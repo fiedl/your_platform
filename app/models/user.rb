@@ -5,4 +5,8 @@ class User < ActiveRecord::Base
     first_name + " " + last_name 
   end
 
+  def profile_fields
+    ProfileField.find(:all, :conditions => "user_id = '#{id}'")
+  end
+
 end
