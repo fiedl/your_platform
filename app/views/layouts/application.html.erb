@@ -56,7 +56,8 @@
             <div class="content_twoCols content_twoCols-20-80">
               <div class="content_twoCols_left">
 		<ul class="subnavi top">
-		  <li><a class="active">Mitgliederbereich</a></li>
+		  <li><a>Mitgliederbereich</a></li>
+		  <li><%= link_to "Alle Benutzer auflisten", { :controller => "users" }, { :class => (action_name == "index" ? "active" : "" ) } %></li>
 		</ul>
               </div>
               <div class="content_twoCols_right">

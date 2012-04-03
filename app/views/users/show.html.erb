@@ -1,9 +1,15 @@
 <%= content_box :heading => @user.name do %>
-<span class=profile_fields>
-  <ul>
-    <% for pf in @profile_fields %>
-    <li><%=h pf.label %>: <%=h pf.value %></li>
-    <% end %>
-  </ul>
-</span>
+<p>Profil-Informationen</p>
 <% end  %>
+
+<% for title,profile_fields in @profile_field_groups %>
+<%= content_box :heading => title do %>
+<ul>
+  <% for pf in profile_fields %>
+  <li><%=h "#{pf.label}: #{pf.value}" %></li>
+  <% end %>
+</ul>
+<% end %>
+<% end %>
+
+
