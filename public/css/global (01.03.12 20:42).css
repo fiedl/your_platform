@@ -1,0 +1,927 @@
+@font-face {
+    font-family: 'AdobeGaramondPro';
+    src: url('../files/fonts/agaramondpro-bold-webfont.eot');
+    src: url('../files/fonts/agaramondpro-bold-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../files/fonts/agaramondpro-bold-webfont.woff') format('woff'),
+        url('../files/fonts/agaramondpro-bold-webfont.ttf') format('truetype'),
+        url('../files/fonts/agaramondpro-bold-webfont.svg#AdobeGaramondProBold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'AdobeGaramondPro';
+    src: url('../files/fonts/agaramondpro-bolditalic-webfont.eot');
+    src: url('../files/fonts/agaramondpro-bolditalic-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../files/fonts/agaramondpro-bolditalic-webfont.woff') format('woff'),
+        url('../files/fonts/agaramondpro-bolditalic-webfont.ttf') format('truetype'),
+        url('../files/fonts/agaramondpro-bolditalic-webfont.svg#AdobeGaramondProBoldItalic') format('svg');
+    font-weight:bold;
+    font-style:italic;
+}
+
+@font-face {
+    font-family: 'AdobeGaramondPro';
+    src: url('../files/fonts/agaramondpro-italic-webfont.eot');
+    src: url('../files/fonts/agaramondpro-italic-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../files/fonts/agaramondpro-italic-webfont.woff') format('woff'),
+        url('../files/fonts/agaramondpro-italic-webfont.ttf') format('truetype'),
+        url('../files/fonts/agaramondpro-italic-webfont.svg#AdobeGaramondProItalic') format('svg');
+    font-weight: normal;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'AdobeGaramondPro';
+    src: url('../files/fonts/agaramondpro-regular-webfont.eot');
+    src: url('../files/fonts/agaramondpro-regular-webfont.eot?#iefix') format('embedded-opentype'),
+        url('../files/fonts/agaramondpro-regular-webfont.woff') format('woff'),
+        url('../files/fonts/agaramondpro-regular-webfont.ttf') format('truetype'),
+        url('../files/fonts/agaramondpro-regular-webfont.svg#AdobeGaramondProRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body{
+    margin:0px;
+    padding:0px;
+    font-family: arial;
+    font-size:12px;
+    color:#000;
+}
+
+img{
+    border:none;
+}
+
+a {
+    text-decoration: none;
+    color:#7e0f0d;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+#ajaxFlashMessage, #ajaxFlashMessage{
+}
+
+.clear{
+    clear:both;
+    height:0px;
+    line-height:0px;
+    font-size:0px;
+    overflow:hidden;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+html[xmlns] .clearfix {
+    display: block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+
+td, table {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+textarea, input { outline:none; }
+
+.input.text,
+.input.password,
+.input.select,
+.input.number{
+    padding:0 0 11px 0;
+}
+
+.input.text label,
+.input.password label,
+.input.select label,
+.input.number label{
+    padding:0 0 3px 0;
+}
+.input.date label{
+    padding:0 0 4px 0;
+}
+
+.input.radio label{
+    display:inline;
+}
+
+.input.text input,
+.input.password input,
+.input.select select,
+.input.date select,
+.input.number input{
+    border-top:1px solid #727272;
+    border-left:1px solid #cccccb;
+    border-right:1px solid #cccccb;
+    border-bottom:1px solid #dadada;
+    color:#666;
+    height:18px;
+    width:166px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:12px;
+    font-weight:bold;
+    padding:0 5px;
+}
+
+.input.date select{
+    width:auto;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.input.select select{
+    width:171px;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.submit input{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    border:none;
+    background:none;
+    color:#7e0f0d;
+    cursor:pointer;
+    margin:0px;
+    padding:0px;
+}
+
+.input .error{
+    color:#7E0F0D;
+    font-size:12px;
+    width:176px;
+}
+
+#flashMessage{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    height:30px;
+    padding:10px 0 0 0;
+    text-align: center;
+}
+#flashMessage.success_message{
+    color:#193800;
+    background:url(../img/flash_success_bg.png) repeat;
+}
+#flashMessage.failure_message{
+    color:#fff;
+    background:url(../img/flash_failure_bg.png) repeat;
+}
+
+#headerBg, #footer{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    height:144px;
+    background:url(../img/header_bg.gif) repeat;
+    border-bottom:1px solid #fff;
+}
+
+#header{
+    background:url(../img/header_img.jpg) no-repeat center 0;
+    height:144px;
+    width:996px;
+    margin:0 auto;
+    position:relative;
+}
+
+#header_claim{
+    position:absolute;
+    top:20px;
+    left:27px;
+}
+
+#header_logo{
+    position:absolute;
+    top:62px;
+    left:27px;
+}
+
+#header_search{
+    position: absolute;
+    left:782px;
+    top:20px;
+}
+
+#header_search .input{
+    background:url(../img/search_bg.gif) no-repeat;
+    width:156px;
+    height:21px;
+    float:left;
+}
+
+#header_search_input{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    background:none;
+    border:0px;
+    font-weight: bold;
+    font-size:12px;
+    margin:2px 0 0 6px;
+    width:148px;
+    color:#333333;
+}
+
+#header_search .submit{
+    margin-left:10px;
+    float:left;
+}
+
+#header_navi{
+    position: absolute;
+    right: 28px;
+    top:92px;
+}
+
+#header_navi ul,
+#header_navi li{
+    margin:0px;
+    padding:0px;
+    list-style: none;
+    display:block;
+}
+
+#header_navi li{
+    float:left;
+    margin-left:3px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-weight: bold;
+    font-size:14px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding:7px 5px 3px 9px;
+}
+
+#header_navi li.active,
+#header_navi li:hover{
+    background:#333;
+}
+
+#header_navi li.active a,
+#header_navi li:hover a{
+    color:#fff;
+}
+
+#header_navi li a{
+    color:#000;
+    text-decoration: none;
+}
+
+#contentBgLayer1{
+    background:url(../img/content_wrapper.gif) repeat;
+}
+
+#contentBgLayer2{
+    background:url(../img/content_wrapper_bg.jpg) repeat-x;
+}
+
+#contentBgLayer3{
+    background:url(../img/bg_shadow.png) no-repeat center 0;
+}
+
+#content_wrapper{
+    margin:0 auto;
+    width:940px;
+    padding:13px 28px;
+    min-height: 659px;
+}
+
+#breadcrumb{
+    background:url(../img/breadcrumb.gif) no-repeat 0px 2px;
+    padding-left:20px;
+    width:100%;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-weight: bold;
+    font-size:15px;
+    text-decoration: none;
+    color:#444444;
+}
+
+#breadcrumb a{
+    text-decoration: none;
+    color:#7e0f0d;
+}
+
+#content{
+    margin-top:15px;
+    position: relative;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+}
+
+#content .subnavi,
+#content .subnavi ul{
+    width:219px;
+    margin:0;
+    padding:0;
+    list-style: none;
+}
+
+#content .subnavi{
+    /* background:#e7e4dd url(../img/subnavi_bg.jpg) no-repeat 1px 0; */
+    background:#f8f7f5 no-repeat 1px 0;
+    border-top:1px solid #d6d3cd;
+    border-bottom:1px solid #d6d3cd;
+    font-family: 'AdobeGaramondPro', Helvetica;
+}
+
+#content .subnavi a{
+    font-size:14px;
+    font-weight:bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    color:#000;
+    letter-spacing: 1.5px;
+    width:202px;
+    padding:10px 5px 10px 11px;
+    display:block;
+    border-left:1px solid #d6d3cd;
+    border-right:1px solid #d6d3cd;
+}
+
+#content .subnavi a.active {
+    background:#222222;
+    width:202px;
+    border:none;
+    padding:10px 5px 10px 12px;
+    color:#fff;
+}
+
+#content .subnavi .sub{
+    background:#e6e6e4;
+}
+
+#content .subnavi .sub a{
+    width:186px;
+    padding:10px 5px 10px 26px;
+}
+
+#content .subnavi .sub a.active{
+    width:188px;
+}
+
+#content .subnavi a.active.sub {
+    background:#5f5f5f;
+}
+
+#content .subnavi li hr{
+    background:none;
+    border:none;
+    height:1px;
+    background:#b06d6b;
+    border-left:1px solid #a15d5a;
+    border-right:1px solid #a15d5a;
+    font-size:0px;
+    line-height:0px;
+    overflow:hidden;
+    padding:0px;
+    margin:0px;
+    /*width:220px;*/
+}
+
+#content .subnavi li.last hr, #content .subnavi li:last-child hr {
+    display:none;
+}
+
+#content .subnavi.bottom{
+    margin-top:15px;
+}
+
+#content .subnavi li{
+    display:none;
+    position: relative;
+}
+
+#content .subnavi a.child, #content .subnavi a.neighbor {
+    padding-left: 20px;
+    width: 194px;
+}
+
+#content .subnavi.groups {
+    margin-top: 15px;
+    background:#e7e4dd url(../img/subnavi_bg.jpg) no-repeat 1px -100px;
+}
+
+#content .subnavi.seperator {
+    margin-top: 15px;
+}
+
+#content .box, .fancybox .box{
+    position:relative;
+    width:698px;
+    border:1px solid #d6d3cd;
+    background: url(../img/content_bg.jpg) repeat;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    margin-bottom:15px;
+}
+
+#content .box_minimize, .fancybox .box_minimize{
+    position:absolute;
+    top:18px;
+    right:16px;
+    background:url(../img/box_minimize.gif) no-repeat;
+    width:14px;
+    height:14px;
+    cursor:pointer;
+}
+#content .box_minimize.closed, .fancybox .box_minimize.closed{
+    background:url(../img/box_minimize_closed.gif) no-repeat;
+}
+
+#content .box_head, .fancybox .box_head{
+    padding:17px 0 0 10px;
+    font-size:20px;
+}
+
+#content .box_head h2, .fancybox .box_head h2{
+    font-weight:bold;
+    text-transform: uppercase;
+    margin:0;
+    float:left;
+    font-size:20px;
+}
+
+.fancybox .box_head_userId,
+#content .box_head_userId{
+    float:left;
+    margin-left:15px;
+    position:relative;
+    top:0px;
+    font-weight: bold;
+}
+
+#content .box_head_functions, .fancybox .box_head_functions{
+    position:absolute;
+    top:18px;
+    right:45px;
+}
+
+#content .box_head_functions a,
+.fancybox .box_head_functions a,
+a.box_head_functions_changeStatus{
+    font-size:14px;
+    font-weight: bold;
+    color:#7e0f0d;
+    text-decoration: none;
+    padding-left:15px;
+    margin-left:10px;
+}
+.change_status a.box_head_functions_changeStatus{
+    margin-left:0px;
+}
+
+#content .box_head_functions_changeStatus{
+    background: url(../img/change_status_icon.png) no-repeat 0px 2px;
+}
+
+#content .box_head_functions_edit{
+    background: url(../img/edit_icon.png) no-repeat;
+    padding-left:16px;
+}
+
+#content .box_divider, .fancybox .box_divider{
+    height:0px;
+    font-size:0px;
+    line-height: 0px;
+    border-top:1px solid #ffeda7;
+    border-bottom:1px solid #dcb000;
+    margin-top:6px;
+}
+
+#content .box_content, .fancybox .box_content{
+    padding:10px;
+    font-size:15px;
+    font-weight: bold;
+}
+
+#content .box_content_col, .fancybox .box_content_col{
+    width:230px;
+    float:left;
+}
+
+#content .box_content_col.mid, .fancybox .box_content_col.mid{
+    width:222px;
+}
+
+#content .box_content_col.right, .fancybox .box_content_col.right{
+    width:226px;
+}
+
+.content_twoCols_left, .fancybox .content_twoCols_left,
+.content_twoCols_right, .fancybox .content_twoCols_right{
+    float:left;
+}
+
+.content_twoCols_left, .fancybox .content_twoCols_left{
+    width:220px;
+}
+
+.content_twoCols_right, .fancybox .content_twoCols_right{
+    padding-left:20px;
+    width:700px;
+}
+
+#footer{
+    height:180px;
+    position:relative;
+}
+#footer_bg{
+    background:url(../img/footer_img.jpg) no-repeat center 0;
+    height:180px;
+    width:996px;
+    position:absolute;
+    top:0px;
+    left:50%;
+    margin-left:-498px;
+    z-index:1;
+}
+#footer_navi{
+    position:relative;
+    width:996px;
+    margin:0 auto;
+    z-index:5;
+    text-align: center;
+}
+#footer_navi ul,
+#footer_navi li{
+    margin:0;
+    padding:0;
+    list-style: none;
+    padding:11px 0 9px 0;
+}
+#footer_navi li{
+    display:inline;
+    margin-left:12px;
+}
+#footer_navi a{
+    text-decoration:none;
+    text-transform:uppercase;
+    font-size:12px;
+    color:#000000;
+    font-weight: bold;
+}
+#footer_line{
+    position:relative;
+    border-top:1px solid #ffeda7;
+    border-bottom:1px solid #dcb000;
+    z-index:5;
+}
+
+.fancybox .box_head {
+    position: relative;
+}
+.fancybox .box_content {
+}
+.fancybox_close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+.fancybox .box {
+    margin: 0;
+}
+
+/** Datepicker Start **/
+
+table.jCalendar {
+    border: 1px solid #000;
+    background: #aaa;
+    border-collapse: separate;
+    border-spacing: 2px;
+}
+table.jCalendar th {
+    background: #333;
+    color: #fff;
+    font-weight: bold;
+    padding: 3px 5px;
+}
+
+table.jCalendar td {
+    background: #ccc;
+    color: #000;
+    padding: 3px 5px;
+    text-align: center;
+}
+table.jCalendar td.other-month {
+    background: #ddd;
+    color: #aaa;
+}
+table.jCalendar td.today {
+    background: #666;
+    color: #fff;
+}
+table.jCalendar td.selected {
+    background: #f66;
+    color: #fff;
+}
+table.jCalendar td.selected.dp-hover {
+    background: #f33;
+    color: #fff;
+}
+table.jCalendar td.dp-hover,
+table.jCalendar tr.activeWeekHover td {
+    background: #fff;
+    color: #000;
+}
+table.jCalendar tr.selectedWeek td {
+    background: #f66;
+    color: #fff;
+}
+table.jCalendar td.disabled, table.jCalendar td.disabled.dp-hover {
+    background: #bbb;
+    color: #888;
+}
+table.jCalendar td.unselectable,
+table.jCalendar td.unselectable:hover,
+table.jCalendar td.unselectable.dp-hover {
+    background: #bbb;
+    color: #888;
+}
+
+/* For the popup */
+
+/* NOTE - you will probably want to style a.dp-choose-date - see how I did it in demo.css */
+
+div.dp-popup {
+    position: relative;
+    background: #ccc;
+    font-size: 10px;
+    font-family: arial, sans-serif;
+    padding: 2px;
+    width: 171px;
+    line-height: 1.2em;
+}
+div#dp-popup {
+    position: absolute;
+    z-index: 1102;
+}
+div.dp-popup h2 {
+    font-size: 12px;
+    text-align: center;
+    margin: 2px 0;
+    padding: 0;
+}
+a#dp-close {
+    font-size: 11px;
+    padding: 4px 0;
+    text-align: center;
+    display: block;
+}
+a#dp-close:hover {
+    text-decoration: underline;
+}
+div.dp-popup a {
+    color: #000;
+    text-decoration: none;
+    padding: 3px 2px 0;
+}
+div.dp-popup div.dp-nav-prev {
+    position: absolute;
+    top: 2px;
+    left: 4px;
+    width: 100px;
+}
+div.dp-popup div.dp-nav-prev a {
+    float: left;
+}
+/* Opera needs the rules to be this specific otherwise it doesn't change the cursor back to pointer after you have disabled and re-enabled a link */
+div.dp-popup div.dp-nav-prev a, div.dp-popup div.dp-nav-next a {
+    cursor: pointer;
+}
+div.dp-popup div.dp-nav-prev a.disabled, div.dp-popup div.dp-nav-next a.disabled {
+    cursor: default;
+}
+div.dp-popup div.dp-nav-next {
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    width: 100px;
+}
+div.dp-popup div.dp-nav-next a {
+    float: right;
+}
+div.dp-popup a.disabled {
+    cursor: default;
+    color: #aaa;
+}
+div.dp-popup td {
+    cursor: pointer;
+}
+div.dp-popup td.disabled {
+    cursor: default;
+}
+/** Datepicker Ende **/
+
+.login_page{
+    width:302px;
+    background: #e8e5de url(../img/logo_klein.png) 50% 10px no-repeat;
+    margin:20px auto 0px auto;
+    padding:65px 10px 10px 10px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+}
+.login_page.resend_password{
+    padding:45px 10px 10px 10px;
+}
+.login_page p{
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.login_page.resend_password h1{
+    font-size:20px;
+    text-align: center;
+    margin:10px 0;
+}
+
+.login_page.resend_password p{
+    margin:10px 0;
+}
+
+.login_page label{
+    display:block;
+    float:left;
+    width:115px;
+}
+
+.login_page.resend_password .input.text{
+    padding-bottom:0px;
+}
+
+.login_page .input.password{
+    padding:0 0 5px 0;
+}
+
+.login_page .pw_link{
+    color:#7e0f0d;
+    text-decoration: none;
+    font-size:12px;
+    margin-left:95px;
+}
+
+.login_page .submit input{
+    float:right;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    border:none;
+    background:none;
+    color:#7e0f0d;
+    margin:10px 10px 0 0;
+    cursor:pointer;
+}
+
+fieldset div.input label  {
+    width: 150px;
+    display: inline-block;
+}
+
+.hint {
+    padding-left: 15px;
+    background:transparent url(../img/hint.png) 0 2px no-repeat;
+    font-weight: normal;
+}
+
+.floating_input {
+    position: relative;
+}
+.floating_input div.input {
+    float: left;
+    margin-right: 15px;
+    padding: 0;
+}
+.floating_input div.save {
+    margin-top: 21px;
+}
+
+/**
+* Flash Messages
+**/
+#alert_message_failure, #alert_message_success {
+    background-color: #fff !important;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
+    filter: alpha(opacity=95);
+    opacity: .95;
+    color: #000;
+    border-bottom:2px solid #ccc;
+    z-index: 1300 !important;
+}
+#alert_message_failure {
+    background-color: #EE0000 !important;
+    color: #fff;
+}
+.message.info {
+    color: #000;
+    border:1px solid #ccc;
+    padding: 8px 6px 8px 30px;
+    background:#fff url(../img/hint_big.png) 0 6px no-repeat;
+    margin-bottom: 10px;
+}
+
+.help {
+    display: inline;
+    position: relative;
+    top: -4px;
+    cursor: help;
+}
+
+.tooltip {
+    z-index: 1300 !important;
+    display:none;
+    background-color:#FFEDA7;
+    border:1px solid #cc9;
+    padding:3px;
+    font-size:13px;
+    -moz-box-shadow: 2px 2px 11px #666;
+    -webkit-box-shadow: 2px 2px 11px #666;
+}
+
+.nobr {
+    white-space: nowrap;
+}
+
+/** Datatable Ergänzungen **/
+table.dataTable tbody tr.even:hover td, #example tbody tr.even td.highlighted {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tbody tr.odd:hover td, #example tbody tr.odd td.highlighted {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.even:hover td {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.even:hover td.sorting_1 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.even:hover td.sorting_2 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.even:hover td.sorting_3 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.odd:hover td.sorting_1 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td.sorting_2 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td.sorting_3 {
+    background-color: #FFE177;
+}
+table.dataTable tr.row_selected td {
+    background-color: #FFE8A0 !important;
+}
+.dataTables_info_selected_rows {
+    float: left;
+    padding-top: 3px;
+    margin-left: 10px;
+}
+table.dataTable tr.odd td.positive {
+    background-color: #DEFCDE;
+}
+table.dataTable tr.odd td.negative {
+    background-color: #FFE0E0;
+}
+table.dataTable tr.even td.positive {
+    background-color: #EDFFED;
+}
+table.dataTable tr.even td.negative {
+    background-color: #FFEAEA;
+}
+table.dataTable tfoot th {
+    text-align: left;
+}

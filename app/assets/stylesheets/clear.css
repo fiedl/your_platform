@@ -1,0 +1,24 @@
+.clear{
+    clear:both;
+    height:0px;
+    line-height:0px;
+    font-size:0px;
+    overflow:hidden;
+}
+
+.clearfix:after {
+    content: ".";
+    display: none;
+    clear: both;
+    line-height: 0;
+    height: 0;
+}
+
+.clearfix {
+    display: inline-block;
+}
+
+* html .clearfix {
+    height: 1%;
+}
+

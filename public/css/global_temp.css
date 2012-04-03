@@ -1,0 +1,338 @@
+
+
+
+#ajaxFlashMessage, #ajaxFlashMessage{
+}
+
+
+td, table {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+textarea, input { outline:none; }
+
+.input.checkbox label {
+    display: inline;
+    margin-left: 5px;
+}
+
+input[readonly] {
+    background: #ddd;
+}
+
+.input.text,
+.input.password,
+.input.select,
+.input.number{
+    padding:0 0 11px 0;
+}
+
+.input.text label,
+.input.password label,
+.input.select label,
+.input.number label{
+    padding:0 0 3px 0;
+}
+.input.date label{
+    padding:0 0 4px 0;
+}
+
+.input.radio label{
+    display:inline;
+}
+
+.input.text input,
+.input.password input,
+.input.select select,
+.input.date select,
+.input.number input{
+    border-top:1px solid #727272;
+    border-left:1px solid #cccccb;
+    border-right:1px solid #cccccb;
+    border-bottom:1px solid #dadada;
+    color:#666;
+    height:18px;
+    width:166px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:12px;
+    font-weight:bold;
+    padding:0 5px;
+}
+
+.input.date select{
+    width:auto;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.input.select select{
+    width:171px;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.submit input{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    border:none;
+    background:none;
+    color:#7e0f0d;
+    cursor:pointer;
+    margin:0px;
+    padding:0px;
+}
+
+.input .error{
+    color:#7E0F0D;
+    font-size:12px;
+    width:176px;
+}
+
+#flashMessage{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    height:30px;
+    padding:10px 0 0 0;
+    text-align: center;
+}
+#flashMessage.success_message{
+    color:#193800;
+    background:url(../images/flash_success_bg.png) repeat;
+}
+#flashMessage.failure_message{
+    color:#fff;
+    background:url(../images/flash_failure_bg.png) repeat;
+}
+
+
+
+#header_search .input{
+    background:url(../images/search_bg.gif) no-repeat;
+    width:156px;
+    height:21px;
+    float:left;
+}
+
+#header_search_input{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    background:none;
+    border:0px;
+    font-weight: bold;
+    font-size:12px;
+    margin:2px 0 0 6px;
+    width:148px;
+    color:#333333;
+}
+
+#header_search .submit{
+    margin-left:10px;
+    float:left;
+}
+
+
+
+
+
+.login_page{
+    width:302px;
+    background: #e8e5de url(../images/logo_klein.png) 50% 10px no-repeat;
+    margin:20px auto 0px auto;
+    padding:65px 10px 10px 10px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    -moz-border-radius: 12px;
+    border-radius: 12px;
+}
+.login_page.resend_password{
+    padding:45px 10px 10px 10px;
+}
+.login_page p{
+    font-weight: normal;
+    font-size: 14px;
+}
+
+.login_page.resend_password h1{
+    font-size:20px;
+    text-align: center;
+    margin:10px 0;
+}
+
+.login_page.resend_password p{
+    margin:10px 0;
+}
+
+.login_page label{
+    display:block;
+    float:left;
+    width:115px;
+}
+
+.login_page.resend_password .input.text{
+    padding-bottom:0px;
+}
+
+.login_page .input.password{
+    padding:0 0 5px 0;
+}
+
+.login_page .pw_link{
+    color:#7e0f0d;
+    text-decoration: none;
+    font-size:12px;
+    margin-left:95px;
+}
+
+.login_page .submit input{
+    float:right;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    border:none;
+    background:none;
+    color:#7e0f0d;
+    margin:10px 10px 0 0;
+    cursor:pointer;
+}
+
+fieldset div.input label  {
+    width: 150px;
+    display: inline-block;
+}
+
+.hint {
+    padding-left: 15px;
+    background:transparent url(../images/hint.png) 0 2px no-repeat;
+    font-weight: normal;
+}
+
+.floating_input {
+    position: relative;
+}
+.floating_input div.input {
+    float: left;
+    margin-right: 15px;
+    padding: 0;
+}
+.floating_input div.save {
+    margin-top: 21px;
+}
+
+/**
+* Flash Messages
+**/
+#alert_message_failure, #alert_message_success {
+    background-color: #fff !important;
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=95)";
+    filter: alpha(opacity=95);
+    opacity: .95;
+    color: #000;
+    border-bottom:2px solid #ccc;
+    z-index: 1300 !important;
+}
+#alert_message_failure {
+    background-color: #EE0000 !important;
+    color: #fff;
+}
+.message.info {
+    color: #000;
+    border:1px solid #ccc;
+    padding: 8px 6px 8px 30px;
+    background:#fff url(../images/hint_big.png) 0 6px no-repeat;
+    margin-bottom: 10px;
+}
+
+.help {
+    display: inline;
+    position: relative;
+    top: -4px;
+    cursor: help;
+}
+
+.tooltip {
+    z-index: 1300 !important;
+    display:none;
+    background-color:#FFEDA7;
+    border:1px solid #cc9;
+    padding:3px;
+    font-size:13px;
+    -moz-box-shadow: 2px 2px 11px #666;
+    -webkit-box-shadow: 2px 2px 11px #666;
+}
+
+.nobr {
+    white-space: nowrap;
+}
+
+/** Datatable Ergänzungen **/
+table.dataTable tbody tr.even:hover td, #example tbody tr.even td.highlighted {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tbody tr.odd:hover td, #example tbody tr.odd td.highlighted {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.even:hover td {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.even:hover td.sorting_1 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.even:hover td.sorting_2 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.even:hover td.sorting_3 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td {
+    background-color: #FFE8A0;
+}
+
+table.dataTable tr.odd:hover td.sorting_1 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td.sorting_2 {
+    background-color: #FFE177;
+}
+
+table.dataTable tr.odd:hover td.sorting_3 {
+    background-color: #FFE177;
+}
+table.dataTable tr.row_selected td.sorting_1,
+table.dataTable tr.row_selected td.sorting_2,
+table.dataTable tr.row_selected td.sorting_3,
+table.dataTable tr.row_selected td{
+    background-color: #FFD760;
+}
+.dataTables_info_selected_rows {
+    float: left;
+    padding-top: 3px;
+    margin-left: 10px;
+}
+table.dataTable tr.odd td.positive {
+    background-color: #DEFCDE;
+}
+table.dataTable tr.odd td.negative {
+    background-color: #FFE0E0;
+}
+table.dataTable tr.even td.positive {
+    background-color: #EDFFED;
+}
+table.dataTable tr.even td.negative {
+    background-color: #FFEAEA;
+}
+table.dataTable tfoot th {
+    text-align: left;
+}
+.dataTables_info {
+    min-width: 100px;
+}

@@ -1,0 +1,72 @@
+#headerBg {
+
+    height:130px;
+    background:url('../images/header_bg.gif') repeat;
+    border-bottom:1px solid #fff;
+}
+
+#header {
+    background: url('../images/header_img.jpg') no-repeat center 0;
+    height:130px;
+    width:896px;
+    margin:0 auto;
+    position:relative;
+}
+
+#header_claim{
+    position:absolute;
+    top:18px;
+    left:24px;
+}
+
+#header_logo{
+    position:absolute;
+    top:56px;
+    left:24px;
+}
+
+#header_search{
+    position: absolute;
+    left:704px;
+    top:18px;
+}
+
+#header_navi{
+    position: absolute;
+    right: 25px;
+    top:83px;
+}
+
+#header_navi ul,
+#header_navi li{
+    margin:0px;
+    padding:0px;
+    list-style: none;
+    display:block;
+}
+
+#header_navi li{
+    float:left;
+    margin-left:3px;
+    font-weight: bold;
+    font-size:13px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    padding:6px 4px 3px 8px;
+}
+
+#header_navi li.active,
+#header_navi li:hover{
+    background:#333;
+}
+
+#header_navi li.active a,
+#header_navi li:hover a{
+    color:#fff;
+}
+
+#header_navi li a{
+    color:#000;
+    text-decoration: none;
+}
+

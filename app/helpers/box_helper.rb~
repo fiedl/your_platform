@@ -1,0 +1,7 @@
+module BoxHelper
+
+  def content_box( params )  # :heading, :content
+    render :partial => "box", :locals => { :heading => params[:heading], :content => params[:content] }
+  end
+
+end

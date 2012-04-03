@@ -1,0 +1,40 @@
+#contentBgLayer1{
+    background:url(../images/content_wrapper.gif) repeat;
+}
+
+#contentBgLayer2{
+    background:url(../images/content_wrapper_bg.jpg) repeat-x;
+}
+
+#contentBgLayer3{
+    background:url(../images/bg_shadow.png) no-repeat center 0;
+}
+
+#content_wrapper{
+    margin:0 auto;
+    width:846px;
+    padding:12px 25px;
+    min-height: 593px;
+}
+
+#content{
+    margin-top:13px;
+    position: relative;
+    font-size:13px;
+    font-weight:bold;
+}
+
+.content_twoCols_left, .fancybox .content_twoCols_left,
+.content_twoCols_right, .fancybox .content_twoCols_right {
+    float:left;
+}
+
+.content_twoCols_left, .fancybox .content_twoCols_left {
+    width:198px;
+}
+
+.content_twoCols_right, .fancybox .content_twoCols_right {
+    padding-left:18px;
+    width:630px;
+}
+
