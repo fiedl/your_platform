@@ -1,4 +1,8 @@
 Wingolfsplattform::Application.routes.draw do
+
+  get "users/new"
+  match "users/new/:alias" => "users#new"
+
   get "users/show"
 
   get "users/index"

@@ -5,8 +5,12 @@ class UsersController < ApplicationController
   end
 
   def show
-    _alias = params[:alias]
-    @user = User.find( :first, :conditions => "alias='#{_alias}'" )
+    @alias = params[:alias]
+    if @alias
+      @user = User.find( :first, :conditions => "alias='#{@alias}'" )
+    else
+      @user = User.find_by_id( params[:id] )
+    end
 
     if @user
       @profile_fields = @user.profile_fields
@@ -21,10 +25,32 @@ class UsersController < ApplicationController
         'Vereine und Organisationen' => profile_fields_of_this_type( "Organisation" ),
       }
     else
-      @title = "Benutzer: #{_alias}"
+      @title = "Benutzer: #{@alias}"
       @profile_field_groups = {}
     end
+  end
 
+  def new
+    @title = "Benutzer anlegen"
+    @user = User.new
+    @user.alias = params[:alias]
+    
+    # Eigentlich möchte ich das automatisch erstellen lassen im View. Aber es klappt noch nicht richtig. 
+    # @form_fields = {
+    #  :first_name => {},
+    #  :last_name => {},
+    #  :alias => {},
+    #  :email => {},
+    # }
+  end
+
+  def create
+    @user = User.new( params[:user] )
+    if @user.save
+      redirect_to :action => "show", :alias => @user.alias
+    else
+      render :action => "new"
+    end
   end
 
   private

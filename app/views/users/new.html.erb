@@ -1,0 +1,31 @@
+<h1>Benutzer anlegen</h1>
+<div class="form">
+
+  <legend>Bitte Details zum neu anzulegenden Benutzer angeben.</legend>
+
+  <%= form_for @user, :url => { :action => "create" } do |form| %>
+  
+  <div>
+    <%= form.label :firstname %>
+    <%= form.text_field :first_name, :class => "text" %>
+  </div>
+  <div>
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name, :class => "text" %>
+  </div>
+  <div>
+    <%= form.label :alias %>
+    <%= form.text_field :alias, :class => "text" %>
+  </div>
+  <div>
+    <%= form.label :email %>
+    <%= form.text_field :email, :class => "text" %>
+  </div>
+
+  <%= submit_tag "Benutzer erstellen", :class => "submit" %>    
+  
+  <% end %>
+
+  
+</div>
+

@@ -3,6 +3,7 @@
 <p>Profil-Informationen</p>
 <% else %>
 <p>Der angegebene Benutzer ist im System nicht vorhanden.</p>
+<%= link_to( "Diesen Benutzer anlegen", :action => "new", :alias => @alias ) %>
 <% end %>
 <% end %>
 

@@ -1,5 +1,5 @@
 class ProfileField < ActiveRecord::Base
-  # attr_accessible :title, :body
+  attr_accessible        :user_id, :label, :type, :value
 end
 
 class Custom < ProfileField

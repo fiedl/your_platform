@@ -1,0 +1,112 @@
+
+legend {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-top: 4px;
+    margin-left: 2px;
+}
+
+input[type=text] {
+    /*outline-style: solid;*/
+    /*outline: none;*/
+    outline-width: 1px;
+    border: 0px solid;
+    box-shadow: none;
+    box-sizing: content-box;
+    border-collapse: separate;
+    border-top:1px solid #727272;
+    border-left:1px solid #cccccb;
+    border-right:1px solid #cccccb;
+    border-bottom:1px solid #dadada;
+    color:#666;    
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:12px;
+    font-weight:bold;
+    padding:1px 3px;
+}
+
+/* deleted-string unterhalb. Aber noch nicht umgerechnet auf 90% untehalb. */
+/*
+textarea, input { outline:none; }
+
+.input.checkbox label {
+    display: inline;
+    margin-left: 5px;
+}
+
+input[readonly] {
+    background: #ddd;
+}
+
+.input.text,
+.input.password,
+.input.select,
+.input.number{
+    padding:0 0 11px 0;
+}
+
+.input.text label,
+.input.password label,
+.input.select label,
+.input.number label{
+    padding:0 0 3px 0;
+}
+.input.date label{
+    padding:0 0 4px 0;
+}
+
+.input.radio label{
+    display:inline;
+}
+
+.input.text input,
+.input.password input,
+.input.select select,
+.input.date select,
+.input.number input{
+    border-top:1px solid #727272;
+    border-left:1px solid #cccccb;
+    border-right:1px solid #cccccb;
+    border-bottom:1px solid #dadada;
+    color:#666;
+    height:18px;
+    width:166px;
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:12px;
+    font-weight:bold;
+    padding:0 5px;
+}
+
+.input.date select{
+    width:auto;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.input.select select{
+    width:171px;
+    padding:1px 0 0 5px;
+    height:19px;
+}
+
+.submit input{
+    font-family: 'AdobeGaramondPro', Helvetica;
+    font-size:15px;
+    font-weight:bold;
+    border:none;
+    background:none;
+    color:#7e0f0d;
+    cursor:pointer;
+    margin:0px;
+    padding:0px;
+}
+
+.input .error{
+    color:#7E0F0D;
+    font-size:12px;
+    width:176px;
+}
+*/
