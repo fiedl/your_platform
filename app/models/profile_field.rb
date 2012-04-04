@@ -13,3 +13,7 @@ end
 class Address < ProfileField
 
 end
+
+class Email < ProfileField
+
+end

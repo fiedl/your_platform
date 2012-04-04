@@ -1,6 +1,10 @@
-<%= content_box :heading => @user.name do %>
+<%= content_box :heading => @title do %>
+<% if @user %>
 <p>Profil-Informationen</p>
-<% end  %>
+<% else %>
+<p>Der angegebene Benutzer ist im System nicht vorhanden.</p>
+<% end %>
+<% end %>
 
 <% for title,profile_fields in @profile_field_groups %>
 <%= content_box :heading => title do %>

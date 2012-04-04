@@ -5,18 +5,25 @@ class UsersController < ApplicationController
   end
 
   def show
-    @user = User.find(:first, :conditions => "alias = #{:alias}")
-    @profile_fields = @user.profile_fields
-    @title = @user.name
+    _alias = params[:alias]
+    @user = User.find( :first, :conditions => "alias='#{_alias}'" )
+
+    if @user
+      @profile_fields = @user.profile_fields
+      @title = @user.name
     
-    # Profilfelder sinnvoll gruppieren
-    @profile_field_groups = { 
-      'Kontaktinformationen' => profile_fields_of_one_of_these_types( [ "Address", "Custom" ] ),
-      'Über mich' => profile_fields_of_this_type( "About" ),
-      'Informationen zum Studium' => profile_fields_of_this_type( "Study" ),
-      'Informationen zum Beruf' => profile_fields_of_one_of_these_types( [ "Job", "Competence" ] ),
-      'Vereine und Organisationen' => profile_fields_of_this_type( "Organisation" ),
-    }
+      # Profilfelder sinnvoll gruppieren
+      @profile_field_groups = { 
+        'Kontaktinformationen' => profile_fields_of_one_of_these_types( [ "Address", "Email", "Custom" ] ),
+        'Über mich' => profile_fields_of_this_type( "About" ),
+        'Informationen zum Studium' => profile_fields_of_this_type( "Study" ),
+        'Informationen zum Beruf' => profile_fields_of_one_of_these_types( [ "Job", "Competence" ] ),
+        'Vereine und Organisationen' => profile_fields_of_this_type( "Organisation" ),
+      }
+    else
+      @title = "Benutzer: #{_alias}"
+      @profile_field_groups = {}
+    end
 
   end
 
