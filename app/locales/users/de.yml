@@ -1,0 +1,23 @@
+
+de:
+  create_user: "Benutzer anlegen"
+  enter_details_for_new_user: "Bitte Details zum neu anzulegenden Benutzer angeben."
+
+#  helpers:
+#    label:
+#      user:
+#        first_name:   Vorname
+#        last_name:    Nachname
+#        alias:        Alias 
+#        email:        E-Mail
+
+  activerecord:
+    models:
+      user:           Benutzer
+    attributes:
+      user:
+        first_name:   Vorname
+        last_name:    Nachname
+        alias:        Alias
+        email:        E-Mail
+

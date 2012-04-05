@@ -1,9 +1,0 @@
-
-de:
-  create_user: "Benutzer anlegen"
-
-#  activerecord:
-#    attributes:
-#      user:
-#        labels:
-#	  first_name: "Vorname"
