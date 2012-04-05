@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
   validates_format_of      :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 
   after_save               :save_email
-  before_save              :generate_alias_if_necessary
+  before_save              :generate_alias_if_necessary, :capitalize_name
 
   def alias
     Alias.new( read_attribute :alias )
@@ -33,6 +33,12 @@ class User < ActiveRecord::Base
 
   def profile_fields
     ProfileField.find( :all, :conditions => "user_id = '#{id}'" ) 
+  end
+
+  def capitalize_name
+    first_name.capitalize!
+    last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
+    self.name
   end
 
   private
