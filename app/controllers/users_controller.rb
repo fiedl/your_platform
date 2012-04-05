@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   end
 
   def new
-    @title = "Benutzer anlegen"
+    @title = t :create_user
     @user = User.new
     @user.alias = params[:alias]
     

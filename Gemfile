@@ -39,3 +39,6 @@ gem 'jquery-rails'
 
 # HTML-Nodes
 gem 'nokogiri'
+
+# i18n
+gem 'rails-i18n'

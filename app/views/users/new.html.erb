@@ -1,4 +1,4 @@
-<h1>Benutzer anlegen</h1>
+<h1><%= @title %></h1>
 <div class="form">
 
   <legend>Bitte Details zum neu anzulegenden Benutzer angeben.</legend>
@@ -22,7 +22,7 @@
     <%= form.text_field :email, :class => "text" %>
   </div>
 
-  <%= submit_tag "Benutzer erstellen", :class => "submit" %>    
+  <%= submit_tag @title, :class => "submit" %>    
   
   <% end %>
 
