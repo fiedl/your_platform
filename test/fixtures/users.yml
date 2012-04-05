@@ -1,26 +1,22 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
-max.mustermann:
+max_mustermann:
   first_name: Max
   last_name:  Mustermann
   alias:      mustermann
-  email:      mustermann@wingolf.org
 
-stefan.mustermann:
+stefan_mustermann:
   first_name: Stefan
   last_name:  Mustermann
-  email:      stefan@example.com
 
-moritz.mustermann:
+moritz_mustermann:
   first_name: Moritz
   last_name:  Mustermann
   alias:      mo.mustermann
-  email:      moritz@wingolf.org
 
 tamara_musterfrau:
   first_name: Tamara
   last_name:  Musterfrau
   alias:      tamara
-  email:      tamara@example.com
 
 

@@ -11,11 +11,14 @@ class User < ActiveRecord::Base
   before_save              :generate_alias_if_necessary, :capitalize_name
 
   def alias
-    Alias.new( read_attribute :alias )
+    a = Alias.new( read_attribute :alias ) if read_attribute :alias
+    a = Alias.new unless a
+    a.user = self
+    return a
   end
 
   def name
-    first_name + " " + last_name 
+    first_name + " " + last_name
   end
 
   def email
@@ -63,29 +66,50 @@ class User < ActiveRecord::Base
   end
 
   def generate_alias_if_necessary
-    self.alias = Alias.generate( self ) if self.alias.blank?
+    self.alias.generate! if self.alias.blank?
   end
 
 end
 
-
 class Alias < String
 
-  def self.generate( user )
-    suggestion = Alias.new user.last_name.downcase # mustermann
-    suggestion = Alias.new user.first_name.downcase.first + "." + user.last_name.downcase if suggestion.taken? # m.mustermann
-    suggestion = Alias.new user.first_name.downcase + "." + user.last_name.downcase if suggestion.taken? #max.mustermann
-    # Wenn dies immernoch nicht ausreicht, wird das ganze zu einem Fehler führen, da der Alias weder leer noch bereits vorhanden sein darf.
-    # Der Benutzer wird dann aufgefordert, einen anderen Alias zu wählen.
-    return suggestion
+  def generate( user = nil )
+    user = @user unless user
+    if user
+      if User.find( :all, :conditions => "last_name='#{user.last_name}' AND id!='#{user.id}'" ).count == 0
+        # Wenn der Nachname nur einmal vorkommt, wird dieser als Alias vorgeschlagen.      
+        suggestion = Alias.new user.last_name.downcase # mustermann
+      elsif User.find( 
+                      :all, 
+                      :conditions => "last_name='#{user.last_name}' 
+                                      AND first_name LIKE '#{user.first_name.first}%' 
+                                      AND id!='#{user.id}'" 
+                      ).count == 0
+        # Wenn der erste Buchstabe des Vornamens den Nutzer eindeutig identifiziert:
+        suggestion = Alias.new user.first_name.downcase.first + "." + user.last_name.downcase # m.mustermann
+      else
+        suggestion = Alias.new user.first_name.downcase + "." + user.last_name.downcase # max.mustermann            
+      end
+      # Wenn dies immernoch nicht ausreicht, wird das ganze zu einem Fehler führen, 
+      # da der Alias weder leer noch bereits vorhanden sein darf.
+      # Der Benutzer wird dann aufgefordert, einen anderen Alias zu wählen.
+      return suggestion
+    end
   end
 
-  def generate!( user )
-    user.alias = Alias.generate( user )
+  def generate!( user = nil )
+    user = @user unless user
+    if user
+      user.alias = user.alias.generate
+    end
   end
 
   def taken?
     User.find( :all, :conditions => "alias='#{self}'" ).size > 0
+  end
+
+  def user=( user )
+    @user = user
   end
 
 end
