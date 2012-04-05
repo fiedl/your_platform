@@ -34,14 +34,7 @@ class UsersController < ApplicationController
     @title = t :create_user
     @user = User.new
     @user.alias = params[:alias]
-    
-    # Eigentlich möchte ich das automatisch erstellen lassen im View. Aber es klappt noch nicht richtig. 
-    # @form_fields = {
-    #  :first_name => {},
-    #  :last_name => {},
-    #  :alias => {},
-    #  :email => {},
-    # }
+    @ask_for_attributes = [ :first_name, :last_name, :alias, :email ]
   end
 
   def create

@@ -3,29 +3,7 @@
 
   <legend><%=t :enter_details_for_new_user %></legend>
 
-  <%= form_for @user, :url => { :action => "create" } do |form| %>
-  
-  <div>
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name, :class => "text" %>
-  </div>
-  <div>
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name, :class => "text" %>
-  </div>
-  <div>
-    <%= form.label :alias %>
-    <%= form.text_field :alias, :class => "text" %>
-  </div>
-  <div>
-    <%= form.label :email %>
-    <%= form.text_field :email, :class => "text" %>
-  </div>
-
-  <%= submit_tag @title, :class => "submit" %>    
-  
-  <% end %>
-
+  <%= automated_form_for @user, :action => "create", :field_names => @ask_for_attributes, :submit_label => @title %>
   
 </div>
 

@@ -55,5 +55,12 @@ module Wingolfsplattform
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
+
+    # fix for field_with_errors in form helper, see: http://www.rabbitcreative.com/2010/09/20/rails-3-still-fucking-up-field_with_errors/
+    config.action_view.field_error_proc = Proc.new { |html_tag, instance| "<span class=\"field_with_errors\">#{html_tag}</span>".html_safe }
+
+
   end
+
 end
+
