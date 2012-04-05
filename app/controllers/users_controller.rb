@@ -42,7 +42,11 @@ class UsersController < ApplicationController
     if @user.save
       redirect_to :action => "show", :alias => @user.alias
     else
+      @title = t :create_user
+      @user.valid?
+      @ask_for_attributes = [ :first_name, :last_name, :alias, :email ]
       render :action => "new"
+      "Test"
     end
   end
 
