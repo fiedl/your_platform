@@ -1,0 +1,14 @@
+<h1><%= @title %></h1>
+<div>
+  <%= form_tag :action => "create" do %>
+  <div>
+    <label for="login_name"><%=t :login_name %>&nbsp;&nbsp;&nbsp; (<%=t :login_name_explanation %>)</label>
+    <%= text_field_tag :login_name, params[ :login_name ], :class => "text" %>
+  </div>
+  <div>
+    <label for="password"><%=t :password %></label>
+    <%= password_field_tag :password, params[ :password ], :class => "password" %>
+  </div>
+  <%= submit_tag @title %>
+  <% end %>
+</div>

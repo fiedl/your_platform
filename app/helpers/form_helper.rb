@@ -13,4 +13,16 @@ module FormHelper
     end
   end
 
+  def form_fields( options = {} )
+    if options[:field_names]
+      options[:field_names].each do |field_name|
+        html_code_in_form += render :partial => "shared/form_field", 
+                                    :locals => { :post => object, :field_name => field_name }
+      end
+      html_code_in_form += submit_tag options[:submit_label], :class => "submit"
+      html_code_in_form.html_safe
+    end
+    
+  end
+
 end

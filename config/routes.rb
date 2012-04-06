@@ -1,4 +1,6 @@
-Wingolfsplattform::Application.routes.draw do
+Wingolfsplattform::Application.routes.draw do 
+
+  get "sessions/new"
 
   get "users/new"
   match "users/new/:alias" => "users#new"

@@ -9,7 +9,7 @@ label {
     margin-left: 2px;
 }
 
-input[type=text] {
+input[type=text], input[type=password], .text, .password {
     /*outline-style: solid;*/
     /*outline: none;*/
     outline-width: 1px;

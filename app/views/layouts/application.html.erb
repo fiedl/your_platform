@@ -14,16 +14,22 @@
 </head>
 <body class="<%= controller.controller_name %>">
 
+  <% if logged_in? %>
   <div id="backendBar">
     <div class="content">
       <ul>
-        <li class="first">Angemeldeter Benutzer</li>
-        <li>Menu</li>
-        <li class="last">Abmelden</li>
+        <li class="first">
+	  <%= link_to @current_user.name, :controller => "users", :action => "show", :alias => @current_user.alias %>
+	</li>
+        <li><%= link_to t( :my_profile ), :controller => "users", :action => "show", :alias => @current_user.alias %> </li>
+        <li class="last">
+	  <%= link_to t( :logout ), :controller => "sessions", :action => "destroy" %>
+	</li>
       </div>
       <div class="clear"></div>
     </div>
   </div>
+  <% end %>
   
   <div id="headerBg">
     <div id="header">
@@ -61,6 +67,12 @@
 		</ul>
               </div>
               <div class="content_twoCols_right">
+
+		<% if flash[ :error ] %>
+		<div class="flash_error">
+                  <%=h flash[ :error ] %>
+		</div>
+                <% end %>   
 
            	<%= convert_to_content_box { yield } %>
 

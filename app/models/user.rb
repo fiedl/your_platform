@@ -69,6 +69,42 @@ class User < ActiveRecord::Base
     self.encrypted_password = ""
   end
 
+  def self.authenticate( login_name, password )
+    try_to_authenticate_by = [ :alias, :last_name, :name, :email ]
+    user = nil
+    try_to_authenticate_by.each do |attribute|
+      if User.column_names.include? attribute.to_s
+        # Wenn es eine SQL-Tabellenspalte ist, kann SQL zum (schnelleren) Suchen benutzt werden.
+        user = send( "find_by_" + attribute.to_s, login_name )
+      else
+        # Wenn es keine Tabellenspalte ist, müssen erst alle Objekte in ein Array geladen 
+        # und dann gefltert werden.
+        User.find_each do |u|
+          result = u.send attribute.to_s
+          if result
+            if result.downcase == login_name.downcase
+              user = u
+              break
+            end
+          end
+        end
+      end
+      break if user
+    end
+    if user
+      if Password.new( password ).valid_against_encrypted_password?( 
+                                                                    user.encrypted_password,
+                                                                    user.salt
+                                                                    )
+        return user
+      else
+        raise "wrong_password"
+      end
+    else
+      raise "no_user_found"
+    end
+  end
+
   private
 
   def email_profile_field
