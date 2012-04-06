@@ -56,6 +56,11 @@ class UserTest < ActiveSupport::TestCase
     assert u.alias.generate! == u.alias.generate
   end
 
+  def test_password_automatically_generated
+    user = create_test_user( :alias => "user_without_password", :new_password => "" )
+    assert user.encrypted_password != ""
+  end   
+
   protected
 
   def create_test_user( options = {} )

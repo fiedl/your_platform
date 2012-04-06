@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
 class UsersController < ApplicationController
+
+  before_filter :find_user, :except => [ :index, :new, :create ]
+
   def index
     @users = User.all
   end
 
   def show
-    @alias = params[:alias]
-    if @alias
-      @user = User.find( :first, :conditions => "alias='#{@alias}'" )
-    else
-      @user = User.find_by_id( params[:id] )
-    end
-
     if @user
       @profile_fields = @user.profile_fields
       @title = @user.name
@@ -58,6 +54,18 @@ class UsersController < ApplicationController
 
   def profile_fields_of_this_type ( type ) 
     profile_fields_of_one_of_these_types ( [ type ] )
+  end
+
+  def find_user
+    @alias = params[ :alias ]
+    id = params[ :id ]
+    if @alias
+      @user = User.find_by_alias( @alias ) #User.find( :first, :conditions => "alias='#{@alias}'" )
+    elsif id
+      @user = User.find_by_id( id )
+    else
+      @user = User.new
+    end
   end
 
 end
