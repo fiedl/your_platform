@@ -1,27 +1,36 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible          :first_name, :last_name, :alias, :email, :new_password
+  attr_accessible           :first_name, :last_name, :alias, :email, :new_password
 
-  attr_accessor            :new_password
+  attr_accessor             :new_password
 
-  validates_presence_of    :first_name, :last_name, :alias
-  
-  # Ein Passwort muss nicht zwangsläufig angegeben werden. Wenn kein Passwort angegeben ist, kann sich der Benutzer
-  # aber nicht anmelden. Er hat dann sozusagen keinen Account.
-  
-  validates_uniqueness_of  :alias, :if => Proc.new { |user| ! user.alias.blank? }
-  validates_format_of      :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
+  validates_presence_of     :first_name, :last_name, :alias
+  validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
+  validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
   validates_confirmation_of :new_password, :if => Proc.new{ |user| ! user.new_password.blank? }
+                            # Ein Passwort muss nicht zwangsläufig angegeben werden. Wenn kein Passwort angegeben ist, 
+                            # kann sich der Benutzer aber nicht anmelden. Er hat dann sozusagen keinen Account.
 
-  after_save               :save_email
-  before_save              :encrypt_password_if_necessary, :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
+  has_many                  :profile_fields, :autosave => true
+
+  before_save               :encrypt_password_if_necessary, :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
+  after_save                Proc.new { |user| user.profile.save }
+
+
+  def name
+    first_name + " " + last_name
+  end
+
+  def profile
+    @profile = Profile.new( self ) unless @profile
+    return @profile
+  end
 
   def alias
     @alias = Alias.new( read_attribute( :alias ), :user => self ) unless @alias.kind_of? Alias
     return @alias
   end
-
   def alias=( a )
     @alias = a
     write_alias_attribute
@@ -32,25 +41,11 @@ class User < ActiveRecord::Base
     return @new_password
   end
 
-  def name
-    first_name + " " + last_name
-  end
-
   def email
-    begin
-      @email = email_profile_field.value unless @email
-    rescue
-      @email = nil
-    end
-    return @email
+    profile.email
   end
-  def email=(email)
-    @email = email
-    # Dieser Wert wird erst später gesichert, wenn User.save() aufgerufen wird.
-  end
-
-  def profile_fields
-    ProfileField.find( :all, :conditions => "user_id = '#{id}'" ) 
+  def email=( email )
+    profile.email = email
   end
 
   def capitalize_name
@@ -106,25 +101,6 @@ class User < ActiveRecord::Base
   end
 
   private
-
-  def email_profile_field
-    ProfileField.find( :first, :conditions => "user_id='#{id}' AND type='Email'" )
-  end
-
-  def save_email
-    if @email
-      unless @email.blank?
-        pf = email_profile_field
-        unless pf
-          pf = ProfileField.new( :user_id => id, :type => "Email", :label => "E-Mail" )
-        end
-        unless pf.value == @email
-          pf.value = @email
-          pf.save
-        end
-      end
-    end
-  end
 
   def write_alias_attribute
     write_attribute :alias, @alias
@@ -221,4 +197,5 @@ class Password < UserPropertyString
   end
   
 end
+
 
