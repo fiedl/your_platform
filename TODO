@@ -1,5 +1,15 @@
 
-# TODO:
-# - Authentication class
-# - Account class
-# - Profiles controller
+TODO:
+- Authentication class
+- Account class
+- Profiles controller
+- Startpage controller
+- Navigation
+- Hierarchy
+- Groups
+- Access Control
+
+Dokumentation:
+- rake doc:app
+- http://yardoc.org/
+- Rails API einschließen: http://stackoverflow.com/questions/1202060/how-do-i-generate-rdoc-for-all-of-rails
