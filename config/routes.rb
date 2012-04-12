@@ -1,13 +1,11 @@
 Wingolfsplattform::Application.routes.draw do 
 
-  get "sessions/new"
 
-  get "users/new"
+  resources :sessions
+
   match "users/new/:alias" => "users#new"
+  resources :users
 
-  get "users/show"
-
-  get "users/index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
