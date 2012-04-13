@@ -8,13 +8,18 @@
 <% end %>
 
 <% for title,profile_fields in @profile_field_groups %>
-<%= content_box :heading => title do %>
-<ul>
-  <% for pf in profile_fields %>
-  <li><%=h "#{pf.label}: #{pf.value}" %></li>
+  <%= content_box :heading => title do %>
+    <% if title == "Kontaktinformationen" %>
+      <span style="display:inline-block;float:right;width:50%;height:200px;">
+        <%= gmaps4rails @gmaps4rails_json %>
+      </span>
+    <% end %>
+    <dl>
+      <% for pf in profile_fields %>
+        <dt><%=h pf.label %></dt>
+	<dd><%=h pf.value %></dd>
+      <% end %>
+    </dl>
   <% end %>
-</ul>
 <% end %>
-<% end %>
-
 

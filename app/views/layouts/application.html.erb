@@ -10,7 +10,7 @@
   <% %w(global).each do |file_title|
     concat stylesheet_link_tag file_title, :media => "screen"
   end #jquery.fancybox-1.3.4 jquery-ui-1.8.16.custom datatables/jquery.dataTables_themeroller global backend %>
-
+  <%= yield :head %>
 </head>
 <body class="<%= controller.controller_name %>">
 
@@ -96,6 +96,8 @@
     </div>
     <div id="footer_line"></div>
   </div>
+
+  <%= yield :scripts %>
 
 </body>
 </html>

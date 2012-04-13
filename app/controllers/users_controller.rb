@@ -20,6 +20,14 @@ class UsersController < ApplicationController
         'Informationen zum Beruf' => profile_fields_of_one_of_these_types( [ "Job", "Competence" ] ),
         'Vereine und Organisationen' => profile_fields_of_this_type( "Organisation" ),
       }
+
+      # GoogleMaps
+      @test = ""
+      @gmaps4rails_json = profile_fields_of_this_type( "Address" ).to_gmaps4rails do |pf|
+        @test += pf.value + "   "
+        "\"Test\": \"#{pf.value}\""
+      end
+      
     else
       @title = "Benutzer: #{@alias}"
       @profile_field_groups = {}
