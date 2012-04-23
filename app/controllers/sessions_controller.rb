@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
     begin
       @current_user = User.authenticate( params[ :login_name ], params[ :password ] )
       if @current_user
-        @session.current_user = @current_user
+        @session.login @current_user
         redirect_to :controller => "users", :action => "show", :alias => @current_user.alias
       end
     rescue => exception
@@ -22,8 +22,19 @@ class SessionsController < ApplicationController
     end
   end
 
+  def logout
+    @session.logout
+    redirect_after_logout
+  end
+
   def destroy
     @session.destroy
+    redirect_after_logout
+  end
+
+  private
+
+  def redirect_after_logout
     flash[ :notice ] = t :good_bye
     redirect_to :action => "new"
   end
