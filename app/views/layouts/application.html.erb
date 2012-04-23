@@ -54,10 +54,20 @@
     <div id="contentBgLayer2">
       <div id="contentBgLayer3">
         <div id="content_wrapper">
-          <div id="breadcrumb">
-	    Breadcrumb
-            <div class="clear"></div>
-          </div>
+          <div id="toolbar">
+	    <span id="breadcrumb">
+	      Breadcrumb
+	    </span>
+	    <span id="site_tools">
+	      <%= link_to ( 
+		    "Bearbeiten " +
+		    image_tag( '../images/tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
+		  ).html_safe,
+		  action: "edit"
+	      %>
+	      
+	    </span>
+	  </div>
 	  <div id="content">
             <div class="content_twoCols content_twoCols-20-80">
               <div class="content_twoCols_left">

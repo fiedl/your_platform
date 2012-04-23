@@ -1,0 +1,89 @@
+# Place all the behaviors and hooks related to the matching controller here.
+# All this logic will automatically be available in application.js.
+# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+
+jQuery ->
+
+  # Alle Profilfelder auf der ganzen Seite werden durchgegangen:
+  $( ".profile_field" ).each( ->
+
+    # Die íd des Profilfeldes ist im id-Attribut des Spans gespeichert.
+    id = $(this).attr( 'id' ).replace( "profile_field_", "" )
+
+    # Die Url des Ajax-Aufrufs ist im Url-Attribut des Spans gespeichert.
+    show_url = $(this).attr( 'url' )
+    edit_url = show_url.replace( "show", "edit" )
+    update_url = show_url.replace( "show", "update" )
+
+    # Per Ajax wird der Show-View geladen. Wenn dies hier fehlt,
+    # werden die Profilfelder auf den Profilseiten nicht gefüllt.
+    $(this).load( show_url )
+
+    # Methoden zum Anzeigen, Bearbeiten, etc. hinzufügen.
+#    $.fn.edit = () ->
+#      $(this).load( edit_url )
+
+        # Aber das macht Blödsinn. Das fügt nämlich eine globale Funktion hinzu; nicht zu diesem Objekt.
+        # So geht die url verloren.
+
+    # Ein Doppelklick auf ein Profilfeld löst den Bearbeiten-Modus
+    # für dieses Feld aus.
+    $(this).dblclick( ->
+
+      # Wenn das Feld schon im Bearbeiten-Modus ist,
+      # die Ereignisse nicht nocheinmal zuweisen.
+      return if $(this).find( ".edit" ).size() > 0
+
+      $(this).load( edit_url, ->
+
+        # Entfernen-Button
+        $(this).find( ".remove_button" ).click( (event) ->
+          $.ajax(
+            url: $(this).attr( 'href' ),
+            type: 'DELETE'
+          )
+          profile_field( id ).hide( 'blind' )
+          clear_events_on_exit( id )
+          event.preventDefault()
+        )
+      )
+
+      # Ein Klick außerhalb lässt speichern.
+      $(this).bind( "clickoutside", ->
+        save_and_exit( id, update_url )
+      )
+
+      # ESC bricht ab.
+      $(this).keyup( (event) ->
+        if( event.keyCode == 27 )
+          exit_edit_mode( id, show_url )
+        if( event.keyCode == 13 )
+          save_and_exit( id, update_url )
+      )
+
+    )
+
+  )
+
+  # Feld speichern und Bearbeiten-Modus verlassen,
+  save_and_exit = ( id, update_url ) ->
+    profile_field( id ).load( update_url,
+      profile_field( id ).find( "form" ).serialize()
+    )
+    clear_events_on_exit( id )
+
+  # Bearbeiten-Modus verlassen, ohne zu speichern.
+  exit_edit_mode = ( id, show_url ) ->
+    profile_field( id ).load( show_url )
+    clear_events_on_exit( id )
+
+  # Ereignis-Bindungen lösen, wenn der Bearbeiten-Modus verlassen wird.
+  # Sonst würden die Ereignisse weiterhin aufgerufen werden.
+  clear_events_on_exit = ( id ) ->
+    profile_field( id ).keyup()
+    profile_field( id ).bind( "clickoutside", null )
+
+  profile_field = ( id ) ->
+    $( "#profile_field_" + id )
+
+

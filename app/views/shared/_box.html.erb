@@ -1,6 +1,13 @@
 <div class="box">
   <div class="minimize"></div>
-  <div class="head"><h1><%=h heading %></h1></div>
+  <div class="head">
+    <span class="box_toolbar">
+      <%= image_tag '../images/tools/cancel.png', alt: t( :cancel ), title: t( :cancel ), class: "button box_cancel_button hidden" %>
+      <%= image_tag '../images/tools/save.png', alt: t( :save ), title: t( :save ), class: "button box_save_button hidden" %>
+      <%= image_tag '../images/tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button box_edit_button hidden" %>
+    </span>
+    <h1><%=h heading %></h1>
+  </div>
   <div class="divider"></div>
   <div class="content">
     <%=h content %>
