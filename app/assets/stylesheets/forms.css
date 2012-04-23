@@ -28,6 +28,11 @@ input[type=text], input[type=password], .text, .password {
     padding:1px 3px;
 }
 
+input.text.label {
+    background: transparent;
+    width: 100px;
+}
+
 form .error_message {
     display: inline;
     color: red;

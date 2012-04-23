@@ -1,11 +1,11 @@
 Wingolfsplattform::Application.routes.draw do 
 
 
+
   match "sessions/logout" => "sessions#logout"
   resources :sessions
 
   match "users/new/:alias" => "users#new"
-  resources :users
 
 
   # The priority is based upon order of creation:
@@ -19,7 +19,9 @@ Wingolfsplattform::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
-  match 'profile/:alias' => 'users#show', :as => :profile
+#  match 'profile/:alias' => 'users#show', :as => :profile
+  match ':alias' => 'users#show', :as => :profile
+
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
@@ -65,5 +67,8 @@ Wingolfsplattform::Application.routes.draw do
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  match ':controller(/:action(/:id))(.:format)'
+  match 'controllers/:controller(/:action(/:id))(.:format)'
+
+  match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
+
 end

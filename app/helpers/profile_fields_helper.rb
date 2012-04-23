@@ -1,0 +1,2 @@
+module ProfileFieldsHelper
+end

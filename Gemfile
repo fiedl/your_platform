@@ -45,3 +45,6 @@ gem 'rails-i18n'
 
 # GoogleMaps
 gem 'gmaps4rails'
+
+# jQuery UI
+gem 'jquery-ui-rails'

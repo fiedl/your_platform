@@ -1,0 +1,8 @@
+# -*- coding: utf-8 -*-
+
+# Hilfsmodul für editierbare Bereiche, z.B. Profilfelder etc.
+module EditableHelper
+
+  
+
+end

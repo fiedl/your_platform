@@ -16,8 +16,12 @@
     <% end %>
     <dl>
       <% for pf in profile_fields %>
-        <dt><%=h pf.label %></dt>
-	<dd><%=h pf.value %></dd>
+      
+        <span class="profile_field">
+	  <!-- Im Moment werden die Profilfelder nur von jQuery gefüllt. Die Füllung muss aber noch in einen Helper ausgelagert werden, damit es auch auf mobilen Geräten funktioniert. -->
+	  <%= editable_span_tag( controller: 'profile_fields', id: pf.id ) %>
+	</span>
+
       <% end %>
     </dl>
   <% end %>

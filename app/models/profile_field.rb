@@ -22,7 +22,6 @@ class Address < ProfileField
 
   # Google Maps integration
   # see: http://rubydoc.info/gems/gmaps4rails/
-
   acts_as_gmappable 
 
   def gmaps4rails_address
@@ -35,6 +34,10 @@ class Address < ProfileField
 
   def longitude
     geo_information :lng
+  end
+
+  def gmaps
+    true
   end
 
   def geo_information( key )
