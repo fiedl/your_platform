@@ -23,7 +23,7 @@
 	</li>
         <li><%= link_to t( :my_profile ), :controller => "users", :action => "show", :alias => @current_user.alias %> </li>
         <li class="last">
-	  <%= link_to t( :logout ), :controller => "sessions", :action => "destroy" %>
+	  <%= link_to t( :logout ), :controller => "sessions", :action => "logout" %>
 	</li>
       </div>
       <div class="clear"></div>

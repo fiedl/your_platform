@@ -1,6 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
 
+  match "sessions/logout" => "sessions#logout"
   resources :sessions
 
   match "users/new/:alias" => "users#new"
