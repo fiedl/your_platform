@@ -30,14 +30,29 @@ class Address < ProfileField
   end
 
   def latitude
-    Gmaps4rails.geocode( self.value ).first[ :lat ]
+    geo_information :lat
   end
 
   def longitude
-    Gmaps4rails.geocode( self.value ).first[ :lng ]
+    geo_information :lng
   end
 
-  
+  def geo_information( key )
+    @geo_information = geo_information_from_gmaps unless @geo_information
+    @geo_information[ key ] if @geo_information
+  end
+
+  private
+
+  def geo_information_from_gmaps
+    begin
+      Gmaps4rails.geocode( self.gmaps4rails_address ).first
+    rescue
+      return nil
+      # Wenn keine Verbindung zu GoogleMaps besteht, wird hier ein Fehler auftreten,
+      # der die Anwendung jedoch nicht beenden sollte. 
+    end
+  end
 
 end
 
