@@ -1,3 +1,9 @@
+GIT
+  remote: git://github.com/resgraph/acts-as-dag.git
+  revision: b1d64a1666d7afdaa3eb31024a7ef320a3cc45c6
+  specs:
+    acts-as-dag (2.5.7)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -111,6 +117,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  acts-as-dag!
   coffee-rails (~> 3.2.1)
   gmaps4rails
   jquery-rails

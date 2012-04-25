@@ -1,0 +1,8 @@
+module MenuHelper
+  
+  # Generates html code for a vertical menu, representing the given object as root menu element.
+  def submenu_for( object )
+    
+  end
+    
+end

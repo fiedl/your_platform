@@ -1,0 +1,4 @@
+class Page < ActiveRecord::Base
+  attr_accessible :content, :title
+  has_dag_links   link_class_name: 'DagLink'
+end

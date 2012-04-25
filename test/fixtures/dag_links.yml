@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  ancestor_id: 1
+  ancestor_type: MyString
+  descendant_id: 1
+  descendant_type: MyString
+  direct: false
+  count: 1
+
+two:
+  ancestor_id: 1
+  ancestor_type: MyString
+  descendant_id: 1
+  descendant_type: MyString
+  direct: false
+  count: 1

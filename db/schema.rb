@@ -11,7 +11,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120406225409) do
+ActiveRecord::Schema.define(:version => 20120425162644) do
+
+  create_table "dag_links", :force => true do |t|
+    t.integer  "ancestor_id"
+    t.string   "ancestor_type"
+    t.integer  "descendant_id"
+    t.string   "descendant_type"
+    t.boolean  "direct"
+    t.integer  "count"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "pages", :force => true do |t|
+    t.string   "title"
+    t.text     "content"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "profile_fields", :force => true do |t|
     t.integer  "user_id"

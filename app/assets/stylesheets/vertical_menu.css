@@ -1,34 +1,27 @@
 
-#content .subnavi,
-#content .subnavi ul{
+.vertical_menu ul {
     width:197px;
     margin:0;
     padding:0;
     list-style: none;
-}
 
-#content .subnavi{
-    background: #f8f7f5 no-repeat 1px 0;
+    margin-bottom: 15px;
+
+/*    background: #f8f7f5 no-repeat 1px 0;*/
     border-top: 1px solid #d6d3cd;
     border-bottom: 1px solid #d6d3cd;
+
+/*    background: #a15d5a;*/
+    background: #cccccc; 
 }
 
-#content .subnavi ul li {
-    display: list-item;
-}
-
-#content .subnavi li{
-    /*display:none;*/
-    position: relative;
-}
-
-
-#content .subnavi a{
+.vertical_menu ul * a {
     font-size:12px;
     font-weight:bold;
     text-decoration: none;
     text-transform: uppercase;
     color:#000;
+    background: #f8f7f5;
     letter-spacing: 1.3px;
     width:182px;
     padding:8px 4px 8px 10px;
@@ -36,19 +29,36 @@
     border:none;
     border-left:1px solid #d6d3cd;
     border-right:1px solid #d6d3cd;
+    margin-bottom: 1px;
 }
 
-#content .subnavi a.active {
+.vertical_menu * .root, .vertical_menu * .parent a {
+    background: #e6e6e4;    
+}
+
+.vertical_menu * .active a {
     background:#222222;
     color:#fff;
 }
 
-/* Diese Datei wurde unterhalb noch nicht auf 90% skaliert. */
+
+
 /*
-#content .parent {
-    background: #e6e6e4;
+
+#content .subnavi ul li {
+    display: list-item;
 }
 
+#content .subnavi li{
+    position: relative;
+}
+
+
+
+*/
+
+/* Diese Datei wurde unterhalb noch nicht auf 90% skaliert. */
+/*
 
 #content .subnavi .sub{
     background:#e6e6e4;
