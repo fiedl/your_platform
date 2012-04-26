@@ -1,0 +1,20 @@
+<h1><%= @title %></h1>
+<p>Gruppenseite dieser Gruppe</p>
+
+<h1><%=t :sub_groups %></h1>
+<div>
+  <ul>
+    <% for group in @groups do %>
+      <%= group_list_item group %>
+    <% end %>
+  </ul>
+</div>
+
+<h1><%=t :members %></h1>
+<div>
+  <ul>
+    <% for user in @users do %>
+      <li><%= link_to user.name, controller: 'users', action: 'show', alias: user.alias %></li>
+    <% end %>
+  </ul>
+</div>

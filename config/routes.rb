@@ -2,6 +2,10 @@ Wingolfsplattform::Application.routes.draw do
 
 
 
+  get "groups/index"
+
+  get "groups/show"
+
   match "sessions/logout" => "sessions#logout"
   resources :sessions
 

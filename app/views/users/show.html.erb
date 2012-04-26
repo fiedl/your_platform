@@ -1,14 +1,16 @@
-<%= content_box :heading => @title do %>
-<% if @user %>
-<p>Profil-Informationen</p>
-<% else %>
-<p>Der angegebene Benutzer ist im System nicht vorhanden.</p>
-<%= link_to( "Diesen Benutzer anlegen", :action => "new", :alias => @alias ) %>
-<% end %>
-<% end %>
+<h1><%=h @title %></h1>
+<div>
+  <% if @user %>
+    <p>Profil-Informationen</p>
+  <% else %>
+    <p>Der angegebene Benutzer ist im System nicht vorhanden.</p>
+    <%= link_to( "Diesen Benutzer anlegen", :action => "new", :alias => @alias ) %>
+  <% end %>
+</div>
 
 <% for title,profile_fields in @profile_field_groups %>
-  <%= content_box :heading => title do %>
+  <h1><%=h title %></h1>
+  <div>
     <% if title == "Kontaktinformationen" %>
       <span style="display:inline-block;float:right;width:50%;height:200px;">
         <%= gmaps4rails @gmaps4rails_json %>
@@ -24,6 +26,10 @@
 
       <% end %>
     </dl>
-  <% end %>
+  </div>
 <% end %>
 
+<h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
+<div>
+  <%= groups_of_user_ul @user %>
+</div>

@@ -14,7 +14,7 @@ class User < ActiveRecord::Base
 
   has_many                  :profile_fields, :autosave => true
 
-  has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page), descendant_class_names: %w(Page)
+  has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 
   before_save               :encrypt_password_if_necessary, :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   after_save                Proc.new { |user| user.profile.save }

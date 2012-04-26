@@ -1,0 +1,8 @@
+<h1><%=h @title %></h1>
+<div>
+  <ul>
+    <% for group in @groups do %>
+      <%= group_list_item group %>
+    <% end %>
+  </ul>
+</div>
