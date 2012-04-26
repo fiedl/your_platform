@@ -33,3 +33,18 @@
 <div>
   <%= groups_of_user_ul @user %>
 </div>
+
+<h1>Beziehungen</h1>
+<div>
+  <%= relationships_of_user_ul @user %>
+</div>
+
+<h1>Zugangsdaten</h1>
+<div>
+  <dl>
+    <dt>Identifikation möglich mit folgenden Daten:</dt>
+    <dd>Alias: <%=h @user.alias %></dd>
+    <dd>Name: <%=h @user.name %></dd>
+    <dd>TODO: Automatisch alle möglichen Identifikationsdaten auflisten</dd>
+  </dl>
+</div>

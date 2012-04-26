@@ -1,0 +1,12 @@
+module RelationshipHelper
+  
+  def relationship_li( id )
+    relationship = Relationship.find_by_id( id )
+    who = relationship.parent_user
+    of = relationship.child_user
+    content_tag :li do
+      "#{who.name} ist #{relationship.name} von #{of.name}"
+    end
+  end
+
+end

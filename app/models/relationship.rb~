@@ -1,0 +1,20 @@
+# -*- coding: undecided -*-
+class Relationship < ActiveRecord::Base
+  attr_accessible :name
+
+  has_dag_links link_class_name: 'RelationshipDagLink', ancestor_class_name: %w(User), descendant_class_names: %w(User)
+
+  # Neue Beziehung hinzufügen via:
+  # Relationship.create( who: first_user, is: :leibbursch, of: second_user )
+  def initialize( params )
+    who = params[ :who ] # first user
+    is = params[ :is ]   # name of the relation
+    of = params[ :of ]   # second user
+    if is
+      super { name: is } # Beziehung eintragen mit dem Namen
+      who.child_relationships << self 
+      of.parent_relationships << self
+    end
+  end
+
+end

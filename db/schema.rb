@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426023322) do
+ActiveRecord::Schema.define(:version => 20120426043542) do
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"
@@ -42,6 +42,23 @@ ActiveRecord::Schema.define(:version => 20120426023322) do
     t.string   "label"
     t.string   "type"
     t.string   "value"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  create_table "relationship_dag_links", :force => true do |t|
+    t.integer  "ancestor_id"
+    t.string   "ancestor_type"
+    t.integer  "descendant_id"
+    t.string   "descendant_type"
+    t.boolean  "direct"
+    t.integer  "count"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "relationships", :force => true do |t|
+    t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
