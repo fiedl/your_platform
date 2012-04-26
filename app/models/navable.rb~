@@ -1,0 +1,17 @@
+module Navable
+  def is_navable
+    has_one                :nav_node, as: :navable, dependent: :destroy
+    include InstanceMethods
+  end
+  module InstanceMethods
+    def nav_node
+      node = super
+      node = create_nav_node unless node
+      return node
+    end
+
+    def navnode
+      nav_node
+    end
+  end
+end

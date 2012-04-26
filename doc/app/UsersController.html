@@ -111,17 +111,49 @@
   
     <li><a href="./Custom.html">Custom</a>
   
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
+  
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -184,7 +216,7 @@
 
           
           <div class="method-source-code" id="create-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 35</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>] )
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">save</span>
@@ -253,7 +285,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 28</span>
+            <pre><span class="ruby-comment"># File app/controllers/users_controller.rb, line 36</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">new</span>
   <span class="ruby-ivar">@title</span> = <span class="ruby-identifier">t</span> <span class="ruby-value">:create_user</span>
   <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>
@@ -300,6 +332,14 @@
       <span class="ruby-string">'Informationen zum Beruf'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">profile_fields_of_one_of_these_types</span>( [ <span class="ruby-string">&quot;Job&quot;</span>, <span class="ruby-string">&quot;Competence&quot;</span> ] ),
       <span class="ruby-string">'Vereine und Organisationen'</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">profile_fields_of_this_type</span>( <span class="ruby-string">&quot;Organisation&quot;</span> ),
     }
+
+    <span class="ruby-comment"># GoogleMaps</span>
+    <span class="ruby-ivar">@test</span> = <span class="ruby-string">&quot;&quot;</span>
+    <span class="ruby-ivar">@gmaps4rails_json</span> = <span class="ruby-identifier">profile_fields_of_this_type</span>( <span class="ruby-string">&quot;Address&quot;</span> ).<span class="ruby-identifier">to_gmaps4rails</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pf</span><span class="ruby-operator">|</span>
+      <span class="ruby-ivar">@test</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">pf</span>.<span class="ruby-identifier">value</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;   &quot;</span>
+      <span class="ruby-node">&quot;\&quot;Test\&quot;: \&quot;#{pf.value}\&quot;&quot;</span>
+    <span class="ruby-keyword">end</span>
+    
   <span class="ruby-keyword">else</span>
     <span class="ruby-ivar">@title</span> = <span class="ruby-node">&quot;Benutzer: #{@alias}&quot;</span>
     <span class="ruby-ivar">@profile_field_groups</span> = {}

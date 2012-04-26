@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426043542) do
+ActiveRecord::Schema.define(:version => 20120426090436) do
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"
@@ -28,6 +28,20 @@ ActiveRecord::Schema.define(:version => 20120426043542) do
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "nav_nodes", :force => true do |t|
+    t.string   "url_component"
+    t.string   "breadcrumb_item"
+    t.string   "menu_item"
+    t.boolean  "slim_breadcrumb"
+    t.boolean  "slim_url"
+    t.boolean  "slim_menu"
+    t.boolean  "hidden_menu"
+    t.integer  "navable_id"
+    t.string   "navable_type"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
   end
 
   create_table "pages", :force => true do |t|

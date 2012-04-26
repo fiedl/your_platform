@@ -1,7 +1,8 @@
+# -*- coding: utf-8 -*-
 module RelationshipsHelper
 
   def relationships_of_user_ul( user )
-    relationships = user.parent_relationships + user.child_relationships
+    relationships = user.relationships #parent_relationships + user.child_relationships
     content_tag :ul do
        (relationships.collect do |relationship|
           relationship_li relationship

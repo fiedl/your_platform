@@ -1,7 +1,9 @@
 class Page < ActiveRecord::Base
-  attr_accessible :content, :title
-  has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Page User), descendant_class_names: %w(Page User)
+  attr_accessible                :content, :title
+  has_dag_links                  link_class_name: 'DagLink', ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
 
+  is_navable
+  
   def self.find_root
     p = Page.first
     if p.root?

@@ -15,7 +15,9 @@ class User < ActiveRecord::Base
   has_many                  :profile_fields, :autosave => true
 
   has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
-  has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship)
+  has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'
+
+  is_navable
 
   before_save               :encrypt_password_if_necessary, :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   after_save                Proc.new { |user| user.profile.save }
@@ -23,6 +25,14 @@ class User < ActiveRecord::Base
 
   def name
     first_name + " " + last_name
+  end
+
+  # Diese Funktion gibt eine sinnvolle Beschriftung des Benutzers zurück, z.B. für die Beschriftung von Menüpunkten, 
+  # die diesen Benutzer repräsentieren. Damit ist der Aufruf der gleiche wie etwa beim Page-Modell. 
+  # <tt>@title = page.title</tt>, <tt>@title = user.title</tt>.
+  # Die Funktion gibt *nicht* den akademischen Titel oder die Anrede des Benutzers zurück.
+  def title
+    name # TODO Später hier vmlt. die Aktivitätszahl hinzufügen.
   end
 
   def profile
@@ -65,6 +75,10 @@ class User < ActiveRecord::Base
   def deactivate_account
     # Der Account wird deaktiviert, indem das verschlüsselte Passwort entfernt wird.
     self.encrypted_password = ""
+  end
+
+  def relationships
+    relationships_parent_relationships + relationships_child_relationships
   end
 
   def self.authenticate( login_name, password )

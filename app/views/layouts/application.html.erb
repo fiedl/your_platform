@@ -57,7 +57,7 @@
         <div id="content_wrapper">
           <div id="toolbar">
 	    <span id="breadcrumb">
-	      Breadcrumb
+	      <%= breadcrumb_ul %>
 	    </span>
 	    <span id="site_tools">
 	      <%= link_to ( 
@@ -74,8 +74,7 @@
               <div class="content_twoCols_left">
 		<div class="vertical_menu">
 		  <ul>
-		    <%= vertical_menu root: Page.find_root, active_element: Page.last %>
-		    <% # = submenu_for User.first %>
+		    <%= vertical_menu %>
 		  </ul>
 		  <ul>
 		    <li><%= link_to "Alle Benutzer auflisten", { :controller => "users" }, { :class => (action_name == "index" ? "active" : "" ) } %></li>

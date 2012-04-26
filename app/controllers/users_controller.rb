@@ -9,6 +9,7 @@ class UsersController < ApplicationController
 
   def show
     if @user
+      @navable = @user
       @profile_fields = @user.profile_fields
       @title = @user.name
     

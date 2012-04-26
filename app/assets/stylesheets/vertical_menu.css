@@ -32,7 +32,7 @@
     margin-bottom: 1px;
 }
 
-.vertical_menu * .root, .vertical_menu * .parent a {
+.vertical_menu * .root, .vertical_menu * .ancestor a {
     background: #e6e6e4;    
 }
 

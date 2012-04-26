@@ -20,9 +20,12 @@ class GroupsController < ApplicationController
 
   def show
     @group = Group.find_by_id params[ :id ]
-    @title = @group.name
-    @groups = @group.descendant_groups
-    @users = @group.descendant_users
+    if @group
+      @navable = @group
+      @title = @group.name
+      @groups = @group.descendant_groups
+      @users = @group.descendant_users
+    end
   end
 
 end

@@ -1,7 +1,13 @@
 class Group < ActiveRecord::Base
   attr_accessible :name
 
-  has_dag_links    link_class_name: 'DagLink', ancestor_class_names: %w(Group), descendant_class_names: %w(Group User)
+  has_dag_links    link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
+
+  is_navable
+
+  def title
+    self.name
+  end
 
   def self.jeder
     g = Group.first

@@ -88,6 +88,8 @@
     
     <li><a href="#method-i-profile">#profile</a>
     
+    <li><a href="#method-i-title">#title</a>
+    
   </ul>
 </nav>
 
@@ -121,17 +123,49 @@
   
     <li><a href="./Custom.html">Custom</a>
   
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
+  
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -214,7 +248,7 @@
 
           
           <div class="method-source-code" id="authenticate-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 66</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 77</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">authenticate</span>( <span class="ruby-identifier">login_name</span>, <span class="ruby-identifier">password</span> )
   <span class="ruby-identifier">try_to_authenticate_by</span> = [ <span class="ruby-value">:alias</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:name</span>, <span class="ruby-value">:email</span> ]
   <span class="ruby-identifier">user</span> = <span class="ruby-keyword">nil</span>
@@ -282,7 +316,7 @@
 
           
           <div class="method-source-code" id="alias-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 29</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 40</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">alias</span>
   <span class="ruby-ivar">@alias</span> = <span class="ruby-constant">Alias</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">read_attribute</span>( <span class="ruby-value">:alias</span> ), <span class="ruby-value">:user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span> ) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@alias</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Alias</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@alias</span>
@@ -313,7 +347,7 @@
 
           
           <div class="method-source-code" id="capitalize_name-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 50</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">capitalize_name</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">first_name</span>.<span class="ruby-identifier">capitalize!</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">capitalize!</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">include?</span>( <span class="ruby-string">&quot; &quot;</span> ) <span class="ruby-comment"># &quot;de Silva&quot;</span>
@@ -345,7 +379,7 @@
 
           
           <div class="method-source-code" id="deactivate_account-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 61</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 72</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deactivate_account</span>
   <span class="ruby-comment"># Der Account wird deaktiviert, indem das verschlüsselte Passwort entfernt wird.</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encrypted_password</span> = <span class="ruby-string">&quot;&quot;</span>
@@ -376,7 +410,7 @@
 
           
           <div class="method-source-code" id="email-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 43</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 54</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">email</span>
   <span class="ruby-identifier">profile</span>.<span class="ruby-identifier">email</span>
 <span class="ruby-keyword">end</span></pre>
@@ -406,7 +440,7 @@
 
           
           <div class="method-source-code" id="email-3D-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 46</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 57</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">email=</span>( <span class="ruby-identifier">email</span> )
   <span class="ruby-identifier">profile</span>.<span class="ruby-identifier">email</span> = <span class="ruby-identifier">email</span>
 <span class="ruby-keyword">end</span></pre>
@@ -436,7 +470,7 @@
 
           
           <div class="method-source-code" id="has_account-3F-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 56</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 67</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_account?</span>
   <span class="ruby-comment"># Wenn kein Passwort gespeichert ist, hat der Benutzer keinen Account.</span>
   <span class="ruby-operator">!</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encrypted_password</span>.<span class="ruby-identifier">blank?</span>
@@ -467,7 +501,7 @@
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 20</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 23</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">first_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">last_name</span>
 <span class="ruby-keyword">end</span></pre>
@@ -497,7 +531,7 @@
 
           
           <div class="method-source-code" id="profile-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 24</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 35</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">profile</span>
   <span class="ruby-ivar">@profile</span> = <span class="ruby-constant">Profile</span>.<span class="ruby-identifier">new</span>( <span class="ruby-keyword">self</span> ) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@profile</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@profile</span>
@@ -510,6 +544,41 @@
 
         
       </div><!-- profile-method -->
+
+    
+      <div id="method-i-title" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">title</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Diese Funktion gibt eine sinnvolle Beschriftung des Benutzers zurück, z.B.
+für die Beschriftung von Menüpunkten,  die diesen Benutzer repräsentieren.
+Damit ist der Aufruf der gleiche wie etwa beim Page-Modell.  <code>@title =
+page.title</code>, <code>@title = user.title</code>. Die Funktion gibt
+<strong>nicht</strong> den akademischen Titel oder die Anrede des Benutzers
+zurück.</p>
+          
+
+          
+          <div class="method-source-code" id="title-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">title</span>
+  <span class="ruby-identifier">name</span> <span class="ruby-comment"># TODO Später hier vmlt. die Aktivitätszahl hinzufügen.</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- title-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- title-method -->
 
     
     </section><!-- public-instance-method-details -->

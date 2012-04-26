@@ -64,7 +64,25 @@
 </nav>
 
     
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
     
+    <li><a href="#method-i-geo_information">#geo_information</a>
+    
+    <li><a href="#method-i-gmaps">#gmaps</a>
+    
+    <li><a href="#method-i-gmaps4rails_address">#gmaps4rails_address</a>
+    
+    <li><a href="#method-i-latitude">#latitude</a>
+    
+    <li><a href="#method-i-longitude">#longitude</a>
+    
+  </ul>
+</nav>
+
   </div>
 
   <div id="project-metadata">
@@ -95,17 +113,49 @@
   
     <li><a href="./Custom.html">Custom</a>
   
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
+  
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -148,6 +198,163 @@
 
     <!-- Methods -->
     
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-geo_information" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">geo_information</span><span
+            class="method-args">( key )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="geo_information-source">
+            <pre><span class="ruby-comment"># File app/models/profile_field.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">geo_information</span>( <span class="ruby-identifier">key</span> )
+  <span class="ruby-ivar">@geo_information</span> = <span class="ruby-identifier">geo_information_from_gmaps</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@geo_information</span>
+  <span class="ruby-ivar">@geo_information</span>[ <span class="ruby-identifier">key</span> ] <span class="ruby-keyword">if</span> <span class="ruby-ivar">@geo_information</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- geo_information-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- geo_information-method -->
+
+    
+      <div id="method-i-gmaps" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gmaps</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="gmaps-source">
+            <pre><span class="ruby-comment"># File app/models/profile_field.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gmaps</span>
+  <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- gmaps-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- gmaps-method -->
+
+    
+      <div id="method-i-gmaps4rails_address" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">gmaps4rails_address</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="gmaps4rails_address-source">
+            <pre><span class="ruby-comment"># File app/models/profile_field.rb, line 27</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">gmaps4rails_address</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">value</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- gmaps4rails_address-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- gmaps4rails_address-method -->
+
+    
+      <div id="method-i-latitude" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">latitude</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="latitude-source">
+            <pre><span class="ruby-comment"># File app/models/profile_field.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">latitude</span>
+  <span class="ruby-identifier">geo_information</span> <span class="ruby-value">:lat</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- latitude-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- latitude-method -->
+
+    
+      <div id="method-i-longitude" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">longitude</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="longitude-source">
+            <pre><span class="ruby-comment"># File app/models/profile_field.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">longitude</span>
+  <span class="ruby-identifier">geo_information</span> <span class="ruby-value">:lng</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- longitude-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- longitude-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
   </section><!-- 5Buntitled-5D -->
 
 </div><!-- documentation -->
