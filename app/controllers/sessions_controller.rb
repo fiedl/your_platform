@@ -15,6 +15,9 @@ class SessionsController < ApplicationController
       if @current_user
         @session.login @current_user
         redirect_to :controller => "users", :action => "show", :alias => @current_user.alias
+      else
+        flash[ :error ] = t( :login_failed )
+        render :action => "new"
       end
     rescue => exception
       flash[ :error ] = t exception

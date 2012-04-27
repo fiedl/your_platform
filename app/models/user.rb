@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   has_many                  :profile_fields, :autosave => true
 
-  has_one                   :user_account, autosave: true
+  has_one                   :user_account, autosave: true, inverse_of: :user
 
   has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
   has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'

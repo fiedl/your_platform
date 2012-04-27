@@ -13,8 +13,8 @@ class UserPassword < UserPropertyString
     self.replace self.encrypt
   end
 
-  def valid_against_encrypted_password?( encrypted_password, salt )
-    encrypted_password == encrypt_string( self, salt )
+  def valid_against_encrypted_password?( encrypted_password, _salt )
+    encrypted_password == encrypt_string( self, _salt )
   end
 
   def self.generate
@@ -25,23 +25,27 @@ class UserPassword < UserPropertyString
     replace self.class.generate
   end
 
+  def self.generate_salt( user )
+    Digest::SHA1.hexdigest( "--#{Time.now}--#{user.name}--" )
+  end
+
+  def user
+    @user
+  end
+
   private
 
   def encrypt_string( string, _salt )
     if string and _salt
-      Digest::SHA1.hexdigest( "--#{_salt}--#{string}--" )
+      return Digest::SHA1.hexdigest( "--#{_salt}--#{string}--" )
+    else
+      raise 'no string to encrypt given' unless string
+      raise 'no salt given for encryption' unless _salt
     end
   end
 
   def salt
-    if @user
-      @user.account.salt = new_salt unless @user.account.salt
-      return @user.account.salt
-    end
-  end
-
-  def new_salt
-    Digest::SHA1.hexdigest( "--#{Time.now}--#{@user.name}--" )
+    return @user.account.salt if @user
   end
 
 end

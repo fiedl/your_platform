@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 class UserAccount < ActiveRecord::Base
-  # attr_accessible :title, :body
+  
+  attr_accessible :encrypted_password
+  
+#  validates_presence_of    :salt, :encrypted_password
 
-  belongs_to       :user
+  belongs_to               :user, inverse_of: :user_account
 
-  attr_accessor    :new_password
+  attr_accessor            :new_password
 
-  before_save      :encrypt_new_password_if_necessary
+  before_save              :ensure_salt_exists, :encrypt_new_password_if_necessary
 
   # Gibt das Benutzerobjekt zurück, dass zum Login-String und dem angegebenen Passwort passt. 
   # Wenn etwa zwei Benutzer den gleichen Nachnamen haben, dient also das Passwort der Identifizierung.
@@ -19,8 +22,14 @@ class UserAccount < ActiveRecord::Base
       users.each do |user| 
         authenticated_user = user if user_password_correct? user, password
       end
+    else
+      raise :no_user_found.to_s
     end
-    return authenticated_user
+    if authenticated_user
+      return authenticated_user
+    else
+      raise :wrong_password.to_s
+    end
   end
 
   def authenticate( password )
@@ -36,20 +45,26 @@ class UserAccount < ActiveRecord::Base
 
   def generate
     self.new_password.generate!
-    puts "EMAIL...."
-    
+    UserAccountMailer.welcome_email( self.user, self.new_password ).deliver
   end
 
   private
 
   def self.user_password_correct?( user, password )
     account = user.account
-    UserPassword.new( password ).valid_against_encrypted_password( account.encrypted_password, account.salt )
+    UserPassword.new( password ).valid_against_encrypted_password?( account.encrypted_password, account.salt )
   end
 
+  # Stellt sicher, dass der Salt für den Benutzer nicht leer ist. Sonst kann das Passwort nicht sicher gespeichert werden.
+  def ensure_salt_exists
+    self.salt = UserPassword.generate_salt( self.user ) unless self.salt
+  end
+
+  # Verschlüsselt das neue Passwort, sofern ein neues Passwort gesetzt ist. Wenn keines gesetzt ist, wird auch der verschlüsselte
+  # String leer bleiben.
   def encrypt_new_password_if_necessary
-    # Nur wenn ein neues Passwort gesetzt wird, wird es verschlüsselt gespeichert.
-    self.encrypted_password = new_password.encrypt unless new_password.blank?
+    ensure_salt_exists
+    self.encrypted_password = self.new_password.encrypt unless self.new_password.blank?
   end
 
 end

@@ -84,10 +84,11 @@
               <div class="content_twoCols_right">
 
 		<% if flash[ :error ] %>
-		<div class="flash_error">
-                  <%=h flash[ :error ] %>
-		</div>
+  		  <div class="flash error"><%=h flash[ :error ] %></div>
                 <% end %>   
+		<% if flash[ :notice ] %>
+		  <div class="flash notice"><%=h flash[ :notice ] %></div>
+		<% end %>
 
            	<%= convert_to_content_box { yield } %>
 
