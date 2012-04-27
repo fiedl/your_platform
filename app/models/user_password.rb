@@ -18,7 +18,7 @@ class UserPassword < UserPropertyString
   end
 
   def self.generate
-    Password.new( `pwgen -N 1 -n -c -B`.to_s[0..-2], :user => @user )
+    UserPassword.new( `pwgen -N 1 -n -c -B`.to_s[0..-2], :user => @user )
   end
 
   def generate!

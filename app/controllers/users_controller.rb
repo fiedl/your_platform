@@ -2,7 +2,6 @@
 class UsersController < ApplicationController
 
   before_filter :find_user, :except => [ :index, :new, :create ]
-  before_filter :define_form, only: [ :new, :create ]
 
   def index
     @users = User.all
@@ -44,10 +43,6 @@ class UsersController < ApplicationController
     else
       @user = User.new
     end
-  end
-
-  def define_form
-    @ask_for_attributes = [ :first_name, :last_name, :alias, :email, :create_account ]
   end
 
 end

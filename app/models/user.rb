@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   after_save                Proc.new { |user| user.profile.save }
+  after_save                :create_account_if_requested
 
 
   def name
@@ -103,6 +104,15 @@ class User < ActiveRecord::Base
 
   def generate_alias_if_necessary
     self.alias.generate! if self.alias.blank?
+  end
+
+  def create_account_if_requested
+    if self.create_account
+      self.user_account.destroy if self.user_account.id 
+      @account = self.build_user_account
+      @account.generate
+      self.create_account = false
+    end
   end
 
 end

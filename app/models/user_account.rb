@@ -34,6 +34,12 @@ class UserAccount < ActiveRecord::Base
     return @new_password
   end    
 
+  def generate
+    self.new_password.generate!
+    puts "EMAIL...."
+    
+  end
+
   private
 
   def self.user_password_correct?( user, password )
