@@ -52,3 +52,6 @@ gem 'jquery-ui-rails'
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"
+
+# Formtastic Form Helper, see: https://github.com/justinfrench/formtastic, http://rubydoc.info/gems/formtastic/frames
+gem 'formtastic'

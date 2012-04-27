@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :alias, :email, :new_password
+  attr_accessible           :first_name, :last_name, :alias, :email, :create_account
 
-  attr_accessor_with_default :create_account, false 
+  attr_accessor             :create_account
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
-  validates_presence_of     :first_name, :last_name, :alias
+  validates_presence_of     :first_name, :last_name, :alias, :email
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 

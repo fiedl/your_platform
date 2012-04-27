@@ -5,6 +5,15 @@ de:
 
   email:                         E-Mail
 
+  formtastic:
+
+    hints:
+      alias:                     Beliebige, kurze Anmelde-Kennung, z.B. 'm.mustermann'.
+      create_account:		 Wenn ein Benutzerkonto angelegt wird, wird dem neuen Benutzer ein Passwort per E-Mail zugesandt.
+
+    actions:
+      create: "%{model} anlegen"
+
   activerecord:
     models:
       user:                      Benutzer
@@ -14,4 +23,5 @@ de:
         last_name:		 Nachname
         alias:        		 Alias
         email:        		 E-Mail
+        create_account:          Benutzerkonto anlegen
 
