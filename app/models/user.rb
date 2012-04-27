@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
   # <tt>@title = page.title</tt>, <tt>@title = user.title</tt>.
   # Die Funktion gibt *nicht* den akademischen Titel oder die Anrede des Benutzers zurück.
   def title
-    name # TODO Später hier vmlt. die Aktivitätszahl hinzufügen.
+    name + "  " + aktivitaetszahl
   end
 
   def profile
@@ -98,6 +98,19 @@ class User < ActiveRecord::Base
 
   def self.authenticate( login_string, password )
     UserAccount.authenticate login_string, password 
+  end
+
+  # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
+  def corporations
+    if Group.wingolf_am_hochschulort
+      return self.parent_groups & Group.wingolf_am_hochschulort.child_groups 
+    else
+      return []
+    end
+  end
+
+  def aktivitaetszahl
+    ( self.corporations.collect { |corporation| corporation.token } ).join( " " )
   end
 
   private

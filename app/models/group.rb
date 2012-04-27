@@ -18,6 +18,10 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def self.wingolf_am_hochschulort
+    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first
+  end
+
 end
 
 class Groups 

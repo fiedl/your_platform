@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120427044338) do
+ActiveRecord::Schema.define(:version => 20120427150156) do
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"
@@ -26,8 +26,10 @@ ActiveRecord::Schema.define(:version => 20120427044338) do
 
   create_table "groups", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+    t.string   "token"
+    t.string   "extensive_name"
   end
 
   create_table "nav_nodes", :force => true do |t|

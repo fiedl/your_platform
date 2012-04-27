@@ -1,0 +1,35 @@
+
+#horizontal_nav
+  position: absolute
+  right: 25px
+  top: 83px
+
+  ul
+    margin: 0px
+    padding: 0px
+    list-style: none
+    display: block
+
+    li
+      float: left
+      margin-left: 3px
+      font-weight: bold
+      font-size: 13px
+      text-transform: uppercase
+      letter-spacing: 3px
+      padding: 6px 4px 3px 8px
+      color: #000
+
+      a
+        color: inherit
+        text-decoration: none
+
+    li
+
+    li.active
+      background: #333
+      color: #fff
+
+    li:hover
+      border-bottom: solid 2px orange
+

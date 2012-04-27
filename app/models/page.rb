@@ -13,4 +13,8 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def self.mitglieder_start
+    self.find_root.child_pages.select { |page| page.title == "Mitglieder Start" }.first
+  end
+
 end
