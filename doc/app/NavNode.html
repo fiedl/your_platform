@@ -70,7 +70,21 @@
 
   <ul class="link-list">
     
+    <li><a href="#method-i-ancestor_navables">#ancestor_navables</a>
+    
+    <li><a href="#method-i-ancestor_navables_and_own">#ancestor_navables_and_own</a>
+    
+    <li><a href="#method-i-ancestor_nodes_and_self">#ancestor_nodes_and_self</a>
+    
     <li><a href="#method-i-breadcrumb_item">#breadcrumb_item</a>
+    
+    <li><a href="#method-i-breadcrumbs">#breadcrumbs</a>
+    
+    <li><a href="#method-i-menu_item">#menu_item</a>
+    
+    <li><a href="#method-i-url">#url</a>
+    
+    <li><a href="#method-i-url_component">#url_component</a>
     
   </ul>
 </nav>
@@ -93,6 +107,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -102,6 +120,8 @@
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
+  
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
   
     <li><a href="./Custom.html">Custom</a>
   
@@ -143,6 +163,10 @@
   
     <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
   
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
     <li><a href="./Relationship.html">Relationship</a>
   
     <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
@@ -156,6 +180,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -194,6 +222,120 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
+      <div id="method-i-ancestor_navables" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ancestor_navables</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Gibt die übergeordneten navigationsfähigen Objekte zurück, beginnend mit
+dem entferntesten (root) und endend mit dem am nächsten liegenden.</p>
+          
+
+          
+          <div class="method-source-code" id="ancestor_navables-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ancestor_navables</span>
+  <span class="ruby-identifier">ancestor_navables_and_own</span>.<span class="ruby-identifier">slice</span>( <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">-2</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ancestor_navables-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ancestor_navables-method -->
+
+    
+      <div id="method-i-ancestor_navables_and_own" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ancestor_navables_and_own</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Gibt die übergeordneten navigationsfähigen Objekte (<a
+href="User.html">User</a>, <a href="Page.html">Page</a>, …) inkl. des
+eigenen Objektes als Array zurück, beginnend mit dem entferntesten (root)
+und endend mit dem eigenen Objekt.</p>
+          
+
+          
+          <div class="method-source-code" id="ancestor_navables_and_own-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 46</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ancestor_navables_and_own</span>
+  <span class="ruby-comment"># Das Plugin 'acts-as-dag' unterstützt offenbar nicht, die Ancestor-Knoten nach ihrer Distanz zu sortieren.</span>
+  <span class="ruby-comment"># Daher muss, solange hier keine Lösung besteht, von Knoten zu Knoten vorgegangen werden, damit die Reihenfolge</span>
+  <span class="ruby-comment"># eingehalten wird.</span>
+  <span class="ruby-comment"># TODO: Sobald diese Funktionalität vorliegt, ist dies hier sicherlich performanter umzusetzen.</span>
+  <span class="ruby-identifier">object</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>
+  <span class="ruby-identifier">navables</span> = []
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">object</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">navables</span>.<span class="ruby-identifier">last</span>
+    <span class="ruby-identifier">navables</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">object</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:nav_node</span>
+    <span class="ruby-keyword">for</span> <span class="ruby-identifier">parent</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">parents</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">parent</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:nav_node</span>
+        <span class="ruby-identifier">object</span> = <span class="ruby-identifier">parent</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">navables</span>.<span class="ruby-identifier">reverse!</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">navables</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ancestor_navables_and_own-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ancestor_navables_and_own-method -->
+
+    
+      <div id="method-i-ancestor_nodes_and_self" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">ancestor_nodes_and_self</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="ancestor_nodes_and_self-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">ancestor_nodes_and_self</span>
+  <span class="ruby-identifier">nodes</span> = <span class="ruby-ivar">@ancestor_nodes_and_self</span> 
+  <span class="ruby-identifier">nodes</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">ancestors</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ancestor</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ancestor</span>.<span class="ruby-identifier">nav_node</span> } <span class="ruby-operator">+</span> [ <span class="ruby-keyword">self</span> ] <span class="ruby-keyword">unless</span> <span class="ruby-identifier">nodes</span>
+  <span class="ruby-ivar">@ancestor_nodes_and_self</span> = <span class="ruby-identifier">nodes</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@ancestor_nodes_and_self</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">nodes</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- ancestor_nodes_and_self-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- ancestor_nodes_and_self-method -->
+
+    
       <div id="method-i-breadcrumb_item" class="method-detail ">
         
         <div class="method-heading">
@@ -210,16 +352,11 @@
 
           
           <div class="method-source-code" id="breadcrumb_item-source">
-            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 6</span>
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 12</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">breadcrumb_item</span>
-  <span class="ruby-identifier">title</span> = <span class="ruby-identifier">read_attribute</span> <span class="ruby-value">:breadcrumb_item</span>
-  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">title</span>
-    <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Page</span>
-      <span class="ruby-identifier">title</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">title</span>
-    <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">User</span>
-      <span class="ruby-identifier">title</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">name</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">title</span> = <span class="ruby-keyword">super</span>
+  <span class="ruby-identifier">title</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">title</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">title</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">title</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- breadcrumb_item-source -->
           
@@ -229,6 +366,143 @@
 
         
       </div><!-- breadcrumb_item-method -->
+
+    
+      <div id="method-i-breadcrumbs" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">breadcrumbs</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Gibt die Breadcrumb-Elemente zurück, die zu diesem Knoten führen, und zwar
+als assoziatives Array: <code>{ title =&gt; object }</code>,  wobei
+<code>title</code> die Beschriftung des Breadcrumb-Elementes und
+<code>object</code> das repräsentierte Objekt angibt.</p>
+          
+
+          
+          <div class="method-source-code" id="breadcrumbs-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">breadcrumbs</span>
+  <span class="ruby-identifier">breadcrumbs_to_return</span> = []
+  <span class="ruby-identifier">navables</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">ancestor_navables_and_own</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">navable</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">navables</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">navable</span>.<span class="ruby-identifier">nav_node</span>.<span class="ruby-identifier">slim_breadcrumb</span>
+      <span class="ruby-identifier">breadcrumbs_to_return</span> <span class="ruby-operator">&lt;&lt;</span> { <span class="ruby-identifier">title</span><span class="ruby-operator">:</span> <span class="ruby-identifier">navable</span>.<span class="ruby-identifier">nav_node</span>.<span class="ruby-identifier">breadcrumb_item</span>, <span class="ruby-identifier">navable</span><span class="ruby-operator">:</span> <span class="ruby-identifier">navable</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">breadcrumbs_to_return</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- breadcrumbs-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- breadcrumbs-method -->
+
+    
+      <div id="method-i-menu_item" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">menu_item</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="menu_item-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 18</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">menu_item</span>
+  <span class="ruby-identifier">title</span> = <span class="ruby-keyword">super</span>
+  <span class="ruby-identifier">title</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">title</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">title</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">title</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- menu_item-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- menu_item-method -->
+
+    
+      <div id="method-i-url" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">url</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Gibt die vollständige Url des Navigationsknotens zurück, die sich aus den
+einzelnen url_components zusammensetzt.</p>
+          
+
+          
+          <div class="method-source-code" id="url-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 25</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">url</span>
+  <span class="ruby-identifier">url</span> = <span class="ruby-identifier">ancestor_nodes_and_self</span>.<span class="ruby-identifier">collect</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">nav_node</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">nav_node</span>.<span class="ruby-identifier">url_component</span>
+  <span class="ruby-keyword">end</span>.<span class="ruby-identifier">join</span>.<span class="ruby-identifier">gsub</span>( <span class="ruby-regexp">%r(\/)$/</span>, <span class="ruby-string">''</span> ) <span class="ruby-comment"># Das gsub entfernt den abschließenden Slash, wenn einer da ist.</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- url-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- url-method -->
+
+    
+      <div id="method-i-url_component" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">url_component</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="url_component-source">
+            <pre><span class="ruby-comment"># File app/models/nav_node.rb, line 6</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">url_component</span>
+  <span class="ruby-identifier">component</span> = <span class="ruby-keyword">super</span>
+  <span class="ruby-identifier">component</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">navable</span>.<span class="ruby-identifier">title</span>.<span class="ruby-identifier">parameterize</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot;/&quot;</span>  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">component</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">component</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- url_component-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- url_component-method -->
 
     
     </section><!-- public-instance-method-details -->

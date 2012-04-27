@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120426090436) do
+ActiveRecord::Schema.define(:version => 20120427044338) do
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"
@@ -77,14 +77,20 @@ ActiveRecord::Schema.define(:version => 20120426090436) do
     t.datetime "updated_at", :null => false
   end
 
-  create_table "users", :force => true do |t|
-    t.string   "alias"
+  create_table "user_accounts", :force => true do |t|
     t.string   "encrypted_password"
-    t.string   "first_name"
-    t.string   "last_name"
+    t.string   "salt",               :limit => 40
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
-    t.string   "salt",               :limit => 40
+    t.integer  "user_id"
+  end
+
+  create_table "users", :force => true do |t|
+    t.string   "alias"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
 end

@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+
+# Diese Klasse repräsentiert den Vorgang der Identifikation eines Benutzers.
+# Benutzer können sich auf verschiedene Arten identifizieren, z.B. durch Vor- und Zunamen, oder durch ihre E-Mail-Adresse.
+# Siehe auch UserIdentification::possible_attributes
+class UserIdentification
+
+  def initialize( user )
+    @user = user
+  end
+
+  
+
+end

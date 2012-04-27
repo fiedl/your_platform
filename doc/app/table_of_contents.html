@@ -33,7 +33,13 @@
 
 <h2 id="classes">Classes/Modules</h2>
 <ul>
-  <li class="class">
+  <li class="module">
+    <a href="Navable.html">Navable</a>
+  </li>
+    <li class="module">
+    <a href="Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  </li>
+    <li class="class">
     <a href="Address.html">Address</a>
   </li>
     <li class="class">
@@ -47,6 +53,9 @@
   </li>
     <li class="module">
     <a href="BoxHelper.html">BoxHelper</a>
+  </li>
+    <li class="module">
+    <a href="BreadcrumbsHelper.html">BreadcrumbsHelper</a>
   </li>
     <li class="class">
     <a href="Custom.html">Custom</a>
@@ -109,6 +118,12 @@
     <a href="ProfileFieldsHelper.html">ProfileFieldsHelper</a>
   </li>
     <li class="class">
+    <a href="ProfilesController.html">ProfilesController</a>
+  </li>
+    <li class="module">
+    <a href="ProfilesHelper.html">ProfilesHelper</a>
+  </li>
+    <li class="class">
     <a href="Relationship.html">Relationship</a>
   </li>
     <li class="class">
@@ -128,6 +143,12 @@
   </li>
     <li class="class">
     <a href="User.html">User</a>
+  </li>
+    <li class="class">
+    <a href="UserAccount.html">UserAccount</a>
+  </li>
+    <li class="class">
+    <a href="UserIdentification.html">UserIdentification</a>
   </li>
     <li class="class">
     <a href="UserPropertyString.html">UserPropertyString</a>
@@ -154,21 +175,37 @@
   
     <li class="method"><a href="Password.html#method-c-generate">::generate &mdash; Password</a>
   
+    <li class="method"><a href="User.html#method-c-identify">::identify &mdash; User</a>
+  
     <li class="method"><a href="Group.html#method-c-jeder">::jeder &mdash; Group</a>
   
-    <li class="method"><a href="Profile.html#method-c-new">::new &mdash; Profile</a>
+    <li class="method"><a href="UserPropertyString.html#method-c-new">::new &mdash; UserPropertyString</a>
   
     <li class="method"><a href="Session.html#method-c-new">::new &mdash; Session</a>
   
-    <li class="method"><a href="UserPropertyString.html#method-c-new">::new &mdash; UserPropertyString</a>
+    <li class="method"><a href="UserIdentification.html#method-c-new">::new &mdash; UserIdentification</a>
+  
+    <li class="method"><a href="Profile.html#method-c-new">::new &mdash; Profile</a>
   
     <li class="method"><a href="Groups.html#method-c-of_user">::of_user &mdash; Groups</a>
   
     <li class="method"><a href="User.html#method-i-alias">#alias &mdash; User</a>
   
+    <li class="method"><a href="NavNode.html#method-i-ancestor_navables">#ancestor_navables &mdash; NavNode</a>
+  
+    <li class="method"><a href="NavNode.html#method-i-ancestor_navables_and_own">#ancestor_navables_and_own &mdash; NavNode</a>
+  
+    <li class="method"><a href="NavNode.html#method-i-ancestor_nodes_and_self">#ancestor_nodes_and_self &mdash; NavNode</a>
+  
     <li class="method"><a href="FormHelper.html#method-i-automated_form_for">#automated_form_for &mdash; FormHelper</a>
   
     <li class="method"><a href="NavNode.html#method-i-breadcrumb_item">#breadcrumb_item &mdash; NavNode</a>
+  
+    <li class="method"><a href="BreadcrumbsHelper.html#method-i-breadcrumb_ul">#breadcrumb_ul &mdash; BreadcrumbsHelper</a>
+  
+    <li class="method"><a href="BreadcrumbsHelper.html#method-i-breadcrumb_ul_for_navable">#breadcrumb_ul_for_navable &mdash; BreadcrumbsHelper</a>
+  
+    <li class="method"><a href="NavNode.html#method-i-breadcrumbs">#breadcrumbs &mdash; NavNode</a>
   
     <li class="method"><a href="User.html#method-i-capitalize_name">#capitalize_name &mdash; User</a>
   
@@ -176,9 +213,9 @@
   
     <li class="method"><a href="BoxHelper.html#method-i-convert_to_content_box">#convert_to_content_box &mdash; BoxHelper</a>
   
-    <li class="method"><a href="SessionsController.html#method-i-create">#create &mdash; SessionsController</a>
-  
     <li class="method"><a href="UsersController.html#method-i-create">#create &mdash; UsersController</a>
+  
+    <li class="method"><a href="SessionsController.html#method-i-create">#create &mdash; SessionsController</a>
   
     <li class="method"><a href="Session.html#method-i-current_user">#current_user &mdash; Session</a>
   
@@ -188,9 +225,9 @@
   
     <li class="method"><a href="SessionsController.html#method-i-destroy">#destroy &mdash; SessionsController</a>
   
-    <li class="method"><a href="Session.html#method-i-destroy">#destroy &mdash; Session</a>
-  
     <li class="method"><a href="ProfileFieldsController.html#method-i-destroy">#destroy &mdash; ProfileFieldsController</a>
+  
+    <li class="method"><a href="Session.html#method-i-destroy">#destroy &mdash; Session</a>
   
     <li class="method"><a href="ProfileFieldsController.html#method-i-edit">#edit &mdash; ProfileFieldsController</a>
   
@@ -208,13 +245,17 @@
   
     <li class="method"><a href="Profile.html#method-i-fields">#fields &mdash; Profile</a>
   
+    <li class="method"><a href="Profile.html#method-i-fields_of_one_of_these_types">#fields_of_one_of_these_types &mdash; Profile</a>
+  
+    <li class="method"><a href="Profile.html#method-i-fields_of_this_type">#fields_of_this_type &mdash; Profile</a>
+  
     <li class="method"><a href="FormHelper.html#method-i-form_fields">#form_fields &mdash; FormHelper</a>
   
     <li class="method"><a href="Alias.html#method-i-generate">#generate &mdash; Alias</a>
   
-    <li class="method"><a href="Alias.html#method-i-generate-21">#generate! &mdash; Alias</a>
-  
     <li class="method"><a href="Password.html#method-i-generate-21">#generate! &mdash; Password</a>
+  
+    <li class="method"><a href="Alias.html#method-i-generate-21">#generate! &mdash; Alias</a>
   
     <li class="method"><a href="Address.html#method-i-geo_information">#geo_information &mdash; Address</a>
   
@@ -234,7 +275,13 @@
   
     <li class="method"><a href="GroupsController.html#method-i-index">#index &mdash; GroupsController</a>
   
+    <li class="method"><a href="ProfilesController.html#method-i-index">#index &mdash; ProfilesController</a>
+  
     <li class="method"><a href="ApplicationController.html#method-i-initialize_session">#initialize_session &mdash; ApplicationController</a>
+  
+    <li class="method"><a href="Navable.html#method-i-is_navable">#is_navable &mdash; Navable</a>
+  
+    <li class="method"><a href="Navable/InstanceMethodsForNavables.html#method-i-is_navable-3F">#is_navable? &mdash; Navable::InstanceMethodsForNavables</a>
   
     <li class="method"><a href="Address.html#method-i-latitude">#latitude &mdash; Address</a>
   
@@ -250,43 +297,63 @@
   
     <li class="method"><a href="Address.html#method-i-longitude">#longitude &mdash; Address</a>
   
+    <li class="method"><a href="NavNode.html#method-i-menu_item">#menu_item &mdash; NavNode</a>
+  
     <li class="method"><a href="GroupsController.html#method-i-my">#my &mdash; GroupsController</a>
   
     <li class="method"><a href="User.html#method-i-name">#name &mdash; User</a>
+  
+    <li class="method"><a href="Navable/InstanceMethodsForNavables.html#method-i-nav_node">#nav_node &mdash; Navable::InstanceMethodsForNavables</a>
+  
+    <li class="method"><a href="Navable/InstanceMethodsForNavables.html#method-i-navnode">#navnode &mdash; Navable::InstanceMethodsForNavables</a>
   
     <li class="method"><a href="UsersController.html#method-i-new">#new &mdash; UsersController</a>
   
     <li class="method"><a href="SessionsController.html#method-i-new">#new &mdash; SessionsController</a>
   
+    <li class="method"><a href="UserIdentification.html#method-i-possible_attributes">#possible_attributes &mdash; UserIdentification</a>
+  
     <li class="method"><a href="User.html#method-i-profile">#profile &mdash; User</a>
   
     <li class="method"><a href="RelationshipsHelper.html#method-i-relationship_li">#relationship_li &mdash; RelationshipsHelper</a>
+  
+    <li class="method"><a href="User.html#method-i-relationships">#relationships &mdash; User</a>
   
     <li class="method"><a href="RelationshipsHelper.html#method-i-relationships_of_user_ul">#relationships_of_user_ul &mdash; RelationshipsHelper</a>
   
     <li class="method"><a href="Profile.html#method-i-save">#save &mdash; Profile</a>
   
-    <li class="method"><a href="PagesController.html#method-i-show">#show &mdash; PagesController</a>
+    <li class="method"><a href="Profile.html#method-i-sections">#sections &mdash; Profile</a>
   
-    <li class="method"><a href="ProfileFieldsController.html#method-i-show">#show &mdash; ProfileFieldsController</a>
+    <li class="method"><a href="PagesController.html#method-i-show">#show &mdash; PagesController</a>
   
     <li class="method"><a href="UsersController.html#method-i-show">#show &mdash; UsersController</a>
   
     <li class="method"><a href="GroupsController.html#method-i-show">#show &mdash; GroupsController</a>
   
-    <li class="method"><a href="MenuHelper.html#method-i-submenu_for">#submenu_for &mdash; MenuHelper</a>
+    <li class="method"><a href="ProfilesController.html#method-i-show">#show &mdash; ProfilesController</a>
+  
+    <li class="method"><a href="ProfileFieldsController.html#method-i-show">#show &mdash; ProfileFieldsController</a>
   
     <li class="method"><a href="Alias.html#method-i-taken-3F">#taken? &mdash; Alias</a>
+  
+    <li class="method"><a href="Group.html#method-i-title">#title &mdash; Group</a>
   
     <li class="method"><a href="User.html#method-i-title">#title &mdash; User</a>
   
     <li class="method"><a href="ProfileFieldsController.html#method-i-update">#update &mdash; ProfileFieldsController</a>
+  
+    <li class="method"><a href="NavNode.html#method-i-url">#url &mdash; NavNode</a>
+  
+    <li class="method"><a href="NavNode.html#method-i-url_component">#url_component &mdash; NavNode</a>
   
     <li class="method"><a href="UsersHelper.html#method-i-user_link">#user_link &mdash; UsersHelper</a>
   
     <li class="method"><a href="Password.html#method-i-valid_against_encrypted_password-3F">#valid_against_encrypted_password? &mdash; Password</a>
   
     <li class="method"><a href="MenuHelper.html#method-i-vertical_menu">#vertical_menu &mdash; MenuHelper</a>
+  
+    <li class="method"><a href="MenuHelper.html#method-i-vertical_menu_for">#vertical_menu_for &mdash; MenuHelper</a>
   
 </ul>
 

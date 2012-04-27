@@ -72,6 +72,8 @@
     
     <li><a href="#method-c-jeder">::jeder</a>
     
+    <li><a href="#method-i-title">#title</a>
+    
   </ul>
 </nav>
 
@@ -93,6 +95,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -102,6 +108,8 @@
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
+  
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
   
     <li><a href="./Custom.html">Custom</a>
   
@@ -143,6 +151,10 @@
   
     <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
   
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
     <li><a href="./Relationship.html">Relationship</a>
   
     <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
@@ -156,6 +168,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -210,7 +226,7 @@
 
           
           <div class="method-source-code" id="jeder-source">
-            <pre><span class="ruby-comment"># File app/models/group.rb, line 6</span>
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 12</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">jeder</span>
   <span class="ruby-identifier">g</span> = <span class="ruby-constant">Group</span>.<span class="ruby-identifier">first</span>
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">g</span>.<span class="ruby-identifier">root_for_groups?</span>
@@ -230,6 +246,42 @@
 
     
     </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-title" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">title</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="title-source">
+            <pre><span class="ruby-comment"># File app/models/group.rb, line 8</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">title</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- title-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- title-method -->
+
+    
+    </section><!-- public-instance-method-details -->
   
   </section><!-- 5Buntitled-5D -->
 

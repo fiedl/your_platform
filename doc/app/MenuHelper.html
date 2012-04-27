@@ -64,9 +64,9 @@
 
   <ul class="link-list">
     
-    <li><a href="#method-i-submenu_for">#submenu_for</a>
-    
     <li><a href="#method-i-vertical_menu">#vertical_menu</a>
+    
+    <li><a href="#method-i-vertical_menu_for">#vertical_menu_for</a>
     
   </ul>
 </nav>
@@ -89,6 +89,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -98,6 +102,8 @@
     <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
+  
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
   
     <li><a href="./Custom.html">Custom</a>
   
@@ -139,6 +145,10 @@
   
     <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
   
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
     <li><a href="./Relationship.html">Relationship</a>
   
     <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
@@ -152,6 +162,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -190,77 +204,25 @@
       <h3 class="section-header">Public Instance Methods</h3>
 
     
-      <div id="method-i-submenu_for" class="method-detail ">
-        
-        <div class="method-heading">
-          <span class="method-name">submenu_for</span><span
-            class="method-args">( object )</span>
-          <span class="method-click-advice">click to toggle source</span>
-        </div>
-        
-
-        <div class="method-description">
-          
-          <p>Generates html code for a vertical menu, representing the given object as
-root menu element.</p>
-          
-
-          
-          <div class="method-source-code" id="submenu_for-source">
-            <pre><span class="ruby-comment"># File app/helpers/menu_helper.rb, line 20</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">submenu_for</span>( <span class="ruby-identifier">object</span> )
-  
-  <span class="ruby-identifier">html_code</span> = <span class="ruby-string">&quot;&quot;</span>
-
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_element</span> <span class="ruby-identifier">object</span>, <span class="ruby-value">:root</span>
-
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">child_pages</span>, <span class="ruby-value">:child</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">child_pages</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:child_pages</span>
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">child_users</span>, <span class="ruby-value">:child</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">child_users</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">object</span>.<span class="ruby-identifier">respond_to?</span> <span class="ruby-value">:child_users</span>
-  
-
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html_code</span>.<span class="ruby-identifier">html_safe</span>
-
-<span class="ruby-keyword">end</span></pre>
-          </div><!-- submenu_for-source -->
-          
-        </div>
-
-        
-
-        
-      </div><!-- submenu_for-method -->
-
-    
       <div id="method-i-vertical_menu" class="method-detail ">
         
         <div class="method-heading">
           <span class="method-name">vertical_menu</span><span
-            class="method-args">( params )</span>
+            class="method-args">()</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
 
         <div class="method-description">
           
-          <p>Generates html code for a vertical menu.  Parameters:</p>
-
-<pre>root:           Object that is displayed as root element of the menu, typically Page.find_root.
-active_element: Object that is displayed as active element of the menu.</pre>
+          <p>Generates the HTML Code for the current @navable object.</p>
           
 
           
           <div class="method-source-code" id="vertical_menu-source">
-            <pre><span class="ruby-comment"># File app/helpers/menu_helper.rb, line 7</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">vertical_menu</span>( <span class="ruby-identifier">params</span> )
-  <span class="ruby-identifier">root</span> = <span class="ruby-identifier">params</span>[ <span class="ruby-value">:root</span> ]
-  <span class="ruby-identifier">active_element</span> = <span class="ruby-identifier">params</span>[ <span class="ruby-value">:active_element</span> ]
-  
-  <span class="ruby-identifier">html_code</span> = <span class="ruby-string">&quot;&quot;</span>
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span>( <span class="ruby-identifier">active_element</span>.<span class="ruby-identifier">ancestors</span>, <span class="ruby-value">:parent</span> )
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_element</span>( <span class="ruby-identifier">active_element</span>, <span class="ruby-value">:active</span> )
-  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span>( <span class="ruby-identifier">active_element</span>.<span class="ruby-identifier">children</span>, <span class="ruby-value">:child</span> )
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html_code</span>.<span class="ruby-identifier">html_safe</span>
-
+            <pre><span class="ruby-comment"># File app/helpers/menu_helper.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">vertical_menu</span>
+  <span class="ruby-identifier">vertical_menu_for</span> <span class="ruby-ivar">@navable</span> <span class="ruby-keyword">if</span> <span class="ruby-ivar">@navable</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- vertical_menu-source -->
           
@@ -270,6 +232,44 @@ active_element: Object that is displayed as active element of the menu.</pre>
 
         
       </div><!-- vertical_menu-method -->
+
+    
+      <div id="method-i-vertical_menu_for" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">vertical_menu_for</span><span
+            class="method-args">( navable )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Generates the HTML code for a navable object, e.g. a <a
+href="Page.html">Page</a> or a <a href="User.html">User</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="vertical_menu_for-source">
+            <pre><span class="ruby-comment"># File app/helpers/menu_helper.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">vertical_menu_for</span>( <span class="ruby-identifier">navable</span> )
+  <span class="ruby-identifier">html_code</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">active_navable</span> = <span class="ruby-identifier">navable</span>
+  <span class="ruby-identifier">ancestor_navables</span> = <span class="ruby-identifier">navable</span>.<span class="ruby-identifier">nav_node</span>.<span class="ruby-identifier">ancestor_navables</span>
+  <span class="ruby-identifier">child_navables</span> = <span class="ruby-identifier">navable</span>.<span class="ruby-identifier">children</span>
+  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span>( <span class="ruby-identifier">ancestor_navables</span>, <span class="ruby-value">:ancestor</span> )
+  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_element</span>( <span class="ruby-identifier">active_navable</span>, <span class="ruby-value">:active</span> )
+  <span class="ruby-identifier">html_code</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">menu_elements</span>( <span class="ruby-identifier">child_navables</span>, <span class="ruby-value">:child</span> )
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">html_code</span>.<span class="ruby-identifier">html_safe</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- vertical_menu_for-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- vertical_menu_for-method -->
 
     
     </section><!-- public-instance-method-details -->
