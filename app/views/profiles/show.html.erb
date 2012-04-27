@@ -39,12 +39,16 @@
 
 <h1>Zugangsdaten</h1>
 <div>
-  <dl>
-    <dt>Identifikation möglich mit folgenden Daten:</dt>
-    <dd>Alias: <%=h @user.alias %></dd>
-    <dd>Name: <%=h @user.name %></dd>
-    <dd>TODO: Automatisch alle möglichen Identifikationsdaten auflisten</dd>
-  </dl>
+  <% if @user.has_account? %>
+    <dl>
+      <dt>Identifikation möglich mit folgenden Daten:</dt>
+      <% for attribute in UserIdentification.possible_attributes %>
+        <dd><%=t attribute.to_s %>: <%= @user.send attribute %></dd>
+      <% end %> 
+    </dl>
+  <% else %>
+    <p><%=t :user_has_no_account %></p>
+  <% end %>
 </div>
 
 <% end %>

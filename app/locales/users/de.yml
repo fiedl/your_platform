@@ -4,6 +4,9 @@ de:
   enter_details_for_new_user:    Bitte Details zum neu anzulegenden Benutzer angeben.
 
   email:                         E-Mail
+  first_name:			 Vorname
+  last_name:			 Nachname
+  alias:			 Alias
 
   formtastic:
 
