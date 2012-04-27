@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
 
   def has_account?
     # Wenn der Account keine ID hat, dann existiert er nicht.
-    user_account.id.to_b
+    not user_account.id.nil?
   end
 
   def deactivate_account

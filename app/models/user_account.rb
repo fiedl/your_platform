@@ -20,15 +20,21 @@ class UserAccount < ActiveRecord::Base
     authenticated_user = nil
     if users
       users.each do |user| 
-        authenticated_user = user if user_password_correct? user, password
+        if user.has_account?
+          if user_password_correct? user, password
+            authenticated_user = user 
+          else
+            raise 'wrong_password'
+          end
+        else
+          raise 'user_has_no_account'
+        end
       end
     else
-      raise :no_user_found.to_s
+      raise 'no_user_found'
     end
     if authenticated_user
       return authenticated_user
-    else
-      raise :wrong_password.to_s
     end
   end
 
