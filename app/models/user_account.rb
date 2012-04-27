@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 class UserAccount < ActiveRecord::Base
   
-  attr_accessible :encrypted_password
+  attr_accessible          :encrypted_password
   
-#  validates_presence_of    :salt, :encrypted_password
+  validates_presence_of    :salt, :encrypted_password
 
   belongs_to               :user, inverse_of: :user_account
 

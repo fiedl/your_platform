@@ -10,9 +10,9 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 
-  has_many                  :profile_fields, :autosave => true
+  has_many                  :profile_fields, :autosave => true, dependent: :destroy
 
-  has_one                   :user_account, autosave: true, inverse_of: :user
+  has_one                   :user_account, autosave: true, inverse_of: :user, dependent: :destroy
 
   has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
   has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'
@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   after_save                Proc.new { |user| user.profile.save }
-  after_save                :create_account_if_requested
+  before_save                :create_account_if_requested
 
 
   def name
@@ -68,6 +68,10 @@ class User < ActiveRecord::Base
     @account = build_user_account unless @account
     return @account
   end
+  def user_account=( account )
+    @account = account
+    super account
+  end
 
   def account
     user_account
@@ -108,10 +112,11 @@ class User < ActiveRecord::Base
 
   def create_account_if_requested
     if self.create_account
-      self.user_account.destroy if self.user_account.id 
-      @account = self.build_user_account
-      @account.generate
+      self.user_account.destroy if self.has_account?
+      self.user_account = self.build_user_account
+      self.user_account.generate
       self.create_account = false
+      return self.user_account
     end
   end
 

@@ -27,7 +27,6 @@ class UsersController < ApplicationController
       @title = t :create_user
       @user.valid?
       render :action => "new"
-      "Test"
     end
   end
 
