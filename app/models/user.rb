@@ -111,6 +111,7 @@ class User < ActiveRecord::Base
   end
 
   def create_account_if_requested
+    self.create_account = false if self.create_account == "0" # wegen checkbox, da 0 nach true transformieren würde.
     if self.create_account
       self.user_account.destroy if self.has_account?
       self.user_account = self.build_user_account
