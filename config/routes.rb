@@ -3,7 +3,7 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :pages
   resources :groups
-
+  resources :profiles
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions

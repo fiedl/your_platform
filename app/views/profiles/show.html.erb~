@@ -1,0 +1,50 @@
+<h1><%=h @title %></h1>
+<div>
+  <% if @user %>
+    <p>Profil-Informationen</p>
+  <% else %>
+    <p>Der angegebene Benutzer ist im System nicht vorhanden.</p>
+    <%= link_to( "Diesen Benutzer anlegen", :action => "new", :alias => @alias ) %>
+  <% end %>
+</div>
+
+<% for title,profile_fields in @profile_field_groups %>
+  <h1><%=h title %></h1>
+  <div>
+    <% if title == "Kontaktinformationen" %>
+      <span style="display:inline-block;float:right;width:50%;height:200px;">
+        <%= gmaps4rails @gmaps4rails_json %>
+      </span>
+    <% end %>
+    <dl>
+      <% for pf in profile_fields %>
+      
+        <span class="profile_field">
+	  <!-- Im Moment werden die Profilfelder nur von jQuery gefüllt. Die Füllung muss aber noch in einen Helper ausgelagert werden, damit es auch auf mobilen Geräten funktioniert. -->
+	  <%= editable_span_tag( controller: 'profile_fields', id: pf.id ) %>
+	</span>
+
+      <% end %>
+    </dl>
+  </div>
+<% end %>
+
+<h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
+<div>
+  <%= groups_of_user_ul @user %>
+</div>
+
+<h1>Beziehungen</h1>
+<div>
+  <%= relationships_of_user_ul @user %>
+</div>
+
+<h1>Zugangsdaten</h1>
+<div>
+  <dl>
+    <dt>Identifikation möglich mit folgenden Daten:</dt>
+    <dd>Alias: <%=h @user.alias %></dd>
+    <dd>Name: <%=h @user.name %></dd>
+    <dd>TODO: Automatisch alle möglichen Identifikationsdaten auflisten</dd>
+  </dl>
+</div>
