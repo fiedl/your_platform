@@ -53,7 +53,7 @@ class Group < ActiveRecord::Base
         sub_group_hashes = YAML::load(file)
       end
       sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes ) # für verkürzte YAML-Schreibweise
-      Group.hash_array_import_groups_into_parent_group sub_group_hashes, self
+      Group.hash_array_import_groups_into_parent_group( sub_group_hashes, self )
     end
   end
 
@@ -84,7 +84,8 @@ class Group < ActiveRecord::Base
     counter_for_created_groups = 0
     for new_group_hash in hash_array_of_groups do
       unless parent_group.children.select { |child| child.name == new_group_hash[ "name" ] }.count > 0
-        sub_group_hash_array = new_group_hash[ "children" ]
+        sub_group_hash_array = new_group_hash[ "children" ] 
+        sub_group_hash_array = new_group_hash[ :children ] unless sub_group_hash_array
         new_group_hash.reject! { |key| not Group.attr_accessible[:default].include? key }
         g = Group.create( new_group_hash )
         g.parent_groups << parent_group
