@@ -13,8 +13,8 @@ class Relationship < ActiveRecord::Base
 
     if who and is and of
       relationship = Relationship.create( name: is )
-      who.child_relationships << relationship
-      of.parent_relationships << relationship
+      who.relationships_child_relationships << relationship
+      of.relationships_parent_relationships << relationship
       return relationship
     end
   end

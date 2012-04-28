@@ -23,7 +23,7 @@ class GroupsController < ApplicationController
     if @group
       @navable = @group
       @title = @group.name
-      @groups = @group.descendant_groups
+      @groups = @group.child_groups
       @users = @group.descendant_users
     end
   end

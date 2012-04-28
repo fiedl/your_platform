@@ -1,0 +1,41 @@
+[
+    {
+	"name": "Hospitanten"
+    },
+    {
+	"name": "Fuxen",
+	"children":
+	[
+	    {
+		"name": "Kraßfuxen"
+	    },
+	    {
+		"name": "Brandfuxen"
+	    }
+	]
+    },
+    {
+	"name": "Burschen",
+	"children":
+	[	
+	    {
+		"name": "Aktive Burschen"
+	    },
+	    {
+		"name": "Inaktive Burschen",
+		"children":
+		[
+		    {
+			"name": "Inaktive Burschen loci"	
+		    },
+		    {
+			"name": "Inaktive Burschen non loci"
+		    }
+		]
+	    }
+	]
+    },
+    {
+	"name": "Konkneipanten"
+    }
+]
