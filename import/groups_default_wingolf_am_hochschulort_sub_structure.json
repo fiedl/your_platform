@@ -1,41 +1,95 @@
 [
     {
-	"name": "Hospitanten"
+        "name": "Aktivitas",
+        "children":
+        [
+            {
+                "name": "Hospitanten"
+            },
+            {
+                "name": "Fuxen",
+                "children":
+                [
+                    {
+                        "name": "Kraßfuxen"
+                    },
+                    {
+                        "name": "Brandfuxen"
+                    }
+                ]
+            },
+            {
+                "name": "Burschen",
+                "children":
+                [
+                    {
+                        "name": "Aktive Burschen"
+                    },
+                    {
+                        "name": "Inaktive Burschen",
+                        "children":
+                        [
+                            {
+                                "name": "Inaktive Burschen loci"
+                            },
+                            {
+                                "name": "Inaktive Burschen non loci"
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                "name": "Konkneipanten"
+            }
+        ]
     },
     {
-	"name": "Fuxen",
-	"children":
-	[
-	    {
-		"name": "Kraßfuxen"
-	    },
-	    {
-		"name": "Brandfuxen"
-	    }
-	]
+        "name": "Philisterschaft",
+        "children":
+        [
+            {
+                "name": "Philister"
+            },
+            {
+                "name": "Ehrenphilister"
+            }
+        ]
     },
     {
-	"name": "Burschen",
-	"children":
-	[	
-	    {
-		"name": "Aktive Burschen"
-	    },
-	    {
-		"name": "Inaktive Burschen",
-		"children":
-		[
-		    {
-			"name": "Inaktive Burschen loci"	
-		    },
-		    {
-			"name": "Inaktive Burschen non loci"
-		    }
-		]
-	    }
-	]
+        "name": "Gäste",
+        "children":
+        [
+            {
+                "name": "Gäste der Aktivitas"
+            },
+            {
+                "name": "Gäste der Philisterschaft"
+            },
+            {
+                "name": "Kontakte"
+            }
+        ]
     },
     {
-	"name": "Konkneipanten"
+        "name": "Hausbewohner",
+        "children":
+        [
+            {
+                "name": "Zimmer 1"
+            },
+            {
+                "name": "Zimmer 2"
+            },
+            {
+                "name": "Gästezimmer"
+            }
+        ]
+    },
+    {
+        "name": "Wohnheimsverein"
+    },
+    {
+        "name": "Thematische Gruppen"
     }
 ]

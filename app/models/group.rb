@@ -2,9 +2,11 @@
 class Group < ActiveRecord::Base
   attr_accessible :name, :token, :excessive_name
 
-  has_dag_links    link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
+  has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
 
   is_navable
+
+  after_create    :import_default_group_structure
 
   def title
     self.name
@@ -40,6 +42,31 @@ class Group < ActiveRecord::Base
       wah_group.parent_groups << Group.jeder
     end
     return self.wingolf_am_hochschulort
+  end
+
+  def import_default_group_structure( yaml_file_title = nil )
+    yaml_file_title = self.name + ".yml" unless yaml_file_title
+    yaml_file_name = File.join( Rails.root, "import", "default_group_sub_structures", yaml_file_title )
+    if File.exists? yaml_file_name
+      sub_group_hashes = []
+      File.open( yaml_file_name, "r" ) do |file|
+        sub_group_hashes = YAML::load(file)
+      end
+      sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes ) # für verkürzte YAML-Schreibweise
+      Group.hash_array_import_groups_into_parent_group sub_group_hashes, self
+    end
+  end
+
+  def convert_group_names_to_group_hashes( group_names )
+    group_names.map do |name|
+      if name.kind_of? String
+        { name: name }
+      elsif name.kind_of? Hash
+        unless name[ :name ]
+          { name: name.keys.first, children: convert_group_names_to_group_hashes( name[ name.keys.first ] ) }
+        end
+      end
+    end
   end
 
   # Importiert ein JSON-Array von Gruppen in die Grupe +parent_group+. 

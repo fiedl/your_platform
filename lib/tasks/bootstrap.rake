@@ -22,18 +22,26 @@ namespace :bootstrap do
     counter = 0
     Group.wingolf_am_hochschulort.child_groups.each do |woh_group|
       if woh_group.child_groups.count == 0
-        Group.json_import_groups_into_parent_group "groups_default_wingolf_am_hochschulort_sub_structure.json", woh_group
+        woh_group.import_default_group_structure "wingolf_am_hochschulort_children.yml"
         counter += 1
       end
     end
     p "Added sub structure for " + counter.to_s + " groups."
   end
 
+  desc "Set some nav node properties of the basic groups"
+  task basic_nav_node_properties: :environment do
+    p "Task: Set some basic nav node properties"
+    n = Group.jeder.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
+    n = Group.wingolf_am_hochschulort.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
                 :import_wingolf_am_hochschulort_groups,
-                :import_sub_structure_of_wingolf_am_hochschulort_groups
+                :import_sub_structure_of_wingolf_am_hochschulort_groups,
+                :basic_nav_node_properties
                ]
 
 end

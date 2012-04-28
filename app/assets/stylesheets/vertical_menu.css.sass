@@ -1,0 +1,52 @@
+
+$dark: #e6e6e4
+$light: #f8f7f5
+// #f8f7f5, #a15d5a
+$black: #222222
+$border: #cccccc  
+$border_shade: #d6d3cd
+
+.vertical_menu 
+  ul
+    width: 197px
+    margin: 0
+    margin-bottom: 15px
+    padding: 0
+    list-style: none
+    border-top: 1px solid $border
+    border-bottom: 1px solid $border
+    background: $border
+
+    * a
+      font:
+        size: 12px
+        weight: bold
+      text:
+        decoration: none
+        transform: uppercase
+      color: #000
+      letter-spacing: 1.3px
+      //width: 182px
+      padding: 8px 4px 8px 10px
+      display: block
+      border: none
+      border-left: 1px solid $border_shade
+      border-right: 1px solid $border_shade
+      margin-bottom: 1px
+
+    * a
+      background: $light
+
+    li.root a,
+    li.ancestor a
+      background: $dark
+
+    li.active a
+      background: $black
+      color: #fff
+
+    li.child a
+      padding-left: 16px
+
+
+
