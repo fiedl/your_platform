@@ -22,6 +22,12 @@ class NavNode < ActiveRecord::Base
     return title
   end
 
+  def hidden_menu
+    hidden = super
+    hidden = true if self.navable.kind_of? User unless hidden
+    return hidden
+  end
+
   # Gibt die vollständige Url des Navigationsknotens zurück, die sich aus den einzelnen url_components zusammensetzt.
   def url
     url = ancestor_nodes_and_self.collect do |nav_node|

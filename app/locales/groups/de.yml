@@ -3,3 +3,7 @@ de:
   sub_groups:                     Untergruppen
   members:			  Mitglieder
   groups_of: 			  Gruppen von
+
+  details:			  Detail-Informationen
+  token:			  Kürzel
+  extensive_name:		  Ausführliche Bezeichnung
