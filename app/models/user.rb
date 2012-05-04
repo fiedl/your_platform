@@ -103,7 +103,7 @@ class User < ActiveRecord::Base
   # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
   def corporations
     if Group.wingolf_am_hochschulort
-      return self.parent_groups & Group.wingolf_am_hochschulort.child_groups 
+      return self.ancestor_groups & Group.wingolf_am_hochschulort.child_groups 
     else
       return []
     end
