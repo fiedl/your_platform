@@ -78,7 +78,13 @@
     
     <li><a href="#method-i-fields">#fields</a>
     
+    <li><a href="#method-i-fields_of_one_of_these_types">#fields_of_one_of_these_types</a>
+    
+    <li><a href="#method-i-fields_of_this_type">#fields_of_this_type</a>
+    
     <li><a href="#method-i-save">#save</a>
+    
+    <li><a href="#method-i-sections">#sections</a>
     
   </ul>
 </nav>
@@ -101,6 +107,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -111,19 +121,57 @@
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
   
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
+  
     <li><a href="./Custom.html">Custom</a>
+  
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
   
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -132,6 +180,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -304,6 +356,66 @@
       </div><!-- fields-method -->
 
     
+      <div id="method-i-fields_of_one_of_these_types" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">fields_of_one_of_these_types</span><span
+            class="method-args">( types )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="fields_of_one_of_these_types-source">
+            <pre><span class="ruby-comment"># File app/models/profile.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fields_of_one_of_these_types</span> ( <span class="ruby-identifier">types</span> )
+  <span class="ruby-identifier">fields</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">profile_field</span><span class="ruby-operator">|</span>  <span class="ruby-identifier">types</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">profile_field</span>.<span class="ruby-identifier">type</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- fields_of_one_of_these_types-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- fields_of_one_of_these_types-method -->
+
+    
+      <div id="method-i-fields_of_this_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">fields_of_this_type</span><span
+            class="method-args">( type )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="fields_of_this_type-source">
+            <pre><span class="ruby-comment"># File app/models/profile.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fields_of_this_type</span> ( <span class="ruby-identifier">type</span> )
+  <span class="ruby-identifier">fields_of_one_of_these_types</span> ( [ <span class="ruby-identifier">type</span> ] )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- fields_of_this_type-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- fields_of_this_type-method -->
+
+    
       <div id="method-i-save" class="method-detail ">
         
         <div class="method-heading">
@@ -320,7 +432,7 @@
 
           
           <div class="method-source-code" id="save-source">
-            <pre><span class="ruby-comment"># File app/models/profile.rb, line 32</span>
+            <pre><span class="ruby-comment"># File app/models/profile.rb, line 55</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">save</span>
   <span class="ruby-keyword">if</span> <span class="ruby-ivar">@email</span>
     <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@email</span>.<span class="ruby-identifier">blank?</span>
@@ -343,6 +455,45 @@
 
         
       </div><!-- save-method -->
+
+    
+      <div id="method-i-sections" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sections</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Um die Profilfelder sinnvoll zu gruppieren, können sie in mehrere
+Abschnitte (sections) untergliedert abgefragt werden.  Diese Funktion gibt
+ein assoziatives Array zurück, wobei der Schlüssel der Titel des
+Abschnittes ist, der Wert ein Array der entsprechenden Profilfelder.</p>
+          
+
+          
+          <div class="method-source-code" id="sections-source">
+            <pre><span class="ruby-comment"># File app/models/profile.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">sections</span>
+  {
+    <span class="ruby-value">:contact_information</span>      =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">fields_of_one_of_these_types</span>( [ <span class="ruby-string">&quot;Address&quot;</span>, <span class="ruby-string">&quot;Email&quot;</span>, <span class="ruby-string">&quot;Custom&quot;</span> ] ),
+    <span class="ruby-value">:about_myself</span>             =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">fields_of_this_type</span>( <span class="ruby-string">&quot;About&quot;</span> ),
+    <span class="ruby-value">:study_information</span>        =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">fields_of_this_type</span>( <span class="ruby-string">&quot;Study&quot;</span> ),
+    <span class="ruby-value">:career_information</span>       =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">fields_of_one_of_these_types</span>( [ <span class="ruby-string">&quot;Job&quot;</span>, <span class="ruby-string">&quot;Competence&quot;</span> ] ),
+    <span class="ruby-value">:organisations</span>            =<span class="ruby-operator">&gt;</span>  <span class="ruby-identifier">fields_of_this_type</span>( <span class="ruby-string">&quot;Organisation&quot;</span> ),
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- sections-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- sections-method -->
 
     
     </section><!-- public-instance-method-details -->

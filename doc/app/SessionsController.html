@@ -74,6 +74,8 @@
     
     <li><a href="#method-i-destroy">#destroy</a>
     
+    <li><a href="#method-i-logout">#logout</a>
+    
     <li><a href="#method-i-new">#new</a>
     
   </ul>
@@ -97,6 +99,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -107,19 +113,57 @@
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
   
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
+  
     <li><a href="./Custom.html">Custom</a>
+  
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
   
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -128,6 +172,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -188,7 +236,7 @@
   <span class="ruby-keyword">begin</span>
     <span class="ruby-ivar">@current_user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">authenticate</span>( <span class="ruby-identifier">params</span>[ <span class="ruby-value">:login_name</span> ], <span class="ruby-identifier">params</span>[ <span class="ruby-value">:password</span> ] )
     <span class="ruby-keyword">if</span> <span class="ruby-ivar">@current_user</span>
-      <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">current_user</span> = <span class="ruby-ivar">@current_user</span>
+      <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">login</span> <span class="ruby-ivar">@current_user</span>
       <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;users&quot;</span>, <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;show&quot;</span>, <span class="ruby-value">:alias</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@current_user</span>.<span class="ruby-identifier">alias</span>
     <span class="ruby-keyword">end</span>
   <span class="ruby-keyword">rescue</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">exception</span>
@@ -222,11 +270,10 @@
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/controllers/sessions_controller.rb, line 24</span>
+            <pre><span class="ruby-comment"># File app/controllers/sessions_controller.rb, line 29</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">destroy</span>
-  <span class="ruby-identifier">flash</span>[ <span class="ruby-value">:notice</span> ] = <span class="ruby-identifier">t</span> <span class="ruby-value">:good_bye</span>
-  <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;new&quot;</span>
+  <span class="ruby-identifier">redirect_after_logout</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- destroy-source -->
           
@@ -236,6 +283,37 @@
 
         
       </div><!-- destroy-method -->
+
+    
+      <div id="method-i-logout" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">logout</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="logout-source">
+            <pre><span class="ruby-comment"># File app/controllers/sessions_controller.rb, line 24</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logout</span>
+  <span class="ruby-ivar">@session</span>.<span class="ruby-identifier">logout</span>
+  <span class="ruby-identifier">redirect_after_logout</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- logout-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- logout-method -->
 
     
       <div id="method-i-new" class="method-detail ">

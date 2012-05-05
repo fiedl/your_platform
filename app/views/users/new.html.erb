@@ -3,7 +3,20 @@
 
   <legend><%=t :enter_details_for_new_user %></legend>
 
-  <%= automated_form_for @user, :action => "create", :field_names => @ask_for_attributes, :submit_label => @title %>
-  
+  <%= semantic_form_for @user, action: :create do |f| %>
+    <%= f.inputs do %>
+      <%= f.input :first_name %>
+      <%= f.input :last_name %>
+      <%= f.input :alias %>
+      <%= f.input :email %>
+      <%= f.input :create_account, as: :boolean %>
+    <% end %>
+    <%= f.actions %>
+  <% end %>
+
+  <div class="footnotes">
+    * <%=t :fields_have_to_be_given %>
+  </div>
+
 </div>
 

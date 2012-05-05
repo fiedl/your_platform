@@ -22,6 +22,7 @@
 	  <%= link_to @current_user.name, :controller => "users", :action => "show", :alias => @current_user.alias %>
 	</li>
         <li><%= link_to t( :my_profile ), :controller => "users", :action => "show", :alias => @current_user.alias %> </li>
+	<li><%= link_to t( :my_groups ), controller: 'groups', action: 'my' %></li>
         <li class="last">
 	  <%= link_to t( :logout ), :controller => "sessions", :action => "logout" %>
 	</li>
@@ -42,10 +43,8 @@
       <div id="header_search">
 	Suche
       </div>
-      <div id="header_navi">
-        <ul>
-          <li class="active"><a>Horizontale Navigation</a></li>
-        </ul>
+      <div id="horizontal_nav">
+	<%= backend_horizontal_nav %>
       </div>
     </div>
   </div>
@@ -56,7 +55,7 @@
         <div id="content_wrapper">
           <div id="toolbar">
 	    <span id="breadcrumb">
-	      Breadcrumb
+	      <%= breadcrumb_ul %>
 	    </span>
 	    <span id="site_tools">
 	      <%= link_to ( 
@@ -71,18 +70,23 @@
 	  <div id="content">
             <div class="content_twoCols content_twoCols-20-80">
               <div class="content_twoCols_left">
-		<ul class="subnavi top">
-		  <li><a>Mitgliederbereich</a></li>
-		  <li><%= link_to "Alle Benutzer auflisten", { :controller => "users" }, { :class => (action_name == "index" ? "active" : "" ) } %></li>
-		</ul>
-              </div>
+		<div class="vertical_menu">
+		  <ul>
+		    <%= vertical_menu %>
+		  </ul>
+		  <ul>
+		    <li><%= link_to "Alle Benutzer auflisten", { :controller => "users" }, { :class => (action_name == "index" ? "active" : "" ) } %></li>
+		  </ul>
+		</div>
+	      </div>
               <div class="content_twoCols_right">
 
 		<% if flash[ :error ] %>
-		<div class="flash_error">
-                  <%=h flash[ :error ] %>
-		</div>
+  		  <div class="flash error"><%=h flash[ :error ] %></div>
                 <% end %>   
+		<% if flash[ :notice ] %>
+		  <div class="flash notice"><%=h flash[ :notice ] %></div>
+		<% end %>
 
            	<%= convert_to_content_box { yield } %>
 

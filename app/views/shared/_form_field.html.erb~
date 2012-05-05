@@ -1,7 +1,0 @@
-<div>
-  <%= form.label field_name %>
-  <%= form.text_field field_name, :class => "text" %>
-  <% if post.invalid? %>
-    <div class="error_message"><%=h post.errors[field_name].first %></div>
-  <% end %>
-</div>

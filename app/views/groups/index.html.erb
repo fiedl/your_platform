@@ -1,0 +1,12 @@
+<h1><%=h @title %></h1>
+<div>
+  <% if @user %>
+    <%= groups_of_user_ul @user %>
+  <% else %>
+    <ul>
+      <% for group in @groups do %>
+        <%= group_list_item group %>
+      <% end %>
+    </ul>  
+  <% end %>
+</div>

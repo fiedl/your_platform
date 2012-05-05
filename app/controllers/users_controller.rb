@@ -8,37 +8,15 @@ class UsersController < ApplicationController
   end
 
   def show
-    if @user
-      @profile_fields = @user.profile_fields
-      @title = @user.name
-    
-      # Profilfelder sinnvoll gruppieren
-      @profile_field_groups = { 
-        'Kontaktinformationen' => profile_fields_of_one_of_these_types( [ "Address", "Email", "Custom" ] ),
-        'Über mich' => profile_fields_of_this_type( "About" ),
-        'Informationen zum Studium' => profile_fields_of_this_type( "Study" ),
-        'Informationen zum Beruf' => profile_fields_of_one_of_these_types( [ "Job", "Competence" ] ),
-        'Vereine und Organisationen' => profile_fields_of_this_type( "Organisation" ),
-      }
-
-      # GoogleMaps
-      @test = ""
-      @gmaps4rails_json = profile_fields_of_this_type( "Address" ).to_gmaps4rails do |pf|
-        @test += pf.value + "   "
-        "\"Test\": \"#{pf.value}\""
-      end
-      
-    else
-      @title = "Benutzer: #{@alias}"
-      @profile_field_groups = {}
-    end
+    id = @user.id if @user
+    redirect_to controller: 'profiles', action: 'show', id: id
   end
 
   def new
     @title = t :create_user
     @user = User.new
     @user.alias = params[:alias]
-    @ask_for_attributes = [ :first_name, :last_name, :alias, :email ]
+    
   end
 
   def create
@@ -48,21 +26,11 @@ class UsersController < ApplicationController
     else
       @title = t :create_user
       @user.valid?
-      @ask_for_attributes = [ :first_name, :last_name, :alias, :email ]
       render :action => "new"
-      "Test"
     end
   end
 
   private
-
-  def profile_fields_of_one_of_these_types ( types )
-    @profile_fields.select { |profile_field|  types.include? profile_field.type }
-  end
-
-  def profile_fields_of_this_type ( type ) 
-    profile_fields_of_one_of_these_types ( [ type ] )
-  end
 
   def find_user
     @alias = params[ :alias ]

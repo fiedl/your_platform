@@ -1,7 +1,0 @@
-class RemoveUserEmailColumn < ActiveRecord::Migration
-  def up
-  end
-
-  def down
-  end
-end

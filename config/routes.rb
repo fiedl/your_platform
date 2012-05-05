@@ -1,6 +1,9 @@
 Wingolfsplattform::Application.routes.draw do 
 
 
+  resources :pages
+  resources :groups
+  resources :profiles
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
@@ -19,9 +22,10 @@ Wingolfsplattform::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
+  resources :users
+
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile
-
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

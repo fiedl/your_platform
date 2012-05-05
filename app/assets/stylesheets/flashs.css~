@@ -1,7 +1,0 @@
-
-.flash_error {
-  background-color: red;
-  color: white;
-  padding: 3px;
-  margin-bottom: 10px;
-}

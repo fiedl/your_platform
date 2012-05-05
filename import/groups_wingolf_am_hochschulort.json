@@ -1,0 +1,177 @@
+[ 
+    {
+	"name": "Bonner Wingolf",
+	"token": "Bo",
+	"domain": "bonn"
+    },
+    {
+	"name": "Berliner Wingolf",
+	"token": "Be",
+	"domain": "berlin"
+    },
+    {
+	"name": "Hallenser Wingolf",
+	"token": "H",
+	"domain": "halle"
+    },
+    {
+	"name": "Marburger Wingolf",
+	"token": "M",
+	"domain": "marburg"
+    },
+    {
+	"name": "Rostocker Wingolf",
+	"token": "R",
+	"domain": "rostock"
+    },
+    {
+	"name": "Arminia Dorpatensis",
+	"token": "Dp",
+	"domain": "dorpat"
+    },
+    {
+	"name": "Erlanger Wingolf",
+	"token": "E",
+	"domain": "erlangen"
+    },
+    {
+	"name": "Heidelberger Wingolf",
+	"token": "Hg",
+	"domain": "heidelberg"
+    },
+    {
+	"name": "Gießener Wingolf",
+	"token": "Gi",
+	"domain": "giessen"
+    },
+    {
+	"name": "Leipziger Wingolf",
+	"token": "L",
+	"domain": "leipzig"
+    },
+    {
+	"name": "Tübinger Wingolf",
+	"token": "T",
+	"domain": "tuebingen"
+    },
+    {
+	"name": "Göttinger Wingolf",
+	"token": "G",
+	"domain": "goettingen"
+    },
+    {
+	"name": "Kieler Wingolf",
+	"token": "K",
+	"domain": "kiel"
+    },
+    {
+	"name": "Münchener Wingolf",
+	"token": "Mch",
+	"domain": "muenchen"
+    },
+    {
+	"name": "Karlsruher Wingolf",
+	"token": "Ka",
+	"domain": "karlsruhe"
+    },
+    {
+	"name": "Darmstädter Wingolf",
+	"token": "Dst",
+	"domain": "darmstadt"
+    },
+    {
+	"name": "Stuttgarter Wingolf",
+	"token": "St",
+	"domain": "stuttgart"
+    },
+    {
+	"name": "Münsterscher Wingolf",
+	"token": "Mst",
+	"domain": "muenster"
+    },
+    {
+	"name": "Freiburger Wingolf",
+	"token": "Fr",
+	"domain": "freiburg"
+    },
+    {
+	"name": "Frakfurter Wingolf",
+	"token": "Ft",
+	"domain": "frankfurt"
+    },
+    {
+	"name": "Hannoverscher Wingolf",
+	"token": "Hv",
+	"domain": "hannover"
+    },
+    {
+	"name": "Hamburger Wingolf",
+	"token": "Hb",
+	"domain": "hamburg"
+    },
+    {
+	"name": "Kölner Wingolf",
+	"token": "Kö",
+	"domain": "koeln"
+    },
+    {
+	"name": "Jenenser Wingolf",
+	"token": "Je",
+	"domain": "jena"
+    },
+    {
+	"name": "Clausthaler Wingolf zu Marburg",
+	"token": "ClzM",
+	"domain": "clzm"
+    },
+    {
+	"name": "Wingolfsverbindung Chattia zu Würzburg",
+	"token": "W",
+	"domain": "wuerzburg"
+    },
+    {
+	"name": "Wingolf zu Wien",
+	"token": "Wi",
+	"domain": "wien"
+    },
+    {
+	"name": "Hohenheimer Wingolfsverbindung Fraternitas Academica",
+	"token": "Hm",
+	"domain": "hohenheim"
+    },
+    {
+	"name": "Mainzer Wingolf",
+	"token": "Mz",
+	"domain": "mainz"
+    },
+    {
+	"name": "Clausthaler Wingolf Catena",
+	"token": "CaCl",
+	"domain": "clausthal"
+    },
+    {
+	"name": "Wingolfsverbindung Chattia zu Aachen",
+	"token": "A",
+	"domain": "aachen"
+    },
+    {
+	"name": "Mannheimer Wingolf",
+	"token": "Mm",
+	"domain": "mannheim"
+    },
+    {
+	"name": "CDStV Nibelungen zu Siegen",
+	"token": "Si",
+	"domain": "siegen"
+    },
+    {
+	"name": "Erfurter Wingolf Georgia",
+	"token": "Ef",
+	"domain": "erfurt"
+    },
+    {
+	"name": "Bremer Wingolf",
+	"token": "B",
+	"domain": "bremen"
+    }
+]

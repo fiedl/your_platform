@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  url_component: MyString
+  breadcrumb_item: MyString
+  menu_item: MyString
+  slim_breadcrumb: false
+  slim_url: false
+  slim_menu: false
+  hidden_menu: false
+  navable_id: 1
+  navable_type: MyString
+
+two:
+  url_component: MyString
+  breadcrumb_item: MyString
+  menu_item: MyString
+  slim_breadcrumb: false
+  slim_url: false
+  slim_menu: false
+  hidden_menu: false
+  navable_id: 1
+  navable_type: MyString

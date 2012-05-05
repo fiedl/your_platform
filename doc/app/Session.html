@@ -80,6 +80,10 @@
     
     <li><a href="#method-i-logged_in-3F">#logged_in?</a>
     
+    <li><a href="#method-i-login">#login</a>
+    
+    <li><a href="#method-i-logout">#logout</a>
+    
   </ul>
 </nav>
 
@@ -101,6 +105,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -111,19 +119,57 @@
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
   
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
+  
     <li><a href="./Custom.html">Custom</a>
+  
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
   
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -132,6 +178,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -174,7 +224,7 @@
         
         <div class="method-heading">
           <span class="method-name">new</span><span
-            class="method-args">( session_array, request )</span>
+            class="method-args">( session, cookies, request )</span>
           <span class="method-click-advice">click to toggle source</span>
         </div>
         
@@ -187,10 +237,13 @@
           
           <div class="method-source-code" id="new-source">
             <pre><span class="ruby-comment"># File app/models/session.rb, line 3</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">session_array</span>, <span class="ruby-identifier">request</span> )
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initialize</span>( <span class="ruby-identifier">session</span>, <span class="ruby-identifier">cookies</span>, <span class="ruby-identifier">request</span> )
   <span class="ruby-ivar">@request</span> = <span class="ruby-identifier">request</span>
-  <span class="ruby-ivar">@session_array</span> = <span class="ruby-identifier">session_array</span>
-  <span class="ruby-ivar">@current_user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find_by_id</span>( <span class="ruby-ivar">@session_array</span>[ <span class="ruby-value">:current_user_id</span> ] ) <span class="ruby-keyword">if</span> <span class="ruby-identifier">session_array</span>[ <span class="ruby-value">:current_user_id</span> ]
+  <span class="ruby-ivar">@session</span> = <span class="ruby-identifier">session</span>
+  <span class="ruby-ivar">@cookies</span> = <span class="ruby-identifier">cookies</span>
+  
+  <span class="ruby-identifier">current_user_id</span> = <span class="ruby-identifier">read_from_session_and_cookie</span> <span class="ruby-value">:current_user_id</span>
+  <span class="ruby-ivar">@current_user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find_by_id</span>( <span class="ruby-identifier">current_user_id</span> ) <span class="ruby-keyword">if</span> <span class="ruby-identifier">current_user_id</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- new-source -->
           
@@ -224,7 +277,7 @@
 
           
           <div class="method-source-code" id="current_user-source">
-            <pre><span class="ruby-comment"># File app/models/session.rb, line 9</span>
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 12</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">current_user</span>
   <span class="ruby-ivar">@current_user</span>
 <span class="ruby-keyword">end</span></pre>
@@ -254,10 +307,10 @@
 
           
           <div class="method-source-code" id="current_user-3D-source">
-            <pre><span class="ruby-comment"># File app/models/session.rb, line 13</span>
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 16</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">current_user=</span>( <span class="ruby-identifier">current_user</span> )
   <span class="ruby-ivar">@current_user</span> = <span class="ruby-identifier">current_user</span>
-  <span class="ruby-ivar">@session_array</span>[ <span class="ruby-value">:current_user_id</span> ] = <span class="ruby-ivar">@current_user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">save_to_session_and_cookie</span> <span class="ruby-value">:current_user_id</span>, <span class="ruby-ivar">@current_user</span>.<span class="ruby-identifier">id</span> 
 <span class="ruby-keyword">end</span></pre>
           </div><!-- current_user-3D-source -->
           
@@ -285,10 +338,11 @@
 
           
           <div class="method-source-code" id="destroy-source">
-            <pre><span class="ruby-comment"># File app/models/session.rb, line 22</span>
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 33</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
   <span class="ruby-ivar">@request</span>.<span class="ruby-identifier">reset_session</span>
   <span class="ruby-ivar">@current_user</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-ivar">@cookies</span>.<span class="ruby-identifier">delete</span> <span class="ruby-value">:current_user_id</span>
 <span class="ruby-keyword">end</span></pre>
           </div><!-- destroy-source -->
           
@@ -316,7 +370,7 @@
 
           
           <div class="method-source-code" id="logged_in-3F-source">
-            <pre><span class="ruby-comment"># File app/models/session.rb, line 18</span>
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">logged_in?</span>
   <span class="ruby-ivar">@current_user</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">User</span>
 <span class="ruby-keyword">end</span></pre>
@@ -328,6 +382,66 @@
 
         
       </div><!-- logged_in-3F-method -->
+
+    
+      <div id="method-i-login" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">login</span><span
+            class="method-args">( user = nil )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="login-source">
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 21</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">login</span>( <span class="ruby-identifier">user</span> = <span class="ruby-keyword">nil</span> )
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">current_user</span> = <span class="ruby-identifier">user</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- login-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- login-method -->
+
+    
+      <div id="method-i-logout" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">logout</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="logout-source">
+            <pre><span class="ruby-comment"># File app/models/session.rb, line 29</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logout</span>
+  <span class="ruby-identifier">destroy</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- logout-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- logout-method -->
 
     
     </section><!-- public-instance-method-details -->

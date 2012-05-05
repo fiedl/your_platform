@@ -72,6 +72,8 @@
     
     <li><a href="#method-c-authenticate">::authenticate</a>
     
+    <li><a href="#method-c-identify">::identify</a>
+    
     <li><a href="#method-i-alias">#alias</a>
     
     <li><a href="#method-i-capitalize_name">#capitalize_name</a>
@@ -87,6 +89,10 @@
     <li><a href="#method-i-name">#name</a>
     
     <li><a href="#method-i-profile">#profile</a>
+    
+    <li><a href="#method-i-relationships">#relationships</a>
+    
+    <li><a href="#method-i-title">#title</a>
     
   </ul>
 </nav>
@@ -109,6 +115,10 @@
 
   <ul class="link-list">
   
+    <li><a href="./Navable.html">Navable</a>
+  
+    <li><a href="./Navable/InstanceMethodsForNavables.html">Navable::InstanceMethodsForNavables</a>
+  
     <li><a href="./Address.html">Address</a>
   
     <li><a href="./Alias.html">Alias</a>
@@ -119,19 +129,57 @@
   
     <li><a href="./BoxHelper.html">BoxHelper</a>
   
+    <li><a href="./BreadcrumbsHelper.html">BreadcrumbsHelper</a>
+  
     <li><a href="./Custom.html">Custom</a>
+  
+    <li><a href="./DagLink.html">DagLink</a>
+  
+    <li><a href="./EditableHelper.html">EditableHelper</a>
   
     <li><a href="./Email.html">Email</a>
   
     <li><a href="./FormHelper.html">FormHelper</a>
   
+    <li><a href="./Group.html">Group</a>
+  
+    <li><a href="./Groups.html">Groups</a>
+  
+    <li><a href="./GroupsController.html">GroupsController</a>
+  
+    <li><a href="./GroupsHelper.html">GroupsHelper</a>
+  
+    <li><a href="./MenuHelper.html">MenuHelper</a>
+  
+    <li><a href="./NavNode.html">NavNode</a>
+  
     <li><a href="./Organisation.html">Organisation</a>
+  
+    <li><a href="./Page.html">Page</a>
+  
+    <li><a href="./PagesController.html">PagesController</a>
+  
+    <li><a href="./PagesHelper.html">PagesHelper</a>
   
     <li><a href="./Password.html">Password</a>
   
     <li><a href="./Profile.html">Profile</a>
   
     <li><a href="./ProfileField.html">ProfileField</a>
+  
+    <li><a href="./ProfileFieldsController.html">ProfileFieldsController</a>
+  
+    <li><a href="./ProfileFieldsHelper.html">ProfileFieldsHelper</a>
+  
+    <li><a href="./ProfilesController.html">ProfilesController</a>
+  
+    <li><a href="./ProfilesHelper.html">ProfilesHelper</a>
+  
+    <li><a href="./Relationship.html">Relationship</a>
+  
+    <li><a href="./RelationshipDagLink.html">RelationshipDagLink</a>
+  
+    <li><a href="./RelationshipsHelper.html">RelationshipsHelper</a>
   
     <li><a href="./Session.html">Session</a>
   
@@ -140,6 +188,10 @@
     <li><a href="./SessionsHelper.html">SessionsHelper</a>
   
     <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserAccount.html">UserAccount</a>
+  
+    <li><a href="./UserIdentification.html">UserIdentification</a>
   
     <li><a href="./UserPropertyString.html">UserPropertyString</a>
   
@@ -214,7 +266,7 @@
 
           
           <div class="method-source-code" id="authenticate-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 66</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 111</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">authenticate</span>( <span class="ruby-identifier">login_name</span>, <span class="ruby-identifier">password</span> )
   <span class="ruby-identifier">try_to_authenticate_by</span> = [ <span class="ruby-value">:alias</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:name</span>, <span class="ruby-value">:email</span> ]
   <span class="ruby-identifier">user</span> = <span class="ruby-keyword">nil</span>
@@ -260,6 +312,59 @@
       </div><!-- authenticate-method -->
 
     
+      <div id="method-c-identify" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">identify</span><span
+            class="method-args">( login_string )</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Versucht, einen Benutzer anhand eines login_strings zu identifizieren, der
+beim Anmelden eingegeben wird. Das kann eine E-Mail-Adresse, ein
+Benutzername, Vor- und Zuname, etc. sein.</p>
+          
+
+          
+          <div class="method-source-code" id="identify-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 85</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">identify</span>( <span class="ruby-identifier">login_string</span> )
+  <span class="ruby-identifier">try_to_identify_by</span> = [ <span class="ruby-value">:alias</span>, <span class="ruby-value">:last_name</span>, <span class="ruby-value">:name</span>, <span class="ruby-value">:email</span> ]
+  <span class="ruby-identifier">user</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">try_to_identify_by</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">attribute</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">column_names</span>.<span class="ruby-identifier">include?</span> <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>
+      <span class="ruby-comment"># Wenn es eine SQL-Tabellenspalte ist, kann SQL zum (schnelleren) Suchen benutzt werden.</span>
+      <span class="ruby-identifier">user</span> = <span class="ruby-identifier">send</span>( <span class="ruby-string">&quot;find_by_&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>, <span class="ruby-identifier">login_string</span> )
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment"># Wenn es keine Tabellenspalte ist, müssen erst alle Objekte in ein Array geladen </span>
+      <span class="ruby-comment"># und dann gefltert werden.</span>
+      <span class="ruby-constant">User</span>.<span class="ruby-identifier">find_each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">result</span> = <span class="ruby-identifier">u</span>.<span class="ruby-identifier">send</span> <span class="ruby-identifier">attribute</span>.<span class="ruby-identifier">to_s</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">login_string</span>.<span class="ruby-identifier">downcase</span>
+            <span class="ruby-identifier">user</span> = <span class="ruby-identifier">u</span>
+            <span class="ruby-keyword">break</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">user</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- identify-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- identify-method -->
+
+    
     </section><!-- public-class-method-details -->
   
      <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
@@ -282,7 +387,7 @@
 
           
           <div class="method-source-code" id="alias-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 29</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 42</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">alias</span>
   <span class="ruby-ivar">@alias</span> = <span class="ruby-constant">Alias</span>.<span class="ruby-identifier">new</span>( <span class="ruby-identifier">read_attribute</span>( <span class="ruby-value">:alias</span> ), <span class="ruby-value">:user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span> ) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@alias</span>.<span class="ruby-identifier">kind_of?</span> <span class="ruby-constant">Alias</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@alias</span>
@@ -313,7 +418,7 @@
 
           
           <div class="method-source-code" id="capitalize_name-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 50</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 63</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">capitalize_name</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">first_name</span>.<span class="ruby-identifier">capitalize!</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">capitalize!</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">include?</span>( <span class="ruby-string">&quot; &quot;</span> ) <span class="ruby-comment"># &quot;de Silva&quot;</span>
@@ -345,7 +450,7 @@
 
           
           <div class="method-source-code" id="deactivate_account-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 61</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">deactivate_account</span>
   <span class="ruby-comment"># Der Account wird deaktiviert, indem das verschlüsselte Passwort entfernt wird.</span>
   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encrypted_password</span> = <span class="ruby-string">&quot;&quot;</span>
@@ -376,7 +481,7 @@
 
           
           <div class="method-source-code" id="email-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 43</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 56</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">email</span>
   <span class="ruby-identifier">profile</span>.<span class="ruby-identifier">email</span>
 <span class="ruby-keyword">end</span></pre>
@@ -406,7 +511,7 @@
 
           
           <div class="method-source-code" id="email-3D-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 46</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 59</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">email=</span>( <span class="ruby-identifier">email</span> )
   <span class="ruby-identifier">profile</span>.<span class="ruby-identifier">email</span> = <span class="ruby-identifier">email</span>
 <span class="ruby-keyword">end</span></pre>
@@ -436,7 +541,7 @@
 
           
           <div class="method-source-code" id="has_account-3F-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 56</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 69</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">has_account?</span>
   <span class="ruby-comment"># Wenn kein Passwort gespeichert ist, hat der Benutzer keinen Account.</span>
   <span class="ruby-operator">!</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">encrypted_password</span>.<span class="ruby-identifier">blank?</span>
@@ -467,7 +572,7 @@
 
           
           <div class="method-source-code" id="name-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 20</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 25</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">name</span>
   <span class="ruby-identifier">first_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">&quot; &quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">last_name</span>
 <span class="ruby-keyword">end</span></pre>
@@ -497,7 +602,7 @@
 
           
           <div class="method-source-code" id="profile-source">
-            <pre><span class="ruby-comment"># File app/models/user.rb, line 24</span>
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 37</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier">profile</span>
   <span class="ruby-ivar">@profile</span> = <span class="ruby-constant">Profile</span>.<span class="ruby-identifier">new</span>( <span class="ruby-keyword">self</span> ) <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@profile</span>
   <span class="ruby-keyword">return</span> <span class="ruby-ivar">@profile</span>
@@ -510,6 +615,71 @@
 
         
       </div><!-- profile-method -->
+
+    
+      <div id="method-i-relationships" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">relationships</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="relationships-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 79</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">relationships</span>
+  <span class="ruby-identifier">relationships_parent_relationships</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">relationships_child_relationships</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- relationships-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- relationships-method -->
+
+    
+      <div id="method-i-title" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">title</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Diese Funktion gibt eine sinnvolle Beschriftung des Benutzers zurück, z.B.
+für die Beschriftung von Menüpunkten,  die diesen Benutzer repräsentieren.
+Damit ist der Aufruf der gleiche wie etwa beim Page-Modell.  <code>@title =
+page.title</code>, <code>@title = user.title</code>. Die Funktion gibt
+<strong>nicht</strong> den akademischen Titel oder die Anrede des Benutzers
+zurück.</p>
+          
+
+          
+          <div class="method-source-code" id="title-source">
+            <pre><span class="ruby-comment"># File app/models/user.rb, line 33</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">title</span>
+  <span class="ruby-identifier">name</span> <span class="ruby-comment"># TODO Später hier vmlt. die Aktivitätszahl hinzufügen.</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- title-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- title-method -->
 
     
     </section><!-- public-instance-method-details -->

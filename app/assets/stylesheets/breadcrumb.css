@@ -3,7 +3,23 @@
 #breadcrumb{
     background:url(../images/breadcrumb.gif) no-repeat 0px 2px;
     padding-left:18px;
+    vertical-alignment: middle;
+    display: inline-block;
 }
 
+#breadcrumb ul {
+    display: inline-block;
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
 
+#breadcrumb ul li {
+    float: left;
+    margin-left: 8px;
+}
 
+#breadcrumb ul li a {
+    background: url(../images/breadcrumb-sep.png) no-repeat center right;
+    padding-right: 12px;
+}

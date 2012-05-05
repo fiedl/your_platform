@@ -29,6 +29,29 @@ class Profile #< ActiveRecord::Base
     # TODO: Hier ist die Frage, wie das getriggert wird, nachdem dies kein echter ActiveRecord ist. 
   end
 
+  def fields_of_one_of_these_types ( types )
+    fields.select { |profile_field|  types.include? profile_field.type }
+  end
+
+  def fields_of_this_type ( type )
+    fields_of_one_of_these_types ( [ type ] )
+  end
+
+  # Um die Profilfelder sinnvoll zu gruppieren, können sie in mehrere Abschnitte (sections) untergliedert
+  # abgefragt werden. 
+  # Diese Funktion gibt ein assoziatives Array zurück, wobei der Schlüssel der Titel des Abschnittes ist,
+  # der Wert ein Array der entsprechenden Profilfelder.
+  def sections
+    {
+      :contact_information      =>  fields_of_one_of_these_types( [ "Address", "Email", "Custom" ] ),
+      :about_myself             =>  fields_of_this_type( "About" ),
+      :study_information        =>  fields_of_this_type( "Study" ),
+      :career_information       =>  fields_of_one_of_these_types( [ "Job", "Competence" ] ),
+      :organisations            =>  fields_of_this_type( "Organisation" ),
+    }
+  end
+
+
 
   def save
     if @email
