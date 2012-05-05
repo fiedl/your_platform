@@ -1,4 +1,3 @@
-
 == TODO
 - Startpage controller
 - Navigation
@@ -15,3 +14,5 @@
 - testing-aki: Interner Test im AK Internet
 - development: Entwicklungs-Branch. Hiervon abzweigen, wenn eine neue Komponente entwickelt wird.
 - next: Das ist der Branch, in den neue Entwicklungen eingepflegt werden. Dann kurzer Test und Übernahme nach development.
+
+
