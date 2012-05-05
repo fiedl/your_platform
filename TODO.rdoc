@@ -10,7 +10,8 @@
 - http://yardoc.org/
 - Rails API einschließen: http://stackoverflow.com/questions/1202060/how-do-i-generate-rdoc-for-all-of-rails
 
-=== Testing
+=== Branches und Testing
 - testing-pub: Test mit einer größeren Gruppe, z.B. dem Erlanger Wingolf
 - testing-aki: Interner Test im AK Internet
 - development: Entwicklungs-Branch. Hiervon abzweigen, wenn eine neue Komponente entwickelt wird.
+- next: Das ist der Branch, in den neue Entwicklungen eingepflegt werden. Dann kurzer Test und Übernahme nach development.
