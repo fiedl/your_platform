@@ -9,3 +9,6 @@
 - rake doc:app
 - http://yardoc.org/
 - Rails API einschließen: http://stackoverflow.com/questions/1202060/how-do-i-generate-rdoc-for-all-of-rails
+
+=== Testing
+- testing-pub: Test mit einer größeren Gruppe, z.B. dem Erlanger Wingolf
