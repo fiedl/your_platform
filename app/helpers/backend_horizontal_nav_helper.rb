@@ -8,7 +8,7 @@ module BackendHorizontalNavHelper
   def backend_horizontal_nav_for_user( user )
     important_navables = []
     important_navables += [ Page.mitglieder_start ] if Page.mitglieder_start
-    important_navables += user.corporations if user.corporations
+    important_navables += user.corporations if user.corporations if user
     content_tag :ul do
       important_navables.collect do |navable|
         backend_horizontal_nav_item navable
