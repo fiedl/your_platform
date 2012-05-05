@@ -13,3 +13,4 @@
 === Testing
 - testing-pub: Test mit einer größeren Gruppe, z.B. dem Erlanger Wingolf
 - testing-aki: Interner Test im AK Internet
+- development: Entwicklungs-Branch. Hiervon abzweigen, wenn eine neue Komponente entwickelt wird.
