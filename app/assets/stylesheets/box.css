@@ -42,6 +42,10 @@
     font-weight: bold;
 }
 
+#content * .box .content h2 {
+    font-size: 13pt;
+}
+
 .modal {
     z-index: 3005;
 }

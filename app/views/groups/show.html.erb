@@ -9,6 +9,7 @@
   </dl>
 </div>
 
+<% if false # Das hat sich wohl erübrigt, (a) durch das Menü, (b) durch die Mitgliederauflistung unterhalb. %>
 <h1><%=t :sub_groups %></h1>
 <div>
   <ul>
@@ -17,12 +18,26 @@
     <% end %>
   </ul>
 </div>
+<% end %>
 
 <h1><%=t :members %></h1>
 <div>
-  <ul>
-    <% for user in @users do %>
-      <li><%= link_to user.name, controller: 'users', action: 'show', alias: user.alias %></li>
+  <% if @group %>
+    <% if @group.child_users.count > 0 %>
+      <ul>
+        <% for user in @group.child_users do %>
+          <li><%= link_to user.title, user %></li>
+        <% end %>
+      </ul>
+    <% elsif @group.child_groups.count > 0 %>
+      <% for child_group in @group.child_groups do %>
+        <h2><%= link_to child_group.title, child_group %> (<%=h child_group.descendant_users.count %>)</h2>
+	<ul>
+  	  <% for user in child_group.descendant_users do %>
+	    <li><%= link_to user.title, user %></li>
+	  <% end %>
+	</ul>
+      <% end %>
     <% end %>
-  </ul>
+  <% end %>
 </div>
