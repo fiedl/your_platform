@@ -1,0 +1,49 @@
+token;name
+BV 01;BV 01 – Berlin-Brandenburg
+BV 02;BV 02 – Hamburg
+BV 03;BV 03 – Schleswig-Holstein
+BV 04;BV 04 – Unterweser
+BV 05;BV 05 – Stade
+BV 06;BV 07 – Celle
+BV 08;BV 08 – Hannover
+BV 09;BV 09 – Braunschweig
+BV 10;BV 10 – Südhannover
+BV 11;BV 11 – Ostfriesland
+BV 12;BV 12 – Münster-Benthelm-Osnabrück
+BV 13;BV 13 – Minden-Ravensberg
+BV 14;BV 14 – Lippe
+BV 15;￼BV 15 – Mark I (Ruhr-Lippe)
+￼￼BV 16;￼BV 16 – Mark II (Hellweg)
+￼￼BV 17;￼BV 17 – Mark III (Hagen-Sauerland)
+￼￼BV 18;￼BV 18 – Bergisch-Märkischer Kreis
+￼￼BV 19a;￼BV 19a – Niederrhein-Nord
+￼￼BV 19b;￼BV 19b – Niederrhein-Mitte
+￼￼BV 19c;￼BV 19c – Niederrhein-Süd (Köln-Aachen)
+￼￼BV 20;￼BV 20 – Mittelrhein
+￼￼BV 21;￼BV 21 – Obere Sieg
+￼￼BV 22;￼BV 22 – Kassel-Waldeck
+￼￼BV 23;￼BV 23 – Sachsen-Anhalt
+￼￼BV 24;￼BV 24 – Oberhessen
+￼￼BV 25;￼BV 25 – Starkenburg
+￼￼BV 26;￼BV 26 – Rheinhessen-Nassau
+￼￼BV 27;￼BV 27 – Frankfurt
+￼￼BV 28;￼BV 28 – Thüringen
+￼￼BV 29;￼BV 29 – Mittelrhein-Nahe
+￼￼BV 30;￼BV 30 – Trier
+￼￼BV 31;￼BV 31 – Nordbaden
+￼￼BV 32;￼BV 32 – Mittelbaden
+￼￼BV 33;￼BV 33 – Südbaden
+￼￼BV 34;￼BV 34 – Schwäbischer Kreis
+BV 35;BV 35 – Unterfranken
+BV 36;BV 36 – Oberfranken
+BV 37;BV 37 – Mittelfranken-Oberpfalz
+BV 38;BV 38 – Südbayern-München
+BV 39;BV 39 – Oberschwaben-Bodensee
+BV 40;BV 40 – Rheinpfalz
+BV 41;BV 41 – Saar
+BV 42;BV 42 – Sachsen
+BV 43;BV 43 – Österreich
+BV 44;BV 44 – Estland
+BV 45;BV 45 – Übriges Europa
+BV 46;BV 46 – Außer-Europa
+BV 00;BV 00 – Unbekannt verzogene Philister
