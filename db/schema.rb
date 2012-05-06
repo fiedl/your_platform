@@ -11,7 +11,14 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120427150156) do
+ActiveRecord::Schema.define(:version => 20120506073852) do
+
+  create_table "bv_mappings", :force => true do |t|
+    t.string   "bv_name"
+    t.string   "plz"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"

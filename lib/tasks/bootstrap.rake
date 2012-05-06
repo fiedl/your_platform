@@ -8,6 +8,7 @@ namespace :bootstrap do
     p "Task: Add basic groups"
     Group.jeder!
     Group.wingolf_am_hochschulort!
+    Group.bvs!
   end
 
   desc "Import all wingolf_am_hochschulort groups"
@@ -36,12 +37,28 @@ namespace :bootstrap do
     n = Group.wingolf_am_hochschulort.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
   end
 
+  desc "Import BVs from PLZ list"
+  task import_bv_mappings: :environment do
+    p "Task: Import BV mappings. This really will take a while."
+    require 'csv'
+    file_name = File.join( Rails.root, "import", "bv_zuordnung.csv" )
+    if File.exists? file_name
+      counter = 0
+      CSV.foreach file_name, headers: true, col_sep: ';' do |row|
+        BvMapping.create( bv_name: row[ 'BV' ], plz: row[ 'PLZ' ] )
+        counter += 1
+      end
+      p "BV Mappings created: " + counter.to_s
+    end
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
                 :import_wingolf_am_hochschulort_groups,
                 :import_sub_structure_of_wingolf_am_hochschulort_groups,
-                :basic_nav_node_properties
+                :basic_nav_node_properties,
+                :import_bv_mappings
                ]
 
 end

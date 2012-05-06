@@ -44,6 +44,19 @@ class Group < ActiveRecord::Base
     return self.wingolf_am_hochschulort
   end
 
+  def self.bvs
+    ( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first
+  end
+
+  def self.bvs!
+    unless self.bvs
+      p "Creating group 'Bezirksverbände' ..."
+      bvs_group = Group.create( name: "Bezirksverbände" )
+      raise "no group 'Jeder'" unless Group.jeder
+      bvs_group.parent_groups << Group.jeder
+    end
+  end
+
   def import_default_group_structure( yaml_file_title = nil )
     yaml_file_title = self.name + ".yml" unless yaml_file_title
     yaml_file_name = File.join( Rails.root, "import", "default_group_sub_structures", yaml_file_title )
