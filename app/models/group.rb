@@ -82,6 +82,16 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # Importiere Gruppen aus CSV-Datei
+  def self.csv_import_groups_into_parent_group( csv_file_title, parent_group )
+    import_file_name = File.join( Rails.root, "import", csv_file_title )
+    require 'csv'
+    CSV.foreach import_file_name, headers: true, col_sep: ';' do |row|
+      new_child_group = Group.create row.to_hash
+      parent_group.child_groups << new_child_group
+    end
+  end
+
   # Importiert ein JSON-Array von Gruppen in die Grupe +parent_group+. 
   # Kann z.B. zum Import der Wingolf-am-Hochschulort-Gruppen verwendet werden.
   def self.json_import_groups_into_parent_group( json_file_title, parent_group )

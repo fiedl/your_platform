@@ -1,4 +1,10 @@
 <span class="show">
   <dt><%=h @profile_field.label %></dt>
-  <dd><%=h @profile_field.value.gsub( ', ', '<br />').html_safe %></dd>
+  <dd>
+    <%=h @profile_field.value.gsub( ', ', '<br />').html_safe %>
+    <% if @profile_field.type == "Address" %>
+      <br />
+      (<%= link_to @profile_field.bv.name, @profile_field.bv %>)
+    <% end %>
+  </dd>
 </span>

@@ -52,13 +52,20 @@ namespace :bootstrap do
     end
   end
 
+  desc "Import BV groups"
+  task import_bv_groups: :environment do
+    p "Task: Import BV groups"
+    Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
                 :import_wingolf_am_hochschulort_groups,
                 :import_sub_structure_of_wingolf_am_hochschulort_groups,
                 :basic_nav_node_properties,
-                :import_bv_mappings
+                :import_bv_mappings,
+                :import_bv_groups
                ]
 
 end

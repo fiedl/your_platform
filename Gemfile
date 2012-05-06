@@ -55,6 +55,9 @@ gem 'rails-i18n'							# MIT License
 # GoogleMaps
 gem 'gmaps4rails'							# MIT License
 
+# GeoCoder
+gem 'geocoder'								# 
+
 # jQuery UI
 gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License 
 
