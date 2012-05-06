@@ -109,6 +109,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  # Der Bezirksverband, dem der Benutzer zugeordnet ist.
+  def bv
+    bv_of_this_user = ( Bv.all & self.ancestor_groups ).first
+    return bv_of_this_user.becomes Bv if bv_of_this_user
+  end
+
   def aktivitaetszahl
     ( self.corporations.collect { |corporation| corporation.token } ).join( " " )
   end
