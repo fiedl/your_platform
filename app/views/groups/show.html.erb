@@ -1,6 +1,7 @@
 <h1><%= @title %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
+<% if @group.token or @group.extensive_name %>
 <h1><%=t :details %></h1>
 <div>
   <dl>
@@ -8,6 +9,7 @@
     <dt><%=t :extensive_name %></dt><dd><%=h @group.extensive_name %></dd>
   </dl>
 </div>
+<% end %>
 
 <% if false # Das hat sich wohl erübrigt, (a) durch das Menü, (b) durch die Mitgliederauflistung unterhalb. %>
 <h1><%=t :sub_groups %></h1>
@@ -20,7 +22,7 @@
 </div>
 <% end %>
 
-<h1><%=t :members %></h1>
+<h1><%=t :members %> (<%=h @group.descendant_users.count %>)</h1>
 <div>
   <% if @group %>
     <% if @group.child_users.count > 0 %>
