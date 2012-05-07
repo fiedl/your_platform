@@ -8,8 +8,10 @@ class UsersController < ApplicationController
   end
 
   def show
-    id = @user.id if @user
-    redirect_to controller: 'profiles', action: 'show', id: id
+    respond_to do |format|
+      format.html # show.html.erb
+      #format.json { render json: @profile.sections }  # TODO
+    end
   end
 
   def new
@@ -41,6 +43,13 @@ class UsersController < ApplicationController
       @user = User.find_by_id( id )
     else
       @user = User.new
+    end
+    if @user
+      @navable = @user
+      @title = @user.title
+    else
+      @title = t :user_not_found
+      @title += ": #{@alias}" if @alias
     end
   end
 

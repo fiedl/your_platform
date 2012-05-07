@@ -5,6 +5,7 @@ class Group < ActiveRecord::Base
   has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
 
   is_navable
+  has_profile_fields
 
   after_create    :import_default_group_structure
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120506073852) do
+ActiveRecord::Schema.define(:version => 20120507165551) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -61,12 +61,13 @@ ActiveRecord::Schema.define(:version => 20120506073852) do
   end
 
   create_table "profile_fields", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "profileable_id"
     t.string   "label"
     t.string   "type"
     t.string   "value"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+    t.string   "profileable_type"
   end
 
   create_table "relationship_dag_links", :force => true do |t|

@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 
-  has_many                  :profile_fields, :autosave => true, dependent: :destroy
+  has_profile_fields
 
   has_one                   :user_account, autosave: true, inverse_of: :user, dependent: :destroy
 
@@ -48,13 +48,6 @@ class User < ActiveRecord::Base
   def alias=( a )
     @alias = a
     write_alias_attribute
-  end
-
-  def email
-    profile.email
-  end
-  def email=( email )
-    profile.email = email
   end
 
   def capitalize_name

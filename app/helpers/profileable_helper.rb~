@@ -1,0 +1,34 @@
+module ProfileableHelper
+  
+  def profile_sections_for_profileable( profileable, sections = [] )
+
+#    sections = [ :contact_information, :about_myself ] if profileable.kind_of? User
+#    sections = [ :contact_information ] if profileable.kind_of? Group
+
+    sections.collect do |section|
+      profile_section_html( profileable, section )
+    end.join.html_safe
+    
+  end
+
+  private
+  
+  def profile_section_html( profileable, section )
+    [ content_tag( :h1, t( section ) ),
+      content_tag( :div ) do
+        content_tag( :dl ) do
+          if profileable.profile_fields_by_section( section )
+            profileable.profile_fields_by_section( section ).collect do |pf|
+              profile_field_html pf
+            end.join.html_safe
+          end
+        end
+      end
+    ].join.html_safe
+  end
+
+  def profile_field_html( profile_field )
+    render partial: "shared/profile_field", object: profile_field, locals: {  action: 'show' }
+  end
+
+end

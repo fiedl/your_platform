@@ -2,7 +2,7 @@ class ProfileField < ActiveRecord::Base
   
   attr_accessible        :user_id, :label, :type, :value
   
-  belongs_to             :user
+  belongs_to             :profileable, polymorphic: true
 
 end
 

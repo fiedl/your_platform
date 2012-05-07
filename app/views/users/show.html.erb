@@ -11,6 +11,11 @@
   <p>Profil-Informationen</p>
 </div>
 
+
+<%= profile_sections_for_profileable @user, [ :contact_information, :about_myself, :study_information, :career_information, :organisations ] %>
+
+
+<% if false %>
 <% for title,profile_fields in @profile.sections %>
   <h1><%=t title %></h1>
   <div>
@@ -25,6 +30,7 @@
       <% end %>
     </dl>
   </div>
+<% end %>
 <% end %>
 
 <h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
@@ -50,5 +56,8 @@
     <p><%=t :user_has_no_account %></p>
   <% end %>
 </div>
+
+
+
 
 <% end %>

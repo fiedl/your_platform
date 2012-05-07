@@ -1,4 +1,4 @@
-<span class="show">
+<span class="profile_field show">
   <dt><%=h @profile_field.label %></dt>
   <dd>
     <%=h @profile_field.value.gsub( ', ', '<br />').html_safe %>
