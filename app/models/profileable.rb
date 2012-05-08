@@ -41,6 +41,8 @@ module Profileable
         profile_fields_by_type "Organisation"
       when :bank_account_information
         profile_fields_by_type "BankAccount"
+      when :description
+        profile_fields_by_type "Description"
       else
         []
       end

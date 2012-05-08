@@ -78,3 +78,7 @@ end
 class BankAccount < ProfileField
 
 end
+
+class Description < ProfileField
+
+end
