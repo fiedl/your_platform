@@ -30,7 +30,7 @@ module Profileable
     def profile_fields_by_section( section )
       case section
       when :contact_information
-        profile_fields_by_type [ "Address", "Email", "Custom" ]
+        profile_fields_by_type [ "Address", "Email", "Phone", "Homepage", "Custom" ]
       when :about_myself
         profile_fields_by_type "About"
       when :study_information

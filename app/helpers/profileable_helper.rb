@@ -2,7 +2,7 @@ module ProfileableHelper
   
   def profile_sections_for_profileable( profileable, sections = [] )
     sections.collect do |section|
-      profile_section_html( profileable, section )
+      profile_section_html( profileable, section ) if profileable.profile_fields_by_section( section ).count > 0
     end.join.html_safe
   end
 

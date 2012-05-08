@@ -82,3 +82,11 @@ end
 class Description < ProfileField
 
 end
+
+class Phone < ProfileField
+
+end
+
+class Homepage < ProfileField
+
+end

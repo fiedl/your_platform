@@ -21,9 +21,47 @@ namespace :data_migration do
     end
   end
 
+  desc "Import Wat information"
+  task import_wah_information: :environment do
+    p "Task: Import Wah (Wingolf am Hochschulort) information"
+    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+      if row[ 'cn' ]
+        if row[ 'cn' ].include? "WV "
+          if row[ 'dn' ].include? "o=Verbindungen"
+            token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
+            wah = Wah.by_token( token ) # Wingolf-am-Hochschulort-Gruppe
+            infos = row.to_hash
+            import_address wah, infos
+            import_group_profile_info wah, infos
+          end
+        end
+      end
+    end
+  end
+
+  desc "Import Aktivitas information"
+  task import_aktivitas_information: :environment do
+    p "Task: Import Aktivitas information"
+    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+      if row[ 'cn' ]
+        if row[ 'cn' ].include? "WV " 
+          if row[ 'dn' ].include? "o=Verbindungen"
+            token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
+            aktivitas = Wah.by_token( token ).aktivitas
+            infos = row.to_hash
+            import_bank_account( aktivitas, infos )
+          end
+        end
+      end
+    end
+  end
+
+
   desc "Run data migration tasks."
   task :all => [
-                :import_bv_information
+                :import_bv_information,
+                :import_wv_information,
+                :import_aktivitas_information
                ]
 
   def csv_rows( file_title, &block )
@@ -41,29 +79,61 @@ namespace :data_migration do
 
   def import_group_profile_info( profileable, infos )
     info_mapping = [
-                    { import_field: 'description', label: "Hinweis",      type: "Description" },
-                    { import_field: 'mail',        label: "E-Mail",       type: "Email" }
+                    { import_field: 'mail',                       label: "E-Mail",       type: "Email" },
+                    { import_field: 'telephoneNumber',            label: "Telefon",      type: "Phone" },
+                    { import_field: 'facsimileTelephoneNumber',   label: "Fax",          type: "Phone" },
+                    { import_field: 'seeAlso',                    label: "Internet",     type: "Homepage" },
+                    { import_field: 'description',                label: "Hinweis",      type: "Description" },
+                    { import_field: 'epdwingolfsubcomwahlspruch', label: "Wahlspruch",   type: "Description" },
+                    { import_field: 'epdwingolfsubcomgegruendet', label: "Informationen zur Gründung", type: "Description" },
+                    { import_field: 'epdwingolfsubcomband',       label: "Band",         type: "Description" },
+                    { import_field: 'epdwingolfsubcommuetze',     label: "Mütze",        type: "Description" },
+                    { import_field: 'epdwingolfsubcomcerevis',    label: "Cerevis",      type: "Description" },
+                    { import_field: 'epdwingolfsubcomtoennchen',  label: "Tönnchen",     type: "Description" },
+                    { import_field: 'epdwingolfsubcomtradition',  label: "Tradition",    type: "Description" },
+                    { import_field: 'epdwingolfsubcompostille',   label: "Verbindungszeitschrift", type: "Description" },
                    ]
     info_mapping.each do |m|
       add_profile_field_to profileable.profile_fields, infos, m
     end
-
+    profileable.internal_token = infos[ 'initials' ] if infos[ 'initials' ]
+    profileable.save
   end
 
-  def import_bank_account( profileable, infos )
-    account = profileable.profile_fields.create(  label: "Bankverbindung",          type: "BankAccount" )
-    add_profile_field_to account.children, infos, label: "Kontoinhaber",    import_field: 'epdbankaccountowner'
-    add_profile_field_to account.children, infos, label: "Konto-Nr.",       import_field: 'epdbankaccountnr'
-    add_profile_field_to account.children, infos, label: "BLZ",             import_field: 'epdbankid'
-    add_profile_field_to account.children, infos, label: "Kreditinstitut",  import_field: 'epdbankinstitution'
-    add_profile_field_to account.children, infos, label: "IBAN",            import_field: 'epdbankiban' 
-    add_profile_field_to account.children, infos, label: "BIC",             import_field: 'epdbankswiftcode'
+  def import_bank_account( profileable, infos, prefix = "epd" )
+    account = add_profile_field_to profileable.profile_fields, 
+                                           infos, label: "Bankverbindung",          type: "BankAccount",               force: true 
+    #   account = profileable.profile_fields.create(  label: "Bankverbindung",          type: "BankAccount" )
+    add_profile_field_to account.children, infos, label: "Kontoinhaber",    import_field: prefix + 'bankaccountowner', force: true
+    add_profile_field_to account.children, infos, label: "Konto-Nr.",       import_field: prefix + 'bankaccountnr',    force: true
+    add_profile_field_to account.children, infos, label: "BLZ",             import_field: prefix + 'bankid',           force: true
+    add_profile_field_to account.children, infos, label: "Kreditinstitut",  import_field: prefix + 'bankinstitution',  force: true
+    add_profile_field_to account.children, infos, label: "IBAN",            import_field: prefix + 'bankiban',         force: true 
+    add_profile_field_to account.children, infos, label: "BIC",             import_field: prefix + 'bankswiftcode',    force: true
   end
+
+  def import_address( profileable, infos, prefix = "" )
+    plz = infos[ prefix + 'postalCode' ]
+    street = infos[ prefix + 'postalAddress' ]
+    country = infos[ prefix + 'epdcountry' ]
+    city = infos[ prefix + 'l' ]
+    address = "#{street}, #{plz} #{city}, #{country}"
+    add_profile_field_to( profileable.profile_fields, infos, 
+                          label: "Anschrift", type: "Address",
+                          value: address,
+                          force: true )
+  end 
 
   def add_profile_field_to( profile_fields, infos, new_field_hash )
-    new_field_hash[ :value ] = infos[ new_field_hash[ :import_field ] ]
+    force = new_field_hash[ :force ]
+    new_field_hash[ :value ] = infos[ new_field_hash[ :import_field ] ] if new_field_hash[ :import_field ]
     new_field_hash.reject! { |key| not ProfileField.attr_accessible[:default].include? key }
-    profile_fields.create( new_field_hash )
+    if new_field_hash[ :value ] or force
+      profile_fields.create( new_field_hash )
+#      pf = profile_fields.new( new_field_hash ) # FOR DEBUG
+#      p pf                                      # 
+#      pf                                        #
+    end
   end
 
 end

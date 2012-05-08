@@ -1,11 +1,12 @@
 <h1><%= @title %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
-<% if @group.token or @group.extensive_name %>
+<% if @group.token or @group.extensive_name or @group.internal_token %>
 <h1><%=t :details %></h1>
 <div>
   <dl>
     <dt><%=t :token %></dt><dd><%=h @group.token %></dd>
+    <dt><%=t :internal_token %></dt><dd><%=h @group.internal_token %></dd>
     <dt><%=t :extensive_name %></dt><dd><%=h @group.extensive_name %></dd>
   </dl>
 </div>

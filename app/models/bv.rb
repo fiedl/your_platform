@@ -5,21 +5,9 @@ class Bv < Group
     Group.bvs.child_groups
   end
 
-  def self.first
-    all.first.becomes Bv
-  end
-
-  def self.last
-    all.last.becomes Bv
-  end
-  
   def self.by_plz( plz )
     bv_token = BvMapping.find_by_plz( plz ).bv_name if BvMapping.find_by_plz( plz )
     return ( Bv.all.select { |group| group.token == bv_token } ).first.becomes Bv if bv_token
-  end
-
-  def self.by_token( token )
-    return ( Group.bvs.child_groups.select{ |group| group.token == token } ).first.becomes Bv
   end
 
   def self.by_address( address )

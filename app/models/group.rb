@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Group < ActiveRecord::Base
-  attr_accessible :name, :token, :excessive_name
+  attr_accessible :name, :token, :excessive_name, :internal_token
 
   has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
 
@@ -11,6 +11,18 @@ class Group < ActiveRecord::Base
 
   def title
     self.name
+  end
+
+  def self.first
+    self.all.first.becomes self
+  end
+
+  def self.last
+    self.all.last.becomes self
+  end
+
+  def self.by_token( token )
+    ( self.all.select { |group| group.token == token } ).first.becomes self
   end
 
   def self.jeder

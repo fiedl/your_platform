@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120508152233) do
+ActiveRecord::Schema.define(:version => 20120508201550) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(:version => 20120508152233) do
     t.datetime "updated_at",     :null => false
     t.string   "token"
     t.string   "extensive_name"
+    t.string   "internal_token"
   end
 
   create_table "nav_nodes", :force => true do |t|
