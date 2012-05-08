@@ -1,7 +1,13 @@
 <span class="<%= 'profile_field editable show' unless profile_field.parent %>">
   <dt><%=h profile_field.label %></dt>
   <dd>
-    <%=h profile_field.value.gsub( ', ', '<br />').html_safe if profile_field.value %>
+    <% if profile_field.value %>
+      <% if profile_field.type == "Address" %>
+        <%=h profile_field.value.gsub( ', ', '<br />').html_safe %>
+      <% else %>
+        <%=h profile_field.value.gsub( /\n/, '<br />').html_safe %>
+      <% end %>
+    <% end %>
     <% if profile_field.children.count > 0 %>
       <dl>
 	<% for child_field in profile_field.children %>
