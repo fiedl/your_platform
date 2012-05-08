@@ -1,8 +1,12 @@
+# -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
   
   attr_accessible        :user_id, :label, :type, :value
   
   belongs_to             :profileable, polymorphic: true
+
+  # Profilfelder können zusammengesetzt sein: 
+  acts_as_tree
 
 end
 
@@ -71,3 +75,6 @@ class Address < ProfileField
 
 end
 
+class BankAccount < ProfileField
+
+end

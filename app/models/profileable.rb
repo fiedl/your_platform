@@ -39,6 +39,8 @@ module Profileable
         profile_fields_by_type [ "Job", "Competence" ]
       when :organisations
         profile_fields_by_type "Organisation"
+      when :bank_account_information
+        profile_fields_by_type "BankAccount"
       else
         []
       end

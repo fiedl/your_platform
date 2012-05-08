@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120507165551) do
+ActiveRecord::Schema.define(:version => 20120508130729) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -68,6 +68,7 @@ ActiveRecord::Schema.define(:version => 20120507165551) do
     t.datetime "created_at",       :null => false
     t.datetime "updated_at",       :null => false
     t.string   "profileable_type"
+    t.integer  "parent_id"
   end
 
   create_table "relationship_dag_links", :force => true do |t|
