@@ -58,6 +58,12 @@ namespace :bootstrap do
     Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs
   end
 
+  dec "Import groups: Philistervereine vertagter Wingolfsverbindungen"
+  task import_wah_vertagte: :environment do
+    p "Task: Import groups: Philistervereine vertagter Wingolfsverbindungen"
+    # TODO
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
@@ -65,7 +71,8 @@ namespace :bootstrap do
                 :import_sub_structure_of_wingolf_am_hochschulort_groups,
                 :basic_nav_node_properties,
                 :import_bv_mappings,
-                :import_bv_groups
+                :import_bv_groups,
+                :import_wah_vertagte
                ]
 
 end

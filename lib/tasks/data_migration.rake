@@ -56,12 +56,40 @@ namespace :data_migration do
     end
   end
 
+  desc "Import Philisterschaft information"
+  task import_philisterschaft_information: :environment do
+    p "Task: Import Philisterschaft information"
+    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+      if row[ 'cn' ]
+        if row[ 'cn' ].include? "PhV " 
+          if row[ 'dn' ].include? "o=Philister"
+            if not row[ 'cn' ].include? "bandphilister" 
+              token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
+              p token
+
+              # TODO
+
+
+              #           philisterschaft = Wah.by_token( token ).philisterschaft
+              #           infos = row.to_hash
+              #           philisterschaft.extensive_name = infos[ 'ou' ]
+              #           philisterschaft.save            
+              #           import_group_profile_info philisterschaft, infos
+              #           import_bank_account( philisterschaft, infos )
+            end
+          end
+        end
+      end
+    end
+  end
+
 
   desc "Run data migration tasks."
   task :all => [
                 :import_bv_information,
                 :import_wv_information,
-                :import_aktivitas_information
+                :import_aktivitas_information,
+                :import_philisterschaft_information
                ]
 
   def csv_rows( file_title, &block )
