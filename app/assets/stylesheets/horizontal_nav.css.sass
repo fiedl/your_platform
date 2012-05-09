@@ -8,7 +8,7 @@
 
   ul
     margin: 0px
-    padding: 0px
+    //padding: 0px
     list-style: none
     display: block
 
@@ -19,23 +19,27 @@
       font-size: 13px
       text-transform: uppercase
       letter-spacing: 3px
-      padding: 6px 4px 3px 8px
       color: #000
 
       a
         color: inherit
         text-decoration: none
+        padding: 6px 4px 3px 8px
+        padding-bottom: 3px
+        padding-top: 6px
 
-    li
 
     li.under_this_category
-      background: #888
-      color: #fff
+      a 
+        background: #888
+        color: #fff
 
     li.active
-      background: #333
-      color: #fff
+      a
+        background: #333
+        color: #fff
 
     li:hover
-      border-bottom: solid 2px orange
+      a 
+        border-bottom: solid 2px orange
 
