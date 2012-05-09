@@ -81,13 +81,37 @@ namespace :data_migration do
     end
   end
 
+  desc "Import Hausverein information"
+  task import_hausverein_information: :environment do 
+    p "Task: Import Hausverein information"
+    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+      if row[ 'cn' ]
+        if row[ 'cn' ].include? "PhV " 
+          if row[ 'dn' ].include? "o=Philister"
+            if not row[ 'cn' ].include? "bandphilister" 
+              token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
+              hausverein = Wah.by_token( token ).hausverein
+              if hausverein
+                infos = row.to_hash
+                hausverein.extensive_name = infos[ 'epdwingolfphhvname' ]
+                hausverein.save
+                import_bank_account( hausverein, infos, "epdwingolfphhv" )
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+
 
   desc "Run data migration tasks."
   task :all => [
                 :import_bv_information,
                 :import_wv_information,
                 :import_aktivitas_information,
-                :import_philisterschaft_information
+                :import_philisterschaft_information,
+                :import_hausverein_information
                ]
 
   def csv_rows( file_title, &block )

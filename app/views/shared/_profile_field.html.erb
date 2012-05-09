@@ -17,7 +17,9 @@
     <% end %>
     <% if profile_field.type == "Address" %>
       <br />
-      (<%= link_to profile_field.bv.name, profile_field.bv.becomes( Group ) %>)
+      <% if profile_field.bv %>
+        (<%= link_to profile_field.bv.name, profile_field.bv.becomes( Group ) %>)
+      <% end %>
     <% end %>
   </dd>
 </span>

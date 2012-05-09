@@ -18,4 +18,8 @@ class Wah < Group
 
   end
 
+  def hausverein
+    self.child_groups.select{ |child| child.name == "Hausverein" or child.name == "Wohnheimsverein" }.first
+  end
+
 end
