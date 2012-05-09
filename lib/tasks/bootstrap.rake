@@ -58,10 +58,21 @@ namespace :bootstrap do
     Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs
   end
 
-  dec "Import groups: Philistervereine vertagter Wingolfsverbindungen"
+  desc "Import groups: Philistervereine vertagter Wingolfsverbindungen"
   task import_wah_vertagte: :environment do
     p "Task: Import groups: Philistervereine vertagter Wingolfsverbindungen"
-    # TODO
+    require 'csv'
+    file_name = File.join( Rails.root, "import", "groups_wah_vertagt.csv" )
+    if File.exists? file_name
+      counter = 0
+      CSV.foreach file_name, headers: true, col_sep: ';' do |row|
+        new_wah_group = Group.create( row.to_hash )
+        new_wah_group.child_groups.create( name: "Philisterschaft" )
+        new_wah_group.parent_groups << Group.wingolf_am_hochschulort
+        counter += 1
+      end
+      p "Wah Groups created: " + counter.to_s
+    end
   end
 
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
