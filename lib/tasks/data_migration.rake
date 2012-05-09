@@ -49,6 +49,8 @@ namespace :data_migration do
             token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
             aktivitas = Wah.by_token( token ).aktivitas
             infos = row.to_hash
+            aktivitas.token = infos[ 'cn' ]
+            aktivitas.save
             import_bank_account( aktivitas, infos )
           end
         end
@@ -65,17 +67,13 @@ namespace :data_migration do
           if row[ 'dn' ].include? "o=Philister"
             if not row[ 'cn' ].include? "bandphilister" 
               token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
-              p token
-
-              # TODO
-
-
-              #           philisterschaft = Wah.by_token( token ).philisterschaft
-              #           infos = row.to_hash
-              #           philisterschaft.extensive_name = infos[ 'ou' ]
-              #           philisterschaft.save            
-              #           import_group_profile_info philisterschaft, infos
-              #           import_bank_account( philisterschaft, infos )
+              philisterschaft = Wah.by_token( token ).philisterschaft
+              infos = row.to_hash
+              philisterschaft.extensive_name = infos[ 'ou' ]
+              philisterschaft.token = infos[ 'cn' ]
+              philisterschaft.save            
+              import_group_profile_info philisterschaft, infos
+              import_bank_account( philisterschaft, infos )
             end
           end
         end
