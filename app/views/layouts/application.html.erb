@@ -35,10 +35,10 @@
   <div id="headerBg">
     <div id="header">
       <div id="header_claim">
-	<%= image_tag( '../images/claim.png' ) %>
+	<%= image_tag( 'claim.png' ) %>
       </div>
       <div id="header_logo">
-	<%= image_tag( '../images/logo.png' ) %>
+	<%= image_tag( 'logo.png' ) %>
       </div>
       <div id="header_search">
 	Suche
@@ -60,7 +60,7 @@
 	    <span id="site_tools">
 	      <%= link_to ( 
 		    "Bearbeiten " +
-		    image_tag( '../images/tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
+		    image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
 		  ).html_safe,
 		  action: "edit"
 	      %>
