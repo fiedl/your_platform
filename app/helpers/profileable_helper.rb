@@ -30,7 +30,7 @@ module ProfileableHelper
   end
 
   def profile_field_html( profile_field )
-    render partial: "shared/profile_field", object: profile_field, locals: {  action: 'show' }
+    profile_field_span_tag( profile_field )
   end
 
   def map_of_address_profile_fields( address_profile_fields )

@@ -4,15 +4,21 @@
 module EditableHelper
 
   # Erzeugt <span class="editable" showUrl=... editUrl=... ></span>.
-  # Parameter: controller, id
-  def editable_span_tag( params )
-
+  # Parameter: css_class, object
+  def editable_span_tag( params, &block )
+    css_class = params[ :css_class ]
+    object = params[ :object ]
+    controller = params[ :controller ]
+    id = params[ :id ]
+    
     urls = {}
     [ 'show', 'edit', 'update', 'create', 'new' ].each do |action| 
-      urls[ "#{action}_url" ] = url_for( params.merge( action: action ) )
+      urls[ "data-#{action}-url" ] = url_for controller: controller, action: action, id: id
     end
     
-    content_tag( :span, "", { class: "editable" }.merge( urls ) )
+    content_tag( :span, { class: "editable #{css_class}" }.merge( urls ) ) do
+      yield
+    end
     
   end
 

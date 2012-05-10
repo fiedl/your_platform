@@ -1,3 +1,4 @@
+<%= editable_span_tag css_class: "profile_field show", object: @profile_field do unless profile_field.parent %>
 <span class="<%= 'profile_field editable show' unless profile_field.parent %>">
   <dt><%=h profile_field.label %></dt>
   <dd>
@@ -8,7 +9,7 @@
         <%=h profile_field.value.gsub( /\n/, '<br />').html_safe %>
       <% end %>
     <% end %>
-    <% if profile_field.children.count > 0 %>
+    <% if p rofile_field.children.count > 0 %>
       <dl>
 	<% for child_field in profile_field.children %>
 	  <%= render partial: "shared/profile_field", object: child_field %>
@@ -23,3 +24,4 @@
     <% end %>
   </dd>
 </span>
+<% end %>
