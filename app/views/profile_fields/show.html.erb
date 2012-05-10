@@ -1,10 +1,1 @@
-<span class="show">
-  <dt><%=h @profile_field.label %></dt>
-  <dd>
-    <%=h @profile_field.value.gsub( ', ', '<br />').html_safe %>
-    <% if @profile_field.type == "Address" %>
-      <br />
-      (<%= link_to @profile_field.bv.name, @profile_field.bv.becomes( Group ) %>)
-    <% end %>
-  </dd>
-</span>
+<%= profile_field_span_tag( @profile_field, action: "show" ) %>

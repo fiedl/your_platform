@@ -3,9 +3,6 @@ class ProfileFieldsController < ApplicationController
   before_filter        :load_profile_field_as_instance_variable
   layout               false
 
-#  def index
-#  end
-
   def show
   end
 
@@ -18,9 +15,9 @@ class ProfileFieldsController < ApplicationController
   end
 
   def destroy
-    user_id = @profile_field.user.id
+    profileable = @profile_field.profileable
     @profile_field.destroy
-    redirect_to controller: 'users', action: 'show', id: user_id
+    redirect_to profileable #controller: 'users', action: 'show', id: user_id
   end
 
   private

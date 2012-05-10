@@ -4,13 +4,6 @@
 
 jQuery ->
 
-        # Alle bearbeitbaren Felder durchgehen.
-        $( "span.editable" ).each( ->
-                $( this ).load(
-                        $( this ).attr( 'show_url' )
-                )
-        )
-
         # Jedes editierbare Feld soll auf einen Doppelklick in
         # in den Bearbeiten-Modus wechseln.
         $( "span.editable" ).live( "dblclick", ->
@@ -22,17 +15,18 @@ jQuery ->
 
                 # Wenn sich das Feld bereits im Bearbeiten-Modus befindet,
                 # abbrechen. Sonst die Markierung für den Modus setzen.
-                return if $( this ).hasClass( "edit_mode" )
-                $( this ).addClass( "edit_mode" )
+                return if $( this ).hasClass( "edit" )
+                $( this ).addClass( "edit" )
+                $( this ).removeClass( "show" )
 
                 # Wenn die ganze Box bearbeitet wird, muss sich das Objekt
                 # leicht anders verhalten, d.h. nicht auf alle Einzel-Ereignisse
                 # reagieren.
-                box_edit_mode = true if $( this ).hasClass( "box_edit_mode" )
+                box_edit_mode = true if $( this ).hasClass( "box_edit_mode" ) or $( this ).closest( ".box" ).hasClass( "edit_mode" )
 
                 # Die Bearbeiten-Version des Feldes laden.
                 $( this ).load(
-                        $( this ).attr( 'edit_url' ),
+                        $( this ).attr( 'data-edit-url' ),
                         null,
                         () ->
                                 # Nach dem Laden den Tastatur-Fokus setzen.
@@ -51,7 +45,8 @@ jQuery ->
                         editable_span = $( this )
                         $( editable_span ).keyup( (event) ->
                                 if event.keyCode == 13
-                                        editable_span.trigger( "save" )
+                                        unless editable_span.find( "textarea" ).length > 0
+                                                editable_span.trigger( "save" )
                                 if event.keyCode == 27
                                         editable_span.trigger( "cancel" )
                         )
@@ -65,7 +60,7 @@ jQuery ->
                 # Speichern-Routine:
                 save = ( editable_span ) ->
                         editable_span.load(
-                                editable_span.attr( 'update_url' ),
+                                editable_span.attr( 'data-update-url' ),
                                 editable_span.find( "form" ).serialize()
                         )
                         exit_edit_mode( editable_span )
@@ -77,13 +72,14 @@ jQuery ->
 
                 # Abbrechen-Routine:
                 cancel = ( editable_span ) ->
-                        editable_span.load( editable_span.attr( 'show_url' ) )
+                        editable_span.load( editable_span.attr( 'data-show-url' ) )
                         exit_edit_mode( editable_span )
 
                 # Bearbeiten-Modus-Verlassen-Routine:
                 exit_edit_mode = ( editable_span ) ->
                         unbind_edit_mode_events( editable_span )
-                        editable_span.removeClass( "edit_mode" )
+                        editable_span.removeClass( "edit" )
+                        editable_span.addClass( "show" )
 
                 # Event-Handler-Entfernen-Routine:
                 unbind_edit_mode_events = ( editable_span ) ->

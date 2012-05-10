@@ -1,16 +1,1 @@
-<span class="edit">
-  <%= form_for :profile_field, url: { :action => "update" } do |form| %>
-    <%= form.hidden_field :id %>
-    <dt>
-      <%= link_to image_tag( 
-	  '../images/tools/remove.png', 
-	  alt: t( :remove ), title: t( :remove ) 
-	).html_safe, 
-	url_for( action: 'destroy', id: @profile_field.id ), 
-	class: 'remove_button' 
-      %>
-      <%= form.text_field :label, class: "text label"  %>
-    </dt>
-    <dd><%= form.text_field :value %></dd>
-  <% end %>
-</span>
+<%= profile_field_span_tag( @profile_field, action: "edit" ) %>

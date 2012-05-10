@@ -30,7 +30,16 @@ input[type=text], input[type=password], .text, .password {
 
 input.text.label {
     background: transparent;
-    width: 100px;
+    width: 150px;
+}
+
+.text.multiline {
+    height: 70px;
+}
+
+.text.multiline.Description {
+    width: 95%;
+    height: 90px;
 }
 
 form .error_message {
