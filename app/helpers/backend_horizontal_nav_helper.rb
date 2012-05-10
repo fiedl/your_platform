@@ -47,15 +47,19 @@ module BackendHorizontalNavHelper
   end
 
   def categories_the_current_navable_falls_in 
-    navables_for_backend_horizontal_nav.select do |navable| 
-      ( currently_shown_navable.ancestors + [ currently_shown_navable ] ).include? navable 
+    if currently_shown_navable
+      navables_for_backend_horizontal_nav.select do |navable| 
+        ( currently_shown_navable.ancestors + [ currently_shown_navable ] ).include? navable 
+      end
     end
   end
 
   def most_special_category
-    categories_the_current_navable_falls_in.select do |navable|
-      (navable.descendants & categories_the_current_navable_falls_in).empty?
-    end.first
+    if categories_the_current_navable_falls_in
+      categories_the_current_navable_falls_in.select do |navable|
+        (navable.descendants & categories_the_current_navable_falls_in).empty?
+      end.first
+    end
   end
 
   def currently_shown_navable
