@@ -6,7 +6,7 @@
 </div>
 <% end %>
 <% if @user %>
-<h1><%=h @title %></h1>
+<h1><!--%=h @title %--><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%=h @user.aktivitaetszahl %></h1>
 <div>
   <span id="user_workflows" class="only-in-edit-mode">
     <ul>
@@ -17,8 +17,9 @@
   </span>
   <p>Profil-Informationen</p>
   <dl>
-    <dt><%=t :first_name %></dt><dd><%= best_in_place @user, :first_name %></dd>
-    <dt><%=t :last_name %></dt><dd><%= best_in_place @user, :last_name %></dd>
+    <dt><%=t :name %></dt><dd><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></dd>
+    <!--dt><%=t :first_name %></dt><dd><%= best_in_place @user, :first_name %></dd>
+    <dt><%=t :last_name %></dt><dd><%= best_in_place @user, :last_name %></dd-->
   </dl>
 </div>
 

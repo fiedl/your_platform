@@ -1,5 +1,5 @@
-<h1><%=h @title %></h1>
+<h1><%= best_in_place @page, :title %></h1>
 <div>
-  <%=h @page.content if @page %>
+  <%= best_in_place @page, :content, type: 'textarea', sanitize: false %>
 </div>
 
