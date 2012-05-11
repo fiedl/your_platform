@@ -35,6 +35,22 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def descendant_users
+    if self == Group.jeder
+      return User.all
+    else
+      return super 
+    end
+  end
+
+  def child_users
+    if self == Group.jeder
+      return descendant_users
+    else
+      return super
+    end
+  end
+
   def self.jeder!
     unless self.jeder
       p "Creating group 'Jeder' ..."
