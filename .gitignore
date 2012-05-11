@@ -21,6 +21,9 @@
 # Ignore database configuration
 config/database.yml
 
+# Ignore sensitive import data
+import/deleted-string_data
+
 # Other things to ignore, suggested by github.
 *.rbc
 *.sassc
