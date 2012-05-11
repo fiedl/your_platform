@@ -37,6 +37,9 @@ GEM
     acts_as_tree (1.1.0)
       activerecord (>= 3.0.0)
     arel (3.0.2)
+    best_in_place (1.0.6)
+      jquery-rails
+      rails (~> 3.1)
     builder (3.0.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
@@ -125,6 +128,7 @@ PLATFORMS
 DEPENDENCIES
   acts-as-dag!
   acts_as_tree
+  best_in_place
   coffee-rails (~> 3.2.1)
   colored
   formtastic

@@ -1,4 +1,6 @@
 class GroupsController < ApplicationController
+  respond_to :html, :json
+
   def index
     @user = User.find_by_alias params[ :alias ] if params[ :alias ]
     @title = params[ :title ] if params[ :title ]
@@ -26,6 +28,12 @@ class GroupsController < ApplicationController
       @groups = @group.child_groups
       @users = @group.descendant_users
     end
+  end
+
+  def update
+    @group = Group.find params[ :id ]
+    @group.update_attributes( params[ :group ] )
+    respond_with @group
   end
 
 end

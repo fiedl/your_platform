@@ -1,13 +1,13 @@
-<h1><%= @title %></h1>
+<h1><%= best_in_place @group, :name %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
 <% if @group.token or @group.extensive_name or @group.internal_token %>
 <h1><%=t :details %></h1>
 <div>
   <dl>
-    <dt><%=t :token %></dt><dd><%=h @group.token %></dd>
-    <dt><%=t :internal_token %></dt><dd><%=h @group.internal_token %></dd>
-    <dt><%=t :extensive_name %></dt><dd><%=h @group.extensive_name %></dd>
+    <dt><%=t :token %></dt><dd><%= best_in_place @group, :token %></dd>
+    <dt><%=t :internal_token %></dt><dd><%= best_in_place @group, :internal_token %></dd>
+    <dt><%=t :extensive_name %></dt><dd><%= best_in_place @group, :extensive_name %></dd>
   </dl>
 </div>
 <% end %>

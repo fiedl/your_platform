@@ -14,7 +14,7 @@ module BoxHelper
       # Node-HTML-Struktur, siehe http://stackoverflow.com/questions/3449767/find-and-replace-entire-html-nodes-with-nokogiri
       # http://www.engineyard.com/blog/2010/getting-started-with-nokogiri/
       doc.xpath('//h1').each do |h1_node|
-        heading = h1_node.text 
+        heading = h1_node.inner_html.html_safe
         content = h1_node.next_element.inner_html.html_safe #http://nokogiri.org/Nokogiri/XML/Node.html#method-i-next_element
         html_code_to_return += content_box( :heading => heading ) { concat content }
       end

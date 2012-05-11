@@ -73,6 +73,9 @@ gem 'acts_as_tree'							# MIT License
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
 
+# In Place Editing
+gem 'best_in_place'							# MIT License
+
 # JSON
 gem 'json'								# Ruby License
 
