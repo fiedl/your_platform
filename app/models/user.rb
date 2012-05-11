@@ -14,7 +14,9 @@ class User < ActiveRecord::Base
 
   has_one                   :user_account, autosave: true, inverse_of: :user, dependent: :destroy
 
-  has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
+#  has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
+  is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
+
   has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'
 
   is_navable

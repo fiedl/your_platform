@@ -6,7 +6,7 @@
 module Navable
   def is_navable
     has_one                :nav_node, as: :navable, dependent: :destroy, autosave: true
-    before_destroy         :destroy_links
+    
     include InstanceMethodsForNavables
   end
   module InstanceMethodsForNavables
@@ -26,19 +26,6 @@ module Navable
 
     private
 
-    def destroy_links
-      links = self.links_as_parent + self.links_as_child
-      for link in links do
-        if link.destroyable?
-          link.destroy
-        else
-          raise "Could not destroy links of the group that should be deleted." # TODO: Das sollte eigentlich nicht nötig sein.
-          return false
-        end
-      end
-    end
   end
 end
-
-
 

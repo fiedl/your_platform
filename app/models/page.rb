@@ -1,6 +1,8 @@
 class Page < ActiveRecord::Base
   attr_accessible                :content, :title
-  has_dag_links                  link_class_name: 'DagLink', ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
+#  has_dag_links                  link_class_name: 'DagLink', ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
+
+  is_structureable    ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
 
   is_navable
   

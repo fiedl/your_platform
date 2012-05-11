@@ -2,7 +2,8 @@
 class Group < ActiveRecord::Base
   attr_accessible :name, :token, :excessive_name, :internal_token
 
-  has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
+#  has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
+  is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page Workflow)
 
   is_navable
   has_profile_fields
