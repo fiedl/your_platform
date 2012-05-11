@@ -13,7 +13,7 @@ module Profileable
   module InstanceMethodsForProfileables
     
     def email
-      profile_fields_by_type( "Email" ).first.value
+      profile_fields_by_type( "Email" ).first.value if profile_fields_by_type( "Email" ).first
     end
     def email=( email )
       @email_profile_field = profile_fields_by_type( "Email" ).first unless @email_profile_field

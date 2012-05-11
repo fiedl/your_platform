@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :alias, :email, :create_account
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account
 
-  attr_accessor             :create_account
+  attr_accessor             :create_account, :name
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name, :alias, :email
@@ -27,6 +27,13 @@ class User < ActiveRecord::Base
   def name
     first_name + " " + last_name
   end
+  def name=( name )
+    name_components = name.split( " " )
+    if name_components.count > 1
+      self.first_name = name_components[ 0..-2 ].join( " " )
+      self.last_name = name_components[ -1 ]
+    end
+  end
 
   # Diese Funktion gibt eine sinnvolle Beschriftung des Benutzers zurück, z.B. für die Beschriftung von Menüpunkten, 
   # die diesen Benutzer repräsentieren. Damit ist der Aufruf der gleiche wie etwa beim Page-Modell. 
@@ -46,7 +53,7 @@ class User < ActiveRecord::Base
   end
 
   def capitalize_name
-    self.first_name.capitalize!
+    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
     self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
     self.name
   end

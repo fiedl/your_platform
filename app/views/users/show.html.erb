@@ -60,7 +60,7 @@
     <dl>
       <dt>Identifikation möglich mit folgenden Daten:</dt>
       <% for attribute in UserIdentification.possible_attributes %>
-        <dd><%=t attribute.to_s %>: <%= @user.send attribute %></dd>
+        <dd><%=t attribute.to_s %>: <%= best_in_place @user, attribute.to_sym  %><!-- # = @user.send attribute --></dd>
       <% end %> 
     </dl>
   <% else %>
