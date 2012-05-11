@@ -1,5 +1,0 @@
-
-jQuery ->
-  $( ".only-in-edit-mode" ).bind( "edit", ->
-    $( this ).toggle
-  )

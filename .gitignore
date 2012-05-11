@@ -15,8 +15,11 @@
 /tmp
 
 # Ignore editor tempfiles.
-*~   
-\#*# 
+*~
+\#*#
+
+# Ignore database configuration
+config/database.yml
 
 # Other things to ignore, suggested by github.
 *.rbc
