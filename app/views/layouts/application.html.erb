@@ -19,9 +19,9 @@
     <div class="content">
       <ul>
         <li class="first">
-	  <%= link_to @current_user.name, :controller => "users", :action => "show", :alias => @current_user.alias %>
+	  <%= link_to @current_user.name, @current_user %>
 	</li>
-        <li><%= link_to t( :my_profile ), :controller => "users", :action => "show", :alias => @current_user.alias %> </li>
+        <li><%= link_to t( :my_profile ), @current_user %> </li>
 	<li><%= link_to t( :my_groups ), controller: 'groups', action: 'my' %></li>
         <li class="last">
 	  <%= link_to t( :logout ), :controller => "sessions", :action => "logout" %>
