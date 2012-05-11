@@ -2,7 +2,7 @@
 class UsersController < ApplicationController
 
   respond_to :html, :json
-  before_filter :find_user, :except => [ :index, :new, :create ]
+  before_filter :find_user, :except => [ :index, :new, :create, :update ]
 
   def index
     redirect_to Group.jeder
@@ -34,29 +34,36 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes params[ :user ]
+    @user = User.find params[ :id ]
+    @user.update_attributes( params[ :user ] )
     respond_with @user
   end
 
   private
 
   def find_user
-    @alias = params[ :alias ]
-    id = params[ :id ]
-    if @alias
-      @user = User.find_by_alias( @alias ) #User.find( :first, :conditions => "alias='#{@alias}'" )
-    elsif id
-      @user = User.find_by_id( id )
-    else
-      @user = User.new
-    end
-    if @user
-      @navable = @user
-      @title = @user.title
-    else
-      @title = t :user_not_found
-      @title += ": #{@alias}" if @alias
-    end
+#    @alias = params[ :alias ]
+#    id = params[ :id ]
+#    if @alias
+#      @user = User.find_by_alias( @alias ) #User.find( :first, :conditions => "alias='#{@alias}'" )
+#    elsif id
+#      @user = User.find_by_id( id )
+#    else
+#      @user = User.new
+#    end
+#    if @user
+#      @navable = @user
+#      @title = @user.title
+#    else
+#      @title = t :user_not_found
+#      @title += ": #{@alias}" if @alias
+#    end
+
+    @user = User.find( params[ :id ] )
+    @user = User.new unless @user
+    @title = @user.title
+    @navable = @user
+
   end
 
 end

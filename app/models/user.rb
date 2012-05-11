@@ -14,7 +14,6 @@ class User < ActiveRecord::Base
 
   has_one                   :user_account, autosave: true, inverse_of: :user, dependent: :destroy
 
-#  has_dag_links             link_class_name: 'DagLink', ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 
   has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'
@@ -22,7 +21,6 @@ class User < ActiveRecord::Base
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
-  after_save                Proc.new { |user| user.profile.save }
   before_save                :create_account_if_requested
 
 
@@ -36,11 +34,6 @@ class User < ActiveRecord::Base
   # Die Funktion gibt *nicht* den akademischen Titel oder die Anrede des Benutzers zurück.
   def title
     name + "  " + aktivitaetszahl
-  end
-
-  def profile
-    @profile = Profile.new( self ) unless @profile
-    return @profile
   end
 
   def alias
