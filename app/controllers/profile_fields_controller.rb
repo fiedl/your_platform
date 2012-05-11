@@ -17,9 +17,9 @@ class ProfileFieldsController < ApplicationController
   end
 
   def destroy
-    profileable = @profile_field.profileable
+#    profileable = @profile_field.profileable
     @profile_field.destroy
-    redirect_to profileable #controller: 'users', action: 'show', id: user_id
+#    redirect_to profileable #controller: 'users', action: 'show', id: user_id
   end
 
   private

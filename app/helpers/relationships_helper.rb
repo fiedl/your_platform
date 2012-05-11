@@ -14,7 +14,15 @@ module RelationshipsHelper
     who = relationship.parent_users.first
     of = relationship.child_users.first
     content_tag :li do
-      "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe
+      [ "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe,
+        relationship_tools( relationship )
+      ].join.html_safe
+    end
+  end
+
+  def relationship_tools( relationship )
+    content_tag :span, class: 'tools only-in-edit-mode' do
+      remove_button( relationship )
     end
   end
 

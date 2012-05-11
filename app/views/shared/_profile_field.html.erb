@@ -3,7 +3,14 @@
      input_type = 'input'
      input_type = 'textarea' if [ "Address", "Description" ].include? profile_field.type
   %>
-  <dt><%= best_in_place profile_field, :label %></dt>
+  <dt>
+    <%= best_in_place profile_field, :label %>
+    <% unless profile_field.parent %>
+      <span class="tools only-in-edit-mode">
+        <%= remove_button( profile_field ) %>
+      </span>
+    <% end %>
+  </dt>
   <dd>
     <% if profile_field.value %>
       <%= best_in_place profile_field, :value,

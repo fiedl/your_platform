@@ -1,6 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
 
+
   resources :pages
   resources :groups
 
@@ -25,6 +26,7 @@ Wingolfsplattform::Application.routes.draw do
   resources :workflows
 
   resources :profile_fields
+  resources :relationships
 
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile
