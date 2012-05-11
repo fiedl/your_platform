@@ -16,4 +16,5 @@
 - next: Das ist der Branch, in den neue Entwicklungen eingepflegt werden. Dann kurzer Test und Übernahme nach development.
 
 
-test
+=== Deployment 
+- http://stackoverflow.com/questions/1449836/how-to-manage-rails-database-yml
