@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   before_filter :find_user, :except => [ :index, :new, :create ]
 
   def index
-    @users = User.all
+    redirect_to Group.jeder
   end
 
   def show
