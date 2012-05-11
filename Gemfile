@@ -74,7 +74,7 @@ gem 'acts_as_tree'							# MIT License
 gem 'formtastic'							# MIT License
 
 # In Place Editing
-gem 'best_in_place'							# MIT License
+gem 'best_in_place' #, git: 'git://github.com/bernat/best_in_place.git'	# MIT License
 
 # JSON
 gem 'json'								# Ruby License

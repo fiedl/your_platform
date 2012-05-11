@@ -11,18 +11,22 @@ class ProfileField < ActiveRecord::Base
 end
 
 class Custom < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Organisation < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Email < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Address < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
   # Google Maps integration
   # see: http://rubydoc.info/gems/gmaps4rails/
@@ -76,17 +80,21 @@ class Address < ProfileField
 end
 
 class BankAccount < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Description < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Phone < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 
 class Homepage < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end

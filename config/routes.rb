@@ -24,6 +24,8 @@ Wingolfsplattform::Application.routes.draw do
   resources :users
   resources :workflows
 
+  resources :profile_fields
+
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile
 

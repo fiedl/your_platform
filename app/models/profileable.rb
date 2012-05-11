@@ -7,6 +7,7 @@ module Profileable
 
   def is_profileable
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
+#    attr_accessor :email
     include InstanceMethodsForProfileables
   end
 

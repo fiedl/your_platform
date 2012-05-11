@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
   attr_accessor             :create_account, :name
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
-  validates_presence_of     :first_name, :last_name, :alias, :email
+  validates_presence_of     :first_name, :last_name
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 

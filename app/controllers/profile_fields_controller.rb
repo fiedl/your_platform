@@ -1,6 +1,7 @@
 class ProfileFieldsController < ApplicationController
 
   before_filter        :load_profile_field_as_instance_variable
+  respond_to :html, :json
   layout               false
 
   def show
@@ -11,7 +12,8 @@ class ProfileFieldsController < ApplicationController
 
   def update
     @profile_field.update_attributes( params[ :profile_field ] )
-    render action: 'show'
+    respond_with @profile_field
+    #render action: 'show'
   end
 
   def destroy

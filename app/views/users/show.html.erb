@@ -15,35 +15,12 @@
       <% end %>
     </ul>
   </span>
-  <p>Profil-Informationen</p>
   <dl>
     <dt><%=t :name %></dt><dd><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></dd>
-    <!--dt><%=t :first_name %></dt><dd><%= best_in_place @user, :first_name %></dd>
-    <dt><%=t :last_name %></dt><dd><%= best_in_place @user, :last_name %></dd-->
   </dl>
 </div>
 
-
 <%= profile_sections_for_profileable @user, [ :contact_information, :about_myself, :study_information, :career_information, :organisations, :bank_account_information ] %>
-
-
-<% if false %>
-<% for title,profile_fields in @profile.sections %>
-  <h1><%=t title %></h1>
-  <div>
-    <%= gmaps4rails( @gmaps4rails_json ) if @gmaps4rails_json if title.to_sym == :contact_information %>
-    <dl>
-      <% for pf in profile_fields %>
-        <span class="profile_field">
-	  <!-- Im Moment werden die Profilfelder nur von jQuery gefüllt. Die Füllung muss aber noch in einen Helper ausgelagert werden, damit es auch auf mobilen Geräten funktioniert. -->
-	  <%= editable_span_tag( controller: 'profile_fields', id: pf.id ) %>
-	</span>
-
-      <% end %>
-    </dl>
-  </div>
-<% end %>
-<% end %>
 
 <h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
 <div>
@@ -60,16 +37,23 @@
   <% if @user.has_account? %>
     <dl>
       <dt>Identifikation möglich mit folgenden Daten:</dt>
-      <% for attribute in UserIdentification.possible_attributes %>
-        <dd><%=t attribute.to_s %>: <%= best_in_place @user, attribute.to_sym  %><!-- # = @user.send attribute --></dd>
-      <% end %> 
+      <dd>
+	<dl>
+          <% for attribute in UserIdentification.possible_attributes %>
+	    <span>
+	      <dt><%=t attribute.to_s %></dt>
+	      <dd><%= best_in_place @user, attribute.to_sym  %></dd>
+	    </span>
+          <% end %> 
+	</dl>
+      </dd>
     </dl>
   <% else %>
     <p><%=t :user_has_no_account %></p>
+    <span class="only-in-edit-mode">
+      <a><%=t :create_account %></a>
+    </span>
   <% end %>
 </div>
-
-
-
 
 <% end %>

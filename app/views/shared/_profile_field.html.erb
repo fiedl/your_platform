@@ -1,0 +1,22 @@
+<span class="profile_field">
+  <%
+     input_type = 'input'
+     input_type = 'textarea' if [ "Address", "Description" ].include? profile_field.type
+  %>
+  <dt><%= best_in_place profile_field, :label %></dt>
+  <dd>
+    <% if profile_field.value %>
+      <%= best_in_place profile_field, :value,
+          type: input_type #,
+          # display_with: :simple_format
+          # display_with: :profile_field_show_value, type: :helper, helper_options: { object: profile_field }
+          %>
+    <% elsif profile_field.children.count > 0 %>
+      <dl>
+        <% for child_field in profile_field.children %>
+          <%= render partial: 'shared/profile_field', object: child_field %>
+        <% end %>
+      </dl>
+    <% end %>
+  </dd>
+</span>
