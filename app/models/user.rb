@@ -95,6 +95,18 @@ class User < ActiveRecord::Base
     UserAccount.authenticate login_string, password 
   end
 
+  def groups
+    self.ancestor_groups
+  end
+
+  def workflows
+    my_workflows = []
+    self.groups.each do |group|
+      my_workflows += group.child_workflows
+    end
+    return my_workflows
+  end
+
   # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
   def corporations
     if Group.wingolf_am_hochschulort

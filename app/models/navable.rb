@@ -24,6 +24,10 @@ module Navable
       nav_node
     end
 
+    def navable_children
+      children.select{ |child| child.respond_to? :nav_node }
+    end
+
     private
 
   end

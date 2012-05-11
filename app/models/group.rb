@@ -159,7 +159,7 @@ class Groups
   end
 
   def self.of_user( user )
-    user.ancestor_groups
+    user.groups
   end
 
 end

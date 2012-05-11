@@ -26,22 +26,31 @@
 <h1><%=t :members %> (<%=h @group.descendant_users.count %>)</h1>
 <div>
   <% if @group %>
-    <% if @group.child_users.count > 0 %>
-      <ul>
-        <% for user in @group.child_users do %>
-          <li><%= link_to user.title, user %></li>
-        <% end %>
-      </ul>
-    <% elsif @group.child_groups.count > 0 %>
-      <% for child_group in @group.child_groups do %>
-        <h2><%= link_to child_group.title, child_group %> (<%=h child_group.descendant_users.count %>)</h2>
-	<ul>
-  	  <% for user in child_group.descendant_users do %>
-	    <li><%= link_to user.title, user %></li>
-	  <% end %>
+    <span id="group_members">
+      <% if @group.child_users.count > 0 %>
+        <ul>
+          <% for user in @group.child_users do %>
+            <li><%= link_to user.title, user %></li>
+          <% end %>
 	</ul>
+      <% elsif @group.child_groups.count > 0 %>
+        <% for child_group in @group.child_groups do %>
+          <h2><%= link_to child_group.title, child_group %> (<%=h child_group.descendant_users.count %>)</h2>
+	  <ul>
+  	    <% for user in child_group.descendant_users do %>
+	      <li>
+		<%= link_to user.title, user %>
+		<span class="only-in-edit-mode">
+  		  <% for workflow in child_group.child_workflows do %>
+	            <%= link_to_workflow workflow, user: user %>
+		  <% end %>
+		</span>
+	      </li>
+	    <% end %>
+	  </ul>
+	<% end %>
       <% end %>
-    <% end %>
+    </span>
   <% end %>
 </div>
 

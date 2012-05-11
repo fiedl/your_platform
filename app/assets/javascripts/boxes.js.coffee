@@ -8,6 +8,10 @@ jQuery ->
   $(".box_toolbar .button.hidden").removeClass( "hidden" ).css( "display", "inline-block" ).hide()
   $(".box_edit_button").show()
 
+  # Objekte, die nur im Edit-Mode angezeigt werden sollen, müssen auch als .editable klassifiziert werden,
+  # damit die Methoden in dieser Datei richtig greifen.
+  $( ".only-in-edit-mode" ).addClass( "editable" )
+
   # Der Bearbeiten-Button der Box schaltet den Bearbeiten-Modus
   # für alle Felder in der Box ein.
   $(".box_edit_button").click( ->

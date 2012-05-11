@@ -22,6 +22,7 @@ Wingolfsplattform::Application.routes.draw do
   # This route can be invoked with purchase_url(:id => product.id)
 
   resources :users
+  resources :workflows
 
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile

@@ -8,6 +8,13 @@
 <% if @user %>
 <h1><%=h @title %></h1>
 <div>
+  <span id="user_workflows" class="only-in-edit-mode">
+    <ul>
+      <% for workflow in @user.workflows %>
+        <li><%= link_to_workflow workflow, user: @user %></li>
+      <% end %>
+    </ul>
+  </span>
   <p>Profil-Informationen</p>
 </div>
 
