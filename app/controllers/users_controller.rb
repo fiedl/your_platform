@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 class UsersController < ApplicationController
 
+  respond_to :html, :json
   before_filter :find_user, :except => [ :index, :new, :create ]
 
   def index
@@ -30,6 +31,11 @@ class UsersController < ApplicationController
       @user.valid?
       render :action => "new"
     end
+  end
+
+  def update
+    @user.update_attributes params[ :user ]
+    respond_with @user
   end
 
   private

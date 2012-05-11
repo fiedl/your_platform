@@ -16,6 +16,10 @@
     </ul>
   </span>
   <p>Profil-Informationen</p>
+  <dl>
+    <dt><%=t :first_name %></dt><dd><%= best_in_place @user, :first_name %></dd>
+    <dt><%=t :last_name %></dt><dd><%= best_in_place @user, :last_name %></dd>
+  </dl>
 </div>
 
 
