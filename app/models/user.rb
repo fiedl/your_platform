@@ -113,11 +113,13 @@ class User < ActiveRecord::Base
 
   # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
   def corporations
+    my_corporations = []
     if Group.wingolf_am_hochschulort
-      return self.ancestor_groups & Group.wingolf_am_hochschulort.child_groups 
-    else
-      return []
+      my_corporations += ( self.ancestor_groups & Group.wingolf_am_hochschulort.child_groups ).select do |wah|
+        ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
+      end
     end
+    return my_corporations
   end
 
   # Der Bezirksverband, dem der Benutzer zugeordnet ist.
