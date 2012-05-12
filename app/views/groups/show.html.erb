@@ -60,7 +60,11 @@
     <dl>
       <% for officer_group in @group.officers %>
         <dt><%= best_in_place officer_group, :name %></dt>
-	<dd><%= officer_group.child_users.collect{ |user| user.title }.join( ", " ) %></dd>
+	<dd><%= best_in_place officer_group, 
+		:direct_member_titles_string, 
+		html_attrs: { 'data-autocomplete-url' => autocomplete_title_users_path  }
+		%></dd>
+	<% # autocomplete_field_tag :user_title, '', autocomplete_title_users_path %>
       <% end %>
     </dl>
   </span>

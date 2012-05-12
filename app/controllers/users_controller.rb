@@ -2,7 +2,7 @@
 class UsersController < ApplicationController
 
   respond_to :html, :json
-  before_filter :find_user, :except => [ :index, :new, :create, :update ]
+  before_filter :find_user, only: [ :show, :update ]
 
   def index
     redirect_to Group.jeder
@@ -34,36 +34,24 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user = User.find params[ :id ]
     @user.update_attributes( params[ :user ] )
     respond_with @user
   end
 
+  def autocomplete_title
+    term = params[ :term ]
+    @users = User.all.select { |user| user.title.downcase.include? term.downcase }
+    render json: json_for_autocomplete( @users, :title )
+  end
+
+
   private
 
   def find_user
-#    @alias = params[ :alias ]
-#    id = params[ :id ]
-#    if @alias
-#      @user = User.find_by_alias( @alias ) #User.find( :first, :conditions => "alias='#{@alias}'" )
-#    elsif id
-#      @user = User.find_by_id( id )
-#    else
-#      @user = User.new
-#    end
-#    if @user
-#      @navable = @user
-#      @title = @user.title
-#    else
-#      @title = t :user_not_found
-#      @title += ": #{@alias}" if @alias
-#    end
-
     @user = User.find( params[ :id ] )
     @user = User.new unless @user
     @title = @user.title
     @navable = @user
-
   end
 
 end

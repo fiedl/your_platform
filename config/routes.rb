@@ -3,7 +3,7 @@ Wingolfsplattform::Application.routes.draw do
 
 
   resources :pages
-  resources :groups
+  resources :groups #do
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
@@ -22,7 +22,10 @@ Wingolfsplattform::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
-  resources :users
+  resources :users do
+    get :autocomplete_title, on: :collection
+  end
+
   resources :workflows
 
   resources :profile_fields

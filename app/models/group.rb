@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 class Group < ActiveRecord::Base
-  attr_accessible :name, :token, :extensive_name, :internal_token
+  attr_accessible :name, :token, :extensive_name, :internal_token, :direct_member_titles_string
 
 #  has_dag_links   link_class_name: 'DagLink', ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page)
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page Workflow)
@@ -123,6 +123,38 @@ class Group < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def direct_member_titles_string
+    child_users.collect { |user| user.title }.join( ", " )
+  end
+  def direct_member_titles_string=( titles_string )
+    new_members_titles = titles_string.split( "," )
+    new_members = new_members_titles.collect do |title|
+      u = User.find_by_title( title.strip )
+      self.errors.add :direct_member_titles_string, 'user not found: #{title}' unless u
+#      raise 'validation error: user not found: #{title}'
+      u
+    end
+    for member in child_users
+      unassign_user member unless member.in? new_members if member
+    end
+    for new_member in new_members
+      assign_user new_member if new_member
+    end
+  end
+
+  def assign_user( user )
+    if user
+      unless user.in? self.child_users
+        self.child_users << user if user
+      end
+    end
+  end
+
+  def unassign_user( user )
+    link = DagLink.find_edge( self.becomes( Group ), user )
+    link.destroy if link.destroyable? if link
   end
 
   # Importiere Gruppen aus CSV-Datei

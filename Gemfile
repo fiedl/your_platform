@@ -85,3 +85,5 @@ gem 'json'								# Ruby License
 # Farbiger Konsolen-Output					
 gem 'colored'								# MIT License
 
+# Auto Completion
+gem 'rails3-jquery-autocomplete'					# MIT Licenses

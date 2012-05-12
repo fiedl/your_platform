@@ -40,7 +40,11 @@ class User < ActiveRecord::Base
   # <tt>@title = page.title</tt>, <tt>@title = user.title</tt>.
   # Die Funktion gibt *nicht* den akademischen Titel oder die Anrede des Benutzers zurück.
   def title
-    name + "  " + aktivitaetszahl
+    ( name + "  " + aktivitaetszahl ).strip
+  end
+
+  def self.find_by_title( title )
+    User.all.select { |user| user.title == title }.first
   end
 
   def alias
