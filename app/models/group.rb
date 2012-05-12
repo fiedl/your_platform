@@ -51,6 +51,19 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def officers_group
+    self.child_groups.find_by_name( "Amtsträger" ) unless self.name == "Amtsträger"
+  end
+
+  def officers
+    officers = self.descendant_groups.find_all_by_name( "Amtsträger" ).collect{ |officer_group| officer_group.child_groups }.flatten
+    return officers if officers.count > 0
+  end
+
+  def amtsträger
+    officers
+  end
+
   def self.jeder!
     unless self.jeder
       p "Creating group 'Jeder' ..."

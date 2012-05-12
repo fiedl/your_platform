@@ -54,4 +54,16 @@
   <% end %>
 </div>
 
+<% if @group.officers %>
+  <h1><%=t :officers %></h1>
+  <span id="officers">
+    <dl>
+      <% for officer_group in @group.officers %>
+        <dt><%= best_in_place officer_group, :name %></dt>
+	<dd><%= officer_group.child_users.collect{ |user| user.title }.join( ", " ) %></dd>
+      <% end %>
+    </dl>
+  </span>
+<% end %>
+
 <%= profile_sections_for_profileable @group, [ :contact_information, :bank_account_information, :description ] %>

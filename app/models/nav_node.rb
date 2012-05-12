@@ -24,7 +24,8 @@ class NavNode < ActiveRecord::Base
 
   def hidden_menu
     hidden = super
-    hidden = true if self.navable.kind_of? User unless hidden
+    hidden = true if self.navable.kind_of? User if hidden.nil?
+    hidden = true if self.navable.title == "Amtsträger" if hidden.nil?
     return hidden
   end
 
