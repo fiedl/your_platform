@@ -14,7 +14,12 @@ module RelationshipsHelper
     who = relationship.parent_users.first
     of = relationship.child_users.first
     content_tag :li do
-      [ "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe,
+      [ multiple_users_best_in_place( who, :title ), # -> user_best_in_place( relationship, :who_by_title ) # TODO
+        " ist ",
+        best_in_place( relationship, :name ),
+        " von ",
+        multiple_users_best_in_place( of, :title ), # -> user_best_in_place( relationship, :of_by_title ) # TODO
+# "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe,
         relationship_tools( relationship )
       ].join.html_safe
     end

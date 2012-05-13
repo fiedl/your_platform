@@ -7,7 +7,7 @@ jQuery ->
 
   # Auto-Completion for Users-Select-Box
   auto_complete_input_element = null
-  $("input[name='direct_member_titles_string']").live("keydown", (event) ->
+  $("input[name='direct_member_titles_string'], .multiple-users-select-input").live("keydown", (event) ->
     unless autocomplete_input_element
       autocomplete_input_element = $( this )
       $(this).autocomplete
