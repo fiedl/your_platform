@@ -47,6 +47,10 @@ class User < ActiveRecord::Base
     User.all.select { |user| user.title == title }.first
   end
 
+  def self.by_title( title )
+    User.find_by_title title
+  end
+
   def alias
     @alias = UserAlias.new( read_attribute( :alias ), :user => self ) unless @alias.kind_of? UserAlias
     return @alias

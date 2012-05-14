@@ -14,12 +14,12 @@ module RelationshipsHelper
     who = relationship.parent_users.first
     of = relationship.child_users.first
     content_tag :li do
-      [ multiple_users_best_in_place( who, :title ), # -> user_best_in_place( relationship, :who_by_title ) # TODO
-        " ist ",
-        best_in_place( relationship, :name ),
-        " von ",
-        multiple_users_best_in_place( of, :title ), # -> user_best_in_place( relationship, :of_by_title ) # TODO
-# "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe,
+      [ user_best_in_place( relationship, :who_by_title ),
+        content_tag( :span, " " + t( :is ) + " ", :class => "junction_expression" ),
+        best_in_place( relationship, :is ),
+        content_tag( :span, " " + t( :of ) + " ", :class => "junction_expression" ),
+        user_best_in_place( relationship, :of_by_title ),
+        # "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe, # TODO: User-Links
         relationship_tools( relationship )
       ].join.html_safe
     end
@@ -30,5 +30,13 @@ module RelationshipsHelper
       remove_button( relationship )
     end
   end
+
+# def user_best_in_place_if_not_me( object, user_attribute, me_user )
+#   if object.send( user_attribute ) == me_user
+#     me_user.title
+#   else
+#     best_in_place( object, user_attribute )
+#   end
+# end
 
 end
