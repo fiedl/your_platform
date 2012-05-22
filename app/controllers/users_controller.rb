@@ -5,7 +5,11 @@ class UsersController < ApplicationController
   before_filter :find_user, only: [ :show, :update ]
 
   def index
-    redirect_to Group.jeder
+    begin
+      redirect_to Group.jeder
+    rescue
+      raise "No basic groups are present, yet. Try `rake bootstrap:all`."
+    end
   end
 
   def show
@@ -48,10 +52,12 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    @user = User.find( params[ :id ] )
-    @user = User.new unless @user
-    @title = @user.title
-    @navable = @user
+    if params[ :id ]
+      @user = User.find( params[ :id ] )
+      @user = User.new unless @user
+      @title = @user.title
+      @navable = @user
+    end
   end
 
 end

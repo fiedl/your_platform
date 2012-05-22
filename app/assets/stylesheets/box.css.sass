@@ -1,0 +1,143 @@
+#content * .box
+  position: relative
+  width: 628px
+  border: 1px solid #d6d3cd
+  background: image-url("content_bg.jpg") repeat
+  margin-bottom: 13px
+  .head
+    padding: 15px 0 0 9px
+    text-transform: uppercase
+    *
+      font-size: 18px
+      padding: 0
+      margin: 0
+  .minimize
+    position: absolute
+    top: 16px
+    right: 14px
+    background: image-url("box_minimize.gif") no-repeat
+    width: 13px
+    height: 13px
+    cursor: pointer
+  .divider
+    height: 0px
+    font-size: 0px
+    line-height: 0px
+    border-top: 1px solid #ffeda7
+    border-bottom: 1px solid #dcb000
+    margin-top: 5px
+  .content
+    padding: 9px
+    font-size: 13px
+    font-weight: bold
+    h2
+      font-size: 13pt
+
+.modal
+  z-index: 3005
+
+.modal_bg
+  top: 0px
+  left: 0px
+  position: fixed
+  width: 100%
+  height: 100%
+  background-color: #000000
+  filter: alpha(opacity = 60)
+  opacity: 0.6
+  -moz-opacity: 0.6
+  z-index: 3000
+  text-align: center
+  vertical-align: middle
+
+/* Diese Datei ist unterhalb noch nicht auf 90% skaliert.
+/*
+ *
+ *
+ *#content .box_minimize.closed, .fancybox .box_minimize.closed{
+ *    background:url(../images/box_minimize_closed.gif) no-repeat;
+ *}
+ *
+ *
+ *
+ *.fancybox .box_head_userId,
+ *#content .box_head_userId{
+ *    float:left;
+ *    margin-left:15px;
+ *    position:relative;
+ *    top:0px;
+ *    font-weight: bold;
+ *}
+ *
+ *#content .box_head_functions, .fancybox .box_head_functions{
+ *    position:absolute;
+ *    top:18px;
+ *    right:45px;
+ *}
+ *
+ *#content .box_head_functions a,
+ *.fancybox .box_head_functions a,
+ *a.box_head_functions_changeStatus{
+ *    font-size:14px;
+ *    font-weight: bold;
+ *    color:#7e0f0d;
+ *    text-decoration: none;
+ *    padding-left:15px;
+ *    margin-left:10px;
+ *}
+ *.change_status a.box_head_functions_changeStatus{
+ *    margin-left:0px;
+ *}
+ *
+ *#content .box_head_functions_changeStatus{
+ *    background: url(../images/change_status_icon.png) no-repeat 0px 2px;
+ *}
+ *
+ *#content .box_head_functions_edit{
+ *    background: url(../images/edit_icon.png) no-repeat;
+ *    padding-left:16px;
+ *}
+ *
+ *#content .box_divider, .fancybox .box_divider{
+ *    height:0px;
+ *    font-size:0px;
+ *    line-height: 0px;
+ *    border-top:1px solid #ffeda7;
+ *    border-bottom:1px solid #dcb000;
+ *    margin-top:6px;
+ *}
+ *
+ *#content .box_content, .fancybox .box_content{
+ *    padding:10px;
+ *    font-size:15px;
+ *    font-weight: bold;
+ *}
+ *
+ *#content .box_content_col, .fancybox .box_content_col{
+ *    width:230px;
+ *    float:left;
+ *}
+ *
+ *#content .box_content_col.mid, .fancybox .box_content_col.mid{
+ *    width:222px;
+ *}
+ *
+ *#content .box_content_col.right, .fancybox .box_content_col.right{
+ *    width:226px;
+ *}
+ *
+ *
+ *.fancybox .box_head {
+ *    position: relative;
+ *}
+ *.fancybox .box_content {
+ *}
+ *.fancybox_close {
+ *    position: absolute;
+ *    top: 10px;
+ *    right: 10px;
+ *}
+ *
+ *.fancybox .box {
+ *    margin: 0;
+ *}

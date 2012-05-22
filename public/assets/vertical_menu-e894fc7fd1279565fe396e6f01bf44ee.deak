@@ -1,0 +1,118 @@
+
+.vertical_menu ul {
+    width:197px;
+    margin:0;
+    padding:0;
+    list-style: none;
+
+    margin-bottom: 15px;
+
+/*    background: #f8f7f5 no-repeat 1px 0;*/
+    border-top: 1px solid #d6d3cd;
+    border-bottom: 1px solid #d6d3cd;
+
+/*    background: #a15d5a;*/
+    background: #cccccc; 
+}
+
+.vertical_menu ul * a {
+    font-size:12px;
+    font-weight:bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    color:#000;
+    background: #f8f7f5;
+    letter-spacing: 1.3px;
+    width:182px;
+    padding:8px 4px 8px 10px;
+    display:block;
+    border:none;
+    border-left:1px solid #d6d3cd;
+    border-right:1px solid #d6d3cd;
+    margin-bottom: 1px;
+}
+
+.vertical_menu * .root, .vertical_menu * .ancestor a {
+    background: #e6e6e4;    
+}
+
+.vertical_menu * .active a {
+    background:#222222;
+    color:#fff;
+}
+
+
+
+/*
+
+#content .subnavi ul li {
+    display: list-item;
+}
+
+#content .subnavi li{
+    position: relative;
+}
+
+
+
+*/
+
+/* Diese Datei wurde unterhalb noch nicht auf 90% skaliert. */
+/*
+
+#content .subnavi .sub{
+    background:#e6e6e4;
+}
+
+#content .subnavi .sub a{
+    width:186px;
+    padding:10px 5px 10px 26px;
+}
+
+#content .subnavi .sub a.active{
+    width:188px;
+}
+
+#content .subnavi a.active.sub {
+    background:#5f5f5f;
+}
+
+#content .subnavi li hr{
+    background:none;
+    border:none;
+    height:1px;
+    background:#b06d6b;
+    border-left:1px solid #a15d5a;
+    border-right:1px solid #a15d5a;
+    font-size:0px;
+    line-height:0px;
+    overflow:hidden;
+    padding:0px;
+    margin:0px;
+}
+
+#content .subnavi li.last hr, #content .subnavi li:last-child hr {
+    display:none;
+}
+
+#content .subnavi.bottom{
+    margin-top:15px;
+}
+
+
+
+#content .subnavi a.child, #content .subnavi a.neighbor {
+    padding-left: 20px;
+    width: 194px;
+}
+
+#content .subnavi.groups {
+    margin-top: 15px;
+    background:#e7e4dd url(../images/subnavi_bg.jpg) no-repeat 1px -100px;
+}
+
+#content .subnavi.seperator {
+    margin-top: 15px;
+}
+
+*/

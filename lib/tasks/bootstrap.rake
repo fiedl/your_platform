@@ -3,6 +3,7 @@
 # SF 2012-05-03
 
 namespace :bootstrap do
+
   desc "Add basic groups"
   task basic_groups: :environment do
     p "Task: Add basic groups"
@@ -75,6 +76,14 @@ namespace :bootstrap do
     end
   end
 
+  desc "Add basic pages"
+  task add_basic_pages: :environment do
+    p "Task: Add basic pages."
+    home = Page.create( title: "wingolf.org" )
+    mitglieder_start = home.child_pages.create( title: "Mitglieder Start" )
+    mitglieder_start.child_groups << Group.jeder
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
@@ -83,7 +92,8 @@ namespace :bootstrap do
                 :basic_nav_node_properties,
                 :import_bv_mappings,
                 :import_bv_groups,
-                :import_wah_vertagte
+                :import_wah_vertagte,
+                :add_basic_pages
                ]
 
 end
