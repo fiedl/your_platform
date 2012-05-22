@@ -22,4 +22,10 @@ module EditableHelper
     
   end
 
+  def only_in_edit_mode_tag( &block )
+    content_tag :span, :class => "only-in-edit-mode" do
+      yield
+    end
+  end    
+
 end

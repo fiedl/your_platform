@@ -28,10 +28,12 @@ class Group < ActiveRecord::Base
 
   def self.jeder
     g = Group.find_by_name( "Jeder" )
-    if g.root_for_groups?
-      return g
-    else
-      return g.ancestor_groups.first
+    if g
+      if g.root_for_groups?
+        return g
+      else
+        return g.ancestor_groups.first
+      end
     end
   end
 

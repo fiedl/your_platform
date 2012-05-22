@@ -3,11 +3,17 @@ module RelationshipsHelper
 
   def relationships_of_user_ul( user )
     relationships = user.relationships #parent_relationships + user.child_relationships
-    content_tag :ul do
-       (relationships.collect do |relationship|
-          relationship_li relationship
-       end).join.html_safe
-    end
+    content_tag( :ul ) do
+      [ relationship_lis( relationships ),
+        relationship_tools_common_li
+      ].join.html_safe
+     end
+  end
+
+  def relationship_lis( relationships )
+    ( relationships.collect do |relationship|
+      relationship_li( relationship )
+    end ).join.html_safe
   end
   
   def relationship_li( relationship )
@@ -20,14 +26,28 @@ module RelationshipsHelper
         content_tag( :span, " " + t( :of ) + " ", :class => "junction_expression" ),
         user_best_in_place( relationship, :of_by_title ),
         # "#{user_link who} ist #{relationship.name} von #{user_link of}".html_safe, # TODO: User-Links
-        relationship_tools( relationship )
+        relationship_tools_each( relationship )
       ].join.html_safe
     end
   end
 
-  def relationship_tools( relationship )
-    content_tag :span, class: 'tools only-in-edit-mode' do
+  def relationship_tools_each( relationship )
+    only_in_edit_mode_tag do
       remove_button( relationship )
+    end
+  end
+
+  def relationship_tools_common_li
+    only_in_edit_mode_tag do
+      content_tag :li do
+        relationship_tools_common
+      end
+    end
+  end
+
+  def relationship_tools_common
+    only_in_edit_mode_tag do
+      add_button( nil )
     end
   end
 
