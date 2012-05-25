@@ -37,16 +37,20 @@ namespace :deploy do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 
-  desc "Copy local database.yml for stage onto the server"
-  task :copy_stage_database_yml_onto_server, :roles => :app do
-    upload "config/database/database_#{stage}.yml", "#{shared_path}/config/database.yml"
-  end
+#  desc "Copy local database.yml for stage onto the server"
+#  task :copy_stage_database_yml_onto_server, :roles => :app do
+#    #upload "config/database/database_#{stage}.yml", "#{shared_path}/config/database.yml"
+#    upload "config/database/database_testing-aki.yml", "#{shared_path}/config/database.yml"
+#  end
   
   desc "ln database.yml into current release"
-  task :ln_database_yml_into_current_release, roles => :app do
+  task :ln_database_yml_into_current_release, :roles => :app do
+#    upload "config/database/database_testing-aki.yml", "#{shared_path}/config/database.yml"
+    Capistrano::CLI.ui.say "TODO UPLOAD DATABASE YML FILE!"
     run "ln -s #{shared_path}/config/database.yml #{latest_release}/config/database.yml"
   end
 end
 
 before "deploy:assets:precompile", "deploy:ln_database_yml_into_current_release"
+#before "deploy:ln_database_yml_into_current_release", "deploy:copy_stage_database_yml_onto_server"
 
