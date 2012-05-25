@@ -25,7 +25,8 @@ group :assets do
 
   # See https://github.com/sstephenson/execjs#readme for more 
   # supported runtimes
-  # gem 'therubyracer', :platform => :ruby
+  gem 'execjs'
+  gem 'therubyracer', :platform => :ruby
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
 end
@@ -93,4 +94,5 @@ gem 'rails3-jquery-autocomplete'					# MIT Licenses
 # Capistrano runs locally, not on the remote server.
 group :development do
   gem 'capistrano'                                                      #
+  gem 'net-ssh', '2.4.0'
 end 

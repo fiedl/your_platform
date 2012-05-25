@@ -11,3 +11,7 @@ set :group, "users"
 set :deploy_to, "/var/wingolfsplattform"
 set :use_sudo, false
 
+set :default_environment, {
+  'PATH' => "$PATH:/home/rubyuser/.gem/ruby/1.9.1/bin",
+  'RAILS_ENV' => "testing-aki"
+}

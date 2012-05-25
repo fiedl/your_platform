@@ -37,7 +37,7 @@ namespace :deploy do
     run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
   end
 
-  desc "Copy local database.yml for stage '#{stage}' onto the server"
+  desc "Copy local database.yml for stage onto the server"
   task :copy_stage_database_yml_onto_server, :roles => :app do
     upload "config/database/database_#{stage}.yml", "#{shared_path}/config/database.yml"
   end
