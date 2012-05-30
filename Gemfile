@@ -94,5 +94,6 @@ gem 'rails3-jquery-autocomplete'					# MIT Licenses
 # Capistrano runs locally, not on the remote server.
 group :development do
   gem 'capistrano', '~>2.11.2'
+  gem 'capistrano_colors'
   gem 'net-ssh', '2.4.0'
 end 

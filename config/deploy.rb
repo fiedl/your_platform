@@ -1,5 +1,6 @@
 
 require 'bundler/capistrano'
+require 'capistrano_colors'
 
 set :stages, %w(testing-aki testing-pub production)
 set :default_stage, "testing-aki"
