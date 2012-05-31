@@ -20,10 +20,9 @@ class UsersController < ApplicationController
   end
 
   def new
-    @title = t :create_user
+    @title = t( :create_user )
     @user = User.new
     @user.alias = params[:alias]
-    
   end
 
   def create

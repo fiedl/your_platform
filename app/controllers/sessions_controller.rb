@@ -14,7 +14,8 @@ class SessionsController < ApplicationController
       @current_user = User.authenticate( params[ :login_name ], params[ :password ] )
       if @current_user
         @session.login @current_user
-        redirect_to :controller => "users", :action => "show", :alias => @current_user.alias
+#        redirect_to :controller => "users", :action => "show", :alias => @current_user.alias
+        redirect_to @current_user
       else
         flash[ :error ] = t( :login_failed )
         render :action => "new"
