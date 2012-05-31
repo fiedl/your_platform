@@ -102,6 +102,11 @@ end
 group :test, :development do
   gem 'rspec-rails'
 end
+group :development do
+  gem 'guard-rspec'
+end
 group :test do
   gem 'capybara'
+  gem 'rb-inotify'
+  gem 'libnotify'
 end
