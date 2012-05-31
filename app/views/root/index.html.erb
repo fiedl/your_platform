@@ -1,0 +1,14 @@
+<h1>Test-System der Wingolfsplattform</h1>
+<div>
+  <p>Willkommen im Test-System der neuen Wingolfsplattform.</p>
+
+  <h2>Wo bin ich hier?</h2>
+  <p>Dies ist eine temporäre Test-Seite für den AK Internet. Deswegen findest Du sie auch nicht über die Navigation. Du kommst zu dieser Seite immer zurück, indem Du den Pfad in der Adressleiste entfernst, also nur noch <%= link_to root_url, controller: 'root' %> stehen lässt.</p>
+
+  <h2>Erste Schritte</h2>
+  <ol>
+    <li><%= link_to "Einen neuen Benutzer für Dich anlegen", controller: 'users', action: 'new' %></li>
+    <li><%= link_to "Dich mit diesen Benutzerdaten einloggen.", controller: 'sessions', action: 'new' %> (Das Passwort wird per E-Mail übermittelt.)</li>
+  </ol>
+
+</div>

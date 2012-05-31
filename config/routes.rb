@@ -1,6 +1,6 @@
 Wingolfsplattform::Application.routes.draw do 
 
-
+  root :to => 'root#index'
 
   resources :pages
   resources :groups #do
