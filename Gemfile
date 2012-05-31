@@ -97,3 +97,11 @@ group :development do
   gem 'capistrano_colors'
   gem 'net-ssh', '2.4.0'
 end 
+
+# RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
+group :test, :development do
+  gem 'rspec-rails'
+end
+group :test do
+  gem 'capybara'
+end
