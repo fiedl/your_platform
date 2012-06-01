@@ -93,22 +93,20 @@ gem 'rails3-jquery-autocomplete'					# MIT Licenses
 # Deployment with Capistrano.                                          
 # Capistrano runs locally, not on the remote server.
 group :development do
-  gem 'capistrano', '~>2.11.2'
+  gem 'capistrano' #, '~>2.11.2'
   gem 'capistrano_colors'
   gem 'net-ssh', '2.4.0'
 end 
 
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
-  gem 'rspec-rails'
-  gem 'rspec'
-  gem 'guard'
-  gem 'guard-rspec'
+  gem 'rspec-rails', '2.10.0'
+  gem 'guard-rspec', '0.5.5'
 end
 group :test do
-  gem 'capybara'
-  gem 'guard-spork'
-  gem 'spork'
+  gem 'capybara', '1.1.2'
+#  gem 'guard-spork'
+#  gem 'spork'
 end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
