@@ -43,3 +43,6 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
+
+# bundler_stubs, see: http://ruby.railstutorial.org/chapters/static-pages#sec:eliminating_bundle_exec
+bundler_stubs
