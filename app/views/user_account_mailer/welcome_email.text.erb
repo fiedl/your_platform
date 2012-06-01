@@ -1,5 +1,6 @@
 <%=t :welcome_to_wingolfsplattform %>
 ====================================================
 
+<%= url_for controller: 'session', action: 'new' %>
 Login: <%=h @user.alias %>
 Passwort: <%=h @password %>
