@@ -107,8 +107,24 @@ group :test, :development do
 end
 group :test do
   gem 'capybara'
-  gem 'rb-inotify'
-  gem 'libnotify'
   gem 'guard-spork'
   gem 'spork'
+end
+
+# Automatische Anzeige des Red-Green-Refactor-Zyklus.
+# Packages: see: http://ruby.railstutorial.org/chapters/static-pages
+group :test do
+  if RUBY_PLATFORM.downcase.include?("linux")
+    gem 'rb-inotify' 
+    gem 'libnotify'
+  end
+  if RUBY_PLATFORM.downcase.include?("darwin") # Mac
+    gem 'rb-fsevent', :require => false
+    gem 'growl'      
+  end
+  if RUBY_PLATFORM.downcase.include?("windows")
+    gem 'rb-fchange'
+    gem 'rb-notifu'
+    gem 'win32console'
+  end
 end
