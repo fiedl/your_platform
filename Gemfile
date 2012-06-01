@@ -101,12 +101,14 @@ end
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'rspec-rails'
-end
-group :development do
+  gem 'rspec'
+  gem 'guard'
   gem 'guard-rspec'
 end
 group :test do
   gem 'capybara'
   gem 'rb-inotify'
   gem 'libnotify'
+  gem 'guard-spork'
+  gem 'spork'
 end
