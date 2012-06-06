@@ -8,6 +8,7 @@ jQuery ->
                                               .unbind( 'click' )
                                               .unbind( 'keyup' )
                                               .unbind( 'submit' )
+                                              .bind( 'keyup', keyUpHandler )
                        )
                        .bind( "cancel", ->
                          $( this ).data( 'bestInPlaceEditor' ).abort()
@@ -15,3 +16,9 @@ jQuery ->
                        .bind( "save", ->
                          $( this ).data( 'bestInPlaceEditor' ).update()
                        )
+
+  keyUpHandler = (event) ->
+    if event.keyCode == 27
+      $( this ).closest( ".box" ).trigger( "cancel" )
+    if event.keyCode == 13
+      $( this ).closest( ".box" ).trigger( "save" )

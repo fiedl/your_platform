@@ -14,27 +14,68 @@ jQuery ->
 
   # Der Bearbeiten-Button der Box schaltet den Bearbeiten-Modus
   # für alle Felder in der Box ein.
-  $(".box_edit_button").click( ->
+  $( ".box" ).bind( "edit", ->
+    unless $( this ).hasClass ( "edit_mode" )
+      box = $( this )
+      box.addClass( "edit_mode" )
 
-    # Box identifizieren.
-    box = $(this).closest( ".box" )
+      # Modaler Effekt
+      make_box_modal( box )
 
-    # Modaler Effekt
-    make_box_modal( box )
+      # Die Buttons der Box für den Bearbeiten-Modus anzeigen.
+      edit_mode_button_set( box )
 
-    # Bearbeiten-Buttons umschalten.
-    enter_edit_mode_of_box( box )
-
-    # Bearbeiten-Modus auf enthaltene Felder übertragen.
-    box.find( "span.editable" ).each ->
-      $(this).addClass( "box_edit_mode" ).trigger( "edit" )
-
-    # Hinzufügen-Button ganz am Ende sichtbar machen.
-    box.find( ".add_button" ).show()
-    #image_tag( "../images/tools/add.png", alt: t( :add ), title: t( :add ), class: "button add_button" )
-    # TODO: Das muss noch in die Box.
+      # Bearbeiten-Modus auf enthaltene Felder übertragen.
+      # Das Reverse-Konstrukt sorgt hierbei dafür, dass das *erste* Element den
+      # Tastatur-Fokus erhält.
+      $( box.find( "span.editable" ).get().reverse() ).each ->
+        $(this).addClass( "box_edit_mode" ).trigger( "edit" )
 
   )
+
+  # Box speichern.
+  $( ".box" ).bind( "save", ->
+    if $( this ).hasClass( "edit_mode" )
+      box = $( this )
+      box.removeClass( "edit_mode" )
+      box.find( ".box_save_button" ).effect( "pulsate", { times: 2 }, "fast", ->
+        box.find( ".editable" ).each ->
+          $( this ).removeClass( "box_edit_mode" ).trigger( "save" )
+        animate_end_edit_mode( box )
+      )
+  )
+
+  # Box-Bearbeiten-Modus abbrechen.
+  $( ".box" ).bind( "cancel", ->
+    if $( this ).hasClass( "edit_mode" )
+      box = $( this )
+      box.removeClass( "edit_mode" )
+      box.find( ".box_cancel_button" ).effect( "pulsate", { times: 2 }, "fast", ->
+        box.find( ".editable" ).each ->
+          $( this ).removeClass( "box_edit_mode" ).trigger( "cancel" )
+        animate_end_edit_mode( box )
+      )
+  )
+
+
+  # == Button-Trigger ==========================================
+
+  # Der Bearbeiten-Modus einer Box wird ausgelöst, indem man auf den Bearbeiten-Button
+  # der Box klickt.
+  $(".box_edit_button").click ( ->
+    $( this ).closest( ".box" ).trigger( "edit" )
+  )
+
+  $(".box_save_button").click( ->
+    $( this ).closest( ".box" ).trigger( "save" )
+  )
+
+  $(".box_cancel_button").click( ->
+    $( this ).closest( ".box" ).trigger( "cancel" )
+  )
+
+
+  # == Animationen und Anzeige-Funktionen ======================
 
   # Box modal machen
   make_box_modal = (box) ->
@@ -45,17 +86,17 @@ jQuery ->
 
       # Wenn man auf den abgedunkelten Berreich außerhalb der Box klickt, wird
       # der Bearbeien-Modus beendet und gespeichert.
-      modal_box.find(".box_save_button").click()
+      modal_box.trigger( "save" )
 
     )
 
-  # Animation: Bearbeiten-Modus einer Box einschalten.
-  enter_edit_mode_of_box = (box) ->
+  # Buttons für den EditMode einer Box anzeigen.
+  edit_mode_button_set = (box) ->
     box.find( ".box_edit_button" ).hide()
     box.find(".box_save_button, .box_cancel_button").show()
 
   # Animation: Bearbeiten-Modus einer Box beenden.
-  end_edit_mode_of_box = (box) ->
+  animate_end_edit_mode = (box) ->
     box.find(".box_save_button, .box_cancel_button").hide()
     box.find(".box_edit_button").show()
     $("div.modal_bg").fadeOut( ->
@@ -63,22 +104,3 @@ jQuery ->
       $(".modal").removeClass("modal")
     )
 
-  # Box speichern.
-  $(".box_save_button").click( ->
-    $(this).effect( "pulsate", { times: 2 }, "fast", ->
-      box = $( this ).closest( ".box" )
-      box.find( ".editable" ).each ->
-        $( this ).removeClass( "box_edit_mode" ).trigger( "save" )
-      end_edit_mode_of_box( box )
-    )
-  )
-
-  # Box-Bearbeiten-Modus abbrechen.
-  $(".box_cancel_button").click( ->
-    $(this).effect( "pulsate", { times: 2 }, "fast", ->
-      box = $( this ).closest( ".box" )
-      box.find( ".editable" ).each ->
-        $( this ).removeClass( "box_edit_mode" ).trigger( "cancel" )
-      end_edit_mode_of_box( box )
-    )
-  )
