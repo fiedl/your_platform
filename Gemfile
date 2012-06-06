@@ -77,6 +77,7 @@ gem 'formtastic'							# MIT License
 
 # In Place Editing
 gem 'best_in_place' #, git: 'git://github.com/bernat/best_in_place.git'	# MIT License
+#gem 'best_in_place', path: '../best_in_place/'
 
 # JSON
 gem 'json'								# Ruby License
