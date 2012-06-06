@@ -28,7 +28,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new( params[:user] )
     if @user.save
-      redirect_to :action => "show", :alias => @user.alias
+      redirect_to @user
     else
       @title = t :create_user
       @user.valid?
