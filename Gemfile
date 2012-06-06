@@ -100,9 +100,8 @@ end
 
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
-#  gem 'rspec-rails', '2.10.0'
-  gem 'rspec-rails' #, '2.9.0'
-#  gem 'guard-rspec', '0.5.5'
+  gem 'rspec-rails' #, '2.10.0'
+  gem 'guard-rspec' #, '0.5.5'
 end
 group :test do
   gem 'capybara' #, '1.1.2'
@@ -112,17 +111,18 @@ end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
 # Packages: see: http://ruby.railstutorial.org/chapters/static-pages
+# Diese Pakete scheinen nicht mehr notwendig zu sein und vielmehr Guard zum Absturz zu bringen (SF 2012-06-06)
 #group :test do
 #  if RUBY_PLATFORM.downcase.include?("linux")
-#    gem 'rb-inotify' 
-#    gem 'libnotify'
+#    gem 'rb-inotify' #, '0.8.8'
+#    gem 'libnotify' #, '0.5.9'
 #  end
 #  if RUBY_PLATFORM.downcase.include?("darwin") # Mac
 #    gem 'rb-fsevent', :require => false
 #    gem 'growl'      
 #  end
 #  if RUBY_PLATFORM.downcase.include?("windows")
-#    gem 'rb-fchange'
+#   gem 'rb-fchange'
 #    gem 'rb-notifu'
 #    gem 'win32console'
 #  end
