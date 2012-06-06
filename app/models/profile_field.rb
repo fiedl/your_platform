@@ -8,6 +8,11 @@ class ProfileField < ActiveRecord::Base
   # Profilfelder können zusammengesetzt sein: 
   acts_as_tree
 
+  def display_html
+    # Override this in the inheriting classes in ordner to modify the html output of the value.
+    self.value
+  end
+
 end
 
 class Custom < ProfileField
@@ -23,6 +28,10 @@ end
 class Email < ProfileField
   def self.model_name; ProfileField.model_name; end
 
+  def display_html
+    ActionController::Base.helpers.mail_to self.value
+  end
+
 end
 
 class Address < ProfileField
@@ -31,6 +40,10 @@ class Address < ProfileField
   # Google Maps integration
   # see: http://rubydoc.info/gems/gmaps4rails/
   acts_as_gmappable 
+
+  def display_html
+    ActionController::Base.helpers.simple_format self.value
+  end
 
   def gmaps4rails_address
     self.value

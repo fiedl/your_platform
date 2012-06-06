@@ -21,4 +21,5 @@ jQuery ->
     if event.keyCode == 27
       $( this ).closest( ".box" ).trigger( "cancel" )
     if event.keyCode == 13
-      $( this ).closest( ".box" ).trigger( "save" )
+      unless $( event.target ).is( "textarea" )
+        $( this ).closest( ".box" ).trigger( "save" )

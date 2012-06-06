@@ -16,7 +16,6 @@
 //= require jquery.ui.all
 //= require jquery.purr
 //= require_boxes
-//= require editable
 //= require best_in_place
 //= require autocomplete-rails
 //= require_tree .

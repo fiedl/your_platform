@@ -12,7 +12,10 @@ class ProfileFieldsController < ApplicationController
 
   def update
     @profile_field.update_attributes( params[ :profile_field ] )
-    respond_with @profile_field
+    respond_to do |format|
+      format.json { respond_with_bip( @profile_field ) }
+    end
+    #respond_with @profile_field
     #render action: 'show'
   end
 

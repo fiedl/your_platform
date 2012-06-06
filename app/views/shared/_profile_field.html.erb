@@ -14,9 +14,8 @@
   <dd>
     <% unless profile_field.children.count > 0 %>
       <%= best_in_place profile_field, :value,
-          type: input_type #,
-          # display_with: :simple_format
-          # display_with: :profile_field_show_value, type: :helper, helper_options: { object: profile_field }
+          type: input_type,
+	  display_as: :display_html # display_html ist eine Methode in der ProfileField-Klasse
           %>
     <% end %>
     <% if profile_field.children.count > 0 %>
