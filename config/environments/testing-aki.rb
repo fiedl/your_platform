@@ -64,4 +64,15 @@ Wingolfsplattform::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+
+  # SMTP Settings
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address: 'smtp.erlanger-wingolf.de',
+    user_name: 'wingolfsplattform@erlanger-wingolf.de',
+    password: 'ooxais5Aishoo5eile9t',
+    enable_starttls_auto: false
+  }
+
+
 end
