@@ -51,11 +51,11 @@ class UserAccount < ActiveRecord::Base
 
   def generate
     self.new_password.generate!
-    begin
+#    begin
       UserAccountMailer.welcome_email( self.user, self.new_password ).deliver
-    rescue
-      raise "Could not send welcome email due to unreachable mail server (sender)."
-    end
+#    rescue
+#      raise "Could not send welcome email due to unreachable mail server (sender)."
+#    end
   end
 
   private

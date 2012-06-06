@@ -43,4 +43,6 @@ Wingolfsplattform::Application.configure do
     password: 'ooxais5Aishoo5eile9t',
     enable_starttls_auto: false
   }
+  config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'https' }
+
 end
