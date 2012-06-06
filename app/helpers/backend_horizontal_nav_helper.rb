@@ -9,9 +9,15 @@ module BackendHorizontalNavHelper
     # @navable         # die aktell angezeigte Seite, Gruppe, ...
 
     content_tag :ul do
-      navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
+      c = navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
         backend_horizontal_nav_item navable_to_display_in_horizontal_nav
       end.join.html_safe
+      unless @current_user # Temporärer Login-Link
+        c += content_tag :li do
+          link_to "Login", controller: 'sessions', action: 'new'
+        end
+      end
+      c
     end
 
   end
