@@ -100,6 +100,10 @@ end
 class Description < ProfileField
   def self.model_name; ProfileField.model_name; end
 
+  def display_html
+    ActionController::Base.helpers.simple_format self.value
+  end
+
 end
 
 class Phone < ProfileField
@@ -109,5 +113,11 @@ end
 
 class Homepage < ProfileField
   def self.model_name; ProfileField.model_name; end
+
+  def display_html
+    url = self.value
+    url = "http://#{url}" unless url.starts_with? 'http://'
+    ActionController::Base.helpers.link_to self.value, url
+  end
 
 end
