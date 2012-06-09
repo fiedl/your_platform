@@ -55,7 +55,7 @@ gem 'nokogiri'								# MIT License
 gem 'rails-i18n'							# MIT License
 
 # GoogleMaps
-gem 'gmaps4rails'							# MIT License
+gem 'gmaps4rails', '~> 1.4.8'					        # MIT License
 
 # GeoCoder
 gem 'geocoder'								# 
@@ -134,4 +134,4 @@ end
 
 
 # Edit-Mode, SF
-gem 'edit_mode' #, path: "../edit_mode"
+gem 'edit_mode', '>= 0.0.3' #, path: "../edit_mode"
