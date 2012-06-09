@@ -32,13 +32,13 @@ module RelationshipsHelper
   end
 
   def relationship_tools_each( relationship )
-    only_in_edit_mode_tag do
+    show_only_in_edit_mode_span do
       remove_button( relationship )
     end
   end
 
   def relationship_tools_common_li
-    only_in_edit_mode_tag do
+    show_only_in_edit_mode_span do
       content_tag :li do
         relationship_tools_common
       end
@@ -46,9 +46,7 @@ module RelationshipsHelper
   end
 
   def relationship_tools_common
-    only_in_edit_mode_tag do
-      add_button( nil )
-    end
+    add_button( nil )
   end
 
 # def user_best_in_place_if_not_me( object, user_attribute, me_user )

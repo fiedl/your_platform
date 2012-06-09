@@ -40,7 +40,7 @@
   	    <% for user in child_group.descendant_users do %>
 	      <li>
 		<%= link_to user.title, user %>
-		<span class="only-in-edit-mode">
+		<span class="show_only_in_edit_mode">
   		  <% for workflow in child_group.child_workflows do %>
 	            <%= link_to_workflow workflow, user: user %>
 		  <% end %>

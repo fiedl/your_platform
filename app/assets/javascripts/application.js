@@ -17,5 +17,6 @@
 //= require jquery.purr
 //= require_boxes
 //= require best_in_place
+//= require edit_mode
 //= require autocomplete-rails
 //= require_tree .

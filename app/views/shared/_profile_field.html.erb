@@ -6,9 +6,7 @@
   <dt>
     <%= best_in_place profile_field, :label %>
     <% unless profile_field.parent %>
-      <span class="tools only-in-edit-mode">
-        <%= remove_button( profile_field ) %>
-      </span>
+      <%= remove_button( profile_field ) %>
     <% end %>
   </dt>
   <dd>

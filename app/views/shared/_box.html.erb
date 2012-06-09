@@ -1,15 +1,17 @@
-<div class="box">
-  <%=h content_tag( :div, "", class: "minimize", title: t( :fold_box ) ) %>
-  <div class="head">
-    <span class="box_toolbar">
-      <%= image_tag 'tools/cancel.png', alt: t( :cancel ), title: t( :cancel ), class: "button box_cancel_button hidden" %>
-      <%= image_tag 'tools/save.png', alt: t( :save ), title: t( :save ), class: "button box_save_button hidden" %>
-      <%= image_tag 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button box_edit_button hidden" %>
-    </span>
-    <h1><%=h heading %></h1>
-  </div>
-  <div class="divider"></div>
-  <div class="content">
-    <%=h content %>
+<div class="edit_mode_group">
+  <div class="box">
+    <%=h content_tag( :div, "", class: "minimize", title: t( :fold_box ) ) %>
+    <div class="head">
+      <span class="box_toolbar">
+        <%= image_tag 'tools/cancel.png', alt: t( :cancel ), title: t( :cancel ), class: "button cancel_button" %>
+        <%= image_tag 'tools/save.png', alt: t( :save ), title: t( :save ), class: "button save_button" %>
+        <%= image_tag 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button edit_button" %>
+      </span>
+      <h1><%=h heading %></h1>
+    </div>
+    <div class="divider"></div>
+    <div class="content">
+      <%=h content %>
+    </div>
   </div>
 </div>

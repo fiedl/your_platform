@@ -3,7 +3,7 @@
 # Hilfsmodul für editierbare Bereiche, z.B. Profilfelder etc.
 module EditableHelper
 
-  # Erzeugt <span class="editable" showUrl=... editUrl=... ></span>.
+  # Erzeugt <span class="editable" data-show-url=... data-edit-url=... ></span>.
   # Parameter: css_class, object
   def editable_span_tag( params, &block )
     css_class = params[ :css_class ]
@@ -21,11 +21,5 @@ module EditableHelper
     end
     
   end
-
-  def only_in_edit_mode_tag( &block )
-    content_tag :span, :class => "only-in-edit-mode" do
-      yield
-    end
-  end    
 
 end

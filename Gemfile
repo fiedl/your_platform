@@ -101,8 +101,11 @@ end
 
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
-  gem 'rspec-rails' #, '2.10.0'
-  gem 'guard-rspec' #, '0.5.5'
+  gem 'guard', '1.0.1'
+  gem 'rspec-rails', '2.10.0'
+  gem 'guard-rspec', '0.5.5'
+#  gem 'listen'
+#  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
 end
 group :test do
   gem 'capybara' #, '1.1.2'
@@ -128,3 +131,7 @@ end
 #    gem 'win32console'
 #  end
 #end
+
+
+# Edit-Mode, SF
+gem 'edit_mode' #, path: "../edit_mode"

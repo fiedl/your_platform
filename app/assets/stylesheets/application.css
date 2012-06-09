@@ -12,5 +12,6 @@
  *= require jquery.ui.all
  *= require formtastic
  *= require my_formtastic_changes
+ *= require edit_mode
  *= require_tree .
 */
