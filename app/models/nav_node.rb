@@ -42,9 +42,9 @@ class NavNode < ActiveRecord::Base
     breadcrumbs_to_return = []
     navables = self.ancestor_navables_and_own
     for navable in navables do
-      unless navable.nav_node.slim_breadcrumb
-        breadcrumbs_to_return << { title: navable.nav_node.breadcrumb_item, navable: navable }
-      end
+      breadcrumbs_to_return << { title: navable.nav_node.breadcrumb_item, 
+                                 navable: navable, 
+                                 slim: navable.nav_node.slim_breadcrumb }
     end
     return breadcrumbs_to_return
   end

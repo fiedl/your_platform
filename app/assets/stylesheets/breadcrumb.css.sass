@@ -5,12 +5,21 @@
   display: inline-block
   ul
     display: inline-block
+    font-weight: bold
     list-style-type: none
     padding: 0px
     margin: 0px
     li
       float: left
-      margin-left: 8px
+      margin-left: 7px
+      margin-right: 7px
+    li.slim.crumb
+      font-weight: normal
+      display: inline
+    li.crumb.sep
+      margin: 0px
+      width: 3px
+      background: image-url("breadcrumb-sep.png") no-repeat center center
+    li.last
       a
-        background: url("breadcrumb-sep.png") no-repeat center right
-        padding-right: 12px
+        color: black

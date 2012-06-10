@@ -7,13 +7,17 @@ module BreadcrumbsHelper
     content_tag :ul do
       breadcrumbs = navable.nav_node.breadcrumbs
       breadcrumbs.collect do |breadcrumb|
-        content_tag :li do
-          if breadcrumb == breadcrumbs.last
-            breadcrumb[ :title ]
-          else
-            link_to breadcrumb[ :title ], breadcrumb[ :navable ]
-          end
+        css_class = "crumb"
+        css_class = "root crumb" if breadcrumb == breadcrumbs.first
+        css_class = "last crumb" if breadcrumb == breadcrumbs.last
+        css_class += " slim" if breadcrumb[ :slim ]
+        c = content_tag :li, :class => css_class do
+          link_to breadcrumb[ :title ], breadcrumb[ :navable ]
         end
+        unless breadcrumb == breadcrumbs.last
+          c+= content_tag :li, "&nbsp;".html_safe, :class => "crumb sep"
+        end
+        c
       end.join.html_safe
     end
   end
