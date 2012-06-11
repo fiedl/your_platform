@@ -172,6 +172,11 @@ GEM
       libwebsocket (~> 0.1.3)
       multi_json (~> 1.0)
       rubyzip
+    slim_breadcrumb (0.0.1)
+      coffee-rails
+      jquery-rails
+      rails (>= 3.2)
+      sass-rails
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -220,5 +225,6 @@ DEPENDENCIES
   rails3-jquery-autocomplete
   rspec-rails (= 2.10.0)
   sass-rails (~> 3.2.3)
+  slim_breadcrumb
   therubyracer
   uglifier (>= 1.0.3)

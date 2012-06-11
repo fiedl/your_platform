@@ -19,4 +19,5 @@
 //= require best_in_place
 //= require edit_mode
 //= require autocomplete-rails
+//= require slim_breadcrumb
 //= require_tree .

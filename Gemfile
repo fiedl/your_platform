@@ -135,3 +135,7 @@ end
 
 # Edit-Mode, SF
 gem 'edit_mode', '>= 0.0.3' #, path: "../edit_mode"
+
+# hide slim breadcrumb elements until user hovers the separator
+gem 'slim_breadcrumb'
+
