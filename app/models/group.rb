@@ -213,6 +213,13 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def date_of_joining( user )
+    self.links_as_ancestor.where( "descendant_type = ?", "User" )
+                          .where( "descendant_id = ?", user.id )
+                          .order( :created_at )
+                          .first.created_at
+  end
+
 end
 
 class Groups 

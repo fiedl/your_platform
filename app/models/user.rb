@@ -133,7 +133,7 @@ class User < ActiveRecord::Base
   end
 
   def aktivitaetszahl
-    ( self.corporations.collect { |corporation| corporation.token } ).join( " " )
+    ( self.corporations.collect { |corporation| corporation.token + corporation.date_of_joining( self ).year.to_s[2, 2] } ).join( " " )
   end
 
   private
