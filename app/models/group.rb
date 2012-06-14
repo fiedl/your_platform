@@ -220,6 +220,15 @@ class Group < ActiveRecord::Base
                           .first.created_at
   end
 
+  def change_date_of_joining( user, date )
+    old_date = date_of_joining( user )
+    links = user.links_as_descendant.where( "created_at = ?", old_date )
+    links.each do |link|
+      link.created_at = date
+      link.save
+    end
+  end
+
 end
 
 class Groups 
