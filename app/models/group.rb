@@ -213,22 +213,14 @@ class Group < ActiveRecord::Base
     end
   end
 
-  def date_of_joining( user )
-    self.links_as_ancestor.where( "descendant_type = ?", "User" )
-                          .where( "descendant_id = ?", user.id )
-                          .order( :created_at )
-                          .first.created_at
+  def memberships
+    UserGroupMembership.find_all_by_group self 
   end
 
-  def change_date_of_joining( user, date )
-    old_date = date_of_joining( user )
-    links = user.links_as_descendant.where( "created_at = ?", old_date )
-    links.each do |link|
-      link.created_at = date
-      link.save
-    end
+  def membership_of( user )
+    UserGroupMembership.find_by_user_and_group( user, self )
   end
-
+    
 end
 
 class Groups 
