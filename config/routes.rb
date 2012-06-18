@@ -31,6 +31,10 @@ Wingolfsplattform::Application.routes.draw do
   resources :profile_fields
   resources :relationships
 
+  delete 'user_group_memberships/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :destroy
+
+#  resources :user_group_memberships
+
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile
 

@@ -1,5 +1,6 @@
 class UserGroupMembership 
-  # attr_accessible :title, :body
+  extend ActiveModel::Naming
+  
 
   def initialize( params = {} ) 
 
@@ -26,14 +27,18 @@ class UserGroupMembership
   end
   
   def destroy
-    if @dag_link.destroyable?
-      @dag_link.destroy
-      return nil
-    else
-      raise "membership not destroyable."
+    if self.exists?
+      if dag_link.destroyable?
+        dag_link.destroy
+        return nil
+      else
+        raise "membership not destroyable."
+      end
     end
   end
 
+  def user ; @user; end
+  def group ; @group; end
 
   def created_at ; dag_link_attr( :created_at ); end
   def created_at=( created_at ); dag_link_attr( :created_at=, created_at ); end
@@ -73,6 +78,11 @@ class UserGroupMembership
     
   def save
     devisor_dag_link.save if devisor_dag_link
+  end
+
+  
+  def direct?
+    dag_link.direct?
   end
 
 
