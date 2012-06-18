@@ -8,7 +8,7 @@ source 'https://rubygems.org'						# Ruby License,
 
 
 
-gem 'rails', '3.2.3'							# MIT License,
+gem 'rails', '3.2.5'							# MIT License,
     	     								# http://www.opensource.org/licenses/mit-license.php
 
 # Bundle edge Rails instead:
