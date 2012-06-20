@@ -15,6 +15,7 @@
 //= require jquery-ui
 //= require jquery.ui.all
 //= require jquery.purr
+//= require jquery.ui.datepicker-de
 //= require_boxes
 //= require best_in_place
 //= require edit_mode

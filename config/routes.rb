@@ -22,6 +22,11 @@ Wingolfsplattform::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
+#  delete 'user_group_memberships/delete/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :destroy
+#  put 'user_group_memberships/update/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :update, as: :user_group_membership
+
+  resources :user_group_memberships, as: :user_group_membership # plural s does not work for some unknown reason!
+
   resources :users do
     get :autocomplete_title, on: :collection
   end
@@ -30,10 +35,6 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :profile_fields
   resources :relationships
-
-  delete 'user_group_memberships/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :destroy
-
-#  resources :user_group_memberships
 
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile

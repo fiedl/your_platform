@@ -1,8 +1,11 @@
-class UserGroupMembership 
+class UserGroupMembership
   extend ActiveModel::Naming
-  
+  include ActiveModel::MassAssignmentSecurity
+  include ActiveModel::Dirty
 
-  def initialize( params = {} ) 
+  attr_accessible :created_at, :deleted_at
+
+  def initialize( params = {} )
 
     return nil unless params[ :user ] && params[ :group ]
 
@@ -11,12 +14,12 @@ class UserGroupMembership
 
   end
 
-  
+
   def exists?
-    return true if @dag_link
+    return true if dag_link
     return false
   end
-  
+
   def self.create( params )
     unless UserGroupMembership.new( params ).exists?
       user = params[ :user ]
@@ -25,15 +28,16 @@ class UserGroupMembership
       return UserGroupMembership.new( params )
     end
   end
-  
+
   def destroy
     if self.exists?
       if dag_link.destroyable?
-        dag_link.destroy
-        return nil
+        p dag_link.destroy
       else
         raise "membership not destroyable."
       end
+    else
+      raise "membership does not exist."
     end
   end
 
@@ -44,12 +48,12 @@ class UserGroupMembership
   def created_at=( created_at ); dag_link_attr( :created_at=, created_at ); end
   def deleted_at ; dag_link_attr( :deleted_at ); end
   def deleted_at=( deleted_at ) ; dag_link_attr( :deleted_at, deleted_at ); end
-      
+
 
 
   def dag_link_attr( attr_name, params = nil )
     return devisor_dag_link.send( attr_name ) if params.nil?
-    return devisor_dag_link.send( attr_name, params ) 
+    devisor_dag_link.send( attr_name, params )
   end
 
 
@@ -63,24 +67,42 @@ class UserGroupMembership
     return @dag_link
   end
 
+  def devisor_membership
+    unless @devisor_membership
+      if dag_link.direct?
+        @devisor_membership = self
+      else
+        direct_group = DagLink.shortest_path_between( @group, @user )[-2]
+        @devisor_membership = UserGroupMembership.new( user: @user, group: direct_group )
+      end
+    end
+    @devisor_membership
+  end
+
   def devisor_dag_link
     unless @devisor_dag_link
       if dag_link.direct?
         @devisor_dag_link = dag_link
       else
-        direct_group = DagLink.shortest_path_between( @group, @user )[-2]
-        devisor_membership = UserGroupMembership.new( user: @user, group: direct_group )
         @devisor_dag_link = devisor_membership.dag_link
       end
     end
     return @devisor_dag_link
   end
-    
+
   def save
     devisor_dag_link.save if devisor_dag_link
   end
 
-  
+  def update_attributes( values, options = {} )
+    # see: http://stackoverflow.com/questions/10975370/does-activemodel-have-a-module-that-includes-an-update-attributes-method
+    sanitize_for_mass_assignment( values, options[ :as ] ).each do |k, v|
+      send( "#{k}=", v )
+    end
+    self.save
+  end
+
+
   def direct?
     dag_link.direct?
   end

@@ -134,7 +134,9 @@ class User < ActiveRecord::Base
 
   def aktivitaetszahl
     self.corporations.collect do |corporation| 
-      corporation.token + "\u2009" + corporation.membership_of( self ).created_at.to_s[2, 2] 
+      year_of_joining = ""
+      year_of_joining = corporation.membership_of( self ).created_at.to_s[2, 2] if corporation.membership_of( self ).created_at
+      corporation.token + "\u2009" + year_of_joining
     end.join( " " )
   end
 

@@ -2,6 +2,22 @@
 class UserGroupMembershipsController < ApplicationController
 
   before_filter :find_membership
+  respond_to :html, :json
+
+  def show
+    update
+  end
+
+  def update
+    if @membership.update_attributes( params[ :user_group_membership ] )
+      respond_to do |format|
+        format.json do
+          #head :ok
+          respond_with_bip @membership
+        end
+      end
+    end
+  end
 
   def destroy
     if @membership
@@ -19,5 +35,5 @@ class UserGroupMembershipsController < ApplicationController
       @membership = UserGroupMembership.find_by_user_and_group user, group
     end
   end
-
+  
 end
