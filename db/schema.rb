@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120511090234) do
+ActiveRecord::Schema.define(:version => 20120701115059) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -95,6 +95,7 @@ ActiveRecord::Schema.define(:version => 20120511090234) do
     t.datetime "created_at",                       :null => false
     t.datetime "updated_at",                       :null => false
     t.integer  "user_id"
+    t.string   "password_digest"
   end
 
   create_table "users", :force => true do |t|

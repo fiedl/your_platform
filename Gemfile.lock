@@ -40,6 +40,7 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.2.8)
     arel (3.0.2)
+    bcrypt-ruby (3.0.1)
     best_in_place (1.1.2)
       jquery-rails
       rails (~> 3.1)
@@ -75,6 +76,11 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
+    factory_girl (2.3.2)
+      activesupport
+    factory_girl_rails (1.4.0)
+      factory_girl (~> 2.3.0)
+      railties (>= 3.0.0)
     ffi (1.0.11)
     formtastic (2.2.1)
       actionpack (>= 3.0)
@@ -201,6 +207,7 @@ PLATFORMS
 DEPENDENCIES
   acts-as-dag!
   acts_as_tree
+  bcrypt-ruby
   best_in_place
   capistrano
   capistrano_colors
@@ -209,6 +216,7 @@ DEPENDENCIES
   colored
   edit_mode (>= 0.0.3)
   execjs
+  factory_girl_rails (= 1.4.0)
   formtastic
   geocoder
   gmaps4rails (~> 1.4.8)

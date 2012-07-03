@@ -21,14 +21,17 @@ class UserAccount < ActiveRecord::Base
     if users
       users.each do |user| 
         if user.has_account?
-          if user_password_correct? user, password
-            authenticated_user = user 
+          if user.account.authenticate password
+            authenticated_user = user
           else
             raise 'wrong_password'
           end
         else
           raise 'user_has_no_account'
         end
+      end
+      if authenticated_user.nil?
+        raise 'no_user_found'
       end
     else
       raise 'no_user_found'
@@ -39,7 +42,7 @@ class UserAccount < ActiveRecord::Base
   end
 
   def authenticate( password )
-    user_password_correct? self.user, password 
+    user_password_correct? password 
   end
 
   def new_password
@@ -60,9 +63,8 @@ class UserAccount < ActiveRecord::Base
 
   private
 
-  def self.user_password_correct?( user, password )
-    account = user.account
-    UserPassword.new( password ).valid_against_encrypted_password?( account.encrypted_password, account.salt )
+  def user_password_correct?( password )
+    UserPassword.new( password ).valid_against_encrypted_password?( encrypted_password, salt )
   end
 
   # Stellt sicher, dass der Salt für den Benutzer nicht leer ist. Sonst kann das Passwort nicht sicher gespeichert werden.

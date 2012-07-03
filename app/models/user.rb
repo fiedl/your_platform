@@ -23,6 +23,9 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   before_save                :create_account_if_requested
 
+#  def inspect
+#    "User: " + title
+#  end
 
   def name
     first_name + " " + last_name
