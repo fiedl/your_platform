@@ -48,6 +48,6 @@ pickle-email-*.html
 bundler_stubs
 
 # aptana project
-/.project  
+.project
 # vim swap files
 *.swp 
