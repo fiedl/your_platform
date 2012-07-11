@@ -34,19 +34,16 @@ class UserAccount < ActiveRecord::Base
     end
   end
 
+  # This generates a new user account for the user this account belongs to. 
+  # This causes the system to generate an account, generate a password for it, and send the password
+  # to the account owner via email.
   def generate
-    self.password = new_password.generate!
-#    begin
+    self.password = UserPassword.generate
+    begin
       UserAccountMailer.welcome_email( self.user, password ).deliver
-#    rescue
-#      raise "Could not send welcome email due to unreachable mail server (sender)."
-#    end
+    rescue
+      raise "Could not send welcome email due to unreachable mail server (sender)."
+    end
   end
 
-  private 
-  
-  def new_password
-    require "user_password"
-    self.password = UserPassword.new( self.password, :user => self.user ) unless self.password.kind_of? UserPassword
-  end    
 end
