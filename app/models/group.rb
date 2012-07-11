@@ -220,7 +220,6 @@ class Group < ActiveRecord::Base
   def membership_of( user )
     UserGroupMembership.find_by_user_and_group( user, self )
   end
-    
 end
 
 class Groups 

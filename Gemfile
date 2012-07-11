@@ -15,7 +15,7 @@ gem 'rails', '3.2.5'							# MIT License,
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'								# MIT License
-
+gem 'bcrypt-ruby' #, '3.0.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -109,6 +109,7 @@ group :test, :development do
 end
 group :test do
   gem 'capybara' #, '1.1.2'
+  gem 'factory_girl_rails', '1.4.0'
 #  gem 'guard-spork'
 #  gem 'spork'
 end

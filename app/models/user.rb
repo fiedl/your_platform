@@ -21,8 +21,7 @@ class User < ActiveRecord::Base
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
-  before_save                :create_account_if_requested
-
+  before_validation                :create_account_if_requested
 
   def name
     first_name + " " + last_name

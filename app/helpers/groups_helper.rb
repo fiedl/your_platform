@@ -41,5 +41,4 @@ module GroupsHelper
 #  def group_li( group )
 #    group_list_item group
 #  end
-
 end

@@ -23,8 +23,12 @@ class UserIdentification
       # Wenn es keine Tabellenspalte ist, müssen erst alle Objekte in ein Array geladen                                             
       # und dann gefltert werden.                                                                                                   
       User.find_each do |u|
-        result = u.send attribute_name.to_s
-        users << u if result.downcase == attribute_value.downcase if result
+        result = u.send attribute_name
+        begin
+          users << u if result.downcase == attribute_value.downcase if result
+        rescue Exception=>e
+          raise "Result: " + result.inspect + " | Attribute: " + attribute_value.inspect + " | Exception: " + e.to_s
+        end
       end
     end
     return users
