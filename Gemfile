@@ -15,7 +15,6 @@ gem 'rails', '3.2.5'							# MIT License,
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'								# MIT License
-gem 'bcrypt-ruby' #, '3.0.1'
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -33,8 +32,8 @@ end
 
 gem 'jquery-rails'							# MIT License
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'	
+# To use ActiveModel has_secure_password (password encryption)
+gem 'bcrypt-ruby', '>= 3.0.1'	                                        # MIT License
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'

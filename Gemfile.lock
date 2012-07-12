@@ -206,7 +206,7 @@ PLATFORMS
 DEPENDENCIES
   acts-as-dag!
   acts_as_tree
-  bcrypt-ruby
+  bcrypt-ruby (>= 3.0.1)
   best_in_place
   capistrano
   capistrano_colors
