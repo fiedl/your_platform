@@ -18,10 +18,20 @@ class UserAccount < ActiveRecord::Base
   # Tries to identify a user based on the given `login_string` and to authenticate this user 
   # with the given `password`. 
   def self.authenticate( login_string, password )
-    
-    # If everything works out, this contains the authenticated user at the end of this method.
-    authenticated_user = nil
-    
+    identified_user = UserAccount.identify_user_with_account( login_string )
+    if identified_user
+      if identified_user.account.authenticate( password )
+        authenticated_user = identified_user
+      else  
+        raise 'wrong_password'
+      end
+    end
+    return authenticated_user
+  end
+
+  # Tries to identify a user based on the given `login_string`.
+  def self.identify_user_with_account( login_string )
+
     # What can go wrong?
     # 1. No user could match the login string.
     users_that_match_the_login_string = UserIdentification.find_users( login_string )
@@ -37,19 +47,7 @@ class UserAccount < ActiveRecord::Base
     raise 'identification_not_unique' if users_that_match_the_login_string_and_have_an_account.count > 1
     identified_user = users_that_match_the_login_string_and_have_an_account.first
 
-    # 4. The password may be wrong.
-    authenticated = identified_user.account.authenticate( password )
-    unless authenticated
-      raise 'wrong_password'
-    end
-
-    # If everything went right until this point, the user is authenticated.
-    if authenticated
-      authenticated_user = identified_user
-    end
-
-    return authenticated_user
-
+    return identified_user
   end
 
 
