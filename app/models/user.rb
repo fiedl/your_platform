@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   has_profile_fields
 
-  has_one                   :user_account, autosave: true, inverse_of: :user, dependent: :destroy
+  has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
 
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 
@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
-  before_validation                :create_account_if_requested
+  before_save               :build_account_if_requested
 
   def name
     first_name + " " + last_name
@@ -65,27 +65,13 @@ class User < ActiveRecord::Base
     self.name
   end
 
-  def user_account
-    @account = super unless @account
-    @account = build_user_account unless @account
-    return @account
-  end
-  def user_account=( account )
-    @account = account
-    super account
-  end
-
-  def account
-    user_account
-  end
-
   def has_account?
-    # Wenn der Account keine ID hat, dann existiert er nicht.
-    not user_account.id.nil?
+    return true if self.account
   end
-
+  
   def deactivate_account
-    user_account.destory
+    self.account.destroy if self.account
+    self.account = nil
   end
 
   def relationships
@@ -153,15 +139,24 @@ class User < ActiveRecord::Base
     self.alias.generate! if self.alias.blank?
   end
 
-  def create_account_if_requested
-    self.create_account = false if self.create_account == "0" # wegen checkbox, da 0 nach true transformieren würde.
+  # If the attribute `create_account` is set to `true` or to `1`, e.g. by an html form,
+  # this code makes sure that the account association is build.
+  # This code is run on validation, as you can see above in this model.
+  # Note: A welcome email is automatically sent on save by the UserAccount model.
+  def build_account_if_requested
+
+    # If this value is set by an html form, it is "0" or "1". But "0" would 
+    # transform to true rather than to false.
+    # Thus, we have to make sure that "0" means false.
+    self.create_account = false if self.create_account == "0"
+
     if self.create_account
-      self.user_account.destroy if self.has_account?
-      self.user_account = self.build_user_account
-      self.user_account.generate
-      self.create_account = false
-      return self.user_account
+      self.account.destroy if self.has_account?
+      self.account = self.build_account
+      self.create_account = false # to make sure that this code is nut run twice.
+      return self.account
     end
+
   end
 
 end
