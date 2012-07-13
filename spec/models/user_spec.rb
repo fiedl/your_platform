@@ -18,5 +18,19 @@ describe User do
   it { should respond_to( :groups ) }
 
   it { should be_valid }
+
+  describe "#memberships" do
+    it "should return all UserGroupMemberships of the user" do
+      @user.memberships.collect { |membership| membership.dag_link.id }
+        .should == UserGroupMembership.find_all_by_user( @user ).collect { |membership| membership.dag_link.id }
+    end
+    describe "( with_deleted: true )" do
+      it "should return all UserGroupMemberships of the user, including the deleted ones" do
+        @user.memberships( with_deleted: true ).collect { |membership| membership.dag_link.id }
+          .should == UserGroupMembership.find_all_by_user( @user, with_deleted: true )
+          .collect { |membership| membership.dag_link.id }
+      end
+    end
+  end
   
 end

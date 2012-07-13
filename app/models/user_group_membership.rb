@@ -24,8 +24,6 @@ class UserGroupMembership
 
   end
 
-  #scope :now, where( "DagLink.deleted_at IS NULL OR DagLink.deleted_at >= #{Time.current}" )
-
   # Returns the same representation of the membership at a certain point in time.
   # Example: earlier_membership = 
   #    UserGroupMembership.new( user: User.first, group: Group.first ).at( 30.minutes.ago )
@@ -48,6 +46,10 @@ class UserGroupMembership
       return true if deleted_at != nil
     end
     return false
+  end
+
+  def deleted?
+    return true if dag_link and not exists?
   end
 
   def self.create( params )
@@ -128,16 +130,22 @@ class UserGroupMembership
     return UserGroupMembership.new( user: user, group: group )
   end
 
-  def self.find_all_by_user( user )
-    groups = user.links_as_descendant.where( "ancestor_type = ?", "Group" )
-      .collect { |dag_link| Group.find( dag_link.ancestor_id ) }
+  # Find all UserGroupMemberships for a certain user. 
+  # If the option :with_deleted is set true, also deleted memberships are found.
+  def self.find_all_by_user( user, options = {} )
+    links = user.links_as_descendant.where( "ancestor_type = ?", "Group" )
+    links = links.with_deleted if options[ :with_deleted ] == true 
+    groups = links.collect { |dag_link| Group.find( dag_link.ancestor_id ) }
     memberships = groups.collect { |group| UserGroupMembership.new( user: user, group: group ) }
     return memberships
   end
 
-  def self.find_all_by_group( group )
-    users = group.links_as_ancestor.where( "descendant_type = ?", "User" )
-      .collect { |dag_link| User.find( dag_link.descendant_id ) }
+  # Find all UserGroupMemberships for a certain group.
+  # If the option :with_deleted is set true, also deleted memberships are found.
+  def self.find_all_by_group( group, options = {} )
+    links = group.links_as_ancestor.where( "descendant_type = ?", "User" )
+    links = links.with_deleted if options[ :with_deleted ] == true
+    users = links.collect { |dag_link| User.find( dag_link.descendant_id ) }
     memberships = users.collect { |user| UserGroupMembership.new( user: user, group: group ) }
     return memberships
   end
@@ -182,6 +190,6 @@ class UserGroupMembership
     return @devisor_dag_link
   end
 
-
-
 end
+
+

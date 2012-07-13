@@ -71,6 +71,18 @@ describe UserGroupMembership do
     end
   end
 
+  describe "#deleted?" do
+    it "should be false if the membership exists" do
+      membership = create_membership
+      membership.deleted?.should be_false
+    end
+    it "should be true if the membership has been deleted" do
+      membership = create_membership
+      membership.destroy
+      UserGroupMembership.new( user: @user, group: @group ).deleted?.should be_true
+    end
+  end
+
   describe "#created_at" do
     it "should be the time of creation" do
       time_before_creation = Time.current
