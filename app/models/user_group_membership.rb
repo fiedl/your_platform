@@ -150,15 +150,11 @@ class UserGroupMembership
     return memberships
   end
 
-
-  private
-
-  def dag_link_attr( attr_name, params = nil )
-    raise "No DagLink associated." unless dag_link 
-    return devisor_dag_link.send( attr_name ) if params.nil?
-    devisor_dag_link.send( attr_name, params )
-  end
-
+  # Returns the direct membership corresponding to an indirect one.
+  # If, for example, `subgroup` is a subgroup of `group` 
+  # and `user` is a direct member of `subgroup`, then
+  #   UserGroupMembership.new( user: user, group: group ).devisor_membership 
+  #      == UserGroupMembership.new( user: user, group: subgroup )
   def devisor_membership
     unless @devisor_membership
       if dag_link.direct?
@@ -177,6 +173,19 @@ class UserGroupMembership
       end
     end
     @devisor_membership
+  end
+
+  def ==( other_membership )
+    return true if self.dag_link.id == other_membership.dag_link.id
+  end
+
+
+  private
+
+  def dag_link_attr( attr_name, params = nil )
+    raise "No DagLink associated." unless dag_link 
+    return devisor_dag_link.send( attr_name ) if params.nil?
+    devisor_dag_link.send( attr_name, params )
   end
 
   def devisor_dag_link

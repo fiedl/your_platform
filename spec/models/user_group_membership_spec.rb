@@ -154,6 +154,14 @@ describe UserGroupMembership do
     end
   end
 
+  describe "#== ( other_membership ), i.e. euality relation, " do
+    it "should return true if the two memberships refer to the same dag_link, i.e. represent the same membership" do
+      membership = create_membership
+      same_membership = UserGroupMembership.new( user: @user, group: @group )
+      membership.should == same_membership
+    end
+  end
+
   describe "after creation" do
 
     subject { @membership }
@@ -260,6 +268,16 @@ describe UserGroupMembership do
       @indirect_membership.save
       @membership.deleted_at.to_i.should == new_time.to_i
     end
+
+    describe "#devisor_dag_link" do
+      it "should return the direct membership corresponding to self, if self is an indirect membership" do
+        @indirect_membership.devisor_membership.should == @membership
+      end
+      it "should return self, if self is a direct membership itself" do
+        @membership.devisor_membership.should == @membership
+      end
+    end
+
 
   end
     
