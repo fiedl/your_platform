@@ -19,4 +19,49 @@ describe User do
 
   it { should be_valid }
   
+  describe "before building an account" do
+
+    describe "should have no user account" do
+      its(:account) { should be_nil }
+      it { should_not have_account }
+    end
+
+    describe "with create_account set to 'true'" do
+
+      before do
+        @user.create_account = true
+        @user.save
+      end
+
+      describe "should build an account automatically on save" do
+        it { should have_account }
+      end
+
+    end
+
+  end
+
+  describe "after building an account" do
+
+    before do
+      @user_account = @user.build_account
+    end
+
+    describe "should have an account" do
+      its( :account ) { should be @user_account }
+      it { should have_account }
+    end
+
+    describe "should have no account after deactivating the account" do
+      before do
+        @user.deactivate_account
+      end
+      
+      specify { @user.account( force_reload: true ).should be_nil }
+      it { should_not have_account }
+    end
+
+  end
+
 end
+
