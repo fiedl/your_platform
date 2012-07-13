@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120710193308) do
+ActiveRecord::Schema.define(:version => 20120713102445) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(:version => 20120710193308) do
     t.integer  "count"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.datetime "deleted_at"
   end
 
   create_table "groups", :force => true do |t|

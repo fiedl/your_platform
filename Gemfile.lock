@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/fiedl/acts_as_paranoid_dag.git
+  revision: f270eb53608973ecdeb69fd78ae691abfa8428be
+  specs:
+    acts_as_paranoid_dag (0.0.1.alpha)
+      acts-as-dag
+      rails (>= 3.2)
+      rails3_acts_as_paranoid
+
+GIT
   remote: git://github.com/resgraph/acts-as-dag.git
   revision: 1b42e95e9d03a179b7c387bc18749ae620462d46
   specs:
@@ -143,6 +152,8 @@ GEM
       i18n (~> 0.5)
     rails3-jquery-autocomplete (1.0.7)
       rails (~> 3.0)
+    rails3_acts_as_paranoid (0.2.4)
+      activerecord (~> 3.2)
     railties (3.2.5)
       actionpack (= 3.2.5)
       activesupport (= 3.2.5)
@@ -205,6 +216,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-dag!
+  acts_as_paranoid_dag!
   acts_as_tree
   bcrypt-ruby (>= 3.0.1)
   best_in_place
@@ -230,6 +242,7 @@ DEPENDENCIES
   rails (= 3.2.5)
   rails-i18n
   rails3-jquery-autocomplete
+  rails3_acts_as_paranoid
   rspec-rails (= 2.10.0)
   sass-rails (~> 3.2.3)
   slim_breadcrumb
