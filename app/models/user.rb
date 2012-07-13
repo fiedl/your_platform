@@ -128,6 +128,10 @@ class User < ActiveRecord::Base
   def memberships
     UserGroupMembership.find_all_by_user self
   end
+  
+  def inspect
+    "User: " + title
+  end
 
   private
 

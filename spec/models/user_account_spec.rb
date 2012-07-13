@@ -23,20 +23,13 @@ describe UserAccount do
       @user.save
     end
 
-    describe "should still be referenced by the associated user" do
-      it { should be @user.account }
-    end
+    it { should be @user.account }
+      
+    #is this true for every save? Or just after creation like here --JRe
+    its( :password_digest ) { should_not be_nil }
+    its( :password_digest ) { should_not be_empty }
 
-    describe "really needs to have a password set" do
-      #is this true for every save? Or just after creation like here --JRe
-      its( :password_digest ) { should_not be_nil }
-      its( :password_digest ) { should_not be_empty }
-    end
-
-    describe "should be autosaved" do
-      #@user.id.should_not be_nil
-      its( :id ) { should_not be_nil }
-    end
+    its( :id ) { should_not be_nil }
 
     describe "should send a welcome email" do
 
@@ -65,7 +58,7 @@ describe UserAccount do
       @user.save
     end
 
-    describe "should be readable just after password generation" do
+    describe "just after generation" do
       its( :password ) { should_not be_nil }
     end
 

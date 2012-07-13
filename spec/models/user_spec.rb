@@ -21,21 +21,17 @@ describe User do
   
   describe "before building an account" do
 
-    describe "should have no user account" do
-      its(:account) { should be_nil }
-      it { should_not have_account }
-    end
+    its(:account) { should be_nil }
+    it { should_not have_account }
 
-    describe "with create_account set to 'true'" do
+    describe "with create_account set to 'true' and save" do
 
       before do
         @user.create_account = true
         @user.save
       end
 
-      describe "should build an account automatically on save" do
-        it { should have_account }
-      end
+      it { should have_account }
 
     end
 
@@ -47,17 +43,15 @@ describe User do
       @user_account = @user.build_account
     end
 
-    describe "should have an account" do
-      its( :account ) { should be @user_account }
-      it { should have_account }
-    end
+    its( :account ) { should be @user_account }
+    it { should have_account }
 
-    describe "should have no account after deactivating the account" do
+    describe "and deactivating it" do
       before do
         @user.deactivate_account
       end
       
-      specify { @user.account( force_reload: true ).should be_nil }
+      its(:account) { should be_nil }
       it { should_not have_account }
     end
 
