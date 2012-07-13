@@ -139,3 +139,6 @@ gem 'edit_mode', '>= 0.0.3' #, path: "../edit_mode"
 # hide slim breadcrumb elements until user hovers the separator
 gem 'slim_breadcrumb'
 
+# make dag links paranoid, i.e. don't delete links, but only mark as deleted.
+gem 'rails3_acts_as_paranoid'
+gem 'acts_as_paranoid_dag', path: "../acts_as_paranoid_dag"
