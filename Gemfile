@@ -141,4 +141,4 @@ gem 'slim_breadcrumb'
 
 # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
 gem 'rails3_acts_as_paranoid'
-gem 'acts_as_paranoid_dag', path: "../acts_as_paranoid_dag"
+gem 'acts_as_paranoid_dag', git: 'git://github.com/fiedl/acts_as_paranoid_dag.git'
