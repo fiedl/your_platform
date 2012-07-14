@@ -42,14 +42,14 @@ describe UserAccount do
       describe "and it should contain the password" do
         # This would be the code to retrieve the password:
         #      email = ActionMailer::Base.deliveries.last
-        #      line = email.to_s.lines.find { |s| s.starts_with? "Passwort: " }
+        #      line = email.to_s.lines.find { |s| s.starts_with? "Passwort:" }
         #      @password = line.split(' ').last
+
         specify { @user_account.password.should_not be_nil }
+        specify { @user_account.password.should_not be_empty }
         its(:to_s) { should include @user_account.password }
       end
-
     end
-
   end
 
   describe "#password" do    # use "." for class methods, "#" for instance methods in rspec.
@@ -99,6 +99,4 @@ describe UserAccount do
     end
 
   end
-
-
 end

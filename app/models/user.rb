@@ -132,7 +132,7 @@ class User < ActiveRecord::Base
   end
   
   def inspect
-    "User: " + title
+    "User: " + self.alias
   end
 
   private
