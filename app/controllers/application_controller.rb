@@ -10,6 +10,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def http_authenticate
+    return true if ENV[ 'RAILS_ENV' ] == 'test'
     authenticate_or_request_with_http_basic do |username, password|
       username == "aki" && password == "deleted-string"
     end

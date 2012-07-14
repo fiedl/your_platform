@@ -243,6 +243,7 @@ DEPENDENCIES
   rails-i18n
   rails3-jquery-autocomplete
   rails3_acts_as_paranoid
+  rspec-mocks
   rspec-rails (= 2.10.0)
   sass-rails (~> 3.2.3)
   slim_breadcrumb
