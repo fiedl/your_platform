@@ -75,7 +75,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.wingolf_am_hochschulort
-    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first
+    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first if self.jeder
   end
 
   def self.wingolf_am_hochschulort!
@@ -90,7 +90,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.bvs
-    ( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first
+    ( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first if self.jeder
   end
 
   def self.bvs!
