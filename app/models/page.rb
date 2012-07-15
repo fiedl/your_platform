@@ -8,15 +8,19 @@ class Page < ActiveRecord::Base
   
   def self.find_root
     p = Page.first
-    if p.root?
-      p
-    else
-     p.ancestor_pages.first
+    if p
+      if p.root?
+        p
+      else
+        p.ancestor_pages.first
+      end
     end
   end
 
   def self.mitglieder_start
-    self.find_root.child_pages.select { |page| page.title == "Mitglieder Start" }.first
+    if self.find_root
+      self.find_root.child_pages.select { |page| page.title == "Mitglieder Start" }.first
+    end
   end
 
 end
