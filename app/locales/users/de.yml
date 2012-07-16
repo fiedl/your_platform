@@ -10,6 +10,10 @@ de:
   alias:			 Alias
   create_account:                Benutzerkonto anlegen
 
+  password:                      Passwort
+  send_new_password:             Neues Passwort per E-Mail zusenden
+  new_password_has_been_sent_to: "%{user_name} wurde ein neues Passwort per E-Mail übersandt."
+
   formtastic:
 
     hints:

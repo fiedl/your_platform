@@ -3,7 +3,9 @@ Wingolfsplattform::Application.routes.draw do
   root :to => 'root#index'
 
   resources :pages
-  resources :groups #do
+  resources :groups do
+    get :my, on: :collection
+  end
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
@@ -29,6 +31,7 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :users do
     get :autocomplete_title, on: :collection
+    put :forgot_password, on: :member # the path method appears to be 'forgot_password_user_path'
   end
 
   resources :workflows
@@ -83,8 +86,8 @@ Wingolfsplattform::Application.routes.draw do
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.
   # Note: This route will make all actions in every controller accessible via GET requests.
-  match 'controllers/:controller(/:action(/:id))(.:format)'
+  #match 'controllers/:controller(/:action(/:id))(.:format)'
 
-  match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
+  #match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
 
 end

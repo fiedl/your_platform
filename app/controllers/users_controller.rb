@@ -2,7 +2,7 @@
 class UsersController < ApplicationController
 
   respond_to :html, :json
-  before_filter :find_user, only: [ :show, :update ]
+  before_filter :find_user, only: [ :show, :update, :forgot_password ]
 
   def index
     begin
@@ -45,6 +45,12 @@ class UsersController < ApplicationController
     term = params[ :term ]
     @users = User.all.select { |user| user.title.downcase.include? term.downcase }
     render json: json_for_autocomplete( @users, :title )
+  end
+
+  def forgot_password
+    @user.account.send_new_password
+    flash[ :notice ] = I18n.t( :new_password_has_been_sent_to, user_name: @user.title )
+    redirect_to :back
   end
 
 
