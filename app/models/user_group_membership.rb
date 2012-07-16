@@ -179,6 +179,28 @@ class UserGroupMembership
     return true if self.dag_link.id == other_membership.dag_link.id
   end
 
+  # returns an array of memberships that represent the direct memberships of the given user (of self), i.e.
+  # in the subgroups (of self). For example, this is used in the corporate vita.
+  def direct_memberships_now_and_in_the_past
+    if self == devisor_membership
+      # for direct memberships, the direct memberships contain only the membership itself.
+      return self 
+    else
+      sub_groups = self.group.descendant_groups
+      sub_group_ids = sub_groups.collect { |group| group.id }
+      links = user
+        .links_as_child
+        .now_and_in_the_past
+        .where( "ancestor_type = ?", "Group" )
+        .where( :direct => true )
+        .find_all_by_ancestor_id( sub_group_ids )
+      memberships = links.collect do |link|
+        UserGroupMembership.new( user: link.descendant, group: link.ancestor )
+      end
+      return memberships
+    end
+  end
+
 
   private
 

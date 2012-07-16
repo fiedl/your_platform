@@ -278,6 +278,28 @@ describe UserGroupMembership do
       end
     end
 
+    describe "#direct_memberships_now_and_in_the_past" do
+
+      describe "of an indirect membership" do
+        subject { @indirect_membership.direct_memberships_now_and_in_the_past }
+
+        it "should return an array" do
+          subject.kind_of?( Array ).should be_true
+        end
+        it "should contain the direct membership" do
+          subject.include?( @membership ).should be_true
+        end
+      end
+
+      describe "of a direct membership" do
+        subject { @membership.direct_memberships_now_and_in_the_past }
+
+        it "should return the direct membership" do
+          subject.should == @membership
+        end
+      end
+
+    end
 
   end
     
