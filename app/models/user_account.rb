@@ -52,6 +52,7 @@ class UserAccount < ActiveRecord::Base
 
   def send_new_password
     generate_password
+    self.save
     send_welcome_email
   end
 

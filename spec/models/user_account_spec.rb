@@ -40,11 +40,6 @@ describe UserAccount do
       end
 
       describe "and it should contain the password" do
-        # This would be the code to retrieve the password:
-        #      email = ActionMailer::Base.deliveries.last
-        #      line = email.to_s.lines.find { |s| s.starts_with? "Passwort:" }
-        #      @password = line.split(' ').last
-
         specify { @user_account.password.should_not be_nil }
         specify { @user_account.password.should_not be_empty }
         its(:to_s) { should include @user_account.password }
