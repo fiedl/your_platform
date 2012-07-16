@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/fiedl/acts_as_paranoid_dag.git
-  revision: f270eb53608973ecdeb69fd78ae691abfa8428be
-  specs:
-    acts_as_paranoid_dag (0.0.1.alpha)
-      acts-as-dag
-      rails (>= 3.2)
-      rails3_acts_as_paranoid
-
-GIT
   remote: git://github.com/resgraph/acts-as-dag.git
   revision: 1b42e95e9d03a179b7c387bc18749ae620462d46
   specs:
@@ -45,6 +36,10 @@ GEM
     activesupport (3.2.5)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    acts_as_paranoid_dag (0.0.1)
+      acts-as-dag
+      rails (>= 3.2)
+      rails3_acts_as_paranoid
     acts_as_tree (1.1.0)
       activerecord (>= 3.0.0)
     addressable (2.2.8)
@@ -216,7 +211,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-dag!
-  acts_as_paranoid_dag!
+  acts_as_paranoid_dag
   acts_as_tree
   bcrypt-ruby (>= 3.0.1)
   best_in_place
