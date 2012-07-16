@@ -1,35 +1,44 @@
-<ul id="corporate_vita">
-  <% if user %>
+
+<% if user %>
+
+<table id="corporate_vita">
   <% for corporation in user.corporations %>
-  <li>
-    <%= corporation.title %>
-    <ul>
-      <li>
-        <ul>
-          <% sub_group_membership = corporation.membership_of( user ).devisor_membership %>
-          <li><%= best_in_place sub_group_membership,
-                  :created_at,
-                  type: :date,
-                  display_with: lambda { |v| l( v.to_date ) },
-                  path: user_group_membership_path( { user_id: sub_group_membership.user.id,
-                  group_id: sub_group_membership.group.id,
-                  controller: :user_group_memberships,
-                  action: :update,
-                  format: :json  } )
-                  %></li>
-          <li><%= link_to sub_group_membership.group.title, sub_group_membership.group %></li>
-        </ul>
-      </li>
-      <li>
-        <ul>
-          <li>Test</li>
-          <li>Test 2</li>
 
-        </ul>
+  <tr>
+    <th colspan="3"><%=h corporation.title %></th>
+  </tr>
 
-      </li>
-    </ul>
-  </li>
+  <% sub_group_memberships = [ corporation.membership_of( user ).devisor_membership ] %>
+
+  <% for sub_group_membership in sub_group_memberships %>
+
+  <tr>
+    <td></td>
+    <td>
+      <%= best_in_place sub_group_membership,
+          :created_at,
+          type: :date,
+          display_with: lambda { |v| l( v.to_date ) },
+          path: user_group_membership_path( 
+	  { 
+	  user_id: sub_group_membership.user.id,
+          group_id: sub_group_membership.group.id,
+          controller: :user_group_memberships,
+          action: :update,
+          format: :json  
+	  } )
+          %>
+    </td>
+    <td>
+      <%= link_to sub_group_membership.group.title, sub_group_membership.group %>
+    </td>
+  </tr>
+
   <% end %>
+
   <% end %>
-</ul>
+
+</table>
+
+
+<% end %>
