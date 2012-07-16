@@ -1,23 +1,35 @@
 <ul id="corporate_vita">
   <% if user %>
-    <% for corporation in user.corporations %>
+  <% for corporation in user.corporations %>
+  <li>
+    <%= corporation.title %>
+    <ul>
       <li>
-	<%= corporation.title %>
-	<ul>
+        <ul>
           <% sub_group_membership = corporation.membership_of( user ).devisor_membership %>
-	  <li><%= best_in_place sub_group_membership, 
-		  :created_at, 
-		  type: :date, 
-		  display_with: lambda { |v| l( v.to_date ) },
-		  path: user_group_membership_path( { user_id: sub_group_membership.user.id, 
-		                                       group_id: sub_group_membership.group.id,
-		                                       controller: :user_group_memberships,
-		                                       action: :update,
-		                                       format: :json  } )
-		  %></li>          
-	  <li><%= link_to sub_group_membership.group.title, sub_group_membership.group %></li>
-	</ul>
+          <li><%= best_in_place sub_group_membership,
+                  :created_at,
+                  type: :date,
+                  display_with: lambda { |v| l( v.to_date ) },
+                  path: user_group_membership_path( { user_id: sub_group_membership.user.id,
+                  group_id: sub_group_membership.group.id,
+                  controller: :user_group_memberships,
+                  action: :update,
+                  format: :json  } )
+                  %></li>
+          <li><%= link_to sub_group_membership.group.title, sub_group_membership.group %></li>
+        </ul>
       </li>
-    <% end %>
+      <li>
+        <ul>
+          <li>Test</li>
+          <li>Test 2</li>
+
+        </ul>
+
+      </li>
+    </ul>
+  </li>
+  <% end %>
   <% end %>
 </ul>
