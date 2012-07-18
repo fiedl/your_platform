@@ -1,225 +1,288 @@
 
-# In this application, all user group memberships, i.e. memberships of a certain 
+# In this application, all user group memberships, i.e. memberships of a certain
 # user in a certail group, are stored implicitly in the dag_links table in order
-# to minimize the number of database requests that are necessary to find out
+# to minimize the number of database queries that are necessary to find out
 # whether a user is member in a certain group through an indirect membership.
+#
 # This class allows abstract access to the UserGroupMemberships themselves,
 # and to their properties like since when the membership exists.
-class UserGroupMembership
-  extend ActiveModel::Naming
-  include ActiveModel::MassAssignmentSecurity
-  include ActiveModel::Dirty
+class UserGroupMembership < DagLink
 
   attr_accessible :created_at, :deleted_at
 
-  def initialize( params = {} )
 
-    raise "Could not initialize UserGroupMembership without user." unless params[ :user ]
-    raise "Could not initialize UserGroupMembership without group." unless params[ :group ]
+  # Creation Class Method
+  # ====================================================================================================
 
-    @params = params
-    @user = params[ :user ]
-    @group = params[ :group ]
-    @at_time = params[ :at_time ] # represent the membership at a certain point in time
-
-  end
-
-  # Returns the same representation of the membership at a certain point in time.
-  # Example: earlier_membership = 
-  #    UserGroupMembership.new( user: User.first, group: Group.first ).at( 30.minutes.ago )
-  def at_time( time )
-    UserGroupMembership.new( @params.merge( { at_time: time } ) )
-  end
-
-  def exists?
-    if dag_link
-      return true if deleted_at == nil # then the link exists until further notice
-      return true if deleted_at >= @at_time if @at_time # then the link still exists at the given time
-    end
-    return false # otherwise, the link does not exist (at the given time)
-  end
-
-  def existed?
-    if dag_link
-      # if the dag_link exists, the link exists now or existed in the past.
-      # But this method should only return `true` if the link existed in the past.
-      return true if deleted_at != nil
-    end
-    return false
-  end
-
-  def deleted?
-    return true if dag_link and not exists?
-  end
-
+  # Create a membership of the `u` in the group `g`.
+  #
+  #    membership = UserGroupMembership.create( user: u, group: g )
+  #
   def self.create( params )
-    membership = UserGroupMembership.new( params )
-    if membership
-      unless membership.exists?
-        user = params[ :user ]
-        group = params[ :group ]
-        user.parent_groups << group
-        membership = UserGroupMembership.new( params ) # this is required to avoid caching problem.
-                                                       # Otherwise, the membership instance will use an old @dag_link.
-      end
-    end
-    return membership
-  end
-
-  def destroy
-    if self.exists?
-      if dag_link.destroyable?
-        dag_link.destroy
-        @dag_link = nil
-        @devisor_dag_link = nil
-        @devisor_membership = nil
-        initialize( @params )
-      else
-        raise "membership not destroyable."
-      end
+    if UserGroupMembership.find_by( params ).present?
+      raise 'Membership already exists: id = ' + UserGroupMembership.find_by( params ).id.to_s
     else
-      raise "membership does not exist."
+      raise "Could not create UserGroupMembership without user." unless params[ :user ]
+      raise "Could not create UserGroupMembership without group." unless params[ :group ]
+      user = params[ :user ]
+      group = params[ :group ]
+      user.parent_groups << group
+      return UserGroupMembership.find_by( user: user, group: group )
     end
   end
 
-  def user ; @user; end
-  def group ; @group; end
 
-  def created_at ; dag_link_attr( :created_at ); end
-  def created_at=( created_at ); dag_link_attr( :created_at=, created_at ); end
-  def deleted_at ; dag_link_attr( :deleted_at ); end
-  def deleted_at=( deleted_at ) ; dag_link_attr( :deleted_at=, deleted_at ); end
+  # Finder Class Methods
+  # ====================================================================================================
 
-
-  def dag_links
-    links = @group.links_as_ancestor(true)
-      .now_and_in_the_past
-      .where( "descendant_type = ?", "User" )
-      .where( "descendant_id = ?", @user.id )
-    links = links.order( "created_at asc" )
-    links = links.at_time( @at_time ) if @at_time
-    links
-  end
-      
-  def dag_link
-    @dag_link = dag_links.last unless @dag_link
-    return @dag_link
-  end
-
-
-  def save
-    devisor_dag_link.save if devisor_dag_link
+  # Find all memberships that match the given parameters.
+  # This method returns an ActiveRecord::Relation object, which means that the result can
+  # be chained with scope methods.
+  #
+  #     memberships = UserGroupMembership.find_all_by( user: u )
+  #     memberships = UserGroupMembership.find_all_by( group: g )
+  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).now
+  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).in_the_past
+  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).now_and_in_the_past
+  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).with_deleted  # same as .now_and_in_the_past
+  #
+  def self.find_all_by( params )
+    user = params[ :user ]
+    group = params[ :group ]
+    links = UserGroupMembership
+      .where( :descendant_type => "User" )
+      .where( :ancestor_type => "Group" )
+    links = links.where( :descendant_id => user.id ) if user
+    links = links.where( :ancestor_id => group.id ) if group
+    links = links.order( :created_at )
+    return links
   end
 
-  def update_attributes( values, options = {} )
-    # see: http://stackoverflow.com/questions/10975370/does-activemodel-have-a-module-that-includes-an-update-attributes-method
-    sanitize_for_mass_assignment( values, options[ :as ] ).each do |k, v|
-      send( "#{k}=", v )
-    end
-    self.save
+  # Find the first membership that matches the parameters `params`.
+  # This is a shortcut for `find_all_by( params ).first`.
+  # Use this, if you only expect one membership to be found.
+  #
+  def self.find_by( params )
+    self.find_all_by( params ).limit( 1 ).first
   end
 
-
-  def direct?
-    dag_link.direct?
+  def self.find_all_by_user( user )
+    self.find_all_by( user: user )
   end
 
-
+  def self.find_all_by_group( group )
+    self.find_all_by( group: group )
+  end
 
   def self.find_by_user_and_group( user, group )
-    return UserGroupMembership.new( user: user, group: group )
+    self.find_by( user: user, group: group )
   end
 
-  # Find all UserGroupMemberships for a certain user. 
-  # If the option :with_deleted is set true, also deleted memberships are found.
-  def self.find_all_by_user( user, options = {} )
-    links = user.links_as_descendant.where( "ancestor_type = ?", "Group" )
-    links = links.with_deleted if options[ :with_deleted ] == true 
-    groups = links.collect { |dag_link| Group.find( dag_link.ancestor_id ) }
-    memberships = groups.collect { |group| UserGroupMembership.new( user: user, group: group ) }
+  def self.find_all_by_user_and_group( user, group )
+    self.find_all_by( user: user, group: group )
+  end
+
+
+  # Temporal Scope Methods
+  # ====================================================================================================
+
+  # Return the same membership as it was/is/will be at a certain point in time.
+  # This can be used, for example to get one or more memberships at a certain point in time.
+  # This is a scope method and can be chained to other ActiveRecord::Relation objects.
+  #
+  #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago )
+  #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago ).count
+  #    UserGroupMembership.find_by( user: u, group: g ).at_time( Time.current + 30.minutes ).present?
+  #
+  def at_time( time )
+    memberships = UserGroupMembership
+      .find_all_by( user: self.user, group: self.group )
+      .with_deleted
+      .where( "created_at < ?", time ).where( "deleted_at IS NULL OR deleted_at > ?", time )
+    return nil if memberships.count == 0
+    return memberships.first if memberships.count == 1
     return memberships
   end
 
-  # Find all UserGroupMemberships for a certain group.
-  # If the option :with_deleted is set true, also deleted memberships are found.
-  def self.find_all_by_group( group, options = {} )
-    links = group.links_as_ancestor.where( "descendant_type = ?", "User" )
-    links = links.with_deleted if options[ :with_deleted ] == true
-    users = links.collect { |dag_link| User.find( dag_link.descendant_id ) }
-    memberships = users.collect { |user| UserGroupMembership.new( user: user, group: group ) }
-    return memberships
-  end
 
-  # Returns the direct membership corresponding to an indirect one.
-  # If, for example, `subgroup` is a subgroup of `group` 
-  # and `user` is a direct member of `subgroup`, then
-  #   UserGroupMembership.new( user: user, group: group ).devisor_membership 
-  #      == UserGroupMembership.new( user: user, group: subgroup )
-  def devisor_membership
-    unless @devisor_membership
-      if dag_link.direct?
-        @devisor_membership = self
-      else
-        shortest_path = DagLink.shortest_path_between( @group, @user )
-        if shortest_path.count == 0 # then it might be a connection in the past (i.e. deleted)
-          shortest_path = DagLink.with_deleted.shortest_path_between( @group, @user )
-        end
-        if shortest_path.count > 0 
-          direct_group = shortest_path[-2] # [-2] represents that element in the path array that
-                                           #   comes just before the user itself, i.e. the 
-                                           #   closest group to the user.
-        end
-        @devisor_membership = UserGroupMembership.new( user: @user, group: direct_group )
-      end
+  # Save and Destroy Methods
+  # ====================================================================================================
+
+  # Save the current membership and auto-save also the direct memberships
+  # associated with the current (maybe indirect) membership.
+  #
+  def save
+    unless direct?
+      first_created_direct_membership.save if first_created_direct_membership
+      last_deleted_direct_membership.save if last_deleted_direct_membership
     end
-    @devisor_membership
+    super
   end
 
-  def ==( other_membership )
-    return true if self.dag_link.id == other_membership.dag_link.id
-  end
-
-  # returns an array of memberships that represent the direct memberships of the given user (of self), i.e.
-  # in the subgroups (of self). For example, this is used in the corporate vita.
-  def direct_memberships_now_and_in_the_past
-    if self == devisor_membership
-      # for direct memberships, the direct memberships contain only the membership itself.
-      return self 
+  # Destroy this membership, but reload the dataset from the database in order to get access
+  # to the datetime of deletion.
+  # 
+  def destroy
+    if self.destroyable?
+      super
+      self.reload
     else
-      sub_groups = self.group.descendant_groups
-      sub_group_ids = sub_groups.collect { |group| group.id }
-      links = user
-        .links_as_child
-        .now_and_in_the_past
-        .where( "ancestor_type = ?", "Group" )
-        .where( :direct => true )
-        .find_all_by_ancestor_id( sub_group_ids )
-      memberships = links.collect do |link|
-        UserGroupMembership.new( user: link.descendant, group: link.ancestor )
-      end
-      return memberships
+      raise "membership not destroyable."
     end
   end
 
 
-  private
+  # Status Instance Methods
+  # ====================================================================================================   
 
-  def dag_link_attr( attr_name, params = nil )
-    raise "No DagLink associated." unless dag_link 
-    return devisor_dag_link.send( attr_name ) if params.nil?
-    devisor_dag_link.send( attr_name, params )
+  def deleted?
+    return true if not UserGroupMembership.find_by( user: self.user, group: self.group )
   end
 
-  def devisor_dag_link
-    unless @devisor_dag_link
-      if dag_link.direct?
-        @devisor_dag_link = dag_link
-      else
-        @devisor_dag_link = devisor_membership.dag_link
-      end
+
+  # Timestamps Methods: Beginning and end of a membership
+  # ====================================================================================================
+
+  def created_at
+    return read_attribute( :created_at ) if direct?
+    first_created_direct_membership.created_at if first_created_direct_membership
+  end
+  def created_at=( created_at )
+    return super( created_at ) if direct?
+    first_created_direct_membership.created_at = created_at if first_created_direct_membership
+  end
+
+  def deleted_at
+    return read_attribute( :deleted_at ) if direct?
+    last_deleted_direct_membership.deleted_at if last_deleted_direct_membership
+  end
+  def deleted_at=( deleted_at )
+    return super( deleted_at ) if direct?
+    last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
+  end
+
+
+
+
+
+
+  def user
+    self.descendant
+  end
+
+  def group
+    self.ancestor
+  end
+
+
+
+
+
+
+  # Returns the direct membership corresponding to this membership (self).
+  # For clarification, consider the following structure:
+  #   group1
+  #     |---- group2
+  #             |---- user
+  #
+  # user is not a direct member of group1, but an indirect member. But user is a direct member of group2.
+  # Thus, this method, called on a membership of user and group1 will return the membership between
+  # user and group2.
+  #
+  #     UserGroupMembership.find( user: user, group: group1 ).direct_membership ==
+  #       UserGroupMembership.find( user: user, group: group2 )
+  #
+
+
+
+  def direct_memberships
+    descendant_groups_of_self_group = self.group.descendant_groups
+    descendant_group_ids_of_self_group = descendant_groups_of_self_group.collect { |group| group.id }
+    group_ids = descendant_group_ids_of_self_group + [ self.group.id ]
+    memberships = UserGroupMembership
+      .find_all_by_user( self.user )
+      .where( :direct => true )
+      .where( :ancestor_id => group_ids )
+    memberships = memberships.with_deleted if self.read_attribute( :deleted_at )
+    memberships = memberships.order( :created_at )
+    memberships
+  end
+
+  def direct_groups
+    direct_memberships.collect { |membership| membership.group }
+  end
+
+  #
+  #     A1                                                      A2
+  #     | indirect membership                                   |
+  #
+  #     b1                          b2
+  #     | direct membership 1       |
+  #                                 | direct membership 2       |
+  #                                 c1                          c2
+  #
+  # A1 <--> b1
+  # A2 <--> c2
+  # b2 <--> c1
+  #
+
+  def first_created_direct_membership
+    unless @first_created_direct_membership
+      @first_created_direct_membership = direct_memberships.reorder( :created_at ).first
     end
-    return @devisor_dag_link
+    @first_created_direct_membership
   end
+
+  def last_deleted_direct_membership
+    unless @last_deleted_direct_membership
+      @last_deleted_direct_membership = direct_memberships.reorder( :deleted_at ).last
+    end
+    @last_deleted_direct_membership
+  end
+
+
+
+
+
+  #
+  #
+  #  # returns an array of memberships that represent the direct memberships of the given user (of self), i.e.
+  #  # in the subgroups (of self). For example, this is used in the corporate vita.
+  #  def direct_memberships_now_and_in_the_past
+  #    if self == devisor_membership
+  #      # for direct memberships, the direct memberships contain only the membership itself.
+  #      return self
+  #    else
+  #      sub_groups = self.group.descendant_groups
+  #      sub_group_ids = sub_groups.collect { |group| group.id }
+  #      links = user
+  #        .links_as_child
+  #        .now_and_in_the_past
+  #        .where( "ancestor_type = ?", "Group" )
+  #        .where( :direct => true )
+  #        .find_all_by_ancestor_id( sub_group_ids )
+  #      memberships = links.collect do |link|
+  #        UserGroupMembership.find( user: link.descendant, group: link.ancestor )
+  #      end
+  #      return memberships
+  #    end
+  #  end
+  #
+
+  def direct_memberships_now_and_in_the_past
+    self.direct_memberships.now_and_in_the_past
+  end
+
+  #
+  #  private
+  #
+  #  def devisor_attr( attr_name, params = nil )
+  ##    raise "No DagLink associated." unless dag_link
+  #    if devisor_membership
+  #      return devisor_membership.send( attr_name ) if params.nil?
+  #      devisor_membership.send( attr_name, params )
+  #    end
+  #  end
 
 end
 
