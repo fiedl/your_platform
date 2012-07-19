@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
   
-  attr_accessible        :user_id, :label, :type, :value
+  attr_accessible        :label, :type, :value
   
   belongs_to             :profileable, polymorphic: true
 
