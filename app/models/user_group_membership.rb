@@ -162,9 +162,8 @@ class UserGroupMembership < DagLink
   end
 
 
-
-
-
+  # Access Methods to Associated User and Group
+  # ====================================================================================================   
 
   def user
     self.descendant
@@ -175,12 +174,12 @@ class UserGroupMembership < DagLink
   end
 
 
+  # Access Methods to Associated Direct Memberships
+  # ====================================================================================================  
 
-
-
-
-  # Returns the direct membership corresponding to this membership (self).
+  # Returns the direct memberships corresponding to this membership (self).
   # For clarification, consider the following structure:
+  #
   #   group1
   #     |---- group2
   #             |---- user
@@ -189,12 +188,20 @@ class UserGroupMembership < DagLink
   # Thus, this method, called on a membership of user and group1 will return the membership between
   # user and group2.
   #
-  #     UserGroupMembership.find( user: user, group: group1 ).direct_membership ==
-  #       UserGroupMembership.find( user: user, group: group2 )
+  #     UserGroupMembership.find_by( user: user, group: group1 ).direct_memberships.should 
+  #       include( UserGroupMembership.find_by( user: user, group: group2 ) )
   #
-
-
-
+  # An indirect membership can also have several direct memberships, as shown in this figure:
+  # 
+  #   group1
+  #     |--------------- group2
+  #     |                  |
+  #     |---- group3       |
+  #             |------------- user
+  # 
+  # Here, group2 and grou3 are children of group1. user is member of group2 and group3.
+  # Hence, the indirect membership of user and group1 will include both direct memberships.
+  #
   def direct_memberships
     descendant_groups_of_self_group = self.group.descendant_groups
     descendant_group_ids_of_self_group = descendant_groups_of_self_group.collect { |group| group.id }
@@ -208,24 +215,34 @@ class UserGroupMembership < DagLink
     memberships
   end
 
+  # Returns the direct groups shown in the figures above in the description of
+  # `direct_memberships`.
+  #
   def direct_groups
     direct_memberships.collect { |membership| membership.group }
   end
 
+  def direct_memberships_now_and_in_the_past
+    self.direct_memberships.now_and_in_the_past
+  end
+
+
+  # In order to set and get the correct inherited datetime of creation and deletion,
+  # one has to find the first created direct membership and the last deleted 
+  # direct membership, as shown in the following schema.
+  #
   #
   #     A1                                                      A2
-  #     | indirect membership                                   |
+  #     |-- indirect membership ----------------------------------|
   #
   #     b1                          b2
-  #     | direct membership 1       |
-  #                                 | direct membership 2       |
-  #                                 c1                          c2
+  #     |-- direct membership 1 -----|
+  #                                  |-- direct membership 2 -----|
+  #                                  c1                         c2
   #
-  # A1 <--> b1
-  # A2 <--> c2
-  # b2 <--> c1
+  # The following datetimes should be the same:
+  # A1 = b1,  A2 = c2,  b2 = c1
   #
-
   def first_created_direct_membership
     unless @first_created_direct_membership
       @first_created_direct_membership = direct_memberships.reorder( :created_at ).first
@@ -241,48 +258,20 @@ class UserGroupMembership < DagLink
   end
 
 
+  # Methods to Change the Membership
+  # ====================================================================================================  
 
-
-
-  #
-  #
-  #  # returns an array of memberships that represent the direct memberships of the given user (of self), i.e.
-  #  # in the subgroups (of self). For example, this is used in the corporate vita.
-  #  def direct_memberships_now_and_in_the_past
-  #    if self == devisor_membership
-  #      # for direct memberships, the direct memberships contain only the membership itself.
-  #      return self
-  #    else
-  #      sub_groups = self.group.descendant_groups
-  #      sub_group_ids = sub_groups.collect { |group| group.id }
-  #      links = user
-  #        .links_as_child
-  #        .now_and_in_the_past
-  #        .where( "ancestor_type = ?", "Group" )
-  #        .where( :direct => true )
-  #        .find_all_by_ancestor_id( sub_group_ids )
-  #      memberships = links.collect do |link|
-  #        UserGroupMembership.find( user: link.descendant, group: link.ancestor )
-  #      end
-  #      return memberships
-  #    end
-  #  end
-  #
-
-  def direct_memberships_now_and_in_the_past
-    self.direct_memberships.now_and_in_the_past
+  # Destroy the current membership and move the user over to the given group.
+  # 
+  #    group1                       group2
+  #      |---- user       =>          |---- user
+  # 
+  def move_to_group( group_to_move_in )
+    user_to_move = self.user
+    self.destroy
+    UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
   end
-
-  #
-  #  private
-  #
-  #  def devisor_attr( attr_name, params = nil )
-  ##    raise "No DagLink associated." unless dag_link
-  #    if devisor_membership
-  #      return devisor_membership.send( attr_name ) if params.nil?
-  #      devisor_membership.send( attr_name, params )
-  #    end
-  #  end
+  
 
 end
 

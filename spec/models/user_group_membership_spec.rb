@@ -5,8 +5,10 @@ describe UserGroupMembership do
 
   before do
     @group = Group.create( name: "Group 1" )
-    @super_group = Group.create( name: "Parent Group of Group 1" )
+    @super_group = Group.create( name: "Parent Group of Groups 1 and 2" )
+    @other_group = Group.create( name: "Group 2" )
     @group.parent_groups << @super_group
+    @other_group.parent_groups << @super_group
     @user = User.create( first_name: "John", last_name: "Doe", :alias => "j.doe" )
   end
 
@@ -38,11 +40,24 @@ describe UserGroupMembership do
   end
 
   def find_indirect_membership_with_deleted
-    UserGroupMembership.find_all_by( user: @user, group: @super_group ).with_deleted_first
+    UserGroupMembership.find_all_by( user: @user, group: @super_group ).with_deleted.first
+  end
+
+  def create_other_membership
+    UserGroupMembership.create( user: @user, group: @other_group )
+  end
+  
+  def find_other_membership
+    UserGroupMembership.find_by( user: @user, group: @other_group )
+  end
+
+  def find_other_membership_with_deleted
+    UserGroupMembership.find_all_by( user: @user, group: @other_group).with_deleted.first
   end
 
   def create_memberships
     create_membership
+    create_other_membership
     # the indirect membership is created implicitly, becuase @group and @super_group are already connected.
   end
 
@@ -133,12 +148,12 @@ describe UserGroupMembership do
   end
 
   # Save and Destroy Instance Methods
-  # ====================================================================================================  
+  # ====================================================================================================
 
   describe "#reload" do
     before { create_memberships }
     it "should restore the values from the database without saving" do
-      membership = find_membership 
+      membership = find_membership
       membership.created_at = 1.hour.ago
       membership.reload
       membership.created_at.should > 50.minutes.ago
@@ -189,7 +204,7 @@ describe UserGroupMembership do
 
 
   # Status Instance Methods
-  # ====================================================================================================  
+  # ====================================================================================================
 
   describe "#present?" do
     before { create_membership }
@@ -219,17 +234,44 @@ describe UserGroupMembership do
     end
   end
 
+  describe "#destroyable?" do
+    before { create_memberships }
+    describe "for a direct membership" do
+      subject { find_membership }
+      its( :destroyable? ) { should be_true }
+    end
+    describe "for an indirect membership" do
+      subject { find_indirect_membership }
+      its( :destroyable? ) { should be_false }
+    end
+  end
+
+  describe "#== ( other_membership ), i.e. euality relation, " do
+    it "should return true if the two objects represent the same membership" do
+      membership = create_membership
+      same_membership = find_membership
+      membership.should == same_membership
+    end
+  end
+
 
   # Timestamps Methods: Beginning and end of a membership
-  # ====================================================================================================   
+  # ====================================================================================================
 
   describe "#created_at" do
     it "should be the time of creation" do
       time_before_creation = Time.current
       create_membership
-      find_membership.created_at.to_i.should >= time_before_creation.to_i 
+      find_membership.created_at.to_i.should >= time_before_creation.to_i
       find_membership.created_at.to_i.should <= Time.current.to_i
       # Note: to_i is necessary, since the elapsed time is too short to be recognized by a datetime string.
+    end
+    describe "for an indirect membership" do
+      it "should return the datetime of the direct membership" do
+        create_memberships
+        find_membership.update_attributes( created_at: 1.hour.ago ) # assume the *direct* membership has been created earlier
+        find_indirect_membership.created_at.should < 50.minutes.ago # ask for the *indirect* membership's :created_at
+      end
     end
   end
 
@@ -244,6 +286,15 @@ describe UserGroupMembership do
       membership.destroy
       membership = find_membership_with_deleted
       membership.at_time( Time.current + 30.minutes ).present?.should be_false
+    end
+    describe "for an indirect membership" do
+      it "should modify the datetime of the direct membership" do
+        create_memberships
+        indirect_membership = find_indirect_membership
+        indirect_membership.created_at = 1.hour.ago
+        indirect_membership.save
+        find_indirect_membership.created_at.should < 50.minutes.ago
+      end
     end
   end
 
@@ -260,6 +311,21 @@ describe UserGroupMembership do
       membership.deleted_at.to_i.should >= time_before_deletion.to_i
       membership.deleted_at.to_i.should <= Time.current.to_i
     end
+    describe "for an indirect membership" do
+      it "should return the datetime of the direct membership" do
+        create_membership
+        find_membership.destroy
+        find_membership_with_deleted.update_attributes( created_at: 2.hours.ago, deleted_at: 1.hour.ago )
+        find_indirect_membership_with_deleted.deleted_at.should < 50.minutes.ago
+      end
+    end
+    describe "for an indirect membership of two direct memberships, where only one has been deleted" do
+      it "should return nil, since the direct membership still persists" do
+        create_memberships
+        find_membership.destroy
+        find_indirect_membership_with_deleted.deleted_at.should == nil
+      end
+    end
   end
 
   describe "#deleted_at=" do
@@ -272,28 +338,33 @@ describe UserGroupMembership do
       membership.at_time( Time.current + 30.minutes ).present?.should be_true
       membership.at_time( Time.current + 2.hours ).present?.should be_false
     end
-  end
-
-
-
-
-
-  describe "#== ( other_membership ), i.e. euality relation, " do
-    it "should return true if the two memberships represent the same membership" do
-      membership = create_membership
-      same_membership = find_membership
-      membership.should == same_membership
+    describe "for an indirect membership" do
+      it "should modify the datetime of the direct membership" do
+        create_membership
+        find_membership.destroy
+        find_membership_with_deleted.update_attributes( created_at: 2.hours.ago )
+        indirect_membership = find_indirect_membership_with_deleted
+        indirect_membership.deleted_at = 1.hour.ago
+        indirect_membership.save
+        find_membership_with_deleted.deleted_at.should < 50.minutes.ago
+      end
+    end
+    describe "for an indirect membership of two direct memberships, where only one has been deleted" do
+      it "still persists. Therefore, setting :deleted_at doesn't make sense." do
+        create_memberships
+        find_membership.destroy
+        find_indirect_membership.present?.should be_true
+      end
     end
   end
 
-  describe "after creation" do
 
-    subject { @membership }
+  # Access Methods to Associated User and Group
+  # ====================================================================================================
 
-    before do
-      @membership = create_membership
-    end
-
+  describe "Access Method to Assiciation" do
+    before { create_membership }
+    subject { find_membership }
 
     describe "#user" do
       its( :user ) { should == @user }
@@ -302,10 +373,85 @@ describe UserGroupMembership do
     describe "#group" do
       its( :group ) { should == @group }
     end
-
   end
 
-  describe "indirect membership" do
+
+  # Access Methods to Associated Direct Memberships
+  # ====================================================================================================
+
+  describe "#direct_memberships" do
+    before {create_memberships }
+    describe "for a direct membership" do
+      subject { find_membership }
+      it "should include only itself (the direct membership)" do
+        subject.direct_memberships.should == [ subject ]
+      end
+    end
+    describe "for an indirect membership" do
+      subject { find_indirect_membership }
+      it "should include the direct membership" do
+        subject.direct_memberships.should include( find_membership )
+      end
+    end
+  end
+
+  describe "#direct_memberships_now_and_in_the_past" do
+    before { create_memberships }
+    it "should return an ActiveRecord::Relation, i.e. be chainable" do
+      find_membership.direct_memberships_now_and_in_the_past.kind_of?( ActiveRecord::Relation ).should be_true
+    end
+    it "should be the same as #direct_memberships.now_and_in_the_past" do
+      find_indirect_membership.direct_memberships_now_and_in_the_past.should ==
+        find_indirect_membership.direct_memberships.now_and_in_the_past
+    end
+    describe "for a direct membership" do
+      it "should include itself (the direct membership)" do
+        find_membership.direct_memberships_now_and_in_the_past.should include( find_membership )
+      end
+    end
+    describe "for an indirect membership" do
+      it "should include the direct membership" do
+        find_indirect_membership.direct_memberships_now_and_in_the_past.should include( find_membership )
+      end
+    end
+  end
+
+  describe "#direct_groups" do
+    before { create_memberships }
+    describe "for a direct membership" do
+      it "should return an array containing only the own group" do
+        find_membership.direct_groups.should == [ find_membership.group ]
+      end
+    end
+    describe "for an indirect membership" do
+      it "should return an array containing the direct group" do
+        find_indirect_membership.direct_groups.should == [ find_membership.group, find_other_membership.group ]
+      end
+    end
+  end
+
+  describe "#first_created_direct_membership" do
+    before { create_memberships }
+    subject { find_indirect_membership.first_created_direct_membership }
+    it { should == find_membership } # this membership has been created before the other_membership.
+  end
+
+  describe "#last_deleted_direct_membership" do
+    before do
+      create_memberships
+      find_membership.destroy
+      sleep 1.2 # in order to be able to discriminate the two datetimes
+      find_other_membership.destroy
+    end
+    subject { find_indirect_membership_with_deleted.last_deleted_direct_membership }
+    it { should == find_other_membership_with_deleted }
+  end
+
+
+  # More Tests for Indirect Memberships
+  # ====================================================================================================
+
+  describe "Indirect Membership" do
 
     before do
       @sub_group = Group.create( name: "Sub Group" )
@@ -362,39 +508,30 @@ describe UserGroupMembership do
       @membership.reload
       @membership.deleted_at.to_i.should == new_time.to_i
     end
-
-    describe "#direct_memberships" do
-      it "should return the direct memberships corresponding to self, if self is an indirect membership" do
-        @indirect_membership.direct_memberships.first.should == @membership
-      end
-      it "should return self, if self is a direct membership itself" do
-        @membership.direct_memberships.first.should == @membership
-      end
-    end
-
-    describe "#direct_memberships_now_and_in_the_past" do
-
-      describe "of an indirect membership" do
-        subject { @indirect_membership.direct_memberships_now_and_in_the_past }
-
-        it "should return an ActiveRecord::Relation" do
-          subject.kind_of?( ActiveRecord::Relation ).should be_true
-        end
-        it "should contain the direct membership" do
-          subject.all.should include( @membership )
-        end
-      end
-
-      describe "of a direct membership" do
-        subject { @membership.direct_memberships_now_and_in_the_past }
-
-        it "should include the direct membership" do
-          subject.should include( @membership )
-        end
-      end
-
-    end
-
   end
 
+  # Methods to Change the Membership
+  # ====================================================================================================       
+
+  describe "#move_to_group( group )" do
+    describe "for a direct membership" do
+      before do
+        create_membership
+        find_membership.move_to_group( @other_group )
+      end
+      it "should destroy the direct membership" do
+        find_membership.should == nil
+      end
+      it "should create a new membership between the user and the given group" do
+        find_other_membership.should_not == nil
+      end
+    end
+    describe "for an indirect membership" do
+      before { create_membership }
+      it "should raise an error, since the indirect membership cannot be destroyed" do
+        expect { find_indirect_membership.move_to_group( @other_group ) }.should raise_error RuntimeError
+      end
+    end
+  end
+  
 end
