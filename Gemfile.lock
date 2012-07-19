@@ -127,6 +127,7 @@ GEM
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
     nokogiri (1.5.5)
+    pg (0.14.0)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -234,6 +235,7 @@ DEPENDENCIES
   mysql2
   net-ssh (= 2.4.0)
   nokogiri
+  pg
   rails (= 3.2.5)
   rails-i18n
   rails3-jquery-autocomplete
