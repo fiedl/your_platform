@@ -73,8 +73,6 @@ Wingolfsplattform::Application.configure do
     password: 'ooxais5Aishoo5eile9t',
     enable_starttls_auto: false
   }
-  config.action_mailer.default_url_options = { host: 'ruby.deiszner.de', protocol: 'https' }
-
-
+  config.action_mailer.default_url_options = { host: 'wingolf.herokuapp.com', protocol: 'https' }
 
 end
