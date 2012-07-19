@@ -1,4 +1,3 @@
-
 en:
   create_user:                   Create User
   enter_details_for_new_user:    Please enter details for the new user.
@@ -21,7 +20,7 @@ en:
       create_account:            If you create an user account, the new user will receive a password via email.
 
     actions:
-      create: "Create %{model}"
+      create:                    "Create %{model}"
 
   activerecord:
     models:
