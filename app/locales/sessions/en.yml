@@ -1,13 +1,13 @@
 en:
   login:                    Login
-  login_name:	   	    Login Name
+  login_name:               Login Name
   password:        	    Password
   login_name_explanation:   Your Name, Email Address, Alias, W-Number
 
-  login_failed:		    Login Failed.
+  login_failed:             Login Failed.
   no_user_found:      	    No matching user found.
-  wrong_password:	    Wrong password.
-  user_has_no_account:	    The user does not have an active user account.
+  wrong_password:           Wrong password.
+  user_has_no_account:      The user does not have an active user account.
 
-  good_bye:		    Good bye!
-  logout:		    Logout
+  good_bye:                 Good bye!
+  logout:                   Logout

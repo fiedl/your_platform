@@ -5,9 +5,9 @@ en:
 
   email:                         Email
   name:                          Name
-  first_name:			 First Name
-  last_name:			 Last Name
-  alias:			 Alias
+  first_name:                    First Name
+  last_name:                     Last Name
+  alias:                         Alias
   create_account:                Create User Account
 
   password:                      Password
@@ -18,7 +18,7 @@ en:
 
     hints:
       alias:                     Arbitrary, short login name, e.g. 'j.doe'.
-      create_account:		 If you create an user account, the new user will receive a password via email.
+      create_account:            If you create an user account, the new user will receive a password via email.
 
     actions:
       create: "Create %{model}"
@@ -28,8 +28,8 @@ en:
       user:                      User
     attributes:
       user:
-        first_name:		 First Name
-        last_name:		 Last Name
+        first_name:              First Name
+        last_name:               Last Name
         alias:        		 Alias
         email:        		 Email
         create_account:          Create User Account
