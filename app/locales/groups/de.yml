@@ -1,10 +1,10 @@
 de:
   my_groups:                      Meine Gruppen
   sub_groups:                     Untergruppen
-  members:			  Mitglieder
+  members:                        Mitglieder
   groups_of: 			  Gruppen von
 
-  details:			  Detail-Informationen
-  token:			  Kürzel
+  details:                        Detail-Informationen
+  token:                          Kürzel
   internal_token:                 Internes Kürzel
-  extensive_name:		  Ausführliche Bezeichnung
+  extensive_name:                 Ausführliche Bezeichnung
