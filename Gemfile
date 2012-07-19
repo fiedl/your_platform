@@ -22,7 +22,7 @@ gem 'mysql2'								# MIT License
 
 # Gems used only for assets and not required
 # in production environments by default.
-group :assets, :production do
+group :assets, :production, 'testing-aki' do
   gem 'sass-rails',   '~> 3.2.3'					# MIT License
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
 
