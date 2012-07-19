@@ -113,7 +113,9 @@ class User < ActiveRecord::Base
 
   # Der Bezirksverband, dem der Benutzer zugeordnet ist.
   def bv
-    bv_of_this_user = ( Bv.all & self.ancestor_groups ).first
+    if Bv.all and self.ancestor_groups
+      bv_of_this_user = ( Bv.all & self.ancestor_groups ).first
+    end
     return bv_of_this_user.becomes Bv if bv_of_this_user
   end
 
@@ -127,8 +129,8 @@ class User < ActiveRecord::Base
 
   # Returns all UserGroupMemberships for this user. 
   # If the option :with_deleted is set true, this includes all deleted UserGroupMemberships.
-  def memberships( options = {} )
-    UserGroupMembership.find_all_by_user self, options
+  def memberships
+    UserGroupMembership.find_all_by_user self
   end
   
   def inspect

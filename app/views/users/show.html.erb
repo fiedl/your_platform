@@ -54,6 +54,16 @@
 	</dl>
       </dd>
     </dl>
+    <span class="show_only_in_edit_mode">
+      <dl>
+	<dt>
+	  <%=t 'password' %>:
+	</dt>
+	<dd>
+	  <%= link_to t( 'send_new_password' ), forgot_password_user_path( @user.id ), method: :put %>
+	</dd>
+      </dl>
+    </span>
   <% else %>
     <p><%=t :user_has_no_account %></p>
     <span class="show_only_in_edit_mode">

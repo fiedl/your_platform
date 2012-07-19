@@ -103,6 +103,7 @@ group :test, :development do
   gem 'guard', '1.0.1'
   gem 'rspec-rails', '2.10.0'
   gem 'guard-rspec', '0.5.5'
+  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
 end
@@ -134,11 +135,11 @@ end
 
 
 # Edit-Mode, SF
-gem 'edit_mode', '>= 0.0.3' #, path: "../edit_mode"
+gem 'edit_mode', '>= 0.0.3'                                             # MIT License
 
-# hide slim breadcrumb elements until user hovers the separator
-gem 'slim_breadcrumb'
+# hide slim breadcrumb elements until user hovers the separator, SF
+gem 'slim_breadcrumb'                                                   # MIT License
 
 # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
 gem 'rails3_acts_as_paranoid'
-gem 'acts_as_paranoid_dag', git: 'git://github.com/fiedl/acts_as_paranoid_dag.git'
+gem 'acts_as_paranoid_dag'                                              # MIT License

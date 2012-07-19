@@ -21,14 +21,11 @@ describe User do
 
   describe "#memberships" do
     it "should return all UserGroupMemberships of the user" do
-      @user.memberships.collect { |membership| membership.dag_link.id }
-        .should == UserGroupMembership.find_all_by_user( @user ).collect { |membership| membership.dag_link.id }
+      @user.memberships.should == UserGroupMembership.find_all_by_user( @user )
     end
-    describe "( with_deleted: true )" do
+    describe ".with_deleted" do
       it "should return all UserGroupMemberships of the user, including the deleted ones" do
-        @user.memberships( with_deleted: true ).collect { |membership| membership.dag_link.id }
-          .should == UserGroupMembership.find_all_by_user( @user, with_deleted: true )
-          .collect { |membership| membership.dag_link.id }
+        @user.memberships.with_deleted.should == UserGroupMembership.find_all_by_user( @user ).with_deleted
       end
     end
   end

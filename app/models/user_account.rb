@@ -50,6 +50,11 @@ class UserAccount < ActiveRecord::Base
     return identified_user
   end
 
+  def send_new_password
+    generate_password
+    self.save
+    send_welcome_email
+  end
 
   def generate_password
     self.password = Password.generate
@@ -64,11 +69,15 @@ class UserAccount < ActiveRecord::Base
       end
     end
   end      
+
+  def send_welcome_email
+    UserAccountMailer.welcome_email( self.user, self.password ).deliver
+  end
     
   # This sends a welcome email to the user of the newly created user account.
   def send_welcome_email_if_just_created
     if id_changed? # If the id of the record has changed, this is a new record.
-      UserAccountMailer.welcome_email( self.user, self.password ).deliver
+      send_welcome_email
     end
   end  
 
