@@ -23,10 +23,12 @@
 
 <%= profile_sections_for_profileable @user, [ :contact_information, :about_myself, :study_information, :career_information, :organisations, :bank_account_information ] %>
 
-<h1>Wingolfitischer Lebenslauf</h1>
-<div>
-  <%= wingolfitische_vita_ul @user %>
-</div>
+<% if wingolfitische_vita_ul( @user ) %>
+  <h1>Wingolfitischer Lebenslauf</h1>
+  <div>
+    <%= wingolfitische_vita_ul @user %>
+  </div>
+<% end %>
 
 <h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
 <div>
