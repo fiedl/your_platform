@@ -147,3 +147,7 @@ gem 'slim_breadcrumb'                                                   # MIT Li
 # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
 gem 'rails3_acts_as_paranoid'
 gem 'acts_as_paranoid_dag'                                              # MIT License
+
+# password generator. it's not pwgen, but it's a gem.
+# TODO: if we ever find a way to properly include pwgen, let's do it.
+gem 'passgen'                                                           # MIT License
