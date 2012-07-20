@@ -19,6 +19,14 @@
     <div class="content">
       <ul>
         <li class="first">
+	  <span class="avatar">
+	    <a href="http://gravatar.com/emails">
+	      <%= gravatar_image_tag( @current_user.email, :alt => "Gravatar: #{@current_user.email}", 
+	      :title => "Gravatar: #{@current_user.email}", :gravatar => {
+	      :size => 36
+	      } ) %>
+	    </a>
+	  </span>
 	  <%= link_to @current_user.name, @current_user %>
 	</li>
         <li><%= link_to t( :my_profile ), @current_user %> </li>

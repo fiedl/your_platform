@@ -151,3 +151,7 @@ gem 'acts_as_paranoid_dag'                                              # MIT Li
 # password generator. it's not pwgen, but it's a gem.
 # TODO: if we ever find a way to properly include pwgen, let's do it.
 gem 'passgen'                                                           # MIT License
+
+# Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
+gem 'gravatar_image_tag'                                                # MIT License
+
