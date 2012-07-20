@@ -23,7 +23,7 @@
 
 <%= profile_sections_for_profileable @user, [ :contact_information, :about_myself, :study_information, :career_information, :organisations, :bank_account_information ] %>
 
-<% if wingolfitische_vita_ul( @user ) %>
+<% if @user.corporations.count > 0 %>
   <h1>Wingolfitischer Lebenslauf</h1>
   <div>
     <%= wingolfitische_vita_ul @user %>
