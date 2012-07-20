@@ -2,9 +2,34 @@
 require 'spec_helper'
 
 describe User do
+
+  def new_user
+    User.new( first_name: "Max", last_name: "Mustermann", alias: "m.mustermann",
+              email: "max.mustermann@example.com", create_account: true )
+  end
+
+  def create_user_with_account
+    User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com",
+                 :alias => "j.doe", create_account: true )
+  end
+
+  describe ".create" do
+    describe "with account" do
+      before { @created_user_with_account = create_user_with_account }
+      subject { @created_user_with_account }
+      it "should have an initial password set" do
+        # This is to avoid the bug of welcome emails with a blank password.
+        subject.account.password.should_not be_empty
+      end
+    end
+  end
+
+
+
+
+
   before do
-    @user = User.new( first_name: "Max", last_name: "Mustermann", alias: "m.mustermann",
-                      email: "max.mustermann@example.com", create_account: true )
+    @user = new_user
   end
 
   subject { @user }
@@ -29,7 +54,8 @@ describe User do
       end
     end
   end
-  
+
+
   describe "before building an account" do
 
     its(:account) { should be_nil }

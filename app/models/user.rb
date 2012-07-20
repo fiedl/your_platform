@@ -13,6 +13,7 @@ class User < ActiveRecord::Base
   has_profile_fields
 
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
+  validates_associated      :account
 
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 

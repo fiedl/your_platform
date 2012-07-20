@@ -8,9 +8,16 @@ class UserAccount < ActiveRecord::Base
 
   belongs_to               :user, inverse_of: :account
 
-  before_validation        :generate_password_if_unset  # This needs to run before validation, since validation
-                                                        # requires a password to be set in order to allow saving the account.
-                                                        # See ressources of `has_secure_password` above. 
+  before_validation        :generate_password_if_unset
+                             # This needs to run before validation, since validation
+                             # requires a password to be set in order to allow saving the account.
+                             # See ressources of `has_secure_password` above. 
+
+  before_save              :generate_password_if_unset
+                             # This is required, because, apparently, the `before_validation` callback is not called
+                             # if the account is created via an association (like User.create( ... , create_account: true )).
+                             # But `before_save` callbacks are called.
+                             # Notice: Apparently, even `validates_associated :account` in the User model has no effect.
 
   after_save               :send_welcome_email_if_just_created
 
@@ -71,6 +78,7 @@ class UserAccount < ActiveRecord::Base
   end      
 
   def send_welcome_email
+    raise 'attempt to send welcome email with empty password' unless self.password
     UserAccountMailer.welcome_email( self.user, self.password ).deliver
   end
     
