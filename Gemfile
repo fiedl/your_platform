@@ -8,7 +8,7 @@ source 'https://rubygems.org'						# Ruby License,
 
 
 
-gem 'rails', '3.2.5'							# MIT License,
+gem 'rails', '~> 3.2.5'							# MIT License,
     	     								# http://www.opensource.org/licenses/mit-license.php
 
 # Bundle edge Rails instead:
@@ -155,3 +155,5 @@ gem 'passgen'                                                           # MIT Li
 # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
 gem 'gravatar_image_tag'                                                # MIT License
 
+# WorkflowKit, SF
+gem 'workflow_kit'                                                      # MIT License

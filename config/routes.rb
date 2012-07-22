@@ -39,8 +39,13 @@ Wingolfsplattform::Application.routes.draw do
   resources :profile_fields
   resources :relationships
 
+  mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
+
+
+
 #  match 'profile/:alias' => 'users#show', :as => :profile
   match ':alias' => 'users#show', :as => :profile
+
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
