@@ -37,6 +37,13 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def child_workflows
+    Workflow
+      .joins( :links_as_child )
+      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => self.id, direct: true } )
+      .uniq
+  end
+
   def descendant_users
     if self == Group.jeder
       return User.all

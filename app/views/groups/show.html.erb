@@ -30,7 +30,12 @@
       <% if @group.child_users.count > 0 %>
         <ul>
           <% for user in @group.child_users do %>
-            <li><%= link_to user.title, user %></li>
+            <li>
+	      <%= link_to user.title, user %>
+	      <span class="show_only_in_edit_mode">
+		<%= workflow_execution_links_for( group: @group, user: user ) %>
+	      </span>
+	    </li>
           <% end %>
 	</ul>
       <% elsif @group.child_groups.count > 0 %>
@@ -41,9 +46,7 @@
 	      <li>
 		<%= link_to user.title, user %>
 		<span class="show_only_in_edit_mode">
-  		  <% for workflow in child_group.child_workflows do %>
-	            <%= link_to_workflow workflow, user: user %>
-		  <% end %>
+		  <%= workflow_execution_links_for( group: child_group, user: user ) %>
 		</span>
 	      </li>
 	    <% end %>
