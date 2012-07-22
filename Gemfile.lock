@@ -1,16 +1,17 @@
 GIT
+  remote: git://github.com/fiedl/workflow_kit.git
+  revision: caa1f30acee20ffaccb19f13972809d887775018
+  specs:
+    workflow_kit (0.0.4.alpha)
+      rails (~> 3.2.6)
+
+GIT
   remote: git://github.com/resgraph/acts-as-dag.git
   revision: 1b42e95e9d03a179b7c387bc18749ae620462d46
   specs:
     acts-as-dag (2.5.7)
       activemodel
       activerecord
-
-PATH
-  remote: ../workflow_kit
-  specs:
-    workflow_kit (0.0.4.alpha)
-      rails (~> 3.2.6)
 
 GEM
   remote: https://rubygems.org/

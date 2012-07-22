@@ -156,4 +156,4 @@ gem 'passgen'                                                           # MIT Li
 gem 'gravatar_image_tag'                                                # MIT License
 
 # WorkflowKit, SF
-gem 'workflow_kit', path: '../workflow_kit'                             # MIT License
+gem 'workflow_kit', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
