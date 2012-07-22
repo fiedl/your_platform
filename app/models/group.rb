@@ -44,6 +44,10 @@ class Group < ActiveRecord::Base
       .uniq
   end
 
+  def descendant_groups_by_name( descendant_group_name )
+    self.descendant_groups.where( :name => descendant_group_name )
+  end
+
   def descendant_users
     if self == Group.jeder
       return User.all

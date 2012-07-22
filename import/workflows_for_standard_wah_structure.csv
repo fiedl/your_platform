@@ -1,0 +1,10 @@
+workflow_name;workflow_belongs_to_group_names;remove_from_group_name;add_to_group_name
+Aktivmeldung;           Keilgäste;                                    Gäste;                            Hospitanten
+Reception;              Hospitanten;                                  Hospitanten;                      Kraßfuxen
+Branderung;             Kraßfuxen;                                    Kraßfuxen;                        Brandfuxen
+Burschung;              Brandfuxen;                                   Brandfuxen;                       Aktive Burschen
+Inaktivierung loci;     Aktive Burschen, Inaktive Burschen non loci;  Burschen;                         Inaktive Burschen loci
+Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Burschen;                         Inaktive Burschen non loci
+Reaktivierung;          Inaktive Burschen;                            Inaktive Burschen;                Aktive Burschen
+Konkneipierung;         Hospitanten;                                  Hospitanten;                      Konkneipanten
+Philistration;          Burschen, Konkneipanten;                      Aktivitas;                        Philister
