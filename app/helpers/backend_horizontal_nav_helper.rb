@@ -37,7 +37,8 @@ module BackendHorizontalNavHelper
     style_class = "under_this_category" if navable_to_display_in_horizontal_nav == most_special_category unless style_class
     
     content_tag :li, :class => style_class do
-      link_to navable_title_to_show_in_horizontal_nav( navable_to_display_in_horizontal_nav ), navable_to_display_in_horizontal_nav
+      link_to( navable_title_to_show_in_horizontal_nav( navable_to_display_in_horizontal_nav ), 
+               navable_path( navable_to_display_in_horizontal_nav ) )
     end
     
   end
@@ -91,6 +92,11 @@ module BackendHorizontalNavHelper
     length_counter = 0
     navables_for_backend_horizontal_nav.each{ |nav| length_counter += nav.title.length }
     return length_counter
+  end
+
+  def navable_path( navable )
+    main_app.send( "#{navable.class.name.downcase}_path".to_sym, navable )
+    # e.g. main_app.page_path( navable )  for a Page
   end
 
 end

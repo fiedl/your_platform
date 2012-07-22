@@ -27,12 +27,12 @@
 	      } ) %>
 	    </a>
 	  </span>
-	  <%= link_to @current_user.name, @current_user %>
+	  <%= link_to @current_user.name, main_app.user_path( @current_user ) %>
 	</li>
-        <li><%= link_to t( :my_profile ), @current_user %> </li>
-	<li><%= link_to t( :my_groups ), controller: 'groups', action: 'my' %></li>
+        <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+	<li><%= link_to t( :my_groups ), main_app.my_groups_path %></li>
         <li class="last">
-	  <%= link_to t( :logout ), :controller => "sessions", :action => "logout" %>
+	  <%= link_to t( :logout ), main_app.sessions_logout_path %>
 	</li>
       </div>
       <div class="clear"></div>
@@ -66,11 +66,15 @@
 	      <%= breadcrumb_ul %>
 	    </span>
 	    <span id="site_tools">
-	      <%= link_to ( 
-		    "Bearbeiten " +
-		    image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
-		  ).html_safe,
-		  action: "edit"
+	      <a href="#">
+		<%= image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" ) %>
+		Bearbeiten
+	      </a>
+	      <% # link_to ( 
+		 #   "Bearbeiten " +
+		 #   image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
+		 # ).html_safe,
+		 # action: "edit"
 	      %>
 	      
 	    </span>
