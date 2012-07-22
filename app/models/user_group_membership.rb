@@ -125,9 +125,18 @@ class UserGroupMembership < DagLink
   def destroy
     if self.destroyable?
       super
-      self.reload
     else
-      raise "membership not destroyable."
+      destroy_direct_memberships
+    end
+    self.reload
+  end
+
+  # This is a helper to destroy all direct memberships of this membership.
+  # This is called in #destroy.
+  #
+  def destroy_direct_memberships
+    for direct_membership in self.direct_memberships
+      direct_membership.destroy
     end
   end
 

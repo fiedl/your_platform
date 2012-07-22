@@ -196,8 +196,11 @@ describe UserGroupMembership do
       end
     end
     describe "for an indirect membership" do
-      it "should raise an error, since only direct memberships can be destroyed" do
-        expect { find_indirect_membership.destroy }.should raise_error RuntimeError
+      it "should destroy the direct memberships" do
+        find_indirect_membership.present?.should be_true
+        find_indirect_membership.destroy
+        find_indirect_membership.present?.should be_false
+        find_membership.present?.should be_false
       end
     end
   end
@@ -495,10 +498,6 @@ describe UserGroupMembership do
       @membership.created_at.to_i.should == new_time.to_i
     end
 
-    it "should not be destroyable" do
-      expect { @indirect_membership.destroy }.should raise_error RuntimeError
-    end
-
     it "should be effected by the direct membership on change of date of deletion" do
       new_time = Time.current + 1.hour
       @membership.destroy # need to destroy the *direct* membership, ...
@@ -514,23 +513,15 @@ describe UserGroupMembership do
   # ====================================================================================================       
 
   describe "#move_to_group( group )" do
-    describe "for a direct membership" do
-      before do
-        create_membership
-        find_membership.move_to_group( @other_group )
-      end
-      it "should destroy the direct membership" do
-        find_membership.should == nil
-      end
-      it "should create a new membership between the user and the given group" do
-        find_other_membership.should_not == nil
-      end
+    before do
+      create_membership
+      find_membership.move_to_group( @other_group )
     end
-    describe "for an indirect membership" do
-      before { create_membership }
-      it "should raise an error, since the indirect membership cannot be destroyed" do
-        expect { find_indirect_membership.move_to_group( @other_group ) }.should raise_error RuntimeError
-      end
+    it "should destroy the direct membership" do
+      find_membership.should == nil
+    end
+    it "should create a new membership between the user and the given group" do
+      find_other_membership.should_not == nil
     end
   end
   
