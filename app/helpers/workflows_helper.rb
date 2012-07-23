@@ -4,6 +4,7 @@ module WorkflowsHelper
     user = context_infos[ :user ]
     title = user.name + " " if user
     title += workflow.name_as_verb
+    title += " (#{workflow.wah_group.name})" if workflow.wah_group
     workflow_params = { user_id: user.id }
     link_to(
             image_tag( 'tools/up.png' ) +  workflow.name,

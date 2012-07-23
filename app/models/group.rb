@@ -36,12 +36,15 @@ class Group < ActiveRecord::Base
       end
     end
   end
-
-  def child_workflows
+  
+  def descendant_workflows
     Workflow
-      .joins( :links_as_child )
-      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => self.id, direct: true } )
+      .joins( :links_as_descendant )
+      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => self.id } )
       .uniq
+  end
+  def child_workflows
+    self.descendant_workflows.where( :dag_links => { direct: true } )
   end
 
   def descendant_groups_by_name( descendant_group_name )

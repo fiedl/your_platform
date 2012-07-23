@@ -14,4 +14,8 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
       .downcase
   end
 
+  def wah_group
+    ( self.ancestor_groups & Wah.all ).first
+  end
+
 end
