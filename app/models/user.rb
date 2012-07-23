@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female
 
   attr_accessor             :create_account, :name
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.

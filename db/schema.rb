@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120722005024) do
+ActiveRecord::Schema.define(:version => 20120723165226) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(:version => 20120722005024) do
     t.string   "last_name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.boolean  "female"
   end
 
   create_table "workflow_kit_parameters", :force => true do |t|
