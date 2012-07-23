@@ -6,6 +6,7 @@ Wingolfsplattform::Application.routes.draw do
   resources :groups do
     get :my, on: :collection
   end
+  resources :groups, as: :wah # to define wah_path
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
@@ -99,3 +100,4 @@ Wingolfsplattform::Application.routes.draw do
   #match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
 
 end
+

@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
     if Group.wingolf_am_hochschulort
       my_corporations += ( self.ancestor_groups & Group.wingolf_am_hochschulort.child_groups ).select do |wah|
         ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
-      end
+      end.collect { |group| group.becomes( Wah ) }
     end
     return my_corporations
   end

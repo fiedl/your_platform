@@ -8,9 +8,9 @@
     <th colspan="3"><%=h corporation.title %></th>
   </tr>
 
-  <% sub_group_memberships = corporation.membership_of( user ).direct_memberships_now_and_in_the_past %>
+  <% memberships_for_the_corporate_vita = corporation.memberships_for_the_corporate_vita_of( user ) %>
 
-  <% for sub_group_membership in sub_group_memberships %>
+  <% for sub_group_membership in memberships_for_the_corporate_vita %>
 
   <tr>
     <td></td>
