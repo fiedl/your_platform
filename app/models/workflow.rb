@@ -8,7 +8,10 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
 
   def name_as_verb
-    name.gsub( /ung/, 'en' ).downcase
+    name
+      .gsub( /ung/, 'en' )
+      .gsub( /ation/, 'ieren' )
+      .downcase
   end
 
 end

@@ -1,10 +1,10 @@
-workflow_name;workflow_belongs_to_group_names;remove_from_group_name;add_to_group_name
-Aktivmeldung;           Keilgäste;                                    Gäste;                            Hospitanten
-Reception;              Hospitanten;                                  Hospitanten;                      Kraßfuxen
-Branderung;             Kraßfuxen;                                    Kraßfuxen;                        Brandfuxen
-Burschung;              Brandfuxen;                                   Brandfuxen;                       Aktive Burschen
-Inaktivierung loci;     Aktive Burschen, Inaktive Burschen non loci;  Burschen;                         Inaktive Burschen loci
-Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Burschen;                         Inaktive Burschen non loci
-Reaktivierung;          Inaktive Burschen;                            Inaktive Burschen;                Aktive Burschen
-Konkneipierung;         Hospitanten;                                  Hospitanten;                      Konkneipanten
-Philistration;          Burschen, Konkneipanten;                      Aktivitas;                        Philister
+workflow_name;workflow_belongs_to_group_names;remove_from_group_name;add_to_group_name;description
+Aktivmeldung;           Keilgäste;                                    Gäste;                            Hospitanten;                 Nimmt einen Keilgast als Hospitant in die Verbindung auf.
+Reception;              Hospitanten;                                  Hospitanten;                      Kraßfuxen;                   Rezipiert einen Hospitanten, sodass er Kraßfux wird.
+Branderung;             Kraßfuxen;                                    Kraßfuxen;                        Brandfuxen;                  Brandert einen Kraßfuxen, sodass er Brandfux wird.
+Burschung;              Brandfuxen;                                   Brandfuxen;                       Aktive Burschen;             Burscht einen Brandfuxen, sodass er aktiver Bursch wird. 
+Inaktivierung loci;     Aktive Burschen, Inaktive Burschen non loci;  Burschen;                         Inaktive Burschen loci;	     Inaktiviert einen Burschen zum Inaktiven am Ort.
+Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Burschen;                         Inaktive Burschen non loci;  Inaktiviert einen Burschen zum auswärtigen Inaktiven.
+Reaktivierung;          Inaktive Burschen;                            Inaktive Burschen;                Aktive Burschen;             Reaktiviert einen inaktiven Burschen zum aktiven Burschen.
+Konkneipierung;         Hospitanten;                                  Hospitanten;                      Konkneipanten;               Macht einen Hospitanten zum Konkneipanten.
+Philistration;          Burschen, Konkneipanten;                      Aktivitas;                        Philister;                   Philistriert eien Burschen oder Konkneipanten zum ordentlichen Philister.
