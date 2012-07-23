@@ -140,6 +140,22 @@ class UserGroupMembership < DagLink
     end
   end
 
+  # This really deletes a membership from the database. 
+  # Since this won't call any callbacks, the links depending on this one are not updated,
+  # meaning for reasons of database consistency, this is not to be run on 
+  # links where deleted_at == nil. 
+  # If you really delete a link, you have to use these two methods:
+  # 
+  #   link.destroy  # now it has a :deleted_at and all dependent links are updated
+  #   link.delete!
+  #
+  def delete!
+    if self.deleted_at
+      DagLink.delete_all!( id: self.id ) 
+    else
+      raise 'for reasons of database consistency, you have to call destroy() first and then delete!().'
+    end
+  end
 
   # Status Instance Methods
   # ====================================================================================================   

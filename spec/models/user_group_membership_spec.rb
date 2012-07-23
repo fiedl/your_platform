@@ -205,6 +205,24 @@ describe UserGroupMembership do
     end
   end
 
+  describe "#delete!" do
+    before { create_memberships } 
+    describe "for direct links" do
+      describe "for existing memberships" do
+        it "should raise an error, since the database consistency would be desturbed without a proper destroy call" do
+          expect { find_membership.delete! }.should raise_error RuntimeError
+        end
+      end
+      describe "for memberships with #deleted_at not nil" do
+        before { find_membership.destroy }
+        it "should really delete the membership from the database" do
+          find_membership_with_deleted.delete!
+          find_membership_with_deleted.should be_nil
+        end
+      end
+    end
+  end
+
 
   # Status Instance Methods
   # ====================================================================================================
