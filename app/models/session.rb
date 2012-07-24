@@ -8,7 +8,18 @@ class Session
     
     current_user_id = read_from_session_and_cookie :current_user_id
     @current_user = User.find_by_id( current_user_id ) if current_user_id
+
+    @layout = read_from_session_and_cookie :layout
   end
+
+  def layout
+    @layout
+  end
+  def layout=( new_layout )
+    @layout = new_layout
+    save_to_session_and_cookie :layout, @layout
+  end
+    
 
   def current_user
     @current_user

@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
 
   helper_method      :logged_in?
 
+  layout             :find_layout
+
   protected
 
   def http_authenticate
@@ -26,6 +28,16 @@ class ApplicationController < ActionController::Base
 
   def logged_in?
     @session.logged_in?
+  end
+
+  def find_layout
+    layout = "bootstrap"
+    if params[ :layout ]
+      layout = params[ :layout ] 
+      @session.layout = layout if @session
+    end
+    layout = @session.layout if @session.layout if @session
+    return layout
   end
 
 end

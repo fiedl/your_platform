@@ -29,10 +29,11 @@ group :assets, :production, 'testing-aki' do
   # See https://github.com/sstephenson/execjs#readme for more 
   # supported runtimes
   gem 'execjs'
-  gem 'therubyracer', :platform => :ruby
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
 end
+
+gem 'therubyracer', :platform => :ruby
 
 gem 'jquery-rails'							# MIT License
 
@@ -157,3 +158,8 @@ gem 'gravatar_image_tag'                                                # MIT Li
 
 # WorkflowKit, SF
 gem 'workflow_kit', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
+
+# Twitter Bootstrap Layout
+gem 'twitter-bootstrap-rails'
+#gem 'bootstrap-sass'                                                    # Apache License 2.0
+
