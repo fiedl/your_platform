@@ -23,6 +23,7 @@ class UsersController < ApplicationController
     @title = t( :create_user )
     @user = User.new
     @user.alias = params[:alias]
+    @group = Group.find( params[ :group_id ] ) if params[ :group_id ]
   end
 
   def create

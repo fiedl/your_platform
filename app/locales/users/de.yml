@@ -9,6 +9,11 @@ de:
   last_name:                     Nachname
   alias:                         Alias
   create_account:                Benutzerkonto anlegen
+  register_in:                   Eintragen in
+
+  gender:                        Geschlecht
+  male:                          Männlich
+  female:                        Weiblich
 
   password:                      Passwort
   send_new_password:             Neues Passwort per E-Mail zusenden

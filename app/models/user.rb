@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group
 
-  attr_accessor             :create_account, :name
+  attr_accessor             :create_account, :name, :add_to_group
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
@@ -22,7 +22,7 @@ class User < ActiveRecord::Base
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
-  before_save               :build_account_if_requested
+  before_save               :build_account_if_requested, :add_to_group_if_requested
 
   def name
     first_name + " " + last_name
@@ -138,6 +138,18 @@ class User < ActiveRecord::Base
     "User: " + self.alias
   end
 
+  def gender
+    return :female if female?
+    return :male
+  end
+  def gender=( new_gender )
+    if new_gender.to_s == "female"
+      self.female = true 
+    else
+      self.female = false
+    end
+  end
+
   private
 
   def write_alias_attribute
@@ -166,6 +178,14 @@ class User < ActiveRecord::Base
       return self.account
     end
 
+  end
+
+  def add_to_group_if_requested
+    if self.add_to_group 
+      group = add_to_group if add_to_group.kind_of? Group
+      group = Group.find( add_to_group ) if add_to_group.to_i
+      UserGroupMembership.create( user: self, group: group ) if group
+    end
   end
 
 end

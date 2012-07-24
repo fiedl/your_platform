@@ -26,6 +26,9 @@
 <h1><%=t :members %> (<%=h @group.descendant_users.count %>)</h1>
 <div>
   <% if @group %>
+    <span class="show_only_in_edit_mode">
+      <%= link_to t( :add_member ), new_user_path( :group_id => @group.id ), class: "add_group_member" %>
+    </span>
     <span id="group_members">
       <% if @group.child_users.count > 0 %>
         <ul>
