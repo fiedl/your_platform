@@ -9,7 +9,7 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require bootstrap_layout/bootstrap_and_overrides
+ *= require bootstrap_layout_no_auto_load/bootstrap_and_overrides
  *= require_tree ./bootstrap_layout
 */
 

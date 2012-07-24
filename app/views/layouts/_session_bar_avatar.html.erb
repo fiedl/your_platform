@@ -1,0 +1,8 @@
+<span class="avatar">
+  <a href="http://gravatar.com/emails">
+    <%= gravatar_image_tag( @current_user.email, :alt => "Gravatar: #{@current_user.email}",
+    :title => "Gravatar: #{@current_user.email}", :gravatar => {
+    :size => 36
+    } ) %>
+  </a>
+</span>

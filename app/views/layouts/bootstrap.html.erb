@@ -49,9 +49,19 @@
           <a class="brand" href="#">Wingolfsplattform</a>
           <!--div class="container-fluid nav-collapse"-->
             <ul class="nav">
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+              <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+              <li><%= link_to t( :my_groups ), main_app.my_groups_path %></li>
+	      <li class="last dropdown">
+		<%= render "layouts/session_bar_avatar" %>
+		<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+		  <%= @current_user.name %>
+		  <b class="caret"></b>
+		</a>
+		<ul class="dropdown-menu">
+		  <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+		  <li><%= link_to t( :logout ), main_app.sessions_logout_path %></li>
+		</ul>
+	      </li>
             </ul>
           <!--/div--><!--/.nav-collapse -->
         </div>
@@ -59,9 +69,20 @@
     </div>
 
     <div class="container-fluid">
+      <ul class="breadcrumb">
+	<span id="breadcrumb">
+	  <%= breadcrumb_ul %>
+	</span>
+	<span id="category_indicator">
+	  <%= backend_horizontal_nav %>
+	</span>
+      </ul>
+    </div>
+
+    <div class="container-fluid">
       <div class="row-fluid">
         <div class="span3">
-          <div class="well sidebar-nav">
+          <div class="sidebar-nav">
             <ul class="nav nav-tabs nav-stacked">
               <!--li class="nav-header">Sidebar</li-->
 	      <%= vertical_menu %>
@@ -74,7 +95,7 @@
       </div><!--/row-->
 
       <footer>
-        <p>&copy; Company 2012</p>
+        <!--p>&copy; Company 2012</p-->
       </footer>
 
     </div> <!-- /container -->
