@@ -40,19 +40,20 @@
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
+	  <!--//
           <a class="btn btn-navbar" data-target=".nav-collapse" data-toggle="collapse">
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-          </a>
+          </a> //-->
           <a class="brand" href="#">Wingolfsplattform</a>
-          <div class="container-fluid nav-collapse">
+          <!--div class="container-fluid nav-collapse"-->
             <ul class="nav">
               <li><%= link_to "Link1", "/path1"  %></li>
               <li><%= link_to "Link2", "/path2"  %></li>
               <li><%= link_to "Link3", "/path3"  %></li>
             </ul>
-          </div><!--/.nav-collapse -->
+          <!--/div--><!--/.nav-collapse -->
         </div>
       </div>
     </div>
@@ -61,11 +62,9 @@
       <div class="row-fluid">
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
+            <ul class="nav nav-tabs nav-stacked">
+              <!--li class="nav-header">Sidebar</li-->
+	      <%= vertical_menu %>
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
