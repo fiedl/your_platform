@@ -37,6 +37,7 @@
   </head>
   <body>
 
+    <% if logged_in? %>
     <div class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -67,6 +68,7 @@
         </div>
       </div>
     </div>
+    <% end %>
 
     <div class="container-fluid">
       <ul class="breadcrumb">
@@ -90,6 +92,20 @@
           </div><!--/.well -->
         </div><!--/span-->
         <div class="span9">
+
+          <% if flash[ :error ] %>
+            <div class="alert alert-error">
+	      <button class="close" data-dismiss="alert">×</button>
+	      <%=h flash[ :error ] %>
+	    </div>
+          <% end %>
+          <% if flash[ :notice ] %>
+            <div class="alert alert-success">
+	      <button class="close" data-dismiss="alert">×</button>
+	      <%=h flash[ :notice ] %>
+	    </div>
+          <% end %>
+
           <%= yield %>
         </div>
       </div><!--/row-->
