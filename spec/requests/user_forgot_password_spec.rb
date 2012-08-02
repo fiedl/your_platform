@@ -41,7 +41,7 @@ describe "UserForgotPassword" do
 
     it "should change the user's password" do
       old_password_digest = @user.account.password_digest
-      old_password_digest.should_not == nil
+      old_password_digest.should_not be_nil
       send_new_password
       User.first.account.password_digest.should_not == old_password_digest
     end

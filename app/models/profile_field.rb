@@ -20,9 +20,8 @@ class Custom < ProfileField
 
 end
 
-class Organisation < ProfileField
+class Organization < ProfileField
   def self.model_name; ProfileField.model_name; end
-
 end
 
 class Email < ProfileField

@@ -18,12 +18,16 @@ describe "User page" do
     before do 
       user.save
       password = user.account.password
-      puts password
+      #puts password
+      page.save_page
       visit user_path(user)
     end
   
-    #it { should have_selector('h1', text: "Vereine und Organisationen") }
-    #it { should have_selector('title', text: user.name) }
+    it { should have_selector('h1', text: "About Myself") }
+    it { should have_selector('h1', text: "Study Information") }
+    it { should have_selector('h1', text: "Career Information") }
+    it { should have_selector('h1', text: "Organizations") }
+    it { should have_selector('title', text: "Wingolfsplattform") }
   end 
 end
 
