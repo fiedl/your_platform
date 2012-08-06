@@ -71,12 +71,15 @@
     <% end %>
 
     <div class="container-fluid">
-      <ul class="breadcrumb">
+      <span id="category_indicator">
+	<ul class="nav nav-tabs">
+	  <%= backend_horizontal_nav_lis %>	
+	</ul>
+      </span>
+      
+      <ul><!-- class="breadcrumb" -->
 	<span id="breadcrumb">
 	  <%= breadcrumb_ul %>
-	</span>
-	<span id="category_indicator">
-	  <%= backend_horizontal_nav %>
 	</span>
       </ul>
     </div>

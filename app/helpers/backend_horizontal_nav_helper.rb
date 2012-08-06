@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 module BackendHorizontalNavHelper
 
-  # Horizontale Navigation / Kategorie-Anzeiger 
+  # Horizontale Navigation / Kategorie-Anzeiger
   def backend_horizontal_nav
 
     # Wichtige Controller-Variablen:
@@ -9,25 +9,29 @@ module BackendHorizontalNavHelper
     # @navable         # die aktell angezeigte Seite, Gruppe, ...
 
     content_tag :ul do
-      c = navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
-        backend_horizontal_nav_item navable_to_display_in_horizontal_nav
-      end.join.html_safe
-      unless @current_user # Temporärer Login-Link
-        c += content_tag :li do
-          link_to "Login", controller: 'sessions', action: 'new'
-        end
-      end
-      c
+      backend_horizontal_nav_lis
     end
 
+  end
+
+  def backend_horizontal_nav_lis
+    c = navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
+      backend_horizontal_nav_item navable_to_display_in_horizontal_nav
+    end.join.html_safe
+    unless @current_user # Temporärer Login-Link
+      c += content_tag :li do
+        link_to "Login", controller: 'sessions', action: 'new'
+      end
+    end
+    c
   end
 
   def backend_horizontal_nav_item( navable_to_display_in_horizontal_nav )
 
     # Die horizontale Navigation fungiert als Kategorie-Anzeiger. Wenn man sich gerade auf einer Seite befindet,
-    # die einem Menü-Element entspricht, wird dieses Menü-Element als aktiv dargestellt. Befindet man sich in 
+    # die einem Menü-Element entspricht, wird dieses Menü-Element als aktiv dargestellt. Befindet man sich in
     # der Hierarchie unterhalb, wird es auch, aber etwas schwächer, hervorgehoben, sodass man erkennt, dass man
-    # sich unterhalb dieser Kategorie befindet. 
+    # sich unterhalb dieser Kategorie befindet.
     # Hierbei soll man sich aber höchstens in einer Kategorie befinden können, auch wenn es durch Verschachtelung
     # möglich wäre, dass man sich gleichzeitig in mehreren befindet, nämlich in einer angezeigten Ober- und einer
     # ihrer Unterkategorien. Daher wird nur die speziellste der angezeigten Kategorien hervorgehoben, unter denen
@@ -35,12 +39,12 @@ module BackendHorizontalNavHelper
 
     style_class = "active" if navable_is_currently_shown?( navable_to_display_in_horizontal_nav )
     style_class = "under_this_category" if navable_to_display_in_horizontal_nav == most_special_category unless style_class
-    
+
     content_tag :li, :class => style_class do
-      link_to( navable_title_to_show_in_horizontal_nav( navable_to_display_in_horizontal_nav ), 
+      link_to( navable_title_to_show_in_horizontal_nav( navable_to_display_in_horizontal_nav ),
                navable_path( navable_to_display_in_horizontal_nav ) )
     end
-    
+
   end
 
   # Array der Navables (Seiten, Gruppen, etc.), die in der horizontalen Navigation
@@ -48,15 +52,19 @@ module BackendHorizontalNavHelper
   def navables_for_backend_horizontal_nav
     navables = []
     navables += [ Page.mitglieder_start ] if Page.mitglieder_start
-    navables += @current_user.corporations if @current_user.corporations if @current_user
+    if @current_user
+      if @current_user.corporations 
+        navables += @current_user.corporations.collect { |corporation| corporation.becomes Group }  
+      end
+    end
     navables += [ @current_user.bv.becomes( Group ) ] if @current_user.bv if @current_user
     return navables
   end
 
-  def categories_the_current_navable_falls_in 
+  def categories_the_current_navable_falls_in
     if currently_shown_navable
-      navables_for_backend_horizontal_nav.select do |navable| 
-        ( currently_shown_navable.ancestors + [ currently_shown_navable ] ).include? navable 
+      navables_for_backend_horizontal_nav.select do |navable|
+        ( currently_shown_navable.ancestors + [ currently_shown_navable ] ).include? navable
       end
     end
   end
