@@ -1,0 +1,9 @@
+<% [ :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information ].each do |section| %>
+    <h1><%= t section %></h1>
+    <div>
+      <% @user.profile_fields_by_section(section).each  do |profile_field| %>
+          <%= render partial: 'shared/profile_field', object: profile_field %>
+      <% end %>
+      <%= add_button(section) %>
+    </div>
+<% end %>

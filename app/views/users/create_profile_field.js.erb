@@ -1,0 +1,4 @@
+alert($("#sections").html)
+$("#sections").html("<%= escape_javascript(render('shared/sections')) %>")
+$("#sections").highlight()
+$("#sections").hide()

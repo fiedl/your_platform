@@ -22,6 +22,10 @@ module Profileable
       @email_profile_field.value = email
     end
 
+    def sections
+      [:contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description]
+    end
+
     def profile_fields_by_type( type_or_types )
       types = type_or_types if type_or_types.kind_of? Array
       types = [ type_or_types ] unless types

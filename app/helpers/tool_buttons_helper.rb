@@ -9,7 +9,8 @@ module ToolButtonsHelper
                         ).html_safe,
              object,
              method: 'delete',
-             :class => 'remove_button tool show_only_in_edit_mode'
+             :class => 'remove_button tool show_only_in_edit_mode',
+    :remote => :true
            )
   end
 
@@ -18,9 +19,10 @@ module ToolButtonsHelper
     link_to(
             image_tag( 'tools/add.png',
                        alt: title, title: title
-                       ).html_safe,
-            { :action => :new },
-            :class => 'add_button tool show_only_in_edit_mode'
+                       ),
+            { :action => :create_profile_field, :user_id => @user.id, :type => object },
+            :class => 'add_button tool show_only_in_edit_mode',
+            :remote => :true
             )
   end
 

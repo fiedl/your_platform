@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class UsersController < ApplicationController
 
-  respond_to :html, :json
+  respond_to :html, :json, :js
   before_filter :find_user, only: [ :show, :update, :forgot_password ]
 
   def index
@@ -16,6 +16,16 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       #format.json { render json: @profile.sections }  # TODO
+    end
+  end
+
+  def create_profile_field
+    @user = User.find_by_id(params[:user_id])
+    section = params[:type]
+    @user.profile_fields.create(type: section.camelize.singularize)
+    respond_to do |format|
+  format.html { redirect_to @user }
+      format.js
     end
   end
 
@@ -53,7 +63,6 @@ class UsersController < ApplicationController
     flash[ :notice ] = I18n.t( :new_password_has_been_sent_to, user_name: @user.title )
     redirect_to :back
   end
-
 
   private
 

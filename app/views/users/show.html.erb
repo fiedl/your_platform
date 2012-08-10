@@ -21,7 +21,11 @@
       </dl>
 </div>
 
-<%= profile_sections_for_profileable @user, [ :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information ] %>
+<div id="sections">
+
+  <%= render partial: 'shared/sections' %>
+
+</div>
 
 <% if @user.corporations.count > 0 %>
   <h1>Wingolfitischer Lebenslauf</h1>
