@@ -17,7 +17,7 @@ class Page < ActiveRecord::Base
     end
   end
 
-  def self.mitglieder_start
+  def self.find_intranet_root
     if self.find_root
       self.find_root.child_pages.select { |page| page.title == "Mitglieder Start" }.first
     end
