@@ -13,6 +13,12 @@ GIT
       activemodel
       activerecord
 
+PATH
+  remote: vendor/engines/your_platform
+  specs:
+    your_platform (0.0.1)
+      rails (~> 3.2.6)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -270,3 +276,4 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   workflow_kit!
+  your_platform!

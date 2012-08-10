@@ -163,3 +163,5 @@ gem 'workflow_kit', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT Li
 gem 'twitter-bootstrap-rails'
 #gem 'bootstrap-sass'                                                    # Apache License 2.0
 
+# YourPlatform
+gem 'your_platform', path: 'vendor/engines/your_platform'
