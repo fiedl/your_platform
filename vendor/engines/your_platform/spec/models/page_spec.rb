@@ -7,6 +7,8 @@ describe Page do
     @intranet_root = Page.create( title: "Intranet Root" )
     @some_page = Page.create( title: "Some Page" )
 
+    @intranet_root.add_flag( :intranet_root )
+
     @root.child_pages << @intranet_root
     @intranet_root.child_pages << @some_page
   end  
@@ -25,7 +27,7 @@ describe Page do
     subject { Page.find_intranet_root }
     
     it "should return the intranet root page" do
-      subject.should == @intranet_root
+      subject.should == @intranet_root 
     end
   end
 

@@ -51,7 +51,7 @@ module BackendHorizontalNavHelper
   # des Mitgliederbereichs angezeigt werden sollen.
   def navables_for_backend_horizontal_nav
     navables = []
-    navables += [ Page.mitglieder_start ] if Page.mitglieder_start
+    navables += [ Page.find_intranet_root ] if Page.find_intranet_root
     if @current_user
       if @current_user.corporations 
         navables += @current_user.corporations.collect { |corporation| corporation.becomes Group }  

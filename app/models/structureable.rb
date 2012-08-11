@@ -15,6 +15,8 @@ module Structureable
 
     before_destroy   :destroy_links
 
+    has_many_flags
+
     include StructureableInstanceMethods
   end
 
