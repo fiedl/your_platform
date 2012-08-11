@@ -35,6 +35,13 @@ Wingolfsplattform::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+
+  # Plugin Reload
+  # see: http://stackoverflow.com/questions/5156061/reopening-rails-3-engine-classes-from-parent-app
+  # This is to be able to re-open engine classes.
+  config.reload_plugins = true
+
+
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
