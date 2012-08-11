@@ -18,8 +18,22 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["spec/**/*"]
 
+  # Dependencies 
+  # --------------------------------------------------------------------------------
+
   s.add_dependency "rails", "~> 3.2.6"
   s.add_dependency "jquery-rails"
+
+  # To use ActiveModel has_secure_password (password encryption)
+  s.add_dependency 'bcrypt-ruby', '>= 3.0.1'                                           # MIT License 
+
+  # Formtastic Form Helper,
+  # see: https://github.com/justinfrench/formtastic,
+  # http://rubydoc.info/gems/formtastic/frames
+  s.add_dependency 'formtastic'                                                        # MIT License
+
+  # Development Dependencies 
+  # --------------------------------------------------------------------------------
 
   s.add_development_dependency "rspec-rails", "2.10.0"
   s.add_development_dependency "guard", "1.0.1"

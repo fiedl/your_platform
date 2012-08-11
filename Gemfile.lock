@@ -17,6 +17,9 @@ PATH
   remote: vendor/engines/your_platform
   specs:
     your_platform (0.0.1)
+      bcrypt-ruby (>= 3.0.1)
+      formtastic
+      jquery-rails
       rails (~> 3.2.6)
 
 GEM
