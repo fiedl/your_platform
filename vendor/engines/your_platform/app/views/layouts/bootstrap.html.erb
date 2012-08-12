@@ -38,7 +38,7 @@
   <body>
 
     <% if logged_in? %>
-    <div class="navbar navbar-fixed-top">
+    <div id="logged-in-bar" class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
 	  <!--//
@@ -51,7 +51,17 @@
           <!--div class="container-fluid nav-collapse"-->
             <ul class="nav">
               <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
-              <li><%= link_to t( :my_groups ), main_app.my_groups_path %></li>
+
+              <li class="dropdown">
+		<%= link_to( 
+		    ( t( :my_groups ) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, 
+		    main_app.my_groups_path, 
+		    class: 'dropdown-toggle', data: { toggle: 'dropdown' } ) %>
+		<ul class="dropdown-menu">
+		  <%= my_groups_lis %>
+		</ul>
+              </li>
+
 	      <li class="last dropdown">
 		<%= render "layouts/session_bar_avatar" %>
 		<a class="dropdown-toggle" data-toggle="dropdown" href="#">
