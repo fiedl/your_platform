@@ -23,6 +23,27 @@ namespace :wingolf_groups do
     p "Added sub structure for " + counter.to_s + " groups."
   end
 
+  task set_default_nav_attributes: :environment do
+    p "Task: Set default nav attributes"
+    
+    # make the sub-groups "Philister" and "Ehrenphilister" of the "Philisterschaft" groups
+    # be slim in the vertical menu and in the breadcrumb.
+    groups_to_slim = Wah.all.collect do |wah|
+      wah.philisterschaft.child_groups.collect do |child_group|
+        if child_group.name.in? [ "Philister", "Ehrenphilister" ]
+          child_group
+        else
+          []
+        end
+      end
+    end.flatten
+    for group in groups_to_slim
+      group.nav_node.slim_menu = true
+      group.nav_node.slim_breadcrumb = true
+      group.save
+    end
+  end
+
   desc "Import BVs from PLZ list"
   task import_bv_mappings: :environment do
     p "Task: Import BV mappings. This really will take a while."
@@ -68,6 +89,7 @@ namespace :wingolf_groups do
                 :import_bv_mappings,
                 :import_bv_groups,
                 :import_wah_vertagte,
+                :set_default_nav_attributes,
                ]
 
 end
