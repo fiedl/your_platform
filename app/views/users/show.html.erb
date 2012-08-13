@@ -22,8 +22,11 @@
 </div>
 
 <div id="sections">
+  <% [ :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information ].each do |section| %>
+      <h1><%= t section %></h1>
 
-  <%= render partial: 'shared/sections' %>
+  <%= render partial: 'shared/section', object: section %>
+  <% end %>
 
 </div>
 

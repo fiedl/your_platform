@@ -1,4 +1,4 @@
-alert($("#sections").html)
-$("#sections").html("<%= escape_javascript(render('shared/sections')) %>")
-$("#sections").highlight()
-$("#sections").hide()
+var target = "#section_<%= escape_javascript(params[:type]) %>";
+alert(target);
+$(target).html("<%= escape_javascript(render('shared/section', object: params[:type])) %>");
+$(target).highlight();

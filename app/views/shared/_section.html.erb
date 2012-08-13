@@ -1,0 +1,6 @@
+<div id="section_<%= section %>">
+      <% @user.profile_fields_by_section(section).each  do |profile_field| %>
+          <%= render partial: 'shared/profile_field', object: profile_field %>
+      <% end %>
+      <%= add_button(section) %>
+</div>

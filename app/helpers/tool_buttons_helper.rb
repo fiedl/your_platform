@@ -14,7 +14,7 @@ module ToolButtonsHelper
            )
   end
 
-  def add_button( object ) # TODO: Was braucht er für minimale Informationen?
+  def add_button( object )
     title = t( :add )
     link_to(
             image_tag( 'tools/add.png',
