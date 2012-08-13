@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120723165226) do
+ActiveRecord::Schema.define(:version => 20120811141703) do
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -30,6 +30,14 @@ ActiveRecord::Schema.define(:version => 20120723165226) do
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
     t.datetime "deleted_at"
+  end
+
+  create_table "flags", :force => true do |t|
+    t.string   "key"
+    t.integer  "flagable_id"
+    t.string   "flagable_type"
+    t.datetime "created_at",    :null => false
+    t.datetime "updated_at",    :null => false
   end
 
   create_table "groups", :force => true do |t|

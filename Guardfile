@@ -3,7 +3,8 @@
 
 require 'active_support/core_ext'
 
-guard 'rspec', :version => 2, :all_after_pass => false do
+guard( 'rspec', :version => 2, :all_after_pass => false,
+       spec_paths: [ 'spec', 'vendor/engines/your_platform/spec' ] ) do
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }
@@ -17,5 +18,12 @@ guard 'rspec', :version => 2, :all_after_pass => false do
   watch('app/controllers/application_controller.rb')  { "spec/controllers" }
   # Capybara request specs
   watch(%r{^app/views/(.+)/.*\.(erb|haml)$})          { |m| "spec/requests/#{m[1]}_spec.rb" }
+
+
+  # TODO: Move this into its own testing environment
+  # Temporary integration of the your_platform engine's tests
+  watch(%r{^vendor/engines/your_platform/spec/.+_spec\.rb$})
+  watch(%r{^vendor/engines/your_platform/app/(.+)\.rb$})    { |m| "vendor/engines/your_platform/spec/#{m[1]}_spec.rb" }
+
 end
 

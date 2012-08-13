@@ -2,6 +2,29 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+# ENGINE LOAD PATCH
+# This code loads the engine codes before the main app. This makes it possible
+# to re-open engine classes in the main app.
+# Reference: http://www.cowboycoded.com/2011/02/28/why-you-cant-reopen-rails-3-engine-classes-from-the-parent-app/
+#require 'active_support/dependencies'
+#module ActiveSupport::Dependencies
+#  alias_method :require_or_load_without_multiple, :require_or_load
+#  def require_or_load(file_name, const_path = nil)
+#    if file_name.starts_with?(Rails.root.to_s + '/app')
+#      relative_name = file_name.gsub(Rails.root.to_s, '')
+#      @engine_paths ||= Rails::Application::Railties.engines.collect{|engine| engine.config.root.to_s }
+#      @engine_paths.each do |path|
+#        engine_file = File.join(path, relative_name)
+#        require_or_load_without_multiple(engine_file, const_path) if File.file?(engine_file)
+#      end
+#    end
+#    require_or_load_without_multiple(file_name, const_path)
+#  end
+#end
+# /ENGINE LOAD PATCH
+
+
+
 if defined?(Bundler)
   # If you precompile assets before deploying to production, use this line
   Bundler.require(*Rails.groups(:assets => %w(development test)))

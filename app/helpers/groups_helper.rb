@@ -2,7 +2,11 @@ module GroupsHelper
 
   def groups_of_user_ul( user )
     content_tag :ul do
+      groups_of_user_lis( user )
+    end
+  end
 
+  def groups_of_user_lis( user )
       user.memberships.collect do |membership|
         content_tag :li do
         
@@ -18,8 +22,10 @@ module GroupsHelper
           c
         end
       end.join.html_safe
+  end
 
-    end
+  def my_groups_lis
+    groups_of_user_lis current_user if current_user
   end
   
 #  def groups_of_user_ul( user )

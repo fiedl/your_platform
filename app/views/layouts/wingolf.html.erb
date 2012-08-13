@@ -3,14 +3,13 @@
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8" >
   <title><%=h "#{@title} - " if @title %>Wingolfsplattform</title>
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= stylesheet_link_tag    "wingolf_layout", :media => "all" %>
+
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 
-  <% %w(global).each do |file_title|
-    concat stylesheet_link_tag file_title, :media => "screen"
-  end #jquery.fancybox-1.3.4 jquery-ui-1.8.16.custom datatables/jquery.dataTables_themeroller global backend %>
   <%= yield :head %>
 </head>
 <body class="<%= controller.controller_name %>">
@@ -18,14 +17,19 @@
   <% if logged_in? %>
   <div id="backendBar">
     <div class="content">
-      <ul>
-        <li class="first">
+      <ul class="backendBarItems">
+        <li class="first backendBarItem">
 	  <%= render "layouts/session_bar_avatar" %>
 	  <%= link_to @current_user.name, main_app.user_path( @current_user ) %>
 	</li>
-        <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
-	<li><%= link_to t( :my_groups ), main_app.my_groups_path %></li>
-        <li class="last">
+        <li class="backendBarItem"><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+	<li class="backendBarItem dropdown">
+	  <%= link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' } %>
+	  <ul class="dropdown-menu">
+	    <%= my_groups_lis %>
+	  </ul>
+	</li>
+        <li class="last backendBarItem">
 	  <%= link_to t( :logout ), main_app.sessions_logout_path %>
 	</li>
           </ul>

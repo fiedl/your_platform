@@ -23,8 +23,16 @@ namespace :bootstrap do
   task add_basic_pages: :environment do
     p "Task: Add basic pages."
     home = Page.create( title: "wingolf.org" )
+    home.add_flag :root
     mitglieder_start = home.child_pages.create( title: "Mitglieder Start" )
+    mitglieder_start.add_flag :intranet_root
     mitglieder_start.child_groups << Group.jeder
+  end
+
+  task add_flags_to_basic_pages: :environment do
+    p "Task: Add Flags to Basic Pages"
+    Page.find_by_title( "wingolf.org" ).add_flag :root
+    Page.find_by_title( "Mitglieder Start" ).add_flag :intranet_root 
   end
 
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
