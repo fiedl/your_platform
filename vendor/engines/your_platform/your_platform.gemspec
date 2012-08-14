@@ -32,6 +32,9 @@ Gem::Specification.new do |s|
   # http://rubydoc.info/gems/formtastic/frames
   s.add_dependency 'formtastic'                                                        # MIT License
 
+  # File Uploads
+  s.add_dependency 'carrierwave'                                                       # MIT License
+
   # Development Dependencies 
   # --------------------------------------------------------------------------------
 
