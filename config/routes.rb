@@ -2,7 +2,6 @@ Wingolfsplattform::Application.routes.draw do
 
   root :to => 'root#index'
 
-  resources :pages
   resources :groups do
     get :my, on: :collection
   end
@@ -44,8 +43,8 @@ Wingolfsplattform::Application.routes.draw do
 
 
 
-#  match 'profile/:alias' => 'users#show', :as => :profile
-  match ':alias' => 'users#show', :as => :profile
+  match 'profile/:alias' => 'users#show', :as => :profile
+#  match ':alias' => 'users#show', :as => :profile
 
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):

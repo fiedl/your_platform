@@ -1,0 +1,21 @@
+de:
+  attachment: 'Anhang'
+  attachments: 'Anhänge'
+  add_attachment: 'Anhang hinzufügen'
+
+  file: 'Datei'
+  helpers:
+    submit:
+      create: '%{model} erzeugen'
+      update: '%{model} ändern'
+      submit: '%{model} speichern'
+
+  activerecord:
+    models:
+      attachment:   'Anhang'
+
+    attributes:
+      attachment:
+        file:       'Datei'
+        title:      'Titel'
+        description: 'Beschreibung'
