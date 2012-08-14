@@ -2,7 +2,7 @@
 class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
-  # include CarrierWave::RMagick
+  include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
@@ -35,9 +35,22 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  # version :thumb do
-  #   process :scale => [50, 50]
-  # end
+  version :thumb do
+    process :resize_to_limit => [ 100, 100 ]
+    process :cover
+    process :convert => :png
+    process :set_content_type
+  end
+
+  def cover 
+    manipulate! do |frame, index|
+      frame if index.zero?
+    end
+  end
+
+  def set_content_type( *args )
+    self.file.instance_variable_set( :@content_type, "image/png" )
+  end
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
