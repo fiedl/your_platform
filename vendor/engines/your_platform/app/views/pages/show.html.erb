@@ -7,7 +7,7 @@
 <div class="attachments">
   <ul class="attachments">
     <% for attachment in @page.attachments %>
-      <li><%= link_to attachment.title, attachment.file.url %></li>
+      <li><%= link_to attachment.title, attachment.file.url %> <%= remove_button attachment %></li>
     <% end %>
   </ul>
   <div class="add_attachment show_only_in_edit_mode">

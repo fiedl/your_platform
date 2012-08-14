@@ -5,4 +5,6 @@ class Attachment < ActiveRecord::Base
 
   mount_uploader :file, AttachmentUploader
 
+  before_destroy :remove_file!
+
 end
