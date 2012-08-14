@@ -51,7 +51,27 @@ module Profileable
       else
         []
       end
+    end
 
+    def profile_field_type_by_section(section)
+      case section
+        when :contact_information
+          [ "Address", "Email", "Phone", "Homepage", "Custom" ]
+        when :about_myself
+          "About"
+        when :study_information
+          "Study"
+        when :career_information
+          [ "Job", "Competence" ]
+        when :organizations
+          "Organization"
+        when :bank_account_information
+          "BankAccount"
+        when :description
+          "Description"
+        else
+          []
+      end
     end
 
   end

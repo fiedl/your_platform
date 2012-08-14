@@ -6,15 +6,15 @@
     </div>
 <% end %>
 <% if @user %>
-    <h1><!--%=h @title %--><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%= h @user.aktivitaetszahl %></h1>
+<h1><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%= h @user.aktivitaetszahl %></h1>
     <div>
-  <span id="user_workflows" class="show_only_in_edit_mode">
-	  <ul>
-        <% for workflow in @user.workflows %>
+      <span id="user_workflows" class="show_only_in_edit_mode">
+	    <ul>
+          <% for workflow in @user.workflows %>
             <li><%= link_to_workflow workflow, user: @user %></li>
-        <% end %>
+          <% end %>
       </ul>
-	</span>
+	  </span>
 
       <dl>
         <dt><%= t :name %></dt>
@@ -22,13 +22,10 @@
       </dl>
     </div>
 
-    <div id="sections">
-      <% @user.sections.each do |section| %>
-          <h1><%= t section %></h1>
-          <%= render partial: 'shared/section', object: section %>
-      <% end %>
-
-    </div>
+    <% @user.sections.each do |section| %>
+        <h1><%= t section %></h1>
+        <%= render partial: 'shared/section', object: section %>
+    <% end %>
 
     <% if @user.corporations.count > 0 %>
         <h1>Wingolfitischer Lebenslauf</h1>

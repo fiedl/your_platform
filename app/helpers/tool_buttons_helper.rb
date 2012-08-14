@@ -19,8 +19,8 @@ module ToolButtonsHelper
     link_to(
             image_tag( 'tools/add.png',
                        alt: title, title: title
-                       ),
-            { :action => :create_profile_field, :user_id => @user.id, :type => object },
+                       ).html_safe,
+            object,
             :class => 'add_button tool show_only_in_edit_mode',
             :remote => :true
             )
