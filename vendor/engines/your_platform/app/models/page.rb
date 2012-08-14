@@ -5,6 +5,8 @@ class Page < ActiveRecord::Base
   is_structureable       ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
   is_navable
 
+  has_many :attachments, as: :parent, dependent: :destroy
+
   # Finder Methods
   # ----------------------------------------------------------------------------------------------------
   

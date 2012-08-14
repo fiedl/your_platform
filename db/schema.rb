@@ -11,7 +11,17 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120811141703) do
+ActiveRecord::Schema.define(:version => 20120814101052) do
+
+  create_table "attachments", :force => true do |t|
+    t.string   "file"
+    t.string   "title"
+    t.text     "description"
+    t.integer  "parent_id"
+    t.string   "parent_type"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
+  end
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
