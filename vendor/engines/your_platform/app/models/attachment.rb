@@ -9,14 +9,14 @@ class Attachment < ActiveRecord::Base
   before_destroy :remove_file!
 
   def thumb_url
-    url = file.url( :thumb ) if thumbnable?
+    url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
+    url = file.url( :video_thumb ) if has_type?( "video" )
     url = helpers.image_path( 'file.png' ) unless url
     return url
   end
 
-  def thumbnable?
-    self.content_type.include? 'image' or
-      self.content_type.include? 'pdf'
+  def has_type?( type )
+    self.content_type.include? type
   end
 
   def filename 
@@ -35,8 +35,12 @@ class Attachment < ActiveRecord::Base
     where( true ).all.collect do |attachment|
       re = attachment
       for type in types
-        if attachment.content_type.include? type
+        if not attachment.content_type
           re = []
+        else
+          if attachment.content_type.include? type
+            re = []
+          end
         end
       end
       re

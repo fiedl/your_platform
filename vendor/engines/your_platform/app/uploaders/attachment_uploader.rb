@@ -35,16 +35,25 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  version :thumb, :if => :thumbnable? do
+  version :thumb, :if => :image_or_pdf? do
     process :resize_to_limit => [ 100, 100 ]
     process :cover
     process :convert => :png
     process :set_content_type
   end
 
-  def thumbnable?( new_file )
+  version :video_thumb, :if => :video? do
+    process :create_video_thumb
+    process :set_content_type => [ "image/jpeg" ]
+  end
+
+  def image_or_pdf?( new_file )
     new_file.content_type.include? 'image' or 
       new_file.content_type.include? 'pdf'
+  end
+
+  def video?( new_file )
+    new_file.content_type.include? 'video' 
   end
   
   def cover 
@@ -54,7 +63,19 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   end
 
   def set_content_type( *args )
-    self.file.instance_variable_set( :@content_type, "image/png" )
+    type = args[0]
+    type = "image/png" unless type
+    self.file.instance_variable_set( :@content_type, type )
+  end
+
+  def create_video_thumb( *args )
+    original_file = self.file.instance_variable_get( :@file )
+    original_file_title = original_file.split( "/" ).last
+    thumb_title = "thumb.jpg"
+    tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
+
+    `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
+    `mv '#{tmp_thumb_file}' '#{original_file}'`
   end
 
   # Add a white list of extensions which are allowed to be uploaded.
