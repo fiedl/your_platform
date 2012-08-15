@@ -1,0 +1,23 @@
+<h1><%=t :attachments %></h1>
+<div class="attachments">
+  <table class="attachments">
+    <% for attachment in @page.attachments.find_without_types( "video" ) %>
+      <tr>
+        <td>
+	  <%= link_to image_tag( attachment.thumb_url ), attachment.file.url %>
+	</td>
+	<td>
+          <span class="attachment-description">
+	    <p class="attachment title"><%= link_to attachment.title, attachment.file.url %> <%= remove_button attachment %></p>
+	    <p class="attachment filename"><%= link_to attachment.filename, attachment.file.url  %></p>
+	    <p class="attachment description"><%= attachment.description %></p>
+	    <p class="attachment filesize"><%= attachment.file_size_human %></p>
+	  </span>
+	</td>
+      </tr>
+    <% end %>
+  </table>
+
+  <%= render partial: 'add_attachment' %>
+
+</div>

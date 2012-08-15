@@ -1,0 +1,11 @@
+<% if @page.attachments_by_type( "video" ).count > 0 %>
+  <h1><%=t :videos %></h1>
+  <div class="videos">
+    <% for attachment in @page.attachments_by_type( "video" ) %>
+
+      <%= link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime" %>
+      <%= video_tag attachment.file.url, class: "sublime lightbox" %>
+
+    <% end %>
+  </div>
+<% end %>

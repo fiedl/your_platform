@@ -1,0 +1,18 @@
+<div class="add_attachment show_only_in_edit_mode">
+  <h2><%=t :add_attachment %></h2>
+
+  <%= semantic_form_for @page.attachments.build, multipart: true do |f| %>
+    <%= f.inputs do %>
+      <%= f.hidden_field :parent_id %> 
+      <%= f.hidden_field :parent_type %>
+      <p>
+        <%= f.input :title %>
+        <%= f.input :description, as: :string %>
+        <%= f.input :file, as: :file %>
+      </p>
+    <% end %>
+    <%= f.actions %>
+  <% end %>
+
+</div>
+

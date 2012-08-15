@@ -7,6 +7,10 @@ class Page < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
+  def attachments_by_type( type )
+    attachments.find_by_type type
+  end
+
   # Finder Methods
   # ----------------------------------------------------------------------------------------------------
   

@@ -35,13 +35,18 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  version :thumb do
+  version :thumb, :if => :thumbnable? do
     process :resize_to_limit => [ 100, 100 ]
     process :cover
     process :convert => :png
     process :set_content_type
   end
 
+  def thumbnable?( new_file )
+    new_file.content_type.include? 'image' or 
+      new_file.content_type.include? 'pdf'
+  end
+  
   def cover 
     manipulate! do |frame, index|
       frame if index.zero?
