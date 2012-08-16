@@ -1,0 +1,10 @@
+<% if @page.attachments_by_type( "image" ).count > 0 %>
+  <h1><%=t :pictures %></h1>
+  <div class="pictures">
+    <% for attachment in @page.attachments_by_type( "image" ) %>
+
+      <%= attachment_lightbox_tag( attachment ) %>
+
+    <% end %>
+  </div>
+<% end %>

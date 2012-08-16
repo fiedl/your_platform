@@ -17,3 +17,8 @@ gem "jquery-rails"
 # gem 'debugger'
 
 gem 'mysql2'
+
+# LightBox 2 Gallery
+gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5 
+# TODO: Move to *gemspec, when changes pulled into original gem.
+

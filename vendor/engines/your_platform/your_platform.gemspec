@@ -36,6 +36,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'rmagick'
 
+
   # Development Dependencies 
   # --------------------------------------------------------------------------------
 

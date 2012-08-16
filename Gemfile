@@ -165,3 +165,7 @@ gem 'twitter-bootstrap-rails'
 
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'
+
+# LightBox 2 Gallery
+gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
+# TODO: Move to *gemspec, when changes pulled into original gem.    

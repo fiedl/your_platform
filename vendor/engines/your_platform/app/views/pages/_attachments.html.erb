@@ -1,7 +1,7 @@
 <h1><%=t :attachments %></h1>
 <div class="attachments">
   <table class="attachments">
-    <% for attachment in @page.attachments.find_without_types( "video" ) %>
+    <% for attachment in @page.attachments.find_without_types( "video", "image" ) %>
       <tr>
         <td>
 	  <%= link_to image_tag( attachment.thumb_url ), attachment.file.url %>
