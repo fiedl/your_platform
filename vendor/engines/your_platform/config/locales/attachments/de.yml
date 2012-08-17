@@ -7,6 +7,8 @@ de:
   videos: 'Video-Dateien'
   audios: 'Audio-Dateien'
 
+  to_edit_title_click_on_image_and_then_on_title: 'Das Bearbeiten eines Bild-Titels ist in der Dia-Show-Ansicht möglich. Dazu klicken Sie bitte auf ein Bild. Dann sehen Sie unterhalb den Titel und die Beschreibung des Bildes, die Sie jeweils bearbeiten können, indem Sie darauf klicken.'
+
   file: 'Datei'
   helpers:
     submit:

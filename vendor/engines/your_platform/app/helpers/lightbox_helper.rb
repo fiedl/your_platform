@@ -8,8 +8,24 @@ module LightboxHelper
       ).html_safe
   end
 
+  private
+
   def lightbox_title( attachment )
-    attachment.title + "\n" + attachment.description
+    in_place_title( attachment ) + "\n" + in_place_description( attachment )
+  end
+
+  def in_place( attachment, attribute )
+    best_in_place_tag = best_in_place( attachment, attribute )
+    best_in_place_tag.gsub!( "\"", "'" ) # since the html tag will look like this:
+                                         #   <... title="<span class='best_in_place' ...>">
+    return best_in_place_tag
+  end
+
+  def in_place_title( attachment )
+    in_place( attachment, :title )
+  end
+  def in_place_description( attachment )
+    in_place( attachment, :description )
   end
 
 end

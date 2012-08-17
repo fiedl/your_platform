@@ -12,7 +12,24 @@ jQuery ->
     $( caption_selector ).html( $( caption_selector ).html().replace( "\n", "<br />" ) )
   )
 
-  # create best in place tags for in-place editing of title and description
-  $( caption_selector ).live( "mouseenter", ->
+  # remove span tag from title
+  strip_html = ( string ) ->
+    string.replace( /(<.*?>)/ig, "" )
+  $( "div.pictures a" ).each( ->
+    old_title = $( this ).attr( 'title' )
+    new_title = strip_html( old_title )
+    $( this ).find( "img" ).attr( 'title', new_title )
+  )
 
+  # activate best_in_place editing
+  $( caption_selector ).live( "mouseenter", ->
+    $( this ).find( ".best_in_place" ).best_in_place()
+  )
+
+  # prevent lightbox hotkeys when in in-place-editing mode
+  $( ".form_in_place input" ).live( "keyup", (e) ->
+    code = e.keyCode
+    code = e.which unless code
+    unless code == 13 or code == 27
+      e.stopPropagation()
   )
