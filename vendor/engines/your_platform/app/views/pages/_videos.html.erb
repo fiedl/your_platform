@@ -3,8 +3,12 @@
   <div class="videos">
     <% for attachment in @page.attachments_by_type( "video" ) %>
 
-      <%= link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime" %>
-      <%= video_tag attachment.file.url, class: "sublime lightbox" %>
+      <span class="video-element">
+	<%= link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime" %>
+	<%= video_tag attachment.file.url, class: "sublime lightbox" %>
+        <span class="video-title"><%= best_in_place attachment, :title %></span>
+	<span class="video-description"><%= best_in_place attachment, :description %></span>
+      </span>
 
     <% end %>
   </div>
