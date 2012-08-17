@@ -14,7 +14,7 @@ jQuery ->
 
   # remove span tag from title
   strip_html = ( string ) ->
-    string.replace( /(<.*?>)/ig, "" )
+    string.replace( /(<.*?>)/ig, "" ) if string
   $( "div.pictures a" ).each( ->
     old_title = $( this ).attr( 'title' )
     new_title = strip_html( old_title )

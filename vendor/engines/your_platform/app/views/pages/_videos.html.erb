@@ -6,6 +6,7 @@
       <span class="video-element">
 	<%= link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime" %>
 	<%= video_tag attachment.file.url, class: "sublime lightbox" %>
+	<%= remove_button( attachment ) %>
         <span class="video-title"><%= best_in_place attachment, :title %></span>
 	<span class="video-description"><%= best_in_place attachment, :description %></span>
       </span>
