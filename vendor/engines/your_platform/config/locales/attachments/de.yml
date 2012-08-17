@@ -3,6 +3,10 @@ de:
   attachments: 'Anhänge'
   add_attachment: 'Anhang hinzufügen'
 
+  pictures: 'Bilder'
+  videos: 'Video-Dateien'
+  audios: 'Audio-Dateien'
+
   file: 'Datei'
   helpers:
     submit:
