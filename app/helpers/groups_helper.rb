@@ -7,6 +7,22 @@ module GroupsHelper
   end
 
   def groups_of_user_lis( user )
+    
+    # TODO:
+    # https://trello.com/c/xmFQtRdw
+    # 
+    # Meine Gruppen
+    #   Erlanger Wingolf
+    #     Aktivitas
+    #       Burschen
+    #       Aktive Burschen
+    #   Hallenser Wingolf
+    #     Aktivitas
+    #        Burschen
+    #        Inaktive Burschen
+    #        Inaktive Burschen non loci
+    #   AK Internet
+
       user.memberships.collect do |membership|
         content_tag :li do
         
