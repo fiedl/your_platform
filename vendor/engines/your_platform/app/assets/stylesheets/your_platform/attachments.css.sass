@@ -1,6 +1,8 @@
 div.attachments
-  table
+  table.attachments
+    border-spacing: 18px !important
     margin-left: 20px
+    width: auto !important
   span.attachment-description
     display: inline-block
     margin-left: 4px
@@ -23,3 +25,10 @@ div.videos
       font-weight: bold
       display: block
     span.video-description
+.pictures, .videos, .attachments
+  img
+    -webkit-border-radius: 4px
+    -moz-border-radius: 4px
+    -ms-border-radius: 4px
+    -o-border-radius: 4px
+    border-radius: 4px
