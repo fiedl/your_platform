@@ -67,17 +67,7 @@
 	      <%= breadcrumb_ul %>
 	    </span>
 	    <span id="site_tools">
-	      <a href="#">
-		<%= image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" ) %>
-		Bearbeiten
-	      </a>
-	      <% # link_to ( 
-		 #   "Bearbeiten " +
-		 #   image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
-		 # ).html_safe,
-		 # action: "edit"
-	      %>
-	      
+	      <%= edit_button %>
 	    </span>
 	  </div>
 	  <div id="content">

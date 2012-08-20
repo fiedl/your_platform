@@ -23,8 +23,11 @@ module ToolButtonsHelper
 
   def tool_button( type, icon, text, options = {} )
     options = { :class => "button #{type}_button btn" }.merge( options )
+    href = options[ :href ]
+    href = "#" unless href
+    options.delete( :href )
     link_to( tool_icon( icon ) + text,
-             "#",
+             href,
              options )
   end
 
