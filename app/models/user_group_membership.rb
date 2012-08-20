@@ -11,6 +11,16 @@ class UserGroupMembership < DagLink
   attr_accessible :created_at, :deleted_at
 
 
+  # General Properties
+  # ====================================================================================================
+
+  # Title, e.g. 'Membership of John Doe in GroupXY'
+  # 
+  def title
+    I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
+  end
+
+
   # Creation Class Method
   # ====================================================================================================
 
@@ -81,6 +91,15 @@ class UserGroupMembership < DagLink
   def self.find_all_by_user_and_group( user, group )
     self.find_all_by( user: user, group: group )
   end
+
+
+#  def self.find_membership_structure_by_user_and_root_group( user, group )
+#    child_groups_where_the_user_is_member = group.child_group & user.ancestor_groups
+#    child_hash = child_groups_where_the_user_is_member.collect do |child_group|
+#      self.find_membershipself.find_membership_structure_by_user_and_root_group( user, child_group )
+#    end
+#    return {     
+#  end
 
 
   # Temporal Scope Methods
