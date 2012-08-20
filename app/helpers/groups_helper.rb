@@ -3,21 +3,25 @@ module GroupsHelper
   def groups_of_user_table( user )
     content_tag :table, :class => "user_groups" do
       content_tag :tr do
-
+        
         # first column:
-        ( content_tag :td do
+        c = content_tag :td do
           content_tag :ul do
-
-            Group.find_wah_groups_of( user ).collect do |group|
-              sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
-            end.join.html_safe
-
+            
+            wah_groups = Group.find_wah_groups_of( user )
+            if wah_groups
+              wah_groups.collect do |group|
+                sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
+              end.join.html_safe
+            end
+            
           end
+        end
 
         # second column:
-        end ) + content_tag( :td ) do
+        c += content_tag( :td ) do
           content_tag :ul do
-
+            
             Group.find_non_wah_branch_groups_of( user ).collect do |group|
               membership_li( user, group )
             end.join.html_safe

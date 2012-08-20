@@ -162,17 +162,18 @@ class Group < ActiveRecord::Base
 
   def self.find_wah_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_groups = Group.wingolf_am_hochschulort.child_groups
-    return ancestor_groups & wah_groups
+    wah_groups = Group.wingolf_am_hochschulort.child_groups if Group.wingolf_am_hochschulort
+    return ancestor_groups & wah_groups if ancestor_groups and wah_groups
   end
   def self.find_wah_branch_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_branch = Group.wingolf_am_hochschulort.descendant_groups
-    return ancestor_groups & wah_branch
+    wah_branch = Group.wingolf_am_hochschulort.descendant_groups if Group.wingolf_am_hochschulort
+    return ancestor_groups & wah_branch if ancestor_groups and wah_branch
   end
   def self.find_non_wah_branch_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_branch = Group.wingolf_am_hochschulort.descendant_groups
+    wah_branch = Group.wingolf_am_hochschulort.descendant_groups if Group.wingolf_am_hochschulort
+    wah_branch = [] unless wah_branch
     return ancestor_groups - wah_branch
   end
 
