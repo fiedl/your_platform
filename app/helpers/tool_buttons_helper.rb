@@ -4,10 +4,7 @@ module ToolButtonsHelper
   def remove_button( object )
     title = t( :remove )
     title += ": " + object.title if object.respond_to? :title
-    link_to( content_tag( :i, "", :class => "icon-trash icon-white" ),
-         #    image_tag( 'tools/remove.png', 
-         #               alt: title, title: title
-         #               ).html_safe,
+    link_to( tool_icon( "icon-trash icon-white" ),
              object,
              method: 'delete',
              :class => 'remove_button tool show_only_in_edit_mode btn btn-danger',
@@ -17,14 +14,36 @@ module ToolButtonsHelper
 
   def add_button( url ) # TODO: Was braucht er für minimale Informationen?
     title = t( :add )
-    link_to( content_tag( :i, "", :class => "icon-plus icon-white" ) +
+    link_to( tool_icon( "icon-plus icon-white" ) + 
              title,
-        #    image_tag( 'tools/add.png',
-        #               alt: title, title: title
-        #               ).html_safe,
-            url.to_s,
-            :class => 'add_button tool show_only_in_edit_mode btn btn-success'
-            )
+             url.to_s,
+             :class => 'add_button tool show_only_in_edit_mode btn btn-success'
+             )
+  end
+
+  def tool_button( type, icon, text, options = {} )
+    options = { :class => "button #{type}_button btn" }.merge( options )
+    link_to( tool_icon( icon ) + text,
+             "#",
+             options )
+  end
+
+  def edit_button( options = {} )
+    tool_button :edit, "icon-edit icon-black", t( :edit ), options
+  end
+
+  def save_button( options = {} )
+    tool_button( :save, "icon-ok icon-white", "", 
+                 :class => "save_button button btn btn-primary", :title => t( :save ) )
+  end    
+
+  def cancel_button( options = {} )
+    tool_button( :cancel, "icon-remove icon-black", "", 
+                 :title => t( :cancel ) )
+  end
+
+  def tool_icon( type )
+    content_tag( :i, "", :class => "#{type}" )
   end
 
 end
