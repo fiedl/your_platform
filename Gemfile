@@ -15,7 +15,7 @@ gem 'rails', '~> 3.2.5'							# MIT License,
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 group :production do
-  gem 'pg'
+#  gem 'pg'
 end
 
 gem 'mysql2'								# MIT License

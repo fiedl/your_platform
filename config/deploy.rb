@@ -19,6 +19,8 @@ set :scm, :git
 
 ssh_options[:keys] = "~/.ssh/id_rsa"
 
+#default_run_options[:pty] = true
+
 set :deploy_via, :copy
 set :copy_strategy, :export
 
