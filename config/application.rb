@@ -76,6 +76,9 @@ module Wingolfsplattform
     # Enable the asset pipeline
     config.assets.enabled = true
 
+    # http://stackoverflow.com/questions/7577236/actionviewtemplateerror-960-css-isnt-precompiled
+    config.assets.precompile += [ 'wingolf_layout.css', 'bootstrap_layout.css' ]
+
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'
 
