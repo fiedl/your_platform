@@ -12,6 +12,7 @@
  *= require jquery.ui.all
  *= require formtastic
  *= require edit_mode
+ *= require_tree ./all_layouts
 */
 
 

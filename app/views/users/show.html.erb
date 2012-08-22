@@ -1,81 +1,81 @@
 <% unless @user %>
-    <h1><%= h @title %></h1>
-    <div>
-      <p><%= t :the_requested_user_is_not_listed_in_the_system %></p>
-      <%= link_to t(:create_new_user), controller: 'users', action: 'new', alias: @alias %>
-    </div>
+<h1><%= h @title %></h1>
+<div>
+  <p><%= t :the_requested_user_is_not_listed_in_the_system %></p>
+  <%= link_to t(:create_new_user), controller: 'users', action: 'new', alias: @alias %>
+</div>
 <% end %>
 <% if @user %>
 <h1><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%= h @user.aktivitaetszahl %></h1>
-    <div>
-      <span id="user_workflows" class="show_only_in_edit_mode">
-	    <ul>
-          <% for workflow in @user.workflows %>
-            <li><%= link_to_workflow workflow, user: @user %></li>
-          <% end %>
-      </ul>
-	  </span>
-
-      <dl>
-        <dt><%= t :name %></dt>
-        <dd><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></dd>
-      </dl>
-    </div>
-
-    <% @user.sections.each do |section| %>
-        <h1><%= t section %></h1>
-        <%= render partial: 'shared/section', object: section %>
-    <% end %>
-
-    <% if @user.corporations.count > 0 %>
-        <h1>Wingolfitischer Lebenslauf</h1>
-        <div>
-          <%= wingolfitische_vita_ul @user %>
-        </div>
-    <% end %>
-
-    <h1><%= t(:groups_of) + " " + h(@user.first_name) %></h1>
-    <div>
-      <%= groups_of_user_ul @user %>
-    </div>
-
-    <h1>Beziehungen</h1>
-    <div>
-      <%= relationships_of_user_ul @user %>
-    </div>
-
-    <h1>Zugangsdaten</h1>
-    <div>
-      <% if @user.has_account? %>
-          <dl>
-            <dt>Identifikation möglich mit folgenden Daten:</dt>
-            <dd>
-              <dl>
-                <% for attribute in UserIdentification.possible_attributes %>
-	    <span>
-	      <dt><%= t attribute.to_s %></dt>
-	      <dd><%= best_in_place @user, attribute.to_sym %></dd>
-	    </span>
-                <% end %>
-              </dl>
-            </dd>
-          </dl>
-    <span class="show_only_in_edit_mode">
-      <dl>
-        <dt>
-          <%= t 'password' %>:
-        </dt>
-        <dd>
-          <%= link_to t('send_new_password'), forgot_password_user_path(@user.id), method: :put %>
-        </dd>
-      </dl>
-    </span>
-      <% else %>
-          <p><%= t :user_has_no_account %></p>
-    <span class="show_only_in_edit_mode">
-      <a><%= t :create_account %></a>
-    </span>
+<div>
+  <span id="user_workflows" class="show_only_in_edit_mode">
+    <ul>
+      <% for workflow in @user.workflows %>
+      <li><%= link_to_workflow workflow, user: @user %></li>
       <% end %>
-    </div>
+    </ul>
+  </span>
+
+  <dl>
+    <dt><%= t :name %></dt>
+    <dd><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></dd>
+  </dl>
+</div>
+
+<% @user.sections.each do |section| %>
+<h1><%= t section %></h1>
+<%= render partial: 'shared/section', object: section %>
+<% end %>
+
+<% if @user.corporations.count > 0 %>
+<h1>Wingolfitischer Lebenslauf</h1>
+<div>
+  <%= wingolfitische_vita_ul @user %>
+</div>
+<% end %>
+
+<h1><%= t( :groups_of ) + " " + h( @user.first_name ) %></h1>
+<div>
+  <%= groups_of_user_table @user %>
+</div>
+
+<h1>Beziehungen</h1>
+<div>
+  <%= relationships_of_user_ul @user %>
+</div>
+
+<h1>Zugangsdaten</h1>
+<div>
+  <% if @user.has_account? %>
+  <dl>
+    <dt>Identifikation möglich mit folgenden Daten:</dt>
+    <dd>
+      <dl>
+        <% for attribute in UserIdentification.possible_attributes %>
+        <span>
+          <dt><%= t attribute.to_s %></dt>
+          <dd><%= best_in_place @user, attribute.to_sym %></dd>
+        </span>
+        <% end %>
+      </dl>
+    </dd>
+  </dl>
+  <span class="show_only_in_edit_mode">
+    <dl>
+      <dt>
+        <%= t 'password' %>:
+      </dt>
+      <dd>
+        <%= link_to t('send_new_password'), forgot_password_user_path(@user.id), method: :put %>
+      </dd>
+    </dl>
+  </span>
+  <% else %>
+  <p><%= t :user_has_no_account %></p>
+  <span class="show_only_in_edit_mode">
+    <a><%= t :create_account %></a>
+  </span>
+  <% end %>
+</div>
 
 <% end %>

@@ -1,7 +1,7 @@
 <h1><%=h @title %></h1>
 <div>
   <% if @user %>
-    <%= groups_of_user_ul @user %>
+    <%= groups_of_user_table @user %>
   <% else %>
     <ul>
       <% for group in @groups do %>
