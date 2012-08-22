@@ -2,12 +2,18 @@
   <div class="box">
     <%=h content_tag( :div, "", class: "minimize", title: t( :fold_box ) ) %>
     <div class="head">
-      <span class="box_toolbar">
-        <%= image_tag 'tools/cancel.png', alt: t( :cancel ), title: t( :cancel ), class: "button cancel_button" %>
-        <%= image_tag 'tools/save.png', alt: t( :save ), title: t( :save ), class: "button save_button" %>
-        <%= image_tag 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button edit_button" %>
-      </span>
-      <h1><%= heading %></h1>
+      <table><tr>
+	  <td class="box_heading">
+	    <h1><%= heading %></h1>	    
+	  </td>
+	  <td class="box_toolbar">
+	    <span class="box_toolbar">
+	      <%= cancel_button %>
+              <%= save_button %>
+	      <%= edit_button %>
+	    </span>
+	  </td>
+      </tr></table>
     </div>
     <div class="divider"></div>
     <div class="content">

@@ -1,0 +1,14 @@
+<% if @page.attachments_by_type( "image" ).count > 0 %>
+  <h1><%=t :pictures %></h1>
+  <div class="pictures">
+    <% for attachment in @page.attachments_by_type( "image" ) %>
+
+      <%= attachment_lightbox_tag( attachment ) %>
+      <%= remove_button( attachment ) %>
+
+    <% end %>
+    <span class="show_only_in_edit_mode">
+      <%=t :to_edit_title_click_on_image_and_then_on_title %>
+    </span>
+  </div>
+<% end %>

@@ -4,10 +4,13 @@
   <meta http-equiv="Content-type" content="text/html; charset=utf-8" >
   <title><%=h "#{@title} - " if @title %>Wingolfsplattform</title>
 
-  <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= stylesheet_link_tag    "wingolf_layout", :media => "all" %>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+
 
   <%= javascript_include_tag "application" %>
+  <script type="text/javascript" src="http://cdn.sublimevideo.net/js/deleted-sublime-key"></script><!-- TODO: Replace! -->
+
   <%= csrf_meta_tags %>
 
   <%= yield :head %>
@@ -64,17 +67,7 @@
 	      <%= breadcrumb_ul %>
 	    </span>
 	    <span id="site_tools">
-	      <a href="#">
-		<%= image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" ) %>
-		Bearbeiten
-	      </a>
-	      <% # link_to ( 
-		 #   "Bearbeiten " +
-		 #   image_tag( 'tools/edit.png', alt: t( :edit ), title: t( :edit ), class: "button site_edit_button" )
-		 # ).html_safe,
-		 # action: "edit"
-	      %>
-	      
+	      <%= edit_button %>
 	    </span>
 	  </div>
 	  <div id="content">

@@ -1,0 +1,16 @@
+<% if @page.attachments_by_type( "video" ).count > 0 %>
+  <h1><%=t :videos %></h1>
+  <div class="videos">
+    <% for attachment in @page.attachments_by_type( "video" ) %>
+
+      <span class="video-element">
+	<%= link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime" %>
+	<%= video_tag attachment.file.url, class: "sublime lightbox" %>
+	<%= remove_button( attachment ) %>
+        <span class="video-title"><%= best_in_place attachment, :title %></span>
+	<span class="video-description"><%= best_in_place attachment, :description %></span>
+      </span>
+
+    <% end %>
+  </div>
+<% end %>

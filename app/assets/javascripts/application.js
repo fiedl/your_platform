@@ -23,4 +23,5 @@
 //= require autocomplete-rails
 //= require slim_breadcrumb
 //= require gmaps4rails
+//= require your_platform
 //= require_tree .
