@@ -7,9 +7,17 @@ class Page < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
+
+  # Association Related Methods
+  # ----------------------------------------------------------------------------------------------------
+
+  # This return alls attachments of a certain type. 
+  # +type+ could be something like `image` or `pdf`. It will be compared to the attachments' mime type. 
+  #
   def attachments_by_type( type )
     attachments.find_by_type type
   end
+
 
   # Finder Methods
   # ----------------------------------------------------------------------------------------------------
