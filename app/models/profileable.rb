@@ -22,6 +22,10 @@ module Profileable
       @email_profile_field.value = email
     end
 
+    def sections
+      [:contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description]
+    end
+
     def profile_fields_by_type( type_or_types )
       types = type_or_types if type_or_types.kind_of? Array
       types = [ type_or_types ] unless types
@@ -38,8 +42,8 @@ module Profileable
         profile_fields_by_type "Study"
       when :career_information
         profile_fields_by_type [ "Job", "Competence" ]
-      when :organisations
-        profile_fields_by_type "Organisation"
+      when :organizations
+        profile_fields_by_type "Organization"
       when :bank_account_information
         profile_fields_by_type "BankAccount"
       when :description
@@ -47,7 +51,27 @@ module Profileable
       else
         []
       end
+    end
 
+    def profile_field_type_by_section(section)
+      case section
+        when :contact_information
+          [ "Address", "Email", "Phone", "Homepage", "Custom" ]
+        when :about_myself
+          "About"
+        when :study_information
+          "Study"
+        when :career_information
+          [ "Job", "Competence" ]
+        when :organizations
+          "Organization"
+        when :bank_account_information
+          "BankAccount"
+        when :description
+          "Description"
+        else
+          []
+      end
     end
 
   end

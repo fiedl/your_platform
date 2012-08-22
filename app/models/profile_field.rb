@@ -20,9 +20,8 @@ class Custom < ProfileField
 
 end
 
-class Organisation < ProfileField
+class Organization < ProfileField
   def self.model_name; ProfileField.model_name; end
-
 end
 
 class Email < ProfileField
@@ -89,6 +88,11 @@ class Address < ProfileField
       # der die Anwendung jedoch nicht beenden sollte. 
     end
   end
+
+end
+
+class Study < ProfileField
+  def self.model_name; ProfileField.model_name; end
 
 end
 

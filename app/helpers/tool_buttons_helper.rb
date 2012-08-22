@@ -8,7 +8,8 @@ module ToolButtonsHelper
              object,
              method: 'delete',
              :class => 'remove_button tool show_only_in_edit_mode btn btn-danger',
-             :title => title
+             :title => title,
+             :remote => true
            )
   end
 
@@ -17,7 +18,8 @@ module ToolButtonsHelper
     link_to( tool_icon( "icon-plus icon-white" ) + 
              title,
              url.to_s,
-             :class => 'add_button tool show_only_in_edit_mode btn btn-success'
+             :class => 'add_button tool show_only_in_edit_mode btn btn-success',
+             :remote => true
              )
   end
 

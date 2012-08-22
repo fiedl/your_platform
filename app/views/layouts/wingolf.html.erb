@@ -35,6 +35,7 @@
         <li class="last backendBarItem">
 	  <%= link_to t( :logout ), main_app.sessions_logout_path %>
 	</li>
+          </ul>
       </div>
       <div class="clear"></div>
     </div>
@@ -112,6 +113,7 @@
     </div>
     <div id="footer_line"></div>
   </div>
+  <%= debug(params) if Rails.env.development? %>
 
   <%= yield :scripts %>
 

@@ -1,0 +1,3 @@
+var target = "#section_<%= escape_javascript(params[:section]) %>";
+$(target).html("<%= raw escape_javascript(render partial: 'shared/section', :object => params[:section].to_sym) %>");
+$(target).highlight();
