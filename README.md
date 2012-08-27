@@ -9,5 +9,17 @@ Ansprechpartner:
 Sebastian Fiedlschuster  E 06  (B-xx)
 <deleted-string>
 
+### Build Status 
 
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=master&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) master
+
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=testing-pub&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) testing-pub
+
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=testing-aki&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) testing-aki
+
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=dev-stable&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) dev-stable
+
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=dev-beta&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) dev-beta
+
+[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=dev-alpha&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) dev-alpha
 
