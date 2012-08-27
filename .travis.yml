@@ -1,5 +1,9 @@
 
-env: "RAILS_ENV=test"
+env: 
+  - "RAILS_ENV=test"
+  - "DB=mysql"
 
 before_script:
+  - "cp config/database.travis.yml config/database.yml"
+  - "mysql -e 'create database wingolfsplattform_test'"
   - "sh -c 'bundle & bundle exec rake db:drop db:migrate bootstrap:all'"
