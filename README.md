@@ -10,4 +10,4 @@ Sebastian Fiedlschuster  E 06  (B-xx)
 <deleted-string>
 
 
-
+<a href="http://love.travis-ci.org"><img src="http://lh3.ggpht.com/obn0J0zRytlDzhms1icTmoV6S-B-vW2v-hTwnkV9rCcWPScUGLZ3XaWmeblAJyHtzuToa3Q=s166"></a>
