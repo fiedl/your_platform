@@ -5,6 +5,7 @@ env:
 before_script:
   - sh -c "sudo apt-get -y install pwgen"
   - sh -c "cp config/database.travis.yml config/database.yml"
+  - sh -c "mkdir -p public/uploads"
   - sh -c "bundle & bundle exec rake db:drop db:create db:migrate"
   - sh -c "bundle exec rake bootstrap:all"
   - "sh -e /etc/init.d/xvfb start"
