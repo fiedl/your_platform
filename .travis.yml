@@ -1,0 +1,5 @@
+
+env: "RAILS_ENV=test"
+
+before_script:
+  - "sh -c 'bundle & bundle exec rake db:drop db:migrate bootstrap:all'"
