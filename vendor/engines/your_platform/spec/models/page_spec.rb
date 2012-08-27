@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Page do
 
   def create_page_structure
+    Page.destroy_all # in case there are already pages defined elsewhere
     @root = create( :page, title: "Root" )
     @intranet_root = create( :page, title: "Intranet Root" )
     @some_page = create( :page, title: "Some Page" )

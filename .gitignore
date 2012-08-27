@@ -20,7 +20,7 @@
 
 # Ignore database configuration
 config/database.yml
-config/database*.yml
+#config/database*.yml
 config/database
 
 # Ignore uploads folder

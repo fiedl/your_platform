@@ -30,7 +30,7 @@ describe "Flagable" do
     it "should remove the given flags" do
       subject.add_flags :flag1, :flag2
       subject.remove_flags :flag1
-      @flagable = Page.first # to avoid caching
+      @flagable = Page.last # to avoid caching
       @flagable.flags_to_syms.should == [ :flag2 ]
     end
   end
