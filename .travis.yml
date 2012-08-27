@@ -1,9 +1,9 @@
 
 env: 
-  - "RAILS_ENV=test"
-  - "DB=mysql"
+  - "RAILS_ENV=test DB=mysql"
 
 before_script:
-  - "cp config/database.travis.yml config/database.yml"
-  - "mysql -e 'create database wingolfsplattform_test'"
-  - "sh -c 'bundle & bundle exec rake db:drop db:migrate bootstrap:all'"
+  - sh -c "sudo apt-get -y install pwgen"
+  - sh -c "cp config/database.travis.yml config/database.yml"
+  - sh -c "bundle & bundle exec rake db:drop db:create db:migrate"
+  - sh -c "bundle exec rake bootstrap:all"
