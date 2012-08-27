@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Page do
 
   def create_page_structure
+    Page.destroy_all # in case there are already pages defined elsewhere
     @root = Page.create( title: "Root" )
     @intranet_root = Page.create( title: "Intranet Root" )
     @some_page = Page.create( title: "Some Page" )
