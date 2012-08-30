@@ -23,8 +23,8 @@ config/database.yml
 #config/database*.yml
 config/database
 
-# Ignore uploads folder
-public/uploads
+# Ignore public folder
+public
 
 # Ignore sensitive import data
 import/deleted-string_data
