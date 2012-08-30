@@ -41,6 +41,10 @@ module Flagable
       end
     end
 
+    def remove_flag( flag_to_remove )
+      self.remove_flags flag_to_remove
+    end
+
     def flags_to_syms
       self.flags.collect { |flag| flag.key.to_sym }
     end
