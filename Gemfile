@@ -158,7 +158,7 @@ gem 'passgen'                                                           # MIT Li
 gem 'gravatar_image_tag'                                                # MIT License
 
 # WorkflowKit, SF
-gem 'workflow_kit', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
+gem 'workflow_kit', '>= 0.0.4.alpha' # git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
 
 # Twitter Bootstrap Layout
 gem 'twitter-bootstrap-rails'
@@ -168,5 +168,6 @@ gem 'twitter-bootstrap-rails'
 gem 'your_platform', path: 'vendor/engines/your_platform'
 
 # LightBox 2 Gallery
-gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
+#gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
+gem 'rubylight', '>= 1.0.3.2'
 # TODO: Move to *gemspec, when changes pulled into original gem.    
