@@ -69,7 +69,8 @@ gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
 
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
-gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
+#gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
+gem 'acts-as-dag'
 
 # Tree-Verhalten, z.B. für Profilfelder
 gem 'acts_as_tree'							# MIT License

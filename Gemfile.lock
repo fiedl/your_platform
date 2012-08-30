@@ -6,14 +6,6 @@ GIT
       rails (~> 3.2.6)
 
 GIT
-  remote: git://github.com/resgraph/acts-as-dag.git
-  revision: 1b42e95e9d03a179b7c387bc18749ae620462d46
-  specs:
-    acts-as-dag (2.5.7)
-      activemodel
-      activerecord
-
-GIT
   remote: https://github.com/Mario1988/rubylight.git
   revision: ea1f5a1ce4cd20ae38b79e470d652a9272ce32ef
   specs:
@@ -61,6 +53,9 @@ GEM
     activesupport (3.2.6)
       i18n (~> 0.6)
       multi_json (~> 1.0)
+    acts-as-dag (2.5.7)
+      activemodel
+      activerecord
     acts_as_paranoid_dag (0.0.1)
       acts-as-dag
       rails (>= 3.2)
@@ -259,7 +254,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  acts-as-dag!
+  acts-as-dag
   acts_as_paranoid_dag
   acts_as_tree
   bcrypt-ruby (>= 3.0.1)
