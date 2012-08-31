@@ -23,6 +23,9 @@ config/database.yml
 #config/database*.yml
 config/database
 
+# mailer passwords
+config/mailer_passwords.yml
+
 # Ignore public folder
 public
 
