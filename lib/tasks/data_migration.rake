@@ -21,7 +21,7 @@ namespace :data_migration do
     end
   end
 
-  desc "Import Wat information"
+  desc "Import Wah information"
   task import_wah_information: :environment do
     p "Task: Import Wah (Wingolf am Hochschulort) information"
     csv_rows( "deleted-string_data/groups.csv" ) do |row|
@@ -108,7 +108,7 @@ namespace :data_migration do
   desc "Run data migration tasks."
   task :all => [
                 :import_bv_information,
-                :import_wv_information,
+                :import_wah_information,
                 :import_aktivitas_information,
                 :import_philisterschaft_information,
                 :import_hausverein_information
