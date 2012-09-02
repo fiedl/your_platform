@@ -91,11 +91,6 @@ class Address < ProfileField
 
 end
 
-class Study < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-end
-
 class BankAccount < ProfileField
   def self.model_name; ProfileField.model_name; end
 
