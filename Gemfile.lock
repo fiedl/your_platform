@@ -90,10 +90,10 @@ GEM
     erubis (2.7.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
-    factory_girl (2.3.2)
-      activesupport
-    factory_girl_rails (1.4.0)
-      factory_girl (~> 2.3.0)
+    factory_girl (4.0.0)
+      activesupport (>= 3.0.0)
+    factory_girl_rails (4.0.0)
+      factory_girl (~> 4.0.0)
       railties (>= 3.0.0)
     ffi (1.1.0)
     formtastic (2.2.1)
@@ -256,7 +256,7 @@ DEPENDENCIES
   colored
   edit_mode (>= 0.0.4)
   execjs
-  factory_girl_rails (= 1.4.0)
+  factory_girl_rails (>= 4.0.0)
   formtastic
   geocoder
   gmaps4rails (~> 1.4.8)
