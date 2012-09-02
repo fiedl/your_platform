@@ -9,7 +9,7 @@ class MakeProfileFieldsPolymorphic < ActiveRecord::Migration
     
     ProfileField.reset_column_information
     ProfileField.all.each do |pf|
-      pf.profileable_type = "User"  # Weil es vorher nur Benutzer gab, die Profilfelder hatten.
+      pf.profileable_type = "User"  # Before that point in the migration chain, only users had profile_fields.
       pf.save
     end
   end
