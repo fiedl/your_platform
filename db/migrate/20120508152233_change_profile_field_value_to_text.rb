@@ -1,4 +1,3 @@
-# This migration comes from your_platform (originally 20120508152233)
 class ChangeProfileFieldValueToText < ActiveRecord::Migration
 
   def change

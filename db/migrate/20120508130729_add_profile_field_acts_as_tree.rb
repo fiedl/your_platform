@@ -1,4 +1,3 @@
-# This migration comes from your_platform (originally 20120508130729)
 class AddProfileFieldActsAsTree < ActiveRecord::Migration
 
   def change

@@ -1,4 +1,3 @@
-# This migration comes from your_platform (originally 20120507165551)
 class MakeProfileFieldsPolymorphic < ActiveRecord::Migration
 
   def change
