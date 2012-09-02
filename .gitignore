@@ -26,8 +26,11 @@ config/database
 # mailer passwords
 config/mailer_passwords.yml
 
-# Ignore public folder
-public
+# Ignore uploads folder content folder
+public/uploads/*
+
+# ignore assets folder
+public/assets
 
 # Ignore sensitive import data
 import/deleted-string_data
