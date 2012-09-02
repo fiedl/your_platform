@@ -2,7 +2,7 @@
 require 'spec_helper'
 
 describe "User page" do
-    let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:user_with_account) }
 
   subject { page }
   
