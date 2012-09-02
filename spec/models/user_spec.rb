@@ -3,95 +3,50 @@ require 'spec_helper'
 
 describe User do
 
-  def new_user
-    User.new( first_name: "Max", last_name: "Mustermann", alias: "m.mustermann",
-              email: "max.mustermann@example.com", create_account: true )
+  before do 
+    @user = create( :user )
   end
 
-  def create_user_with_account
-    User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com",
-                 :alias => "j.doe", create_account: true )
-  end
-
-  describe ".create" do
-    describe "with account" do
-      before { @created_user_with_account = create_user_with_account }
-      subject { @created_user_with_account }
-      it "should have an initial password set" do
-        # This is to avoid the bug of welcome emails with a blank password.
-        subject.account.password.should_not be_empty
-      end
-    end
-  end
-
-
-
-
-
-  before do
-    @user = new_user
-  end
-
-  subject { @user }
-
-  it { should respond_to( :first_name ) }
-  it { should respond_to( :last_name ) }
-  it { should respond_to( :name ) }
-  it { should respond_to( :alias ) }
-  it { should respond_to( :email ) }
-  it { should respond_to( :create_account ) }
-  it { should respond_to( :groups ) }
-
-  it { should be_valid }
-
-  describe "#memberships" do
-    it "should return all UserGroupMemberships of the user" do
-      @user.memberships.should == UserGroupMembership.find_all_by_user( @user )
-    end
-    describe ".with_deleted" do
-      it "should return all UserGroupMemberships of the user, including the deleted ones" do
-        @user.memberships.with_deleted.should == UserGroupMembership.find_all_by_user( @user ).with_deleted
-      end
-    end
-  end
-
-
-  describe "before building an account" do
-
-    its(:account) { should be_nil }
-    it { should_not have_account }
-
-    describe "with create_account set to 'true' and save" do
-
-      before do
-        @user.create_account = true
-        @user.save
-      end
-
-      it { should have_account }
-
-    end
-
-  end
-
-  describe "after building an account" do
-
+  describe "#title" do
     before do
-      @user_account = @user.build_account
+      @corporation = create( :wah_group )
+      @user.parent_groups << @corporation.aktivitas
     end
-
-    its( :account ) { should be @user_account }
-    it { should have_account }
-
-    describe "and deactivating it" do
-      before do
-        @user.deactivate_account
-      end
-      
-      its(:account) { should be_nil }
-      it { should_not have_account }
+    subject { @user.title }
+    it "should return the user's name and his aktivitaetszahl" do
+      @user.name.blank?.should be_false
+      @user.aktivitaetszahl.blank?.should be_false
+      subject.should == @user.name + "  " + @user.aktivitaetszahl
     end
+  end
 
+  describe "#bv" do
+    before do
+      @bv = create( :bv_group )
+      @bv.child_users << @user
+    end
+    subject { @user.bv }
+    it "should return the user's bv" do
+      subject.should == @bv
+    end
+  end
+
+  describe "aktivitaetszahl" do
+    before do
+      @corporationE = create( :wah_group, :token => "E" )
+      @membershipE = UserGroupMembership.create( user: @user, group: @corporationE.aktivitas )
+      @membershipE.created_at = "2006-12-01"
+      @membershipE.save
+
+      @corporationH = create( :wah_group, :token => "H" )
+      @membershipH = UserGroupMembership.create( user: @user, group: @corporationH.aktivitas )
+      @membershipH.created_at = "2008-12-01"
+      @membershipH.save
+    end
+    subject { @user.aktivitaetszahl }
+    it "should return the composed aktivitaetszahl" do
+      subject.should == "E06 H08"
+    end
   end
 
 end

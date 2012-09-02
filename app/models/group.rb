@@ -251,6 +251,26 @@ class Group < ActiveRecord::Base
   def membership_of( user )
     UserGroupMembership.find_by_user_and_group( user, self )
   end
+
+
+
+  def self.find_corporations_parent
+    self.wingolf_am_hochschulort
+  end
+
+  def self.find_corporations
+    self.find_coprorations_parent.child_groups
+  end
+
+  def self.find_bvs_parent
+    self.bvs
+  end
+
+  def self.find_bvs
+    self.find_bvs_parent.child_groups
+  end
+
+
 end
 
 class Groups 

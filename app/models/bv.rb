@@ -24,6 +24,11 @@ class Bv < Group
   # Ordnet den +user+ diesem BV zu und trägt ihn ggf. aus seinem vorigen BV aus.
   def assign_user( user )
     Bv.unassign_user user
+
+#    user.parent_groups << self
+#    p "PARENT_GROUPS"
+#    p user.parent_groups
+
     new_bv = self
     new_bv.child_users << user
     # TODO: Hier muss noch der entsprechende Workflow später getriggert werden, 
