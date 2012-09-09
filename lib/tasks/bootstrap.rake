@@ -28,7 +28,7 @@ namespace :bootstrap do
 
     # Bvs Parent Group ("Bezirksverbände")
     unless Group.bvs_parent 
-      bvs_parent = Group.create( "Bezirksverbände" )
+      bvs_parent = Group.create( name: "Bezirksverbände" )
       bvs_parent.add_flag( :bvs_parent )
       bvs_parent.parent_groups << Group.everyone
       bvs_parent.name = I18n.translate( :bvs_parent ) # "Bezirksverbände"
