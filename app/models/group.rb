@@ -26,40 +26,13 @@ class Group
     self.find_everyone_group
   end
   
-  def self.jeder!
-    unless self.jeder
-      p "Creating group 'Jeder' ..."
-      Group.create( name: "Jeder" )
-    end
-    return self.jeder
-  end
-
   def self.wingolf_am_hochschulort
     self.corporations_parent
   end
 
-  def self.wingolf_am_hochschulort!
-    unless self.wingolf_am_hochschulort
-      p "Creating group 'Wingolf am Hochschulort' ..."
-      wah_group = Group.create( name: "Wingolf am Hochschulort" ) 
-      raise 'There is no root group for all users (Group.jeder).' + 
-        'But it is needed in order to create the group "Wingolf am hochschulort".' unless Group.jeder
-      wah_group.parent_groups << Group.jeder
-    end
-    return self.wingolf_am_hochschulort
-  end
-
   def self.bvs_parent
-    ( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first if self.jeder
-  end
-
-  def self.bvs!
-    unless self.bvs
-      p "Creating group 'Bezirksverbände' ..."
-      bvs_group = Group.create( name: "Bezirksverbände" )
-      raise "no group 'Jeder'" unless Group.jeder
-      bvs_group.parent_groups << Group.jeder
-    end
+    Group.find_by_flag( :bvs_parent )
+    #( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first if self.jeder
   end
 
   

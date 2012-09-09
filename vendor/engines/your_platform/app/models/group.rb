@@ -149,12 +149,26 @@ class Group < ActiveRecord::Base
 
   # TODO: special groups
   def officers_parent
-    self.child_groups.find_by_name( "Amtsträger" ) unless self.name == "Amtsträger"
+    self.child_groups.find_by_flag( :officers_parent ) unless self.has_flag? :officers_parent
+#    self.child_groups.find_by_name( "Amtsträger" ) unless self.name == "Amtsträger"
+  end
+
+  def officers_parent!
+    unless self.has_flag? :officers_parent
+      unless self.officers_parent
+        officers_parent = Group.create( name: I18n.translate( :officers_parent ) )
+        officers_parent.parent_groups << self
+        officers_parent.add_flag( :officers_parent )
+      end
+      return officers_parent
+    end
   end
 
   # TODO: special groups
   def officers
-    officers = self.descendant_groups.find_all_by_name( "Amtsträger" ).collect{ |officer_group| officer_group.child_groups }.flatten
+    officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
+    #officers_parents = self.descendant_groups.find_all_by_name( "Amtsträger" )
+    officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
     return officers if officers.count > 0
   end
 
@@ -178,14 +192,7 @@ class Group < ActiveRecord::Base
   # Root group, 'everyone'
   # 
   def self.everyone # TODO: special group
-    g = Group.find_by_name( "Jeder" )
-    if g
-      if g.root_for_groups?
-        return g
-      else
-        return g.ancestor_groups.first
-      end
-    end
+    Group.find_by_flag( :everyone )
   end
 
 
@@ -201,7 +208,8 @@ class Group < ActiveRecord::Base
   #                       |---------- corporation_c
   #                                        |--- ...
   def self.corporations_parent
-    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first if self.jeder
+#    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first if self.jeder
+    Group.find_by_flag( :corporations_parent )
   end
 
 
@@ -289,12 +297,20 @@ class Group < ActiveRecord::Base
         new_group_hash.reject! { |key| not Group.attr_accessible[:default].include? key }
         g = Group.create( new_group_hash )
         g.parent_groups << parent_group
+        g.set_flags_based_on_group_name
         g.save
         self.hash_array_import_groups_into_parent_group sub_group_hash_array, g if sub_group_hash_array
         counter_for_created_groups += 1
       end
     end
     return counter_for_created_groups.to_s + " groups created."
+  end
+
+  def set_flags_based_on_group_name
+    if self.name == "Amtsträger"
+      self.add_flag( :officers_parent )
+    end
+
   end
 
 
