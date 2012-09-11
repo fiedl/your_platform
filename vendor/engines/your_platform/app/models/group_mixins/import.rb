@@ -51,6 +51,7 @@ module GroupMixins::Import
       counter_for_created_groups = 0
 
       for new_group_hash in hash_array_of_groups do
+
         unless parent_group.children.select { |child| child.name == new_group_hash[ "name" ] }.count > 0
 
           # get children from hash
@@ -238,7 +239,7 @@ module GroupMixins::Import
         # method.
         sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes )
 
-        Group.hash_array_import_groups_into_parent_group( sub_group_hashes, self )
+        Group.hash_array_import_groups_into_parent_group( sub_group_hashes, parent_group )
 
       end
     end
@@ -270,7 +271,8 @@ module GroupMixins::Import
       yaml_file_title = File.join( "default_group_sub_structures",
                                    "#{self.name}.yml" )
     end
-    yaml_import_groups_into_parent_group( yaml_file_title )
+    parent_group = self
+    Group.yaml_import_groups_into_parent_group( yaml_file_title, parent_group )
   end
 
 
@@ -286,6 +288,7 @@ module GroupMixins::Import
 
     # Officers
     officers_parent_group_name_translations = []
+    I18n.translate( :officers_parent ) # required to initialize the I18n 
     I18n.backend.send( :translations ).each do |language, translations_hash|
       officers_parent_group_name_translations << translations_hash[ :officers_parent ]
     end
