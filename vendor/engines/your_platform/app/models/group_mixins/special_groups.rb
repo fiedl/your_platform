@@ -102,6 +102,7 @@ module GroupMixins::SpecialGroups
 
   def create_officers_parent_group
     unless self.has_flag? :officers_parent
+      officers_parent = self.officers_parent
       unless self.officers_parent
         officers_parent = Group.create( name: I18n.translate( :officers_parent ) )
         officers_parent.parent_groups << self
@@ -114,7 +115,7 @@ module GroupMixins::SpecialGroups
   def find_officers_groups
     officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
     officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
-    return officers if officers.count > 0
+    return officers # if officers.count > 0
   end
 
 
