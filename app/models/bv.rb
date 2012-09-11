@@ -2,7 +2,7 @@
 class Bv < Group
 
   def self.all
-    Group.find_bvs
+    Group.find_bv_groups
   end
 
   def self.by_plz( plz )

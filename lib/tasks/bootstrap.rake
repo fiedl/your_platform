@@ -10,30 +10,13 @@ namespace :bootstrap do
     p "Task: Add basic groups"
 
     # Group 'Everyone' / 'Jeder'
-    unless Group.everyone
-      everyone = Group.create( name: 'Everyone' )
-      everyone.add_flag( :everyone )
-      everyone.name = I18n.translate( :everyone ) # "Jeder"
-      everyone.save
-    end
+    Group.create_everyone_group unless Group.everyone
 
     # Corporations Parent Group ("Wingolf am Hochschulort")
-    unless Group.find_corporations_parent
-      corporations_parent = Group.create( name: "Corporations" )
-      corporations_parent.add_flag( :corporations_parent )
-      corporations_parent.parent_groups << Group.everyone
-      corporations_parent.name = I18n.translate( :corporations_parent ) # "Wingolf am Hochschulort"
-      corporations_parent.save
-    end
+    Group.create_corporations_parent_group unless Group.corporations_parent
 
     # Bvs Parent Group ("Bezirksverbände")
-    unless Group.bvs_parent 
-      bvs_parent = Group.create( name: "Bezirksverbände" )
-      bvs_parent.add_flag( :bvs_parent )
-      bvs_parent.parent_groups << Group.everyone
-      bvs_parent.name = I18n.translate( :bvs_parent ) # "Bezirksverbände"
-      bvs_parent.save
-    end
+    Group.create_bvs_parent_group unless Group.bvs_parent 
 
   end
 

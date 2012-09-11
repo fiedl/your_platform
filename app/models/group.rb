@@ -22,6 +22,10 @@ class Group
   # Special Groups
   # ==========================================================================================
 
+  # German Translations
+  # ------------------------------------------------------------------------------------------
+
+  # TODO: delete this
   def self.jeder
     self.find_everyone_group
   end
@@ -30,10 +34,35 @@ class Group
     self.corporations_parent
   end
 
+  
+  # BVs
+  # ------------------------------------------------------------------------------------------
+
   def self.bvs_parent
-    Group.find_by_flag( :bvs_parent )
-    #( self.jeder.child_groups.select { |group| group.name == "Bezirksverbände" } ).first if self.jeder
+    self.find_bvs_parent_group
   end
+
+  def self.bvs
+    self.find_bv_groups
+  end
+
+  def self.find_bvs_parent_group
+    Group.find_by_flag( :bvs_parent )
+  end
+
+  def self.find_bv_groups
+    self.find_bvs_parent_group.child_groups
+  end
+
+  def self.create_bvs_parent_group
+    bvs_parent = Group.create( name: "Bezirksverbände" )
+    bvs_parent.add_flag( :bvs_parent )
+    bvs_parent.parent_groups << Group.everyone
+    bvs_parent.name = I18n.translate( :bvs_parent ) # "Bezirksverbände"
+    bvs_parent.save
+    return bvs_parent
+  end
+
 
   
   # Finder Methods
@@ -59,13 +88,6 @@ class Group
   end
 
 
-  def self.find_bvs_parent
-    self.bvs_parent
-  end
-
-  def self.find_bvs
-    self.find_bvs_parent.child_groups
-  end
 
 
 end

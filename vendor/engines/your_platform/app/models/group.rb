@@ -22,6 +22,9 @@ class Group < ActiveRecord::Base
 
   after_create     :import_default_group_structure
 
+  include GroupMixins::SpecialGroups
+  include GroupMixins::Import
+
   
   # General Properties
   # ==========================================================================================
@@ -94,23 +97,6 @@ class Group < ActiveRecord::Base
     self.descendant_groups.where( :name => descendant_group_name )
   end
 
-#  # Entferne alle DagLinks im Baum unter dieser Gruppe.
-#  def destroy_links_to_descendants
-#    descendant_groups = self.descendant_groups
-#    descendant_groups_and_self = descendant_groups + [ self ]
-#    for group in descendant_groups_and_self do
-#      for link in group.links_as_parent do
-#        if link.destroyable?
-#          link.destroy 
-#        else
-#          p "KANN LINK NICHT ZERSTÖREN:".bold.red
-#          p link 
-#        end
-#      end
-#    end
-#  end
-
-
 
   # User Group Memberships
   # ------------------------------------------------------------------------------------------
@@ -142,78 +128,6 @@ class Group < ActiveRecord::Base
       assign_user new_member if new_member
     end
   end
-
-
-  # Officers
-  # ------------------------------------------------------------------------------------------
-
-  # TODO: special groups
-  def officers_parent
-    self.child_groups.find_by_flag( :officers_parent ) unless self.has_flag? :officers_parent
-#    self.child_groups.find_by_name( "Amtsträger" ) unless self.name == "Amtsträger"
-  end
-
-  def officers_parent!
-    unless self.has_flag? :officers_parent
-      unless self.officers_parent
-        officers_parent = Group.create( name: I18n.translate( :officers_parent ) )
-        officers_parent.parent_groups << self
-        officers_parent.add_flag( :officers_parent )
-      end
-      return officers_parent
-    end
-  end
-
-  # TODO: special groups
-  def officers
-    officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
-    #officers_parents = self.descendant_groups.find_all_by_name( "Amtsträger" )
-    officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
-    return officers if officers.count > 0
-  end
-
-  # deprecated alias for `officers_parent`. TODO: Delete this!
-  def officers_group
-    officers_parent
-  end
-
-
-
-
-
-
-
-
-
-
-  # Special Groups
-  # ==========================================================================================
-
-  # Root group, 'everyone'
-  # 
-  def self.everyone # TODO: special group
-    Group.find_by_flag( :everyone )
-  end
-
-
-  # Parent group for all corporation groups.
-  # The group structure looks something like this:
-  # 
-  #   everyone
-  #      |----- corporations_parent                     <--- this is the group returned by this method
-  #                       |---------- corporation_a 
-  #                       |                |--- ...
-  #                       |---------- corporation_b
-  #                       |                |--- ...
-  #                       |---------- corporation_c
-  #                                        |--- ...
-  def self.corporations_parent
-#    ( self.jeder.child_groups.select { |group| group.name == "Wingolf am Hochschulort" } ).first if self.jeder
-    Group.find_by_flag( :corporations_parent )
-  end
-
-
-
 
 
 
@@ -306,11 +220,10 @@ class Group < ActiveRecord::Base
     return counter_for_created_groups.to_s + " groups created."
   end
 
-  def set_flags_based_on_group_name
+  def set_flags_based_on_group_name # TODO!
     if self.name == "Amtsträger"
       self.add_flag( :officers_parent )
     end
-
   end
 
 
@@ -320,31 +233,6 @@ class Group < ActiveRecord::Base
 
   # Finder Methods
   # ==========================================================================================
-
-  
-  # TODO: This should be done by `self.find_all_by_token`.
-  #def self.by_token( token )
-  #  ( self.all.select { |group| group.token == token } ).first.becomes self
-  #end
-
-
-
-  def self.find_everyone_group 
-    self.everyone
-  end
-
-  def self.find_corporations_parent
-    self.corporations_parent
-  end
-
-  def self.find_corporations
-    self.find_coprorations_parent.child_groups
-  end
-
-
-
-
-
 
   def self.first
     self.all.first.becomes self
