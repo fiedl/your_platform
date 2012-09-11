@@ -20,10 +20,10 @@ class Group < ActiveRecord::Base
   is_navable
   has_profile_fields
 
-  after_create     :import_default_group_structure
-
   include GroupMixins::SpecialGroups
   include GroupMixins::Import
+
+  after_create     :import_default_group_structure  # from GroupMixins::Import
 
   
   # General Properties
@@ -128,106 +128,6 @@ class Group < ActiveRecord::Base
       assign_user new_member if new_member
     end
   end
-
-
-
-
-  # ActiveRecord Callbacks
-  # ==========================================================================================
-
-  # Import the default group structure. 
-  # This is called after creation of the group. 
-  # 
-  # The structure is to be placed in a file at 
-  #   #{Rails.root}/import/default_group_sub_structures/#{self.name}.yml
-  # and is to be formatted in yaml, like this:
-  #  
-  #   - Group 1
-  #   - Group 2:
-  #       - Group 2.1:
-  #           - Group 2.1.1
-  #           - Group 2.1.2
-  #       - Group 2.2
-  #   - Group 3:
-  #       - Group 3.1
-  #
-  def import_default_group_structure( yaml_file_title = nil )
-    yaml_file_title = self.name + ".yml" unless yaml_file_title
-    yaml_file_name = File.join( Rails.root, "import", "default_group_sub_structures", yaml_file_title )
-    if File.exists? yaml_file_name
-      sub_group_hashes = []
-      File.open( yaml_file_name, "r" ) do |file|
-        sub_group_hashes = YAML::load(file)
-      end
-      sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes ) # für verkürzte YAML-Schreibweise
-      Group.hash_array_import_groups_into_parent_group( sub_group_hashes, self )
-    end
-  end
-
-
-
-  # Import Helpers
-  # ==========================================================================================
-
-  def convert_group_names_to_group_hashes( group_names )
-    group_names.map do |name|
-      if name.kind_of? String
-        { name: name }
-      elsif name.kind_of? Hash
-        unless name[ :name ]
-          { name: name.keys.first, children: convert_group_names_to_group_hashes( name[ name.keys.first ] ) }
-        end
-      end
-    end
-  end
-
-  # Importiere Gruppen aus CSV-Datei
-  def self.csv_import_groups_into_parent_group( csv_file_title, parent_group )
-    import_file_name = File.join( Rails.root, "import", csv_file_title )
-    require 'csv'
-    CSV.foreach import_file_name, headers: true, col_sep: ';' do |row|
-      new_child_group = Group.create row.to_hash
-      parent_group.child_groups << new_child_group
-    end
-  end
-
-  # Importiert ein JSON-Array von Gruppen in die Grupe +parent_group+.
-  # Kann z.B. zum Import der Wingolf-am-Hochschulort-Gruppen verwendet werden.
-  def self.json_import_groups_into_parent_group( json_file_title, parent_group )
-    raise "no parent group given during import" unless parent_group
-    import_json_file = File.open( File.join( Rails.root, "import", json_file_title ), "r" )
-    json = IO.read( import_json_file )
-    new_child_groups_hash_array = JSON.parse( json )
-    p self.hash_array_import_groups_into_parent_group new_child_groups_hash_array, parent_group
-  end
-
-  def self.hash_array_import_groups_into_parent_group( hash_array_of_groups, parent_group )
-    return unless hash_array_of_groups
-    counter_for_created_groups = 0
-    for new_group_hash in hash_array_of_groups do
-      unless parent_group.children.select { |child| child.name == new_group_hash[ "name" ] }.count > 0
-        sub_group_hash_array = new_group_hash[ "children" ]
-        sub_group_hash_array = new_group_hash[ :children ] unless sub_group_hash_array
-        new_group_hash.reject! { |key| not Group.attr_accessible[:default].include? key }
-        g = Group.create( new_group_hash )
-        g.parent_groups << parent_group
-        g.set_flags_based_on_group_name
-        g.save
-        self.hash_array_import_groups_into_parent_group sub_group_hash_array, g if sub_group_hash_array
-        counter_for_created_groups += 1
-      end
-    end
-    return counter_for_created_groups.to_s + " groups created."
-  end
-
-  def set_flags_based_on_group_name # TODO!
-    if self.name == "Amtsträger"
-      self.add_flag( :officers_parent )
-    end
-  end
-
-
-  
 
 
 
