@@ -52,7 +52,7 @@ class Group < ActiveRecord::Base
   end
 
   def child_workflows
-    self.descendant_workflows.where( :dag_links => { direct: true } )
+   self.descendant_workflows.where( :dag_links => { direct: true } )
   end
 
 
@@ -146,14 +146,3 @@ class Group < ActiveRecord::Base
 
 end
 
-class Groups 
-  
-  def self.all
-    Group.all
-  end
-
-  def self.of_user( user )
-    user.groups
-  end
-
-end
