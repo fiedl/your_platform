@@ -44,6 +44,7 @@ describe Group do
     describe "#descendant_workflows" do
       it "should return the workflows of the group and its subgroups" do
         @group.descendant_workflows.should include( @workflow, @subworkflow )
+        @workflow.ancestor_groups.should include( @group )
       end
     end
 
@@ -51,6 +52,8 @@ describe Group do
       it "should return only the workflows of the groups, not of the subgroups" do
         @group.child_workflows.should include( @workflow )
         @group.child_workflows.should_not include( @subworkflow )
+        @workflow.ancestor_groups.should include( @group )
+        @subworkflow.ancestor_groups.should include( @group, @subgroup )
       end
     end
 

@@ -44,6 +44,20 @@ class Group < ActiveRecord::Base
   # Workflows
   # ------------------------------------------------------------------------------------------
 
+  # These methods override the standard methods, which are usual ActiveRecord associations
+  # methods created by the acts-as-dag gem 
+  # (https://github.com/resgraph/acts-as-dag/blob/master/lib/dag/dag.rb).
+  # But since the Workflow in the main application
+  # inherits from WorkflowKit::Workflow and single table inheritance and polymorphic 
+  # associations do not always work together as expected in rails, as can be seen here
+  # http://stackoverflow.com/questions/9628610/why-polymorphic-association-doesnt-work-for-sti-if-type-column-of-the-polymorph,
+  # we have to override these methods. 
+  #
+  # ActiveRecord associations require 'WorkflowKit::Workflow' to be stored in the database's
+  # type column, but by asking for the `child_workflows` we want to get òbjects of the
+  # `Workflow` type, not `WorkflowKit::Workflow`, since Workflow objects may have
+  # additional methods, added by the main application. 
+  #
   def descendant_workflows
     Workflow
       .joins( :links_as_descendant )

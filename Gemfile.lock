@@ -54,7 +54,7 @@ GEM
     best_in_place (1.1.2)
       jquery-rails
       rails (~> 3.1)
-    builder (3.0.0)
+    builder (3.0.3)
     capistrano (2.12.0)
       highline
       net-scp (>= 1.0.0)
@@ -244,7 +244,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  acts-as-dag
+  acts-as-dag (>= 2.5.7)
   acts_as_paranoid_dag
   acts_as_tree
   bcrypt-ruby (>= 3.0.1)
