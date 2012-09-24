@@ -73,8 +73,12 @@ class Group < ActiveRecord::Base
   # Users
   # ------------------------------------------------------------------------------------------
 
+  # These methods override the standard association methods for descendant_users
+  # and child_users to make sure that the `everyone` Groups do have *all* users
+  # as children and descendants.
+  #
   def descendant_users
-    if self == Group.jeder
+    if self.has_flag?( :everyone )
       return User.all
     else
       return super 
@@ -82,13 +86,16 @@ class Group < ActiveRecord::Base
   end
 
   def child_users
-    if self == Group.jeder
-      return descendant_users
+    if self.has_flag?( :everyone )      
+      return User.all
     else
       return super
     end
   end
 
+  # This assings the given user as a member to the group, i.e. this will
+  # create a UserGroupMembership.
+  #
   def assign_user( user )
     if user
       unless user.in? self.child_users
@@ -97,11 +104,17 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # This method will remove a UserGroupMembership, i.e. terminate the membership
+  # of the given user in this group.
+  #
   def unassign_user( user )
     link = DagLink.find_edge( self.becomes( Group ), user )
-    link.destroy if link.destroyable? if link
+    if link
+      link.destroy if link.destroyable?
+    else
+      raise "The user to unassign is not member of the group."
+    end
   end
-
 
 
   # Groups
@@ -115,24 +128,46 @@ class Group < ActiveRecord::Base
   # User Group Memberships
   # ------------------------------------------------------------------------------------------
 
+  # This returns all UserGroupMembership objects of the group, including indirect 
+  # memberships.
+  #
   def memberships
     UserGroupMembership.find_all_by_group self 
   end
 
+  # This returns the UserGroupMembership object that represents the membership of the 
+  # given user in this group.
+  # 
   def membership_of( user )
     UserGroupMembership.find_by_user_and_group( user, self )
   end
 
+  # This returns a string of the titles of the direct members of this group. This is used
+  # for in-place editing, for example.
+  # 
+  # The string would be something like this:
+  # 
+  #    "#{user1.title}, #{user2.title}, ..."
+  #
   def direct_member_titles_string
     child_users.collect { |user| user.title }.join( ", " )
   end
 
+  # This sets the memberships of a group according to the given string of user titles.
+  # 
+  # For example, after calling
+  # 
+  #    direct_member_titles_string = "#{user1.title}, #{user2.title}",
+  # 
+  # the users `user1` and `user2` are the only direct members of the group.
+  # The memberships are removed using the standard methods, which means that the memberships
+  # are only marked as deleted. See: acts_as_paranoid_dag gem.
+  #
   def direct_member_titles_string=( titles_string )
     new_members_titles = titles_string.split( "," )
     new_members = new_members_titles.collect do |title|
       u = User.find_by_title( title.strip )
       self.errors.add :direct_member_titles_string, 'user not found: #{title}' unless u
-#      raise 'validation error: user not found: #{title}'
       u
     end
     for member in child_users
@@ -144,19 +179,20 @@ class Group < ActiveRecord::Base
   end
 
 
-
   # Finder Methods
   # ==========================================================================================
 
-  def self.first
-    self.all.first.becomes self
-  end
+  # I'm not so sure anymore, what this was supposed to do. I guess, it had something to do
+  # with inheriting group classes. 
+  # TODO: Delete those methods, if there is no error after the migration to your_platform.
 
-  def self.last
-    self.all.last.becomes self
-  end
-
-
-
+  #  def self.first
+  #    self.all.first.becomes self
+  #  end
+  
+  #  def self.last
+  #    self.all.last.becomes self
+  #  end
+  
 end
 
