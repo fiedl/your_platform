@@ -280,7 +280,12 @@ class User < ActiveRecord::Base
 
 
   # TODO:
+  # Achtung! Profil wird auf wingolfsplattform.org nicht angezeigt.
+  
+  # TODO:
   # Hier weiter!
+
+  
 
 
 

@@ -1,6 +1,6 @@
 FactoryGirl.define do
 
-  factory :wah_group, :class => "Wah" do
+  factory :wah_group, :class => "Corporation" do
     
     sequence( :token ) { |n| ( "A".."Z" ).to_a[ n ] }
     sequence( :name ) { |n| "#{token}er Wingolf" }

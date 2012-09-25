@@ -29,7 +29,7 @@ namespace :data_migration do
         if row[ 'cn' ].include? "WV "
           if row[ 'dn' ].include? "o=Verbindungen"
             token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
-            wah = Wah.by_token( token ) # Wingolf-am-Hochschulort-Gruppe
+            wah = Corporation.by_token( token ) # Wingolf-am-Hochschulort-Gruppe
             infos = row.to_hash
             import_address wah, infos
             import_group_profile_info wah, infos
@@ -47,7 +47,7 @@ namespace :data_migration do
         if row[ 'cn' ].include? "WV " 
           if row[ 'dn' ].include? "o=Verbindungen"
             token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
-            aktivitas = Wah.by_token( token ).aktivitas
+            aktivitas = Corporation.by_token( token ).aktivitas
             infos = row.to_hash
             aktivitas.token = infos[ 'cn' ]
             aktivitas.save
@@ -67,7 +67,7 @@ namespace :data_migration do
           if row[ 'dn' ].include? "o=Philister"
             if not row[ 'cn' ].include? "bandphilister" 
               token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
-              philisterschaft = Wah.by_token( token ).philisterschaft
+              philisterschaft = Corporation.by_token( token ).philisterschaft
               infos = row.to_hash
               philisterschaft.extensive_name = infos[ 'ou' ]
               philisterschaft.token = infos[ 'cn' ]
@@ -90,7 +90,7 @@ namespace :data_migration do
           if row[ 'dn' ].include? "o=Philister"
             if not row[ 'cn' ].include? "bandphilister" 
               token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
-              hausverein = Wah.by_token( token ).hausverein
+              hausverein = Corporation.by_token( token ).hausverein
               if hausverein
                 infos = row.to_hash
                 hausverein.extensive_name = infos[ 'epdwingolfphhvname' ]

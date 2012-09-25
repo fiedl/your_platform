@@ -15,7 +15,7 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
 
   def wah_group
-    ( self.ancestor_groups & Wah.all ).first
+    ( self.ancestor_groups & Corporation.all ).first
   end
 
 end

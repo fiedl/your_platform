@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+
+# This extends the your_platform Corporation model.
+require_dependency YourPlatform::Engine.root.join( 'app/models/corporation' ).to_s
+
 # Wingolf-am-Hochschulort-Gruppe
-class Wah < Corporation
+class Corporation 
 
   def self.all
     Group.find_corporation_groups.collect do |group|
-      group.becomes Wah
+      group.becomes Corporation
     end
   end
 

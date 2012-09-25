@@ -18,7 +18,7 @@ namespace :wingolf_standard_workflows do
       wah_counter = 0
       workflow_counter = 0
 
-      for wah in Wah.all   # test with   [ Wah.find_by_token( "H" ) ] 
+      for wah in Corporation.all   # test with   [ Wah.find_by_token( "H" ) ] 
         old_workflow_counter = workflow_counter
 
         if wah.descendant_workflows.count == 0 # only add worklfows if non exist in this Wah group
@@ -67,7 +67,7 @@ namespace :wingolf_standard_workflows do
 
       print "\n"
       p "Created #{workflow_counter} workflows for #{wah_counter} Wah groups."
-      p "#{Wah.all.count - wah_counter} Wah groups didn't need modification."
+      p "#{Corporation.all.count - wah_counter} Wah groups didn't need modification."
 
     end
   end
