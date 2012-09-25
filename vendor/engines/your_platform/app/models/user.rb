@@ -24,24 +24,34 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
   before_save               :build_account_if_requested, :add_to_group_if_requested
 
+
+  # General Properties
+  # ==========================================================================================
+
+  # The name of the user, i.e. first_name and last_name.
+  #
   def name
     first_name + " " + last_name
   end
-  def name=( name )
-    name_components = name.split( " " )
-    if name_components.count > 1
-      self.first_name = name_components[ 0..-2 ].join( " " )
-      self.last_name = name_components[ -1 ]
-    end
-  end
+
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden 
   # in the main application.
   # Notice: This method does *not* return the academic title of the user.
+  #
   def title
     name
   end
+
+
+  # Associated Objects
+  # ==========================================================================================
+
+
+
+
+
 
   def self.find_by_title( title )
     User.all.select { |user| user.title == title }.first
