@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 
   attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group
 
-  attr_accessor             :create_account, :name, :add_to_group
+  attr_accessor             :create_account, :add_to_group
                             # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
@@ -34,7 +34,6 @@ class User < ActiveRecord::Base
     first_name + " " + last_name
   end
 
-
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden 
   # in the main application.
@@ -44,94 +43,10 @@ class User < ActiveRecord::Base
     name
   end
 
-
-  # Associated Objects
-  # ==========================================================================================
-
-
-
-
-
-
-  def self.find_by_title( title )
-    User.all.select { |user| user.title == title }.first
-  end
-
-  def self.by_title( title )
-    User.find_by_title title
-  end
-
-  def alias
-    @alias = UserAlias.new( read_attribute( :alias ), :user => self ) unless @alias.kind_of? UserAlias
-    return @alias
-  end
-  def alias=( a )
-    @alias = a
-    write_alias_attribute
-  end
-
-  def capitalize_name
-    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
-    self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
-    self.name
-  end
-
-  def has_account?
-    return true if self.account
-  end
-  
-  def deactivate_account
-    self.account.destroy if self.account
-    self.account = nil
-  end
-
-  def relationships
-    relationships_parent_relationships + relationships_child_relationships
-  end
-
-  # Versucht, einen Benutzer anhand eines login_strings zu identifizieren, der beim Anmelden eingegeben wird.
-  # Das kann eine E-Mail-Adresse, ein Benutzername, Vor- und Zuname, etc. sein.
-  def self.identify( login_string )
-    UserIdentification.find_users login_string
-  end
-
-  def self.authenticate( login_string, password )
-    UserAccount.authenticate login_string, password 
-  end
-
-  def groups
-    self.ancestor_groups
-  end
-
-  def workflows
-    my_workflows = []
-    self.groups.each do |group|
-      my_workflows += group.child_workflows
-    end
-    return my_workflows
-  end
-
-  # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
-  def corporations
-    my_corporations = []
-    if Group.corporations_parent
-      my_corporations += ( self.ancestor_groups & Group.corporations ).select do |wah|
-        ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
-      end.collect { |group| group.becomes( Wah ) }
-    end
-    return my_corporations
-  end
-
-  # Returns all UserGroupMemberships for this user. 
-  # If the option :with_deleted is set true, this includes all deleted UserGroupMemberships.
-  def memberships
-    UserGroupMembership.find_all_by_user self
-  end
-  
-  def inspect
-    "User: " + self.alias
-  end
-
+  # This accessors allow to access the gender of the user rather than just asking if the 
+  # user is female as allowed by the ActiveRecord accessor. 
+  # (:female is a boolean column in the users table.)
+  #
   def gender
     return :female if female?
     return :male
@@ -144,14 +59,66 @@ class User < ActiveRecord::Base
     end
   end
 
-  private
+
+
+  # Associated Objects
+  # ==========================================================================================
+
+  # Alias
+  # ------------------------------------------------------------------------------------------
+
+  # The UserAlias class inherits from String, but has some more methods, e.g. a method
+  # to generate a new alias from other user attributes. To make sure that `alias` returns
+  # an object of UserAlias type, the accessor methods are overridden here.
+  #
+  def alias
+    @alias = UserAlias.new( read_attribute( :alias ), :user => self ) unless @alias.kind_of? UserAlias
+    return @alias
+  end
+  def alias=( a )
+    @alias = a
+    write_alias_attribute
+  end
 
   def write_alias_attribute
     write_attribute :alias, @alias
   end
+  private :write_alias_attribute
 
   def generate_alias_if_necessary
     self.alias.generate! if self.alias.blank?
+  end
+  private :generate_alias_if_necessary
+
+  
+  # User Account
+  # ------------------------------------------------------------------------------------------
+
+  # A user stored in the database does not necessarily possess the right to log in, i.e.
+  # have a user account. This method allows to find out whether the user has got an
+  # active user account.
+  # 
+  def has_account?
+    return true if self.account
+    return false
+  end
+
+  # This method activates the user account, i.e. grants the user the right to log in.
+  # 
+  def activate_account
+    unless self.account
+      self.account = self.build_account
+      self.save
+    end
+  end
+
+  # This method deactivates the user account, i.e. destroys the associated object
+  # and prevents the user from logging in.
+  # 
+  def deactivate_account
+    raise "no user account exists, therefore it can't be destroyed." if not self.account
+    self.account.destroy
+    self.account = nil
   end
 
   # If the attribute `create_account` is set to `true` or to `1`, e.g. by an html form,
@@ -164,8 +131,12 @@ class User < ActiveRecord::Base
     # transform to true rather than to false.
     # Thus, we have to make sure that "0" means false.
     self.create_account = false if self.create_account == "0"
+    self.create_account = true if self.create_account == "1"
+    self.create_account = false if self.create_account == 0
+    self.create_account = true if self.create_account == 1
+    self.create_account = false if self.create_account == ""
 
-    if self.create_account
+    if self.create_account == true
       self.account.destroy if self.has_account?
       self.account = self.build_account
       self.create_account = false # to make sure that this code is nut run twice.
@@ -173,13 +144,192 @@ class User < ActiveRecord::Base
     end
 
   end
+  private :build_account_if_requested
+
+
+  # Groups
+  # ------------------------------------------------------------------------------------------
+
+  # This returns all groups the user is currently a member of. In terms of the DAG model,
+  # this method returns all ancestor groups.
+  #
+  def groups
+    self.ancestor_groups
+  end
 
   def add_to_group_if_requested
     if self.add_to_group 
       group = add_to_group if add_to_group.kind_of? Group
-      group = Group.find( add_to_group ) if add_to_group.to_i
+      group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
     end
+  end
+  private :add_to_group_if_requested
+
+
+  # Corporations
+  # ------------------------------------------------------------------------------------------
+
+  # This returns all corporations of the user. The Corporation model inherits from the Group
+  # model. corporations are child_groups of the corporations_parent_group in the DAG.
+  #
+  #   everyone
+  #      |----- corporations_parent                      
+  #      |                |---------- corporation_a      <---- 
+  #      |                |                |--- ...           |--- These are corporations
+  #      |                |---------- corporation_b      <----
+  #      |                                 |--- ...      
+  #      |----- other_group_1
+  #      |----- other_group_2
+  #
+  # Warning! 
+  # This method does not distinguish between regular members and guest members. 
+  # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
+  #
+  def corporations
+    my_corporations = ( self.ancestor_groups & Group.corporations ) if Group.corporations_parent
+    my_corporations = my_corporations.collect { |group| group.becomes( Corporation ) }
+    return my_corporations
+  end
+
+  # TODO 
+  # Corporations for Guest Users
+  # z.B. für Aktivitätszahl
+  #
+  #   def corporations
+  #     my_corporations = []
+  #     if Group.corporations_parent
+  #       my_corporations += ( self.ancestor_groups & Group.corporations ).select do |wah|
+  #         ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
+  #       end.collect { |group| group.becomes( Wah ) }
+  #     end
+  #     return my_corporations
+  #   end
+
+
+  # Memberships
+  # ------------------------------------------------------------------------------------------
+
+  # Returns all UserGroupMemberships for this user. 
+  # Since this is an ActiveRelation object, one can chain other conditions, like:
+  # 
+  #     some_user.memberships.with_deleted
+  #     some_user.memberships.in_the_past
+  #
+  def memberships
+    UserGroupMembership.find_all_by_user self
+  end
+
+  
+  # Relationships
+  # ------------------------------------------------------------------------------------------
+  
+  # This returns all relationship opjects.
+  #
+  def relationships
+    # At the moment, the partners of a relationships are stored in a DAG model
+    # prexied with 'relationships_'. 
+    relationships_parent_relationships + relationships_child_relationships
+  end
+
+  
+  # Workflows
+  # ------------------------------------------------------------------------------------------
+
+  # This method returns all workflows applicable for this user, i.e. this returns
+  # all workflows of all groups the user is a member of.
+  # 
+  def workflows
+    my_workflows = []
+    self.groups.each do |group|
+      my_workflows += group.child_workflows
+    end
+    return my_workflows
+  end
+
+
+  # User Identification and Authentification
+  # ==========================================================================================
+  
+  # This method tries to identify a user by a login_string that is entered during the
+  # login process. The login_string may be an email address, an alias, the last name
+  # or first_name plus last_name. 
+  #
+  # If a user could be identified, the user is returned.
+  # Otherwise, the method returns `nil`.
+  #
+  def self.identify( login_string )
+    matching_users = self.find_by_login_string( login_string )
+    if matching_users.count == 1
+      return matching_users.first
+    else
+      return nil
+    end
+  end
+
+  # This method tries to authenticate a user by a login_string and a password.
+  # The user is identified by the login_string (see `self.identify`).
+  #
+  # If the given password matches the identified user, the hereby authenticated user
+  # is returned. Otherwise, this method returns `nil`.
+  #
+  def self.authenticate( login_string, password )
+    UserAccount.authenticate login_string, password 
+  end
+  
+
+
+  # TODO:
+  # Hier weiter!
+
+
+
+
+
+  
+  # Finder Methods
+  # ==========================================================================================
+
+
+
+
+  # This method returns an array of users matching the given login string.
+  # In contrast to `self.identify`, this returns an array, whereas `self.identify` 
+  # returns a user object if the match was unique.
+  #
+  def self.find_by_login_string( login_string )
+    UserIdentification.find_users login_string
+  end
+
+  def self.find_by_title( title )
+    User.all.select { |user| user.title == title }.first
+  end
+
+  def self.by_title( title )
+    User.find_by_title title
+  end
+
+
+  def capitalize_name
+    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
+    self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
+    self.name
+  end
+
+
+
+
+
+  # Debug Helpers
+  # ==========================================================================================
+  
+  # The string returned by this method represents the user in the rails console.
+  # For example, if you type `User.all` in the console, the answer would be:
+  #
+  #    User: alias_of_the_first_user, User: alias_of_the_second_user, ...
+  #
+  def inspect
+    "User: " + self.alias
   end
 
 end

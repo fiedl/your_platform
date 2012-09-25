@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Wingolf-am-Hochschulort-Gruppe
-class Wah < Group
+class Wah < Corporation
 
   def self.all
     Group.find_corporation_groups.collect do |group|
