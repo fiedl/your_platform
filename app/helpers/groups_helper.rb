@@ -8,7 +8,7 @@ module GroupsHelper
         c = content_tag :td do
           content_tag :ul do
             
-            wah_groups = Group.find_wah_groups_of( user )
+            wah_groups = Group.find_corporation_groups_of( user )
             if wah_groups
               wah_groups.collect do |group|
                 sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
@@ -22,7 +22,7 @@ module GroupsHelper
         c += content_tag( :td ) do
           content_tag :ul do
             
-            Group.find_non_wah_branch_groups_of( user ).collect do |group|
+            Group.find_non_corporations_branch_groups_of( user ).collect do |group|
               membership_li( user, group )
             end.join.html_safe
             

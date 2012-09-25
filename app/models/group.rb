@@ -13,7 +13,6 @@ class Group
   # Special Groups
   # ==========================================================================================
 
-  
   # BVs
   # ------------------------------------------------------------------------------------------
 
@@ -41,32 +40,6 @@ class Group
     bvs_parent.save
     return bvs_parent
   end
-
-
-  
-  # Finder Methods
-  # ==========================================================================================
-
-  def self.find_wah_groups_of( user )
-    ancestor_groups = user.ancestor_groups
-    wah_groups = Group.corporations if Group.corporations_parent
-    return ancestor_groups & wah_groups if ancestor_groups and wah_groups
-  end
-
-  def self.find_wah_branch_groups_of( user )
-    ancestor_groups = user.ancestor_groups
-    wah_branch = Group.corporations_parent.descendant_groups if Group.corporations_parent
-    return ancestor_groups & wah_branch if ancestor_groups and wah_branch
-  end
-
-  def self.find_non_wah_branch_groups_of( user )
-    ancestor_groups = user.ancestor_groups
-    wah_branch = Group.corporations_parent.descendant_groups if Group.corporations_parent
-    wah_branch = [] unless wah_branch
-    return ancestor_groups - wah_branch
-  end
-
-
 
 
 end

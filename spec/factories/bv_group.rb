@@ -8,7 +8,7 @@ FactoryGirl.define do
     sequence( :internal_token ) { |n| "#{token}" }
 
     after( :create ) do |bv|
-      raise 'no bvs parent group' unless Group.bvs_parent
+      Group.create_bvs_parent_group unless Group.find_bvs_parent_group
       Group.bvs << bv
     end
 
