@@ -104,8 +104,8 @@ class User < ActiveRecord::Base
   # Verbindungen (im Sinne des Wingolfs am Hochschulort), d.h. Bänder, die ein Mitglied trägt.
   def corporations
     my_corporations = []
-    if Group.wingolf_am_hochschulort
-      my_corporations += ( self.ancestor_groups & Group.wingolf_am_hochschulort.child_groups ).select do |wah|
+    if Group.corporations_parent
+      my_corporations += ( self.ancestor_groups & Group.corporations ).select do |wah|
         ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
       end.collect { |group| group.becomes( Wah ) }
     end

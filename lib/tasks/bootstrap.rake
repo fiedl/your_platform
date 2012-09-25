@@ -23,8 +23,8 @@ namespace :bootstrap do
   desc "Set some nav node properties of the basic groups"
   task basic_nav_node_properties: :environment do
     p "Task: Set some basic nav node properties"
-    n = Group.jeder.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
-    n = Group.wingolf_am_hochschulort.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
+    n = Group.everyone.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
+    n = Group.corporations_parent.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
   end
 
   desc "Add basic pages"
@@ -34,7 +34,7 @@ namespace :bootstrap do
     home.add_flag :root
     mitglieder_start = home.child_pages.create( title: "Mitglieder Start" )
     mitglieder_start.add_flag :intranet_root
-    mitglieder_start.child_groups << Group.jeder
+    mitglieder_start.child_groups << Group.everyone
   end
 
   task add_flags_to_basic_pages: :environment do

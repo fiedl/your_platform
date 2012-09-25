@@ -38,6 +38,7 @@ describe GroupMixins::SpecialGroups do
       Group.destroy_all
       @everyone_group = Group.create_everyone_group
       @corporations_parent_group = Group.create_corporations_parent_group
+      @corporation_group = create( :group ); @corporation_group.parent_groups << @corporations_parent_group
     end
 
     describe ".create_corporations_parent_group" do
@@ -53,6 +54,14 @@ describe GroupMixins::SpecialGroups do
         subject.has_flag?( :corporations_parent ).should be_true
       end
     end
+
+    describe ".find_corporation_groups" do
+      subject { Group.find_corporation_groups }
+      it "should return an array containing the corporation groups" do
+        subject.should == [ @corporation_group ]
+      end
+    end
+
   end
 
 

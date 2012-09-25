@@ -7,14 +7,14 @@ namespace :wingolf_groups do
   desc "Import all wingolf_am_hochschulort groups"
   task import_wingolf_am_hochschulort_groups: :environment do
     p "Task: Import wingolf_am_hochschulort groups"
-    Group.json_import_groups_into_parent_group "groups_wingolf_am_hochschulort.json", Group.wingolf_am_hochschulort
+    Group.json_import_groups_into_parent_group "groups_wingolf_am_hochschulort.json", Group.corporations_parent
   end
 
   desc "Import default sub structure for wingolf_am_hochschulort groups"
   task import_sub_structure_of_wingolf_am_hochschulort_groups: :environment do
     p "Task: Import default substructure for wingolf_am_hochschulort groups"
     counter = 0
-    Group.wingolf_am_hochschulort.child_groups.each do |woh_group|
+    Group.corporations_parent.child_groups.each do |woh_group|
       if woh_group.child_groups.count == 0
         woh_group.import_default_group_structure "wingolf_am_hochschulort_children.yml"
         counter += 1
@@ -75,7 +75,7 @@ namespace :wingolf_groups do
       CSV.foreach file_name, headers: true, col_sep: ';' do |row|
         new_wah_group = Group.create( row.to_hash )
         new_wah_group.child_groups.create( name: "Philisterschaft" )
-        new_wah_group.parent_groups << Group.wingolf_am_hochschulort
+        new_wah_group.parent_groups << Group.corporations_parent
         counter += 1
       end
       p "Wah Groups created: " + counter.to_s

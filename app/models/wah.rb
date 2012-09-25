@@ -3,7 +3,7 @@
 class Wah < Group
 
   def self.all
-    Group.wingolf_am_hochschulort.child_groups.collect do |group|
+    Group.find_corporation_groups.collect do |group|
       group.becomes Wah
     end
   end

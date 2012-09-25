@@ -9,30 +9,9 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/group' ).to_s
 
 class Group
 
-  # Associated Objects
-  # ==========================================================================================
-  
-  # Just the German-named alias method for officers of the group.
-  # 
-  def amtsträger
-    officers
-  end
-
 
   # Special Groups
   # ==========================================================================================
-
-  # German Translations
-  # ------------------------------------------------------------------------------------------
-
-  # TODO: delete this
-  def self.jeder
-    self.find_everyone_group
-  end
-  
-  def self.wingolf_am_hochschulort
-    self.corporations_parent
-  end
 
   
   # BVs
@@ -70,19 +49,19 @@ class Group
 
   def self.find_wah_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_groups = Group.wingolf_am_hochschulort.child_groups if Group.wingolf_am_hochschulort
+    wah_groups = Group.corporations if Group.corporations_parent
     return ancestor_groups & wah_groups if ancestor_groups and wah_groups
   end
 
   def self.find_wah_branch_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_branch = Group.wingolf_am_hochschulort.descendant_groups if Group.wingolf_am_hochschulort
+    wah_branch = Group.corporations_parent.descendant_groups if Group.corporations_parent
     return ancestor_groups & wah_branch if ancestor_groups and wah_branch
   end
 
   def self.find_non_wah_branch_groups_of( user )
     ancestor_groups = user.ancestor_groups
-    wah_branch = Group.wingolf_am_hochschulort.descendant_groups if Group.wingolf_am_hochschulort
+    wah_branch = Group.corporations_parent.descendant_groups if Group.corporations_parent
     wah_branch = [] unless wah_branch
     return ancestor_groups - wah_branch
   end

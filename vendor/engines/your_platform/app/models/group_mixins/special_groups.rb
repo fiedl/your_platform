@@ -78,6 +78,14 @@ module GroupMixins::SpecialGroups
       return corporations_parent
     end
 
+    def corporations
+      self.find_corporation_groups
+    end
+
+    def find_corporation_groups
+      self.corporations_parent.child_groups
+    end
+
   end
 
 
