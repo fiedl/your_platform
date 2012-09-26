@@ -16,7 +16,7 @@ class GroupsController < ApplicationController
   def my
     @title = "Meine Gruppen"
     @user = @session.current_user
-    @groups = Groups.of_user @user
+    @groups = @user.groups
 #    @navables = [ Page.find_root ]
     @navable = @user
     render action: 'index'
