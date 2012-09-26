@@ -32,6 +32,20 @@ describe User do
     it { should == "#{@user.first_name} #{@user.last_name}" }
   end
 
+  describe "#capitalize_name" do
+    before do
+      @user.first_name = "john"
+      @user.last_name = "doe"
+      @user.capitalize_name
+      @user.save
+    end
+    it "should capitalize the first_name and last_name" do
+      @user.first_name.should == "John"
+      @user.last_name.should == "Doe"
+      @user.name.should == "John Doe"
+    end
+  end
+
   describe "#title" do
     subject { @user.title }
     # the title is likely to be overridden in the main application. Therefore, here are
@@ -92,6 +106,7 @@ describe User do
 
   context "for a user with account" do
     before { @user_with_account = create( :user_with_account ) }
+    subject { @user_with_account }
 
     describe "#has_account?" do
       subject { @user_with_account.has_account? }
@@ -113,6 +128,11 @@ describe User do
         @user_with_account.account.should be_nil
         @user_with_account.has_account?.should == false
       end
+    end
+
+    specify "the new user should have an initial password" do
+      # This is to avoid the bug of welcome emails with a blank password.
+      subject.account.password.should_not be_empty
     end
   end
 
@@ -263,6 +283,9 @@ describe User do
     it "should return an array of the user's memberships" do
       subject.should == [ @membership ]
     end
+    it "should be the same as UserGroupMembership.find_all_by_user" do
+      subject.should == UserGroupMembership.find_all_by_user( @user )
+    end
     it "should allow to chain other ActiveRelation scopes, like `with_deleted`" do
       subject.with_deleted.should == [ @membership ]
     end
@@ -352,59 +375,51 @@ describe User do
     end
   end
       
+  
+  # Finder Methods
+  # ==========================================================================================
 
-
-
-
-  # TODO: Hier weiter!
-
-
-
-
-  def new_user
-    User.new( first_name: "Max", last_name: "Mustermann", alias: "m.mustermann",
-              email: "max.mustermann@example.com", create_account: true )
-  end
-
-  def create_user_with_account
-    User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com",
-                 :alias => "j.doe", create_account: true )
-  end
-
-  describe ".create" do
-    describe "with account" do
-      before { @created_user_with_account = create_user_with_account }
-      subject { @created_user_with_account }
-      it "should have an initial password set" do
-        # This is to avoid the bug of welcome emails with a blank password.
-        subject.account.password.should_not be_empty
-      end
+  describe ".find_by_login_string" do
+    before do
+      @user.first_name = "Some First Name"
+      @user.last_name = "UniqueLastName" 
+      @user.email = "unique@example.com"
+      @user.alias = "s.unique"
+      @user.save
+    end
+    describe "for a given alias" do
+      subject { User.find_all_by_login_string( @user.alias ) }
+      it { should == [ @user ] }
+    end
+    describe "for a given last_name" do
+      subject { User.find_all_by_login_string( @user.last_name ) }
+      it { should == [ @user ] }
+    end
+    describe "for a given name" do
+      subject { User.find_all_by_login_string( "#{@user.first_name} #{@user.last_name}" ) }
+      it { should == [ @user ] }
+    end
+    describe "for a given email" do
+      subject { User.find_all_by_login_string( @user.email ) }
+      it { should == [ @user ] }
+    end
+    describe "for given nonsense" do
+      subject { User.find_all_by_login_string( "f kas#dfk aoefak!" ) }
+      it { should == [] }
     end
   end
 
-
-
-
-
-  before do
-    @user = new_user
-  end
-
-  subject { @user }
-
-  it { should respond_to( :groups ) }
-
-
-
-
-  describe "#memberships" do
-    it "should return all UserGroupMemberships of the user" do
-      @user.memberships.should == UserGroupMembership.find_all_by_user( @user )
+  describe ".find_by_title" do
+    before do
+      @user.first_name = "Johnny"
+      @user.last_name = "Doe"
+      @user.save
+      @title = @user.title 
     end
-    describe ".with_deleted" do
-      it "should return all UserGroupMemberships of the user, including the deleted ones" do
-        @user.memberships.with_deleted.should == UserGroupMembership.find_all_by_user( @user ).with_deleted
-      end
+    specify { @title.should_not be_empty }
+    subject { User.find_by_title( @title ) }
+    it "should find the user by its title" do
+      subject.should == @user 
     end
   end
 

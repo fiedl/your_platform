@@ -34,6 +34,20 @@ class User < ActiveRecord::Base
     first_name + " " + last_name
   end
 
+  # This method will make the first_name and the last_name capitalized.
+  # For example:
+  #
+  #   @user = User.create( first_name: "john", last_name: "doe", ... )
+  #   @user.capitalize_name  # => "John Doe"
+  #   @user.save
+  #   @user.name  # => "John Doe"
+  #
+  def capitalize_name
+    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
+    self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
+    self.name
+  end
+
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden 
   # in the main application.
@@ -192,20 +206,6 @@ class User < ActiveRecord::Base
     return my_corporations
   end
 
-  # TODO 
-  # Corporations for Guest Users
-  # z.B. für Aktivitätszahl
-  #
-  #   def corporations
-  #     my_corporations = []
-  #     if Group.corporations_parent
-  #       my_corporations += ( self.ancestor_groups & Group.corporations ).select do |wah|
-  #         ( wah.becomes( Wah ).aktivitas.descendant_users | wah.becomes( Wah ).philisterschaft.descendant_users ).include? self
-  #       end.collect { |group| group.becomes( Wah ) }
-  #     end
-  #     return my_corporations
-  #   end
-
 
   # Memberships
   # ------------------------------------------------------------------------------------------
@@ -259,7 +259,7 @@ class User < ActiveRecord::Base
   # Otherwise, the method returns `nil`.
   #
   def self.identify( login_string )
-    matching_users = self.find_by_login_string( login_string )
+    matching_users = self.find_all_by_login_string( login_string )
     if matching_users.count == 1
       return matching_users.first
     else
@@ -278,52 +278,22 @@ class User < ActiveRecord::Base
   end
   
 
-
-
-  # TODO: 
-  # Pre-Compile Assets on wingolfsplattform.org
-  
-  # TODO:
-  # Hier weiter!
-
-  
-
-
-
-
-
-  
   # Finder Methods
   # ==========================================================================================
-
-
-
 
   # This method returns an array of users matching the given login string.
   # In contrast to `self.identify`, this returns an array, whereas `self.identify` 
   # returns a user object if the match was unique.
   #
-  def self.find_by_login_string( login_string )
+  def self.find_all_by_login_string( login_string )
     UserIdentification.find_users login_string
   end
-
+  
+  # This method returns the first user matching the given title.
+  #
   def self.find_by_title( title )
     User.all.select { |user| user.title == title }.first
   end
-
-  def self.by_title( title )
-    User.find_by_title title
-  end
-
-
-  def capitalize_name
-    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
-    self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
-    self.name
-  end
-
-
-
 
 
   # Debug Helpers
