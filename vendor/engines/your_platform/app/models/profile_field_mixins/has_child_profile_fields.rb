@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-module ProfileFieldMixins::HasChildProfileFieldAccessors
+module ProfileFieldMixins::HasChildProfileFields
 
   # This creates an easier way to access a composed ProfileField's child field
   # values. Instead of calling 
@@ -16,17 +16,30 @@ module ProfileFieldMixins::HasChildProfileFieldAccessors
   #
   #    class BankAccount < ProfileField
   #      ...
-  #      has_child_profile_field_accessors :account_holder, :account_number, ...
+  #      has_child_profile_fields :account_holder, :account_number, ...
   #      ...
   #    end
   # 
-  def has_child_profile_field_accessors( *accessors )
+  # Furthermore, this method modifies the intializer to build the child fields
+  # on build of the main profile_field.
+  #
+  def has_child_profile_fields( *labels )
 
-    after_save :save_child_profile_field_accessors
+    after_save :save_child_profile_fields
 
-    include HasChildProfileFieldAccessorsInstanceMethods
+    include HasChildProfileFieldsInstanceMethods
 
-    accessors.each do |accessor|
+    self.class_eval <<-EOL
+
+      def initialize( *attrs )
+        super( *attrs )
+        self.build_child_fields( #{labels} )
+      end
+
+    EOL
+
+
+    labels.each do |accessor|
 
       self.class_eval <<-EOL
 
@@ -43,16 +56,24 @@ module ProfileFieldMixins::HasChildProfileFieldAccessors
     end
   end
 
-  module HasChildProfileFieldAccessorsInstanceMethods
+  module HasChildProfileFieldsInstanceMethods
 
-    def save_child_profile_field_accessors
+    def build_child_fields( labels )
+      if self.parent == nil # do it only for the parent, not the children as well
+        labels.each do |label|
+          self.children.build( label: label )
+        end
+      end
+    end
+
+    def save_child_profile_fields
       if @children
         @children.each do |key, child_profile_field|
           child_profile_field.save
         end
       end
     end
-    private :save_child_profile_field_accessors
+    private :save_child_profile_fields
 
     def get_field( accessor )
       @children ||= {}

@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+# General Profile Field
+# ==========================================================================================
+
 describe ProfileField do
 
   subject { ProfileField.new }
@@ -21,6 +24,60 @@ describe ProfileField do
   it { should respond_to( :display_html ) }
 
 end
+
+
+# Custom Contact Information
+# ==========================================================================================
+
+describe Custom do
+  describe ".create" do
+    subject { Custom.create( label: "Custom Contact Information" ) }
+    its( 'children.count' ) { should == 0 }
+  end
+end
+
+
+# Organisation Membership Information
+# ==========================================================================================
+
+describe Organization do
+  subject { Organization.create() }
+  
+  # Here it is only tested whether the methods exist. The functionality is
+  # provided by the same mechanism as tested unter the BankAccount section.
+
+  it { should respond_to( :organization ) }
+  it { should respond_to( :organization= ) }
+  it { should respond_to( :role ) }
+  it { should respond_to( :role= ) }
+  it { should respond_to( :since_when ) }
+  it { should respond_to( :since_when= ) }
+end
+
+
+# Email Contact Information
+# ==========================================================================================
+
+describe Email do
+  describe ".create" do
+    subject { Email.create( label: "Email" ) }
+    its( 'children.count' ) { should == 0 }
+  end
+end
+
+
+# Address Information
+# ==========================================================================================
+
+describe Address do
+
+
+
+end
+
+
+# Bank Account Information
+# ==========================================================================================
 
 describe BankAccount do
 

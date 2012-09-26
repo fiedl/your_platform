@@ -64,24 +64,52 @@ class ProfileField < ActiveRecord::Base
   #
   #    class BankAccount < ProfileField
   #      ...
-  #      has_child_profile_field_accessors :account_holder, :account_number, ...
+  #      has_child_profile_fields :account_holder, :account_number, ...
   #      ...
   #    end
   #
-  extend ProfileFieldMixins::HasChildProfileFieldAccessors
+  # Furthermore, this method modifies the intializer to build the child fields
+  # on build of the main profile_field.
+  extend ProfileFieldMixins::HasChildProfileFields
 
 end
 
+# Custom Contact Information
+# ==========================================================================================
 
-
+# Custom profile_fields are just key-value fields. They don't have a
+# sub-structure. They are displayed in the contact section of a profile.
+#
 class Custom < ProfileField
   def self.model_name; ProfileField.model_name; end
-
 end
 
+
+# Organisation Membership Information
+# ==========================================================================================
+
+# An organization entry represents the activity of a user in an organization.
+# Such an entry could be:
+#
+#    the user is "Lead Singer" of "the Band XYZ" since "May 2007"
+# 
+# Therefore, this profile_field has got a sub-structure.
+#
+#    Organization
+#         |--------- ProfileField:  :label => :organization
+#         |--------- ProfileField:  :label => :role
+#         |--------- ProfileField:  :label => :since_when
+#
 class Organization < ProfileField
   def self.model_name; ProfileField.model_name; end
+
+  has_child_profile_fields :organization, :role, :since_when
+  
 end
+
+
+# Email Contact Information
+# ==========================================================================================
 
 class Email < ProfileField
   def self.model_name; ProfileField.model_name; end
@@ -91,6 +119,10 @@ class Email < ProfileField
   end
 
 end
+
+
+# Address Information
+# ==========================================================================================
 
 class Address < ProfileField
   def self.model_name; ProfileField.model_name; end
@@ -150,23 +182,15 @@ class Address < ProfileField
 
 end
 
+
+# Bank Account Information
+# ==========================================================================================
+
 class BankAccount < ProfileField
   def self.model_name; ProfileField.model_name; end
 
-  has_child_profile_field_accessors( :account_holder, :account_number, :bank_code, 
-                                     :credit_institution, :iban, :bic )
-
-  def initialize( *attrs ) 
-    super( *attrs )
-    if self.parent == nil  # do it only for the parent field, not the children as well
-      [ :account_holder, :account_number, :bank_code, 
-        :credit_institution, :iban, :bic ].each do |label|
-         
-        self.children.build( label: label )
-      
-      end
-    end
-  end
+  has_child_profile_fields( :account_holder, :account_number, :bank_code, 
+                            :credit_institution, :iban, :bic )
 
 end
 
