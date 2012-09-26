@@ -5,15 +5,74 @@ class ProfileField < ActiveRecord::Base
   
   belongs_to             :profileable, polymorphic: true
 
-  # Profilfelder können zusammengesetzt sein: 
+  # There are profile_fields that are composed of other profile_fields. 
+  # For example, the BankAccount profile_field type is composed.
+  #
+  #   BankAccount
+  #        |------- ProfileField:  :label => "Account Holder"
+  #        |------- ProfileField:  :label => "Account Number"
+  #        |------- ProfileField:  :label => "Bank Code"
+  #        |------- ProfileField:  :label => "Credit Institution"
+  #        |------- ProfileField:  :label => "IBAN"
+  #        |------- ProfileField:  :label => "BIC"
+  # 
+  # You can add this structured ProfileField manually:
+  #
+  #    account = ProfileField.create( label: "Bank Account", type: "BankAccount" )
+  #    account.children.create( label: "Account Holder", value: ... )
+  #    ...
+  # 
+  # Or, you can use the customized `create` method of the specialized class BankAccount,
+  # which inherits from ProfileField, to create a blank BankAccount-type profile_field
+  # with all children auto-created empty.
+  #
+  #    account = BankAccount.create( label: "Bank Account" )
+  #
   acts_as_tree
 
+  # Often, profile_fields are to be displayed in a certain manner on a HTML page.
+  # This method returns the profile_field's value as HTML code in the way
+  # the profile_field should be displayed.
+  #
+  # Override this in the inheriting classes in ordner to modify the html output 
+  # of the value.
+  #
   def display_html
-    # Override this in the inheriting classes in ordner to modify the html output of the value.
     self.value
   end
 
+  # This method returns the label text of the profile_field.
+  # If a translation exists, the translation is returned instead.
+  #
+  def label
+    label_text = super
+    translated_label_text = I18n.translate( label_text, :default => label_text )
+  end
+
+  # This creates an easier way to access a composed ProfileField's child field
+  # values. Instead of calling
+  #        
+  #    bank_account.children.where( :label => :account_number ).first.value
+  #    bank_account.children.where( :label => :account_number ).first.value = "12345"
+  #
+  # you may call
+  #
+  #    bank_account.account_number
+  #    bank_account.account_number = "12345"
+  #
+  # after telling the profile_field to create these accessors:
+  #
+  #    class BankAccount < ProfileField
+  #      ...
+  #      has_child_profile_field_accessors :account_holder, :account_number, ...
+  #      ...
+  #    end
+  #
+  extend ProfileFieldMixins::HasChildProfileFieldAccessors
+
 end
+
+
 
 class Custom < ProfileField
   def self.model_name; ProfileField.model_name; end
@@ -93,6 +152,21 @@ end
 
 class BankAccount < ProfileField
   def self.model_name; ProfileField.model_name; end
+
+  has_child_profile_field_accessors( :account_holder, :account_number, :bank_code, 
+                                     :credit_institution, :iban, :bic )
+
+  def initialize( *attrs ) 
+    super( *attrs )
+    if self.parent == nil  # do it only for the parent field, not the children as well
+      [ :account_holder, :account_number, :bank_code, 
+        :credit_institution, :iban, :bic ].each do |label|
+         
+        self.children.build( label: label )
+      
+      end
+    end
+  end
 
 end
 
