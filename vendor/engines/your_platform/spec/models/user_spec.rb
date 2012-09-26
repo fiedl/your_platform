@@ -249,8 +249,6 @@ describe User do
     end
   end
 
-  pending "corporations for guest users"
-
   
   # Memberships
   # ------------------------------------------------------------------------------------------

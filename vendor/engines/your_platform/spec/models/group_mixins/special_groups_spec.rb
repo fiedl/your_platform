@@ -170,6 +170,7 @@ describe GroupMixins::SpecialGroups do
       @container_subgroup.reload
       @guests_parent.reload
       @subgroup_guests_parent.reload
+      @other_group = create( :group )
     end
 
     describe "#create_guests_parent_group" do
@@ -199,9 +200,15 @@ describe GroupMixins::SpecialGroups do
     end
 
     describe "#find_guest_users" do
-      subject { @container_group.find_guest_users }
-      it "should find all descendant users of the group" do
-        subject.should include( @guest1, @guest2 )
+      describe "if the group has a guests_parent group" do
+        subject { @container_group.find_guest_users }
+        it "should find all descendant users of the group" do
+          subject.should include( @guest1, @guest2 )
+        end
+      end
+      describe "if the group does not have a guests_parent group" do
+        subject { @other_group.find_guest_users }
+        it { should == [] }
       end
     end
 

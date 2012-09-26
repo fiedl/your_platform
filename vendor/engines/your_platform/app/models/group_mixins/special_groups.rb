@@ -205,7 +205,11 @@ module GroupMixins::SpecialGroups
   # find_guests_groups
 
   def find_guest_users
-    self.find_guests_parent_group.descendant_users
+    if self.find_guests_parent_group
+      self.find_guests_parent_group.descendant_users 
+    else
+      []
+    end
   end
 
   # In contrast to officers, `group.guests` should list all guest USERS, not
