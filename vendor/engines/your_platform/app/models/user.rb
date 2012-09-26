@@ -279,8 +279,9 @@ class User < ActiveRecord::Base
   
 
 
-  # TODO:
-  # Achtung! Profil wird auf wingolfsplattform.org nicht angezeigt.
+
+  # TODO: 
+  # Pre-Compile Assets on wingolfsplattform.org
   
   # TODO:
   # Hier weiter!

@@ -162,39 +162,57 @@ module GroupMixins::SpecialGroups
   # Officers Parent
   # ==========================================================================================
 
-  def officers_parent
-    self.find_officers_parent_group
-  end
+  # Each group may have officers, e.g. the president of the organization.
+  # Officers are collected in a sub-group with the flag :officers_parent. This 
+  # officers_parent-group may also have sub-groups. But, of course, the officers_parent 
+  # group must not have another officers_parent sub-group.
+  # 
+  extend HasSpecialChildParentGroup
+  has_special_child_parent_group :officers
 
-  def officers_parent!
-    self.create_officers_parent_group
-  end
+  # This provides the following methods:
+  # officers_parent
+  # officers_parent!
+  # officers
+  # find_officers_parent_group
+  # create_officers_parent_group
+  # find_officers_groups
 
-  def officers
-    self.find_officers_groups
-  end
-
-  def find_officers_parent_group
-    self.child_groups.find_by_flag( :officers_parent ) unless self.has_flag? :officers_parent
-  end
-
-  def create_officers_parent_group
-    unless self.has_flag? :officers_parent
-      officers_parent = self.officers_parent
-      unless self.officers_parent
-        officers_parent = Group.create( name: I18n.translate( :officers_parent ) )
-        officers_parent.parent_groups << self
-        officers_parent.add_flag( :officers_parent )
-      end
-      return officers_parent
-    end
-  end
-
+  # This finder method has to be overridden, since we want to have a special behaviour
+  # for officers: All officers of sub-groups of self should be listed as officers of 
+  # self, too.
+  #
   def find_officers_groups
     officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
     officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
     return officers # if officers.count > 0
   end
 
+
+  # Guests Parent
+  # ==========================================================================================
+
+  # As well as officers, each group may have guests.
+  #
+  has_special_child_parent_group :guests
+
+  # This provides the following methods:
+  # guests_parent
+  # guests_parent!
+  # guests
+  # find_guests_parent_group
+  # create_guests_parent_group
+  # find_guests_groups
+
+  def find_guest_users
+    self.find_guests_parent_group.descendant_users
+  end
+
+  # In contrast to officers, `group.guests` should list all guest USERS, not
+  # all officers groups.
+  #
+  def guests
+    self.find_guest_users
+  end
 
 end
