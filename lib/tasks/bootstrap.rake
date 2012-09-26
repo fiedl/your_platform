@@ -32,6 +32,7 @@ namespace :bootstrap do
     p "Task: Add basic pages."
     home = Page.create( title: "wingolf.org" )
     home.add_flag :root
+    n = home.nav_node; n.slim_menu = true; n.save; n = nil
     mitglieder_start = home.child_pages.create( title: "Mitglieder Start" )
     mitglieder_start.add_flag :intranet_root
     mitglieder_start.child_groups << Group.everyone
