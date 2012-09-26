@@ -23,7 +23,7 @@
 </div>
 
 <% @user.sections.each do |section| %>
-<h1><%= t section %></h1>
+<h1 class="section <%= section %>"><%= t section %></h1>
 <%= render partial: 'shared/section', object: section %>
 <% end %>
 

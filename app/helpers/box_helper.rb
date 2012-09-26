@@ -5,8 +5,9 @@ module BoxHelper
     heading = options[ :heading ]
     content = options[ :content ]
     content = yield unless content
+    box_class = options[ :box_class ]
 
-    render partial: 'shared/box', locals: { heading: heading, content: content }
+    render partial: 'shared/box', locals: { heading: heading, content: content, box_class: box_class }
   end
 
   def convert_to_content_box( html_code = nil )
@@ -25,8 +26,9 @@ module BoxHelper
 
     doc.xpath( '//h1' ).collect do |h1_node|
       heading = h1_node.inner_html.html_safe
+      heading_class = h1_node.attr( :class )
       content = h1_node.next_element.to_html.html_safe
-      content_box( heading: heading, content: content )
+      content_box( heading: heading, content: content, box_class: heading_class )
     end.join.html_safe
   end
 
