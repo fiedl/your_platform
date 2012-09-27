@@ -135,6 +135,7 @@ class Address < ProfileField
     ActionController::Base.helpers.simple_format self.value
   end
 
+  # This is needed to display the map later.
   def gmaps4rails_address
     self.value
   end
@@ -143,41 +144,17 @@ class Address < ProfileField
     true
   end
 
-  # TODO: resolve redundancy with class AddressString
-
-
   def latitude ;      geo_information :lat           end
   def longitude ;     geo_information :lng           end
   def country ;       geo_information :country       end
   def country_code ;  geo_information :country_code  end
   def city ;          geo_information :city          end
   def postal_code ;   geo_information :postal_code   end
-
-  def plz
-    return postal_code if country_code == "DE"
-    return nil
-  end
+  def plz ;           geo_information :plz           end
 
   def geo_information( key )
-    @geo_information = geo_information_from_gmaps unless @geo_information
-    @geo_information[ key ] if @geo_information
-  end
-
-  def bv
-    address= AddressString.new self.value
-    return Bv.by_address( address )
-  end
-
-  private
-
-  def geo_information_from_gmaps
-    begin
-      Gmaps4rails.geocode( self.gmaps4rails_address ).first
-    rescue
-      return nil
-      # Wenn keine Verbindung zu GoogleMaps besteht, wird hier ein Fehler auftreten,
-      # der die Anwendung jedoch nicht beenden sollte. 
-    end
+    @address_string ||= AddressString.new( self.gmaps4rails_address )
+    @address_string.geo_information( key )
   end
 
 end
@@ -194,6 +171,12 @@ class BankAccount < ProfileField
 
 end
 
+
+# Description Field
+# ==========================================================================================
+
+# This fields are used to display any kind of free-text descriptive information.
+#
 class Description < ProfileField
   def self.model_name; ProfileField.model_name; end
 
@@ -203,10 +186,40 @@ class Description < ProfileField
 
 end
 
+
+# Phone Number Field
+# ==========================================================================================
+
 class Phone < ProfileField
   def self.model_name; ProfileField.model_name; end
 
+  before_save :auto_format_value
+
+  private
+  def auto_format_value
+    value = self.value
+
+    # determine wheter this is an international number
+    format = :national
+    format = :international if value.start_with?( "00" ) or value.start_with? ( "+" )
+
+    # do only format international numbers, since for national numbers, the country
+    # is unknown and each country formats its national area codes differently.
+    if format == :international
+      value = Phony.normalize( value ) # remove spaces etc.
+      value = value[ 2..-1 ] if value.start_with?( "00" ) # because Phony can't handle leading 00
+      value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
+      value = Phony.formatted( value, :format => format, :spaces => ' ' ) 
+    end
+
+    self.value = value
+  end
+
 end
+
+
+# Homepage Field
+# ==========================================================================================
 
 class Homepage < ProfileField
   def self.model_name; ProfileField.model_name; end
@@ -214,7 +227,7 @@ class Homepage < ProfileField
   def display_html
     url = self.value
     url = "http://#{url}" unless url.starts_with? 'http://'
-    ActionController::Base.helpers.link_to self.value, url
+    ActionController::Base.helpers.link_to url, url
   end
 
 end

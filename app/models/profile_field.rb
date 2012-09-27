@@ -21,9 +21,22 @@ end
 #
 # end
 
+
+# Address Information
+# ==========================================================================================
+
+class Address
+
+  # This method returns the Bv associated with the given address.
+  def bv
+    AddressString.new( self.value ).bv
+  end
+
+end
+
+
 class Study < ProfileField
   def self.model_name; ProfileField.model_name; end
 
 end
-
 

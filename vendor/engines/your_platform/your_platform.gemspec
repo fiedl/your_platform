@@ -36,6 +36,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'rmagick'
 
+  # Phone Numbers Formatting
+  s.add_dependency 'phony'                                         
+
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

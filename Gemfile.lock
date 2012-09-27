@@ -6,6 +6,7 @@ PATH
       carrierwave
       formtastic
       jquery-rails
+      phony
       rails (~> 3.2.6)
       rmagick
 
@@ -146,6 +147,7 @@ GEM
     nokogiri (1.5.5)
     passgen (1.0.2)
     pg (0.14.0)
+    phony (1.8.1)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -271,6 +273,7 @@ DEPENDENCIES
   nokogiri
   passgen
   pg
+  phony
   rails (~> 3.2.5)
   rails-i18n
   rails3-jquery-autocomplete

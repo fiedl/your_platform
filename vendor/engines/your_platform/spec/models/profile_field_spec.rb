@@ -71,7 +71,32 @@ end
 
 describe Address do
 
+  before do
+    @address_field = Address.create( label: "Address of the Brandenburg Gate",
+                                     value: "Pariser Platz 1\n 10117 Berlin" )
+  end
+  subject { @address_field }
+  
+  specify "latitude and longitude should be correct" do
+    subject.latitude.round(4).should == 52.5163 
+    subject.longitude.round(4).should == 13.3777
+  end
 
+  its( :country ) { should == "Germany" }
+  its( :country_code ) { should == "DE" }
+  its( :city ) { should == "Berlin" }
+  its( :postal_code ) { should == "10117" }
+  its( :plz ) { should == "10117" }
+
+  # This is needed in order to display the map later.
+  its( :gmaps4rails_address ) { should == @address_field.value }
+
+  describe "#display_html" do
+    subject { @address_field.display_html }
+    it "should have a line-break in it" do
+      subject.should include( "<br />" )
+    end
+  end
 
 end
 
@@ -140,5 +165,54 @@ describe BankAccount do
       end
     end
   end
+
+end  
+
+# Description Field
+# ==========================================================================================
+
+describe Description do
+  before { @description_field = Description.create( label: "Heraldic Animal", 
+                                                    value: "The heraldic animal of the organisation is a fox." ) }
+  subject { @description_field }
+  its( :display_html ) { should include( @description_field.value ) }
+end
+
+
+# Phone Number Field
+# ==========================================================================================
+
+describe Phone do
+  
+  describe "international number with leading 00" do
+    subject { Phone.create( value: "0049800123456789" ) }
+    its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
+  end
+  
+  describe "international number with leading +" do
+    subject { Phone.create( value: "+49 800 123456789" ) }
+    its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
+  end
+  
+  describe "national number" do
+    subject { Phone.create( value: "0800123456789" ) }
+    it "should not be formatted, since the country is not unique" do
+      subject.value.should == "0800123456789"
+    end
+  end
   
 end
+
+
+# Homepage Field
+# ==========================================================================================
+
+describe Homepage do
+
+  subject { Homepage.create( value: "example.com" ) }
+
+  its( :display_html ) { should == "<a href=\"http://example.com\">http://example.com</a>" }
+
+end
+
+

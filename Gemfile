@@ -171,3 +171,6 @@ gem 'your_platform', path: 'vendor/engines/your_platform'
 #gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
 gem 'rubylight', '>= 1.0.3.2'
 # TODO: Move to *gemspec, when changes pulled into original gem.    
+
+# Phone Number Formatting
+gem 'phony'

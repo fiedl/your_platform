@@ -17,7 +17,18 @@ class AddressString < String
   end
 
   def geo_information( key )
-    @geo_information = geo_information_from_geocoder unless @geo_information
+
+    # cache the geo information object
+    @geo_information ||= geo_information_from_geocoder
+
+    # German plz
+    return self.plz if key == :plz
+
+    # latitude and longitude apparently have been renamed
+    key = :latitude if key == :lat
+    key = :longitude if key == :lng
+
+    # return the requested geo information
     @geo_information.send key if @geo_information
   end
 
