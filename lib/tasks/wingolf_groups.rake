@@ -48,7 +48,7 @@ namespace :wingolf_groups do
   task import_bv_mappings: :environment do
     p "Task: Import BV mappings. This really will take a while."
     require 'csv'
-    file_name = File.join( Rails.root, "import", "bv_zuordnung.csv" )
+    file_name = File.join( Rails.root, "import", "groups_bv_zuordnung.csv" )
     if File.exists? file_name
       counter = 0
       CSV.foreach file_name, headers: true, col_sep: ';' do |row|
@@ -56,6 +56,8 @@ namespace :wingolf_groups do
         counter += 1
       end
       p "BV Mappings created: " + counter.to_s
+    else
+      p "File Missing: import/groups_bv_zuordnung.csv !!"
     end
   end
 
