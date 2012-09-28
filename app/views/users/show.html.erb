@@ -6,7 +6,11 @@
 </div>
 <% end %>
 <% if @user %>
-<h1><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%= h @user.aktivitaetszahl %></h1>
+<h1>
+  <%= best_in_place @user, :first_name %> 
+  <%= best_in_place @user, :last_name %> &nbsp; 
+  <%= h @user.aktivitaetszahl %>
+</h1>
 <div>
   <span id="user_workflows" class="show_only_in_edit_mode">
     <ul>

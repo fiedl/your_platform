@@ -9,7 +9,6 @@ module Profileable
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
 #    attr_accessor :email
     include InstanceMethodsForProfileables
-    include SessionsHelper
   end
 
   module InstanceMethodsForProfileables

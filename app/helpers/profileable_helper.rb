@@ -39,7 +39,11 @@ module ProfileableHelper
 
   def map_of_address_profile_fields( address_profile_fields )
     json = address_profile_fields.to_gmaps4rails
-    gmaps4rails( json ) if json
+    if json
+      gmaps( :markers => { :data => json }, 
+             :map_options => { :auto_adjust => true, :auto_zoom => false, :zoom => 5 }
+             )   
+    end 
   end
   
 end
