@@ -14,9 +14,9 @@
     </dl>
   <% end %>
   
-  <% type_or_types = @user.profile_field_type_by_section( section ) %>
+  <% type_or_types = profileable.profile_field_type_by_section( section ) %>
   <%= add_button( :action => :create_profile_field, 
-                  :user_id => @user.id, 
+                  :profileable_id => profileable.id, 
                   :type => type_or_types, 
                   :section => section ) unless type_or_types.kind_of? Array %>
 
