@@ -35,8 +35,13 @@ class Address
 end
 
 
+# Studies Information
+# ==========================================================================================
+
 class Study < ProfileField
   def self.model_name; ProfileField.model_name; end
+
+  has_child_profile_fields :from, :to, :university, :subject, :specialization
 
 end
 
