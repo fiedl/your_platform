@@ -22,10 +22,7 @@
   </dl>
 </div>
 
-<% @user.sections.each do |section| %>
-<h1 class="section <%= section %>"><%= t section %></h1>
-<%= render partial: 'shared/section', object: section %>
-<% end %>
+<%= profile_sections_for_profileable @user, @user.sections %>
 
 <% if @user.corporations.count > 0 %>
 <h1>Wingolfitischer Lebenslauf</h1>

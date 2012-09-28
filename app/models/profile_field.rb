@@ -32,6 +32,26 @@ class Address
     AddressString.new( self.value ).bv
   end
 
+  # The html output method is overridden here, in order to display the bv as well.
+  #
+  def display_html
+    ActionView::Base.send( :include, Rails.application.routes.url_helpers )
+
+    text_to_display = self.value
+
+    if self.bv
+      text_to_display = "
+        <p>#{text_to_display}</p>
+        <p class=\"address_is_in_bv\">
+          (#{I18n.translate( :address_is_in_bv )} " + 
+        ActionController::Base.helpers.link_to( self.bv.name, self.bv.becomes( Group ) ) + 
+        ")
+        </p>"
+    end
+
+    ActionController::Base.helpers.simple_format( text_to_display )
+  end
+
 end
 
 

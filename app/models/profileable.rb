@@ -9,6 +9,7 @@ module Profileable
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
 #    attr_accessor :email
     include InstanceMethodsForProfileables
+    include SessionsHelper
   end
 
   module InstanceMethodsForProfileables
@@ -23,7 +24,8 @@ module Profileable
     end
 
     def sections
-      [:contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description]
+      [:contact_information, :about_myself, :study_information, :career_information, 
+       :organizations, :bank_account_information, :description]
     end
 
     def profile_fields_by_type( type_or_types )
