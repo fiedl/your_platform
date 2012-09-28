@@ -1,7 +1,7 @@
 <span class="profile_field">
   <%
      input_type = 'input'
-     input_type = 'textarea' if [ "Address", "Description" ].include? profile_field.type
+     input_type = 'textarea' if [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Description" ].include? profile_field.type
   %>
   <dt>
     <%= best_in_place profile_field, :label %>

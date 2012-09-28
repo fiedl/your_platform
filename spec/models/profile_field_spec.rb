@@ -9,11 +9,11 @@ end
 # Address Information
 # ==========================================================================================
 
-describe Address do
+describe ProfileFieldTypes::Address do
 
   before do
-    @address_field = Address.create( label: "Address of the Brandenburg Gate",
-                                     value: "Pariser Platz 1\n 10117 Berlin" )
+    @address_field = ProfileFieldTypes::Address.create( label: "Address of the Brandenburg Gate",
+                                                        value: "Pariser Platz 1\n 10117 Berlin" )
 
     create( :bv_group, name: "BV 00" ) # just to have another one in the database
     @bv = create( :bv_group, name: "BV 01", token: "BV 01" )
@@ -34,9 +34,9 @@ end
 # Studies Information
 # ==========================================================================================
 
-describe Study do
+describe ProfileFieldTypes::Study do
 
-  subject { Study.create() }
+  subject { ProfileFieldTypes::Study.create() }
   
   its( 'children.count' ) { should == 5 }
   it { should respond_to :from }

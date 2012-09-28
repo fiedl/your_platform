@@ -14,11 +14,11 @@ module Profileable
   module InstanceMethodsForProfileables
     
     def email
-      profile_fields_by_type( "Email" ).first.value if profile_fields_by_type( "Email" ).first
+      profile_fields_by_type( "ProfileFieldTypes::Email" ).first.value if profile_fields_by_type( "ProfileFieldTypes::Email" ).first
     end
     def email=( email )
-      @email_profile_field = profile_fields_by_type( "Email" ).first unless @email_profile_field
-      @email_profile_field = profile_fields.build( type: "Email", label: "E-Mail" ) unless @email_profile_field
+      @email_profile_field = profile_fields_by_type( "ProfileFieldTypes::Email" ).first unless @email_profile_field
+      @email_profile_field = profile_fields.build( type: "ProfileFieldTypes::Email", label: "E-Mail" ) unless @email_profile_field
       @email_profile_field.value = email
     end
 
@@ -36,19 +36,21 @@ module Profileable
     def profile_fields_by_section( section )
       case section
       when :contact_information
-        profile_fields_by_type [ "Address", "Email", "Phone", "Homepage", "Custom" ]
+        profile_fields_by_type [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
+                                 "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", 
+                                 "ProfileFieldTypes::Custom" ]
       when :about_myself
-        profile_fields_by_type "About"
+        profile_fields_by_type "ProfileFieldTypes::About"
       when :study_information
-        profile_fields_by_type "Study"
+        profile_fields_by_type "ProfileFieldTypes::Study"
       when :career_information
-        profile_fields_by_type [ "Job", "Competence" ]
+        profile_fields_by_type [ "ProfileFieldTypes::Job", "ProfileFieldTypes::Competence" ]
       when :organizations
-        profile_fields_by_type "Organization"
+        profile_fields_by_type "ProfileFieldTypes::Organization"
       when :bank_account_information
-        profile_fields_by_type "BankAccount"
+        profile_fields_by_type "ProfileFieldTypes::BankAccount"
       when :description
-        profile_fields_by_type "Description"
+        profile_fields_by_type "ProfileFieldTypes::Description"
       else
         []
       end
@@ -57,19 +59,20 @@ module Profileable
     def profile_field_type_by_section(section)
       case section
         when :contact_information
-          [ "Address", "Email", "Phone", "Homepage", "Custom" ]
+          [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
+            "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
         when :about_myself
-          "About"
+          "ProfileFieldTypes::About"
         when :study_information
-          "Study"
+          "ProfileFieldTypes::Study"
         when :career_information
-          [ "Job", "Competence" ]
+          [ "ProfileFieldTypes::Job", "ProfileFieldTypes::Competence" ]
         when :organizations
-          "Organization"
+          "ProfileFieldTypes::Organization"
         when :bank_account_information
-          "BankAccount"
+          "ProfileFieldTypes::BankAccount"
         when :description
-          "Description"
+          "ProfileFieldTypes::Description"
         else
           []
       end

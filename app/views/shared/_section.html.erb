@@ -3,8 +3,8 @@
 <div id="section_<%= section %>">
 
   <% if section.to_sym == :contact_information %> 
-    <% if profileable.profile_fields_by_type( "Address" ).count > 0 %>
-      <%= map_of_address_profile_fields( profileable.profile_fields_by_type( "Address" ) ) %>
+    <% if profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0 %>
+      <%= map_of_address_profile_fields( profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) ) %>
     <% end %>
   <% end %>
 

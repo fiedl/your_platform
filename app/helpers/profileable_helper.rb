@@ -38,6 +38,9 @@ module ProfileableHelper
   end
 
   def map_of_address_profile_fields( address_profile_fields )
+    address_profile_fields = address_profile_fields.select do |pf|
+      pf.type == "ProfileFieldTypes::Address"
+    end
     json = address_profile_fields.to_gmaps4rails
     if json
       gmaps( :markers => { :data => json }, 
