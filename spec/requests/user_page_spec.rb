@@ -28,6 +28,15 @@ describe "User page" do
     it { should have_selector('h1', text: "Career Information") }
     it { should have_selector('h1', text: "Organizations") }
     it { should have_selector('title', text: "Wingolfsplattform") }
-  end 
+
+    it { should have_link "OrganizationsEditButton"}
+    it { should have_link "Save" } #how to test that it is hidden
+    it { should have_link "Add" } #how to test that it is hidden
+
+    describe "and clicking on the organizations edit button" do
+      before { click_link "OrganizationsEditButton" }
+
+    end
+  end
 end
 
