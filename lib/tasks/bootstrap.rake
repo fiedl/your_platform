@@ -11,12 +11,15 @@ namespace :bootstrap do
 
     # Group 'Everyone' / 'Jeder'
     Group.create_everyone_group unless Group.everyone
+    Group.find_everyone_group.update_attributes( name: "Jeder" )
 
     # Corporations Parent Group ("Wingolf am Hochschulort")
     Group.create_corporations_parent_group unless Group.corporations_parent
+    Group.find_corporations_parent_group.update_attributes( name: "Wingolf am Hochschulort" )
 
     # Bvs Parent Group ("Bezirksverbände")
     Group.create_bvs_parent_group unless Group.bvs_parent 
+    Group.find_bvs_parent_group.update_attributes( name: "Bezirksverbände" )
 
   end
 
