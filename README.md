@@ -29,6 +29,7 @@ bundle install
 bundle exec rake db:create db:migrate
 bundle exec rake bootstrap:all
 bundle exec rake db:test:prepare
+RAILS_ENV=test bundle exec rake bootstrap:all
 bundle exec rake
 ```
 
