@@ -19,6 +19,21 @@ HTTP-Auth-Login: `aki`, Passwort: `deleted-string`
 
 ### Contribution & Continuous Deployment
 
+#### Setup
+
+```bash
+cd ~/rails
+git clone git@github.com:fiedl/wingolfsplattform.git
+cd ~/rails/wingolfsplattform
+bundle install
+bundle exec rake db:create db:migrate
+bundle exec rake bootstrap:all
+bundle exec rake db:test:prepare
+bundle exec rake
+```
+
+#### Continuous Deployment
+
 Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt. 
 **Mit großer Macht geht große Verantwortung einher!** :)
 
