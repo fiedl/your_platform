@@ -72,6 +72,3 @@ module ProfileFieldTypes
 
 end
 
-class Study < ProfileFieldTypes::Study
-end
-

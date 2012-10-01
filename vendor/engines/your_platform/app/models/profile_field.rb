@@ -252,33 +252,3 @@ module ProfileFieldTypes
   end
 
 end
-
-
-# ==========================================================================================
-# TODO
-# DELETE THOSE CLASSES AFTER A WHILE:
-# ==========================================================================================
-
-class Custom < ProfileFieldTypes::Custom
-end
-
-class Organization < ProfileFieldTypes::Organization
-end
-
-class Email < ProfileFieldTypes::Email
-end
-
-class Address < ProfileFieldTypes::Address
-end
-
-class BankAccount < ProfileFieldTypes::BankAccount
-end
-
-class Description < ProfileFieldTypes::Description
-end
-
-class Phone < ProfileFieldTypes::Phone
-end
-
-class Homepage < ProfileFieldTypes::Homepage
-end
