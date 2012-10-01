@@ -10,7 +10,7 @@ module Flagable
     end
     
     def find_by_flag( flag )
-      find_all_by_flag( flag ).first
+      find_all_by_flag( flag ).limit( 1 ).readonly( false ).first
     end
 
   end
