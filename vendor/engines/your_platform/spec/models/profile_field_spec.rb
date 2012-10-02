@@ -72,8 +72,12 @@ end
 describe ProfileFieldTypes::Address do
 
   before do
-    @address_field = ProfileFieldTypes::Address.create( label: "Address of the Brandenburg Gate",
-                                                        value: "Pariser Platz 1\n 10117 Berlin" )
+    # use a global variable ($...) to make sure the profile_field objects is only created
+    # once. Otherwise, this series of tests will hit the traffic limitation of the 
+    # geodata service of google.
+    $address_field ||= ProfileFieldTypes::Address.create( label: "Address of the Brandenburg Gate",
+                                                          value: "Pariser Platz 1\n 10117 Berlin" )
+    @address_field = $address_field
   end
   subject { @address_field }
   
