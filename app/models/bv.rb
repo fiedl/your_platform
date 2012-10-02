@@ -7,7 +7,8 @@ class Bv < Group
 
   def self.by_plz( plz )
     bv_token = BvMapping.find_by_plz( plz ).bv_name if BvMapping.find_by_plz( plz )
-    return ( Bv.all.select { |group| group.token == bv_token } ).first.becomes Bv if bv_token
+    bv_group = ( Bv.all.select { |group| group.token == bv_token } ).first if bv_token
+    return bv_group.becomes Bv if bv_group
   end
 
   def self.by_address( address )

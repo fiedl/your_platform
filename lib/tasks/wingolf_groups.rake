@@ -71,10 +71,9 @@ namespace :wingolf_groups do
     end
   end
 
-  desc "Import BV groups"
   task import_bv_groups: :environment do
-    p "Task: Import BV groups"
-    Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs
+    print "\n" + "Task: Import BV groups. \n".cyan
+    Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs_parent
   end
 
   desc "Import groups: Philistervereine vertagter Wingolfsverbindungen"
