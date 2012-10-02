@@ -48,7 +48,7 @@ module RelationshipsHelper
   def relationship_tools_common( options = {} )
     user = options[ :user ]
     data = {}
-    data = { :user_id => user.id, :user_title => user.title } if user
+    data = { :user_id => user.id, :user_title => user.title, :relationship_is_label => "Leibbursch" } if user
     add_button( relationships_path, :method => :post, :data => data )
   end
 
