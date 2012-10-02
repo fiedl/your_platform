@@ -4,7 +4,9 @@
 
   <% if section.to_sym == :contact_information %> 
     <% if profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0 %>
-      <%= map_of_address_profile_fields( profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) ) %>
+      <span id="contact_section_google_maps" class="do_not_show_in_edit_mode">
+	<%= map_of_address_profile_fields( profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) ) %>
+      </span>
     <% end %>
   <% end %>
 
