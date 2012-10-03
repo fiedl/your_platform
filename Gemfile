@@ -147,7 +147,7 @@ gem 'edit_mode', '>= 0.0.6'                                             # MIT Li
 #gem 'edit_mode', path: '../edit_mode'
 
 # hide slim breadcrumb elements until user hovers the separator, SF
-gem 'slim_breadcrumb'                                                   # MIT License
+gem 'slim_breadcrumb', '>= 0.0.2'                                       # MIT License
 
 # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
 gem 'rails3_acts_as_paranoid'
