@@ -49,6 +49,12 @@ RSpec.configure do |config|
     Group.create_everyone_group
     Group.create_corporations_parent_group
     Group.create_bvs_parent_group
+
+    # Set the default locale.
+    # Notice: This has to be set to the same value as in config/application.rb.
+    # Because, in tests withs :js => true, the setting from config/application.rb is used.
+    I18n.default_locale = :de
+    I18n.locale = :de
     
   end
   config.after do
@@ -63,6 +69,6 @@ RSpec.configure do |config|
   # FactoryGirl syntax helper
   config.include FactoryGirl::Syntax::Methods
 
-
 end
+
 

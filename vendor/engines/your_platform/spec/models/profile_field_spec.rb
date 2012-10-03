@@ -123,8 +123,8 @@ describe ProfileFieldTypes::BankAccount do
     end
     it "should create the correct labels for the children" do
       subject.children.collect { |child| child.label }.should ==
-        [ "Account Holder", "Account Number", "Bank Code", 
-          "Credit Institution", "IBAN", "BIC" ]
+        [ I18n.t( :account_holder ), I18n.t( :account_number ), I18n.t( :bank_code ), 
+          I18n.t( :credit_institution ), I18n.t( :iban ), I18n.t( :bic ) ]
     end
 
   end

@@ -25,15 +25,16 @@ describe "User page", js: false do
       visit new_session_path
       fill_in 'login_name', with: @login_string
       fill_in 'password', with: @password
-      click_button :login # I18n.t( :login )
+      click_button I18n.t( :login )
 
       visit user_path( @user )
     end
   
-    it { should have_selector('h1', text: "About Myself") }
-    it { should have_selector('h1', text: "Study Information") }
-    it { should have_selector('h1', text: "Career Information") }
-    it { should have_selector('h1', text: "Organizations") }
+    it { should have_selector('h1', text: I18n.t( :about_myself ) ) }
+    it { should have_selector('h1', text: I18n.t( :study_information ) ) }
+    it { should have_selector('h1', text: I18n.t( :career_information ) ) }
+    it { should have_selector('h1', text: I18n.t( :organizations ) ) }
+
     it { should have_selector('title', text: "Wingolfsplattform") }
   end 
 end
