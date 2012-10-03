@@ -30,7 +30,8 @@ module ToolButtonsHelper
   end
 
   def tool_button( type, icon, text, options = {} )
-    options = { :class => "button #{type}_button btn" }.merge( options )
+    css_class = "button #{type}_button btn #{options[ :class ]}"; options.delete( :class )
+    options = { :class => css_class }.merge( options )
     href = options[ :href ]
     href = "#" unless href
     options.delete( :href )
