@@ -115,7 +115,9 @@ group :test, :development do
 end
 group :test do
   gem 'capybara' #, '1.1.2'
+  gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
+  gem 'database_cleaner'
 #  gem 'guard-spork'
 #  gem 'spork'
 end

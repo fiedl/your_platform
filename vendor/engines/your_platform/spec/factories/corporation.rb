@@ -8,7 +8,8 @@ FactoryGirl.define do
     sequence( :internal_token ) { |n| "#{token}C" }
 
     after( :create ) do |corporation|
-      raise 'no corporations parent group' unless Group.find_corporations_parent_group
+      Group.create_everyone_group unless Group.find_everyone_group
+      Group.create_corporations_parent_group unless Group.find_corporations_parent_group
       Group.corporations << corporation
     end
 

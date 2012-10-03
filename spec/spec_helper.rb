@@ -31,7 +31,29 @@ RSpec.configure do |config|
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
   # examples within a transaction, remove the following line or assign false
   # instead of true.
-  config.use_transactional_fixtures = true
+  # config.use_transactional_fixtures = true
+
+  # This is to allow the creation of objects even if :js => true.
+  # see * http://stackoverflow.com/questions/8178120/capybara-with-js-true-causes-test-to-fail/8698940#8698940
+  #     * http://stackoverflow.com/questions/10692161/issue-with-capybara-request-specs-with-js-cant-find-the-model
+  config.use_transactional_fixtures = false
+  config.before :each do
+    if Capybara.current_driver == :rack_test
+      DatabaseCleaner.strategy = :transaction
+    else
+      DatabaseCleaner.strategy = :truncation
+    end
+    DatabaseCleaner.start
+
+    # create the basic objects that are needed for all specs
+    Group.create_everyone_group
+    Group.create_corporations_parent_group
+    Group.create_bvs_parent_group
+    
+  end
+  config.after do
+    DatabaseCleaner.clean
+  end
 
   # If true, the base class of anonymous controllers will be inferred
   # automatically. This will be the default behavior in future versions of
@@ -41,4 +63,6 @@ RSpec.configure do |config|
   # FactoryGirl syntax helper
   config.include FactoryGirl::Syntax::Methods
 
+
 end
+
