@@ -1,6 +1,6 @@
 ## Wingolfsplattform
 
-Dies ist der Quellcode der entstehenden neuen Plattform von Wingolfsbund und VAW, der sog **Wingolfsplattform**. 
+Dies ist der Quellcode der entstehenden neuen Plattform von Wingolfsbund und VAW, der sog **Wingolfsplattform**. Die Plattform soll vier Hauptaufgaben erfüllen: Hilfestellung bei der Verwaltung der Mitglieder des Wingolfs, Netzwerk der Mitglieder, Austausch von Informationen und Dokumenten, Präsentation nach außen. 
 Nähere Informationen zum Anforderungsspektrum unter http://wingolf.org/ak-internet.
 
 **Ansprechpartner**:
@@ -17,7 +17,7 @@ HTTP-Auth-Login: `aki`, Passwort: `deleted-string`
 
 [![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=master&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) master
 
-### Contribution & Continuous Deployment
+### Contribution
 
 #### Setup
 
@@ -29,9 +29,15 @@ bundle install
 bundle exec rake db:create db:migrate
 bundle exec rake bootstrap:all
 bundle exec rake db:test:prepare
-RAILS_ENV=test bundle exec rake bootstrap:all
 bundle exec rake
 ```
+
+#### your_platform
+
+Der abstrakte Teil des Quellcodes, d.h. derjenige Teil, der auch von anderen Organisationen als dem Wingolf verwendet werden kann, ist in der `your_platform`-Engine unterzubringen. Die Konkretisierung und Anpassung auf die wingolfitischen Bedürfnisse erfolgt in der Haupt-Applikation. 
+
+Dieser aufgespaltete Zustand ist noch nicht erreicht. Der aktuelle Stand ist der Migrations-Matrix zu entnehmen, die unter der folgenden Adresse abgerufen werden kann:
+https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU2U0IteWc&pli=1#gid=0
 
 #### Continuous Deployment
 
