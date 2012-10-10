@@ -16,6 +16,9 @@ module GroupMixins::SpecialGroups
 
   # Erstbandphilister
   # ==========================================================================================
+
+  # Finder and Creator Methods
+  # ------------------------------------------------------------------------------------------
   
   def is_erstbandphilister_parent_group?
     self.has_flag?( :erstbandphilister_parent_group ) and
@@ -24,16 +27,68 @@ module GroupMixins::SpecialGroups
         )
   end
 
+  def find_erstbandphilister_parent_group
+    self.child_groups.find_by_flag( :erstbandphilister_parent_group )
+  end
+
+  def create_erstbandphilister_parent_group
+    if not find_erstbandphilister_parent_group
+      if self.name == "Philisterschaft" 
+        erstbandphilister = self.child_groups.create( name: "Erstband-Philister" )
+        erstbandphilister.add_flag( :erstbandphilister_parent_group )
+        return erstbandphilister
+      else
+        raise 'erstbandphilister_parent_group has to be a child of a philisterschaft group'
+      end
+    else
+      raise 'erstbandphilister_parent_group already exists'
+    end
+  end
+
+  def erstbandphilister
+    self.find_erstbandphilister_parent_group
+  end
+
+  def erstbandphilister!
+    erstbandphilister ||= self.find_erstbandphilister_parent_group
+    erstbandphilister ||= self.create_erstbandphilister_parent_group
+    erstbandphilister
+  end
+
+  module ClassMethods
+    def create_erstbandphilister_parent_groups
+      Corporation.all.each do |corporation|
+        philisterschaft = corporation.philisterschaft
+        erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
+        if not erstbandphilister
+          erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
+        end
+      end
+    end
+  end
+
+
+  # Redefined User Association Methods
+  # ------------------------------------------------------------------------------------------
+
   def users
     if is_erstbandphilister_parent_group?
       
-      # TODO: definition here
-      # and delete this dummy
-      philisterschaft = self.parent_groups.first 
-      normale_philister = philisterschaft.child_groups.find_by_name( "Philister" )
-      ehrenphilister = philisterschaft.child_groups.find_by_name( "Ehrenphilister" )
-      return normale_philister.child_users + ehrenphilister.child_users
+      philisterschaft = self.parent_groups.first
+      if not philisterschaft.name == "Philisterschaft" 
+        raise error 'the parent_group if this erstbandphilister group is not a philisterschaft group'
+      end
+      corporation = philisterschaft.parent_groups.first.becomes( Corporation )
 
+      erstbandphilister_users = philisterschaft.descendant_users.select do |user|
+
+        # a user is erstbandphilister of a corporation if the corporation is the
+        # first corporation the user has joined.
+        corporation.is_first_corporation_this_user_has_joined?( user )
+
+      end
+                  
+      return erstbandphilister_users
     else
       return super
     end
@@ -54,42 +109,5 @@ module GroupMixins::SpecialGroups
       return super
     end
   end
-
-  def find_erstbandphilister_parent_group
-    self.child_groups.find_by_flag( :erstbandphilister_parent_group )
-  end
-
-  def create_erstbandphilister_parent_group
-    if not find_erstbandphilister_parent_group
-      erstbandphilister = self.child_groups.create( name: "Erstband-Philister" )
-      erstbandphilister.add_flag( :erstbandphilister_parent_group )
-      return erstbandphilister
-    end
-  end
-
-  def erstbandphilister
-    self.find_erstbandphilister_parent_group
-  end
-
-  def erstbandphilister!
-    erstbandphilister ||= self.find_erstbandphilister_parent_group
-    erstbandphilister ||= self.create_erstbandphilister_parent_group
-    erstbandphilister
-  end
-
-  module ClassMethods
-
-    def create_erstbandphilister_parent_groups
-      Wah.all.each do |corporation|
-        philisterschaft = corporation.philisterschaft
-        erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
-        if not erstbandphilister
-          erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
-        end
-      end
-    end
-
-  end
-
 
 end
