@@ -34,7 +34,7 @@ module GroupMixins::SpecialGroups
   def create_erstbandphilister_parent_group
     if not find_erstbandphilister_parent_group
       if self.name == "Philisterschaft" 
-        erstbandphilister = self.child_groups.create( name: "Erstband-Philister" )
+        erstbandphilister = self.child_groups.create( name: "Erstbandphilister" )
         erstbandphilister.add_flag( :erstbandphilister_parent_group )
         return erstbandphilister
       else
