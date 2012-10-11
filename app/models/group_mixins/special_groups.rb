@@ -57,13 +57,18 @@ module GroupMixins::SpecialGroups
 
   module ClassMethods
     def create_erstbandphilister_parent_groups
+      STDOUT.sync = true
       Corporation.all.each do |corporation|
         philisterschaft = corporation.philisterschaft
         erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
         if not erstbandphilister
           erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
+          print ".".green
+        else
+          print ".".yellow
         end
       end
+      print "\n"
     end
   end
 
