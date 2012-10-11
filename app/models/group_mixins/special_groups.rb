@@ -60,12 +60,16 @@ module GroupMixins::SpecialGroups
       STDOUT.sync = true
       Corporation.all.each do |corporation|
         philisterschaft = corporation.philisterschaft
-        erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
-        if not erstbandphilister
-          erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
-          print ".".green
+        if philisterschaft
+          erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
+          if not erstbandphilister
+            erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
+            print ".".green
+          else
+            print ".".yellow
+          end
         else
-          print ".".yellow
+          print ".".red
         end
       end
       print "\n"
