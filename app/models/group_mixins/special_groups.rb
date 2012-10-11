@@ -64,15 +64,15 @@ module GroupMixins::SpecialGroups
           erstbandphilister = philisterschaft.find_erstbandphilister_parent_group
           if not erstbandphilister
             erstbandphilister = philisterschaft.create_erstbandphilister_parent_group
-            print ".".green
+            print ".".green unless Rails.env.test?
           else
-            print ".".yellow
+            print ".".yellow unless Rails.env.test?
           end
         else
-          print ".".red
+          print ".".red unless Rails.env.test?
         end
       end
-      print "\n"
+      print "\n" unless Rails.env.test?
     end
   end
 
