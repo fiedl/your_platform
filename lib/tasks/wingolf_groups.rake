@@ -93,6 +93,11 @@ namespace :wingolf_groups do
     end
   end
 
+  task add_erstbandphilister_parent_groups: :environment do
+    print "\n" + "Task: Add Erstbandphilister Parent Groups. \n".cyan
+    Group.create_erstbandphilister_parent_groups
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :import_wingolf_am_hochschulort_groups,
@@ -101,6 +106,7 @@ namespace :wingolf_groups do
                 :import_bv_groups,
                 :import_wah_vertagte,
                 :set_default_nav_attributes,
+                :add_erstbandphilister_parent_groups
                ]
 
 end
