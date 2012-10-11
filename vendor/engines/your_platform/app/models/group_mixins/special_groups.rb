@@ -96,7 +96,11 @@ module GroupMixins::SpecialGroups
     # Find all corporation groups, i.e. the children of `corporations_parent`.
     #
     def find_corporation_groups
-      self.corporations_parent.child_groups
+      if self.corporations_parent
+        self.corporations_parent.child_groups
+      else
+        []
+      end
     end
 
     # Find corporation groups of a certain user.
