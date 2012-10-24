@@ -4,23 +4,33 @@
 
 namespace :wingolf_groups do
 
+  require 'colored'
+  
+
   desc "Import all wingolf_am_hochschulort groups"
   task import_wingolf_am_hochschulort_groups: :environment do
     p "Task: Import wingolf_am_hochschulort groups"
     Group.json_import_groups_into_parent_group "groups_wingolf_am_hochschulort.json", Group.corporations_parent
   end
 
-  desc "Import default sub structure for wingolf_am_hochschulort groups"
   task import_sub_structure_of_wingolf_am_hochschulort_groups: :environment do
-    p "Task: Import default substructure for wingolf_am_hochschulort groups"
+    STDOUT.sync = true
+    print "\n" + "Task: Import default substructure for wingolf_am_hochschulort groups. \n".cyan
+
     counter = 0
-    Group.corporations_parent.child_groups.each do |woh_group|
-      if woh_group.child_groups.count == 0
-        woh_group.import_default_group_structure "wingolf_am_hochschulort_children.yml"
-        counter += 1
+    Group.corporations.each do |corporation|
+      if corporation.child_groups.count == 0
+        if corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
+          counter += 1
+          print ".".green
+        else
+          print ".".red
+        end
+      else
+        print ".".yellow # nothing to do for this group
       end
     end
-    p "Added sub structure for " + counter.to_s + " groups."
+    print "\n" + ( "Added sub structure for " + counter.to_s + " groups.\n" ).green
   end
 
   task set_default_nav_attributes: :environment do
@@ -48,7 +58,7 @@ namespace :wingolf_groups do
   task import_bv_mappings: :environment do
     p "Task: Import BV mappings. This really will take a while."
     require 'csv'
-    file_name = File.join( Rails.root, "import", "bv_zuordnung.csv" )
+    file_name = File.join( Rails.root, "import", "groups_bv_zuordnung.csv" )
     if File.exists? file_name
       counter = 0
       CSV.foreach file_name, headers: true, col_sep: ';' do |row|
@@ -56,13 +66,14 @@ namespace :wingolf_groups do
         counter += 1
       end
       p "BV Mappings created: " + counter.to_s
+    else
+      p "File Missing: import/groups_bv_zuordnung.csv !!"
     end
   end
 
-  desc "Import BV groups"
   task import_bv_groups: :environment do
-    p "Task: Import BV groups"
-    Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs
+    print "\n" + "Task: Import BV groups. \n".cyan
+    Group.csv_import_groups_into_parent_group "groups_bvs.csv", Group.bvs_parent
   end
 
   desc "Import groups: Philistervereine vertagter Wingolfsverbindungen"
@@ -82,6 +93,11 @@ namespace :wingolf_groups do
     end
   end
 
+  task add_erstbandphilister_parent_groups: :environment do
+    print "\n" + "Task: Add Erstbandphilister Parent Groups. \n".cyan
+    Group.create_erstbandphilister_parent_groups
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :import_wingolf_am_hochschulort_groups,
@@ -90,6 +106,7 @@ namespace :wingolf_groups do
                 :import_bv_groups,
                 :import_wah_vertagte,
                 :set_default_nav_attributes,
+                :add_erstbandphilister_parent_groups
                ]
 
 end

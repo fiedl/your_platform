@@ -241,6 +241,8 @@ module GroupMixins::Import
 
         Group.hash_array_import_groups_into_parent_group( sub_group_hashes, parent_group )
 
+      else
+        return false
       end
     end
 
@@ -267,10 +269,8 @@ module GroupMixins::Import
   #       - Group 3.1
   #
   def import_default_group_structure( yaml_file_title = nil )
-    unless yaml_file_title
-      yaml_file_title = File.join( "default_group_sub_structures",
-                                   "#{self.name}.yml" )
-    end
+    yaml_file_title ||= yaml_file_title = File.join( "default_group_sub_structures",
+                                                     "#{self.name}.yml" )
     parent_group = self
     Group.yaml_import_groups_into_parent_group( yaml_file_title, parent_group )
   end

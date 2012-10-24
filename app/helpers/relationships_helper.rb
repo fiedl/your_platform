@@ -5,7 +5,7 @@ module RelationshipsHelper
     relationships = user.relationships #parent_relationships + user.child_relationships
     content_tag( :ul ) do
       [ relationship_lis( relationships ),
-        relationship_tools_common_li
+        relationship_tools_common_li( user: user )
       ].join.html_safe
      end
   end
@@ -37,16 +37,19 @@ module RelationshipsHelper
     end
   end
 
-  def relationship_tools_common_li
+  def relationship_tools_common_li( options = {} )
     show_only_in_edit_mode_span do
       content_tag :li do
-        relationship_tools_common
+        relationship_tools_common( options )
       end
     end
   end
 
-  def relationship_tools_common
-    add_button( nil )
+  def relationship_tools_common( options = {} )
+    user = options[ :user ]
+    data = {}
+    data = { :user_id => user.id, :user_title => user.title, :relationship_is_label => "Leibbursch" } if user
+    add_button( relationships_path, :method => :post, :data => data )
   end
 
 # def user_best_in_place_if_not_me( object, user_attribute, me_user )

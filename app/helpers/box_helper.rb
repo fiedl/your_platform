@@ -24,9 +24,13 @@ module BoxHelper
     # * http://nokogiri.org/Nokogiri/XML/Node.html#method-i-next_element
     doc = Nokogiri::HTML( html_code )
 
+    box_counter = 0
     doc.xpath( '//h1' ).collect do |h1_node|
+      box_counter += 1
       heading = h1_node.inner_html.html_safe
       heading_class = h1_node.attr( :class )
+      heading_class ||= ""
+      heading_class += " first" if box_counter == 1
       content = h1_node.next_element.to_html.html_safe
       content_box( heading: heading, content: content, box_class: heading_class )
     end.join.html_safe

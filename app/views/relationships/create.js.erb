@@ -1,0 +1,32 @@
+
+// Create a new relationships list item
+created_relationship_li = $( "<%=j relationship_li( @relationship ) %>" )
+
+// Insert this new list item as the last one in the section of the list items
+// that can be seen also when not in edit_mode.
+created_relationship_li.insertBefore( 
+    $( ".section.relationships .add_button" ).closest( "li" ).closest( ".show_only_in_edit_mode" )
+)
+
+// Add all methods and triggers that are needed for the edit mode to the new
+// elements.
+created_relationship_li.apply_edit_mode()
+
+// And finally, trigger the edit_mode in order to make the new entry be shown
+// as text fields.
+created_relationship_li.find( ".editable" ).trigger( "edit" )
+
+// Set the user as the last partner of the relationship if given.
+user_title = $( ".section.relationships .add_button" ).attr( 'data-user-title' )
+created_relationship_li.find( "input[name=of_by_title]" ).attr( 'value', user_title )
+
+// Set the `is` label of the relationship.
+is_label = $( ".section.relationships .add_button" ).attr( 'data-relationship-is-label' )
+created_relationship_li.find( "input[name=is]" ).attr( 'value', is_label )
+
+// Set the focus to the first field
+created_relationship_li.find( "input[name=who_by_title]" ).focus()
+
+
+
+

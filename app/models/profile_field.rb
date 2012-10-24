@@ -7,7 +7,7 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/profile_field' ).
 # inherit from this class.
 #
 class ProfileField
-  
+
 end
 
 # Template
@@ -22,21 +22,53 @@ end
 # end
 
 
-# Address Information
-# ==========================================================================================
+module ProfileFieldTypes
 
-class Address
+  # Address Information
+  # ==========================================================================================
 
-  # This method returns the Bv associated with the given address.
-  def bv
-    AddressString.new( self.value ).bv
+  class Address
+
+    # This method returns the Bv associated with the given address.
+    def bv
+      AddressString.new( self.value ).bv
+    end
+
+    # The html output method is overridden here, in order to display the bv as well.
+    #
+    def display_html
+      text_to_display = self.value
+
+      if self.bv
+        text_to_display = "
+        <p>#{text_to_display}</p>
+        <p class=\"address_is_in_bv\">
+          (#{I18n.translate( :address_is_in_bv )} " +
+          ActionController::Base.helpers.link_to( self.bv.name,
+                                                  Rails.application.routes.url_helpers.group_path( self.bv.becomes( Group ) ) ) +
+          ")
+        </p>"
+
+        # more infos on how to use the link_to helper in models:
+        # http://stackoverflow.com/questions/4713571/view-helper-link-to-in-model-class
+
+      end
+
+      ActionController::Base.helpers.simple_format( text_to_display )
+    end
+
   end
 
-end
 
+  # Studies Information
+  # ==========================================================================================
 
-class Study < ProfileField
-  def self.model_name; ProfileField.model_name; end
+  class Study < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    has_child_profile_fields :from, :to, :university, :subject, :specialization
+
+  end
 
 end
 

@@ -8,9 +8,10 @@
 	  </td>
 	  <td class="box_toolbar">
 	    <span class="box_toolbar">
-	      <%= cancel_button %>
-              <%= save_button %>
-	      <%= edit_button :id => (strip_tags(heading) + "EditButton") %>
+	      <%= cancel_button :class => box_class %>
+              <%= save_button :class => box_class %>
+              <%= edit_button(:class => box_class, 
+                              :id => (strip_tags(heading) + "EditButton")) %>
 	    </span>
 	  </td>
       </tr></table>

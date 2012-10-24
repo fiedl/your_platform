@@ -15,10 +15,12 @@ class Relationship < ActiveRecord::Base
     self.parent_users.first
   end
   def who=( user )
-    for link in self.links_as_child
-      link.destroy if link.destroyable?
+    if user.kind_of? User
+      for link in self.links_as_child
+        link.destroy if link.destroyable?
+      end
+      self.parent_users << user
     end
-    self.parent_users << user
   end
 
   def is
@@ -32,10 +34,12 @@ class Relationship < ActiveRecord::Base
     self.child_users.first
   end
   def of=( user )
-    for link in self.links_as_parent
-      link.destroy if link.destroyable?
+    if user.kind_of? User
+      for link in self.links_as_parent
+        link.destroy if link.destroyable?
+      end
+      self.child_users << user
     end
-    self.child_users << user
   end
 
 
@@ -47,17 +51,17 @@ class Relationship < ActiveRecord::Base
 
 
   def who_by_title
-    self.who.title
+    self.who.title if self.who
   end
   def who_by_title=( title )
-    self.who = User.by_title( title )
+    self.who = User.find_by_title( title )
   end
   
   def of_by_title
-    self.of.title
+    self.of.title if self.of
   end
   def of_by_title=( title )
-    self.of = User.by_title( title )
+    self.of = User.find_by_title( title )
   end
 
 end

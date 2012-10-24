@@ -1,7 +1,25 @@
+
+<h1 class="section <%= section %>"><%=t section %></h1>
 <div id="section_<%= section %>">
-  <% @user.profile_fields_by_section(section).each do |profile_field| %>
-      <%= render partial: 'shared/profile_field', object: profile_field %>
+
+  <% if section.to_sym == :contact_information %> 
+    <% if profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0 %>
+      <span id="contact_section_google_maps" class="do_not_show_in_edit_mode">
+	<%= map_of_address_profile_fields( profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) ) %>
+      </span>
+    <% end %>
   <% end %>
-  <% type_or_types = @user.profile_field_type_by_section(section)  %>
-  <%= add_button({ :action => :create_profile_field, :user_id => @user.id, :type => type_or_types, :section => section }) unless type_or_types.kind_of? Array %>
+
+  <% for profile_field in profileable.profile_fields_by_section( section ) %>
+    <dl>
+      <%= render partial: 'shared/profile_field', object: profile_field %>
+    </dl>
+  <% end %>
+  
+  <% type_or_types = profileable.profile_field_type_by_section( section ) %>
+  <%= add_button( :action => :create_profile_field, 
+                  :profileable_id => profileable.id, 
+                  :type => type_or_types, 
+                  :section => section ) unless type_or_types.kind_of? Array %>
+
 </div>

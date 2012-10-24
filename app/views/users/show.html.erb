@@ -6,7 +6,11 @@
 </div>
 <% end %>
 <% if @user %>
-<h1><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %> &nbsp; <%= h @user.aktivitaetszahl %></h1>
+<h1>
+  <%= best_in_place @user, :first_name %> 
+  <%= best_in_place @user, :last_name %> &nbsp; 
+  <%= h @user.aktivitaetszahl %>
+</h1>
 <div>
   <span id="user_workflows" class="show_only_in_edit_mode">
     <ul>
@@ -22,10 +26,7 @@
   </dl>
 </div>
 
-<% @user.sections.each do |section| %>
-<h1 class="section <%= section %>"><%= t section %></h1>
-<%= render partial: 'shared/section', object: section %>
-<% end %>
+<%= profile_sections_for_profileable @user, @user.sections %>
 
 <% if @user.corporations.count > 0 %>
 <h1>Wingolfitischer Lebenslauf</h1>
@@ -39,7 +40,7 @@
   <%= groups_of_user_table @user %>
 </div>
 
-<h1>Beziehungen</h1>
+<h1 class="section relationships">Beziehungen</h1>
 <div>
   <%= relationships_of_user_ul @user %>
 </div>

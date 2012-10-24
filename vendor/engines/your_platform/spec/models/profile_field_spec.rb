@@ -29,9 +29,9 @@ end
 # Custom Contact Information
 # ==========================================================================================
 
-describe Custom do
+describe ProfileFieldTypes::Custom do
   describe ".create" do
-    subject { Custom.create( label: "Custom Contact Information" ) }
+    subject { ProfileFieldTypes::Custom.create( label: "Custom Contact Information" ) }
     its( 'children.count' ) { should == 0 }
   end
 end
@@ -40,8 +40,8 @@ end
 # Organisation Membership Information
 # ==========================================================================================
 
-describe Organization do
-  subject { Organization.create() }
+describe ProfileFieldTypes::Organization do
+  subject { ProfileFieldTypes::Organization.create() }
   
   # Here it is only tested whether the methods exist. The functionality is
   # provided by the same mechanism as tested unter the BankAccount section.
@@ -58,9 +58,9 @@ end
 # Email Contact Information
 # ==========================================================================================
 
-describe Email do
+describe ProfileFieldTypes::Email do
   describe ".create" do
-    subject { Email.create( label: "Email" ) }
+    subject { ProfileFieldTypes::Email.create( label: "Email" ) }
     its( 'children.count' ) { should == 0 }
   end
 end
@@ -69,11 +69,15 @@ end
 # Address Information
 # ==========================================================================================
 
-describe Address do
+describe ProfileFieldTypes::Address do
 
   before do
-    @address_field = Address.create( label: "Address of the Brandenburg Gate",
-                                     value: "Pariser Platz 1\n 10117 Berlin" )
+    # use a global variable ($...) to make sure the profile_field objects is only created
+    # once. Otherwise, this series of tests will hit the traffic limitation of the 
+    # geodata service of google.
+    $address_field ||= ProfileFieldTypes::Address.create( label: "Address of the Brandenburg Gate",
+                                                          value: "Pariser Platz 1\n 10117 Berlin" )
+    @address_field = $address_field
   end
   subject { @address_field }
   
@@ -104,23 +108,23 @@ end
 # Bank Account Information
 # ==========================================================================================
 
-describe BankAccount do
+describe ProfileFieldTypes::BankAccount do
 
   before do
-    @bank_account = BankAccount.create( label: "Bank Account" )
+    @bank_account = ProfileFieldTypes::BankAccount.create( label: "Bank Account" )
   end
   subject { @bank_account }
 
   describe ".create" do
-    subject { BankAccount.create( label: "Bank Account" ) }
+    subject { ProfileFieldTypes::BankAccount.create( label: "Bank Account" ) }
 
     it "should create 6 children" do
       subject.children.count.should == 6
     end
     it "should create the correct labels for the children" do
       subject.children.collect { |child| child.label }.should ==
-        [ "Account Holder", "Account Number", "Bank Code", 
-          "Credit Institution", "IBAN", "BIC" ]
+        [ I18n.t( :account_holder ), I18n.t( :account_number ), I18n.t( :bank_code ), 
+          I18n.t( :credit_institution ), I18n.t( :iban ), I18n.t( :bic ) ]
     end
 
   end
@@ -171,9 +175,9 @@ end
 # Description Field
 # ==========================================================================================
 
-describe Description do
-  before { @description_field = Description.create( label: "Heraldic Animal", 
-                                                    value: "The heraldic animal of the organisation is a fox." ) }
+describe ProfileFieldTypes::Description do
+  before { @description_field = ProfileFieldTypes::Description.create( label: "Heraldic Animal", 
+                                                                       value: "The heraldic animal of the organisation is a fox." ) }
   subject { @description_field }
   its( :display_html ) { should include( @description_field.value ) }
 end
@@ -182,20 +186,20 @@ end
 # Phone Number Field
 # ==========================================================================================
 
-describe Phone do
+describe ProfileFieldTypes::Phone do
   
   describe "international number with leading 00" do
-    subject { Phone.create( value: "0049800123456789" ) }
+    subject { ProfileFieldTypes::Phone.create( value: "0049800123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
   
   describe "international number with leading +" do
-    subject { Phone.create( value: "+49 800 123456789" ) }
+    subject { ProfileFieldTypes::Phone.create( value: "+49 800 123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
   
   describe "national number" do
-    subject { Phone.create( value: "0800123456789" ) }
+    subject { ProfileFieldTypes::Phone.create( value: "0800123456789" ) }
     it "should not be formatted, since the country is not unique" do
       subject.value.should == "0800123456789"
     end
@@ -207,9 +211,9 @@ end
 # Homepage Field
 # ==========================================================================================
 
-describe Homepage do
+describe ProfileFieldTypes::Homepage do
 
-  subject { Homepage.create( value: "example.com" ) }
+  subject { ProfileFieldTypes::Homepage.create( value: "example.com" ) }
 
   its( :display_html ) { should == "<a href=\"http://example.com\">http://example.com</a>" }
 

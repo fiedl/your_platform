@@ -13,18 +13,25 @@ module ToolButtonsHelper
            )
   end
 
-  def add_button( url ) # TODO: Was braucht er für minimale Informationen?
-    title = t( :add )
-    link_to( tool_icon( "icon-plus icon-white" ) + 
-             title,
-             url.to_s,
-             :class => 'add_button tool show_only_in_edit_mode btn btn-success',
-             :remote => true
-             )
+  def add_button( url, options = {} ) # TODO: Was braucht er für minimale Informationen?
+
+    # label for the button = icon + "add"
+    label = tool_icon( "icon-plus icon-white" ) + t( :add )
+
+    # default options
+    options = { 
+      :class => 'add_button tool show_only_in_edit_mode btn btn-success',
+      :remote => true
+    }.merge( options )
+    
+    # create the link_to tag
+    link_to( label, url.to_s, options )
+
   end
 
   def tool_button( type, icon, text, options = {} )
-    options = { :class => "button #{type}_button btn" }.merge( options )
+    css_class = "button #{type}_button btn #{options[ :class ]}"; options.delete( :class )
+    options = { :class => css_class }.merge( options )
     href = options[ :href ]
     href = "#" unless href
     options.delete( :href )

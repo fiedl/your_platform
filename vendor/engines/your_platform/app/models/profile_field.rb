@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
-  
+
   attr_accessible        :label, :type, :value
-  
+
   belongs_to             :profileable, polymorphic: true
 
-  # There are profile_fields that are composed of other profile_fields. 
+  # There are profile_fields that are composed of other profile_fields.
   # For example, the BankAccount profile_field type is composed.
   #
   #   BankAccount
@@ -15,13 +15,13 @@ class ProfileField < ActiveRecord::Base
   #        |------- ProfileField:  :label => "Credit Institution"
   #        |------- ProfileField:  :label => "IBAN"
   #        |------- ProfileField:  :label => "BIC"
-  # 
+  #
   # You can add this structured ProfileField manually:
   #
   #    account = ProfileField.create( label: "Bank Account", type: "BankAccount" )
   #    account.children.create( label: "Account Holder", value: ... )
   #    ...
-  # 
+  #
   # Or, you can use the customized `create` method of the specialized class BankAccount,
   # which inherits from ProfileField, to create a blank BankAccount-type profile_field
   # with all children auto-created empty.
@@ -34,7 +34,7 @@ class ProfileField < ActiveRecord::Base
   # This method returns the profile_field's value as HTML code in the way
   # the profile_field should be displayed.
   #
-  # Override this in the inheriting classes in ordner to modify the html output 
+  # Override this in the inheriting classes in ordner to modify the html output
   # of the value.
   #
   def display_html
@@ -51,7 +51,7 @@ class ProfileField < ActiveRecord::Base
 
   # This creates an easier way to access a composed ProfileField's child field
   # values. Instead of calling
-  #        
+  #
   #    bank_account.children.where( :label => :account_number ).first.value
   #    bank_account.children.where( :label => :account_number ).first.value = "12345"
   #
@@ -72,162 +72,183 @@ class ProfileField < ActiveRecord::Base
   # on build of the main profile_field.
   extend ProfileFieldMixins::HasChildProfileFields
 
+  # In order to namespace the type classes of the profile_fields, we place them
+  # in a module. In order to be able to use the type column without including
+  # the module, this method makes sure that the module is included in the
+  # type column on save.
+  #
+  # Both versions should work:
+  #     ProfileField.create( label: "My Address", value: "...", type: "Address" )
+  #     ProfileField.create( label: "My Address", value: "...", type: "ProfileField::Address" )
+  #
+  # The long version `ProfileField::...` is stored in the database.
+  #
+  before_save :include_module_in_type_column
+  def include_module_in_type_column
+    type = "ProfileFieldTypes::#{type}" if not type.include?( "::" ) if type
+  end
+  private :include_module_in_type_column
+
 end
 
-# Custom Contact Information
-# ==========================================================================================
+module ProfileFieldTypes
 
-# Custom profile_fields are just key-value fields. They don't have a
-# sub-structure. They are displayed in the contact section of a profile.
-#
-class Custom < ProfileField
-  def self.model_name; ProfileField.model_name; end
-end
+  # Custom Contact Information
+  # ==========================================================================================
 
-
-# Organisation Membership Information
-# ==========================================================================================
-
-# An organization entry represents the activity of a user in an organization.
-# Such an entry could be:
-#
-#    the user is "Lead Singer" of "the Band XYZ" since "May 2007"
-# 
-# Therefore, this profile_field has got a sub-structure.
-#
-#    Organization
-#         |--------- ProfileField:  :label => :organization
-#         |--------- ProfileField:  :label => :role
-#         |--------- ProfileField:  :label => :since_when
-#
-class Organization < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-  has_child_profile_fields :organization, :role, :since_when
-  
-end
-
-
-# Email Contact Information
-# ==========================================================================================
-
-class Email < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-  def display_html
-    ActionController::Base.helpers.mail_to self.value
+  # Custom profile_fields are just key-value fields. They don't have a
+  # sub-structure. They are displayed in the contact section of a profile.
+  #
+  class Custom < ProfileField
+    def self.model_name; ProfileField.model_name; end
   end
 
-end
 
+  # Organisation Membership Information
+  # ==========================================================================================
 
-# Address Information
-# ==========================================================================================
+  # An organization entry represents the activity of a user in an organization.
+  # Such an entry could be:
+  #
+  #    the user is "Lead Singer" of "the Band XYZ" since "May 2007"
+  #
+  # Therefore, this profile_field has got a sub-structure.
+  #
+  #    Organization
+  #         |--------- ProfileField:  :label => :organization
+  #         |--------- ProfileField:  :label => :role
+  #         |--------- ProfileField:  :label => :since_when
+  #
+  class Organization < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
-class Address < ProfileField
-  def self.model_name; ProfileField.model_name; end
+    has_child_profile_fields :organization, :role, :since_when
 
-  # Google Maps integration
-  # see: http://rubydoc.info/gems/gmaps4rails/
-  acts_as_gmappable 
-
-  def display_html
-    ActionController::Base.helpers.simple_format self.value
   end
 
-  # This is needed to display the map later.
-  def gmaps4rails_address
-    self.value
-  end
 
-  def gmaps
-    true
-  end
+  # Email Contact Information
+  # ==========================================================================================
 
-  def latitude ;      geo_information :lat           end
-  def longitude ;     geo_information :lng           end
-  def country ;       geo_information :country       end
-  def country_code ;  geo_information :country_code  end
-  def city ;          geo_information :city          end
-  def postal_code ;   geo_information :postal_code   end
-  def plz ;           geo_information :plz           end
+  class Email < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
-  def geo_information( key )
-    @address_string ||= AddressString.new( self.gmaps4rails_address )
-    @address_string.geo_information( key )
-  end
-
-end
-
-
-# Bank Account Information
-# ==========================================================================================
-
-class BankAccount < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-  has_child_profile_fields( :account_holder, :account_number, :bank_code, 
-                            :credit_institution, :iban, :bic )
-
-end
-
-
-# Description Field
-# ==========================================================================================
-
-# This fields are used to display any kind of free-text descriptive information.
-#
-class Description < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-  def display_html
-    ActionController::Base.helpers.simple_format self.value
-  end
-
-end
-
-
-# Phone Number Field
-# ==========================================================================================
-
-class Phone < ProfileField
-  def self.model_name; ProfileField.model_name; end
-
-  before_save :auto_format_value
-
-  private
-  def auto_format_value
-    value = self.value
-
-    # determine wheter this is an international number
-    format = :national
-    format = :international if value.start_with?( "00" ) or value.start_with? ( "+" )
-
-    # do only format international numbers, since for national numbers, the country
-    # is unknown and each country formats its national area codes differently.
-    if format == :international
-      value = Phony.normalize( value ) # remove spaces etc.
-      value = value[ 2..-1 ] if value.start_with?( "00" ) # because Phony can't handle leading 00
-      value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
-      value = Phony.formatted( value, :format => format, :spaces => ' ' ) 
+    def display_html
+      ActionController::Base.helpers.mail_to self.value
     end
 
-    self.value = value
   end
 
-end
+
+  # Address Information
+  # ==========================================================================================
+
+  class Address < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    # Google Maps integration
+    # see: http://rubydoc.info/gems/gmaps4rails/
+    acts_as_gmappable
+
+    def display_html
+      ActionController::Base.helpers.simple_format self.value
+    end
+
+    # This is needed to display the map later.
+    def gmaps4rails_address
+      self.value
+    end
+
+    def gmaps
+      true
+    end
+
+    def latitude ;      geo_information :lat           end
+    def longitude ;     geo_information :lng           end
+    def country ;       geo_information :country       end
+    def country_code ;  geo_information :country_code  end
+    def city ;          geo_information :city          end
+    def postal_code ;   geo_information :postal_code   end
+    def plz ;           geo_information :plz           end
+
+    def geo_information( key )
+      @address_string ||= AddressString.new( self.gmaps4rails_address )
+      @address_string.geo_information( key )
+    end
+
+  end
 
 
-# Homepage Field
-# ==========================================================================================
+  # Bank Account Information
+  # ==========================================================================================
 
-class Homepage < ProfileField
-  def self.model_name; ProfileField.model_name; end
+  class BankAccount < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
-  def display_html
-    url = self.value
-    url = "http://#{url}" unless url.starts_with? 'http://'
-    ActionController::Base.helpers.link_to url, url
+    has_child_profile_fields( :account_holder, :account_number, :bank_code,
+                              :credit_institution, :iban, :bic )
+
+  end
+
+
+  # Description Field
+  # ==========================================================================================
+
+  # This fields are used to display any kind of free-text descriptive information.
+  #
+  class Description < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    def display_html
+      ActionController::Base.helpers.simple_format self.value
+    end
+
+  end
+
+
+  # Phone Number Field
+  # ==========================================================================================
+
+  class Phone < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    before_save :auto_format_value
+
+    private
+    def auto_format_value
+      value = self.value
+
+      # determine wheter this is an international number
+      format = :national
+      format = :international if value.start_with?( "00" ) or value.start_with? ( "+" )
+
+      # do only format international numbers, since for national numbers, the country
+      # is unknown and each country formats its national area codes differently.
+      if format == :international
+        value = Phony.normalize( value ) # remove spaces etc.
+        value = value[ 2..-1 ] if value.start_with?( "00" ) # because Phony can't handle leading 00
+        value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
+        value = Phony.formatted( value, :format => format, :spaces => ' ' )
+      end
+
+      self.value = value
+    end
+
+  end
+
+
+  # Homepage Field
+  # ==========================================================================================
+
+  class Homepage < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    def display_html
+      url = self.value
+      url = "http://#{url}" unless url.starts_with? 'http://'
+      ActionController::Base.helpers.link_to url, url
+    end
+
   end
 
 end

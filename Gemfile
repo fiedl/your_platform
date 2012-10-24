@@ -115,7 +115,9 @@ group :test, :development do
 end
 group :test do
   gem 'capybara' #, '1.1.2'
+  gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
+  gem 'database_cleaner'
 #  gem 'guard-spork'
 #  gem 'spork'
 end
@@ -141,10 +143,11 @@ end
 
 
 # Edit-Mode, SF
-gem 'edit_mode', '>= 0.0.4'                                             # MIT License
+gem 'edit_mode', '>= 0.0.6'                                             # MIT License
+#gem 'edit_mode', path: '../edit_mode'
 
 # hide slim breadcrumb elements until user hovers the separator, SF
-gem 'slim_breadcrumb'                                                   # MIT License
+gem 'slim_breadcrumb', '>= 0.0.2'                                       # MIT License
 
 # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
 gem 'rails3_acts_as_paranoid'

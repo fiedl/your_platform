@@ -1,7 +1,17 @@
 class RelationshipsController < ApplicationController
   respond_to :json
 
+  def new
+    @relationship = Relationship.new
+  end
+
+  def create
+    @relationship = Relationship.create( params[ :relationship ] )    
+  end
+
   def destroy
+    @relationship = Relationship.find( params[ :id ] )
+    @relationship.destroy
   end
 
   def update
