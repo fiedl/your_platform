@@ -11,6 +11,9 @@ class SearchController < ApplicationController
       @groups = Group.where( "name like ?", q )
 
       @results = @users + @pages + @groups
+      if @results.count == 1
+        redirect_to @results.first
+      end
 
       @pages = nil if @pages.count == 0
       @users = nil if @users.count == 0
