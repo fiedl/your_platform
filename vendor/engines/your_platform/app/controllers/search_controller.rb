@@ -8,9 +8,14 @@ class SearchController < ApplicationController
         .order( :last_name, :first_name )
       @pages = Page.where( "title like ?", q )
         .order( :title )
+      @groups = Group.where( "name like ?", q )
+
+      @results = @users + @pages + @groups
 
       @pages = nil if @pages.count == 0
       @users = nil if @users.count == 0
+      @groups = nil if @groups.count == 0
+      @results = nil if @results.count == 0
 
     end
     @navable = Page.find_intranet_root

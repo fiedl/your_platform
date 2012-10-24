@@ -3,7 +3,7 @@
   <%= render partial: 'shared/search_box' %>
   <p>Die Suche wird verbessert, sobald mehr Zeit und Geld zur Verfügung gestellt wird.</p>
 
-  <% if not @users and not @pages %>
+  <% if not @results %>
   <p>Keine Ergebnisse gefunden.</p>
   <% end %>
 
@@ -19,6 +19,18 @@
   </ul>
 </div>
 <% end %>
+
+<% if @groups %>
+<h1>Gefundene Gruppen</h1>
+<div>
+  <ul>
+    <% for object in @groups %>
+    <li><%= link_to object.title, object %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
 
 <% if @pages %>
 <h1>Gefundene Inhalte</h1>
