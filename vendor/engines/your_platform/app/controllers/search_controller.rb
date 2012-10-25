@@ -3,7 +3,7 @@ class SearchController < ApplicationController
     query_string = params[ :query ]
     if not query_string.empty?
 
-      q = "%" + query_string + "%"
+      q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where( "first_name like ? or last_name like ?", q, q )
         .order( :last_name, :first_name )
       @pages = Page.where( "title like ?", q )
