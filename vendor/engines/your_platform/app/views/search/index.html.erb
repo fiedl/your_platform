@@ -1,16 +1,16 @@
-<h1>Suche</h1>
+<h1><%= @title %></h1>
 <div>
   <%= render partial: 'shared/search_box' %>
   <p>Die Suche wird verbessert, sobald mehr Zeit und Geld zur Verfügung gestellt wird.</p>
 
   <% if not @results %>
-  <p>Keine Ergebnisse gefunden.</p>
+  <p><%=t :no_results_found %></p>
   <% end %>
 
 </div>
 
 <% if @users %>
-<h1>Gefundene Benutzer</h1>
+<h1><%=t :found_users %></h1>
 <div>
   <ul>
     <% for object in @users %>
@@ -21,7 +21,7 @@
 <% end %>
 
 <% if @groups %>
-<h1>Gefundene Gruppen</h1>
+<h1><%=t :found_groups %></h1>
 <div>
   <ul>
     <% for object in @groups %>
@@ -33,7 +33,7 @@
 
 
 <% if @pages %>
-<h1>Gefundene Inhalte</h1>
+<h1><%=t :found_pages %></h1>
 <div>
   <ul>
     <% for object in @pages %>
