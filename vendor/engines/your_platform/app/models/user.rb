@@ -276,6 +276,44 @@ class User < ActiveRecord::Base
   def self.authenticate( login_string, password )
     UserAccount.authenticate login_string, password 
   end
+
+
+  # Roles and Rights
+  # ==========================================================================================
+
+  # This method finds all objects the user is an administrator of.
+  def admin_of
+    self.administrated_objects
+  end
+
+  # This method verifies if the user is administrator of the given structureable object.
+  def admin_of?( structureable )
+    self.admin_of.include? structureable
+  end
+
+  # This method returns all structureable objects the user is directly administrator of,
+  # i.e. the user is a member of the administrators group of this object.
+  def directly_administrated_objects
+    admin_groups = self.ancestor_groups.find_all_by_flag( :admins_parent )
+    directly_administrated_objects = admin_groups.collect do |admin_group|
+      admin_group_parent = admin_group.parents.first 
+      if admin_group_parent.has_flag? :officers_parent
+        administrated_object = admin_group_parent.parents.first
+      else
+        administrated_object = admin_group_parent
+      end
+      administrated_object
+    end
+  end
+
+  # This method returns all structureable objects the user is administrator of.
+  def administrated_objects
+    administrated_objects = directly_administrated_objects
+    administrated_objects += directly_administrated_objects.collect do |directly_administrated_object|
+      directly_administrated_object.descendants
+    end.flatten
+    administrated_objects
+  end
   
 
   # Finder Methods
