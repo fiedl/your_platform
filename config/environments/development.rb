@@ -42,17 +42,8 @@ Wingolfsplattform::Application.configure do
   config.reload_plugins = true
 
 
-  # SMTP Settings
-  config.action_mailer.delivery_method = :smtp
-  require 'yaml'
-  mailer_passwords = YAML.load( File.read( "config/mailer_passwords.yml" ) )
-  raise 'no sender smtp password set in configuration.' unless mailer_passwords[ "production_smtp_password" ]
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.1und1.de',
-    user_name: 'wingolfsplattform@wingolf.org',
-    password: mailer_passwords[ "production_smtp_password" ],
-    enable_starttls_auto: false
-  }
+  # Mailer Settings
+  config.action_mailer.delivery_method = :sendmail
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'https' }
 
 end

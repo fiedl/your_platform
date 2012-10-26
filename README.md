@@ -32,6 +32,8 @@ bundle exec rake db:test:prepare
 bundle exec rake
 ```
 
+* Make sure, `/usr/sbin/sendmail` is installed on your development machine. The mailer won't raise an error if not. If you don't recaive email from your dev machine, check `/var/log/mail.err`.
+
 #### your_platform
 
 Der abstrakte Teil des Quellcodes, d.h. derjenige Teil, der auch von anderen Organisationen als dem Wingolf verwendet werden kann, ist in der `your_platform`-Engine unterzubringen. Die Konkretisierung und Anpassung auf die wingolfitischen Bedürfnisse erfolgt in der Haupt-Applikation. 
