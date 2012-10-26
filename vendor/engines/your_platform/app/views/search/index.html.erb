@@ -1,0 +1,47 @@
+<h1><%= @title %></h1>
+<div>
+  <%= render partial: 'shared/search_box' %>
+  <p>Die Suche wird verbessert, sobald mehr Zeit und Geld zur Verfügung gestellt wird.</p>
+
+  <% if not @results %>
+  <p><%=t :no_results_found %></p>
+  <% end %>
+
+</div>
+
+<% if @users %>
+<h1><%=t :found_users %></h1>
+<div>
+  <ul>
+    <% for object in @users %>
+    <li><%= link_to object.title, object %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<% if @groups %>
+<h1><%=t :found_groups %></h1>
+<div>
+  <ul>
+    <% for object in @groups %>
+    <li><%= link_to object.title, object %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+
+<% if @pages %>
+<h1><%=t :found_pages %></h1>
+<div>
+  <ul>
+    <% for object in @pages %>
+    <li><%= link_to object.title, object %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+
+

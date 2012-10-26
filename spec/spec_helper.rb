@@ -38,6 +38,7 @@ RSpec.configure do |config|
   #     * http://stackoverflow.com/questions/10692161/issue-with-capybara-request-specs-with-js-cant-find-the-model
   config.use_transactional_fixtures = false
   config.before :each do
+
     if Capybara.current_driver == :rack_test
       DatabaseCleaner.strategy = :transaction
     else
