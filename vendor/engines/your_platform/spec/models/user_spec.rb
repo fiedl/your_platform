@@ -379,7 +379,7 @@ describe User do
   # Finder Methods
   # ==========================================================================================
 
-  describe ".find_by_login_string" do
+  describe ".find_all_by_identification_string" do
     before do
       @user.first_name = "Some First Name"
       @user.last_name = "UniqueLastName" 
@@ -388,23 +388,23 @@ describe User do
       @user.save
     end
     describe "for a given alias" do
-      subject { User.find_all_by_login_string( @user.alias ) }
+      subject { User.find_all_by_identification_string( @user.alias ) }
       it { should == [ @user ] }
     end
     describe "for a given last_name" do
-      subject { User.find_all_by_login_string( @user.last_name ) }
+      subject { User.find_all_by_identification_string( @user.last_name ) }
       it { should == [ @user ] }
     end
     describe "for a given name" do
-      subject { User.find_all_by_login_string( "#{@user.first_name} #{@user.last_name}" ) }
+      subject { User.find_all_by_identification_string( "#{@user.first_name} #{@user.last_name}" ) }
       it { should == [ @user ] }
     end
     describe "for a given email" do
-      subject { User.find_all_by_login_string( @user.email ) }
+      subject { User.find_all_by_identification_string( @user.email ) }
       it { should == [ @user ] }
     end
     describe "for given nonsense" do
-      subject { User.find_all_by_login_string( "f kas#dfk aoefak!" ) }
+      subject { User.find_all_by_identification_string( "f kas#dfk aoefak!" ) }
       it { should == [] }
     end
   end
@@ -420,6 +420,30 @@ describe User do
     subject { User.find_by_title( @title ) }
     it "should find the user by its title" do
       subject.should == @user 
+    end
+  end
+
+  describe ".find_all_by_name" do
+    before do
+      @user = create( :user )
+    end
+    subject { User.find_all_by_name( @user.name ) }
+    it { should include( @user ) }
+    it "should be case-insensitive" do
+      User.find_all_by_name( @user.name.upcase ).should include( @user )
+      User.find_all_by_name( @user.name.downcase ).should include( @user )
+    end
+  end
+
+  describe ".find_all_by_email" do
+    before do
+      @user = create( :user )
+    end
+    subject { User.find_all_by_email( @user.email ) }
+    it { should include( @user ) }
+    it "should be case-insensitive" do
+      User.find_all_by_email( @user.email.upcase ).should include( @user )
+      User.find_all_by_email( @user.email.downcase ).should include( @user )
     end
   end
 

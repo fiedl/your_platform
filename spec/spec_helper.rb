@@ -70,6 +70,12 @@ RSpec.configure do |config|
   # FactoryGirl syntax helper
   config.include FactoryGirl::Syntax::Methods
 
+  # set geocoder timeout to a small value in order to accelerate tests without 
+  # network connection.
+  Geocoder.configure do |config|
+    config.timeout = 1
+  end
+
 end
 
 

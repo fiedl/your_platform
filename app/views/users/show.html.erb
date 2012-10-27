@@ -52,7 +52,7 @@
     <dt>Identifikation möglich mit folgenden Daten:</dt>
     <dd>
       <dl>
-        <% for attribute in UserIdentification.possible_attributes %>
+        <% for attribute in User.attributes_used_for_identification %>
         <span>
           <dt><%= t attribute.to_s %></dt>
 	  <dd>

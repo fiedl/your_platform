@@ -250,23 +250,9 @@ class User < ActiveRecord::Base
 
   # User Identification and Authentification
   # ==========================================================================================
-  
-  # This method tries to identify a user by a login_string that is entered during the
-  # login process. The login_string may be an email address, an alias, the last name
-  # or first_name plus last_name. 
-  #
-  # If a user could be identified, the user is returned.
-  # Otherwise, the method returns `nil`.
-  #
-  def self.identify( login_string )
-    matching_users = self.find_all_by_login_string( login_string )
-    if matching_users.count == 1
-      return matching_users.first
-    else
-      return nil
-    end
-  end
 
+  include UserMixins::Identification
+  
   # This method tries to authenticate a user by a login_string and a password.
   # The user is identified by the login_string (see `self.identify`).
   #
@@ -319,20 +305,25 @@ class User < ActiveRecord::Base
   # Finder Methods
   # ==========================================================================================
 
-  # This method returns an array of users matching the given login string.
-  # In contrast to `self.identify`, this returns an array, whereas `self.identify` 
-  # returns a user object if the match was unique.
-  #
-  def self.find_all_by_login_string( login_string )
-    UserIdentification.find_users login_string
-  end
-  
   # This method returns the first user matching the given title.
   #
   def self.find_by_title( title )
     User.all.select { |user| user.title == title }.first
   end
+  
+  # This method finds all users having the given name attribute.
+  # notice: case insensitive
+  #
+  def self.find_all_by_name( name ) # TODO: Test this; # TODO: optimize using where
+    User.all.select { |user| user.name.downcase == name.downcase }
+  end
 
+  # This method finds all users having the given email attribute.
+  # notice: case insensitive
+  #
+  def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
+    User.all.select { |user| user.email.downcase == email.downcase }
+  end
 
   # Debug Helpers
   # ==========================================================================================
