@@ -64,6 +64,10 @@ module Structureable
 
   module StructureableInstanceMethods
 
+    # Include Rules, e.g. let this object have admins.
+    # 
+    include StructureableMixins::Roles
+
     private
 
     # When a dag node is destroyed, also destroy the corresponding dag links.
