@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-#if ActiveRecord::Migration.table_exists? :my_structureables
-#  ActiveRecord::Migration.drop_table :my_structureables
-#end
-
 unless ActiveRecord::Migration.table_exists? :my_structureables
   ActiveRecord::Migration.create_table :my_structureables do |t|
     t.string :name
@@ -22,6 +18,8 @@ describe StructureableMixins::HasSpecialGroup do
       has_special_group :testers_parent # <--!!! this determines the method names in the tests below.
       has_special_group :main_testers_parent, :child_of => :testers_parent
       has_special_group :vip_testers_parent, :child_of => :main_testers_parent
+
+      has_special_group :global_admins_parent, global: true
     end
 
     @my_structureable = MyStructureable.create( name: "My Structureable Object" )
@@ -160,5 +158,31 @@ describe StructureableMixins::HasSpecialGroup do
     end
   end
   
+  context "(global special_groups)" do
+    describe ".find_global_admins_parent_group" do
+      subject { MyStructureable.find_global_admins_parent_group }
+      context "if existent" do
+        before { @global_admins_parent_group = MyStructureable.create_global_admins_parent_group }
+        it { should == @global_admins_parent_group }
+      end
+      context "if absent" do
+        it { should == nil }
+      end
+    end
+    describe ".global_admins_parent" do
+      subject { MyStructureable.global_admins_parent }
+      context "if existent" do
+        before { @global_admins_parent_group = MyStructureable.create_global_admins_parent_group }
+        it { should == @global_admins_parent_group }
+      end
+      context "if absent" do
+        it { should == nil }
+      end
+    end
+    describe ".global_admins_parent!" do
+      subject { MyStructureable.global_admins_parent! }
+      it { should be_kind_of( Group ) }
+    end
+  end
 
 end
