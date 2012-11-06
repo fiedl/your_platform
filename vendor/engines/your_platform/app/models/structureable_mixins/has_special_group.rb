@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
 
-# This module extends the Structureable models by methods for the interaction with special_groups 
-# that are descendants of the structureable object. 
-# 
-# For example, 
-# 
-#     class Page 
+# This module extends the Structureable models by methods for the interaction with special_groups
+# that are descendants of the structureable object.
+#
+# For example,
+#
+#     class Page
 #       is_structureable ...
 #       has_special_group :officers_parent
 #     end
-# 
-# will give you these and other instance methods:
-# 
-#     some_page.officers # => Array of descendant_users of the officers_parent child_group 
+#
+# will give you these instance methods:
+#
 #     some_page.find_officers_parent_group
 #     some_page.create_officers_parent_group
+#     some_page.find_or_create_officers_parent_group
 #     some_page.officers_parent
 #     some_page.officers_parent!
+#     some_page.officers # => Array of descendant_users of the officers_parent child_group
+#     some_page.officers << some_users
 #
 module StructureableMixins::HasSpecialGroup
 
@@ -30,67 +32,92 @@ module StructureableMixins::HasSpecialGroup
     # This method creates the accessor methods corresponding to the given group flag.
     # See, description of StructureableMixins::HasSpecialGroup.
     #
-    def has_special_group( group_flag, options = {} )    # ACHTUNG: def child_of ÜBERSPEICHERT JEDESMAL DIE SELBE METHODE.
-      self.class_eval <<-EOL
-        def flag_of_parent_of_#{group_flag}
-          '#{options[ :child_of ]}'.to_sym
-        end
-        def find_#{group_flag}_group
-          find_special_group( '#{group_flag}'.to_sym )
-        end
-      EOL
-    end
+    def has_special_group( group_flag, options = {} )
+      child_of = options[ :child_of ]
 
+      self.class_eval <<-EOL
+
+      def #{group_flag}
+        find_#{group_flag}_group
+      end
+
+      def #{group_flag}!
+        find_or_create_#{group_flag}_group
+      end
+
+      def find_#{group_flag}_group
+        find_special_group( '#{group_flag}' )
+      end
+
+      def create_#{group_flag}_group
+        create_special_group( '#{group_flag}', { child_of: '#{child_of}' } )
+      end
+
+      def find_or_create_#{group_flag}_group
+        g = find_#{group_flag}_group
+        g ||= create_#{group_flag}_group
+      end
+
+      EOL
+
+      if child_of
+        self.class_eval <<-EOL
+      
+        def find_or_create_#{group_flag}_group_parent
+          find_or_create_#{child_of}_group
+        end
+
+        EOL
+      else
+        self.class_eval <<-EOL
+      
+        def find_or_create_#{group_flag}_group_parent
+          self
+        end
+
+        EOL
+      end
+
+      if group_flag.to_s.end_with?( '_parent' ) # e.g. "admins_parent"
+        reduced_group_flag = group_flag.to_s.gsub( /_parent$/, "" ) # e.g. "admins"
+
+        self.class_eval <<-EOL
+
+        def #{reduced_group_flag}
+          return #{group_flag}.child_users if #{group_flag}
+        end
+
+        EOL
+      end
+
+    end
   end
- 
+
   # This method finds the group of all descendant_groups of this object that matches
   # the given flag.
   #
   def find_special_group( group_flag )
-    self.descendant_groups.find_by_flag( group_flag )
-  end
-
-  # This method finds or creates the parent of the special_group specified
-  # by the group_flag. 
-  #
-  # First priority for finding the parent group has the options[ :child_of ] parameter.
-  # Second priority has the :child_of parameter given during `has_special_group ...`.
-  # If none is found, `self` is returned, i.e. the special_group is a direct child
-  # of the structureable object itself in this case.
-  #
-  def find_or_create_special_group_parent_for( group_flag )
-    if self.respond_to? ( 'flag_of_parent_of_' + group_flag.to_s ).to_sym 
-      child_of self.find_or_create_special_group( self.send( ( 'flag_of_parent_of_' + group_flag.to_s ).to_sym ) )
-    end
-    child_of ||= self
+    self.descendant_groups.find_by_flag( group_flag.to_sym )
   end
 
   # This method creates a special_group with the given flag as child
   # of the specified parent group.
-  # 
+  #
   # For example:
   #      some_page.create_special_group( :officers_parent )
   #      some_page.create_special_group( :admins_parent, :child_of => :officers_parent )
   #
   def create_special_group( group_flag, options = {} )
-    raise "special group with flag :#{group_flag} already exists." if self.find_special_group( group_flag )
+
+    if self.find_special_group( group_flag )
+      raise "special group with flag '#{group_flag}' already exists."
+    end
     
-    child_of = self.find_or_create_special_group_parent_for( group_flag, options )
+    child_of = self.send( "find_or_create_#{group_flag}_group_parent" )
+
     new_special_group = child_of.child_groups.create
-    new_special_group.add_flag( group_flag )
+    new_special_group.add_flag( group_flag.to_sym )
     return new_special_group
   end
 
-  # If the special_group exists, return the special_group. 
-  # If not, create and then return it.
-  # The options argument is used for the creation.
-  #
-  def find_or_create_special_group( group_flag, options = {} )
-    if self.find_special_group( group_flag )
-      return self.find_special_group( group_flag )
-    else
-      return self.create_special_group( group_flag, options )
-    end
-  end
-  
 end
