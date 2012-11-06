@@ -15,33 +15,23 @@ module GroupMixins::SpecialGroups
 
   included do
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
-  end
 
 
-  # Everyone
-  # ==========================================================================================
-
-  module ClassMethods
-
+    # Everyone
+    # ==========================================================================================
+    #
     # The 'root group', which is the highest in the group hierarchy. 
     # Everyone is member of this group, even not registered users.
     # 
-    def everyone
-      self.find_everyone_group
-    end
-    
-    def find_everyone_group
-      Group.find_by_flag( :everyone )
-    end
+    # This creates the methods
+    #    Group.everyone
+    #    Group.find_everyone_group
+    #    Group.everyone!
+    #    Group.find_or_create_everyone_group
+    #    Group.create_everyone_group
+    #
+    has_special_group :everyone, global: true
 
-    def create_everyone_group
-      everyone = Group.create( name: 'Everyone' )
-      everyone.add_flag( :everyone )
-      everyone.name = I18n.translate( :everyone )
-      everyone.save
-      return everyone
-    end
-    
   end
 
 
