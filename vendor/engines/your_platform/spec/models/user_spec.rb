@@ -376,6 +376,101 @@ describe User do
   end
       
   
+  # Roles
+  # ==========================================================================================
+
+  describe "#admin_of" do
+    before do 
+      @group = create( :group, name: "Directly Administrated Group" )
+      @group.create_admins_parent_group
+      @group.admins_parent.child_users << @user
+    end
+    subject { @user.admin_of }
+    it { should == @user.administrated_objects }
+  end
+
+  describe "#admin_of?" do
+    before do
+      @group = create( :group, name: "Directly Administrated Group" )
+      @sub_group = create( :group, name: "Indirectly Administrated Group" )
+      @sub_group.parent_groups << @group
+    end
+    context "for the user being admin" do
+      before do
+        @group.create_admins_parent_group
+        @group.admins_parent.child_users << @user  # the @user is direct admin of @group
+      end
+      context "for directly administrated objects" do
+        subject { @user.admin_of? @group }
+        it "should state that the user is admin" do
+          subject.should == true
+        end
+      end
+      context "for indirectly administrated objects" do
+        subject { @user.admin_of? @sub_group }
+        it "should state that the user is admin" do
+          subject.should == true
+        end
+      end
+    end
+    context "for the user being main admin" do
+      before do
+        @group.create_main_admins_parent_group
+        @group.main_admins_parent.child_users << @user
+      end
+      subject { @user.admin_of? @group }
+      it { should == true }
+    end
+    context "for some object the user is no admin of" do
+      before { @other_object = Page.create }
+      subject { @user.admin_of? @other_object }
+      it { should == false }
+    end
+  end
+
+  describe "#directly_administrated_objects" do
+    before do
+      @group = create( :group, name: "Directly Administrated Group" )
+      @group.create_admins_parent_group
+    end
+    subject { @user.directly_administrated_objects }
+    it { should be_kind_of Array }
+    context "for the user being admin of objects" do
+      before { @group.admins_parent.child_users << @user }
+      it "should list the objects the user is directly admin of" do
+        subject.should include @group
+      end
+    end
+  end
+
+  describe "#administrated_objects" do
+    before do
+      @group = create( :group, name: "Administrated Group" )
+      @group.create_admins_parent_group
+    end
+    subject { @user.administrated_objects }
+    it { should be_kind_of Array }
+    context "for the user being admin of an object" do
+      before { @group.admins_parent.child_users << @user }
+      it "should list all objects administrated by the user" do
+        @group.admins_parent.should be_kind_of Group
+        @group.admins_parent.child_users.should include @user
+        subject.should include @group
+      end
+    end
+    context "for the user being an indirect admin of an object" do
+      before do
+        @sub_group = create( :group, name: "Indirectly Administrated Group" )
+        @sub_group.parent_groups << @group
+        @group.admins_parent.child_users << @user
+      end
+      it "should list directly and indirectly administrated objects" do
+        subject.should include( @group, @sub_group )
+      end
+    end
+  end
+
+
   # Guest Status
   # ==========================================================================================
 

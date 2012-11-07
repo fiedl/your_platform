@@ -30,6 +30,14 @@ module StructureableMixins::Roles
     #
     has_special_group :admins_parent, :child_of => :officers_parent
 
+    # Main Admins
+    # ==========================================================================================
+    #
+    # Main admins are also admins. But they have more rights and responsibilities.
+    # For example, they may edit the critical properties of the objects they administrate.
+    #
+    has_special_group :main_admins_parent, :child_of => :admins_parent
+
   end
 
 end

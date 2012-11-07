@@ -281,24 +281,32 @@ class User < ActiveRecord::Base
   # i.e. the user is a member of the administrators group of this object.
   def directly_administrated_objects
     admin_groups = self.ancestor_groups.find_all_by_flag( :admins_parent )
-    directly_administrated_objects = admin_groups.collect do |admin_group|
-      admin_group_parent = admin_group.parents.first 
-      if admin_group_parent.has_flag? :officers_parent
-        administrated_object = admin_group_parent.parents.first
-      else
-        administrated_object = admin_group_parent
+    if admin_groups.count > 0
+      objects = admin_groups.collect do |admin_group|
+        admin_group_parent = admin_group.parents.first 
+        if admin_group_parent.has_flag? :officers_parent
+          administrated_object = admin_group_parent.parents.first
+        else
+          administrated_object = admin_group_parent
+        end
+        administrated_object
       end
-      administrated_object
+    else
+      []
     end
   end
 
   # This method returns all structureable objects the user is administrator of.
   def administrated_objects
-    administrated_objects = directly_administrated_objects
-    administrated_objects += directly_administrated_objects.collect do |directly_administrated_object|
-      directly_administrated_object.descendants
-    end.flatten
-    administrated_objects
+    objects = directly_administrated_objects
+    if objects
+      objects += directly_administrated_objects.collect do |directly_administrated_object|
+        directly_administrated_object.descendants
+      end.flatten
+      objects
+    else
+      []
+    end
   end
 
 
