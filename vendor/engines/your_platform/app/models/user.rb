@@ -267,29 +267,43 @@ class User < ActiveRecord::Base
   # Roles and Rights
   # ==========================================================================================
 
+  # Members
+  # ------------------------------------------------------------------------------------------
+
+  # This method says whether the user (self) is a member of the given structureable
+  # object. This may be used to determine if the user has, for example, the read to
+  # read that object.
+  #
+  def member_of?( structureable )
+    raise 'the given object is capable of having users as members' if not structureable.respond_to? :descendant_users
+    structureable.descendant_users.include? self
+  end
+
+  # Admins
+  # ------------------------------------------------------------------------------------------
+
   # This method finds all objects the user is an administrator of.
+  #
   def admin_of
     self.administrated_objects
   end
 
   # This method verifies if the user is administrator of the given structureable object.
+  #
   def admin_of?( structureable )
     self.admin_of.include? structureable
   end
 
   # This method returns all structureable objects the user is directly administrator of,
   # i.e. the user is a member of the administrators group of this object.
-  def directly_administrated_objects
-    admin_groups = self.ancestor_groups.find_all_by_flag( :admins_parent )
+  #
+  def directly_administrated_objects( role = :admin )
+    admin_group_flag = :admins_parent if role == :admin
+    admin_group_flag = :main_admins_parent if role == :main_admin
+    admin_groups = self.ancestor_groups.find_all_by_flag( admin_group_flag )
     if admin_groups.count > 0
       objects = admin_groups.collect do |admin_group|
-        admin_group_parent = admin_group.parents.first 
-        if admin_group_parent.has_flag? :officers_parent
-          administrated_object = admin_group_parent.parents.first
-        else
-          administrated_object = admin_group_parent
-        end
-        administrated_object
+        admin_group.administrated_object
       end
     else
       []
@@ -297,16 +311,27 @@ class User < ActiveRecord::Base
   end
 
   # This method returns all structureable objects the user is administrator of.
-  def administrated_objects
-    objects = directly_administrated_objects
+  #
+  def administrated_objects( role = :admin )
+    objects = directly_administrated_objects( role )
     if objects
-      objects += directly_administrated_objects.collect do |directly_administrated_object|
+      objects += objects.collect do |directly_administrated_object|
         directly_administrated_object.descendants
       end.flatten
       objects
     else
       []
     end
+  end
+
+  # Main Admins 
+  # ------------------------------------------------------------------------------------------
+
+  # This method says whether the user (self) is a main admin of the given
+  # structureable object.
+  #
+  def main_admin_of?( structureable )
+    self.administrated_objects( :main_admin ).include? structureable
   end
 
 

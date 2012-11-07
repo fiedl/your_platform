@@ -379,6 +379,35 @@ describe User do
   # Roles
   # ==========================================================================================
 
+  # Members
+  # ------------------------------------------------------------------------------------------
+
+  describe "#member_of?" do
+    before do
+      @group = create( :group ); @group.child_users << @user 
+      @page = create( :page )
+    end
+    context "for the user being a descendant of the object" do
+      before { @page.child_groups << @group }
+      subject { @user.member_of? @page }
+      it { should == true }
+    end
+    context "for the user not being a descendant of the object" do
+      subject { @user.member_of? @page }
+      it "should be false" do
+        @page.descendants.should_not include @user
+        subject.should == false
+      end
+    end
+    context "for the user being a member of the group object" do
+      subject { @user.member_of? @group }
+      it { should == true }
+    end
+  end
+
+  # Admins
+  # ------------------------------------------------------------------------------------------
+
   describe "#admin_of" do
     before do 
       @group = create( :group, name: "Directly Administrated Group" )
@@ -466,6 +495,38 @@ describe User do
       end
       it "should list directly and indirectly administrated objects" do
         subject.should include( @group, @sub_group )
+      end
+    end
+  end
+
+  # Main Admins
+  # ------------------------------------------------------------------------------------------
+
+  describe "#main_admin_of?" do
+    before do
+      @page = create( :page )
+    end
+    subject { @user.main_admin_of? @page }
+    context "for the main_admins_parent_group existing" do
+      before { @page.create_main_admins_parent_group }
+      context "for the user being a main admin of the object" do
+        before { @page.main_admins << @user }
+        it { should == true }
+      end
+      context "for the user being just a regular admin of the object" do
+        before { @page.admins << @user }
+        it { should == false }
+      end
+      context "for the user being just a regular member of the object" do
+        before do
+          @group = create( :group )
+          @group.child_users << @user
+          @page.child_groups << @group
+        end
+        it "should be false" do
+          @user.member_of?( @page ).should be_true # just to make sure
+          subject.should == false
+        end
       end
     end
   end
