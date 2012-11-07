@@ -287,16 +287,25 @@ module GroupMixins::Import
   def set_flags_based_on_group_name 
 
     # Officers
-    officers_parent_group_name_translations = []
+    translations = []
     I18n.translate( :officers_parent ) # required to initialize the I18n 
     I18n.backend.send( :translations ).each do |language, translations_hash|
-      officers_parent_group_name_translations << translations_hash[ :officers_parent ]
+      translations << translations_hash[ :officers_parent ]
     end
-    if self.name.in? officers_parent_group_name_translations
+    if self.name.in? translations
       self.add_flag( :officers_parent )
     end
 
-  end
+    # Guests
+    translations = []
+    I18n.translate( :guests_parent ) # required to initialize the I18n 
+    I18n.backend.send( :translations ).each do |language, translations_hash|
+      translations << translations_hash[ :guests_parent ]
+    end
+    if self.name.in? translations
+      self.add_flag( :guests_parent )
+    end
 
+  end
 
 end

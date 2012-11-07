@@ -58,22 +58,36 @@ describe GroupMixins::Import do
   # ==========================================================================================
 
   describe "#set_flags_based_on_group_name" do
-
-    for name_translation in [ "Officers", "Amtsträger" ] do
-      describe "(group.name=='#{name_translation}')" do
-
-        before do
-          @officers_parent_group = create( :group, name: name_translation )
-          @officers_parent_group.set_flags_based_on_group_name
-        end
-
-        it "should set the officers flag" do
-          @officers_parent_group.has_flag?( :officers_parent ).should be_true
-        end
-
+    before { @group = create( :group ) }
+    subject { @group.set_flags_based_on_group_name }
+    context "for group name 'Officers'" do
+      before { @group.name = "Officers" }
+      it "should set the :officers_parent flag" do
+        subject
+        @group.has_flag?( :officers_parent ).should be_true
       end
     end
-
+    context "for group name 'Amtsträger'" do
+      before { @group.name = "Amtsträger" }
+      it "should set the :officers_parent flag" do
+        subject
+        @group.has_flag?( :officers_parent ).should be_true
+      end
+    end
+    context "for group name 'Gäste'" do
+      before { @group.name = "Gäste" }
+      it "should set the :guests_parent flag" do
+        subject
+        @group.has_flag?( :guests_parent ).should be_true
+      end
+    end
+    context "for group name 'Guests'" do
+      before { @group.name = "Guests" }
+      it "should set the :guests_parent flag" do
+        subject
+        @group.has_flag?( :guests_parent ).should be_true
+      end
+    end
   end
 
 end
