@@ -163,6 +163,43 @@ describe StructureableMixins::HasSpecialGroup do
       end
     end
   end
+
+  describe "#testers!" do
+    subject { @my_structureable.testers! }
+    context "for an existing special group" do
+      before { @my_structureable.create_testers_parent_group }
+      it { should == @my_structureable.testers }
+    end
+    context "for an absent special group" do
+      it { should be_kind_of Array }
+      it { should_not == nil }
+    end
+  end
+
+  describe "#testers! <<" do
+    subject { @my_structureable.testers! << @tester_user }
+    context "for an existing special group" do
+      before { @my_structureable.create_testers_parent_group }
+      it "should add the user" do
+        @my_structureable.find_testers_parent_group.child_users.should == []
+        subject
+        @my_structureable.find_testers_parent_group.child_users.should == [ @tester_user ]
+      end
+    end
+    context "for a non-existing special group" do
+      it "should create the special group" do
+        @my_structureable.find_testers_parent_group.should == nil
+        subject
+        @my_structureable.find_testers_parent_group.should be_kind_of Group
+      end
+      it "should add the user" do
+        @my_structureable.find_testers_parent_group.should == nil
+        subject
+        @my_structureable.find_testers_parent_group.child_users.should == [ @tester_user ]
+      end
+    end
+
+  end
   
   context "(global special_groups)" do
     describe ".find_global_admins_parent_group" do
@@ -190,5 +227,6 @@ describe StructureableMixins::HasSpecialGroup do
       it { should be_kind_of( Group ) }
     end
   end
+
 
 end

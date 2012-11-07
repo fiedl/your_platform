@@ -19,6 +19,7 @@
 #     some_page.officers_parent!
 #     some_page.officers # => Array of descendant_users of the officers_parent child_group
 #     some_page.officers << some_users
+#     some_page.officers! << some_users  # creates the officers_parent_group on the way if absent
 #
 # This will also work global, i.e. to produce class methods instead of instance methods.
 # 
@@ -114,6 +115,11 @@ module StructureableMixins::HasSpecialGroup
 
           def #{self_or_not}#{reduced_group_flag}
             return #{group_flag}.descendant_users if #{group_flag}
+          end
+
+          def #{self_or_not}#{reduced_group_flag}!
+            #{self_or_not}find_or_create_#{group_flag}_group
+            return #{self_or_not}#{reduced_group_flag} 
           end
 
           EOL
