@@ -379,6 +379,37 @@ describe User do
   # Roles
   # ==========================================================================================
 
+  describe "#role_for" do
+    before do
+      @object = create( :page )
+      @object.create_main_admins_parent_group
+    end
+    subject { @user.role_for @object }
+    context "for the user being not related to the object" do
+      it { should == nil }
+    end
+    context "for the user being a member of the object" do
+      before do
+        @group = create( :group )
+        @group.child_users << @user
+        @object.child_groups << @group 
+      end
+      it { should == :member }
+    end
+    context "for the user being an admin of the object" do
+      before { @object.admins << @user }
+      it { should == :admin }
+    end
+    context "for the user being a main_admin of the object" do
+      before { @object.main_admins << @user }
+      it { should == :main_admin }
+    end
+    context "for the object being not structureable" do
+      before { @object = "This is a string." }
+      it { should == nil }
+    end
+  end
+
   # Members
   # ------------------------------------------------------------------------------------------
 

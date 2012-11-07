@@ -267,6 +267,18 @@ class User < ActiveRecord::Base
   # Roles and Rights
   # ==========================================================================================
 
+  # This method returns the role the user (self) has for a given
+  # structureable object.
+  # 
+  # The roles may be :member, :admin or :main_admin.
+  #
+  def role_for( structureable )
+    return nil if not structureable.respond_to? :child_groups
+    return :main_admin if self.main_admin_of? structureable
+    return :admin if self.admin_of? structureable
+    return :member if self.member_of? structureable
+  end
+
   # Members
   # ------------------------------------------------------------------------------------------
 
