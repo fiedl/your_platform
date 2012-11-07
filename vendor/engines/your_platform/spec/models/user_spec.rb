@@ -383,6 +383,8 @@ describe User do
     before do
       @object = create( :page )
       @object.create_main_admins_parent_group
+      @sub_object = create( :group ); @sub_object.parent_pages << @object
+      @sub_sub_object = create( :user ); @sub_sub_object.parent_groups << @sub_object
     end
     subject { @user.role_for @object }
     context "for the user being not related to the object" do
@@ -407,6 +409,14 @@ describe User do
     context "for the object being not structureable" do
       before { @object = "This is a string." }
       it { should == nil }
+    end
+    context "for descendant objects of administrated objects" do
+      before { @object.admins << @user }
+      it "should return the inherited role" do
+        @user.role_for( @object ).should == :admin
+        @user.role_for( @sub_object ).should == :admin
+        @user.role_for( @sub_sub_object ).should == :admin
+      end
     end
   end
 

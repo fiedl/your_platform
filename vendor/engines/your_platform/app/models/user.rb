@@ -273,7 +273,7 @@ class User < ActiveRecord::Base
   # The roles may be :member, :admin or :main_admin.
   #
   def role_for( structureable )
-    return nil if not structureable.respond_to? :child_groups
+    return nil if not structureable.respond_to? :parent_groups
     return :main_admin if self.main_admin_of? structureable
     return :admin if self.admin_of? structureable
     return :member if self.member_of? structureable
