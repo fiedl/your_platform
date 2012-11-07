@@ -139,6 +139,12 @@ describe StructureableMixins::HasSpecialGroup do
         subject.should == []
       end
     end
+    context "for testers that are members of a sub-group, e.g. 'main_testers'" do
+      before { @my_structureable.main_testers_parent!.child_users << @tester_user }
+      it "should return all descendant users" do
+        subject.should == [ @tester_user ]
+      end
+    end
   end
 
   describe "#testers <<" do

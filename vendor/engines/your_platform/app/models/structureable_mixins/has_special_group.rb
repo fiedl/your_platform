@@ -57,7 +57,9 @@ module StructureableMixins::HasSpecialGroup
       # class methods, not instance methods.
       self_or_not = "self." if global 
 
-      self.class_eval <<-EOL
+      # TODO: Maybe use a block instead: 
+      # http://stackoverflow.com/questions/1011142/include-a-module-to-define-dynamic-class-method
+      self.class_eval <<-EOL  
 
       def #{self_or_not}#{group_flag}
         find_#{group_flag}_group
@@ -103,13 +105,19 @@ module StructureableMixins::HasSpecialGroup
       if group_flag.to_s.end_with?( '_parent' ) # e.g. "admins_parent"
         reduced_group_flag = group_flag.to_s.gsub( /_parent$/, "" ) # e.g. "admins"
 
-        self.class_eval <<-EOL
+        # Warning! If the method already exists (even it is defined after `has_special_group` outside,
+        # it is going to be overridden here. Therefore, we only replace it if it does not exist.
+        # http://stackoverflow.com/questions/5944278/overriding-method-by-another-defined-in-module
+        #
+        if not self.respond_to? reduced_group_flag
+          self.class_eval <<-EOL
 
-        def #{self_or_not}#{reduced_group_flag}
-          return #{group_flag}.child_users if #{group_flag}
+          def #{self_or_not}#{reduced_group_flag}
+            return #{group_flag}.descendant_users if #{group_flag}
+          end
+
+          EOL
         end
-
-        EOL
       end
 
     end

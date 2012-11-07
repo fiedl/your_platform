@@ -30,16 +30,12 @@ module GroupMixins::SpecialGroups
     #    Group.find_or_create_everyone_group
     #    Group.create_everyone_group
     #
-    has_special_group :everyone, global: true
-
-  end
+    has_special_group :everyone, global: true     # or: `Group.has_special_group(...)` outside of `included`.
 
 
-  # Corporations Parent
-  # ==========================================================================================
-
-  module ClassMethods
-
+    # Corporations Parent
+    # ==========================================================================================
+    #
     # Parent group for all corporation groups.
     # The group structure looks something like this:
     #
@@ -51,36 +47,22 @@ module GroupMixins::SpecialGroups
     #                       |                |--- ...
     #                       |---------- corporation_c
     #                                        |--- ...
-    def corporations_parent
-      self.find_corporations_parent_group
-    end
-    
-    def find_corporations_parent_group
-      Group.find_by_flag( :corporations_parent )
-    end
-
-    def create_corporations_parent_group
-      corporations_parent = Group.create( name: "Corporations" )
-      corporations_parent.add_flag( :corporations_parent )
-      corporations_parent.parent_groups << Group.everyone
-      corporations_parent.name = I18n.translate( :corporations_parent )
-      corporations_parent.save
-      return corporations_parent
-    end
+    #
+    has_special_group :corporations_parent, global: true 
 
   end
 
   
   # Corporations
   # ==========================================================================================
-  
+
   module ClassMethods
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
     # Alias method for `find_corporation_groups`.
     #
     def corporations
-      self.find_corporation_groups
+      find_corporation_groups
     end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
