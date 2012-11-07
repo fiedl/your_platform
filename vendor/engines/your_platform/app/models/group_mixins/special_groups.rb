@@ -79,6 +79,21 @@ module GroupMixins::SpecialGroups
     end
 
 
+    # Guests Parent
+    # ==========================================================================================
+    #
+    # As well as officers, each group may have guests.
+    #
+    # This provides the following methods:
+    # guests_parent
+    # guests_parent!
+    # guests
+    # find_guests_parent_group
+    # create_guests_parent_group
+    # find_or_create_guests_parent_group
+    #
+    has_special_group :guests_parent
+
   end
 
   
@@ -182,33 +197,16 @@ module GroupMixins::SpecialGroups
   # Guests Parent
   # ==========================================================================================
 
-  extend HasSpecialChildParentGroup
-
-  # As well as officers, each group may have guests.
+  # This method lists all guest sub-groups of self, but not of the sub-groups of self.
   #
-  has_special_child_parent_group :guests
-
-  # This provides the following methods:
-  # guests_parent
-  # guests_parent!
-  # guests
-  # find_guests_parent_group
-  # create_guests_parent_group
-  # find_guests_groups
-
-  def find_guest_users
-    if self.find_guests_parent_group
-      self.find_guests_parent_group.descendant_users 
-    else
-      []
-    end
+  def find_guests_groups
+    find_guests_parent_group.descendant_groups
   end
 
-  # In contrast to officers, `group.guests` should list all guest USERS, not
-  # all officers groups.
+  # This method lists all descendant users of the guests_parent_group.
   #
-  def guests
-    self.find_guest_users
+  def find_guest_users
+    guests
   end
 
 end

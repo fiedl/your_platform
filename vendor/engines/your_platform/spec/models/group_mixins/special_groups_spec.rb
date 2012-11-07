@@ -217,7 +217,6 @@ describe GroupMixins::SpecialGroups do
         subject.should include( @guests_sub1 )
       end
       it "should NOT find the guests of the container group's subgroups" do
-        #subject.should include( @subgroup_guests_parent.child_groups )
         subject.should_not include( @guests_sub2 ) 
       end
     end
@@ -231,7 +230,7 @@ describe GroupMixins::SpecialGroups do
       end
       describe "if the group does not have a guests_parent group" do
         subject { @other_group.find_guest_users }
-        it { should == [] }
+        it { should == nil }
       end
     end
 

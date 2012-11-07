@@ -376,6 +376,25 @@ describe User do
   end
       
   
+  # Guest Status
+  # ==========================================================================================
+
+  describe "#guest_of?" do
+    before { @group = create( :group ) }
+    subject { @user.guest_of? @group }
+    context "for the user being not a guest of the given group" do
+      it { should == false }
+    end
+    context "for the user being a guest of the given group" do
+      before do
+        @group.find_or_create_guests_parent_group
+        @group.guests << @user
+      end
+      it { should == true }
+    end
+  end
+
+
   # Finder Methods
   # ==========================================================================================
 

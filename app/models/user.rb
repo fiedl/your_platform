@@ -33,7 +33,7 @@ class User
   #
   def aktivitaetszahl
     self.corporations.collect do |corporation| 
-      if not corporation.guests.include?( self ) # only if the user is no guest here
+      if not self.guest_of? corporation
         year_of_joining = ""
         year_of_joining = corporation.membership_of( self ).created_at.to_s[2, 2] if corporation.membership_of( self ).created_at
         #corporation.token + "\u2009" + year_of_joining

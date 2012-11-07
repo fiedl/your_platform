@@ -300,6 +300,17 @@ class User < ActiveRecord::Base
     end.flatten
     administrated_objects
   end
+
+
+  # Guest Status
+  # ==========================================================================================
+
+  # This method says if the user (self) is a guest of the given group.
+  #
+  def guest_of?( group )
+    return false if not group.find_guests_parent_group
+    group.guests.include? self
+  end
   
 
   # Finder Methods
