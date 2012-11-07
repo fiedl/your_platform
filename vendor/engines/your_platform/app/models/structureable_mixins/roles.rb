@@ -12,47 +12,24 @@ module StructureableMixins::Roles
 
   included do
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
+
+    include StructureableMixins::HasSpecialGroup
+    has_special_group :officers_parent
+
+    # Admins
+    # ==========================================================================================
+    #
+    # This provides the following methods:
+    #   some_structureable.admins_parent
+    #                     .find_admins_parent_group
+    #                     .admins_parent!
+    #                     .find_or_create_admins_parent_group
+    #                     .create_admins_parent_group
+    #                     .admins  # returns an array of the admin users
+    #                     .admins << some_user
+    #
+    has_special_group :admins_parent, :child_of => :officers_parent
+
   end
-
-
-  module ClassMethods
-  end
-
-
-  # Admins
-  # ==========================================================================================
-
-  def admins_parent
-    self.find_admins_parent_group
-  end
-
-  def admins_parent!
-    p = admins_parent 
-    p ||= self.create_admins_parent_group
-    p
-  end
-
-  def find_admins_parent_group
-    self.descendant_groups.find_by_flag( :admins_parent )
-  end
-
-  def create_admins_parent_group
-    admins_parent_group = Group.create( name: I18n.t( :admins ) )
-    admins_parent_group.add_flag( :admins_parent )
-    admins_parent_group.save
-    self.officers_parent!.child_groups << admins_parent_group
-  end
-
-  # This method allows you to list, add or remove direct admins of this object.
-  # You may call:
-  # 
-  #   object.admins           # => []
-  #   object.admins << user   
-  #   object.admins.delete( user )
-  #
-  def admins
-    self.admins_parent!.child_users
-  end
-
 
 end
