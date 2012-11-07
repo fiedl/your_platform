@@ -50,6 +50,35 @@ module GroupMixins::SpecialGroups
     #
     has_special_group :corporations_parent, global: true 
 
+    # Officers Parent
+    # ==========================================================================================
+    #
+    # Each group may have officers, e.g. the president of the organization.
+    # Officers are collected in a sub-group with the flag :officers_parent. This 
+    # officers_parent-group may also have sub-groups. But, of course, the officers_parent 
+    # group must not have another officers_parent sub-group.
+    # 
+    # This provides the following methods:
+    #     officers_parent
+    #     officers_parent!
+    #     officers
+    #     find_officers_parent_group
+    #     create_officers_parent_group
+    #     find_or_create_officers_parent_group
+    #
+    has_special_group :officers_parent
+
+    # This method returns all officer users, as well all of this group as of its sub-groups.
+    # Therefore, this method has to be overridden, since the one provided by
+    # `has_special_group :officers_parent` would return only the officers of this group.
+    #
+    def officers
+      find_officers_groups.collect do |officers_group|
+        officers_group.descendant_users
+      end.flatten.uniq
+    end
+
+
   end
 
   
@@ -138,25 +167,9 @@ module GroupMixins::SpecialGroups
   # Officers Parent
   # ==========================================================================================
 
-  # Each group may have officers, e.g. the president of the organization.
-  # Officers are collected in a sub-group with the flag :officers_parent. This 
-  # officers_parent-group may also have sub-groups. But, of course, the officers_parent 
-  # group must not have another officers_parent sub-group.
-  # 
-  extend HasSpecialChildParentGroup
-  has_special_child_parent_group :officers
-
-  # This provides the following methods:
-  # officers_parent
-  # officers_parent!
-  # officers
-  # find_officers_parent_group
-  # create_officers_parent_group
-  # find_officers_groups
-
-  # This finder method has to be overridden, since we want to have a special behaviour
-  # for officers: All officers of sub-groups of self should be listed as officers of 
-  # self, too.
+  # This method lists all officer groups, as well in this group as well all of the sub-groups.
+  # The method name is not to be confused with `find_officers_parent_group`, 
+  # which is provided by `has_special_group :officers_parent`.
   #
   def find_officers_groups
     officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
@@ -164,9 +177,12 @@ module GroupMixins::SpecialGroups
     return officers # if officers.count > 0
   end
 
-
+   
+ 
   # Guests Parent
   # ==========================================================================================
+
+  extend HasSpecialChildParentGroup
 
   # As well as officers, each group may have guests.
   #

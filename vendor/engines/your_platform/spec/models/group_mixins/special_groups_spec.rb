@@ -122,6 +122,8 @@ describe GroupMixins::SpecialGroups do
       @subgroup_officers_parent = @container_subgroup.create_officers_parent_group
       @officer1 = create( :group ); @officer1.parent_groups << @officers_parent
       @officer2 = create( :group ); @officer2.parent_groups << @subgroup_officers_parent
+      @officer1_user = create( :user ); @officer1.child_users << @officer1_user
+      @officer2_user = create( :user ); @officer2.child_users << @officer2_user
       @container_group.reload
       @container_subgroup.reload
       @officers_parent.reload
@@ -158,7 +160,16 @@ describe GroupMixins::SpecialGroups do
     subject { @container_group }
     its( :officers_parent ) { should == @officers_parent }
     its( :officers_parent! ) { should == @officers_parent }
-    its( :officers ) { should == @container_group.find_officers_groups }
+    
+    describe "#officers" do
+      subject { @container_group.officers }
+      it "should list the users that are officers" do
+        subject.should include @officer1_user
+      end
+      it "should also list the officers of the sub-groups of this group" do
+        subject.should include @officer2_user
+      end
+    end
 
   end
 
