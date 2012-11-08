@@ -287,7 +287,7 @@ class User < ActiveRecord::Base
   # read that object.
   #
   def member_of?( structureable )
-    raise 'the given object is capable of having users as members' if not structureable.respond_to? :descendant_users
+    return false if not structureable.respond_to? :descendant_users
     structureable.descendant_users.include? self
   end
 

@@ -444,6 +444,17 @@ describe User do
       subject { @user.member_of? @group }
       it { should == true }
     end
+    context "for the argument being not able to having children, e.g. a user or another object" do
+      # this is a bug fix test
+      before do
+        @another_user = create( :user )
+        @another_object = "This is a String."
+      end
+      it "should be simply false and not raise an error" do
+        @user.member_of?( @another_user ).should == false
+        @user.member_of?( @another_object ).should == false
+      end
+    end
   end
 
   # Admins
