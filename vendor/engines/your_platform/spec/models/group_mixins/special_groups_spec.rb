@@ -68,6 +68,18 @@ describe GroupMixins::SpecialGroups do
       end
     end
 
+    describe ".corporations" do
+      subject { Group.corporations }
+      it "should be the same as .find_corporation_groups" do
+        subject.should == Group.find_corporation_groups
+      end
+      it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly? 
+        subject.should be_kind_of Array
+        subject.first.should_not be_kind_of User
+        subject.first.should be_kind_of Group
+      end
+    end
+
     describe ".find_corporation_groups_of( user )" do
       subject { Group.find_corporation_groups_of( @user ) }
       it { should == [ @corporation_group_of_user ] }
@@ -110,6 +122,8 @@ describe GroupMixins::SpecialGroups do
       @subgroup_officers_parent = @container_subgroup.create_officers_parent_group
       @officer1 = create( :group ); @officer1.parent_groups << @officers_parent
       @officer2 = create( :group ); @officer2.parent_groups << @subgroup_officers_parent
+      @officer1_user = create( :user ); @officer1.child_users << @officer1_user
+      @officer2_user = create( :user ); @officer2.child_users << @officer2_user
       @container_group.reload
       @container_subgroup.reload
       @officers_parent.reload
@@ -146,7 +160,57 @@ describe GroupMixins::SpecialGroups do
     subject { @container_group }
     its( :officers_parent ) { should == @officers_parent }
     its( :officers_parent! ) { should == @officers_parent }
-    its( :officers ) { should == @container_group.find_officers_groups }
+    
+    describe "#officers" do
+      subject { @container_group.officers }
+      it "should list the users that are officers" do
+        subject.should include @officer1_user
+      end
+      it "should also list the officers of the sub-groups of this group" do
+        subject.should include @officer2_user
+      end
+    end
+
+  end
+
+  describe "#administrated_object" do
+    before do
+      @some_group = create( :group )
+      @sub_group = create( :group ); @sub_group.parent_groups << @some_group
+      @officers_parent = @sub_group.create_officers_parent_group
+      @admins_parent = @sub_group.create_admins_parent_group
+      @main_admins_parent = @sub_group.create_main_admins_parent_group
+    end
+    context "for an officers_parent_group" do
+      subject { @officers_parent.administrated_object }
+      it "should be the parent of the officers_parent" do
+        subject.should == @sub_group
+      end
+    end
+    context "for a child group of the officers_parent_group" do
+      subject { @main_admins_parent.administrated_object }
+      it "should be the parent of the officers_parent as well" do
+        subject.should == @sub_group
+      end
+    end
+    context "for the administrated object itself" do
+      subject { @sub_group.administrated_object }
+      it { should == nil }
+    end
+    context "for a parent of the aministrated object" do
+      subject { @some_group.administrated_object }
+      it { should == nil }
+    end
+    context "for the administrated object being something different than a group" do
+      before do
+        @some_page = create( :page )
+        @main_admins_parent = @some_page.create_main_admins_parent_group
+      end
+      subject { @main_admins_parent.administrated_object }
+      it "should work as well" do
+        subject.should == @some_page
+      end
+    end
 
   end
 
@@ -194,7 +258,6 @@ describe GroupMixins::SpecialGroups do
         subject.should include( @guests_sub1 )
       end
       it "should NOT find the guests of the container group's subgroups" do
-        #subject.should include( @subgroup_guests_parent.child_groups )
         subject.should_not include( @guests_sub2 ) 
       end
     end
@@ -208,7 +271,7 @@ describe GroupMixins::SpecialGroups do
       end
       describe "if the group does not have a guests_parent group" do
         subject { @other_group.find_guest_users }
-        it { should == [] }
+        it { should == nil }
       end
     end
 

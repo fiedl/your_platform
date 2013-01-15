@@ -59,6 +59,10 @@ module Structureable
     # see Flagable model.
     has_many_flags
 
+    # Structureable objects may have special_groups as descendants, e.g. the admins_parent group.
+    # This mixin loads the necessary methods to interact with them.
+    include StructureableMixins::HasSpecialGroup
+
     include StructureableInstanceMethods
   end
 

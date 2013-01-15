@@ -64,7 +64,7 @@
   <h1><%=t :officers %></h1>
   <span id="officers">
     <dl>
-      <% for officer_group in @group.officers %>
+      <% for officer_group in @group.find_officers_groups %>
         <dt><%= best_in_place officer_group, :name %></dt>
 	<dd><%= multiple_users_best_in_place officer_group, :direct_member_titles_string %></dd>
       <% end %>
