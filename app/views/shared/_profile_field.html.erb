@@ -1,27 +1,25 @@
-<span class="profile_field">
-  <%
-     input_type = 'input'
-     input_type = 'textarea' if [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Description" ].include? profile_field.type
-  %>
-  <dt>
+<li>
+  <span class="profile_field" id="profile_field_id_<%= profile_field.id %>">
+    <%
+       input_type = 'input'
+       input_type = 'textarea' if ["ProfileFieldTypes::Address", "ProfileFieldTypes::Description"].include? profile_field.type
+    %>
     <%= best_in_place profile_field, :label %>
-    <% unless profile_field.parent %>
-      <%= remove_button( profile_field ) %>
-    <% end %>
-  </dt>
-  <dd>
     <% unless profile_field.children.count > 0 %>
       <%= best_in_place profile_field, :value,
-          type: input_type,
-	  display_as: :display_html # display_html ist eine Methode in der ProfileField-Klasse
-          %>
+                        type: input_type,
+                        display_as: :display_html # display_html is a method of the ProfileField class
+      %>
+    <% end %>
+    <% unless profile_field.parent %>
+        <%= remove_button(profile_field) %>
     <% end %>
     <% if profile_field.children.count > 0 %>
-      <dl>
-        <% for child_field in profile_field.children %>
-          <%= render partial: 'shared/profile_field', object: child_field %>
+      <ul>
+        <% profile_field.children.each do |child_field| %>
+            <%= render partial: 'shared/profile_field', object: child_field %>
         <% end %>
-      </dl>
+      </ul>
     <% end %>
-  </dd>
-</span>
+  </span>
+</li>

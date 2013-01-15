@@ -46,14 +46,10 @@ describe "User page", js: false do
         page.should have_selector( 'li', count: 1 )
 
         find(".remove_button").click
-        page.should_not have_selector('li', count: 1)
+        page.should_not have_selector('li')
       end
     end
 
-    describe "and clicking on the organizations edit button" do
-      before { click_link "OrganizationsEditButton" }
-
-    end
   end
 end
 
