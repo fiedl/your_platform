@@ -37,9 +37,18 @@ describe "User page", js: false do
 
     it { should have_selector('title', text: "Wingolfsplattform") }
 
-    it { should have_link "OrganizationsEditButton"}
-    it { should have_link "Save" } #how to test that it is hidden
-    it { should have_link "Add" } #how to test that it is hidden
+    it "the section 'organizations'", js: true do
+      within(".section.organizations") do
+        click_on I18n.t(:edit)
+        page.should have_selector('a.add_button', visible: true)
+
+        click_on I18n.t(:add)
+        page.should have_selector( 'li', count: 1 )
+
+        find(".remove_button").click
+        page.should_not have_selector('li', count: 1)
+      end
+    end
 
     describe "and clicking on the organizations edit button" do
       before { click_link "OrganizationsEditButton" }

@@ -19,10 +19,10 @@ class UsersController < ApplicationController
     end
   end
 
-  def create_profile_field
-    @user = User.find_by_id(params[:user_id])
+  def create_profile_field()
+    @user = User.find_by_id(params[:profileable_id])
     type = params[:type]
-    @user.profile_fields.create(type: type)
+    @profile_field = @user.profile_fields.create(type: type)
     respond_to do |format|
       format.html { redirect_to @user }
       format.js
