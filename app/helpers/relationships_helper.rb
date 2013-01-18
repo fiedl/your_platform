@@ -17,8 +17,8 @@ module RelationshipsHelper
   end
   
   def relationship_li( relationship )
-    who = relationship.parent_users.first
-    of = relationship.child_users.first
+    who = relationship.who
+    of = relationship.of
     content_tag :li do
       [ user_best_in_place( relationship, :who_by_title ),
         content_tag( :span, " " + t( :is ) + " ", :class => "junction_expression" ),
