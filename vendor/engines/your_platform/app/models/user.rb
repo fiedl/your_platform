@@ -22,7 +22,8 @@ class User < ActiveRecord::Base
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
-  before_save               :build_account_if_requested, :add_to_group_if_requested
+  before_save               :build_account_if_requested
+  after_save                :add_to_group_if_requested
 
 
   # General Properties
