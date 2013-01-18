@@ -83,7 +83,7 @@ describe ProfileFieldTypes::Address do
   
   specify "latitude and longitude should be correct" do
     subject.latitude.round(4).should == 52.5163 
-    subject.longitude.round(4).should == 13.3777
+    subject.longitude.round(4).should == 13.3778
   end
 
   its( :country ) { should == "Germany" }
