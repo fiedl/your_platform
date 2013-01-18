@@ -46,7 +46,7 @@ class ProfileField < ActiveRecord::Base
   #
   def label
     label_text = super
-    translated_label_text = I18n.translate( label_text, :default => label_text )
+    translated_label_text = I18n.translate( label_text, :default => label_text ) if label_text
   end
 
   # This creates an easier way to access a composed ProfileField's child field
