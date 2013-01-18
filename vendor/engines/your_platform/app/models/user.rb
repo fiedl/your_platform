@@ -17,8 +17,10 @@ class User < ActiveRecord::Base
 
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 
-  has_dag_links             link_class_name: 'RelationshipDagLink', ancestor_class_names: %w(Relationship), descendant_class_names: %w(Relationship), prefix: 'relationships'
-
+  has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
+                              
+  has_many                  :relationships_as_second_user, foreign_key: 'user2_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user2
+  
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
@@ -228,9 +230,7 @@ class User < ActiveRecord::Base
   # This returns all relationship opjects.
   #
   def relationships
-    # At the moment, the partners of a relationships are stored in a DAG model
-    # prexied with 'relationships_'. 
-    relationships_parent_relationships + relationships_child_relationships
+    relationships_as_first_user + relationships_as_second_user
   end
 
   

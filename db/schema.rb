@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121011001151) do
+ActiveRecord::Schema.define(:version => 20130118225427) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -93,19 +93,10 @@ ActiveRecord::Schema.define(:version => 20121011001151) do
     t.integer  "parent_id"
   end
 
-  create_table "relationship_dag_links", :force => true do |t|
-    t.integer  "ancestor_id"
-    t.string   "ancestor_type"
-    t.integer  "descendant_id"
-    t.string   "descendant_type"
-    t.boolean  "direct"
-    t.integer  "count"
-    t.datetime "created_at",      :null => false
-    t.datetime "updated_at",      :null => false
-  end
-
   create_table "relationships", :force => true do |t|
     t.string   "name"
+    t.integer  "user1_id"
+    t.integer  "user2_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
