@@ -5,6 +5,7 @@ feature "Relationships on User show view", js: true do
 
   background do
     @user = create( :user_with_account )
+    @related_user = create( :user, first_name: "Jacobus", last_name: "Doe" )
   end
 
   scenario "adding a relationship and removing it again" do
@@ -28,6 +29,25 @@ feature "Relationships on User show view", js: true do
 
     end
 
+  end
+
+  scenario "using the auto completion mechanism for selecting a related user" do
+    
+    visit user_path( @user )
+    within( ".section.relationships" ) do
+      click_link I18n.t( :edit )
+      click_on I18n.t( :add )
+      fill_in 'who_by_title', with: "Jaco"
+
+      # The auto completion mechanism now should suggest the name "Jacobus Doe".
+      page.should have_content( "Jacobus Doe" )
+
+      # Clicking on the suggestion should use it in the text field.
+      click_on "Jacobus Doe" 
+      find( "input[name=who_by_title]" ).value.should == @related_user.title
+
+    end
+    
   end
 
 end
