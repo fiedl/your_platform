@@ -20,7 +20,6 @@
 //= require_boxes
 //= require best_in_place
 //= require edit_mode
-//= require autocomplete-rails
 //= require slim_breadcrumb
 //= require gmaps4rails
 //= require your_platform

@@ -94,7 +94,7 @@ gem 'json'								# Ruby License
 gem 'colored'								# MIT License
 
 # Auto Completion
-gem 'rails3-jquery-autocomplete'					# MIT Licenses
+#gem 'rails3-jquery-autocomplete'					# MIT Licenses
 
 # Deployment with Capistrano.                                          
 # Capistrano runs locally, not on the remote server.

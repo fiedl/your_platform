@@ -164,8 +164,6 @@ GEM
       railties (= 3.2.11)
     rails-i18n (0.6.5)
       i18n (~> 0.5)
-    rails3-jquery-autocomplete (1.0.10)
-      rails (~> 3.0)
     rails3_acts_as_paranoid (0.2.4)
       activerecord (~> 3.2)
     railties (3.2.11)
@@ -279,7 +277,6 @@ DEPENDENCIES
   phony
   rails (~> 3.2.11)
   rails-i18n
-  rails3-jquery-autocomplete
   rails3_acts_as_paranoid
   rspec-mocks
   rspec-rails (= 2.10.0)
