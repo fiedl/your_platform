@@ -2,7 +2,7 @@ jQuery ->
 
   # fix issue with new tabs
   close_selector = ".lb-next,.lb-prev,.lb-close"
-  $( close_selector ).live( "mouseenter", ->
+  $( document ).on( 'mouseenter', close_selector, ->
     $( close_selector ).attr( "href", "#" ) # otherwise click will open new tab
   )
 
@@ -22,12 +22,12 @@ jQuery ->
   )
 
   # activate best_in_place editing
-  $( caption_selector ).live( "mouseenter", ->
+  $( document ).on( 'mouseenter', caption_selector, ->
     $( this ).find( ".best_in_place" ).best_in_place()
   )
 
   # prevent lightbox hotkeys when in in-place-editing mode
-  $( ".form_in_place input" ).live( "keyup", (e) ->
+  $( document ).on( 'keyup', ".form_in_place input", (e) ->
     code = e.keyCode
     code = e.which unless code
     unless code == 13 or code == 27

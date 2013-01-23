@@ -5,7 +5,7 @@
 jQuery ->
 
         # Entfernen-Button der Profilfelder mit Funktion ausstatten.
-        $( ".profile_field * .remove_button").live( "click", (event) ->
+        $( document ).on( 'click', ".profile_field * .remove_button", (event) ->
 
                 # Per Ajax die Seite im Hintergrund aufrufen, zu der der Entfernen-Button auch
                 # ohne JavaScript führen würde.
