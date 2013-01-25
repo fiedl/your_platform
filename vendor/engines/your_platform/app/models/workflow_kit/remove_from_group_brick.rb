@@ -2,11 +2,11 @@
 module WorkflowKit
   class RemoveFromGroupBrick < Brick
     def name 
-      "Aus Gruppe entfernen"
+      "Remove User from Group"
     end
     def description
-      "Beendet die Mitgliedschaft des Benutzers, der dem Workflow als Parameter übergeben wird, " +
-        "in der Gruppe, die dem Workflow als Parameter übergeben wird."
+      "Quit the membership of the user that is passed to this workflow as parameter " + 
+        "in the group that is passed to the workflow as parameter."
     end
     def execute( params )
       raise 'no user_id given' unless params[ :user_id ]
