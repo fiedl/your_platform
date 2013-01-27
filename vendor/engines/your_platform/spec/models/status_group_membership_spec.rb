@@ -24,7 +24,7 @@ describe StatusGroupMembership do
       @membership = UserGroupMembership.find_by_user_and_group( @user, @status_group )
         .becomes( StatusGroupMembership )
       @intermediate_group_membership = UserGroupMembership
-        .find_by_user_and_group( @user, @intermediate_group )
+        .find_by_user_and_group( @user, @intermediate_group ).becomes StatusGroupMembership
     end
 
     describe ".find_all_by_corporation" do
@@ -96,6 +96,13 @@ describe StatusGroupMembership do
         @membership.destroy
         StatusGroupMembership.find_all_by_user( @user ).in_the_past
           .should include @membership
+      end
+    end
+
+    describe ".find_all_by_user_and_corporation" do
+      subject { StatusGroupMembership.find_all_by_user_and_corporation( @user, @corporation ) }
+      it "should return the memberships of the user in the status groups of the corporation" do
+        subject.should include @membership
       end
     end
 

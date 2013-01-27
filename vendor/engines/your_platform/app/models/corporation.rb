@@ -15,11 +15,13 @@ class Corporation < Group
   end
 
   # This method returns all status groups of the corporation.
-  # In this general context, each subgroup of the corporation is a status group.
+  # In this general context, each leaf group of the corporation is a status group.
   # But this is likely to be overridden by the main application.
   #
   def status_groups 
-    self.descendant_groups
+    self.descendant_groups.select do |group|
+      group.descendant_groups.count == 0
+    end
   end
 
 end

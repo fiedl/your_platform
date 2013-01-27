@@ -42,4 +42,10 @@ class StatusGroupMembership < UserGroupMembership
     return links
   end
 
+  # Returns all memberships of the given user in the given corporation.
+  #
+  def self.find_all_by_user_and_corporation( user, corporation )
+    self.find_all_by_user( user ).find_all_by_corporation( corporation )
+  end
+
 end
