@@ -8,7 +8,7 @@
     <th colspan="3"><%=h corporation.title %></th>
   </tr>
 
-  <% memberships_for_the_corporate_vita = corporation.memberships_for_the_corporate_vita_of( user ) %>
+  <% memberships_for_the_corporate_vita = StatusGroupMembership.find_all_by_user_and_corporation( user, corporation ) %>
 
   <% for sub_group_membership in memberships_for_the_corporate_vita %>
 
