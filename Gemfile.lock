@@ -55,6 +55,10 @@ GEM
     best_in_place (2.0.2)
       jquery-rails
       rails (~> 3.1)
+    better_errors (0.3.2)
+      coderay (>= 1.0.0)
+      erubis (>= 2.7.0)
+    binding_of_caller (0.6.8)
     builder (3.0.4)
     capistrano (2.12.0)
       highline
@@ -75,6 +79,7 @@ GEM
       activesupport (>= 3.2.0)
     childprocess (0.3.6)
       ffi (~> 1.0, >= 1.0.6)
+    coderay (1.0.8)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -137,6 +142,9 @@ GEM
       i18n (>= 0.4.0)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    meta_request (0.2.1)
+      rack-contrib
+      rails
     mime-types (1.19)
     multi_json (1.5.0)
     mysql2 (0.3.11)
@@ -156,6 +164,8 @@ GEM
     rack (1.4.4)
     rack-cache (1.2)
       rack (>= 0.4)
+    rack-contrib (1.1.0)
+      rack (>= 0.9.1)
     rack-ssl (1.3.2)
       rack
     rack-test (0.6.2)
@@ -257,6 +267,8 @@ DEPENDENCIES
   acts_as_tree
   bcrypt-ruby (>= 3.0.1)
   best_in_place
+  better_errors
+  binding_of_caller
   capistrano
   capistrano_colors
   capybara
@@ -276,6 +288,7 @@ DEPENDENCIES
   jquery-ui-rails
   json
   launchy
+  meta_request
   mysql2
   net-ssh (= 2.4.0)
   nokogiri
