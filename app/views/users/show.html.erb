@@ -31,7 +31,7 @@
 <% if @user.corporations.count > 0 %>
 <h1 class="section corporate_vita">Wingolfitischer Lebenslauf</h1>
 <div>
-  <%= wingolfitische_vita_ul @user %>
+  <%= render partial: 'users/corporate_vita', locals: { user: @user } %>
 </div>
 <% end %>
 

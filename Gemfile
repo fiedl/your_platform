@@ -104,6 +104,13 @@ group :development do
   gem 'net-ssh', '2.4.0'
 end 
 
+# Debug Tools
+group :development do
+  gem 'better_errors'              # see Railscasts #402               
+  gem 'binding_of_caller'
+  gem 'meta_request'
+end
+
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'guard', '1.0.1'
