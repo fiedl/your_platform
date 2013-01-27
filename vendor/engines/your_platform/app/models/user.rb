@@ -209,6 +209,15 @@ class User < ActiveRecord::Base
     return my_corporations
   end
 
+  # This returns all status groups of the user, i.e. groups that represent the member
+  # status of the user in a corporation.
+  #
+  def status_groups
+    self.corporations.collect do |corporation|
+      corporation.status_groups
+    end.flatten
+  end
+
 
   # Memberships
   # ------------------------------------------------------------------------------------------
