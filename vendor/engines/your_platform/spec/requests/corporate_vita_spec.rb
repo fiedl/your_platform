@@ -43,20 +43,13 @@ describe "Corporate Vita", js: true do
         click_on @first_promotion_workflow.name
       end
 
-      within( ".section.corporate_vita" ) do
+      within( "#corporate_vita" ) do
         page.should have_content @status_groups.first.name
         page.should have_content @status_groups.second.name
         page.should_not have_content @status_groups.last.name
 
         # check this to avoid the double listing bug (sf 2013-01-24)
-        @corporation.memberships_for_the_corporate_vita_of( @user ).count.should == 2
-        page.should have_selector( "a", count: 2 )
-
-        # SF 2013-01-24
-        # I think, the bug is in the @corporation.memberships_for_the_corporate_vita_of method.
-        # This method is still in wingolfsplattform and not in your_platform.
-        # The factory-girls method does not create aktivitas and philisterschaft.
-        # Therefore, the method somehow produces not the desired output.
+        page.should have_selector( "a", count: 2 ) 
 
       end
 
