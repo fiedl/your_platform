@@ -46,10 +46,16 @@ class User < ActiveRecord::Base
   #   @user.name  # => "John Doe"
   #
   def capitalize_name
-    self.first_name.capitalize! unless first_name.include?( " " ) # zwei Vornamen
-    self.last_name.capitalize! unless last_name.include?( " " ) # "de Silva"
+    self.first_name = capitalized_name_string( self.first_name )
+    self.last_name = capitalized_name_string( self.last_name )
     self.name
   end
+
+  def capitalized_name_string( name_string )
+    return name_string if name_string.include?( " " )
+    return name_string.slice( 0, 1 ).capitalize + name_string.slice( 1 .. -1 )
+  end
+  private :capitalized_name_string
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden 

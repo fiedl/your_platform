@@ -33,16 +33,26 @@ describe User do
   end
 
   describe "#capitalize_name" do
-    before do
-      @user.first_name = "john"
-      @user.last_name = "doe"
-      @user.capitalize_name
-      @user.save
-    end
-    it "should capitalize the first_name and last_name" do
-      @user.first_name.should == "John"
-      @user.last_name.should == "Doe"
-      @user.name.should == "John Doe"
+    [ { first_name: "john", last_name: "doe", 
+        capitalized_first_name: "John", capitalized_last_name: "Doe" },
+      { first_name: "Bruno", last_name: "de Silva", 
+        capitalized_first_name: "Bruno", capitalized_last_name: "de Silva" },
+      { first_name: "Klaus-Dieter", last_name: "Kunz", 
+        capitalized_first_name: "Klaus-Dieter", capitalized_last_name: "Kunz" } ].each do |name_to_test|
+      describe "for '#{name_to_test[ :capitalized_last_name ]}'" do
+        before do
+          @user.first_name = name_to_test[ :first_name ]
+          @user.last_name = name_to_test[ :last_name ]
+          @user.capitalize_name
+          @user.save
+        end
+        it "should capitalize the first_name and last_name" do
+          @user.first_name.should == name_to_test[ :capitalized_first_name ]
+          @user.last_name.should == name_to_test[ :capitalized_last_name ]
+          @user.name.should == name_to_test[ :capitalized_first_name ] + " " + 
+            name_to_test[ :capitalized_last_name ]
+        end
+      end
     end
   end
 
