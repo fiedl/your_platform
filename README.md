@@ -46,6 +46,8 @@ https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU
 Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt. 
 **Mit großer Macht geht große Verantwortung einher!** :)
 
+New: The server will run all specs before deploying and abort if the tests fail. (ALPHA STAGE)
+
 ### Badges
 
 <a href="http://love.travis-ci.org"><img src="http://wingolfsplattform.org/images/supporttravis.png"></a>
