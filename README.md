@@ -46,7 +46,7 @@ https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU
 Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt. 
 **Mit großer Macht geht große Verantwortung einher!** :)
 
-New: The server will run all specs before deploying and abort if the tests fail. (ALPHA STAGE)
+Neu: Der Server führt vor dem Deployment die Specs druch und führt das Deployment nur durch, wenn die Tests grün sind. (ALPHA STAGE, Test 2).
 
 ### Badges
 
