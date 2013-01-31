@@ -46,7 +46,7 @@ https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU
 Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt. 
 **Mit großer Macht geht große Verantwortung einher!** :)
 
-Neu: Der Server führt vor dem Deployment die Specs druch und führt das Deployment nur durch, wenn die Tests grün sind. (ALPHA STAGE, Test 3).
+Hierbei werden nach einem Push automatisch die Tests auf travis-ci.com ausgeführt. Handelt es sich um einen Push nach master und sind die Tests grün, wird der Deployment-Hook von wingolfsplattform.org ausgelöst, wodurch der aktuelle master-Branch auf wingolfsplattform.org installiert wird.
 
 ### Badges
 
