@@ -48,6 +48,8 @@ Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org b
 
 Hierbei werden nach einem Push automatisch die Tests auf travis-ci.com ausgeführt. Handelt es sich um einen Push nach master und sind die Tests grün, wird der Deployment-Hook von wingolfsplattform.org ausgelöst, wodurch der aktuelle master-Branch auf wingolfsplattform.org installiert wird.
 
+Den aktuellen Status kann man hier abfragen: http://wingolfsplattform.org:4567
+
 ### Badges
 
 <a href="http://love.travis-ci.org"><img src="http://wingolfsplattform.org/images/supporttravis.png"></a>
