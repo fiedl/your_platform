@@ -13,6 +13,9 @@ notifications:
     on_success: always
     on_failure: always
     on_start: true
+  irc:
+    - "irc.freenode.org#wingolf"
+    - "irc.freenode.org#wingolfsplattform"
   webhooks:
     urls:
       - http://wingolfsplattform.org:4567   # this triggers the deployment
