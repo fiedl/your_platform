@@ -114,6 +114,7 @@ GEM
       thor (~> 0.14.6)
     guard-rspec (0.5.5)
       guard (>= 0.8.4)
+    haml (3.1.7)
     highline (1.6.13)
     hike (1.2.1)
     i18n (0.6.1)
@@ -284,6 +285,7 @@ DEPENDENCIES
   gravatar_image_tag
   guard (= 1.0.1)
   guard-rspec (= 0.5.5)
+  haml
   jquery-rails
   jquery-ui-rails
   json

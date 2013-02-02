@@ -35,6 +35,9 @@ end
 
 gem 'therubyracer', :platform => :ruby
 
+# haml template language, http://haml.info
+gem 'haml'
+
 gem 'jquery-rails'							# MIT License
 
 # To use ActiveModel has_secure_password (password encryption)
