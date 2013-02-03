@@ -24,4 +24,16 @@ class Corporation < Group
     end
   end
 
+  # This method returns all corporations in the database.
+  # Usage: corporations = Corporation.all
+  # 
+  def self.all
+    # The find_corporation_groups method is created by the GroupMixins::SpecialGroups module.
+    Corporation.find_corporation_groups.collect do |group|
+      # This conversion is necessary, since the find_corporation_groups method uses 
+      # the child_groups method, which returns Group-type objects.
+      group.becomes Corporation 
+    end
+  end
+
 end
