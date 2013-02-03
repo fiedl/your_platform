@@ -29,7 +29,7 @@
 <%= profile_sections_for_profileable @user, @user.sections %>
 
 <% if @user.corporations.count > 0 %>
-<h1>Wingolfitischer Lebenslauf</h1>
+<h1 class="section corporate_vita">Wingolfitischer Lebenslauf</h1>
 <div>
   <%= corporate_vita_for_user( @user ) %>
 </div>

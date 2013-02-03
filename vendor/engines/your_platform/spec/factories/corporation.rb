@@ -13,6 +13,14 @@ FactoryGirl.define do
       Group.corporations << corporation
     end
 
+    factory :corporation_with_status_groups do
+      after :create do |corporation|
+        corporation.child_groups.create( name: "Member Status 1" )
+        corporation.child_groups.create( name: "Member Status 2" )
+        corporation.child_groups.create( name: "Member Status 3" )
+      end
+    end
+
   end
 
 end

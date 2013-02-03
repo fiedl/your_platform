@@ -2,11 +2,11 @@
 module WorkflowKit
   class AddToGroupBrick < Brick
     def name 
-      "Zu Gruppe hinzufügen"
+      "Add User to Group"
     end
     def description
-      "Fügt den gegebenen Benutzer der gegebenen Gruppe als neues Mitglied hinzu. " + 
-        "Die neue Gruppe muss hierbei dem Workflow-Schritt als Parameter übergeben werden."
+      "Add the given user to the given group as a new member. " +
+        "The new group has to be passed as a parameter to the workflow step."
     end
     def execute( params )
       raise 'no user_id given' unless params[ :user_id ] 
