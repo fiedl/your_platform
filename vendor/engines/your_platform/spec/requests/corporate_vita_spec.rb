@@ -69,7 +69,7 @@ describe "Corporate Vita", js: true do
 
   end
 
-  pending "change the date of promotion afterwards" 
+#  pending "change the date of promotion afterwards" 
 
 end
 
