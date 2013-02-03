@@ -32,6 +32,25 @@ describe Corporation do
   describe "#status_groups" do
     before do
       @corporation = create( :corporation )
+
+      # status groups are leaf groups of corporations
+      @status_group = create( :group )
+      @intermediate_group = create( :group )
+      @corporation.child_groups << @intermediate_group
+      @intermediate_group.child_groups << @status_group
+
+      @another_group = create( :group )
+    end
+    subject { @corporation.status_groups }
+    
+    it "should include the status groups, i.e. the leaf groups of the corporation" do
+      subject.should include @status_group
+    end
+    it "should not include the non-status groups, i.e. the descendant_grous of the corporation that are no leafs" do
+      subject.should_not include @intermediate_group
+    end
+    it "should not include unrelated groups" do
+      subject.should_not include @another_group
     end
   end
 
