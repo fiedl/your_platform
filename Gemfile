@@ -117,6 +117,7 @@ end
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'guard', '1.0.1'
+  gem 'guard-focus'
   gem 'rspec-rails', '2.10.0'
   gem 'guard-rspec', '0.5.5'
   gem 'rspec-mocks'
