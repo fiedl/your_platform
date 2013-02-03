@@ -69,7 +69,35 @@ describe "Corporate Vita", js: true do
 
   end
 
-#  pending "change the date of promotion afterwards" 
+  describe "change the date of promation afterwards" do
+    before do
+      @first_promotion_workflow.execute( user_id: @user.id )
+      @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+      visit user_path( @user )
+    end
+
+    it "should be possible to change the date", focus: true do
+      within( "#corporate_vita" ) do
+
+        @created_at_formatted = I18n.localize @membership.created_at.to_date
+
+        page.should have_content @created_at_formatted
+
+        # activate inplace editing of the date_field
+        find( ".best_in_place.status_group_date_of_joining" ).click 
+
+        within( ".best_in_place.status_group_date_of_joining" ) do
+          
+          find( "input" ).value.should == @created_at_formatted
+
+          # TODO: Neues Datum eintragen und bearbeiten abschließen.
+          # TODO: Vergleichen, ob das Datum auch in die Datenbank gespeichert wurde.
+
+        end
+
+      end
+    end
+  end
 
 end
 

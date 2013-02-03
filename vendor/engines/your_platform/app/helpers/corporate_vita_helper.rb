@@ -22,7 +22,8 @@ module CorporateVitaHelper
                                                      controller: :user_group_memberships,
                                                      action: :update,
                                                      format: :json
-                                                     )
+                                                     ),
+                   :classes => "status_group_date_of_joining"
                    )
   end
 
