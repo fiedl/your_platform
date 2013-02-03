@@ -205,6 +205,22 @@ class UserGroupMembership < DagLink
     last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
   end
 
+  # This method is used in the views, since it is more convenient just to edit the date
+  # rather then date and time when specifying the date of joining a group.
+  #
+  def created_at_date
+    self.created_at.to_date
+  end
+  def created_at_date=( created_at_date )
+    self.created_at = created_at_date
+  end
+  def created_at_date_formatted
+    I18n.localize self.created_at_date
+  end
+  def created_at_date_formatted=( created_at_date_formatted )
+    self.created_at_date = created_at_date_formatted
+  end
+
 
   # Access Methods to Associated User and Group
   # ====================================================================================================   

@@ -14,9 +14,8 @@ module CorporateVitaHelper
 
   def status_group_membership_created_at_best_in_place( membership )
     best_in_place( membership,
-                   :created_at,
+                   :created_at_date_formatted,
                    type: :date,
-                   display_with: lambda { |v| l( v.to_date ) },
                    path: user_group_membership_path( user_id: membership.user.id,
                                                      group_id: membership.group.id,
                                                      controller: :user_group_memberships,

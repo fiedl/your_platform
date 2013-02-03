@@ -76,7 +76,7 @@ describe "Corporate Vita", js: true do
       visit user_path( @user )
     end
 
-    it "should be possible to change the date", focus: true do
+    it "should be possible to change the date" do
       within( "#corporate_vita" ) do
 
         @created_at_formatted = I18n.localize @membership.created_at.to_date
