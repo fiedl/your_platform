@@ -2,10 +2,11 @@
 class UserGroupMembershipsController < ApplicationController
 
   before_filter :find_membership
-  respond_to :html, :json
+#  respond_to :html, :json
+  respond_to :json
 
   def show
-    update
+    # update  # 2013-02-03 SF: This seems wrong, does it not?
   end
 
   def update
@@ -16,6 +17,8 @@ class UserGroupMembershipsController < ApplicationController
           respond_with_bip @membership
         end
       end
+    else
+      raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
     end
   end
 
