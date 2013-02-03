@@ -379,6 +379,52 @@ describe UserGroupMembership do
     end
   end
 
+  describe "#created_at_date" do
+    before { @membership = create_membership }
+    subject { @membership.created_at_date }
+    it "should return the date of creation" do
+      subject.should == @membership.created_at.to_date
+    end
+  end
+  describe "#created_at_date=" do
+    before do
+      @membership = create_membership 
+      @new_created_at = 1.year.ago
+      @new_created_at_date = @new_created_at.to_date
+    end
+    subject { @membership.created_at_date = @new_created_at_date }
+    it "should set the create_at value correctly" do
+      subject
+      @membership.created_at_date.should == @new_created_at_date
+      @membership.created_at.to_date.should == @new_created_at_date
+    end
+  end
+  describe "#created_at_date_formatted" do
+    before { @membership = create_membership }
+    subject { @membership.created_at_date_formatted }
+    it "should return a string" do
+      subject.should be_kind_of String
+    end
+    it "should return the localized date of creation" do
+      subject.should == I18n.localize( @membership.created_at.to_date )
+    end
+  end
+  describe "#created_at_date_formatted=" do
+    before do
+      @membership = create_membership
+      @new_created_at = 1.year.ago
+      @new_created_at_formatted = I18n.localize( @new_created_at.to_date )
+    end
+    subject { @membership.created_at_date_formatted = @new_created_at_formatted }
+    it "should set the created_at value correctly" do
+      subject
+      @membership.created_at_date_formatted.should == @new_created_at_formatted
+      @membership.created_at_date.should == @new_created_at.to_date
+      @membership.created_at.to_date.should == @new_created_at.to_date
+    end
+  end
+
+
 
   # Access Methods to Associated User and Group
   # ====================================================================================================

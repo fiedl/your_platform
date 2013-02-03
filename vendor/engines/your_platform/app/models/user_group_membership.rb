@@ -212,7 +212,7 @@ class UserGroupMembership < DagLink
     self.created_at.to_date
   end
   def created_at_date=( created_at_date )
-    self.created_at = created_at_date
+    self.created_at = created_at_date.to_datetime
   end
   def created_at_date_formatted
     I18n.localize self.created_at_date
