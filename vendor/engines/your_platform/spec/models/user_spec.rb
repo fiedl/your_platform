@@ -279,6 +279,28 @@ describe User do
     end
   end
 
+
+  # Status Groups
+  # ------------------------------------------------------------------------------------------
+
+  describe "#status_groups" do
+    before do
+      @corporation = create( :corporation_with_status_groups )
+      @status_group = @corporation.status_groups.first
+      @status_group.assign_user @user
+      @another_group = create( :group )
+      @another_group.assign_user @user
+    end
+    subject { @user.status_groups }
+
+    it "should include the status groups of the user" do
+      subject.should include @status_group
+    end
+    it "should not include the non-status groups of the user" do
+      subject.should_not include @another_group
+    end
+  end
+
   
   # Memberships
   # ------------------------------------------------------------------------------------------

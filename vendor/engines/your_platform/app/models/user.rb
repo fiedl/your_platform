@@ -215,6 +215,10 @@ class User < ActiveRecord::Base
     return my_corporations
   end
 
+
+  # Status Groups
+  # ------------------------------------------------------------------------------------------
+
   # This returns all status groups of the user, i.e. groups that represent the member
   # status of the user in a corporation.
   #
