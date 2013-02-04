@@ -8,18 +8,18 @@ before_script:
   - sh -c "bundle & bundle exec rake db:drop db:create db:migrate"
   - "sh -e /etc/init.d/xvfb start"
   
-notifications:
-  email:
-    on_success: always
-    on_failure: always
-    on_start: true
-  irc:
-    - "irc.freenode.org#wingolf"
-    - "irc.freenode.org#wingolfsplattform"
-  webhooks:
-    urls:
-      - http://wingolfsplattform.org:4567   # this triggers the deployment
-    on_success: always
-    on_failure: never
-    on_start: false
+#notifications:
+#  email:
+#    on_success: always
+#    on_failure: always
+#    on_start: true
+#  irc:
+#    - "irc.freenode.org#wingolf"
+#    - "irc.freenode.org#wingolfsplattform"
+#  webhooks:
+#    urls:
+#      - http://wingolfsplattform.org:4567   # this triggers the deployment
+#    on_success: always
+#    on_failure: never
+#    on_start: false
 
