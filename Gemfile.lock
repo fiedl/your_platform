@@ -88,6 +88,7 @@ GEM
       execjs
     coffee-script-source (1.3.3)
     colored (1.2)
+    commonjs (0.2.6)
     database_cleaner (0.8.0)
     diff-lcs (1.1.3)
     edit_mode (0.0.6)
@@ -135,6 +136,11 @@ GEM
     kgio (2.7.4)
     launchy (2.1.2)
       addressable (~> 2.3)
+    less (2.2.2)
+      commonjs (~> 0.2.6)
+    less-rails (2.2.6)
+      actionpack (>= 3.1)
+      less (~> 2.2.0)
     libv8 (3.11.8.13)
     libwebsocket (0.1.7.1)
       addressable
@@ -299,6 +305,8 @@ DEPENDENCIES
   jquery-ui-rails
   json
   launchy
+  less (>= 2.2.2)
+  less-rails
   meta_request
   mysql2
   net-ssh (= 2.4.0)

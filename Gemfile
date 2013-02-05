@@ -26,13 +26,13 @@ group :assets, :production, 'testing-aki' do
   gem 'sass-rails',   '~> 3.2.3'					# MIT License
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
 
-  # See https://github.com/sstephenson/execjs#readme for more 
-  # supported runtimes
-  gem 'execjs'
-
   gem 'uglifier', '>= 1.0.3'						# MIT License
 end
 
+# See https://github.com/sstephenson/execjs#readme for more 
+# supported runtimes.
+# This is also needed by twitter-bootstrap-rails in production.
+gem 'execjs'
 gem 'therubyracer', :platform => :ruby
 
 # haml template language, http://haml.info
@@ -183,6 +183,8 @@ gem 'workflow_kit', '>= 0.0.4.alpha' # git: 'git://github.com/fiedl/workflow_kit
 
 # Twitter Bootstrap Layout
 gem 'twitter-bootstrap-rails'
+gem 'less', '>=2.2.2'
+gem 'less-rails'
 #gem 'bootstrap-sass'                                                    # Apache License 2.0
 
 # YourPlatform
