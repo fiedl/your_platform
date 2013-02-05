@@ -18,14 +18,14 @@ created_relationship_li.find( ".editable" ).trigger( "edit" )
 
 // Set the user as the last partner of the relationship if given.
 user_title = $( ".section.relationships .add_button" ).attr( 'data-user-title' )
-created_relationship_li.find( "input[name=of_by_title]" ).attr( 'value', user_title )
+created_relationship_li.find( "input[name='of_by_title']" ).attr( 'value', user_title )
 
 // Set the `is` label of the relationship.
 is_label = $( ".section.relationships .add_button" ).attr( 'data-relationship-is-label' )
-created_relationship_li.find( "input[name=is]" ).attr( 'value', is_label )
+created_relationship_li.find( "input[name='is']" ).attr( 'value', is_label )
 
 // Set the focus to the first field
-created_relationship_li.find( "input[name=who_by_title]" ).focus()
+created_relationship_li.find( "input[name='who_by_title']" ).focus()
 
 
 

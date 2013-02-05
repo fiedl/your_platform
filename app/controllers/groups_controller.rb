@@ -19,7 +19,11 @@ class GroupsController < ApplicationController
     @groups = @user.groups
 #    @navables = [ Page.find_root ]
     @navable = @user
-    render action: 'index'
+
+    respond_to do |format|
+      format.html { render action: 'index' }
+      format.json { render json: @groups }
+    end
   end
 
   def show
