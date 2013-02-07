@@ -49,5 +49,10 @@ describe User do
     end
   end
 
+  it "should fail for testing reasons" do
+    @test = "1"
+    @test.should == "2"
+  end
+
 end
 
