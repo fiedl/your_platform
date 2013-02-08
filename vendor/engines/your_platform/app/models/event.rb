@@ -40,7 +40,7 @@ class Event < ActiveRecord::Base
     ancestor_id = group.id if group
     self.includes( :links_as_descendant )
       .where( :dag_links => { 
-                :ancestor_type => "Group", :ancestor_id => ancestor_id, 
+                :ancestor_type => "Group", :ancestor_id => ancestor_id
               } )
       .order( :start_at )
   end

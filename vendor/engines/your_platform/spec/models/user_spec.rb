@@ -361,21 +361,51 @@ describe User do
   # ------------------------------------------------------------------------------------------
 
   describe "#upcoming_events" do
-    before do
-      @group1 = @user.parent_groups.create
-      @group2 = @group1.parent_groups.create
-      @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
-                           @group2.events.create( start_at: 6.hours.from_now ) ]
-      @recent_events = [ @group1.events.create( start_at: 5.hours.ago ) ]
-      @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
-    end
     subject { @user.upcoming_events }
-    it { should include *@upcoming_events }
-    it { should_not include *@recent_events }
-    it { should_not include *@unrelated_events }
-    it "should return the upcoming events in ascending order" do
-      subject.first.start_at.should < subject.last.start_at
+    describe "(timing)" do
+      before do
+        @group1 = @user.parent_groups.create
+        @group2 = @group1.parent_groups.create
+        @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
+                             @group2.events.create( start_at: 6.hours.from_now ) ]
+        @recent_events = [ @group1.events.create( start_at: 5.hours.ago ) ]
+        @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
+      end
+      it { should include *@upcoming_events }
+      it { should_not include *@recent_events }
+      it { should_not include *@unrelated_events }
+      it "should return the upcoming events in ascending order" do
+        subject.first.start_at.should < subject.last.start_at
+      end
     end
+    describe "(direct/indirect)" do
+      # group_a 
+      #   |----- event_0             <<===
+      #   |----- group_b
+      #   |        |------ event_1   <<===
+      #   |        |------ user    
+      #   |
+      #   |----- group_c
+      #            |------ event_2
+      before do
+        @group_a = create( :group )
+        @event_0 = @group_a.child_events.create( start_at: 5.hours.from_now )
+        @group_b = @group_a.child_groups.create
+        @group_b.child_users << @user
+        @event_1 = @group_b.child_events.create( start_at: 5.hours.from_now )
+        @group_c = @group_a.child_groups.create
+        @event_2 = @group_c.child_events.create( start_at: 5.hours.from_now )
+        @user.reload
+      end
+      it "should list direct events of the user's groups" do # "<<===" above
+        @user.ancestor_groups.should include @group_a, @group_b
+        subject.should include @event_0, @event_1
+      end
+      it "should not list in-direct events" do
+        # otherwise all users will see all events, since everyone is member of Group.everyone.
+        subject.should_not include @event_2
+      end
+    end 
   end
 
 
