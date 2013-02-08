@@ -91,6 +91,34 @@ describe Event do
       end
     end
   end
+
+  describe ".direct" do
+    # group_a 
+    #   |----- event_0
+    #   |----- group_b
+    #   |        |------ event_1
+    #   |        |------ user
+    #   |
+    #   |----- group_c
+    #            |------ event_2
+    before do
+      @group_a = create( :group )
+      @event_0 = @group_a.child_events.create
+      @group_b = @group_a.child_groups.create
+      @event_1 = @group_b.child_events.create
+      @group_c = @group_a.child_groups.create
+      @event_2 = @group_c.child_events.create
+    end
+    it "should list direct events" do
+      @group_a.events.should include @event_0, @event_1, @event_2
+      @group_a.events.direct.should include @event_0
+      @group_a.events.direct.should_not include @event_1
+    end
+    it "should commute with .find_all_by_group" do
+      Event.find_all_by_group( @group_a ).direct.to_a.should ==
+        Event.direct.find_all_by_group( @group_a ).to_a
+    end
+  end
   
 
   # Finder Methods

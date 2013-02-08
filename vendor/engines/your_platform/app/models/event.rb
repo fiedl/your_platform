@@ -27,6 +27,8 @@ class Event < ActiveRecord::Base
 
   scope :upcoming, lambda { where( "start_at > ?", Time.zone.now ) }
 
+  scope :direct, lambda { includes( :links_as_descendant ).where( :dag_links => { :direct => true } ) }
+
   def upcoming?
     ( self.start_at > Time.zone.now )
   end
@@ -35,15 +37,21 @@ class Event < ActiveRecord::Base
   # ==========================================================================================
 
   def self.find_all_by_group( group )
+    ancestor_id = group.id if group
     self.includes( :links_as_descendant )
-      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => group.id } )
+      .where( :dag_links => { 
+                :ancestor_type => "Group", :ancestor_id => ancestor_id, 
+              } )
+      .order( :start_at )
   end
 
   def self.find_all_by_groups( groups )
     group_ids = groups.collect { |g| g.id }
-    self.includes( :links_as_descendant ) # the ancestor_id will be overridden here:
-      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => group_ids } )
-      .order( :start_at ) 
+    self.includes( :links_as_descendant )
+      .where( :dag_links => { 
+                :ancestor_type => "Group", :ancestor_id => group_ids
+              } )
+      .order( :start_at )
   end 
 
 end
