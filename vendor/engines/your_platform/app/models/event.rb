@@ -35,7 +35,15 @@ class Event < ActiveRecord::Base
   # ==========================================================================================
 
   def self.find_all_by_group( group )
-    self.includes( :links_as_descendant ).where( :dag_links => { :ancestor_type => "Group" } )
+    self.includes( :links_as_descendant )
+      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => group.id } )
   end
+
+  def self.find_all_by_groups( groups )
+    group_ids = groups.collect { |g| g.id }
+    self.includes( :links_as_descendant ) # the ancestor_id will be overridden here:
+      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => group_ids } )
+      .order( :start_at ) 
+  end 
 
 end
