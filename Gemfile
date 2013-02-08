@@ -52,9 +52,6 @@ gem 'unicorn'
 # Deploy with Capistrano
 # gem 'capistrano'
 
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
 
@@ -109,6 +106,10 @@ end
 
 # Debug Tools
 group :development do
+
+  # debugger: http://guides.rubyonrails.org/debugging_rails_applications.html
+  gem 'debugger'                   
+
   gem 'better_errors'              # see Railscasts #402               
   gem 'binding_of_caller'
   gem 'meta_request'
