@@ -1,13 +1,14 @@
 Wingolfsplattform::Application.routes.draw do 
 
-  
-
   root :to => 'root#index'
 
   match "search" => "search#index", as: "search"
 
+  resources :events  
+
   resources :groups do
     get :my, on: :collection
+
   end
   resources :groups, as: :wah # to define wah_path
 
