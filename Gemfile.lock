@@ -152,6 +152,7 @@ GEM
     meta_request (0.2.1)
       rack-contrib
       rails
+    method_source (0.8.1)
     mime-types (1.19)
     multi_json (1.5.0)
     mysql2 (0.3.11)
@@ -174,6 +175,10 @@ GEM
       http_parser.rb (~> 0.5.3)
       multi_json (~> 1.0)
     polyglot (0.3.3)
+    pry (0.9.11.4)
+      coderay (~> 1.0.5)
+      method_source (~> 0.8)
+      slop (~> 3.4)
     rack (1.4.4)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -241,6 +246,7 @@ GEM
       jquery-rails
       rails (>= 3.2)
       sass-rails
+    slop (3.4.3)
     sprockets (2.2.2)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -315,6 +321,7 @@ DEPENDENCIES
   pg
   phony
   poltergeist
+  pry
   rails (~> 3.2.11)
   rails-i18n
   rails3-jquery-autocomplete

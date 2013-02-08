@@ -197,3 +197,6 @@ gem 'rubylight', '>= 1.0.3.2'
 
 # Phone Number Formatting
 gem 'phony'
+
+# Pry Console Addon
+gem 'pry', group: :development
