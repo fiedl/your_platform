@@ -69,6 +69,34 @@ describe Group do
   end
 
 
+  # Events
+  # ------------------------------------------------------------------------------------------
+
+  describe "(Events)" do
+    before do 
+      @group = create( :group )
+      @subgroup = @group.child_groups.create
+      @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ), 
+                           @subgroup.events.create( start_at: 5.hours.from_now ) ]
+      @recent_events = [ @group.events.create( start_at: 5.hours.ago ) ]
+      @unrelated_events = [ create( :event ) ]
+    end
+
+    describe "#upcoming_events" do
+      subject { @group.upcoming_events }
+      it { should include *@upcoming_events }
+      it { should_not include *@recent_events }
+      it { should_not include *@unrelated_events }
+    end
+
+    describe "#events" do
+      subject { @group.events }
+      it { should include *@upcoming_events }
+      it { should include *@recent_events }
+      it { should_not include *@unrelated_events }
+    end
+  end
+
   # Users
   # ------------------------------------------------------------------------------------------
 
