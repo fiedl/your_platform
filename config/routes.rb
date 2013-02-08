@@ -4,13 +4,12 @@ Wingolfsplattform::Application.routes.draw do
 
   match "search" => "search#index", as: "search"
 
-  resources :events  
-
   resources :groups do
     get :my, on: :collection
-
   end
   resources :groups, as: :wah # to define wah_path
+
+  resources :events  
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
