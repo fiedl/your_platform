@@ -40,6 +40,13 @@
   <%= groups_of_user_table @user %>
 </div>
 
+<% if @user.upcoming_events %>
+<h1>Veranstaltungen von <%= @user.first_name %></h1>
+<div>
+  <%= upcoming_events_list_for_user( @user ) %>
+</div>
+<% end %>
+
 <h1 class="section relationships">Beziehungen</h1>
 <div>
   <%= relationships_of_user_ul @user %>

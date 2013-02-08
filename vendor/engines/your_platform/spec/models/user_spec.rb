@@ -357,6 +357,28 @@ describe User do
   end
 
 
+  # Events
+  # ------------------------------------------------------------------------------------------
+
+  describe "#upcoming_events" do
+    before do
+      @group1 = @user.parent_groups.create
+      @group2 = @group1.parent_groups.create
+      @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
+                           @group2.events.create( start_at: 6.hours.from_now ) ]
+      @recent_events = [ @group1.events.create( start_at: 5.hours.ago ) ]
+      @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
+    end
+    subject { @user.upcoming_events }
+    it { should include *@upcoming_events }
+    it { should_not include *@recent_events }
+    it { should_not include *@unrelated_events }
+    it "should return the upcoming events in ascending order" do
+      subject.first.start_at.should < subject.last.start_at
+    end
+  end
+
+
   # User Identification and Authentification
   # ==========================================================================================
 
