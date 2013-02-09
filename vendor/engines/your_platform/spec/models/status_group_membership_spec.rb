@@ -2,6 +2,47 @@ require 'spec_helper'
 
 describe StatusGroupMembership do
 
+  describe "#promoted_by_workflow" do
+    before do
+      @workflow = create( :workflow )
+      @membership = create( :status_group_membership )
+    end
+    subject { @membership.promoted_by_workflow }
+    describe "if one has been assigned" do
+      before do
+        @membership.promoted_by_workflow = @workflow
+      end
+      it "should return the workflow that has been associated" do
+        subject.should == @workflow
+      end
+      it "should persist" do
+        @membership.save!
+        @reloaded_membership = StatusGroupMembership.find( @membership.id )
+        @reloaded_membership.promoted_by_workflow.should == @workflow
+      end
+    end
+    describe "if none has been assigned" do
+      it { should == nil }
+    end
+  end
+
+  describe "#promoted_on_event" do
+    before do
+      @event = create( :event )
+      @membership = create( :status_group_membership )
+    end
+    subject { @membership.promoted_on_event }
+    describe "if one has been assigned" do
+      before { @membership.promoted_on_event = @event }
+      it { should == @event }
+    end
+    describe "if none has been assigned" do
+      it { should == nil }
+    end
+  end
+
+
+
   # Finder Methods
   # ==========================================================================================
   
