@@ -2,6 +2,9 @@ require 'spec_helper'
 
 describe StatusGroupMembership do
 
+  # Alias Methods for Delegated Methods
+  # ==========================================================================================
+
   describe "#promoted_by_workflow" do
     before do
       @workflow = create( :workflow )
@@ -16,9 +19,15 @@ describe StatusGroupMembership do
         subject.should == @workflow
       end
       it "should persist" do
-        @membership.save!
+        @membership.save
         @reloaded_membership = StatusGroupMembership.find( @membership.id )
         @reloaded_membership.promoted_by_workflow.should == @workflow
+        @reloaded_membership = StatusGroupMembership
+          .find_by_user_and_group( @membership.user, @membership.group )
+        @reloaded_membership.promoted_by_workflow.should == @workflow
+      end
+      it "should be an alias of #workflow" do
+        subject.should == @membership.workflow
       end
     end
     describe "if none has been assigned" do
@@ -35,12 +44,22 @@ describe StatusGroupMembership do
     describe "if one has been assigned" do
       before { @membership.promoted_on_event = @event }
       it { should == @event }
+      it "should persist" do
+        @membership.save
+        @reloaded_membership = StatusGroupMembership.find( @membership.id )
+        @reloaded_membership.promoted_on_event.should == @event
+        @reloaded_membership = StatusGroupMembership
+          .find_by_user_and_group( @membership.user, @membership.group )
+        @reloaded_membership.promoted_on_event.should == @event
+      end
+      it "should be an alias of #event" do
+        subject.should == @membership.event
+      end
     end
     describe "if none has been assigned" do
       it { should == nil }
     end
   end
-
 
 
   # Finder Methods

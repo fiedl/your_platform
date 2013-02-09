@@ -9,36 +9,59 @@ class StatusGroupMembership < UserGroupMembership
   # Since rails apparently does not support Multi Table Inheritance,
   # this associated model takes the additional properties.
   # 
-  has_one :status_group_membership_info, foreign_key: 'membership_id', autosave: true
+  has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership, autosave: true
 
   delegate( :promoted_by_workflow, :promoted_by_workflow=,
             :promoted_on_event, :promoted_on_event=,
-            to: :status_group_membership_info, allow_nil: true )
+            to: :status_group_membership_info )
 
-  # This is to make sure the status_group_membership_info object exists.
-  # See: http://stackoverflow.com/questions/3802179/
-  #accepts_nested_attributes_for :status_group_membership_info
+  after_initialize :build_status_group_membership_info_if_nil
+  before_validation :save_status_group_membership_info_if_changed
+  before_create :mark_as_changed
 
-  def status_group_membership_info
-    super || build_status_group_membership_info
+  
+  # Alias Methods For Delegated Methods
+  # ==========================================================================================
+
+  # Promoted By Workflow
+  # ------------------------------------------------------------------------------------------
+  #
+  # Status Group Memberships can store the workflow that has promoted the user to this
+  # status. This is used, for example, in the corporate vita, since the title of the
+  # promotion workflow is to be shown there, rather than the title of the new status group.
+  # 
+  # Example:
+  #     membership.promoted_by_workflow = workflow   # long form
+  #     membership.workflow = workflow               # short form
+  #     membership.promoted_by_workflow.title        # long form
+  #     membership.workflow.title                    # short form
+  #
+  def workflow
+    self.promoted_by_workflow
+  end
+  def workflow=( workflow )
+    self.promoted_by_workflow = workflow
   end
 
-  before_save do 
-    if status_group_membership_info.changed?
-      status_group_membership_info.save
-    end
+  # Promoted On Event
+  # ------------------------------------------------------------------------------------------
+  # 
+  # This stores the event on which the promotion took place that caused the user to be
+  # in this status group.
+  #
+  # Example:
+  #     membership.promoted_on_event = event         # long form
+  #     membership.event = event                     # short form
+  #     membership.promoted_on_event.name            # long form
+  #     membership.event.title                       # short form
+  # 
+  def event
+    self.promoted_on_event
+  end
+  def event=( event )
+    self.promoted_on_event = event
   end
 
-#  def initialize
-#    super
-#
-#    # In order to get the delegation working, the status_group_membership_info
-#    # must not be nil. The ActiveRecords might not alway be triggered,
-#    # since this is an inherited model. Therefore, the class initializer
-#    # is used to do this, here.
-#    #
-#    build_status_group_membership_info unless status_group_membership_info
-#  end
 
   # Creator
   # ==========================================================================================
@@ -96,7 +119,45 @@ class StatusGroupMembership < UserGroupMembership
   end
 
   def self.find_by_user_and_group( user, group )
-    super( user, group ).becomes StatusGroupMembership
+    # The #becomes method won't work here.
+    StatusGroupMembership.find( super( user, group ).id ) 
+  end
+
+
+
+  # Callback Methods for the Delegation to status_group_membership_info
+  # ==========================================================================================
+
+  private 
+
+  # Since methods of this associated object are delegated to this class, the associated object
+  # is required to exist. Thus, if it is nil, build one!
+  #
+  def build_status_group_membership_info_if_nil
+    build_status_group_membership_info unless status_group_membership_info
+  end
+  
+  # When .save is called on this instance, but only the associated object has changed through 
+  # the delegated methods, this instance is not marked as changed. As a result, any call of 
+  # .save will fail.
+  #
+  # To fix this issue, the associated object is saved manually, here, if changed.
+  # After that, the updated_at of this instance is touched in order to mark this instance
+  # as changed. Otherwise, the save call will be cancelled and the transaction will be
+  # reverted. 
+  #
+  def save_status_group_membership_info_if_changed
+    if status_group_membership_info.changed?
+      status_group_membership_info.save 
+      mark_as_changed
+    end
+  end
+
+  # Just mark this instance as changed to avoid the 'no changes' error on save.
+  # See: http://apidock.com/rails/ActiveRecord/Dirty
+  #
+  def mark_as_changed
+    self.updated_at = DateTime.now
   end
 
 end
