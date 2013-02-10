@@ -9,3 +9,4 @@
           %td
           %td= status_group_membership_created_at_best_in_place( membership )
           %td= link_to membership.group.title, membership.group, :class => 'status_group_label'
+          %td= link_to membership.event.name, membership.event, :class => 'status_event_label' if membership.event
