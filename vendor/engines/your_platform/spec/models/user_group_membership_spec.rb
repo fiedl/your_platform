@@ -443,6 +443,46 @@ describe UserGroupMembership do
   end
 
 
+  # Associated Corporation
+  # ====================================================================================================
+
+  # corporation
+  #     |-------- group
+  #                 |---( membership )---- user
+  #
+  describe "#corporation" do
+    describe "for the group having a corporation" do
+      before do
+        @corporation = create( :corporation )
+        @group = @corporation.child_groups.create
+        @user = create( :user )
+        @group.assign_user @user
+      end
+      subject { UserGroupMembership.find_by_user_and_group( @user, @group ).corporation }
+      it { should == @corporation }
+    end
+    describe "for the group not having a corporation" do
+      before do
+        @group = create( :group )
+        @user = create( :user )
+        @group.assign_user @user
+      end
+      subject { UserGroupMembership.find_by_user_and_group( @user, @group ).corporation }
+      it { should == nil }
+    end
+    describe "for the group being a corporation" do
+      before do
+        @corporation = create( :corporation )
+        @user = create( :user )
+        @corporation.assign_user @user
+      end
+      subject { UserGroupMembership.find_by_user_and_group( @user, @corporation ).corporation }
+      it { should == @corporation }
+    end
+  end
+
+
+
   # Access Methods to Associated Direct Memberships
   # ====================================================================================================
 

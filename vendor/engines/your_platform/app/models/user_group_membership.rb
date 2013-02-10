@@ -233,6 +233,24 @@ class UserGroupMembership < DagLink
     self.ancestor
   end
 
+  
+  # Associated Corporation
+  # ====================================================================================================
+
+  # If this membership is a subgroup membership of a corporation, this method will return the 
+  # corporation. Otherwise, this will return nil.
+  #
+  # corporation
+  #     |-------- group 
+  #                 |---( membership )---- user
+  #
+  #     membership = UserGroupMembership.find_by_user_and_group( user, group )
+  #     membership.corporation == corporation
+  #
+  def corporation
+    ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+  end
+
 
   # Access Methods to Associated Direct Memberships
   # ====================================================================================================  
