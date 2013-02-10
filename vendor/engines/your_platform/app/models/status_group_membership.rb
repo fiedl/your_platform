@@ -62,6 +62,29 @@ class StatusGroupMembership < UserGroupMembership
     self.promoted_on_event = event
   end
 
+  # Access the event (promoted_on_event) by its name, since this is the way
+  # most likely done by a user interface.
+  # 
+  # If a new event is created, assign the corporation associated with this status group
+  # as the group of the event.
+  #
+  def event_by_name
+    self.event.name if self.event
+  end
+  def event_by_name=( event_name )
+    if Event.find_by_name( event_name )
+      self.event = Event.find_by_name( event_name )
+    else
+      self.event = Event.new( name: event_name )
+      self.event.group ||= self.corporation if self.corporation
+
+      #status_group_membership_info.mark_attribute_as_changed( :promoted_on_event )
+      # @changed_attributes[ :event ] = self.event
+      self.updated_at = DateTime.now
+      status_group_membership_info.updated_at = DateTime.now
+    end
+  end
+
 
   # Creator
   # ==========================================================================================

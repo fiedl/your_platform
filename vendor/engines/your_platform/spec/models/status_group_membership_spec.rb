@@ -61,6 +61,66 @@ describe StatusGroupMembership do
     end
   end
 
+  describe "#event_by_name" do
+    before do
+      @membership = create( :status_group_membership )
+    end
+    subject { @membership.event_by_name }
+    describe "for existing event" do
+      before do
+        @event = create( :event )
+        @membership.event = @event
+      end
+      it { should == @event.name }
+    end
+    describe "if no event is assigned" do
+      it { should == nil }
+    end
+  end
+  describe "#event_by_name=" do
+    before do
+      @membership = create( :status_group_membership )
+    end
+    describe "for an existing event" do
+      before { @event = create( :event ) }
+      subject { @membership.event_by_name = @event.name }
+      it "should assign the event" do
+        @membership.event.should == nil
+        subject
+        @membership.event.should == @event
+      end
+    end
+    describe "for a new event" do
+      subject { @membership.event_by_name = "A New Event" }
+      it "should create the event" do
+        @membership.event.should == nil
+        subject
+        @membership.event.name.should == "A New Event"
+      end
+      it "should mark the membership as changed" do
+        @membership.status_group_membership_info.changed?.should be_true
+        @membership.changed?.should be_true
+      end
+      it "should persist" do
+        @membership.save
+        @reloaded_membership = StatusGroupMembership.find( @membership.id )
+        @reloaded_membership.event.should == @membership.event
+        @reloaded_membership.event.name.should == "A New Event"
+      end
+      describe "for the membership having a corporation" do
+        before do
+          @corporation = create( :corporation )
+          @corporation.child_groups << @membership.group
+        end
+        it "should association the corporation with the new event" do
+          subject
+          @membership.event.group.should == @corporation
+        end
+      end
+    end
+  end
+    
+
 
   # Finder Methods
   # ==========================================================================================
