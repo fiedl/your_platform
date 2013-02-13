@@ -33,7 +33,7 @@ module CorporateVitaHelper
     else
       best_in_place( membership,
                      :event_by_name,
-                     path: user_group_membership_path( membership )
+                     path: status_group_membership_path( membership )
                      )
     end
   end

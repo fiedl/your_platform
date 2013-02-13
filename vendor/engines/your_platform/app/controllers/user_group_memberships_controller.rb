@@ -10,7 +10,10 @@ class UserGroupMembershipsController < ApplicationController
   end
 
   def update
-    if @membership.update_attributes( params[ :user_group_membership ] )
+    attributes = params[ :user_group_membership ]
+    attributes ||= params[ :status_group_membership ]
+
+    if @membership.update_attributes( attributes )
       respond_to do |format|
         format.json do
           #head :ok
@@ -32,10 +35,14 @@ class UserGroupMembershipsController < ApplicationController
   private
 
   def find_membership
-    user = User.find params[ :user_id ]
-    group = Group.find params[ :group_id ]
-    if user && group
-      @membership = UserGroupMembership.find_by_user_and_group user, group
+    if params[ :id ]
+      @membership = UserGroupMembership.find( params[ :id ] )
+    else
+      user = User.find params[ :user_id ] if params[ :user_id ]
+      group = Group.find params[ :group_id ] if params[ :group_id ]
+      if user && group
+        @membership = UserGroupMembership.find_by_user_and_group user, group
+      end
     end
   end
   
