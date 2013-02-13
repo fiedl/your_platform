@@ -12,12 +12,6 @@ class StatusGroupMembership < UserGroupMembership
   # 
   has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership, autosave: true
 
-
-#  delegate_attributes( :promoted_by_workflow, :promoted_by_workflow=,
-#                       :promoted_on_event, :promoted_on_event=,
-#                       :workflow, :workflow=, :event, :event=, # alias methods
-#                       to: :status_group_membership_info )
-
   delegate( :promoted_by_workflow, :promoted_by_workflow=,
             :promoted_on_event, :promoted_on_event=,
             :workflow, :workflow=, :event, :event=,   # alias methods
@@ -25,8 +19,6 @@ class StatusGroupMembership < UserGroupMembership
 
 
   after_initialize :build_status_group_membership_info_if_nil
-#  before_validation :save_status_group_membership_info_if_changed
-#  before_create :mark_as_changed
 
   
   # Alias Methods For Delegated Methods
@@ -34,9 +26,6 @@ class StatusGroupMembership < UserGroupMembership
 
   def build_event( params )
     self.status_group_membership_info.build_promoted_on_event( params )
-    
-#    self.status_group_membership_info.promoted_on_event_id_will_change!
-#    raise 'hae?' unless self.status_group_membership_info.changed?
   end
 
   # Access the event (promoted_on_event) by its name, since this is the way
@@ -54,10 +43,6 @@ class StatusGroupMembership < UserGroupMembership
     else
       self.build_event( name: event_name )
       self.event.group ||= self.corporation if self.corporation
-
-      # @changed_attributes[ :event ] = self.event
-#      self.updated_at = DateTime.now
-#      status_group_membership_info.updated_at = DateTime.now
     end
   end
 
@@ -161,37 +146,24 @@ class StatusGroupMembership < UserGroupMembership
   # the delegated methods, this instance is not marked as changed. As a result, any call of 
   # .save will fail.
   #
-  # To fix this issue, the associated object is saved manually, here, if changed.
-  # After that, the updated_at of this instance is touched in order to mark this instance
-  # as changed. Otherwise, the save call will be cancelled and the transaction will be
-  # reverted. 
+  # This method compensates for the missing automatism.
   #
   def save_status_group_membership_info_if_changed
     if status_group_membership_info.event
-      p status_group_membership_info.event
       if status_group_membership_info.event.changed? or status_group_membership_info.event.id.nil?
         status_group_membership_info.promoted_on_event_id_will_change!
         status_group_membership_info.event.save! 
       end
-      p event.id
     end
 
-    status_group_membership_info.workflow.save! if status_group_membership_info.workflow.changed? if status_group_membership_info.workflow
-    status_group_membership_info.save! if status_group_membership_info.changed?
-#
-#
-#    raise 'bad!' if not status_group_membership_info.changed?
-#    if status_group_membership_info.changed?
-#      status_group_membership_info.save 
-##      mark_as_changed
-#    end
-  end
+    if status_group_membership_info.workflow
+      if status_group_membership_info.workflow.changed? or status_group_membership_info.workflow.id.nil?
+        status_group_membership_info.promoted_on_workflow_id_will_change!
+        status_group_membership_info.workflow.save! 
+      end
+    end
 
-  # Just mark this instance as changed to avoid the 'no changes' error on save.
-  # See: http://apidock.com/rails/ActiveRecord/Dirty
-  #
-  def mark_as_changed
-    self.updated_at = DateTime.now
+    status_group_membership_info.save! if status_group_membership_info.changed?
   end
 
 end
