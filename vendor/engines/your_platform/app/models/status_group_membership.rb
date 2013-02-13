@@ -13,14 +13,16 @@ class StatusGroupMembership < UserGroupMembership
   has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership, autosave: true
 
 
-  delegate_attributes( :promoted_by_workflow, :promoted_by_workflow=,
-                       :promoted_on_event, :promoted_on_event=,
-                       :workflow, :workflow=, :event, :event=, # alias methods
-                       to: :status_group_membership_info )
+#  delegate_attributes( :promoted_by_workflow, :promoted_by_workflow=,
+#                       :promoted_on_event, :promoted_on_event=,
+#                       :workflow, :workflow=, :event, :event=, # alias methods
+#                       to: :status_group_membership_info )
 
-#  delegate( :promoted_by_workflow, :promoted_by_workflow=,
-#            :promoted_on_event, :promoted_on_event=,
-#            to: :status_group_membership_info )
+  delegate( :promoted_by_workflow, :promoted_by_workflow=,
+            :promoted_on_event, :promoted_on_event=,
+            :workflow, :workflow=, :event, :event=,   # alias methods
+            to: :status_group_membership_info )
+
 
   after_initialize :build_status_group_membership_info_if_nil
 #  before_validation :save_status_group_membership_info_if_changed

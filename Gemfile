@@ -202,5 +202,3 @@ gem 'phony'
 # Pry Console Addon
 gem 'pry', group: :development
 
-# Delegate Attributes
-gem 'delegates_attributes_to', git: "https://github.com/pahanix/delegates_attributes_to.git"
