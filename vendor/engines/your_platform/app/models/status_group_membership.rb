@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # 
 # This class represents the membership of a user in a status group, i.e. a subgroup of a corporation
 # representing a member status, e.g. the subgroup 'guests' or 'presidents'.
@@ -11,55 +12,29 @@ class StatusGroupMembership < UserGroupMembership
   # 
   has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership, autosave: true
 
-  delegate( :promoted_by_workflow, :promoted_by_workflow=,
-            :promoted_on_event, :promoted_on_event=,
-            to: :status_group_membership_info )
+
+  delegate_attributes( :promoted_by_workflow, :promoted_by_workflow=,
+                       :promoted_on_event, :promoted_on_event=,
+                       :workflow, :workflow=, :event, :event=, # alias methods
+                       to: :status_group_membership_info )
+
+#  delegate( :promoted_by_workflow, :promoted_by_workflow=,
+#            :promoted_on_event, :promoted_on_event=,
+#            to: :status_group_membership_info )
 
   after_initialize :build_status_group_membership_info_if_nil
-  before_validation :save_status_group_membership_info_if_changed
-  before_create :mark_as_changed
+#  before_validation :save_status_group_membership_info_if_changed
+#  before_create :mark_as_changed
 
   
   # Alias Methods For Delegated Methods
   # ==========================================================================================
 
-  # Promoted By Workflow
-  # ------------------------------------------------------------------------------------------
-  #
-  # Status Group Memberships can store the workflow that has promoted the user to this
-  # status. This is used, for example, in the corporate vita, since the title of the
-  # promotion workflow is to be shown there, rather than the title of the new status group.
-  # 
-  # Example:
-  #     membership.promoted_by_workflow = workflow   # long form
-  #     membership.workflow = workflow               # short form
-  #     membership.promoted_by_workflow.title        # long form
-  #     membership.workflow.title                    # short form
-  #
-  def workflow
-    self.promoted_by_workflow
-  end
-  def workflow=( workflow )
-    self.promoted_by_workflow = workflow
-  end
-
-  # Promoted On Event
-  # ------------------------------------------------------------------------------------------
-  # 
-  # This stores the event on which the promotion took place that caused the user to be
-  # in this status group.
-  #
-  # Example:
-  #     membership.promoted_on_event = event         # long form
-  #     membership.event = event                     # short form
-  #     membership.promoted_on_event.name            # long form
-  #     membership.event.title                       # short form
-  # 
-  def event
-    self.promoted_on_event
-  end
-  def event=( event )
-    self.promoted_on_event = event
+  def build_event( params )
+    self.status_group_membership_info.build_promoted_on_event( params )
+    
+#    self.status_group_membership_info.promoted_on_event_id_will_change!
+#    raise 'hae?' unless self.status_group_membership_info.changed?
   end
 
   # Access the event (promoted_on_event) by its name, since this is the way
@@ -75,13 +50,12 @@ class StatusGroupMembership < UserGroupMembership
     if Event.find_by_name( event_name )
       self.event = Event.find_by_name( event_name )
     else
-      self.event = Event.new( name: event_name )
+      self.build_event( name: event_name )
       self.event.group ||= self.corporation if self.corporation
 
-      #status_group_membership_info.mark_attribute_as_changed( :promoted_on_event )
       # @changed_attributes[ :event ] = self.event
-      self.updated_at = DateTime.now
-      status_group_membership_info.updated_at = DateTime.now
+#      self.updated_at = DateTime.now
+#      status_group_membership_info.updated_at = DateTime.now
     end
   end
 
@@ -147,6 +121,27 @@ class StatusGroupMembership < UserGroupMembership
   end
 
 
+  # Save Method 
+  # ==========================================================================================
+
+  # Since several important attributes of this model are delegated, it is likely to change
+  # a delegated attribute without changing a direct attribute. For example:
+  #
+  #    membership.workflow = some_workflow                # workflow is delegated
+  #    membership.changed?                                # => false
+  #    membership.status_group_membership_info.changed?   # => true
+  #    membership.save
+  #
+  # The regular `save` method would fail, because there are `no changes` to the membership
+  # itself. 
+  #
+  # To circumvent this, this save method first saves the delegate model if necessary and 
+  # then calls the regular `save` method.
+  #
+  def save
+    save_status_group_membership_info_if_changed
+    super
+  end
 
   # Callback Methods for the Delegation to status_group_membership_info
   # ==========================================================================================
@@ -170,10 +165,24 @@ class StatusGroupMembership < UserGroupMembership
   # reverted. 
   #
   def save_status_group_membership_info_if_changed
-    if status_group_membership_info.changed?
-      status_group_membership_info.save 
-      mark_as_changed
+    if status_group_membership_info.event
+      p status_group_membership_info.event
+      if status_group_membership_info.event.changed? or status_group_membership_info.event.id.nil?
+        status_group_membership_info.promoted_on_event_id_will_change!
+        status_group_membership_info.event.save! 
+      end
+      p event.id
     end
+
+    status_group_membership_info.workflow.save! if status_group_membership_info.workflow.changed? if status_group_membership_info.workflow
+    status_group_membership_info.save! if status_group_membership_info.changed?
+#
+#
+#    raise 'bad!' if not status_group_membership_info.changed?
+#    if status_group_membership_info.changed?
+#      status_group_membership_info.save 
+##      mark_as_changed
+#    end
   end
 
   # Just mark this instance as changed to avoid the 'no changes' error on save.
