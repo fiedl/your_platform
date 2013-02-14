@@ -45,6 +45,8 @@ class StatusGroupMembership < UserGroupMembership
     else
       self.create_event( name: event_name )
       self.event.group ||= self.corporation if self.corporation
+      self.event.start_at = self.created_at
+      self.event.save
     end
   end
 

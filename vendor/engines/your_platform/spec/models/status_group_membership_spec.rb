@@ -104,6 +104,10 @@ describe StatusGroupMembership do
         @reloaded_membership.event.should == @membership.event
         @reloaded_membership.event.name.should == "A New Event"
       end
+      it "should copy the date from the membership" do
+        subject
+        @membership.event.start_at.to_date.should == @membership.created_at.to_date
+      end
       describe "for the membership having a corporation" do
         before do
           @corporation = create( :corporation )
