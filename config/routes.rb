@@ -1,7 +1,5 @@
 Wingolfsplattform::Application.routes.draw do 
 
-  
-
   root :to => 'root#index'
 
   match "search" => "search#index", as: "search"
@@ -10,6 +8,8 @@ Wingolfsplattform::Application.routes.draw do
     get :my, on: :collection
   end
   resources :groups, as: :wah # to define wah_path
+
+  resources :events  
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
@@ -32,6 +32,7 @@ Wingolfsplattform::Application.routes.draw do
 #  put 'user_group_memberships/update/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :update, as: :user_group_membership
 
   resources :user_group_memberships, as: :user_group_membership # plural s does not work for some unknown reason!
+  resources :status_group_memberships #, as: :status_group_membership
 
   resources :users do
     get :autocomplete_title, on: :collection

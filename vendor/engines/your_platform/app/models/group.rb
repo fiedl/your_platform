@@ -16,7 +16,8 @@ class Group < ActiveRecord::Base
                                                 # titles of the child users of the group.
                    )
 
-  is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group User Page Workflow)
+  is_structureable( ancestor_class_names: %w(Group Page), 
+                    descendant_class_names: %w(Group User Page Workflow Event) )
   is_navable
   has_profile_fields
 
@@ -67,6 +68,14 @@ class Group < ActiveRecord::Base
 
   def child_workflows
    self.descendant_workflows.where( :dag_links => { direct: true } )
+  end
+
+
+  # Events
+  # ------------------------------------------------------------------------------------------
+
+  def upcoming_events
+    self.events.upcoming
   end
 
 

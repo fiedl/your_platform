@@ -1,0 +1,12 @@
+- if user
+  %table{ id: 'corporate_vita' }
+    - for corporation in user.corporations
+      %tr
+        %th{ colspan: 3}= corporation.title
+      - memberships = status_group_memberships_for_user_and_corporation( user, corporation )
+      - for membership in memberships
+        %tr
+          %td
+          %td= status_group_membership_created_at_best_in_place( membership )
+          %td= link_to membership.group.title, membership.group, :class => 'status_group_label'
+          %td= status_group_membership_promoted_on_event( membership )

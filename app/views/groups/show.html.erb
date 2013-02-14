@@ -1,6 +1,13 @@
 <h1><%= best_in_place @group, :name %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
+<% if @group.events.upcoming %>
+<h1 class="section upcoming_events">Kommende Veranstaltungen</h1>
+<div>
+  <%= upcoming_events_list_for_group( @group ) %>
+</div>
+<% end %>
+
 <% if @group.token or @group.extensive_name or @group.internal_token %>
 <h1><%=t :details %></h1>
 <div>

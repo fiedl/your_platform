@@ -10,6 +10,10 @@ require 'nokogiri'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("vendor/engines/your_platform/spec/factories/*.rb")].each {|f| require f}
 
+
+require 'capybara/poltergeist'
+Capybara.javascript_driver = :poltergeist
+
 RSpec.configure do |config|
 
   require 'rspec/expectations'

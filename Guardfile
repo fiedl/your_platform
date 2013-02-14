@@ -3,8 +3,12 @@
 
 require 'active_support/core_ext'
 
-guard( 'rspec', :version => 2, :all_after_pass => false,
+#guard( #'focus', # see https://github.com/supaspoida/guard-focus
+       #on: :rspec, :version => 2, 
+guard( 'rspec', :version => 2,
+       :all_after_pass => false,
        spec_paths: [ 'spec', 'vendor/engines/your_platform/spec' ] ) do
+
   watch(%r{^spec/.+_spec\.rb$})
   watch(%r{^lib/(.+)\.rb$})     { |m| "spec/lib/#{m[1]}_spec.rb" }
   watch('spec/spec_helper.rb')  { "spec" }

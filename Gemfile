@@ -26,14 +26,17 @@ group :assets, :production, 'testing-aki' do
   gem 'sass-rails',   '~> 3.2.3'					# MIT License
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
 
-  # See https://github.com/sstephenson/execjs#readme for more 
-  # supported runtimes
-  gem 'execjs'
-
   gem 'uglifier', '>= 1.0.3'						# MIT License
 end
 
+# See https://github.com/sstephenson/execjs#readme for more 
+# supported runtimes.
+# This is also needed by twitter-bootstrap-rails in production.
+gem 'execjs'
 gem 'therubyracer', :platform => :ruby
+
+# haml template language, http://haml.info
+gem 'haml'
 
 gem 'jquery-rails'							# MIT License
 
@@ -48,9 +51,6 @@ gem 'unicorn'
 
 # Deploy with Capistrano
 # gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
 
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
@@ -104,9 +104,21 @@ group :development do
   gem 'net-ssh', '2.4.0'
 end 
 
+# Debug Tools
+group :development do
+
+  # debugger: http://guides.rubyonrails.org/debugging_rails_applications.html
+  gem 'debugger'                   
+
+  gem 'better_errors'              # see Railscasts #402               
+  gem 'binding_of_caller'
+  gem 'meta_request'
+end
+
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'guard', '1.0.1'
+  gem 'guard-focus'
   gem 'rspec-rails', '2.10.0'
   gem 'guard-rspec', '0.5.5'
   gem 'rspec-mocks'
@@ -120,6 +132,13 @@ group :test do
   gem 'database_cleaner'
 #  gem 'guard-spork'
 #  gem 'spork'
+end
+
+# This is for testing on wingolfsplattform.org -- since travis-pro has expired.
+group :test do
+  gem 'sqlite3'
+#  gem 'headless'
+  gem 'poltergeist'
 end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
@@ -165,6 +184,8 @@ gem 'workflow_kit', '>= 0.0.4.alpha' # git: 'git://github.com/fiedl/workflow_kit
 
 # Twitter Bootstrap Layout
 gem 'twitter-bootstrap-rails'
+gem 'less', '>=2.2.2'
+gem 'less-rails'
 #gem 'bootstrap-sass'                                                    # Apache License 2.0
 
 # YourPlatform
@@ -177,3 +198,7 @@ gem 'rubylight', '>= 1.0.3.2'
 
 # Phone Number Formatting
 gem 'phony'
+
+# Pry Console Addon
+gem 'pry', group: :development
+

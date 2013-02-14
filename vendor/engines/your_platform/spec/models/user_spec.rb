@@ -33,16 +33,26 @@ describe User do
   end
 
   describe "#capitalize_name" do
-    before do
-      @user.first_name = "john"
-      @user.last_name = "doe"
-      @user.capitalize_name
-      @user.save
-    end
-    it "should capitalize the first_name and last_name" do
-      @user.first_name.should == "John"
-      @user.last_name.should == "Doe"
-      @user.name.should == "John Doe"
+    [ { first_name: "john", last_name: "doe", 
+        capitalized_first_name: "John", capitalized_last_name: "Doe" },
+      { first_name: "Bruno", last_name: "de Silva", 
+        capitalized_first_name: "Bruno", capitalized_last_name: "de Silva" },
+      { first_name: "Klaus-Dieter", last_name: "Kunz", 
+        capitalized_first_name: "Klaus-Dieter", capitalized_last_name: "Kunz" } ].each do |name_to_test|
+      describe "for '#{name_to_test[ :capitalized_last_name ]}'" do
+        before do
+          @user.first_name = name_to_test[ :first_name ]
+          @user.last_name = name_to_test[ :last_name ]
+          @user.capitalize_name
+          @user.save
+        end
+        it "should capitalize the first_name and last_name" do
+          @user.first_name.should == name_to_test[ :capitalized_first_name ]
+          @user.last_name.should == name_to_test[ :capitalized_last_name ]
+          @user.name.should == name_to_test[ :capitalized_first_name ] + " " + 
+            name_to_test[ :capitalized_last_name ]
+        end
+      end
     end
   end
 
@@ -269,6 +279,28 @@ describe User do
     end
   end
 
+
+  # Status Groups
+  # ------------------------------------------------------------------------------------------
+
+  describe "#status_groups" do
+    before do
+      @corporation = create( :corporation_with_status_groups )
+      @status_group = @corporation.status_groups.first
+      @status_group.assign_user @user
+      @another_group = create( :group )
+      @another_group.assign_user @user
+    end
+    subject { @user.status_groups }
+
+    it "should include the status groups of the user" do
+      subject.should include @status_group
+    end
+    it "should not include the non-status groups of the user" do
+      subject.should_not include @another_group
+    end
+  end
+
   
   # Memberships
   # ------------------------------------------------------------------------------------------
@@ -322,6 +354,58 @@ describe User do
     it "should return an array of all workflows of all groups of the user" do
       subject.should == [ @workflow ]
     end
+  end
+
+
+  # Events
+  # ------------------------------------------------------------------------------------------
+
+  describe "#upcoming_events" do
+    subject { @user.upcoming_events }
+    describe "(timing)" do
+      before do
+        @group1 = @user.parent_groups.create
+        @group2 = @group1.parent_groups.create
+        @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
+                             @group2.events.create( start_at: 6.hours.from_now ) ]
+        @recent_events = [ @group1.events.create( start_at: 5.hours.ago ) ]
+        @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
+      end
+      it { should include *@upcoming_events }
+      it { should_not include *@recent_events }
+      it { should_not include *@unrelated_events }
+      it "should return the upcoming events in ascending order" do
+        subject.first.start_at.should < subject.last.start_at
+      end
+    end
+    describe "(direct/indirect)" do
+      # group_a 
+      #   |----- event_0             <<===
+      #   |----- group_b
+      #   |        |------ event_1   <<===
+      #   |        |------ user    
+      #   |
+      #   |----- group_c
+      #            |------ event_2
+      before do
+        @group_a = create( :group )
+        @event_0 = @group_a.child_events.create( start_at: 5.hours.from_now )
+        @group_b = @group_a.child_groups.create
+        @group_b.child_users << @user
+        @event_1 = @group_b.child_events.create( start_at: 5.hours.from_now )
+        @group_c = @group_a.child_groups.create
+        @event_2 = @group_c.child_events.create( start_at: 5.hours.from_now )
+        @user.reload
+      end
+      it "should list direct events of the user's groups" do # "<<===" above
+        @user.ancestor_groups.should include @group_a, @group_b
+        subject.should include @event_0, @event_1
+      end
+      it "should not list in-direct events" do
+        # otherwise all users will see all events, since everyone is member of Group.everyone.
+        subject.should_not include @event_2
+      end
+    end 
   end
 
 

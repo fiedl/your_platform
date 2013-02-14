@@ -72,8 +72,6 @@ module Structureable
     # 
     include StructureableMixins::Roles
 
-    private
-
     # When a dag node is destroyed, also destroy the corresponding dag links.
     # Otherwise, there would remain ghost dag links in the database that would
     # corrupt the integrity of the database. 
@@ -84,7 +82,7 @@ module Structureable
     # 
     #    rake reconstruct_indirect_dag_links:all
     # 
-    def destroy_links
+    def destroy_dag_links
 
       # destory only child and parent links, since the indirect links
       # are destroyed automatically by the DagLink model then.
@@ -105,6 +103,10 @@ module Structureable
         end  
 
       end  
+    end
+
+    def destroy_links
+      self.destroy_dag_links
     end
 
   end

@@ -15,7 +15,7 @@ HTTP-Auth-Login: `aki`, Passwort: `deleted-string`
 
 ### Build Status 
 
-[![Build Status](https://magnum.travis-ci.com/fiedl/wingolfsplattform.png?branch=master&token=EkwxFvobzUvAGcKu7AzB)](http://travis-ci.org/fiedl/wingolfsplattform) master
+Der Status kann derzeit nicht per Travis eingesehen werden, da unser Travis-Pro-Account ausgelaufen ist. 
 
 ### Contribution
 
@@ -46,7 +46,6 @@ https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU
 Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt. 
 **Mit großer Macht geht große Verantwortung einher!** :)
 
-### Badges
+Den aktuellen Status kann man hier abfragen: http://wingolfsplattform.org:4567
 
-<a href="http://love.travis-ci.org"><img src="http://wingolfsplattform.org/images/supporttravis.png"></a>
 
