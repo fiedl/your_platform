@@ -18,7 +18,8 @@ feature "Relationships on User show view", js: true do
 
       click_on I18n.t( :add )
       page.should have_selector( 'li', count: 2 )
-      find( "input[name=of_by_title]" ).value.should == @user.title
+
+      find( ".best_in_place.relationships.of_by_title * input" )[ :value ].should == @user.title 
 
       find( ".remove_button" ).click
       page.should have_selector( 'li', count: 1 )
@@ -44,7 +45,7 @@ feature "Relationships on User show view", js: true do
 
       # Clicking on the suggestion should use it in the text field.
       click_on "Jacobus Doe" 
-      find( "input[name=who_by_title]" ).value.should == @related_user.title
+      find( ".best_in_place.relationships.who_by_title input" ).value.should == @related_user.title
 
     end
     

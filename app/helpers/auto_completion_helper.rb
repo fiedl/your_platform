@@ -13,8 +13,9 @@ module AutoCompletionHelper
     best_in_place( object, attribute,
                    html_attrs: {
                      'data-autocomplete-url' => autocomplete_title_users_path,
-                     :class => 'user-select-input'
-                   } )
+                     :class => "user-select-input #{attribute}"
+                   },
+                   classes: "relationships #{attribute}" )
   end
 
 end
