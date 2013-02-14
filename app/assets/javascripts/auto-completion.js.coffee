@@ -27,31 +27,45 @@ jQuery ->
       #
       # In the meantime, we will just use the jquery ui tool.
       #
-      ## $( this ).typeahead()
+      $( this ).typeahead( {
+        ajax: {
+          url: autocomplete_input_element.data( 'autocomplete-url' ),
+          method: 'get'
+        },
+        display: 'title'
+      } )
 
-      $(this).autocomplete
-        source: (request, response) ->
-          $.getJSON autocomplete_input_element.data('autocomplete-url'),
-            term: extractLast(request.term)
-          , response
-
-        search: ->
-          term = extractLast(@value)
-          false  if term.length < 2
-
-        focus: ->
-          false
-
-        select: (event, ui) ->
-          if autocomplete_input_element.hasClass( "multiple-users-select-input" )
-            terms = split(@value)
-            terms.pop()
-            terms.push ui.item.value
-            terms.push ""
-            @value = terms.join(", ")
-            false
-          else
-            @value = ui.item.value
-
+#      $(this).autocomplete
+#        source: (request, response) ->
+#          $.getJSON autocomplete_input_element.data('autocomplete-url'),
+#            term: extractLast(request.term)
+#          , response
+#
+#        search: ->
+#          term = extractLast(@value)
+#          false  if term.length < 2
+#
+#        focus: ->
+#          false
+#
+#        select: (event, ui) ->
+#          if autocomplete_input_element.hasClass( "multiple-users-select-input" )
+#            terms = split(@value)
+#            terms.pop()
+#            terms.push ui.item.value
+#            terms.push ""
+#            @value = terms.join(", ")
+#            false
+#          else
+#            @value = ui.item.value
+#
       event.preventDefault()  if event.keyCode is $.ui.keyCode.TAB and $(this).data("autocomplete").menu.active
+  )
+
+  # issue fix:
+  # allow typeahead selection by clicking an item.
+  # see: http://stackoverflow.com/questions/14796415/how-to-use-best-in-place-with-twitter-bootstrap/14799698#14799698
+  #
+  $( document ).on( 'mousedown', 'ul.typeahead', (event) ->
+    event.preventDefault()
   )
