@@ -111,7 +111,7 @@ describe StatusGroupMembership do
         end
         it "should association the corporation with the new event" do
           subject
-          @membership.event.group.should == @corporation
+          @membership.event.group.becomes( Group ).should == @corporation.becomes( Group )
         end
       end
     end

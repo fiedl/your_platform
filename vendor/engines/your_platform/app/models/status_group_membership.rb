@@ -20,14 +20,14 @@ class StatusGroupMembership < UserGroupMembership
 
   after_initialize :build_status_group_membership_info_if_nil
 
-  attr_accessible :event_by_name
+  attr_accessible :event_by_name, 
 
   
   # Alias Methods For Delegated Methods
   # ==========================================================================================
 
-  def build_event( params )
-    self.status_group_membership_info.build_promoted_on_event( params )
+  def create_event( params )
+    self.status_group_membership_info.create_promoted_on_event( params )
   end
 
   # Access the event (promoted_on_event) by its name, since this is the way
@@ -43,7 +43,7 @@ class StatusGroupMembership < UserGroupMembership
     if Event.find_by_name( event_name )
       self.event = Event.find_by_name( event_name )
     else
-      self.build_event( name: event_name )
+      self.create_event( name: event_name )
       self.event.group ||= self.corporation if self.corporation
     end
   end
@@ -129,7 +129,16 @@ class StatusGroupMembership < UserGroupMembership
   #
   def save
     save_status_group_membership_info_if_changed
-    super
+    if changed?
+      return super
+    else
+      return true
+    end
+  end
+
+  def update_attributes( attributes, options = {} )
+    self.assign_attributes( attributes, options )
+    save
   end
 
   # Callback Methods for the Delegation to status_group_membership_info
