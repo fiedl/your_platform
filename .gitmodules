@@ -1,0 +1,3 @@
+[submodule "twitter-bootstrap-typeahead"]
+      path = vendor/engines/your_platform/app/assets/javascripts/twitter-bootstrap-typeahead
+      url = git://github.com/tcrosen/twitter-bootstrap-typeahead.git
