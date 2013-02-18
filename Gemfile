@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 
 									# Licenses
 									# =======================================
@@ -13,10 +13,6 @@ gem 'rails', '~> 3.2.11'						# MIT License,
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-group :production do
-  gem 'pg'
-end
 
 gem 'mysql2'								# MIT License
 
@@ -136,7 +132,6 @@ end
 
 # This is for testing on wingolfsplattform.org -- since travis-pro has expired.
 group :test do
-  gem 'sqlite3'
 #  gem 'headless'
   gem 'poltergeist'
 end
