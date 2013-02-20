@@ -1,3 +1,4 @@
 $( ".star" ).toggleClass( "starred" ).toggleClass( "unstarred" );
 $( ".star.starred" ).html( $( ".star" ).data( "starred-character" ) );
 $( ".star.unstarred" ).html( $( ".star" ).data( "unstarred-character" ) );
+$( "ul.my-favorites" ).html( "<%=j starred_objects_lis( current_user ) %>" );
