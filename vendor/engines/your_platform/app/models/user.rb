@@ -278,6 +278,16 @@ class User < ActiveRecord::Base
   end
 
 
+  # Starred Objects
+  # ------------------------------------------------------------------------------------------
+
+  # This method lists all starrable objects starred by this user (aka favorites).
+  #
+  def starred_objects
+    Star.find_all_by_user( self ).collect { |star| star.starrable }
+  end
+
+
   # User Identification and Authentification
   # ==========================================================================================
 

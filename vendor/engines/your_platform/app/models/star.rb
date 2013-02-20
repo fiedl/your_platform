@@ -47,14 +47,14 @@ class Star < ActiveRecord::Base
   # ==========================================================================================
 
   def self.find_by_user_and_starrable( user, starrable )
-    self.find_by_user( user ).find_by_starrable( starrable )
+    self.find_all_by_user( user ).find_all_by_starrable( starrable ).first
   end
 
-  def self.find_by_user( user )
+  def self.find_all_by_user( user )
     self.where( :user_id => user.id )
   end
 
-  def self.find_by_starrable( starrable )
+  def self.find_all_by_starrable( starrable )
     self.where( :starrable_type => starrable.class.name, :starrable_id => starrable.id )
   end
 

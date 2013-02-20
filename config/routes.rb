@@ -10,12 +10,16 @@ Wingolfsplattform::Application.routes.draw do
   resources :groups, as: :wah # to define wah_path
 
   resources :events  
+
+  match 'stars/user/:user_id/:starrable_type/:starrable_id' => "stars#update"
   resources :stars
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
 
   match "users/new/:alias" => "users#new"
+
+  get :my_favorites, controller: "favorites", action: "index"
 
 
   # The priority is based upon order of creation:

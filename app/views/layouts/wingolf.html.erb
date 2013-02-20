@@ -40,6 +40,12 @@
 	    Role: <%= current_user.role_for( @navable ) %>
 	  </a></li>
 	<% end %>
+	<li class="backendBarItem dropdown">
+	  <%= link_to "Favoriten", my_favorites_path %>
+	  <ul class="dropdown-menu favorites">
+	    <%= starred_objects_lis( current_user ) %>
+	  </ul>
+	</li>
         <li class="last backendBarItem">
 	  <%= link_to t( :logout ), main_app.sessions_logout_path %>
 	</li>

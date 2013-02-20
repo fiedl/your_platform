@@ -62,6 +62,17 @@
 		</ul>
               </li>
 
+              <li class="dropdown">
+		<%= link_to( 
+		    ( "Favoriten" + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, 
+		    main_app.my_favorites_path, 
+		    class: 'dropdown-toggle', data: { toggle: 'dropdown' } ) %>
+		<ul class="dropdown-menu">
+		  <%= starred_objects_lis( current_user ) %>
+		</ul>
+              </li>
+
+
 	      <li class="last dropdown">
 		<%= render "layouts/session_bar_avatar" %>
 		<a class="dropdown-toggle" data-toggle="dropdown" href="#">
@@ -94,6 +105,9 @@
       </span>
       
       <ul><!-- class="breadcrumb" -->
+	<span id="star_tool">
+	  <%= star_tool( current_user, @navable ) %>
+	</span>
 	<span id="breadcrumb">
 	  <%= breadcrumb_ul %>
 	</span>
