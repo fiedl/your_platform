@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 
 									# Licenses
 									# =======================================
@@ -77,7 +77,8 @@ gem 'acts_as_tree'							# MIT License
 gem 'formtastic'							# MIT License
 
 # In Place Editing
-gem 'best_in_place' #, git: 'git://github.com/bernat/best_in_place.git'	# MIT License
+gem 'best_in_place', '~> 2.1.0'                                         # MIT License
+#gem 'best_in_place', git: 'git://github.com/bernat/best_in_place.git'	
 #gem 'best_in_place', path: '../best_in_place/'
 
 # JSON
@@ -132,7 +133,6 @@ end
 
 # This is for testing on wingolfsplattform.org -- since travis-pro has expired.
 group :test do
-#  gem 'headless'
   gem 'poltergeist'
 end
 
