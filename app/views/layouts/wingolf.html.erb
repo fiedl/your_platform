@@ -72,6 +72,9 @@
       <div id="contentBgLayer3">
         <div id="content_wrapper">
           <div id="toolbar">
+	    <span id="star_tool">
+	      <%= star_tool( current_user, @navable ) %>
+	    </span>
 	    <span id="breadcrumb">
 	      <%= breadcrumb_ul %>
 	    </span>

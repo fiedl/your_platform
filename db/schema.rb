@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130207215239) do
+ActiveRecord::Schema.define(:version => 20130220185631) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -108,6 +108,22 @@ ActiveRecord::Schema.define(:version => 20130207215239) do
     t.integer  "user2_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+  end
+
+  create_table "stars", :force => true do |t|
+    t.integer  "starrable_id"
+    t.string   "starrable_type"
+    t.integer  "user_id"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  create_table "status_group_membership_infos", :force => true do |t|
+    t.integer  "membership_id"
+    t.integer  "promoted_by_workflow_id"
+    t.integer  "promoted_on_event_id"
+    t.datetime "created_at",              :null => false
+    t.datetime "updated_at",              :null => false
   end
 
   create_table "user_accounts", :force => true do |t|

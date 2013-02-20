@@ -10,6 +10,7 @@ Wingolfsplattform::Application.routes.draw do
   resources :groups, as: :wah # to define wah_path
 
   resources :events  
+  resources :stars
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions
