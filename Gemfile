@@ -197,3 +197,4 @@ gem 'phony'
 # Pry Console Addon
 gem 'pry', group: :development
 
+gem 'turbolinks', '>= 1.0'
