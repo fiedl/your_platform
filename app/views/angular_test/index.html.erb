@@ -1,18 +1,27 @@
-<div ng-app>
+<div ng-app="Profile">
   <h1>Angular Test</h1>
   <p>Find me in app/views/angular_test/index.html.erb</p>
-
-  <form>
-    <input type="text" ng-model="newEntry.name">
-  </form>
-  <i>{{newEntry.name}}</i>
 
   <h2>Profile of User <%= @user.title %></h2>
 
   <div ng-controller="ProfileCtrl">
     <ul>
       <li ng-repeat="profile_field in profile_fields">
-	{{profile_field.label}}: {{profile_field.value}}
+	<span class="profile_field_label" ng-controller="InPlaceEditCtrl">
+	  <span ng-click="edit()" ng-hide="editorEnabled">{{profile_field.label}}</span>
+	  <span ng-show="editorEnabled">
+	    <input type="text" ng:required ng-model="profile_field.label">
+	    <button ng-click="save()">Ok</button>
+	  </span>
+	</span>:
+	<span class="profile_field_value" ng-click="editValue(profile_field.value)">{{profile_field.value}}</span>
+      </li>
+      <li>
+	<form ng-submit="addProfileField()">
+	  <input type="text" ng-model="new_profile_field.label">
+	  <input type="text" ng-model="new_profile_field.value">
+	  <input type="submit" value="Add">
+	</form>
       </li>
     </ul>
   </div>
