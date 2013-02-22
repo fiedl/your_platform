@@ -1,0 +1,20 @@
+<div ng-app>
+  <h1>Angular Test</h1>
+  <p>Find me in app/views/angular_test/index.html.erb</p>
+
+  <form>
+    <input type="text" ng-model="newEntry.name">
+  </form>
+  <i>{{newEntry.name}}</i>
+
+  <h2>Profile of User <%= @user.title %></h2>
+
+  <div ng-controller="ProfileCtrl">
+    <ul>
+      <li ng-repeat="profile_field in profile_fields">
+	{{profile_field.label}}: {{profile_field.value}}
+      </li>
+    </ul>
+  </div>
+
+</div>

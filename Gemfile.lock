@@ -50,6 +50,7 @@ GEM
     acts_as_tree (1.1.0)
       activerecord (>= 3.0.0)
     addressable (2.3.2)
+    angularjs-rails (1.0.5)
     arel (3.0.2)
     bcrypt-ruby (3.0.1)
     best_in_place (2.1.0)
@@ -290,6 +291,7 @@ DEPENDENCIES
   acts-as-dag (>= 2.5.7)
   acts_as_paranoid_dag
   acts_as_tree
+  angularjs-rails
   bcrypt-ruby (>= 3.0.1)
   best_in_place (~> 2.1.0)
   better_errors

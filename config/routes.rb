@@ -1,5 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  get "angular_test", controller: "angular_test", action: "index"
+
   root :to => 'root#index'
 
   match "search" => "search#index", as: "search"

@@ -197,3 +197,5 @@ gem 'phony'
 # Pry Console Addon
 gem 'pry', group: :development
 
+# Angular JS
+gem 'angularjs-rails'
