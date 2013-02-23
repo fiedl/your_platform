@@ -14,11 +14,11 @@
 //= require jquery_ujs
 //= require angular
 //= require angular-resource
-//= require twitter/bootstrap
 //= require jquery-ui
 //= require jquery.ui.all
 //= require jquery.purr
 //= require jquery.ui.datepicker-de
+//= require twitter/bootstrap
 //= require_boxes
 //= require best_in_place
 //= require edit_mode

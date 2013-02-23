@@ -2,23 +2,35 @@
   <h1>Angular Test</h1>
   <p>Find me in app/views/angular_test/index.html.erb</p>
 
-  <h2>Profile of User <%= @user.title %></h2>
+  <h2>Profile of <%= @profileable.title %></h2>
 
-  <div ng-controller="ProfileCtrl">
+  <div id="profile" ng-controller="ProfileCtrl" ng-init="profileable.type='<%=@profileable.class.name%>'; profileable.id='<%=@profileable.id%>'">
+    <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button>
     <ul>
       <li ng-repeat="profile_field in profile_fields">
-	<span class="profile_field_label" ng-controller="InPlaceEditCtrl">
-	  <span ng-click="edit()" ng-hide="editorEnabled">{{profile_field.label}}</span>
+	<span class="profile_field_delete" ng-show="editMode">
+	  <button class="btn-small btn-danger" ng-click="deleteProfileField(profile_field)">
+	    <i class="icon-trash icon-white"></i>
+	  </button>
+	</span>
+	<span class="profile_field_label edit_in_place" ng-controller="InPlaceEditCtrl">
+	  <span class="label" ng-click="edit()" ng-hide="editorEnabled">{{profile_field.label}}</span>
 	  <span ng-show="editorEnabled">
 	    <input type="text" ng:required ng-model="profile_field.label">
-	    <button ng-click="save()">Ok</button>
+	    <button ng-click="save()" ng-hide="editMode">Ok</button>
 	  </span>
 	</span>:
-	<span class="profile_field_value" ng-click="editValue(profile_field.value)">{{profile_field.value}}</span>
+	<span class="profile_field_value edit_in_place" ng-controller="InPlaceEditCtrl">
+	  <span ng-click="edit()" ng-hide="editorEnabled">{{profile_field.value}}</span>
+	  <span ng-show="editorEnabled">
+	    <input type="text" ng:required ng-model="profile_field.value">
+	    <button ng-click="save()" ng-hide="editMode">Ok</button>
+	  </span>
+	</span>
       </li>
-      <li>
+      <li ng-show="editMode">
 	<form ng-submit="addProfileField()">
-	  <input type="text" ng-model="new_profile_field.label">
+	  <input type="text" ng-model="new_profile_field.label">:
 	  <input type="text" ng-model="new_profile_field.value">
 	  <input type="submit" value="Add">
 	</form>
