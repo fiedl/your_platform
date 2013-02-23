@@ -19,7 +19,9 @@ class ProfileFieldsController < ApplicationController
   end
 
   def create
-    respond_with @profileable.profile_fields.create( params[ :profile_field ] ) if @profileable
+    args = params[ :profile_field ]
+    args[ :type ] = "ProfileFieldTypes::Custom" if not args[ :type ] 
+    respond_with @profileable.profile_fields.create( args ) if @profileable
   end
 
   def update
@@ -33,9 +35,17 @@ class ProfileFieldsController < ApplicationController
   end
 
   def destroy
-    respond_with ProfileField.destroy( params[ :id ] )
-#    profileable = @profile_field.profileable
-#    @profile_field.destroy
+    # For compatibility reasons, this is messy, now:
+    # This would be the REST response, compatible to angular js:
+#    respond_with ProfileField.destroy( params[ :id ] )  
+
+    # And this is needed for the current interface, because then a js template
+    # is rendered and sent back to the client (in order to hide the deleted
+    # elements).
+    @profile_field = ProfileField.find( params[ :id ] )
+    @profile_field.destroy
+
+    # And this would be the HTML response:
 #    redirect_to profileable #controller: 'users', action: 'show', id: user_id
   end
 

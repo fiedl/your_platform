@@ -3,7 +3,7 @@ app = angular.module( "Profile", [ "ngResource" ] )
 
 app.factory "ProfileField", ["$resource", ($resource) ->
 #  console.log $scope.profileable.type
-  $resource( "/profile_fields/:id?profileable_id=:profileable_id&profileable_type=:profileable_type", { id: "@id", profileable_id: 2, profileable_type: "User" }, { update: { method: "PUT" } } )
+  $resource( "/profile_fields/:id?profileable_id=:profileable_id&profileable_type=:profileable_type", { id: "@id", profileable_id: 4, profileable_type: "User" }, { update: { method: "PUT" } } )
 ]
 
 @ProfileCtrl = ["$scope", "ProfileField", ($scope, ProfileField) ->
@@ -40,6 +40,8 @@ app.factory "ProfileField", ["$resource", ($resource) ->
   $scope.edit = ->
     $scope.editorEnabled = true
   $scope.save = ->
+#    if $scope.profile_field.type == ''
+#      $scope.profile_field.type = "ProfileFieldTypes::Custom" # warning! writing something bad here, will crash the dataset!
     $scope.profile_field.$update()
     $scope.editorEnabled = false
 ]
