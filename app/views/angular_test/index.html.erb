@@ -13,6 +13,8 @@
 
     <h2>Profile of {{profileable.title}}</h2>
 
+
+    <!-- TEMPLATES ---------------------------------------------------------------------- -->
     <!-- profile field -->
     <script type="text/ng-template" id="profile_field_renderer.html">
       <!-- remove button -->
@@ -37,11 +39,18 @@
           <button ng-click="save()" ng-hide="editMode">Ok</button>
         </span>
       </span>
+      <!-- sub profile fields -->
+      <ul>
+	<li ng-repeat="profile_field in profile_field.children" ng-include="'profile_field_renderer.html'"></li>
+      </ul>
     </script>
+    <!-- / TEMPLATES -------------------------------------------------------------------- -->
 
 
-
+    <!-- edit mode button -->
     <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button>
+
+    <!-- profile field list -->
     <ul>
       <li ng-repeat="profile_field in profile_fields" ng-include="'profile_field_renderer.html'"></li>
       <li ng-show="editMode">
@@ -52,6 +61,19 @@
         </form>
       </li>
     </ul>
+
+    
+    <h3>And now, how it should be:</h3>
+
+    <ul>
+      <li ng-repeat="profile_field in profile_fields">
+	<remove-button ng-model="profile_field" />
+	<in-place-editor ng-model="profile_field.label">{{profile_field.label}}</in-place-editor>:
+	<in-place-editor ng-model="profile_field.value">{{profile_field.value}}</in-place-editor>
+      </li>
+    </ul>
+
+
   </div>
 
 </div>

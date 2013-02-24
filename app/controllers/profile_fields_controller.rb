@@ -8,7 +8,7 @@ class ProfileFieldsController < ApplicationController
 
   def index
     @profile_fields = @profileable.profile_fields if @profileable
-    respond_with @profile_fields
+    respond_with @profile_fields.to_json( include: [ :children ] )
   end
 
   def show

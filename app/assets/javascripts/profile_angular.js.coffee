@@ -28,7 +28,6 @@ app.service( "Profileable", ->
   $scope.profileable = {}
   $scope.profileable = Profileable
 
-
   $scope.profile_fields = ProfileField.query()
 
   $scope.addProfileField = ->
