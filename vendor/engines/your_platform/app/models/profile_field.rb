@@ -8,8 +8,10 @@ class ProfileField < ActiveRecord::Base
   # Only allow the type column to be an existing class name.
   #
   validates_each :type do |record, attr, value| 
-    if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFieldTypes::" ) )
-      record.errors.add "#{value} is not a ProfileFieldTypes class."
+    if value
+      if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFieldTypes::" ) )
+        record.errors.add "#{value} is not a ProfileFieldTypes class."
+      end
     end
   end
 
