@@ -2,38 +2,54 @@
   <h1>Angular Test</h1>
   <p>Find me in app/views/angular_test/index.html.erb</p>
 
-  <h2>Profile of <%= @profileable.title %></h2>
+  <div id="profile" ng-controller="ProfileCtrl" 
+       data-profileable-type="<%=@profileable.class.name%>" data-profileable-id="<%=@profileable.id%>"
+       data-profileable="<%=@profileable.to_json( methods: [:title] )%>"
+       ng-init="fooprofileable=<%=@profileable.to_json( methods: [:title] )%>; 
+		fooprofileable_type='<%=@profileable.class.name%>'"
+       ng-click="$broadcast('clickOutside')"
+       >
 
-  <div id="profile" ng-controller="ProfileCtrl" ng-init="profileable.type='<%=@profileable.class.name%>'; profileable.id='<%=@profileable.id%>'">
+
+    <h2>Profile of {{profileable.title}}</h2>
+
+    <!-- profile field -->
+    <script type="text/ng-template" id="profile_field_renderer.html">
+      <!-- remove button -->
+      <span class="profile_field_delete" ng-show="editMode">
+        <button class="btn-small btn-danger" ng-click="deleteProfileField(profile_field)">
+          <i class="icon-trash icon-white"></i>
+        </button>
+      </span>
+      <!-- label -->
+      <span class="profile_field_label edit_in_place" ng-controller="InPlaceEditCtrl">
+	<span class="label" ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.label}}</span>
+	<span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
+          <input type="text" ng:required ng-model="profile_field.label">
+          <button ng-click="save()" ng-hide="editMode">Ok</button>
+	</span>
+      </span>
+      <!-- value -->
+      <span class="profile_field_value edit_in_place" ng-controller="InPlaceEditCtrl">
+        <span ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.value}}</span>
+        <span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
+          <input type="text" ng:required ng-model="profile_field.value">
+          <button ng-click="save()" ng-hide="editMode">Ok</button>
+        </span>
+      </span>
+    </script>
+
+
+
     <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button>
     <ul>
-      <li ng-repeat="profile_field in profile_fields">
-	<span class="profile_field_delete" ng-show="editMode">
-	  <button class="btn-small btn-danger" ng-click="deleteProfileField(profile_field)">
-	    <i class="icon-trash icon-white"></i>
-	  </button>
-	</span>
-	<span class="profile_field_label edit_in_place" ng-controller="InPlaceEditCtrl">
-	  <span class="label" ng-click="edit()" ng-hide="editorEnabled">{{profile_field.label}}</span>
-	  <span ng-show="editorEnabled">
-	    <input type="text" ng:required ng-model="profile_field.label">
-	    <button ng-click="save()" ng-hide="editMode">Ok</button>
-	  </span>
-	</span>:
-	<span class="profile_field_value edit_in_place" ng-controller="InPlaceEditCtrl">
-	  <span ng-click="edit()" ng-hide="editorEnabled">{{profile_field.value}}</span>
-	  <span ng-show="editorEnabled">
-	    <input type="text" ng:required ng-model="profile_field.value">
-	    <button ng-click="save()" ng-hide="editMode">Ok</button>
-	  </span>
-	</span>
-      </li>
+      <li ng-repeat="profile_field in profile_fields" ng-include="'profile_field_renderer.html'"></li>
       <li ng-show="editMode">
-	<form ng-submit="addProfileField()">
-	  <input type="text" ng-model="new_profile_field.label">:
-	  <input type="text" ng-model="new_profile_field.value">
-	  <input type="submit" value="Add">
-	</form>
+        <form ng-submit="addProfileField()">
+          <input type="text" ng-model="new_profile_field.label">:
+          <input type="text" ng-model="new_profile_field.value">
+          <input type="submit" value="Add">
+        </form>
       </li>
     </ul>
   </div>

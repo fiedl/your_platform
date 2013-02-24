@@ -1,14 +1,33 @@
 
 app = angular.module( "Profile", [ "ngResource" ] )
 
-app.factory "ProfileField", ["$resource", ($resource) ->
-#  console.log $scope.profileable.type
-  $resource( "/profile_fields/:id?profileable_id=:profileable_id&profileable_type=:profileable_type", { id: "@id", profileable_id: 4, profileable_type: "User" }, { update: { method: "PUT" } } )
+app.factory "ProfileField", ["$resource", "$rootScope", ($resource, $rootScope) ->
+  profileable_id = $( "#profile" ).data( "profileable-id" )
+  profileable_type = $( "#profile" ).data( "profileable-type" )
+
+  $resource(
+    "/profile_fields/:id?profileable_id=:profileable_id&profileable_type=:profileable_type",
+    { id: "@id", profileable_id: profileable_id ,profileable_type: profileable_type },
+    { update: { method: "PUT" } }
+  )
 ]
 
-@ProfileCtrl = ["$scope", "ProfileField", ($scope, ProfileField) ->
+# see: https://gist.github.com/Mithrandir0x/3639232
+app.service( "Profileable", ->
+  this.id = $( "#profile" ).data( "profileable-id" )
+  this.type = $( "#profile" ).data( "profileable-type" )
+  this.attributes = $( "#profile" ).data( "profileable" )
+  this.title = this.attributes.title
+)
+
+
+@ProfileCtrl = ["$scope", "ProfileField", "Profileable", ($scope, ProfileField, Profileable) ->
 
   $scope.editMode = false;
+
+  $scope.profileable = {}
+  $scope.profileable = Profileable
+
 
   $scope.profile_fields = ProfileField.query()
 
@@ -33,13 +52,22 @@ app.factory "ProfileField", ["$resource", ($resource) ->
 
 @InPlaceEditCtrl = [ "$scope", ($scope) ->
   $scope.editorEnabled = $scope.editMode
+#  $scope.editorJustEnabled = false
   $scope.$on( 'editModeChange', ->
     $scope.edit() if $scope.editMode
     $scope.save() if not $scope.editMode
   )
+  $scope.$on( 'clickOutside', ->
+    $scope.save() if not $scope.editMode
+  )
   $scope.edit = ->
     $scope.editorEnabled = true
+#    $scope.editorJustEnabled = true
+#    setTimeout( ->
+#      $scope.editorJustEnabled = false
+#    , 200 )
   $scope.save = ->
+#    return if $scope.editorJustEnabled # since this is a click outside
 #    if $scope.profile_field.type == ''
 #      $scope.profile_field.type = "ProfileFieldTypes::Custom" # warning! writing something bad here, will crash the dataset!
     $scope.profile_field.$update()
