@@ -1,15 +1,16 @@
 require 'spec_helper'
 
-class TestProfileField < ProfileField
+module ProfileFieldTypes
+  class TestProfileField < ProfileField
 
-  has_child_profile_fields :field_a, :field_b
-
+    has_child_profile_fields :field_a, :field_b
+  end
 end
 
 describe ProfileFieldMixins::HasChildProfileFields do
   
   before do
-    @profile_field = TestProfileField.create() # which triggers has_child_profile_fields( :field_a, :field_b )
+    @profile_field = ProfileFieldTypes::TestProfileField.create() # which triggers has_child_profile_fields( :field_a, :field_b )
   end
   subject { @profile_field }
 
