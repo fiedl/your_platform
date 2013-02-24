@@ -21,20 +21,29 @@ app.service( "Profileable", ->
 )
 
 
-@ProfileCtrl = ["$scope", "ProfileField", "Profileable", ($scope, ProfileField, Profileable) ->
+@ProfileCtrl = ["$scope", "ProfileField", "Profileable", "$resource", ($scope, ProfileField, Profileable, $resource) ->
 
   $scope.editMode = false;
 
   $scope.profileable = {}
   $scope.profileable = Profileable
 
-  $scope.profile_fields = ProfileField.query()
+  # http://thoughtmonkeys.com/slides/AngularJS/#/3/2
+  ProfileField.prototype.getChildren = ->
+    $resource("/profile_fields/?parent_id=:parent_id", { parent_id: this.id }, {update: { method: "PUT" }} )
 
-  angular.forEach( $scope.profile_fields, (i,profile_field)->
-    angular.forEach( profile_field.children, (j,child_field)->
-      $scope.profile_fields[i].children[j] = ProfileField.get( { id: child_field.id } )
-    )
+
+  $scope.profile_fields = ProfileField.query({}, ->
+    console.log $scope.profile_fields[2].getChildren()
+    console.log $scope.profile_fields[2].getChildren().query()
   )
+
+
+#  angular.forEach( $scope.profile_fields, (i,profile_field)->
+#    angular.forEach( profile_field.children, (j,child_field)->
+#      $scope.profile_fields[i].children[j] = ProfileField.get( { id: child_field.id } )
+#    )
+#  )
 
   $scope.addProfileField = ->
     profile_field = ProfileField.save( $scope.new_profile_field )

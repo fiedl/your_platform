@@ -8,6 +8,7 @@ class ProfileFieldsController < ApplicationController
 
   def index
     @profile_fields = @profileable.profile_fields if @profileable
+    @profile_fields ||= ProfileField.find_all_by_parent_id( params[ :parent_id ] ) if params[ :parent_id ]
     respond_with @profile_fields.to_json( include: [ :children ] )
   end
 
