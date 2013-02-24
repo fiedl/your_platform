@@ -45,7 +45,7 @@ describe "User page", js: false do
         click_on I18n.t(:add)
         page.should have_selector( ".profile_field" )
         within(".profile_field") do
-          page.should have_selector('input[type=text]', count: 7)
+          page.should have_selector('input[type=text]', count: 6)
         end
 
         find(".remove_button").click
