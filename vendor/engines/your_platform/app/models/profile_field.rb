@@ -5,6 +5,14 @@ class ProfileField < ActiveRecord::Base
 
   belongs_to             :profileable, polymorphic: true
 
+  # Only allow the type column to be an existing class name.
+  #
+  validates_each :type do |record, attr, value| 
+    if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFieldTypes::" ) )
+      record.errors.add "#{value} is not a ProfileFieldTypes class."
+    end
+  end
+
   # There are profile_fields that are composed of other profile_fields.
   # For example, the BankAccount profile_field type is composed.
   #
