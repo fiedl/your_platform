@@ -30,6 +30,12 @@ app.service( "Profileable", ->
 
   $scope.profile_fields = ProfileField.query()
 
+  angular.forEach( $scope.profile_fields, (i,profile_field)->
+    angular.forEach( profile_field.children, (j,child_field)->
+      $scope.profile_fields[i].children[j] = ProfileField.get( { id: child_field.id } )
+    )
+  )
+
   $scope.addProfileField = ->
     profile_field = ProfileField.save( $scope.new_profile_field )
     $scope.profile_fields.push( profile_field )
