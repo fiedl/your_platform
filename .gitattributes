@@ -12,3 +12,8 @@
 *.PDF	 diff=astextplain
 *.rtf	 diff=astextplain
 *.RTF	 diff=astextplain
+
+# Automatically generated files should retain its endings
+schema.rb text eol=lf
+.ruby-version text eol=lf
+Gemfile.lock text eol=lf
