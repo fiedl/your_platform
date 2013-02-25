@@ -18,7 +18,7 @@
     <!-- profile field -->
     <script type="text/ng-template" id="profile_field_renderer.html">
       <!-- remove button -->
-      <span class="profile_field_delete" ng-show="editMode">
+      <span class="profile_field_delete" ng-show="editMode && ! isChildField">
         <button class="btn-small btn-danger" ng-click="deleteProfileField(profile_field)">
           <i class="icon-trash icon-white"></i>
         </button>
@@ -41,7 +41,9 @@
       </span>
       <!-- sub profile fields -->
       <ul>
-	<li ng-repeat="profile_field in profile_field.children" ng-include="'profile_field_renderer.html'"></li>
+	<li ng-repeat="profile_field in profile_field.children" ng-controller="ProfileFieldCtrl"
+	    ng-include="'profile_field_renderer.html'">
+	</li>
       </ul>
     </script>
     <!-- / TEMPLATES -------------------------------------------------------------------- -->
@@ -52,7 +54,9 @@
 
     <!-- profile field list -->
     <ul>
-      <li ng-repeat="profile_field in profile_fields" ng-include="'profile_field_renderer.html'"></li>
+      <li ng-repeat="profile_field in profile_fields" ng-controller="ProfileFieldCtrl" 
+	  ng-include="'profile_field_renderer.html'">
+      </li>
       <li ng-show="editMode">
         <form ng-submit="addProfileField()">
           <input type="text" ng-model="new_profile_field.label">:

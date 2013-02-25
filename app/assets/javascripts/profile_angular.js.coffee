@@ -102,9 +102,13 @@ app.service( "Profileable", ->
 
 ]
 
+@ProfileFieldCtrl = [ "$scope", ($scope) ->
+  $scope.isChildField = true if $scope.profile_field.parent_id
+]
+
 @InPlaceEditCtrl = [ "$scope", ($scope) ->
   $scope.editorEnabled = $scope.editMode
-#  $scope.editorJustEnabled = false
+
   $scope.$on( 'editModeChange', ->
     $scope.edit() if $scope.editMode
     $scope.save() if not $scope.editMode
@@ -114,14 +118,7 @@ app.service( "Profileable", ->
   )
   $scope.edit = ->
     $scope.editorEnabled = true
-#    $scope.editorJustEnabled = true
-#    setTimeout( ->
-#      $scope.editorJustEnabled = false
-#    , 200 )
   $scope.save = ->
-#    return if $scope.editorJustEnabled # since this is a click outside
-#    if $scope.profile_field.type == ''
-#      $scope.profile_field.type = "ProfileFieldTypes::Custom" # warning! writing something bad here, will crash the dataset!
     $scope.profile_field.$update()
     $scope.editorEnabled = false
 ]
