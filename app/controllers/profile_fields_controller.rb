@@ -53,7 +53,7 @@ class ProfileFieldsController < ApplicationController
   private
 
   def find_profileable
-    if params[ :profileable_type ] && params[ :profileable_id ]
+    if params[ :profileable_type ].present? && params[ :profileable_id ].present?
       @profileable = params[ :profileable_type ].constantize.find( params[ :profileable_id ] )
     end
   end
