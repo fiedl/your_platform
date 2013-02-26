@@ -1,5 +1,71 @@
 
+
 app = angular.module( "Profile", [ "ngResource" ] )
+
+
+app.directive( "box", -> {
+  priority: 0,
+  template: '<div class="box">' +
+              '<div class="head"><table><tr>' +
+                '<td class="box_heading">' +
+                  '<h1>{{caption}} {{editMode}}</h1>' +
+                '</td>' +
+                '<td class="box_toolbar">' +
+                  '<button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()" ng-show="editable">' +
+                    '<i class="icon-edit icon-black"></i> ' +
+                    'Edit' +
+                  '</button>' +
+                '</td>' +
+              '</tr></table></div>' +
+              '<div class="divider"></div>' +
+              '<div class="content" ng-transclude></div>' +
+            '</div>',
+  replace: false,
+  transclude: true,
+  restrict: 'E',
+#  scope: true
+#  scope: { title: '@title' },
+#  scope: {
+#    caption: '@',
+#    editable: '@',
+#    toggleEditMode: '&'
+#  },
+  link: ($scope, $element, $attrs)->
+    console.log $attrs
+#    scp = angular.element( $($element).find(".box") ).scope()
+#    scp.title = $attrs[ 'title' ]
+#    $scope.title = $attrs[ 'title' ]
+    $scope.caption = $attrs[ 'caption' ]
+    $scope.editable = true if $attrs[ 'editable' ] == "true"
+#    console.log $scope
+#  controller: ($scope, $element, $attrs, $transclude)->
+#    $scope.editMode = false
+#    $scope.toggleEditMode = ->
+#      $scope.editMode = not $scope.editMode
+#      $scope.$broadcast( 'editModeChange' )
+#
+#    $scope.editablesInside = false
+#    $scope.$on( 'inPlaceEditorInitiated', ->
+#      console.log $scope
+#      $scope.editablesInside = true
+#    )
+} )
+
+app.controller( "BoxCtrl", ["$scope", ($scope)->
+#  $scope.editablesInside = false
+#  $scope.editablesInside = true
+#  $scope.$on( 'inPlaceEditorInitiated', ->
+#    alert "received"
+#    $scope.editablesInside = true
+#  )
+  $scope.toggleEditMode = ->
+    $scope.editMode = not $scope.editMode
+    $scope.$broadcast( 'editModeChange' )
+
+] )
+
+
+
 
 # ProfileField Model
 app.factory "ProfileField", ["$resource", ($resource) ->
@@ -102,12 +168,14 @@ app.service( "Profileable", ->
 
 ]
 
-@ProfileFieldCtrl = [ "$scope", ($scope) ->
+app.controller( "ProfileFieldCtrl", [ "$scope", ($scope) ->
   $scope.isChildField = true if $scope.profile_field.parent_id
-]
+] )
 
-@InPlaceEditCtrl = [ "$scope", ($scope) ->
+app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
   $scope.editorEnabled = $scope.editMode
+  $scope.$emit( 'inPlaceEditorInitiated' )
+
 
   $scope.$on( 'editModeChange', ->
     $scope.edit() if $scope.editMode
@@ -121,4 +189,4 @@ app.service( "Profileable", ->
   $scope.save = ->
     $scope.profile_field.$update()
     $scope.editorEnabled = false
-]
+] )
