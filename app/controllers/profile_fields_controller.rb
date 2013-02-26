@@ -21,7 +21,7 @@ class ProfileFieldsController < ApplicationController
 
   def create
     args = params[ :profile_field ]
-    args[ :type ] = "ProfileFieldTypes::Custom" if not args[ :type ] 
+    args[ :type ] = "ProfileFieldTypes::Custom" if not args[ :type ] if args
     respond_with @profileable.profile_fields.create( args ) if @profileable
   end
 

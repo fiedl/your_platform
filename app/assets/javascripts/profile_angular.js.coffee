@@ -91,13 +91,13 @@ app.factory "ProfileField", ["$resource", ($resource) ->
   # these are temporary defined in the local scope of this block,
   # since we need them in the following initialization of the
   # ProfileField model.
-#  profileable_id = $( "#profile" ).data( "profileable-id" )
-#  profileable_type = $( "#profile" ).data( "profileable-type" )
+  profileable_id = $( "#profile" ).data( "profileable-id" )
+  profileable_type = $( "#profile" ).data( "profileable-type" )
 
   # Model initialization: Bind it to an AJAX resource.
   ProfileField = $resource(
     "/profile_fields/:id?profileable_id=:profileable_id&profileable_type=:profileable_type&parent_id=:parent_id",
-    { id: "@id" },
+    { id: "@id", profileable_id: profileable_id, profileable_type: profileable_type },
     { update: { method: "PUT" } }
   )
 
@@ -117,7 +117,7 @@ app.factory "ProfileField", ["$resource", ($resource) ->
   #     child_fields = parent_field.children        # Array of Objects
   #
   ProfileField.prototype.getChildren = ->
-    ProfileField.query( { parent_id: @id } )
+    ProfileField.query( { parent_id: @id, profileable_id: null, profileable_type: null } )
 
   ProfileField.prototype.loadChildrenResource = ->
     this.children = this.getChildren() if this.children.length > 0
