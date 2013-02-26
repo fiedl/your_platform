@@ -8,7 +8,7 @@ app.directive( "box", -> {
   template: '<div class="box">' +
               '<div class="head"><table><tr>' +
                 '<td class="box_heading">' +
-                  '<h1>{{caption}} {{editMode}}</h1>' +
+                  '<h1>{{caption}} </h1>' + # the space in the h1 is really needed!
                 '</td>' +
                 '<td class="box_toolbar">' +
                   '<button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()" ng-show="editable">' +
@@ -20,25 +20,41 @@ app.directive( "box", -> {
               '<div class="divider"></div>' +
               '<div class="content" ng-transclude></div>' +
             '</div>',
+# templateUrl: 'some.html',
   replace: false,
   transclude: true,
   restrict: 'E',
-#  scope: true
+#  scope: false,
+  scope: true
 #  scope: { title: '@title' },
 #  scope: {
 #    caption: '@',
 #    editable: '@',
 #    toggleEditMode: '&'
 #  },
-  link: ($scope, $element, $attrs)->
-    console.log $attrs
+#  compile: (tElement, tAttrs, transclude)->
+#    console.log "COMPILE:"
+#    console.log tAttrs
+  link: (scope, element, attrs)->
+    scope.editable = attrs[ 'editable' ]
+    scope.$watch( 'attrs.caption', (value)->
+      scope.caption = attrs.caption
+    )
+#   $scope.caption = $attrs.caption
+#    console.log $scope
 #    scp = angular.element( $($element).find(".box") ).scope()
 #    scp.title = $attrs[ 'title' ]
 #    $scope.title = $attrs[ 'title' ]
-    $scope.caption = $attrs[ 'caption' ]
-    $scope.editable = true if $attrs[ 'editable' ] == "true"
+#    $scope.caption = $attrs[ 'caption' ]
+#    console.log $attrs.caption
+#    console.log $scope.caption
 #    console.log $scope
-#  controller: ($scope, $element, $attrs, $transclude)->
+#    $scope.editable = true if $attrs[ 'editable' ] == "true"
+#    console.log $scope
+# controller: ($scope, $element, $attrs, $transclude)->
+#    $scope.$watch( 'caption', ->
+#      $scope.caption = $attrs.caption
+#    )
 #    $scope.editMode = false
 #    $scope.toggleEditMode = ->
 #      $scope.editMode = not $scope.editMode
@@ -52,12 +68,14 @@ app.directive( "box", -> {
 } )
 
 app.controller( "BoxCtrl", ["$scope", ($scope)->
+#  $scope.caption = $scope.profileable.title
 #  $scope.editablesInside = false
 #  $scope.editablesInside = true
 #  $scope.$on( 'inPlaceEditorInitiated', ->
 #    alert "received"
 #    $scope.editablesInside = true
 #  )
+  $scope.editMode = false
   $scope.toggleEditMode = ->
     $scope.editMode = not $scope.editMode
     $scope.$broadcast( 'editModeChange' )
