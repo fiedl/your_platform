@@ -5,7 +5,7 @@ app = angular.module( "Profile", [ "ngResource" ] )
 
 app.directive( "box", -> {
   priority: 0,
-  template: '<div class="box">' +
+  template: '<div class="box" ng-controller="BoxCtrl">' +
               '<div class="head"><table><tr>' +
                 '<td class="box_heading">' +
                   '<h1>{{caption}} </h1>' + # the space in the h1 is really needed!
@@ -26,6 +26,26 @@ app.directive( "box", -> {
   restrict: 'E',
 #  scope: false,
   scope: true
+  #
+  # the scope structure looks like this:
+  #
+  #    some_div_controller_scope
+  #            |---------------- box_scope
+  #            |                     |------ BoxCtrl_scope
+  #            |
+  #            |---------------- transclude_scope
+  #
+  # whereas the DOM structure looks like this:
+  #
+  #    some_div
+  #       |-------- box
+  #                  |---- BoxCtrl_div
+  #                           |--------- transclude_div
+  #
+  # I'm not sure why, but that's how angular does ist. Therefore, we have to
+  # apply a patch in order to be able to broadcast to the transclude and back.
+  #
+#
 #  scope: { title: '@title' },
 #  scope: {
 #    caption: '@',
@@ -51,7 +71,13 @@ app.directive( "box", -> {
 #    console.log $scope
 #    $scope.editable = true if $attrs[ 'editable' ] == "true"
 #    console.log $scope
-# controller: ($scope, $element, $attrs, $transclude)->
+#  controller: ($scope, $element, $attrs, $transclude)->
+#    $transclude( (clone)->
+#      console.log "Clone Scope"
+#      console.log $element
+#      console.log clone.scope()
+#      $scope.transclude_scope = clone.scope()
+#    )
 #    $scope.$watch( 'caption', ->
 #      $scope.caption = $attrs.caption
 #    )
@@ -76,16 +102,20 @@ app.controller( "BoxCtrl", ["$scope", ($scope)->
 #    $scope.editablesInside = true
 #  )
   $scope.editMode = false
+  $scope.transclude_scope = -> $scope.$parent.$$nextSibling
   $scope.toggleEditMode = ->
     $scope.editMode = not $scope.editMode
-    $scope.$broadcast( 'editModeChange' )
-
+    $scope.transclude_scope().$broadcast( 'editModeChange', {newState: $scope.editMode} )
+#    setTimeout( ->
+#      $scope.transclude_scope().$apply() # to tell angular to refresh the view
+#    , 200 )
+#    $scope.$parent.$$nextSibling.$broadcast( 'editModeChange', {newState: $scope.editMode} )
 ] )
 
 
 
 
-# ProfileField Model
+# PfileField Model
 app.factory "ProfileField", ["$resource", ($resource) ->
 
   # these are temporary defined in the local scope of this block,
@@ -191,20 +221,30 @@ app.controller( "ProfileFieldCtrl", [ "$scope", ($scope) ->
 ] )
 
 app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
+  $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
   $scope.editorEnabled = $scope.editMode
-  $scope.$emit( 'inPlaceEditorInitiated' )
 
+#  $scope.$emit( 'inPlaceEditorInitiated' )
 
-  $scope.$on( 'editModeChange', ->
-    $scope.edit() if $scope.editMode
-    $scope.save() if not $scope.editMode
+  $.inplacescope = $scope unless $.inplacescope
+  $scope.$on( 'editModeChange', (event, args)->
+    newState = args[ 'newState' ]
+    $scope.edit() if newState == true
+    $scope.save() if newState == false
   )
   $scope.$on( 'clickOutside', ->
     $scope.save() if not $scope.editMode
   )
   $scope.edit = ->
     $scope.editorEnabled = true
+    $scope.editorEnabledJustNow = true
+    setTimeout( ->
+      $scope.editorEnabledJustNow = false
+    , 200 )
   $scope.save = ->
-    $scope.profile_field.$update()
-    $scope.editorEnabled = false
+    unless $scope.editorEnabledJustNow
+      # because if it has been enabled just now, this save()
+      # has been triggered by a bubbled click event accidentally.
+      $scope.profile_field.$update()
+      $scope.editorEnabled = false
 ] )

@@ -22,6 +22,7 @@
       </span>
       <!-- label -->
       <span class="profile_field_label edit_in_place editable" ng-controller="InPlaceEditCtrl">
+	{{editorEnabled}}
 	<span class="label" ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.label}}</span>
 	<span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
           <input type="text" ng:required ng-model="profile_field.label">
@@ -48,7 +49,7 @@
 
     <!-- edit mode button -->
     <!-- <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button> -->
-    <div ng-controller="BoxCtrl">
+    <!--div ng-controller="BoxCtrl"-->
     <box caption="Profile of {{profileable.title}}" editable="true">
 
       <!-- profile field list -->
@@ -65,9 +66,9 @@
 	</li>
       </ul>
     </box>
-    </div>
+    <!--/div-->
 
-    <div ng-controller="BoxCtrl">
+    <!--div ng-controller="BoxCtrl"-->
     <box caption="And now, how it should be..." editable="true">
       <ul>
 	<li ng-repeat="profile_field in profile_fields">
@@ -77,13 +78,13 @@
 	</li>
       </ul>
     </box>
-    </div>
+    <!--/div-->
 
-    <div ng-controller="BoxCtrl">
+    <!--div ng-controller="BoxCtrl"-->
     <box caption="Third box" editable="false">
       This box should not be editable.
     </box>
-    </div>
+    <!--/div-->
 
 
   </div>
