@@ -1,4 +1,4 @@
-<div ng-app="Profile">
+<div>
   <h1>Angular Test</h1>
   <p>Find me in app/views/angular_test/index.html.erb</p>
 
@@ -22,7 +22,6 @@
       </span>
       <!-- label -->
       <span class="profile_field_label edit_in_place editable" ng-controller="InPlaceEditCtrl">
-	{{editorEnabled}}
 	<span class="label" ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.label}}</span>
 	<span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
           <input type="text" ng:required ng-model="profile_field.label">
@@ -73,6 +72,8 @@
       <ul>
 	<li ng-repeat="profile_field in profile_fields">
 	  <remove-button ng-model="profile_field" />
+
+	  <!-- TODO: HIER GUCKEN: http://docs.angularjs.org/guide/concepts#directives -->
 	  <in-place-editor ng-model="profile_field.label">{{profile_field.label}}</in-place-editor>:
 	  <in-place-editor ng-model="profile_field.value">{{profile_field.value}}</in-place-editor>
 	</li>

@@ -1,9 +1,14 @@
 
+# TODO:
+# - sinnvolle Verzeichnisstruktur
+# - directives für in_place_edit und remove_button
+# - box soll automatisch merken, wenn editables drin sind, und nur dann den button einblenden
+# - das directive-template muss in eine Datei
+# - die erste box braucht noch ein "first"-css-Attribut.
 
-app = angular.module( "Profile", [ "ngResource" ] )
 
 
-app.directive( "box", -> {
+@app.directive( "box", -> {
   priority: 0,
   template: '<div class="box" ng-controller="BoxCtrl">' +
               '<div class="head"><table><tr>' +
@@ -93,7 +98,7 @@ app.directive( "box", -> {
 #    )
 } )
 
-app.controller( "BoxCtrl", ["$scope", ($scope)->
+@app.controller( "BoxCtrl", ["$scope", ($scope)->
 #  $scope.caption = $scope.profileable.title
 #  $scope.editablesInside = false
 #  $scope.editablesInside = true
@@ -116,7 +121,7 @@ app.controller( "BoxCtrl", ["$scope", ($scope)->
 
 
 # PfileField Model
-app.factory "ProfileField", ["$resource", ($resource) ->
+@app.factory "ProfileField", ["$resource", ($resource) ->
 
   # these are temporary defined in the local scope of this block,
   # since we need them in the following initialization of the
@@ -161,7 +166,7 @@ app.factory "ProfileField", ["$resource", ($resource) ->
 ]
 
 # see: https://gist.github.com/Mithrandir0x/3639232
-app.service( "Profileable", ->
+@app.service( "Profileable", ->
   this.id = $( "#profile" ).data( "profileable-id" )
   this.type = $( "#profile" ).data( "profileable-type" )
   this.attributes = $( "#profile" ).data( "profileable" )
@@ -216,11 +221,11 @@ app.service( "Profileable", ->
 
 ]
 
-app.controller( "ProfileFieldCtrl", [ "$scope", ($scope) ->
+@app.controller( "ProfileFieldCtrl", [ "$scope", ($scope) ->
   $scope.isChildField = true if $scope.profile_field.parent_id
 ] )
 
-app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
+@app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
   $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
   $scope.editorEnabled = $scope.editMode
 
