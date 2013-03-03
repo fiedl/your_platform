@@ -49,7 +49,7 @@
     <!-- edit mode button -->
     <!-- <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button> -->
     <!--div ng-controller="BoxCtrl"-->
-    <box caption="Profile of {{profileable.title}}" editable="true">
+    <box caption="Profile of {{profileable.title}}">
 
       <!-- profile field list -->
       <ul>
@@ -68,7 +68,7 @@
     <!--/div-->
 
     <!--div ng-controller="BoxCtrl"-->
-    <box caption="And now, how it should be..." editable="true">
+    <box caption="And now, how it should be...">
       <ul>
 	<li ng-repeat="profile_field in profile_fields">
 	  <remove-button ng-model="profile_field" />
@@ -82,7 +82,7 @@
     <!--/div-->
 
     <!--div ng-controller="BoxCtrl"-->
-    <box caption="Third box" editable="false">
+    <box caption="Third box">
       This box should not be editable.
     </box>
     <!--/div-->

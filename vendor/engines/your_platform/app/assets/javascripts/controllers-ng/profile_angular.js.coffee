@@ -1,122 +1,8 @@
 
 # TODO:
-# - sinnvolle Verzeichnisstruktur
 # - directives für in_place_edit und remove_button
-# - box soll automatisch merken, wenn editables drin sind, und nur dann den button einblenden
 # - das directive-template muss in eine Datei
 # - die erste box braucht noch ein "first"-css-Attribut.
-
-
-
-@app.directive( "box", -> {
-  priority: 0,
-  template: '<div class="box" ng-controller="BoxCtrl">' +
-              '<div class="head"><table><tr>' +
-                '<td class="box_heading">' +
-                  '<h1>{{caption}} </h1>' + # the space in the h1 is really needed!
-                '</td>' +
-                '<td class="box_toolbar">' +
-                  '<button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()" ng-show="editable">' +
-                    '<i class="icon-edit icon-black"></i> ' +
-                    'Edit' +
-                  '</button>' +
-                '</td>' +
-              '</tr></table></div>' +
-              '<div class="divider"></div>' +
-              '<div class="content" ng-transclude></div>' +
-            '</div>',
-# templateUrl: 'some.html',
-  replace: false,
-  transclude: true,
-  restrict: 'E',
-#  scope: false,
-  scope: true
-  #
-  # the scope structure looks like this:
-  #
-  #    some_div_controller_scope
-  #            |---------------- box_scope
-  #            |                     |------ BoxCtrl_scope
-  #            |
-  #            |---------------- transclude_scope
-  #
-  # whereas the DOM structure looks like this:
-  #
-  #    some_div
-  #       |-------- box
-  #                  |---- BoxCtrl_div
-  #                           |--------- transclude_div
-  #
-  # I'm not sure why, but that's how angular does ist. Therefore, we have to
-  # apply a patch in order to be able to broadcast to the transclude and back.
-  #
-#
-#  scope: { title: '@title' },
-#  scope: {
-#    caption: '@',
-#    editable: '@',
-#    toggleEditMode: '&'
-#  },
-#  compile: (tElement, tAttrs, transclude)->
-#    console.log "COMPILE:"
-#    console.log tAttrs
-  link: (scope, element, attrs)->
-    scope.editable = attrs[ 'editable' ]
-    scope.$watch( 'attrs.caption', (value)->
-      scope.caption = attrs.caption
-    )
-#   $scope.caption = $attrs.caption
-#    console.log $scope
-#    scp = angular.element( $($element).find(".box") ).scope()
-#    scp.title = $attrs[ 'title' ]
-#    $scope.title = $attrs[ 'title' ]
-#    $scope.caption = $attrs[ 'caption' ]
-#    console.log $attrs.caption
-#    console.log $scope.caption
-#    console.log $scope
-#    $scope.editable = true if $attrs[ 'editable' ] == "true"
-#    console.log $scope
-#  controller: ($scope, $element, $attrs, $transclude)->
-#    $transclude( (clone)->
-#      console.log "Clone Scope"
-#      console.log $element
-#      console.log clone.scope()
-#      $scope.transclude_scope = clone.scope()
-#    )
-#    $scope.$watch( 'caption', ->
-#      $scope.caption = $attrs.caption
-#    )
-#    $scope.editMode = false
-#    $scope.toggleEditMode = ->
-#      $scope.editMode = not $scope.editMode
-#      $scope.$broadcast( 'editModeChange' )
-#
-#    $scope.editablesInside = false
-#    $scope.$on( 'inPlaceEditorInitiated', ->
-#      console.log $scope
-#      $scope.editablesInside = true
-#    )
-} )
-
-@app.controller( "BoxCtrl", ["$scope", ($scope)->
-#  $scope.caption = $scope.profileable.title
-#  $scope.editablesInside = false
-#  $scope.editablesInside = true
-#  $scope.$on( 'inPlaceEditorInitiated', ->
-#    alert "received"
-#    $scope.editablesInside = true
-#  )
-  $scope.editMode = false
-  $scope.transclude_scope = -> $scope.$parent.$$nextSibling
-  $scope.toggleEditMode = ->
-    $scope.editMode = not $scope.editMode
-    $scope.transclude_scope().$broadcast( 'editModeChange', {newState: $scope.editMode} )
-#    setTimeout( ->
-#      $scope.transclude_scope().$apply() # to tell angular to refresh the view
-#    , 200 )
-#    $scope.$parent.$$nextSibling.$broadcast( 'editModeChange', {newState: $scope.editMode} )
-] )
-
 
 
 
@@ -229,11 +115,16 @@
   $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
   $scope.editorEnabled = $scope.editMode
 
-#  $scope.$emit( 'inPlaceEditorInitiated' )
+  # Let the box know that there is an in place edit field inside.
+  # Then the box can show the 'edit' button.
+  #
+  $scope.box_scope().$broadcast( 'inPlaceEditorInitiated' )
+
 
   $.inplacescope = $scope unless $.inplacescope
   $scope.$on( 'editModeChange', (event, args)->
     newState = args[ 'newState' ]
+    $scope.editMode = newState
     $scope.edit() if newState == true
     $scope.save() if newState == false
   )
