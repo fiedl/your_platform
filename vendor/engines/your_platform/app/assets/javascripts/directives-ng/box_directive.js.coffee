@@ -68,7 +68,7 @@
   scope: true
   link: (scope, element, attrs)->
 #    scope.editable = attrs[ 'editable' ]
-    scope.$watch( 'attrs.caption', (value)->
+    scope.$watch( (->attrs.caption), (value)->
       scope.caption = attrs.caption
     )
   controller: ($scope, $element, $attrs, $transclude)->
@@ -83,7 +83,7 @@
     #
     #     box_scope = $scope.box_scope()  # from inside the box (transclude).
     #
-    $scope.$watch( '$$nextSibling', (transclude_scope)->
+    $scope.$watch( (->$scope.$$nextSibling), (transclude_scope)->
       transclude_scope.box_scope = -> $scope
     )
 

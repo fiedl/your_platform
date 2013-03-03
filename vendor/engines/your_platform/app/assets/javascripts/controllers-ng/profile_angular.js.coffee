@@ -60,7 +60,7 @@
 )
 
 
-@ProfileCtrl = ["$scope", "ProfileField", "Profileable", "$resource", ($scope, ProfileField, Profileable, $resource) ->
+@app.controller( "ProfileCtrl", ["$scope", "ProfileField", "Profileable", "$resource", ($scope, ProfileField, Profileable, $resource) ->
 
   $scope.editMode = false;
 
@@ -101,11 +101,13 @@
       $scope.profile_fields.splice( index, 1 ) unless index == -1
     )
 
-  $scope.toggleEditMode = ->
-    $scope.editMode = not $scope.editMode
-    $scope.$broadcast( 'editModeChange' )
+  $scope.$on( 'editModeChange', (event, args)->
+    newState = args[ 'newState' ]
+    $scope.editMode = newState
+  )
 
-]
+
+] )
 
 @app.controller( "ProfileFieldCtrl", [ "$scope", ($scope) ->
   $scope.isChildField = true if $scope.profile_field.parent_id
