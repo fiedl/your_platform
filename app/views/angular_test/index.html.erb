@@ -2,13 +2,7 @@
   <h1>Angular Test</h1>
   <p>Find me in app/views/angular_test/index.html.erb</p>
 
-  <div id="profile" ng-controller="ProfileCtrl" 
-       data-profileable-type="<%=@profileable.class.name%>" data-profileable-id="<%=@profileable.id%>"
-       data-profileable="<%=@profileable.to_json( methods: [:title] )%>"
-       ng-init="fooprofileable=<%=@profileable.to_json( methods: [:title] )%>; 
-		fooprofileable_type='<%=@profileable.class.name%>'"
-       ng-click="$broadcast('clickOutside')"
-       >
+  <div>
 
 
     <!-- TEMPLATES ---------------------------------------------------------------------- -->
@@ -22,11 +16,11 @@
       </span>
       <!-- label -->
       <span class="profile_field_label edit_in_place editable" ng-controller="InPlaceEditCtrl">
-	<span class="label" ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.label}}</span>
-	<span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
+        <span class="label" ng-click="edit(); $event.stopPropagation()" ng-hide="editorEnabled">{{profile_field.label}}</span>
+        <span ng-show="editorEnabled" ng-click="$event.stopPropagation()">
           <input type="text" ng:required ng-model="profile_field.label">
           <button ng-click="save()" ng-hide="editMode">Ok</button>
-	</span>
+        </span>
       </span>
       <!-- value -->
       <span class="profile_field_value edit_in_place editable" ng-controller="InPlaceEditCtrl">
@@ -38,9 +32,9 @@
       </span>
       <!-- sub profile fields -->
       <ul>
-	<li ng-repeat="profile_field in profile_field.children" ng-controller="ProfileFieldCtrl"
-	    ng-include="'profile_field_renderer.html'">
-	</li>
+        <li ng-repeat="profile_field in profile_field.children" ng-controller="ProfileFieldCtrl"
+            ng-include="'profile_field_renderer.html'">
+        </li>
       </ul>
     </script>
     <!-- / TEMPLATES -------------------------------------------------------------------- -->
@@ -48,35 +42,43 @@
 
     <!-- edit mode button -->
     <!-- <button class="btn" type="button" data-toggle="button" ng-click="toggleEditMode()">Edit</button> -->
-    <!--div ng-controller="BoxCtrl"-->
-    <box caption="Profile of {{profileable.title}}">
 
-      <!-- profile field list -->
-      <ul>
-	<li ng-repeat="profile_field in profile_fields" ng-controller="ProfileFieldCtrl" 
-	    ng-include="'profile_field_renderer.html'">
-	</li>
-	<li ng-show="editMode">
-          <form ng-submit="addProfileField()">
-            <input type="text" ng-model="new_profile_field.label">:
-            <input type="text" ng-model="new_profile_field.value">
-            <input type="submit" value="Add">
-          </form>
-	</li>
-      </ul>
+    <box caption="Profile of {{profileable.title}}">
+      <div id="profile" ng-controller="ProfileCtrl"
+           data-profileable-type="<%=@profileable.class.name%>" data-profileable-id="<%=@profileable.id%>"
+           data-profileable="<%=@profileable.to_json( methods: [:title] )%>"
+           ng-init="fooprofileable=<%=@profileable.to_json( methods: [:title] )%>;
+                    fooprofileable_type='<%=@profileable.class.name%>'"
+           ng-click="$broadcast('clickOutside')"
+           >
+
+        <!-- profile field list -->
+        <ul>
+          <li ng-repeat="profile_field in profile_fields" ng-controller="ProfileFieldCtrl"
+              ng-include="'profile_field_renderer.html'">
+          </li>
+          <li ng-show="editMode">
+            <form ng-submit="addProfileField()">
+              <input type="text" ng-model="new_profile_field.label">:
+              <input type="text" ng-model="new_profile_field.value">
+              <input type="submit" value="Add">
+            </form>
+          </li>
+        </ul>
+      </div>
     </box>
-    <!--/div-->
+
 
     <!--div ng-controller="BoxCtrl"-->
     <box caption="And now, how it should be...">
       <ul>
-	<li ng-repeat="profile_field in profile_fields">
-	  <remove-button ng-model="profile_field" />
+        <li ng-repeat="profile_field in profile_fields">
+          <remove-button ng-model="profile_field" />
 
-	  <!-- TODO: HIER GUCKEN: http://docs.angularjs.org/guide/concepts#directives -->
-	  <in-place-editor ng-model="profile_field.label">{{profile_field.label}}</in-place-editor>:
-	  <in-place-editor ng-model="profile_field.value">{{profile_field.value}}</in-place-editor>
-	</li>
+          <!-- TODO: HIER GUCKEN: http://docs.angularjs.org/guide/concepts#directives -->
+          <in-place-editor ng-model="profile_field.label">{{profile_field.label}}</in-place-editor>:
+          <in-place-editor ng-model="profile_field.value">{{profile_field.value}}</in-place-editor>
+        </li>
       </ul>
     </box>
     <!--/div-->

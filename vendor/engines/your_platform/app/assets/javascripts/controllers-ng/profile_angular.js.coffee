@@ -114,7 +114,7 @@
 ] )
 
 @app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
-  $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
+#  $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
   $scope.editorEnabled = $scope.editMode
 
   # Let the box know that there is an in place edit field inside.

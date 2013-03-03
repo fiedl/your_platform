@@ -67,11 +67,10 @@
   #
   scope: true
   link: (scope, element, attrs)->
-#    scope.editable = attrs[ 'editable' ]
     scope.$watch( (->attrs.caption), (value)->
       scope.caption = attrs.caption
     )
-  controller: ($scope, $element, $attrs, $transclude)->
+  controller: [ "$scope", "$element", "$attrs", "$transclude", ($scope, $element, $attrs, $transclude)->
 
     # This method allows to access the transclude scope from the box controller:
     #
@@ -86,6 +85,7 @@
     $scope.$watch( (->$scope.$$nextSibling), (transclude_scope)->
       transclude_scope.box_scope = -> $scope
     )
+  ]
 
 } )
 
