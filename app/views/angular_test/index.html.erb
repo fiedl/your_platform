@@ -47,6 +47,7 @@
       <div id="profile" ng-controller="ProfileCtrl"
            data-profileable-type="<%=@profileable.class.name%>" data-profileable-id="<%=@profileable.id%>"
            data-profileable="<%=@profileable.to_json( methods: [:title] )%>"
+	   data-profile-fields="<%=@profileable.profile_fields.to_json( include: :children )%>"
            ng-init="fooprofileable=<%=@profileable.to_json( methods: [:title] )%>;
                     fooprofileable_type='<%=@profileable.class.name%>'"
            ng-click="$broadcast('clickOutside')"

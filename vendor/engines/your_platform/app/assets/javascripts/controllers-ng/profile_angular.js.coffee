@@ -71,14 +71,16 @@
   $scope.profileable = Profileable
 
   # profile fields
-  $scope.profile_fields = ProfileField.query( {
-    profileable_type: $scope.profileable.type, profileable_id: $scope.profileable.id
-  },
-  -> # done loading, load the child profile fields:
-    angular.forEach( $scope.profile_fields, (profile_field)->
-      profile_field.loadChildrenResource()
-    )
-  )
+#  $scope.profile_fields = ProfileField.query( {
+#    profileable_type: $scope.profileable.type, profileable_id: $scope.profileable.id
+#  },
+#  -> # done loading, load the child profile fields:
+#    angular.forEach( $scope.profile_fields, (profile_field)->
+#      profile_field.loadChildrenResource()
+#    )
+#  )
+
+  $scope.profile_fields = $( "#profile" ).data( 'profile-fields' )
 
   # FOR DEBUG:
   # TODO: DELETE THIS
@@ -113,7 +115,7 @@
   $scope.isChildField = true if $scope.profile_field.parent_id
 ] )
 
-@app.controller( "InPlaceEditCtrl", [ "$scope", ($scope) ->
+@app.controller( "InPlaceEditCtrl", [ "$scope", "ProfileField", ($scope, ProfileField) ->
 #  $scope.editMode = false # this does not inherit from the box scope, since the box is a directive.
   $scope.editorEnabled = $scope.editMode
 
@@ -143,6 +145,6 @@
     unless $scope.editorEnabledJustNow
       # because if it has been enabled just now, this save()
       # has been triggered by a bubbled click event accidentally.
-      $scope.profile_field.$update()
+      new ProfileField( $scope.profile_field ).$update() # typecast for pre-populated data
       $scope.editorEnabled = false
 ] )
