@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
 
-describe "Search Field", js: true do
+feature "Search Field", js: true do
 
   before do
     visit root_path

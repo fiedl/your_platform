@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "UserForgotPassword" do
+feature "UserForgotPassword" do
 
   before do
     @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe", 

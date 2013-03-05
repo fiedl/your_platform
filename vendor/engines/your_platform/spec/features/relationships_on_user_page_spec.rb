@@ -17,7 +17,7 @@ feature "Relationships on User show view", js: true do
   scenario "adding a relationship and removing it again" do
 
     visit user_path( @user )
-    within( ".section.relationships" ) do
+    within(first (".section.relationships") ) do
 
       click_link I18n.t( :edit )
       page.should have_selector( 'a.add_button', visible: true )
@@ -41,7 +41,7 @@ feature "Relationships on User show view", js: true do
   scenario "using the auto completion mechanism for selecting a related user" do
     
     visit user_path( @user )
-    within( ".section.relationships" ) do
+    within(first ( ".section.relationships") ) do
       click_link I18n.t( :edit )
       click_on I18n.t( :add )
       fill_in 'who_by_title', with: "Jaco"

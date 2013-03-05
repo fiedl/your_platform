@@ -105,7 +105,7 @@ end
 group :development do
 
   # debugger: http://guides.rubyonrails.org/debugging_rails_applications.html
-  gem 'debugger'                   
+  #gem 'debugger'                   
 
   gem 'better_errors'              # see Railscasts #402               
   gem 'binding_of_caller'

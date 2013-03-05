@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Sessions" do
+feature "Sessions" do
   describe "New Session Page" do  # to show the browser while testing, e.g. use `js: true`.
     
     before do
