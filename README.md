@@ -48,7 +48,9 @@ $ rbenv rehash
 
 Möglicherweise wird danach eine neue Installation des Gem Bundlers erforderlich: `$ gem install bundle && rbenv rehash`
 
-Danach die Shell neustarten (`$ bash -l`) und die Gems installieren: `$ bundle install`.
+* Danach die Shell neustarten (`$ bash -l`) und die Gems installieren: `$ bundle install`.
+* Das Systempaket `libruby1.9.1` oder neuer installieren.
+* `gem install rb-readline`, damit `guard` funktioniert (für die korrekte Ruby-Version).
 
 #### Projekt-Setup
 
