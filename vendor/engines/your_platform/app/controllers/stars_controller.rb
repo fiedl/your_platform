@@ -2,6 +2,10 @@ class StarsController < ApplicationController
 
   respond_to :json
 
+  def show
+    respond_with Star.find( params[ :id ] )
+  end
+
   def index
 #    @stars = find_stars
     respond_with find_stars

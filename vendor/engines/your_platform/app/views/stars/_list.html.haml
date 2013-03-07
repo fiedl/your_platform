@@ -1,6 +1,7 @@
 %div{ 'ng-controller' => "StarListCtrl", 'ng-init' => "user_id=#{user_id};stars=#{stars.to_json}" }
   %li( ng-repeat="star in stars" )
-    // %star-tool( starrable-id="{{star.starrable_id}}" starrable-type="{{star.starrable_type}}" user-id="#{user_id}" star-object="{{star}}" )
-    {{star.starrable_id}}
+    %a
+      %star-tool
+      {{star.starrable_id}}
   
   
