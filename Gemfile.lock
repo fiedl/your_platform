@@ -238,6 +238,10 @@ GEM
       multi_json (~> 1.0)
       rubyzip
       websocket (~> 1.0.4)
+    simplecov (0.7.1)
+      multi_json (~> 1.0)
+      simplecov-html (~> 0.7.1)
+    simplecov-html (0.7.1)
     slim_breadcrumb (0.0.2)
       coffee-rails
       jquery-rails
@@ -326,6 +330,7 @@ DEPENDENCIES
   rspec-rails (= 2.10.0)
   rubylight (>= 1.0.3.2)
   sass-rails (~> 3.2.3)
+  simplecov
   slim_breadcrumb (>= 0.0.2)
   therubyracer
   twitter-bootstrap-rails

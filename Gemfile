@@ -135,6 +135,7 @@ end
 # This is for testing on wingolfsplattform.org -- since travis-pro has expired.
 group :test do
   gem 'poltergeist'
+  gem 'simplecov', require: false
 end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
