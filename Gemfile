@@ -124,7 +124,7 @@ group :test, :development do
   gem 'rb-readline'
 end
 group :test do
-  gem 'capybara' #, '1.1.2'
+  gem 'capybara' ,'>=2.0.2'
   gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
   gem 'database_cleaner'
