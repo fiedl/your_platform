@@ -33,7 +33,7 @@
       if scope.star
         scope.star_object = scope.star
     )
-  controller: [ "$scope", "$attrs", "Star", ($scope, $attrs, Star)->
+  controller: [ "$scope", "$attrs", "Star", "stars", "$rootScope", ($scope, $attrs, Star, stars, $rootScope)->
 
     $scope.starred = false
 
@@ -60,38 +60,50 @@
           } )
     , 200 )
 
-    # DEBUG ONLY -- REMOVE THIS:
-    $.Star = Star
-
     # Set the starred state to true if there is an star_object. Otherwise, currently
     # no star (bookmark) exists.
     #
     $scope.$watch( 'star_object', ->
-#      console.log "ATTR"
-#      console.log $attrs.starObject
-#      console.log typeof $attrs.starObject
-#      console.log "SCOPE"
-#      console.log $scope.star_object
-#      console.log typeof $scope.star_object
       $scope.starred = true if $scope.star_object
     )
 
     # This method stars the object for the user, i.e. creates a bookmark.
     #
     $scope.starIt = ->
+
+      # mark the current star tool element as starred, i.e. display the filled star.
       $scope.starred = true
+
+      # create a star object
       $scope.star_object = new Star( {
         starrable_type: $scope.starrable_type,
         starrable_id: $scope.starrable_id,
         user_id: $scope.user_id
       } )
+
+      # add the star object to the current user's list of stars,
+      # i.e. display it in the bookmarks menu, instantly.
+      stars.add( $scope.star_object )
+
+      # make the star objet persistent
       $scope.star_object.$save()
 
     # This method unstars the object for the user, i.e. removes an existing bookmark.
     #
     $scope.unstarIt = ->
       $scope.starred = false
+      stars.remove( $scope.star_object )
       new Star( $scope.star_object ).$remove()
+
+    # Some other controller may change the stars lists.
+    # This controller needs to track this in order to display the proper status.
+    #
+    $scope.$on( 'starsChange', ->
+      if $.inArray( $scope.star_object, stars ) == -1
+        $scope.starred = false
+      else
+        $scope.starred = true
+    )
 
   ]
 
