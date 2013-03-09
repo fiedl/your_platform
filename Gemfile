@@ -200,3 +200,4 @@ gem 'pry', group: :development
 
 # Angular JS
 gem 'angularjs-rails'
+
