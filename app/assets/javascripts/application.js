@@ -12,6 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
 //= require jquery-ui
@@ -24,5 +25,6 @@
 //= require edit_mode
 //= require slim_breadcrumb
 //= require gmaps4rails
+//= require make-js-more-like-ruby
 //= require your_platform
 //= require_tree .

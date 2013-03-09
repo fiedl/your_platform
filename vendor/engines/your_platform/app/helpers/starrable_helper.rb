@@ -2,24 +2,34 @@ module StarrableHelper
 
   def star_tool( user, starrable )
     if user and starrable
-      star_toggler_link( user, starrable ) do
-        if Star.user_starred_object? user, starrable
-          character_span( true )
-        else
-          character_span( false )
-        end
-      end
+
+      star = Star.find_by_user_and_starrable( user, starrable )
+      content_tag 'star-tool', '', { 
+        'starrable-id' => starrable.id, 'starrable-type' => starrable.class.name,
+        'user-id' => user.id, 
+        'star-object' => star.to_json
+      }
+
+#      star_toggler_link( user, starrable ) do
+#        if Star.user_starred_object? user, starrable
+#          character_span( true )
+#        else
+#          character_span( false )
+#        end
+#      end
     end
   end
 
   def starred_objects_lis( user )
     if user
-      user.starred_objects.collect do |starrable|
-        content_tag :li do
-          link_to starrable.title, starrable
-        end
-      end
-    end.join.html_safe
+      render partial: "stars/list", locals: { user_id: user.id, stars: user.stars }
+    end
+#      user.starred_objects.collect do |starrable|
+#        content_tag :li do
+#          link_to starrable.title, starrable
+#        end
+#      end
+#    end.join.html_safe
   end
 
   private
