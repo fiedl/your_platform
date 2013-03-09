@@ -128,8 +128,8 @@ group :test do
   gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
   gem 'database_cleaner'
-#  gem 'guard-spork'
-#  gem 'spork'
+  gem 'guard-spork'
+  gem 'spork'
   gem 'simplecov', require: false
 end
 
