@@ -16,8 +16,8 @@
 
 @app.directive( "starTool", -> {
   priority: 0,
-  template: '<span class="starred star" ng-show="starred" ng-click="unstarIt()">&#9733;</span>' +
-            '<span class="unstarred star" ng-hide="starred" ng-click="starIt()">&#9734;</span>',
+  template: '<span class="starred star" ng-show="starred" ng-click="unstarIt()" title="Click here to remove {{star_object.starrable.title}} from your list of bookmarks.">&#9733;</span>' +
+            '<span class="unstarred star" ng-hide="starred" ng-click="starIt()" title="Click here to add {{star_object.starrable.title}} to your list of bookmarks.">&#9734;</span>',
 # templateUrl: 'some.html',
   replace: false,
   transclude: false,

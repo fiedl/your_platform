@@ -58,4 +58,46 @@ class Star < ActiveRecord::Base
     self.where( :starrable_type => starrable.class.name, :starrable_id => starrable.id )
   end
 
+
+  # API Export // Data Serialization
+  # ==========================================================================================
+  #
+  # Include some associated data in serialized representations of this object,
+  # since this additional information is most likely required by the API and
+  # external components.
+  #
+  def serializable_hash( options = {} )
+    options.merge!(
+                   {
+                     :include => {
+                       :starrable => {
+                         :methods => [ :title, :url ]
+                       }
+                     }
+                   } )
+    super( options )
+  end
+
+end
+
+
+module ActiveRecord
+  class Base
+    
+    include Rails.application.routes.url_helpers
+    include ActionDispatch::Routing::UrlFor
+
+    def default_url_options
+      { host: "localhost:3000", :only_path => true }
+    end
+
+    def url
+      url_for self
+    end
+
+    def serialize_hash( options = {} )
+      super options.merge( :methods => :url )
+    end
+
+  end
 end
