@@ -1,5 +1,5 @@
 ## Wingolfsplattform
-
+ 
 Dies ist der Quellcode der entstehenden neuen Plattform von Wingolfsbund und VAW, der sog **Wingolfsplattform**. Die Plattform soll vier Hauptaufgaben erfüllen: Hilfestellung bei der Verwaltung der Mitglieder des Wingolfs, Netzwerk der Mitglieder, Austausch von Informationen und Dokumenten, Präsentation nach außen. 
 Nähere Informationen zum Anforderungsspektrum unter http://wingolf.org/ak-internet.
 
