@@ -13,8 +13,7 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :events  
 
-  match 'stars/user/:user_id/:starrable_type/:starrable_id' => "stars#update"
-  resources :stars
+  resources :bookmarks
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions

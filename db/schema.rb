@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130220185631) do
+ActiveRecord::Schema.define(:version => 20130310004842) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -23,6 +23,14 @@ ActiveRecord::Schema.define(:version => 20130220185631) do
     t.datetime "updated_at",   :null => false
     t.string   "content_type"
     t.integer  "file_size"
+  end
+
+  create_table "bookmarks", :force => true do |t|
+    t.integer  "bookmarkable_id"
+    t.string   "bookmarkable_type"
+    t.integer  "user_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "bv_mappings", :force => true do |t|
@@ -108,14 +116,6 @@ ActiveRecord::Schema.define(:version => 20130220185631) do
     t.integer  "user2_id"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
-  end
-
-  create_table "stars", :force => true do |t|
-    t.integer  "starrable_id"
-    t.string   "starrable_type"
-    t.integer  "user_id"
-    t.datetime "created_at",     :null => false
-    t.datetime "updated_at",     :null => false
   end
 
   create_table "status_group_membership_infos", :force => true do |t|
