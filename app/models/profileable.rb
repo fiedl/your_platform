@@ -30,7 +30,8 @@ module Profileable
     def profile_fields_by_type( type_or_types )
       types = type_or_types if type_or_types.kind_of? Array
       types = [ type_or_types ] unless types
-      profile_fields.select { |profile_field| types.include? profile_field.type }
+      profile_fields.where( type: types )
+#      profile_fields.select { |profile_field| types.include? profile_field.type }
     end
     
     def profile_fields_by_section( section )
