@@ -1,14 +1,14 @@
-class StarsController < ApplicationController
+class BookmarksController < ApplicationController
 
   respond_to :json
 
   def show
-    respond_with Star.find( params[ :id ] )
+    respond_with Bookmark.find( params[ :id ] )
   end
 
   def index
 #    @stars = find_stars
-    respond_with find_stars
+    respond_with find_bookmarks
 #    respond_to do |format|
 #      format.json { respond_with @stars }
 #      format.html
@@ -16,18 +16,18 @@ class StarsController < ApplicationController
   end
 
   def create
-    respond_with Star.create( params[ :star ] )
+    respond_with Bookmark.create( params[ :bookmark ] )
   end
 
   def destroy
-    respond_with Star.find( params[ :id ] ).destroy
+    respond_with Bookmark.find( params[ :id ] ).destroy
   end
 
   private 
 
-  def find_stars
+  def find_bookmarks
     user = User.find params[ :user_id ] if params[ :user_id ].present?
-    Star.find_all_by_user( user ) if user
+    Bookmark.find_all_by_user( user ) if user
   end
 
 end

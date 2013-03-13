@@ -1,0 +1,7 @@
+%div{ 'ng-controller' => "BookmarkListCtrl", 'ng-init' => "user_id=#{user_id};bookmarks=#{bookmarks.to_json}" }
+  %li( ng-repeat="bookmark in bookmarks" )
+    %star-tool
+    %a( href="{{bookmark.bookmarkable.url}}" )
+      {{bookmark.bookmarkable.title}}
+  
+  

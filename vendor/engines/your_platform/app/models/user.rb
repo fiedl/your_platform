@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
   has_many                  :relationships_as_second_user, foreign_key: 'user2_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user2
+  
+  has_many                  :bookmarks
 
   is_navable
 
@@ -290,20 +292,15 @@ class User < ActiveRecord::Base
   end
 
 
-  # Starred Objects
+  # Bookmarked Objects
   # ------------------------------------------------------------------------------------------
 
-  # This method lists all starrable objects starred by this user (aka favorites).
+  # This method lists all bookmarked objets of this user.
   #
-  def starred_objects
-    self.stars.collect { |star| star.starrable }
+  def bookmarked_objects
+    self.bookmarks.collect { |bookmark| bookmark.bookmarkable }
   end
 
-  # The Stars itself, i.e. the association objects.
-  #
-  def stars
-    Star.find_all_by_user( self )
-  end
 
 
   # User Identification and Authentification

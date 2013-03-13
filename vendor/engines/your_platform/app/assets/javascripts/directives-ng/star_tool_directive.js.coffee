@@ -5,104 +5,104 @@
 #
 # Use the tag like this:
 #
-#     <star-tool starrable-type="User" starrable-id="2403" user-id="382" star-object="{JSON...}" />
+#     <star-tool bookmarkable-type="User" bookmarkable-id="2403" user-id="382" bookmark="{JSON object...}" />
 #
 # where the arguments are as follows:
 #
-#     starrable-type, starrable-id      identify the object to be starred/unstarred
-#     user-id                           identify the user that is starring/unstarring the object
-#     star-object  (JSON)               allowes to pre-populate the star object (model instance).
+#     bookmarkable-type, bookmarkable-id      identify the object to be starred/unstarred
+#     user-id                                 identify the user that is starring/unstarring the object
+#     bookmark  (JSON)                        allows to pre-populate the star object (model instance).
 #
 
 @app.directive( "starTool", -> {
   priority: 0,
-  template: '<span class="starred star" ng-show="starred" ng-click="unstarIt()" title="Click here to remove {{star_object.starrable.title}} from your list of bookmarks.">&#9733;</span>' +
-            '<span class="unstarred star" ng-hide="starred" ng-click="starIt()" title="Click here to add {{star_object.starrable.title}} to your list of bookmarks.">&#9734;</span>',
+  template: '<span class="starred star" ng-show="bookmarked" ng-click="unbookmarkIt()" ' +
+                   'title="Click here to remove {{bookmark.bookmarkable.title}} from your list of bookmarks.">&#9733;</span>' +
+            '<span class="unstarred star" ng-hide="bookmarked" ng-click="bookmarkIt()" ' +
+                   'title="Click here to add {{bookmark.bookmarkable.title}} to your list of bookmarks.">&#9734;</span>',
 # templateUrl: 'some.html',
   replace: false,
   transclude: false,
   restrict: 'E',
   scope: true,
   link: (scope, element, attrs)->
-    scope.$watch( (->attrs.star_object), (value)->
-      unless scope.starrable_type or scope.starrable_id or scope.user_id or scope.star_object
-        scope.starrable_type = attrs.starrableType
-        scope.starrable_id = attrs.starrableId
+    scope.$watch( (->attrs.bookmark), (value)->
+      unless scope.bookmarkable_type or scope.bookmarkable_id or scope.user_id or scope.bookmark
+        scope.bookmarkable_type = attrs.bookmarkableType
+        scope.bookmarkable_id = attrs.bookmarkableId
         scope.user_id = attrs.userId
-        scope.star_object = $.parseJSON( attrs.starObject )
-      if scope.star
-        scope.star_object = scope.star
+        scope.bookmark = $.parseJSON( attrs.bookmark )
     )
-  controller: [ "$scope", "$attrs", "Star", "stars", "$rootScope", ($scope, $attrs, Star, stars, $rootScope)->
+  controller: [ "$scope", "$attrs", "Bookmark", "current_user_bookmarks", "$rootScope", ($scope, $attrs, Bookmark, current_user_bookmarks, $rootScope)->
 
-    $scope.starred = false
+    $scope.bookmarked = false
 
-    # If given, use the star_object attribute to pre-populate the object.
+    # If given, use the bookmark attribute to pre-populate the object.
     # Otherwise, load the object from the JSON resource.
     #
-    # If the attribute is given, but there exists no star record,
+    # If the attribute is given, but there exists no bookmark record,
     # the variable is 'null'. If not given, i.e. have to look it up,
     # the variable is 'undefined'.
     #
     # The $scope becomes available later, the $attrs are available, yet.
     # Therefore, use the $attrs, here.
     #
-    # Since it is possible that the parent scope provides the star_object,
+    # Since it is possible that the parent scope provides the bookmark,
     # wait 200ms for the scope to be ready.
     #
     setTimeout( ->
-      unless $scope.star_object
-        if typeof $attrs.starObject == 'undefined'
-          $scope.star_object = Star.get( {
+      unless $scope.bookmark
+        if typeof $attrs.bookmark == 'undefined'
+          $scope.bookmark = Bookmark.get( {
             user_id: $scope.user_id,
-            starrable_type: $scope.starrable_type,
-            starrable_id: $scope.starrable_id
+            bookmarkable_type: $scope.bookmarkable_type,
+            bookmarkable_id: $scope.bookmarkable_id
           } )
     , 200 )
 
-    # Set the starred state to true if there is an star_object. Otherwise, currently
-    # no star (bookmark) exists.
+    # Set the bookmarked state to true if there is a bookmark. Otherwise, currently
+    # no bookmark exists.
     #
-    $scope.$watch( 'star_object', ->
-      $scope.starred = true if $scope.star_object
+    $scope.$watch( 'bookmark', ->
+      $scope.bookmarked = true if $scope.bookmark
     )
 
-    # This method stars the object for the user, i.e. creates a bookmark.
+    # This method bookmarks the object for the user, i.e. creates a bookmark.
     #
-    $scope.starIt = ->
+    $scope.bookmarkIt = ->
 
-      # mark the current star tool element as starred, i.e. display the filled star.
-      $scope.starred = true
+      # mark the current star tool element as bookmarked, i.e. display the filled star.
+      $scope.bookmarked = true
 
-      # create a star object
-      $scope.star_object = new Star( {
-        starrable_type: $scope.starrable_type,
-        starrable_id: $scope.starrable_id,
+      # create a bookmark object
+      $scope.bookmark = new Bookmark( {
+        bookmarkable_type: $scope.bookmarkable_type,
+        bookmarkable_id: $scope.bookmarkable_id,
         user_id: $scope.user_id
       } )
 
-      # add the star object to the current user's list of stars,
+      # add the bookmark object to the current user's list of bookmarks,
       # i.e. display it in the bookmarks menu, instantly.
-      stars.add( $scope.star_object )
+      current_user_bookmarks.add( $scope.bookmark )
 
-      # make the star objet persistent
-      $scope.star_object.$save()
+      # make the bookmark objet persistent
+      $scope.bookmark.$save()
 
-    # This method unstars the object for the user, i.e. removes an existing bookmark.
+    # This method unbookmarks the object for the user, i.e. removes an existing bookmark.
     #
-    $scope.unstarIt = ->
-      $scope.starred = false
-      stars.remove( $scope.star_object )
-      new Star( $scope.star_object ).$remove()
+    $scope.unbookmarkIt = ->
+      $scope.bookmarked = false
+      current_user_bookmarks.remove( $scope.bookmark )
+      new Bookmark( $scope.bookmark ).$remove()
 
-    # Some other controller may change the stars lists.
+    # Some other controller may change the bookmarks lists.
     # This controller needs to track this in order to display the proper status.
     #
-    $scope.$on( 'starsChange', ->
-      if $.inArray( $scope.star_object, stars ) == -1
-        $scope.starred = false
+    $scope.$on( 'bookmarksChange', ->
+      if $.inArray( $scope.bookmark, current_user_bookmarks ) == -1
+        $scope.bookmarked = false
       else
-        $scope.starred = true
+        $scope.bookmarked = true
     )
 
   ]
