@@ -7,13 +7,13 @@ module BookmarksHelper
       content_tag 'star-tool', '', { 
         'bookmarkable-id' => bookmarkable.id, 'bookmarkable-type' => bookmarkable.class.name,
         'user-id' => user.id, 
-        'star-object' => bookmark.to_json
+        'bookmark' => bookmark.to_json
       }
 
     end
   end
 
-  def bookmarkred_objects_lis( user )
+  def bookmarked_objects_lis( user )
     if user
       render partial: "bookmarks/list", locals: { user_id: user.id, bookmarks: user.bookmarks }
     end
