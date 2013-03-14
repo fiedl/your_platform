@@ -12,14 +12,30 @@ class Bv < Group
   end
 
   def self.by_address( address )
-    address = address.becomes AddressString unless address.kind_of? AddressString
-    return self.by_plz address.plz if address.country_code == "DE"
-    return self.find_by_token "BV 43" if address.country_code == "AT" # Österreich
-    return self.find_by_token "BV 44" if address.country_code == "EE" # Estland
-    european_country_codes = %w(AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GG GI GR GB HR HU IE IM IS IT JE LI LT LU LV MC MD MK MT NL NO PL PT RO RU SE SI SJ SK SM TR UA UK VA YU)
-    return self.find_by_token "BV 45" if european_country_codes.include? address.country_code # Europa
-    return self.find_by_token "BV 46" if address.country_code # Rest der Welt
-    return self.find_by_token "BV 00" # Unbekannt verzogen
+    geo_location = GeoLocation.find_or_create_by_address( address )
+    self.by_geo_location(geo_location)
+  end
+
+  def self.by_geo_location( geo_location )
+    
+    # Germany: Use PLZ to identify BV
+    return self.by_plz(geo_location.plz) if geo_location.country_code == "DE"
+
+    # Austria => BV 43
+    return self.find_by_token("BV 43") if geo_location.country_code == "AT"
+
+    # Estonia => BV 44
+    return self.find_by_token("BV 44") if geo_location.country_code == "EE"
+
+    # Rest of Europe => BV 45
+    return self.find_by_token("BV 45") if geo_location.in_europe?
+
+    # Rest of the World => BV 46
+    return self.find_by_token("BV 46") if geo_location.country_code
+
+    # No valid address given => BV 00
+    return self.find_by_token("BV 00")
+
   end
 
   # Ordnet den +user+ diesem BV zu und trägt ihn ggf. aus seinem vorigen BV aus.
@@ -44,5 +60,7 @@ class Bv < Group
       link.destroy if link.destroyable? if link
     end
   end
+
+
 
 end

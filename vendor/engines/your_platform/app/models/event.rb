@@ -2,6 +2,17 @@ class Event < ActiveRecord::Base
   attr_accessible :description, :end_at, :name, :start_at
 
   is_structureable ancestor_class_names: %w(Group), descendant_class_names: %w(Group)
+  is_navable
+
+  
+  # General Properties
+  # ==========================================================================================
+
+  # The title, i.e. the caption of the event is its name.
+  def title
+    name
+  end
+
 
   # Groups
   # ==========================================================================================

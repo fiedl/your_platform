@@ -30,8 +30,9 @@ module ProfileFieldTypes
   class Address
 
     # This method returns the Bv associated with the given address.
+    #
     def bv
-      AddressString.new( self.value ).bv
+      geo_location.bv
     end
 
     # The html output method is overridden here, in order to display the bv as well.

@@ -160,6 +160,10 @@ module ProfileFieldTypes
     # see: http://rubydoc.info/gems/gmaps4rails/
     acts_as_gmappable
 
+    def geo_location
+      @geo_location ||= GeoLocation.find_or_create_by_address(value)
+    end
+
     def display_html
       ActionController::Base.helpers.simple_format self.value
     end
@@ -173,8 +177,8 @@ module ProfileFieldTypes
       true
     end
 
-    def latitude ;      geo_information :lat           end
-    def longitude ;     geo_information :lng           end
+    def latitude ;      geo_information :latitude      end
+    def longitude ;     geo_information :longitude     end
     def country ;       geo_information :country       end
     def country_code ;  geo_information :country_code  end
     def city ;          geo_information :city          end
@@ -182,8 +186,7 @@ module ProfileFieldTypes
     def plz ;           geo_information :plz           end
 
     def geo_information( key )
-      @address_string ||= AddressString.new( self.gmaps4rails_address )
-      @address_string.geo_information( key )
+      geo_location.send( key )
     end
 
   end
