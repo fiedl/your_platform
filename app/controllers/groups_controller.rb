@@ -31,8 +31,11 @@ class GroupsController < ApplicationController
     if @group
       @navable = @group
       @title = @group.name
-      @groups = @group.child_groups
-      @users = @group.descendant_users
+
+      @child_groups = @group.child_groups
+      @descendant_users = @group.descendant_users
+      @child_users = @group.child_users
+      @child_users = @child_users.page(params[:page]).per_page(25) # pagination
     end
   end
 

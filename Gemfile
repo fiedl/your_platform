@@ -202,3 +202,5 @@ gem 'pry', group: :development
 # Angular JS
 gem 'angularjs-rails'
 
+# Pagination
+gem 'will_paginate', '> 3.0'

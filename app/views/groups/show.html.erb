@@ -23,13 +23,14 @@
 <h1><%=t :sub_groups %></h1>
 <div>
   <ul>
-    <% for group in @groups do %>
+    <% for group in @child_groups do %>
       <%= group_list_item group %>
     <% end %>
   </ul>
 </div>
 <% end %>
 
+<!-- listing members -->
 <h1><%=t :members %> (<%=h @group.descendant_users.count %>)</h1>
 <div>
   <% if @group %>
@@ -37,9 +38,11 @@
       <%= link_to t( :add_member ), new_user_path( :group_id => @group.id ), class: "add_group_member" %>
     </span>
     <span id="group_members">
-      <% if @group.child_users.count > 0 %>
+      <!-- child users -->
+      <% if @child_users.count > 0 %>
+        <%= will_paginate @child_users %>
         <ul>
-          <% for user in @group.child_users do %>
+          <% for user in @child_users do %>
             <li>
 	      <%= link_to user.title, user %>
 	      <span class="show_only_in_edit_mode">
@@ -48,6 +51,7 @@
 	    </li>
           <% end %>
 	</ul>
+      <!-- structured view of sub groups -->	
       <% elsif @group.child_groups.count > 0 %>
         <% for child_group in @group.child_groups do %>
           <h2><%= link_to child_group.title, child_group %> (<%=h child_group.descendant_users.count %>)</h2>

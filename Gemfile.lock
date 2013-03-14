@@ -278,6 +278,7 @@ GEM
       rack
       raindrops (~> 0.7)
     websocket (1.0.7)
+    will_paginate (3.0.4)
     workflow_kit (0.0.4.alpha)
       rails (~> 3.2.6)
     xpath (1.0.0)
@@ -342,5 +343,6 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   unicorn
+  will_paginate (> 3.0)
   workflow_kit (>= 0.0.4.alpha)
   your_platform!
