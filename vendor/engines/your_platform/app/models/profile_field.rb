@@ -198,7 +198,7 @@ module ProfileFieldTypes
     end
 
     def geocoded?
-      (find_geo_location && @geo_location.geocoded?)
+      (find_geo_location && @geo_location.geocoded?).to_b
     end
     def geocode
       return @geo_location.geocode if @geo_location

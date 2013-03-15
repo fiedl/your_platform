@@ -72,34 +72,120 @@ end
 describe ProfileFieldTypes::Address do
 
   before do
-    # use a global variable ($...) to make sure the profile_field objects is only created
-    # once. Otherwise, this series of tests will hit the traffic limitation of the 
-    # geodata service of google.
-    $address_field ||= ProfileFieldTypes::Address.create( label: "Address of the Brandenburg Gate",
-                                                          value: "Pariser Platz 1\n 10117 Berlin" )
-    @address_field = $address_field
+    @address_field = ProfileFieldTypes::Address.new( label: "Address of the Brandenburg Gate",
+                                                     value: "Pariser Platz 1\n 10117 Berlin" )
   end
   subject { @address_field }
   
-  specify "latitude and longitude should be correct" do
-    subject.latitude.round(4).should == 52.5163 
-    subject.longitude.round(4).should == 13.3778
-  end
-
-  its( :country ) { should == "Germany" }
-  its( :country_code ) { should == "DE" }
-  its( :city ) { should == "Berlin" }
-  its( :postal_code ) { should == "10117" }
-  its( :plz ) { should == "10117" }
-
-  # This is needed in order to display the map later.
-  its( :gmaps4rails_address ) { should == @address_field.value }
-
   describe "#display_html" do
     subject { @address_field.display_html }
     it "should have a line-break in it" do
       subject.should include( "<br />" )
     end
+  end
+
+  describe "#geo_location" do
+    subject { @address_field.geo_location }
+    it { should be_kind_of GeoLocation }
+  end
+
+  describe "#find_geo_location" do
+    subject { @address_field.find_geo_location }
+    describe "before saving, before geocoding" do
+      it { should == nil }
+    end
+    describe "after saving, before geocoding" do
+      it { should == nil }
+    end
+    describe "before saving, after geocoding" do
+      before { @address_field.geocode }
+      it { should be_kind_of GeoLocation }
+      its( :country_code ) { should == "DE" }
+      its( :queried_at ) { should be_kind_of Time }
+    end
+    describe "after saving, after geocoding" do
+      before { @address_field.save; @address_field.geocode }      
+      it { should be_kind_of GeoLocation }
+      its( :country_code ) { should == "DE" }
+      its( :queried_at ) { should be_kind_of Time }
+    end
+  end
+
+  describe "#find_or_create_geo_location" do
+    subject { @address_field.find_or_create_geo_location }
+    describe "even before explicit geocoding" do
+      it { should be_kind_of GeoLocation }
+    end
+  end
+
+  describe "#geocoded?" do
+    subject { @address_field.geocoded? }
+    describe "for a new address field" do
+      it { should == false }
+    end
+    describe "after geocoding" do
+      before { @address_field.geocode }
+      it { should == true }
+    end
+    describe "after #find_or_create_geo_location" do
+      before { @address_field.find_or_create_geo_location }
+      it { should == true }
+    end
+    describe "after #find_geo_location" do
+      before { @address_field.find_geo_location }
+      it { should == false }
+    end
+    describe "after #geo_location" do
+      before { @address_field.geo_location }
+      it { should == true }
+    end
+  end
+
+  describe "#geo_location" do
+    subject { @address_field.geo_location }
+    describe "for a new address field" do
+      it "should perform a query" do
+        @address_field.geocoded?.should == false
+        subject
+        @address_field.geocoded?.should == true
+      end
+    end
+    describe "for an already geocoded address field" do
+      before { @address_field.geocode }
+      it "should not query again" do
+        @queried_at = @address_field.geo_location.queried_at
+        sleep 1.3
+        subject
+        @address_field.geo_location.queried_at.should_not > @queried_at
+      end
+    end
+  end
+
+  describe "#geocode" do
+    subject { @address_field.geocode }
+    it "should perform a query" do
+      @address_field.geocoded?.should == false
+      subject
+      @address_field.geocoded?.should == true
+    end
+  end
+
+  its( :gmaps4rails_address ) { should == @address_field.value }
+
+  describe "after saving" do
+    before { @address_field.save }
+
+    specify "latitude and longitude should be correct" do
+      subject.latitude.round(4).should == 52.5163 
+      subject.longitude.round(4).should == 13.3778
+    end
+    
+    its( :country ) { should == "Germany" }
+    its( :country_code ) { should == "DE" }
+    its( :city ) { should == "Berlin" }
+    its( :postal_code ) { should == "10117" }
+    its( :plz ) { should == "10117" }
+    
   end
 
 end
