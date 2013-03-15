@@ -306,3 +306,11 @@ describe ProfileFieldTypes::Homepage do
 end
 
 
+# Date Field
+# ==========================================================================================
+
+describe ProfileFieldTypes::Date do
+  subject { ProfileFieldTypes::Date.create( value: 24.years.ago ) }
+
+  its( :value ) { should be_kind_of Date }
+end

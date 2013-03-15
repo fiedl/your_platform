@@ -287,6 +287,10 @@ module ProfileFieldTypes
 
   class Date < ProfileField
     def self.model_name; ProfileField.model_name; end
+
+    def value
+      super.to_date
+    end
   end
 
 end
