@@ -3,11 +3,11 @@
 <div id="section_<%= section %>">
 
   <% if section.to_sym == :contact_information %>
-      <% if profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0 %>
-      <span id="contact_section_google_maps" class="do_not_show_in_edit_mode">
+    <% if profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0 %>
+      <span class="contact_section map do_not_show_in_edit_mode">
 	<%= map_of_address_profile_fields( profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) ) %>
       </span>
-      <% end %>
+    <% end %>
   <% end %>
   <ul>
     <% profileable.profile_fields_by_section( section ).each do | profile_field | %>
