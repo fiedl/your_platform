@@ -161,6 +161,14 @@ module ProfileFieldTypes
     acts_as_gmappable
 
     def geo_location
+      find_or_create_geo_location
+    end
+
+    def find_geo_location
+      @geo_location ||= GeoLocation.find_by_address(value)
+    end
+
+    def find_or_create_geo_location
       @geo_location ||= GeoLocation.find_or_create_by_address(value)
     end
 
@@ -187,6 +195,15 @@ module ProfileFieldTypes
 
     def geo_information( key )
       geo_location.send( key )
+    end
+
+    def geocoded?
+      (find_geo_location && @geo_location.geocoded?)
+    end
+    def geocode
+      return @geo_location.geocode if @geo_location
+      return @geo_location.geocode if find_geo_location
+      return find_or_create_geo_location
     end
 
   end

@@ -16,6 +16,7 @@ Spork.prefork do
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
+  Dir[Rails.root.join('vendor/engines/your_platform/spec/support/**/*.rb')].each {|f| require f}
 
   #Remove the next line when the your_platform is extracted
   FactoryGirl.definition_file_paths = %w(spec/factories vendor/engines/your_platform/spec/factories)

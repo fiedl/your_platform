@@ -29,6 +29,11 @@ describe GeoLocation do
       @geo_location.plz.should == "10117"
       @geo_location.address.should == @address_string
     end
+    it "should set the queried_at attribute" do
+      @geo_location.queried_at.should == nil
+      subject
+      @geo_location.queried_at.should be_kind_of Time
+    end
   end
 
   describe "#geocode_and_save" do
@@ -42,6 +47,24 @@ describe GeoLocation do
       @geo_location.id.should == nil
       subject
       @geo_location.id.should_not == nil
+    end
+  end
+
+  describe "#geocoded?" do
+    subject { @geo_location.geocoded? }
+    describe "before the query" do
+      it { should == false }
+    end
+    describe "after the query" do
+      before { @geo_location.geocode }
+      it { should == true }
+    end
+    describe "after reloading the object" do
+      before { @geo_location.geocode_and_save }
+      subject { GeoLocation.find_by_address(@geo_location.address).geocoded? }
+      it "should persist" do
+        subject.should == true
+      end
     end
   end
 

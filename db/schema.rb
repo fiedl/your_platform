@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130314011831) do
+ActiveRecord::Schema.define(:version => 20130315073719) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20130314011831) do
     t.string   "postal_code"
     t.datetime "created_at",   :null => false
     t.datetime "updated_at",   :null => false
+    t.datetime "queried_at"
   end
 
   add_index "geo_locations", ["address"], :name => "index_geo_locations_on_address"

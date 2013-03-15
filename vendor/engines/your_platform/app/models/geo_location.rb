@@ -1,5 +1,5 @@
 class GeoLocation < ActiveRecord::Base
-  attr_accessible :address #, :city, :country, :country_code, :latitude, :longitude, :postal_code
+  attr_accessible :address #, :city, :country, :country_code, :latitude, :longitude, :postal_code, :queried_at
 
 
   # When to perform geocoding queries (to google)
@@ -25,12 +25,29 @@ class GeoLocation < ActiveRecord::Base
     self
   end
   
+  # This method performs the geociding query and stores the query datetime. 
+  #
+  def geocode
+    self.queried_at = DateTime.now
+    super
+  end
+
   # Perform geocode query and save the record.
   # This is needed after finding a record where no geocode query has been done, yet.
   #
   def geocode_and_save
     geocode
     save
+  end
+
+  # This method returns `true` if the geocoding query has been performed, already.  
+  #
+  # After a query, the attributes may still be empty, since this might be an
+  # invalid address. Therefore, it's good to know, whether the query has been
+  # done already.
+  #
+  def geocoded?
+    (queried_at.present? || country_code.present?)
   end
 
 
