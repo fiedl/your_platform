@@ -36,6 +36,9 @@ class GroupsController < ApplicationController
       @descendant_users = @group.descendant_users
       @child_users = @group.child_users
       @child_users = @child_users.page(params[:page]).per_page(25) # pagination
+
+      user_ids = @group.descendant_users.collect { |user| user.id }
+      @map_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
     end
   end
 
