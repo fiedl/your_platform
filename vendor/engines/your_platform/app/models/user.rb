@@ -90,12 +90,12 @@ class User < ActiveRecord::Base
     date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
   end
   def date_of_birth=( date_of_birth )
-    @date_of_birth_profile_field ||= date_of_birth_profile_field if date_of_birth_profile_field
+    date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
     @date_of_birth_profile_field.value = date_of_birth
   end
   def date_of_birth_profile_field
-    profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
+    @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
 
   # Associated Objects
