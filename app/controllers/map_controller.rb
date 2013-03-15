@@ -1,7 +1,7 @@
 class MapController < ApplicationController
 
   def show
-    @address_fields = find_address_fields.limit(30)
+    @address_fields = find_address_fields.limit(500)
   end
 
   private
