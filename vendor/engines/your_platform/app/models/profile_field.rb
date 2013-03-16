@@ -56,7 +56,7 @@ class ProfileField < ActiveRecord::Base
   #
   def label
     label_text = super
-    translated_label_text = I18n.translate( label_text, :default => label_text ) if label_text
+    translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text
   end
 
   # This creates an easier way to access a composed ProfileField's child field
@@ -205,6 +205,17 @@ module ProfileFieldTypes
       return @geo_location.geocode if find_geo_location
       return find_or_create_geo_location
     end
+
+  end
+
+
+  # Employment Field
+  # ==========================================================================================
+
+  class Employment < ProfileField
+    def self.model_name; ProfileField.model_name; end
+    
+    has_child_profile_fields :from, :to, :organization, :position, :task
 
   end
 
