@@ -216,6 +216,12 @@ module ProfileFieldTypes
     def self.model_name; ProfileField.model_name; end
     
     has_child_profile_fields :from, :to, :organization, :position, :task
+    
+    # If the employment instance has no label, just say 'Employment'.
+    #
+    def label
+      super || I18n.translate( :employment, default: "Employment" ) 
+    end
 
   end
 
