@@ -8,14 +8,9 @@
 #   User.all  # will list all users
 #
 
-require 'colored'
-STDOUT.sync = true
+require 'importers/importer'
 
-class UserImporter
-
-  def initialize( args = {} )
-    self.file_name = args[:file_name] if args[:file_name]
-  end
+class UserImporter < Importer
 
   # Import users like this:
   #
@@ -24,44 +19,16 @@ class UserImporter
   def import( args = {} )
     self.file_name = args[:file_name] if args[:file_name]
     self.filter = args[:filter] if args[:filter]
-    transaction do
-      import_users
-    end
-  end
-
-  def file_name=( file_name )
-    raise "File #{file_name} does not exist." if not File.exists? file_name
-    @file_name = file_name
-  end
-  def file_name
-    @file_name
-  end
-
-  def filter=( filter )
-    raise "The filter should be a Hash like `{ \"uid\" => \"W64433\" }`." if not ( filter.kind_of?(Hash) || filter.nil? )
-    @filter = filter
-  end
-  def filter
-    @filter
+    import_users
   end
 
   private
-
-  def transaction( &block )
-#    ActiveRecord::Base.transaction do
-      #      begin
-      yield
-      #      rescue
-      #        raise ActiveRecord::Rollback
-      #      end
-#    end
-  end
 
   def import_users
     counter = 0
     @warnings = []
     @errors = []
-    import_file = ImportFile.new( @file_name )
+    import_file = ImportFile.new( file_name: @file_name, data_class_name: "UserData" )
     import_file.each_row do |user_data|
       if user_data.match? @filter 
         @debug_user_data=user_data # TODO :REMOVE!
@@ -87,23 +54,6 @@ class UserImporter
   end
 end
 
-
-class ImportFile
-
-  require 'csv'
-
-  def initialize( file_name )
-    @file_name = file_name
-    raise "File #{file_name} does not exist." if not File.exists? file_name
-  end
-
-  def each_row( &block )
-    CSV.foreach( @file_name, headers: true, col_sep: ";" ) do |row|
-      yield( UserData.new( row.to_hash ) )
-    end
-  end
-
-end
 
 class UserData
 
