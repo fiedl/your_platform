@@ -289,7 +289,8 @@ module ProfileFieldTypes
     def self.model_name; ProfileField.model_name; end
 
     def value
-      super.to_date
+      date_string = super
+      return date_string.to_date if date_string
     end
   end
 

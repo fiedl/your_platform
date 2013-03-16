@@ -310,7 +310,12 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Date do
-  subject { ProfileFieldTypes::Date.create( value: 24.years.ago ) }
-
-  its( :value ) { should be_kind_of Date }
+  describe "if unset" do
+    subject { ProfileFieldTypes::Date.new }
+    its( :value ) { should == nil }
+  end
+  describe "if set" do
+    subject { ProfileFieldTypes::Date.create( value: 24.years.ago ) }
+    its( :value ) { should be_kind_of Date }
+  end
 end

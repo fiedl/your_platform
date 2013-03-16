@@ -1,57 +1,64 @@
+require 'importers/importer'
+
 #
 # This file contains the code to import users from the deleted-string csv export.
 # Import users like this:
 #
-#   require 'tasks/user_import'
-#   importer = UserImporter.new( file_name: "path/to/csv/file" )
-#   importer.import( filter: { "uid" => "W51061" } )
+#   require 'importers/user_import'
+#   importer = UserImporter.new( file_name: "path/to/csv/file", filter: { "uid" => "W51061" },
+#                                update_policy: :update )
+#   importer.import
 #   User.all  # will list all users
 #
-
-require 'importers/importer'
-
 class UserImporter < Importer
 
-  # Import users like this:
-  #
-  #   UserImport.import( file_name: "path/to/csv/file", filter: { "uid" => "W51061" } )
-  #
-  def import( args = {} )
-    self.file_name = args[:file_name] if args[:file_name]
-    self.filter = args[:filter] if args[:filter]
-    import_users
-  end
-
-  private
-
-  def import_users
-    counter = 0
-    @warnings = []
-    @errors = []
+  def import
     import_file = ImportFile.new( file_name: @file_name, data_class_name: "UserData" )
     import_file.each_row do |user_data|
       if user_data.match? @filter 
-        @debug_user_data=user_data # TODO :REMOVE!
-        unless user_data.user_alredy_exists? || user_data.email_already_exists?
-          print ".".green
-          counter += 1
-          user = User.create( user_data.attributes )
-          user.import_profile_fields( user_data.profile_fields_hash )
-        else
-          if user_data.user_alredy_exists?
-            @warnings << { message: "user already exists", user_data: user_data }
-            print ".".yellow
-          end
-          if user_data.email_already_exists?
-            @errors << { message: "email already exists", user_data: user_data }
-            print ".".red
+        handle_existing(user_data) do |user|
+          handle_existing_email(user_data) do |email_warning|
+            user.update_attributes( user_data.attributes )
+            user.import_profile_fields( user_data.profile_fields_hash )
+            progress.log_success unless email_warning
           end
         end
       end
     end
-    print "\n"
-    print "#{counter} users have been imported.\n".green
+    progress.print_status_report
   end
+
+  private
+
+  def handle_existing( data, &block )
+    if data.user_already_exists?
+      if update_policy == :ignore
+        progress.log_ignore( { message: "user already exists", user_uid: data.uid, name: data.name } ) 
+        user = nil
+      end
+      if update_policy == :replace
+        data.existing_user.destroy 
+        user = User.new 
+      end
+      if update_policy == :update
+        user = data.existing_user
+      end
+      yield( user ) if update_policy == :update || update_policy == :replace
+    else
+      yield( User.new )
+    end
+  end
+
+  def handle_existing_email( data, &block )
+    if data.email_already_exists?
+      warning = { message: "Email #{data.email} already exists. Keeping the existing one, ignoring the new one.",
+        user_uid: data.uid, name: data.name }
+      progress.log_warning(warning)
+      data.email = nil
+    end
+    yield(warning)
+  end
+
 end
 
 
@@ -83,7 +90,7 @@ class UserData
     return ( @data_hash.slice( *filter.keys ) == filter )
   end
 
-  def user_alredy_exists?
+  def user_already_exists?
     user = User.where( first_name: self.first_name, last_name: self.last_name ).limit(1).includes( :profile_fields ).first
     return false unless user
     return false unless user.date_of_birth == self.date_of_birth
@@ -128,9 +135,19 @@ class UserData
   def last_name
     d(:sn)
   end
+  def name
+    "#{first_name} #{last_name}"
+  end
+
+  def uid
+    d(:uid)
+  end
 
   def email
     d(:mail)
+  end
+  def email=(email)
+    @data_hash[:mail] = email
   end
 
   def date_of_birth
@@ -178,7 +195,7 @@ module UserImportMethods
   def import_profile_fields( profile_fields_hash )
     profile_fields_hash.each do |label, attrs|
       attrs[ :label ] = label
-      profile_field = self.profile_fields.create
+      profile_field = self.profile_fields.build
       profile_field.import_attributes( attrs )
     end
   end
