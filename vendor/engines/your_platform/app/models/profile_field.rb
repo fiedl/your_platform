@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
 
-  attr_accessible        :label, :type, :value
+  attr_accessible        :label, :type, :value, :key
 
   belongs_to             :profileable, polymorphic: true
 
@@ -51,6 +51,13 @@ class ProfileField < ActiveRecord::Base
     self.value
   end
 
+  # This method returns the key, i.e. the un-translated label, 
+  # which is needed for child profile fields.
+  #
+  def key
+    read_attribute :label
+  end
+  
   # This method returns the label text of the profile_field.
   # If a translation exists, the translation is returned instead.
   #

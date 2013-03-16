@@ -46,7 +46,7 @@ describe ProfileFieldMixins::HasChildProfileFields do
       it { should == @new_value }
     end
     describe "after setting the child's value manually" do
-      before { @profile_field.find_or_build_child_by_label( :field_a ).value = @new_value }
+      before { @profile_field.find_or_build_child_by_key( :field_a ).value = @new_value }
       it { should == @new_value }
     end
   end
