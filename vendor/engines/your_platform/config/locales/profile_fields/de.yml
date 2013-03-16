@@ -1,7 +1,20 @@
 de:
+  account: Konto
   account_holder: Kontoinhaber
   account_number: Kontonummer
   bank_code: BLZ
   credit_institution: Kreditinstitut
   iban: IBAN
   bic: BIC
+  
+  employment: Beschäftigung
+  from: Von
+  to: Bis
+  organization: Organisation
+  position: Position
+  task: Aufgabenfeld
+
+  study: Studium
+  university: Universität
+  subject: Fach
+  specialization: Spezialisierung
