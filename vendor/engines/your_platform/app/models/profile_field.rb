@@ -260,7 +260,7 @@ module ProfileFieldTypes
 
   end
 
-  class ProfessionCategory < ProfileField
+  class ProfessionalCategory < ProfileField
     def self.model_name; ProfileField.model_name; end
 
   end
@@ -353,6 +353,15 @@ module ProfileFieldTypes
       date_string = super
       return date_string.to_date if date_string
     end
+  end
+
+
+  # Academic Degree 
+  # ==========================================================================================
+
+  class AcademicDegree < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
   end
 
 end

@@ -22,6 +22,7 @@ class UserImporter < Importer
             user.update_attributes( user_data.attributes )
             user.save
             user.import_profile_fields( user_data.profile_fields_array, update_policy)
+            user.assign_to_groups( user_data.groups )
             progress.log_success unless email_warning
           end
         end
@@ -132,7 +133,6 @@ class UserData
     add_profile_field 'W-Nummer', value: self.w_nummer, type: "General"
 
     add_profile_field :title, value: self.personal_title, type: "General"
-    add_profile_field :academic_title, value: academic_titles.join(", "), type: "General"
 
     add_profile_field :email, value: self.email, type: 'Email'
     add_profile_field :work_email, value: d('epdprofemailaddress'), type: 'Email'
@@ -150,14 +150,21 @@ class UserData
     add_profile_field :homepage, value: d('epdpersonallabeledurl'), type: 'Homepage'
     add_profile_field :work_homepage, value: d('epdproflabeledurl'), type: 'Homepage'
 
-#    add_profile_field :employment, { type: 'Employment' }.merge(employment)
+    academic_degrees.each do |degree|
+      add_profile_field :academic_degree, value: degree, type: "AcademicDegree"
+    end
+
+    add_profile_field :employment_title, value: employment_title, type: 'ProfessionalCategory'
     professional_categories.each do |category|
-      add_profile_field :professional_category, value: category, type: 'ProfessionCategory'
+      add_profile_field :professional_category, value: category, type: 'ProfessionalCategory'
     end
     occupational_areas.each do |area|
-      add_profile_field :occupational_area, value: area, type: 'ProfessionCategory'
+      add_profile_field :occupational_area, value: area, type: 'ProfessionalCategory'
     end
-    add_profile_field :employment_status, value: d('epdprofworktype'), type: 'ProfessionCategory'
+    add_profile_field :employment_status, value: d('epdprofworktype'), type: 'ProfessionalCategory'
+#    add_profile_field :employment, { type: 'Employment' }.merge(employment)
+
+    add_profile_field :bank_account, bank_account.merge( { type: "BankAccount" } )
 
     @profile_fields
   end
@@ -211,20 +218,20 @@ class UserData
     d('epdprofcompanyname') || ( aktiver? ? :study_address : :professional_address )
   end
 
-#  def employment_title 
-#    d("epdprofworktype").present? ? d("epdprofworktype") : 'employment'
-#  end
+  def employment_title # dt. Amtsbezeichnung
+    d('epdwingolfprofamtsbezeichnung')
+  end
+
 #  def employment
 #    { 
 #      position: d("epdprofposition"),
 #    }
 #  end
-  def professional_categories
-    ( d('epdwingolfprofamtsbezeichnung') ? d('epdwingolfprofamtsbezeichnung') : "" ).split("|") + 
-      ( d('epdprofposition') ? d('epdprofposition') : "" ).split("|")
+  def professional_categories # dt. Berufsgruppen
+    ( d('epdprofposition') ? d('epdprofposition') : "" ).split("|")
   end
 
-  def occupational_areas
+  def occupational_areas # dt. Berufsfelder
     ( d('epdprofbusinesscateogory') ? d('epdprofbusinesscateogory') : "" ).split("|") +
       ( d('epdproffieldofemployment') ? d('epdproffieldofemployment') : "" ).split("|")
   end
@@ -241,13 +248,13 @@ class UserData
   end
 
   def aktiver?
-    d('epdorgstatusofperson') == "Aktiver"
+    status == "Aktiver"
   end
   def philister?
-    d('epdorgstatusofperson') == "Philister"
+    status == "Philister"
   end
   def ehemaliger?
-    d('epdorgstatusofperson') == "Ehemaliger"
+    status == "Ehemaliger"
   end
 
   def first_name
@@ -261,9 +268,9 @@ class UserData
   end
 
   def personal_title
-    d('epdpersonaltitle') || d('epdpersonalothertitle')
+    (( [ d('epdpersonaltitle') ] || [] ) + ( [ d('epdpersonalothertitle') ] || [] )).join(" ")
   end
-  def academic_titles
+  def academic_degrees
     (d('epdeduacademictitle') ? d('epdeduacademictitle') : "").split("|")
   end
 
@@ -308,6 +315,24 @@ class UserData
     d(:epdorgstatusofperson)
   end
 
+  def groups
+    ldap_group_string = d('epddynagroups') 
+    ldap_group_string += "|" + d('epddynagroupsstatus') if d('epddynagroupsstatus')
+    ldap_assignments = ldap_group_string.split("|")
+    ldap_group_paths = []
+    ldap_assignments.each do |assignment| # assignment = "o=asd,ou=def"
+      ldap_group_path = []
+      ldap_category_assignments = assignment.split(",")
+      ldap_category_assignments.each do |category_assignment|
+        ldap_category, ldap_group = category_assignment.split("=")
+        #ldap_group_path << { ldap_category => ldap_group }
+        ldap_group_path << ldap_group
+      end
+      ldap_group_paths << ldap_group_path
+    end
+    ldap_group_paths
+  end
+
 end
 
 
@@ -342,6 +367,12 @@ module UserImportMethods
       self.send( "#{key}=", value )
     end
     self.save
+  end
+
+  def assign_to_groups( groups )
+    p "TODO: GROUP ASSIGNMENT"
+    p groups
+    p "-----"
   end
 
 end
