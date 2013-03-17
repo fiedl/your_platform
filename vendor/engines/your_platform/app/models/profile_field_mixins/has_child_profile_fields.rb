@@ -95,7 +95,7 @@ module ProfileFieldMixins::HasChildProfileFields
     private :save_child_profile_fields
 
     def get_field( accessor )
-      find_child_by_key(accessor).value
+      find_child_by_key(accessor).value if find_child_by_key(accessor)
     end
 
     def set_field( accessor, value )

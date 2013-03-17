@@ -36,6 +36,8 @@ module Profileable
     
     def profile_fields_by_section( section )
       case section
+      when :general
+        profile_fields_by_type "ProfileFieldTypes::General"
       when :contact_information
         profile_fields_by_type [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
                                  "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", 
@@ -45,7 +47,7 @@ module Profileable
       when :study_information
         profile_fields_by_type "ProfileFieldTypes::Study"
       when :career_information
-        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence" ]
+        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionCategory" ]
       when :organizations
         profile_fields_by_type "ProfileFieldTypes::Organization"
       when :bank_account_information
@@ -59,6 +61,8 @@ module Profileable
 
     def profile_field_type_by_section(section)
       case section
+        when :general
+          "ProfileFieldTypes::General"
         when :contact_information
           [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
             "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
@@ -67,7 +71,7 @@ module Profileable
         when :study_information
           "ProfileFieldTypes::Study"
         when :career_information
-          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence" ]
+          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionCategory" ]
         when :organizations
           "ProfileFieldTypes::Organization"
         when :bank_account_information

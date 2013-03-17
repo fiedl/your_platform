@@ -1,4 +1,3 @@
-
 <h1 class="section <%= section %>"><%=t section %></h1>
 <div id="section_<%= section %>">
 
@@ -9,11 +8,7 @@
       </span>
     <% end %>
   <% end %>
-  <ul>
-    <% profileable.profile_fields_by_section( section ).each do | profile_field | %>
-        <%= render partial: 'shared/profile_field', object: profile_field %>
-    <% end %>
-  </ul>
+  <%= render partial: 'shared/profile_section_ul', locals: { section: section, profileable: profileable } %>
   <% type_or_types = profileable.profile_field_type_by_section( section ) %>
   <%= add_button( url_for( :action => :create_profile_field,
                            :profileable_id => profileable.id,

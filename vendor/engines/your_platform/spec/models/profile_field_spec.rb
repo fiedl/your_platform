@@ -191,6 +191,41 @@ describe ProfileFieldTypes::Address do
 end
 
 
+# Employment Information
+# ==========================================================================================
+
+describe ProfileFieldTypes::Employment do
+  before { @profile_field = ProfileFieldTypes::Employment.new }
+  subject { @profile_field }
+
+  it { should respond_to :from, :to, :organization, :position, :task }
+  it { should respond_to :from=, :to=, :organization=, :position=, :task= }
+  
+  describe "#from" do
+    subject { @profile_field.from }
+    describe "before setting" do
+      it { should == nil }
+    end
+    describe "after setting" do
+      before { @profile_field.from = 6.years.ago }
+      it { should be_kind_of Date }
+    end
+  end
+
+  describe "#to" do
+    subject { @profile_field.to }
+    describe "before setting" do
+      it { should == nil }
+    end
+    describe "after setting" do
+      before { @profile_field.to = 6.years.ago }
+      it { should be_kind_of Date }
+    end
+  end
+
+end
+
+
 # Bank Account Information
 # ==========================================================================================
 

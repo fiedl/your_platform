@@ -66,6 +66,17 @@ class ProfileField < ActiveRecord::Base
     translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text
   end
 
+  # If the field has children, their values are included in the main field's value.
+  # Attention! Probably, you want to display only one in the view: The main value or the child fields.
+  # 
+  def value
+    if children.count > 0
+      ( [ super ] + children.collect { |child| child.value } ).merge(", ")
+    else
+      super
+    end
+  end
+
   # This creates an easier way to access a composed ProfileField's child field
   # values. Instead of calling
   #
@@ -109,6 +120,15 @@ class ProfileField < ActiveRecord::Base
 end
 
 module ProfileFieldTypes
+
+  # General Information Field
+  # ==========================================================================================
+
+  class General < ProfileField
+    def self.model_name; ProfileField.model_name; end
+  end
+
+  
 
   # Custom Contact Information
   # ==========================================================================================
@@ -216,7 +236,7 @@ module ProfileFieldTypes
   end
 
 
-  # Employment Field
+  # Employment Fields
   # ==========================================================================================
 
   class Employment < ProfileField
@@ -229,6 +249,19 @@ module ProfileFieldTypes
     def label
       super || I18n.translate( :employment, default: "Employment" ) 
     end
+
+    def from
+      get_field(:from).to_date if get_field(:from)
+    end
+
+    def to
+      get_field(:to).to_date if get_field(:to)
+    end
+
+  end
+
+  class ProfessionCategory < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
   end
 

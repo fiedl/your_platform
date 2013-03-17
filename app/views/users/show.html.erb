@@ -26,6 +26,8 @@
     <dt><%= t :date_of_birth %></dt>
     <dd><%= best_in_place @user, :date_of_birth, type: :date %></dd>
   </dl>
+  <%= render partial: 'shared/profile_section_ul', locals: { section: :general, profileable: @user } %>
+
 </div>
 
 <%= profile_sections_for_profileable @user, @user.sections %>
