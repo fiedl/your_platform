@@ -9,8 +9,8 @@ namespace :import do
     require 'importers/user_importer'
 
     importer = UserImporter.new( file_name: "import/deleted-string_data/Members_production_2012-01-17.csv",
-#                                 update_policy: :update,
-                                 # filter: { "uid": "W66441" },
+                                 update_policy: :update,
+                                 filter: { "uid" => "W51028" },
                                  )
     importer.import
 

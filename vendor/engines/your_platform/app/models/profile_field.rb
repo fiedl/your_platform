@@ -301,9 +301,8 @@ module ProfileFieldTypes
 
     before_save :auto_format_value
 
-    private
-    def auto_format_value
-      value = self.value
+    def self.format_phone_number( phone_number_str )
+      value = phone_number_str
 
       # determine wheter this is an international number
       format = :national
@@ -317,8 +316,13 @@ module ProfileFieldTypes
         value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
         value = Phony.formatted( value, :format => format, :spaces => ' ' )
       end
+      
+      return value
+    end
 
-      self.value = value
+    private
+    def auto_format_value
+      self.value = Phone.format_phone_number( self.value )
     end
 
   end
