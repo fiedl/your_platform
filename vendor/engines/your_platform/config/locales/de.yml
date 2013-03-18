@@ -2,3 +2,5 @@ de:
   time:
     formats:
       time: ! '%H:%M Uhr'
+
+  map: Karte

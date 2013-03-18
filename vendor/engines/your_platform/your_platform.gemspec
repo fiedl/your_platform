@@ -1,5 +1,8 @@
 $:.push File.expand_path("../lib", __FILE__)
 
+# SEE ALSO
+# https://github.com/fiedl/your_platform/blob/master/your_platform.gemspec
+
 # Maintain your gem's version:
 require "your_platform/version"
 
@@ -10,9 +13,9 @@ Gem::Specification.new do |s|
 
   s.authors     = [ "Sebastian Fiedlschuster" ]
   s.email       = [ "sebastian@fiedlschuster.de" ]
-  s.homepage    = "TODO"
+  s.homepage    = "https://github.com/fiedl/your_platform"
 
-  s.summary     = "TODO: Summary of YourPlatform."
+  s.summary     = "Administrative and social network platform for closed user groups."
   s.description = s.summary
 
   s.files = Dir["{app,config,db,lib}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]

@@ -28,14 +28,13 @@ module CorporateVitaHelper
   
   def status_group_membership_promoted_on_event( membership )
     event = membership.event
-    if event
-      link_to membership.event.name, membership.event, :class => 'status_event_label'
-    else
-      best_in_place( membership,
-                     :event_by_name,
-                     path: status_group_membership_path( membership )
-                     )
-    end
+    best_in_place( membership,
+                   :event_by_name,
+                   path: status_group_membership_path( membership ),
+                   display_with: lambda do |v|
+                     link_to membership.event.name, membership.event, :class => 'status_event_label'
+                   end
+                   )
   end
 
 

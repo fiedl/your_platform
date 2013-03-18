@@ -30,8 +30,9 @@ module ProfileFieldTypes
   class Address
 
     # This method returns the Bv associated with the given address.
+    #
     def bv
-      AddressString.new( self.value ).bv
+      geo_location.bv
     end
 
     # The html output method is overridden here, in order to display the bv as well.
@@ -67,6 +68,12 @@ module ProfileFieldTypes
     def self.model_name; ProfileField.model_name; end
 
     has_child_profile_fields :from, :to, :university, :subject, :specialization
+
+    # If the single study has no label, just say 'Study'.
+    #
+    def label
+      super || I18n.translate( :study, default: "Study" )
+    end
 
   end
 

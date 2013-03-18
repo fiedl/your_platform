@@ -105,7 +105,7 @@ end
 group :development do
 
   # debugger: http://guides.rubyonrails.org/debugging_rails_applications.html
-  gem 'debugger'                   
+  #gem 'debugger'                   
 
   gem 'better_errors'              # see Railscasts #402               
   gem 'binding_of_caller'
@@ -121,14 +121,16 @@ group :test, :development do
   gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
+  gem 'rb-readline'
 end
 group :test do
-  gem 'capybara' #, '1.1.2'
+  gem 'capybara' ,'>=2.0.2'
   gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
   gem 'database_cleaner'
-#  gem 'guard-spork'
-#  gem 'spork'
+  gem 'guard-spork'
+  gem 'spork'
+  gem 'simplecov', require: false
 end
 
 # This is for testing on wingolfsplattform.org -- since travis-pro has expired.
@@ -197,4 +199,12 @@ gem 'phony'
 # Pry Console Addon
 gem 'pry', group: :development
 
+# Turbolinks
 gem 'turbolinks', '>= 1.0'
+
+# Angular JS
+gem 'angularjs-rails'
+
+# Pagination
+gem 'will_paginate', '> 3.0'
+

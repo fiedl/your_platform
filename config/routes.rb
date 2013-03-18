@@ -1,5 +1,9 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  get "map/show"
+
+  get "angular_test", controller: "angular_test", action: "index"
+
   root :to => 'root#index'
 
   match "search" => "search#index", as: "search"
@@ -11,8 +15,7 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :events  
 
-  match 'stars/user/:user_id/:starrable_type/:starrable_id' => "stars#update"
-  resources :stars
+  resources :bookmarks
 
   match "sessions/logout" => "sessions#logout"
   resources :sessions

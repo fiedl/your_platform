@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="YourPlatform">
 <head>
   <meta http-equiv="Content-type" content="text/html; charset=utf-8" >
   <title><%=h "#{@title} - " if @title %>Wingolfsplattform</title>
@@ -43,7 +43,7 @@
 	<li class="backendBarItem dropdown">
 	  <%= link_to "Favoriten", my_favorites_path %>
 	  <ul class="dropdown-menu my-favorites">
-	    <%= starred_objects_lis( current_user ) %>
+	    <%= bookmarked_objects_lis( current_user ) %>
 	  </ul>
 	</li>
         <li class="last backendBarItem">

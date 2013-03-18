@@ -88,7 +88,7 @@ class Group < ActiveRecord::Base
   #
   def descendant_users
     if self.has_flag?( :everyone )
-      return User.all
+      return User.where(true)
     else
       return super 
     end
@@ -96,7 +96,7 @@ class Group < ActiveRecord::Base
 
   def child_users
     if self.has_flag?( :everyone )      
-      return User.all
+      return User.where(true)
     else
       return super
     end
