@@ -1,15 +1,20 @@
-Gmaps = {}
+ready = ->
 
-Gmaps.loadMaps = ->
-  #loop through all variable names.
-  #there should only be maps inside so it trigger their load function
-  for key, value of Gmaps
-    searchLoadIncluded = key.search(/load/)
-    if searchLoadIncluded == -1
-      load_function_name = "load_" + key
-      Gmaps[load_function_name]()
+  Gmaps = {}
 
-window.Gmaps = Gmaps
+  Gmaps.loadMaps = ->
+    #loop through all variable names.
+    #there should only be maps inside so it trigger their load function
+    for key, value of Gmaps
+      searchLoadIncluded = key.search(/load/)
+      if searchLoadIncluded == -1
+        load_function_name = "load_" + key
+        Gmaps[load_function_name]()
+
+  window.Gmaps = Gmaps
+
+$(document).ready(ready)
+$(document).on('page:load', ready)
 
 class @Gmaps4Rails
 

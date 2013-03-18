@@ -2,7 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
-jQuery ->
+ready = ->
 
         # Entfernen-Button der Profilfelder mit Funktion ausstatten.
         $( document ).on( 'click', ".profile_field * .remove_button", (event) ->
@@ -23,4 +23,5 @@ jQuery ->
 
         )
 
-
+$(document).ready(ready)
+$(document).on('page:load', ready)

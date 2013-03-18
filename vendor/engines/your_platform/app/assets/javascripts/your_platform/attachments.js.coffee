@@ -1,4 +1,4 @@
-jQuery ->
+ready = ->
   form_span_selector = ".attachments .add_attachment"
   $( form_span_selector ).hide()
 
@@ -8,3 +8,6 @@ jQuery ->
     $( form_span_selector ).show( "blind" )
     e.preventDefault()
   )
+
+$(document).ready(ready)
+$(document).on('page:load', ready)
