@@ -112,8 +112,7 @@ GEM
     formtastic (2.2.1)
       actionpack (>= 3.0)
     geocoder (1.1.6)
-    gmaps4rails (1.4.8)
-      json
+    gmaps4rails (2.0.0.pre)
     gravatar_image_tag (1.1.3)
     guard (1.0.1)
       ffi (>= 0.5.0)
@@ -309,7 +308,7 @@ DEPENDENCIES
   factory_girl_rails (>= 4.0.0)
   formtastic
   geocoder
-  gmaps4rails (~> 1.4.8)
+  gmaps4rails (>= 2.0.0.pre)
   gravatar_image_tag
   guard (= 1.0.1)
   guard-focus

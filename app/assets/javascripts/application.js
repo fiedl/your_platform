@@ -23,9 +23,9 @@
 //= require twitter/bootstrap
 //= require_boxes
 //= require best_in_place
+//= require gmaps4rails
 //= require edit_mode
 //= require slim_breadcrumb
-//= require gmaps4rails
 //= require make-js-more-like-ruby
 //= require your_platform
 //= require_tree .
