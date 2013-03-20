@@ -36,6 +36,61 @@ describe Page do
   end
 
 
+  # Redirection
+  # ----------------------------------------------------------------------------------------------------
+
+  describe "#redirect_to" do
+    before { @page = create(:page) }
+    subject { @page.redirect_to }
+    describe "for urls with given protocol" do
+      before { @page.redirect_to = "http://example.com" }
+      it "should return the url" do
+        subject.should == "http://example.com"
+      end
+    end
+    describe "for controller#action strings" do
+      before { @page.redirect_to = "users#index" }
+      it "should return a Hash with controller and index" do
+        subject.should == { controller: "users", action: "index" }
+      end
+    end
+  end
+
+  describe "#redirect_to=" do
+    before { @page = create(:page) }
+    subject { @page.redirect_to = @redirect_to }
+    describe "for setting it to a url with protocol" do
+      before { @redirect_to = "http://example.com" }
+      it "should store the url" do
+        subject
+        @page.read_attribute(:redirect_to).should == @redirect_to
+      end
+      it "should retrieve the url unchanged" do
+        subject
+        @page.redirect_to.should == @redirect_to
+      end
+    end
+    describe "for setting it to a controller#action string" do
+      before { @redirect_to = "users#index" }
+      it "should store the controller#action string" do
+        subject
+        @page.read_attribute(:redirect_to).should == @redirect_to
+      end
+      it "should retrieve a Hash with controller and action" do
+        subject
+        @page.redirect_to.should == { controller: "users", action: "index" }
+      end
+    end
+    describe "for setting it to a Hash with controller and action" do
+      before { @redirect_to = { controller: "users", action: "index" } }
+      it "should retrieve it as a Hash with controller and action" do
+        subject
+        @page.redirect_to.should == @redirect_to
+      end
+    end
+  end
+
+
   # Association Related Methods
   # ----------------------------------------------------------------------------------------------------
 

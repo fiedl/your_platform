@@ -5,6 +5,8 @@ class PagesController < ApplicationController
 
   def show
     if @page
+      redirect_to @page.redirect_to if @page.redirect_to
+      
       @title = @page.title
       @navable = @page
     end
