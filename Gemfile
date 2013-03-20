@@ -122,7 +122,6 @@ group :test, :development do
   gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
-  gem 'rb-readline'
 end
 group :test do
   gem 'capybara' ,'>=2.0.2'
