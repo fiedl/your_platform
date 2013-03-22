@@ -22,6 +22,9 @@ Spork.prefork do
   FactoryGirl.definition_file_paths = %w(spec/factories vendor/engines/your_platform/spec/factories)
 
   require 'capybara/poltergeist'
+  Capybara.register_driver :poltergeist do |app|
+    Capybara::Poltergeist::Driver.new(app, inspector: true)
+  end
   Capybara.javascript_driver = :poltergeist
 
   RSpec.configure do |config|

@@ -40,13 +40,17 @@ class StatusGroupMembership < UserGroupMembership
     self.event.name if self.event
   end
   def event_by_name=( event_name )
-    if Event.find_by_name( event_name )
-      self.event = Event.find_by_name( event_name )
+    if event_name.present?
+      if Event.find_by_name( event_name )
+        self.event = Event.find_by_name( event_name )
+      else
+        self.create_event( name: event_name )
+        self.event.group ||= self.corporation if self.corporation
+        self.event.start_at = self.created_at
+        self.event.save
+      end
     else
-      self.create_event( name: event_name )
-      self.event.group ||= self.corporation if self.corporation
-      self.event.start_at = self.created_at
-      self.event.save
+      self.event = nil
     end
   end
 

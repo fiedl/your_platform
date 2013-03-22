@@ -119,6 +119,16 @@ describe StatusGroupMembership do
         end
       end
     end
+    describe "for an empty string" do
+      before do
+        @membership.event_by_name = "some prefilled event" 
+      end
+      subject { @membership.event_by_name = "" }
+      it "should set the event to nil" do
+        subject
+        @membership.event.should == nil 
+      end
+    end
   end
     
 
