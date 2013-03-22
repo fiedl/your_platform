@@ -13,16 +13,18 @@ class UserGroupMembershipsController < ApplicationController
     attributes = params[ :user_group_membership ]
     attributes ||= params[ :status_group_membership ]
 
-    if @membership.update_attributes( attributes )
-      respond_to do |format|
-        format.json do
-          #head :ok
-          respond_with_bip @membership
-        end
-      end
-    else
-      raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
-    end
+    @membership.update_attributes( attributes )
+#    if @membership.update_attributes( attributes )
+#      respond_to do |format|
+#        format.json do
+#          #head :ok
+#          respond_with_bip @membership
+#        end
+#      end
+      respond_with @membership
+#    else
+#      raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
+#    end
   end
 
   def destroy
@@ -35,13 +37,15 @@ class UserGroupMembershipsController < ApplicationController
   private
 
   def find_membership
-    if params[ :id ]
-      @membership = UserGroupMembership.find( params[ :id ] )
+    p "controller", params
+    p "------------------------------------------------------------------------------------------"
+    if params[ :id ].present?
+      @membership = UserGroupMembership.with_deleted.find( params[ :id ] )
     else
       user = User.find params[ :user_id ] if params[ :user_id ]
       group = Group.find params[ :group_id ] if params[ :group_id ]
       if user && group
-        @membership = UserGroupMembership.find_by_user_and_group user, group
+        @membership = UserGroupMembership.with_deleted.find_by_user_and_group user, group
       end
     end
   end

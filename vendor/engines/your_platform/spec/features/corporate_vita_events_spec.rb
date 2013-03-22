@@ -21,15 +21,28 @@ feature 'Events in the Corporate Vita:', js: true do
     status_group.should be_kind_of Group
   end
 
-  scenario 'assigning a new event' do #, driver: :selenium do
+  scenario 'assigning a new event' do
     visit user_path(user)
-    within "#corporate_vita" do
-      click_on_empty_event_place_holder
-      fill_in_event_name "A thrilling new event\n"
+    within section_selector do
+      click_edit_button
+      fill_in_event_name "A thrilling new event"
+      click_save_button
 
       page.should have_no_selector('.status_event_by_name form input')
       page.should have_selector('.status_event_by_name', visible: true, text: "A thrilling new event")
     end
+  end
+
+  def section_selector
+    "div.section.corporate_vita"
+  end
+
+  def click_edit_button
+    find('.edit_button', visible: true).click
+  end
+
+  def click_save_button
+    find('.save_button', visible: true).click
   end
 
   def click_on_empty_event_place_holder
@@ -40,17 +53,26 @@ feature 'Events in the Corporate Vita:', js: true do
   def fill_in_event_name( event_name )
     fill_in :event_by_name, with: event_name
   end
+  
+  given(:reloaded_membership) do
+    sleep 1 # give the API some time to write to the database
+    StatusGroupMembership.now_and_in_the_past.find(membership.id)
+  end
 
   context "for an existing event:" do
     given(:event) { Event.create(name: "Fancy Event", start_at: 1.hour.from_now) }
     before { corporation.child_events << event }
-    scenario "assigning the existing event" do #, driver: :selenium do
+
+    scenario "assigning the existing event" do
       visit user_path(user)
-      within '#corporate_vita' do
-        click_on_empty_event_place_holder
-        fill_in_event_name "Fancy Event\n"
+      within section_selector do
+        click_edit_button
+        fill_in_event_name "Fancy Event"
+        click_save_button
+        
+        page.should have_no_selector "input"
       end
-      membership.reload.event.should == event
+      reloaded_membership.event.should == event
     end
   end
 

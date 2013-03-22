@@ -8,7 +8,7 @@
 # and to their properties like since when the membership exists.
 class UserGroupMembership < DagLink
 
-  attr_accessible :created_at, :deleted_at
+  attr_accessible :created_at, :deleted_at, :created_at_date_formatted
 
 
   # General Properties
@@ -248,7 +248,9 @@ class UserGroupMembership < DagLink
   #     membership.corporation == corporation
   #
   def corporation
-    ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+    if self.group && self.user
+      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+    end
   end
 
 

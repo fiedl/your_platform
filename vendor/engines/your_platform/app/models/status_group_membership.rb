@@ -20,7 +20,7 @@ class StatusGroupMembership < UserGroupMembership
 
   after_initialize :build_status_group_membership_info_if_nil
 
-  attr_accessible :event_by_name, 
+  attr_accessible :event_by_name
 
   
   # Alias Methods For Delegated Methods
