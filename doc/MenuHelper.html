@@ -1,0 +1,266 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>
+  Module: MenuHelper
+  
+    &mdash; Documentation by YARD 0.8.5.2
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index (M)</a> &raquo;
+    
+    
+    <span class="title">MenuHelper</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><h1>Module: MenuHelper
+  
+  
+  
+</h1>
+
+<dl class="box">
+  
+  
+    
+  
+    
+  
+  
+  
+    <dt class="r1 last">Defined in:</dt>
+    <dd class="r1 last">app/helpers/menu_helper.rb</dd>
+  
+</dl>
+<div class="clear"></div>
+
+
+
+
+
+
+
+
+  
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#vertical_menu-instance_method" title="#vertical_menu (instance method)">- (Object) <strong>vertical_menu</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Generates the HTML Code for the current @navable object.</p>
+</div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#vertical_menu_for-instance_method" title="#vertical_menu_for (instance method)">- (Object) <strong>vertical_menu_for</strong>(navable) </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'>
+<p>Generates the HTML code for a navable object, e.g.</p>
+</div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="vertical_menu-instance_method">
+  
+    - (<tt>Object</tt>) <strong>vertical_menu</strong> 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Generates the HTML Code for the current @navable object.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+48
+49
+50</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/helpers/menu_helper.rb', line 48</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_vertical_menu'>vertical_menu</span>
+  <span class='id identifier rubyid_vertical_menu_for'>vertical_menu_for</span> <span class='ivar'>@navable</span> <span class='kw'>if</span> <span class='ivar'>@navable</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="vertical_menu_for-instance_method">
+  
+    - (<tt>Object</tt>) <strong>vertical_menu_for</strong>(navable) 
+  
+
+  
+
+  
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Generates the HTML code for a navable object, e.g. a Page or a User.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/helpers/menu_helper.rb', line 36</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_vertical_menu_for'>vertical_menu_for</span><span class='lparen'>(</span> <span class='id identifier rubyid_navable'>navable</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_html_code'>html_code</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
+  <span class='id identifier rubyid_active_navable'>active_navable</span> <span class='op'>=</span> <span class='id identifier rubyid_navable'>navable</span>
+  <span class='id identifier rubyid_ancestor_navables'>ancestor_navables</span> <span class='op'>=</span> <span class='id identifier rubyid_navable'>navable</span><span class='period'>.</span><span class='id identifier rubyid_nav_node'>nav_node</span><span class='period'>.</span><span class='id identifier rubyid_ancestor_navables'>ancestor_navables</span>
+  <span class='id identifier rubyid_child_navables'>child_navables</span> <span class='op'>=</span> <span class='id identifier rubyid_navable'>navable</span><span class='period'>.</span><span class='id identifier rubyid_navable_children'>navable_children</span>
+  <span class='id identifier rubyid_html_code'>html_code</span> <span class='op'>+=</span> <span class='id identifier rubyid_menu_elements'>menu_elements</span><span class='lparen'>(</span> <span class='id identifier rubyid_ancestor_navables'>ancestor_navables</span><span class='comma'>,</span> <span class='symbol'>:ancestor</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_html_code'>html_code</span> <span class='op'>+=</span> <span class='id identifier rubyid_menu_element'>menu_element</span><span class='lparen'>(</span> <span class='id identifier rubyid_active_navable'>active_navable</span><span class='comma'>,</span> <span class='symbol'>:active</span> <span class='rparen'>)</span>
+  <span class='id identifier rubyid_html_code'>html_code</span> <span class='op'>+=</span> <span class='id identifier rubyid_menu_elements'>menu_elements</span><span class='lparen'>(</span> <span class='id identifier rubyid_child_navables'>child_navables</span><span class='comma'>,</span> <span class='symbol'>:child</span> <span class='rparen'>)</span>
+  <span class='kw'>return</span> <span class='id identifier rubyid_html_code'>html_code</span><span class='period'>.</span><span class='id identifier rubyid_html_safe'>html_safe</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
+
+</div>
+
+    <div id="footer">
+  Generated on Sat Mar 23 00:23:01 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.5.2 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>
