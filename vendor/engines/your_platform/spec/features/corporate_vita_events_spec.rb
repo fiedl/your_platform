@@ -31,6 +31,7 @@ feature 'Events in the Corporate Vita:', js: true do
       page.should have_no_selector('.status_event_by_name form input')
       page.should have_selector('.status_event_by_name', visible: true, text: "A thrilling new event")
     end
+    wait_for_ajax_to_complete
   end
 
   def section_selector
@@ -38,11 +39,13 @@ feature 'Events in the Corporate Vita:', js: true do
   end
 
   def click_edit_button
-    find('.edit_button', visible: true).click
+    click_on I18n.t(:edit)
   end
 
   def click_save_button
-    find('.save_button', visible: true).click
+    click_on I18n.t(:save)
+    page.should have_selector('.save_button', visible: true)
+    page.should have_no_selector('.modal_bg', visible: true)
   end
 
   def click_on_empty_event_place_holder
@@ -53,7 +56,17 @@ feature 'Events in the Corporate Vita:', js: true do
   def fill_in_event_name( event_name )
     fill_in :event_by_name, with: event_name
   end
-  
+
+  def wait_for_ajax_to_complete
+    # Even though capybara is pretty suffisticated regarding its mechanism
+    # to wait for requests to be finished. But sometimes, one has to make sure, 
+    # manually, that all asynchronous requests are finished before stepping
+    # to the next test. Before every test, the DatabaseCleaner wipes the
+    # database. Thus, if an ajax requests is not finished, it will hit the 
+    # database after wiping, which leads to very unforseeable errors.
+    sleep 2
+  end
+
   given(:reloaded_membership) do
     sleep 1 # give the API some time to write to the database
     StatusGroupMembership.now_and_in_the_past.find(membership.id)
@@ -69,32 +82,31 @@ feature 'Events in the Corporate Vita:', js: true do
         click_edit_button
         fill_in_event_name "Fancy Event"
         click_save_button
-        
+
         page.should have_no_selector "input"
       end
       reloaded_membership.event.should == event
     end
+
+    context "for an already assigned event:" do
+      before { membership.event = event; membership.save }
+
+      scenario 'unassigning events' do
+        visit user_path(user)
+        within section_selector do
+          page.should have_content "Fancy Event"
+
+          click_edit_button
+          fill_in_event_name ""
+          click_save_button
+
+          page.should have_selector('.status_event_by_name', visible: true)
+          page.should have_no_selector('.status_event_by_name', visible: true, text: "Fancy Event")
+        end
+        reloaded_membership.event.should == nil
+      end
+    end
   end
-
-  #    context "for an already assigned event:" do
-  #      before do
-  #        @event = @membership.create_event( name: "Fancy Event", start_at: 1.hour.from_now )
-  #        wait
-  #      end
-  #      scenario 'unassigning events' do
-  #        visit user_path @user
-  #        within '#corporate_vita' do
-  #          page.should have_content "Fancy Event"
-  #          find('.status_event_by_name', text: "Fancy Event").click
-  #          fill_in_event_name "\n"
-  #          page.should have_selector('.status_event_by_name', visible: true)
-  #          page.should_not have_selector('.status_event_by_name', visible: true, text: "Fancy Event")
-  #        end
-  #        @user.upcoming_events.should_not include @event
-  #      end
-  #    end
-
-
 
 end
 
