@@ -24,11 +24,28 @@ Gem::Specification.new do |s|
   # Dependencies 
   # --------------------------------------------------------------------------------
 
+  # Rails and Rails Additions
   s.add_dependency "rails", "~> 3.2.6"
+  s.add_dependency "rails-i18n"                                                        # MIT License
+
+  # JavaScript 
   s.add_dependency "jquery-rails"
+
+  # Data Structures
+  # DAG Structure, https://github.com/resgraph/acts-as-dag
+  s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
+  s.add_dependency 'acts_as_tree'                                                      # MIT License
+  # make dag links paranoid, i.e. don't delete links, but only mark as deleted.
+  s.add_dependency 'rails3_acts_as_paranoid'                                           # MIT License
+  s.add_dependency 'acts_as_paranoid_dag'                                              # MIT License
+
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt-ruby', '>= 3.0.1'                                           # MIT License 
+
+  # Template Engines
+  # haml template language, http://haml.info
+  s.add_dependency 'haml'                                                              # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,

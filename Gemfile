@@ -31,9 +31,6 @@ end
 gem 'execjs'
 gem 'therubyracer', :platform => :ruby
 
-# haml template language, http://haml.info
-gem 'haml'
-
 gem 'jquery-rails'							# MIT License
 
 # To use ActiveModel has_secure_password (password encryption)
@@ -51,9 +48,6 @@ gem 'unicorn'
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
 
-# i18n
-gem 'rails-i18n'							# MIT License
-
 # GoogleMaps
 gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
     # , path: '../Google-Maps-for-Rails/'  #, '~> 1.4.8' #, path: '../gmaps4rails-1.4.8/'				        # MIT License
@@ -67,10 +61,7 @@ gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
-gem 'acts-as-dag', '>= 2.5.7'
-
-# Tree-Verhalten, z.B. für Profilfelder
-gem 'acts_as_tree'							# MIT License
+#gem 'acts-as-dag', '>= 2.5.7'  # now in your_platform
 
 # Formtastic Form Helper, 
 # see: https://github.com/justinfrench/formtastic, 
@@ -165,9 +156,6 @@ gem 'edit_mode', '>= 0.0.7'                                             # MIT Li
 # hide slim breadcrumb elements until user hovers the separator, SF
 gem 'slim_breadcrumb', '>= 0.0.2'                                       # MIT License
 
-# make dag links paranoid, i.e. don't delete links, but only mark as deleted.
-gem 'rails3_acts_as_paranoid'
-gem 'acts_as_paranoid_dag'                                              # MIT License
 
 # password generator. it's not pwgen, but it's a gem.
 # TODO: if we ever find a way to properly include pwgen, let's do it.
