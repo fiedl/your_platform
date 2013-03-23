@@ -55,13 +55,16 @@ Spork.prefork do
     # see * http://stackoverflow.com/questions/8178120/capybara-with-js-true-causes-test-to-fail/8698940#8698940
     #     * http://stackoverflow.com/questions/10692161/issue-with-capybara-request-specs-with-js-cant-find-the-model
     config.use_transactional_fixtures = false
-    config.before :each do
 
-      if Capybara.current_driver == :rack_test
-        DatabaseCleaner.strategy = :transaction
-      else
-        DatabaseCleaner.strategy = :truncation
-      end
+
+    # http://p373.net/2012/08/07/capybara-ajax-requirejs-and-how-to-pull-your-hair-out-in-8-easy-hours/
+    config.before(:suite) do
+      DatabaseCleaner.strategy = :truncation
+      DatabaseCleaner.clean
+
+    end
+
+    config.before(:each) do
       DatabaseCleaner.start
 
       # create the basic objects that are needed for all specs
@@ -76,9 +79,37 @@ Spork.prefork do
       I18n.locale = :de
 
     end
-    config.after do
+
+    config.after(:each) do
       DatabaseCleaner.clean
     end
+
+    config.after(:suite) do
+      DatabaseCleaner.clean
+    end
+
+
+
+
+    #    config.before(:each) do
+    #
+    #      if Capybara.current_driver == :rack_test
+    #        DatabaseCleaner.strategy = :transaction
+    #      else
+    #        DatabaseCleaner.strategy = :truncation
+    #      end
+    #      DatabaseCleaner.start
+    #
+
+    #
+    #    end
+    #    config.before(:suite) do
+    #     DatabaseCleaner
+    #      config.after do
+    #        DatabaseCleaner.clean
+    #      end
+
+    #    end
 
     # If true, the base class of anonymous controllers will be inferred
     # automatically. This will be the default behavior in future versions of
@@ -94,8 +125,9 @@ Spork.prefork do
     config.treat_symbols_as_metadata_keys_with_true_values = true
     #config.filter_run :focus => true
     config.run_all_when_everything_filtered = true
+    
+    
   end
-
 end
 
 Spork.each_run do
