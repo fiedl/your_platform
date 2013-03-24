@@ -212,7 +212,12 @@ Spork.prefork do
     # BUT REMEMBER to reove the `focus: true` before comitting the spec code.
     # Otherwise you prevent other tests from being run regularly. 
     #    
-    config.filter_run :focus => true
+    # config.filter_run :focus => true
+    #
+    # EDIT: The filter is not set here, but using guar (i.e. in the Guardfile). 
+    # Thus, when using `bundle exec rake`, always all specs run,
+    # which is important on the server.
+    #
     config.run_all_when_everything_filtered = true
 
 
