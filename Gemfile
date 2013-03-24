@@ -110,7 +110,7 @@ group :test, :development do
   gem 'guard-focus'
   gem 'rspec-rails', '2.10.0'
   gem 'guard-rspec', '0.5.5'
-  gem 'rspec-mocks'
+#  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
 end

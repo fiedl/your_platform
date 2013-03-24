@@ -336,7 +336,6 @@ DEPENDENCIES
   poltergeist
   pry
   rails (~> 3.2.11)
-  rspec-mocks
   rspec-rails (= 2.10.0)
   rubylight (>= 1.0.3.2)
   sass-rails (~> 3.2.3)
