@@ -169,11 +169,21 @@ Spork.prefork do
     config.use_transactional_fixtures = false
 
     config.before(:suite) do
-      DatabaseCleaner.strategy = :truncation
       DatabaseCleaner.clean
     end
 
     config.before(:each) do
+
+      # This distinction reduces the run time of the test suite by over a factor of 4:
+      # From 40 to a couple of minutes, since the truncation method, which is slower,
+      # is only used when needed by Capybara, i.e. when running integration tests,
+      # possibly with asynchronous requests.
+      #
+      if Capybara.current_driver == :rack_test
+        DatabaseCleaner.strategy = :transaction
+      else
+        DatabaseCleaner.strategy = :truncation
+      end
       DatabaseCleaner.start
 
       # create the basic objects that are needed for all specs
