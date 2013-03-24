@@ -65,6 +65,12 @@ require 'spork'
 Spork.prefork do
 
 
+  # Required Application Environment
+  # ----------------------------------------------------------------------------------------
+  ENV['RAILS_ENV'] ||= 'test'
+  require File.expand_path('../../config/environment', __FILE__)
+
+
   # Required Libraries
   # ----------------------------------------------------------------------------------------
   
@@ -74,12 +80,6 @@ Spork.prefork do
   require 'nokogiri'
   require 'capybara/poltergeist'
   require 'rspec/expectations'
-
-
-  # Required Application Environment
-  # ----------------------------------------------------------------------------------------
-  ENV['RAILS_ENV'] ||= 'test'
-  require File.expand_path('../../config/environment', __FILE__)
 
 
   # Required Support Files (that help you testing)
