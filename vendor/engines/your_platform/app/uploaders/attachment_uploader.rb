@@ -40,6 +40,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     process :cover
     process :convert => :png
     process :set_content_type
+    def full_filename( for_file = model.attachment.file )
+      "thumb.png"
+    end
   end
 
   version :video_thumb, :if => :video? do
@@ -87,7 +90,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Override the filename of the uploaded files:
   # Avoid using model.id or version_name here, see uploader/store.rb for details.
   # def filename
-  #   "something.jpg" if original_filename
+  #   "original.#{model.attachment.file.extension}" if original_filename
   # end
 
 end
