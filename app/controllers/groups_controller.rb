@@ -48,4 +48,14 @@ class GroupsController < ApplicationController
     respond_with @group
   end
 
+  def create
+    if params[:parent_type].present? && params[:parent_id].present?
+      @parent = params[:parent_type].constantize.find(params[:parent_id]).child_groups
+    else
+      @parent = Group
+    end
+    @new_group = @parent.create( name: I18n.t(:new_group) )
+    redirect_to @new_group
+  end
+
 end
