@@ -77,7 +77,7 @@ Wingolfsplattform::Application.configure do
     password: mailer_passwords[ "production_smtp_password" ],
     enable_starttls_auto: false
   }
-  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
+  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
 
 
 
