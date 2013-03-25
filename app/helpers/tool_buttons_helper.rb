@@ -3,7 +3,7 @@ module ToolButtonsHelper
   
   def remove_button( object )
     title = t( :remove )
-    title += ": " + object.title if object.respond_to? :title
+    title += ": " + object.title if object.respond_to?(:title) && object.title.present?
     link_to( tool_icon( "icon-trash icon-white" ),
              object,
              method: 'delete',

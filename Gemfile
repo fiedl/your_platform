@@ -23,6 +23,8 @@ group :assets, :production, 'testing-aki' do
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
+
+  gem 'jquery-fileupload-rails'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more 

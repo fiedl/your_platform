@@ -1,0 +1,15 @@
+<tr>
+  <td>
+    <%= link_to image_tag( attachment.thumb_url ), attachment.file.url %>
+  </td>
+  <td>
+    <span class="attachment-description">
+      <p class="attachment title">
+        <%= link_to best_in_place( attachment, :title ), attachment.file.url %> <%= remove_button attachment %>
+      </p>
+      <p class="attachment filename"><%= link_to attachment.filename, attachment.file.url  %></p>
+      <p class="attachment description"><%= best_in_place attachment, :description %></p>
+      <p class="attachment filesize"><%= attachment.file_size_human %></p>
+    </span>
+  </td>
+</tr>
