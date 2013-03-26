@@ -21,6 +21,9 @@ ready = ->
   $(document).bind('dragover', (e) ->
     $('.attachment_global_drop_zone').show()
   )
+  $('.attachment_global_drop_zone').bind('dragleave drop', (e) ->
+    $('.attachment_global_drop_zone').hide()
+  )
   $(document).bind('mouseout', (e) ->
     $('.attachment_global_drop_zone').hide()
   )

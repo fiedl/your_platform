@@ -15,8 +15,8 @@ module BoxHelper
     html_convert_h1_to_boxes( html_code )
   end
 
-  def html_convert_h1_to_boxes( html_code )
-    return html_code if not html_code.start_with? "<h1>"
+  def html_convert_h1_to_boxes( html_code, options = {} )
+    return html_code if (not html_code.start_with? "<h1>") && (not options[:force])
     
     # Further Nokogiri Reference
     # * http://stackoverflow.com/questions/3449767/find-and-replace-entire-html-nodes-with-nokogiri 
