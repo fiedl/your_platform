@@ -2,13 +2,10 @@
   <h1><%=t :pictures %></h1>
   <div class="pictures">
     <% for attachment in @page.attachments_by_type( "image" ) %>
-
-      <%= attachment_lightbox_tag( attachment ) %>
-      <%= remove_button( attachment ) %>
-
+      <%= render partial: 'attachments/picture', locals: { attachment: attachment } %>
     <% end %>
-    <span class="show_only_in_edit_mode">
+    <p class="show_only_in_edit_mode">
       <%=t :to_edit_title_click_on_image_and_then_on_title %>
-    </span>
+    </p>
   </div>
 <% end %>

@@ -7,7 +7,7 @@ module ToolButtonsHelper
     link_to( tool_icon( "icon-trash icon-white" ),
              object,
              method: 'delete',
-             :class => 'remove_button tool show_only_in_edit_mode btn btn-danger',
+             :class => 'remove_button tool show_only_in_edit_mode btn btn-danger btn-small',
              :title => title,
              :remote => true
            )

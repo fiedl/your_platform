@@ -5,7 +5,8 @@ ready = ->
       file = data.files[0]
       data.context = $($.parseHTML(tmpl("template-upload", file)))
       # see https://github.com/blueimp/JavaScript-Templates/issues/19
-      $('table.attachments').append(data.context)
+      #$('table.attachments').append(data.context)
+      $('span.add_attachment').prepend(data.context)
       data.context.find('.processing').hide()
       data.submit()
     progress: (e, data) ->
