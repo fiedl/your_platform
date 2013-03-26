@@ -48,6 +48,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :video_thumb, :if => :video? do
     process :create_video_thumb
     process :set_content_type => [ "image/jpeg" ]
+    def full_filename( for_file = model.attachment.file )
+      "video-thumb.jpg"
+    end
   end
 
   def image_or_pdf?( new_file )
