@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+#
+# This script handles receiving emails in order to reprocess them, e.g. for group emails.
+# Have a look at these resources:
+#
+#   * http://railscasts.com/episodes/313-receiving-email-with-mailman.
+#   * https://github.com/titanous/mailman
+#   * http://rubydoc.info/github/titanous/mailman/master/file/USER_GUIDE.md
+#
+
+require "rubygems"
+require "bundler/setup"
+require "mailman"
+
+Mailman::Application.run do
+  default do
+    
+    puts "received #{message.subject}"
+
+  end
+end

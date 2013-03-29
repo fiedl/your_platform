@@ -198,3 +198,5 @@ gem 'angularjs-rails'
 # Pagination
 gem 'will_paginate', '> 3.0'
 
+# Receiving Mails
+gem 'mailman', require: false
