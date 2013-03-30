@@ -32,7 +32,9 @@ class User
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
   def aktivitaetszahl
-    self.corporations.collect do |corporation| 
+    self.corporations
+      .sort_by { |corporation| corporation.membership_of(self).created_at } # order by date of joining
+      .collect do |corporation| 
       if not self.guest_of? corporation
         year_of_joining = ""
         year_of_joining = corporation.membership_of( self ).created_at.to_s[2, 2] if corporation.membership_of( self ).created_at
