@@ -12,10 +12,24 @@ require "rubygems"
 require "bundler/setup"
 require "mailman"
 
+Mailman.config.logger = Logger.new("log/mailman.log")
+
 Mailman::Application.run do
-  default do
+
+  to '%token%@wingolfsplattform.org' do
     
-    puts "received #{message.subject}"
+    begin
+      Post.create_from_message(message)
+    rescue Exception => e
+      Mailman.logger.error "Exception occured while processing received email:\n#{message}"
+      Mailman.logger.error [e, *e.backtrace].join("\n")
+    end
 
   end
 end
+
+
+# This file is still in development.
+# Try this using 
+#
+#   cat mailman_test.eml | script/mailman_server
