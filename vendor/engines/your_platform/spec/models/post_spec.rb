@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Post, focus: true do
+describe Post do
 
   describe ".create_from_message" do
     before { @message = build(:mail_message_to_group) }
