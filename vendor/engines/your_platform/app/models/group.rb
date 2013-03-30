@@ -21,6 +21,8 @@ class Group < ActiveRecord::Base
   is_navable
   has_profile_fields
 
+  has_many :posts
+
   include GroupMixins::SpecialGroups
   include GroupMixins::Import
 
