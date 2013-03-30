@@ -265,7 +265,7 @@ GEM
       multi_json (~> 1.0)
       simplecov-html (~> 0.7.1)
     simplecov-html (0.7.1)
-    slim_breadcrumb (0.0.2)
+    slim_breadcrumb (0.0.3)
       coffee-rails
       jquery-rails
       rails (>= 3.2)
@@ -353,7 +353,7 @@ DEPENDENCIES
   rubylight (>= 1.0.3.2)
   sass-rails (~> 3.2.3)
   simplecov
-  slim_breadcrumb (>= 0.0.2)
+  slim_breadcrumb (>= 0.0.3)
   spork
   therubyracer
   turbolinks (>= 1.0)

@@ -156,7 +156,7 @@ gem 'edit_mode', '>= 0.0.7'                                             # MIT Li
 #gem 'edit_mode', path: '../edit_mode'
 
 # hide slim breadcrumb elements until user hovers the separator, SF
-gem 'slim_breadcrumb', '>= 0.0.2'                                       # MIT License
+gem 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
 
 
 # password generator. it's not pwgen, but it's a gem.
