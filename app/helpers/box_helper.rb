@@ -16,7 +16,6 @@ module BoxHelper
   end
 
   def html_convert_h1_to_boxes( html_code, options = {} )
-    return html_code if (not html_code.start_with? "<h1>") && (not options[:force])
     
     # Further Nokogiri Reference
     # * http://stackoverflow.com/questions/3449767/find-and-replace-entire-html-nodes-with-nokogiri 
@@ -25,15 +24,21 @@ module BoxHelper
     doc = Nokogiri::HTML( html_code )
 
     box_counter = 0
-    doc.xpath( '//h1' ).collect do |h1_node|
+    doc.xpath( '//h1' ).each do |h1_node|
       box_counter += 1
       heading = h1_node.inner_html.html_safe
       heading_class = h1_node.attr( :class )
       heading_class ||= ""
       heading_class += " first" if box_counter == 1
-      content = h1_node.next_element.to_html.html_safe
-      content_box( heading: heading, content: content, box_class: heading_class )
-    end.join.html_safe
+
+      content_element = h1_node.next_element
+      content = content_element.to_html.html_safe
+      content_element.remove()      
+
+      h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
+    end
+
+    return doc.to_s
   end
 
 end
