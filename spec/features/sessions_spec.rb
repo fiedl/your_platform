@@ -4,14 +4,14 @@ feature "Sessions" do
   describe "New Session Page" do  # to show the browser while testing, e.g. use `js: true`.
     
     before do
-      visit new_session_path
+      visit new_user_account_session_path
     end
 
     subject { page }
 
     describe "Form elements" do
-      it { should have_field( 'login_name' ) }
-      it { should have_field( 'password' ) }
+      it { should have_field( 'user_account_login' ) }
+      it { should have_field( 'user_account_password' ) }
     end
 
     it "should allow to create a new session" do
@@ -21,9 +21,9 @@ feature "Sessions" do
       @user.save
       @password = @user.account.password
 
-      fill_in 'login_name', with: "John Doe"
-      fill_in 'password', with: @password
-      click_button I18n.t( "login" )
+      fill_in 'user_account_login', with: "John Doe"
+      fill_in 'user_account_password', with: @password
+      click_button I18n.t( :login )
       
       page.should have_content( "John Doe" )
       page.should have_content( I18n.t( :logout ) )

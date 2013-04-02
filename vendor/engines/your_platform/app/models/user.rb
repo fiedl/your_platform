@@ -133,6 +133,7 @@ class User < ActiveRecord::Base
       self.account = self.build_account
       self.save
     end
+    return self.account
   end
 
   # This method deactivates the user account, i.e. destroys the associated object
@@ -299,16 +300,6 @@ class User < ActiveRecord::Base
 
   include UserMixins::Identification
   
-  # This method tries to authenticate a user by a login_string and a password.
-  # The user is identified by the login_string (see `self.identify`).
-  #
-  # If the given password matches the identified user, the hereby authenticated user
-  # is returned. Otherwise, this method returns `nil`.
-  #
-  def self.authenticate( login_string, password )
-    UserAccount.authenticate login_string, password 
-  end
-
 
   # Roles and Rights
   # ==========================================================================================

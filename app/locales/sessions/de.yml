@@ -1,7 +1,7 @@
 de:
   login:                    Anmelden
-  login_name:               Login-Name
-  password:        	    Passwort
+  login_name:               Anmeldename
+  password:                 Passwort
   login_name_explanation:   Name, E-Mail-Adresse, Alias, W-Nummer
 
   login_failed:             Anmeldung fehlgeschlagen.
@@ -11,3 +11,11 @@ de:
 
   good_bye:                 Auf Wiedersehen!
   logout:                   Abmelden
+
+  submit_send_instructions: Passwort zurücksetzen
+  forgot_password:          Passwort vergessen?
+  change_password:          Passwort ändern
+  new_password:             Neues Passwort
+  confirm_new_password:     Passwort bestätigen
+  submit_changed_password:  Passwort ändern
+  remember_me:              Anmeldestatus merken

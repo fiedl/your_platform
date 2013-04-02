@@ -1,14 +1,19 @@
 require 'spec_helper'
 
 feature "UserForgotPassword" do
+  include SessionSteps
 
   before do
     @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe", 
                          create_account: true )
     @user.save
+    login
+    #logged in with a different user account.
+    # If you change your own password, you get logged out(and these tests would fail)!
   end
 
   describe "Profile Page" do
+
     it "should contain the send-new-password link" do
       visit user_path( @user )
       page.should have_link I18n.t( :send_new_password ) 
@@ -36,14 +41,21 @@ feature "UserForgotPassword" do
       email_text.include?( "Passwort" ).should be_true # TODO: change this later to use I18n
       password_line = email_text.lines.find { |s| s.starts_with? "Passwort:" } # TODO: change this later to use I18n
       password = password_line.split( ' ' ).last
-      UserAccount.authenticate( @user.alias, password ).should_not == nil
+
+      logout
+
+      visit new_user_account_session_path
+      fill_in 'user_account_login', with: @user.alias
+      fill_in 'user_account_password', with: password
+      click_button I18n.t( :login )
+      page.should have_content( I18n.t( 'devise.sessions.signed_in', user_name: @user.title ) )
     end
 
     it "should change the user's password" do
-      old_password_digest = @user.account.password_digest
-      old_password_digest.should_not be_nil
+      old_encrypted_password = @user.account.encrypted_password
+      old_encrypted_password.should_not be_nil
       send_new_password
-      User.first.account.password_digest.should_not == old_password_digest
+      User.first.account.encrypted_password.should_not == old_encrypted_password
     end
 
   end

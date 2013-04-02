@@ -2,11 +2,11 @@
 require 'spec_helper'
 
 feature 'User page', js: false do
+  include SessionSteps
+
   background do
     User.destroy_all
     @user = create( :user_with_account )
-    @login_string = @user.alias
-    @password = @user.account.password
   end
 
   subject { page }
@@ -21,12 +21,7 @@ feature 'User page', js: false do
 
   describe 'when signed in' do
     background do
-
-      visit new_session_path
-      fill_in 'login_name', with: @login_string
-      fill_in 'password', with: @password
-      click_button I18n.t( :login )
-
+      login @user
       visit user_path( @user )
     end
   

@@ -2,8 +2,12 @@
 require 'spec_helper'
 
 feature "Search Field", js: true do
+  include SessionSteps
 
   before do
+    user = create( :user_with_account )
+    login user
+
     visit root_path
   end
 

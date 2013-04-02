@@ -409,7 +409,7 @@ describe User do
   end
 
 
-  # User Identification and Authentification
+  # User Identification
   # ==========================================================================================
 
   describe ".identify" do
@@ -428,38 +428,7 @@ describe User do
     end
   end
 
-  describe ".authenticate" do
-    before do
-      @user.activate_account
-      @user.account.password = "correct_password"
-      @user.save
-    end
-    describe "with the correct password" do
-      subject { User.authenticate( @user.alias, "correct_password" ) }
-      it { should == @user }
-    end
-    describe "with the wrong password" do
-      subject { User.authenticate( @user.alias, "wrong_password" ) }
-      it "should raise an error" do
-        expect { subject }.to raise_error
-      end
-    end
-    describe "with a wrong login_string" do
-      subject { User.authenticate( "wrong_login_string", "some_password" ) }
-      it "should raise an error" do
-        expect { subject }.to raise_error
-      end
-    end
-    describe "for a user without account" do
-      before { @user.deactivate_account }
-      subject { User.authenticate( @user.alias, "correct_password" ) }
-      it "should raise an error" do
-        expect { subject }.to raise_error
-      end
-    end
-  end
-      
-  
+
   # Roles
   # ==========================================================================================
 

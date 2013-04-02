@@ -1,10 +1,16 @@
 # -*- coding: utf-8 -*-
 class UserAccount < ActiveRecord::Base
+  # Include default devise modules. Others available are:
+  # :token_authenticatable, :confirmable,
+  # :lockable, :timeoutable, :registerable and :omniauthable
+  devise :database_authenticatable,
+         :recoverable, :rememberable, :trackable, :validatable
 
-  has_secure_password      # This provides a `password` attribute to set a new password. 
-                           # The encrypted password is saved in the `password_digest` column.
-                           # See: * http://railscasts.com/episodes/270-authentication-in-rails-3-1
-                           #      * http://api.rubyonrails.org/classes/ActiveModel/SecurePassword/ClassMethods.html
+  # Setup accessible (or protected) attributes for your model
+  attr_accessible :password, :password_confirmation, :remember_me
+
+  # Virtual attribute for authenticating by either username, alias or email
+  attr_accessor :login
 
   belongs_to               :user, inverse_of: :account
 
@@ -21,20 +27,23 @@ class UserAccount < ActiveRecord::Base
 
   after_save               :send_welcome_email_if_just_created
 
-
-  # Tries to identify a user based on the given `login_string` and to authenticate this user 
-  # with the given `password`. 
-  def self.authenticate( login_string, password )
-    identified_user = UserAccount.identify_user_with_account( login_string )
-    if identified_user
-      if identified_user.account.authenticate( password )
-        authenticated_user = identified_user
-      else  
-        raise 'wrong_password'
-      end
-    end
-    return authenticated_user
+  def email
+    user.email if user
   end
+
+  #HACK: This method seems to be required by the PasswordController and is missing, since we have a virtual email
+  #field. If we ever change the Password authentication field to login, remove this method.
+  def email_changed?
+    false
+  end
+
+  # Used by devise to identify the correct user account by the given strings
+  def self.find_first_by_auth_conditions(warden_conditions)
+    login = warden_conditions[:login] || warden_conditions[:email]
+    return self.identify_user_with_account(login) if login # user our own identification system for virtual attributes
+    where(warden_conditions).first # use devise identification system for auth tokens and the like.
+  end
+
 
   # Tries to identify a user based on the given `login_string`.
   def self.identify_user_with_account( login_string )
@@ -54,7 +63,7 @@ class UserAccount < ActiveRecord::Base
     raise 'identification_not_unique' if users_that_match_the_login_string_and_have_an_account.count > 1
     identified_user = users_that_match_the_login_string_and_have_an_account.first
 
-    return identified_user
+    return identified_user.account
   end
 
   def send_new_password
@@ -70,7 +79,7 @@ class UserAccount < ActiveRecord::Base
   # This generates a password if (1) no password is stored in the database
   # and (2) no new password is set to be saved (in the `password` attribute).
   def generate_password_if_unset
-    unless self.password_digest
+    if self.encrypted_password.blank?
       unless self.password
         self.generate_password
       end

@@ -18,9 +18,9 @@ module BackendHorizontalNavHelper
     c = navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
       backend_horizontal_nav_item navable_to_display_in_horizontal_nav
     end.join.html_safe
-    unless @current_user # Temporärer Login-Link
+    unless current_user_account # Temporärer Login-Link
       c += content_tag :li do
-        link_to "Login", controller: 'sessions', action: 'new'
+        link_to t(:login), new_user_account_session_url
       end
     end
     c

@@ -1,5 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  devise_for :user_accounts
+
   get "angular_test", controller: "angular_test", action: "index"
 
   root :to => 'root#index'
@@ -15,9 +17,6 @@ Wingolfsplattform::Application.routes.draw do
 
   match 'stars/user/:user_id/:starrable_type/:starrable_id' => "stars#update"
   resources :stars
-
-  match "sessions/logout" => "sessions#logout"
-  resources :sessions
 
   match "users/new/:alias" => "users#new"
 

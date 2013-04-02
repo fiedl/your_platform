@@ -20,15 +20,15 @@
 </head>
 <body class="<%= controller.controller_name %>">
 
-  <% if logged_in? %>
+  <% if user_account_signed_in? %>
   <div id="backendBar">
     <div class="content">
       <ul class="backendBarItems">
         <li class="first backendBarItem">
 	  <%= render "layouts/session_bar_avatar" %>
-	  <%= link_to @current_user.name, main_app.user_path( @current_user ) %>
+	  <%= link_to current_user.name, main_app.user_path( current_user ) %>
 	</li>
-        <li class="backendBarItem"><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+        <li class="backendBarItem"><%= link_to t( :my_profile ), main_app.user_path( current_user ) %> </li>
 	<li class="backendBarItem dropdown">
 	  <%= link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' } %>
 	  <ul class="dropdown-menu">
@@ -47,7 +47,7 @@
 	  </ul>
 	</li>
         <li class="last backendBarItem">
-	  <%= link_to t( :logout ), main_app.sessions_logout_path %>
+	  <%= link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete %>
 	</li>
           </ul>
       </div>

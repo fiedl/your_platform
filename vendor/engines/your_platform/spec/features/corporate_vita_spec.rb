@@ -2,10 +2,11 @@
 require 'spec_helper'
 
 feature 'Corporate Vita', js: true do
+  include SessionSteps
 
   background do
 
-    @user = create( :user )
+    @user = create( :user_with_account )
 
     @corporation = create( :corporation_with_status_groups )
     @status_groups = @corporation.child_groups
@@ -19,7 +20,9 @@ feature 'Corporate Vita', js: true do
     @second_promotion_workflow = create( :promotion_workflow, name: 'Second Promotion',
                                          :remove_from_group_id => @status_groups.second.id,
                                          :add_to_group_id => @status_groups.last.id )
-    @second_promotion_workflow.parent_groups << @status_groups.second 
+    @second_promotion_workflow.parent_groups << @status_groups.second
+
+    login @user
 
     visit user_path( @user )
   end

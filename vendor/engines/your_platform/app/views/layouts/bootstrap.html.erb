@@ -37,7 +37,7 @@
   </head>
   <body>
 
-    <% if logged_in? %>
+    <% if user_account_signed_in? %>
     <div id="logged-in-bar" class="navbar navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container-fluid">
@@ -50,7 +50,7 @@
           <a class="brand" href="#">Wingolfsplattform</a>
           <!--div class="container-fluid nav-collapse"-->
             <ul class="nav">
-              <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
+              <li><%= link_to t( :my_profile ), main_app.user_path( current_user_account.user ) %> </li>
 
               <li class="dropdown">
 		<%= link_to( 
@@ -76,12 +76,12 @@
 	      <li class="last dropdown">
 		<%= render "layouts/session_bar_avatar" %>
 		<a class="dropdown-toggle" data-toggle="dropdown" href="#">
-		  <%= @current_user.name %>
+		  <%= current_user.name %>
 		  <b class="caret"></b>
 		</a>
 		<ul class="dropdown-menu">
-		  <li><%= link_to t( :my_profile ), main_app.user_path( @current_user ) %> </li>
-		  <li><%= link_to t( :logout ), main_app.sessions_logout_path %></li>
+		  <li><%= link_to t( :my_profile ), main_app.user_path( current_user ) %> </li>
+		  <li><%= link_to t( :logout ), main_app.destroy_user_account_session_url, method: :delete %></li>
 		</ul>
 	      </li>
             </ul>
@@ -105,9 +105,11 @@
       </span>
       
       <ul><!-- class="breadcrumb" -->
+        <% if user_account_signed_in? %>
 	<span id="star_tool">
 	  <%= star_tool( current_user, @navable ) %>
 	</span>
+          <% end %>
 	<span id="breadcrumb">
 	  <%= breadcrumb_ul %>
 	</span>

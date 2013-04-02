@@ -36,8 +36,8 @@ gem 'haml'
 
 gem 'jquery-rails'							# MIT License
 
-# To use ActiveModel has_secure_password (password encryption)
-gem 'bcrypt-ruby', '>= 3.0.1'	                                        # MIT License
+# Authentification
+gem 'devise'                  # MIT License
 
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
@@ -93,7 +93,7 @@ gem 'colored'								# MIT License
 # Auto Completion
 #gem 'rails3-jquery-autocomplete'					# MIT Licenses
 
-# Deployment with Capistrano.                                          
+# Deployment with Capistrano.
 # Capistrano runs locally, not on the remote server.
 group :development do
   gem 'capistrano' #, '~>2.11.2'
