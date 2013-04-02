@@ -21,10 +21,13 @@ else
   config = YAML.load(File.read(config_file))
   
   Mailman.config.logger = Logger.new("log/mailman.log")
-  Mailman.config.maildir = config[:maildir]
+  Mailman.config.maildir = config["maildir"]
   
+  p "mailman: configuration set. starting mailman application ..."
   Mailman::Application.run do
   
+    p "mailman run ..."
+    p "monitoring #{Mailman.config.maildir}/new."
     to '%token%@wingolfsplattform.org' do
       
       begin

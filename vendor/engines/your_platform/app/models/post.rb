@@ -8,6 +8,12 @@ class Post < ActiveRecord::Base
   # See spec/factories/mail_message.rb.
   #
   def self.create_from_message(message)
+    p "================================================================================"
+    p message.text_part
+    p "--------------------------------------------------------------------------------"
+    p message.html_part
+    p "--------------------------------------------------------------------------------"
+
     new_post = self.create(subject: message.subject, text: message.body.decoded, sent_at: message.date)
     new_post.author = message.from.first
     new_post.set_group_by_email_address(message.to.first)

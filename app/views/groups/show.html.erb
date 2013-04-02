@@ -2,7 +2,7 @@
 <p>Gruppenseite dieser Gruppe</p>
 
 <!-- current posts -->
-<% if @posts %>
+<% if @posts && @posts.count > 0 %>
   <%= render partial: 'posts/posts', locals: { posts: @posts } %>
 <% end %>
 
