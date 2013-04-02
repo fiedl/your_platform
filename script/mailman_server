@@ -11,20 +11,30 @@
 require "rubygems"
 require "bundler/setup"
 require "mailman"
+require 'yaml'
 
-Mailman.config.logger = Logger.new("log/mailman.log")
+config_file = File.expand_path('../config/group-mail-worker.yml', __FILE__)
+if not File.exists? config_file
+  raise "The config/group-mail-worker.yml was not found! Group mail worker could not be started!"
+else
 
-Mailman::Application.run do
-
-  to '%token%@wingolfsplattform.org' do
-    
-    begin
-      Post.create_from_message(message)
-    rescue Exception => e
-      Mailman.logger.error "Exception occured while processing received email:\n#{message}"
-      Mailman.logger.error [e, *e.backtrace].join("\n")
+  config = YAML.load(File.read(config_file))
+  
+  Mailman.config.logger = Logger.new("log/mailman.log")
+  Mailman.config.maildir = config.maildir
+  
+  Mailman::Application.run do
+  
+    to '%token%@wingolfsplattform.org' do
+      
+      begin
+        Post.create_from_message(message)
+      rescue Exception => e
+        Mailman.logger.error "Exception occured while processing received email:\n#{message}"
+        Mailman.logger.error [e, *e.backtrace].join("\n")
+      end
+  
     end
-
   end
 end
 

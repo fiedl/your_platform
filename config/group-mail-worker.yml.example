@@ -1,0 +1,2 @@
+user: "group-mail-worker"
+maildir: "/home/group-mail-worker/Maildir"
