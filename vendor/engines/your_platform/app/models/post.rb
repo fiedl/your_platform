@@ -8,13 +8,13 @@ class Post < ActiveRecord::Base
   # See spec/factories/mail_message.rb.
   #
   def self.create_from_message(message)
-    p "================================================================================"
-    p message.text_part
-    p "--------------------------------------------------------------------------------"
-    p message.html_part
-    p "--------------------------------------------------------------------------------"
 
-    new_post = self.create(subject: message.subject, text: message.body.decoded, sent_at: message.date)
+    # http://stackoverflow.com/questions/4868205
+    plain_part = message.multipart? ? (message.text_part ? message.text_part.body.decoded : nil) : message.body.decoded
+    html_part = message.html_part ? message.html_part.body.decoded : nil
+    body = html_part || plain_part
+
+    new_post = self.create(subject: message.subject, text: body, sent_at: message.date)
     new_post.author = message.from.first
     new_post.set_group_by_email_address(message.to.first)
     new_post.save
