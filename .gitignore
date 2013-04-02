@@ -26,8 +26,9 @@ config/database.yml
 #config/database*.yml
 config/database
 
-# mailer passwords
+# mailer passwords and configuration
 config/mailer_passwords.yml
+config/group-mail-worker.yml
 
 # Ignore uploads folder content folder
 public/uploads/*
