@@ -32,13 +32,16 @@ module BoxHelper
       heading_class += " first" if box_counter == 1
 
       content_element = h1_node.next_element
-      content = content_element.to_html.html_safe
-      content_element.remove()      
+      if content_element
+        content = content_element.to_html.html_safe
+        content_element.remove()      
+      end
+      content ||= "" # because content_box expects a String
 
       h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
     end
 
-    return doc.to_s
+    return doc.to_s.html_safe
   end
 
 end
