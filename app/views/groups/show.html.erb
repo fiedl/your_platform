@@ -1,6 +1,12 @@
 <h1><%= best_in_place @group, :name %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
+<!-- current posts -->
+<% if @posts %>
+  <%= render partial: 'posts/posts', locals: { posts: @posts } %>
+<% end %>
+
+<!-- umcoming events -->
 <% if @group.events.upcoming %>
 <h1 class="section upcoming_events">Kommende Veranstaltungen</h1>
 <div>

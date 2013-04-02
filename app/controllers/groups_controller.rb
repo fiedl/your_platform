@@ -39,6 +39,9 @@ class GroupsController < ApplicationController
 
       user_ids = @group.descendant_users.collect { |user| user.id }
       @map_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
+
+      # current posts
+      @posts = @group.posts.order("sent_at DESC").limit(10)
     end
   end
 

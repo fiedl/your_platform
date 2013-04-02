@@ -8,6 +8,8 @@ Wingolfsplattform::Application.routes.draw do
 
   match "search" => "search#index", as: "search"
 
+  resources :posts
+
   resources :groups do
     get :my, on: :collection
   end
