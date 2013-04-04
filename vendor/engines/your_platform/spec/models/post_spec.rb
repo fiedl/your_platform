@@ -57,7 +57,7 @@ describe Post do
         subject.should_not include("--Apple-Mail=") 
       end
       it "should include html tags" do
-        subject.should include("<html>")
+        subject.should include("<div>")
       end
       it "should include the text" do
         # have a look at the spec/factories/mail_message/html_email.eml file.
@@ -68,6 +68,30 @@ describe Post do
       end
       it "should be UTF-8 encoded" do
         subject.encoding.to_s.should == "UTF-8"
+      end
+      it "should not include html, head or body tag, since this would cause problems embedded in an html document" do
+        subject.should_not include "<html"
+        subject.should_not include "<head"
+        subject.should_not include "<body"
+      end
+    end
+  end
+
+  describe ".create_from_message#text_without_html_tags" do
+    subject { Post.create_from_message(@message).text_without_html_tags }
+    describe "for html messages" do
+      before { @message = build(:html_mail_message) }
+      it "should include the text" do
+        # have a look at the spec/factories/mail_message/html_email.eml file.
+        subject.should include("Liebe Freunde",
+                               "es ist mir ein besonderes Vergnügen",
+                               "Viele Grüße!",
+                               "Fiedl Z! E06") 
+      end
+      it "should not include html tags" do
+        subject.should_not include "<html"
+        subject.should_not include "<body"
+        subject.should_not include "<div"
       end
     end
   end

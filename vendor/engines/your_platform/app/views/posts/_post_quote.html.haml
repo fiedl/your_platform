@@ -2,14 +2,17 @@
   %div.post-header
     %div.post-author-and-date
       %span.post-author
+        - author = ""
         - if post.author.kind_of? User
-          = link_to post.author.title, post.author
+          - author = link_to post.author.title, post.author
         - if post.author.kind_of? String
-          = post.author
-        = ", "
+          - author = post.author
+        = author + ", " if author.present?
       %span.post-date
         = localize(post.sent_at)
     %div.post-subject
       = link_to post.subject, post
   %div.post-body
-    = truncate(post.text, length: 100, separator: " ").html_safe
+    - body_quote = truncate(post.text_without_html_tags, length: 250, separator: " ").html_safe
+    = body_quote
+    = ("(" + link_to(t(:read_on), post) + ")").html_safe if body_quote.end_with?("...")

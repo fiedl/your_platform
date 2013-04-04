@@ -28,7 +28,7 @@ else
   
     p "mailman run ..."
     p "monitoring #{Mailman.config.maildir}/new."
-    to '%token%@wingolfsplattform.org' do
+    default do
       
       begin
         Mailman.logger.info "Processing incoming email:\n#{message}"

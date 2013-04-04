@@ -10,13 +10,16 @@ class Post < ActiveRecord::Base
   def self.create_from_message(message)
 
     # http://stackoverflow.com/questions/4868205
-    plain_part_body = message.multipart? ? (message.text_part ? message.text_part.body.decoded : nil) : message.body.decoded
-    html_part_body = message.html_part ? message.html_part.body.decoded : nil
-
-    encoding = self.mail_encoding(message.html_part) if message.html_part
-
-    body = html_part_body || plain_part_body
+    part_to_use = message.html_part || message.text_part || message
+    encoding = part_to_use.content_type_parameters['charset'] if part_to_use.content_type_parameters
+    body = part_to_use.body.decoded
     body = body.force_encoding(encoding).encode('UTF-8') if encoding
+
+    # extract the content of the body tag if necessary
+    if body.include?('<body')
+      doc = Nokogiri::HTML( body )
+      body = doc.xpath( '//body' ).first.inner_html
+    end
 
     new_post = self.create(subject: message.subject, text: body, sent_at: message.date)
     new_post.author = message.from.first
@@ -67,5 +70,13 @@ class Post < ActiveRecord::Base
   end
 
   
+  # This returns the text attribute, i.e. the message body, without html tags,
+  # which could be used in block quotes, where only an excerpt of the message
+  # is shown. (Use this to avoid opened but not closed html tags.)
+  #
+  def text_without_html_tags
+    # http://stackoverflow.com/questions/7414267/strip-html-from-string-ruby-on-rails
+    HTML::FullSanitizer.new.sanitize(self.text)
+  end
 
 end
