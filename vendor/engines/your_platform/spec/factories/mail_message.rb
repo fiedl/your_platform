@@ -17,5 +17,14 @@ FactoryGirl.define do
     initialize_with { new(message) }
   end
 
+  factory :html_mail_message, :class => Mail do
+    
+    ignore do
+      email_file_name = File.join(File.dirname(__FILE__), './html_email.eml')
+      message File.open(email_file_name, "r").read
+    end
+
+    initialize_with { new(message) }
+  end
 
 end

@@ -10,9 +10,13 @@ class Post < ActiveRecord::Base
   def self.create_from_message(message)
 
     # http://stackoverflow.com/questions/4868205
-    plain_part = message.multipart? ? (message.text_part ? message.text_part.body.decoded : nil) : message.body.decoded
-    html_part = message.html_part ? message.html_part.body.decoded : nil
-    body = html_part || plain_part
+    plain_part_body = message.multipart? ? (message.text_part ? message.text_part.body.decoded : nil) : message.body.decoded
+    html_part_body = message.html_part ? message.html_part.body.decoded : nil
+
+    encoding = self.mail_encoding(message.html_part) if message.html_part
+
+    body = html_part_body || plain_part_body
+    body = body.force_encoding(encoding).encode('UTF-8') if encoding
 
     new_post = self.create(subject: message.subject, text: body, sent_at: message.date)
     new_post.author = message.from.first
@@ -50,5 +54,18 @@ class Post < ActiveRecord::Base
     # TODO Make this efficient, e.g. by email_token attribute
     self.group = groups.first if groups.count == 1
   end
+
+  # In order to do the encoding conversion properly,
+  # we have to find out the former encoding from the mail header.
+  # 
+  # parameter: Mail object
+  # #<Mail::Part:-570274288, Multipart: false, Headers: <Content-Type: text/html; charset=windows-1252>, 
+  #   <Content-Transfer-Encoding: quoted-printable>>
+  # 
+  def self.mail_encoding(mail)
+    mail.inspect.to_s.scan(/.charset=(.*)>./)[0][0].split(">").first if mail
+  end
+
+  
 
 end
