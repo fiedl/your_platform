@@ -32,6 +32,10 @@ describe Post do
 
       its(:text) { should == @message.body.decoded }
 
+      it "should store the entire message for later re-deliveries" do
+        subject.entire_message.should == @message
+      end
+
       describe "for an existing group with matching token" do
         before do
           # the email used is sent to test-group@exmaple.com
@@ -141,4 +145,73 @@ describe Post do
       it { should == @post.external_author }
     end
   end
+
+  
+  # Delivering Post as Email to All Group Members
+  # ==========================================================================================
+  
+  describe "Delivering Group Mails: " do
+    before do
+      @message = build(:mail_message_to_group)
+      # the email used is sent to test-group@exmaple.com
+      @group = create(:group, name: "Test Group")
+      @group.child_users << create(:user) << create(:user)
+      @users = @group.child_users
+      @post = Post.create_from_message(@message)
+    end
+
+    describe "#messages_to_deliver_to_mailing_list_members" do
+      subject { @post.messages_to_deliver_to_mailing_list_members }
+      
+      it "should be an Array of Mail Messages" do
+        subject.should be_kind_of Array
+        subject.first.should be_kind_of Mail
+      end
+      it "should contain one message per group member" do
+        subject.count.should == @users.count
+      end
+    end
+
+    describe "#modified_subject" do
+      subject { @post.modified_subject }
+      describe "for a clean subject" do
+        before { @post.subject = "My Fancy Subject" }
+        it { should == "[Test Group] My Fancy Subject" }
+      end
+      describe "for a Re: subject" do
+        before { @post.subject = "Re: [Test Group] My Fancy Subject" }
+        it { should == "Re: [Test Group] My Fancy Subject" }
+      end
+    end
+
+    describe "#mailing_list_footer" do
+      subject { @post.mailing_list_footer }
+      it { should include @group.name }
+      it "should containt the group's url" do
+        @group.url.present?.should == true
+        subject.should include @group.url
+      end
+    end
+
+    describe "#message_for_email_delivery_to_user" do
+      before { @user = @users.first }
+      subject { @post.message_for_email_delivery_to_user(@user) }
+      
+      it { should be_kind_of Mail }
+      it "should preserve multipart character" do
+        subject.multipart?.should == @message.multipart?
+      end
+      it "should have the modified subject" do
+        subject.subject.should == @post.modified_subject
+      end
+      it "should only have the given user as recipient" do
+        subject.to.count.should == 1
+        subject.to.first.should include @user.email
+      end
+      it "should contain the mailing list footer" do
+        subject.to_s.should include @post.mailing_list_footer
+      end
+    end
+  end
+
 end

@@ -79,4 +79,47 @@ class Post < ActiveRecord::Base
     HTML::FullSanitizer.new.sanitize(self.text)
   end
 
+
+  # Delivering Post as Email to All Group Members
+  # ==========================================================================================
+
+  # Each post may be delivered to all group members via email. ("Group Mail Feature").
+  # This method returns the message to deliver to the group members.
+  # This is done separately (i.e. one user at a time) in order to (a) not reveal the 
+  # email addresses, and (b) avoid being caught by a spam filter.
+  #
+  # Calling this method will produce, *not deliver* the mail messages.
+  # 
+  def messages_to_deliver_to_mailing_list_members
+    self.group.descendant_users.collect do |user|
+      
+    end
+  end
+
+  # This method returns the modified subject, which is used by the Group Mail Feature.
+  # Give a post subject 'My Fancy Subject" and the post's group's name being "Test Group",
+  # this mehtod returns "[Test Group] My Fancy Subject". 
+  #
+  # If the subject already contains the prefix, like in "Re: [Test Group] My Fancy Subject", 
+  # of cause, the prefix isn't added, twice.
+  #
+  def modified_subject
+    prefix = "[#{self.group.name}] "
+    if self.subject.include? prefix
+      return subject
+    else
+      return prefix + subject
+    end
+  end
+
+  # This method returns a mail footer, which may be added to the messages delivered via
+  # email. The footer contains, e.g. a link to the group's site.
+  #
+  def mailing_list_footer
+    "\n\n\n" + 
+      "_____________________________________\n" +
+      I18n.t(:this_message_has_been_deliverd_through_mailing_list, group_name: self.group.name ) + "\n" +
+      self.group.url + "\n"
+  end
+
 end

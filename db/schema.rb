@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130329231902) do
+ActiveRecord::Schema.define(:version => 20130404223828) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -125,6 +125,7 @@ ActiveRecord::Schema.define(:version => 20130329231902) do
     t.boolean  "sticky"
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
+    t.text     "entire_message"
   end
 
   create_table "profile_fields", :force => true do |t|
