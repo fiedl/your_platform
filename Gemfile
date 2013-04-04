@@ -200,3 +200,7 @@ gem 'will_paginate', '> 3.0'
 
 # Receiving Mails
 gem 'mailman', require: false
+
+# Manage Workers
+gem 'foreman', group: [:development, :production]
+
