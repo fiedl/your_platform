@@ -24,6 +24,7 @@ class Post < ActiveRecord::Base
     new_post = self.create(subject: message.subject, text: body, sent_at: message.date)
     new_post.author = message.from.first
     new_post.set_group_by_email_address(message.to.first)
+    new_post.entire_message = message
     new_post.save
     return new_post
   end
@@ -120,6 +121,37 @@ class Post < ActiveRecord::Base
       "_____________________________________\n" +
       I18n.t(:this_message_has_been_deliverd_through_mailing_list, group_name: self.group.name ) + "\n" +
       self.group.url + "\n"
+  end
+
+  # This method returns the modified message, ready for delivery via email
+  # to the specified user.
+  #
+  def message_for_email_delivery_to_user( user )
+
+    # use the stored message as template
+    message = self.entire_message
+    
+    # modify the subject according to the group's name
+    message.subject = self.modified_subject
+
+    # add the footer for each part
+    # TODO: de-uglify this!
+    if message.multipart?
+      message.parts.each_with_index do |part, index|
+        if part.content_type == 'text/plain'
+          message.parts[index].body = part.body.decoded + self.mailing_list_footer
+        end
+        if part.content_type == 'text/html'
+          doc = Nokogiri::HTML( part.body )
+          doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer
+          message.parts[index].body = doc.to_s
+        end
+      end
+    else
+      message.body = (message.body.decoded.to_s + self.mailing_list_footer).encode('UTF-8')
+    end
+    
+    return message
   end
 
 end
