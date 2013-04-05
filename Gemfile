@@ -201,6 +201,7 @@ gem 'will_paginate', '> 3.0'
 # Receiving Mails
 gem 'mailman', require: false
 gem 'mail', git: 'git://github.com/jeremy/mail.git'
+gem 'rb-inotify', '~> 0.9', group: :production
 
 # Manage Workers
 gem 'foreman', group: [:development, :production]
