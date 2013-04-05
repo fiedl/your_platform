@@ -38,11 +38,18 @@ else
         post = Post.create_from_message(message)
         Mailman.logger.info "Processing completed. Created post #{post.id}."
 
+        # copy delivery settings from the Rails configuration
+        delivery_method = Rails.application.config.action_mailer.delivery_method
+        delivery_settings = Rails.application.config.action_mailer.smtp_settings
+        delivery_settings ||= {}
+
         # TEMPORARY SAFE GUARD!
         # ONLY ALLOW MESSAGES TO fiedlschuster.
         messages_to_deliver = post.messages_to_deliver_to_mailing_list_members
         messages_to_deliver.each do |message|
           raise "TEMP: no mail to fiedlschuster:\n#{message}" unless message.smtp_envelope_to.first.include?('fiedlschuster')
+
+          message.delivery_method delivery_method, delivery_settings
           message.deliver
         end
         Mailman.logger.info "Delivered post #{post.id} to #{messages_to_deliver.count} users."
