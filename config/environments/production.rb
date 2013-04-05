@@ -66,20 +66,26 @@ Wingolfsplattform::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
 
-  # SMTP Settings
-  config.action_mailer.delivery_method = :smtp
-  require 'yaml'
-  mailer_passwords = YAML.load( File.read( "config/mailer_passwords.yml" ) )
-  raise 'no sender smtp password set in configuration.' unless mailer_passwords[ "production_smtp_password" ]
-  config.action_mailer.smtp_settings = {
-    address: 'smtp.1und1.de',
-    user_name: 'wingolfsplattform@wingolf.org',
-    password: mailer_passwords[ "production_smtp_password" ],
-    enable_starttls_auto: false,
-    # TODO Repair SSL connection
-    # see: http://stackoverflow.com/questions/13408898
-    openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
-  }
+#  # SMTP Settings
+#  config.action_mailer.delivery_method = :smtp
+#  require 'yaml'
+#  mailer_passwords = YAML.load( File.read( "config/mailer_passwords.yml" ) )
+#  raise 'no sender smtp password set in configuration.' unless mailer_passwords[ "production_smtp_password" ]
+#  config.action_mailer.smtp_settings = {
+#    address: 'smtp.1und1.de',
+#    user_name: 'wingolfsplattform@wingolf.org',
+#    password: mailer_passwords[ "production_smtp_password" ],
+#    enable_starttls_auto: false,
+#    # TODO Repair SSL connection
+#    # see: http://stackoverflow.com/questions/13408898
+#    openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
+#  }
   config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
+
+  # TEMPORARILY SWITCH TO SENDMAIL
+  # TODO: SWITCH BACK TO SMTP WHEN mail gem is fixed.
+  # https://github.com/mikel/mail/pull/477
+  # https://github.com/rails/rails/issues/9780
+  config.action_mailer.delivery_method = :sendmail
 
 end
