@@ -38,11 +38,8 @@ Wingolfsplattform::Application.routes.draw do
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
   # This route can be invoked with purchase_url(:id => product.id)
 
-#  delete 'user_group_memberships/delete/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :destroy
-#  put 'user_group_memberships/update/group/:group_id/user/:user_id', controller: :user_group_memberships, action: :update, as: :user_group_membership
-
-  resources :user_group_memberships, as: :user_group_membership # plural s does not work for some unknown reason!
-  resources :status_group_memberships #, as: :status_group_membership
+  resources :user_group_memberships
+  resources :status_group_memberships
 
   resources :users do
     get :autocomplete_title, on: :collection
@@ -59,7 +56,6 @@ Wingolfsplattform::Application.routes.draw do
 
 
   match 'profile/:alias' => 'users#show', :as => :profile
-#  match ':alias' => 'users#show', :as => :profile
 
 
   # Sample resource route (maps HTTP verbs to controller actions automatically):
@@ -112,6 +108,9 @@ Wingolfsplattform::Application.routes.draw do
      # controller, which is defenetly not wanted.
 
   #match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
+
+  get ':alias', to: 'users#show'
+
 
 end
 

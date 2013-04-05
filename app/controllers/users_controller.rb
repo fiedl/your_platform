@@ -75,12 +75,11 @@ class UsersController < ApplicationController
   private
 
   def find_user
-    if params[:id]
-      @user = User.find(params[:id])
-      @user = User.new unless @user
-      @title = @user.title
-      @navable = @user
-    end
+    @user = User.find(params[:id]) if params[:id].present?
+    @user ||= User.find_by_alias(params[:alias]) if params[:alias].present?
+    @user ||= User.new
+    @title = @user.title
+    @navable = @user
   end
 
 end
