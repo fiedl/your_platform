@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-									# Licenses
-									# =======================================
+                                                                                           # Licenses
+                                                                                           # =======================================
 
-source 'https://rubygems.org'						# Ruby License,
-       									# http://www.ruby-lang.org/en/LICENSE.txt
+source 'https://rubygems.org'						                                                   # Ruby License,
+                                                                                           # http://www.ruby-lang.org/en/LICENSE.txt
 
 
 
@@ -200,6 +200,7 @@ gem 'will_paginate', '> 3.0'
 
 # Receiving Mails
 gem 'mailman', require: false
+gem 'mail', git: 'git://github.com/jeremy/mail.git'
 
 # Manage Workers
 gem 'foreman', group: [:development, :production]
