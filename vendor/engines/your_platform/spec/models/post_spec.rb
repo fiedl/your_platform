@@ -231,15 +231,22 @@ describe Post do
       it "should still have the group as the recipient" do
         subject.to.should == @message.to
       end
-
-      pending "how to deliver it only to the user?" 
+      it "should have the user's email as envelop recipient" do
+        subject.smtp_envelope_to.should be_kind_of Array
+        subject.smtp_envelope_to.should include @user.email
+        subject.smtp_envelope_to.first.should include "@"
+      end
 
       it "should contain the mailing list footer" do
         subject.body.decoded.encode('UTF-8').should include @post.mailing_list_footer.encode('UTF-8')
       end
     end
   end
-
+  
+  # We might have to deal with this, but after switching back to the main mail gem,
+  # since this fix is not contained in the branch we are currently using.
+  # See: Gemfile, gem 'mail'.
+  #
   pending "check for added '=', https://github.com/mikel/mail/issues/533"
 
 end

@@ -93,7 +93,7 @@ class Post < ActiveRecord::Base
   # 
   def messages_to_deliver_to_mailing_list_members
     self.group.descendant_users.collect do |user|
-      
+      message_for_email_delivery_to_user(user)
     end
   end
 
@@ -134,24 +134,37 @@ class Post < ActiveRecord::Base
     # modify the subject according to the group's name
     message.subject = self.modified_subject
 
+    # modify the envelope_to field, but keep the to field as it is.
+    # Thereby, the group mail address is shown in the mail programs
+    # as recipient.
+    message.smtp_envelope_to = user.email
+
     # add the footer for each part
-    # TODO: de-uglify this!
     if message.multipart?
       message.parts.each_with_index do |part, index|
-        if part.content_type == 'text/plain'
-          message.parts[index].body = part.body.decoded + self.mailing_list_footer
-        end
-        if part.content_type == 'text/html'
-          doc = Nokogiri::HTML( part.body )
-          doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer
-          message.parts[index].body = doc.to_s
-        end
+        message.parts[index].body = body_and_footer_of_part(part)
       end
     else
-      message.body = (message.body.decoded.to_s + self.mailing_list_footer).encode('UTF-8')
+      message.body = body_and_footer_of_part(message)
     end
     
     return message
+  end
+
+  private
+
+  # This method takes the body of the given multipart message part, 
+  # adds the mailing list footer and returns the new body.
+  #
+  def body_and_footer_of_part( part )
+    if part.content_type == 'text/plain' || part.content_type == nil 
+      return (part.body.decoded + self.mailing_list_footer).encode('UTF-8')
+    end
+    if part.content_type == 'text/html'
+      doc = Nokogiri::HTML( part.body )
+      doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer
+      return doc.to_s.encode('UTF-8')
+    end
   end
 
 end
