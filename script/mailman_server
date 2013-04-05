@@ -42,7 +42,7 @@ else
         # ONLY ALLOW MESSAGES TO fiedlschuster.
         messages_to_deliver = post.messages_to_deliver_to_mailing_list_members
         messages_to_deliver.each do |message|
-          raise "TEMP: no mail to fiedlschuster:\n#{message}" unless message.smtp_envelope_to.include?('fiedlschuster')
+          raise "TEMP: no mail to fiedlschuster:\n#{message}" unless message.smtp_envelope_to.first.include?('fiedlschuster')
           message.deliver
         end
         Mailman.logger.info "Delivered post #{post.id} to #{messages_to_deliver.count} users."
