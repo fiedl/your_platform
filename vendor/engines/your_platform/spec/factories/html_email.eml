@@ -1,9 +1,9 @@
 Return-Path: <john.doe@example.com>
-X-Original-To: ak-internet@example.com
+X-Original-To: test-group@example.com
 Delivered-To: group-mail-worker@example.com
 Received: from moutng.kundenserver.de (moutng.kundenserver.de [212.227.17.8])
 	by example.com (Postfix) with ESMTPS id 1CFDC219BD
-	for <ak-internet@example.com>; Tue,  2 Apr 2013 23:10:55 +0200 (CEST)
+	for <test-group@example.com>; Tue,  2 Apr 2013 23:10:55 +0200 (CEST)
 Received: from [192.168.0.110] (p5B2840DA.dip.t-dialin.net [91.40.64.218])
 	by mrelayeu.kundenserver.de (node=mreu4) with ESMTP (Nemesis)
 	id 0Mhrl9-1U0GGj1Vn1-00N259; Tue, 02 Apr 2013 23:10:54 +0200
@@ -12,7 +12,7 @@ Content-Type: multipart/alternative; boundary="Apple-Mail=_178E883F-F1A3-462B-8E
 Subject: Gruppen-Mailverteiler online!
 Message-Id: <75C2CEC3-1877-44B6-A125-D00C3F79F63A@wingolf.org>
 Date: Tue, 2 Apr 2013 23:10:52 +0200
-To: "ak-internet@example.com" <ak-internet@example.com>
+To: "test-group@example.com" <test-group@example.com>
 Mime-Version: 1.0 (Mac OS X Mail 6.2 \(1499\))
 X-Mailer: Apple Mail (2.1499)
 X-Provags-ID: V02:K0:ppzxdKVDpRO6QNt3WeDv5IHCvLxKtK+vt48ZvsQVAB5
@@ -35,7 +35,7 @@ Liebe Freunde,
 
 es ist mir ein besonderes Vergn=FCgen, die neuen E-Mail-Verteiler =
 vorzustellen. Diese Nachricht wurde erzeugt, indem ich ebendiese E-Mail =
-an ak-internet@example.com geschickt habe. Das System hat sie =
+an test-group@example.com geschickt habe. Das System hat sie =
 dann in die Datenbank importiert. Die Nachrichten an die E-Mails der =
 Gruppenmitglieder weiterzuleiten, d=FCrfte nicht mehr so schwierig sein.
 
@@ -76,7 +76,7 @@ charset=3Dwindows-1252"></head><body style=3D"word-wrap: break-word; =
 Freunde,<div><br></div><div>es ist mir ein besonderes Vergn=FCgen, die =
 neuen E-Mail-Verteiler vorzustellen. Diese Nachricht wurde erzeugt, =
 indem ich ebendiese E-Mail an&nbsp;<a =
-href=3D"mailto:ak-internet@example.com">ak-internet@example.com=
+href=3D"mailto:test-group@example.com">test-group@example.com=
 </a>&nbsp;geschickt habe. Das System hat sie dann in die =
 Datenbank importiert. Die Nachrichten an die E-Mails der =
 Gruppenmitglieder weiterzuleiten, d=FCrfte nicht mehr so schwierig =
@@ -652,8 +652,8 @@ auto; -webkit-text-stroke-width: 0px; font-size: medium; "><div =
 style=3D"font-weight: normal; ">von Wingolfsbund und VAW</div><div =
 style=3D"font-weight: normal; "><br></div><div style=3D"font-weight: =
 normal; "><a =
-href=3D"mailto:ak-internet@example.com">ak-internet@example.com</a>, <a =
-href=3D"http://example.org/ak-internet/">http://example.org/ak-internet/</=
+href=3D"mailto:test-group@example.com">test-group@example.com</a>, <a =
+href=3D"http://example.org/test-group/">http://example.org/test-group/</=
 a></div><div style=3D"font-weight: normal; "><br></div><b> =
 &nbsp;</b><div style=3D"font-weight: normal; ">Leiter des =
 Arbeitskreises =

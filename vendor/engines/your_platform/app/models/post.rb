@@ -11,9 +11,10 @@ class Post < ActiveRecord::Base
 
     # http://stackoverflow.com/questions/4868205
     part_to_use = message.html_part || message.text_part || message
-    encoding = part_to_use.content_type_parameters['charset'] if part_to_use.content_type_parameters
-    body = part_to_use.body.decoded
-    body = body.force_encoding(encoding).encode('UTF-8') if encoding
+   # encoding = part_to_use.content_type_parameters['charset'] if part_to_use.content_type_parameters
+   # body = part_to_use.body.decoded
+   # body = body.force_encoding(encoding).encode('UTF-8') if encoding
+    body = part_to_use.body_in_utf8
 
     # extract the content of the body tag if necessary
     if body.include?('<body')
@@ -157,14 +158,39 @@ class Post < ActiveRecord::Base
   # adds the mailing list footer and returns the new body.
   #
   def body_and_footer_of_part( part )
-    if part.content_type == 'text/plain' || part.content_type == nil 
-      return (part.body.decoded + self.mailing_list_footer).encode('UTF-8')
+    if part.content_type == nil || part.content_type.include?("text") # ignore attachments
+      if part.body.decoded.include?("<body")
+         doc = Nokogiri::HTML( part.body_in_utf8 )
+        doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer.force_encoding('binary')
+        new_body = doc.xpath('//html').to_s
+      else
+        new_body = part.body_in_utf8 + self.mailing_list_footer.force_encoding('binary')
+      end
+    else
+      new_body = part.body
     end
-    if part.content_type == 'text/html'
-      doc = Nokogiri::HTML( part.body )
-      doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer
-      return doc.to_s.encode('UTF-8')
-    end
+    raise 'Something went wrong. The new body should not be empty.' if not new_body.present?
+    return new_body
   end
 
 end
+
+module Mail
+  class Message
+    def body_in_utf8
+      # http://stackoverflow.com/questions/4868205
+#      encoding = self.content_type_parameters['charset'] if self.content_type_parameters
+#      encoding ||= self.body.charset
+#      recoded_body = self.body.decoded
+#      recoded_body = recoded_body.force_encoding(encoding).encode('UTF-8') if encoding
+#      recoded_body = recoded_body.encode('UTF-8') unless recoded_body.encoding.to_s == "UTF-8"
+      recoded_body = self.body.decoded.force_encoding('binary')
+#      if not recoded_body.encoding.to_s == "UTF-8"
+#        raise "Encoding has failed, apparently. It should be UTF-8 but is '#{recoded_body.encoding.to_s}'.\n" +
+#          "The detected charset is '#{encoding}'."
+#      end
+      return recoded_body
+    end
+  end
+end
+

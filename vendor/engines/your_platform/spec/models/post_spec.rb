@@ -2,7 +2,7 @@
 require 'spec_helper'
 require 'action_mailer/base'
 
-describe Post do 
+describe Post do
 
   def build_text_only_message
     build(:mail_message_to_group)
@@ -82,7 +82,7 @@ describe Post do
         subject.should_not include("Return-Path:")
       end
       it "should not include multipart separators" do
-        subject.should_not include("--Apple-Mail=") 
+        subject.should_not include("--Apple-Mail=")
       end
       it "should include html tags" do
         subject.should include("<div>")
@@ -92,7 +92,7 @@ describe Post do
         subject.should include("Liebe Freunde",
                                "es ist mir ein besonderes Vergnügen",
                                "Viele Grüße!",
-                               "Fiedl Z! E06") 
+                               "Fiedl Z! E06")
       end
       it "should be UTF-8 encoded" do
         subject.encoding.to_s.should == "UTF-8"
@@ -114,7 +114,7 @@ describe Post do
         subject.should include("Liebe Freunde",
                                "es ist mir ein besonderes Vergnügen",
                                "Viele Grüße!",
-                               "Fiedl Z! E06") 
+                               "Fiedl Z! E06")
       end
       it "should not include html tags" do
         subject.should_not include "<html"
@@ -170,79 +170,100 @@ describe Post do
     end
   end
 
-  
+
   # Delivering Post as Email to All Group Members
   # ==========================================================================================
-  
-  describe "Delivering Group Mails: " do
-    before do
-      @message = build(:mail_message_to_group)
-      # the email used is sent to test-group@exmaple.com
-      @group = create(:group, name: "Test Group")
-      @group.child_users << create(:user) << create(:user)
-      @users = @group.child_users
-      @post = Post.create_from_message(@message)
-    end
 
-    describe "#messages_to_deliver_to_mailing_list_members" do
-      subject { @post.messages_to_deliver_to_mailing_list_members }
-      
-      it "should be an Array of Mail Messages" do
-        subject.should be_kind_of Array
-        subject.first.should be_kind_of Mail::Message
-      end
-      it "should contain one message per group member" do
-        subject.count.should == @users.count
-      end
-    end
+  describe "Delivering Group Mails: ", focus: true do
 
-    describe "#modified_subject" do
-      subject { @post.modified_subject }
-      describe "for a clean subject" do
-        before { @post.subject = "My Fancy Subject" }
-        it { should == "[Test Group] My Fancy Subject" }
-      end
-      describe "for a Re: subject" do
-        before { @post.subject = "Re: [Test Group] My Fancy Subject" }
-        it { should == "Re: [Test Group] My Fancy Subject" }
-      end
-    end
+    message_types = [ :build_text_only_message, :build_multipart_message ]
+    message_types.each do |message_type|
 
-    describe "#mailing_list_footer" do
-      subject { @post.mailing_list_footer }
-      it { should include @group.name }
-      it "should containt the group's url" do
-        @group.url.present?.should == true
-        subject.should include @group.url
-      end
-    end
+      describe "#{message_type}: " do
 
-    describe "#message_for_email_delivery_to_user" do
-      before { @user = @users.first }
-      subject { @post.message_for_email_delivery_to_user(@user) }
-      
-      it { should be_kind_of Mail::Message }
-      it "should preserve multipart character" do
-        subject.multipart?.should == @message.multipart?
-      end
-      it "should have the modified subject" do
-        subject.subject.should == @post.modified_subject
-      end
-      it "should still have the group as the recipient" do
-        subject.to.should == @message.to
-      end
-      it "should have the user's email as envelop recipient" do
-        subject.smtp_envelope_to.should be_kind_of Array
-        subject.smtp_envelope_to.should include @user.email
-        subject.smtp_envelope_to.first.should include "@"
-      end
+        before do
+          @message = self.send(message_type)
+          # the email used is sent to test-group@exmaple.com
+          @group = create(:group, name: "Test Group")
+          @group.child_users << create(:user) << create(:user)
+          @users = @group.child_users
+          @post = Post.create_from_message(@message)
+        end
 
-      it "should contain the mailing list footer" do
-        subject.body.decoded.encode('UTF-8').should include @post.mailing_list_footer.encode('UTF-8')
+        specify "preliminaries" do
+          @message.should be_kind_of Mail::Message
+          @post.should be_kind_of Post
+        end
+
+        describe "#messages_to_deliver_to_mailing_list_members" do
+          subject { @post.messages_to_deliver_to_mailing_list_members }
+
+          it "should be an Array of Mail Messages" do
+            subject.should be_kind_of Array
+            subject.first.should be_kind_of Mail::Message
+          end
+          it "should contain one message per group member" do
+            subject.count.should == @users.count
+          end
+        end
+
+        describe "#modified_subject" do
+          subject { @post.modified_subject }
+          describe "for a clean subject" do
+            before { @post.subject = "My Fancy Subject" }
+            it { should == "[Test Group] My Fancy Subject" }
+          end
+          describe "for a Re: subject" do
+            before { @post.subject = "Re: [Test Group] My Fancy Subject" }
+            it { should == "Re: [Test Group] My Fancy Subject" }
+          end
+        end
+
+        describe "#mailing_list_footer" do
+          subject { @post.mailing_list_footer }
+          it { should include @group.name }
+          it "should containt the group's url" do
+            @group.url.present?.should == true
+            subject.should include @group.url
+          end
+        end
+
+        describe "#message_for_email_delivery_to_user" do
+          before { @user = @users.first }
+          subject { @post.message_for_email_delivery_to_user(@user) }
+
+          it { should be_kind_of Mail::Message }
+          it "should preserve multipart character" do
+            subject.multipart?.should == @message.multipart?
+          end
+          it "should have the modified subject" do
+            subject.subject.should == @post.modified_subject
+          end
+          it "should still have the group as the recipient" do
+            subject.to.should == @message.to
+          end
+          it "should have the user's email as envelop recipient" do
+            subject.smtp_envelope_to.should be_kind_of Array
+            subject.smtp_envelope_to.should include @user.email
+            subject.smtp_envelope_to.first.should include "@"
+          end
+
+          it "should contain the mailing list footer" do
+            if subject.multipart?
+              subject.parts.each do |part|
+                part.body_in_utf8.force_encoding('binary')
+                  .should include @post.mailing_list_footer.force_encoding('binary')
+              end
+            else
+              subject.body_in_utf8.force_encoding('binary')
+                .should include @post.mailing_list_footer.force_encoding('binary')
+            end
+          end
+        end
       end
     end
   end
-  
+
   # We might have to deal with this, but after switching back to the main mail gem,
   # since this fix is not contained in the branch we are currently using.
   # See: Gemfile, gem 'mail'.
