@@ -415,7 +415,7 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    User.all.select { |user| user.email.downcase == email.downcase }
+    User.all.select { |user| user.email.present? && user.email.downcase == email.downcase }
   end
 
   # Debug Helpers
