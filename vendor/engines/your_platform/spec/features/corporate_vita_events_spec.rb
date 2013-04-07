@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 feature 'Events in the Corporate Vita:', js: true do
+  include SessionSteps
 
   given(:corporation) { create :corporation_with_status_groups }
   given(:status_group) { corporation.child_groups.first }
@@ -22,7 +23,7 @@ feature 'Events in the Corporate Vita:', js: true do
   end
 
   scenario 'assigning a new event' do
-    visit user_path(user)
+    visit user_path(user) 
     within section_selector do
       click_edit_button
       fill_in_event_name "A thrilling new event"
