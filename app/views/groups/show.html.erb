@@ -1,6 +1,12 @@
 <h1><%= best_in_place @group, :name %></h1>
 <p>Gruppenseite dieser Gruppe</p>
 
+<!-- current posts -->
+<% if @posts && @posts.count > 0 %>
+  <%= render partial: 'posts/posts', locals: { posts: @posts } %>
+<% end %>
+
+<!-- umcoming events -->
 <% if @group.events.upcoming %>
 <h1 class="section upcoming_events">Kommende Veranstaltungen</h1>
 <div>
@@ -23,13 +29,14 @@
 <h1><%=t :sub_groups %></h1>
 <div>
   <ul>
-    <% for group in @groups do %>
+    <% for group in @child_groups do %>
       <%= group_list_item group %>
     <% end %>
   </ul>
 </div>
 <% end %>
 
+<!-- listing members -->
 <h1><%=t :members %> (<%=h @group.descendant_users.count %>)</h1>
 <div>
   <% if @group %>
@@ -37,9 +44,11 @@
       <%= link_to t( :add_member ), new_user_path( :group_id => @group.id ), class: "add_group_member" %>
     </span>
     <span id="group_members">
-      <% if @group.child_users.count > 0 %>
+      <!-- child users -->
+      <% if @child_users.count > 0 %>
+        <%= will_paginate @child_users %>
         <ul>
-          <% for user in @group.child_users do %>
+          <% for user in @child_users do %>
             <li>
 	      <%= link_to user.title, user %>
 	      <span class="show_only_in_edit_mode">
@@ -48,6 +57,7 @@
 	    </li>
           <% end %>
 	</ul>
+      <!-- structured view of sub groups -->	
       <% elsif @group.child_groups.count > 0 %>
         <% for child_group in @group.child_groups do %>
           <h2><%= link_to child_group.title, child_group %> (<%=h child_group.descendant_users.count %>)</h2>
@@ -78,5 +88,12 @@
     </dl>
   </span>
 <% end %>
+
+<h1 class="large_map section"><%=t :map %></h1>
+<div class="group_map">
+  <div class="large_map_section">
+    <%= address_fields_map( @map_address_fields ) %>  
+  </div>  
+</div>
 
 <%= profile_sections_for_profileable @group, [ :contact_information, :bank_account_information, :description ] %>

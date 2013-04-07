@@ -90,6 +90,37 @@ describe User do
     end
   end
 
+  describe "#date_of_birth" do
+    subject { @user.date_of_birth }
+    describe "before setting a date of birth" do
+      it { should == nil }
+    end
+    describe "after setting a date of birth" do
+      before { @user.date_of_birth = 24.years.ago.to_date }
+      it { should be_kind_of Date }
+      it "should persist" do
+        @user.save
+        @reloaded_user = User.find(@user.id)
+        @reloaded_user.date_of_birth.should == @user.date_of_birth
+      end
+      it "should be stored inside a ProfileField" do
+        @user.save
+        @profile_field = @user.profile_fields.where( label: 'date_of_birth' ).first
+        @profile_field.value.to_date.should == @user.date_of_birth
+      end
+    end
+  end
+
+  describe "#date_of_birth=" do
+    before { @date_of_birth = 24.years.ago.to_date }
+    subject { @user.date_of_birth = @date_of_birth }
+    it "should set the date of birth" do
+      @user.date_of_birth.should == nil
+      subject
+      @user.date_of_birth.should == @date_of_birth
+    end
+  end
+
   
   # Associated Objects
   # ==========================================================================================

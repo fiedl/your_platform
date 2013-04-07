@@ -1,4 +1,4 @@
-jQuery ->
+ready = ->
   $.datepicker.setDefaults( $.datepicker.regional[ "de" ] )
   $.datepicker.setDefaults( { dateFormat: 'yy-mm-dd' } )
   # TODO: This has to be generalized, depending on the current locale.
@@ -21,3 +21,6 @@ jQuery ->
   #  input_field.value = $.datepicker.parseDate( "d.m.yy", input_field.value )
   #  alert( input_field.value )
   #)
+
+$(document).ready(ready)
+$(document).on('page:load', ready)

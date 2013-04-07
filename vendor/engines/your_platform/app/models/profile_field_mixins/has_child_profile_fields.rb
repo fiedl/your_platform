@@ -23,23 +23,23 @@ module ProfileFieldMixins::HasChildProfileFields
   # Furthermore, this method modifies the intializer to build the child fields
   # on build of the main profile_field.
   #
-  def has_child_profile_fields( *labels )
+  def has_child_profile_fields( *keys )
 
+    before_save :build_child_fields_if_absent
     after_save :save_child_profile_fields
 
     include HasChildProfileFieldsInstanceMethods
 
     self.class_eval <<-EOL
 
-      def initialize( *attrs )
-        super( *attrs )
-        self.build_child_fields( #{labels} )
+      def keys
+        #{keys}
       end
 
     EOL
 
 
-    labels.each do |accessor|
+    keys.each do |accessor|
 
       self.class_eval <<-EOL
 
@@ -58,33 +58,53 @@ module ProfileFieldMixins::HasChildProfileFields
 
   module HasChildProfileFieldsInstanceMethods
 
-    def build_child_fields( labels )
+    def find_child_by_key(key)
+      # we have to use 'select' here instead of 'where', because this needs
+      # to work before the records are saved. But this should not be a problem,
+      # since there are only a couple of child fields.
+      #
+      self.children.select { |child| child.key.to_s == key.to_s }.first
+    end
+    def find_or_build_child_by_key(key)
+      find_child_by_key(key) || build_child(key)
+    end
+
+    def build_child_fields_if_absent
+      if self.children.count == 0
+        build_child_fields self.keys
+      end
+    end
+
+    def build_child_fields( keys )
       if self.parent == nil # do it only for the parent, not the children as well
-        labels.each do |label|
-          self.children.build( label: label )
+        keys.each do |key|
+          build_child(key) unless find_child_by_key(key)
         end
       end
     end
 
+    # This method saves the child profile fields. 
+    # This is necessary, since the acts_as_tree gem does not provide the
+    # autosave option for the association.
+    #
     def save_child_profile_fields
-      if @children
-        @children.each do |key, child_profile_field|
-          child_profile_field.save
-        end
+      children.each do |child_field|
+        child_field.save
       end
     end
     private :save_child_profile_fields
 
     def get_field( accessor )
-      @children ||= {}
-      @children[ accessor ] ||= self.children.where( :label => accessor ).first
-      @children[ accessor ].value
+      find_child_by_key(accessor).value if find_child_by_key(accessor)
     end
 
     def set_field( accessor, value )
-      @children ||= {}
-      @children[ accessor ] ||= self.children.where( :label => accessor ).first
-      @children[ accessor ].value = value
+      build_child_fields_if_absent
+      find_child_by_key(accessor).value = value
+    end
+
+    def build_child( key )
+      children.build( label: key )
     end
 
   end

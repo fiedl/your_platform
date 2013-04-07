@@ -30,11 +30,14 @@ module Profileable
     def profile_fields_by_type( type_or_types )
       types = type_or_types if type_or_types.kind_of? Array
       types = [ type_or_types ] unless types
-      profile_fields.select { |profile_field| types.include? profile_field.type }
+      profile_fields.where( type: types )
+#      profile_fields.select { |profile_field| types.include? profile_field.type }
     end
     
     def profile_fields_by_section( section )
       case section
+      when :general
+        profile_fields_by_type "ProfileFieldTypes::General"
       when :contact_information
         profile_fields_by_type [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
                                  "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", 
@@ -42,9 +45,9 @@ module Profileable
       when :about_myself
         profile_fields_by_type "ProfileFieldTypes::About"
       when :study_information
-        profile_fields_by_type "ProfileFieldTypes::Study"
+        profile_fields_by_type [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
       when :career_information
-        profile_fields_by_type [ "ProfileFieldTypes::Job", "ProfileFieldTypes::Competence" ]
+        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionalCategory" ]
       when :organizations
         profile_fields_by_type "ProfileFieldTypes::Organization"
       when :bank_account_information
@@ -58,15 +61,17 @@ module Profileable
 
     def profile_field_type_by_section(section)
       case section
+        when :general
+          "ProfileFieldTypes::General"
         when :contact_information
           [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
             "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
         when :about_myself
           "ProfileFieldTypes::About"
         when :study_information
-          "ProfileFieldTypes::Study"
+          [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
         when :career_information
-          [ "ProfileFieldTypes::Job", "ProfileFieldTypes::Competence" ]
+          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionalCategory" ]
         when :organizations
           "ProfileFieldTypes::Organization"
         when :bank_account_information

@@ -15,8 +15,8 @@ module CorporateVitaHelper
   def status_group_membership_created_at_best_in_place( membership )
     best_in_place( membership,
                    :created_at_date_formatted,
-                   type: :date,
-                   path: user_group_membership_path( user_id: membership.user.id,
+                   # type: :date,
+                   path: user_group_memberships_path( user_id: membership.user.id,
                                                      group_id: membership.group.id,
                                                      controller: :user_group_memberships,
                                                      action: :update,
@@ -31,9 +31,11 @@ module CorporateVitaHelper
     best_in_place( membership,
                    :event_by_name,
                    path: status_group_membership_path( membership ),
-                   display_with: lambda do |v|
-                     link_to membership.event.name, membership.event, :class => 'status_event_label'
-                   end
+                   classes: 'status_event_by_name',
+                   # display_with does more harm than it's good for. We wait for angular!
+#                   display_with: lambda do |v|
+#                     link_to membership.event.name, membership.event, :class => 'status_event_label'
+#                   end
                    )
   end
 

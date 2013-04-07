@@ -1,3 +1,20 @@
+
+# Required Gems.
+# This should mirror your_platform.gemspec, as far as the gems need to be required.
+#
+# Gem Source
+require 'rubygems'
+# Rails and Additions
+require 'rails-i18n'
+# JavaScript
+# Data Structures
+require 'acts-as-dag'
+require 'acts_as_tree'
+require 'rails3_acts_as_paranoid'
+require 'acts_as_paranoid_dag'
+# Template Engines
+require 'haml'
+# File Uploads
 require 'carrierwave'
 
 module YourPlatform

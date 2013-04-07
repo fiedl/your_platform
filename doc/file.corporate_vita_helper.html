@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: corporate_vita_helper
+  
+    &mdash; Documentation by YARD 0.8.5.2
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: corporate_vita_helper</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'><pre class="code ruby"><span class='kw'>module</span> <span class='const'>CorporateVitaHelper</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_corporate_vita_for_user'>corporate_vita_for_user</span><span class='lparen'>(</span> <span class='id identifier rubyid_user'>user</span> <span class='rparen'>)</span>
+    <span class='id identifier rubyid_render'>render</span> <span class='label'>partial:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>users/corporate_vita</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>locals:</span> <span class='lbrace'>{</span> 
+      <span class='label'>user:</span> <span class='ivar'>@user</span><span class='comma'>,</span>
+    <span class='rbrace'>}</span> 
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_status_group_memberships_for_user_and_corporation'>status_group_memberships_for_user_and_corporation</span><span class='lparen'>(</span> <span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_corporation'>corporation</span> <span class='rparen'>)</span>
+    <span class='const'>StatusGroupMembership</span><span class='period'>
+</span><span class='id identifier rubyid_      .find_all_by_user_and_corporation'>      .find_all_by_user_and_corporation</span><span class='lparen'>(</span> <span class='id identifier rubyid_user'>user</span><span class='comma'>,</span> <span class='id identifier rubyid_corporation'>corporation</span> <span class='rparen'>)</span><span class='period'>
+</span><span class='id identifier rubyid_      .now_and_in_the_past'>      .now_and_in_the_past</span>
+  <span class='kw'>end</span>
+
+  <span class='kw'>def</span> <span class='id identifier rubyid_status_group_membership_created_at_best_in_place'>status_group_membership_created_at_best_in_place</span><span class='lparen'>(</span> <span class='id identifier rubyid_membership'>membership</span> <span class='rparen'>)</span>
+    <span class='id identifier rubyid_best_in_place'>best_in_place</span><span class='lparen'>(</span> <span class='id identifier rubyid_membership'>membership</span><span class='comma'>,</span>
+                   <span class='symbol'>:created_at_date_formatted</span><span class='comma'>,</span>
+                   <span class='comment'># type: :date,
+</span>                   <span class='label'>path:</span> <span class='id identifier rubyid_user_group_membership_path'>user_group_membership_path</span><span class='lparen'>(</span> <span class='label'>user_id:</span> <span class='id identifier rubyid_membership'>membership</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span>
+                                                     <span class='label'>group_id:</span> <span class='id identifier rubyid_membership'>membership</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_id'>id</span><span class='comma'>,</span>
+                                                     <span class='label'>controller:</span> <span class='symbol'>:user_group_memberships</span><span class='comma'>,</span>
+                                                     <span class='label'>action:</span> <span class='symbol'>:update</span><span class='comma'>,</span>
+                                                     <span class='label'>format:</span> <span class='symbol'>:json</span>
+                                                     <span class='rparen'>)</span><span class='comma'>,</span>
+                   <span class='symbol'>:classes</span> <span class='op'>=&gt;</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>status_group_date_of_joining</span><span class='tstring_end'>&quot;</span></span>
+                   <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  
+  <span class='kw'>def</span> <span class='id identifier rubyid_status_group_membership_promoted_on_event'>status_group_membership_promoted_on_event</span><span class='lparen'>(</span> <span class='id identifier rubyid_membership'>membership</span> <span class='rparen'>)</span>
+    <span class='id identifier rubyid_event'>event</span> <span class='op'>=</span> <span class='id identifier rubyid_membership'>membership</span><span class='period'>.</span><span class='id identifier rubyid_event'>event</span>
+    <span class='id identifier rubyid_best_in_place'>best_in_place</span><span class='lparen'>(</span> <span class='id identifier rubyid_membership'>membership</span><span class='comma'>,</span>
+                   <span class='symbol'>:event_by_name</span><span class='comma'>,</span>
+                   <span class='label'>path:</span> <span class='id identifier rubyid_status_group_membership_path'>status_group_membership_path</span><span class='lparen'>(</span> <span class='id identifier rubyid_membership'>membership</span> <span class='rparen'>)</span><span class='comma'>,</span>
+                   <span class='label'>classes:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>status_event_by_name</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span>
+                   <span class='comment'># display_with does more harm than it&#39;s good for. We wait for angular!
+</span><span class='comment'>#                   display_with: lambda do |v|
+</span><span class='comment'>#                     link_to membership.event.name, membership.event, :class =&gt; &#39;status_event_label&#39;
+</span><span class='comment'>#                   end
+</span>                   <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+
+<span class='kw'>end</span></pre></div></div>
+
+    <div id="footer">
+  Generated on Sat Mar 23 00:23:00 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.5.2 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

@@ -1,4 +1,4 @@
-jQuery ->
+ready = ->
 
   # fix issue with new tabs
   close_selector = ".lb-next,.lb-prev,.lb-close"
@@ -33,3 +33,6 @@ jQuery ->
     unless code == 13 or code == 27
       e.stopPropagation()
   )
+
+$(document).ready(ready)
+$(document).on('page:load', ready)

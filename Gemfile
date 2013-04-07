@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-									# Licenses
-									# =======================================
+                                                                                           # Licenses
+                                                                                           # =======================================
 
-source 'https://rubygems.org'						# Ruby License,
-       									# http://www.ruby-lang.org/en/LICENSE.txt
+source 'https://rubygems.org'						                                                   # Ruby License,
+                                                                                           # http://www.ruby-lang.org/en/LICENSE.txt
 
 
 
@@ -23,6 +23,8 @@ group :assets, :production, 'testing-aki' do
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
+
+  gem 'jquery-fileupload-rails'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more 
@@ -30,9 +32,6 @@ end
 # This is also needed by twitter-bootstrap-rails in production.
 gem 'execjs'
 gem 'therubyracer', :platform => :ruby
-
-# haml template language, http://haml.info
-gem 'haml'
 
 gem 'jquery-rails'							# MIT License
 
@@ -51,11 +50,9 @@ gem 'unicorn'
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
 
-# i18n
-gem 'rails-i18n'							# MIT License
-
 # GoogleMaps
-gem 'gmaps4rails', '~> 1.4.8'					        # MIT License
+gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
+    # , path: '../Google-Maps-for-Rails/'  #, '~> 1.4.8' #, path: '../gmaps4rails-1.4.8/'				        # MIT License
 
 # GeoCoder
 gem 'geocoder'								# 
@@ -66,10 +63,7 @@ gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
-gem 'acts-as-dag', '>= 2.5.7'
-
-# Tree-Verhalten, z.B. für Profilfelder
-gem 'acts_as_tree'							# MIT License
+#gem 'acts-as-dag', '>= 2.5.7'  # now in your_platform
 
 # Formtastic Form Helper, 
 # see: https://github.com/justinfrench/formtastic, 
@@ -118,10 +112,9 @@ group :test, :development do
   gem 'guard-focus'
   gem 'rspec-rails', '2.10.0'
   gem 'guard-rspec', '0.5.5'
-  gem 'rspec-mocks'
+#  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
-  gem 'rb-readline'
 end
 group :test do
   gem 'capybara' ,'>=2.0.2'
@@ -163,11 +156,8 @@ gem 'edit_mode', '>= 0.0.7'                                             # MIT Li
 #gem 'edit_mode', path: '../edit_mode'
 
 # hide slim breadcrumb elements until user hovers the separator, SF
-gem 'slim_breadcrumb', '>= 0.0.2'                                       # MIT License
+gem 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
 
-# make dag links paranoid, i.e. don't delete links, but only mark as deleted.
-gem 'rails3_acts_as_paranoid'
-gem 'acts_as_paranoid_dag'                                              # MIT License
 
 # password generator. it's not pwgen, but it's a gem.
 # TODO: if we ever find a way to properly include pwgen, let's do it.
@@ -199,6 +189,23 @@ gem 'phony'
 # Pry Console Addon
 gem 'pry', group: :development
 
+# Turbolinks
+gem 'turbolinks', '>= 1.0'
+
 # Angular JS
 gem 'angularjs-rails'
+
+# Pagination
+gem 'will_paginate', '> 3.0'
+
+# Receiving Mails
+gem 'mailman', require: false
+gem 'mail', git: 'git://github.com/jeremy/mail.git'
+gem 'rb-inotify', '~> 0.9', group: :production
+
+# Encoding Detection
+gem 'charlock_holmes'
+
+# Manage Workers
+gem 'foreman', group: [:development, :production]
 

@@ -26,8 +26,9 @@ config/database.yml
 #config/database*.yml
 config/database
 
-# mailer passwords
+# mailer passwords and configuration
 config/mailer_passwords.yml
+config/group-mail-worker.yml
 
 # Ignore uploads folder content folder
 public/uploads/*
@@ -55,6 +56,7 @@ capybara-*.html
 **.orig
 rerun.txt
 pickle-email-*.html
+.yardoc/*
 
 # bundler_stubs, see: http://ruby.railstutorial.org/chapters/static-pages#sec:eliminating_bundle_exec
 bundler_stubs

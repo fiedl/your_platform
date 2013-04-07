@@ -1,5 +1,5 @@
 
-jQuery ->
+ready = ->
 
   $( ".box" ).bind( "toggle-minimized", ->
     $(this).find( ".content" ).toggle( "blind" )
@@ -22,3 +22,6 @@ jQuery ->
         window.getSelection().removeAllRanges()
       else if (document.selection) # IE
         document.selection.empty()
+
+$(document).ready(ready)
+$(document).on('page:load', ready)

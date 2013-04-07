@@ -1,0 +1,8 @@
+%div.btn-group.post-show-nav-buttons
+  = link_to t(:all_posts), posts_path( group_id: @post.group.id ), { :class => "btn all-posts" }
+  = link_to t(:back_to_group), @post.group, { :class => "btn back-to-group" }
+
+%h1
+  = @post.subject
+= render partial: 'posts/post', locals: { post: @post }
+

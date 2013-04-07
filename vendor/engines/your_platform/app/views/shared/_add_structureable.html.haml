@@ -1,0 +1,10 @@
+%div.btn-group.add-structureable
+  %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+    %i.icon-plus
+    = I18n.t(:add)
+    %span.caret
+  %ul.dropdown-menu
+    %li
+      = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
+    %li
+      = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post

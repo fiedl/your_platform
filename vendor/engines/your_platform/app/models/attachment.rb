@@ -6,6 +6,7 @@ class Attachment < ActiveRecord::Base
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes
+  before_create :set_default_title_if_empty
   before_destroy :remove_file!
 
   def thumb_url
@@ -59,6 +60,10 @@ class Attachment < ActiveRecord::Base
       self.content_type = file.file.content_type
     end
     true
+  end
+
+  def set_default_title_if_empty
+    self.title ||= File.basename(file.filename, '.*').titleize if file
   end
 
 end

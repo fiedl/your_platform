@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>
+  File: relationship
+  
+    &mdash; Documentation by YARD 0.8.5.2
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" media="screen" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" media="screen" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  hasFrames = window.top.frames.main ? true : false;
+  relpath = '';
+  framesUrl = "frames.html#!" + escape(window.location.href);
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div id="header">
+      <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: relationship</span>
+  
+
+  <div class="noframes"><span class="title">(</span><a href="." target="_top">no frames</a><span class="title">)</span></div>
+</div>
+
+      <div id="search">
+  
+    <a class="full_list_link" id="class_list_link"
+        href="class_list.html">
+      Class List
+    </a>
+  
+    <a class="full_list_link" id="method_list_link"
+        href="method_list.html">
+      Method List
+    </a>
+  
+    <a class="full_list_link" id="file_list_link"
+        href="file_list.html">
+      File List
+    </a>
+  
+</div>
+      <div class="clear"></div>
+    </div>
+
+    <iframe id="search_frame"></iframe>
+
+    <div id="content"><div id='filecontents'><pre class="code ruby"><span class='comment'># -*- coding: utf-8 -*-
+</span><span class='comment'>#
+</span><span class='comment'># This class models a relationship between two users.
+</span><span class='comment'>#
+</span><span class='comment'># For example, John is the brother of Sue. 
+</span><span class='comment'>#
+</span><span class='comment'>#   who: John        relationship.user1    relationship.who
+</span><span class='comment'>#   is:  Brother     relationship.is       relationship.name
+</span><span class='comment'>#   of:  Sue         relationship.user2    relationship.of
+</span><span class='comment'>#
+</span><span class='kw'>class</span> <span class='const'>Relationship</span> <span class='op'>&lt;</span> <span class='const'>ActiveRecord</span><span class='op'>::</span><span class='const'>Base</span>
+
+  <span class='id identifier rubyid_attr_accessible'>attr_accessible</span> <span class='symbol'>:user1</span><span class='comma'>,</span> <span class='symbol'>:user2</span><span class='comma'>,</span> <span class='symbol'>:name</span><span class='comma'>,</span> <span class='symbol'>:who</span><span class='comma'>,</span> <span class='symbol'>:is</span><span class='comma'>,</span> <span class='symbol'>:of</span><span class='comma'>,</span> <span class='symbol'>:who_by_title</span><span class='comma'>,</span> <span class='symbol'>:of_by_title</span>
+
+  <span class='id identifier rubyid_belongs_to'>belongs_to</span> <span class='symbol'>:user1</span><span class='comma'>,</span> <span class='label'>class_name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>User</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>inverse_of:</span> <span class='symbol'>:relationships_as_first_user</span>
+  <span class='id identifier rubyid_belongs_to'>belongs_to</span> <span class='symbol'>:user2</span><span class='comma'>,</span> <span class='label'>class_name:</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>User</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>inverse_of:</span> <span class='symbol'>:relationships_as_second_user</span>
+
+  <span class='comment'># John is the brother of Sue.
+</span>  <span class='comment'># ----                           who: John
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_who'>who</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user1'>user1</span>
+  <span class='kw'>end</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_who='>who=</span><span class='lparen'>(</span> <span class='id identifier rubyid_user'>user</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user1'>user1</span> <span class='op'>=</span> <span class='id identifier rubyid_user'>user</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># John is the brother of Sue.
+</span>  <span class='comment'>#             -------           is: brother
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_is'>is</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span>
+  <span class='kw'>end</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_is='>is=</span><span class='lparen'>(</span> <span class='id identifier rubyid_name'>name</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_name'>name</span> <span class='op'>=</span> <span class='id identifier rubyid_name'>name</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># John is the brother of Sue.
+</span>  <span class='comment'>#                        ---    of: Sue
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_of'>of</span> 
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user2'>user2</span>
+  <span class='kw'>end</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_of='>of=</span><span class='lparen'>(</span> <span class='id identifier rubyid_user'>user</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user2'>user2</span> <span class='op'>=</span> <span class='id identifier rubyid_user'>user</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Adding new relationships:
+</span>  <span class='comment'># 
+</span>  <span class='comment'>#     Relationship.add( who: john_user, is: :brother, of: :sue_user )
+</span>  <span class='comment'>#
+</span>  <span class='comment'># which is the same as:
+</span>  <span class='comment'>#
+</span>  <span class='comment'>#     Relationship.create( who: john_user, is: :brother, of: :sue_user )
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_add'>add</span><span class='lparen'>(</span> <span class='id identifier rubyid_params'>params</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_create'>create</span><span class='lparen'>(</span> <span class='id identifier rubyid_params'>params</span> <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+  <span class='comment'># Access method for the first user being given by his title.
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_who_by_title'>who_by_title</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_who'>who</span><span class='period'>.</span><span class='id identifier rubyid_title'>title</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_who'>who</span>
+  <span class='kw'>end</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_who_by_title='>who_by_title=</span><span class='lparen'>(</span> <span class='id identifier rubyid_title'>title</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_who'>who</span> <span class='op'>=</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_find_by_title'>find_by_title</span><span class='lparen'>(</span> <span class='id identifier rubyid_title'>title</span> <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+  
+  <span class='comment'># Access method for the second user being given by his title.
+</span>  <span class='comment'>#
+</span>  <span class='kw'>def</span> <span class='id identifier rubyid_of_by_title'>of_by_title</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_of'>of</span><span class='period'>.</span><span class='id identifier rubyid_title'>title</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_of'>of</span>
+  <span class='kw'>end</span>
+  <span class='kw'>def</span> <span class='id identifier rubyid_of_by_title='>of_by_title=</span><span class='lparen'>(</span> <span class='id identifier rubyid_title'>title</span> <span class='rparen'>)</span>
+    <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_of'>of</span> <span class='op'>=</span> <span class='const'>User</span><span class='period'>.</span><span class='id identifier rubyid_find_by_title'>find_by_title</span><span class='lparen'>(</span> <span class='id identifier rubyid_title'>title</span> <span class='rparen'>)</span>
+  <span class='kw'>end</span>
+
+<span class='kw'>end</span></pre></div></div>
+
+    <div id="footer">
+  Generated on Sat Mar 23 00:23:00 2013 by
+  <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
+  0.8.5.2 (ruby-2.0.0).
+</div>
+
+  </body>
+</html>

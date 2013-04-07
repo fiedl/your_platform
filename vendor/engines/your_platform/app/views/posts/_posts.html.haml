@@ -1,0 +1,6 @@
+%h1.posts
+  = t :current_posts
+%div.posts
+  - for post in posts
+    = render partial: 'posts/post_quote', locals: { post: post }
+  

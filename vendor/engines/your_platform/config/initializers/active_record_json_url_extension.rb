@@ -1,0 +1,1 @@
+require 'active_record_json_url_extension'

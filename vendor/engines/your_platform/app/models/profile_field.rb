@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
 
-  attr_accessible        :label, :type, :value
+  attr_accessible        :label, :type, :value, :key
 
   belongs_to             :profileable, polymorphic: true
 
@@ -51,12 +51,30 @@ class ProfileField < ActiveRecord::Base
     self.value
   end
 
+  # This method returns the key, i.e. the un-translated label, 
+  # which is needed for child profile fields.
+  #
+  def key
+    read_attribute :label
+  end
+  
   # This method returns the label text of the profile_field.
   # If a translation exists, the translation is returned instead.
   #
   def label
     label_text = super
-    translated_label_text = I18n.translate( label_text, :default => label_text ) if label_text
+    translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text
+  end
+
+  # If the field has children, their values are included in the main field's value.
+  # Attention! Probably, you want to display only one in the view: The main value or the child fields.
+  # 
+  def value
+    if children.count > 0
+      ( [ super ] + children.collect { |child| child.value } ).merge(", ")
+    else
+      super
+    end
   end
 
   # This creates an easier way to access a composed ProfileField's child field
@@ -102,6 +120,15 @@ class ProfileField < ActiveRecord::Base
 end
 
 module ProfileFieldTypes
+
+  # General Information Field
+  # ==========================================================================================
+
+  class General < ProfileField
+    def self.model_name; ProfileField.model_name; end
+  end
+
+  
 
   # Custom Contact Information
   # ==========================================================================================
@@ -160,6 +187,18 @@ module ProfileFieldTypes
     # see: http://rubydoc.info/gems/gmaps4rails/
     acts_as_gmappable
 
+    def geo_location
+      find_or_create_geo_location
+    end
+
+    def find_geo_location
+      @geo_location ||= GeoLocation.find_by_address(value)
+    end
+
+    def find_or_create_geo_location
+      @geo_location ||= GeoLocation.find_or_create_by_address(value)
+    end
+
     def display_html
       ActionController::Base.helpers.simple_format self.value
     end
@@ -173,8 +212,8 @@ module ProfileFieldTypes
       true
     end
 
-    def latitude ;      geo_information :lat           end
-    def longitude ;     geo_information :lng           end
+    def latitude ;      geo_information :latitude      end
+    def longitude ;     geo_information :longitude     end
     def country ;       geo_information :country       end
     def country_code ;  geo_information :country_code  end
     def city ;          geo_information :city          end
@@ -182,9 +221,47 @@ module ProfileFieldTypes
     def plz ;           geo_information :plz           end
 
     def geo_information( key )
-      @address_string ||= AddressString.new( self.gmaps4rails_address )
-      @address_string.geo_information( key )
+      geo_location.send( key )
     end
+
+    def geocoded?
+      (find_geo_location && @geo_location.geocoded?).to_b
+    end
+    def geocode
+      return @geo_location.geocode if @geo_location
+      return @geo_location.geocode if find_geo_location
+      return find_or_create_geo_location
+    end
+
+  end
+
+
+  # Employment Fields
+  # ==========================================================================================
+
+  class Employment < ProfileField
+    def self.model_name; ProfileField.model_name; end
+    
+    has_child_profile_fields :from, :to, :organization, :position, :task
+    
+    # If the employment instance has no label, just say 'Employment'.
+    #
+    def label
+      super || I18n.translate( :employment, default: "Employment" ) 
+    end
+
+    def from
+      get_field(:from).to_date if get_field(:from)
+    end
+
+    def to
+      get_field(:to).to_date if get_field(:to)
+    end
+
+  end
+
+  class ProfessionalCategory < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
   end
 
@@ -224,9 +301,8 @@ module ProfileFieldTypes
 
     before_save :auto_format_value
 
-    private
-    def auto_format_value
-      value = self.value
+    def self.format_phone_number( phone_number_str )
+      value = phone_number_str
 
       # determine wheter this is an international number
       format = :national
@@ -240,8 +316,13 @@ module ProfileFieldTypes
         value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
         value = Phony.formatted( value, :format => format, :spaces => ' ' )
       end
+      
+      return value
+    end
 
-      self.value = value
+    private
+    def auto_format_value
+      self.value = Phone.format_phone_number( self.value )
     end
 
   end
@@ -258,6 +339,28 @@ module ProfileFieldTypes
       url = "http://#{url}" unless url.starts_with? 'http://'
       ActionController::Base.helpers.link_to url, url
     end
+
+  end
+
+
+  # Date Field
+  # ==========================================================================================
+
+  class Date < ProfileField
+    def self.model_name; ProfileField.model_name; end
+
+    def value
+      date_string = super
+      return date_string.to_date if date_string
+    end
+  end
+
+
+  # Academic Degree 
+  # ==========================================================================================
+
+  class AcademicDegree < ProfileField
+    def self.model_name; ProfileField.model_name; end
 
   end
 

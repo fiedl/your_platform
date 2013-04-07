@@ -12,6 +12,9 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery-fileupload/basic
+//= require jquery-fileupload/vendor/tmpl
+//= require turbolinks
 //= require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
@@ -22,9 +25,9 @@
 //= require twitter/bootstrap
 //= require_boxes
 //= require best_in_place
+//= require gmaps4rails
 //= require edit_mode
 //= require slim_breadcrumb
-//= require gmaps4rails
 //= require make-js-more-like-ruby
 //= require your_platform
 //= require_tree .

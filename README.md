@@ -42,7 +42,8 @@ zum Aufesetzen einer Entwicklungsumgebung (bis zum Punkt, an dem die Specs laufe
 Sollte beim Ausführen von Ruby im Projektverzeichnis ein Fehler auftreten, der besagt, dass die benötigte Ruby-Version nicht installiert ist (z.B. `rbenv: version `2.0.0-p0' is not installed`), kann diese Version einfach nachinstalliert werden:
 
 ```bash
-$ rbenv install 2.0.0-p0
+$ rbenv install 2.0.0-p0  # im Allgemeinen
+$ rbenv install 2.0.0-p0 CONFIGURE_OPTS="--with-readline-dir=/usr/include/readline"  # Ubuntu 12.04 LTS
 $ rbenv rehash
 ```
 
@@ -50,7 +51,8 @@ Möglicherweise wird danach eine neue Installation des Gem Bundlers erforderlich
 
 * Danach die Shell neustarten (`$ bash -l`) und die Gems installieren: `$ bundle install`.
 * Das Systempaket `libruby1.9.1` oder neuer installieren.
-* `gem install rb-readline`, damit `guard` funktioniert (für die korrekte Ruby-Version).
+
+* `gem install rb-readline`, damit `guard` funktioniert (für die korrekte Ruby-Version).  (TODO: Ist dies noch nötig?)
 
 #### Projekt-Setup
 

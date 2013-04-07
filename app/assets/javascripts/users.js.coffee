@@ -1,4 +1,4 @@
-jQuery ->
+ready = ->
   $( "span#gender" ).hide()
   $( "select#user_add_to_group" ).change( ->
     selected_option = $( "select#user_add_to_group option:selected" ).text().toLowerCase()
@@ -8,3 +8,6 @@ jQuery ->
       $( "span#gender" ).hide()
       $( "span#gender option[value='false']" ).attr( 'selected', true ) # male
   )
+
+$(document).ready(ready)
+$(document).on('page:load', ready)

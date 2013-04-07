@@ -1,18 +1,24 @@
 <div class="add_attachment show_only_in_edit_mode">
-  <h2><%=t :add_attachment %></h2>
+  <h2><%=t :add_attachments %></h2>
 
-  <%= semantic_form_for @page.attachments.build, multipart: true do |f| %>
-    <%= f.inputs do %>
+  <div class="attachment_drop_field">
+    <p><%=t :drop_attachments_here %></p>
+
+    <%= form_for @page.attachments.build do |f| %>
       <%= f.hidden_field :parent_id %> 
       <%= f.hidden_field :parent_type %>
-      <p>
-        <%= f.input :title %>
-        <%= f.input :description, as: :string %>
-        <%= f.input :file, as: :file %>
-      </p>
+      <%= f.label :file, t(:attachments) %>
+      <%= f.file_field :file, multiple: true, name: "attachment[file]" %>
     <% end %>
-    <%= f.actions %>
-  <% end %>
+  </div>
+
+  <script id="template-upload" type="text/x-tmpl">
+    <div class="upload">
+      {%=o.name%} 
+     <div class="processing"><%= I18n.t(:processing_attachment) %></div>
+      <div class="progress"><div class="bar" style="width: 0%"></div></div>
+    </div>
+  </script>
 
 </div>
 

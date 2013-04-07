@@ -31,8 +31,17 @@ class GroupsController < ApplicationController
     if @group
       @navable = @group
       @title = @group.name
-      @groups = @group.child_groups
-      @users = @group.descendant_users
+
+      @child_groups = @group.child_groups
+      @descendant_users = @group.descendant_users
+      @child_users = @group.child_users
+      @child_users = @child_users.page(params[:page]).per_page(25) # pagination
+
+      user_ids = @group.descendant_users.collect { |user| user.id }
+      @map_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
+
+      # current posts
+      @posts = @group.posts.order("sent_at DESC").limit(10)
     end
   end
 
@@ -40,6 +49,16 @@ class GroupsController < ApplicationController
     @group = Group.find params[ :id ]
     @group.update_attributes( params[ :group ] )
     respond_with @group
+  end
+
+  def create
+    if params[:parent_type].present? && params[:parent_id].present?
+      @parent = params[:parent_type].constantize.find(params[:parent_id]).child_groups
+    else
+      @parent = Group
+    end
+    @new_group = @parent.create( name: I18n.t(:new_group) )
+    redirect_to @new_group
   end
 
 end

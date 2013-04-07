@@ -8,7 +8,7 @@ class UserAlias < UserPropertyString
     if @user && @user.first_name && @user.last_name
       if User.find( :all, :conditions => "last_name='#{@user.last_name}' AND id!='#{@user.id}'" ).count == 0
         # Wenn der Nachname nur einmal vorkommt, wird dieser als Alias vorgeschlagen.      
-        suggestion = Alias.new @user.last_name.downcase # mustermann
+        suggestion = UserAlias.new @user.last_name.downcase # mustermann
       elsif User.find( 
                       :all, 
                       :conditions => "last_name='#{@user.last_name}' 

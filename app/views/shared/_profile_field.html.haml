@@ -2,14 +2,14 @@
   %span{class: 'profile_field', id: "profile_field_id_#{profile_field.id}"}
     - input_type = 'input'
     - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type
+    - unless profile_field.parent
+      = remove_button(profile_field)
+    = best_in_place profile_field, :label, classes: 'label'
     - if profile_field.children.count == 0
-      = best_in_place profile_field, :label, classes: 'label'
       = best_in_place profile_field, :value,
                         type: input_type,
                         display_as: :display_html,
                         classes: 'value'
-    - unless profile_field.parent
-      = remove_button(profile_field)
     - if profile_field.children.count > 0
       %ul
         - profile_field.children.each do |child_field|

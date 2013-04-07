@@ -8,7 +8,7 @@
 # and to their properties like since when the membership exists.
 class UserGroupMembership < DagLink
 
-  attr_accessible :created_at, :deleted_at
+  attr_accessible :created_at, :deleted_at, :created_at_date_formatted
 
 
   # General Properties
@@ -198,6 +198,7 @@ class UserGroupMembership < DagLink
 
   def deleted_at
     return read_attribute( :deleted_at ) if direct?
+    return nil if direct_memberships_now.count > 0 # there are still un-deleted direct memberships
     last_deleted_direct_membership.deleted_at if last_deleted_direct_membership
   end
   def deleted_at=( deleted_at )
@@ -248,7 +249,9 @@ class UserGroupMembership < DagLink
   #     membership.corporation == corporation
   #
   def corporation
-    ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+    if self.group && self.user
+      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+    end
   end
 
 
@@ -288,6 +291,11 @@ class UserGroupMembership < DagLink
       .find_all_by_user( self.user )
       .where( :direct => true )
       .where( :ancestor_id => group_ids )
+
+    # If the membership itself is deleted, also consider the deleted direct memberships.
+    # Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
+    # `direct_memberships` in order to have the deleted direct memberships included.
+    #
     memberships = memberships.with_deleted if self.read_attribute( :deleted_at )
     memberships = memberships.order( :created_at )
     memberships
@@ -302,6 +310,9 @@ class UserGroupMembership < DagLink
 
   def direct_memberships_now_and_in_the_past
     self.direct_memberships.now_and_in_the_past
+  end
+  def direct_memberships_now
+    self.direct_memberships.where( :deleted_at => nil )
   end
 
 
@@ -322,17 +333,11 @@ class UserGroupMembership < DagLink
   # A1 = b1,  A2 = c2,  b2 = c1
   #
   def first_created_direct_membership
-    unless @first_created_direct_membership
-      @first_created_direct_membership = direct_memberships.reorder( :created_at ).first
-    end
-    @first_created_direct_membership
+    @first_created_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :created_at ).first
   end
 
   def last_deleted_direct_membership
-    unless @last_deleted_direct_membership
-      @last_deleted_direct_membership = direct_memberships.reorder( :deleted_at ).last
-    end
-    @last_deleted_direct_membership
+    @last_deleted_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :deleted_at ).last
   end
 
 

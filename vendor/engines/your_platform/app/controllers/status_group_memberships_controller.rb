@@ -7,7 +7,7 @@ class StatusGroupMembershipsController < ApplicationController
   def update
     attributes = params[ :status_group_membership ]
     if @membership.update_attributes( attributes )
-      respond_with_bip @membership
+      respond_with @membership
     else
       raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
     end
@@ -20,7 +20,7 @@ class StatusGroupMembershipsController < ApplicationController
   private
 
   def find_membership
-    @membership = StatusGroupMembership.with_deleted.find( params[ :id ] ) if params[ :id ]
+    @membership = StatusGroupMembership.with_deleted.find( params[ :id ] ) if params[ :id ].present?
   end
   
 end

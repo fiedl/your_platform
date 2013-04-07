@@ -2,3 +2,10 @@ de:
   time:
     formats:
       time: ! '%H:%M Uhr'
+
+  map: Karte
+  page: Seite
+  group: Gruppe
+
+  new_page: Neue Seite
+  new_group: Neue Gruppe

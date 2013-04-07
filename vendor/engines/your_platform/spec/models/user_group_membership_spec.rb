@@ -31,9 +31,9 @@ describe UserGroupMembership do
     UserGroupMembership.find_all_by( user: @user, group: @group ).with_deleted.first
   end
 
-  def create_indirect_membership
-    UserGroupMembership.create( user: @user, group: @super_group )
-  end
+#  def create_indirect_membership
+#    UserGroupMembership.create( user: @user, group: @super_group )
+#  end
 
   def find_indirect_membership
     UserGroupMembership.find_by( user: @user, group: @super_group )
@@ -88,6 +88,20 @@ describe UserGroupMembership do
       end
       it "should find all memberships for a group" do
         UserGroupMembership.find_all_by( group: @group ).should include( find_membership )
+      end
+      it "should not find deleted memberships" do
+        find_membership.destroy
+        UserGroupMembership.find_all_by( user: @user )
+          .should include( find_indirect_membership_with_deleted, find_other_membership_with_deleted )
+        UserGroupMembership.find_all_by( user: @user )
+          .should_not include( find_membership_with_deleted )
+      end
+    end
+    describe ".find_all_by.with_deleted" do
+      before { find_membership.destroy }
+      it "should find all memberships, including the deleted ones" do
+        UserGroupMembership.find_all_by( user: @user ).with_deleted
+          .should include( find_membership_with_deleted, find_indirect_membership, find_other_membership )
       end
     end
 
@@ -339,11 +353,42 @@ describe UserGroupMembership do
         find_membership_with_deleted.update_attributes( created_at: 2.hours.ago, deleted_at: 1.hour.ago )
         find_indirect_membership_with_deleted.deleted_at.should < 50.minutes.ago
       end
+      specify "check boundary conditions, since this spec has previously caused problems" do
+        create_membership
+        find_other_membership.should == nil
+        find_membership_with_deleted.deleted_at.should == nil
+        find_indirect_membership_with_deleted.deleted_at.should == nil
+
+        find_membership.destroy
+        find_other_membership.should == nil
+        find_membership.should == nil
+        find_membership_with_deleted.should_not == nil
+        find_membership_with_deleted.deleted_at.should_not == nil
+        find_indirect_membership.should == nil
+        find_indirect_membership_with_deleted.should_not == nil
+        find_indirect_membership_with_deleted.direct?.should == false
+        find_indirect_membership_with_deleted.direct_memberships_now
+          .should_not include( find_membership_with_deleted )
+        find_indirect_membership_with_deleted.direct_memberships_now_and_in_the_past
+          .should include( find_membership_with_deleted )
+        find_indirect_membership_with_deleted.deleted_at.should_not == nil
+      end
     end
     describe "for an indirect membership of two direct memberships, where only one has been deleted" do
       it "should return nil, since the direct membership still persists" do
         create_memberships
         find_membership.destroy
+        find_indirect_membership_with_deleted.deleted_at.should == nil
+      end
+      specify "check if the boundary conditions are fulfilled, since this spec has caused problems, previously" do
+        create_memberships
+        find_membership_with_deleted.deleted_at.should == nil
+        find_other_membership_with_deleted.deleted_at.should == nil
+        find_indirect_membership_with_deleted.deleted_at.should == nil
+
+        find_membership.destroy
+        find_membership_with_deleted.deleted_at.should_not == nil
+        find_other_membership_with_deleted.deleted_at.should == nil
         find_indirect_membership_with_deleted.deleted_at.should == nil
       end
     end
@@ -538,9 +583,36 @@ describe UserGroupMembership do
   end
 
   describe "#first_created_direct_membership" do
-    before { create_memberships }
-    subject { find_indirect_membership.first_created_direct_membership }
-    it { should == find_membership } # this membership has been created before the other_membership.
+    before do
+      @user = create(:user)
+
+      # The @user will be indirect member of these corporations:
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+
+      # The @user will be direct member of these status groups, which are subgroups of the corporations:
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E.update_attributes( created_at: "2006-12-01".to_datetime )
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H.update_attributes( created_at: "2008-12-01".to_datetime )
+      @first_membership_E.destroy
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E.update_attributes( created_at: "2013-12-01".to_datetime )
+
+      @membershipE = UserGroupMembership.find_by_user_and_group(@user, @corporationE)
+    end
+    subject { @membershipE.first_created_direct_membership }
+    
+    specify "verify which memberships are direct and which are indirect" do
+      @membershipE.direct?.should == false
+      @first_membership_E.direct?.should == true
+      @second_membership_E.direct?.should == true
+      @first_membership_H.direct?.should == true
+    end
+  
+    it "should return the direct sub-membership, which has been created first" do
+      subject.should == @first_membership_E.becomes(UserGroupMembership)
+    end
   end
 
   describe "#last_deleted_direct_membership" do

@@ -1,11 +1,34 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title
+  attr_accessible        :content, :title, :redirect_to
 
   is_structureable       ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
   is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
+
+
+  # Redirection
+  # ----------------------------------------------------------------------------------------------------
+
+  def redirect_to
+
+    # http://example.com
+    return super if super.kind_of?(String) && super.include?("://")
+
+    # users#index
+    if super.kind_of?(String) && super.include?("#")
+      controller, action = super.split("#")           
+      return { controller: controller, action: action } if controller && action
+    end
+
+    # { controller: "users", action: "index" }
+    return super if super.kind_of? Hash
+
+    # else
+    return nil
+  end
+
 
 
   # Association Related Methods

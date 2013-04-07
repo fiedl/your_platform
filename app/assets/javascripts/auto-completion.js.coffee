@@ -1,4 +1,4 @@
-jQuery ->
+ready = ->
 
   split = (val) ->
     val.split /,\s*/
@@ -69,3 +69,6 @@ jQuery ->
   $( document ).on( 'mousedown', 'ul.typeahead', (event) ->
     event.preventDefault()
   )
+
+$(document).ready(ready)
+$(document).on('page:load', ready)

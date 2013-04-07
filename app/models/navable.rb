@@ -16,7 +16,7 @@ module Navable
 
     def nav_node
       node = super
-      node = create_nav_node unless node
+      node = build_nav_node unless node
       return node
     end
 
@@ -29,7 +29,9 @@ module Navable
     end
 
     def navable_children
-      children.select{ |child| child.respond_to? :nav_node }
+      #children.select{ |child| child.respond_to? :nav_node } # inefficient!
+      self.links_as_parent.where( 'descendant_type != ?', 'User' ).where( direct: true ).collect { |link| link.descendant }
+      #children.where( 'descendant_type != ?', 'User' ) # suppress users -- they don't have to be in the menus
     end
 
     private

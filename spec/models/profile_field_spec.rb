@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
 
-describe ProfileField do
+# Profile Fields in General
+# ==========================================================================================
 
+describe ProfileField do
 end
 
 
@@ -25,6 +27,14 @@ describe ProfileFieldTypes::Address do
     subject { @address_field.bv }
     it "should return the correct Bv (Bezirksverband)" do
       subject.should == @bv
+    end
+  end
+
+  describe "#display_html" do
+    subject { @address_field.display_html }
+    it "should include the BV" do
+      subject.should include I18n.translate(:address_is_in_bv)
+      subject.should include @address_field.bv.name
     end
   end
 

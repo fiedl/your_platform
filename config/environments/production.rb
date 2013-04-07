@@ -75,11 +75,12 @@ Wingolfsplattform::Application.configure do
     address: 'smtp.1und1.de',
     user_name: 'wingolfsplattform@wingolf.org',
     password: mailer_passwords[ "production_smtp_password" ],
-    enable_starttls_auto: false
+    domain: 'wingolfsplattform.org',
+    enable_starttls_auto: true,
+    # only if certificate malfunctions:
+    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE    
   }
-  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
-
-
+  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
 
 
 end

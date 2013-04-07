@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group, :date_of_birth
 
   attr_accessor             :create_account, :add_to_group
-                            # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
+  # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
@@ -18,9 +18,11 @@ class User < ActiveRecord::Base
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
-                              
+
   has_many                  :relationships_as_second_user, foreign_key: 'user2_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user2
   
+  has_many                  :bookmarks
+
   is_navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
@@ -58,7 +60,7 @@ class User < ActiveRecord::Base
   private :capitalized_name_string
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
-  # Use this rather than the name attribute itself, since the title method is likely to be overridden 
+  # Use this rather than the name attribute itself, since the title method is likely to be overridden
   # in the main application.
   # Notice: This method does *not* return the academic title of the user.
   #
@@ -66,8 +68,8 @@ class User < ActiveRecord::Base
     name
   end
 
-  # This accessors allow to access the gender of the user rather than just asking if the 
-  # user is female as allowed by the ActiveRecord accessor. 
+  # This accessors allow to access the gender of the user rather than just asking if the
+  # user is female as allowed by the ActiveRecord accessor.
   # (:female is a boolean column in the users table.)
   #
   def gender
@@ -76,13 +78,25 @@ class User < ActiveRecord::Base
   end
   def gender=( new_gender )
     if new_gender.to_s == "female"
-      self.female = true 
+      self.female = true
     else
       self.female = false
     end
   end
 
-
+  # Date of Birth
+  #
+  def date_of_birth
+    date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
+  end
+  def date_of_birth=( date_of_birth )
+    date_of_birth_profile_field
+    @date_of_birth_profile_field ||= profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
+    @date_of_birth_profile_field.value = date_of_birth
+  end
+  def date_of_birth_profile_field
+    @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
+  end
 
   # Associated Objects
   # ==========================================================================================
@@ -113,21 +127,21 @@ class User < ActiveRecord::Base
   end
   private :generate_alias_if_necessary
 
-  
+
   # User Account
   # ------------------------------------------------------------------------------------------
 
   # A user stored in the database does not necessarily possess the right to log in, i.e.
   # have a user account. This method allows to find out whether the user has got an
   # active user account.
-  # 
+  #
   def has_account?
     return true if self.account
     return false
   end
 
   # This method activates the user account, i.e. grants the user the right to log in.
-  # 
+  #
   def activate_account
     unless self.account
       self.account = self.build_account
@@ -138,7 +152,7 @@ class User < ActiveRecord::Base
 
   # This method deactivates the user account, i.e. destroys the associated object
   # and prevents the user from logging in.
-  # 
+  #
   def deactivate_account
     raise "no user account exists, therefore it can't be destroyed." if not self.account
     self.account.destroy
@@ -151,7 +165,7 @@ class User < ActiveRecord::Base
   # Note: A welcome email is automatically sent on save by the UserAccount model.
   def build_account_if_requested
 
-    # If this value is set by an html form, it is "0" or "1". But "0" would 
+    # If this value is set by an html form, it is "0" or "1". But "0" would
     # transform to true rather than to false.
     # Thus, we have to make sure that "0" means false.
     self.create_account = false if self.create_account == "0"
@@ -182,7 +196,7 @@ class User < ActiveRecord::Base
   end
 
   def add_to_group_if_requested
-    if self.add_to_group 
+    if self.add_to_group
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
@@ -198,16 +212,16 @@ class User < ActiveRecord::Base
   # model. corporations are child_groups of the corporations_parent_group in the DAG.
   #
   #   everyone
-  #      |----- corporations_parent                      
-  #      |                |---------- corporation_a      <---- 
+  #      |----- corporations_parent
+  #      |                |---------- corporation_a      <----
   #      |                |                |--- ...           |--- These are corporations
   #      |                |---------- corporation_b      <----
-  #      |                                 |--- ...      
+  #      |                                 |--- ...
   #      |----- other_group_1
   #      |----- other_group_2
   #
-  # Warning! 
-  # This method does not distinguish between regular members and guest members. 
+  # Warning!
+  # This method does not distinguish between regular members and guest members.
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
   def corporations
@@ -233,9 +247,9 @@ class User < ActiveRecord::Base
   # Memberships
   # ------------------------------------------------------------------------------------------
 
-  # Returns all UserGroupMemberships for this user. 
+  # Returns all UserGroupMemberships for this user.
   # Since this is an ActiveRelation object, one can chain other conditions, like:
-  # 
+  #
   #     some_user.memberships.with_deleted
   #     some_user.memberships.in_the_past
   #
@@ -243,23 +257,23 @@ class User < ActiveRecord::Base
     UserGroupMembership.find_all_by_user self
   end
 
-  
+
   # Relationships
   # ------------------------------------------------------------------------------------------
-  
+
   # This returns all relationship opjects.
   #
   def relationships
     relationships_as_first_user + relationships_as_second_user
   end
 
-  
+
   # Workflows
   # ------------------------------------------------------------------------------------------
 
   # This method returns all workflows applicable for this user, i.e. this returns
   # all workflows of all groups the user is a member of.
-  # 
+  #
   def workflows
     my_workflows = []
     self.groups.each do |group|
@@ -273,40 +287,38 @@ class User < ActiveRecord::Base
   # ------------------------------------------------------------------------------------------
 
   # This method lists all upcoming events of the groups the user is member of.
-  # 
+  #
   def upcoming_events
     Event.upcoming.find_all_by_groups( self.groups ).direct
   end
 
 
-  # Starred Objects
+  # Bookmarked Objects
   # ------------------------------------------------------------------------------------------
 
-  # This method lists all starrable objects starred by this user (aka favorites).
+  # This method lists all bookmarked objets of this user.
   #
-  def starred_objects
-    self.stars.collect { |star| star.starrable }
+  def bookmarked_objects
+    self.bookmarks.collect { |bookmark| bookmark.bookmarkable }
   end
 
-  # The Stars itself, i.e. the association objects.
-  #
-  def stars
-    Star.find_all_by_user( self )
-  end
 
 
   # User Identification and Authentification
   # ==========================================================================================
 
   include UserMixins::Identification
-  
+
+  # The authentication is handled by devise, now.
+  # See: https://github.com/plataformatec/devise
+
 
   # Roles and Rights
   # ==========================================================================================
 
   # This method returns the role the user (self) has for a given
   # structureable object.
-  # 
+  #
   # The roles may be :member, :admin or :main_admin.
   #
   def role_for( structureable )
@@ -373,7 +385,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Main Admins 
+  # Main Admins
   # ------------------------------------------------------------------------------------------
 
   # This method says whether the user (self) is a main admin of the given
@@ -393,7 +405,7 @@ class User < ActiveRecord::Base
     return false if not group.find_guests_parent_group
     group.guests.include? self
   end
-  
+
 
   # Finder Methods
   # ==========================================================================================
@@ -403,7 +415,7 @@ class User < ActiveRecord::Base
   def self.find_by_title( title )
     User.all.select { |user| user.title == title }.first
   end
-  
+
   # This method finds all users having the given name attribute.
   # notice: case insensitive
   #
@@ -415,12 +427,16 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    User.all.select { |user| user.email.present? && user.email.downcase == email.downcase }
+    email_fields = ProfileField.where( type: "ProfileFieldTypes::Email", value: email )
+    matching_users = email_fields
+      .select{ |ef| ef.profileable_type == "User" }
+      .collect { |ef| ef.profileable }
+    return matching_users.to_a
   end
 
   # Debug Helpers
   # ==========================================================================================
-  
+
   # The string returned by this method represents the user in the rails console.
   # For example, if you type `User.all` in the console, the answer would be:
   #
