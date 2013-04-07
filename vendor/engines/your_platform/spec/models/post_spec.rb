@@ -174,7 +174,7 @@ describe Post do
   # Delivering Post as Email to All Group Members
   # ==========================================================================================
 
-  describe "Delivering Group Mails: ", focus: true do
+  describe "Delivering Group Mails: " do
 
     message_types = [ :build_text_only_message, :build_multipart_message ]
     message_types.each do |message_type|
@@ -250,13 +250,9 @@ describe Post do
 
           it "should contain the mailing list footer" do
             if subject.multipart?
-              subject.parts.each do |part|
-                part.body_in_utf8.force_encoding('binary')
-                  .should include @post.mailing_list_footer.force_encoding('binary')
-              end
+              subject.parts.last.body_in_utf8.should include @post.mailing_list_footer
             else
-              subject.body_in_utf8.force_encoding('binary')
-                .should include @post.mailing_list_footer.force_encoding('binary')
+              subject.body_in_utf8.should include @post.mailing_list_footer
             end
           end
         end

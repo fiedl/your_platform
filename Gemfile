@@ -203,6 +203,9 @@ gem 'mailman', require: false
 gem 'mail', git: 'git://github.com/jeremy/mail.git'
 gem 'rb-inotify', '~> 0.9', group: :production
 
+# Encoding Detection
+gem 'charlock_holmes'
+
 # Manage Workers
 gem 'foreman', group: [:development, :production]
 

@@ -141,13 +141,7 @@ class Post < ActiveRecord::Base
     message.smtp_envelope_to = user.email
 
     # add the footer for each part
-    if message.multipart?
-      message.parts.each_with_index do |part, index|
-        message.parts[index].body = body_and_footer_of_part(part)
-      end
-    else
-      message.body = body_and_footer_of_part(message)
-    end
+    message.add_to_body self.mailing_list_footer
     
     return message
   end
@@ -160,11 +154,11 @@ class Post < ActiveRecord::Base
   def body_and_footer_of_part( part )
     if part.content_type == nil || part.content_type.include?("text") # ignore attachments
       if part.body.decoded.include?("<body")
-         doc = Nokogiri::HTML( part.body_in_utf8 )
-        doc.xpath( '//body' ).first.inner_html += self.mailing_list_footer.force_encoding('binary')
+        doc = Nokogiri::HTML( part.body_in_utf8 )
+        doc.xpath( '//body' ).first.inner_html = self.mailing_list_footer
         new_body = doc.xpath('//html').to_s
       else
-        new_body = part.body_in_utf8 + self.mailing_list_footer.force_encoding('binary')
+        new_body = part.body_in_utf8 + self.mailing_list_footer
       end
     else
       new_body = part.body
@@ -175,22 +169,146 @@ class Post < ActiveRecord::Base
 
 end
 
+
+
 module Mail
   class Message
+
     def body_in_utf8
+      CharlockHolmes
+      require 'charlock_holmes/string'
+
+      body = self.body.decoded
+      if body.present?
+        encoding = body.detect_encoding[:encoding]
+        body = body.force_encoding(encoding).encode('UTF-8')
+      end
+      return body
+      
+
       # http://stackoverflow.com/questions/4868205
 #      encoding = self.content_type_parameters['charset'] if self.content_type_parameters
 #      encoding ||= self.body.charset
 #      recoded_body = self.body.decoded
 #      recoded_body = recoded_body.force_encoding(encoding).encode('UTF-8') if encoding
 #      recoded_body = recoded_body.encode('UTF-8') unless recoded_body.encoding.to_s == "UTF-8"
-      recoded_body = self.body.decoded.force_encoding('binary')
+#      recoded_body = self.body.decoded.force_encoding('binary')
 #      if not recoded_body.encoding.to_s == "UTF-8"
 #        raise "Encoding has failed, apparently. It should be UTF-8 but is '#{recoded_body.encoding.to_s}'.\n" +
 #          "The detected charset is '#{encoding}'."
 #      end
-      return recoded_body
+#      return recoded_body
     end
+
+    # This method adds the given string to all text parts of the message.
+    # This is used for email footers.
+    # 
+    # Attention: Multipart emails may have a tree structure, i.e. a part
+    # may contain several other parts. Therefore, this method calls itself
+    # recursively. 
+    # 
+    def add_to_body_deak( text_to_add )
+      CharlockHolmes
+      require 'charlock_holmes/string'
+
+
+      if self.multipart?
+        self.parts.each_with_index do |part, index|
+          self.parts[index].add_to_body text_to_add
+        end
+      else
+        
+        new_body = "" # TODO: REMOVE THIS
+
+        # plain text parts
+        if self.content_type == nil || self.content_type.include?('text/plain')
+          self.body = self.body_in_utf8 + text_to_add.encode('UTF-8')
+        end
+
+        # html parts
+        if self.content_type && self.content_type.include?('text/html')
+          #        if self.content_type_parameters && self.content_type_parameters[:type] == "text/html" 
+          #            p "DID THIS WITH NOKOGIRI!"
+          #           doc = Nokogiri::HTML(part.body_in_utf8)
+          #          doc.xpath('//body').first.inner_html += text_to_add.encode('UTF-8')
+          #         p doc.xpath('//body').first.inner_html
+            
+#          new_body = self.body_in_utf8.gsub("</body>", text_to_add.encode('UTF-8') + "</body>") #.force_encoding('UTF-8')
+          #            self.parts[index].body = new_body #   = doc.xpath('//html').to_s            
+          #            self.parts[index].body = new_body.force_encoding('UTF-8')
+          
+          #            old_encoding = part.body.decoded.encoding
+          #            self.parts[index].body = new_body.force_encoding('UTF-8').encode(old_encoding)
+
+#          self.body = new_body.force_encoding('UTF-8')
+
+#          p "=========================================================================================="
+#          p part.multipart?
+#          p part.parts.length
+#          p new_body.encoding
+#          p new_body.detect_encoding
+#          p new_body.force_encoding('UTF-8').encoding
+#          #            p new_body.encode('UTF-8').encoding
+#          p text_to_add.encoding
+#            
+#          p new_body.include?(text_to_add)
+#          p self.parts[index].body.include?(text_to_add)
+#          p self.parts[index].body_in_utf8.include?(text_to_add)
+#
+
+
+#          self.body.decoded.gsub!("</body>", text_to_add.encode('binary') + "</body>")
+
+          # I tried to add this to the body for three days!
+          # Instead add a new part:
+#          self.p
+
+        end
+        
+        #          p "------------------------------------------------------------------------------------------"
+        #          p "part #{index}"
+        #          p part.content_type
+        #          p part.content_type_parameters
+
+        p "##########################################################################################"
+        p self.content_type
+        p self.content_type_parameters
+        p self.body.decoded.length
+        p new_body.length
+
+
+      end
+
+      return self
+    end
+
+
+
+    def add_to_body( text_to_add )
+      CharlockHolmes
+      require 'charlock_holmes/string'
+
+
+      if self.multipart?
+
+        # Simply add another part.
+        # According to the documentation, this call will add another part 
+        # rather than wiping all.
+        self.body = text_to_add
+
+      else
+        
+        # plain text parts
+        if self.content_type == nil || self.content_type.include?('text/plain')
+          self.body = self.body_in_utf8 + text_to_add.encode('UTF-8')
+        end
+
+      end
+
+      return self
+    end
+
+
   end
 end
 
