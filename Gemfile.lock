@@ -1,4 +1,12 @@
 GIT
+  remote: git://github.com/jejacks0n/mercury
+  revision: d3b085e1b7e1e801efe298bb826a4730179455af
+  specs:
+    mercury-rails (0.9.0)
+      coffee-rails (~> 3.2.2)
+      railties (~> 3.2)
+
+GIT
   remote: git://github.com/jeremy/mail.git
   revision: 4875bc2ba1670289a34a155569af2f51abddc316
   specs:
@@ -109,7 +117,7 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.5.0)
+    coffee-script-source (1.6.2)
     colored (1.2)
     commonjs (0.2.6)
     database_cleaner (0.9.1)
@@ -154,7 +162,7 @@ GEM
     haml (4.0.2)
       tilt
     highline (1.6.15)
-    hike (1.2.1)
+    hike (1.2.2)
     http_parser.rb (0.5.3)
     i18n (0.6.1)
     journey (1.0.4)
@@ -296,7 +304,7 @@ GEM
       libv8 (~> 3.11.8.12)
       ref
     thor (0.14.6)
-    tilt (1.3.6)
+    tilt (1.3.7)
     treetop (1.4.12)
       polyglot
       polyglot (>= 0.3.1)
@@ -360,6 +368,7 @@ DEPENDENCIES
   less-rails
   mail!
   mailman
+  mercury-rails!
   meta_request
   mysql2
   net-ssh (= 2.4.0)

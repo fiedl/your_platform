@@ -12,7 +12,9 @@
         = t(:edited_at)
         = localize(page.updated_at)
   %div.page_body
-    = best_in_place page, :content, type: 'textarea', sanitize: false
+    %div{ id: 'page_content', data: { mercury: 'full' } }
+      // = best_in_place page, :content, type: 'textarea', sanitize: false
+      = page.content.html_safe
 
 = render(partial: 'pictures') 
 = render(partial: 'videos') 

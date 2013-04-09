@@ -1,6 +1,6 @@
 class PagesController < ApplicationController
 
-  before_filter :find_page, only: [:show, :update]
+  before_filter :find_page, only: [:show, :update, :mercury_update]
   respond_to :html, :json
 
   def show
@@ -15,6 +15,7 @@ class PagesController < ApplicationController
   end
 
   def update
+    debugger
     @page.update_attributes params[ :page ]
     respond_with @page
   end

@@ -23,8 +23,11 @@ class ApplicationController < ActionController::Base
   end
 
   def find_layout
-    #layout = "bootstrap"
+    
+    # TODO: The layout should be saved in the user's preferences, i.e. interface settings.
     layout = "wingolf"
+    layout = "bootstrap" if ENV[ 'RAILS_ENV' ] == 'test'
+
     if params[ :layout ]
       layout = params[ :layout ] 
     end

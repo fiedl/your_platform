@@ -21,6 +21,8 @@ gem 'mysql2'								# MIT License
 group :assets, :production, 'testing-aki' do
   gem 'sass-rails',   '~> 3.2.3'					# MIT License
   gem 'coffee-rails', '~> 3.2.1'					# MIT License
+#  gem 'coffee-script', '1.4.0' # need this at 1.4.0 for mercury, at the moment
+    # see https://github.com/jejacks0n/mercury/issues/349
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
 
@@ -209,3 +211,5 @@ gem 'charlock_holmes'
 # Manage Workers
 gem 'foreman', group: [:development, :production]
 
+# CMS: Mercury Editor
+gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'

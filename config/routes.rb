@@ -1,5 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  mount Mercury::Engine => '/'
+
   devise_for :user_accounts
 
   get "map/show"
