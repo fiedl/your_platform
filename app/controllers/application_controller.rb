@@ -6,6 +6,13 @@ class ApplicationController < ActionController::Base
 
   layout             :find_layout
 
+  helper_method      :current_user
+
+  def current_user
+    current_user_account.user if current_user_account
+  end
+
+
   protected
 
   def http_authenticate
@@ -16,7 +23,8 @@ class ApplicationController < ActionController::Base
   end
 
   def find_layout
-    layout = "bootstrap"
+    #layout = "bootstrap"
+    layout = "wingolf"
     if params[ :layout ]
       layout = params[ :layout ] 
     end
