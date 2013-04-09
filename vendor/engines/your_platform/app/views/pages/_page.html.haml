@@ -1,0 +1,22 @@
+%h1= best_in_place(page, :title)
+%div.page
+  %div.page_header
+    - if page.author
+      %span.page_author
+        = link_to(page.author.title, page.author) + ", "
+    %span.page_created_at
+      = localize(page.created_at)
+    - if page.updated_at && page.updated_at > page.created_at + 1.hour
+      %span.page_updated_at
+        = " | "       
+        = t(:edited_at)
+        = localize(page.updated_at)
+  %div.page_body
+    = best_in_place page, :content, type: 'textarea', sanitize: false
+
+= render(partial: 'pictures') 
+= render(partial: 'videos') 
+= render(partial: 'attachments') # if page.attachments.count > 0
+
+
+

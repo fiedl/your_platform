@@ -6,6 +6,8 @@ class Page < ActiveRecord::Base
   is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
+  
+  belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
 
   # Redirection
@@ -39,6 +41,21 @@ class Page < ActiveRecord::Base
   #
   def attachments_by_type( type )
     attachments.find_by_type type
+  end
+
+
+  # Blog Entries
+  # ----------------------------------------------------------------------------------------------------
+
+  # This method returns all Page objects that can be regarded as blog entries of self.
+  # Blog entries are simply child pages of self.
+  # 
+  # Page: "My Blog"
+  #   |------------------ Page: "Entry 1"
+  #   |------------------ Page: "Entry 2"
+  #
+  def blog_entries
+    self.child_pages.order('created_at DESC')
   end
 
 

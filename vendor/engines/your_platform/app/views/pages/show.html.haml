@@ -1,10 +1,10 @@
-= content_box(:heading => best_in_place(@page, :title)) do
-  - best_in_place @page, :content, type: 'textarea', sanitize: false
-
-= html_convert_h1_to_boxes( render(partial: 'pictures') + render(partial: 'videos') + render(partial: 'attachments'), force: true )
+= render @page
 
 %div.attachment_global_drop_zone
   = t :drop_files_here
+
+- for blog_entry_page in @blog_entries
+  = render partial: 'pages/page', object: blog_entry_page
 
 
 
