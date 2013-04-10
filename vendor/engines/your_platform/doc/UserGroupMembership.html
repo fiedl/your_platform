@@ -693,6 +693,28 @@ to get access to the datetime of deletion.</p>
         <li class="public ">
   <span class="summary_signature">
     
+      <a href="#direct_memberships_now-instance_method" title="#direct_memberships_now (instance method)">- (Object) <strong>direct_memberships_now</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
       <a href="#direct_memberships_now_and_in_the_past-instance_method" title="#direct_memberships_now_and_in_the_past (instance method)">- (Object) <strong>direct_memberships_now_and_in_the_past</strong> </a>
     
 
@@ -1288,14 +1310,14 @@ membership.corporation == corporation</code></pre>
       <pre class="lines">
 
 
-250
 251
 252
 253
-254</pre>
+254
+255</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 250</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 251</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_corporation'>corporation</span>
   <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span> <span class='op'>&amp;&amp;</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span>
@@ -1412,12 +1434,12 @@ group.</p>
       <pre class="lines">
 
 
-211
 212
-213</pre>
+213
+214</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 211</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 212</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_created_at_date'>created_at_date</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_created_at'>created_at</span><span class='period'>.</span><span class='id identifier rubyid_to_date'>to_date</span>
@@ -1442,12 +1464,12 @@ group.</p>
       <pre class="lines">
 
 
-214
 215
-216</pre>
+216
+217</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 214</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 215</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_created_at_date='>created_at_date=</span><span class='lparen'>(</span> <span class='id identifier rubyid_created_at_date'>created_at_date</span> <span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_created_at'>created_at</span> <span class='op'>=</span> <span class='id identifier rubyid_created_at_date'>created_at_date</span><span class='period'>.</span><span class='id identifier rubyid_to_datetime'>to_datetime</span>
@@ -1472,12 +1494,12 @@ group.</p>
       <pre class="lines">
 
 
-217
 218
-219</pre>
+219
+220</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 217</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 218</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_created_at_date_formatted'>created_at_date_formatted</span>
   <span class='const'>I18n</span><span class='period'>.</span><span class='id identifier rubyid_localize'>localize</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_created_at_date'>created_at_date</span>
@@ -1502,12 +1524,12 @@ group.</p>
       <pre class="lines">
 
 
-220
 221
-222</pre>
+222
+223</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 220</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 221</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_created_at_date_formatted='>created_at_date_formatted=</span><span class='lparen'>(</span> <span class='id identifier rubyid_created_at_date_formatted'>created_at_date_formatted</span> <span class='rparen'>)</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_created_at_date'>created_at_date</span> <span class='op'>=</span> <span class='id identifier rubyid_created_at_date_formatted'>created_at_date_formatted</span>
@@ -1647,14 +1669,16 @@ use these two methods:</p>
 199
 200
 201
-202</pre>
+202
+203</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 199</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deleted_at'>deleted_at</span>
   <span class='kw'>return</span> <span class='id identifier rubyid_read_attribute'>read_attribute</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_direct?'>direct?</span>
-  <span class='id identifier rubyid_last_deleted_direct_membership'>last_deleted_direct_membership</span><span class='period'>.</span><span class='id identifier rubyid_deleted_at'>deleted_at</span> <span class='kw'>if</span> <span class='id identifier rubyid_last_deleted_direct_membership'>last_deleted_direct_membership</span>
+  <span class='kw'>return</span> <span class='kw'>nil</span> <span class='kw'>if</span> <span class='id identifier rubyid_direct_memberships_now'>direct_memberships_now</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>&gt;</span> <span class='int'>0</span> <span class='comment'># there are still un-deleted direct memberships
+</span>  <span class='id identifier rubyid_last_deleted_direct_membership'>last_deleted_direct_membership</span><span class='period'>.</span><span class='id identifier rubyid_deleted_at'>deleted_at</span> <span class='kw'>if</span> <span class='id identifier rubyid_last_deleted_direct_membership'>last_deleted_direct_membership</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1676,13 +1700,13 @@ use these two methods:</p>
       <pre class="lines">
 
 
-203
 204
 205
-206</pre>
+206
+207</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 203</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 204</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deleted_at='>deleted_at=</span><span class='lparen'>(</span> <span class='id identifier rubyid_deleted_at'>deleted_at</span> <span class='rparen'>)</span>
   <span class='kw'>return</span> <span class='kw'>super</span><span class='lparen'>(</span> <span class='id identifier rubyid_deleted_at'>deleted_at</span> <span class='rparen'>)</span> <span class='kw'>if</span> <span class='id identifier rubyid_direct?'>direct?</span>
@@ -1818,12 +1842,12 @@ is called in #destroy.</p>
       <pre class="lines">
 
 
-301
-302
-303</pre>
+307
+308
+309</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 301</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 307</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_direct_groups'>direct_groups</span>
   <span class='id identifier rubyid_direct_memberships'>direct_memberships</span><span class='period'>.</span><span class='id identifier rubyid_collect'>collect</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_membership'>membership</span><span class='op'>|</span> <span class='id identifier rubyid_membership'>membership</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span> <span class='rbrace'>}</span>
@@ -1884,7 +1908,6 @@ direct memberships.</p>
       <pre class="lines">
 
 
-285
 286
 287
 288
@@ -1895,10 +1918,16 @@ direct memberships.</p>
 293
 294
 295
-296</pre>
+296
+297
+298
+299
+300
+301
+302</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 285</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 286</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_direct_memberships'>direct_memberships</span>
   <span class='id identifier rubyid_descendant_groups_of_self_group'>descendant_groups_of_self_group</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_group'>group</span><span class='period'>.</span><span class='id identifier rubyid_descendant_groups'>descendant_groups</span>
@@ -1908,9 +1937,44 @@ direct memberships.</p>
 </span><span class='id identifier rubyid_    .find_all_by_user'>    .find_all_by_user</span><span class='lparen'>(</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span> <span class='rparen'>)</span><span class='period'>
 </span><span class='id identifier rubyid_    .where'>    .where</span><span class='lparen'>(</span> <span class='symbol'>:direct</span> <span class='op'>=&gt;</span> <span class='kw'>true</span> <span class='rparen'>)</span><span class='period'>
 </span><span class='id identifier rubyid_    .where'>    .where</span><span class='lparen'>(</span> <span class='symbol'>:ancestor_id</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_group_ids'>group_ids</span> <span class='rparen'>)</span>
-  <span class='id identifier rubyid_memberships'>memberships</span> <span class='op'>=</span> <span class='id identifier rubyid_memberships'>memberships</span><span class='period'>.</span><span class='id identifier rubyid_with_deleted'>with_deleted</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_read_attribute'>read_attribute</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='rparen'>)</span>
+
+  <span class='comment'># If the membership itself is deleted, also consider the deleted direct memberships.
+</span>  <span class='comment'># Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
+</span>  <span class='comment'># `direct_memberships` in order to have the deleted direct memberships included.
+</span>  <span class='comment'>#
+</span>  <span class='id identifier rubyid_memberships'>memberships</span> <span class='op'>=</span> <span class='id identifier rubyid_memberships'>memberships</span><span class='period'>.</span><span class='id identifier rubyid_with_deleted'>with_deleted</span> <span class='kw'>if</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_read_attribute'>read_attribute</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_memberships'>memberships</span> <span class='op'>=</span> <span class='id identifier rubyid_memberships'>memberships</span><span class='period'>.</span><span class='id identifier rubyid_order'>order</span><span class='lparen'>(</span> <span class='symbol'>:created_at</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_memberships'>memberships</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+      <div class="method_details ">
+  <h3 class="signature " id="direct_memberships_now-instance_method">
+  
+    - (<tt>Object</tt>) <strong>direct_memberships_now</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+314
+315
+316</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 314</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_direct_memberships_now'>direct_memberships_now</span>
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_direct_memberships'>direct_memberships</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='op'>=&gt;</span> <span class='kw'>nil</span> <span class='rparen'>)</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -1932,12 +1996,12 @@ direct memberships.</p>
       <pre class="lines">
 
 
-305
-306
-307</pre>
+311
+312
+313</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 305</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 311</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_direct_memberships_now_and_in_the_past'>direct_memberships_now_and_in_the_past</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_direct_memberships'>direct_memberships</span><span class='period'>.</span><span class='id identifier rubyid_now_and_in_the_past'>now_and_in_the_past</span>
@@ -1985,21 +2049,15 @@ b1                          b2
       <pre class="lines">
 
 
-326
-327
-328
-329
-330
-331</pre>
+335
+336
+337</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 326</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 335</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_first_created_direct_membership'>first_created_direct_membership</span>
-  <span class='kw'>unless</span> <span class='ivar'>@first_created_direct_membership</span>
-    <span class='ivar'>@first_created_direct_membership</span> <span class='op'>=</span> <span class='id identifier rubyid_direct_memberships'>direct_memberships</span><span class='period'>.</span><span class='id identifier rubyid_reorder'>reorder</span><span class='lparen'>(</span> <span class='symbol'>:created_at</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
-  <span class='kw'>end</span>
-  <span class='ivar'>@first_created_direct_membership</span>
+  <span class='ivar'>@first_created_direct_membership</span> <span class='op'>||=</span> <span class='id identifier rubyid_direct_memberships_now_and_in_the_past'>direct_memberships_now_and_in_the_past</span><span class='period'>.</span><span class='id identifier rubyid_reorder'>reorder</span><span class='lparen'>(</span> <span class='symbol'>:created_at</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_first'>first</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2021,12 +2079,12 @@ b1                          b2
       <pre class="lines">
 
 
-232
 233
-234</pre>
+234
+235</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 232</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 233</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_group'>group</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_ancestor'>ancestor</span>
@@ -2051,21 +2109,15 @@ b1                          b2
       <pre class="lines">
 
 
-333
-334
-335
-336
-337
-338</pre>
+339
+340
+341</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 333</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 339</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_last_deleted_direct_membership'>last_deleted_direct_membership</span>
-  <span class='kw'>unless</span> <span class='ivar'>@last_deleted_direct_membership</span>
-    <span class='ivar'>@last_deleted_direct_membership</span> <span class='op'>=</span> <span class='id identifier rubyid_direct_memberships'>direct_memberships</span><span class='period'>.</span><span class='id identifier rubyid_reorder'>reorder</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
-  <span class='kw'>end</span>
-  <span class='ivar'>@last_deleted_direct_membership</span>
+  <span class='ivar'>@last_deleted_direct_membership</span> <span class='op'>||=</span> <span class='id identifier rubyid_direct_memberships_now_and_in_the_past'>direct_memberships_now_and_in_the_past</span><span class='period'>.</span><span class='id identifier rubyid_reorder'>reorder</span><span class='lparen'>(</span> <span class='symbol'>:deleted_at</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_last'>last</span>
 <span class='kw'>end</span></pre>
     </td>
   </tr>
@@ -2102,14 +2154,14 @@ b1                          b2
       <pre class="lines">
 
 
-349
-350
-351
 352
-353</pre>
+353
+354
+355
+356</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 349</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 352</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_move_to_group'>move_to_group</span><span class='lparen'>(</span> <span class='id identifier rubyid_group_to_move_in'>group_to_move_in</span> <span class='rparen'>)</span>
   <span class='id identifier rubyid_user_to_move'>user_to_move</span> <span class='op'>=</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span>
@@ -2240,12 +2292,12 @@ associated with the current (maybe indirect) membership.</p>
       <pre class="lines">
 
 
-228
 229
-230</pre>
+230
+231</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 228</span>
+      <pre class="code"><span class="info file"># File 'app/models/user_group_membership.rb', line 229</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_user'>user</span>
   <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_descendant'>descendant</span>
@@ -2260,7 +2312,7 @@ associated with the current (maybe indirect) membership.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Mar 23 00:23:17 2013 by
+  Generated on Wed Apr 10 21:17:58 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5.2 (ruby-2.0.0).
 </div>

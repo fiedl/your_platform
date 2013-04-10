@@ -1,4 +1,8 @@
 class RelationshipsController < ApplicationController
+
+  load_and_authorize_resource
+
+
   respond_to :json
 
   def new
@@ -10,12 +14,10 @@ class RelationshipsController < ApplicationController
   end
 
   def destroy
-    @relationship = Relationship.find( params[ :id ] )
     @relationship.destroy
   end
 
   def update
-    @relationship = Relationship.find params[ :id ]
     @relationship.update_attributes params[ :relationship ]
     respond_with @relationship
   end

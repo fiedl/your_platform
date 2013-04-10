@@ -26,7 +26,7 @@ module ProfileableHelper
   # i.e. if somebody looks at his own profile.
   #
   def show_all_sections?( profileable )
-    ( profileable == current_user )
+    can? :manage, profileable
   end
 
   # A section is to be shown if

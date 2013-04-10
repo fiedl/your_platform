@@ -25,7 +25,7 @@ feature 'Corporate Vita', js: true do
                                            :add_to_group_id => @status_groups.last.id )
       @second_promotion_workflow.parent_groups << @status_groups.second
 
-      login @user
+      login(:admin)
       visit user_path( @user )
     end
 

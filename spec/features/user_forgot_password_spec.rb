@@ -7,9 +7,11 @@ feature "UserForgotPassword" do
     @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe", 
                          create_account: true )
     @user.save
-    login
-    #logged in with a different user account.
-    # If you change your own password, you get logged out(and these tests would fail)!
+
+    # Log in as administrator.
+    # The administrator will click on the link to send a certain user a new password.
+    #
+    login(:admin)
   end
 
   describe "Profile Page" do
@@ -41,14 +43,17 @@ feature "UserForgotPassword" do
       email_text.include?( "Passwort" ).should be_true # TODO: change this later to use I18n
       password_line = email_text.lines.find { |s| s.starts_with? "Passwort:" } # TODO: change this later to use I18n
       password = password_line.split( ' ' ).last
+      password.should be_kind_of String
+      password.should be_present
 
       logout
 
-      visit new_user_account_session_path
+      visit sign_in_path
       fill_in 'user_account_login', with: @user.alias
       fill_in 'user_account_password', with: password
+
       click_button I18n.t( :login )
-      page.should have_content( I18n.t( 'devise.sessions.signed_in', user_name: @user.title ) )
+      page.should have_content I18n.t :logout
     end
 
     it "should change the user's password" do

@@ -38,7 +38,7 @@ class Ability
       
       # Only global administrators can change anything.
       #
-      if user.in? Group.find_everyone_group.admins
+      if Group.find_everyone_group.admins && user.in?(Group.find_everyone_group.admins)
         can :manage, :all
         
       else

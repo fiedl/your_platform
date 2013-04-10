@@ -5,6 +5,10 @@ Wingolfsplattform::Application.routes.draw do
   mount Mercury::Engine => '/'
 
   devise_for :user_accounts
+  devise_scope :user_account do
+    match 'sign_in' => 'devise/sessions#new', as: :sign_in
+    match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
+  end
 
   get "map/show"
 

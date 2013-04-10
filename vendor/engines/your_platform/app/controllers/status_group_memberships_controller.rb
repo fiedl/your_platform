@@ -2,25 +2,27 @@
 class StatusGroupMembershipsController < ApplicationController
 
   before_filter :find_membership
+  load_and_authorize_resource
+
   respond_to :json
 
   def update
     attributes = params[ :status_group_membership ]
-    if @membership.update_attributes( attributes )
-      respond_with @membership
+    if @status_group_membership.update_attributes( attributes )
+      respond_with @status_group_membership
     else
-      raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
+      raise "updating attributes of user_group_membership has failed: " + @status_group_membership.errors.full_messages.first
     end
   end
 
   def destroy
-    @membership.destroy if @membership
+    @status_group_membership.destroy if @status_group_membership
   end
 
   private
 
   def find_membership
-    @membership = StatusGroupMembership.with_deleted.find( params[ :id ] ) if params[ :id ].present?
+    @status_group_membership = StatusGroupMembership.with_deleted.find( params[ :id ] ) if params[ :id ].present?
   end
   
 end

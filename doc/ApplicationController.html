@@ -103,9 +103,8 @@
 
 <div id="subclasses">
   <h2>Direct Known Subclasses</h2>
-  <p class="children"><span class='object_link'><a href="AngularTestController.html" title="AngularTestController (class)">AngularTestController</a></span>, <span class='object_link'><a href="GroupsController.html" title="GroupsController (class)">GroupsController</a></span>, <span class='object_link'><a href="MapController.html" title="MapController (class)">MapController</a></span>, <span class='object_link'><a href="PagesController.html" title="PagesController (class)">PagesController</a></span>, <span class='object_link'><a href="ProfileFieldsController.html" title="ProfileFieldsController (class)">ProfileFieldsController</a></span>, <span class='object_link'><a href="RelationshipsController.html" title="RelationshipsController (class)">RelationshipsController</a></span>, <span class='object_link'><a href="RootController.html" title="RootController (class)">RootController</a></span>, <span class='object_link'><a href="SessionsController.html" title="SessionsController (class)">SessionsController</a></span>, <span class='object_link'><a href="UsersController.html" title="UsersController (class)">UsersController</a></span>, <span class='object_link'><a href="WorkflowsController.html" title="WorkflowsController (class)">WorkflowsController</a></span></p>
+  <p class="children"><span class='object_link'><a href="AngularTestController.html" title="AngularTestController (class)">AngularTestController</a></span>, <span class='object_link'><a href="ErrorsController.html" title="ErrorsController (class)">ErrorsController</a></span>, <span class='object_link'><a href="GroupsController.html" title="GroupsController (class)">GroupsController</a></span>, <span class='object_link'><a href="MapController.html" title="MapController (class)">MapController</a></span>, <span class='object_link'><a href="PagesController.html" title="PagesController (class)">PagesController</a></span>, <span class='object_link'><a href="ProfileFieldsController.html" title="ProfileFieldsController (class)">ProfileFieldsController</a></span>, <span class='object_link'><a href="RelationshipsController.html" title="RelationshipsController (class)">RelationshipsController</a></span>, <span class='object_link'><a href="RootController.html" title="RootController (class)">RootController</a></span>, <span class='object_link'><a href="UsersController.html" title="UsersController (class)">UsersController</a></span>, <span class='object_link'><a href="WorkflowsController.html" title="WorkflowsController (class)">WorkflowsController</a></span></p>
 </div>
-
 
 
 
@@ -114,11 +113,81 @@
 
 
   
+    <h2>
+      Instance Method Summary
+      <small>(<a href="#" class="summary_toggle">collapse</a>)</small>
+    </h2>
+
+    <ul class="summary">
+      
+        <li class="public ">
+  <span class="summary_signature">
+    
+      <a href="#current_user-instance_method" title="#current_user (instance method)">- (Object) <strong>current_user</strong> </a>
+    
+
+    
+  </span>
+  
+  
+  
+  
+  
+  
+  
+
+  
+    <span class="summary_desc"><div class='inline'></div></span>
+  
+</li>
+
+      
+    </ul>
+  
+
+
+  
+
+  <div id="instance_method_details" class="method_details_list">
+    <h2>Instance Method Details</h2>
+
+    
+      <div class="method_details first">
+  <h3 class="signature first" id="current_user-instance_method">
+  
+    - (<tt>Object</tt>) <strong>current_user</strong> 
+  
+
+  
+
+  
+</h3><table class="source_code">
+  <tr>
+    <td>
+      <pre class="lines">
+
+
+26
+27
+28</pre>
+    </td>
+    <td>
+      <pre class="code"><span class="info file"># File 'app/controllers/application_controller.rb', line 26</span>
+
+<span class='kw'>def</span> <span class='id identifier rubyid_current_user'>current_user</span>
+  <span class='id identifier rubyid_current_user_account'>current_user_account</span><span class='period'>.</span><span class='id identifier rubyid_user'>user</span> <span class='kw'>if</span> <span class='id identifier rubyid_current_user_account'>current_user_account</span>
+<span class='kw'>end</span></pre>
+    </td>
+  </tr>
+</table>
+</div>
+    
+  </div>
 
 </div>
 
     <div id="footer">
-  Generated on Sat Mar 23 00:23:04 2013 by
+  Generated on Wed Apr 10 21:17:43 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5.2 (ruby-2.0.0).
 </div>

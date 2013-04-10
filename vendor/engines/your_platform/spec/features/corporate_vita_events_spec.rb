@@ -23,6 +23,7 @@ feature 'Events in the Corporate Vita:', js: true do
   end
 
   scenario 'assigning a new event' do
+    login(:admin)
     visit user_path(user) 
     within section_selector do
       click_edit_button
@@ -78,6 +79,7 @@ feature 'Events in the Corporate Vita:', js: true do
     before { corporation.child_events << event }
 
     scenario "assigning the existing event" do
+      login(:admin)
       visit user_path(user)
       within section_selector do
         click_edit_button
@@ -92,6 +94,7 @@ feature 'Events in the Corporate Vita:', js: true do
     context "for an already assigned event:" do
       before { membership.event = event; membership.save }
       scenario 'unassigning events' do
+        login(:admin)
         visit user_path(user)
         within section_selector do
           page.should have_content "Fancy Event"

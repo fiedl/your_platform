@@ -13,7 +13,7 @@ feature "Relationships on User show view", js: true do
   background do
     @user = create( :user_with_account )
     @related_user = create( :user, first_name: "Jacobus", last_name: "Doe" )
-    login @user
+    login(:admin)
   end
 
   scenario "adding a relationship and removing it again" do

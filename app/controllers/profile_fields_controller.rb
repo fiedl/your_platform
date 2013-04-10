@@ -1,5 +1,7 @@
 class ProfileFieldsController < ApplicationController
 
+  load_and_authorize_resource
+
   before_filter        :find_profileable
 #  before_filter        :load_profile_field_as_instance_variable
 #  respond_to           :html, :json
@@ -43,7 +45,6 @@ class ProfileFieldsController < ApplicationController
     # And this is needed for the current interface, because then a js template
     # is rendered and sent back to the client (in order to hide the deleted
     # elements).
-    @profile_field = ProfileField.find( params[ :id ] )
     @profile_field.destroy
 
     # And this would be the HTML response:

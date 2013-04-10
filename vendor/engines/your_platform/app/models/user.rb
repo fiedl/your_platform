@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
   # The name of the user, i.e. first_name and last_name.
   #
   def name
-    first_name + " " + last_name
+    first_name + " " + last_name if first_name && last_name
   end
 
   # This method will make the first_name and the last_name capitalized.

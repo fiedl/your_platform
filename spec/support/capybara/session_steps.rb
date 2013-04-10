@@ -1,6 +1,17 @@
 module SessionSteps
-  def login(user = nil)
-    user = create(:user_with_account) unless user
+
+  # This helper method allows to simulate the login of a given user.
+  # 
+  # If the +parameter+ specifies a +User*, this user is logged in.
+  # If the +parameter+ specifies a +:role+, a user with this role is created and logged in.
+  # If +parameter+ is nil, a new user is created and logged in.
+  #
+  def login( parameter = nil)
+
+    user = parameter if parameter.kind_of? User
+    user = create(:admin) if parameter == :admin
+    user = create(:user_with_account) if parameter == :user
+    user ||= create(:user_with_account)
 
     password = user.account.password
     login_string = user.alias

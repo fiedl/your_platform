@@ -163,10 +163,6 @@
       <pre class="lines">
 
 
-2
-3
-4
-5
 6
 7
 8
@@ -188,10 +184,20 @@
 24
 25
 26
-27</pre>
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'app/controllers/search_controller.rb', line 2</span>
+      <pre class="code"><span class="info file"># File 'app/controllers/search_controller.rb', line 6</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_index'>index</span>
   <span class='id identifier rubyid_query_string'>query_string</span> <span class='op'>=</span> <span class='id identifier rubyid_params'>params</span><span class='lbracket'>[</span> <span class='symbol'>:query</span> <span class='rbracket'>]</span>
@@ -203,6 +209,12 @@
     <span class='ivar'>@pages</span> <span class='op'>=</span> <span class='const'>Page</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>title like ?</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_q'>q</span> <span class='rparen'>)</span><span class='period'>
 </span><span class='id identifier rubyid_      .order'>      .order</span><span class='lparen'>(</span> <span class='symbol'>:title</span> <span class='rparen'>)</span>
     <span class='ivar'>@groups</span> <span class='op'>=</span> <span class='const'>Group</span><span class='period'>.</span><span class='id identifier rubyid_where'>where</span><span class='lparen'>(</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>name like ?</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='id identifier rubyid_q'>q</span> <span class='rparen'>)</span>
+
+
+    <span class='comment'># AUTHORIZATION
+</span>    <span class='ivar'>@users</span> <span class='op'>=</span> <span class='id identifier rubyid_filter_by_authorization'>filter_by_authorization</span><span class='lparen'>(</span><span class='ivar'>@users</span><span class='rparen'>)</span>
+    <span class='ivar'>@pages</span> <span class='op'>=</span> <span class='id identifier rubyid_filter_by_authorization'>filter_by_authorization</span><span class='lparen'>(</span><span class='ivar'>@pages</span><span class='rparen'>)</span>
+    <span class='ivar'>@groups</span> <span class='op'>=</span> <span class='id identifier rubyid_filter_by_authorization'>filter_by_authorization</span><span class='lparen'>(</span><span class='ivar'>@groups</span><span class='rparen'>)</span>
 
     <span class='ivar'>@results</span> <span class='op'>=</span> <span class='ivar'>@users</span> <span class='op'>+</span> <span class='ivar'>@pages</span> <span class='op'>+</span> <span class='ivar'>@groups</span>
     <span class='kw'>if</span> <span class='ivar'>@results</span><span class='period'>.</span><span class='id identifier rubyid_count'>count</span> <span class='op'>==</span> <span class='int'>1</span>
@@ -229,7 +241,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sat Mar 23 00:23:17 2013 by
+  Generated on Wed Apr 10 21:17:59 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5.2 (ruby-2.0.0).
 </div>

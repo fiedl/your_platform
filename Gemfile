@@ -172,7 +172,8 @@ gem 'passgen'                                                           # MIT Li
 gem 'gravatar_image_tag'                                                # MIT License
 
 # WorkflowKit, SF
-gem 'workflow_kit', '>= 0.0.4.alpha' # git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
+gem 'workflow_kit', '>= 0.0.5.alpha', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
+#gem 'workflow_kit', path: '../workflow_kit'
 
 # Twitter Bootstrap Layout
 gem 'twitter-bootstrap-rails'

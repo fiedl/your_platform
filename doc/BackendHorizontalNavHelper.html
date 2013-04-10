@@ -510,9 +510,9 @@ Navigation des Mitgliederbereichs angezeigt werden sollen.</p>
   <span class='id identifier rubyid_c'>c</span> <span class='op'>=</span> <span class='id identifier rubyid_navables_for_backend_horizontal_nav'>navables_for_backend_horizontal_nav</span><span class='period'>.</span><span class='id identifier rubyid_collect'>collect</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_navable_to_display_in_horizontal_nav'>navable_to_display_in_horizontal_nav</span><span class='op'>|</span>
     <span class='id identifier rubyid_backend_horizontal_nav_item'>backend_horizontal_nav_item</span> <span class='id identifier rubyid_navable_to_display_in_horizontal_nav'>navable_to_display_in_horizontal_nav</span>
   <span class='kw'>end</span><span class='period'>.</span><span class='id identifier rubyid_join'>join</span><span class='period'>.</span><span class='id identifier rubyid_html_safe'>html_safe</span>
-  <span class='kw'>unless</span> <span class='ivar'>@current_user</span> <span class='comment'># Temporärer Login-Link
+  <span class='kw'>unless</span> <span class='id identifier rubyid_current_user_account'>current_user_account</span> <span class='comment'># Temporärer Login-Link
 </span>    <span class='id identifier rubyid_c'>c</span> <span class='op'>+=</span> <span class='id identifier rubyid_content_tag'>content_tag</span> <span class='symbol'>:li</span> <span class='kw'>do</span>
-      <span class='id identifier rubyid_link_to'>link_to</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>Login</span><span class='tstring_end'>&quot;</span></span><span class='comma'>,</span> <span class='label'>controller:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>sessions</span><span class='tstring_end'>&#39;</span></span><span class='comma'>,</span> <span class='label'>action:</span> <span class='tstring'><span class='tstring_beg'>&#39;</span><span class='tstring_content'>new</span><span class='tstring_end'>&#39;</span></span>
+      <span class='id identifier rubyid_link_to'>link_to</span> <span class='id identifier rubyid_t'>t</span><span class='lparen'>(</span><span class='symbol'>:login</span><span class='rparen'>)</span><span class='comma'>,</span> <span class='id identifier rubyid_new_user_account_session_url'>new_user_account_session_url</span>
     <span class='kw'>end</span>
   <span class='kw'>end</span>
   <span class='id identifier rubyid_c'>c</span>
@@ -853,7 +853,7 @@ Navigation des Mitgliederbereichs angezeigt werden sollen.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Mar 23 00:23:02 2013 by
+  Generated on Wed Apr 10 21:17:40 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5.2 (ruby-2.0.0).
 </div>

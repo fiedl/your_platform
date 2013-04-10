@@ -245,13 +245,17 @@ additions to the user model.</p>
 41
 42
 43
-44</pre>
+44
+45
+46</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'app/models/user.rb', line 34</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_aktivitaetszahl'>aktivitaetszahl</span>
-  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_corporations'>corporations</span><span class='period'>.</span><span class='id identifier rubyid_collect'>collect</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_corporation'>corporation</span><span class='op'>|</span> 
+  <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_corporations'>corporations</span><span class='period'>
+</span><span class='id identifier rubyid_    .sort_by'>    .sort_by</span> <span class='lbrace'>{</span> <span class='op'>|</span><span class='id identifier rubyid_corporation'>corporation</span><span class='op'>|</span> <span class='id identifier rubyid_corporation'>corporation</span><span class='period'>.</span><span class='id identifier rubyid_membership_of'>membership_of</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_created_at'>created_at</span> <span class='rbrace'>}</span> <span class='comment'># order by date of joining
+</span><span class='period'>    .</span><span class='id identifier rubyid_collect'>collect</span> <span class='kw'>do</span> <span class='op'>|</span><span class='id identifier rubyid_corporation'>corporation</span><span class='op'>|</span> 
     <span class='kw'>if</span> <span class='kw'>not</span> <span class='kw'>self</span><span class='period'>.</span><span class='id identifier rubyid_guest_of?'>guest_of?</span> <span class='id identifier rubyid_corporation'>corporation</span>
       <span class='id identifier rubyid_year_of_joining'>year_of_joining</span> <span class='op'>=</span> <span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_end'>&quot;</span></span>
       <span class='id identifier rubyid_year_of_joining'>year_of_joining</span> <span class='op'>=</span> <span class='id identifier rubyid_corporation'>corporation</span><span class='period'>.</span><span class='id identifier rubyid_membership_of'>membership_of</span><span class='lparen'>(</span> <span class='kw'>self</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_created_at'>created_at</span><span class='period'>.</span><span class='id identifier rubyid_to_s'>to_s</span><span class='lbracket'>[</span><span class='int'>2</span><span class='comma'>,</span> <span class='int'>2</span><span class='rbracket'>]</span> <span class='kw'>if</span> <span class='id identifier rubyid_corporation'>corporation</span><span class='period'>.</span><span class='id identifier rubyid_membership_of'>membership_of</span><span class='lparen'>(</span> <span class='kw'>self</span> <span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_created_at'>created_at</span>
@@ -366,7 +370,7 @@ E10 H12”.</p>
 </div>
 
     <div id="footer">
-  Generated on Sat Mar 23 00:23:02 2013 by
+  Generated on Wed Apr 10 21:17:40 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.5.2 (ruby-2.0.0).
 </div>

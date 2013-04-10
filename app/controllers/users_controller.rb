@@ -2,8 +2,9 @@
 class UsersController < ApplicationController
 
   respond_to :html, :json, :js
+
   before_filter :find_user, only: [:show, :update, :forgot_password]
-#  before_filter :authenticate_user_account!
+  authorize_resource
 
   def index
     begin

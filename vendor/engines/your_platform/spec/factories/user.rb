@@ -16,5 +16,17 @@ FactoryGirl.define do
       create_account true
     end
 
+    # global administrator
+    # this is just temporary, until the structured role model is ready.
+    # TODO: Remove this when ready!
+    #
+    factory :admin do
+      create_account true
+      
+      after :create do |admin|
+        Group.find_everyone_group.admins! << admin
+      end
+    end
+
   end
 end
