@@ -52,12 +52,12 @@ module BackendHorizontalNavHelper
   def navables_for_backend_horizontal_nav
     navables = []
     navables += [ Page.find_intranet_root ] if Page.find_intranet_root
-    if @current_user
-      if @current_user.corporations 
-        navables += @current_user.corporations.collect { |corporation| corporation.becomes Group }  
+    if current_user
+      if current_user.corporations 
+        navables += current_user.corporations.collect { |corporation| corporation.becomes Group }  
       end
     end
-    navables += [ @current_user.bv.becomes( Group ) ] if @current_user.bv if @current_user
+    navables += [ current_user.bv.becomes( Group ) ] if current_user.bv if current_user
     return navables
   end
 

@@ -7,9 +7,13 @@
 <% end %>
 <% if @user %>
 <h1>
-  <%= best_in_place @user, :first_name %> 
-  <%= best_in_place @user, :last_name %> &nbsp; 
-  <%= h @user.aktivitaetszahl %>
+  <% if can? :update, @user %>
+    <%= best_in_place @user, :first_name %> 
+    <%= best_in_place @user, :last_name %> &nbsp; 
+    <%= h @user.aktivitaetszahl %>
+  <% else %>
+    <%= @user.title %>
+  <% end %>
 </h1>
 <div>
   <span id="user_workflows" class="show_only_in_edit_mode">
@@ -22,9 +26,21 @@
 
   <dl>
     <dt><%= t :name %></dt>
-    <dd><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></dd>
+    <dd>
+      <% if can? :update, @user %>
+        <%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %>
+      <% else %>
+        <%= @user.name %>
+      <% end %>
+    </dd>
     <dt><%= t :date_of_birth %></dt>
-    <dd><%= best_in_place @user, :date_of_birth, type: :date %></dd>
+    <dd>
+      <% if can? :update, @user %>
+        <%= best_in_place @user, :date_of_birth, type: :date %>
+      <% else %>
+        <%= localize @user.date_of_birth %>
+      <% end %>
+    </dd>
   </dl>
   <%= render partial: 'shared/profile_section_ul', locals: { section: :general, profileable: @user } %>
 
