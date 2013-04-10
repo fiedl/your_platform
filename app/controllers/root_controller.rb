@@ -1,5 +1,11 @@
 class RootController < ApplicationController
+
+  skip_authorization_check
+
   def index
-    @navable = Page.find_intranet_root
+    @page = Page.find_intranet_root
+
+    unauthorized! if cannot? :read, @page
+    @navable = @page
   end
 end

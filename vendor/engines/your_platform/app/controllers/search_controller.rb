@@ -1,4 +1,8 @@
 class SearchController < ApplicationController
+
+  # https://github.com/ryanb/cancan/wiki/Ensure-Authorization
+  skip_authorization_check
+
   def index
     query_string = params[ :query ]
     if not query_string.empty?
@@ -9,6 +13,12 @@ class SearchController < ApplicationController
       @pages = Page.where( "title like ?", q )
         .order( :title )
       @groups = Group.where( "name like ?", q )
+
+
+      # AUTHORIZATION
+      @users = filter_by_authorization(@users)
+      @pages = filter_by_authorization(@pages)
+      @groups = filter_by_authorization(@groups)
 
       @results = @users + @pages + @groups
       if @results.count == 1
@@ -25,4 +35,13 @@ class SearchController < ApplicationController
     @title = "Suche: #{query_string}"
 
   end
+
+  private
+
+  def filter_by_authorization( resources )
+    resources.select do |resource|
+      can? :read, resource
+    end
+  end
+
 end

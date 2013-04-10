@@ -1,6 +1,8 @@
 class GroupsController < ApplicationController
   respond_to :html, :json
 
+  load_and_authorize_resource
+
   def index
     @user = User.find_by_alias params[ :alias ] if params[ :alias ]
     @title = params[ :title ] if params[ :title ]
@@ -27,7 +29,6 @@ class GroupsController < ApplicationController
   end
 
   def show
-    @group = Group.find_by_id params[ :id ]
     if @group
       @navable = @group
       @title = @group.name
@@ -46,7 +47,6 @@ class GroupsController < ApplicationController
   end
 
   def update
-    @group = Group.find params[ :id ]
     @group.update_attributes( params[ :group ] )
     respond_with @group
   end

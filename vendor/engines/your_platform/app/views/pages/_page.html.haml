@@ -1,4 +1,8 @@
-%h1= best_in_place(page, :title)
+%h1
+  - if can? :update, page
+    = best_in_place(page, :title)
+  - else
+    = page.title
 %div.page
   %div.page_header
     - if page.author
@@ -13,8 +17,11 @@
         = localize(page.updated_at)
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
-      = best_in_place page, :content, type: 'textarea', sanitize: false
-      // = page.content.html_safe
+      - if can? :update, page
+        = best_in_place page, :content, type: 'textarea', sanitize: false
+        // = page.content.html_safe
+      - else
+        = page.content
 
 = render(partial: 'pictures') 
 = render(partial: 'videos') 

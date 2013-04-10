@@ -1,6 +1,6 @@
 Wingolfsplattform::Application.routes.draw do 
 
-  get "error/anauthorized"
+  get "errors/unauthorized"
 
   mount Mercury::Engine => '/'
 

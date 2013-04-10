@@ -1,0 +1,8 @@
+%h1= t :attachments
+%div.attachments
+  %table.attachments
+    - for attachment in @page.attachments.find_without_types( "video", "image" )
+      = render attachment
+  - if can? :manage, @page
+    %span.add_attachment
+      = render partial: 'add_attachment'

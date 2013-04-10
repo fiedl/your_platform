@@ -1,0 +1,94 @@
+%h1
+  - if can? :update, @group
+    = best_in_place @group, :name
+  - else
+    = @group.name
+
+%p Gruppenseite dieser Gruppe
+/ current posts
+- if @posts && @posts.count > 0
+  = render partial: 'posts/posts', locals: { posts: @posts }
+/ umcoming events
+- if @group.events.upcoming && ( @group.events.upcoming.count > 0 || can?(:manage, @group) )
+  %h1.section.upcoming_events Kommende Veranstaltungen
+  %div
+    = upcoming_events_list_for_group( @group )
+- if @group.token or @group.extensive_name or @group.internal_token
+  %h1= t :details
+  %div
+    %dl
+      %dt= t :token
+      %dd
+        - if can? :update, @group
+          = best_in_place @group, :token
+        - else
+          = @group.token
+      %dt= t :internal_token
+      %dd
+        - if can? :update, @group
+          = best_in_place @group, :internal_token
+        - else
+          = @group.internal_token
+      %dt= t :extensive_name
+      %dd
+        - if can? :update, @group
+          = best_in_place @group, :extensive_name
+        - else
+          @group.extensive_name
+
+/ listing members
+%h1
+  = t :members
+  (#{h @group.descendant_users.count})
+%div
+  - if @group
+    - if can? :manage, @group
+      %span.show_only_in_edit_mode
+        = link_to t( :add_member ), new_user_path( :group_id => @group.id ), class: "add_group_member"
+    %span#group_members
+
+      / child users
+      - if @child_users.count > 0
+        = will_paginate @child_users
+        %ul
+          - for user in @child_users do
+            %li
+              = link_to user.title, user
+              - if can? :manage, user
+                %span.show_only_in_edit_mode
+                  = workflow_execution_links_for( group: @group, user: user )
+
+        / structured view of sub groups
+      - elsif @group.child_groups.count > 0
+        - for child_group in @group.child_groups do
+          %h2
+            = link_to child_group.title, child_group
+            (#{h child_group.descendant_users.count})
+          %ul
+            - for user in child_group.descendant_users do
+              %li
+                = link_to user.title, user
+                - if can? :manage, user
+                  %span.show_only_in_edit_mode
+                    = workflow_execution_links_for( group: child_group, user: user )
+- if @group.officers && ( @group.officers.count > 0 || can?(:manage, @group) )
+  %h1= t :officers
+  %span#officers
+  %dl
+    - for officer_group in @group.find_officers_groups    
+      %dt
+        - if can? :update, officer_group
+          = best_in_place officer_group, :name
+        - else
+          = officer_group.name
+      %dd
+        - if can? :manage, officer_group
+          = multiple_users_best_in_place officer_group, :direct_member_titles_string
+        - else
+          = officer_group.members.collect { |member| link_to member.title, member }.join(", ")
+
+%h1.large_map.section= t :map
+.group_map
+  .large_map_section
+    = address_fields_map( @map_address_fields )
+= profile_sections_for_profileable @group, [ :contact_information, :bank_account_information, :description ]

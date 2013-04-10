@@ -8,6 +8,21 @@ class ApplicationController < ActionController::Base
 
   helper_method      :current_user
 
+
+  # Authorization: CanCan
+  # ==========================================================================================
+  #
+  # https://github.com/ryanb/cancan
+  #
+  check_authorization(
+                      :unless => :devise_controller? # in order to allow login
+                      )
+
+  rescue_from CanCan::AccessDenied do |exception|
+    redirect_to errors_unauthorized_url
+  end
+
+
   def current_user
     current_user_account.user if current_user_account
   end

@@ -1,0 +1,20 @@
+%tr{ id: "attachment-#{attachment.id}" }
+  %td 
+    = link_to image_tag( attachment.thumb_url ), attachment.file.url
+  %td
+    %span.attachment-description
+      %p.attachment.title
+        - if can? :manage, attachment
+          = link_to best_in_place( attachment, :title ), attachment.file.url
+          = remove_button attachment
+        - else
+          = link_to attachment.title, attachment.file.url
+      %p.attachment.filename
+        = link_to attachment.filename, attachment.file.url
+      %p.attachment.description
+        - if can? :manage, attachment
+          = best_in_place attachment, :description
+        - else
+          = attachment.description
+      %p.attachment.filesize
+        = attachment.file_size_human
