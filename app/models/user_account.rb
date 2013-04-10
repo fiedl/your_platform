@@ -27,9 +27,7 @@ class UserAccount < ActiveRecord::Base
 
   after_save               :send_welcome_email_if_just_created
 
-  def email
-    user.email if user
-  end
+  delegate :email, :to => :user, :allow_nil => true
 
   #HACK: This method seems to be required by the PasswordController and is missing, since we have a virtual email
   #field. If we ever change the Password authentication field to login, remove this method.
