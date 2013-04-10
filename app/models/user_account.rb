@@ -40,13 +40,13 @@ class UserAccount < ActiveRecord::Base
   # Used by devise to identify the correct user account by the given strings
   def self.find_first_by_auth_conditions(warden_conditions)
     login = warden_conditions[:login] || warden_conditions[:email]
-    return self.identify_user_with_account(login) if login # user our own identification system for virtual attributes
+    return self.identify_user_account(login) if login # user our own identification system for virtual attributes
     where(warden_conditions).first # use devise identification system for auth tokens and the like.
   end
 
 
   # Tries to identify a user based on the given `login_string`.
-  def self.identify_user_with_account( login_string )
+  def self.identify_user_account( login_string )
 
     # What can go wrong?
     # 1. No user could match the login string.
