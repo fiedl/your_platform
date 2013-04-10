@@ -27,9 +27,7 @@ class UserAccount < ActiveRecord::Base
 
   after_save               :send_welcome_email_if_just_created
 
-  def email
-    user.email if user
-  end
+  delegate :email, :to => :user, :allow_nil => true
 
   #HACK: This method seems to be required by the PasswordController and is missing, since we have a virtual email
   #field. If we ever change the Password authentication field to login, remove this method.
@@ -40,13 +38,13 @@ class UserAccount < ActiveRecord::Base
   # Used by devise to identify the correct user account by the given strings
   def self.find_first_by_auth_conditions(warden_conditions)
     login = warden_conditions[:login] || warden_conditions[:email]
-    return self.identify_user_with_account(login) if login # user our own identification system for virtual attributes
+    return self.identify_user_account(login) if login # user our own identification system for virtual attributes
     where(warden_conditions).first # use devise identification system for auth tokens and the like.
   end
 
 
   # Tries to identify a user based on the given `login_string`.
-  def self.identify_user_with_account( login_string )
+  def self.identify_user_account( login_string )
 
     # What can go wrong?
     # 1. No user could match the login string.
