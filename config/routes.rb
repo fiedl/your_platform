@@ -1,5 +1,7 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  get "error/anauthorized"
+
   mount Mercury::Engine => '/'
 
   devise_for :user_accounts

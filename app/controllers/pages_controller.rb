@@ -1,6 +1,8 @@
 class PagesController < ApplicationController
 
-  before_filter :find_page, only: [:show, :update, :mercury_update]
+  load_and_authorize_resource
+
+#  before_filter :find_page, only: [:show, :update, :mercury_update]
   respond_to :html, :json
 
   def show
@@ -33,9 +35,9 @@ class PagesController < ApplicationController
   end
 
 
-  private
-
-  def find_page
-    @page = Page.find params[ :id ]
-  end
+#  private
+#
+#  def find_page
+#    @page = Page.find params[ :id ]
+#  end
 end

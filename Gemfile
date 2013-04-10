@@ -40,6 +40,9 @@ gem 'jquery-rails'							# MIT License
 # Authentification
 gem 'devise'                  # MIT License
 
+# Authorization
+gem 'cancan'
+
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 

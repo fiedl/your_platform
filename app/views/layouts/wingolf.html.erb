@@ -35,11 +35,18 @@
 	    <%= my_groups_table %>
 	  </ul>
 	</li>
+  <!--//
 	<% if current_user.role_for( @navable ) %>
   	  <li class="backendBarItem"><a>
 	    Role: <%= current_user.role_for( @navable ) %>
 	  </a></li>
 	<% end %>
+  //-->
+  <% if can? :manage, @navable %>
+    <li class="backendBarItem"><a>
+      Sie sind Administrator.
+    </a></li>
+  <% end %>
 	<li class="backendBarItem dropdown">
 	  <%= link_to "Favoriten", my_favorites_path %>
 	  <ul class="dropdown-menu my-favorites">
