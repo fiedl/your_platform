@@ -85,7 +85,7 @@
           - if can? :manage, officer_group
             = multiple_users_best_in_place officer_group, :direct_member_titles_string
           - else
-            = officer_group.members.collect { |member| link_to member.title, member }.join(", ")
+            = officer_group.descendant_users.collect { |member| link_to member.title, member }.join(", ")
 
 %h1.large_map.section= t :map
 .group_map
