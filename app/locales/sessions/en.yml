@@ -23,5 +23,6 @@ en:
   reset_password_instructions:
     hello:                  Hello
     introduction:           Someone has requested a link to change your password. You can do this through the link below.
+    change_password:        Change my password
     ignore_notice:          If you didn't request this, please ignore this email.
     change_notice:          Your password won't change until you access the link above and create a new one.
