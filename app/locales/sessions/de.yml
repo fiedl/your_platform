@@ -19,3 +19,9 @@ de:
   confirm_new_password:     Passwort bestätigen
   submit_changed_password:  Passwort ändern
   remember_me:              Anmeldestatus merken
+
+  reset_password_instructions:
+    hello:                  "Guten Tag, "
+    introduction:           "Jemand hat die Änderung Ihres Passworts beantragt. Sie können Ihr Passwort auf folgender Seite ändern:"
+    ignore_notice:          Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese Email.
+    change_notice:          Ihr Passwort wird sich nicht ändern, wenn sie obigem Link nicht folgen.
