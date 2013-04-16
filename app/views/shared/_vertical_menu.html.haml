@@ -5,4 +5,5 @@
   - if @navable && can?(:manage, @navable)
     %p= add_structureable_button(@navable)
   - if can?(:manage, Group.everyone) && !( params[:controller] == "users" && params[:action] == "new" )
-    %p= link_to( "Aktivmeldung eintragen", new_user_path, :class => "btn btn-success")
+    - corporation_id = @navable.corporation.id if @navable.kind_of?(Group) && @navable.corporation
+    %p= link_to( "Aktivmeldung eintragen", new_user_path(group_id: corporation_id), :class => "btn btn-success")

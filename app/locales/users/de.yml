@@ -2,6 +2,7 @@
 de:
   create_user:                   Benutzer anlegen
   enter_details_for_new_user:    Bitte Details zum neu anzulegenden Benutzer angeben.
+  add_to_corporation:            Zu dieser Verbindung hinzufügen
 
   email:                         E-Mail
   name:                          Name

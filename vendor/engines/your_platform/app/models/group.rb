@@ -135,6 +135,16 @@ class Group < ActiveRecord::Base
     self.descendant_groups.where( :name => descendant_group_name )
   end
 
+  def corporation
+    ([ self ] + ancestor_groups).select do |group|
+      group.corporation?
+    end.first
+  end
+
+  def corporation?
+    self.becomes(Corporation).in? Corporation.all
+  end
+
 
   # User Group Memberships
   # ------------------------------------------------------------------------------------------

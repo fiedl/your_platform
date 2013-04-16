@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group, :date_of_birth
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group, 
+                            :add_to_corporation, :date_of_birth
 
-  attr_accessor             :create_account, :add_to_group
+  attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
@@ -200,6 +201,14 @@ class User < ActiveRecord::Base
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
+    end
+    if self.add_to_corporation
+      corporation = add_to_corporation if add_to_corporation.kind_of? Group
+      corporation ||= Group.find( add_to_corporation ) if add_to_corporation.to_i
+      if corporation
+        hospitanten_group = corporation.descendant_groups.where(name: "Hospitanten").first
+        hospitanten_group.assign_user self
+      end
     end
   end
   private :add_to_group_if_requested

@@ -37,10 +37,13 @@ class UsersController < ApplicationController
   end
 
   def new
-    @title = t(:create_user)
+    @title = "Aktivmeldung eintragen" # t(:create_user)
     @user = User.new
-    @user.alias = params[:alias]
+
     @group = Group.find(params[:group_id]) if params[:group_id]
+    @user.add_to_corporation = @group.becomes(Corporation).id if @group && @group.corporation?
+
+    @user.alias = params[:alias]
   end
 
   def create
