@@ -1,0 +1,8 @@
+%span.vertical_menu.sidebar-nav
+  %ul.nav.nav-tabs.nav-stacked
+    - if @navable
+      = vertical_menu_for @navable
+  - if @navable && can?(:manage, @navable)
+    %p= add_structureable_button(@navable)
+  - if can?(:manage, Group.everyone) && !( params[:controller] == "users" && params[:action] == "new" )
+    %p= link_to( "Aktivmeldung eintragen", new_user_path, :class => "btn btn-success")

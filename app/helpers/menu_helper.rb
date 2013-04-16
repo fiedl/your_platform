@@ -46,16 +46,8 @@ module MenuHelper
 
   # Generates the HTML Code for the current @navable object.
   def vertical_menu
-    if @navable
-      code = ""
-      code += content_tag(:span, content_tag(:ul, vertical_menu_for(@navable), 
-                                             :class => "nav nav-tabs nav-stacked"), 
-                          :class => "vertical_menu sidebar-nav")
-      code += add_structureable_button(@navable) if can? :manage, @navable
-      return code.html_safe
-    end
+    render partial: 'shared/vertical_menu'
   end
-
 
   private
 
