@@ -12,7 +12,16 @@ module AvatarHelper
     options[:alt] ||= "Gravatar: #{email}"
     options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
-    options[:gravatar][:default] ||= URI.join(root_url, asset_path('avatar_128.png'))
+
+    # Default Url
+    # Instead of 
+    #     URI.join(root_url, asset_path('avatar_128.png'))
+    # we use a string at the moment, in order to make this work
+    # locally as well. Otherwise a 'http://localhost/...' would be 
+    # submitted to gravatar as source of the default image.
+    # 
+    options[:gravatar][:default] ||= "http://wingolfsplattform.org/assets/avatar_128.png" 
+    
 
     render partial: 'shared/avatar', locals: { email: email, options: options }
 
