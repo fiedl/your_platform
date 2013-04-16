@@ -1,0 +1,31 @@
+%h1 Aktivmeldung
+%div.form
+  %legend
+    %p= t :enter_details_for_new_user
+  %p
+    Im Moment können nur globale Administratoren Aktivmeldungen eintragen. 
+
+  = semantic_form_for @user, action: :create do |f|
+    = f.inputs do
+      = f.input :first_name
+      = f.input :last_name
+      // = f.input :alias
+      = f.input :email
+      //= f.input :add_to_corporation, as: :select
+      = f.input :create_account, as: :boolean
+      - if @group
+        - sub_groups = @group.descendant_groups
+        = f.input( :add_to_group, as: :select, label: t( :register_in ), collection: sub_groups, hint: ( "(" + link_to( @group.name, @group ).html_safe + ")" ).html_safe )
+
+        // <span id="gender">
+        // <%= f.input :female, as: :select, label: t( :gender ), 
+        // collection: [[ t( :male ), false ], [ t( :female ), :true ]], 
+        //default: :male 
+
+    = f.actions
+
+  %div.footnotes
+    * 
+    = t :fields_have_to_be_given
+
+
