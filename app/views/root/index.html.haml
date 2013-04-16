@@ -1,0 +1,65 @@
+%h1 Willkommen zur neuen Wingolfsplattform!
+%div
+  
+  %h2 Wo bin ich hier?
+  %p
+    Bei dieser Web-Anwendung, zu finden unter
+    = link_to( "http://wingolfsplattform.org", "http://wingolfsplattform.org" ) + ","
+    handelt es sich um den vom 
+    = link_to( "Arbeitskreis Internet", Group.find_by_name("AK Internet") )
+    konzeptionierten und entwickelten 
+    %strong Nachfolger der deleted-string-Plattform.
+  %p
+    Die Wingolfsplattform ist ein Werkzeug zur Mitgliederverwaltung, zum Austausch von Kontaktdaten,
+    Informationen und Dokumenten, sowie zur vereinsinternen Kommunikation.
+  
+  %h2 Schrittweise Freischaltung von Funktionen
+  %p 
+    Auf Wunsch des VAW, der durch frühzeitige Abschaltung der deleted-string-Plattform 
+    laufende Kosten senken möchte, haben wir diese Software früher als geplant in Betrieb genommen.
+  %p 
+    Dies ist der Grund dafür, dass im Moment viele Funktionen, die noch nicht hinreichend getestet sind,
+    für die Mehrzahl der Wingolfiten noch nicht freigeschaltet sind. Diese zusätzlichen Funktionen werden
+    nun Zug um Zug hinzugeschaltet, etwa, das eigene Profil pflegen zu können, Verwaltungsaufgaben zu delegieren, 
+    E-Mail-Verteiler zu nutzen, et cetera.
+  %p
+    In Kürze werden wir zudem eine Sammlung für Verbesserungsvorschläge einrichten. 
+  
+  %h2 Was kann ich hier jetzt tun?
+  %ul
+    %li 
+      %strong Kontaktdaten anderer Wingolfiten
+      heraussuchen ("Online-Vademecum"). Am besten eignet sich hierfür das Suchfeld rechts oben: 
+      Einfach den gewünschten Namen eingeben und mit der Eingabetaste bestätigen.
+    %li 
+      Bereitgestellte 
+      %strong Informationen und Dokumente 
+      herunterladen, z.B. die 
+      = link_to( "Wingolfsblätter als PDF", Page.where(title: "Wingolfsblätter").first ) + "."
+      (Suche rechts oben oder links im Menü.)
+    %li 
+      Das 
+      = link_to( "eigene Profil", current_user )
+      einsehen und bei zu korrigierenden Informationen einem 
+      = link_to( "Administrator", Group.everyone.find_admins_parent_group )
+      Bescheid geben.
+  
+  %h2 Wer kann mir helfen? 
+  %ul
+    %li
+      %strong Daten ändern, Aktivmeldung eintragen, 
+      et cetera, können im Moment nur die
+      = link_to( "hier aufgelisteten Bundesbrüder mit Administrator-Zugang", Group.everyone.find_admins_parent_group ) + "."
+      (Bitte einfach per E-Mail kontaktieren.)
+    %li 
+      Bei 
+      %strong Verwaltungs-Problemen 
+      ist die Geschäftsstelle des Wingolfs zuständig:
+      %a(href="mailto:gfdw@wingolf.org") gfdw@wingolf.org
+    %li 
+      Auf 
+      %strong technische Probleme
+      ist am Besten der Arbeitskreis Internet aufmerksam zu machen:
+      %a(href="mailto:deleted-string") deleted-string
+
+  
