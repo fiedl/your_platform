@@ -24,6 +24,12 @@
     </ul>
   </span>
 
+  <table>
+  <tr><td width="20%">
+    <span class="thumbnail">
+      <%= user_avatar(@user, size: 128) %>
+    </span>
+  </td><td>
   <dl>
     <dt><%= t :name %></dt>
     <dd>
@@ -43,6 +49,9 @@
     </dd>
   </dl>
   <%= render partial: 'shared/profile_section_ul', locals: { section: :general, profileable: @user } %>
+  
+  </td></tr>
+  </table>
 
 </div>
 
