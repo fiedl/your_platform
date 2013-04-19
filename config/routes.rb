@@ -50,7 +50,6 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :users do
     get :autocomplete_title, on: :collection
-    put :forgot_password, on: :member # the path method appears to be 'forgot_password_user_path'
   end
 
   resources :workflows
