@@ -1,6 +1,6 @@
 <%=t :welcome_to_wingolfsplattform %>
 ====================================================
 
-<%= url_for( :action => 'new', :controller => 'sessions', :only_path => false, :protocol => 'https') %>
+<%= new_user_account_session_url %>
 Login: <%=h @user.alias %>
 Passwort: <%=h @password %>
