@@ -41,6 +41,7 @@ feature "UserForgotPassword" do
       email_text = ActionMailer::Base.deliveries.last.to_s
       email_text.include?( @user.alias ).should be_true
       email_text.include?( "Passwort" ).should be_true # TODO: change this later to use I18n
+      email_text.include?(new_user_account_session_path).should be_true
       password_line = email_text.lines.find { |s| s.starts_with? "Passwort:" } # TODO: change this later to use I18n
       password = password_line.split( ' ' ).last
       password.should be_kind_of String
