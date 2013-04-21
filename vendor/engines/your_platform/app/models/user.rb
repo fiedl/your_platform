@@ -202,7 +202,7 @@ class User < ActiveRecord::Base
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
     end
-    if self.add_to_corporation
+    unless self.add_to_corporation.blank?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
       corporation ||= Group.find( add_to_corporation ) if add_to_corporation.to_i
       if corporation
