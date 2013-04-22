@@ -81,7 +81,7 @@
   <%= relationships_of_user_ul @user %>
 </div>
 
-<h1>Zugangsdaten</h1>
+<h1 class="section access">Zugangsdaten</h1>
 <div>
   <% if @user.has_account? %>
   <dl>
@@ -116,7 +116,7 @@
   <% else %>
   <p><%= t :user_has_no_account %></p>
   <span class="show_only_in_edit_mode">
-    <a><%= t :create_account %></a>
+    <%= link_to t(:create_account), :action => 'activate_account' %></a>
   </span>
   <% end %>
 </div>
