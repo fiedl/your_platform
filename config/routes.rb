@@ -57,6 +57,7 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :profile_fields
   resources :relationships
+  resources :user_accounts
 
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
 

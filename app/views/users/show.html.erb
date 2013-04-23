@@ -84,40 +84,13 @@
 <h1 class="section access">Zugangsdaten</h1>
 <div>
   <% if @user.has_account? %>
-  <dl>
-    <dt>Identifikation möglich mit folgenden Daten:</dt>
-    <dd>
-      <dl>
-        <% for attribute in User.attributes_used_for_identification %>
-        <span>
-          <dt><%= t attribute.to_s %></dt>
-	  <dd>
-	    <% if attribute.to_s == "name" %>
-	      <span class="first_and_last_name"><%= best_in_place @user, :first_name %> <%= best_in_place @user, :last_name %></span>
-	    <% else %>
-              <%= best_in_place @user, attribute.to_sym %>
-	    <% end %>
-	  </dd>
-        </span>
-        <% end %>
-      </dl>
-    </dd>
-  </dl>
-  <span class="show_only_in_edit_mode">
-    <dl>
-      <dt>
-        <%= t 'password' %>:
-      </dt>
-      <dd>
-        <%= link_to t('send_new_password'), forgot_password_user_path(@user.id), method: :put %>
-      </dd>
-    </dl>
-  </span>
+    <%= render @user.account %>
   <% else %>
-  <p><%= t :user_has_no_account %></p>
-  <span class="show_only_in_edit_mode">
-    <%= link_to t(:create_account), :action => 'activate_account' %></a>
-  </span>
+    <p><%= t :user_has_no_account %></p>
+    <span class="show_only_in_edit_mode">
+      <!--<%= link_to t(:create_account), {:controller => :user_accounts, :action => :create, :id => @user.id}, :method => :post %></a>-->
+      <%= link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post %></a>
+    </span>
   <% end %>
 </div>
 
