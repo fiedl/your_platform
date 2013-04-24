@@ -10,6 +10,7 @@ de:
   last_name:                     Nachname
   alias:                         Alias
   create_account:                Benutzerkonto anlegen
+  delete_account:                Benutzerkonto löschen
   register_in:                   Eintragen in
 
   gender:                        Geschlecht

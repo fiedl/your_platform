@@ -8,6 +8,7 @@ en:
   last_name:                     Last Name
   alias:                         Alias
   create_account:                Create User Account
+  delete_account:                Delete User Account
 
   password:                      Password
   send_new_password:             Send new password via email
