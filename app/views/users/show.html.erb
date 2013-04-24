@@ -88,8 +88,7 @@
   <% else %>
     <p><%= t :user_has_no_account %></p>
     <span class="show_only_in_edit_mode">
-      <!--<%= link_to t(:create_account), {:controller => :user_accounts, :action => :create, :id => @user.id}, :method => :post %></a>-->
-      <%= link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post %></a>
+      <%= link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post %>
     </span>
   <% end %>
 </div>
