@@ -8,7 +8,9 @@ en:
   last_name:                     Last Name
   alias:                         Alias
   create_account:                Create User Account
+  user_account_created:          'User account was successfully created.'
   delete_account:                Delete User Account
+  user_account_deleted:          'User account was successfully deleted.'
 
   password:                      Password
   send_new_password:             Send new password via email

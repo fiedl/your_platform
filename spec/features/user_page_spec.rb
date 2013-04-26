@@ -67,7 +67,7 @@ feature 'User page', js: false do
         within('.box.section.access') do
 
           click_on I18n.t(:edit)
-          page.should have_link(I18n.t(:delete_account) )
+          page.should have_button(I18n.t(:delete_account) )
 
           expect { click_on I18n.t(:delete_account) }.to change(UserAccount, :count).by -1
         end

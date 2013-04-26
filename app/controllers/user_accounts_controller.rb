@@ -28,28 +28,13 @@ class UserAccountsController < ApplicationController
   def create
     @user = User.find_by_id(params[:user_id])
     @user_account = @user.build_account
-    #@user_account = UserAccount.new(params[:user_account])
 
     respond_to do |format|
       if @user_account.save
-        format.html { redirect_to :back, notice: 'User account was successfully created.' }
+        format.html { redirect_to :back, notice: t(:user_account_created) }
         format.json { render json: @user_account, status: :created, location: @user_account }
       else
         format.html { render action: "new" }
-        format.json { render json: @user_account.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  def update
-    @user_account = UserAccount.find(params[:id])
-
-    respond_to do |format|
-      if @user_account.update_attributes(params[:user_account])
-        format.html { redirect_to @user_account, notice: 'User account was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
         format.json { render json: @user_account.errors, status: :unprocessable_entity }
       end
     end
@@ -60,7 +45,7 @@ class UserAccountsController < ApplicationController
     @user_account.destroy
 
     respond_to do |format|
-      format.html { redirect_to :back }
+      format.html { redirect_to :back, notice: t(:user_account_deleted)  }
       format.json { head :no_content }
     end
   end
