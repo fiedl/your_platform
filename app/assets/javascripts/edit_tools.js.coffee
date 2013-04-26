@@ -8,9 +8,8 @@ ready = ->
   # Hide 'edit' buttons for boxes where no .editable element is included.
   #
   $( ".edit_button" ).each( ->
-    edit_button = $(this)
-    box = edit_button.closest('.box')
-    edit_button.hide() if box.find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
+    box = $(this).closest('.box')
+    $(this).hide() if box.find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
   )
 
 $(document).ready(ready)
