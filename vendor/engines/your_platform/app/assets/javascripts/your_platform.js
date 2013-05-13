@@ -1,7 +1,6 @@
 //
 //= require jquery.appear-1.1.1
 //= require lightbox
-//= require twitter-bootstrap-typeahead/js/bootstrap-typeahead
 //= require app-ng
 //= require_tree ./services-ng
 //= require_tree ./models-ng

@@ -58,7 +58,7 @@ Möglicherweise wird danach eine neue Installation des Gem Bundlers erforderlich
 
 ```bash
 cd ~/rails
-git clone --recursive git@github.com:fiedl/wingolfsplattform.git
+git clone git@github.com:fiedl/wingolfsplattform.git
 cd ~/rails/wingolfsplattform
 bundle install
 bundle exec rake db:create db:migrate
@@ -66,50 +66,6 @@ bundle exec rake bootstrap:all
 bundle exec rake db:test:prepare
 bundle exec rake
 ```
-
-#### Git Submodules
-
-Das Repository verwendet sog. Git-Submodules. D.h. bestimmte Vendor-Komponenten werden nicht in das 
-Repository kopiert, sondern verweisen auf andere Repositories. Beim Klonen bzw. Pullen muss folglich
-darauf geachtet werden, dass diese Submodules auch geladen werden.
-
-##### git clone
-
-```bash
-cd ~/rails
-git clone --recursive git@github.com:fiedl/wingolfsplattform.git
-```
-
-##### git pull
-
-```bash
-git pull --recurse-submodules [origin] [master]
-```
-
-##### Argument vergessen?
-
-Wenn man beim `git clone` das `--recursive`-Argument oder beim `git pull` das `--recurse-submodules` 
-vergessen hat, lassen sich die Dateien natürlich auch nachträglich herunterladen:
-```bash
-cd ~/rails/wingolfsplattform    # oder in welches Projektverzeichnis auch immer
-git pull
-git submodule init
-git submodule update
-git submodule status            # nur, um sicherzustellen, dass alles funktioniert hat.
-```
-
-##### Automatismus
-
-Ab Git 1.7.5 sollten die Submodules automatisch geladen werden. Falls das nicht funktioniert, 
-kann man beispielsweise den `git pullall`-Alias definieren:
-
-```bash
-git config alias.pullall '!f(){ git pull "$@" && git submodule update --init --recursive; }; f'
-```
-
-Quelle: http://stackoverflow.com/questions/4611512/
-
-
 
 #### Sendmail
 
