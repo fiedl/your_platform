@@ -174,9 +174,9 @@ describe Group do
         end
       end
       describe "if the user is not a member" do
-        it "should raise an error" do
+        it "should not raise an error" do
           @group.child_users.should_not include( @user )
-          expect { @group.unassign_user( @user ) }.to raise_error
+          expect { @group.unassign_user( @user ) }.to_not raise_error
         end
       end
     end

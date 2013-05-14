@@ -85,7 +85,7 @@
 <div>
   <% if can? :manage, @user %>
     Wingolfsblätter abonniert:
-    <%= best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t(:no)], ['true', I18n.t(:yes)]] %>
+    <%= best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]] %>
   <% end %>
 </div>
 

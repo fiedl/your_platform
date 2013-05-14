@@ -7,6 +7,7 @@ feature "Aktivmeldung" do
   before do
     @corporation = create(:corporation)
     @aktivitas_group = @corporation.child_groups.create(name: "Aktivitas")
+    @intranet_root = Page.create(title: "Intranet Root").add_flag(:intranet_root)
 
     login(:admin)
   end
@@ -47,8 +48,7 @@ feature "Aktivmeldung" do
 
     page.should have_content I18n.t(:bank_account)
 
-    page.should have_content "Wingolfslätter abonniert: Ja"
-
+    page.should have_content "Wingolfsblätter abonniert: Ja"
 
   end
 

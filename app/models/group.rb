@@ -41,6 +41,35 @@ class Group
     return bvs_parent
   end
 
+  
+  # Wingolfsblätter-Abonnenten
+  # ------------------------------------------------------------------------------------------
+
+  def self.wbl_abo_group
+    Group.find_by_flag(:wbl_abo)
+  end
+
+  def self.wbl_abo
+    self.wbl_abo_group
+  end
+
+  def self.find_or_create_wbl_abo_group
+    if self.wbl_abo_group
+      return self.wbl_abo_group 
+    else
+      wbl_page = Page.find_by_title("Wingolfsblätter")
+      wbl_page ||= Page.find_intranet_root.child_pages.create(title: "Wingolfsblätter")
+      group = wbl_page.child_groups.where(name: "Abonnenten").first
+      group ||= wbl_page.child_groups.create(name: "Abonnenten")
+      group.add_flag :wbl_abo
+      return group
+    end
+  end
+ 
+  def self.wbl_abo!
+    self.find_or_create_wbl_abo_group
+  end
+
 
 end
 

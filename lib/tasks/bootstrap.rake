@@ -47,11 +47,17 @@ namespace :bootstrap do
     Page.find_by_title( "Mitglieder Start" ).add_flag :intranet_root 
   end
 
+  task wbl_abo_group: :environment do
+    p "Task: Adding Wingolfsblätter Abo Group"
+    Group.find_or_create_wbl_abo_group
+  end
+
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   task :all => [ 
                 :basic_groups, 
                 :basic_nav_node_properties,
-                :add_basic_pages
+                :add_basic_pages,
+                :wbl_abo_group
                ]
 
 end

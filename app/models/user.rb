@@ -76,28 +76,21 @@ class User
   # Abo Wingolfsblätter
   # ==========================================================================================
 
-  def wbl_group
-    @wbl_page ||= Page.where(title: "Wingolfsblätter").first
-    @wbl_group ||= @wbl_page.child_groups.where(name: "Abonnenten").first if @wbl_page
-    return @wbl_group
+  def wbl_abo_group
+    Group.find_or_create_wbl_abo_group
   end
-  private :wbl_group
-
+  private :wbl_abo_group
 
   def wingolfsblaetter_abo 
-    return true if wbl_group && self.member_of?(wbl_group)
-    return false
+    self.member_of? wbl_abo_group
   end
   def wingolfsblaetter_abo=(new_abo_status)
-    if wbl_group
-      if new_abo_status == true
-        wbl_group.assign_user self unless self.member_of? wbl_group
-      else
-        wbl_group.unassign_user self if self.member_of? wbl_group
-      end
+    if new_abo_status == true || new_abo_status == "true"
+      wbl_abo_group.assign_user self
+    else
+      wbl_abo_group.unassign_user self
     end
   end
-
 
 end
 

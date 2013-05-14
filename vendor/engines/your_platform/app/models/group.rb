@@ -110,7 +110,7 @@ class Group < ActiveRecord::Base
   def assign_user( user )
     if user
       unless user.in? self.child_users
-        self.child_users << user if user
+        self.child_users << user
       end
     end
   end
@@ -122,8 +122,6 @@ class Group < ActiveRecord::Base
     link = DagLink.find_edge( self.becomes( Group ), user )
     if link
       link.destroy if link.destroyable?
-    else
-      raise "The user to unassign is not member of the group."
     end
   end
 
