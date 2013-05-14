@@ -49,6 +49,7 @@ class UsersController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
+      @user.fill_in_template_profile_information
       redirect_to @user
     else
       @title = t :create_user

@@ -9,6 +9,8 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 #
 class User
 
+  attr_accessible :wingolfsblaetter_abo
+
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
   # in the main application.
@@ -44,6 +46,58 @@ class User
       end
     end.join( " " )
   end
+
+  # Fill-in default profile.
+  #
+  def fill_in_template_profile_information
+    self.profile_fields.create(label: :personal_title, type: "ProfileFieldTypes::General")
+    self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
+
+    self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address")
+    self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address")
+    self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone")
+    self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone")
+    self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
+    self.profile_fields.create(label: :homepage, type: "ProfileFieldTypes::Homepage")
+
+    self.profile_fields.create(label: :academic_degree, type: "ProfileFieldTypes::AcademicDegree")
+    self.profile_fields.create(label: :study, type: "ProfileFieldTypes::Study")
+
+    self.profile_fields.create(label: :professional_category, type: "ProfileFieldTypes::ProfessionalCategory")
+    self.profile_fields.create(label: :occupational_area, type: "ProfileFieldTypes::ProfessionalCategory")
+    self.profile_fields.create(label: :employment_status, type: "ProfileFieldTypes::ProfessionalCategory")
+
+    self.profile_fields.create(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
+
+    self.wingolfsblaetter_abo = true
+  end
+
+
+  # Abo Wingolfsblätter
+  # ==========================================================================================
+
+  def wbl_group
+    @wbl_page ||= Page.where(title: "Wingolfsblätter").first
+    @wbl_group ||= @wbl_page.child_groups.where(name: "Abonnenten").first if @wbl_page
+    return @wbl_group
+  end
+  private :wbl_group
+
+
+  def wingolfsblaetter_abo 
+    return true if wbl_group && self.member_of?(wbl_group)
+    return false
+  end
+  def wingolfsblaetter_abo=(new_abo_status)
+    if wbl_group
+      if new_abo_status == true
+        wbl_group.assign_user self unless self.member_of? wbl_group
+      else
+        wbl_group.unassign_user self if self.member_of? wbl_group
+      end
+    end
+  end
+
 
 end
 

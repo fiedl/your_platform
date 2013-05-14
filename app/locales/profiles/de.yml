@@ -13,3 +13,23 @@ de:
   create_new_user:                                         Neuen Benutzer anlegen
 
   address_is_in_bv:                                        Adresse liegt im BV
+
+
+  personal_title:                                          Persönlicher Titel
+  cognomen:                                                Bierspitz
+
+  home_address:                                            Heimatanschrift
+  work_or_study_address:                                   Arbeits- oder Studienanschrift
+  phone:                                                   Telefon
+  mobile:                                                  Mobil
+  fax:                                                     Fax
+  homepage:                                                Homepage
+  
+  academic_degree:                                         Akademischer Grad
+  study:                                                   Studium
+  
+  professional_category:                                   Berufsgruppe
+  occupational_area:                                       Berufsfeld
+  employment_status:                                       Beschäftigungsverhältnis
+
+  bank_account:                                            Bankverbindung

@@ -81,6 +81,14 @@
   <%= relationships_of_user_ul @user %>
 </div>
 
+<h1 class="section communication">Kommunikation</h1>
+<div>
+  <% if can? :manage, @user %>
+    Wingolfsblätter abonniert:
+    <%= best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t(:no)], ['true', I18n.t(:yes)]] %>
+  <% end %>
+</div>
+
 <h1 class="section access">Zugangsdaten</h1>
 <div>
   <% if @user.has_account? %>
