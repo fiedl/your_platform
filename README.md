@@ -47,5 +47,5 @@ Dieser aufgespaltete Zustand ist noch nicht vollständig erreicht. Der aktuelle 
 ### Links
 
 * [Trello Board "AK Internet: Entwicklung"](https://trello.com/board/ak-internet-entwicklung/50006d110ad48e941e8496d2)
-* AK-Internet-FTP: ftp://akiftp@wingolfsplattform.org, Passwort: deleted-string
+* AK-Internet-FTP: [ftp://akiftp@wingolfsplattform.org](ftp://akiftp@wingolfsplattform.org), Passwort: deleted-string
 * http://wingolf.org/ak-internet
