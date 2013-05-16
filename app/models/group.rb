@@ -58,7 +58,7 @@ class Group
       return self.wbl_abo_group 
     else
       wbl_page = Page.find_by_title("Wingolfsblätter")
-      wbl_page ||= Page.find_intranet_root.child_pages.create(title: "Wingolfsblätter")
+      wbl_page ||= Page.find_or_create_intranet_root.child_pages.create(title: "Wingolfsblätter")
       group = wbl_page.child_groups.where(name: "Abonnenten").first
       group ||= wbl_page.child_groups.create(name: "Abonnenten")
       group.add_flag :wbl_abo

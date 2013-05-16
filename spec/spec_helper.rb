@@ -190,6 +190,8 @@ Spork.prefork do
       Group.create_everyone_group
       Group.create_corporations_parent_group
       Group.create_bvs_parent_group
+      Page.create_root
+      Page.create_intranet_root
 
     end
 

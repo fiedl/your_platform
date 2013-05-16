@@ -73,8 +73,30 @@ class Page < ActiveRecord::Base
     end
   end
 
+  def self.find_or_create_root
+    self.find_root || self.create_root
+  end
+
+  def self.create_root
+    root_page = Page.create(title: "Root")
+    root_page.add_flag :root
+    n = root_page.nav_node; n.slim_menu = true; n.save; n = nil
+    return root_page
+  end
+
   def self.find_intranet_root
     Page.find_by_flag( :intranet_root )
+  end
+
+  def self.find_or_create_intranet_root
+    self.find_intranet_root || self.create_intranet_root
+  end
+
+  def self.create_intranet_root
+    root_page = Page.find_by_flag :root
+    intranet_root = root_page.child_pages.create(title: "Intranet")
+    intranet_root.add_flag :intranet_root
+    return intranet_root
   end
 
 end
