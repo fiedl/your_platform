@@ -29,7 +29,7 @@ class Group
   end
 
   def self.find_bv_groups
-    self.find_bvs_parent_group.child_groups
+    self.find_bvs_parent_group.child_groups if self.find_bvs_parent_group
   end
 
   def self.create_bvs_parent_group

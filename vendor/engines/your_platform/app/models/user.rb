@@ -235,6 +235,7 @@ class User < ActiveRecord::Base
   #
   def corporations
     my_corporations = ( self.ancestor_groups & Group.corporations ) if Group.corporations_parent
+    my_corporations ||= []
     my_corporations = my_corporations.collect { |group| group.becomes( Corporation ) }
     return my_corporations
   end
