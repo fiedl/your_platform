@@ -217,3 +217,5 @@ gem 'foreman', group: [:development, :production]
 
 # CMS: Mercury Editor
 gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
+
+gem 'rb-readline', '~> 0.4.2', group: :development
