@@ -159,8 +159,11 @@ module StructureableMixins::HasSpecialGroup
 
     new_special_group = child_of.child_groups.create
     new_special_group.add_flag( group_flag.to_sym )
+    new_special_group.name = group_flag.gsub("_parent", "")
+    new_special_group.save
     return new_special_group
   end
+
   module ClassMethods
     def create_special_group( group_flag, options = {} )
       

@@ -94,6 +94,7 @@ class Page < ActiveRecord::Base
 
   def self.create_intranet_root
     root_page = Page.find_by_flag :root
+    root_page = self.create_root unless root_page
     intranet_root = root_page.child_pages.create(title: "Intranet")
     intranet_root.add_flag :intranet_root
     return intranet_root
