@@ -105,10 +105,11 @@ feature 'User page', js: false do
         visit user_path(profile)
       end
 
-      scenario 'the section \'career information\'', js: true do
+      scenario 'the profile sections should not be editable', js: true do
         within '.box.section.career_information' do
           subject.should_not have_selector('a.edit_button', visible: true)
           subject.should_not have_selector('a.add_button', visible: true)
+          subject.should_not have_selector('.remove_button', visible: true)
         end
       end
     end
