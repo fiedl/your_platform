@@ -63,6 +63,27 @@ feature 'User page', js: false do
         end
       end
 
+      scenario 'the section \'career information\'', js: true do
+        within '.box.section.career_information' do
+          click_on I18n.t(:edit)
+          subject.should have_selector('a.add_button', visible: true)
+
+          click_on I18n.t(:add)
+          field_name = ProfileFieldTypes::Employment.name.demodulize.downcase
+          subject.should have_selector("a#add_#{field_name}_field")
+
+
+          click_on I18n.t(field_name)
+          subject.should have_selector('.profile_field')
+          within first '.profile_field' do
+            subject.should have_selector('input[type=text]', count: 11)
+          end
+
+          find('.remove_button').click
+          page.should_not have_selector('.profile_field')
+        end
+      end
+
       scenario 'the section \'Zugangsdaten\'', js: true do
         within('.box.section.access') do
 
@@ -74,6 +95,25 @@ feature 'User page', js: false do
       end
 
     end
+
+
+    describe 'when signed in as a regular user' do
+      let(:profile) { create(:user, :with_profile_fields) }
+
+      background do
+        login(:user)
+        visit user_path(profile)
+      end
+
+      scenario 'the profile sections should not be editable', js: true do
+        within '.box.section.career_information' do
+          subject.should_not have_selector('a.edit_button', visible: true)
+          subject.should_not have_selector('a.add_button', visible: true)
+          subject.should_not have_selector('.remove_button', visible: true)
+        end
+      end
+    end
+
   end
 
   describe 'of a user without account' do

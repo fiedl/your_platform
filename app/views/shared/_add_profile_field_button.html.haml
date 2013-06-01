@@ -1,0 +1,21 @@
+- type_or_types = profileable.profile_field_type_by_section( section )
+- if type_or_types.kind_of? Array
+  %a.btn.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
+    = tool_icon( 'icon-plus icon-black' ) + t(:add)
+    %span.caret
+  %ul.dropdown-menu
+    - type_or_types.each do |type|
+      %li
+        = link_to( t(type.demodulize.downcase),
+                     url_for( :action => :create_profile_field,
+                                 :profileable_id => profileable.id,
+                                 :type => type,
+                                 :section => section),
+                     :id => "add_#{type.demodulize.downcase}_field",
+                     :remote => true,
+                     :method => 'post')
+- else
+  = add_button( url_for( :action => :create_profile_field,
+                         :profileable_id => profileable.id,
+                         :type => type_or_types,
+                         :section => section), :method => 'post')

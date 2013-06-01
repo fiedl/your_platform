@@ -9,10 +9,5 @@
     <% end %>
   <% end %>
   <%= render partial: 'shared/profile_section_ul', locals: { section: section, profileable: profileable } %>
-  <% type_or_types = profileable.profile_field_type_by_section( section ) %>
-  <%= add_button( url_for( :action => :create_profile_field,
-                           :profileable_id => profileable.id,
-                           :type => type_or_types,
-                           :section => section), :method =>  "post" ) unless type_or_types.kind_of? Array %>
-
+  <%= render partial: 'shared/add_profile_field_button', locals: { section: section, profileable: profileable } %>
 </div>

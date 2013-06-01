@@ -71,7 +71,7 @@ class ProfileField < ActiveRecord::Base
   # 
   def value
     if children.count > 0
-      ( [ super ] + children.collect { |child| child.value } ).merge(", ")
+      ( [ super ] + children.collect { |child| child.value } ).join(", ")
     else
       super
     end
