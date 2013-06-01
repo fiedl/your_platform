@@ -16,11 +16,11 @@ module ToolButtonsHelper
   def add_button( url, options = {} ) # TODO: Was braucht er für minimale Informationen?
 
     # label for the button = icon + "add"
-    label = tool_icon( "icon-plus icon-white" ) + t( :add )
+    label = tool_icon( "icon-plus icon-black" ) + t( :add )
 
     # default options
     options = { 
-      :class => 'add_button tool show_only_in_edit_mode btn btn-success',
+      :class => 'add_button tool show_only_in_edit_mode btn',
       :remote => true
     }.merge( options )
     
