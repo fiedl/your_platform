@@ -125,23 +125,25 @@
           <!--li class="nav-header">Sidebar</li-->
 	  <%= vertical_menu %>
         </div><!--/span-->
-        <div class="span9">
+        <span id="content_area">
+          <div class="span9">
 
-          <% if flash[ :error ] %>
-            <div class="alert alert-error">
-	      <button class="close" data-dismiss="alert">×</button>
-	      <%=h flash[ :error ] %>
-	    </div>
-          <% end %>
-          <% if flash[ :notice ] %>
-            <div class="alert alert-success">
-	      <button class="close" data-dismiss="alert">×</button>
-	      <%=h flash[ :notice ] %>
-	    </div>
-          <% end %>
+            <% if flash[ :error ] %>
+              <div class="alert alert-error">
+	        <button class="close" data-dismiss="alert">×</button>
+	        <%=h flash[ :error ] %>
+	      </div>
+            <% end %>
+            <% if flash[ :notice ] %>
+              <div class="alert alert-success">
+	        <button class="close" data-dismiss="alert">×</button>
+	        <%=h flash[ :notice ] %>
+	      </div>
+            <% end %>
 
-          <%= html_convert_h1_to_boxes( yield ) %>
-        </div>
+            <%= html_convert_h1_to_boxes( yield ) %>
+          </div>
+        </span>
       </div><!--/row-->
 
       <footer>

@@ -59,19 +59,13 @@ class Page < ActiveRecord::Base
   end
 
 
-  # Finder Methods
+  # Finder and Creator Methods
   # ----------------------------------------------------------------------------------------------------
 
+
+  # root
+
   def self.find_root
-#    p = Page.first
-#    if p
-#        if p.root?
-#            p
-#        else
-#            p.ancestor_pages.first
-#        end
-#    end
-    # This line is broken somehow
     Page.find_by_flag( :root )
   end
 
@@ -79,27 +73,22 @@ class Page < ActiveRecord::Base
     self.find_root || self.create_root
   end
 
+  def self.create_root
+    root_page = Page.create(title: "Root")
+    root_page.add_flag :root
+    n = root_page.nav_node; n.slim_menu = true; n.save; n = nil
+    return root_page
+  end
+
+
+  # intranet root
+
   def self.find_intranet_root
     Page.find_by_flag( :intranet_root )
   end
 
   def self.find_or_create_intranet_root
     self.find_intranet_root || self.create_intranet_root
-  end
-
-  def self.find_help_page
-    Page.find_by_flag( :help )
-  end
-
-  def self.find_or_create_help_page
-    self.find_help_page || self.created_help_page
-  end
-
-  def self.create_root
-    root_page = Page.create(title: "Root")
-    root_page.add_flag :root
-    n = root_page.nav_node; n.slim_menu = true; n.save; n = nil
-    return root_page
   end
 
   def self.create_intranet_root
@@ -110,11 +99,23 @@ class Page < ActiveRecord::Base
     return intranet_root
   end
 
+
+  # help page
+
+  def self.find_help_page
+    Page.find_by_flag( :help )
+  end
+
+  def self.find_or_create_help_page
+    self.find_help_page || self.created_help_page
+  end
+
   def self.create_help_page
     help_page = Page.create(title: "Help")
     help_page.add_flag :help
     n = help_page.nav_node; n.hidden_menu = true; n.save;
     return help_page
   end
+
 
 end
