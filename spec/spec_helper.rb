@@ -74,7 +74,6 @@ Spork.prefork do
   # Required Libraries
   # ----------------------------------------------------------------------------------------
   
-  require 'simplecov'
   require 'rspec/rails'
   require 'rspec/autorun'
   require 'nokogiri'
@@ -97,7 +96,10 @@ Spork.prefork do
   # Resource on using SimpleCov together with Spork:
   # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
   #
-  SimpleCov.start 'rails' unless ENV['DRB']
+  unless ENV['DRB']
+    require 'simplecov'
+    SimpleCov.start 'rails'
+  end
 
 
   # Factories, Stubs and Mocks
@@ -265,6 +267,9 @@ Spork.each_run do
   # Resource on using SimpleCov together with Spork:
   # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
   #
-  SimpleCov.start 'rails' if ENV['DRB']
+  if ENV['DRB']
+    require 'simplecov'
+    SimpleCov.start 'rails'
+  end
 
 end
