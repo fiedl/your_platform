@@ -63,6 +63,15 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   def self.find_root
+#    p = Page.first
+#    if p
+#        if p.root?
+#            p
+#        else
+#            p.ancestor_pages.first
+#        end
+#    end
+    # This line is broken somehow
     Page.find_by_flag( :root )
   end
 
