@@ -6,12 +6,12 @@
   %ul.dropdown-menu
     - type_or_types.each do |type|
       %li
-        = link_to( t(type.demodulize.downcase),
+        = link_to( t(type.demodulize.underscore),
                      url_for( :action => :create_profile_field,
                                  :profileable_id => profileable.id,
                                  :type => type,
                                  :section => section),
-                     :id => "add_#{type.demodulize.downcase}_field",
+                     :id => "add_#{type.demodulize.underscore}_field",
                      :remote => true,
                      :method => 'post')
 - else

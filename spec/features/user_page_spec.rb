@@ -60,8 +60,10 @@ feature 'User page', js: false do
           subject.should have_selector('a.add_button', visible: true)
 
           click_on I18n.t(:add)
-          field_name = ProfileFieldTypes::Employment.name.demodulize.downcase
+          field_name = ProfileFieldTypes::Employment.name.demodulize.underscore
           subject.should have_selector("a#add_#{field_name}_field")
+          field_name2 = ProfileFieldTypes::ProfessionalCategory.name.demodulize.underscore
+          subject.should have_selector("a#add_#{field_name2}_field")
 
 
           click_on I18n.t(field_name)
