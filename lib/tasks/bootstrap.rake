@@ -47,7 +47,6 @@ namespace :bootstrap do
     help = Page.create_help_page
     help.update_attributes(title: "Hilfe")
     help.parent_pages << Page.find_by_flag( :intranet_root )
-    help.child_groups << Group.everyone
   end
 
   task add_flags_to_basic_pages: :environment do
