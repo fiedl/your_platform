@@ -1,7 +1,7 @@
 - type_or_types = profileable.profile_field_type_by_section( section )
 - if type_or_types.kind_of? Array
   %a.btn.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
-    = t('add')
+    = tool_icon( 'icon-plus icon-black' ) + t(:add)
     %span.caret
   %ul.dropdown-menu
     - type_or_types.each do |type|
