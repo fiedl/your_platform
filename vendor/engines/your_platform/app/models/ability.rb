@@ -46,6 +46,19 @@ class Ability
         # Users that are no admins can read all.
         can :read, :all
 
+        can :manage, User do |profile|
+          profile.id == user.id
+        end
+
+        can :manage, ProfileField do |field|
+          parent_field = field
+          while parent_field.parent != nil do
+            parent_field = parent_field.parent
+          end
+
+          parent_field.profileable.id == user.id
+        end
+
       end
 
     end
