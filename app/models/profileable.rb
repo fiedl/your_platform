@@ -47,7 +47,7 @@ module Profileable
       when :study_information
         profile_fields_by_type [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
       when :career_information
-        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionalCategory" ]
+        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory" ]
       when :organizations
         profile_fields_by_type "ProfileFieldTypes::Organization"
       when :bank_account_information
@@ -71,7 +71,7 @@ module Profileable
         when :study_information
           [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
         when :career_information
-          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::Competence", "ProfileFieldTypes::ProfessionalCategory" ]
+          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory" ]
         when :organizations
           "ProfileFieldTypes::Organization"
         when :bank_account_information
