@@ -70,7 +70,8 @@ feature 'User page', js: false do
 
           click_on I18n.t(:add)
           field_name = ProfileFieldTypes::Employment.name.demodulize.downcase
-          subject.should have_selector("a.add_#{field_name}_field")
+          subject.should have_selector("a#add_#{field_name}_field")
+
 
           click_on I18n.t(field_name)
           subject.should have_selector('.profile_field')

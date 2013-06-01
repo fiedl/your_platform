@@ -11,7 +11,7 @@
                                  :profileable_id => profileable.id,
                                  :type => type,
                                  :section => section),
-                     :class => "add_#{type.demodulize.downcase}_field",
+                     :id => "add_#{type.demodulize.downcase}_field",
                      :remote => true,
                      :method => 'post')
 - else
