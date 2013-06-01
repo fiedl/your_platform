@@ -35,28 +35,8 @@ module Profileable
     end
     
     def profile_fields_by_section( section )
-      case section
-      when :general
-        profile_fields_by_type "ProfileFieldTypes::General"
-      when :contact_information
-        profile_fields_by_type [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
-                                 "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", 
-                                 "ProfileFieldTypes::Custom" ]
-      when :about_myself
-        profile_fields_by_type "ProfileFieldTypes::About"
-      when :study_information
-        profile_fields_by_type [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
-      when :career_information
-        profile_fields_by_type [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory" ]
-      when :organizations
-        profile_fields_by_type "ProfileFieldTypes::Organization"
-      when :bank_account_information
-        profile_fields_by_type "ProfileFieldTypes::BankAccount"
-      when :description
-        profile_fields_by_type "ProfileFieldTypes::Description"
-      else
-        []
-      end
+      type_or_types = profile_field_type_by_section(section)
+      profile_fields_by_type(type_or_types)
     end
 
     def profile_field_type_by_section(section)
