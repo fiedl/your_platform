@@ -11,8 +11,9 @@ describe Page do
     @intranet_root.add_flag( :intranet_root )
 
     @root.child_pages << @intranet_root
+    @root.add_flag( :root )
     @intranet_root.child_pages << @some_page
-  end  
+  end
 
   subject { create( :page ) }
 
@@ -21,7 +22,7 @@ describe Page do
   # ----------------------------------------------------------------------------------------------------
 
   it { should respond_to( :content, :content=, :title, :title= ) }
-  
+
   it "should be structureable" do
     subject.should respond_to( :parents, :children, :ancestors, :descendants )
   end
@@ -117,9 +118,9 @@ describe Page do
   describe "#find_intranet_root" do
     before { create_page_structure }
     subject { Page.find_intranet_root }
-    
+
     it "should return the intranet root page" do
-      subject.should == @intranet_root 
+      subject.should == @intranet_root
     end
   end
 

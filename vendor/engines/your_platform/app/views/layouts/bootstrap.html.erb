@@ -53,9 +53,9 @@
               <li><%= link_to t( :my_profile ), main_app.user_path( current_user_account.user ) %> </li>
 
               <li class="dropdown">
-		<%= link_to( 
-		    ( t( :my_groups ) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, 
-		    main_app.my_groups_path, 
+		<%= link_to(
+		    ( t( :my_groups ) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe,
+		    main_app.my_groups_path,
 		    class: 'dropdown-toggle', data: { toggle: 'dropdown' } ) %>
 		<ul class="dropdown-menu">
 		  <%= my_groups_table %>
@@ -63,9 +63,9 @@
               </li>
 
               <li class="dropdown">
-		<%= link_to( 
-		    ( "Favoriten" + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, 
-		    main_app.my_favorites_path, 
+		<%= link_to(
+		    ( "Favoriten" + " " + content_tag( :b, '', class: 'caret' ) ).html_safe,
+		    main_app.my_favorites_path,
 		    class: 'dropdown-toggle', data: { toggle: 'dropdown' } ) %>
 		<ul class="dropdown-menu my-favorites">
 		  <%= bookmarked_objects_lis( current_user ) %>
@@ -98,12 +98,15 @@
       <span id="search_box">
 	<%= render partial: 'shared/search_box' %>
       </span>
+      <span id="header_help">
+          <%= link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  ) %>
+      </span>
       <span id="category_indicator">
 	<ul class="nav nav-tabs">
-	  <%= backend_horizontal_nav_lis %>	
+	  <%= backend_horizontal_nav_lis %>
 	</ul>
       </span>
-      
+
       <ul><!-- class="breadcrumb" -->
         <% if user_account_signed_in? %>
 	<span id="star_tool">
@@ -122,23 +125,25 @@
           <!--li class="nav-header">Sidebar</li-->
 	  <%= vertical_menu %>
         </div><!--/span-->
-        <div class="span9">
+        <span id="content_area">
+          <div class="span9">
 
-          <% if flash[ :error ] %>
-            <div class="alert alert-error">
-	      <button class="close" data-dismiss="alert">×</button>
-	      <%=h flash[ :error ] %>
-	    </div>
-          <% end %>
-          <% if flash[ :notice ] %>
-            <div class="alert alert-success">
-	      <button class="close" data-dismiss="alert">×</button>
-	      <%=h flash[ :notice ] %>
-	    </div>
-          <% end %>
+            <% if flash[ :error ] %>
+              <div class="alert alert-error">
+	        <button class="close" data-dismiss="alert">×</button>
+	        <%=h flash[ :error ] %>
+	      </div>
+            <% end %>
+            <% if flash[ :notice ] %>
+              <div class="alert alert-success">
+	        <button class="close" data-dismiss="alert">×</button>
+	        <%=h flash[ :notice ] %>
+	      </div>
+            <% end %>
 
-          <%= html_convert_h1_to_boxes( yield ) %>
-        </div>
+            <%= html_convert_h1_to_boxes( yield ) %>
+          </div>
+        </span>
       </div><!--/row-->
 
       <footer>

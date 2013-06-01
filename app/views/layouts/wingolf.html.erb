@@ -1,82 +1,85 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <meta http-equiv="Content-type" content="text/html; charset=utf-8" >
-  <title><%=h "#{@title} - " if @title %>Wingolfsplattform</title>
+  <head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" >
+    <title><%=h "#{@title} - " if @title %>Wingolfsplattform</title>
 
-  <%= stylesheet_link_tag    "wingolf_layout", :media => "all" %>
-  <%= stylesheet_link_tag    "application", :media => "all" %>
+    <%= stylesheet_link_tag    "wingolf_layout", :media => "all" %>
+    <%= stylesheet_link_tag    "application", :media => "all" %>
 
-  <%= favicon_link_tag 'favicon.ico' %>
-  <%= favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png' %>
+    <%= favicon_link_tag 'favicon.ico' %>
+    <%= favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png' %>
 
 
-  <%= javascript_include_tag "application" %>
-  <script type="text/javascript" src="http://cdn.sublimevideo.net/js/deleted-sublime-key"></script><!-- TODO: Replace! -->
+    <%= javascript_include_tag "application" %>
+    <script type="text/javascript" src="http://cdn.sublimevideo.net/js/deleted-sublime-key"></script><!-- TODO: Replace! -->
 
-  <%= csrf_meta_tags %>
+    <%= csrf_meta_tags %>
 
-  <%= yield :head %>
-</head>
-<body class="<%= controller.controller_name %>">
+    <%= yield :head %>
+  </head>
+  <body class="<%= controller.controller_name %>">
 
-  <% if user_account_signed_in? %>
-  <div id="backendBar">
-    <div class="content">
-      <ul class="backendBarItems">
-        <li class="first backendBarItem">
+    <% if user_account_signed_in? %>
+      <div id="backendBar">
+        <div class="content">
+          <ul class="backendBarItems">
+            <li class="first backendBarItem">
 
-	  <%= render "layouts/session_bar_avatar" %>
-	  <%= link_to current_user.name, main_app.user_path( current_user ) %>
-	</li>
-        <li class="backendBarItem"><%= link_to t( :my_profile ), main_app.user_path( current_user ) %> </li>
-	<li class="backendBarItem dropdown">
-	  <%= link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' } %>
-	  <ul class="dropdown-menu">
-	    <%= my_groups_table %>
-	  </ul>
-	</li>
-  <!--//
-	<% if current_user.role_for( @navable ) %>
-  	  <li class="backendBarItem"><a>
-	    Role: <%= current_user.role_for( @navable ) %>
-	  </a></li>
-	<% end %>
-  //-->
-  <% if can? :manage, @navable %>
-    <li class="backendBarItem"><a>
-      Sie sind Administrator.
-    </a></li>
-  <% end %>
-	<li class="backendBarItem dropdown">
-	  <%= link_to "Favoriten", my_favorites_path %>
-	  <ul class="dropdown-menu my-favorites">
-	    <%= bookmarked_objects_lis( current_user ) %>
-	  </ul>
-	</li>
-        <li class="last backendBarItem">
-	  <%= link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete %>
-	</li>
+            <%= render "layouts/session_bar_avatar" %>
+            <%= link_to current_user.name, main_app.user_path( current_user ) %>
+            </li>
+            <li class="backendBarItem"><%= link_to t( :my_profile ), main_app.user_path( current_user ) %> </li>
+            <li class="backendBarItem dropdown">
+            <%= link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' } %>
+            <ul class="dropdown-menu">
+              <%= my_groups_table %>
+            </ul>
+            </li>
+            <!--//
+            <% if current_user.role_for( @navable ) %>
+              <li class="backendBarItem"><a>
+                Role: <%= current_user.role_for( @navable ) %>
+              </a></li>
+            <% end %>
+            //-->
+            <% if can? :manage, @navable %>
+              <li class="backendBarItem"><a>
+                Sie sind Administrator.
+              </a></li>
+            <% end %>
+            <li class="backendBarItem dropdown">
+            <%= link_to "Favoriten", my_favorites_path %>
+            <ul class="dropdown-menu my-favorites">
+              <%= bookmarked_objects_lis( current_user ) %>
+            </ul>
+            </li>
+            <li class="last backendBarItem">
+            <%= link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete %>
+            </li>
           </ul>
+        </div>
+        <div class="clear"></div>
       </div>
-      <div class="clear"></div>
     </div>
-  </div>
   <% end %>
-  
+
   <div id="headerBg">
     <div id="header">
       <div id="header_claim">
-	<%= image_tag( 'claim.png' ) %>
+        <%= image_tag( 'claim.png' ) %>
       </div>
       <div id="header_logo">
-	      <%= link_to( image_tag( 'logo.png' ), root_path ) %>
+        <%= link_to( image_tag( 'logo.png' ), root_path ) %>
+      </div>
+      <div id="header_help">
+        <%= link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  ) %>
       </div>
       <div id="header_search">
-	<%= render partial: 'shared/search_box' %>
+        <%= render partial: 'shared/search_box' %>
       </div>
       <div id="horizontal_nav">
-	<%= backend_horizontal_nav %>
+        <%= backend_horizontal_nav %>
       </div>
     </div>
   </div>
@@ -86,57 +89,59 @@
       <div id="contentBgLayer3">
         <div id="content_wrapper">
           <div id="toolbar">
-	    <span id="star_tool">
-	      <%= star_tool( current_user, @navable ) %>
-	    </span>
-	    <span id="breadcrumb">
-	      <%= breadcrumb_ul %>
-	    </span>
-	    <span id="site_tools">
-	      <%= edit_button %>
-	    </span>
-	  </div>
-	  <div id="content">
-            <div class="content_twoCols content_twoCols-20-80">
-              <div class="content_twoCols_left">
-		<%= vertical_menu %>
-	      </div>
-              <div class="content_twoCols_right">
+            <span id="star_tool">
+              <%= star_tool( current_user, @navable ) %>
+            </span>
+            <span id="breadcrumb">
+              <%= breadcrumb_ul %>
+            </span>
+            <span id="site_tools">
+              <%= edit_button %>
+            </span>
+          </div>
+          <span id="content_area">
+            <div id="content">
+              <div class="content_twoCols content_twoCols-20-80">
+                <div class="content_twoCols_left">
+                  <%= vertical_menu %>
+                </div>
+                <div class="content_twoCols_right">
 
-		<% if flash[ :error ] %>
-  		  <div class="flash error"><%=h flash[ :error ] %></div>
-                <% end %>   
-		<% if flash[ :notice ] %>
-		  <div class="flash notice"><%=h flash[ :notice ] %></div>
-		<% end %>
+                  <% if flash[ :error ] %>
+                    <div class="flash error"><%=h flash[ :error ] %></div>
+                  <% end %>
+                  <% if flash[ :notice ] %>
+                    <div class="flash notice"><%=h flash[ :notice ] %></div>
+                  <% end %>
 
-           	<%= replace_unicode_special_chars_by_html_escape_strings(
-		      convert_to_content_box { yield }
-		    ) 
-		%>
+                  <%= replace_unicode_special_chars_by_html_escape_strings(
+                    convert_to_content_box { yield }
+                  )
+                %>
               </div>
               &nbsp;
               <div class="clear"></div>
             </div>
-          </div>
-	</div>
+          </span>
+        </div>
       </div>
     </div>
   </div>
+</div>
 
-  <div id="footer">
-    <div id="footer_bg"></div>
-    <div id="footer_navi">
-      <ul>
-	    <li><a>Impressum</a></li>
-      </ul>
-      <div class="clear"></div>
-    </div>
-    <div id="footer_line"></div>
+<div id="footer">
+  <div id="footer_bg"></div>
+  <div id="footer_navi">
+    <ul>
+      <li><a>Impressum</a></li>
+    </ul>
+    <div class="clear"></div>
   </div>
-  <%= debug(params) if Rails.env.development? %>
+  <div id="footer_line"></div>
+</div>
+<%= debug(params) if Rails.env.development? %>
 
-  <%= yield :scripts %>
+<%= yield :scripts %>
 
 </body>
 </html>
