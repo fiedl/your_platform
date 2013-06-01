@@ -18,7 +18,7 @@ namespace :bootstrap do
     Group.find_corporations_parent_group.update_attributes( name: "Wingolf am Hochschulort" )
 
     # Bvs Parent Group ("Bezirksverbände")
-    Group.create_bvs_parent_group unless Group.bvs_parent 
+    Group.create_bvs_parent_group unless Group.bvs_parent
     Group.find_bvs_parent_group.update_attributes( name: "Bezirksverbände" )
 
   end
@@ -41,10 +41,20 @@ namespace :bootstrap do
     mitglieder_start.child_groups << Group.everyone
   end
 
+  desc "Add help page"
+  task add_help_page: :environment do
+    p "Task: Add help page."
+    help = Page.create_help_page
+    help.update_attributes(title: "Hilfe")
+    help.parent_pages << Page.find_by_flag( :intranet_root )
+    help.child_groups << Group.everyone
+  end
+
   task add_flags_to_basic_pages: :environment do
     p "Task: Add Flags to Basic Pages"
     Page.find_by_title( "wingolf.org" ).add_flag :root
-    Page.find_by_title( "Mitglieder Start" ).add_flag :intranet_root 
+    Page.find_by_title( "Mitglieder Start" ).add_flag :intranet_root
+    Page.find_by_title( "Hilfe" ).add_flag :help
   end
 
   task wbl_abo_group: :environment do
@@ -53,10 +63,11 @@ namespace :bootstrap do
   end
 
   desc "Run all bootstrapping tasks" # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
-  task :all => [ 
-                :basic_groups, 
+  task :all => [
+                :basic_groups,
                 :basic_nav_node_properties,
                 :add_basic_pages,
+                :add_help_page,
                 :wbl_abo_group
                ]
 
