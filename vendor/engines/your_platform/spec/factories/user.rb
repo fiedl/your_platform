@@ -10,6 +10,12 @@ FactoryGirl.define do
     sequence( :alias ) { |n| "j.doe#{n}" }
     sequence( :email ) { |n| "j.doe#{n}@example.com" }
 
+    trait :with_profile_fields do
+      after :create do |user|
+        user.profile_fields.create(type: ProfileFieldTypes::Employment.name)
+      end
+    end
+
     # user with associated user account
     #
     factory :user_with_account do
