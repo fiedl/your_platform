@@ -9,7 +9,6 @@
 	  <td class="box_toolbar">
 	    <span class="box_toolbar">
         <% if can? :manage, @navable %>
-          <%= cancel_button :class => box_class %>
           <%= save_button :class => box_class %>
           <%= edit_button(:class => box_class, 
                           :id => (strip_tags(heading) + "EditButton")) %>
