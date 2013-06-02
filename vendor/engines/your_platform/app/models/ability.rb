@@ -43,12 +43,9 @@ class Ability
         
       else
         
-        # Users that are no admins can read all.
+        # Users that are no admins can read all and edit their own profile.
         can :read, :all
-
-        can :manage, User do |profile|
-          profile.id == user.id
-        end
+        can :manage, User, :id => user.id
 
         can :manage, ProfileField do |field|
           parent_field = field
