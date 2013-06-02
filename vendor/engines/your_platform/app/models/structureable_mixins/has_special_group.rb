@@ -26,7 +26,7 @@
 #     class Group
 #       is_structureable ...
 #       has_special_group :everyone, global: true
-#     Group
+#     end
 #
 # This will give you these class methods:
 #
@@ -71,7 +71,7 @@ module StructureableMixins::HasSpecialGroup
       end
 
       def #{self_or_not}find_#{group_flag}_group
-        find_special_group( '#{group_flag}' )
+        find_special_group( '#{group_flag}', { child_of: '#{child_of}' }  )
       end
 
       def #{self_or_not}create_#{group_flag}_group
@@ -132,11 +132,19 @@ module StructureableMixins::HasSpecialGroup
   # This method finds the group of all descendant_groups of this object that matches
   # the given flag.
   #
-  def find_special_group( group_flag )
-    self.descendant_groups.find_by_flag( group_flag.to_sym )
+  def find_special_group( group_flag, options = {} )
+
+    child_of = self.find_special_group( options[:child_of] ) if options[:child_of].present?
+    child_of ||= self
+
+    p "=========================================================================================="
+    p "child_of"
+    p child_of
+
+    child_of.descendant_groups.find_by_flag( group_flag.to_sym )
   end
   module ClassMethods
-    def find_special_group( group_flag )
+    def find_special_group( group_flag, options = {} )
       Group.find_by_flag( group_flag.to_sym )
     end
   end
@@ -155,8 +163,11 @@ module StructureableMixins::HasSpecialGroup
       raise "special group with flag '#{group_flag}' already exists."
     end
     
-    child_of = self.send( "find_or_create_#{group_flag}_group_parent" )
-
+    if options[:child_of].present?
+      child_of = self.send( "find_or_create_#{options[:child_of]}_group_parent" )
+    else
+      child_of = self
+    end
     new_special_group = child_of.child_groups.create
     new_special_group.add_flag( group_flag.to_sym )
     new_special_group.name = group_flag.gsub("_parent", "")
@@ -171,7 +182,11 @@ module StructureableMixins::HasSpecialGroup
         raise "global special group with flag '#{group_flag}' already exists."
       end
     
-      child_of = self.send( "find_or_create_#{group_flag}_group_parent" )
+      if options[:child_of].present?
+        child_of = self.send( "find_or_create_#{group_flag}_group_parent" )
+      else
+        child_of = self
+      end
 
       if child_of.kind_of? Class
         new_special_group = Group.create
