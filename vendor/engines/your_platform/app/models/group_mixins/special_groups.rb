@@ -32,6 +32,26 @@ module GroupMixins::SpecialGroups
     #
     #has_special_group :everyone, global: true     # or: `Group.has_special_group(...)` outside of `included`.
 
+    def self.find_everyone_group
+      find_special_group(:everyone)
+    end
+    
+    def self.create_everyone_group
+      create_special_group(:everyone)
+    end
+    
+    def self.find_or_create_everyone_group
+      find_or_create_special_group(:everyone)
+    end
+
+    def self.everyone
+      find_or_create_everyone_group
+    end
+
+    def self.everyone!
+      find_everyone_group || raise('special group :everyone does not exist.')
+    end
+
 
     # Corporations Parent
     # ==========================================================================================
@@ -50,6 +70,28 @@ module GroupMixins::SpecialGroups
     #
     #has_special_group :corporations_parent, global: true 
 
+    def self.find_corporations_parent_group
+      find_special_group(:corporations_parent)
+    end
+    
+    def self.create_corporations_parent_group
+      create_special_group(:corporations_parent)
+    end
+    
+    def self.find_or_create_corporations_parent_group
+      find_or_create_special_group(:corporations_parent)
+    end
+
+    def self.corporations_parent
+      find_or_create_corporations_parent_group
+    end
+
+    def self.corporations_parent!
+      find_corporations_parent_group || raise('special group :corporations_parent does not exist.')
+    end
+
+
+
     # Officers Parent
     # ==========================================================================================
     #
@@ -67,6 +109,27 @@ module GroupMixins::SpecialGroups
     #     find_or_create_officers_parent_group
     #
     #has_special_group :officers_parent
+
+    def find_officers_parent_group
+      find_special_group(:officers_parent)
+    end
+    
+    def create_officers_parent_group
+      create_special_group(:officers_parent)
+    end
+    
+    def find_or_create_officers_parent_group
+      find_or_create_special_group(:officers_parent)
+    end
+
+    def officers_parent
+      find_or_create_officers_parent_group
+    end
+
+    def officers_parent!
+      find_officers_parent_group || raise('special group :officers_parent does not exist.')
+    end
+
 
     # This method returns all officer users, as well all of this group as of its sub-groups.
     # Therefore, this method has to be overridden, since the one provided by
@@ -93,6 +156,31 @@ module GroupMixins::SpecialGroups
     # find_or_create_guests_parent_group
     #
     #has_special_group :guests_parent
+
+    def find_guests_parent_group
+      find_special_group(:guests_parent)
+    end
+    
+    def create_guests_parent_group
+      create_special_group(:guests_parent)
+    end
+    
+    def find_or_create_guests_parent_group
+      find_or_create_special_group(:guests_parent)
+    end
+
+    def guests_parent
+      find_or_create_guests_parent_group
+    end
+
+    def guests_parent!
+      find_guests_parent_group || raise('special group :guests_parent does not exist.')
+    end
+
+    def guests
+      guests_parent.child_users
+    end
+
 
   end
 
@@ -137,7 +225,7 @@ module GroupMixins::SpecialGroups
     # Find all groups of the corporations branch, i.e. the corporations_parent
     # and its descendant groups.
     # 
-    #   everyone
+    #   everyoneOAOA
     #      |----- corporations_parent                      <
     #      |                |---------- corporation_a      <  These groups are returned
     #      |                |                |--- ...      <  by this method.

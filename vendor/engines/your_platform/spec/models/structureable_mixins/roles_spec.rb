@@ -25,7 +25,15 @@ describe StructureableMixins::Roles do
 
   describe "#admins_parent!" do
     subject { @my_structureable.admins_parent! }
-    it { should be_kind_of Group }
+    describe "for the group not existing" do
+      it "should raise an error" do
+        expect { subject }.to raise_error
+      end
+    end
+    describe "for the group existing" do
+      before { @admins_parent_group = @my_structureable.create_admins_parent_group }
+      it { should == @admins_parent_group }
+    end  
   end
 
   describe "#find_admins_parent_group" do
@@ -67,15 +75,15 @@ describe StructureableMixins::Roles do
     context "if admin users exist" do
       before do 
         @admin_user = create( :user )
-        @my_structureable.admins_parent!.child_users << @admin_user
+        @my_structureable.admins_parent.child_users << @admin_user
       end
       it "should return an array of admin users" do
         subject.should == [ @admin_user ]
       end
     end
     context "if the admins-parent group does not exist" do
-      it "should return nil" do
-        subject.should == nil
+      it "should return an empty array" do
+        subject.should == []
       end
     end
   end
@@ -96,52 +104,7 @@ describe StructureableMixins::Roles do
       end
     end
     context "for the admin group not existing" do
-      it "should raise an error" do
-        expect { subject }.to raise_error
-      end
-    end
-  end
-
-  describe "#admins!" do
-    subject { @my_structureable.admins! }
-    context "if the admins_parent_group exists" do
-      before { @my_structureable.create_admins_parent_group } 
-      it { should == [] }
-    end
-    context "if admin users exist" do
-      before do 
-        @admin_user = create( :user )
-        @my_structureable.admins_parent!.child_users << @admin_user
-      end
-      it "should return an array of admin users" do
-        subject.should == [ @admin_user ]
-      end
-    end
-    context "if the admins-parent group does not exist" do
-      it "should return an array as well" do
-        subject.should == []
-      end
-      it "should create the special group" do
-        @my_structureable.admins_parent.should == nil
-        subject
-        @my_structureable.admins_parent.should be_kind_of Group
-      end
-    end
-  end
-
-  describe "#admins! <<" do
-    before { @admin_user = create( :user ) }
-    subject { @my_structureable.admins! << @admin_user }
-    context "for the admin group existing" do
-      before { @my_structureable.create_admins_parent_group }
-      it "should add the user to the admins of the structureable object" do
-        @my_structureable.admins.should_not include @admin_user
-        subject
-        @my_structureable.admins.should include @admin_user
-      end
-    end
-    context "for the admin group not existing" do
-      it "should create the admins_parent_group" do
+      it "should create it" do
         @my_structureable.find_admins_parent_group.should == nil
         subject
         @my_structureable.find_admins_parent_group.should be_kind_of Group
@@ -158,16 +121,16 @@ describe StructureableMixins::Roles do
   # Main Admins
   # ==========================================================================================
 
-  describe "#main_admins_parent!" do
-    subject { @my_structureable.main_admins_parent! }
+  describe "#main_admins_parent" do
+    subject { @my_structureable.main_admins_parent }
     it { should be_kind_of Group }
     it "should have the admins_parent as parent group" do
-      @admins_parent = @my_structureable.admins_parent!
+      @admins_parent = @my_structureable.admins_parent
       subject.parent_groups.should include @admins_parent 
     end
     specify "users of this group should also be members of the admins_parent_group" do
       @user = create( :user )
-      @my_structureable.main_admins_parent!.child_users << @user 
+      @my_structureable.main_admins_parent.child_users << @user 
       @user.ancestor_groups.should include( @my_structureable.admins_parent, 
                                             @my_structureable.main_admins_parent )
     end
@@ -204,24 +167,6 @@ describe StructureableMixins::Roles do
   describe "#main_admins <<" do
     before { @admin_user = create( :user ) }
     subject { @my_structureable.main_admins << @admin_user }
-    context "for the admin group existing" do
-      before { @my_structureable.create_main_admins_parent_group }
-      it "should add the user to the main admins of the structureable object" do
-        @my_structureable.main_admins.should_not include @admin_user
-        subject
-        @my_structureable.main_admins.should include @admin_user
-      end
-    end
-    context "for the admin group not existing" do
-      it "should raise an error" do
-        expect { subject }.to raise_error
-      end
-    end
-  end
-
-  describe "#main_admins! <<" do
-    before { @admin_user = create( :user ) }
-    subject { @my_structureable.main_admins! << @admin_user }
     context "for the admin group existing" do
       before { @my_structureable.create_main_admins_parent_group }
       it "should add the user to the main admins of the structureable object" do

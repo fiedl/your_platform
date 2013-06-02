@@ -11,6 +11,7 @@ module StructureableMixins::Roles
   extend ActiveSupport::Concern
 
   included do
+  end
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
 
 #    include StructureableMixins::HasSpecialGroup
@@ -29,6 +30,31 @@ module StructureableMixins::Roles
 #    #                     .admins << some_user
 #    #
 #    has_special_group :admins_parent, :child_of => :officers_parent
+
+    def find_admins_parent_group
+      find_special_group(:admins_parent, parent_element: find_officers_parent_group )
+    end
+
+    def create_admins_parent_group
+      create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
+    end
+
+    def find_or_create_admins_parent_group
+      find_or_create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
+    end
+
+    def admins_parent
+      find_or_create_admins_parent_group
+    end
+
+    def admins_parent!
+      find_admins_parent_group || raise('special group :admins_parent does not exist.')
+    end
+
+    def admins
+      admins_parent.child_users
+    end
+
 #
 #    # Main Admins
 #    # ==========================================================================================
@@ -38,6 +64,32 @@ module StructureableMixins::Roles
 #    #
 #    has_special_group :main_admins_parent, :child_of => :admins_parent
 
-  end
+    def find_main_admins_parent_group
+      find_special_group(:main_admins_parent, parent_element: find_admins_parent_group)
+    end
+
+    def create_main_admins_parent_group
+      create_special_group(:main_admins_parent, parent_element: find_or_create_admins_parent_group )
+    end
+
+    def find_or_create_main_admins_parent_group
+      find_or_create_special_group(:main_admins_parent, parent_element: find_or_create_admins_parent_group )
+    end
+
+    def main_admins_parent
+      find_or_create_main_admins_parent_group
+    end
+
+    def main_admins_parent!
+      find_main_admins_parent_group || raise('special group :main_admins_parent does not exist.')
+    end
+
+    def main_admins
+      main_admins_parent.child_users
+    end
+
+
+
+
 
 end

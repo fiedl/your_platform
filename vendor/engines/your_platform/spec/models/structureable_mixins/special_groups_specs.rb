@@ -26,6 +26,8 @@ describe StructureableMixins::SpecialGroups do
   describe "#find_special_group" do
     subject { @my_structureable.find_special_group( :my_special_group ) }
     describe "for the group existing" do
+      before { @my_special_group = @my_structureable.create_special_group( :my_special_group ) }
+      it { should == @my_special_group }
     end
     describe "for the group not existing" do
       it { should == nil }
