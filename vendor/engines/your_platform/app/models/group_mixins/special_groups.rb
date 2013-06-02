@@ -30,7 +30,7 @@ module GroupMixins::SpecialGroups
     #    Group.find_or_create_everyone_group
     #    Group.create_everyone_group
     #
-    has_special_group :everyone, global: true     # or: `Group.has_special_group(...)` outside of `included`.
+    #has_special_group :everyone, global: true     # or: `Group.has_special_group(...)` outside of `included`.
 
 
     # Corporations Parent
@@ -48,7 +48,7 @@ module GroupMixins::SpecialGroups
     #                       |---------- corporation_c
     #                                        |--- ...
     #
-    has_special_group :corporations_parent, global: true 
+    #has_special_group :corporations_parent, global: true 
 
     # Officers Parent
     # ==========================================================================================
@@ -66,7 +66,7 @@ module GroupMixins::SpecialGroups
     #     create_officers_parent_group
     #     find_or_create_officers_parent_group
     #
-    has_special_group :officers_parent
+    #has_special_group :officers_parent
 
     # This method returns all officer users, as well all of this group as of its sub-groups.
     # Therefore, this method has to be overridden, since the one provided by
@@ -92,7 +92,7 @@ module GroupMixins::SpecialGroups
     # create_guests_parent_group
     # find_or_create_guests_parent_group
     #
-    has_special_group :guests_parent
+    #has_special_group :guests_parent
 
   end
 

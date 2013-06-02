@@ -11,7 +11,7 @@ describe GroupMixins::SpecialGroups do
   # This spec is due to a previous bug.
   # For more specs on roles, please see spec/structureable_mixins/roles_specs.rb.
   #
-  describe "#admins_parent!", focus: true do
+  describe "#admins_parent!" do
     subject { @group.admins_parent! }
     it "should refer to the admins_parent sub group of the group" do
       officers_group = subject.parent_groups.first
