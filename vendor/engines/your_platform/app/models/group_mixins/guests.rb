@@ -43,7 +43,7 @@ module GroupMixins::Guests
   end
 
   def guests
-    find_geust_users
+    find_guest_users
   end
 
   # This method lists all guest subgroups of self, but not of the subgroups of self.

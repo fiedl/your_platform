@@ -54,7 +54,7 @@ module StructureableMixins::Roles
   def find_officers_parent_groups_of_self_and_of_descendant_groups
     officers_parent_groups = ( [self] + self.descendant_groups ).collect do |group|
       group.find_special_group(:officers_parent)
-    end
+    end.select { |group| group.present? }
   end
 
   # This method lists all officer groups, as well in this group as well all of the subgroups.
