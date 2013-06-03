@@ -71,11 +71,13 @@
                 - if can? :manage, user
                   %span.show_only_in_edit_mode
                     = workflow_execution_links_for( group: child_group, user: user )
+
+/ officers
 - if @group.officers && ( @group.officers.count > 0 || can?(:manage, @group) )
   %h1= t :officers
   %span#officers
     %dl
-      - for officer_group in @group.find_officers_groups    
+      - for officer_group in @group.find_officers_groups
         %dt
           - if can? :update, officer_group
             = best_in_place officer_group, :name

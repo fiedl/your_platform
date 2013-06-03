@@ -26,6 +26,23 @@ describe Group do
       end
     end
 
+    describe "#name" do
+      subject { @group.name }
+      describe "for a translation of the name exists" do
+        before { @group.name = "admins" }
+        it "should return the translated name" do
+          I18n.t(:admins).should_not == "admins"
+          subject.should == I18n.t(:admins)
+        end
+      end
+      describe "for no translation of the name exists" do
+        before { @group.name = "asdjkl" }
+        it "should return the name itself" do
+          subject.should == "asdjkl"
+        end
+      end
+    end
+
   end
 
 

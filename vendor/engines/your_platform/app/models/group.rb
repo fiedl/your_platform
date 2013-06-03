@@ -44,6 +44,14 @@ class Group < ActiveRecord::Base
     self.name
   end
 
+  # The name of the group.
+  # If there is a translation for that group name, e.g. for a generic group name like
+  # 'admins', use the translation.
+  #
+  def name
+    I18n.t( super.to_sym, default: super ) if super
+  end
+
 
   # Associated Objects
   # ==========================================================================================

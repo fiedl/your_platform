@@ -61,7 +61,7 @@ module StructureableMixins::Roles
   #
   def find_officers_groups
     self.find_officers_parent_groups_of_self_and_of_descendant_groups.collect do |officers_parent|
-      officers_parent.child_groups
+      officers_parent.descendant_groups
     end.flatten
   end
 
