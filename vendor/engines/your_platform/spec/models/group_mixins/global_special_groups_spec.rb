@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
 
-describe GroupMixins::SpecialGroups do
+describe GroupMixins::GlobalSpecialGroups do
 
 
   # Everyone

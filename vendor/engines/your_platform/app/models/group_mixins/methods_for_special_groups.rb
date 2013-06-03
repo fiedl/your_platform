@@ -1,4 +1,9 @@
-module GroupMixins::LocalSpecialGroups
+#
+# This mixin adds methods to groups which are so called special groups,
+# for example the `admins_parent` group, which contains all admin
+# users of structureable objects.
+#
+module GroupMixins::MethodsForSpecialGroups
 
   extend ActiveSupport::Concern
 

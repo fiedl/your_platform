@@ -1,3 +1,11 @@
+#
+# All groups have associated special groups, for example the `guests_parent` group, which
+# contains all guests of the group. 
+# 
+# This mixin provides the accessor methods for these special groups.
+#
+# The mechanism used in the mixin is defined in `StructureableMixins::HasSpecialGroups`.
+#
 module GroupMixins::HasSpecialGroups
 
   extend ActiveSupport::Concern
@@ -7,12 +15,8 @@ module GroupMixins::HasSpecialGroups
   end
   
   
-  
-  # Guests Parent
+  # Guests
   # ==========================================================================================
-  #
-  # As well as officers, each group may have guests.
-  #
 
   def find_guests_parent_group
     find_special_group(:guests_parent)
@@ -34,23 +38,24 @@ module GroupMixins::HasSpecialGroups
     find_guests_parent_group || raise('special group :guests_parent does not exist.')
   end
 
-  def guests
+  def find_guest_users
     guests_parent.descendant_users
   end
-  
-    # Guests Parent
-  # ==========================================================================================
 
-  # This method lists all guest sub-groups of self, but not of the sub-groups of self.
+  def guests
+    find_geust_users
+  end
+
+  # This method lists all guest subgroups of self, but not of the subgroups of self.
+  # This is used, for example, if there are several kinds of guests.
+  #
+  #    my_group
+  #        |---------- guests_parent
+  #                       |----------- regular_guests    <-- returned by this
+  #                       |----------- vip_guests        <-- method.
   #
   def find_guests_groups
     find_guests_parent_group.descendant_groups
-  end
-
-  # This method lists all descendant users of the guests_parent_group.
-  #
-  def find_guest_users
-    guests
   end
   
 end  

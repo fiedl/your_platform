@@ -23,7 +23,10 @@ class Group < ActiveRecord::Base
 
   has_many :posts
 
-  include GroupMixins::SpecialGroups
+  include GroupMixins::HasSpecialGroups
+  include GroupMixins::GlobalSpecialGroups
+  include GroupMixins::MethodsForSpecialGroups
+
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import

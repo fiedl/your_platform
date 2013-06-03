@@ -1,4 +1,12 @@
-
+#
+# There are certain gloabl special groups, for example the `everyone` group, which contains
+# all users.
+#
+# The global accessors for these groups, e.g. `Group.find_everyone_group` or 
+# `Group.everyone` for short, are defined in this mixin.
+#
+# The mechanism used by this mixin is defined in `StructureableMixins::HasSpecialGroups`.
+#
 module GroupMixins::GlobalSpecialGroups
 
   extend ActiveSupport::Concern
@@ -13,7 +21,6 @@ module GroupMixins::GlobalSpecialGroups
   # The 'root group', which is the highest in the group hierarchy.
   # Everyone is member of this group, even not registered users.
   #
-
   module ClassMethods
     def find_everyone_group
       find_special_group(:everyone)
@@ -37,14 +44,14 @@ module GroupMixins::GlobalSpecialGroups
   end
 
 
-  # Corporations Parent
+  # Corporations
   # ==========================================================================================
   #
-  # Parent group for all corporation groups.
+  # The parent group for all corporation groups is called `corporations_parent`.
   # The group structure looks something like this:
   #
   #   everyone
-  #      |----- corporations_parent                     <--- this is the group returned by this method
+  #      |----- corporations_parent
   #                       |---------- corporation_a
   #                       |                |--- ...
   #                       |---------- corporation_b
@@ -52,7 +59,6 @@ module GroupMixins::GlobalSpecialGroups
   #                       |---------- corporation_c
   #                                        |--- ...
   #
-
   module ClassMethods
     def find_corporations_parent_group
       find_special_group(:corporations_parent)
@@ -73,34 +79,18 @@ module GroupMixins::GlobalSpecialGroups
     def corporations_parent!
       find_corporations_parent_group || raise('special group :corporations_parent does not exist.')
     end
-  end
 
-
-
-
-
-
-
-  # Corporations
-  # ==========================================================================================
-
-  module ClassMethods
+    # Find all corporation groups, i.e. the children of `corporations_parent`.
+    #
+    def find_corporation_groups
+      self.corporations_parent.try(:child_groups) || []
+    end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
     # Alias method for `find_corporation_groups`.
     #
     def corporations
       find_corporation_groups
-    end
-
-    # Find all corporation groups, i.e. the children of `corporations_parent`.
-    #
-    def find_corporation_groups
-      if self.corporations_parent
-        self.corporations_parent.child_groups
-      else
-        []
-      end
     end
 
     # Find corporation groups of a certain user.
@@ -129,6 +119,7 @@ module GroupMixins::GlobalSpecialGroups
     #      |                                 |--- ...      <
     #      |----- other_group_1
     #      |----- other_group_2
+    #
     def find_corporations_branch_groups
       if Group.corporations_parent
         return [ Group.corporations_parent ] + Group.corporations_parent.descendant_groups
@@ -161,7 +152,5 @@ module GroupMixins::GlobalSpecialGroups
     end
 
   end
-
-
 
 end
