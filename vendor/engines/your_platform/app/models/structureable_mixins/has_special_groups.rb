@@ -38,7 +38,7 @@
 # 
 # (The user accessors are created as well if the special_group's name ends with '_parent'.)
 # 
-module StructureableMixins::SpecialGroups
+module StructureableMixins::HasSpecialGroups
 
   extend ActiveSupport::Concern
 

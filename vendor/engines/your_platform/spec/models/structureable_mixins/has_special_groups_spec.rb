@@ -6,7 +6,7 @@ unless ActiveRecord::Migration.table_exists? :my_structureables
   end
 end
 
-describe StructureableMixins::SpecialGroups do
+describe StructureableMixins::HasSpecialGroups do
 
   before do
     class MyStructureable < ActiveRecord::Base
@@ -179,7 +179,9 @@ describe StructureableMixins::SpecialGroups do
         @my_structureable = MyStructureable.new
         @my_structureable.create_special_group(:my_special_group)
       end
-      pending "it is not clear how this should behvave, yet."
+      specify "..." do
+        pending "it is not clear how this should behvave, yet, since we had no use case for that so far."
+      end
     end
   end
 
