@@ -271,7 +271,9 @@ describe GroupMixins::SpecialGroups do
       end
       describe "if the group does not have a guests_parent group" do
         subject { @other_group.find_guest_users }
-        it { should == nil }
+        it "should still return an empty array" do
+          subject.should == []
+        end
       end
     end
 

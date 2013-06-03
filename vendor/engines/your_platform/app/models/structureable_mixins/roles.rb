@@ -15,7 +15,41 @@ module StructureableMixins::Roles
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
 
 #    include StructureableMixins::HasSpecialGroup
+
+
+  # Officers
+  # ==========================================================================================
+
 #    has_special_group :officers_parent
+
+        
+
+  def find_officers_parent_group
+    find_special_group(:officers_parent)
+  end
+  
+  def create_officers_parent_group
+    create_special_group(:officers_parent)
+  end
+  
+  def find_or_create_officers_parent_group
+    find_or_create_special_group(:officers_parent)
+  end
+  
+  def officers_parent
+    find_or_create_officers_parent_group
+  end
+  
+  def officers_parent!
+    find_officers_parent_group || raise('special group :officers_parent does not exist.')
+  end
+  
+  def officers
+    officers_parent.descendant_users
+  end
+  
+
+
 #
 #    # Admins
 #    # ==========================================================================================
@@ -52,7 +86,7 @@ module StructureableMixins::Roles
     end
 
     def admins
-      admins_parent.child_users
+      admins_parent.descendant_users
     end
 
 #
@@ -85,7 +119,7 @@ module StructureableMixins::Roles
     end
 
     def main_admins
-      main_admins_parent.child_users
+      main_admins_parent.descendant_users
     end
 
 

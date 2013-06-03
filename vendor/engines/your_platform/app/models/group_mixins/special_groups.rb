@@ -178,7 +178,7 @@ module GroupMixins::SpecialGroups
     end
 
     def guests
-      guests_parent.child_users
+      guests_parent.descendant_users
     end
 
 

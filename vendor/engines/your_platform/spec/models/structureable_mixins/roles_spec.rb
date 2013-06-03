@@ -18,6 +18,10 @@ describe StructureableMixins::Roles do
     @my_structureable = MyStructureable.create( name: "My Structureable" )
   end
 
+
+  # Admins
+  # ==========================================================================================
+
   describe "#admins_parent" do
     subject { @my_structureable.admins_parent }
     it { should == @my_structureable.find_admins_parent_group }
@@ -160,7 +164,9 @@ describe StructureableMixins::Roles do
       end
     end
     context "for the main_admins_parent_group missing" do
-      it { should == nil }
+      it "should still return an empty array" do
+        subject.should == []
+      end
     end
   end
 
@@ -176,10 +182,72 @@ describe StructureableMixins::Roles do
       end
     end
     context "for the admin group not existing" do
-      it "should create the special group and add the user to the main admins of the structureable object" do
-        @my_structureable.main_admins_parent.should == nil
+      it "should create the admin group and add the user to the main admins of the structureable object" do
+        @my_structureable.main_admins.should == []
         subject
         @my_structureable.main_admins.should include @admin_user
+      end
+    end
+  end
+
+
+  # Structures
+  # ==========================================================================================
+  #
+  #  my_structureable
+  #         |----- officers_parent
+  #                      |---------- admins_parent
+  #                                     |------------ main_admins_parent
+  #
+  # Every admin is also an officer.
+  # Every main_admin is also an admin and also an officer.
+  #
+  describe "structures: " do
+    before { @user = create(:user) }
+    specify "each admin should also be an officer" do
+      @my_structureable.admins << @user
+      @user.should be_in @my_structureable.admins
+      @user.should be_in @my_structureable.officers
+    end
+    specify "each main_admin should also be an admin and also be an officer" do
+      @my_structureable.main_admins << @user
+      @user.should be_in @my_structureable.main_admins
+      @user.should be_in @my_structureable.admins
+      @user.should be_in @my_structureable.officers
+    end
+  end
+  
+
+
+  # Complex Structures
+  # ------------------------------------------------------------------------------------------
+  #
+  #    group1
+  #      |----- :officers_parent 
+  #      |         |--------------- :admins_parent
+  #      |                               |---------- :main_admins_parent
+  #      |----- group2
+  #                |---- :officers_parent
+  #                          |------------ :admins_parent
+  #                                           |------------- :main_admins_parent
+  # 
+  describe "complex structures: " do
+    before do
+      @group1 = create(:group)
+      @group2 = create(:group); @group2.parent_groups << @group1
+      @user = create(:user)
+    end
+    specify "an admin of group2 should not be considered an admin of group1" do
+      @group1.admins.should == []
+      @group2.admins << @user
+      @group2.admins.should include @user
+      @group1.admins.should == []
+    end
+    describe "for the sub group's admins_parent beging created first" do
+      before { @sub_group_admins_parent_group = @group2.create_admins_parent_group }
+      specify "the parent group's admins_parent should not refer to this sub group's admins_parent" do
+        @group1.find_admins_parent_group.should_not == @sub_group_admins_parent_group
+        @group1.find_admins_parent_group.should == nil
       end
     end
   end

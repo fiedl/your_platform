@@ -30,7 +30,7 @@ FactoryGirl.define do
       create_account true
       
       after :create do |admin|
-        Group.find_everyone_group.admins! << admin
+        Group.find_everyone_group.admins << admin
       end
     end
 
