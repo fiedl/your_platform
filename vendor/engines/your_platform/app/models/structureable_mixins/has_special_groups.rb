@@ -69,20 +69,22 @@ module StructureableMixins::HasSpecialGroups
   module ClassMethods
 
     def find_special_group( group_flag, options = {} )
-      object_to_search = options[:parent_element].try(:child_groups) || Group
-      p "------------------------------------------------------------------------------------------"
-      p object_to_search
-      object_to_search.find_by_flag( group_flag.to_sym )
+      object_to_search = options[:parent_element].try(:child_groups) 
+      object_to_search ||= Group unless options[:local]
+      object_to_search.find_by_flag( group_flag.to_sym ) if object_to_search && object_to_search != [] 
     end
 
     def create_special_group( group_flag, options = {} )
       if find_special_group( group_flag, options )
         raise "special group :#{group_flag} already exists."
       end
-      object_to_create = options[:parent_element].try(:child_groups) || Group
+      object_to_create = options[:parent_element].try(:child_groups) 
+      object_to_create ||= Group unless options[:local]
+
       new_special_group = object_to_create.create
       new_special_group.add_flag( group_flag.to_sym )
       new_special_group.update_attribute( :name, group_flag.to_s.gsub(/_parent$/, "" ) )
+
       return new_special_group
     end
 
@@ -105,15 +107,15 @@ module StructureableMixins::HasSpecialGroups
   #
 
   def find_special_group( group_flag, options = {} )
-    self.class.find_special_group( group_flag, { parent_element: self }.merge(options) )
+    self.class.find_special_group( group_flag, { parent_element: self, local: true }.merge(options) )
   end
 
   def create_special_group( group_flag, options = {} )
-    self.class.create_special_group( group_flag, { parent_element: self }.merge(options) )
+    self.class.create_special_group( group_flag, { parent_element: self, local: true }.merge(options) )
   end
 
   def find_or_create_special_group( group_flag, options = {} )
-    self.class.find_or_create_special_group( group_flag, { parent_element: self }.merge(options) ) 
+    self.class.find_or_create_special_group( group_flag, { parent_element: self, local: true }.merge(options) ) 
   end
 
 end

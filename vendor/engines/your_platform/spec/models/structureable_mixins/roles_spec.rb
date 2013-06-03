@@ -252,13 +252,13 @@ describe StructureableMixins::Roles do
         @group1.find_officers_parent_group.should == nil
       end
     end
-    describe "for the sub group's admins_parent beging created first", focus: true do
+    describe "for the sub group's admins_parent beging created first" do
       before do
         @sub_group_admins_parent_group = @group2.create_admins_parent_group
         @sub_group_admins_parent_group.update_attributes( name: "group2.admins_parent" )
       end
-      specify "the parent group's admins_parent should not refer to this sub group's admins_parent" do
-        # @group1.find_admins_parent_group.should == @sub_group_admins_parent_group
+      specify "the parent group's admins_parent should not refer to the sub group's admins_parent (Bug Fix!)" do
+        @group2.find_admins_parent_group.should == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should_not == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should == nil
       end
