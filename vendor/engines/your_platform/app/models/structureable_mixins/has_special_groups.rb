@@ -7,37 +7,38 @@
 #
 #     class Page
 #       is_structureable ...
-#       has_special_group :officers_parent
+#       ...
 #     end
 #
-# will give you these instance methods:
+# one would want to access the `officers_parent` group, which contains all officers of the 
+# structureable object. 
 #
 #     some_page.find_officers_parent_group
 #     some_page.create_officers_parent_group
 #     some_page.find_or_create_officers_parent_group
 #     some_page.officers_parent
 #     some_page.officers_parent!
-#     some_page.officers # => Array of descendant_users of the officers_parent child_group
+#     some_page.officers
 #     some_page.officers << some_users
-#     some_page.officers! << some_users  # creates the officers_parent_group on the way if absent
 #
-# This will also work global, i.e. to produce class methods instead of instance methods.
-# 
+# Or, globally, one would use this mechanism to define, let's say, global special groups
+# like the group 'everyone', which contains each and every user.
+#
 #     class Group
 #       is_structureable ...
-#       has_special_group :everyone, global: true
+#       ...
 #     end
-#
-# This will give you these class methods:
 #
 #     Group.find_everyone_group
 #     Group.create_everyone_group
 #     Group.find_or_create_everyone_group
 #     Group.everyone
 #     Group.everyone!
-# 
-# (The user accessors are created as well if the special_group's name ends with '_parent'.)
-# 
+#
+# The `officers_parent` special group is actually defined in `StructureableMixins::Roles`,
+# the `everyone` group in `GroupMixins::GlobalSpecialGroups`, whereas the helper methods that
+# are used by those definitions are defined here in this mixin below.
+#
 module StructureableMixins::HasSpecialGroups
 
   extend ActiveSupport::Concern
@@ -45,58 +46,26 @@ module StructureableMixins::HasSpecialGroups
   included do
   end
 
-  module ClassMethods
-
-#    # This method creates the accessor methods corresponding to the given group flag.
-#    # See, description of StructureableMixins::HasSpecialGroup.
-#    #
-#    def has_special_group( group_flag, options = {} )
-
-#      ...
-#
-#      if child_of
-#        self.class_eval <<-EOL
-#      
-#        def #{self_or_not}find_or_create_#{group_flag}_group_parent
-#          find_or_create_#{child_of}_group
-#        end
-#
-#        EOL
-#      else
-#        self.class_eval <<-EOL
-#      
-#        def #{self_or_not}find_or_create_#{group_flag}_group_parent
-#          self
-#        end
-#
-#        EOL
-#      end
-#
-
-  end
-
-  # Local Special Groups
-  # i.e. descendants of structureables, e.g. officers groups: `group_xy.officers_parent`
-  # ==========================================================================================
-
-  def find_special_group( group_flag, options = {} )
-    self.class.find_special_group( group_flag, { parent_element: self }.merge(options) )
-  end
-
-  def create_special_group( group_flag, options = {} )
-    self.class.create_special_group( group_flag, { parent_element: self }.merge(options) )
-  end
-
-  def find_or_create_special_group( group_flag, options = {} )
-    self.class.find_or_create_special_group( group_flag, { parent_element: self }.merge(options) ) 
-  end
-
-
-
   # Global Special Groups
-  # i.e. independent, e.g. the everyone group: `Group.everyone`
+  # e.g. the everyone group: `Group.everyone`
   # ==========================================================================================
-
+  #
+  # These class methods may be called on each structureable model.
+  # For example, one may call `Group.find_or_create_special_group(:everyone)`.
+  # This is, for example, used to define the `Group.everyone` accessor.
+  #
+  #     class Group
+  #       def self.everyone
+  #         self.find_or_create_special_group(:everyone)
+  #       end
+  #     end
+  # 
+  # The `options` hash allows to specify a `parent element`, which is a structureable element
+  # that is expected to be the parent element of the special group. Example:
+  # 
+  #     find_or_create_special_group( :corporations, parent_element: 
+  #       find_or_create_special_group(:everyone) )
+  #
   module ClassMethods
 
     def find_special_group( group_flag, options = {} )
@@ -119,6 +88,30 @@ module StructureableMixins::HasSpecialGroups
       find_special_group(group_flag, options) || create_special_group(group_flag, options)
     end
 
+  end
+
+
+  # Local Special Groups
+  # i.e. descendants of structureables, e.g. officers groups: `group_xy.officers_parent`
+  # ==========================================================================================
+  # 
+  # These instance methods may be called on each structureable model instance.
+  # For example, one may call `my_group.find_or_create_special_group(:officers_parent)`.
+  #
+  # These methods use the same mechanism as for the global special groups above
+  # by specifying `self` (i.e. the structureable instance) as the `parent_element`.
+  #
+
+  def find_special_group( group_flag, options = {} )
+    self.class.find_special_group( group_flag, { parent_element: self }.merge(options) )
+  end
+
+  def create_special_group( group_flag, options = {} )
+    self.class.create_special_group( group_flag, { parent_element: self }.merge(options) )
+  end
+
+  def find_or_create_special_group( group_flag, options = {} )
+    self.class.find_or_create_special_group( group_flag, { parent_element: self }.merge(options) ) 
   end
 
 end

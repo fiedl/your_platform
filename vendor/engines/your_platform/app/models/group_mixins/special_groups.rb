@@ -87,43 +87,6 @@ module GroupMixins::SpecialGroups
   end
 
 
-  # Officers Parent
-  # ==========================================================================================
-  #
-  # Each group may have officers, e.g. the president of the organization.
-  # Officers are collected in a sub-group with the flag :officers_parent. This
-  # officers_parent-group may also have sub-groups. But, of course, the officers_parent
-  # group must not have another officers_parent sub-group.
-  #
-
-  def find_officers_parent_group
-    find_special_group(:officers_parent)
-  end
-
-  def create_officers_parent_group
-    create_special_group(:officers_parent)
-  end
-
-  def find_or_create_officers_parent_group
-    find_or_create_special_group(:officers_parent)
-  end
-
-  def officers_parent
-    find_or_create_officers_parent_group
-  end
-
-  def officers_parent!
-    find_officers_parent_group || raise('special group :officers_parent does not exist.')
-  end
-
-  # This method returns all officer users, as well all of this group as of its sub-groups.
-  #
-  def officers
-    find_officers_parent_groups.collect do |officers_group|
-      officers_group.descendant_users
-    end.flatten.uniq
-  end
-
 
   # Guests Parent
   # ==========================================================================================
@@ -238,60 +201,6 @@ module GroupMixins::SpecialGroups
     end
 
   end
-
-
-  # Officers Parent
-  # ==========================================================================================
-
-  def find_officers_parent_groups
-    officers_parent_groups = ( [self] + self.descendant_groups ).collect do |group|
-      group.find_special_group(:officers_parent)
-    end
-  end
-
-  # This method lists all officer groups, as well in this group as well all of the sub-groups.
-  # The method name is not to be confused with `find_officers_parent_group`,
-  # which is provided by `has_special_group :officers_parent`.
-  #
-  def find_officers_groups
-    officers_parent_groups = self.find_officers_parent_groups
-    #officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
-
-    officer_groups = officers_parent_groups.collect{ |officers_parent| officers_parent.child_groups }.flatten
-    #officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
-    return officer_groups # if officers.count > 0
-  end
-
-  # Officers somehow administrate structureable objects, e.g. groups or pages.
-  # They may be admins, main_admins, editors or another kind of officer.
-  #
-  # This method returns the object that is administrated by the officers that are in this
-  # group (self) if this is an officer group.
-  #
-  #     some_group
-  #         |------- another_group   <---------------------------- this group is returned
-  #                        |-------- officers
-  #                                      |---- admins
-  #                                               |--- main_admins
-  #
-  #     main_admins.administrated_object == another_group
-  #     admins.administrated_object == another_group
-  #     officers.administrated_object == another_group
-  #     another_group.administrated_object == nil
-  #     some_group.administrated_object == nil
-  #
-  def administrated_object
-    if self.ancestor_groups.find_all_by_flag( :officers_parent ).count == 0 and
-        not self.has_flag? :officers_parent
-      return nil
-    end
-    object = self
-    until object.has_flag? :officers_parent
-      object = object.parents.first
-    end
-    object = object.parents.first
-  end
-
 
   # Guests Parent
   # ==========================================================================================
