@@ -25,8 +25,8 @@ class Group < ActiveRecord::Base
 
   include GroupMixins::Everyone  
   include GroupMixins::Corporations
+  include GroupMixins::Roles
   include GroupMixins::Guests
-  include GroupMixins::MethodsForSpecialGroups
 
   include GroupMixins::Import
 

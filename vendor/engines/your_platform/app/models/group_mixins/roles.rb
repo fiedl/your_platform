@@ -1,9 +1,7 @@
 #
-# This mixin adds methods to groups which are so called special groups,
-# for example the `admins_parent` group, which contains all admin
-# users of structureable objects.
+# This mixin adds methods to special groups that are related to the role model.
 #
-module GroupMixins::MethodsForSpecialGroups
+module GroupMixins::Roles
 
   extend ActiveSupport::Concern
 
