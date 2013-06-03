@@ -1,5 +1,12 @@
 de:
   everyone: Jeder
   officers_parent: Amtsträger
+  officers: Amtsträger
   corporations_parent: Korporationen
+  corporations: Korporationen
   guests_parent: Gäste
+  guests: Gäste
+  admins_parent: Administratoren
+  admins: Administratoren
+  main_admins_parent: Haupt-Administratoren
+  main_admins: Haupt-Administratoren

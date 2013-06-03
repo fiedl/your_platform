@@ -23,7 +23,11 @@ class Group < ActiveRecord::Base
 
   has_many :posts
 
-  include GroupMixins::SpecialGroups
+  include GroupMixins::Everyone  
+  include GroupMixins::Corporations
+  include GroupMixins::Roles
+  include GroupMixins::Guests
+
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
@@ -38,6 +42,14 @@ class Group < ActiveRecord::Base
   # 
   def title
     self.name
+  end
+
+  # The name of the group.
+  # If there is a translation for that group name, e.g. for a generic group name like
+  # 'admins', use the translation.
+  #
+  def name
+    I18n.t( super.to_sym, default: super ) if super
   end
 
 

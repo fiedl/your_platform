@@ -61,7 +61,8 @@ module Structureable
 
     # Structureable objects may have special_groups as descendants, e.g. the admins_parent group.
     # This mixin loads the necessary methods to interact with them.
-    include StructureableMixins::HasSpecialGroup
+    #
+    include StructureableMixins::HasSpecialGroups
 
     include StructureableInstanceMethods
   end
