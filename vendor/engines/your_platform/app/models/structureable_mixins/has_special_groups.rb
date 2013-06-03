@@ -70,6 +70,8 @@ module StructureableMixins::HasSpecialGroups
 
     def find_special_group( group_flag, options = {} )
       object_to_search = options[:parent_element].try(:child_groups) || Group
+      p "------------------------------------------------------------------------------------------"
+      p object_to_search
       object_to_search.find_by_flag( group_flag.to_sym )
     end
 

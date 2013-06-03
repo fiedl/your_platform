@@ -29,7 +29,11 @@ module StructureableMixins::Roles
   #
 
   def find_officers_parent_group
-    find_special_group(:officers_parent)
+    p "find officers parent"
+    g = find_special_group(:officers_parent)
+    p g
+    p g.flags if g
+    return g
   end
 
   def create_officers_parent_group
@@ -92,7 +96,12 @@ module StructureableMixins::Roles
   #
 
   def find_admins_parent_group
-    find_special_group(:admins_parent, parent_element: find_officers_parent_group )
+    op = find_officers_parent_group
+    return nil if not op             # HERE HAS BEEN THE BUG! If no officers_parent has been found, 
+                                     # the mechanism has been looking for the admins_parent, globally!
+    p "find admins parent"
+    find_special_group(:admins_parent, parent_element: op )
+    #find_special_group(:admins_parent, parent_element: find_officers_parent_group )
   end
 
   def create_admins_parent_group

@@ -244,9 +244,21 @@ describe StructureableMixins::Roles do
       @group2.admins.should include @user
       @group1.admins.should == []
     end
-    describe "for the sub group's admins_parent beging created first" do
-      before { @sub_group_admins_parent_group = @group2.create_admins_parent_group }
+    describe "for the sub group's officers_parent being created first" do
+      before { @sub_group_officers_parent = @group2.create_officers_parent_group }
+      specify "the parent group's officers_parent should not refer to the sub group's officers_parent" do
+        @group2.find_officers_parent_group.should == @sub_group_officers_parent
+        @group1.find_officers_parent_group.should_not == @sub_group_officers_parent
+        @group1.find_officers_parent_group.should == nil
+      end
+    end
+    describe "for the sub group's admins_parent beging created first", focus: true do
+      before do
+        @sub_group_admins_parent_group = @group2.create_admins_parent_group
+        @sub_group_admins_parent_group.update_attributes( name: "group2.admins_parent" )
+      end
       specify "the parent group's admins_parent should not refer to this sub group's admins_parent" do
+        # @group1.find_admins_parent_group.should == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should_not == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should == nil
       end
