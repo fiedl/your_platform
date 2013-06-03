@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GroupMixins::SpecialGroups do 
+describe GroupMixins::Erstbandphilister do
 
   describe "erstbandphilister_parent_group" do
 

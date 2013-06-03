@@ -1,21 +1,14 @@
-
-# First load the correspondant module from the your_platform engine.
-require_dependency YourPlatform::Engine.root.join( 'app/models/group_mixins/special_groups' ).to_s
-
-# This module extends the Group model by methods for the interaction with so called 'special groups'.
-# Those special groups are, for example, the group 'everyone' or the 'officers' groups, which are
-# subgroups of each group which can have officers. 
-# 
-# The module is included in the Group model by `include GroupMixins::Special Groups`.
-# The methods of the module can be accessed just like any other Group model methods:
-#    Group.class_method()
-#    g = Group.new()
-#    g.instance_method()
 #
-module GroupMixins::SpecialGroups
+# This module extends the Group model by methods for the interaction erstbandphilister groups,
+# which are so-called special groups.
+#
+module GroupMixins::Erstbandphilister
 
-  # Erstbandphilister
-  # ==========================================================================================
+  extend ActiveSupport::Concern
+
+  included do
+  end
+
 
   # Finder and Creator Methods
   # ------------------------------------------------------------------------------------------
