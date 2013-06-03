@@ -202,6 +202,7 @@ describe StructureableMixins::Roles do
   # Every admin is also an officer.
   # Every main_admin is also an admin and also an officer.
   #
+
   describe "structures: " do
     before { @user = create(:user) }
     specify "each admin should also be an officer" do

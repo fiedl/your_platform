@@ -100,7 +100,7 @@ module StructureableMixins::SpecialGroups
   module ClassMethods
 
     def find_special_group( group_flag, options = {} )
-      object_to_search = options[:parent_element].try(:descendant_groups) || Group
+      object_to_search = options[:parent_element].try(:child_groups) || Group
       object_to_search.find_by_flag( group_flag.to_sym )
     end
 
@@ -111,7 +111,7 @@ module StructureableMixins::SpecialGroups
       object_to_create = options[:parent_element].try(:child_groups) || Group
       new_special_group = object_to_create.create
       new_special_group.add_flag( group_flag.to_sym )
-      new_special_group.update_attribute( :name, group_flag.to_s.gsub("_parent", "") )
+      new_special_group.update_attribute( :name, group_flag.to_s.gsub(/_parent$/, "" ) )
       return new_special_group
     end
 

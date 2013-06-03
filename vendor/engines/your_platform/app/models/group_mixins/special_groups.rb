@@ -1,8 +1,8 @@
 
 # This module extends the Group model by methods for the interaction with so called 'special groups'.
 # Those special groups are, for example, the group 'everyone' or the 'officers' groups, which are
-# subgroups of each group which can have officers. 
-# 
+# subgroups of each group which can have officers.
+#
 # The module is included in the Group model by `include GroupMixins::Special Groups`.
 # The methods of the module can be accessed just like any other Group model methods:
 #    Group.class_method()
@@ -15,176 +15,149 @@ module GroupMixins::SpecialGroups
 
   included do
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
+  end
 
 
-    # Everyone
-    # ==========================================================================================
-    #
-    # The 'root group', which is the highest in the group hierarchy. 
-    # Everyone is member of this group, even not registered users.
-    # 
-    # This creates the methods
-    #    Group.everyone
-    #    Group.find_everyone_group
-    #    Group.everyone!
-    #    Group.find_or_create_everyone_group
-    #    Group.create_everyone_group
-    #
-    #has_special_group :everyone, global: true     # or: `Group.has_special_group(...)` outside of `included`.
+  # Everyone
+  # ==========================================================================================
+  #
+  # The 'root group', which is the highest in the group hierarchy.
+  # Everyone is member of this group, even not registered users.
+  #
 
-    def self.find_everyone_group
+  module ClassMethods
+    def find_everyone_group
       find_special_group(:everyone)
     end
     
-    def self.create_everyone_group
+    def create_everyone_group
       create_special_group(:everyone)
     end
-    
-    def self.find_or_create_everyone_group
+
+    def find_or_create_everyone_group
       find_or_create_special_group(:everyone)
     end
-
-    def self.everyone
+    
+    def everyone
       find_or_create_everyone_group
     end
-
-    def self.everyone!
+    
+    def everyone!
       find_everyone_group || raise('special group :everyone does not exist.')
     end
+  end
 
 
-    # Corporations Parent
-    # ==========================================================================================
-    #
-    # Parent group for all corporation groups.
-    # The group structure looks something like this:
-    #
-    #   everyone
-    #      |----- corporations_parent                     <--- this is the group returned by this method
-    #                       |---------- corporation_a
-    #                       |                |--- ...
-    #                       |---------- corporation_b
-    #                       |                |--- ...
-    #                       |---------- corporation_c
-    #                                        |--- ...
-    #
-    #has_special_group :corporations_parent, global: true 
+  # Corporations Parent
+  # ==========================================================================================
+  #
+  # Parent group for all corporation groups.
+  # The group structure looks something like this:
+  #
+  #   everyone
+  #      |----- corporations_parent                     <--- this is the group returned by this method
+  #                       |---------- corporation_a
+  #                       |                |--- ...
+  #                       |---------- corporation_b
+  #                       |                |--- ...
+  #                       |---------- corporation_c
+  #                                        |--- ...
+  #
 
-    def self.find_corporations_parent_group
+  module ClassMethods
+    def find_corporations_parent_group
       find_special_group(:corporations_parent)
     end
     
-    def self.create_corporations_parent_group
+    def create_corporations_parent_group
       create_special_group(:corporations_parent)
     end
     
-    def self.find_or_create_corporations_parent_group
+    def find_or_create_corporations_parent_group
       find_or_create_special_group(:corporations_parent)
     end
-
-    def self.corporations_parent
+    
+    def corporations_parent
       find_or_create_corporations_parent_group
     end
-
-    def self.corporations_parent!
+    
+    def corporations_parent!
       find_corporations_parent_group || raise('special group :corporations_parent does not exist.')
     end
-
-
-
-    # Officers Parent
-    # ==========================================================================================
-    #
-    # Each group may have officers, e.g. the president of the organization.
-    # Officers are collected in a sub-group with the flag :officers_parent. This 
-    # officers_parent-group may also have sub-groups. But, of course, the officers_parent 
-    # group must not have another officers_parent sub-group.
-    # 
-    # This provides the following methods:
-    #     officers_parent
-    #     officers_parent!
-    #     officers
-    #     find_officers_parent_group
-    #     create_officers_parent_group
-    #     find_or_create_officers_parent_group
-    #
-    #has_special_group :officers_parent
-
-    def find_officers_parent_group
-      find_special_group(:officers_parent)
-    end
-    
-    def create_officers_parent_group
-      create_special_group(:officers_parent)
-    end
-    
-    def find_or_create_officers_parent_group
-      find_or_create_special_group(:officers_parent)
-    end
-
-    def officers_parent
-      find_or_create_officers_parent_group
-    end
-
-    def officers_parent!
-      find_officers_parent_group || raise('special group :officers_parent does not exist.')
-    end
-
-
-    # This method returns all officer users, as well all of this group as of its sub-groups.
-    # Therefore, this method has to be overridden, since the one provided by
-    # `has_special_group :officers_parent` would return only the officers of this group.
-    #
-    def officers
-      find_officers_groups.collect do |officers_group|
-        officers_group.descendant_users
-      end.flatten.uniq
-    end
-
-
-    # Guests Parent
-    # ==========================================================================================
-    #
-    # As well as officers, each group may have guests.
-    #
-    # This provides the following methods:
-    # guests_parent
-    # guests_parent!
-    # guests
-    # find_guests_parent_group
-    # create_guests_parent_group
-    # find_or_create_guests_parent_group
-    #
-    #has_special_group :guests_parent
-
-    def find_guests_parent_group
-      find_special_group(:guests_parent)
-    end
-    
-    def create_guests_parent_group
-      create_special_group(:guests_parent)
-    end
-    
-    def find_or_create_guests_parent_group
-      find_or_create_special_group(:guests_parent)
-    end
-
-    def guests_parent
-      find_or_create_guests_parent_group
-    end
-
-    def guests_parent!
-      find_guests_parent_group || raise('special group :guests_parent does not exist.')
-    end
-
-    def guests
-      guests_parent.descendant_users
-    end
-
-
   end
 
-  
+
+  # Officers Parent
+  # ==========================================================================================
+  #
+  # Each group may have officers, e.g. the president of the organization.
+  # Officers are collected in a sub-group with the flag :officers_parent. This
+  # officers_parent-group may also have sub-groups. But, of course, the officers_parent
+  # group must not have another officers_parent sub-group.
+  #
+
+  def find_officers_parent_group
+    find_special_group(:officers_parent)
+  end
+
+  def create_officers_parent_group
+    create_special_group(:officers_parent)
+  end
+
+  def find_or_create_officers_parent_group
+    find_or_create_special_group(:officers_parent)
+  end
+
+  def officers_parent
+    find_or_create_officers_parent_group
+  end
+
+  def officers_parent!
+    find_officers_parent_group || raise('special group :officers_parent does not exist.')
+  end
+
+  # This method returns all officer users, as well all of this group as of its sub-groups.
+  #
+  def officers
+    find_officers_parent_groups.collect do |officers_group|
+      officers_group.descendant_users
+    end.flatten.uniq
+  end
+
+
+  # Guests Parent
+  # ==========================================================================================
+  #
+  # As well as officers, each group may have guests.
+  #
+
+  def find_guests_parent_group
+    find_special_group(:guests_parent)
+  end
+
+  def create_guests_parent_group
+    create_special_group(:guests_parent)
+  end
+
+  def find_or_create_guests_parent_group
+    find_or_create_special_group(:guests_parent)
+  end
+
+  def guests_parent
+    find_or_create_guests_parent_group
+  end
+
+  def guests_parent!
+    find_guests_parent_group || raise('special group :guests_parent does not exist.')
+  end
+
+  def guests
+    guests_parent.descendant_users
+  end
+
+
+
+
   # Corporations
   # ==========================================================================================
 
@@ -224,12 +197,12 @@ module GroupMixins::SpecialGroups
 
     # Find all groups of the corporations branch, i.e. the corporations_parent
     # and its descendant groups.
-    # 
+    #
     #   everyoneOAOA
     #      |----- corporations_parent                      <
     #      |                |---------- corporation_a      <  These groups are returned
     #      |                |                |--- ...      <  by this method.
-    #      |                |---------- corporation_b      <  
+    #      |                |---------- corporation_b      <
     #      |                                 |--- ...      <
     #      |----- other_group_1
     #      |----- other_group_2
@@ -270,19 +243,28 @@ module GroupMixins::SpecialGroups
   # Officers Parent
   # ==========================================================================================
 
+  def find_officers_parent_groups
+    officers_parent_groups = ( [self] + self.descendant_groups ).collect do |group|
+      group.find_special_group(:officers_parent)
+    end
+  end
+
   # This method lists all officer groups, as well in this group as well all of the sub-groups.
-  # The method name is not to be confused with `find_officers_parent_group`, 
+  # The method name is not to be confused with `find_officers_parent_group`,
   # which is provided by `has_special_group :officers_parent`.
   #
   def find_officers_groups
-    officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
-    officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
-    return officers # if officers.count > 0
+    officers_parent_groups = self.find_officers_parent_groups
+    #officers_parents = self.descendant_groups.find_all_by_flag( :officers_parent )
+
+    officer_groups = officers_parent_groups.collect{ |officers_parent| officers_parent.child_groups }.flatten
+    #officers = officers_parents.collect{ |officer_group| officer_group.child_groups }.flatten
+    return officer_groups # if officers.count > 0
   end
 
   # Officers somehow administrate structureable objects, e.g. groups or pages.
   # They may be admins, main_admins, editors or another kind of officer.
-  # 
+  #
   # This method returns the object that is administrated by the officers that are in this
   # group (self) if this is an officer group.
   #
@@ -309,8 +291,8 @@ module GroupMixins::SpecialGroups
     end
     object = object.parents.first
   end
-   
- 
+
+
   # Guests Parent
   # ==========================================================================================
 
