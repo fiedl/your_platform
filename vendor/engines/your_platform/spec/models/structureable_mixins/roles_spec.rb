@@ -252,5 +252,110 @@ describe StructureableMixins::Roles do
       end
     end
   end
+  
+  
+  # Officers
+  # ==========================================================================================
+
+  describe "officers_parent_group" do
+    before do
+      @container_group = create( :group ) 
+      @container_subgroup = create( :group ) # this is to test if subgroup's officers are listed as well
+      @container_subgroup.parent_groups << @container_group
+      @officers_parent = @container_group.create_officers_parent_group
+      @subgroup_officers_parent = @container_subgroup.create_officers_parent_group
+      @officer1 = create( :group ); @officer1.parent_groups << @officers_parent
+      @officer2 = create( :group ); @officer2.parent_groups << @subgroup_officers_parent
+      @officer1_user = create( :user ); @officer1.child_users << @officer1_user
+      @officer2_user = create( :user ); @officer2.child_users << @officer2_user
+      @container_group.reload
+      @container_subgroup.reload
+      @officers_parent.reload
+      @subgroup_officers_parent.reload
+    end
+
+    describe "#create_officers_parent_group" do
+      it "should create the officers_parent_group" do
+        @officers_parent.has_flag?( :officers_parent ).should be_true
+        @officers_parent.parent_groups.should include( @container_group )
+      end
+    end
+
+    describe "#find_officers_parent_group" do
+      subject { @container_group.find_officers_parent_group }
+      it "should find the officers_parent_group" do
+        subject.should == @officers_parent
+        subject.has_flag?( :officers_parent ).should be_true
+      end
+    end
+
+    describe "#find_officers_groups" do
+      subject { @container_group.find_officers_groups }
+      it "should find the officers of the container group" do
+        #subject.should include( @officers_parent.child_groups )
+        subject.should include( @officer1 )
+      end
+      it "should find the officers of the container group's subgroups as well" do
+        #subject.should include( @subgroup_officers_parent.child_groups )
+        subject.should include( @officer2 ) 
+      end
+    end
+
+    subject { @container_group }
+    its( :officers_parent ) { should == @officers_parent }
+    its( :officers_parent! ) { should == @officers_parent }
+    
+    describe "#officers" do
+      subject { @container_group.officers }
+      it "should list the users that are officers" do
+        subject.should include @officer1_user
+      end
+      it "should also list the officers of the sub-groups of this group" do
+        subject.should include @officer2_user
+      end
+    end
+
+  end
+
+  describe "#administrated_object" do
+    before do
+      @some_group = create( :group )
+      @sub_group = create( :group ); @sub_group.parent_groups << @some_group
+      @officers_parent = @sub_group.create_officers_parent_group
+      @admins_parent = @sub_group.create_admins_parent_group
+      @main_admins_parent = @sub_group.create_main_admins_parent_group
+    end
+    context "for an officers_parent_group" do
+      subject { @officers_parent.administrated_object }
+      it "should be the parent of the officers_parent" do
+        subject.should == @sub_group
+      end
+    end
+    context "for a child group of the officers_parent_group" do
+      subject { @main_admins_parent.administrated_object }
+      it "should be the parent of the officers_parent as well" do
+        subject.should == @sub_group
+      end
+    end
+    context "for the administrated object itself" do
+      subject { @sub_group.administrated_object }
+      it { should == nil }
+    end
+    context "for a parent of the aministrated object" do
+      subject { @some_group.administrated_object }
+      it { should == nil }
+    end
+    context "for the administrated object being something different than a group" do
+      before do
+        @some_page = create( :page )
+        @main_admins_parent = @some_page.create_main_admins_parent_group
+      end
+      subject { @main_admins_parent.administrated_object }
+      it "should work as well" do
+        subject.should == @some_page
+      end
+    end
+
+  end  
 
 end

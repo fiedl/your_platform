@@ -23,8 +23,9 @@ class Group < ActiveRecord::Base
 
   has_many :posts
 
-  include GroupMixins::HasSpecialGroups
-  include GroupMixins::GlobalSpecialGroups
+  include GroupMixins::Everyone  
+  include GroupMixins::Corporations
+  include GroupMixins::Guests
   include GroupMixins::MethodsForSpecialGroups
 
   include GroupMixins::Import

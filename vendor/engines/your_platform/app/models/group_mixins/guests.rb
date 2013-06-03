@@ -2,11 +2,11 @@
 # All groups have associated special groups, for example the `guests_parent` group, which
 # contains all guests of the group. 
 # 
-# This mixin provides the accessor methods for these special groups.
+# This mixin provides the accessor methods for the guests_parent special group.
 #
 # The mechanism used in the mixin is defined in `StructureableMixins::HasSpecialGroups`.
 #
-module GroupMixins::HasSpecialGroups
+module GroupMixins::Guests
 
   extend ActiveSupport::Concern
 
