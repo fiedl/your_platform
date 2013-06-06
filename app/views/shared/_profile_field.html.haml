@@ -9,6 +9,7 @@
       = best_in_place profile_field, :label, classes: 'label'
     - else
       = profile_field.label
+    = render partial: 'profile_fields/wingolfspost_flag_switch' if profile_field.type == "ProfileFieldTypes::Address"
     - if profile_field.children.count == 0
       - if can? :update, profile_field
         = best_in_place profile_field, :value,
@@ -21,3 +22,4 @@
       %ul
         - profile_field.children.each do |child_field|
           = render partial: 'shared/profile_field', object: child_field
+    /= render partial: 'shared/flags', locals: { flagable: profile_field }

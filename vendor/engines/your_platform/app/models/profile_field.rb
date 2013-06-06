@@ -40,6 +40,10 @@ class ProfileField < ActiveRecord::Base
   #
   acts_as_tree
 
+  # Profile fields may have flags, e.g. :preferred_address.
+  #
+  has_many_flags
+
   # Often, profile_fields are to be displayed in a certain manner on a HTML page.
   # This method returns the profile_field's value as HTML code in the way
   # the profile_field should be displayed.
