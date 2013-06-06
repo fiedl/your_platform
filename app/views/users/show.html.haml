@@ -1,0 +1,91 @@
+
+- unless @user
+  %h1= h @title
+  %div
+    %p= t :the_requested_user_is_not_listed_in_the_system
+    = link_to t(:create_new_user), controller: 'users', action: 'new', alias: @alias
+
+- if @user
+
+  / Name above the General Info Box
+  %h1
+    - if can? :update, @user
+      = best_in_place @user, :first_name
+      = best_in_place @user, :last_name
+      \ 
+      \#{h @user.aktivitaetszahl}
+    - else
+      = @user.title
+
+  / General Info Box
+  %div
+    %span#user_workflows.show_only_in_edit_mode
+    %ul
+      - for workflow in @user.workflows
+        %li= link_to_workflow workflow, user: @user
+    %table
+      %tr
+        %td{:width => "20%"}
+          %span.thumbnail
+            = user_avatar(@user, size: 128)
+        %td
+          %dl
+            %dt= t :name
+            %dd
+              - if can? :update, @user
+                = best_in_place @user, :first_name
+                = best_in_place @user, :last_name
+              - else
+                = @user.name
+            %dt= t :date_of_birth
+            %dd
+              - if can? :update, @user
+                = best_in_place @user, :date_of_birth, type: :date
+              - else
+                = localize @user.date_of_birth if @user.date_of_birth
+          = render partial: 'shared/profile_section_ul', locals: { section: :general, profileable: @user }
+
+  / Profile Sections
+  = profile_sections_for_profileable @user, @user.sections
+
+  / Corporate Vita
+  - if @user.corporations.count > 0
+    %h1.section.corporate_vita Wingolfitischer Lebenslauf
+    %div
+      = corporate_vita_for_user( @user )
+
+  / Groups
+  %h1= t( :groups_of ) + " " + h( @user.first_name ) 
+  %div
+    = groups_of_user_table @user
+
+  / Events
+  - if @user.upcoming_events.present?
+    %h1
+      Veranstaltungen von #{@user.first_name}
+    %div
+      = upcoming_events_list_for_user( @user )
+
+  / Relationships    
+  %h1.section.relationships= t(:relationships)
+  %div
+    = relationships_of_user_ul @user
+
+  / Communication 
+  %h1.section.communication= t(:communication)
+  %div
+    - if can? :manage, @user
+      Wingolfsblätter abonniert:
+      \#{best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]}
+
+    = render partial: 'shared/profile_section_ul', locals: { section: :communication, profileable: @user }
+
+  / Login Data
+  %h1.section.access Zugangsdaten
+  %div
+    - if @user.has_account?
+      = render @user.account
+    - else
+      %p= t :user_has_no_account
+      %span.show_only_in_edit_mode
+        = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post

@@ -54,6 +54,7 @@ class User
   def fill_in_template_profile_information
     self.profile_fields.create(label: :personal_title, type: "ProfileFieldTypes::General")
     self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
+    self.profile_fields.create(label: :klammerung, type: "ProfileFieldTypes::Klammerung")
 
     self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address")
     self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address")
@@ -68,8 +69,15 @@ class User
     self.profile_fields.create(label: :professional_category, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :occupational_area, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :employment_status, type: "ProfileFieldTypes::ProfessionalCategory")
+    self.profile_fields.create(label: :languages, type: "ProfileFieldTypes::Competence")
+    
 
     self.profile_fields.create(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
+
+    pf = self.profile_fields.create(label: :name_field_wingolfspost, type: "ProfileFieldTypes::NameSurrounding")
+      .becomes(ProfileFieldTypes::NameSurrounding)
+    pf.text_above_name = ""; pf.name_prefix = "Herrn"; name_postfix = ""; text_below_name = ""
+    pf.save
 
     self.wingolfsblaetter_abo = true
   end

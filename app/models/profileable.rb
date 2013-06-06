@@ -42,7 +42,7 @@ module Profileable
     def profile_field_type_by_section(section)
       case section
         when :general
-          "ProfileFieldTypes::General"
+          [ "ProfileFieldTypes::General", "ProfileFieldTypes::Klammerung" ]
         when :contact_information
           [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
             "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
@@ -58,6 +58,8 @@ module Profileable
           "ProfileFieldTypes::BankAccount"
         when :description
           "ProfileFieldTypes::Description"
+        when :communication
+          "ProfileFieldTypes::NameSurrounding"
         else
           []
       end
