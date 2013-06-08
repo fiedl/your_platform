@@ -99,6 +99,19 @@ class User < ActiveRecord::Base
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
 
+  
+  # Primary Postal Address
+  #
+  def postal_address_field
+    self.profile_fields.where(type: "ProfileFieldTypes::Address").select do |address_field|
+      address_field.postal_address? == true
+    end.first
+  end
+  def postal_address
+    self.postal_address_field.try(:value)
+  end
+  
+
   # Associated Objects
   # ==========================================================================================
 
@@ -443,6 +456,7 @@ class User < ActiveRecord::Base
       .collect { |ef| ef.profileable }
     return matching_users.to_a
   end
+
 
   # Debug Helpers
   # ==========================================================================================

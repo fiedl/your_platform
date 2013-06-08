@@ -121,6 +121,41 @@ describe User do
     end
   end
 
+  describe "postal address: " do
+    before do
+      @profile_field = ProfileFieldTypes::Address.create(label: "My Home", value: "Some Address")
+      @user.profile_fields << @profile_field
+    end
+    describe "#postal_address_field" do
+      subject { @user.postal_address_field }
+      describe "for no primary postal address being set" do
+        it "should return nil" do
+          subject.should == nil 
+        end
+      end
+      describe "for a primary postal address being set" do
+        before { @profile_field.postal_address = true }
+        it "should return the address field" do
+          subject.should == @profile_field
+        end
+      end
+    end
+    describe "#postal_address" do
+      subject { @user.postal_address }
+      describe "for no primary postal address being set" do
+        it "should return nil" do
+          subject.should == nil
+        end
+      end
+      describe "for a primary postal address being set" do
+        before { @profile_field.postal_address = true }
+        it "should return the address field's value" do
+          subject.should == "Some Address" 
+        end
+      end
+    end
+  end
+
   
   # Associated Objects
   # ==========================================================================================
