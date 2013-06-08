@@ -200,7 +200,7 @@ module ProfileFieldTypes
     end
 
     def find_or_create_geo_location
-      @geo_location ||= GeoLocation.find_or_create_by_address(value)
+      @geo_location ||= GeoLocation.find_or_create_by_address(value) if value
     end
 
     def display_html
@@ -225,7 +225,7 @@ module ProfileFieldTypes
     def plz ;           geo_information :plz           end
 
     def geo_information( key )
-      geo_location.send( key )
+      geo_location.send( key ) if self.value
     end
 
     def geocoded?

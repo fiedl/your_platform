@@ -20,9 +20,9 @@
   / General Info Box
   %div
     %span#user_workflows.show_only_in_edit_mode
-    %ul
-      - for workflow in @user.workflows
-        %li= link_to_workflow workflow, user: @user
+      %ul
+        - for workflow in @user.workflows
+          %li= link_to_workflow workflow, user: @user
     %table
       %tr
         %td{:width => "20%"}
