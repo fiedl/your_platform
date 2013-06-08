@@ -21,7 +21,7 @@
   <body class="<%= controller.controller_name %>">
 
     <% if user_account_signed_in? %>
-      <div id="backendBar">
+      <div id="logged-in-bar"><div id="backendBar">
         <div class="content">
           <ul class="backendBarItems">
             <li class="first backendBarItem">
@@ -61,7 +61,7 @@
         </div>
         <div class="clear"></div>
       </div>
-    </div>
+    </div></div>
   <% end %>
 
   <div id="headerBg">

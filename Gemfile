@@ -157,7 +157,7 @@ end
 
 
 # Edit-Mode, SF
-gem 'edit_mode', '>= 0.0.7'                                             # MIT License
+gem 'edit_mode', '>= 0.0.8'                                             # MIT License
 #gem 'edit_mode', path: '../edit_mode'
 
 # hide slim breadcrumb elements until user hovers the separator, SF
