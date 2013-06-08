@@ -188,6 +188,75 @@ describe ProfileFieldTypes::Address do
     
   end
 
+  describe "postal address: " do
+    before do
+      @user = create(:user)
+      @profile_field = @user.profile_fields.create(type: "ProfileFieldTypes::Address").becomes ProfileFieldTypes::Address
+      @another_profile_field = @user.profile_fields.create(type: "ProfileFieldTypes::Address").becomes ProfileFieldTypes::Address
+    end
+    describe "#postal_address" do
+      subject { @profile_field.postal_address }
+      describe "for the address field being the primary postal address" do
+        before { @profile_field.postal_address = true }
+        it { should == true }
+      end
+      describe "for the address field not being the primary postal address" do
+        before { @profile_field.postal_address = false }
+        it { should == false }
+      end
+    end
+    describe "#postal_address=" do
+      describe "true" do
+        subject { @profile_field.postal_address = true }
+        it "should mark the profile field as postal address" do
+          subject
+          @profile_field.postal_address?.should == true
+        end
+        describe "for another address having been the primary postal address" do
+          before { @another_profile_field.postal_address = true }
+          it "should unmark the other address fields" do
+            subject
+            @another_profile_field.reload.postal_address?.should == false
+          end
+        end
+      end
+      describe "false" do
+        subject { @profile_field.postal_address = false }
+        describe "for the profile field being marked as primary postal address" do
+          before { @profile_field.postal_address = true }
+          it "should mark the profile field as no postal address" do
+            subject
+            @profile_field.reload.postal_address?.should == false
+          end
+        end
+        it "should leave the other address fields alone" do
+          expect { subject }.not_to change { @another_profile_field.postal_address? }
+        end
+      end
+    end
+    describe "#postal_address?" do
+      subject { @profile_field.postal_address? }
+      it "should be the same as #postal_address" do
+        subject.should == @profile_field.postal_address
+        @profile_field.postal_address = true
+        @profile_field.reload.postal_address.should == true
+        @profile_field.postal_address?.should == true
+        @profile_field.postal_address = false
+        @profile_field.reload.postal_address.should == false
+        @profile_field.postal_address?.should == false
+      end
+    end
+    describe "#clear_postal_address" do
+      before { @another_profile_field.postal_address = true }
+      subject { @profile_field.clear_postal_address }
+      it "should remove all postal_address marks from this user's address fields" do
+        subject
+        @profile_field.reload.postal_address?.should == false
+        @another_profile_field.reload.postal_address?.should == false
+      end
+    end
+  end
+
 end
 
 
