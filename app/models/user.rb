@@ -71,7 +71,6 @@ class User
     self.profile_fields.create(label: :employment_status, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :languages, type: "ProfileFieldTypes::Competence")
     
-
     self.profile_fields.create(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
 
     pf = self.profile_fields.create(label: :name_field_wingolfspost, type: "ProfileFieldTypes::NameSurrounding")

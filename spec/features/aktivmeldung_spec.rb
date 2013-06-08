@@ -28,10 +28,14 @@ feature "Aktivmeldung" do
 
     page.should have_content "Bundesbruder Kanne"
     page.should have_content I18n.t(:date_of_birth)
+
     page.should have_content I18n.t(:personal_title)
+    page.should have_content I18n.t(:academic_degree)
     page.should have_content I18n.t(:cognomen)
+    page.should have_content I18n.t(:klammerung)
 
     page.should have_content I18n.t(:email)
+
     page.should have_content I18n.t(:home_address)
     page.should have_content I18n.t(:work_or_study_address)
     page.should have_content I18n.t(:phone)
@@ -39,15 +43,16 @@ feature "Aktivmeldung" do
     page.should have_content I18n.t(:fax)
     page.should have_content I18n.t(:homepage)
 
-    page.should have_content I18n.t(:academic_degree)
     page.should have_content I18n.t(:study)
 
     page.should have_content I18n.t(:professional_category)
     page.should have_content I18n.t(:occupational_area)
     page.should have_content I18n.t(:employment_status)
+    page.should have_content I18n.t(:languages)
 
     page.should have_content I18n.t(:bank_account)
 
+    page.should have_content I18n.t(:name_field_wingolfspost)
     page.should have_content "Wingolfsblätter abonniert: Ja"
 
   end

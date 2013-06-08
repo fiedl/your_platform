@@ -51,7 +51,7 @@ module Profileable
         when :study_information
           [ "ProfileFieldTypes::Study" ]
         when :career_information
-          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory" ]
+          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Competence" ]
         when :organizations
           "ProfileFieldTypes::Organization"
         when :bank_account_information
