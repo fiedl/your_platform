@@ -187,6 +187,8 @@ module ProfileFieldTypes
   class Address < ProfileField
     def self.model_name; ProfileField.model_name; end
 
+    attr_accessible :postal_address
+
     # Google Maps integration
     # see: http://rubydoc.info/gems/gmaps4rails/
     acts_as_gmappable
@@ -235,6 +237,30 @@ module ProfileFieldTypes
       return @geo_location.geocode if @geo_location
       return @geo_location.geocode if find_geo_location
       return find_or_create_geo_location
+    end
+
+    # Allow to mark one address as primary postal address.
+    # 
+    def postal_address
+      self.has_flag? :postal_address
+    end 
+    def postal_address=(new_postal_address) 
+      if new_postal_address != self.postal_address
+        if new_postal_address
+          self.clear_postal_address
+          self.add_flag :postal_address
+        else
+          self.remove_flag :postal_address
+        end
+      end
+    end
+    def postal_address?
+      self.postal_address
+    end
+    def clear_postal_address
+      self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").each do |address_field|
+        address_field.remove_flag :postal_address
+      end
     end
 
   end

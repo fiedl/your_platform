@@ -1,2 +1,20 @@
-%span.label.label-info
-  Wingolfspost
+- if profile_field.wingolfspost?
+  - flagged = true
+  - css_class = "flagged"
+- else
+  - flagged = false
+  - css_class = "unflagged"
+
+- if can? :update, profile_field
+  %span{ :class => "wingolfspost show_only_in_edit_mode #{css_class} profile_field_#{profile_field.id}",
+         :data => { profile_field_id: profile_field.id, update_json_url: profile_field_path(profile_field, format: :json) } }
+    %span.label.label-info
+      %label.radio
+        - if flagged
+          %input(type="radio" name="wingolfspost" checked)
+        - else
+          %input(type="radio" name="wingolfspost")
+        Wingolfspost
+%span{ :class => "wingolfspost do_not_show_in_edit_mode #{css_class} profile_field_#{profile_field.id}" }
+  %span.label.label-info
+    Wingolfspost

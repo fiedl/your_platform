@@ -29,6 +29,8 @@ module ProfileFieldTypes
 
   class Address
 
+    attr_accessible :wingolfspost
+
     # This method returns the Bv associated with the given address.
     #
     def bv
@@ -56,6 +58,18 @@ module ProfileFieldTypes
       end
 
       ActionController::Base.helpers.simple_format( text_to_display )
+    end
+    
+    # Allow to mark the address as primary postal address.
+    #
+    def wingolfspost
+      self.postal_address
+    end
+    def wingolfspost=(new_wingolfspost)
+      self.postal_address = new_wingolfspost
+    end
+    def wingolfspost?
+      self.wingolfspost
     end
 
   end
