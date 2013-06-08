@@ -148,7 +148,7 @@ class Group < ActiveRecord::Base
   def corporation
     ([ self ] + ancestor_groups).select do |group|
       group.corporation?
-    end.first
+    end.first.try(:becomes, Corporation)
   end
 
   def corporation?

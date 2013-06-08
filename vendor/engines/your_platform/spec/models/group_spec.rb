@@ -221,6 +221,59 @@ describe Group do
         @not_matching_groups.each { |g| subject.should_not include( g ) }
       end
     end
+
+    describe "#corporation" do
+      before do
+        @group = create(:group)
+        @corporation = create(:corporation)
+      end
+      subject { @group.corporation }
+      describe "for the group being a corporation" do
+        before { @group = @corporation }
+        it "should return self" do
+          subject.should == @group
+        end
+      end
+      describe "for the group being a child of a corporation" do
+        before { @group.parent_groups << @corporation }
+        it "should return the parent" do
+          subject.should == @corporation 
+        end
+      end
+      describe "for the group being a descendant of a corporation" do
+        before do
+          @middle_group = @group.parent_groups.create
+          @middle_group.parent_groups << @corporation
+        end
+        it "should return the ancestor" do
+          subject.should == @corporation
+        end
+      end
+      describe "for the group being not related to a corporation" do
+        it "should return nil" do
+          subject.should == nil
+        end
+      end
+    end
+    
+    describe "#corporation?" do
+      subject { @group.corporation? }
+      describe "for the group being a corporation" do
+        before { @group = create(:corporation) }
+        it { should == true }
+      end
+      describe "for the group not being a corporation" do
+        before { @group = create(:group) }
+        it { should == false }
+      end
+      describe "for the group being a child of a corporation" do
+        before do
+          @group = create(:group)
+          @group.parent_groups << create(:corporation)
+        end
+        it { should == false }
+      end
+    end
   end
 
 
