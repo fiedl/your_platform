@@ -53,6 +53,7 @@ class User
   #
   def fill_in_template_profile_information
     self.profile_fields.create(label: :personal_title, type: "ProfileFieldTypes::General")
+    self.profile_fields.create(label: :academic_degree, type: "ProfileFieldTypes::AcademicDegree")
     self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
     self.profile_fields.create(label: :klammerung, type: "ProfileFieldTypes::Klammerung")
 
@@ -63,7 +64,6 @@ class User
     self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
     self.profile_fields.create(label: :homepage, type: "ProfileFieldTypes::Homepage")
 
-    self.profile_fields.create(label: :academic_degree, type: "ProfileFieldTypes::AcademicDegree")
     self.profile_fields.create(label: :study, type: "ProfileFieldTypes::Study")
 
     self.profile_fields.create(label: :professional_category, type: "ProfileFieldTypes::ProfessionalCategory")

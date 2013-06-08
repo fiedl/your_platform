@@ -42,14 +42,14 @@ module Profileable
     def profile_field_type_by_section(section)
       case section
         when :general
-          [ "ProfileFieldTypes::General", "ProfileFieldTypes::Klammerung" ]
+          [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::General", "ProfileFieldTypes::Klammerung" ]
         when :contact_information
           [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
             "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
         when :about_myself
           "ProfileFieldTypes::About"
         when :study_information
-          [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::Study" ]
+          [ "ProfileFieldTypes::Study" ]
         when :career_information
           [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory" ]
         when :organizations
