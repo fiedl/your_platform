@@ -35,7 +35,6 @@ feature 'User page', js: false do
       it { should have_selector('h1', text: I18n.t(:career_information)) }
       it { should have_selector('h1', text: I18n.t(:organizations)) }
 
-
       #it { should have_selector('title', text: 'Wingolfsplattform') } #can't get it to work on capybara 2.0
 
       scenario 'the section \'organizations\'', js: true do

@@ -2,7 +2,7 @@ var target = ".section.<%= escape_javascript(params[:section]) %> .add_button";
 
 
 // Create a new relationships list item
-created_profile_field_li = $( "<%= j(render partial: 'shared/profile_field', object: @profile_field)  %>");
+created_profile_field_li = $( "<%= j(render partial: 'profile_fields/profile_field', object: @profile_field)  %>");
 
 // Insert this new list item as the last one in the section of the list items
 // that can be seen also when not in edit_mode.
