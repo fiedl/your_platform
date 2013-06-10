@@ -20,7 +20,7 @@ feature "Postal Address Flag" do
     within ".box.section.contact_information" do
 
       page.should_not have_content "Wingolfspost"  # selector('.wingolfspost .label', visible: true)
-      @user.postal_address.should == nil
+      @user.postal_address_field.should == nil
 
       click_on I18n.t(:edit)
       first("input[type='radio']").click()
