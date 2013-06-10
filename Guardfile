@@ -19,6 +19,7 @@ end
 guard( 'rspec', :version => 2,
        :cli => '--drb --tag focus',
        :all_after_pass => false,
+       :all_on_start => false,
        spec_paths: %w(spec vendor/engines/your_platform/spec)) do
 
   watch(%r{^spec/.+_spec\.rb$})
