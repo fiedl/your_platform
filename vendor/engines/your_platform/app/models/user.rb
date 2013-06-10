@@ -107,8 +107,13 @@ class User < ActiveRecord::Base
       address_field.postal_address? == true
     end.first
   end
+
+  # This method returns the postal address of the user.
+  # If one address of the user has got a :postal_address flag, this address is used.
+  # Otherwise, the first address of the user is used.
+  #
   def postal_address
-    self.postal_address_field.try(:value)
+    self.postal_address_field.try(:value) || self.profile_fields.where(type: "ProfileFieldTypes::Address").first.try(:value)
   end
   
 

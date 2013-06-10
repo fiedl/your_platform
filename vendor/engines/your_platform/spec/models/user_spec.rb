@@ -123,7 +123,9 @@ describe User do
 
   describe "postal address: " do
     before do
+      @other_field = ProfileFieldTypes::Address.create(label: "My Work", value: "Some Other Address")
       @profile_field = ProfileFieldTypes::Address.create(label: "My Home", value: "Some Address")
+      @user.profile_fields << @other_field 
       @user.profile_fields << @profile_field
     end
     describe "#postal_address_field" do
@@ -143,8 +145,8 @@ describe User do
     describe "#postal_address" do
       subject { @user.postal_address }
       describe "for no primary postal address being set" do
-        it "should return nil" do
-          subject.should == nil
+        it "should return the first address of the user" do
+          subject.should == @other_field.value
         end
       end
       describe "for a primary postal address being set" do
