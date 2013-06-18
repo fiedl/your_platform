@@ -22,6 +22,7 @@ class UserImporter < Importer
             user.update_attributes( user_data.attributes )
             user.save
             user.import_profile_fields( user_data.profile_fields_array, update_policy)
+            user.handle_deleted-string_status( user_data.deleted-string_status )
             user.assign_to_groups( user_data.groups )
             progress.log_success unless email_warning
           end
@@ -61,6 +62,8 @@ class UserImporter < Importer
     end
     yield(warning)
   end
+
+  
 
 end
 
@@ -308,6 +311,10 @@ class UserData
     d(:uid)
   end
 
+  def deleted-string_status 
+    d(:epdstatus)
+  end
+
   # status returns one of these strings:
   #   "Aktiver", "Philister", "Ehemaliger"
   #
@@ -373,6 +380,16 @@ module UserImportMethods
     p "TODO: GROUP ASSIGNMENT"
     p groups
     p "-----"
+  end
+
+  def handle_deleted-string_status( status )
+    status = status.to_s
+    if status == "silent"
+      self.hidden = true
+    end
+    if status == "deleted" 
+      self.destroy unless self.deleted_at
+    end
   end
 
 end

@@ -724,6 +724,44 @@ describe User do
   end
 
 
+  # Hidden Users
+  # ==========================================================================================
+
+  describe "#hidden?" do
+    subject { @user.hidden? }
+  end
+
+  describe "#hidden=" do
+    describe "true" do
+      subject { @user.hidden = true }
+      it "shoud assign the user to the hidden_users group" do
+        @user.should_not be_member_of Group.hidden_users
+        subject
+        @user.should be_member_of Group.hidden_users
+      end
+    end
+    describe "false" do
+      subject { @user.hidden = false }
+      describe "for the user being hidden" do
+        before { @user.hidden = true }
+        it "should remove the user from the hidden_users group" do
+          @user.should be_member_of Group.hidden_users
+          subject
+          @user.should_not be_member_of Group.hidden_users
+        end
+      end
+      describe "for the user not being hidden" do
+        it "should make sure the user is not in the hidden_users group" do
+          @user.should_not be_member_of Group.hidden_users
+          subject
+          @user.should_not be_member_of Group.hidden_users
+        end
+      end
+    end
+  end
+
+
+
   # Finder Methods
   # ==========================================================================================
 

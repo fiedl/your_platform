@@ -434,6 +434,25 @@ class User < ActiveRecord::Base
     group.guests.include? self
   end
 
+  # Hidden
+  # ==========================================================================================
+  # 
+  # Some users are hidden for regular users. They can only be seen by their administrators.
+  # This is necessary for some organizations due to privacy reasons.
+  #
+
+  def hidden?
+    self.hidden
+  end
+
+  def hidden
+    self.member_of? Group.hidden_users
+  end
+
+  def hidden=(hidden)
+    Group.hidden_users.assign_user self if hidden == true
+    Group.hidden_users.unassign_user self if hidden == false
+  end
 
   # Finder Methods
   # ==========================================================================================
