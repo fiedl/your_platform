@@ -1,4 +1,7 @@
 de:
+  address: Adresse
+  custom: Benutzerdefiniert
+
   account: Konto
   account_holder: Kontoinhaber
   account_number: Kontonummer
