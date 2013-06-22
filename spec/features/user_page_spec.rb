@@ -3,6 +3,7 @@ require 'spec_helper'
 
 feature 'User page', js: false do
   include SessionSteps
+  include ProfileSteps
 
   subject { page }
 
@@ -23,21 +24,28 @@ feature 'User page', js: false do
     end
 
 
-    describe 'when sigend in as admin' do
+    describe 'when signed in as admin' do
 
       background do
         login(:admin)
         visit user_path(@user)
       end
 
+      it { should have_selector('h1', text: I18n.t(:contact_information)) }
       it { should have_selector('h1', text: I18n.t(:about_myself)) }
       it { should have_selector('h1', text: I18n.t(:study_information)) }
       it { should have_selector('h1', text: I18n.t(:career_information)) }
       it { should have_selector('h1', text: I18n.t(:organizations)) }
+      it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
+      it { should have_selector('h1', text: I18n.t(:description)) }
+      #it { should have_selector('h1', text: I18n.t(:corporate_vita)) } #test user is not member of any corporation
+      it { should have_selector('h1', text: I18n.t(:relationships)) }
+      it { should have_selector('h1', text: I18n.t(:communication)) }
+      it { should have_selector('h1', text: I18n.t(:access_information)) }
 
       #it { should have_selector('title', text: 'Wingolfsplattform') } #can't get it to work on capybara 2.0
 
-      scenario 'the section \'organizations\'', js: true do
+      scenario "the section #{I18n.t(:organizations)} should be editable", js: true do
         within('.box.section.organizations') do
           click_on I18n.t(:edit)
           page.should have_selector('a.add_button', visible: true)
@@ -53,7 +61,7 @@ feature 'User page', js: false do
         end
       end
 
-      scenario 'the section \'career information\'', js: true do
+      scenario "the section #{I18n.t(:career_information)} should be editable", js: true do
         within '.box.section.career_information' do
           click_on I18n.t(:edit)
           subject.should have_selector('a.add_button', visible: true)
@@ -76,7 +84,7 @@ feature 'User page', js: false do
         end
       end
 
-      scenario 'the section \'Zugangsdaten\'', js: true do
+      scenario "the section #{I18n.t(:access_information)}", js: true do
         within('.box.section.access') do
 
           click_on I18n.t(:edit)
@@ -120,16 +128,27 @@ feature 'User page', js: false do
         end
 
         scenario 'the profile sections should be editable', js: true do
-          within '.box.section.career_information' do
-            subject.should have_selector('a.edit_button', visible: true)
-
-            click_on I18n.t(:edit)
-            subject.should have_selector('a.add_button', visible: true)
-
-            click_on I18n.t(:add)
-            subject.should have_selector('.remove_button', visible: true)
-          end
+          #section_should_be_editable(:contact_information, [ProfileFieldTypes::Address, ProfileFieldTypes::Email, ProfileFieldTypes::Phone, ProfileFieldTypes::Homepage, ProfileFieldTypes::Custom])
+          section_should_be_editable(:about_myself)
+          #section_should_be_editable(:study_information, [ProfileFieldTypes::AcademicDegree, ProfileFieldTypes::Study])
+          #section_should_be_editable(:career_information, [ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory])
+          section_should_be_editable(:organizations)
+          section_should_be_editable(:bank_account_information)
+          section_should_be_editable(:description)
         end
+
+
+        it { should have_selector('h1', text: I18n.t(:contact_information)) }
+        it { should have_selector('h1', text: I18n.t(:about_myself)) }
+        it { should have_selector('h1', text: I18n.t(:study_information)) }
+        it { should have_selector('h1', text: I18n.t(:career_information)) }
+        it { should have_selector('h1', text: I18n.t(:organizations)) }
+        it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
+        it { should have_selector('h1', text: I18n.t(:description)) }
+        #it { should have_selector('h1', text: I18n.t(:corporate_vita)) } #test user is not member of any corporation
+        it { should have_selector('h1', text: I18n.t(:relationships)) }
+        it { should have_selector('h1', text: I18n.t(:communication)) }
+        it { should have_selector('h1', text: I18n.t(:access_information)) }
 
         scenario 'the empty sections should be visible' do
           subject.should have_selector('.box.section.organizations')

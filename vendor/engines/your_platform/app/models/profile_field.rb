@@ -266,6 +266,14 @@ module ProfileFieldTypes
   end
 
 
+  # About Myself Field
+  # ==========================================================================================
+
+  class About < ProfileField
+    def self.model_name; ProfileField.model_name; end
+  end
+
+
   # Employment Fields
   # ==========================================================================================
 
@@ -337,9 +345,10 @@ module ProfileFieldTypes
     before_save :auto_format_value
 
     def self.format_phone_number( phone_number_str )
+      return "" if phone_number_str.nil?
       value = phone_number_str
 
-      # determine wheter this is an international number
+      # determine whether this is an international number
       format = :national
       format = :international if value.start_with?( "00" ) or value.start_with? ( "+" )
 
