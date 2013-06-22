@@ -9,7 +9,7 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 #
 class User
 
-  attr_accessible :wingolfsblaetter_abo
+  attr_accessible :wingolfsblaetter_abo, :hidden
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden

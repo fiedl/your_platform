@@ -44,6 +44,8 @@
               - else
                 = localize @user.date_of_birth if @user.date_of_birth
           = render partial: 'shared/profile_section_ul', locals: { section: :general, profileable: @user }
+          = render partial: 'users/hidden_flag_switch', locals: { user: @user }
+            
 
   / Profile Sections
   = profile_sections_for_profileable @user, @user.sections

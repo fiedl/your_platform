@@ -450,8 +450,8 @@ class User < ActiveRecord::Base
   end
 
   def hidden=(hidden)
-    Group.hidden_users.assign_user self if hidden == true
-    Group.hidden_users.unassign_user self if hidden == false
+    Group.hidden_users.assign_user self if hidden == true || hidden == "true"
+    Group.hidden_users.unassign_user self if hidden == false || hidden == "false"
   end
 
   # Finder Methods

@@ -1,0 +1,20 @@
+- if user.hidden?
+  - flagged = true
+  - css_class = "flagged"
+- else
+  - flagged = false
+  - css_class = "unflagged"
+
+- if can? :manage, user
+  %span{ :class => "user_hidden_flag show_only_in_edit_mode #{css_class} user_#{user.id}",
+         :data => { user_id: user.id, update_json_url: user_path(user, format: :json) } }
+    %span.label.label-important
+      %label.checkbox
+        - if flagged
+          %input(type="checkbox" name="user_hidden" checked)
+        - else
+          %input(type="checkbox" name="user_hidden")
+        Benutzer versteckt
+%span{ :class => "user_hidden_flag do_not_show_in_edit_mode #{css_class} user_#{user.id}" }
+  %span.label.label-important
+    Benutzer versteckt
