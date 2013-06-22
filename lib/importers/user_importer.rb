@@ -16,15 +16,17 @@ class UserImporter < Importer
   def import
     import_file = ImportFile.new( file_name: @file_name, data_class_name: "UserData" )
     import_file.each_row do |user_data|
-      if user_data.match? @filter 
-        handle_existing(user_data) do |user|
-          handle_existing_email(user_data) do |email_warning|
-            user.update_attributes( user_data.attributes )
-            user.save
-            user.import_profile_fields( user_data.profile_fields_array, update_policy)
-            user.handle_deleted-string_status( user_data.deleted-string_status )
-            user.assign_to_groups( user_data.groups )
-            progress.log_success unless email_warning
+      if user_data.match?(@filter) 
+        handle_deleted(user_data) do
+          handle_existing(user_data) do |user|
+            handle_existing_email(user_data) do |email_warning|
+              user.update_attributes( user_data.attributes )
+              user.save
+              user.import_profile_fields( user_data.profile_fields_array, update_policy)
+              user.handle_deleted-string_status( user_data.deleted-string_status )
+              user.assign_to_groups( user_data.groups )
+              progress.log_success unless email_warning
+            end
           end
         end
       end
@@ -33,6 +35,16 @@ class UserImporter < Importer
   end
 
   private
+
+  def handle_deleted( data, &block )
+    if data.deleted-string_status == :deleted
+      warning = { message: "Ignoring deleted user #{data.w_nummer}.",
+        user_uid: data.uid, name: data.name }
+      progress.log_ignore(warning)
+    else
+      yield
+    end
+  end
 
   def handle_existing( data, &block )
     if data.user_already_exists?
@@ -312,7 +324,7 @@ class UserData
   end
 
   def deleted-string_status 
-    d(:epdstatus)
+    d(:epdstatus).to_sym
   end
 
   # status returns one of these strings:
@@ -383,12 +395,9 @@ module UserImportMethods
   end
 
   def handle_deleted-string_status( status )
-    status = status.to_s
-    if status == "silent"
-      self.hidden = true
-    end
-    if status == "deleted" 
-      self.destroy unless self.deleted_at
+    self.hidden = true if status == :silent
+    if status == :deleted
+      raise 'trying to handle deleted user, but all deleted users should have been filtered out.' 
     end
   end
 
