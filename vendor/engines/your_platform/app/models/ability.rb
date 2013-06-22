@@ -56,6 +56,11 @@ class Ability
           parent_field.profileable.id == user.id
         end
 
+        # Normal users cannot see hidden users, except for self.
+        cannot :read, User do |user_to_show|
+          (user_to_show.hidden?) && (user != user_to_show)
+        end
+
       end
 
     end
