@@ -1,8 +1,8 @@
-
 class UserGroupMembershipsController < ApplicationController
 
   before_filter :find_membership
-#  respond_to :html, :json
+  authorize_resource
+
   respond_to :json
 
   def show
@@ -13,23 +13,23 @@ class UserGroupMembershipsController < ApplicationController
     attributes = params[ :user_group_membership ]
     attributes ||= params[ :status_group_membership ]
 
-    @membership.update_attributes( attributes )
-#    if @membership.update_attributes( attributes )
+    @user_group_membership.update_attributes( attributes )
+#    if @user_group_membership.update_attributes( attributes )
 #      respond_to do |format|
 #        format.json do
 #          #head :ok
-#          respond_with_bip @membership
+#          respond_with_bip @user_group_membership
 #        end
 #      end
-      respond_with @membership
+      respond_with @user_group_membership
 #    else
-#      raise "updating attributes of user_group_membership has failed: " + @membership.errors.full_messages.first
+#      raise "updating attributes of user_group_membership has failed: " + @user_group_membership.errors.full_messages.first
 #    end
   end
 
   def destroy
-    if @membership
-      @membership.destroy
+    if @user_group_membership
+      @user_group_membership.destroy
       redirect_to :back
     end
   end
@@ -37,15 +37,13 @@ class UserGroupMembershipsController < ApplicationController
   private
 
   def find_membership
-    p "controller", params
-    p "------------------------------------------------------------------------------------------"
     if params[ :id ].present?
-      @membership = UserGroupMembership.with_deleted.find( params[ :id ] )
+      @user_group_membership = UserGroupMembership.with_deleted.find( params[ :id ] )
     else
       user = User.find params[ :user_id ] if params[ :user_id ]
       group = Group.find params[ :group_id ] if params[ :group_id ]
       if user && group
-        @membership = UserGroupMembership.with_deleted.find_by_user_and_group user, group
+        @user_group_membership = UserGroupMembership.with_deleted.find_by_user_and_group user, group
       end
     end
   end
