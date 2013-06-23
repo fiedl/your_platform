@@ -454,6 +454,13 @@ class User < ActiveRecord::Base
     Group.hidden_users.unassign_user self if hidden == false || hidden == "false"
   end
 
+  # Former Member
+  # ==========================================================================================
+
+  def former_member_of_corporation?( corporation )
+    self.member_of? corporation.child_groups.find_by_flag(:former_members_parent)
+  end
+
   # Finder Methods
   # ==========================================================================================
 

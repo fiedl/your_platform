@@ -38,7 +38,7 @@ class User
       self.corporations
         .sort_by { |corporation| corporation.membership_of(self).created_at } # order by date of joining
         .collect do |corporation| 
-        if not self.guest_of? corporation
+        if not (self.guest_of?(corporation)) and not (self.former_member_of_corporation?(corporation))
           year_of_joining = ""
           year_of_joining = corporation.membership_of( self ).created_at.to_s[2, 2] if corporation.membership_of( self ).created_at
           #corporation.token + "\u2009" + year_of_joining
