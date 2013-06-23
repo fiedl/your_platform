@@ -1,6 +1,4 @@
-# This file is to be run to initialise some basic database entries, e.g. the root user group, etc.
-# Execute by typing  'rake bootsrap:all'  after database migration.
-# SF 2012-05-03
+# -*- coding: utf-8 -*-
 
 namespace :wingolf_groups do
 
@@ -31,6 +29,18 @@ namespace :wingolf_groups do
       end
     end
     print "\n" + ( "Added sub structure for " + counter.to_s + " groups.\n" ).green
+  end
+
+  # Dieser Task importiert die Gruppenstruktur für Wingolf-am-Hochschulort-Gruppen,
+  # ohne darauf Rücksicht zu nehmen, ob die Korporationen bereits Untergruppen besitzen.
+  # Warnung! Es ist nur sehr unwahrscheinlich, dass dieser Task ausgeführt wird, sobald das System
+  # im Produktivbetrieb ist, da hiermit individuelle Anpassungen der einzelnen Verbindungen
+  # vereitelt werden können.
+  #
+  task import_and_update_sub_structure_of_wah_groups: :environment do
+    Group.corporations.each do |corporation|
+      corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
+    end
   end
 
   task set_default_nav_attributes: :environment do

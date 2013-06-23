@@ -52,7 +52,8 @@ module GroupMixins::Import
 
       for new_group_hash in hash_array_of_groups do
 
-        unless parent_group.children.select { |child| child.name == new_group_hash[ "name" ] }.count > 0
+        
+        unless parent_group.children.select { |child| child.name == (new_group_hash["name"] || new_group_hash[:name]) }.count > 0
 
           # get children from hash
           sub_group_hash_array = new_group_hash[ "children" ]
@@ -287,25 +288,29 @@ module GroupMixins::Import
   def set_flags_based_on_group_name 
 
     # Officers
-    translations = []
-    I18n.translate( :officers_parent ) # required to initialize the I18n 
-    I18n.backend.send( :translations ).each do |language, translations_hash|
-      translations << translations_hash[ :officers_parent ]
-    end
-    if self.name.in? translations
-      self.add_flag( :officers_parent )
-    end
+    set_flag_based_on_name :officers_parent
 
     # Guests
+    set_flag_based_on_name :guests_parent
+
+    # Deceased
+    set_flag_based_on_name :deceased_parent
+    
+    # Former Members
+    set_flag_based_on_name :former_members_parent
+
+  end
+
+  def set_flag_based_on_name( name )
     translations = []
-    I18n.translate( :guests_parent ) # required to initialize the I18n 
+    name = name.to_sym
+    I18n.translate( name ) # required to initialize the I18n 
     I18n.backend.send( :translations ).each do |language, translations_hash|
-      translations << translations_hash[ :guests_parent ]
+      translations << translations_hash[ name ]
     end
     if self.name.in? translations
-      self.add_flag( :guests_parent )
+      self.add_flag( name )
     end
-
   end
 
 end

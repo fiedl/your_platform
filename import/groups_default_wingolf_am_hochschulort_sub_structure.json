@@ -90,6 +90,30 @@
         "name": "Wohnheimsverein"
     },
     {
+        "name": "Ehemalige",
+        "children": 
+        [
+            {
+                "name": "Ehrenhaft Ausgetretene"
+            },
+            {
+                "name": "Schlicht Ausgetretene"
+            },
+            {
+                "name": "Rausgeworfene (Exclusio)"
+            },
+            {
+                "name": "Rausgeworfene (Dimissio)"
+            },
+            {
+                "name": "Gestrichene"
+            }
+        ]
+    },
+    {
+        "name": "Verstorbene"
+    },
+    {
         "name": "Thematische Gruppen"
     }
 ]
