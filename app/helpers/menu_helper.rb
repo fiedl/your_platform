@@ -56,6 +56,7 @@ module MenuHelper
       should_not_be_displayed = false
       should_not_be_displayed = true if object.nav_node.hidden_menu and element_class == :child
       should_not_be_displayed = true if object.nav_node.slim_menu and element_class == :ancestor
+      should_not_be_displayed = true if cannot? :read, object
       menu_element( object, element_class ) unless should_not_be_displayed 
     end.join.html_safe
   end
