@@ -61,6 +61,12 @@ class Ability
           (user_to_show.hidden?) && (user != user_to_show)
         end
 
+        # Normal users cannot see the former_members_parent groups
+        # and their descendant groups.
+        cannot :read, Group do |group|
+          group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
+        end
+
       end
 
     end
