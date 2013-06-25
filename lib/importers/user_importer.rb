@@ -23,6 +23,7 @@ class UserImporter < Importer
               user.update_attributes( user_data.attributes )
               user.save
               user.import_profile_fields( user_data.profile_fields_array, update_policy)
+              user.handle_corporations( user_data )
               user.handle_deleted-string_status( user_data.deleted-string_status )
               user.handle_former_corporations( user_data )
               user.handle_deceased( user_data )
@@ -77,10 +78,19 @@ class UserImporter < Importer
     yield(warning)
   end
 
-  
-
 end
 
+class String
+  alias old_to_datetime to_datetime
+  def to_datetime
+    if (self[4..8] == "0000") || (self.length == 4)  # 20030000 || 2003
+      str = self[0..3] + "-01-01" # 2003-01-01
+      return str.to_datetime
+    else
+      old_to_datetime.in_time_zone
+    end
+  end
+end
 
 class UserData
 
@@ -278,19 +288,42 @@ class UserData
     d(:epdorgmembershipendreason) == "verstorben"
   end
 
-  def ehemalige_aktivitaetszahl
+  def ehemalige_deleted-string_aktivitaetszahl
     d(:epdwingolfformeractivities)
   end
 
+  def deleted-string_aktivitaetszahl
+    d(:epdwingolfactivity)
+  end
+
+  def aktivitaetszahl
+    deleted-string_aktivitaetszahl.gsub(" ", "").gsub(",", " ")
+  end
+
+  def aktivitätszahl
+    aktivitaetszahl
+  end
+
+  def corporations
+    corporations_by_deleted-string_aktivitaetszahl( self.deleted-string_aktivitaetszahl )
+  end
+
   def former_corporations
-    if self.ehemalige_aktivitaetszahl.present?
-      corporation_tokens = self.ehemalige_aktivitaetszahl.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
+    corporations_by_deleted-string_aktivitaetszahl( self.ehemalige_deleted-string_aktivitaetszahl )
+  end
+
+  def corporations_by_deleted-string_aktivitaetszahl( str ) 
+    # str == "E 12, Fr 13"
+    if str.present?
+
+      raise 'TODO: HANDLE (E 12)-TYPE AKTIVITÄTSZAHLEN' if str.start_with? "("
+
+      corporation_tokens = str.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
       corporations = corporation_tokens.collect do |token|
         Corporation.find_by_token(token)
       end
-      return corporations
     else
-      return []
+      []
     end
   end
 
@@ -301,7 +334,7 @@ class UserData
 
   def date_of_exit( corporation = nil )
     # 31.12.2008 - ausgetreten - durch WV Bo|23.01.2009 - ausgetreten - durch WV Hm
-    date = description_of_exit(corporation).split(" - ").first.to_date
+    date = description_of_exit(corporation).split(" - ").first.to_datetime
   end
 
   def description_of_exit( corporation = nil )
@@ -319,7 +352,7 @@ class UserData
   end
 
   def deleted-string_org_membership_end_date
-    d(:epdorgmembershipenddate).to_date
+    d(:epdorgmembershipenddate).to_datetime
   end
   
   def first_name
@@ -352,7 +385,7 @@ class UserData
 
   def date_of_birth
     begin
-      d(:epdbirthdate).to_date
+      d(:epdbirthdate).to_datetime
     rescue # wrong date format
       return nil
     end
@@ -375,6 +408,10 @@ class UserData
 
   def deleted-string_status 
     d(:epdstatus).to_sym
+  end
+
+  def aktivmeldungsdatum
+    d(:epdorgmembershipstartdate).to_datetime
   end
 
   # status returns one of these strings:
@@ -460,6 +497,39 @@ module UserImportMethods
         group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
         group_to_assign.assign_user self, joined_at: user_data.deleted-string_org_membership_end_date
       end
+    end
+  end
+
+  def yy_to_yyyy( yy )
+    # born 1950
+    # 61 -> 1861?  1961?  2061?
+    #              ----
+    [ "18#{yy}", "19#{yy}", "20#{yy}" ].each do |year|
+      return year if year > self.date_of_birth.year.to_s
+    end
+  end
+
+  def handle_corporations( user_data )
+    user_data.corporations.each do |corporation|
+      year_of_joining = user_data.aktivitätszahl.match( "#{corporation.token}[0-9][0-9]" )[0]
+        .gsub( corporation.token, "" )
+      group_to_assign = nil
+      if user_data.aktivmeldungsdatum.year.to_s[2..4] == year_of_joining
+        date_of_joining = user_data.aktivmeldungsdatum
+        group_to_assign = corporation.descendant_groups.find_by_name("Hospitanten")
+      else
+        date_of_joining = yy_to_yyyy(year_of_joining).to_datetime
+        group_to_assign = corporation.descendant_groups.find_by_name("Aktive Burschen") # TODO: PhV-Bandaufnahme!
+      end
+
+      p "-------------"
+      p date_of_joining
+      raise 'could not identify group to assign this user' if not group_to_assign
+      group_to_assign.assign_user self, joined_at: date_of_joining
+    end
+
+    if user_data.aktivitaetszahl != self.aktivitaetszahl
+      raise "consistency check failed: aktivitaetszahl #{user_data.aktivitaetszahl} not reconstructed properly."
     end
   end
 
