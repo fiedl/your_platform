@@ -25,6 +25,7 @@ class UserImporter < Importer
               user.import_profile_fields( user_data.profile_fields_array, update_policy)
               user.handle_deleted-string_status( user_data.deleted-string_status )
               user.handle_former_corporations( user_data )
+              user.handle_deceased( user_data )
               user.assign_to_groups( user_data.groups )
               progress.log_success unless email_warning
             end
@@ -273,16 +274,24 @@ class UserData
     status == "Ehemaliger"
   end
 
+  def deceased?
+    d(:epdorgmembershipendreason) == "verstorben"
+  end
+
   def ehemalige_aktivitaetszahl
     d(:epdwingolfformeractivities)
   end
 
   def former_corporations
-    corporation_tokens = self.ehemalige_aktivitaetszahl.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",")
-    corporations = corporation_tokens.collect do |token|
-      Corporation.find_by_token(token)
+    if self.ehemalige_aktivitaetszahl.present?
+      corporation_tokens = self.ehemalige_aktivitaetszahl.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
+      corporations = corporation_tokens.collect do |token|
+        Corporation.find_by_token(token)
+      end
+      return corporations
+    else
+      return []
     end
-    return corporations
   end
 
   def reason_for_exit( corporation = nil ) 
@@ -299,7 +308,7 @@ class UserData
     corporation ||= self.former_corporations.first
     # 07.06.2008 - Philistration - durch WV Hm|15.12.2010 - ausgetreten - durch WV Hm
     strs = self.descriptions
-      .select{ |d| d.include? " #{corporation.token}" }
+      .select{ |d| d.match(" #{corporation.token}$") }
       .select{ |d| d.include?("ausgetreten") || d.include?("gestrichen") }
     raise 'selection algorithm returnet non-uniqe result. please correct the algorithm for this case.' if strs.count > 1
     return strs.first
@@ -307,6 +316,10 @@ class UserData
 
   def descriptions 
     d(:description).split("|")
+  end
+
+  def deleted-string_org_membership_end_date
+    d(:epdorgmembershipenddate).to_date
   end
   
   def first_name
@@ -438,6 +451,18 @@ module UserImportMethods
     end
   end
 
+  def handle_deceased( user_data )
+    if user_data.deceased?
+      if self.corporations.count == 0
+        raise 'the user has no corporations, yet. please handle_deceased after assigning the user to corporations.'
+      end
+      self.corporations.each do |corporation|
+        group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
+        group_to_assign.assign_user self, joined_at: user_data.deleted-string_org_membership_end_date
+      end
+    end
+  end
+
   def handle_former_corporations( user_data )
     user_data.former_corporations.each do |corporation|
       reason = user_data.reason_for_exit(corporation)
@@ -449,10 +474,7 @@ module UserImportMethods
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
       end
       
-      group_to_assign.assign_user self
-      membership = UserGroupMembership.find_by_user_and_group( self, group_to_assign )
-      membership.created_at = date
-      membership.save
+      group_to_assign.assign_user self, joined_at: date
     end
   end
 

@@ -120,10 +120,16 @@ class Group < ActiveRecord::Base
   # This assings the given user as a member to the group, i.e. this will
   # create a UserGroupMembership.
   #
-  def assign_user( user )
+  def assign_user( user, options = {} )
     if user
       unless user.in? self.child_users
         self.child_users << user
+
+        if options[:joined_at].present?
+          membership = UserGroupMembership.find_by_user_and_group( user, self )
+          membership.created_at = options[:joined_at].to_date
+          membership.save
+        end
       end
     end
   end
