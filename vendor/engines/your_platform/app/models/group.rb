@@ -130,13 +130,6 @@ class Group < ActiveRecord::Base
         membership = UserGroupMembership.find_by_user_and_group( user, self )
         if membership
           membership.created_at = options[:joined_at].to_datetime
-
-          p "GOT"
-          p options[:joined_at].to_datetime
-          p "UPDATE MEMBERSHIP DATE TO"
-          p membership.created_at
-
-
           membership.save
         end
       end

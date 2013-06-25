@@ -414,6 +414,34 @@ class UserData
     d(:epdorgmembershipstartdate).to_datetime
   end
 
+  def philistrationsdatum
+    d(:epdwingolfaktuelverbindphilistration).to_datetime
+  end
+
+  def bandaufnahme_als_aktiver?( corporation )
+    raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
+    year_of_joining(corporation) < philistrationsdatum.year.to_s
+  end
+
+  def bandverleihung_als_philister?( corporation )
+    raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
+    year_of_joining(corporation) > philistrationsdatum.year.to_s
+  end
+
+  def year_of_joining( corporation )
+    yy = self.aktivitätszahl.match( "#{corporation.token}[0-9][0-9]" )[0].gsub( corporation.token, "" )
+    yyyy = yy_to_yyyy(yy).to_s
+  end
+
+  def yy_to_yyyy( yy )
+    # born 1950
+    # 61 -> 1861?  1961?  2061?
+    #              ----
+    [ "18#{yy}", "19#{yy}", "20#{yy}" ].each do |year|
+      return year if year > self.date_of_birth.year.to_s
+    end
+  end
+
   # status returns one of these strings:
   #   "Aktiver", "Philister", "Ehemaliger"
   #
@@ -500,30 +528,22 @@ module UserImportMethods
     end
   end
 
-  def yy_to_yyyy( yy )
-    # born 1950
-    # 61 -> 1861?  1961?  2061?
-    #              ----
-    [ "18#{yy}", "19#{yy}", "20#{yy}" ].each do |year|
-      return year if year > self.date_of_birth.year.to_s
-    end
-  end
-
   def handle_corporations( user_data )
     user_data.corporations.each do |corporation|
-      year_of_joining = user_data.aktivitätszahl.match( "#{corporation.token}[0-9][0-9]" )[0]
-        .gsub( corporation.token, "" )
+      year_of_joining = user_data.year_of_joining(corporation)
       group_to_assign = nil
-      if user_data.aktivmeldungsdatum.year.to_s[2..4] == year_of_joining
+      if user_data.aktivmeldungsdatum.year.to_s == year_of_joining
         date_of_joining = user_data.aktivmeldungsdatum
         group_to_assign = corporation.descendant_groups.find_by_name("Hospitanten")
       else
-        date_of_joining = yy_to_yyyy(year_of_joining).to_datetime
-        group_to_assign = corporation.descendant_groups.find_by_name("Aktive Burschen") # TODO: PhV-Bandaufnahme!
+        date_of_joining = year_of_joining.to_datetime
+        if user_data.bandaufnahme_als_aktiver?( corporation )
+          group_to_assign = corporation.descendant_groups.find_by_name("Aktive Burschen")
+        elsif user_data.bandverleihung_als_philister?( corporation )
+          group_to_assign = corporation.descendant_groups.find_by_name("Philister")
+        end
       end
 
-      p "-------------"
-      p date_of_joining
       raise 'could not identify group to assign this user' if not group_to_assign
       group_to_assign.assign_user self, joined_at: date_of_joining
     end
