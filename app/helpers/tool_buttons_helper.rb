@@ -35,7 +35,7 @@ module ToolButtonsHelper
     href = options[ :href ]
     href = "#" unless href
     options.delete( :href )
-    link_to( tool_icon( icon ) + text,
+    link_to( tool_icon( icon ) + " " + text,
              href,
              options )
   end

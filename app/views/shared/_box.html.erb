@@ -1,20 +1,19 @@
 <div class="edit_mode_group">
   <div class="box <%= box_class %>">
-    <%=h content_tag( :div, "", class: "minimize", title: t( :fold_box ) ) %>
     <div class="head">
       <table><tr>
-	  <td class="box_heading">
-	    <h1><%= heading %></h1>	    
-	  </td>
-	  <td class="box_toolbar">
-	    <span class="box_toolbar">
-        <% if can? :manage, @navable %>
-          <%= save_button :class => box_class %>
-          <%= edit_button(:class => box_class, 
-                          :id => (strip_tags(heading) + "EditButton")) %>
-        <% end %>
-	    </span>
-	  </td>
+	        <td class="box_heading">
+	          <h1><%= heading %></h1>	    
+	        </td>
+	        <td class="box_toolbar">
+	          <span class="box_toolbar">
+              <% if can? :manage, @navable %>
+                <%= save_button :class => box_class %>
+                <%= edit_button(:class => box_class, 
+                                :id => (strip_tags(heading) + "EditButton")) %>
+              <% end %>
+	          </span>
+	        </td>
       </tr></table>
     </div>
     <div class="divider"></div>
