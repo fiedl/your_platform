@@ -130,12 +130,12 @@ class UserGroupMembership < DagLink
   # Save the current membership and auto-save also the direct memberships
   # associated with the current (maybe indirect) membership.
   #
-  def save
+  def save(*args)
     unless direct?
       first_created_direct_membership.save if first_created_direct_membership
       last_deleted_direct_membership.save if last_deleted_direct_membership
     end
-    super
+    super(*args)
   end
 
   # Destroy this membership, but reload the dataset from the database in order to get access

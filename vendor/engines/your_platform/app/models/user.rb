@@ -268,7 +268,13 @@ class User < ActiveRecord::Base
   def status_groups
     self.corporations.collect do |corporation|
       corporation.status_groups
-    end.flatten
+    end.flatten & self.ancestor_groups
+  end
+
+  def status_group_memberships
+    self.status_groups.collect do |group|
+      StatusGroupMembership.find_by_user_and_group( self, group )
+    end
   end
 
 

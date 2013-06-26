@@ -133,10 +133,10 @@ class StatusGroupMembership < UserGroupMembership
   # To circumvent this, this save method first saves the delegate model if necessary and 
   # then calls the regular `save` method.
   #
-  def save
+  def save(*args)
     save_status_group_membership_info_if_changed
     if changed?
-      return super
+      return super(*args)
     else
       return true
     end
