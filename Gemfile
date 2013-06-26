@@ -180,6 +180,7 @@ gem 'twitter-bootstrap-rails'
 gem 'less', '>=2.2.2'
 gem 'less-rails'
 #gem 'bootstrap-sass'                                                    # Apache License 2.0
+gem 'font-awesome-rails'
 
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'

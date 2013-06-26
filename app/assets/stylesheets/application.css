@@ -13,6 +13,7 @@
  *= require formtastic
  *= require your_platform
  *= require edit_mode
+ *= require font-awesome
  *= require_tree ./all_layouts
 */
 
