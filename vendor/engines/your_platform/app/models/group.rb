@@ -133,6 +133,8 @@ class Group < ActiveRecord::Base
           membership.save
         end
       end
+
+      return membership || UserGroupMembership.find_by_user_and_group( user, self )
     end
   end
 

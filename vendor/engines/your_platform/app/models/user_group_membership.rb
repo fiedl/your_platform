@@ -8,7 +8,7 @@
 # and to their properties like since when the membership exists.
 class UserGroupMembership < DagLink
 
-  attr_accessible :created_at, :deleted_at, :created_at_date_formatted
+  attr_accessible :created_at, :deleted_at, :archived_at, :created_at_date_formatted
 
 
   # General Properties
@@ -150,6 +150,10 @@ class UserGroupMembership < DagLink
     self.reload
   end
 
+  def archive
+    destroy  # using acts_as_paranoid
+  end
+
   # This is a helper to destroy all direct memberships of this membership.
   # This is called in #destroy.
   #
@@ -204,6 +208,13 @@ class UserGroupMembership < DagLink
   def deleted_at=( deleted_at )
     return super( deleted_at ) if direct?
     last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
+  end
+
+  def archived_at
+    deleted_at
+  end
+  def archived_at=( archived_at )
+    deleted_at = archived_at
   end
 
   # This method is used in the views, since it is more convenient just to edit the date
@@ -349,10 +360,18 @@ class UserGroupMembership < DagLink
   #    group1                       group2
   #      |---- user       =>          |---- user
   # 
-  def move_to_group( group_to_move_in )
+  def move_to_group( group_to_move_in, options = {} )
+    date = options[:date].to_datetime if options[:date].present?
     user_to_move = self.user
-    self.destroy
-    UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
+    self.archive
+    self.update_attribute( :archived_at, date ) if date
+    new_membership = UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
+    new_membership.update_attribute( :created_at, date ) if date
+    return new_membership
+  end
+
+  def promote_to( new_group, options = {} )
+    self.move_to_group( new_group, options )
   end
   
 
