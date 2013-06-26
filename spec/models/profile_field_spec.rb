@@ -33,7 +33,7 @@ describe ProfileFieldTypes::Address do
   describe "#display_html" do
     subject { @address_field.display_html }
     it "should include the BV" do
-      subject.should include I18n.translate(:address_is_in_bv)
+      subject.should include I18n.translate(:address_is_in_the)
       subject.should include @address_field.bv.name
     end
   end
