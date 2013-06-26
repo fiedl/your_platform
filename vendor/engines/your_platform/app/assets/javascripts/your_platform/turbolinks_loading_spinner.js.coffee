@@ -8,7 +8,7 @@
       @remove_spinner()
   spinner_html: '
     <div class="modal hide fade" id="page-spinner">
-      <div class="modal-head card-title">Please Wait...</div>
+      <div class="modal-header card-title">Please Wait...</div>
       <div class="modal-body card-body">
         <i class="icon-spinner icon-spin icon-2x"></i>
         &emsp;Loading...
