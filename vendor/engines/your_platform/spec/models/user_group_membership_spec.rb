@@ -605,9 +605,9 @@ describe UserGroupMembership do
     
     specify "verify which memberships are direct and which are indirect" do
       @membershipE.direct?.should == false
-      @first_membership_E.direct?.should == true
-      @second_membership_E.direct?.should == true
-      @first_membership_H.direct?.should == true
+      @first_membership_E.reload.direct?.should == true
+      @second_membership_E.reload.direct?.should == true
+      @first_membership_H.reload.direct?.should == true
     end
   
     it "should return the direct sub-membership, which has been created first" do

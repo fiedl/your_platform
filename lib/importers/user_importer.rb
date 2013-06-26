@@ -23,6 +23,7 @@ class UserImporter < Importer
               user.update_attributes( user_data.attributes )
               user.save
               user.import_profile_fields( user_data.profile_fields_array, update_policy)
+              user.handle_primary_corporation( user_data )
               user.handle_corporations( user_data )
               user.handle_deleted-string_status( user_data.deleted-string_status )
               user.handle_former_corporations( user_data )
@@ -414,6 +415,10 @@ class UserData
     d(:epdorgmembershipstartdate).to_datetime
   end
 
+  def burschungsdatum
+    d(:epdwingolfmutterverbindburschung).to_datetime
+  end
+
   def philistrationsdatum
     d(:epdwingolfaktuelverbindphilistration).to_datetime
   end
@@ -526,6 +531,18 @@ module UserImportMethods
         group_to_assign.assign_user self, joined_at: user_data.deleted-string_org_membership_end_date
       end
     end
+  end
+
+  def handle_primary_corporation( user_data )
+    corporation = user_data.corporations.first
+    hospitanten = corporation.descendant_groups.find_by_name("Hospitanten")
+    membership_hospitant = hospitanten.assign_user self, joined_at: user_data.aktivmeldungsdatum
+#    krassfuxen = corporation.descendant_groups.find_by_name("Kraßfuxen")
+#    membership_krassfux = membership_hospitant.promote_to krassfuxen, date: 
+    burschen = corporation.descendant_groups.find_by_name("Aktive Burschen")
+    membership_burschen = membership_hospitant.promote_to burschen, date: user_data.burschungsdatum
+    philister = corporation.descendant_groups.find_by_name("Philister")
+    membership_philister = membership_burschen.promote_to philister, date: user_data.philistrationsdatum
   end
 
   def handle_corporations( user_data )

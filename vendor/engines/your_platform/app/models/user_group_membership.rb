@@ -147,7 +147,7 @@ class UserGroupMembership < DagLink
     else
       destroy_direct_memberships
     end
-    self.reload
+#    UserGroupMembership.with_deleted.find self.id
   end
 
   def archive
