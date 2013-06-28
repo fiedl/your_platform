@@ -298,7 +298,7 @@ module GroupMixins::Import
     
     # Former Members
     set_flag_based_on_name :former_members_parent
-
+    
   end
 
   def set_flag_based_on_name( name )

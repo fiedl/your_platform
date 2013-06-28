@@ -321,7 +321,7 @@ class UserData
 
       corporation_tokens = str.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
       corporations = corporation_tokens.collect do |token|
-        Corporation.find_by_token(token)
+        Corporation.find_by_token(token) || raise "Corporation #{token} not found."
       end
     else
       []
