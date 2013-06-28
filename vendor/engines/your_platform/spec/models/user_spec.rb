@@ -368,6 +368,20 @@ describe User do
       subject.should_not include @another_group
     end
   end
+  
+  describe "#current_status_membership_in(corporation)" do
+    before do
+      @corporation = create( :corporation_with_status_groups )
+      @status_group = @corporation.status_groups.first
+      @status_group.assign_user @user
+      @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
+    end
+    subject { @user.current_status_membership_in(@corporation) }
+    
+    it "should return the correct membership" do
+      subject.should == @status_group_membership
+    end
+  end
 
   
   # Memberships

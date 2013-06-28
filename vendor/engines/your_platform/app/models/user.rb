@@ -276,6 +276,18 @@ class User < ActiveRecord::Base
       StatusGroupMembership.find_by_user_and_group( self, group )
     end
   end
+  
+  def current_status_membership_in( corporation )
+    current_status_groups = (corporation.status_groups & self.ancestor_groups)
+    if current_status_groups.count > 1
+      raise 'selection algorithm not unique, yet. Please correct this.'
+    end
+    if current_status_groups.count == 0
+      return nil
+    else
+      StatusGroupMembership.find_by_user_and_group( self, current_status_groups.first )
+    end
+  end
 
 
   # Memberships

@@ -23,7 +23,7 @@ class UserImporter < Importer
               user.update_attributes( user_data.attributes )
               user.save
               user.import_profile_fields( user_data.profile_fields_array, update_policy)
-              user.handle_primary_corporation( user_data )
+              user.handle_primary_corporation( user_data, progress )
               user.handle_corporations( user_data )
               user.handle_deleted-string_status( user_data.deleted-string_status )
               user.handle_former_corporations( user_data )
@@ -412,15 +412,23 @@ class UserData
   end
 
   def aktivmeldungsdatum
-    d(:epdorgmembershipstartdate).to_datetime
+    if (d(:epdorgmembershipstartdate)) and (d(:epdwingolfmutterverbindaktivmeldung)) and 
+        (d(:epdwingolfmutterverbindaktivmeldung) != d(:epdorgmembershipstartdate))
+      raise 'deleted-string data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
+    end
+    (d(:epdorgmembershipstartdate) || d(:epdwingolfmutterverbindaktivmeldung)).to_datetime
+  end
+  
+  def receptionsdatum
+    d(:epdwingolfmutterverbindrezeption).try(:to_datetime)
   end
 
   def burschungsdatum
-    d(:epdwingolfmutterverbindburschung).to_datetime
+    d(:epdwingolfmutterverbindburschung).try(:to_datetime)
   end
 
   def philistrationsdatum
-    d(:epdwingolfaktuelverbindphilistration).to_datetime
+    d(:epdwingolfaktuelverbindphilistration).try(:to_datetime)
   end
 
   def bandaufnahme_als_aktiver?( corporation )
@@ -434,6 +442,7 @@ class UserData
   end
 
   def year_of_joining( corporation )
+    raise 'no corporation given.' if not corporation
     yy = self.aktivitätszahl.match( "#{corporation.token}[0-9][0-9]" )[0].gsub( corporation.token, "" )
     yyyy = yy_to_yyyy(yy).to_s
   end
@@ -533,16 +542,41 @@ module UserImportMethods
     end
   end
 
-  def handle_primary_corporation( user_data )
+  def handle_primary_corporation( user_data, progress )
     corporation = user_data.corporations.first
+    
+    # Aktivmeldung
+    raise 'aktivmeldungsdatum not given' if not user_data.aktivmeldungsdatum
     hospitanten = corporation.descendant_groups.find_by_name("Hospitanten")
     membership_hospitant = hospitanten.assign_user self, joined_at: user_data.aktivmeldungsdatum
-#    krassfuxen = corporation.descendant_groups.find_by_name("Kraßfuxen")
-#    membership_krassfux = membership_hospitant.promote_to krassfuxen, date: 
-    burschen = corporation.descendant_groups.find_by_name("Aktive Burschen")
-    membership_burschen = membership_hospitant.promote_to burschen, date: user_data.burschungsdatum
-    philister = corporation.descendant_groups.find_by_name("Philister")
-    membership_philister = membership_burschen.promote_to philister, date: user_data.philistrationsdatum
+    
+    # Reception
+    if user_data.receptionsdatum
+      if (user_data.philistrationsdatum) and (user_data.receptionsdatum > user_data.philistrationsdatum)
+        warning = { message: 'inconsistent deleted-string data: philistration before reception! ingoring reception.',
+                    name: self.name, uid: user_data.w_nummer, 
+                    philistrationsdatum: user_data.philistrationsdatum,
+                    receptionsdatum: user_data.receptionsdatum }
+        progress.log_warning(warning)
+      else
+        krassfuxen = corporation.descendant_groups.find_by_name("Kraßfuxen")
+        membership_krassfux = membership_hospitant.promote_to krassfuxen, date: user_data.receptionsdatum
+      end
+    end
+    
+    # Burschung
+    if user_data.burschungsdatum
+      burschen = corporation.descendant_groups.find_by_name("Aktive Burschen")
+      membership_burschen = self.reload.current_status_membership_in(corporation)
+        .promote_to burschen, date: user_data.burschungsdatum
+    end
+    
+    # Philistration
+    if user_data.philistrationsdatum
+      philister = corporation.descendant_groups.find_by_name("Philister")
+      membership_philister = self.reload.current_status_membership_in(corporation)
+        .promote_to philister, date: user_data.philistrationsdatum
+    end
   end
 
   def handle_corporations( user_data )
@@ -550,8 +584,7 @@ module UserImportMethods
       year_of_joining = user_data.year_of_joining(corporation)
       group_to_assign = nil
       if user_data.aktivmeldungsdatum.year.to_s == year_of_joining
-        date_of_joining = user_data.aktivmeldungsdatum
-        group_to_assign = corporation.descendant_groups.find_by_name("Hospitanten")
+        # Already handled by #handle_primary_corporation.
       else
         date_of_joining = year_of_joining.to_datetime
         if user_data.bandaufnahme_als_aktiver?( corporation )
@@ -559,13 +592,13 @@ module UserImportMethods
         elsif user_data.bandverleihung_als_philister?( corporation )
           group_to_assign = corporation.descendant_groups.find_by_name("Philister")
         end
-      end
 
-      raise 'could not identify group to assign this user' if not group_to_assign
-      group_to_assign.assign_user self, joined_at: date_of_joining
+        raise 'could not identify group to assign this user' if not group_to_assign
+        group_to_assign.assign_user self, joined_at: date_of_joining
+      end
     end
 
-    if user_data.aktivitaetszahl != self.aktivitaetszahl
+    if user_data.aktivitaetszahl != self.reload.aktivitaetszahl
       raise "consistency check failed: aktivitaetszahl #{user_data.aktivitaetszahl} not reconstructed properly."
     end
   end
