@@ -23,8 +23,16 @@ class ProfileFieldsController < ApplicationController
 
   def create
     args = params[ :profile_field ]
-    args[ :type ] = "ProfileFieldTypes::Custom" if not args[ :type ] if args
-    respond_with @profileable.profile_fields.create( args ) if @profileable
+    args[ :type ] ||= ProfileFieldTypes::Custom.name if args
+    @profileable = User.find_by_id(params[:profileable_id])
+    @profile_field = @profile_field.becomes args[:type].constantize
+    @profile_field.profileable = @profileable
+    @profile_field.save
+
+    respond_to do |format|
+      format.html { redirect_to @user }
+      format.js
+    end
   end
 
   def update

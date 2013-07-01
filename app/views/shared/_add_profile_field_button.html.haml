@@ -7,15 +7,15 @@
     - type_or_types.each do |type|
       %li
         = link_to( t(type.demodulize.underscore),
-                     url_for( :action => :create_profile_field,
+                     url_for( :controller => :profile_fields,
                                  :profileable_id => profileable.id,
-                                 :type => type,
+                                 :profile_field => {:type => type},
                                  :section => section),
                      :id => "add_#{type.demodulize.underscore}_field",
                      :remote => true,
                      :method => 'post')
 - else
-  = add_button( url_for( :action => :create_profile_field,
+  = add_button( url_for( :controller => :profile_fields,
                          :profileable_id => profileable.id,
-                         :type => type_or_types,
+                         :profile_field => {:type => type_or_types},
                          :section => section), :method => 'post')

@@ -53,7 +53,7 @@ class Ability
             parent_field = parent_field.parent
           end
 
-          parent_field.profileable.id == user.id
+          !parent_field.profileable || parent_field.profileable.id == user.id
         end
 
         # Normal users cannot see hidden users, except for self.

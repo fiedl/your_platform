@@ -21,21 +21,6 @@ class UsersController < ApplicationController
     end
   end
 
-  def create_profile_field()
-    @user = User.find_by_id(params[:profileable_id])
-    type = params[:type]
-    ProfileField #require
-    @profile_field = type.constantize.create
-    @profile_field.profileable_id = @user.id
-    @profile_field.profileable_type = "User"
-    @profile_field.save
-
-    respond_to do |format|
-      format.html { redirect_to @user }
-      format.js
-    end
-  end
-
   def new
     @title = "Aktivmeldung eintragen" # t(:create_user)
     @user = User.new
