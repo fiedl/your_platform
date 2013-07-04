@@ -1,5 +1,5 @@
-%li
-  %span{class: 'profile_field', id: "profile_field_id_#{profile_field.id}"}
+%li{:class => profile_field.parent ? 'profile_field_child' : 'profile_field_parent', id: "profile_field_id_#{profile_field.id}" }
+  %span{class: 'profile_field'}
     - input_type = 'input'
     - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type   
     - unless profile_field.parent
@@ -9,7 +9,7 @@
       = best_in_place profile_field, :label, classes: 'label'
     - else
       = profile_field.label
-    - if profile_field.type == "ProfileFieldTypes::Address"
+    - if profile_field.type == ProfileFieldTypes::Address.name
       = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
     - if input_type == 'textarea'
       %br
