@@ -65,22 +65,35 @@ Wingolfsplattform::Application.configure do
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
-
+  # Load Secret Settings
+  require 'yaml'
+  secrets = {}
+  if File.exists?("config/secrets.yml")
+    secrets = YAML.load( File.read( "config/secrets.yml" ) )
+  end
+    
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
-  require 'yaml'
-  mailer_passwords = YAML.load( File.read( "config/mailer_passwords.yml" ) )
-  raise 'no sender smtp password set in configuration.' unless mailer_passwords[ "production_smtp_password" ]
+
+  smtp_password = secrets["wingolfsplattform@wingolf.org_smtp_password"]
+  unless smtp_password
+    raise "
+      No smtp password set in config/secrets.yml.
+      Please have a look at config/secrets.yml.example and set the key
+        wingolfsplattform@wingolf.org_smtp_password
+      in config/secrets.yml.
+    "
+  end
+  
   config.action_mailer.smtp_settings = {
     address: 'smtp.1und1.de',
     user_name: 'wingolfsplattform@wingolf.org',
-    password: mailer_passwords[ "production_smtp_password" ],
+    password: smtp_password,
     domain: 'wingolfsplattform.org',
     enable_starttls_auto: true,
     # only if certificate malfunctions:
     # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE    
   }
   config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
-
 
 end
