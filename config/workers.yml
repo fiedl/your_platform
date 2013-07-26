@@ -1,0 +1,5 @@
+workers:
+-
+	name: group_mail_worker
+	script: script/mailman_server
+	pid_file: tmp/pids/group_mail_worker.pid
