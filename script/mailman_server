@@ -15,53 +15,56 @@ require 'yaml'
 
 ENV['RAILS_ENV'] ||= 'production'
 
-config_file = File.expand_path('../../config/group-mail-worker.yml', __FILE__)
-if not File.exists? config_file
-  raise "The config/group-mail-worker.yml (#{config_file}) was not found! Group mail worker could not be started!"
-else
+user = `whoami`.gsub("\n", "")
+maildir = "/home/#{user}/Maildir"
+config = {
+  "user" => user,
+  "maildir" => maildir
+}
 
-  config = YAML.load(File.read(config_file))
-  
-  Mailman.config.logger = Logger.new("log/mailman.log")
-  Mailman.config.maildir = config["maildir"] if config && config["maildir"]
-  
-  p "mailman: configuration set. starting mailman application ..."
-  Mailman::Application.run do
-  
-    p "mailman run ..."
-    p "monitoring #{Mailman.config.maildir}/new."
-    Mailman.logger.info "Watching Maildir #{Mailman.config.maildir}/new."
-    default do
-      
-      begin
-        Mailman.logger.info "Processing incoming email:\n#{message}"
-        post = Post.create_from_message(message)
-        Mailman.logger.info "Processing completed. Created post #{post.id}."
+THIS_FILE = File.symlink?(__FILE__) ? File.readlink(__FILE__) : __FILE__
+log_file = File.expand_path(File.join(THIS_FILE, "../../log/mailman.log"))
 
-        # copy delivery settings from the Rails configuration
-        delivery_method = Rails.application.config.action_mailer.delivery_method
-        delivery_settings = Rails.application.config.action_mailer.smtp_settings
-        delivery_settings ||= {}
+Mailman.config.logger = Logger.new(log_file)
+Mailman.config.maildir = config["maildir"] if config && config["maildir"]
 
-        # TEMPORARY SAFE GUARD!
-        # ONLY ALLOW MESSAGES TO fiedlschuster.
-        messages_to_deliver = post.messages_to_deliver_to_mailing_list_members
-        messages_to_deliver.each do |message|
-          raise "TEMP: no mail to fiedlschuster:\n#{message}" unless message.smtp_envelope_to.first.include?('fiedlschuster')
+p "mailman: configuration set. starting mailman application ..."
+Mailman::Application.run do
 
-          message.delivery_method delivery_method, delivery_settings
-          message.deliver
-        end
-        Mailman.logger.info "Delivered post #{post.id} to #{messages_to_deliver.count} users."
+  p "mailman run ..."
+  p "monitoring #{Mailman.config.maildir}/new."
+  Mailman.logger.info "Watching Maildir #{Mailman.config.maildir}/new."
+  default do
+    
+    begin
+      Mailman.logger.info "Processing incoming email:\n#{message}"
+      post = Post.create_from_message(message)
+      Mailman.logger.info "Processing completed. Created post #{post.id}."
 
-      rescue Exception => e
-        Mailman.logger.error "Exception occured while processing received email:\n#{message}"
-        Mailman.logger.error [e, *e.backtrace].join("\n")
+      # copy delivery settings from the Rails configuration
+      delivery_method = Rails.application.config.action_mailer.delivery_method
+      delivery_settings = Rails.application.config.action_mailer.smtp_settings
+      delivery_settings ||= {}
+
+      # TEMPORARY SAFE GUARD!
+      # ONLY ALLOW MESSAGES TO fiedlschuster.
+      messages_to_deliver = post.messages_to_deliver_to_mailing_list_members
+      messages_to_deliver.each do |message|
+        raise "TEMP: no mail to fiedlschuster:\n#{message}" unless message.smtp_envelope_to.first.include?('fiedlschuster')
+
+        message.delivery_method delivery_method, delivery_settings
+        message.deliver
       end
-  
+      Mailman.logger.info "Delivered post #{post.id} to #{messages_to_deliver.count} users."
+
+    rescue Exception => e
+      Mailman.logger.error "Exception occured while processing received email:\n#{message}"
+      Mailman.logger.error [e, *e.backtrace].join("\n")
     end
+
   end
 end
+
 
 
 # This file is still in development.
