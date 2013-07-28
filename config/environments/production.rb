@@ -66,16 +66,12 @@ Wingolfsplattform::Application.configure do
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
 
   # Load Secret Settings
-  require 'yaml'
-  secrets = {}
-  if File.exists?("config/secrets.yml")
-    secrets = YAML.load( File.read( "config/secrets.yml" ) )
-  end
+  # -> moved to config/application.rb
     
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
 
-  smtp_password = secrets["wingolfsplattform@wingolf.org_smtp_password"]
+  smtp_password = SECRETS["wingolfsplattform@wingolf.org_smtp_password"]
   unless smtp_password
     raise "
       No smtp password set in config/secrets.yml.

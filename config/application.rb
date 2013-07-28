@@ -32,8 +32,15 @@ if defined?(Bundler)
   # Bundler.require(:default, :assets, Rails.env)
 end
 
+# config/secrets.yml
+require 'yaml'
+secrets_file = File.expand_path('../secrets.yml', __FILE__)
+SECRETS = YAML.load(File.read(secrets_file)) if File.exists?(secrets_file)
+SECRETS ||= {}
+
 module Wingolfsplattform
   class Application < Rails::Application
+    
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
