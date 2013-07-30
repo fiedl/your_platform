@@ -269,7 +269,8 @@ class UserData < ImportDataset
   end
 
   def aktivitaetszahl
-    deleted-string_aktivitaetszahl.gsub(" ", "").gsub(",", " ")
+    deleted-string_aktivitaetszahl.gsub(" Eph ", "?Eph?").gsub(" Stft ", "?Stft?")
+      .gsub(" Nstft ", "?Nstft?").gsub(" ", "").gsub(",", " ").gsub("?", " ")
   end
 
   def aktivitätszahl
@@ -285,14 +286,15 @@ class UserData < ImportDataset
   end
 
   def corporations_by_deleted-string_aktivitaetszahl( str ) 
-    # str == "E 12, Fr 13"
+    # str == "E 12, Fr NStft 13"
     if str.present?
 
       raise 'TODO: HANDLE (E 12)-TYPE AKTIVITÄTSZAHLEN' if str.start_with? "("
 
-      corporation_tokens = str.gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
+      corporation_tokens = str.gsub(" Eph", "").gsub(" Stft", "").gsub(" Nstft", "")
+        .gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
       corporations = corporation_tokens.collect do |token|
-        Corporation.find_by_token(token) || raise "Corporation #{token} not found."
+        Corporation.find_by_token(token) || raise("Corporation #{token} not found.")
       end
     else
       []
@@ -401,20 +403,37 @@ class UserData < ImportDataset
   def philistrationsdatum
     d(:epdwingolfaktuelverbindphilistration).try(:to_datetime)
   end
+  
+  def aktivitaet_by_corporation( corporation )
+    parts = deleted-string_aktivitaetszahl.split(", ")
+    parts.select { |part| part.start_with?(corporation.token + " ") }.first
+  end
+  def ehrenphilister?( corporation )
+    aktivitaet_by_corporation(corporation).include? "Eph"
+  end
+  def stifter?( corporation )
+    aktivitaet_by_corporation(corporation).include? "Stft"
+  end
+  def neustifter?( corporation )
+    aktivitaet_by_corporation(corporation).include? "Nstft"
+  end
 
   def bandaufnahme_als_aktiver?( corporation )
+    return true if not philistrationsdatum
     raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
     year_of_joining(corporation) < philistrationsdatum.year.to_s
   end
 
   def bandverleihung_als_philister?( corporation )
+    return false if not philistrationsdatum
     raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
     year_of_joining(corporation) > philistrationsdatum.year.to_s
   end
 
   def year_of_joining( corporation )
     raise 'no corporation given.' if not corporation
-    yy = self.aktivitätszahl.match( "#{corporation.token}[0-9][0-9]" )[0].gsub( corporation.token, "" )
+    aktivitaet = aktivitaet_by_corporation(corporation)
+    yy = aktivitaet.match( "[0-9][0-9]" )[0]
     yyyy = yy_to_yyyy(yy).to_s
   end
 
@@ -563,9 +582,21 @@ module UserImportMethods
         elsif user_data.bandverleihung_als_philister?( corporation )
           group_to_assign = corporation.descendant_groups.find_by_name("Philister")
         end
+        
+        if user_data.ehrenphilister?(corporation)
+          group_to_assign = corporation.descendant_groups.find_by_name("Ehrenphilister")
+        end
 
         raise 'could not identify group to assign this user' if not group_to_assign
         group_to_assign.assign_user self, joined_at: date_of_joining
+        
+        if user_data.stifter?(corporation)
+          corporation.descendant_groups.find_by_name("Stifter").assign_user self, joined_at: date_of_joining
+        end
+        if user_data.neustifter?(corporation)
+          corporation.descendant_groups.find_by_name("Neustifter").assign_user self, joined_at: date_of_joining
+        end
+        
       end
     end
 
