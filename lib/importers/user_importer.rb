@@ -12,6 +12,10 @@ require 'importers/importer'
 #   User.all  # will list all users
 #
 class UserImporter < Importer
+  def initialize( args = {} )
+    super(args)
+    @object_class_name = "User"
+  end
 
   def import
     import_file = ImportFile.new( file_name: @file_name, data_class_name: "UserData" )
@@ -50,25 +54,6 @@ class UserImporter < Importer
     end
   end
 
-  def handle_existing( data, &block )
-    if data.user_already_exists?
-      if update_policy == :ignore
-        progress.log_ignore( { message: "user already exists", user_uid: data.uid, name: data.name } ) 
-        user = nil
-      end
-      if update_policy == :replace
-        data.existing_user.destroy 
-        user = User.new 
-      end
-      if update_policy == :update
-        user = data.existing_user
-      end
-      yield( user ) if update_policy == :update || update_policy == :replace
-    else
-      yield( User.new )
-    end
-  end
-
   def handle_existing_email( data, &block )
     if data.email_already_exists_for_other_user?
       warning = { message: "Email #{data.email} already exists. Keeping the existing one, ignoring the new one.",
@@ -93,44 +78,30 @@ class String
   end
 end
 
-class UserData
+class UserData < ImportDataset
 
   def initialize( data_hash )
-    @data_hash = data_hash
+    super(data_hash)
+    @object_class_name = "User"
     @profile_fields = []
   end
 
-  def data_hash_value( key )
-    val = @data_hash[ key ] 
-    val ||= @data_hash[ key.to_s ]
-  end
-
-  def d( key )
-    data_hash_value(key)
-  end
-
-  # The filter is a Hash the data_hash is compared against.
-  # The method returns true if the data_hash contains the information
-  # given in the filter hash.
-  #
-  # Example:
-  #
-  #   filter = { "uid" => "1234" }
-  #
-  def match?( filter )
-    return true if filter.nil?
-    return ( @data_hash.slice( *filter.keys ) == filter )
-  end
-
   def user_already_exists?
-    existing_user.to_b
+    self.already_imported?
   end
-
-  def existing_user
+  
+  # This looks for an object in the database that matches
+  # the dataset to import. 
+  #
+  def already_imported_object  
     User.where( first_name: self.first_name, last_name: self.last_name )
       .includes( :profile_fields )
       .select { |user| user.date_of_birth == self.date_of_birth }
       .first
+  end
+  
+  def existing_user
+    self.already_imported_object
   end
 
   def email_already_exists_for_other_user?

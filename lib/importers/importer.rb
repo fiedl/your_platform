@@ -12,6 +12,7 @@ class Importer
     self.file_name = args[:file_name]
     self.update_policy = args[:update_policy]
     self.filter = args[:filter]
+    @object_class_name = ""  # e.g. "User"
   end
 
   # This attribute refers to the file name of the file to import
@@ -63,6 +64,28 @@ class Importer
   def progress
     @progress_indicator ||= ProgressIndicator.new
   end
+  
+  # This deals with datasets that have been already imported
+  # with regard to the update policy.
+  #
+  def handle_existing( data, &block )
+    if data.already_imported?
+      if update_policy == :ignore
+        progress.log_ignore( { message: "Dataset already imported.", dataset: data.data_hash } ) 
+        object = nil
+      end
+      if update_policy == :replace
+        data.existing_user.destroy 
+        object = @object_class_name.constantize.new  # e.g.  User.new 
+      end
+      if update_policy == :update
+        object = data.already_imported_object
+      end
+      yield( object ) if update_policy == :update || update_policy == :replace
+    else
+      yield( @object_class_name.constantize.new )  # e.g.  User.new
+    end
+  end
 
 end
 
@@ -90,7 +113,51 @@ class ImportFile
 
 end
 
+# This class represents one dataset to import from the datafile.
+#
+class ImportDataset
+  def initialize( data_hash )
+    @data_hash = data_hash
+    @object_class_name = ""   # e.g. User
+  end
+  
+  def data_hash
+    @data_hash
+  end
+  
+  def data_hash_value( key )
+    val = @data_hash[ key ] 
+    val ||= @data_hash[ key.to_s ]
+  end
 
+  def d( key )
+    data_hash_value(key)
+  end
+  
+  # The filter is a Hash the data_hash is compared against.
+  # The method returns true if the data_hash contains the information
+  # given in the filter hash.
+  #
+  # Example:
+  #
+  #   filter = { "uid" => "1234" }
+  #
+  def match?( filter )
+    return true if filter.nil?
+    return ( @data_hash.slice( *filter.keys ) == filter )
+  end
+  
+  def already_imported?
+    already_imported_object.to_b
+  end
+
+  def already_imported_object
+    if self.respond_to?(:id) && self.id
+      @object_class_name.constantize.where( id: self.id ).first 
+    end
+  end
+  
+end
 
 
 class ProgressIndicator
