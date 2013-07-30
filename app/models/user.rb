@@ -54,7 +54,7 @@ class User
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter")
     addition += " Nstft" if self.member_of? corporation.descendant_groups.find_by_name("Neustifter")
     addition += " Eph" if self.member_of? corporation.descendant_groups.find_by_name("Ehrenphilister")
-    addition += " "
+    addition += " " if addition != ""
     return addition
   end
 
