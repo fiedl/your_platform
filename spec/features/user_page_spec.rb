@@ -53,7 +53,11 @@ feature 'User page', js: false do
           click_on I18n.t(:add)
           page.should have_selector('.profile_field')
           within first '.profile_field' do
-            page.should have_selector('input[type=text]', count: 7)
+            # 
+            # Fields: Organization, From, To, Role  -> 4 fields
+            # Sub labels not editable.
+            #
+            page.should have_selector('input[type=text]', count: 4)
           end
 
           find('.remove_button').click
@@ -76,9 +80,13 @@ feature 'User page', js: false do
           click_on I18n.t(field_name)
           subject.should have_selector('.profile_field')
           within first '.profile_field' do
-            subject.should have_selector('input[type=text]', count: 11)
+            #
+            # Fields: Label, From, To, Organization, Position, Tasks -> 6 fields
+            # Sub labels not editable.
+            #
+            subject.should have_selector('input[type=text]', count: 6)
           end
-
+        
           find('.remove_button').click
           page.should_not have_selector('.profile_field')
         end

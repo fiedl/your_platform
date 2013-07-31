@@ -16,5 +16,5 @@ created_profile_field.apply_edit_mode();
 // as text fields.
 created_profile_field.find(".editable").trigger("edit");
 
-// Set the focus to the first field
-created_profile_field.find("input[name='who_by_title']").focus();
+// Set the focus to the first field (except for the label => second)
+created_profile_field.find("input[type=text]")[1].focus();

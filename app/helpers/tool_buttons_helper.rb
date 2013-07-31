@@ -16,7 +16,7 @@ module ToolButtonsHelper
   def add_button( url, options = {} ) # TODO: Was braucht er für minimale Informationen?
 
     # label for the button = icon + "add"
-    label = tool_icon( "icon-plus icon-black" ) + t( :add )
+    label = tool_icon( "icon-plus icon-black" ) + " " + t( :add )
 
     # default options
     options = { 

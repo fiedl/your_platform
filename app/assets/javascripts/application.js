@@ -15,7 +15,7 @@
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
 //= require turbolinks
-//= require make-js-more-like-ruby
+// require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
 //= require jquery-ui
