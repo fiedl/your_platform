@@ -5,10 +5,13 @@
     - unless profile_field.parent
       - if can? :destroy, profile_field
         = remove_button(profile_field)
-    - if can? :update, profile_field
-      = best_in_place profile_field, :label, classes: 'label'
+    - if profile_field.parent
+      %span.label= profile_field.label
     - else
-      = profile_field.label
+      - if can? :update, profile_field
+        = best_in_place profile_field, :label, classes: 'label'
+      - else
+        = profile_field.label
     - if profile_field.type == ProfileFieldTypes::Address.name
       = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
     - if input_type == 'textarea'
