@@ -6,8 +6,12 @@ ready = ->
 		if event.keyCode == 9  # tab
 			if not $(this).closest(".edit_mode_group").hasClass("currently_in_edit_mode")
 				this_element = $(this).closest(".best_in_place")
-				next_element = $($(".best_in_place")[$(".best_in_place").index( this_element ) + 1])
-				next_element.click().focus()
+				if not event.shiftKey
+					next_element = $($(".best_in_place")[$(".best_in_place").index( this_element ) + 1])
+					next_element.click().focus()
+				else
+					prev_element = $($(".best_in_place")[$(".best_in_place").index( this_element ) - 1])
+					prev_element.click().focus()
 				event.preventDefault()
 	)
 
