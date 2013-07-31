@@ -155,15 +155,15 @@ module ProfileFieldTypes
   #
   # Therefore, this profile_field has got a sub-structure.
   #
-  #    Organization
-  #         |--------- ProfileField:  :label => :organization
+  #    Organization  <-- label of the parent profile field
+  #         |--------- ProfileField:  :label => :from
+  #         |--------- ProfileField:  :label => :to
   #         |--------- ProfileField:  :label => :role
-  #         |--------- ProfileField:  :label => :since_when
   #
   class Organization < ProfileField
     def self.model_name; ProfileField.model_name; end
 
-    has_child_profile_fields :organization, :role, :since_when
+    has_child_profile_fields :from, :to, :role
 
   end
 

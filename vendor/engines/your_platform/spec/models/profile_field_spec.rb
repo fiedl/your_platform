@@ -46,12 +46,12 @@ describe ProfileFieldTypes::Organization do
   # Here it is only tested whether the methods exist. The functionality is
   # provided by the same mechanism as tested unter the BankAccount section.
 
-  it { should respond_to( :organization ) }
-  it { should respond_to( :organization= ) }
+  it { should respond_to( :to ) }
+  it { should respond_to( :to= ) }
+  it { should respond_to( :from ) }
+  it { should respond_to( :from= ) }
   it { should respond_to( :role ) }
   it { should respond_to( :role= ) }
-  it { should respond_to( :since_when ) }
-  it { should respond_to( :since_when= ) }
 end
 
 

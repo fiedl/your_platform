@@ -1,21 +1,31 @@
-%li{:class => profile_field.parent ? 'profile_field_child' : 'profile_field_parent', id: "profile_field_id_#{profile_field.id}" }
-  %span{class: 'profile_field'}
-    - input_type = 'input'
-    - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type   
+// This template represents a profile field, which can be shown on profiles of users or groups.
+// A profile field can either have just label and value or it can have child profile fields
+// in order to display complex information such as bank account information.
+//
+- profile_field_css_class = profile_field.parent ? 'profile_field profile_field_child' : 'profile_field profile_field_parent'
+- input_type = 'input'
+- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type   
+
+%li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
+
+  // remove button
+  %span.button-wrapper
     - unless profile_field.parent
       - if can? :destroy, profile_field
         = remove_button(profile_field)
+  
+  // label
+  %span.label-wrapper
     - if profile_field.parent
-      %span.label= profile_field.label
+      %span.label.profile_field_label= profile_field.label
     - else
       - if can? :update, profile_field
-        = best_in_place profile_field, :label, classes: 'label'
+        = best_in_place profile_field, :label, classes: 'profile_field_label label'
       - else
         = profile_field.label
-    - if profile_field.type == ProfileFieldTypes::Address.name
-      = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
-    - if input_type == 'textarea'
-      %br
+
+  // value
+  %span.value-wrapper
     - if profile_field.children.count == 0
       - if can? :update, profile_field
         = best_in_place profile_field, :value,
@@ -28,4 +38,6 @@
       %ul
         - profile_field.children.each do |child_field|
           = render partial: 'profile_fields/profile_field', object: child_field
+    - if profile_field.type == ProfileFieldTypes::Address.name
+      = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
     /= render partial: 'shared/flags', locals: { flagable: profile_field }

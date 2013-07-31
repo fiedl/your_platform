@@ -1,3 +1,13 @@
+.profile_field_label
+	background-color: transparent
+	font-weight: bold
+	color: black
+	padding: 0px
+	
+ul.section_container
+	padding-left: 0px
+
+
 .box.section.study_information, .box.section.career_information, .box.section.organizations
 	ul.section_container
 		display: table
@@ -11,4 +21,29 @@
 				span.label
 					display: block
 					float: none
-				
+					font-weight: normal
+					color: #777
+
+.box.section.contact_information
+	ul.section_container
+		display: table
+		width: 50%
+		li.profile_field_parent
+			display: table-row
+	span.label-wrapper, span.value-wrapper, span.button-wrapper
+		display: table-cell
+		padding-right: 12px
+		vertical-align: top
+		padding-bottom: 12px			
+
+.box.section.bank_account_information
+	ul.section_container
+		li.profile_field_parent
+			display: block
+			ul
+				display: table
+				li.profile_field_child
+					display: table-row
+	span.label-wrapper, span.value-wrapper, span.button-wrapper
+		display: table-cell
+		padding-right: 12px	
