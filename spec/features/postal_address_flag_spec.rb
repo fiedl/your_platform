@@ -8,7 +8,7 @@ feature "Postal Address Flag" do
     @home_address = @user.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin",
                                                  type: "ProfileFieldTypes::Address" )
       .becomes(ProfileFieldTypes::Address)
-    @study_address = @user.profile_fields.create( label: "Study Address", value: "",
+    @study_address = @user.profile_fields.create( label: "Study Address", value: "Pariser Platz 1\n 10117 Berlin",
                                                   type: "ProfileFieldTypes::Address" )
       .becomes(ProfileFieldTypes::Address)
   end
@@ -27,8 +27,8 @@ feature "Postal Address Flag" do
       wait_for_ajax
       
       visit user_path @user
-      page.should have_content "Home Address Wingolfspost"
-      page.should_not have_content "Study Address Wingolfspost"
+      page.should have_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
+      page.should_not have_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
       @user.postal_address_field.should == @home_address
       
       click_on I18n.t(:edit)
@@ -36,8 +36,8 @@ feature "Postal Address Flag" do
       wait_for_ajax
 
       visit user_path @user
-      page.should_not have_content "Home Address Wingolfspost"
-      page.should have_content "Study Address Wingolfspost"
+      page.should_not have_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
+      page.should have_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
       @user.postal_address_field.should == @study_address
       
     end
