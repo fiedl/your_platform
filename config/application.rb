@@ -35,8 +35,11 @@ end
 # config/secrets.yml
 require 'yaml'
 secrets_file = File.expand_path('../secrets.yml', __FILE__)
-::SECRETS = YAML.load(File.read(secrets_file)) if File.exists?(secrets_file)
-::SECRETS ||= {}
+if File.exists?(secrets_file)
+  ::SECRETS = YAML.load(File.read(secrets_file)) 
+else
+  ::SECRETS = {}
+end
 
 module Wingolfsplattform
   class Application < Rails::Application
