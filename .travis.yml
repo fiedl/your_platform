@@ -1,4 +1,6 @@
-
+rvm:
+  - "1.9.3"
+	- "2.0.0"
 env: 
   - "RAILS_ENV=test DB=mysql DISPLAY=:99.0"
 
