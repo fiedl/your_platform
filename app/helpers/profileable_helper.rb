@@ -1,19 +1,20 @@
 module ProfileableHelper
   
-  def profile_sections_for_profileable( profileable, sections = [] )
-    sections_to_be_shown( sections, profileable ).collect do |section|
-      render( partial: 'shared/section', locals: { :profileable => profileable, :section => section } )
+  def profile_sections_to_html(sections)
+    sections_to_be_shown(sections).collect do |section|
+      render partial: 'profile/section', locals: { :section => section }
     end.join.html_safe
   end
+  
 
   private
 
   # This method returns all sections to be shown.
   # For further reference, see `show_all_sections?` and `show_this_section?`.
   #
-  def sections_to_be_shown( all_sections, profileable )
+  def sections_to_be_shown( all_sections )
     all_sections.select do |section|
-      show_this_section?( section, profileable )
+      show_this_section?( section )
     end
   end
   
@@ -33,8 +34,8 @@ module ProfileableHelper
   # (a) the section is not empty, or
   # (b) all sections are to be shown (by force).
   #
-  def show_this_section?( section, profileable )
-    ( profileable.profile_fields_by_section( section ).count > 0 ) or ( show_all_sections?( profileable ) )
+  def show_this_section?( section )
+    ( section.profile_fields.count > 0 ) or ( show_all_sections?(section.profileable) )
   end
 
   def map_of_address_profile_fields( address_profile_fields )

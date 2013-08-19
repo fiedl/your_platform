@@ -11,10 +11,12 @@ describe Profileable do
     @profileable = MyStructureable.create
   end
   
-  describe "#profile_field_type_by_section" do
-    describe "section :general" do
-      subject { @profileable.profile_field_type_by_section(:general) }
-      it { should include "ProfileFieldTypes::Klammerung" }
+  describe "#profile" do
+    describe "#sections.select(general)" do
+      describe "#profile_field_types" do
+        subject { @profileable.profile.section_by_title(:general).profile_field_types }
+        it { should include "ProfileFieldTypes::Klammerung" }
+      end
     end
   end
 end

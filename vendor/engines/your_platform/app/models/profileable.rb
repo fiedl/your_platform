@@ -6,14 +6,23 @@
 #
 
 module Profileable
-  def has_profile_fields
-    is_profileable
+  def has_profile_fields( options = {} )
+    is_profileable(options)
   end
 
-  def is_profileable
+  def is_profileable( options = {} )
+    @profile_section_titles = options[:profile_sections] || default_profile_section_titles
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
     include InstanceMethodsForProfileables
   end
+  
+  def default_profile_section_titles
+    [:contact_information, :about_myself, :study_information, :career_information, 
+     :organizations, :bank_account_information, :description]
+  end
+  def profile_section_titles 
+    @profile_section_titles
+  end  
 
   module InstanceMethodsForProfileables
     
@@ -25,52 +34,27 @@ module Profileable
       @email_profile_field = profile_fields.build( type: "ProfileFieldTypes::Email", label: "email" ) unless @email_profile_field
       @email_profile_field.value = email
     end
-
-    def profile_sections
-      [:contact_information, :about_myself, :study_information, :career_information, 
-       :organizations, :bank_account_information, :description]
-    end
-    def sections
-      profile_sections
+    
+    def profile
+      @profile ||= Profile.new(self)
     end
 
-    def profile_fields_by_type( type_or_types )
-      types = type_or_types if type_or_types.kind_of? Array
-      types = [ type_or_types ] unless types
-      profile_fields.where( type: types )
+    def profile_section_titles
+      self.class.profile_section_titles
     end
     
-    def profile_fields_by_section( section )
-      type_or_types = profile_field_type_by_section(section)
-      profile_fields_by_type(type_or_types)
+    def profile_sections
+      self.profile.sections
     end
+    
+    #def sections
+    #  profile_section_titles
+    #end
 
-    def profile_field_type_by_section(section)
-      case section
-        when :general
-          [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::General" ]
-        when :contact_information
-          [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
-            "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
-        when :about_myself
-          "ProfileFieldTypes::About"
-        when :study_information
-          [ "ProfileFieldTypes::Study" ]
-        when :career_information
-          [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Competence" ]
-        when :organizations
-          "ProfileFieldTypes::Organization"
-        when :bank_account_information
-          "ProfileFieldTypes::BankAccount"
-        when :description
-          "ProfileFieldTypes::Description"
-        when :communication
-          "ProfileFieldTypes::NameSurrounding"
-        else
-          []
-      end
+    def profile_fields_by_type( type_or_types )
+      profile_fields.where( type: type_or_types )
     end
-
+    
   end
  
 end

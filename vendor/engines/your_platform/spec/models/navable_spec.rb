@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+unless ActiveRecord::Migration.table_exists? :my_structureables
+  ActiveRecord::Migration.create_table :my_structureables do |t|
+    t.string :name
+  end
+end
+
 describe Navable do
   
   before do

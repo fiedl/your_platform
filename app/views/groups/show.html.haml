@@ -74,7 +74,8 @@
 .group_map
   .large_map_section
     = address_fields_map( @map_address_fields )
-= profile_sections_for_profileable @group, [ :contact_information, :bank_account_information, :description ]
+
+= profile_sections_to_html(@group.profile.sections_by_title([ :contact_information, :bank_account_information, :description ]))
 
 / further info: token, extensive name, internal token
 - if @group.token or @group.extensive_name or @group.internal_token

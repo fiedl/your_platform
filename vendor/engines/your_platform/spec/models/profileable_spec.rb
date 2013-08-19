@@ -1,5 +1,11 @@
 require 'spec_helper'
 
+unless ActiveRecord::Migration.table_exists? :my_structureables
+  ActiveRecord::Migration.create_table :my_structureables do |t|
+    t.string :name
+  end
+end
+
 describe Profileable do
 
   before do
@@ -10,7 +16,7 @@ describe Profileable do
     end
   end
   
-  describe "#is_profileable" do
+  describe ".is_profileable" do
     before do
       class MyStructureable
         is_profileable
@@ -26,7 +32,7 @@ describe Profileable do
     end
   end
 
-  describe "#has_profile_fields" do  # alias method for is_profileable
+  describe ".has_profile_fields" do  # alias method for is_profileable
     before do
       class MyStructureable
         has_profile_fields
@@ -69,8 +75,13 @@ describe Profileable do
     
     describe "#profile_sections" do
       subject { @profileable.profile_sections }
-      it { should include :contact_information, :about_myself, :study_information, :career_information, 
-       :organizations, :bank_account_information, :description }
+      it "should be an array of ProfileSection objects" do
+        subject.should be_kind_of Array
+        subject.first.should be_kind_of ProfileSection
+      end
+      it "should include the proper sections for default" do
+        subject.collect { |section| section.title }.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description 
+      end
     end
     
     describe "#profile_fields_by_type" do
@@ -83,25 +94,6 @@ describe Profileable do
         it "should return the matching profile fields" do
           subject.should == [ @address_field.becomes(ProfileFieldTypes::Address) ]
         end
-      end
-    end
-    
-    describe "#profile_fields_by_section" do
-      before do
-        @address_field = @profileable.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Berliner Platz 1, Erlangen")
-        @account_field = @profileable.profile_fields.create(type: "ProfileFieldTypes::BankAccount", label: "My Bank Account")
-      end
-      subject { @profileable.profile_fields_by_section(:contact_information) }
-      it "should return the matching profile fields" do
-        subject.should == [ @address_field.becomes(ProfileFieldTypes::Address) ]
-      end
-    end
-
-    describe "#profile_field_type_by_section" do
-      subject { @profileable.profile_field_type_by_section(:general) }
-      it "should return an array of type strings" do
-        subject.should be_kind_of Array
-        subject.should include "ProfileFieldTypes::General"
       end
     end
     
