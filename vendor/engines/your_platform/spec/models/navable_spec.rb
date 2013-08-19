@@ -42,7 +42,7 @@ describe Navable do
     # Then, this spec has to be changed accordingly.
     it "should not include workflows" do 
       subject.should_not include @workflow
-    end      
+    end
   end
   
 end

@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
-# Dieses Modul stellt die Methode +is_navable+ für ActiveRecord::Base zur Verfügung.
-# Damit kann ein Model (User, Page, ...) als navigationsfähig (d.h. mit Menü-Elementen, Breadcrumb, etc.)
-# deklariert werden.
-# Die Einbindung dieses Moduls erfolgt in einem Initializer: config/initializers/active_record_navable_extension.rb.
+#
+# This module provides the +is_navable+ method for ActiveRecord::Base.
+# Calling this method marks the model (User, Page, ...) as navable, i.e. has menu, breadcrumbs, etc. 
+#
+# The inclusion in ActiveRecord::Base is done in
+# config/initializers/active_record_navable_extension.rb.
+#
+
 module Navable
   def is_navable
     has_one                :nav_node, as: :navable, dependent: :destroy, autosave: true
@@ -40,4 +44,3 @@ module Navable
 
   end
 end
-
