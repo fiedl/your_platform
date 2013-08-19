@@ -3,6 +3,10 @@ class Profile
     @profileable = profileable
   end
   
+  def profileable
+    @profileable
+  end
+  
   def profile_fields
     @profileable.profile_fields
   end
@@ -10,6 +14,12 @@ class Profile
     profile_fields
   end
   
+  def sections
+    @profileable.profile_section_titles.collect do |title|
+      section_by_title(title)
+    end
+  end
+
   def section_by_title(title)
     sections_by_title([title]).first
   end
@@ -18,11 +28,5 @@ class Profile
       ProfileSection.new( title: title, profileable: @profileable )
     end
   end
-  
-  def sections
-    @profileable.profile_section_titles.collect do |title|
-      section_by_title(title)
-    end
-  end
-  
+
 end

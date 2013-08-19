@@ -47,10 +47,6 @@ module Profileable
       self.profile.sections
     end
     
-    #def sections
-    #  profile_section_titles
-    #end
-
     def profile_fields_by_type( type_or_types )
       profile_fields.where( type: type_or_types )
     end

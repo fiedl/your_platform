@@ -42,4 +42,8 @@ class ProfileSection < Struct.new(:title, :profileable)
     profile_field_types
   end
   
+  def to_s
+    self.title.to_s
+  end
+  
 end

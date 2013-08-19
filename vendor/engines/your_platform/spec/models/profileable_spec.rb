@@ -73,6 +73,23 @@ describe Profileable do
       end
     end
     
+    describe "#profile" do
+      subject { @profileable.profile }
+      it { should be_kind_of Profile }
+      its(:profileable) { should == @profileable }
+    end
+    
+    describe "#profile_section_titles" do
+      subject { @profileable.profile_section_titles }
+      it "should be an array of titles" do
+        subject.should be_kind_of Array
+        subject.first.should be_kind_of Symbol
+      end
+      it "should include the proper sections for default" do
+        subject.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description 
+      end
+    end
+    
     describe "#profile_sections" do
       subject { @profileable.profile_sections }
       it "should be an array of ProfileSection objects" do
@@ -98,6 +115,14 @@ describe Profileable do
     end
     
     describe "#profile_fields" do
+      before do
+        @profileable.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Berliner Platz 1, Erlangen")
+      end
+      subject { @profileable.profile_fields }
+      it "should be an Array of ProfileFields" do
+        subject.should be_kind_of Array
+        subject.first.should be_kind_of ProfileField
+      end
       describe "#to_json" do
         subject { @profileable.profile_fields.to_json }
         it "should not raise an error" do

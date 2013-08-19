@@ -24,6 +24,13 @@ describe Profile do
   
   subject { @profile }
   
+  describe "#profileable" do
+    subject { @profile.profileable }
+    it "should return the Profileable the Profile is associated with" do
+      subject.should == @profileable
+    end
+  end
+  
   describe "#profile_fields" do
     subject { @profile.profile_fields }
     it "should return the profile fields of the profileable object" do
@@ -44,6 +51,23 @@ describe Profile do
     it "should be an array of ProfileSection objects" do
       subject.should be_kind_of Array
       subject.first.should be_kind_of ProfileSection
+    end
+  end
+  
+  describe "#section_by_title" do
+    subject { @profile.section_by_title(:general) }
+    it "should return the ProfileSection where the title matches the given title" do
+      subject.should be_kind_of ProfileSection
+      subject.title.should.to_s == "general"
+    end
+  end
+  
+  describe "#sections_by_title" do
+    subject { @profile.sections_by_title([:contact, :general]) }
+    it "should return an array of ProfileSections where the titles matche the given titles" do
+      subject.should be_kind_of Array
+      subject.first.should be_kind_of ProfileSection
+      subject.collect { |section| section.title }.should == [:contact, :general]
     end
   end
 
