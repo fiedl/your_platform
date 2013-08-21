@@ -1,8 +1,6 @@
 class PagesController < ApplicationController
 
   load_and_authorize_resource
-
-#  before_filter :find_page, only: [:show, :update, :mercury_update]
   respond_to :html, :json
 
   def show
@@ -14,10 +12,10 @@ class PagesController < ApplicationController
       @title = @page.title
       @navable = @page
     end
+    #respond_with @page
   end
 
   def update
-    debugger
     @page.update_attributes params[ :page ]
     respond_with @page
   end
@@ -34,10 +32,4 @@ class PagesController < ApplicationController
     redirect_to @new_page
   end
 
-
-#  private
-#
-#  def find_page
-#    @page = Page.find params[ :id ]
-#  end
 end

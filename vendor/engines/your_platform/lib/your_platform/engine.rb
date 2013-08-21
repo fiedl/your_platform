@@ -12,6 +12,8 @@ require 'acts-as-dag'
 require 'acts_as_tree'
 require 'rails3_acts_as_paranoid'
 require 'acts_as_paranoid_dag'
+# Authorization
+#require 'cancan'
 # Template Engines
 require 'haml'
 # File Uploads
