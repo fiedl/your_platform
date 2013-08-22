@@ -1,12 +1,13 @@
-# -*- coding: utf-8 -*-
-class ApplicationController < ActionController::Base
+
+# This extends the your_platform ApplicationController
+require_dependency YourPlatform::Engine.root.join( 'app/controllers/application_controller' ).to_s
+
+class ApplicationController
   protect_from_forgery
 
   before_filter      :http_authenticate
 
   layout             :find_layout
-
-  helper_method      :current_user
 
 
   # Authorization: CanCan
@@ -21,12 +22,6 @@ class ApplicationController < ActionController::Base
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to errors_unauthorized_url
   end
-
-
-  def current_user
-    current_user_account.user if current_user_account
-  end
-
 
   protected
 

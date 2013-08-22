@@ -40,9 +40,6 @@ gem 'jquery-rails'							# MIT License
 # Authentification
 gem 'devise'                  # MIT License
 
-# Authorization
-gem 'cancan'
-
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 
@@ -222,3 +219,5 @@ gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
 # readline (for rails console)
 # see https://github.com/luislavena/rb-readline/issues/84#issuecomment-17335885
 #gem 'rb-readline', '~> 0.5.0', group: :development, require: 'readline' 
+
+gem 'cancan'

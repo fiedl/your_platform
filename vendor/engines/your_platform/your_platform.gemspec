@@ -39,6 +39,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails3_acts_as_paranoid'                                           # MIT License
   s.add_dependency 'acts_as_paranoid_dag'                                              # MIT License
 
+  # Authorization
+  s.add_dependency 'cancan'                                                            # MIT License
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt-ruby', '>= 3.0.1'                                           # MIT License 
