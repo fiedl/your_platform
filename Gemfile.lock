@@ -43,7 +43,7 @@ PATH
       rails (~> 3.2.6)
       rails-i18n
       rails3_acts_as_paranoid
-      rmagick
+      rmagick (>= 2.13.2)
 
 GEM
   remote: https://rubygems.org/

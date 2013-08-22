@@ -54,7 +54,7 @@ Gem::Specification.new do |s|
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
-  s.add_dependency 'rmagick'
+  s.add_dependency 'rmagick', '>=2.13.2'
 
   # Phone Numbers Formatting
   s.add_dependency 'phony'                                         
