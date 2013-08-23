@@ -127,9 +127,15 @@ class NavNode < ActiveRecord::Base
   # This returns the Navable ancestors of the Navable associated with this NavNode as an Array.
   #
   def ancestor_navables
-    self.navable.ancestors.select do |ancestor| 
-      ancestor.respond_to? :nav_node
+    path = []
+    current_navable = self.navable
+    until current_navable.nil?
+      current_navable = current_navable.parents.select do |parent| 
+        parent.respond_to? :nav_node
+      end.first
+      path << current_navable if current_navable
     end
+    path.reverse
   end
   
   # This returns the Navable ancestors of the Navable associated with this NavNode as an Array
