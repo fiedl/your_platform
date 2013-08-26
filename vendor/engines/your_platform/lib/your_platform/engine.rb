@@ -20,7 +20,7 @@ require 'acts_as_paranoid_dag'
 require 'devise'
 
 # Authorization
-# do not require 'cancan' here, since it would have the 'require: false' flag in the Gemfile.
+require 'cancan'
 
 # Template Engines
 require 'haml'

@@ -350,7 +350,6 @@ DEPENDENCIES
   best_in_place (~> 2.1.0)
   better_errors
   binding_of_caller
-  cancan
   capistrano
   capistrano_colors
   capybara (>= 2.0.2)
