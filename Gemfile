@@ -33,6 +33,8 @@ end
 # supported runtimes.
 # This is also needed by twitter-bootstrap-rails in production.
 gem 'execjs'
+# But therubyracer apparently uses a lot of memory: 
+# https://github.com/seyhunak/twitter-bootstrap-rails/issues/336
 gem 'therubyracer', :platform => :ruby
 
 gem 'jquery-rails'							# MIT License
@@ -68,11 +70,6 @@ gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
 # see: https://github.com/justinfrench/formtastic, 
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
-
-# In Place Editing
-gem 'best_in_place', '~> 2.1.0'                                         # MIT License
-#gem 'best_in_place', git: 'git://github.com/bernat/best_in_place.git'	
-#gem 'best_in_place', path: '../best_in_place/'
 
 # JSON
 gem 'json'								# Ruby License
@@ -168,13 +165,6 @@ gem 'gravatar_image_tag'                                                # MIT Li
 # WorkflowKit, SF
 gem 'workflow_kit', '>= 0.0.5.alpha', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
 #gem 'workflow_kit', path: '../workflow_kit'
-
-# Twitter Bootstrap Layout
-gem 'twitter-bootstrap-rails'
-gem 'less', '>=2.2.2'
-gem 'less-rails'
-#gem 'bootstrap-sass'                                                    # Apache License 2.0
-gem 'font-awesome-rails'
 
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'

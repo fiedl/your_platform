@@ -25,6 +25,15 @@ require 'cancan'
 # Template Engines
 require 'haml'
 
+# Layout: Twitter Bootstrap
+require 'twitter-bootstrap-rails'
+require 'less'
+require 'less-rails'
+require 'font-awesome-rails'
+
+# In Place Editing
+require 'best_in_place'
+
 # File Uploads
 require 'carrierwave'
 
