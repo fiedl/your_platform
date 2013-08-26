@@ -1,12 +1,38 @@
-# -*- coding: utf-8 -*-
+#
+# Every User may have an UserAccount that enables the user to log in to the website.
+# 
+#    user = User.create(...)       # This user may not log in.
+#    account = user.build_account
+#    account.password = "foo"
+#    account.save                  # Now, the user may log in.
+#    account.destroy               # Now, the user may not log in anymore. 
+#
 class UserAccount < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :token_authenticatable, :confirmable,
-  # :lockable, :timeoutable, :registerable and :omniauthable
-  devise :database_authenticatable,
-         :recoverable, :rememberable, :trackable, :validatable
-
-  # Setup accessible (or protected) attributes for your model
+  
+  # For authentication, we use devise, 
+  # https://github.com/plataformatec/devise.
+  # 
+  # Available Modules:
+  # Database Authenticatable: 
+  #   encrypts and stores a password in the database to validate the authenticity of a user
+  #   while signing in. The authentication can be done both through POST requests or 
+  #   HTTP Basic Authentication.
+  # Omniauthable: adds Omniauth (https://github.com/intridea/omniauth) support;
+  # Confirmable: sends emails with confirmation instructions and verifies whether an account
+  #   is already confirmed during sign in.
+  # Recoverable: resets the user password and sends reset instructions.
+  # Registerable: handles signing up users through a registration process, also allowing 
+  #   them to edit and destroy their account.
+  # Rememberable: manages generating and clearing a token for remembering the user from a 
+  #   saved cookie.
+  # Trackable: tracks sign in count, timestamps and IP address.
+  # Timeoutable: expires sessions that have no activity in a specified period of time.
+  # Validatable: provides validations of email and password. It's optional and can be customized, 
+  #   so you're able to define your own validations.
+  # Lockable: locks an account after a specified number of failed sign-in attempts. 
+  #   Can unlock via email or after a specified time period.
+  # 
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable
   attr_accessible :password, :password_confirmation, :remember_me
 
   # Virtual attribute for authenticating by either username, alias or email
@@ -29,19 +55,22 @@ class UserAccount < ActiveRecord::Base
 
   delegate :email, :to => :user, :allow_nil => true
 
-  #HACK: This method seems to be required by the PasswordController and is missing, since we have a virtual email
-  #field. If we ever change the Password authentication field to login, remove this method.
+  # HACK: This method seems to be required by the PasswordController and is missing, 
+  # since we have a virtual email field. 
+  # TODO: If we ever change the Password authentication 
+  # field to login, remove this method.
+  #
   def email_changed?
     false
   end
 
-  # Used by devise to identify the correct user account by the given strings
+  # Used by devise to identify the correct user account by the given strings.
+  #
   def self.find_first_by_auth_conditions(warden_conditions)
     login = warden_conditions[:login] || warden_conditions[:email]
     return self.identify_user_account(login) if login # user our own identification system for virtual attributes
     where(warden_conditions).first # use devise identification system for auth tokens and the like.
   end
-
 
   # Tries to identify a user based on the given `login_string`.
   def self.identify_user_account( login_string )
