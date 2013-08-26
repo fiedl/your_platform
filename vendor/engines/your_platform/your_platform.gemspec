@@ -39,6 +39,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails3_acts_as_paranoid'                                           # MIT License
   s.add_dependency 'acts_as_paranoid_dag'                                              # MIT License
 
+  # Authentification
+  s.add_dependency 'devise'                                                            # MIT License
+
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
 

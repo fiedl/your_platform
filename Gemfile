@@ -37,9 +37,6 @@ gem 'therubyracer', :platform => :ruby
 
 gem 'jquery-rails'							# MIT License
 
-# Authentification
-gem 'devise'                  # MIT License
-
 # To use Jbuilder templates for JSON
 # gem 'jbuilder'
 

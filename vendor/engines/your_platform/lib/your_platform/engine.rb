@@ -4,18 +4,27 @@
 #
 # Gem Source
 require 'rubygems'
+
 # Rails and Additions
 require 'rails-i18n'
+
 # JavaScript
+
 # Data Structures
 require 'acts-as-dag'
 require 'acts_as_tree'
 require 'rails3_acts_as_paranoid'
 require 'acts_as_paranoid_dag'
+
+# Authentification
+require 'devise'
+
 # Authorization
-#require 'cancan'
+# do not require 'cancan' here, since it would have the 'require: false' flag in the Gemfile.
+
 # Template Engines
 require 'haml'
+
 # File Uploads
 require 'carrierwave'
 
