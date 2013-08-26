@@ -4,12 +4,6 @@ Wingolfsplattform::Application.routes.draw do
 
   mount Mercury::Engine => '/'
 
-  devise_for :user_accounts
-  devise_scope :user_account do
-    match 'sign_in' => 'devise/sessions#new', as: :sign_in
-    match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
-  end
-
   get "map/show"
 
   get "angular_test", controller: "angular_test", action: "index"
@@ -57,7 +51,6 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :profile_fields
   resources :relationships
-  resources :user_accounts
 
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
 
@@ -116,9 +109,6 @@ Wingolfsplattform::Application.routes.draw do
      # controller, which is defenetly not wanted.
 
   #match 'ajax/:controller(/:action(/:id))(.:format)', ajax: true
-
-  get ':alias', to: 'users#show'
-
 
 end
 
