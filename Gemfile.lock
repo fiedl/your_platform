@@ -39,14 +39,18 @@ PATH
       cancan
       carrierwave
       devise
+      font-awesome-rails
       formtastic
       haml
       jquery-rails
+      less (>= 2.2.2)
+      less-rails
       phony
       rails (~> 3.2.6)
       rails-i18n
       rails3_acts_as_paranoid
       rmagick (>= 2.13.2)
+      twitter-bootstrap-rails
 
 GEM
   remote: https://rubygems.org/
@@ -360,7 +364,6 @@ DEPENDENCIES
   edit_mode (>= 0.0.9)
   execjs
   factory_girl_rails (>= 4.0.0)
-  font-awesome-rails
   foreman
   formtastic
   geocoder
@@ -375,8 +378,6 @@ DEPENDENCIES
   jquery-ui-rails
   json
   launchy
-  less (>= 2.2.2)
-  less-rails
   mail!
   mailman
   mercury-rails!
@@ -398,7 +399,6 @@ DEPENDENCIES
   spork
   therubyracer
   turbolinks (>= 1.0)
-  twitter-bootstrap-rails
   uglifier (>= 1.0.3)
   unicorn
   will_paginate (> 3.0)

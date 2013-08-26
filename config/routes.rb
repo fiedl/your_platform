@@ -10,8 +10,6 @@ Wingolfsplattform::Application.routes.draw do
 
   root :to => 'root#index'
 
-  match "search" => "search#index", as: "search"
-
   resources :posts
 
   resources :groups do

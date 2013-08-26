@@ -5,6 +5,8 @@ Rails.application.routes.draw do
     match 'sign_in' => 'devise/sessions#new', as: :sign_in
     match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
   end
+  
+  match "search" => "search#index", as: "search"
 
   resources :user_accounts
   resources :pages 
