@@ -23,7 +23,9 @@ class ApplicationController < ActionController::Base
   private
   def extract_locale_from_accept_language_header
     # see: http://guides.rubyonrails.org/i18n.html
-    request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first.to_sym if request.env['HTTP_ACCEPT_LANGUAGE']
+    if request.env['HTTP_ACCEPT_LANGUAGE'] and not Rails.env.test?
+      request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first.to_sym
+    end
   end
   def browser_language_if_supported_by_app
     ([extract_locale_from_accept_language_header] & I18n.available_locales).first
