@@ -1,0 +1,101 @@
+!!!
+%html
+  %head
+    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-type"}/
+    %title
+      = h "#{@title} - " if @title
+      Wingolfsplattform
+    = stylesheet_link_tag    "wingolf_layout", :media => "all"
+    = stylesheet_link_tag    "application", :media => "all"
+    = favicon_link_tag 'favicon.ico'
+    = favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png'
+    = javascript_include_tag "application"
+    %script{:src => "http://cdn.sublimevideo.net/js/deleted-sublime-key", :type => "text/javascript"}
+    / TODO: Replace!
+    = csrf_meta_tags
+    = yield :head
+  %body{:class => controller.controller_name}
+    - if user_account_signed_in?
+      #logged-in-bar
+        #backendBar
+          .content
+            %ul.backendBarItems
+              %li.first.backendBarItem
+                = render "layouts/session_bar_avatar"
+                = link_to current_user.title, main_app.user_path( current_user )
+              %li.backendBarItem
+                = link_to t( :my_profile ), main_app.user_path( current_user )
+              %li.backendBarItem.dropdown
+                = link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' }
+                %ul.dropdown-menu
+                  = my_groups_table
+              /
+                \//
+                <haml:silent>             if current_user.role_for( @navable )
+                </haml:silent><haml:block>              <li class="backendBarItem"><a>
+                Role: <haml:loud> current_user.role_for( @navable ) </haml:loud>
+                </a></li>
+                </haml:block>            //
+              - if can? :manage, @navable
+                %li.backendBarItem
+                  %a
+                    Sie sind Administrator.
+              %li.backendBarItem.dropdown
+                = link_to t(:bookmarks), my_favorites_path
+                %ul.dropdown-menu.my-favorites
+                  = bookmarked_objects_lis( current_user )
+              %li.last.backendBarItem
+                = link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete
+          .clear
+    #headerBg
+      #header
+        #header_claim
+          = image_tag( 'claim.png' )
+        #header_logo
+          = link_to( image_tag( 'logo.png' ), root_path )
+        #header_help
+          = link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  )
+        #header_search
+          = render partial: 'shared/search_box'
+        #horizontal_nav
+          = backend_horizontal_nav
+    #contentBgLayer1
+      #contentBgLayer2
+        #contentBgLayer3
+          #content_wrapper
+            #toolbar
+              %span#star_tool
+                = star_tool( current_user, @navable )
+              %span#breadcrumb
+                = breadcrumb_ul
+              %span#site_tools
+                = edit_button
+            %span#content_area
+            #content
+              .content_twoCols.content_twoCols-20-80
+                .content_twoCols_left
+                  = vertical_menu
+                .content_twoCols_right
+                  - if flash[ :error ]
+                    .alert.alert-error
+                      %button.close{"data-dismiss" => "alert", :type => "button"} ×
+                      = h flash[ :error ]
+                  - if flash[ :notice ]
+                    .alert.alert-info
+                      %button.close{"data-dismiss" => "alert", :type => "button"} ×
+                      = h flash[ :notice ]
+                  = replace_unicode_special_chars_by_html_escape_strings( |
+                      convert_to_content_box { yield }                    |
+                    )                                                     |
+                \ 
+                .clear
+    #footer
+      #footer_bg
+      #footer_navi
+        %ul
+          %li
+            %a= t(:imprint)
+        .clear
+      #footer_line
+    = debug(params) if Rails.env.development?
+    = yield :scripts
