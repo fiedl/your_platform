@@ -64,11 +64,7 @@ module Wingolfsplattform
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     config.i18n.load_path = Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s] + config.i18n.load_path
-    
-    # Apparently, unicorn (in production) mixes up #locale and #default_locale.
-    # Therefore, one has to set both here.
     config.i18n.default_locale = :de
-    # config.i18n.locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

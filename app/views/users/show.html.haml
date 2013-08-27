@@ -83,7 +83,7 @@
     = render partial: 'profile/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
 
   / Login Data
-  %h1.section.access Zugangsdaten
+  %h1.section.access= t(:access_information)
   %div
     - if @user.has_account?
       = render @user.account
