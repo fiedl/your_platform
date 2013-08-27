@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 module BackendHorizontalNavHelper
 
-  # Horizontale Navigation / Kategorie-Anzeiger
-  def backend_horizontal_nav
-
-    # Wichtige Controller-Variablen:
-    # @current_user    # der aktuell angemeldete Benutzer
-    # @navable         # die aktell angezeigte Seite, Gruppe, ...
-
-    content_tag :ul do
-      backend_horizontal_nav_lis
-    end
-
-  end
+  # # Horizontale Navigation / Kategorie-Anzeiger
+  # def backend_horizontal_nav
+  #
+  #   # Wichtige Controller-Variablen:
+  #   # @current_user    # der aktuell angemeldete Benutzer
+  #   # @navable         # die aktell angezeigte Seite, Gruppe, ...
+  #
+  #   content_tag :ul do
+  #     backend_horizontal_nav_lis
+  #   end
+  #
+  # end
 
   def backend_horizontal_nav_lis
     c = navables_for_backend_horizontal_nav.collect do |navable_to_display_in_horizontal_nav|
