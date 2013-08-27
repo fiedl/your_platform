@@ -1,5 +1,28 @@
 en:
   everyone: Everyone
   officers_parent: Officers
+  officers: Officers
   corporations_parent: Corporations
+  corporations: Corporations
   guests_parent: Guests
+  guests: Guests
+  admins_parent: Administrators
+  admins: Administrators
+  main_admins_parent: Main Administrators
+  main_admins: Main Administrators
+  deceased_parent: Deceased
+  former_members_parent: Former Members
+  
+  my_groups:                      My Groups
+  sub_groups:                     Sub Groups
+  members:                        Members
+  groups_of:                      Groups of
+
+  details:                        Detail Information
+  token:                          Token
+  internal_token:                 Internal Token
+  extensive_name:                 Extensive Name
+
+  add_member:                     Add Member
+  
+  

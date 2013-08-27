@@ -1,0 +1,41 @@
+en:
+  contact_information:                                     Contact Information
+  about_myself:                                            About Myself
+  study_information:                                       Study Information
+  career_information:                                      Career Information
+  organizations:                                           Organizations
+  bank_account_information:                                Bank Account Information
+  description:                                             Description
+  relationships:                                           Relationships
+  communication:                                           Communication
+  access_information:                                      Access Information
+
+  user_not_found:                                          User not found
+  the_requested_user_is_not_listed_in_the_system:          The requested user is not listed in the system.
+  create_new_user:                                         Create new user
+
+  home_address:                                            Home Address
+  work_or_study_address:                                   Work or Study Address
+  phone:                                                   Phone
+  mobile:                                                  Mobile
+  fax:                                                     Fax
+  homepage:                                                Homepage
+  
+  academic_degree:                                         Academic Degree
+  study:                                                   Study
+  
+  professional_category:                                   Professional Category
+  occupational_area:                                       Occupational Area
+  employment_status:                                       Employment Status
+
+  languages:                                               Languages
+
+  bank_account:                                            Bank Account
+
+  yes:                                                     Yes
+  no:                                                      No
+
+  text_above_name:                                         Text Above the Name
+  text_below_name:                                         Text Below the Name
+  name_prefix:                                             Name Prefix
+  name_postfix:                                            Name Postfix

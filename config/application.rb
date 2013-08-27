@@ -68,7 +68,7 @@ module Wingolfsplattform
     # Apparently, unicorn (in production) mixes up #locale and #default_locale.
     # Therefore, one has to set both here.
     config.i18n.default_locale = :de
-    config.i18n.locale = :de
+    # config.i18n.locale = :de
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

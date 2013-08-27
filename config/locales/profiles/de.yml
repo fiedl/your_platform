@@ -1,20 +1,5 @@
-
 de:
-  contact_information:                                     Kontaktinformationen
-  about_myself:                                            Über mich
-  study_information:                                       Informationen zum Studium
-  career_information:                                      Informationen zum Beruf
-  organizations:                                           Vereine und Organisationen
-  bank_account_information:                                Kontodaten
-  description:                                             Beschreibung
   corporate_vita:                                          Wingolfitischer Lebenslauf
-  relationships:                                           Beziehungen
-  communication:                                           Kommunikation
-  access_information:                                      Zugangsdaten
-
-  user_not_found:                                          Benutzer nicht gefunden
-  the_requested_user_is_not_listed_in_the_system:          Der angeforderte Benutzer ist im System nicht verzeichnet.
-  create_new_user:                                         Neuen Benutzer anlegen
 
   address_is_in_bv:                                        Adresse liegt im BV
   address_is_in_the:                                       Adresse liegt im
@@ -22,31 +7,6 @@ de:
   personal_title:                                          Persönlicher Titel
   cognomen:                                                Bierspitz
 
-  home_address:                                            Heimatanschrift
-  work_or_study_address:                                   Arbeits- oder Studienanschrift
-  phone:                                                   Telefon
-  mobile:                                                  Mobil
-  fax:                                                     Fax
-  homepage:                                                Homepage
-  
-  academic_degree:                                         Akademischer Grad
-  study:                                                   Studium
-  
-  professional_category:                                   Berufsgruppe
-  occupational_area:                                       Tätigkeitsbereich
-  employment_status:                                       Beschäftigungsstatus
-
-  languages:                                               Sprachen
-
-  bank_account:                                            Bankverbindung
-
-  yes:                                                     Ja
-  no:                                                      Nein
-
   klammerung:                                              Klammerung
 
   name_field_wingolfspost:                                 Namensfeld für Wingolfspost
-  text_above_name:                                         Zeile über dem Namen
-  text_below_name:                                         Zeile unter dem Namen
-  name_prefix:                                             Text vor dem Namen
-  name_postfix:                                            Text hinter dem Namen

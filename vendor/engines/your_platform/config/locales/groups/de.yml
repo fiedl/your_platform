@@ -12,3 +12,16 @@ de:
   main_admins: Haupt-Administratoren
   deceased_parent: Verstorbene
   former_members_parent: Ehemalige
+  
+  my_groups:                      Meine Gruppen
+  sub_groups:                     Untergruppen
+  members:                        Mitglieder
+  groups_of:                      Gruppen von
+
+  details:                        Detail-Informationen
+  token:                          Kürzel
+  internal_token:                 Internes Kürzel
+  extensive_name:                 Ausführliche Bezeichnung
+
+  add_member:                     Mitglied hinzufügen
+  

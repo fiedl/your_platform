@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     # Apparently, unicorn (in production) mixes up #locale and #default_locale.
     # Therefore, one has to set both here.
     #    
-    I18n.default_locale = I18n.locale
+    # I18n.default_locale = I18n.locale
   end
   
   private
