@@ -17,7 +17,9 @@ class ApplicationController < ActionController::Base
   #   3. Use the default locale if no other could be determined.
   #
   def set_locale
-    I18n.locale = params[:locale] || browser_language_if_supported_by_app || I18n.default_locale
+    cookies[:locale] = params[:locale] if params[:locale].present?
+    cookies[:locale] = nil if params[:locale] and params[:locale] == ""
+    I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
   end
   
   private
