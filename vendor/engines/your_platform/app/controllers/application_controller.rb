@@ -20,6 +20,11 @@ class ApplicationController < ActionController::Base
     cookies[:locale] = params[:locale] if params[:locale].present?
     cookies[:locale] = nil if params[:locale] and params[:locale] == ""
     I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
+    
+    # Apparently, unicorn (in production) mixes up #locale and #default_locale.
+    # Therefore, one has to set both here.
+    #    
+    I18n.default_locale = I18n.locale
   end
   
   private
