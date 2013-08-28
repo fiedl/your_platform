@@ -1,0 +1,16 @@
+.edit_mode_group
+  %div{:class => "box #{box_class}"}
+    .head
+      %table
+        %tr
+          %td.box_heading
+            %h1= heading
+          %td.box_toolbar
+            %span.box_toolbar
+              - if can? :manage, @navable
+                = save_button :class => box_class
+                = edit_button(:class => box_class,             |
+                  :id => (strip_tags(heading) + "EditButton")) |
+    .divider
+    .content
+      = content

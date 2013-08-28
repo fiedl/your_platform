@@ -7,7 +7,7 @@ module BoxHelper
     content = yield unless content
     box_class = options[ :box_class ]
 
-    render partial: 'shared/box', locals: { heading: heading, content: content, box_class: box_class }
+    render partial: 'layouts/box', locals: { heading: heading, content: content, box_class: box_class }
   end
 
   def convert_to_content_box( html_code = nil )
@@ -18,9 +18,10 @@ module BoxHelper
   def html_convert_h1_to_boxes( html_code, options = {} )
     
     # Further Nokogiri Reference
-    # * http://stackoverflow.com/questions/3449767/find-and-replace-entire-html-nodes-with-nokogiri 
+    # * http://stackoverflow.com/questions/3449767/
     # * http://www.engineyard.com/blog/2010/getting-started-with-nokogiri/
     # * http://nokogiri.org/Nokogiri/XML/Node.html#method-i-next_element
+    #
     doc = Nokogiri::HTML( html_code )
 
     box_counter = 0
