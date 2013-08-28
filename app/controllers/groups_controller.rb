@@ -19,7 +19,6 @@ class GroupsController < ApplicationController
     @title = "Meine Gruppen"
     @user = @session.current_user
     @groups = @user.groups
-#    @navables = [ Page.find_root ]
     @navable = @user
 
     respond_to do |format|

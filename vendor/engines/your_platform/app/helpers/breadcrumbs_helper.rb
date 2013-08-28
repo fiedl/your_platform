@@ -1,11 +1,16 @@
 # -*- coding: utf-8 -*-
 module BreadcrumbsHelper
-
-  # Erzeugt eine ungeordnete Liste der Breadcrumb-Elemente für das navigationsfähige Objekt +navable+, 
-  # z.B. einen Benutzer (User) oder eine Seite (Page).
+  
+  # This returns the html code for an unordered list containing the
+  # bread crumb elements.
+  def breadcrumb_ul
+    return breadcrumb_ul_for_navable @navable if @navable
+    return breadcrumb_ul_for_navables @navables if @navables
+  end
+  
   def breadcrumb_ul_for_navable( navable )
     content_tag :ul do
-      breadcrumbs = navable.nav_node.breadcrumbs
+      breadcrumbs = navable.nav_node.breadcrumbs   # => [ { title: 'foo', navable: ... }, ... ]
       breadcrumb_lis_for_breadcrumb_hashes( breadcrumbs )
     end
   end
@@ -33,11 +38,6 @@ module BreadcrumbsHelper
       end
       c
     end.join.html_safe
-  end
-
-  def breadcrumb_ul
-    return breadcrumb_ul_for_navable @navable if @navable
-    return breadcrumb_ul_for_navables @navables if @navables
   end
 
 end

@@ -86,11 +86,8 @@
     .container-fluid
       .row-fluid
         .span3
-          / li class="nav-header">Sidebar</li
           = vertical_menu
-        / /span
-        %span#content_area
-        .span9
+        .span9#content_area
           - if flash[ :error ]
             .alert.alert-error
               %button.close{"data-dismiss" => "alert"} ×
@@ -100,13 +97,8 @@
               %button.close{"data-dismiss" => "alert"} ×
               = h flash[ :notice ]
           = html_convert_h1_to_boxes( yield )
-      / /row
       %footer
-        / p>&copy; Company 2012</p
-    / /container
-    /
-      Javascripts
-      \==================================================
-    / Placed at the end of the document so the pages load faster
+
+    / JavaScripts: Placed at the end of the document so the pages load faster
     = javascript_include_tag "application"
     = yield :scripts
