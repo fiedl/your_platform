@@ -1,3 +1,5 @@
 en:
   sign_in:          Sign In
   sign_out:         Sign Out
+  
+  unauthorized_please_sign_in: "Access not authorized. Please sign in first and then please try it again."

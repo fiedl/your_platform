@@ -1,3 +1,5 @@
 de:
   sign_in:          Anmelden
   sign_out:         Abmelden
+  
+  unauthorized_please_sign_in: "Zugriff nicht authorisiert. Bitte melden Sie sich zunächst beim System an und versuchen Sie es dann nocheinmal."
