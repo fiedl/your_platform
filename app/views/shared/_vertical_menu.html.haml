@@ -1,9 +1,0 @@
-%span.vertical_menu.sidebar-nav
-  %ul.nav.nav-tabs.nav-stacked
-    - if @navable
-      = vertical_menu_for @navable
-  - if @navable && can?(:manage, @navable)
-    %p= add_structureable_button(@navable)
-  - if can?(:manage, Group.everyone) && !( params[:controller] == "users" && params[:action] == "new" )
-    - corporation_id = @navable.corporation.id if @navable.kind_of?(Group) && @navable.corporation
-    %p= link_to( "Aktivmeldung eintragen", new_user_path(group_id: corporation_id), :class => "btn btn-success")
