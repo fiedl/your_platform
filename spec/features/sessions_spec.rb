@@ -4,7 +4,7 @@ feature "Sessions" do
   describe "New Session Page" do  # to show the browser while testing, e.g. use `js: true`.
     
     before do
-      visit new_user_account_session_path
+      visit sign_in_path
     end
 
     subject { page }

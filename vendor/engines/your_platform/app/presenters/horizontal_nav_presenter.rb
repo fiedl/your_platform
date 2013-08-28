@@ -39,7 +39,10 @@ class HorizontalNavPresenter < BasePresenter
   end
   
   def nav_link(link_object)
-    link_to possibly_shortened_title_for(link_object), link_object
+    title = possibly_shortened_title_for(link_object)
+    object = link_object
+    object = link_object.except(:title) if link_object.kind_of? Hash
+    link_to title, object
   end    
   
   def navable_is_currently_shown?( navable )
@@ -53,7 +56,7 @@ class HorizontalNavPresenter < BasePresenter
   def most_special_category
     categories_the_current_navable_falls_in.try(:select) do |navable|
       (navable.descendants & categories_the_current_navable_falls_in).empty?
-    end.first
+    end.try(:first)
   end  
   
   def categories_the_current_navable_falls_in

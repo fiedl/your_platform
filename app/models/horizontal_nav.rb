@@ -7,7 +7,7 @@ class HorizontalNav
   #
   alias_method :orig_navables, :navables
   def navables
-    return orig_navables + [ @user.bv ] if @user.bv
+    return orig_navables + [ @user.bv ] if @user.bv if @user
     return orig_navables
   end
 
