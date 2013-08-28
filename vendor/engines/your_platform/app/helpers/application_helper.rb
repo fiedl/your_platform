@@ -6,7 +6,7 @@ module ApplicationHelper
     if block_given?
       yield presenter 
     else
-      presenter
+      presenter.present()
     end
   end
   

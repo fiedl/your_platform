@@ -1,4 +1,11 @@
 class Corporation < Group
+  
+  # Override the model name. This is used for the generation of paths, i.e.
+  # group_path rather than corporation_path.
+  # 
+  def self.model_name
+    Group.model_name
+  end
 
   # This method returns true if this (self) is the one corporation
   # the given user has joined first, i.e. before he joined any other

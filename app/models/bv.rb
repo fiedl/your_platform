@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 class Bv < Group
+  
+  # Override the model name. This is used for the generation of paths, i.e.
+  # group_path rather than bv_path.
+  # 
+  def self.model_name
+    Group.model_name
+  end
 
   def self.all
     Group.find_bv_groups

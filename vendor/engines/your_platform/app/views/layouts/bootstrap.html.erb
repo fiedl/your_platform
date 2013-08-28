@@ -101,11 +101,7 @@
       <span id="header_help">
           <%= link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  ) %>
       </span>
-      <span id="category_indicator">
-	<ul class="nav nav-tabs">
-	  <%= backend_horizontal_nav_lis %>
-	</ul>
-      </span>
+      <span id="category_indicator"><%= horizontal_nav %></span>
 
       <ul><!-- class="breadcrumb" -->
         <% if user_account_signed_in? %>
