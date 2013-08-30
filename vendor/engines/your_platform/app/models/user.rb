@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   is_navable
 
-  before_save               :generate_alias_if_necessary, :capitalize_name, :write_alias_attribute
+  before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
 
@@ -128,21 +128,19 @@ class User < ActiveRecord::Base
   # an object of UserAlias type, the accessor methods are overridden here.
   #
   def alias
-    @alias = UserAlias.new( read_attribute( :alias ), :user => self ) unless @alias.kind_of? UserAlias
-    return @alias
-  end
-  def alias=( a )
-    @alias = a
-    write_alias_attribute
+    UserAlias.new(super) if super.present?
   end
 
-  def write_alias_attribute
-    write_attribute :alias, @alias
+  def generate_alias
+    UserAlias.generate_for(self)
   end
-  private :write_alias_attribute
+  
+  def generate_alias!
+    self.alias = self.generate_alias
+  end
 
   def generate_alias_if_necessary
-    self.alias.generate! if self.alias.blank?
+    self.generate_alias! if self.alias.blank?
   end
   private :generate_alias_if_necessary
 

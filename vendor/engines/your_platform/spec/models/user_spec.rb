@@ -166,9 +166,18 @@ describe User do
   # ------------------------------------------------------------------------------------------
 
   describe "#alias" do
-    subject { @user.alias }
-    it { should be_kind_of( UserAlias ) }
-    it { should_not be_empty }
+    describe "for an already created user" do
+      subject { @user.alias }
+      it { should be_kind_of( UserAlias ) }
+      it { should_not be_empty }
+    end
+    describe "for a newly built user without alias being set" do
+      before do
+        @user = User.new(first_name: "James", last_name: "Doe", email: "doe@example.com")
+      end
+      subject { @user.alias }
+      it { should == nil }
+    end
   end
   
   describe "#alias=" do
@@ -177,7 +186,43 @@ describe User do
       @user.alias.should == "New Alias"
     end
   end
-
+  
+  describe "#generate_alias" do
+    before do
+      @user = build(:user, first_name: "Tamara", last_name: "Sweet")
+    end
+    subject { @user.generate_alias }
+    it "should generate the alias" do
+      subject.should be_kind_of UserAlias
+      subject.should == "sweet"
+    end
+    it "should not set the alias of the user" do
+      subject
+      @user.alias.should_not == "sweet"
+    end
+  end
+  
+  describe "#generate_alias!" do
+    before do
+      @user = build(:user, first_name: "Tamara", last_name: "Sweet")
+    end
+    subject { @user.generate_alias! }
+    it "should generate the alias" do
+      subject.should be_kind_of UserAlias
+      subject.should == "sweet"
+    end
+    it "should set the alias of the user" do
+      subject
+      @user.alias.should == "sweet"
+    end
+  end
+  
+  specify "an alias should be generated on user creation" do
+    @user = User.create(first_name: "James", last_name: "Doe", email: "doe@example.com")
+    @user.alias.should be_kind_of UserAlias
+    @user.alias.should == "doe"
+  end
+  
   
   # User Account
   # ------------------------------------------------------------------------------------------
