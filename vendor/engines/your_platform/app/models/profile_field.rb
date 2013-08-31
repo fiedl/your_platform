@@ -69,7 +69,8 @@ class ProfileField < ActiveRecord::Base
   #
   def label
     label_text = super
-    translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text
+    label_text = self.underscored_type if not label_text.present?
+    translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text.present?
   end
 
   # If the field has children, their values are included in the main field's value.
@@ -82,6 +83,14 @@ class ProfileField < ActiveRecord::Base
       super
     end
   end
+  
+  # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
+  # Example: For a ProfileFieldTypes::FooBar-type profile field, this method returns 'foo_bar'.
+  #
+  def underscored_type
+    self.type.demodulize.underscore
+  end
+  
 
   # This creates an easier way to access a composed ProfileField's child field
   # values. Instead of calling

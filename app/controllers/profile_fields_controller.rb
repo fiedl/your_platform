@@ -8,6 +8,7 @@ class ProfileFieldsController < ApplicationController
     type = params[:profile_field][:type] || ProfileFieldTypes::Custom.name
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
+    @profile_field.label = params[:label] if params[:label].present?
     @profile_field.save
     respond_to do |format|
       format.js

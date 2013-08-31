@@ -20,7 +20,7 @@
       %span.label.profile_field_label= profile_field.label
     - else
       - if can? :update, profile_field
-        = best_in_place profile_field, :label, classes: 'profile_field_label label'
+        = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
       - else
         = profile_field.label
 
