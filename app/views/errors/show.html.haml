@@ -1,0 +1,8 @@
+%h1= t(:error_has_occurred)
+%div
+  %p= t(:not_all_features_are_implemented_yet).gsub("\n", "<br />").html_safe
+
+%h1 Information für Mitarbeiter am Plattform-Projekt
+%div 
+  %p Die Fehler-Nachricht lautet wie folgt:
+  %p= @exception

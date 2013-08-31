@@ -29,8 +29,10 @@ Wingolfsplattform::Application.routes.draw do
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
 
   match 'profile/:alias' => 'users#show', :as => :profile
-
-
+  
+  # http://railscasts.com/episodes/53-handling-exceptions-revised
+  match '(errors)/:status', to: 'errors#show', constraints: {status: /\d{3}/} # via: :all
+  
   # See how all your routes lay out with "rake routes"
 
   # This is a legacy wild controller route that's not recommended for RESTful applications.

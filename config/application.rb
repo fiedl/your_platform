@@ -2,6 +2,7 @@ require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
 
+
 # ENGINE LOAD PATCH
 # This code loads the engine codes before the main app. This makes it possible
 # to re-open engine classes in the main app.
@@ -97,6 +98,10 @@ module Wingolfsplattform
     config.action_view.field_error_proc = Proc.new { |html_tag, instance| "<span class=\"field_with_errors\">#{html_tag}</span>".html_safe }
 
 
+    # Exceptions: Use own app as exception handler.
+    # http://railscasts.com/episodes/53-handling-exceptions-revised
+    config.exceptions_app = self.routes
+    
   end
 
 end
