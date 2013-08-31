@@ -82,15 +82,14 @@ module GroupMixins::Erstbandphilister
       end
       corporation = philisterschaft.parent_groups.first.becomes( Corporation )
 
-      erstbandphilister_users = philisterschaft.descendant_users.select do |user|
-
+      erstbandphilister_user_ids = philisterschaft.descendant_users.select do |user|
         # a user is erstbandphilister of a corporation if the corporation is the
         # first corporation the user has joined.
+        #
         corporation.is_first_corporation_this_user_has_joined?( user )
-
-      end
+      end.collect { |user| user.id }
                   
-      return erstbandphilister_users
+      return User.where(id: erstbandphilister_user_ids)   # => <ActiveRecord::Relation ...>
     else
       return super
     end

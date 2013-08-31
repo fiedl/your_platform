@@ -100,7 +100,7 @@ module Wingolfsplattform
 
     # Exceptions: Use own app as exception handler.
     # http://railscasts.com/episodes/53-handling-exceptions-revised
-    config.exceptions_app = self.routes
+    config.exceptions_app = self.routes if Rails.env.production?
     
   end
 

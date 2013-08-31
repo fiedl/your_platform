@@ -135,13 +135,19 @@ describe GroupMixins::Erstbandphilister do
     # ------------------------------------------------------------------------------------------
 
     describe "#users" do
-      it "should return the child users" do
+      specify "presumption: @user is erstbandphilister of A but not of B" do
         UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_a ).created_at.should <
           UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_b ).created_at
         @erstbandphilister_a.users.should include( @user )
         @erstbandphilister_b.users.should_not include( @user )
-        # because @user is erstbandphilister of @corporation_a but not of @corporation_b
-        # (see 'scenario' comment in the before block.)
+      end
+      subject { @erstbandphilister_a.users }
+      it "should return the child users" do
+        subject.should include @user
+      end
+      it { subject.should be_kind_of ActiveRecord::Relation }
+      it "should support pagination" do
+        subject.should respond_to :page
       end
     end
 
