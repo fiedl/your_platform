@@ -4,10 +4,11 @@
                          :profile_field => {:type => section.profile_field_types.first},
                          :section => section.title), :method => 'post')
 - if section.profile_field_types.count > 1
-  %a.btn.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
-    = tool_icon( 'icon-plus icon-black' ) + " " + t(:add)
-    %span.caret
-  %ul.dropdown-menu
-    - section.profile_field_types.each do |type|
-      %li
-        = link_to_add_profile_field(profile_field_type: type, profileable: profileable, profile_section: section.title)
+  %span.dropdown
+    %a.btn.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
+      = tool_icon( 'icon-plus icon-black' ) + " " + t(:add)
+      %span.caret
+    %ul.dropdown-menu
+      - section.profile_field_types.each do |type|
+        %li
+          = link_to_add_profile_field(profile_field_type: type, profileable: profileable, profile_section: section.title)

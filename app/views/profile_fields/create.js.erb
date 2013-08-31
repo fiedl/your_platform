@@ -1,20 +1,20 @@
-var target = ".section.<%= escape_javascript(params[:section]) %> .add_button";
+<% # Close the dropdown menu %>
+var section = $(".section.<%= escape_javascript(params[:section]) %>");
+section.find(".dropdown.open").removeClass("open");
 
-
-// Create a new relationships list item
+<% # Create a new relationships list item %>
 created_profile_field = $("<%= j(render partial: 'profile_fields/profile_field', object: @profile_field)  %>");
 
-// Insert this new list item as the last one in the section of the list items
-// that can be seen also when not in edit_mode.
-$(target).prev(".section_container").append(created_profile_field);
+<% # Insert this new list item as the last one in the section of the list items
+   # that can be seen also when not in edit_mode. %>
+section.find(".section_container").append(created_profile_field);
 
-// Add all methods and triggers that are needed for the edit mode to the new
-// elements.
+<% # Add all methods and triggers that are needed for the edit mode to the new
+   # elements. %>
 created_profile_field.apply_edit_mode();
 
-// And finally, trigger the edit_mode in order to make the new entry be shown
-// as text fields.
+<% # Trigger the edit_mode in order to make the new entry be shown as text fields. %>
 created_profile_field.find(".editable").trigger("edit");
 
-// Set the focus to the first field (except for the label => second)
+<% # Set the focus to the first field (except for the label => second) %>
 created_profile_field.find("input[type=text]")[1].focus();
