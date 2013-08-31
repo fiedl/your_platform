@@ -52,11 +52,9 @@ gem 'unicorn'
 gem 'nokogiri'								# MIT License
 
 # GoogleMaps
-gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
-    # , path: '../Google-Maps-for-Rails/'  #, '~> 1.4.8' #, path: '../gmaps4rails-1.4.8/'				        # MIT License
-
-# GeoCoder
-gem 'geocoder'								# 
+# moved dependency to your_platform.
+# for turbolinks experiments, use this:
+#   gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
 
 # jQuery UI
 gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License 

@@ -61,6 +61,10 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '~> 2.1.0'                                         # MIT License
+  
+  # Geo Coding
+  s.add_dependency 'geocoder'                                                          # MIT License
+  s.add_dependency 'gmaps4rails', '>= 2.0.0.pre'                                     # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,

@@ -34,6 +34,10 @@ require 'font-awesome-rails'
 # In Place Editing
 require 'best_in_place'
 
+# Geo Coding
+require 'geocoder'
+require 'gmaps4rails'
+
 # File Uploads
 require 'carrierwave'
 
