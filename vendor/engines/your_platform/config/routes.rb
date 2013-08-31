@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  
+  root :to => 'root#index'
 
   devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
   devise_scope :user_account do

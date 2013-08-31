@@ -21,4 +21,8 @@ module TitleHelper
     Rails.application.class.parent_name
   end
   
+  def app_name
+    application_name
+  end
+  
 end
