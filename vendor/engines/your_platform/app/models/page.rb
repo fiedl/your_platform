@@ -98,6 +98,10 @@ class Page < ActiveRecord::Base
     intranet_root.add_flag :intranet_root
     return intranet_root
   end
+  
+  def self.intranet_root
+    self.find_or_create_intranet_root
+  end
 
 
   # help page

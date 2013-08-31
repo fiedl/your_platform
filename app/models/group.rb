@@ -22,32 +22,36 @@ class Group
   # BVs
   # ------------------------------------------------------------------------------------------
 
+  def self.find_bvs_parent_group
+    find_special_group(:bvs_parent)
+  end
+  
+  def self.create_bvs_parent_group
+    bvs_parent_group = create_special_group(:bvs_parent)
+    bvs_parent_group.parent_pages << Page.intranet_root
+    return bvs_parent_group
+  end
+
+  def self.find_or_create_bvs_parent_group
+    find_or_create_special_group(:bvs_parent)
+  end
+  
   def self.bvs_parent
-    self.find_bvs_parent_group
+    find_or_create_bvs_parent_group
+  end
+  
+  def self.bvs_parent!
+    find_bvs_parent_group || raise('special group :bvs_parent does not exist.')
   end
 
   def self.bvs
     self.find_bv_groups
   end
 
-  def self.find_bvs_parent_group
-    Group.find_by_flag( :bvs_parent )
-  end
-
   def self.find_bv_groups
     self.find_bvs_parent_group.child_groups if self.find_bvs_parent_group
   end
 
-  def self.create_bvs_parent_group
-    bvs_parent = Group.create( name: "Bezirksverbände" )
-    bvs_parent.add_flag( :bvs_parent )
-    bvs_parent.parent_groups << Group.everyone
-    bvs_parent.name = I18n.translate( :bvs_parent ) # "Bezirksverbände"
-    bvs_parent.save
-    return bvs_parent
-  end
-
-  
   # Wingolfsblätter-Abonnenten
   # ------------------------------------------------------------------------------------------
 
