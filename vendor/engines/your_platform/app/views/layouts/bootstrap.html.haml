@@ -70,10 +70,10 @@
             / /.nav-collapse
     .container-fluid
       %span#logo
-        = image_tag 'logo.png'
+        = link_to image_tag('logo.png'), root_path
       %span#search_box
         = render partial: 'shared/search_box'
-      %span#header_help
+      %span#header_help.pull-right
         = link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  )
       %span#category_indicator= horizontal_nav
       %ul
