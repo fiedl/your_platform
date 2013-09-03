@@ -4,11 +4,20 @@ class ApplicationController < ActionController::Base
 
   # TODO: Change before_filter to before_action  (http://stackoverflow.com/questions/16519828)
   #
-  before_filter :set_locale
+  before_filter :redirect_www_subdomain, :set_locale
   helper_method :current_user
   
   def current_user
     current_user_account.user if current_user_account
+  end
+  
+  # Redirect the www subdomain to non-www, e.g.
+  # http://www.example.com to http://example.com.
+  #
+  def redirect_www_subdomain
+    if request.host.split('.')[0] == 'www'
+      redirect_to "http://" + request.host.gsub('www.',''), flash: { notice: I18n.t(:you_may_leave_out_www) }
+    end
   end
   
   # The locale of the application s set as follows:

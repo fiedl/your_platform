@@ -1,0 +1,17 @@
+de:
+  time:
+    formats:
+      time: ! '%H:%M h'
+
+  map: Map
+  page: Page
+  group: Group
+
+  new_page: New Page
+  new_group: New Group
+
+  edited_at: Edited at
+  
+  imprint: Imprint
+  
+  you_may_leave_out_www: 'Tip: You may leave out the "www." when you enter the web address into the browser.'
