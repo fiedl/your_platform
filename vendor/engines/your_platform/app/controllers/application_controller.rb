@@ -16,7 +16,8 @@ class ApplicationController < ActionController::Base
   #
   def redirect_www_subdomain
     if request.host.split('.')[0] == 'www'
-      redirect_to "http://" + request.host.gsub('www.',''), flash: { notice: I18n.t(:you_may_leave_out_www) }
+      flash[:notice] = I18n.t(:you_may_leave_out_www)
+      redirect_to "http://" + request.host.gsub('www.','')
     end
   end
   
