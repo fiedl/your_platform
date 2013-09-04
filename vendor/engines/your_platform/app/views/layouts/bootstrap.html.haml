@@ -88,14 +88,7 @@
         .span3
           = vertical_nav
         .span9#content_area
-          - if flash[ :error ]
-            .alert.alert-error
-              %button.close{"data-dismiss" => "alert"} ×
-              = h flash[ :error ]
-          - if flash[ :notice ]
-            .alert.alert-success
-              %button.close{"data-dismiss" => "alert"} ×
-              = h flash[ :notice ]
+          = flash_area
           = html_convert_h1_to_boxes( yield )
       %footer
 

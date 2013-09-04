@@ -74,14 +74,7 @@
                 .content_twoCols_left
                   = vertical_nav
                 .content_twoCols_right
-                  - if flash[ :error ]
-                    .alert.alert-error
-                      %button.close{"data-dismiss" => "alert", :type => "button"} ×
-                      = h flash[ :error ]
-                  - if flash[ :notice ]
-                    .alert.alert-info
-                      %button.close{"data-dismiss" => "alert", :type => "button"} ×
-                      = h flash[ :notice ]
+                  = flash_area
                   = replace_unicode_special_chars_by_html_escape_strings( |
                       convert_to_content_box { yield }                    |
                     )                                                     |
