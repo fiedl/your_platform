@@ -53,11 +53,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'                                                              # MIT License
   
   # Layout: Twitter Bootstrap
-  s.add_dependency 'twitter-bootstrap-rails'                                           # MIT License
-  s.add_dependency 'less', '>=2.2.2'
-  s.add_dependency 'less-rails'
+  s.add_dependency 'twitter-bootstrap-rails', '2.2.4'                                  # MIT License
+  s.add_dependency 'less', '2.2.0'
+  s.add_dependency 'less-rails', '2.2.6'
   # s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
-  s.add_dependency 'font-awesome-rails'
+  s.add_dependency 'font-awesome-rails', '3.2.1.1'
 
   # In Place Editing
   s.add_dependency 'best_in_place', '~> 2.1.0'                                         # MIT License
