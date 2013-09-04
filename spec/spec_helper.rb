@@ -235,7 +235,7 @@ Spork.prefork do
     config.infer_base_class_for_anonymous_controllers = false
 
     config.treat_symbols_as_metadata_keys_with_true_values = true
-
+    
   end
 
   
@@ -248,6 +248,21 @@ Spork.prefork do
   #
   I18n.default_locale = :de
   I18n.locale = :de
+  
+  
+  # Request Host
+  # ----------------------------------------------------------------------------------------
+  
+  # Override the request.host to be http://example.com rather than the default
+  # http://www.example.com. Otherwise, each spec would first trigger the non-www redirect
+  # in the your_platform application controller.
+  #
+  # http://stackoverflow.com/questions/6536503
+  #
+  # Edit: Does not work for all specs. 
+  # For the moment, I've just deactivated the www redirect in the test env. --Fiedl
+  #
+  # Capybara.app_host = "http://localhost"
 
 end
 
@@ -271,5 +286,5 @@ Spork.each_run do
     require 'simplecov'
     SimpleCov.start 'rails'
   end
-
+  
 end

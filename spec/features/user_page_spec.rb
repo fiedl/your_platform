@@ -76,9 +76,7 @@ feature 'User page', js: false do
           field_name2 = ProfileFieldTypes::ProfessionalCategory.name.demodulize.underscore
           subject.should have_selector("a#add_#{field_name2}_field")
 
-          save_and_open_page
           click_on I18n.t(field_name)
-          save_and_open_page
           subject.should have_selector('.profile_field')
           within first '.profile_field' do
             #

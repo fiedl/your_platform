@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts_as_paranoid_dag'                                              # MIT License
 
   # Authentification
-  s.add_dependency 'devise'                                                            # MIT License
+  s.add_dependency 'devise', '2.2.3'   # TODO: try to update                           # MIT License
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
@@ -64,7 +64,7 @@ Gem::Specification.new do |s|
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '>= 2.0.0.pre'                                     # MIT License
+  s.add_dependency 'gmaps4rails', '>= 2.0.0.pre'                                       # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,
