@@ -13,24 +13,24 @@ class UserAccount < ActiveRecord::Base
   # https://github.com/plataformatec/devise.
   # 
   # Available Modules:
-  # Database Authenticatable: 
-  #   encrypts and stores a password in the database to validate the authenticity of a user
-  #   while signing in. The authentication can be done both through POST requests or 
-  #   HTTP Basic Authentication.
-  # Omniauthable: adds Omniauth (https://github.com/intridea/omniauth) support;
-  # Confirmable: sends emails with confirmation instructions and verifies whether an account
-  #   is already confirmed during sign in.
-  # Recoverable: resets the user password and sends reset instructions.
-  # Registerable: handles signing up users through a registration process, also allowing 
-  #   them to edit and destroy their account.
-  # Rememberable: manages generating and clearing a token for remembering the user from a 
-  #   saved cookie.
-  # Trackable: tracks sign in count, timestamps and IP address.
-  # Timeoutable: expires sessions that have no activity in a specified period of time.
-  # Validatable: provides validations of email and password. It's optional and can be customized, 
-  #   so you're able to define your own validations.
-  # Lockable: locks an account after a specified number of failed sign-in attempts. 
-  #   Can unlock via email or after a specified time period.
+  #   Database Authenticatable: 
+  #     encrypts and stores a password in the database to validate the authenticity of a user
+  #     while signing in. The authentication can be done both through POST requests or 
+  #     HTTP Basic Authentication.
+  #   Omniauthable: adds Omniauth (https://github.com/intridea/omniauth) support;
+  #   Confirmable: sends emails with confirmation instructions and verifies whether an account
+  #     is already confirmed during sign in.
+  #   Recoverable: resets the user password and sends reset instructions.
+  #   Registerable: handles signing up users through a registration process, also allowing 
+  #     them to edit and destroy their account.
+  #   Rememberable: manages generating and clearing a token for remembering the user from a 
+  #     saved cookie.
+  #   Trackable: tracks sign in count, timestamps and IP address.
+  #   Timeoutable: expires sessions that have no activity in a specified period of time.
+  #   Validatable: provides validations of email and password. It's optional and can be customized, 
+  #     so you're able to define your own validations.
+  #   Lockable: locks an account after a specified number of failed sign-in attempts. 
+  #     Can unlock via email or after a specified time period.
   # 
   devise :database_authenticatable, :recoverable, :rememberable, :validatable
   attr_accessible :password, :password_confirmation, :remember_me
@@ -50,8 +50,6 @@ class UserAccount < ActiveRecord::Base
                              # if the account is created via an association (like User.create( ... , create_account: true )).
                              # But `before_save` callbacks are called.
                              # Notice: Apparently, even `validates_associated :account` in the User model has no effect.
-
-  after_save               :send_welcome_email_if_just_created
 
   delegate :email, :to => :user, :allow_nil => true
 
@@ -119,10 +117,12 @@ class UserAccount < ActiveRecord::Base
   end
     
   # This sends a welcome email to the user of the newly created user account.
-  def send_welcome_email_if_just_created
-    if id_changed? # If the id of the record has changed, this is a new record.
-      send_welcome_email
-    end
-  end  
+  # TODO: Move this to the controller level.
+  #
+  # def send_welcome_email_if_just_created
+  #   if id_changed? # If the id of the record has changed, this is a new record.
+  #     send_welcome_email
+  #   end
+  # end  
 
 end
