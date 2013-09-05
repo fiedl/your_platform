@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   # Rails and Rails Additions
   s.add_dependency "rails", "~> 3.2.6"
   s.add_dependency "rails-i18n"                                                        # MIT License
+  s.add_dependency "strong_parameters"                                                 # MIT License
 
   # JavaScript 
   s.add_dependency "jquery-rails"

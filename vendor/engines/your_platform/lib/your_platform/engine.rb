@@ -7,6 +7,7 @@ require 'rubygems'
 
 # Rails and Additions
 require 'rails-i18n'
+require 'strong_parameters'
 
 # JavaScript
 
