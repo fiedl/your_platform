@@ -68,7 +68,7 @@ class NavNode < ActiveRecord::Base
     hidden = super
     hidden = true if self.navable.kind_of? User if hidden.nil?
     hidden = true if self.navable.kind_of? Event if hidden.nil?
-    hidden = true if self.navable.title == "Amtsträger" if hidden.nil?
+    hidden = true if self.navable.title == I18n.t(:officers_parent) if hidden.nil?
     hidden = false if hidden.nil?
     return hidden
   end
