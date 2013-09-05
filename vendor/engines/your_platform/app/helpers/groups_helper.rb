@@ -1,5 +1,9 @@
 module GroupsHelper
-
+  
+  def my_groups_table
+    groups_of_user_table current_user if current_user
+  end
+  
   def groups_of_user_table( user )
     content_tag :table, :class => "user_groups" do
       content_tag :tr do
@@ -8,9 +12,9 @@ module GroupsHelper
         c = content_tag :td do
           content_tag :ul do
             
-            wah_groups = Group.find_corporation_groups_of( user )
-            if wah_groups
-              wah_groups.collect do |group|
+            corporation_groups = Group.find_corporation_groups_of( user )
+            if corporation_groups
+              corporation_groups.collect do |group|
                 sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
               end.join.html_safe
             end
@@ -31,6 +35,8 @@ module GroupsHelper
       end
     end.html_safe
   end
+  
+  private
 
   def membership_li( user, group )
     content_tag :li do
@@ -56,10 +62,5 @@ module GroupsHelper
     c += "</ul>" if current_indent < max_indent
     return c.html_safe
   end
-
-  def my_groups_table
-    groups_of_user_table current_user if current_user
-  end
-
 
 end
