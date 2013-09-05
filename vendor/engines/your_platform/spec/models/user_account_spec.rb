@@ -47,22 +47,4 @@ describe UserAccount do
     end
   end
 
-  # Welcome Email
-  # ==========================================================================================
-
-  # TODO: Do not deliver the welcome email from the model (account.activate),
-  # but from the controller.
-
-  describe "Welcome Email: " do
-    describe "just after creating the account" do
-      subject { ActionMailer::Base.deliveries.last.to_s }
-      it { should be_present }
-      it "should contain the newly generated password" do
-        subject.should include @account.password
-        @account.password.should be_kind_of String
-        @account.password.should be_present
-      end
-    end
-  end
-  
 end
