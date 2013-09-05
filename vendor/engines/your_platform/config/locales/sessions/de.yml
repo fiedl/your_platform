@@ -1,5 +1,32 @@
 de:
-  sign_in:          Anmelden
-  sign_out:         Abmelden
+  login:                    Anmelden
+  login_name:               Anmeldename
+  password:                 Passwort
+  login_name_explanation:   Name, E-Mail-Adresse, Alias
+
+  login_failed:             Anmeldung fehlgeschlagen.
+  no_user_found:            Es wurde kein übereinstimmender Benutzer gefunden.
+  wrong_password:           Das angegebene Passwort war falsch.
+  user_has_no_account:      Der Benutzer hat kein aktives Benutzerkonto.
+
+  good_bye:                 Auf Wiedersehen!
+  logout:                   Abmelden
   
-  unauthorized_please_sign_in: "Zugriff nicht authorisiert. Bitte melden Sie sich zunächst beim System an und versuchen Sie es dann nocheinmal."
+  sign_in:                  Anmelden
+  sign_out:                 Abmelden
+  sign_up:                  Registrieren 
+
+  submit_send_instructions: Passwort zurücksetzen
+  forgot_password:          Passwort vergessen?
+  change_password:          Passwort ändern
+  new_password:             Neues Passwort
+  confirm_new_password:     Passwort bestätigen
+  submit_changed_password:  Passwort ändern
+  remember_me:              Anmeldestatus merken
+
+  reset_password_instructions:
+    hello:                  "Guten Tag, "
+    introduction:           "Jemand hat die Änderung Ihres Passworts beantragt. Sie können Ihr Passwort auf folgender Seite ändern:"
+    change_password:        Passwort ändern
+    ignore_notice:          Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese Email.
+    change_notice:          Ihr Passwort wird sich nicht ändern, wenn sie obigem Link nicht folgen.

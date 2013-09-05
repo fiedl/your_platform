@@ -1,5 +1,32 @@
 en:
-  sign_in:          Sign In
-  sign_out:         Sign Out
+  login:                    Login
+  login_name:               Login Name
+  password:                 Password
+  login_name_explanation:   Your Name, Email Address, Alias
+
+  login_failed:             Login Failed.
+  no_user_found:            No matching user found.
+  wrong_password:           Wrong password.
+  user_has_no_account:      The user does not have an active user account.
+
+  good_bye:                 Good bye!
+  logout:                   Logout
   
-  unauthorized_please_sign_in: "Access not authorized. Please sign in first and then please try it again."
+  sign_in:                  Sign In
+  sign_out:                 Sign Out
+  sign_up:                  Sign Up
+
+  submit_send_instructions: Send me reset password instructions
+  forgot_password:          Forgot your password?
+  change_password:          Change your password
+  new_password:             New password
+  confirm_new_password:     Confirm new password
+  submit_changed_password:  Change my password
+  remember_me:              Remember me
+
+  reset_password_instructions:
+    hello:                  Hello
+    introduction:           Someone has requested a link to change your password. You can do this through the link below.
+    change_password:        Change my password
+    ignore_notice:          If you didn't request this, please ignore this email.
+    change_notice:          Your password won't change until you access the link above and create a new one.
