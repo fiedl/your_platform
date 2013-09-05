@@ -39,7 +39,7 @@
                   %a
                     Sie sind Administrator.
               %li.backendBarItem.dropdown
-                = link_to t(:bookmarks), my_favorites_path
+                = link_to t(:bookmarks), my_bookmarks_path
                 %ul.dropdown-menu.my-favorites
                   = bookmarked_objects_lis( current_user )
               %li.last.backendBarItem

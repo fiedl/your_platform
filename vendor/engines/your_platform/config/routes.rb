@@ -22,7 +22,10 @@ Rails.application.routes.draw do
   resources :user_accounts
   resources :pages 
   resources :attachments
-  
+
+  resources :bookmarks
+  get :my_bookmarks, controller: "bookmarks", action: "index"
+    
   get ':alias', to: 'users#show'
   
 end

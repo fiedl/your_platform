@@ -51,10 +51,10 @@
                 %ul.dropdown-menu
                   = my_groups_table
               %li.dropdown
-                = link_to(                                                                 |
-                  ( "Favoriten" + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, |
-                  main_app.my_favorites_path,                                              |
-                  class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                 |
+                = link_to(                                                                   |
+                  ( t(:bookmarks) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, |
+                  my_bookmarks_path,                                                         |
+                  class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                   |
                 %ul.dropdown-menu.my-favorites
                   = bookmarked_objects_lis( current_user )
               %li.last.dropdown

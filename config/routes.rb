@@ -10,11 +10,8 @@ Wingolfsplattform::Application.routes.draw do
 
   resources :posts
   resources :events  
-  resources :bookmarks
 
   match "users/new/:alias" => "users#new"
-
-  get :my_favorites, controller: "favorites", action: "index"
 
   resources :user_group_memberships
   resources :status_group_memberships
