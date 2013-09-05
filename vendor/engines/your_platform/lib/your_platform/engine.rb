@@ -41,6 +41,19 @@ require 'gmaps4rails'
 # File Uploads
 require 'carrierwave'
 
+# Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
+require 'gravatar_image_tag'
+
+# Edit Mode
+require 'edit_mode'
+
+# Hide slim breadcrumb elements until user hovers the separator
+require 'slim_breadcrumb'
+
+# Phone Numbers Formatting
+require 'phony' 
+
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

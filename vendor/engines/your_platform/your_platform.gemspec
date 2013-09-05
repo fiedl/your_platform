@@ -75,6 +75,15 @@ Gem::Specification.new do |s|
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'rmagick', '>=2.13.2'
 
+  # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
+  s.add_dependency 'gravatar_image_tag'                                                # MIT License
+
+  # Edit Mode
+  s.add_dependency 'edit_mode', '>= 0.0.9'                                             # MIT License
+
+  # Hide slim breadcrumb elements until user hovers the separator
+  s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
+
   # Phone Numbers Formatting
   s.add_dependency 'phony'                                         
 

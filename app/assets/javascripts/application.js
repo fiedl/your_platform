@@ -18,16 +18,13 @@
 // require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
+//= require lightbox
 //= require jquery-ui
 //= require jquery.ui.all
 //= require jquery.purr
 //= require jquery.ui.datepicker-de
-//= require twitter/bootstrap
 //= require_boxes
-//= require best_in_place
 //= require gmaps4rails
-//= require edit_mode
-//= require slim_breadcrumb
 //= require make-js-more-like-ruby
 //= require your_platform
 //= require_tree .

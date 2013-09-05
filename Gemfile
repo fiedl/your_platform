@@ -145,20 +145,9 @@ end
 #end
 
 
-# Edit-Mode, SF
-gem 'edit_mode', '>= 0.0.9'                                             # MIT License
-#gem 'edit_mode', path: '../edit_mode'
-
-# hide slim breadcrumb elements until user hovers the separator, SF
-gem 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
-
-
 # password generator. it's not pwgen, but it's a gem.
 # TODO: if we ever find a way to properly include pwgen, let's do it.
 gem 'passgen'                                                           # MIT License
-
-# Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
-gem 'gravatar_image_tag'                                                # MIT License
 
 # WorkflowKit, SF
 gem 'workflow_kit', '>= 0.0.5.alpha', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
@@ -171,9 +160,6 @@ gem 'your_platform', path: 'vendor/engines/your_platform'
 #gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
 gem 'rubylight', '>= 1.0.3.2'
 # TODO: Move to *gemspec, when changes pulled into original gem.    
-
-# Phone Number Formatting
-gem 'phony'
 
 # Pry Console Addon
 gem 'pry', group: :development

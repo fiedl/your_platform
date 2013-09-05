@@ -33,10 +33,12 @@ PATH
       cancan
       carrierwave
       devise (= 2.2.3)
+      edit_mode (>= 0.0.9)
       font-awesome-rails (= 3.2.1.1)
       formtastic
       geocoder
       gmaps4rails (>= 2.0.0.pre)
+      gravatar_image_tag
       haml
       jquery-rails
       less (= 2.2.0)
@@ -46,6 +48,7 @@ PATH
       rails-i18n
       rails3_acts_as_paranoid
       rmagick (>= 2.13.2)
+      slim_breadcrumb (>= 0.0.3)
       twitter-bootstrap-rails (= 2.2.4)
 
 GEM
@@ -358,12 +361,10 @@ DEPENDENCIES
   coffee-rails (~> 3.2.1)
   colored
   database_cleaner
-  edit_mode (>= 0.0.9)
   execjs
   factory_girl_rails (>= 4.0.0)
   foreman
   formtastic
-  gravatar_image_tag
   guard (= 1.0.1)
   guard-focus
   guard-rspec (= 0.5.5)
@@ -381,7 +382,6 @@ DEPENDENCIES
   net-ssh (= 2.4.0)
   nokogiri
   passgen
-  phony
   poltergeist
   pry
   rails (~> 3.2.11)
@@ -390,7 +390,6 @@ DEPENDENCIES
   rubylight (>= 1.0.3.2)
   sass-rails (~> 3.2.3)
   simplecov
-  slim_breadcrumb (>= 0.0.3)
   spork
   therubyracer
   turbolinks (>= 1.0)

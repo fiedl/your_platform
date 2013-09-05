@@ -1,6 +1,9 @@
 //
 //= require jquery.appear-1.1.1
-//= require lightbox
+//= require edit_mode
+//= require slim_breadcrumb
+//= require best_in_place
+//= require twitter/bootstrap
 //= require app-ng
 //= require_tree ./services-ng
 //= require_tree ./models-ng
