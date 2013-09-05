@@ -149,10 +149,6 @@ end
 # TODO: if we ever find a way to properly include pwgen, let's do it.
 gem 'passgen'                                                           # MIT License
 
-# WorkflowKit, SF
-gem 'workflow_kit', '>= 0.0.5.alpha', git: 'git://github.com/fiedl/workflow_kit.git'      # MIT License
-#gem 'workflow_kit', path: '../workflow_kit'
-
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'
 

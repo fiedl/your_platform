@@ -50,6 +50,9 @@ require 'edit_mode'
 # Hide slim breadcrumb elements until user hovers the separator
 require 'slim_breadcrumb'
 
+# Workflow Kit
+require 'workflow_kit'
+
 # Phone Numbers Formatting
 require 'phony' 
 

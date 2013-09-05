@@ -83,6 +83,9 @@ Gem::Specification.new do |s|
 
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
+  
+  # Workflow Kit
+  s.add_dependency 'workflow_kit', '~> 0.0.6.alpha'                                    # MIT License
 
   # Phone Numbers Formatting
   s.add_dependency 'phony'                                         
