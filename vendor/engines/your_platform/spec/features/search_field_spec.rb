@@ -63,6 +63,11 @@ feature "Search Field", js: true do
     subject { page }
     it { should have_content( @page.title ) }
   end
+  
+  def hit_enter_in(selector)
+    page.execute_script("var input = $(\"#{selector}\"); input.trigger('keypress', [13]);")
+  end
 
 end
+
 
