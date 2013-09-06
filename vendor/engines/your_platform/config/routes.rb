@@ -16,8 +16,9 @@ Rails.application.routes.draw do
   end
 
   resources :groups do
-    get :my, on: :collection
+    get :mine, on: :collection, to: 'groups#index_mine'
   end
+  get :my_groups, to: 'groups#index_mine'
 
   resources :user_accounts
   resources :pages 

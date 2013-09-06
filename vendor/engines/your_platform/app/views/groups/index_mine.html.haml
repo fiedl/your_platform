@@ -1,0 +1,7 @@
+- set_title I18n.t :my_groups
+%h1
+  = I18n.t :my_groups
+  = "(#{@groups.count})" if @groups
+%div
+  = my_groups_table
+  

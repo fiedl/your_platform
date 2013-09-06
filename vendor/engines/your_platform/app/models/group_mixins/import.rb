@@ -51,14 +51,13 @@ module GroupMixins::Import
       counter_for_created_groups = 0
 
       for new_group_hash in hash_array_of_groups do
-
         
         unless parent_group.children.select { |child| child.name == (new_group_hash["name"] || new_group_hash[:name]) }.count > 0
 
           # get children from hash
           sub_group_hash_array = new_group_hash[ "children" ]
           sub_group_hash_array = new_group_hash[ :children ] unless sub_group_hash_array
-          new_group_hash.reject! { |key| not Group.attr_accessible[:default].include? key }
+          new_group_hash.reject! { |key| key.to_sym == :children }
 
           # create the new group
           g = Group.create( new_group_hash )
@@ -239,7 +238,7 @@ module GroupMixins::Import
         # like shown above in the description of the `yaml_import_groups_into_parent_group`
         # method.
         sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes )
-
+        
         Group.hash_array_import_groups_into_parent_group( sub_group_hashes, parent_group )
 
       else

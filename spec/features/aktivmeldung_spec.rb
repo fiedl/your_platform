@@ -11,6 +11,10 @@ feature "Aktivmeldung" do
 
     login(:admin)
   end
+  
+  specify "make sure the prelims are fulfilled" do
+    @corporation.descendant_groups.collect { |group| group.title }.should include "Hospitanten"
+  end
 
   specify "click 'Aktivmeldung' and add a new user" do
     

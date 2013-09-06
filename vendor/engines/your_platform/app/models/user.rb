@@ -224,6 +224,9 @@ class User < ActiveRecord::Base
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
       corporation ||= Group.find( add_to_corporation ) if add_to_corporation.to_i
       if corporation
+        #
+        # TODO: Move to wingolfsplattform. THIS IS WINGOLF SPECIFIC!!
+        #
         hospitanten_group = corporation.descendant_groups.where(name: "Hospitanten").first
         hospitanten_group.assign_user self
       end

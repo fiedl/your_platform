@@ -1,0 +1,11 @@
+<% set_title(I18n.t(:groups)) %>
+<h1><%= I18n.t(:groups) %> (<%= @groups.count %>)</h1>
+<div>
+  <ul>
+    <% for group in @groups %>
+      <li>
+        <%= link_to group.title, group%>
+      </li>
+    <% end %>
+  </ul>
+</div>
