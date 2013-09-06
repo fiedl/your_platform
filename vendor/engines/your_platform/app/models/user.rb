@@ -330,7 +330,23 @@ class User < ActiveRecord::Base
     end
     return my_workflows
   end
-
+  
+  def workflows_for(group)
+    (([group] + group.descendant_groups) & self.ancestor_groups)
+      .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
+  end
+  
+  def workflows_by_corporation
+    hash = {}
+    other_workflows = self.workflows
+    self.corporations.each do |corporation|
+      corporation_workflows = self.workflows_for(corporation)
+      hash.merge!( corporation.title.to_s => corporation_workflows )
+      other_workflows -= corporation_workflows
+    end
+    hash.merge!( I18n.t(:others).to_s => other_workflows ) if other_workflows.count > 0
+    return hash
+  end
 
   # Events
   # ------------------------------------------------------------------------------------------

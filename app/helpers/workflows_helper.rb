@@ -7,10 +7,10 @@ module WorkflowsHelper
     title += " (#{workflow.wah_group.name})" if workflow.wah_group
     workflow_params = { user_id: user.id }
     link_to(
-            image_tag( 'tools/up.png' ) +  workflow.name,
+            (tag(:i, :class => "icon-chevron-up") + " " + workflow.name).html_safe,
             workflow_kit.execute_workflow_path( workflow, workflow_params ), 
             method: :put,
-            :class => 'workflow_link',
+            :class => 'workflow_trigger',
             title: title
             )
   end

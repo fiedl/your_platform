@@ -40,11 +40,9 @@ feature 'Corporate Vita', js: true do
     describe 'promoting users (i.e. change their status)' do
       it 'should be possible to promote users' do
 
-        # enter edit mode of the first box
-        find('.edit_button.first').click
-
         # run the first workflow
-        within '#user_workflows' do
+        within '.box.first' do
+          click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
 
@@ -59,8 +57,8 @@ feature 'Corporate Vita', js: true do
         end
 
         # run the second workflow
-        find('.edit_button.first').click
-        within '#user_workflows' do
+        within '.box.first' do
+          click_on I18n.t(:change_status)
           click_on @second_promotion_workflow.name
         end
 
@@ -93,11 +91,18 @@ feature 'Corporate Vita', js: true do
 
           within first '.best_in_place.status_group_date_of_joining' do
             find('input').value.should == @created_at_formatted
-
-            # TODO: Neues Datum eintragen und bearbeiten abschließen.
-            # TODO: Vergleichen, ob das Datum auch in die Datenbank gespeichert wurde.
-
           end
+
+          # enter new date of joining and press enter to save.
+          # then check if the date has been changed in the database.
+          within first '.best_in_place.status_group_date_of_joining' do
+            @new_date = 10.days.ago
+            fill_in "created_at_date_formatted", with: (I18n.localize(@new_date) + "\n")
+            @membership.reload.created_at.to_date.should == @new_date
+          end            
+
+          # TODO: Neues Datum eintragen und bearbeiten abschließen.
+          # TODO: Vergleichen, ob das Datum auch in die Datenbank gespeichert wurde.
 
         end
       end

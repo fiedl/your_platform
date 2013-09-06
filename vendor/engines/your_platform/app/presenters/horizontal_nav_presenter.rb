@@ -7,12 +7,16 @@ class HorizontalNavPresenter < BasePresenter
   
   def horizontal_nav_html
     ul_tag do
-      nav_link_objects.collect do |nav_link_object|
-        li_tag(nav_link_object) do
-          nav_link(nav_link_object)
-        end
-      end.join("\n").html_safe
+      nav_lis
     end.html_safe
+  end
+  
+  def nav_lis
+    nav_link_objects.collect do |nav_link_object|
+      li_tag(nav_link_object) do
+        nav_link(nav_link_object)
+      end
+    end.join("\n").html_safe
   end
   
   def nav_link_objects

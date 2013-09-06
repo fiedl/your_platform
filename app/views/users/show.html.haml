@@ -19,10 +19,9 @@
 
   / General Info Box
   %div
-    %span#user_workflows.show_only_in_edit_mode
-      %ul
-        - for workflow in @user.workflows
-          %li= link_to_workflow workflow, user: @user
+    - # #user_workflows
+    %span.workflow_triggers.pull-right
+      = render partial: 'users/workflow_triggers'
     %table
       %tr
         %td{:width => "20%"}
@@ -40,7 +39,7 @@
             %dt= t :date_of_birth
             %dd
               - if can? :update, @user
-                = best_in_place @user, :date_of_birth, type: :date
+                = best_in_place @user, :date_of_birth #, type: :date
               - else
                 = localize @user.date_of_birth if @user.date_of_birth
           = render partial: 'profile/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
@@ -54,6 +53,8 @@
   - if @user.corporations.count > 0
     %h1.section.corporate_vita Wingolfitischer Lebenslauf
     %div
+      .workflow_triggers.pull-right
+        = render partial: 'users/workflow_triggers'
       = corporate_vita_for_user( @user )
 
   / Groups
