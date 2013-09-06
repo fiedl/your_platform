@@ -31,7 +31,10 @@ Wingolfsplattform::Application.configure do
   config.action_mailer.default_url_options = { :host => 'localhost' }
 
   # Raise exception on mass assignment protection for Active Record models
-  config.active_record.mass_assignment_sanitizer = :strict
+  # This is deactivated, now, since we use strong_parameters.
+  # https://github.com/rails/strong_parameters/
+  # 
+  # config.active_record.mass_assignment_sanitizer = :strict
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
