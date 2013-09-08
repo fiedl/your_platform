@@ -21,11 +21,13 @@ module BoxHelper
     # * http://stackoverflow.com/questions/3449767/
     # * http://www.engineyard.com/blog/2010/getting-started-with-nokogiri/
     # * http://nokogiri.org/Nokogiri/XML/Node.html#method-i-next_element
+    # * http://stackoverflow.com/questions/4723344/how-to-prevent-nokogiri-from-adding-doctype-tags
+    # * http://stackoverflow.com/questions/3817843/using-xpath-with-html-or-xml-fragment
     #
-    doc = Nokogiri::HTML( html_code )
+    doc = Nokogiri::HTML::DocumentFragment.parse( html_code )
 
     box_counter = 0
-    doc.xpath( '//h1' ).each do |h1_node|
+    doc.xpath( 'descendant::h1' ).each do |h1_node|
       box_counter += 1
       heading = h1_node.inner_html.html_safe
       heading_class = h1_node.attr( :class )
@@ -41,7 +43,7 @@ module BoxHelper
 
       h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
     end
-
+    
     return doc.to_s.html_safe
   end
 

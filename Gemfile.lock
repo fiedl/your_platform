@@ -40,6 +40,7 @@ PATH
       rails (~> 3.2.6)
       rails-i18n
       rails3_acts_as_paranoid
+      redcarpet
       rmagick (>= 2.13.2)
       slim_breadcrumb (>= 0.0.3)
       strong_parameters
@@ -271,6 +272,7 @@ GEM
       ffi (>= 0.5.0)
     rdoc (3.12.2)
       json (~> 1.4)
+    redcarpet (3.0.0)
     ref (1.0.2)
     rmagick (2.13.2)
     rspec (2.10.0)

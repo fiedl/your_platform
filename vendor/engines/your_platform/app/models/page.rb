@@ -48,14 +48,15 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # This method returns all Page objects that can be regarded as blog entries of self.
-  # Blog entries are simply child pages of self.
+  # Blog entries are simply child pages of self that have the :blog_entry flag. 
+  # They won't show up in the vertical menu.
   #
   # Page: "My Blog"
   #   |------------------ Page: "Entry 1"
   #   |------------------ Page: "Entry 2"
   #
   def blog_entries
-    self.child_pages.order('created_at DESC')
+    self.child_pages.where(type: "BlogPost").order('created_at DESC')
   end
 
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130409193040) do
+ActiveRecord::Schema.define(:version => 20130908011259) do
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(:version => 20130409193040) do
     t.datetime "updated_at",     :null => false
     t.string   "redirect_to"
     t.integer  "author_user_id"
+    t.string   "type"
   end
 
   create_table "posts", :force => true do |t|

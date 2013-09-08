@@ -1,0 +1,14 @@
+en:
+  add_blog_entry: Add blog entry
+  new_blog_post: New blog post
+  
+  attachment: 'Attachment'
+  attachments: 'Attachments'
+  add_attachment: 'Add attachment'
+
+  file: 'File'
+  helpers:
+    submit:
+      create: 'Create %{model}'
+      update: 'Update %{model}'
+      submit: 'Svae %{model}'

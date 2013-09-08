@@ -52,6 +52,7 @@ Gem::Specification.new do |s|
   # Template Engines
   # haml template language, http://haml.info
   s.add_dependency 'haml'                                                              # MIT License
+  s.add_dependency 'redcarpet'  # for Markdown                                         # MIT License
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'twitter-bootstrap-rails', '2.2.4'                                  # MIT License

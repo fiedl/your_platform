@@ -17,7 +17,7 @@ class PagesController < ApplicationController
 
   def update
     @page.update_attributes params[ :page ]
-    respond_with @page
+    respond_with_bip(@page)
   end
 
   def create

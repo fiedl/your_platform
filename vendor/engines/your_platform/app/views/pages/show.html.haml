@@ -3,6 +3,12 @@
 %div.attachment_global_drop_zone
   = t :drop_files_here
 
+- if can? :manage, @page
+  %div.blog_tools.box
+    = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
+      %i.icon-plus
+      = I18n.t(:add_blog_entry)
+
 - for blog_entry_page in @blog_entries
   = render partial: 'pages/page', object: blog_entry_page
 

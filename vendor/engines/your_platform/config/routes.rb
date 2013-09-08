@@ -22,6 +22,7 @@ Rails.application.routes.draw do
 
   resources :user_accounts
   resources :pages 
+  resources :blog_posts
   resources :attachments
 
   resources :bookmarks

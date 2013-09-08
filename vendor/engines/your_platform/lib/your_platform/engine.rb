@@ -25,6 +25,7 @@ require 'cancan'
 
 # Template Engines
 require 'haml'
+require 'redcarpet'
 
 # Layout: Twitter Bootstrap
 require 'twitter-bootstrap-rails'

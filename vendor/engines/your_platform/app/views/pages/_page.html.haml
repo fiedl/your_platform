@@ -18,14 +18,14 @@
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
       - if can? :update, page
-        = best_in_place page, :content, type: 'textarea', sanitize: false
+        = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markdown
         // = page.content.html_safe
       - else
-        = page.content
+        = markdown(page.content)
 
-= render(partial: 'pictures') 
-= render(partial: 'videos') 
-= render(partial: 'attachments') # if page.attachments.count > 0
+= render(partial: 'pages/pictures') 
+= render(partial: 'pages/videos') 
+= render(partial: 'pages/attachments') # if page.attachments.count > 0
 
 
 
