@@ -4,6 +4,8 @@ class RootController < ApplicationController
 
   def index
     @navable = @page
+    @blog_entries = @page.blog_entries
+    render "pages/show"
   end
 
   private
