@@ -90,7 +90,16 @@
         .span9#content_area
           = flash_area
           = html_convert_h1_to_boxes( yield )
-      %footer
+    %footer.footer
+      %div.container.narrow.row-fluid
+        %ul.footer-links
+          %li
+            %a(href="http://github.com/fiedl/your_platform") github
+          %li.muted ·
+          %li
+            %a(href="#")= t(:imprint)
+          %li.muted ·
+          %li= language_switcher_html
 
     / JavaScripts: Placed at the end of the document so the pages load faster
     = javascript_include_tag "application"
