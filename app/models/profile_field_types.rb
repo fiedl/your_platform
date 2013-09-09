@@ -26,7 +26,7 @@ module ProfileFieldTypes
     # This method returns the Bv associated with the given address.
     #
     def bv
-      geo_location.bv
+      geo_location.bv if geo_location
     end
 
     # The html output method is overridden here, in order to display the bv as well.

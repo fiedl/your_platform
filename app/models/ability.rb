@@ -72,6 +72,20 @@ class Ability
         cannot :read, Group do |group|
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
+        
+        # LOCAL ADMINS
+        # Local admins can manage their groups, this groups' subgroups 
+        # and all users within their groups. They can also execute workflows.
+        #
+        can :manage, Group do |group|
+          (group.admins.include?(user)) || (group.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user))
+        end
+        can :manage, User do |other_user|
+          other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+        end
+        can :execute, Workflow do |workflow|
+          workflow.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+        end
 
       end
 
