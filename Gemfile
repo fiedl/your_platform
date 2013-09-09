@@ -168,9 +168,6 @@ gem 'turbolinks', '>= 1.0'
 # Angular JS
 gem 'angularjs-rails'
 
-# Pagination
-gem 'will_paginate', '> 3.0'
-
 # Receiving Mails
 gem 'mailman', require: false
 gem 'mail', git: 'git://github.com/jeremy/mail.git'

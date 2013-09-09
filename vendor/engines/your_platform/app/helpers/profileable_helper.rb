@@ -2,7 +2,7 @@ module ProfileableHelper
   
   def profile_sections_to_html(sections)
     sections_to_be_shown(sections).collect do |section|
-      render partial: 'profile/section', locals: { :section => section }
+      render partial: 'profiles/section', locals: { :section => section }
     end.join.html_safe
   end
   

@@ -8,13 +8,15 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
 
   def name_as_verb
+    
+    # TODO: This is German only! Internationalize!
     name
       .gsub( /ung/, 'en' )
       .gsub( /ation/, 'ieren' )
       .downcase
   end
 
-  def wah_group
+  def wah_group  # => TODO: corporation
     ( self.ancestor_groups & Corporation.all ).first
   end
 

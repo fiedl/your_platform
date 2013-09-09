@@ -55,8 +55,9 @@ require 'slim_breadcrumb'
 # Workflow Kit
 require 'workflow_kit'
 
-# Phone Numbers Formatting
+# View Helpers
 require 'phony' 
+require 'will_paginate'
 
 
 module YourPlatform

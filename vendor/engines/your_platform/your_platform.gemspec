@@ -89,8 +89,9 @@ Gem::Specification.new do |s|
   # Workflow Kit
   s.add_dependency 'workflow_kit', '~> 0.0.6.alpha'                                    # MIT License
 
-  # Phone Numbers Formatting
+  # View Helpers
   s.add_dependency 'phony'                                         
+  s.add_dependency 'will_paginate', '> 3.0'
 
 
   # Development Dependencies 

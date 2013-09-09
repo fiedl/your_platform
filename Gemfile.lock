@@ -45,6 +45,7 @@ PATH
       slim_breadcrumb (>= 0.0.3)
       strong_parameters
       twitter-bootstrap-rails (= 2.2.4)
+      will_paginate (> 3.0)
       workflow_kit (~> 0.0.6.alpha)
 
 GEM
@@ -400,5 +401,4 @@ DEPENDENCIES
   turbolinks (>= 1.0)
   uglifier (>= 1.0.3)
   unicorn
-  will_paginate (> 3.0)
   your_platform!

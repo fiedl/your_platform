@@ -8,5 +8,5 @@
     - if section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0
       %span.contact_section.map.do_not_show_in_edit_mode
         = map_of_address_profile_fields( section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) )
-  = render partial: 'profile/profile_section_ul', locals: { section: section }
-  = render partial: 'profile/add_profile_field_button', locals: { section: section, profileable: section.profileable }
+  = render partial: 'profiles/profile_section_ul', locals: { section: section }
+  = render partial: 'profiles/add_profile_field_button', locals: { section: section, profileable: section.profileable }

@@ -24,6 +24,11 @@ Rails.application.routes.draw do
   resources :pages 
   resources :blog_posts
   resources :attachments
+  resources :profile_fields  
+  resources :workflows
+  resources :user_group_memberships
+  resources :status_group_memberships
+  resources :relationships
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"

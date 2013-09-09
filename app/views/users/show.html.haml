@@ -42,7 +42,7 @@
                 = best_in_place @user, :date_of_birth #, type: :date
               - else
                 = localize @user.date_of_birth if @user.date_of_birth
-          = render partial: 'profile/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
+          = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
           = render partial: 'users/hidden_flag_switch', locals: { user: @user }
             
 
@@ -81,7 +81,7 @@
       Wingolfsblätter abonniert:
       \#{best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]}
 
-    = render partial: 'profile/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
+    = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
 
   / Login Data
   %h1.section.access= t(:access_information)
