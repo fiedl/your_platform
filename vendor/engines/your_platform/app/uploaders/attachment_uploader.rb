@@ -1,9 +1,13 @@
 # encoding: utf-8
+
+require 'carrierwave/processing/mime_types'
+
 class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   include CarrierWave::RMagick
   # include CarrierWave::MiniMagick
+  include CarrierWave::MimeTypes
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
   # include Sprockets::Helpers::RailsHelper
@@ -16,8 +20,19 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+    model.id || raise('Model has no id. But need one to save the file.')
+    "#{Rails.root}/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
   end
+  def cache_dir
+    # model.id || raise('Model has no id. But need one to save the file.')
+    # "#{Rails.root}/tmp/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
+    Rails.root || raise('no rails root')
+    Rails.env || raise('no rails env')
+    "#{Rails.root}/tmp/uploads/#{Rails.env}_env/"
+  end
+    
+
+  process :set_content_type  
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
@@ -39,50 +54,49 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     process :resize_to_limit => [ 100, 100 ]
     process :cover
     process :convert => :png
-    process :set_content_type
+    process :modify_content_type
     def full_filename( for_file = model.attachment.file )
       "thumb.png"
     end
   end
-
-  version :video_thumb, :if => :video? do
-    process :create_video_thumb
-    process :set_content_type => [ "image/jpeg" ]
-    def full_filename( for_file = model.attachment.file )
-      "video-thumb.jpg"
-    end
-  end
-
+  # 
+  # version :video_thumb, :if => :video? do
+  #   process :create_video_thumb
+  #   process :set_content_type => [ "image/jpeg" ]
+  #   def full_filename( for_file = model.attachment.file )
+  #     "video-thumb.jpg"
+  #   end
+  # end
+  # 
   def image_or_pdf?( new_file )
-    new_file.content_type.include? 'image' or 
-      new_file.content_type.include? 'pdf'
+    new_file && new_file.content_type.present? && 
+      (new_file.content_type.include?('image') || new_file.content_type.include?('pdf'))
   end
-
-  def video?( new_file )
-    new_file.content_type.include? 'video' 
-  end
-  
+  # 
+  # def video?( new_file )
+  #   new_file.content_type.include?('video')
+  # end
+  # 
   def cover 
     manipulate! do |frame, index|
       frame if index.zero?
     end
   end
-
-  def set_content_type( *args )
-    type = args[0]
-    type = "image/png" unless type
+  
+  def modify_content_type( *args )
+    type = args[0] || "image/png"
     self.file.instance_variable_set( :@content_type, type )
   end
-
-  def create_video_thumb( *args )
-    original_file = self.file.instance_variable_get( :@file )
-    original_file_title = original_file.split( "/" ).last
-    thumb_title = "thumb.jpg"
-    tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
-
-    `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
-    `mv '#{tmp_thumb_file}' '#{original_file}'`
-  end
+  # 
+  # def create_video_thumb( *args )
+  #   original_file = self.file.instance_variable_get( :@file )
+  #   original_file_title = original_file.split( "/" ).last
+  #   thumb_title = "thumb.jpg"
+  #   tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
+  # 
+  #   `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
+  #   `mv '#{tmp_thumb_file}' '#{original_file}'`
+  # end
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:
@@ -95,5 +109,18 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # def filename
   #   "original.#{model.attachment.file.extension}" if original_filename
   # end
+  
+  def url(version = nil)
+    model.id || raise('Model has no id.')
+    if version
+      filename = self.send(version).current_path
+    else
+      filename = self.current_path
+    end
+    filename || raise('No filename.')
+    extension = File.extname(filename).gsub(/^./, '')
+    basename = File.basename(filename).gsub(/.#{extension}$/, '')
+    Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension )
+  end
 
 end

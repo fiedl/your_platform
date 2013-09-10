@@ -8,7 +8,9 @@
       <%= f.hidden_field :parent_id %> 
       <%= f.hidden_field :parent_type %>
       <%= f.label :file, t(:attachments) %>
-      <%= f.file_field :file, multiple: true, name: "attachment[file]" %>
+      <% # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079 %>
+      <% # f.file_field :file, multiple: true, name: "attachment[file]" %>
+      <%= f.file_field :file, name: "attachment[file]" %>
     <% end %>
   </div>
 

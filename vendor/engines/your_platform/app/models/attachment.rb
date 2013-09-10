@@ -21,7 +21,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def filename 
-    self.file.to_s.split( "/" ).last
+    self.file.to_s.split( "/" ).last if self.file
   end
 
   def file_size_human
@@ -63,7 +63,9 @@ class Attachment < ActiveRecord::Base
   end
 
   def set_default_title_if_empty
-    self.title ||= File.basename(file.filename, '.*').titleize if file
+    if file.present? && file.filename.present? && file_changed?
+      self.title ||= File.basename(file.filename, '.*').titleize
+    end
   end
 
 end

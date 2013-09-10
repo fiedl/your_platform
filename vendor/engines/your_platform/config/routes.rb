@@ -32,6 +32,8 @@ Rails.application.routes.draw do
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
+  
+  get "/attachments/:id/:basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
     
   get ':alias', to: 'users#show'
   

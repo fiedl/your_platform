@@ -1,10 +1,15 @@
 class AttachmentsController < ApplicationController
+  
+  load_and_authorize_resource
+  
   def index
   end
 
   def create
-    @attachment = Attachment.new(params[:attachment])
-    @attachment.save
+    #@attachment = Attachment.new(params[:attachment])
+    #@attachment.save
+    @attachment = Attachment.create
+    @attachment.update_attributes(params[:attachment])
   end
 
 
@@ -29,5 +34,15 @@ class AttachmentsController < ApplicationController
     @attachment.destroy
   end
 
+  # This action allows to download a file, which is not in the public/ directory
+  # but at a secured location. That way, access control for uploaded files cannot
+  # be circumvented by downloading files directly from the public folder.
+  #
+  # https://github.com/carrierwaveuploader/carrierwave/wiki/How-To%3A-Secure-Upload
+  #
+  def download
+    path = @attachment.file.current_path
+    send_file path, x_sendfile: true
+  end
 
 end

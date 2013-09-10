@@ -9,7 +9,8 @@ class BlogPostsController < PagesController
 
   def create
     params[:parent_id].present? || raise('A blog post requires a parent_id to identify the parent page.')
-    can?(:manage, Page.find(params[:parent_id])) || raise('not authorized to add blog post. Make sure to have rights on the parent page.')
+    can?(:manage, Page.find(params[:parent_id])) || raise('Not authorized to add blog post. Make sure to have rights on the parent page.')
+    @blog_post || raise('No @blog_post created by cancan.')
     @blog_post.parent_pages << Page.find(params[:parent_id])
     @blog_post.title = I18n.t(:new_blog_post)
     @blog_post.author = current_user
