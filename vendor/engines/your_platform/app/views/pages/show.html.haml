@@ -1,6 +1,10 @@
 = render @page
 
 %div.attachment_global_drop_zone
+  %div.center.large
+    %i.icon-file
+    %i.icon-picture= # icon-camera
+    %i.icon-facetime-video
   = t :drop_files_here
 
 - if can? :manage, @page

@@ -22,13 +22,13 @@ ready = ->
       data.context.remove()
 
   $(document).bind('dragover', (e) ->
-    $('.attachment_global_drop_zone').show()
+    $('.attachment_global_drop_zone').fadeIn()
   )
-  $('.attachment_global_drop_zone').bind('dragleave drop', (e) ->
-    $('.attachment_global_drop_zone').hide()
+  $('.attachment_global_drop_zone').bind('drop dragleave', (e) ->
+    $('.attachment_global_drop_zone').fadeOut()
   )
   $(document).bind('mouseout', (e) ->
-    $('.attachment_global_drop_zone').hide()
+    $('.attachment_global_drop_zone').fadeOut()
   )
 
 $(document).ready(ready)
