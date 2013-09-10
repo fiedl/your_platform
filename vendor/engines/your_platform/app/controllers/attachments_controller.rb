@@ -41,7 +41,14 @@ class AttachmentsController < ApplicationController
   # https://github.com/carrierwaveuploader/carrierwave/wiki/How-To%3A-Secure-Upload
   #
   def download
-    path = @attachment.file.current_path
+    path = ""
+    if params[:version]
+      if @attachment.file.versions[params[:version].to_sym]
+        path = @attachment.file.versions[params[:version].to_sym].current_path
+      end
+    else
+      path = @attachment.file.current_path
+    end
     send_file path, x_sendfile: true
   end
 

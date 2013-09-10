@@ -120,7 +120,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     filename || raise('No filename.')
     extension = File.extname(filename).gsub(/^./, '')
     basename = File.basename(filename).gsub(/.#{extension}$/, '')
-    Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension )
+    Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension, version: version )
   end
 
 end
