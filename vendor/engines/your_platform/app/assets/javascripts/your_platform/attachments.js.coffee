@@ -6,7 +6,7 @@ ready = ->
       data.context = $($.parseHTML(tmpl("template-upload", file)))
       # see https://github.com/blueimp/JavaScript-Templates/issues/19
       #$('table.attachments').append(data.context)
-      $('span.add_attachment').prepend(data.context)
+      $('span.add_attachment').first().prepend(data.context)
       data.context.find('.processing').hide()
       data.submit()
     progress: (e, data) ->
@@ -15,8 +15,10 @@ ready = ->
         data.context.find('.bar').css('width', progress + '%')
         if progress > 99
           data.context.find('.processing').show()
+          data.context.find('.bar').hide()
     done: (e, data) ->
       console.log "upload done"
+      console.log data.context
       data.context.remove()
 
   $(document).bind('dragover', (e) ->
