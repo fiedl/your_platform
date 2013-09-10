@@ -76,6 +76,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'rmagick', '>=2.13.2'
+  s.add_dependency 'jquery-fileupload-rails'
 
   # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
@@ -92,7 +93,9 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
-
+  
+  # Gallery View
+  s.add_dependency 'rubylight', '1.0.3.2'   # Creative Commons
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

@@ -11,8 +11,9 @@ class PagesController < ApplicationController
       
       @title = @page.title
       @navable = @page
+      @page = @page.becomes(Page)  # rather than BlogPost etc.
     end
-    #respond_with @page
+    respond_with @page
   end
 
   def update

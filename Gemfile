@@ -26,7 +26,6 @@ group :assets, :production, 'testing-aki' do
 
   gem 'uglifier', '>= 1.0.3'						# MIT License
 
-  gem 'jquery-fileupload-rails'
 end
 
 # See https://github.com/sstephenson/execjs#readme for more 
@@ -153,11 +152,6 @@ gem 'passgen'                                                           # MIT Li
 
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'
-
-# LightBox 2 Gallery
-#gem 'rubylight', git: 'https://github.com/Mario1988/rubylight.git'      # Creative Commons 2.5
-gem 'rubylight', '>= 1.0.3.2'
-# TODO: Move to *gemspec, when changes pulled into original gem.    
 
 # Pry Console Addon
 gem 'pry', group: :development

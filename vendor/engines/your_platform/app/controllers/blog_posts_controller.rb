@@ -6,16 +6,20 @@ class BlogPostsController < PagesController
   load_and_authorize_resource
   before_filter :set_inheritance_instance_variable
   respond_to :js 
+  
+  def show
+    redirect_to page_url(id: params[:id])
+  end
 
   def create
     params[:parent_id].present? || raise('A blog post requires a parent_id to identify the parent page.')
     can?(:manage, Page.find(params[:parent_id])) || raise('Not authorized to add blog post. Make sure to have rights on the parent page.')
     @blog_post || raise('No @blog_post created by cancan.')
-    @blog_post.parent_pages << Page.find(params[:parent_id])
     @blog_post.title = I18n.t(:new_blog_post)
     @blog_post.author = current_user
     @blog_post.content = "–"
-    @blog_post.save
+    @blog_post.save!
+    @blog_post.parent_pages << Page.find(params[:parent_id])
     respond_with @blog_post
   end
   

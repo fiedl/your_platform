@@ -4,6 +4,9 @@
 //= require slim_breadcrumb
 //= require best_in_place
 //= require twitter/bootstrap
+//= require jquery-fileupload/basic
+//= require jquery-fileupload/vendor/tmpl
+//= require lightbox
 //= require app-ng
 //= require_tree ./services-ng
 //= require_tree ./models-ng

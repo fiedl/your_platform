@@ -42,6 +42,7 @@ require 'gmaps4rails'
 
 # File Uploads
 require 'carrierwave'
+require 'jquery-fileupload-rails'
 
 # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
 require 'gravatar_image_tag'
@@ -58,6 +59,9 @@ require 'workflow_kit'
 # View Helpers
 require 'phony' 
 require 'will_paginate'
+
+# Gallery View
+require 'rubylight'
 
 
 module YourPlatform

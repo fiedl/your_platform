@@ -12,13 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery-fileupload/basic
-//= require jquery-fileupload/vendor/tmpl
 //= require turbolinks
 // require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
-//= require lightbox
 //= require jquery-ui
 //= require jquery.ui.all
 //= require jquery.purr
