@@ -35,6 +35,7 @@ config/group-mail-worker.yml
 
 # Ignore uploads folder content folder
 public/uploads/*
+uploads
 
 # ignore assets folder
 public/assets
