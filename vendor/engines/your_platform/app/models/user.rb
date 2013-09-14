@@ -102,10 +102,14 @@ class User < ActiveRecord::Base
   end
   
   def localized_date_of_birth
-    I18n.localize self.date_of_birth
+    I18n.localize self.date_of_birth if self.date_of_birth
   end
   def localized_date_of_birth=(str)
-    self.date_of_birth = str.to_date
+    begin
+      self.date_of_birth = str.to_date
+    rescue
+      self.date_of_birth = nil
+    end
   end
 
   

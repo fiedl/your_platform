@@ -122,23 +122,54 @@ describe User do
   end
   
   describe "#localized_date_of_birth" do
-    before do
-      @date_of_birth = "1987-01-11".to_date
-      @user.date_of_birth = @date_of_birth
-    end
     subject { @user.localized_date_of_birth }
-    it { should == I18n.localize(@date_of_birth) }
-    it "should return the correctly localized date" do
-      I18n.locale.should == :de
-      subject.should be_in ["11.01.1987", "11.1.1987"]
+    describe "for a given date of birth" do
+      before do
+        @date_of_birth = "1987-01-11".to_date
+        @user.date_of_birth = @date_of_birth
+      end
+      it { should == I18n.localize(@date_of_birth) }
+      it "should return the correctly localized date" do
+        I18n.locale.should == :de
+        subject.should be_in ["11.01.1987", "11.1.1987"]
+      end
+    end
+    describe "for the user not having a date of birth in the database" do
+      it "should return nil" do
+        @user.date_of_birth.should == nil
+        subject.should == nil
+      end
     end
   end
   describe "#localized_date_of_birth=" do
-    subject { @user.localized_date_of_birth = "11.01.1987" }
-    it "should set the date correctly" do
-      @user.date_of_birth.should_not == "1987-01-11".to_date
-      subject
-      @user.date_of_birth.should == "1987-01-11".to_date
+    subject { @user.localized_date_of_birth = @given_string }
+    describe "for setting a valid date of birth" do
+      before { @given_string = "11.01.1987" }
+      it "should set the date correctly" do
+        @user.date_of_birth.should_not == "1987-01-11".to_date
+        subject
+        @user.date_of_birth.should == "1987-01-11".to_date
+      end
+    end
+    describe "for setting an empty string" do
+      before do
+        @user.date_of_birth = 24.years.ago.to_date
+        @given_string = "" 
+      end
+      it "should set the date of birth to nil" do
+        subject
+        @user.date_of_birth.should == nil
+      end
+    end
+    describe "for setting an invalid date string" do
+      before do
+        @user.date_of_birth = 24.years.ago.to_date
+        @given_string = "foo"
+      end
+      it "should set the date of birth to nil" do
+        subject
+        @user.date_of_birth.should == nil
+      end
     end
   end
 
