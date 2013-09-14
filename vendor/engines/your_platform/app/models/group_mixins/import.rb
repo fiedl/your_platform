@@ -59,6 +59,10 @@ module GroupMixins::Import
           sub_group_hash_array = new_group_hash[ :children ] unless sub_group_hash_array
           new_group_hash.reject! { |key| key.to_sym == :children }
 
+          # get domain from hash
+          domain = new_group_hash[ "domain" ]
+          new_group_hash.reject! { |key| key.to_sym == :domain }
+
           # create the new group
           g = Group.create( new_group_hash )
           g.parent_groups << parent_group
@@ -69,6 +73,8 @@ module GroupMixins::Import
           self.hash_array_import_groups_into_parent_group sub_group_hash_array, g if sub_group_hash_array
           counter_for_created_groups += 1
 
+          # set domain as url component in navnode
+          g.navnode.update_attribute(:url_component, "#{domain}/")
         end
       end
 
