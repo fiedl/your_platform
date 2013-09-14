@@ -106,7 +106,7 @@ feature 'User page', js: false do
 
     describe 'when signed in as a regular user' do
       describe 'and visiting a foreign profile' do
-        let(:profile) { create(:user, :with_profile_fields) }
+        let(:profile) { create(:user, :with_profile_fields, :with_corporate_vita) }
 
         background do
           login(:user)
@@ -115,6 +115,14 @@ feature 'User page', js: false do
 
         scenario 'the profile sections should not be editable', js: true do
           within '.box.section.career_information' do
+            subject.should_not have_selector('a.edit_button', visible: true)
+            subject.should_not have_selector('a.add_button', visible: true)
+            subject.should_not have_selector('.remove_button', visible: true)
+          end
+        end
+
+        scenario 'the vita section should not be editable', js: true do
+          within '.box.section.corporate_vita' do
             subject.should_not have_selector('a.edit_button', visible: true)
             subject.should_not have_selector('a.add_button', visible: true)
             subject.should_not have_selector('.remove_button', visible: true)
