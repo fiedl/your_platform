@@ -1,13 +1,17 @@
 - if can? :manage, @user
-  %div.btn-group
-    %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
-      %i.icon-chevron-up
-      = I18n.t(:change_status)
-      .caret
-    %ul.dropdown-menu
-      - @user.workflows_by_corporation.each do |corporation_title, workflows|
-        - workflows.select { |workflow| can? :execute, workflow }
-        - if workflows.count > 0
-          %li.nav-header= corporation_title
-          - for workflow in workflows
-            %li= link_to_workflow workflow, user: @user
+  - executable_workflows_by_corporation = {}
+  - @user.workflows_by_corporation.each do |corporation_title, workflows|
+    - executable_workflows = workflows.select { |workflow| can? :execute, workflow }
+    - executable_workflows_by_corporation[corporation_title] = executable_workflows if executable_workflows.any?
+  - if executable_workflows_by_corporation.any?
+    %div.btn-group.workflow_triggers.pull-right
+      %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+        %i.icon-chevron-up
+        = I18n.t(:change_status)
+        .caret
+      %ul.dropdown-menu
+        - executable_workflows_by_corporation.each do |corporation_title, workflows|
+          - if workflows.count > 0
+            %li.nav-header= corporation_title
+            - for workflow in workflows
+              %li= link_to_workflow workflow, user: @user

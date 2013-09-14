@@ -20,8 +20,7 @@
   / General Info Box
   %div
     - # #user_workflows
-    %span.workflow_triggers.pull-right
-      = render partial: 'users/workflow_triggers'
+    = render partial: 'users/workflow_triggers'
     %table
       %tr
         %td{:width => "20%"}
@@ -53,8 +52,7 @@
   - if @user.corporations.count > 0
     %h1.section.corporate_vita Wingolfitischer Lebenslauf
     %div
-      .workflow_triggers.pull-right
-        = render partial: 'users/workflow_triggers'
+      = render partial: 'users/workflow_triggers'
       = corporate_vita_for_user( @user )
 
   / Groups
