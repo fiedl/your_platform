@@ -120,6 +120,27 @@ describe User do
       @user.date_of_birth.should == @date_of_birth
     end
   end
+  
+  describe "#localized_date_of_birth" do
+    before do
+      @date_of_birth = "1987-01-11".to_date
+      @user.date_of_birth = @date_of_birth
+    end
+    subject { @user.localized_date_of_birth }
+    it { should == I18n.localize(@date_of_birth) }
+    it "should return the correctly localized date" do
+      I18n.locale.should == :de
+      subject.should be_in ["11.01.1987", "11.1.1987"]
+    end
+  end
+  describe "#localized_date_of_birth=" do
+    subject { @user.localized_date_of_birth = "11.01.1987" }
+    it "should set the date correctly" do
+      @user.date_of_birth.should_not == "1987-01-11".to_date
+      subject
+      @user.date_of_birth.should == "1987-01-11".to_date
+    end
+  end
 
   describe "postal address: " do
     before do

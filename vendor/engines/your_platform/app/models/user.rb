@@ -100,6 +100,13 @@ class User < ActiveRecord::Base
   def date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
+  
+  def localized_date_of_birth
+    I18n.localize self.date_of_birth
+  end
+  def localized_date_of_birth=(str)
+    self.date_of_birth = str.to_date
+  end
 
   
   # Primary Postal Address
