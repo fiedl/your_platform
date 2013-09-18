@@ -23,25 +23,33 @@
     = render partial: 'users/workflow_triggers'
     %table
       %tr
-        %td{:width => "20%"}
+        %td.avatar{:width => "20%"}
           %span.thumbnail
             = user_avatar(@user, size: 128)
         %td
-          %dl
-            %dt= t :name
-            %dd
-              - if can? :update, @user
-                = best_in_place @user, :first_name
-                = best_in_place @user, :last_name
-              - else
-                = @user.name
-            %dt= t :date_of_birth
-            %dd
-              - if can? :update, @user
-                = best_in_place @user, :date_of_birth #, type: :date
-              - else
-                = localize @user.date_of_birth if @user.date_of_birth
+          %ul.attributes
+            %li
+              %span.label-wrapper
+                %span.profile_field_label= t :name
+              %span.value-wrapper
+                %span.value
+                  - if can? :update, @user
+                    = best_in_place @user, :first_name
+                    = best_in_place @user, :last_name
+                  - else
+                    = @user.name
+            %li
+              %span.label-wrapper
+                %span.profile_field_label= t :date_of_birth
+              %span.value-wrapper
+                %span.value
+                  - if can? :update, @user
+                    = best_in_place @user, :date_of_birth #, type: :date
+                  - else
+                    = localize @user.date_of_birth if @user.date_of_birth
+
           = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
+
           = render partial: 'users/hidden_flag_switch', locals: { user: @user }
             
 
@@ -75,10 +83,16 @@
   / Communication 
   %h1.section.communication= t(:communication)
   %div
-    - if can? :manage, @user
-      Wingolfsblätter abonniert:
-      \#{best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]}
-
+    %ul.attributes
+      %li
+        %span.label-wrapper
+          %span.profile_field_label Wingolfsblätter abonniert:
+        %span.value-wrapper
+          %span.value
+            - if can? :update, @user
+              = best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]
+            - else
+              = @user.wingolfsblätter_abo ? t(:yes) : t(:no)
     = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
 
   / Login Data
@@ -89,4 +103,5 @@
     - else
       %p= t :user_has_no_account
       %span.show_only_in_edit_mode
-        = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post
+        = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post, :class => "btn btn-success"
+        %p= t 'formtastic.hints.create_account'

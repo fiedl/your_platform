@@ -4,7 +4,11 @@
 -#
 - profile_field_css_class = profile_field.parent ? 'profile_field profile_field_child' : 'profile_field profile_field_parent'
 - input_type = 'input'
-- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type   
+- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
+- if profile_field.type == "ProfileFieldTypes::About"
+  - display_method = { :display_with => :markdown }
+- else
+  - display_method = { :display_as => :display_html }
 
 %li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
 
@@ -28,12 +32,14 @@
   %span.value-wrapper
     - if profile_field.children.count == 0
       - if can? :update, profile_field
-        = best_in_place profile_field, :value,
-                          type: input_type,
-                          display_as: :display_html,
-                          classes: 'value'
+        = best_in_place profile_field, :value, 
+                          { type: input_type, classes: 'value' }.merge(display_method)
       - else
-        = profile_field.display_html
+        - if display_method[:display_as]
+          = profile_field.send(display_method[:display_as])
+        - elsif display_method[:display_with] == :markdown
+          = markdown(profile_field.value)
+          
     - if profile_field.children.count > 0
       %ul
         - profile_field.children.each do |child_field|

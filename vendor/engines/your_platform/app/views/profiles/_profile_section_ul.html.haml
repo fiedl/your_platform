@@ -2,6 +2,6 @@
 -# Locals:
 -#   section    ProfileSection
 -#
-%ul.section_container
+%ul.profile_fields.section_container
   - section.profile_fields.each do | profile_field |
     = render partial: 'profile_fields/profile_field', object: profile_field
