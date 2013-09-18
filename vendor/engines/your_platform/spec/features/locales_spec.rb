@@ -10,6 +10,8 @@ feature 'Locales' do
   
   scenario "providing the :locale parameter to display the page in different languages" do
     
+    locale_before_scenario = I18n.locale
+    
     # providing the url parameter should change the locale.
     #
     visit user_path(@user, :locale => :de)
@@ -23,6 +25,12 @@ feature 'Locales' do
     page.should have_text "My Profile"
     page.should_not have_text "Mein Profil"
 
+    # reset the locale to the one before the spec.
+    # Since the locale is stored in a cookie, otherwise, the 
+    # following specs can be affected.
+    #
+    visit user_path(@user, :locale => locale_before_scenario)
+    page.should have_text "Mein Profil"
   end
 
 end

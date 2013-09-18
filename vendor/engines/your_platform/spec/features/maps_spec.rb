@@ -1,7 +1,7 @@
 require 'spec_helper'
+include SessionSteps
 
 feature "Maps", js: true do
-  include SessionSteps
   
   background do
     @user = create(:user_with_account)
