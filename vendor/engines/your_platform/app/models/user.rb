@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group, 
-                            :add_to_corporation, :date_of_birth
+  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
+                            :add_to_corporation, :date_of_birth, :localized_date_of_birth
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
 
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
   validates_associated      :account
-  
+
   delegate                  :send_welcome_email, :to => :account
 
   is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
@@ -23,7 +23,7 @@ class User < ActiveRecord::Base
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
   has_many                  :relationships_as_second_user, foreign_key: 'user2_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user2
-  
+
   has_many                  :bookmarks
 
   is_navable
@@ -100,7 +100,7 @@ class User < ActiveRecord::Base
   def date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
-  
+
   def localized_date_of_birth
     I18n.localize self.date_of_birth if self.date_of_birth
   end
@@ -112,7 +112,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  
+
   # Primary Postal Address
   #
   def postal_address_field
@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
   def postal_address
     self.postal_address_field.try(:value) || self.profile_fields.where(type: "ProfileFieldTypes::Address").first.try(:value)
   end
-  
+
 
   # Associated Objects
   # ==========================================================================================
@@ -147,7 +147,7 @@ class User < ActiveRecord::Base
   def generate_alias
     UserAlias.generate_for(self)
   end
-  
+
   def generate_alias!
     self.alias = self.generate_alias
   end
@@ -290,7 +290,7 @@ class User < ActiveRecord::Base
       StatusGroupMembership.find_by_user_and_group( self, group )
     end
   end
-  
+
   def current_status_membership_in( corporation )
     current_status_groups = (corporation.status_groups & self.ancestor_groups)
     if current_status_groups.count > 1
@@ -341,12 +341,12 @@ class User < ActiveRecord::Base
     end
     return my_workflows
   end
-  
+
   def workflows_for(group)
     (([group] + group.descendant_groups) & self.ancestor_groups)
       .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
   end
-  
+
   def workflows_by_corporation
     hash = {}
     other_workflows = self.workflows
@@ -484,7 +484,7 @@ class User < ActiveRecord::Base
 
   # Hidden
   # ==========================================================================================
-  # 
+  #
   # Some users are hidden for regular users. They can only be seen by their administrators.
   # This is necessary for some organizations due to privacy reasons.
   #
