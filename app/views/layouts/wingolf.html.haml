@@ -23,7 +23,7 @@
                 = render "layouts/session_bar_avatar"
                 = link_to current_user.title, main_app.user_path( current_user )
               %li.backendBarItem
-                = link_to t( :my_profile ), main_app.user_path( current_user )
+                = link_to t(:my_profile), current_user, :class => "my_profile"
               %li.backendBarItem.dropdown
                 -# link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' }
                 = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'

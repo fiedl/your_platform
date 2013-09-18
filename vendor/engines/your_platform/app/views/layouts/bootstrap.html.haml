@@ -26,6 +26,7 @@
     / For all other devices
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+    = gmaps4rails_api_script_tags
   %body
     - if user_account_signed_in?
       #logged-in-bar.navbar.navbar-fixed-top
@@ -42,7 +43,7 @@
             / div class="container-fluid nav-collapse"
             %ul.nav
               %li
-                = link_to t( :my_profile ), main_app.user_path( current_user_account.user )
+                = link_to t(:my_profile), current_user, :class => "my_profile"
               %li.dropdown
                 = link_to(                                                                     |
                   ( t( :my_groups ) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, |

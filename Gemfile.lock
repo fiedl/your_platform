@@ -16,9 +16,9 @@ GIT
 
 GIT
   remote: git@github.com:fiedl/Google-Maps-for-Rails.git
-  revision: b650f3327cf80075d3524acf2d99473f7fdc3f8b
+  revision: c159503f5b244f0528482020f6d81215264149ad
   specs:
-    gmaps4rails (2.0.0.pre)
+    gmaps4rails (2.0.1)
 
 PATH
   remote: vendor/engines/your_platform
@@ -378,7 +378,7 @@ DEPENDENCIES
   factory_girl_rails (>= 4.0.0)
   foreman
   formtastic
-  gmaps4rails!
+  gmaps4rails (~> 2.0.1)!
   guard (= 1.0.1)
   guard-focus
   guard-rspec (= 0.5.5)
