@@ -212,6 +212,17 @@ class Group < ActiveRecord::Base
     end
   end
 
+  # Adding objects
+  # --------------
+  
+  def <<(object)
+    if object.kind_of? User
+      self.child_users << object unless self.child_users.include? object
+    end
+    if object.kind_of? Group
+      self.child_groups << object unless self.child_groups.include? object
+    end
+  end
 
   # Finder Methods
   # ==========================================================================================

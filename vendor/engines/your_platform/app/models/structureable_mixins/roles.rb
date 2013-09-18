@@ -57,12 +57,11 @@ module StructureableMixins::Roles
     end.select { |group| group.present? }
   end
 
-  # This method lists all officer groups, as well in this group as well all of the subgroups.
+  # This method lists all officer groups of the group, i.e. all subgroups of the
+  # officers_parent group.
   #
   def find_officers_groups
-    self.find_officers_parent_groups_of_self_and_of_descendant_groups.collect do |officers_parent|
-      officers_parent.descendant_groups
-    end.flatten
+    self.officers_parent.descendant_groups
   end
 
   # This method returns all officer users, as well all of this group as of its subgroups.

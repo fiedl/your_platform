@@ -55,7 +55,7 @@
 
 / officers
 - if @group.officers && ( @group.officers.count > 0 || can?(:manage, @group) )
-  %h1= t :officers
+  %h1.officers.section= t :officers
   %span#officers
     %dl
       - for officer_group in @group.find_officers_groups

@@ -48,7 +48,7 @@ describe Group do
 
   # Associated Objects
   # ==========================================================================================
-
+  
   # Workflows
   # ------------------------------------------------------------------------------------------
 
@@ -315,5 +315,37 @@ describe Group do
 
   end
 
+
+  # Adding objects
+  # --------------
+
+  describe "#<<", focus: true do
+    before { @group = create(:group) }
+    subject { @group << @object_to_add }
+    
+    describe "(user)" do
+      before do
+        @user = create(:user)
+        @object_to_add = @user
+      end
+      it "should add the user as a child user" do
+        @group.child_users.should_not include @user
+        subject
+        @group.child_users.should include @user
+      end
+    end
+    
+    describe "(group)" do
+      before do
+        @subgroup = create(:group)
+        @object_to_add = @subgroup
+      end
+      it "should add the group as a subgroup" do
+        @group.child_groups.should_not include @subgroup
+        subject
+        @group.child_groups.should include @subgroup
+      end
+    end
+  end
 
 end

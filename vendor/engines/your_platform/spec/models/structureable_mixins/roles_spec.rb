@@ -304,12 +304,10 @@ describe StructureableMixins::Roles do
     describe "#find_officers_groups" do
       subject { @container_group.find_officers_groups }
       it "should find the officers of the container group" do
-        #subject.should include( @officers_parent.child_groups )
         subject.should include( @officer1 )
       end
-      it "should find the officers of the container group's subgroups as well" do
-        #subject.should include( @subgroup_officers_parent.child_groups )
-        subject.should include( @officer2 ) 
+      it "should not find the officers of the container group's subgroups" do
+        subject.should_not include( @officer2 ) 
       end
     end
 
