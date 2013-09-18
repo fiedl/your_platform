@@ -5,7 +5,7 @@
 %h1{:class => "section #{section.title}"}= t section.title
 %div{:id => "section_#{section.title}"}
   - if section.title.to_sym == :contact_information
-    - if section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ).count > 0
+    - if section.profileable.kind_of?(User) &&  (section.profileable.profile_fields_by_type("ProfileFieldTypes::Address").count > 0)
       %span.contact_section.map.do_not_show_in_edit_mode
         = map_of_address_profile_fields( section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) )
   = render partial: 'profiles/profile_section_ul', locals: { section: section }

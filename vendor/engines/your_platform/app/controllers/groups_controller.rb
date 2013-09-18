@@ -20,8 +20,7 @@ class GroupsController < ApplicationController
       @child_users = @group.child_users
       @child_users = @child_users.page(params[:page]).per_page(25) # pagination
 
-      user_ids = @group.descendant_users.collect { |user| user.id }
-      @map_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
+      @map_address_fields = map_address_fields
 
       @posts = @group.posts.order("sent_at DESC").limit(10)
     end
@@ -64,5 +63,18 @@ class GroupsController < ApplicationController
       params.require(:group).permit(:name, :token, :internal_token, :extensive_name)
     end
   end  
+  
+  # This method collects the address fields for displaying the large map
+  # on group pages.
+  #
+  # https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Controller
+  #
+  def map_address_fields
+    user_ids = @group.descendant_users.collect { |user| user.id }
+    user_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
+    group_ids = ([@group] + @group.descendant_groups).collect { |group| group.id }
+    group_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: group_ids )
+    (user_address_fields + group_address_fields)
+  end
 
 end

@@ -1,7 +1,16 @@
 module MapHelper
 
   def address_fields_map( address_fields )
-    json = address_fields.to_gmaps4rails
+    json = address_fields.to_gmaps4rails do |address_field, marker|
+      marker.title address_field.profileable.title
+      if address_field.profileable.kind_of? Group
+        marker.picture({
+          picture: image_path("img/gmaps_yellow_marker_38.png"),
+          width: 22, height: 38
+        })
+      end
+    end
+      
     raise 'no json generated from address fields' unless json
 
     #    marker_size = 32
