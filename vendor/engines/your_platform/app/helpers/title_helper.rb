@@ -34,7 +34,7 @@ module TitleHelper
     # @title uses the old mechanism.
     # TODO: Remove @title when it is not used in the controllers anymore.
     #
-    content_for(:title) || @title
+    @title || content_for(:title)
   end
   
   def website_title_with_app_name
