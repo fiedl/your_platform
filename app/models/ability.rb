@@ -51,6 +51,7 @@ class Ability
         
         # Users that are no admins can read all and edit their own profile.
         can :read, :all
+        can :download, :all
         can :manage, User, :id => user.id
 
         can :manage, ProfileField do |field|
@@ -78,13 +79,16 @@ class Ability
         # and all users within their groups. They can also execute workflows.
         #
         can :manage, Group do |group|
-          (group.admins.include?(user)) || (group.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user))
+          (group.admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user))
         end
         can :manage, User do |other_user|
           other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
         end
         can :execute, Workflow do |workflow|
           workflow.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+        end
+        can :manage, Page do |page|
+          page.admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user)
         end
 
       end
