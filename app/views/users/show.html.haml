@@ -36,7 +36,7 @@
                 = best_in_place @user, :last_name
               - else
                 = @user.name
-            %dt.date_of_birth_profile_field.value= t :date_of_birth
+            %dt= t :date_of_birth
             %dd
               - if can? :update, @user
                 = best_in_place @user, :localized_date_of_birth #, type: :date
