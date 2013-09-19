@@ -1,4 +1,4 @@
-
+- # -*- coding: utf-8 -*-
 - unless @user
   %h1= h @title
   %div
@@ -92,7 +92,7 @@
             - if can? :update, @user
               = best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]
             - else
-              = @user.wingolfsblätter_abo ? t(:yes) : t(:no)
+              = @user.wingolfsblaetter_abo ? t(:yes) : t(:no)
     = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
 
   / Login Data
