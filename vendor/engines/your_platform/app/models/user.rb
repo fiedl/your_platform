@@ -12,6 +12,21 @@ class User < ActiveRecord::Base
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 
   has_profile_fields
+  
+  # TODO: This is already Rails 4 syntax. Use this when we switch to Rails 4.
+  # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#method-i-has_one
+  #
+  # has_one                   :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true
+  #
+  # The old Rails 3.2 syntax would be:
+  #
+  # has_one                   :date_of_birth_profile_field, class_name: "ProfileFieldTypes::Date", conditions: "label = 'date_of_birth'", as: :profileable, autosave: true
+  # 
+  # But on build_date_of_birth_profile_field the condition is not set automatically. There are some other issues with this behaviour. 
+  # We would still have to use an instance variable. Therefore, we just build the association from scratch. 
+  # See code down at #date_of_birth_profile_field.
+  #
+  after_save                :save_date_of_birth_profile_field
 
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
   validates_associated      :account
@@ -95,6 +110,7 @@ class User < ActiveRecord::Base
   def date_of_birth=( date_of_birth )
     find_or_build_date_of_birth_profile_field.value = date_of_birth
   end
+  
   def date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
@@ -102,9 +118,14 @@ class User < ActiveRecord::Base
     raise 'profile field already exists' if date_of_birth_profile_field
     @date_of_birth_profile_field = profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
   end
+
   def find_or_build_date_of_birth_profile_field
     date_of_birth_profile_field || build_date_of_birth_profile_field
   end
+  def save_date_of_birth_profile_field
+    date_of_birth_profile_field.try(:save)
+  end
+  private :save_date_of_birth_profile_field
 
   def localized_date_of_birth
     I18n.localize self.date_of_birth if self.date_of_birth

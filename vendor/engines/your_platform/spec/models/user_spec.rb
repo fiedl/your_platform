@@ -116,10 +116,14 @@ describe User do
       @user.save
       User.find(@user.id).date_of_birth.should == "2001-01-01".to_date
     end
-    describe "after a former date of birth has been saved", focus: true do
+    describe "after a former date of birth has been saved" do
       before do
         @user.date_of_birth = 27.years.ago.to_date
         @user.save
+      end
+      specify "prelim: the date of birth should be saved before" do
+        @user.reload
+        @user.date_of_birth.should == 27.years.ago.to_date
       end
       specify "a changed date of birth should be autosaved (bug fix)" do
         @user.reload
@@ -230,6 +234,7 @@ describe User do
       end
       it { should be_kind_of ProfileField }
       its(:type) { should == "ProfileFieldTypes::Date" }
+      its('value.to_date') { should == "1900-01-01".to_date }
       its(:new_record?) { should == false }
     end
   end
