@@ -93,13 +93,17 @@ class User < ActiveRecord::Base
     date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
   end
   def date_of_birth=( date_of_birth )
-    date_of_birth_profile_field
-    @date_of_birth_profile_field ||= profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
-    @date_of_birth_profile_field.value = date_of_birth
-    @date_of_birth_profile_field.save
+    find_or_build_date_of_birth_profile_field.value = date_of_birth
   end
   def date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
+  end
+  def build_date_of_birth_profile_field
+    raise 'profile field already exists' if date_of_birth_profile_field
+    @date_of_birth_profile_field = profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
+  end
+  def find_or_build_date_of_birth_profile_field
+    date_of_birth_profile_field || build_date_of_birth_profile_field
   end
 
   def localized_date_of_birth
