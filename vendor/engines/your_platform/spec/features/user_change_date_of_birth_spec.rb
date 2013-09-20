@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 require 'spec_helper'
 
-feature "Change date of birth", :focus => true do
+feature "Change date of birth" do
   include SessionSteps
 
   background do
-    @user = create( :user_with_account )
+    @user = create(:user_with_account)
     login @user
   end
-  scenario "visit user page and change date of birth" do
-    visit user_path(@user)
-    first("dd.date_of_birth").click
-    save_and_open_page
-
+#  scenario "visit user page and change date of birth" do
+#    visit user_path(@user)
+#    first("dd.date_of_birth").click
+#
 #    within() do
 #      find(".best_in_place").click
 #      sleep 7
@@ -22,6 +21,6 @@ feature "Change date of birth", :focus => true do
 #      page.should have_text(I18n.localize("1980-01-01".to_date))
 #      @user.date_of_birth.should have_content(I18n.localize("1980-01-01".to_date))
 #    end
+#  end
 
-  end
 end
