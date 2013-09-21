@@ -44,14 +44,14 @@
               %span.value-wrapper
                 %span.value
                   - if can? :update, @user
-                    = best_in_place @user, :date_of_birth #, type: :date
+                    = best_in_place @user, :localized_date_of_birth #, type: :date
                   - else
-                    = localize @user.date_of_birth if @user.date_of_birth
+                    = @user.localized_date_of_birth || "-"
 
           = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
 
           = render partial: 'users/hidden_flag_switch', locals: { user: @user }
-            
+
 
   / Profile Sections
   = profile_sections_to_html(@user.profile.sections)
@@ -64,7 +64,7 @@
       = corporate_vita_for_user( @user )
 
   / Groups
-  %h1= t( :groups_of ) + " " + h( @user.first_name ) 
+  %h1= t( :groups_of ) + " " + h( @user.first_name )
   %div
     = groups_of_user_table @user
 
@@ -75,12 +75,12 @@
     %div
       = upcoming_events_list_for_user( @user )
 
-  / Relationships    
+  / Relationships
   %h1.section.relationships= t(:relationships)
   %div
     = relationships_of_user_ul @user
 
-  / Communication 
+  / Communication
   %h1.section.communication= t(:communication)
   %div
     %ul.attributes

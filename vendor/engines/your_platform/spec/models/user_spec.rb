@@ -90,6 +90,7 @@ describe User do
     end
   end
 
+
   describe "#date_of_birth" do
     subject { @user.date_of_birth }
     describe "before setting a date of birth" do
@@ -109,6 +110,28 @@ describe User do
         @profile_field.value.to_date.should == @user.date_of_birth
       end
     end
+    it "should be autosaved" do
+      @user = create(:user)
+      @user.date_of_birth = "2001-01-01"
+      @user.save
+      User.find(@user.id).date_of_birth.should == "2001-01-01".to_date
+    end
+    describe "after a former date of birth has been saved" do
+      before do
+        @user.date_of_birth = 27.years.ago.to_date
+        @user.save
+      end
+      specify "prelim: the date of birth should be saved before" do
+        @user.reload
+        @user.date_of_birth.should == 27.years.ago.to_date
+      end
+      specify "a changed date of birth should be autosaved (bug fix)" do
+        @user.reload
+        @user.date_of_birth = "2001-01-01".to_date
+        @user.save
+        User.find(@user.id).date_of_birth.should == "2001-01-01".to_date
+      end
+    end
   end
 
   describe "#date_of_birth=" do
@@ -118,6 +141,101 @@ describe User do
       @user.date_of_birth.should == nil
       subject
       @user.date_of_birth.should == @date_of_birth
+    end
+  end
+  
+  describe "#localized_date_of_birth" do
+    subject { @user.localized_date_of_birth }
+    describe "for a given date of birth" do
+      before do
+        @date_of_birth = "1987-01-11".to_date
+        @user.date_of_birth = @date_of_birth
+      end
+      it { should == I18n.localize(@date_of_birth) }
+      it "should return the correctly localized date" do
+        I18n.locale.should == :de
+        subject.should be_in ["11.01.1987", "11.1.1987"]
+      end
+    end
+    describe "for the user not having a date of birth in the database" do
+      it "should return nil" do
+        @user.date_of_birth.should == nil
+        subject.should == nil
+      end
+    end
+  end
+  describe "#localized_date_of_birth=" do
+    subject { @user.localized_date_of_birth = @given_string }
+    describe "for setting a valid date of birth" do
+      before { @given_string = "11.01.1987" }
+      it "should set the date correctly" do
+        @user.date_of_birth.should_not == "1987-01-11".to_date
+        subject
+        @user.date_of_birth.should == "1987-01-11".to_date
+      end
+    end
+    describe "for setting an empty string" do
+      before do
+        @user.date_of_birth = 24.years.ago.to_date
+        @given_string = "" 
+      end
+      it "should set the date of birth to nil" do
+        subject
+        @user.date_of_birth.should == nil
+      end
+    end
+    describe "for setting an invalid date string" do
+      before do
+        @user.date_of_birth = 24.years.ago.to_date
+        @given_string = "foo"
+      end
+      it "should set the date of birth to nil" do
+        subject
+        @user.date_of_birth.should == nil
+      end
+    end
+  end
+  
+  describe "#date_of_birth_profile_field" do
+    subject { @user.date_of_birth_profile_field }
+    describe "for no date of birth field created" do
+      it { should == nil }
+    end
+    describe "for an existing date of birth" do
+      before { @user.date_of_birth = "1900-01-01".to_date }
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+    end
+    it "should be autosaved" do
+      @field = @user.build_date_of_birth_profile_field
+      @field.value = "2001-01-01"
+      @user.save
+      @user = User.find(@user.id)
+      subject.value.to_date.should == "2001-01-01".to_date
+    end
+  end
+  describe "#find_or_build_date_of_birth_profile_field" do
+    subject { @user.find_or_build_date_of_birth_profile_field }
+    describe "for no date of birth field created" do
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:new_record?) { should == true }
+    end
+    describe "for an existing date of birth" do
+      before { @user.date_of_birth = "1900-01-01".to_date }
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+    end
+    describe "for a date of birth existing in the database" do
+      before do
+        @user.date_of_birth = "1900-01-01".to_date
+        @user.save
+        @user = User.find(@user.id)
+      end
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+      its('value.to_date') { should == "1900-01-01".to_date }
+      its(:new_record?) { should == false }
     end
   end
 
