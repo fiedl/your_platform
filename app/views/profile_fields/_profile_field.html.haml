@@ -2,7 +2,7 @@
 -# A profile field can either have just label and value or it can have child profile fields
 -# in order to display complex information such as bank account information.
 -#
-- profile_field_css_class = profile_field.parent ? 'profile_field profile_field_child' : 'profile_field profile_field_parent'
+- profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
 - input_type = 'input'
 - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
 - input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
@@ -14,17 +14,18 @@
 %li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
 
   // remove button
-  %span.button-wrapper
-    - unless profile_field.parent
-      - if can? :destroy, profile_field
-        = remove_button(profile_field)
-  
+  - unless no_remove
+    %span.button-wrapper
+      - unless profile_field.parent
+        - if can? :destroy, profile_field
+          = remove_button(profile_field)
+    
   // label
   %span.label-wrapper
     - if profile_field.parent
       %span.label.profile_field_label= profile_field.label
     - else
-      - if can? :update, profile_field
+      - if can?(:update, profile_field) and not lock_label
         = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
       - else
         = profile_field.label

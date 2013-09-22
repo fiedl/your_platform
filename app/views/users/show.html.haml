@@ -1,107 +1,71 @@
 - # -*- coding: utf-8 -*-
-- unless @user
-  %h1= h @title
+
+- # General Info Box
+%h1.section.general= "#{editable_first_and_last_name(@user)} &nbsp;&nbsp; #{@user.aktivitaetszahl}".html_safe
+%div
+  %span.avatar.thumbnail.pull-left= user_avatar(@user, size: 128)
+  = render partial: 'workflow_triggers'
+  %ul.attributes
+    %li.name.attribute= render partial: 'user_name_attribute'
+    = profile_field_li @user.find_or_build_date_of_birth_profile_field, lock_label: true, no_remove: true
+
+-#           = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
+-# 
+-#           = render partial: 'users/hidden_flag_switch', locals: { user: @user }
+-# 
+-# 
+-#   / Profile Sections
+-#   = profile_sections_to_html(@user.profile.sections)
+-# 
+
+- # Corporate Vita
+- if @user.corporations.count > 0
+  %h1.section.corporate_vita= t :corporate_vita
   %div
-    %p= t :the_requested_user_is_not_listed_in_the_system
-    = link_to t(:create_new_user), controller: 'users', action: 'new', alias: @alias
+    = render partial: 'workflow_triggers'
+    = corporate_vita_for_user @user
 
-- if @user
-
-  / Name above the General Info Box
-  %h1
-    - if can? :update, @user
-      = best_in_place @user, :first_name
-      = best_in_place @user, :last_name
-      \ 
-      \#{h @user.aktivitaetszahl}
-    - else
-      = @user.title
-
-  / General Info Box
-  %div
-    - # #user_workflows
-    = render partial: 'users/workflow_triggers'
-    %table
-      %tr
-        %td.avatar{:width => "20%"}
-          %span.thumbnail
-            = user_avatar(@user, size: 128)
-        %td
-          %ul.attributes
-            %li
-              %span.label-wrapper
-                %span.profile_field_label= t :name
-              %span.value-wrapper
-                %span.value
-                  - if can? :update, @user
-                    = best_in_place @user, :first_name
-                    = best_in_place @user, :last_name
-                  - else
-                    = @user.name
-            %li
-              %span.label-wrapper
-                %span.profile_field_label= t :date_of_birth
-              %span.value-wrapper
-                %span.value
-                  - if can? :update, @user
-                    = best_in_place @user, :localized_date_of_birth #, type: :date
-                  - else
-                    = @user.localized_date_of_birth || "-"
-
-          = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:general) }
-
-          = render partial: 'users/hidden_flag_switch', locals: { user: @user }
-
-
-  / Profile Sections
-  = profile_sections_to_html(@user.profile.sections)
-
-  / Corporate Vita
-  - if @user.corporations.count > 0
-    %h1.section.corporate_vita Wingolfitischer Lebenslauf
-    %div
-      = render partial: 'users/workflow_triggers'
-      = corporate_vita_for_user( @user )
-
-  / Groups
-  %h1= t( :groups_of ) + " " + h( @user.first_name )
-  %div
-    = groups_of_user_table @user
-
-  / Events
-  - if @user.upcoming_events.present?
-    %h1
-      Veranstaltungen von #{@user.first_name}
-    %div
-      = upcoming_events_list_for_user( @user )
-
-  / Relationships
-  %h1.section.relationships= t(:relationships)
-  %div
-    = relationships_of_user_ul @user
-
-  / Communication
-  %h1.section.communication= t(:communication)
-  %div
-    %ul.attributes
-      %li
-        %span.label-wrapper
-          %span.profile_field_label Wingolfsblätter abonniert:
-        %span.value-wrapper
-          %span.value
-            - if can? :update, @user
-              = best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]
-            - else
-              = @user.wingolfsblaetter_abo ? t(:yes) : t(:no)
-    = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
-
-  / Login Data
-  %h1.section.access= t(:access_information)
-  %div
-    - if @user.has_account?
-      = render @user.account
-    - else
-      %p= t :user_has_no_account
-      %span.show_only_in_edit_mode
-        = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post, :class => "btn btn-success"
-        %p= t 'formtastic.hints.create_account'
+-# 
+-#   / Groups
+-#   %h1= t( :groups_of ) + " " + h( @user.first_name )
+-#   %div
+-#     = groups_of_user_table @user
+-# 
+-#   / Events
+-#   - if @user.upcoming_events.present?
+-#     %h1
+-#       Veranstaltungen von #{@user.first_name}
+-#     %div
+-#       = upcoming_events_list_for_user( @user )
+-# 
+-#   / Relationships
+-#   %h1.section.relationships= t(:relationships)
+-#   %div
+-#     = relationships_of_user_ul @user
+-# 
+-#   / Communication
+-#   %h1.section.communication= t(:communication)
+-#   %div
+-#     %ul.attributes
+-#       %li
+-#         %span.label-wrapper
+-#           %span.profile_field_label Wingolfsblätter abonniert:
+-#         %span.value-wrapper
+-#           %span.value
+-#             - if can? :update, @user
+-#               = best_in_place @user, :wingolfsblaetter_abo, type: :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]
+-#             - else
+-#               = @user.wingolfsblaetter_abo ? t(:yes) : t(:no)
+-#     = render partial: 'profiles/profile_section_ul', locals: { section: @user.profile.section_by_title(:communication) }
+-# 
+-#   / Login Data
+-#   %h1.section.access= t(:access_information)
+-#   %div
+-#     - if @user.has_account?
+-#       = render @user.account
+-#     - else
+-#       %p= t :user_has_no_account
+-#       %span.show_only_in_edit_mode
+-#         = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post, :class => "btn btn-success"
+-#         %p= t 'formtastic.hints.create_account'
+-# 

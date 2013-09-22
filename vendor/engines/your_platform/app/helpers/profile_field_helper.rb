@@ -1,5 +1,13 @@
 module ProfileFieldHelper
   
+  def profile_field_li( profile_field, options )
+    # options: 
+    #   lock_label: true/false, default: false
+    #   no_remove: true/false, default: false
+    render partial: 'profile_fields/profile_field', locals: {profile_field: profile_field}.merge(options)
+  end
+
+  
   # args:
   #   profileable
   #   profile_field_type
