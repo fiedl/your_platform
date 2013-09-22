@@ -414,12 +414,25 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Date do
-  describe "if unset" do
-    subject { ProfileFieldTypes::Date.new }
-    its( :value ) { should == nil }
-  end
-  describe "if set" do
-    subject { ProfileFieldTypes::Date.create( value: 24.years.ago ) }
-    its( :value ) { should be_kind_of Date }
+  before { @date_field = ProfileFieldTypes::Date.create }
+  describe "#value" do
+    subject { @date_field.value }
+    describe "if unset" do
+      it { should == nil }
+    end
+    describe "if set to a date" do
+      before { @date_field.value = 24.years.ago.to_date }
+      it "should be a localized date String" do
+        subject.should be_kind_of String
+        subject.to_date.should == 24.years.ago.to_date
+      end
+    end
+    describe "if set to a localized date string" do
+      before { @date_field.value = I18n.localize(24.years.ago.to_date) }
+      it "should be a localized date String" do
+        subject.should be_kind_of String
+        subject.to_date.should == 24.years.ago.to_date
+      end
+    end
   end
 end
