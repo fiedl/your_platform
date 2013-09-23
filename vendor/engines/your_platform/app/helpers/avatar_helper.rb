@@ -12,6 +12,7 @@ module AvatarHelper
     options[:alt] ||= "Gravatar: #{email}"
     options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
+    options[:gravatar][:secure] = true
 
     # Default Url
     # Instead of 
@@ -20,9 +21,8 @@ module AvatarHelper
     # locally as well. Otherwise a 'http://localhost/...' would be 
     # submitted to gravatar as source of the default image.
     # 
-    options[:gravatar][:default] ||= "http://wingolfsplattform.org/assets/avatar_128.png" 
+    options[:gravatar][:default] ||= "https://wingolfsplattform.org/assets/avatar_128.png" 
     
-
     render partial: 'shared/avatar', locals: { email: email, options: options }
 
   end
