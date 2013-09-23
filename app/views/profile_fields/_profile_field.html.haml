@@ -15,24 +15,21 @@
 
 %li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
 
-  // remove button
+  - # remove button
   - unless no_remove
     %span.button-wrapper
       - unless profile_field.parent
         - if can? :destroy, profile_field
           = remove_button(profile_field)
     
-  // label
+  - # label
   %span.label-wrapper
-    - if profile_field.parent
+    - if profile_field.parent || lock_label || cannot?(:update, profile_field)
       %span.label.profile_field_label= profile_field.label
     - else
-      - if can?(:update, profile_field) and not lock_label
-        = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
-      - else
-        = profile_field.label
+      = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
 
-  // value
+  - # value
   %span.value-wrapper
     - if profile_field.children.count == 0
       - if can? :update, profile_field
@@ -50,4 +47,4 @@
           = render partial: 'profile_fields/profile_field', object: child_field
     - if profile_field.type == ProfileFieldTypes::Address.name
       = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
-    /= render partial: 'shared/flags', locals: { flagable: profile_field }
+    - # render partial: 'shared/flags', locals: { flagable: profile_field }
