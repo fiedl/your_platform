@@ -19,6 +19,10 @@ class Profile
       section_by_title(title)
     end
   end
+  
+  def section(title)
+    section_by_title(title)
+  end
 
   def section_by_title(title)
     sections_by_title([title]).first

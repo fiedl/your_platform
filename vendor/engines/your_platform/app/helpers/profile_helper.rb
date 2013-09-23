@@ -1,12 +1,20 @@
-module ProfileableHelper
+module ProfileHelper
+  
+  def profile_section(section, profile_field_options = {})
+    render partial: 'profiles/section', locals: { section: section, profile_field_options: profile_field_options }
+  end
+  
+  def optional_profile_section(section, options = {})
+    profile_section(section, options) if show_this_section?(section)
+  end
   
   def profile_sections_to_html(sections)
     sections_to_be_shown(sections).collect do |section|
-      render partial: 'profiles/section', locals: { :section => section }
+      profile_section(section)
     end.join.html_safe
   end
   
-
+  
   private
 
   # This method returns all sections to be shown.

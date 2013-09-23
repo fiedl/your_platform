@@ -97,7 +97,7 @@ describe "User: abilities" do
     end
   end
   
-  context "when the user is a local admin of a page", focus: true do  ## TODO: REMOVE FOCUS
+  context "when the user is a local admin of a page" do
     before do
       @page = create(:page)
       @page.admins << user

@@ -6,6 +6,8 @@
 - input_type = 'input'
 - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
 - input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
+- no_remove ||= false
+- lock_label ||= false
 - if profile_field.type == "ProfileFieldTypes::About"
   - display_method = { :display_with => :markdown }
 - else

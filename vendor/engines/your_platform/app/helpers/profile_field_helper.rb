@@ -1,10 +1,16 @@
 module ProfileFieldHelper
   
-  def profile_field_li( profile_field, options )
+  def profile_field_li( profile_field, options = {} )
     # options: 
     #   lock_label: true/false, default: false
     #   no_remove: true/false, default: false
     render partial: 'profile_fields/profile_field', locals: {profile_field: profile_field}.merge(options)
+  end
+  
+  def profile_field_lis( profile_fields, options = {} )
+    profile_fields.collect do |profile_field|
+      profile_field_li(profile_field, options)
+    end.join.html_safe
   end
 
   

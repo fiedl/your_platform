@@ -1,7 +1,8 @@
 -# This template renders a profile section ul.
 -# Locals:
--#   section    ProfileSection
--#
-%ul.profile_fields.section_container
-  - section.profile_fields.each do | profile_field |
-    = render partial: 'profile_fields/profile_field', object: profile_field
+-#   section                 ProfileSection
+-#   profile_field_options   Hash
+
+%ul.attributes.profile_fields
+  - section.profile_fields.each do |profile_field|
+    = profile_field_li(profile_field, profile_field_options)
