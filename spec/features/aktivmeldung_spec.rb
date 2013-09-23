@@ -57,7 +57,7 @@ feature "Aktivmeldung" do
     page.should have_content I18n.t(:bank_account)
 
     page.should have_content I18n.t(:name_field_wingolfspost)
-    page.should have_content "Wingolfsblätter abonniert: Ja"
+    page.should have_content I18n.t(:wbl_abo)
 
   end
 
