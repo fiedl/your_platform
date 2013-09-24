@@ -142,7 +142,6 @@ class UserData < ImportDataset
     {
       first_name:         self.first_name,
       last_name:          self.last_name,
-      date_of_birth:      self.date_of_birth,
       updated_at:         d('modifyTimestamp').to_datetime,
       created_at:         d('createTimestamp').to_datetime,
     }
@@ -152,6 +151,7 @@ class UserData < ImportDataset
     add_profile_field 'W-Nummer', value: self.w_nummer, type: "General"
 
     add_profile_field :title, value: self.personal_title, type: "General"
+    add_profile_field :date_of_birth, value: self.date_of_birth, type: "Date"
 
     add_profile_field :email, value: self.email, type: 'Email'
     add_profile_field :work_email, value: d('epdprofemailaddress'), type: 'Email'
@@ -378,11 +378,11 @@ class UserData < ImportDataset
   end
 
   def date_of_birth
-    begin
-      d(:epdbirthdate).to_datetime
-    rescue # wrong date format
-      return nil
-    end
+    d(:epdbirthdate).to_date
+    #begin
+    #rescue # wrong date format
+    #raise ''
+    #return nil
   end
 
   def alias
