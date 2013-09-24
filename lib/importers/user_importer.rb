@@ -25,11 +25,12 @@ class UserImporter < Importer
           handle_deleted(user_data) do
             handle_existing(user_data) do |user|
               handle_existing_email(user_data) do |email_warning|
+                p user_data.uid
                 user.update_attributes( user_data.attributes )
                 user.save
                 user.import_profile_fields( user_data.profile_fields_array, update_policy)
                 user.handle_primary_corporation( user_data, progress )
-                user.handle_corporations( user_data )
+                user.handle_current_corporations( user_data )
                 user.handle_deleted-string_status( user_data.deleted-string_status )
                 user.handle_former_corporations( user_data )
                 user.handle_deceased( user_data )
@@ -150,8 +151,8 @@ class UserData < ImportDataset
   def profile_fields_array
     add_profile_field 'W-Nummer', value: self.w_nummer, type: "General"
 
-    add_profile_field :title, value: self.personal_title, type: "General"
     add_profile_field :date_of_birth, value: self.date_of_birth, type: "Date"
+    add_profile_field :personal_title, value: self.personal_title, type: "General"
 
     add_profile_field :email, value: self.email, type: 'Email'
     add_profile_field :work_email, value: d('epdprofemailaddress'), type: 'Email'
@@ -289,15 +290,24 @@ class UserData < ImportDataset
   end
 
   def aktivitaetszahl
-    deleted-string_aktivitaetszahl.gsub(" Eph ", "?Eph?").gsub(" Stft ", "?Stft?")
-      .gsub(" Nstft ", "?Nstft?").gsub(" ", "").gsub(",", " ").gsub("?", " ")
+    if deleted-string_aktivitaetszahl
+      deleted-string_aktivitaetszahl.gsub(" Eph ", "?Eph?").gsub(" Stft ", "?Stft?")
+        .gsub(" Nstft ", "?Nstft?").gsub(" ", "").gsub(",", " ").gsub("?", " ")
+    end
   end
 
   def aktivitätszahl
     aktivitaetszahl
   end
 
+  # This method returns ALL corporations of this user, former AND current ones.
   def corporations
+    (current_corporations + former_corporations).sort_by do |corporation|
+      year_of_joining(corporation)
+    end
+  end
+  
+  def current_corporations
     corporations_by_deleted-string_aktivitaetszahl( self.deleted-string_aktivitaetszahl )
   end
 
@@ -405,11 +415,19 @@ class UserData < ImportDataset
   end
 
   def aktivmeldungsdatum
-    if (d(:epdorgmembershipstartdate)) and (d(:epdwingolfmutterverbindaktivmeldung)) and 
-        (d(:epdwingolfmutterverbindaktivmeldung) != d(:epdorgmembershipstartdate))
-      raise 'deleted-string data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
+    if (d(:epdorgmembershipstartdate)) and (d(:epdwingolfmutterverbindaktivmeldung)) 
+      if (d(:epdwingolfmutterverbindaktivmeldung) != d(:epdorgmembershipstartdate))
+        raise 'deleted-string data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
+      else
+        return (d(:epdorgmembershipstartdate) || d(:epdwingolfmutterverbindaktivmeldung)).to_datetime
+      end
+    else
+      # need to reconstruct the date using the aktivitaetszahl attribute, since no
+      # actual date is given.
+      raise 'could not identify first corporation of user' if not corporations.first
+      raise 'could not reconstruct year of joining' if not year_of_joining(corporations.first)
+      return "#{year_of_joining(corporations.first)}-01-01".to_datetime
     end
-    (d(:epdorgmembershipstartdate) || d(:epdwingolfmutterverbindaktivmeldung)).to_datetime
   end
   
   def receptionsdatum
@@ -425,7 +443,7 @@ class UserData < ImportDataset
   end
   
   def aktivitaet_by_corporation( corporation )
-    parts = deleted-string_aktivitaetszahl.split(", ")
+    parts = (deleted-string_aktivitaetszahl.try(:split, ", ") || []) + (ehemalige_deleted-string_aktivitaetszahl.try(:split, ", ") || [])
     parts.select { |part| part.start_with?(corporation.token + " ") }.first
   end
   def ehrenphilister?( corporation )
@@ -589,8 +607,8 @@ module UserImportMethods
     end
   end
 
-  def handle_corporations( user_data )
-    user_data.corporations.each do |corporation|
+  def handle_current_corporations( user_data )
+    user_data.current_corporations.each do |corporation|
       year_of_joining = user_data.year_of_joining(corporation)
       group_to_assign = nil
       if user_data.aktivmeldungsdatum.year.to_s == year_of_joining
@@ -621,7 +639,8 @@ module UserImportMethods
     end
 
     if user_data.aktivitaetszahl != self.reload.aktivitaetszahl
-      raise "consistency check failed: aktivitaetszahl #{user_data.aktivitaetszahl} not reconstructed properly."
+      raise "consistency check failed: aktivitaetszahl '#{user_data.aktivitaetszahl}' not reconstructed properly.
+        The reconstructed one is '#{self.aktivitaetszahl}'."
     end
   end
 
@@ -635,6 +654,8 @@ module UserImportMethods
       elsif reason == "gestrichen"
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
       end
+      
+      # TODO: Den Benutzer aus den anderen Status-Gruppen dieser Korporation entfernen!!
       
       group_to_assign.assign_user self, joined_at: date
     end
