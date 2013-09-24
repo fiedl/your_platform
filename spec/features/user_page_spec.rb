@@ -37,6 +37,7 @@ feature 'User page', js: false do
       it { should have_selector('h1', text: I18n.t(:career_information)) }
       it { should have_selector('h1', text: I18n.t(:organizations)) }
       it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
+      it { should_not have_selector('h1', text: I18n.t(:description)) }
       #it { should have_selector('h1', text: I18n.t(:corporate_vita)) } #test user is not member of any corporation
       pending { should have_selector('h1', text: I18n.t(:relationships)) }
       it { should have_selector('h1', text: I18n.t(:communication)) }
@@ -158,6 +159,7 @@ feature 'User page', js: false do
         it { should have_selector('h1', text: I18n.t(:career_information)) }
         it { should have_selector('h1', text: I18n.t(:organizations)) }
         it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
+        it { should_not have_selector('h1', text: I18n.t(:description)) }        
         it { should have_selector('h1', text: I18n.t(:corporate_vita)) }
         pending { should have_selector('h1', text: I18n.t(:relationships)) }
         it { should have_selector('h1', text: I18n.t(:communication)) }
