@@ -10,12 +10,14 @@ ul.attributes, ul.profile_fields
       padding-right: 12px
       vertical-align: top
       padding-bottom: 12px  
-      .profile_field_label
-        background-color: transparent
-        font-weight: bold
-        color: black
-        padding: 0px
+    .profile_field_label
+      background-color: transparent
+      font-weight: bold
+      color: black
+      padding: 0px
   li.profile_field_child
+    .label-wrapper
+      padding-bottom: 3px
     .label
       font-weight: normal !important
       color: #777
@@ -75,6 +77,9 @@ ul.section_container
     .label-wrapper 
       width: auto
       min-width: 0px
+  ul.profile_fields
+    ul
+      padding-left: 0px
 
 .box.section.bank_account_information
   ul.section_container
