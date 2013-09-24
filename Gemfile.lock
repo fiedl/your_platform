@@ -25,7 +25,7 @@ PATH
   specs:
     your_platform (0.0.1)
       acts-as-dag (>= 2.5.7)
-      acts_as_paranoid_dag
+      acts_as_paranoid_dag (>= 0.0.3)
       acts_as_tree
       bcrypt-ruby (>= 3.0.1)
       best_in_place (~> 2.1.0)
@@ -89,7 +89,7 @@ GEM
     acts-as-dag (3.0.0)
       activemodel
       activerecord
-    acts_as_paranoid_dag (0.0.2)
+    acts_as_paranoid_dag (0.0.3)
       acts-as-dag
       rails (>= 3.2)
       rails3_acts_as_paranoid
@@ -354,7 +354,7 @@ GEM
     warden (1.2.3)
       rack (>= 1.0)
     websocket (1.0.7)
-    will_paginate (3.0.4)
+    will_paginate (3.0.5)
     workflow_kit (0.0.6.alpha)
       rails (~> 3.2.6)
     xpath (1.0.0)

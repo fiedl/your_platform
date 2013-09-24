@@ -29,10 +29,12 @@ class UserImporter < Importer
                 user.update_attributes( user_data.attributes )
                 user.save
                 user.import_profile_fields( user_data.profile_fields_array, update_policy)
+                user.reset_memberships_in_corporations
                 user.handle_primary_corporation( user_data, progress )
                 user.handle_current_corporations( user_data )
                 user.handle_deleted-string_status( user_data.deleted-string_status )
                 user.handle_former_corporations( user_data )
+                user.perform_consistency_check_for_aktivitaetszahl( user_data )
                 user.handle_deceased( user_data )
                 user.assign_to_groups( user_data.groups )
                 progress.log_success unless email_warning
@@ -111,10 +113,6 @@ class UserData < ImportDataset
   # the dataset to import. 
   #
   def already_imported_object  
-    # User.where( first_name: self.first_name, last_name: self.last_name )
-    #   .includes( :profile_fields )
-    #   .select { |user| user.date_of_birth == self.date_of_birth }
-    #   .first
     User.where( first_name: self.first_name, last_name: self.last_name )  # for better performance
     .select do |user|
       user.w_nummer == self.w_nummer
@@ -547,8 +545,8 @@ module UserImportMethods
 
   def assign_to_groups( groups )
     p "TODO: GROUP ASSIGNMENT"
-    p groups
-    p "-----"
+    #p groups
+    #p "-----"
   end
 
   def handle_deleted-string_status( status )
@@ -637,8 +635,17 @@ module UserImportMethods
         
       end
     end
-
-    if user_data.aktivitaetszahl != self.reload.aktivitaetszahl
+  end
+  
+  def reset_memberships_in_corporations
+    groups = self.parent_groups & Group.corporations_parent.descendant_groups
+    groups.each do |group|
+      UserGroupMembership.with_deleted.find_by_user_and_group(self, group).destroy_permanently
+    end
+  end
+  
+  def perform_consistency_check_for_aktivitaetszahl( user_data )
+    if user_data.aktivitaetszahl.to_s != self.reload.aktivitaetszahl.to_s
       raise "consistency check failed: aktivitaetszahl '#{user_data.aktivitaetszahl}' not reconstructed properly.
         The reconstructed one is '#{self.aktivitaetszahl}'."
     end
@@ -655,7 +662,10 @@ module UserImportMethods
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
       end
       
-      # TODO: Den Benutzer aus den anderen Status-Gruppen dieser Korporation entfernen!!
+      # Remove user from previous status groups of this corporation.
+      (self.status_groups & corporation.status_groups).each do |status_group|
+        status_group.unassign_user self
+      end
       
       group_to_assign.assign_user self, joined_at: date
     end
