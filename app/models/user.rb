@@ -89,6 +89,14 @@ class User
 
     self.wingolfsblaetter_abo = true
   end
+  
+  
+  # W-Nummer  (old uid)
+  # ==========================================================================================
+  
+  def w_nummer
+    self.profile_fields.where(label: "W-Nummer").first.try(:value)
+  end
 
 
   # Abo Wingolfsblätter

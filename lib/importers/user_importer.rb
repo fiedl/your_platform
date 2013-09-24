@@ -110,10 +110,14 @@ class UserData < ImportDataset
   # the dataset to import. 
   #
   def already_imported_object  
-    User.where( first_name: self.first_name, last_name: self.last_name )
-      .includes( :profile_fields )
-      .select { |user| user.date_of_birth == self.date_of_birth }
-      .first
+    # User.where( first_name: self.first_name, last_name: self.last_name )
+    #   .includes( :profile_fields )
+    #   .select { |user| user.date_of_birth == self.date_of_birth }
+    #   .first
+    User.where( first_name: self.first_name, last_name: self.last_name )  # for better performance
+    .select do |user|
+      user.w_nummer == self.w_nummer
+    end.first
   end
   
   def existing_user
