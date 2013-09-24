@@ -31,22 +31,22 @@ class ExternalCorporationsImporter < Importer
           #
           corporation.token = data.token
           corporation.name = data.name
+          corporation.extensive_name = data.extensive_name
           success = corporation.save
           
           # set parent group
           if success
-            p "1"
             if not corporation.ancestor_groups.include? corporations_parent
-              p "2"
               corporation.parent_groups << corporations_parent
-              p "3"
-              
-              if not corporation.reload.parent_groups.include? corporations_parent
-                success = false
-              end
+              success = false if not corporation.reload.parent_groups.include? corporations_parent
             end
           end
-          p corporation.ancestors
+          
+          # add comment field
+          #
+          if success
+            corporation.profile_fields.create(type: "ProfileFieldTypes::Description", value: data.comment)
+          end
           
           # log
           #
@@ -73,6 +73,12 @@ class CorporationData < ImportDataset
   end
   def name
     data_hash_value(:name)
+  end
+  def extensive_name
+    data_hash_value(:extensive_name)
+  end
+  def comment
+    data_hash_value(:comments)
   end
   
   # This looks for an object in the database that matches
