@@ -21,19 +21,21 @@ class UserImporter < Importer
     import_file = ImportFile.new( file_name: @file_name, data_class_name: "UserData" )
     import_file.each_row do |user_data|
       if user_data.match?(@filter) 
-        handle_deleted(user_data) do
-          handle_existing(user_data) do |user|
-            handle_existing_email(user_data) do |email_warning|
-              user.update_attributes( user_data.attributes )
-              user.save
-              user.import_profile_fields( user_data.profile_fields_array, update_policy)
-              user.handle_primary_corporation( user_data, progress )
-              user.handle_corporations( user_data )
-              user.handle_deleted-string_status( user_data.deleted-string_status )
-              user.handle_former_corporations( user_data )
-              user.handle_deceased( user_data )
-              user.assign_to_groups( user_data.groups )
-              progress.log_success unless email_warning
+        handle_dummies(user_data) do
+          handle_deleted(user_data) do
+            handle_existing(user_data) do |user|
+              handle_existing_email(user_data) do |email_warning|
+                user.update_attributes( user_data.attributes )
+                user.save
+                user.import_profile_fields( user_data.profile_fields_array, update_policy)
+                user.handle_primary_corporation( user_data, progress )
+                user.handle_corporations( user_data )
+                user.handle_deleted-string_status( user_data.deleted-string_status )
+                user.handle_former_corporations( user_data )
+                user.handle_deceased( user_data )
+                user.assign_to_groups( user_data.groups )
+                progress.log_success unless email_warning
+              end
             end
           end
         end
@@ -43,6 +45,20 @@ class UserImporter < Importer
   end
 
   private
+
+  # Ignore old dummy users from deleted-string database.
+  #
+  def handle_dummies( data, &block ) 
+    if data.deleted-string_aktivitaetszahl.in? ["?????", "02", "03", "234", "VAW", "wingolf 00", "Wingolf 06", "wingolf 07"]
+      warning = { message: "Ignoring dummy user #{data.w_nummer}.",
+        user_uid: data.uid, name: data.name,
+        aktivitaetszahl: data.deleted-string_aktivitaetszahl
+      }
+      progress.log_ignore(warning)
+    else
+      yield
+    end
+  end
 
   def handle_deleted( data, &block )
     if data.deleted-string_status == :deleted
