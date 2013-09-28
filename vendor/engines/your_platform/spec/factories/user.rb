@@ -16,6 +16,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_address do
+      after :create do |user|
+        user.profile_fields.create(type: ProfileFieldTypes::Address.name)
+      end
+    end
+
     trait :with_corporate_vita do
       after :create do |user|
         corporation = create( :corporation_with_status_groups )

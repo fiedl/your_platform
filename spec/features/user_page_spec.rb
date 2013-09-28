@@ -11,7 +11,7 @@ feature 'User page', js: false do
 
     background do
       User.destroy_all
-      @user = create(:user_with_account, :with_corporate_vita)
+      @user = create(:user_with_account, :with_corporate_vita, :with_address)
     end
 
 
@@ -38,13 +38,27 @@ feature 'User page', js: false do
       it { should have_selector('h1', text: I18n.t(:organizations)) }
       it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
       it { should have_selector('h1', text: I18n.t(:description)) }
-      #it { should have_selector('h1', text: I18n.t(:corporate_vita)) } #test user is not member of any corporation
+      it { should have_selector('h1', text: I18n.t(:corporate_vita)) }
       it { should have_selector('h1', text: I18n.t(:relationships)) }
       it { should have_selector('h1', text: I18n.t(:communication)) }
       it { should have_selector('h1', text: I18n.t(:access_information)) }
       it { should have_selector('.workflow_triggers')}
 
       #it { should have_selector('title', text: 'Wingolfsplattform') } #can't get it to work on capybara 2.0
+
+      scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
+        within('.box.section.contact_information') do
+          page.should have_selector('.wingolfspost', :visible => true)
+          page.should have_no_selector('.radio', :visible => true )
+
+          click_on I18n.t(:edit)
+
+          page.should have_selector('.wingolfspost', :visible => true)
+          page.should have_selector('.radio', :visible => true)
+
+          page.should have_selector('a.add_button', visible: true)
+        end
+      end
 
       scenario "the section #{I18n.t(:organizations)} should be editable", js: true do
         within('.box.section.organizations') do
@@ -136,7 +150,7 @@ feature 'User page', js: false do
       end
 
       describe 'and visiting the own profile' do
-        let(:user) { create(:user_with_account, :with_profile_fields, :with_corporate_vita) }
+        let(:user) { create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address) }
 
         background do
           login(user)
@@ -169,6 +183,21 @@ feature 'User page', js: false do
 
         scenario 'the empty sections should be visible' do
           subject.should have_selector('.box.section.organizations')
+        end
+
+
+        scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
+          within('.box.section.contact_information') do
+            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_no_selector('.radio', :visible => true)
+
+            click_on I18n.t(:edit)
+
+            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_no_selector('.radio', :visible => true)
+
+            page.should have_selector('a.add_button', visible: true)
+          end
         end
 
       end

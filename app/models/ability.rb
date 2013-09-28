@@ -53,13 +53,17 @@ class Ability
         can :read, :all
         can :manage, User, :id => user.id
 
-        can :manage, ProfileField do |field|
+        can :crud, ProfileField do |field|
           parent_field = field
           while parent_field.parent != nil do
             parent_field = parent_field.parent
           end
 
           !parent_field.profileable || parent_field.profileable.id == user.id
+        end
+
+        can :update_restricted, ProfileField do
+          is_admin_of? user, user
         end
 
         # Normal users cannot see hidden users, except for self.
@@ -81,7 +85,8 @@ class Ability
           (group.admins.include?(user)) || (group.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user))
         end
         can :manage, User do |other_user|
-          other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+          #other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+          is_admin_of? user, other_user
         end
         can :execute, Workflow do |workflow|
           workflow.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
@@ -91,4 +96,10 @@ class Ability
 
     end
   end
+
+  private
+
+    def is_admin_of?(user, other_user)
+      other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+    end
 end
