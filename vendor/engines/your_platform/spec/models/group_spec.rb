@@ -319,7 +319,7 @@ describe Group do
   # Adding objects
   # --------------
 
-  describe "#<<", focus: true do
+  describe "#<<" do
     before { @group = create(:group) }
     subject { @group << @object_to_add }
     

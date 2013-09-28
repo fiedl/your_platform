@@ -46,6 +46,18 @@ describe "User: abilities" do
     @profile_field = user.profile_fields.create(type: "ProfileFieldTypes::Phone", value: "123-456789")
     the_user.should be_able_to :update, @profile_field
   end
+  he "should be able to read anything" do
+    @page = create(:page)
+    the_user.should be_able_to :read, @page
+    @group = create(:group)
+    the_user.should be_able_to :read, @group
+    @other_user = create(:user)
+    the_user.should be_able_to :read, @other_user
+  end
+  he "should be able to download anything" do
+    @attachment = Attachment.new
+    the_user.should be_able_to :download, @attachment
+  end
   
   context "when the user is a local admin" do
     before do
@@ -84,6 +96,25 @@ describe "User: abilities" do
       the_user.should_not be_able_to :manage, @other_user
     end
   end
-
+  
+  context "when the user is a local admin of a page" do
+    before do
+      @page = create(:page)
+      @page.admins << user
+    end
+    he "should be able to manage this page" do
+      the_user.should be_able_to :manage, @page
+    end
+    he "should be able to manage subgroups of this page" do
+      @subgroup = @page.child_groups.create
+      the_user.should be_able_to :manage, @subgroup
+    end
+    he "should NOT be able to manage descendant users" do
+      @subgroup = @page.child_groups.create
+      @other_user = create(:user)
+      @subgroup << @other_user 
+      the_user.should_not be_able_to :update, @other_user
+    end
+  end
 end
   

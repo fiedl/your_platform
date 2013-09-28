@@ -7,7 +7,7 @@ created_profile_field = $("<%= j(render partial: 'profile_fields/profile_field',
 
 <% # Insert this new list item as the last one in the section of the list items
    # that can be seen also when not in edit_mode. %>
-section.find(".section_container").append(created_profile_field);
+section.find("ul.profile_fields").append(created_profile_field);
 
 <% # Add all methods and triggers that are needed for the edit mode to the new
    # elements. %>

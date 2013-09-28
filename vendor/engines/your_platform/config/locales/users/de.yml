@@ -1,3 +1,6 @@
 de:
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag
+  
+  user_hidden:                Benutzer versteckt
+  hidden_users_can_only_be_seen_by_admins:   'Versteckte Benutzer können nur von zuständigen Administratoren gesehen werden. Für alle anderen Benutzer sind sie unsichtbar.'

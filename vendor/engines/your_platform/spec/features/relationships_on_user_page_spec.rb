@@ -16,7 +16,7 @@ feature "Relationships on User show view", js: true do
     login(:admin)
   end
 
-  scenario "adding a relationship and removing it again" do
+  pending "adding a relationship and removing it again" do
 
     visit user_path( @user )
     within(first (".section.relationships") ) do

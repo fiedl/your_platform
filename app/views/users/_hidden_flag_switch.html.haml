@@ -14,7 +14,7 @@
           %input(type="checkbox" name="user_hidden" checked)
         - else
           %input(type="checkbox" name="user_hidden")
-        Benutzer versteckt
+        = render partial: 'hidden_badge'
 %span{ :class => "user_hidden_flag do_not_show_in_edit_mode #{css_class} user_#{user.id}" }
   %span.label.label-important
-    Benutzer versteckt
+    = render partial: 'hidden_badge'

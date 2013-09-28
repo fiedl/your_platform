@@ -281,8 +281,9 @@ module ProfileFieldTypes
 
     def value
       date_string = super
-      return date_string.to_date if date_string
+      I18n.localize(date_string.to_date) if date_string.present?
     end
+    
   end
 
 

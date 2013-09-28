@@ -39,7 +39,7 @@ feature 'User page', js: false do
       it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
       it { should have_selector('h1', text: I18n.t(:description)) }
       it { should have_selector('h1', text: I18n.t(:corporate_vita)) }
-      it { should have_selector('h1', text: I18n.t(:relationships)) }
+      pending { should have_selector('h1', text: I18n.t(:relationships)) }
       it { should have_selector('h1', text: I18n.t(:communication)) }
       it { should have_selector('h1', text: I18n.t(:access_information)) }
       it { should have_selector('.workflow_triggers')}
@@ -164,7 +164,6 @@ feature 'User page', js: false do
           #section_should_be_editable(:career_information, [ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory])
           section_should_be_editable(:organizations)
           section_should_be_editable(:bank_account_information)
-          section_should_be_editable(:description)
         end
 
 
@@ -174,9 +173,9 @@ feature 'User page', js: false do
         it { should have_selector('h1', text: I18n.t(:career_information)) }
         it { should have_selector('h1', text: I18n.t(:organizations)) }
         it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
-        it { should have_selector('h1', text: I18n.t(:description)) }
+        it { should_not have_selector('h1', text: I18n.t(:description)) }        
         it { should have_selector('h1', text: I18n.t(:corporate_vita)) }
-        it { should have_selector('h1', text: I18n.t(:relationships)) }
+        pending { should have_selector('h1', text: I18n.t(:relationships)) }
         it { should have_selector('h1', text: I18n.t(:communication)) }
         it { should have_selector('h1', text: I18n.t(:access_information)) }
         it { should_not have_selector('.workflow_triggers')}

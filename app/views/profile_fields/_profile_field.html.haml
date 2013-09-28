@@ -2,42 +2,49 @@
 -# A profile field can either have just label and value or it can have child profile fields
 -# in order to display complex information such as bank account information.
 -#
-- profile_field_css_class = profile_field.parent ? 'profile_field profile_field_child' : 'profile_field profile_field_parent'
+- profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
 - input_type = 'input'
-- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description).include? profile_field.type   
+- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
+- input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
+- no_remove ||= false
+- lock_label ||= false
+- if profile_field.type == "ProfileFieldTypes::About"
+  - display_method = { :display_with => :markdown }
+- else
+  - display_method = { :display_as => :display_html }
 
 %li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
 
-  // remove button
-  %span.button-wrapper
-    - unless profile_field.parent
-      - if can? :destroy, profile_field
-        = remove_button(profile_field)
-  
-  // label
+  - # remove button
+  - unless no_remove
+    %span.button-wrapper
+      - unless profile_field.parent
+        - if can? :destroy, profile_field
+          = remove_button(profile_field)
+    
+  - # label
   %span.label-wrapper
-    - if profile_field.parent
+    - if profile_field.parent || lock_label || cannot?(:update, profile_field)
       %span.label.profile_field_label= profile_field.label
     - else
-      - if can? :update, profile_field
-        = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
-      - else
-        = profile_field.label
+      = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
 
-  // value
+  - # value
   %span.value-wrapper
     - if profile_field.children.count == 0
       - if can? :update, profile_field
-        = best_in_place profile_field, :value,
-                          type: input_type,
-                          display_as: :display_html,
-                          classes: 'value'
+        = best_in_place profile_field, :value, 
+                          { type: input_type, classes: 'value' }.merge(display_method)
       - else
-        = profile_field.display_html
+        - if display_method[:display_as]
+          = profile_field.send(display_method[:display_as])
+        - elsif display_method[:display_with] == :markdown
+          = markdown(profile_field.value)
+          
     - if profile_field.children.count > 0
       %ul
         - profile_field.children.each do |child_field|
           = render partial: 'profile_fields/profile_field', object: child_field
     - if profile_field.type == ProfileFieldTypes::Address.name
       = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
-    /= render partial: 'shared/flags', locals: { flagable: profile_field }
+    - # render partial: 'shared/flags', locals: { flagable: profile_field }

@@ -1,6 +1,7 @@
 -# This template renders a profile section.
 -# Locals:
--#   section    ProfileSection
+-#   section                 ProfileSection
+-#   profile_field_options   Hash
 -#
 %h1{:class => "section #{section.title}"}= t section.title
 %div{:id => "section_#{section.title}"}
@@ -8,5 +9,5 @@
     - if section.profileable.kind_of?(User) &&  (section.profileable.profile_fields_by_type("ProfileFieldTypes::Address").count > 0)
       %span.contact_section.map.do_not_show_in_edit_mode
         = map_of_address_profile_fields( section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) )
-  = render partial: 'profiles/profile_section_ul', locals: { section: section }
+  = render partial: 'profiles/profile_section_ul', locals: { section: section, profile_field_options: profile_field_options }
   = render partial: 'profiles/add_profile_field_button', locals: { section: section, profileable: section.profileable }
