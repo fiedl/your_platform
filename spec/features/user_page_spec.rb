@@ -121,7 +121,7 @@ feature 'User page', js: false do
 
     describe 'when signed in as a regular user' do
       describe 'and visiting a foreign profile' do
-        let(:profile) { create(:user, :with_profile_fields, :with_corporate_vita) }
+        let(:profile) { create(:user, :with_profile_fields, :with_corporate_vita, :with_address) }
 
         background do
           login(:user)
@@ -129,6 +129,14 @@ feature 'User page', js: false do
         end
 
         scenario 'the profile sections should not be editable', js: true do
+          within('.box.section.contact_information') do
+            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_no_selector('.radio', :visible => true)
+            subject.should have_no_selector('a.edit_button', visible: true)
+            subject.should have_no_selector('a.add_button', visible: true)
+            subject.should have_no_selector('.remove_button', visible: true)
+          end
+
           within '.box.section.career_information' do
             subject.should_not have_selector('a.edit_button', visible: true)
             subject.should_not have_selector('a.add_button', visible: true)
@@ -193,7 +201,8 @@ feature 'User page', js: false do
             click_on I18n.t(:edit)
 
             page.should have_selector('.wingolfspost', :visible => true)
-            page.should have_no_selector('.radio', :visible => true)
+
+            page.should have_selector('.radio', :visible => true)
 
             page.should have_selector('a.add_button', visible: true)
           end

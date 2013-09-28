@@ -5,8 +5,7 @@
   - flagged = false
   - css_class = 'unflagged'
 
-
-- if can? :update_restricted, profile_field
+- if can? :update, profile_field
   - css_class += ' do_not_show_in_edit_mode'
   %span{ :class => "wingolfspost show_only_in_edit_mode profile_field_#{profile_field.id}",
          :data => { profile_field_id: profile_field.id, update_json_url: profile_field_path(profile_field, format: :json) } }

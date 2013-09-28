@@ -40,31 +40,27 @@ class Ability
     #
     # Only registered users can do or see anything.
     #
-    if user 
-      
+    if user
+
       # Only global administrators can change anything.
       #
       if Group.find_everyone_group.admins && user.in?(Group.find_everyone_group.admins)
         can :manage, :all
-        
+
       else
-        
+
         # Users that are no admins can read all and edit their own profile.
         can :read, :all
         can :download, :all
         can :manage, User, :id => user.id
 
-        can :crud, ProfileField do |field|
+        can :manage, ProfileField do |field|
           parent_field = field
           while parent_field.parent != nil do
             parent_field = parent_field.parent
           end
 
           !parent_field.profileable || parent_field.profileable.id == user.id
-        end
-
-        can :update_restricted, ProfileField do
-          is_admin_of? user, user
         end
 
         # Normal users cannot see hidden users, except for self.
@@ -77,7 +73,7 @@ class Ability
         cannot :read, Group do |group|
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
-        
+
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
@@ -86,8 +82,7 @@ class Ability
           (group.admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user))
         end
         can :manage, User do |other_user|
-          #other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
-          is_admin_of? user, other_user
+          other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
         end
         can :execute, Workflow do |workflow|
           workflow.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
@@ -100,10 +95,4 @@ class Ability
 
     end
   end
-
-  private
-
-    def is_admin_of?(user, other_user)
-      other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
-    end
 end
