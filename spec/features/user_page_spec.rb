@@ -165,10 +165,10 @@ feature 'User page', js: false do
           visit user_path(user)
         end
 
-        scenario 'the profile sections should be editable', js: true do
+        scenario 'the profile sections should be editable', js: true, focus: true do
           #section_should_be_editable(:contact_information, [ProfileFieldTypes::Address, ProfileFieldTypes::Email, ProfileFieldTypes::Phone, ProfileFieldTypes::Homepage, ProfileFieldTypes::Custom])
           section_should_be_editable(:about_myself)
-          #section_should_be_editable(:study_information, [ProfileFieldTypes::AcademicDegree, ProfileFieldTypes::Study])
+          section_should_be_editable(:study_information)
           #section_should_be_editable(:career_information, [ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory])
           section_should_be_editable(:organizations)
           section_should_be_editable(:bank_account_information)

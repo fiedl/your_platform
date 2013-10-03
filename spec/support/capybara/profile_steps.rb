@@ -32,26 +32,26 @@ module ProfileSteps
   def test_field_type(type)
     #puts type.to_s + ' with ' + @user.profile_fields.count.to_s
     click_on I18n.t(:add)
-    sleep 0.1
 
+    puts all('.profile_field').count.to_s
     expect {
       field_name = type.name.demodulize.underscore
-      page.should have_selector("a#add_#{field_name}_field")
+      page.should have_selector("a#add_#{field_name}_field", visible: true)
+
+      page.should have_content(I18n.t(field_name))
       click_on I18n.t(field_name)
-      sleep 0.5
-    }.to change(UserAccount, :count).by 1
+      page.should have_no_selector("a#add_#{field_name}_field", visible: true)
+      puts all('.profile_field').count.to_s
+    }.to change{ all('.profile_field').count }
 
     page.should have_selector('.profile_field')
 
     page.should have_selector('.remove_button')
 
     expect {
-      find('.remove_button').click
-      sleep 0.1
-    }.to change(UserAccount, :count).by -1
-    #how to test if removing the field worked?
-
-
-    click_on I18n.t(:add) #Temporary, this is needed to close the combobox of the add button.
+      all('.remove_button').last.click
+      page.should have_no_selector('this_is_just_to_trigger_capybaras_ajax_awaiting_which_is_not_triggered_by_click', visible: true)
+      puts all('.profile_field').count.to_s
+    }.to change{ all('.profile_field').count }
   end
 end

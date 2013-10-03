@@ -86,7 +86,7 @@ Spork.prefork do
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
-  Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
+  #Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
   Dir[Rails.root.join('vendor/engines/your_platform/spec/support/**/*.rb')].each {|f| require f}
 
 
@@ -278,6 +278,7 @@ Spork.each_run do
   # There are some actions FactoryGirl needs to perform on every run.
   #
   FactoryGirl.reload
+  Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
 
   # Resource on using SimpleCov together with Spork:
   # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
