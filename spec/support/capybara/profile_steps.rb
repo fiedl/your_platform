@@ -53,7 +53,7 @@ module ProfileSteps
 
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       page.should have_selector('ul.profile_fields')
-      page.save_screenshot('screenshot.png')
+      page.save_screenshot('tmp/screenshot.png')
       #puts all('.remove_button').count.to_s + ' remove buttons'
       #puts all('.profile_field_parent', visible: true).count.to_s + ' profile fields'
     }.to change{ all('.profile_field_parent').count }.by -1
