@@ -5,7 +5,10 @@ class PagesController < ApplicationController
 
   def show
     if @page
-      redirect_to @page.redirect_to if @page.redirect_to
+      if @page.redirect_to
+        redirect_to @page.redirect_to
+        return
+      end
 
       @blog_entries = @page.blog_entries.limit(10)
       
