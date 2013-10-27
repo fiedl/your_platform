@@ -13,8 +13,12 @@
 <h1><%=t :found_users %></h1>
 <div>
   <ul>
+    <% tmp = "" %>
     <% for object in @users %>
+    <% if not object == tmp %>
     <li><%= link_to object.title, object %></li>
+    <% end %>
+    <% tmp = object %>
     <% end %>
   </ul>
 </div>
