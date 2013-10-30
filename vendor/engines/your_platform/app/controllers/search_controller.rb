@@ -14,6 +14,10 @@ class SearchController < ApplicationController
         .order( :title )
       @groups = Group.where( "name like ?", q )
 
+      @users.uniq!
+      @pages.uniq!
+      @groups.uniq!
+
       profile_fields = ProfileField.where("value like ?", q).collect do |profile_field|
         profile_field.parent || profile_field
       end.uniq
