@@ -11,9 +11,9 @@ class User < ActiveRecord::Base
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
 
-  has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information, 
+  has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
      :organizations, :bank_account_information]
-  
+
   # TODO: This is already Rails 4 syntax. Use this when we switch to Rails 4.
   # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#method-i-has_one
   #
@@ -22,9 +22,9 @@ class User < ActiveRecord::Base
   # The old Rails 3.2 syntax would be:
   #
   # has_one                   :date_of_birth_profile_field, class_name: "ProfileFieldTypes::Date", conditions: "label = 'date_of_birth'", as: :profileable, autosave: true
-  # 
-  # But on build_date_of_birth_profile_field the condition is not set automatically. There are some other issues with this behaviour. 
-  # We would still have to use an instance variable. Therefore, we just build the association from scratch. 
+  #
+  # But on build_date_of_birth_profile_field the condition is not set automatically. There are some other issues with this behaviour.
+  # We would still have to use an instance variable. Therefore, we just build the association from scratch.
   # See code down at #date_of_birth_profile_field.
   #
   after_save                :save_date_of_birth_profile_field
@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
   def date_of_birth=( date_of_birth )
     find_or_build_date_of_birth_profile_field.value = date_of_birth
   end
-  
+
   def date_of_birth_profile_field
     @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
   end
