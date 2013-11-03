@@ -44,7 +44,12 @@ describe "User: abilities" do
   
   he "should be able to edit his own profile fields" do
     @profile_field = user.profile_fields.create(type: "ProfileFieldTypes::Phone", value: "123-456789")
+
+    the_user.should be_able_to :create, ProfileField.new
+    the_user.should be_able_to :read, @profile_field
     the_user.should be_able_to :update, @profile_field
+    the_user.should be_able_to :destroy, @profile_field
+    the_user.should_not be_able_to :manage, @profile_field
   end
   he "should be able to read anything" do
     @page = create(:page)

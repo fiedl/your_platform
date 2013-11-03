@@ -51,6 +51,10 @@
                   class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                     |
                 %ul.dropdown-menu
                   = my_groups_table
+              - if can? :manage, @navable
+                %li.backendBarItem
+                  %a
+                    Sie sind Administrator.
               %li.dropdown
                 = link_to(                                                                   |
                   ( t(:bookmarks) + " " + content_tag( :b, '', class: 'caret' ) ).html_safe, |

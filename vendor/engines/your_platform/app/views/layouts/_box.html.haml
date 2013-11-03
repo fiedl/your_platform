@@ -7,7 +7,7 @@
             %h1= heading
           %td.box_toolbar
             %span.box_toolbar
-              - if can? :manage, @navable
+              - if can? :crud, @navable
                 = save_button :class => box_class
                 = edit_button(:class => box_class,             |
                   :id => (strip_tags(heading) + "EditButton")) |

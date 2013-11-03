@@ -35,6 +35,7 @@ class Ability
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
+    alias_action :create, :read, :update, :destroy, :to => :crud
 
     # This behaviour is temporary!
     #
@@ -52,9 +53,9 @@ class Ability
         # Users that are no admins can read all and edit their own profile.
         can :read, :all
         can :download, :all
-        can :manage, User, :id => user.id
+        can :crud, User, :id => user.id
 
-        can :manage, ProfileField do |field|
+        can :crud, ProfileField do |field|
           parent_field = field
           while parent_field.parent != nil do
             parent_field = parent_field.parent

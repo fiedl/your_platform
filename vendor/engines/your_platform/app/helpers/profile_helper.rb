@@ -35,7 +35,7 @@ module ProfileHelper
   # i.e. if somebody looks at his own profile.
   #
   def show_all_sections?( profileable )
-    can? :manage, profileable
+    can? :crud, profileable
   end
 
   # A section is to be shown if
