@@ -1,13 +1,13 @@
 !!!
 %html
   %head
-    %meta{:content => "text/html; charset=utf-8", "http-equiv" => "Content-type"}/
+    %meta{:content => 'text/html; charset=utf-8', 'http-equiv' => 'Content-type'}/
     %title= website_title_with_app_name
-    = stylesheet_link_tag    "wingolf_layout", :media => "all"
-    = stylesheet_link_tag    "application", :media => "all"
+    = stylesheet_link_tag    'wingolf_layout', :media => 'all'
+    = stylesheet_link_tag    'application', :media => 'all'
     = favicon_link_tag 'favicon.ico'
     = favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png'
-    = javascript_include_tag "application"
+    = javascript_include_tag 'application'
     -# TODO: Replace the sublime key file:
     -# %script{:src => "http://cdn.sublimevideo.net/js/deleted-sublime-key", :type => "text/javascript"}
     = gmaps4rails_api_script_tags
@@ -20,10 +20,10 @@
           .content
             %ul.backendBarItems
               %li.first.backendBarItem
-                = render "layouts/session_bar_avatar"
+                = render 'layouts/session_bar_avatar'
                 = link_to current_user.title, main_app.user_path( current_user )
               %li.backendBarItem
-                = link_to t(:my_profile), current_user, :class => "my_profile"
+                = link_to t(:my_profile), current_user, :class => 'my_profile'
               %li.backendBarItem.dropdown
                 -# link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' }
                 = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'
@@ -38,8 +38,7 @@
                 </haml:block>            //
               - if can? :manage, @navable
                 %li.backendBarItem
-                  %a
-                    Sie sind Administrator.
+                  = link_to t(:youareadmin), '#'
               %li.backendBarItem.dropdown
                 = link_to t(:bookmarks), my_bookmarks_path
                 %ul.dropdown-menu.my-favorites
@@ -54,7 +53,7 @@
         #header_logo
           = link_to( image_tag( 'logo.png' ), root_path )
         #header_help
-          = link_to_special_page(t(:help), :help, :class => "btn btn-mini btn-info"  )
+          = link_to_special_page(t(:help), :help, :class => 'btn btn-mini btn-info'  )
         #header_search
           = render partial: 'shared/search_box'
         #horizontal_nav= horizontal_nav
@@ -86,7 +85,7 @@
       #footer_navi
         %ul
           %li
-            %a(href="http://github.com/fiedl/wingolfsplattform") Github
+            %a(href="https://github.com/fiedl/wingolfsplattform") Github
           %li
             %a= t(:imprint)
           %li
