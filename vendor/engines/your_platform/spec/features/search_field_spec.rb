@@ -24,7 +24,7 @@ feature "Search Field", js: true do
       end
     end
     context "if there are more users matching" do
-      before do 
+      before do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "foobar" )
         fill_in 'query', with: "foo\n" # \n hits enter
@@ -33,6 +33,20 @@ feature "Search Field", js: true do
         page.should have_content( I18n.t( :found_users ) )
         page.should have_content( @user1.title )
         page.should have_content( @user2.title )
+      end
+      specify "searching for foo should present a user only once" do
+        periods = page.execute_script("options = find('//box /content'); texts=[]; for (i=0; i<options.length; i++) texts.push(options[i].textContent); return texts")
+        puts periods
+#        page.should have_content( @user1.title )
+#        @u1 = page.find( @user1.title )
+#        @u2 = page.find( @user2.title )
+#        @u3 = page.find( @user3.title )
+#        @us1 = @u1.uniq
+#        @us2 = @u2.uniq
+#        @us3 = @u3.uniq
+#        @us1.should == @u1
+#        @us2.should == @u2
+#        @us3.should == @u3
       end
     end
   end
@@ -56,14 +70,14 @@ feature "Search Field", js: true do
   end
 
   describe "a space should be interpreted as a wild card" do
-    before do 
+    before do
       @page = create( :page, title: "foo some bar page" )
-      fill_in 'query', with: "foo bar\n" 
+      fill_in 'query', with: "foo bar\n"
     end
     subject { page }
     it { should have_content( @page.title ) }
   end
-  
+
   def hit_enter_in(selector)
     page.execute_script("var input = $(\"#{selector}\"); input.trigger('keypress', [13]);")
   end
