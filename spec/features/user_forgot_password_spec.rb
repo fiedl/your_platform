@@ -4,7 +4,7 @@ feature "UserForgotPassword" do
   include SessionSteps
 
   before do
-    @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe", 
+    @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe",
                          create_account: true )
     @user.save
 
@@ -18,7 +18,7 @@ feature "UserForgotPassword" do
 
     it "should contain the send-new-password link" do
       visit user_path( @user )
-      page.should have_link I18n.t( :send_new_password ) 
+      page.should have_link I18n.t( :send_new_password )
     end
   end
 
@@ -28,7 +28,7 @@ feature "UserForgotPassword" do
       visit user_path( @user )
       click_link I18n.t( :send_new_password )
     end
-    
+
     before do
       send_new_password
     end
