@@ -68,7 +68,7 @@ feature 'User page', js: false do
           click_on I18n.t(:add)
           page.should have_selector('.profile_field')
           within first '.profile_field' do
-            # 
+            #
             # Fields: Organization, From, To, Role  -> 4 fields
             # Sub labels not editable.
             #
@@ -76,7 +76,7 @@ feature 'User page', js: false do
           end
 
           find('.remove_button').click
-          page.should_not have_selector('li')
+          page.should have_no_selector('li')
         end
       end
 
@@ -100,9 +100,9 @@ feature 'User page', js: false do
             #
             subject.should have_selector('input[type=text]', count: 6)
           end
-        
+
           find('.remove_button').click
-          page.should_not have_selector('.profile_field')
+          page.should have_no_selector('.profile_field')
         end
       end
 
@@ -138,22 +138,22 @@ feature 'User page', js: false do
           end
 
           within '.box.section.career_information' do
-            subject.should_not have_selector('a.edit_button', visible: true)
-            subject.should_not have_selector('a.add_button', visible: true)
-            subject.should_not have_selector('.remove_button', visible: true)
+            subject.should have_no_selector('a.edit_button', visible: true)
+            subject.should have_no_selector('a.add_button', visible: true)
+            subject.should have_no_selector('.remove_button', visible: true)
           end
         end
 
         scenario 'the vita section should not be editable', js: true do
           within '.box.section.corporate_vita' do
-            subject.should_not have_selector('a.edit_button', visible: true)
-            subject.should_not have_selector('a.add_button', visible: true)
-            subject.should_not have_selector('.remove_button', visible: true)
+            subject.should have_no_selector('a.edit_button', visible: true)
+            subject.should have_no_selector('a.add_button', visible: true)
+            subject.should have_no_selector('.remove_button', visible: true)
           end
         end
 
         scenario 'the empty sections should not be visible' do
-          subject.should_not have_selector('.box.section.organizations')
+          subject.should have_no_selector('.box.section.organizations')
         end
       end
 
@@ -181,12 +181,12 @@ feature 'User page', js: false do
         it { should have_selector('h1', text: I18n.t(:career_information)) }
         it { should have_selector('h1', text: I18n.t(:organizations)) }
         it { should have_selector('h1', text: I18n.t(:bank_account_information)) }
-        it { should have_no_selector('h1', text: I18n.t(:description)) }        
+        it { should have_no_selector('h1', text: I18n.t(:description)) }
         it { should have_selector('h1', text: I18n.t(:corporate_vita)) }
         pending { should have_selector('h1', text: I18n.t(:relationships)) }
         it { should have_selector('h1', text: I18n.t(:communication)) }
         it { should have_selector('h1', text: I18n.t(:access_information)) }
-        it { should_not have_selector('.workflow_triggers')}
+        it { should have_no_selector('.workflow_triggers')}
 
         scenario 'the empty sections should be visible' do
           subject.should have_selector('.box.section.organizations')

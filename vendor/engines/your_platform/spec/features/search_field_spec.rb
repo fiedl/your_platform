@@ -24,7 +24,7 @@ feature "Search Field", js: true do
       end
     end
     context "if there are more users matching" do
-      before do 
+      before do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "foobar" )
         fill_in 'query', with: "foo\n" # \n hits enter
@@ -56,14 +56,14 @@ feature "Search Field", js: true do
   end
 
   describe "a space should be interpreted as a wild card" do
-    before do 
+    before do
       @page = create( :page, title: "foo some bar page" )
-      fill_in 'query', with: "foo bar\n" 
+      fill_in 'query', with: "foo bar\n"
     end
     subject { page }
     it { should have_content( @page.title ) }
   end
-  
+
   def hit_enter_in(selector)
     page.execute_script("var input = $(\"#{selector}\"); input.trigger('keypress', [13]);")
   end

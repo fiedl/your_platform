@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe UserAlias do
-  
+
   describe ".taken?(alias)" do
     subject { UserAlias.taken?("j.doe") }
     describe "for the alias not being taken" do
@@ -13,7 +13,7 @@ describe UserAlias do
       it { should == @user }
     end
   end
-  
+
   describe "#taken?" do
     subject { UserAlias.new("foo").taken? }
     describe "for the alias not being taken" do
@@ -25,7 +25,7 @@ describe UserAlias do
       it { should == @user }
     end
   end
-  
+
   describe ".generate_for(user)" do
     before do
       @user = create(:user, first_name: "John", last_name: "Doe")
@@ -39,7 +39,7 @@ describe UserAlias do
       it { should == "j.doe" }
     end
     describe "for a user with the same last name and a first name with the same initial existing" do
-      before { create(:user, first_name: "Jane", last_name: "Doe") }  
+      before { create(:user, first_name: "Jane", last_name: "Doe") }
       it { should == "john.doe" }
     end
     describe "for a user with the same first and last names existing" do
@@ -53,5 +53,5 @@ describe UserAlias do
       end
     end
   end
-  
+
 end
