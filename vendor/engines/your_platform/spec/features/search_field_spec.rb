@@ -34,19 +34,26 @@ feature "Search Field", js: true do
         page.should have_content( @user1.title )
         page.should have_content( @user2.title )
       end
-      specify "searching for foo should present a user only once" do
-        periods = page.execute_script("options = find('//box /content'); texts=[]; for (i=0; i<options.length; i++) texts.push(options[i].textContent); return texts")
-        puts periods
-#        page.should have_content( @user1.title )
-#        @u1 = page.find( @user1.title )
-#        @u2 = page.find( @user2.title )
-#        @u3 = page.find( @user3.title )
-#        @us1 = @u1.uniq
-#        @us2 = @u2.uniq
-#        @us3 = @u3.uniq
-#        @us1.should == @u1
-#        @us2.should == @u2
-#        @us3.should == @u3
+    end
+    context "if there are more users matching" do
+      before do
+        @user1 = create( :user, last_name: "foo" )
+        @user2 = create( :user, last_name: "blarzfoo" )
+        @user3 = create( :user, last_name: "cannonfoo" )
+
+        fill_in 'query', with: "foo\n" # \n hits enter
+      end
+      specify "searching for foo should list each user only once" do
+        page.should have_content( I18n.t( :found_users ) )
+        page.should have_content( @user1.title )
+        page.should have_content( @user2.title )
+        page.should have_content( @user3.title )
+        u1 = find('div.users_found').all(:css, 'a', :text => @user1.title)
+        u2 = find('div.users_found').all(:css, 'a', :text => @user2.title)
+        u3 = find('div.users_found').all(:css, 'a', :text => @user3.title)
+        u1.size.should == 1
+        u2.size.should == 1
+        u3.size.should == 1
       end
     end
   end
