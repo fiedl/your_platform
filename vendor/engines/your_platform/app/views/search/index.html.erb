@@ -13,9 +13,11 @@
 <h1><%=t :found_users %></h1>
 <div>
   <ul>
-    <% for object in @users %>
-    <li><%= link_to object.title, object %></li>
-    <% end %>
+    <div class="users_found">
+      <% for object in @users %>
+      <li><%= link_to object.title, object %></li>
+      <% end %>
+    </div>
   </ul>
 </div>
 <% end %>
