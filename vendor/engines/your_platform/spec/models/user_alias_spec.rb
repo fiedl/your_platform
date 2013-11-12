@@ -9,7 +9,7 @@ describe UserAlias do
     end
     describe "for the alias being taken" do
       before { @user = create(:user, :alias => "j.doe" ) }
-      it { should be_true }
+      it { should_not be_false }
       it { should == @user }
     end
   end
@@ -21,7 +21,7 @@ describe UserAlias do
     end
     describe "for the alias being taken" do
       before { @user = create(:user, :alias => "foo") }
-      it { should be_true }
+      it { should_not be_false }
       it { should == @user }
     end
   end
