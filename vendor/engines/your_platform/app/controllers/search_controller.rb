@@ -14,10 +14,6 @@ class SearchController < ApplicationController
         .order( :title )
       @groups = Group.where( "name like ?", q )
 
-      @users.uniq!
-      @pages.uniq!
-      @groups.uniq!
-
       profile_fields = ProfileField.where("value like ?", q).collect do |profile_field|
         profile_field.parent || profile_field
       end.uniq
@@ -28,6 +24,10 @@ class SearchController < ApplicationController
           @groups << profile_field.profileable
         end
       end
+
+      @users.uniq!
+      @pages.uniq!
+      @groups.uniq!
 
       # AUTHORIZATION
       @users = filter_by_authorization(@users)
