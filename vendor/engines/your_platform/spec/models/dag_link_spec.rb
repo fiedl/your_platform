@@ -56,8 +56,8 @@ describe DagLink do
     @page2 = create( :page )
     @page3 = create( :page )
     @page1.parent_pages << @page2
-    @deleted_dag_link = @page1.links_as_child.first
-    @deleted_dag_link.destroy
+    @invalid_dag_link = @page1.links_as_child.first
+    @invalid_dag_link.update_attribute(:valid_to, 1.hour.ago)
     @page1.parent_pages << @page3
     @present_dag_link = @page1.links_as_child.last
   end
@@ -66,26 +66,20 @@ describe DagLink do
   subject { DagLink }
 
   describe ".now" do
-    it "should list all dag links that are not deleted" do
+    it "should list all dag links that are not invalid now" do
       subject.now.should include( @present_dag_link )
-      subject.now.should_not include( @deleted_dag_link )
+      subject.now.should_not include( @invalid_dag_link )
     end
   end
   describe ".in_the_past" do
-    it "should list all dag links that are deleted" do
-      subject.in_the_past.should include( @deleted_dag_link )
+    it "should list all dag links that are invalid now" do
+      subject.in_the_past.should include( @invalid_dag_link )
       subject.in_the_past.should_not include( @present_dag_link )
-    end
-    it "should be the same as #only_deleted" do
-      subject.in_the_past.should == subject.only_deleted
     end
   end
   describe ".now_and_in_the_past" do
     it "should list all dag links" do
-      subject.now_and_in_the_past.should include( @deleted_dag_link, @present_dag_link )
-    end
-    it "should be the same as #with_deleted" do
-      subject.now_and_in_the_past.should == subject.with_deleted
+      subject.now_and_in_the_past.should include( @invalid_dag_link, @present_dag_link )
     end
   end
 

@@ -14,8 +14,6 @@ require 'strong_parameters'
 # Data Structures
 require 'acts-as-dag'
 require 'acts_as_tree'
-require 'rails3_acts_as_paranoid'
-require 'acts_as_paranoid_dag'
 
 # Authentification
 require 'devise'

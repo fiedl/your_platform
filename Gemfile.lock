@@ -25,7 +25,6 @@ PATH
   specs:
     your_platform (0.0.1)
       acts-as-dag (>= 2.5.7)
-      acts_as_paranoid_dag (>= 0.0.3)
       acts_as_tree
       bcrypt-ruby (>= 3.0.1)
       best_in_place (~> 2.1.0)
@@ -46,7 +45,6 @@ PATH
       phony
       rails (~> 3.2.6)
       rails-i18n
-      rails3_acts_as_paranoid
       redcarpet
       rmagick (>= 2.13.2)
       rubylight (= 1.0.3.2)
@@ -89,10 +87,6 @@ GEM
     acts-as-dag (3.0.0)
       activemodel
       activerecord
-    acts_as_paranoid_dag (0.0.3)
-      acts-as-dag
-      rails (>= 3.2)
-      rails3_acts_as_paranoid
     acts_as_tree (1.4.0)
       activerecord (>= 3.0.0)
     addressable (2.3.3)
@@ -265,8 +259,6 @@ GEM
       railties (= 3.2.13)
     rails-i18n (0.7.4)
       i18n (~> 0.5)
-    rails3_acts_as_paranoid (0.2.5)
-      activerecord (~> 3.2)
     railties (3.2.13)
       actionpack (= 3.2.13)
       activesupport (= 3.2.13)
