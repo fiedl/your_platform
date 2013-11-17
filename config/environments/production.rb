@@ -67,7 +67,7 @@ Wingolfsplattform::Application.configure do
 
   # Load Secret Settings
   # -> moved to config/application.rb
-    
+
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
 
@@ -80,7 +80,7 @@ Wingolfsplattform::Application.configure do
       in config/secrets.yml.
     "
   end
-  
+
   config.action_mailer.smtp_settings = {
     address: 'smtp.1und1.de',
     user_name: 'wingolfsplattform@wingolf.org',
@@ -88,8 +88,8 @@ Wingolfsplattform::Application.configure do
     domain: 'wingolfsplattform.org',
     enable_starttls_auto: true,
     # only if certificate malfunctions:
-    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE    
+    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
   }
-  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
+  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
 
 end

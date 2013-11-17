@@ -28,11 +28,11 @@ group :assets, :production, 'testing-aki' do
 
 end
 
-# See https://github.com/sstephenson/execjs#readme for more 
+# See https://github.com/sstephenson/execjs#readme for more
 # supported runtimes.
 # This is also needed by twitter-bootstrap-rails in production.
 gem 'execjs'
-# But therubyracer apparently uses a lot of memory: 
+# But therubyracer apparently uses a lot of memory:
 # https://github.com/seyhunak/twitter-bootstrap-rails/issues/336
 gem 'therubyracer', :platform => :ruby
 
@@ -56,15 +56,15 @@ gem 'nokogiri'								# MIT License
 #   gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
 
 # jQuery UI
-gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License 
+gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
 
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
 #gem 'acts-as-dag', '>= 2.5.7'  # now in your_platform
 
-# Formtastic Form Helper, 
-# see: https://github.com/justinfrench/formtastic, 
+# Formtastic Form Helper,
+# see: https://github.com/justinfrench/formtastic,
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
 
@@ -74,7 +74,7 @@ gem 'json'								# Ruby License
 # Lucene
 # gem 'lucene'								# MIT License
 
-# Farbiger Konsolen-Output					
+# Farbiger Konsolen-Output
 gem 'colored'								# MIT License
 
 # Auto Completion
@@ -86,15 +86,15 @@ group :development do
   gem 'capistrano' #, '~>2.11.2'
   gem 'capistrano_colors'
   gem 'net-ssh', '2.4.0'
-end 
+end
 
 # Debug Tools
 group :development do
 
   # debugger: http://guides.rubyonrails.org/debugging_rails_applications.html
-  #gem 'debugger'                   
+  #gem 'debugger'
 
-  gem 'better_errors'              # see Railscasts #402               
+  gem 'better_errors'              # see Railscasts #402
   gem 'binding_of_caller'
   gem 'meta_request'
 end
@@ -136,7 +136,7 @@ end
 #  end
 #  if RUBY_PLATFORM.downcase.include?("darwin") # Mac
 #    gem 'rb-fsevent', :require => false
-#    gem 'growl'      
+#    gem 'growl'
 #  end
 #  if RUBY_PLATFORM.downcase.include?("windows")
 #   gem 'rb-fchange'
@@ -178,7 +178,9 @@ gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
 
 # readline (for rails console)
 # see https://github.com/luislavena/rb-readline/issues/84#issuecomment-17335885
-#gem 'rb-readline', '~> 0.5.0', group: :development, require: 'readline' 
+#gem 'rb-readline', '~> 0.5.0', group: :development, require: 'readline'
 
 gem 'gmaps4rails', '~> 2.0.1', git: 'git@github.com:fiedl/Google-Maps-for-Rails.git'
 
+# To customly set timeout time we need rack-timeout
+gem 'rack-timeout'
