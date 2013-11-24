@@ -27,6 +27,19 @@ FnordMetric.namespace :wingolfsplattform do
     observe :pupular_request_types, data[:request_type]
   end
   
+  widget 'CPU Usage', {
+    :title => "CPU Usage (Percent)",
+    :gauges => :cpu_usage,
+    :type => :timeline,
+    :width => 100,
+    :include_current => true,
+    :autoupdate => 1
+  }
+  gauge :cpu_usage, tick: 1.second
+  event :cpu_usage do
+    set_value :cpu_usage, data[:percentage]
+  end
+  
   widget 'TechStats', {
     :title => "Events per Hour",
     :type => :timeline,

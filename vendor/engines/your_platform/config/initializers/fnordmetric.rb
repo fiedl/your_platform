@@ -10,7 +10,7 @@
 #   * https://github.com/paulasmuth/fnordmetric
 #
 FnordMetric.options = {
-  :event_data_ttl => 1.year.seconds.to_i
+  :event_data_ttl => 1.year.seconds.to_i,
   :session_data_ttl => 7.days.seconds.to_i
 }
 

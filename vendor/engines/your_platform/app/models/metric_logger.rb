@@ -67,4 +67,13 @@ class MetricLogger
     log_event({ url: ApplicationController.helpers.user_avatar_url(current_user) }, type: "_set_picture")
   end
   
+  def log_cpu_usage
+    cpu_usage = `top -bn1 | grep "Cpu(s)" | \
+           sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
+           awk '{print 100 - $1}'`.to_i # works only on linux, otherwise: nil
+    if cpu_usage
+      log_event({ percentage: cpu_usage }, type: :cpu_usage)
+    end
+  end
+  
 end
