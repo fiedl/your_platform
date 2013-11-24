@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe UserGroupMembership do
 
-
   before do
     @group = Group.create( name: "Group 1" )
     @super_group = Group.create( name: "Parent Group of Groups 1 and 2" )
@@ -18,7 +17,6 @@ describe UserGroupMembership do
     @super_group.should_not == nil
   end
 
-
   def create_membership
     UserGroupMembership.create( user: @user, group: @group )
   end
@@ -30,10 +28,6 @@ describe UserGroupMembership do
   def find_membership_now_and_in_the_past
     UserGroupMembership.find_all_by( user: @user, group: @group ).now_and_in_the_past.first
   end
-
-#  def create_indirect_membership
-#    UserGroupMembership.create( user: @user, group: @super_group )
-#  end
 
   def find_indirect_membership
     UserGroupMembership.find_by( user: @user, group: @super_group )
@@ -70,8 +64,8 @@ describe UserGroupMembership do
       @user.parents.should include( @group )
     end
     it "should raise an error if argument is missing" do
-      expect { UserGroupMembership.create( user: @user ) }.should raise_error RuntimeError
-      expect { UserGroupMembership.create( group: @group ) }.should raise_error RuntimeError
+      expect { UserGroupMembership.create( user: @user ) }.to raise_error RuntimeError
+      expect { UserGroupMembership.create( group: @group ) }.to raise_error RuntimeError
     end
   end
 
@@ -89,20 +83,19 @@ describe UserGroupMembership do
       it "should find all memberships for a group" do
         UserGroupMembership.find_all_by( group: @group ).should include( find_membership )
       end
-      it "should not find deleted memberships" do
-        @membership = find_membership
-        @membership.destroy
+      it "should not find memberships that are invalid at the present time" do
+        find_membership.update_attribute(:valid_to, 1.hour.ago)
         UserGroupMembership.find_all_by( user: @user )
-          .should include( find_indirect_membership_with_deleted, find_other_membership_with_deleted )
+          .should_not include( find_membership_now_and_in_the_past )
         UserGroupMembership.find_all_by( user: @user )
-          .should_not include( @membership )
+          .should include find_other_membership
       end
     end
-    describe ".find_all_by.with_deleted" do
-      before { find_membership.destroy }
-      it "should find all memberships, including the deleted ones" do
-        UserGroupMembership.find_all_by( user: @user ).with_deleted
-          .should include( find_membership_with_deleted, find_indirect_membership, find_other_membership )
+    describe ".find_all_by.now_and_in_the_past" do
+      before { find_membership.make_invalid }
+      it "should find all memberships, including the ones that are invalid at the present time" do
+        UserGroupMembership.find_all_by( user: @user ).now_and_in_the_past
+          .should include( find_membership_now_and_in_the_past, find_indirect_membership, find_other_membership )
       end
     end
 
