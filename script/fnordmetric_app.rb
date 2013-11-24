@@ -63,7 +63,30 @@ FnordMetric.namespace :wingolfsplattform do
   
 end
 
-FnordMetric::Web.new(port: 4242)
+
+# READ IN SECRETS FILE
+# config/secrets.yml
+require 'yaml'
+secrets_file = File.expand_path('../../config/secrets.yml', __FILE__)
+if File.exists?(secrets_file)
+  ::SECRETS = YAML.load(File.read(secrets_file)) 
+else
+  ::SECRETS = {}
+end
+
+# HTTP AUTHENTICATION
+if ::SECRETS[:fnordmetric_http_user]
+  middleware = [[ Rack::Auth::Basic, 'Restricted Area: Fnordmetric Web Interface',
+    lambda do |username, password|
+      username == ::SECRETS[:fnordmetric_http_user] && password == ::SECRETS[:fnordmetric_http_password]
+    end
+    ]]
+else
+  middleware = nil
+end
+
+# START SERVICES
+FnordMetric::Web.new(port: 4242, use: middleware)
 FnordMetric::Worker.new
 FnordMetric.run
 
