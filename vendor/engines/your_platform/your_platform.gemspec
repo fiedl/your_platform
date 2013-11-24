@@ -96,6 +96,9 @@ Gem::Specification.new do |s|
   
   # Gallery View
   s.add_dependency 'rubylight', '1.0.3.2'   # Creative Commons
+  
+  # Metrics
+  s.add_dependency 'fnordmetric'            # MIT License
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

@@ -25,6 +25,7 @@ class GroupsController < ApplicationController
       @posts = @group.posts.order("sent_at DESC").limit(10)
     end
     respond_with @group
+    metric_logger.log_event @group.attributes, type: :show_group
   end
 
   def update

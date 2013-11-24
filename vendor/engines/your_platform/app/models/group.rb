@@ -238,6 +238,6 @@ class Group < ActiveRecord::Base
   #  def self.last
   #    self.all.last.becomes self
   #  end
-  
+
 end
 

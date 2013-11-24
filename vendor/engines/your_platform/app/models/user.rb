@@ -564,7 +564,7 @@ class User < ActiveRecord::Base
   end
 
 
-  # Debug Helpers
+  # Helpers
   # ==========================================================================================
 
   # The string returned by this method represents the user in the rails console.
@@ -574,6 +574,13 @@ class User < ActiveRecord::Base
   #
   def inspect
     "User: " + self.alias
+  end
+  
+  # This lists all attributes of the user. Since name and title are not stored in the
+  # database but are derivatives, they have to be merged here.
+  #
+  def attributes
+    super.merge({name: self.name, title: self.title})
   end
 
 end

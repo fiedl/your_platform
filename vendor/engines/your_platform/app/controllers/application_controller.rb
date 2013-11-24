@@ -7,6 +7,8 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_www_subdomain, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
+  before_filter :log_generic_metric_event
+  helper_method :metric_logger
   
   # This method returns the currently signed in user.
   #
@@ -72,6 +74,24 @@ class ApplicationController < ActionController::Base
   end
   def browser_language_if_supported_by_app
     ([extract_locale_from_accept_language_header] & I18n.available_locales).first
+  end
+  
+  # This logs the event using a metric storage.
+  # Here, we use fnordmetric. The metrics can be viewed via
+  #
+  #   http://localhost:4242
+  #
+  # when the deamon is started via
+  #
+  #   bundle exec foreman start fnordmetric
+  #
+  def log_generic_metric_event
+    type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
+    metric_logger.log_event( { id: params[:id] }, type: type)
+    metric_logger.log_event( { request_type: type }, type: :generic_request)
+  end
+  def metric_logger
+    @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
   end
 
 end

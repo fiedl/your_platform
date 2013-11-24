@@ -17,6 +17,7 @@ class PagesController < ApplicationController
       @page = @page.becomes(Page)  # rather than BlogPost etc.
     end
     respond_with @page
+    metric_logger.log_event @page.attributes, type: :show_page
   end
 
   def update

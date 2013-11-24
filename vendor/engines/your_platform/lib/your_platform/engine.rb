@@ -63,6 +63,9 @@ require 'will_paginate'
 # Gallery View
 require 'rubylight'
 
+# Metrics
+require 'fnordmetric'
+
 
 module YourPlatform
   class Engine < ::Rails::Engine

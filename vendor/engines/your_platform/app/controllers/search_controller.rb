@@ -6,7 +6,13 @@ class SearchController < ApplicationController
   def index
     query_string = params[ :query ]
     if not query_string.empty?
+      
+      # log search query for metrics analysis
+      #
+      metric_logger.log_event({query: query_string}, type: :search)
 
+      # browse users, pages and groups
+      #
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where( "first_name like ? or last_name like ?", q, q )
         .order( :last_name, :first_name )
@@ -14,6 +20,8 @@ class SearchController < ApplicationController
         .order( :title )
       @groups = Group.where( "name like ?", q )
 
+      # browse profile fields
+      #
       profile_fields = ProfileField.where("value like ?", q).collect do |profile_field|
         profile_field.parent || profile_field
       end.uniq
@@ -24,12 +32,15 @@ class SearchController < ApplicationController
           @groups << profile_field.profileable
         end
       end
-
+      
+      # eleminiate duplicate results
+      #
       @users.uniq!
       @pages.uniq!
       @groups.uniq!
 
       # AUTHORIZATION
+      #
       @users = filter_by_authorization(@users)
       @pages = filter_by_authorization(@pages)
       @groups = filter_by_authorization(@groups)

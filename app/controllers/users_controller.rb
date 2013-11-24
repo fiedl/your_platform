@@ -19,6 +19,7 @@ class UsersController < ApplicationController
       format.html # show.html.erb
                   #format.json { render json: @profile.sections }  # TODO
     end
+    metric_logger.log_event @user.attributes, type: :show_user
   end
 
   def new

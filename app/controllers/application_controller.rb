@@ -24,14 +24,14 @@ class ApplicationController
   end
 
   protected
-
+  
   def http_authenticate
     return true if ENV[ 'RAILS_ENV' ] == 'test'
     authenticate_or_request_with_http_basic do |username, password|
       username == "aki" && password == "deleted-string"
     end
   end
-
+  
   def find_layout
     
     # TODO: The layout should be saved in the user's preferences, i.e. interface settings.
