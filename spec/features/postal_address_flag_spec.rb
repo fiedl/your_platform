@@ -16,7 +16,7 @@ feature "Postal Address Flag" do
 
     login :admin
     visit user_path @user
-    
+
     within ".box.section.contact_information" do
 
       page.should have_no_selector('.wingolfspost .label.radio', visible: true)
@@ -25,12 +25,12 @@ feature "Postal Address Flag" do
       click_on I18n.t(:edit)
       first("input[type='radio']").click()
       wait_for_ajax
-      
+
       visit user_path @user
       page.should have_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
       page.should have_no_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
       @user.postal_address_field.should == @home_address
-      
+
       click_on I18n.t(:edit)
       find(".wingolfspost.profile_field_#{@study_address.id} input[type='radio']").click()
       wait_for_ajax
@@ -39,7 +39,7 @@ feature "Postal Address Flag" do
       page.should have_no_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
       page.should have_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
       @user.postal_address_field.should == @study_address
-      
+
     end
 
   end
