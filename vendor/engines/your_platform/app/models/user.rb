@@ -576,12 +576,5 @@ class User < ActiveRecord::Base
     "User: " + self.alias
   end
   
-  # This lists all attributes of the user. Since name and title are not stored in the
-  # database but are derivatives, they have to be merged here.
-  #
-  def attributes
-    super.merge({name: self.name, title: self.title})
-  end
-
 end
 
