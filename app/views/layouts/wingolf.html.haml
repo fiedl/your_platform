@@ -87,7 +87,7 @@
           %li
             %a(href="https://github.com/fiedl/wingolfsplattform") Github
           %li
-            %a= t(:imprint)
+            %a= link_to t(:imprint), Page.find_by_flag(:imprint)
           %li
             = language_switcher_html
         .clear
