@@ -11,7 +11,7 @@ class PagesController < ApplicationController
       end
 
       @blog_entries = @page.blog_entries.limit(10)
-      
+
       @title = @page.title
       @navable = @page
       @page = @page.becomes(Page)  # rather than BlogPost etc.
