@@ -43,10 +43,12 @@ class MetricLogger
   #   type :    the type of event that is recorded here
   #
   def log_event(data, options = {})
-    register_session unless options[:type].in? ["_set_name", "_set_picture"]
-    data.merge!({ _type: options[:type] })
-    data.merge!({ _session: session_id })
-    FNORD_METRIC.event(data)
+    unless Rails.env.test?
+      register_session unless options[:type].in? ["_set_name", "_set_picture"]
+      data.merge!({ _type: options[:type] })
+      data.merge!({ _session: session_id })
+      FNORD_METRIC.event(data)
+    end
   end
   
   # This is a shortcut for one-line logs, where no current_user is required.
@@ -68,11 +70,13 @@ class MetricLogger
   end
   
   def log_cpu_usage
-    cpu_usage = `top -bn1 | grep "Cpu(s)" | \
-           sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
-           awk '{print 100 - $1}'`.to_i # works only on linux, otherwise: nil
-    if cpu_usage
-      log_event({ percentage: cpu_usage }, type: :cpu_usage)
+    unless Rails.env.test?
+      cpu_usage = `top -bn1 | grep "Cpu(s)" | \
+             sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
+             awk '{print 100 - $1}'`.to_i # works only on linux, otherwise: nil
+      if cpu_usage
+        log_event({ percentage: cpu_usage }, type: :cpu_usage)
+      end
     end
   end
   
