@@ -8,9 +8,9 @@ module ProfileFieldTypes
 end
 
 describe ProfileFieldMixins::HasChildProfileFields do
-  
+
   before do
-    @profile_field = ProfileFieldTypes::TestProfileField.new  
+    @profile_field = ProfileFieldTypes::TestProfileField.new
   end
 
   subject { @profile_field }
@@ -24,7 +24,7 @@ describe ProfileFieldMixins::HasChildProfileFields do
     subject { @profile_field.field_a = @new_value }
     it "should set the field_a value" do
       subject
-      @profile_field.field_a.should == @new_value 
+      @profile_field.field_a.should == @new_value
     end
     it "should set the value of the associated child" do
       @profile_field.children.first.value.should_not == @new_value if @profile_field.children.first
@@ -37,7 +37,7 @@ describe ProfileFieldMixins::HasChildProfileFields do
       ProfileField.find(@profile_field.id).field_a.should == @new_value
     end
   end
-  
+
   describe "#field_a" do
     before { @new_value = "Foo Bar" }
     subject { @profile_field.field_a }
