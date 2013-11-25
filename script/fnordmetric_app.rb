@@ -88,10 +88,10 @@ else
 end
 
 # HTTP AUTHENTICATION
-if ::SECRETS[:fnordmetric_http_user]
+if ::SECRETS["fnordmetric_http_user"]
   middleware = [[ Rack::Auth::Basic, 'Restricted Area: Fnordmetric Web Interface',
     lambda do |username, password|
-      username == ::SECRETS[:fnordmetric_http_user] && password == ::SECRETS[:fnordmetric_http_password]
+      username == ::SECRETS["fnordmetric_http_user"] && password == ::SECRETS["fnordmetric_http_password"]
     end
     ]]
 else
