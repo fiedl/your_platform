@@ -31,7 +31,7 @@ class MetricLogger
   
   def session_id
     #@session_id
-    @current_user.id.to_s
+    @current_user.try(:id).try(:to_s)
   end
   
   # Log the event with the given information.
@@ -43,12 +43,10 @@ class MetricLogger
   #   type :    the type of event that is recorded here
   #
   def log_event(data, options = {})
-    unless Rails.env.test?
-      register_session unless options[:type].in? ["_set_name", "_set_picture"]
-      data.merge!({ _type: options[:type] })
-      data.merge!({ _session: session_id })
-      FNORD_METRIC.event(data)
-    end
+    register_session unless options[:type].in? ["_set_name", "_set_picture"]
+    data.merge!({ _type: options[:type] })
+    data.merge!({ _session: session_id })
+    FNORD_METRIC.event(data) unless Rails.env.test?
   end
   
   # This is a shortcut for one-line logs, where no current_user is required.
@@ -65,18 +63,20 @@ class MetricLogger
   #
   # We use the user's unique id as session id, since 
   def register_session
-    log_event({ name: current_user.title }, type: "_set_name")
-    log_event({ url: ApplicationController.helpers.user_avatar_url(current_user) }, type: "_set_picture")
+    if current_user
+      log_event({ name: current_user.title }, type: "_set_name")
+      log_event({ url: ApplicationController.helpers.user_avatar_url(current_user) }, type: "_set_picture")
+    end
   end
   
   def log_cpu_usage
-    unless Rails.env.test?
+    if RUBY_PLATFORM.to_s.include? "linux"
       cpu_usage = `top -bn1 | grep "Cpu(s)" | \
              sed "s/.*, *\([0-9.]*\)%* id.*/\1/" | \
-             awk '{print 100 - $1}'`.to_i # works only on linux, otherwise: nil
-      if cpu_usage
-        log_event({ percentage: cpu_usage }, type: :cpu_usage)
-      end
+             awk '{print 100 - $1}'`.to_i 
+    end
+    if cpu_usage
+      log_event({ percentage: cpu_usage }, type: :cpu_usage)
     end
   end
   
