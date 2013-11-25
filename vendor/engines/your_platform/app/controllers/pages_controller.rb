@@ -6,7 +6,14 @@ class PagesController < ApplicationController
   def show
     if @page
       if @page.redirect_to
-        redirect_to @page.redirect_to
+        target = @page.redirect_to
+        
+        # In order to avoid multiple redirects, we force https manually here
+        # in production.
+        #
+        target.merge!({protocol: "https://"}) if target.kind_of?(Hash) && Rails.env.production?
+        
+        redirect_to target
         return
       end
 
