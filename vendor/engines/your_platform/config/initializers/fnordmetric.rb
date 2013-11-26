@@ -10,10 +10,5 @@
 #   * https://github.com/paulasmuth/fnordmetric
 #
 unless Rails.env.test?
-  FnordMetric.options = {
-    :event_data_ttl => 1.year.seconds.to_i,
-    :session_data_ttl => 7.days.seconds.to_i
-  }
-  
   FNORD_METRIC = FnordMetric::API.new
 end
