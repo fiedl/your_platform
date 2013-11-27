@@ -184,3 +184,6 @@ gem 'gmaps4rails', '~> 2.0.1', git: 'git@github.com:fiedl/Google-Maps-for-Rails.
 
 # To customly set timeout time we need rack-timeout
 gem 'rack-timeout'
+
+# Metrics
+gem 'fnordmetric', '1.0.0'
