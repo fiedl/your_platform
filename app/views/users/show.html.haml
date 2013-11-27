@@ -7,7 +7,7 @@
   = render partial: 'workflow_triggers'
   %ul.attributes
     %li.name.attribute= render partial: 'user_name_attribute'
-    = profile_field_li @user.find_or_build_date_of_birth_profile_field, lock_label: true, no_remove: true
+    = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
     = profile_field_lis @user.profile.section(:general).fields, lock_label: true, no_remove: true
     = render partial: 'users/hidden_flag_switch', locals: { user: @user }
 

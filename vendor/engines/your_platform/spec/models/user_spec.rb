@@ -238,6 +238,26 @@ describe User do
       its(:new_record?) { should == false }
     end
   end
+  describe "#find_or_create_date_of_birth_profile_field" do
+    subject { @user.find_or_create_date_of_birth_profile_field }
+    describe "for no date of birth field existing" do
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:new_record?) { should == false }
+      its(:id) { should be_kind_of Integer }
+     end
+     describe "for a date of birth existing in the database" do
+       before do
+         @user.date_of_birth = "1900-01-01".to_date
+         @user.save
+         @user = User.find(@user.id)
+       end
+       it { should be_kind_of ProfileField }
+       its(:type) { should == "ProfileFieldTypes::Date" }
+       its('value.to_date') { should == "1900-01-01".to_date }
+       its(:new_record?) { should == false }
+     end
+  end
 
   describe "postal address: " do
     before do

@@ -127,6 +127,10 @@ class User < ActiveRecord::Base
     date_of_birth_profile_field.try(:save)
   end
   private :save_date_of_birth_profile_field
+  
+  def find_or_create_date_of_birth_profile_field
+    date_of_birth_profile_field || ( build_date_of_birth_profile_field.save && date_of_birth_profile_field)
+  end
 
   def localized_date_of_birth
     I18n.localize self.date_of_birth if self.date_of_birth
