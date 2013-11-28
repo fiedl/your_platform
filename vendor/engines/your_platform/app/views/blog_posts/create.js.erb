@@ -3,13 +3,22 @@ created_blog_post = $("<%= j(html_convert_h1_to_boxes(render partial: 'pages/pag
 
 <% # Add the new blog post below the tool button's section. %>
 blog_tools_section = $("div.blog_tools");
-created_blog_post.hide().insertAfter(blog_tools_section).slideDown();
 
-<% # Add all methods and triggers that are needed for the edit mode to the new elements. %>
-created_blog_post.apply_edit_mode();
+created_blog_post.hide().insertAfter(blog_tools_section).slideDown( function() {
 
-<% # Trigger the edit_mode in order to make the new entry be shown as text fields. %>
-<% # created_blog_post.find(".editable").trigger("edit"); %>
+  <% # Trigger all callbacks that are needed on page load, e.g. initialize edit mode elements. %>
+  <% # created_blog_post.trigger("page:load"); %>
 
-<% # Set the focus to the first field (except for the label => second) %>
-<% # created_blog_post.find("input[type=text]")[1].focus(); %>
+  <% # Add all methods and triggers that are needed for the edit mode to the new elements. %>
+  created_blog_post.apply_edit_mode();
+  
+  <% # Trigger the edit_mode in order to make the new entry be shown as text fields. %>
+  <% # created_blog_post.find(".editable").trigger("edit"); %>
+  created_blog_post.find(".edit_button").trigger("click");
+
+  <% # Set the focus to the first field (except for the label => second) %>
+  <% # created_blog_post.find("input[type=text]")[0].focus(); %>
+  
+} );
+
+
