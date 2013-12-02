@@ -1,6 +1,4 @@
 class UserAccountMailer < ActionMailer::Base
-  default from: "Wingolfsplattform <wingolfsplattform@erlanger-wingolf.de>"
-
   def welcome_email( user, password ) 
     @user = user
     @password = password

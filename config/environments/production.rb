@@ -93,6 +93,9 @@ Wingolfsplattform::Application.configure do
     # only if certificate malfunctions:
     # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
   }
+  config.action_mailer.default_options = {
+    from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
+  }
   config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
 
 end
