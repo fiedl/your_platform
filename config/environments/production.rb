@@ -93,9 +93,14 @@ Wingolfsplattform::Application.configure do
     # only if certificate malfunctions:
     # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
   }
-  config.action_mailer.default_options = {
-    from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
-  }
+  
+  # Rails-4 syntax:  (see http://stackoverflow.com/a/12609856/2066546)
+  #   config.action_mailer.default_options = {    
+  #     from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
+  #   }
+  # Rails-3 syntax:
+  ActionMailer::Base.default from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
+  
   config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
 
 end
