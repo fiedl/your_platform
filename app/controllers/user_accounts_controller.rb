@@ -31,6 +31,9 @@ class UserAccountsController < ApplicationController
 
     respond_to do |format|
       if @user_account.save
+
+        @user.send_welcome_email
+        
         format.html { redirect_to :back, notice: t(:user_account_created) }
         format.json { render json: @user_account, status: :created, location: @user_account }
       else
