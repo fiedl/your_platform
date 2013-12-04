@@ -16,9 +16,9 @@ feature "UserForgotPassword" do
 
   describe "Profile Page" do
 
-    it "should contain the send-new-password link" do
+    it "should contain the send-new-password button" do
       visit user_path( @user )
-      page.should have_link I18n.t( :send_new_password )
+      page.should have_button I18n.t( :send_new_password )
     end
   end
 
@@ -26,7 +26,7 @@ feature "UserForgotPassword" do
 
     def send_new_password
       visit user_path( @user )
-      click_link I18n.t( :send_new_password )
+      click_on I18n.t( :send_new_password )
     end
 
     before do
