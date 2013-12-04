@@ -65,6 +65,7 @@ require 'rubylight'
 
 # Metrics
 require 'fnordmetric'
+require 'rack-mini-profiler'
 
 module YourPlatform
   class Engine < ::Rails::Engine

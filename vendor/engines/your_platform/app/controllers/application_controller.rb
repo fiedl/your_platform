@@ -9,6 +9,7 @@ class ApplicationController < ActionController::Base
   helper_method :current_navable, :current_navable=, :point_navigation_to
   before_filter :log_generic_metric_event
   helper_method :metric_logger
+  before_filter :authorize_miniprofiler
   
   # This method returns the currently signed in user.
   #
@@ -66,6 +67,7 @@ class ApplicationController < ActionController::Base
   end
   
   private
+  
   def extract_locale_from_accept_language_header
     # see: http://guides.rubyonrails.org/i18n.html
     if request.env['HTTP_ACCEPT_LANGUAGE'] and not Rails.env.test?
@@ -93,6 +95,15 @@ class ApplicationController < ActionController::Base
   end
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
+  end
+  
+  # MiniProfiler is a tool that shows the page load time in the top left corner of
+  # the browser. But, in production, this feature should only be visible to developers.
+  #
+  def authorize_miniprofiler
+    if current_user && current_user.developer?
+      Rack::MiniProfiler.authorize_request
+    end
   end
 
 end

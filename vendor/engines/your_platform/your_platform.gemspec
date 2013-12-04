@@ -99,6 +99,7 @@ Gem::Specification.new do |s|
   
   # Metrics
   s.add_dependency 'fnordmetric'            # MIT License
+  s.add_dependency 'rack-mini-profiler'     # MIT License
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
