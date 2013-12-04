@@ -513,6 +513,26 @@ class User < ActiveRecord::Base
     group.guests.include? self
   end
 
+  # Developer Status
+  # ==========================================================================================
+
+  # This method returns whether the user is a developer. This is needed, for example, 
+  # to determine if some features are presented to the current_user. 
+  # 
+  def developer?
+    self.developer
+  end
+  def developer
+    self.member_of? Group.developers
+  end
+  def developer=( mark_as_developer )
+    if mark_as_developer
+      Group.developers.assign_user self
+    else
+      Group.developers.unassign_user self
+    end
+  end  
+  
   # Hidden
   # ==========================================================================================
   #

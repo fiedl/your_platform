@@ -921,6 +921,44 @@ describe User do
   end
 
 
+  # Developers
+  # ==========================================================================================
+
+  describe "#developer?" do
+    subject { @user.developer? }
+    describe "for no developers group existing" do
+      it { should == false }
+    end
+    describe "for the user being no member of the developers group" do
+      before { Group.create_developers_group }
+      it { should == false }
+    end
+    describe "for the user being member of the developers group" do
+      before { Group.create_developers_group.assign_user @user }
+      it { should == true }
+    end
+  end
+  describe "#developer = ", :focus do
+    describe "true" do
+      subject { @user.developer = true }
+      it "should assign the user to the developers group" do
+        @user.should_not be_member_of Group.developers
+        subject
+        @user.should be_member_of Group.developers
+      end
+    end
+    describe "false" do
+      before { @user.developer = true }
+      subject { @user.developer = false }
+      it "should un-assign the user from the developers group" do
+        @user.should be_member_of Group.developers
+        subject
+        @user.should_not be_member_of Group.developers
+      end
+    end
+  end
+
+
   # Hidden Users
   # ==========================================================================================
 

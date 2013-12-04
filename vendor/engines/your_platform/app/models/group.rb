@@ -20,6 +20,7 @@ class Group < ActiveRecord::Base
   include GroupMixins::Roles
   include GroupMixins::Guests
   include GroupMixins::HiddenUsers
+  include GroupMixins::Developers
 
   include GroupMixins::Import
 
