@@ -187,3 +187,5 @@ gem 'rack-timeout'
 
 # Metrics
 gem 'fnordmetric', '1.0.0'
+gem 'rack-mini-profiler', git: 'git@github.com:fiedl/rack-mini-profiler.git'
+
