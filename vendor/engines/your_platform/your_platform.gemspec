@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.summary     = "Administrative and social network platform for closed user groups."
   s.description = s.summary
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   # Dependencies 
