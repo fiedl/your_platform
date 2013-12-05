@@ -91,6 +91,11 @@ class Ability
         can :manage, Page do |page|
           page.admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user)
         end
+        
+        # DEVELOPERS
+        if user.developer?
+          can :use, Rack::MiniProfiler
+        end
 
       end
 

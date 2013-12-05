@@ -100,10 +100,10 @@ class ApplicationController < ActionController::Base
   # MiniProfiler is a tool that shows the page load time in the top left corner of
   # the browser. But, in production, this feature should only be visible to developers.
   #
+  # If the current_user can? :read the :mini_profiler, is defined in the Ability class.
+  #
   def authorize_miniprofiler
-    if current_user && current_user.developer?
-      Rack::MiniProfiler.authorize_request
-    end
+    Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
   end
 
 end
