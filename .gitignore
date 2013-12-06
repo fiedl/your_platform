@@ -85,3 +85,6 @@ Thumbs.db
 .project
 # vim swap files
 *.swp 
+
+
+brakeman.html

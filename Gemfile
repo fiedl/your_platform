@@ -99,6 +99,11 @@ group :development do
   gem 'meta_request'
 end
 
+# Security Tools
+group :development do
+  gem 'brakeman', '~> 2.2.0'
+end
+
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'guard', '1.0.1'
