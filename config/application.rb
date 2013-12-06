@@ -84,10 +84,10 @@ module Wingolfsplattform
     # in your app. As such, your models will need to explicitly whitelist or blacklist accessible
     # parameters by using an attr_accessible or attr_protected declaration.
     # 
-    # This is deactivated, now, since we are using strong_parameters.
+    # This is to be deactivated, when we are using strong_parameters.
     # https://github.com/rails/strong_parameters
     #
-    # config.active_record.whitelist_attributes = true
+    config.active_record.whitelist_attributes = true
 
     # Enable the asset pipeline
     config.assets.enabled = true

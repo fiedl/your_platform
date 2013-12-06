@@ -6,6 +6,17 @@
 # 
 class Group < ActiveRecord::Base
   
+  attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                    :token, # (optional) a short-name, abbreviation of the group's name, in 
+                            # a global context; example: 'A'
+                    :internal_token, # (optional) an internal abbreviation, i.e. used by the 
+                                     # members of the group; example: 'AC'
+                    :extensive_name, # (optional) a long version of the group's name;
+                                     # example: 'The Corporation of A'
+                    :direct_member_titles_string # Used for inline-editing: The comma-separated
+                                                 # titles of the child users of the group.
+                    )
+  
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
   is_structureable( ancestor_class_names: %w(Group Page), 
