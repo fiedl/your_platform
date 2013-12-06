@@ -66,6 +66,7 @@ feature 'User page', js: false do
           page.should have_selector('a.add_button', visible: true)
 
           click_on I18n.t(:add)
+          sleep 5
           page.should have_selector('.profile_field')
           within first '.profile_field' do
             #

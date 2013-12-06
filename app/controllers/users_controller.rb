@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   def index
     begin
-      redirect_to Group.everyone
+      redirect_to group_path(Group.everyone)
     rescue
       raise "No basic groups are present, yet. Try `rake bootstrap:all`."
     end
