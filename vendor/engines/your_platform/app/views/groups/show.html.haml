@@ -19,18 +19,20 @@
 -# listing members
 %h1
   = t :members
-  (#{h @group.descendant_users.count})
+  %span.members_count
+    (#{h @group.descendant_users.count})
 %div
   - if @group
     - if can? :manage, @group
-      %span.show_only_in_edit_mode
-        = link_to t( :add_member ), new_user_path( :group_id => @group.id ), class: "add_group_member"
+      %span.show_only_in_edit_mode.add_membership
+        = render partial: 'user_group_memberships/new'
+
     %span#group_members
 
       / child users
-      - if @child_users.count > 0
-        = will_paginate @child_users
-        %ul
+      = will_paginate @child_users if @child_users
+      %ul.child_users
+        - if @child_users.count > 0
           - for user in @child_users do
             %li
               = link_to user.title, user
@@ -39,7 +41,7 @@
                   = workflow_execution_links_for( group: @group, user: user )
 
         / structured view of sub groups
-      - elsif @group.child_groups.count > 0
+      - if @child_users.count == 0 && @group.child_groups.count > 0
         - for child_group in @group.child_groups do
           -if can? :read, child_group
             %h2

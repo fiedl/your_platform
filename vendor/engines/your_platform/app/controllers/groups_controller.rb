@@ -22,7 +22,9 @@ class GroupsController < ApplicationController
 
       @map_address_fields = map_address_fields
 
-      @posts = @group.posts.order("sent_at DESC").limit(10)
+      # @posts = @group.posts.order("sent_at DESC").limit(10)
+      
+      @new_user_group_membership = @group.memberships.new
     end
     respond_with @group
     metric_logger.log_event @group.attributes, type: :show_group

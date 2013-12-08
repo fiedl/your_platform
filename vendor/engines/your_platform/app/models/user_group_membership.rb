@@ -240,6 +240,13 @@ class UserGroupMembership < DagLink
   def user
     self.descendant
   end
+  
+  def user_title
+    user.try(:title)
+  end
+  def user_title=(new_user_title)
+    self.user = User.find_by_title(new_user_title)
+  end
 
   def group
     self.ancestor

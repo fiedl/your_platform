@@ -1,0 +1,5 @@
+%ul
+  %li
+    = form_for @new_user_group_membership, url: { action: 'create'} do |f|
+      = f.text_field :user_title, 'data-autocomplete-url' => autocomplete_title_users_path, :class => 'user-select-input new-membership'
+      = f.submit I18n.t(:add), :class => 'btn btn-small'

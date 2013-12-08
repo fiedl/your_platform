@@ -55,7 +55,7 @@ class UsersController < ApplicationController
     query ||= params[:term] if params[ :term ]
     query ||= params[ :query ] if params[ :query ]
     @users = User.all.select { |user| user.title.downcase.include? query.downcase }
-    #render json: json_for_autocomplete(@users, :title)
+    # render json: json_for_autocomplete(@users, :title)
     render json: @users.to_json( :methods => [ :title ] )
   end
 
