@@ -6,17 +6,17 @@
     = @group.name
 %div
 
-/ current posts
-- if @posts && @posts.count > 0
-  = render partial: 'posts/posts', locals: { posts: @posts }
+-# / current posts
+-# - if @posts && @posts.count > 0
+-#   = render partial: 'posts/posts', locals: { posts: @posts }
 
-/ umcoming events
-- if @group.events.upcoming && ( @group.events.upcoming.count > 0 || can?(:manage, @group) )
-  %h1.section.upcoming_events Kommende Veranstaltungen
-  %div
-    = upcoming_events_list_for_group( @group )
+-# / umcoming events
+-# - if @group.events.upcoming && ( @group.events.upcoming.count > 0 || can?(:manage, @group) )
+-#   %h1.section.upcoming_events Kommende Veranstaltungen
+-#   %div
+-#     = upcoming_events_list_for_group( @group )
 
-/ listing members
+-# listing members
 %h1
   = t :members
   (#{h @group.descendant_users.count})

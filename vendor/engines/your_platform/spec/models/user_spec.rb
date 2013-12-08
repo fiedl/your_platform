@@ -938,7 +938,7 @@ describe User do
       it { should == true }
     end
   end
-  describe "#developer = ", :focus do
+  describe "#developer = " do
     describe "true" do
       subject { @user.developer = true }
       it "should assign the user to the developers group" do
