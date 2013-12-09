@@ -28,6 +28,10 @@ feature "Groups Page" do
       find('.user-select-input').value.should == ""
     end
     
+    # pressing enter in the blank text field should close the edit mode.
+    fill_in :user_group_membership_user_title, with: "\n" 
+    page.should have_no_selector '#user_group_membership_user_title', visible: true
+    
   end
   
   def fill_autocomplete(field, options = {})
@@ -43,5 +47,9 @@ feature "Groups Page" do
      page.should have_selector('ul.ui-autocomplete li.ui-menu-item a')
      page.execute_script %Q{ $('#{selector}').trigger('mouseenter').click() }
    end
+   
+   # def press_enter(field)
+   #   page.execute_script %Q{ var e = jQuery.Event("keydown"); e.keyCode = 13; $('##{field}').trigger(e); }
+   # end
   
 end

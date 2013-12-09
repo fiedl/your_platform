@@ -5,8 +5,26 @@
 # app/views/user_group_memberships/create.js.erb
 #
 ready = ->
-  $(document).on('submit', 'form.new_user_group_membership', ->
-    $('.add-user-button').button('loading')
+  $(document).on('submit', 'form.new_user_group_membership', (event)->
+    
+    # close the box if no text is entered
+    if $('#user_group_membership_user_title').val() == ""
+      event.preventDefault()
+      $('.box.section.members').trigger('save')
+
+    # if text is entered, send the form and switch to 'loading'.
+    else
+      $('.add-user-button').button('loading')
+      
+  )
+  
+  $(document).on('edit', '.box.section.members', (event) ->
+    $('input#user_group_membership_user_title').focus()
+  )
+  
+  $(document).on('keydown', 'input#user_group_membership_user_title', (event) ->
+    if event.keyCode == 27  # escape
+      $('.box.section.members').trigger('cancel')
   )
   
 $(document).ready(ready)
