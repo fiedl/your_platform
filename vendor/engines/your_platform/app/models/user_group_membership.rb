@@ -9,6 +9,7 @@
 class UserGroupMembership < DagLink
 
   attr_accessible :created_at, :deleted_at, :archived_at, :created_at_date_formatted
+  before_validation :ensure_correct_ancestor_and_descendant_type
 
 
   # General Properties
@@ -32,10 +33,13 @@ class UserGroupMembership < DagLink
     if UserGroupMembership.find_by( params ).present?
       raise 'Membership already exists: id = ' + UserGroupMembership.find_by( params ).id.to_s
     else
-      raise "Could not create UserGroupMembership without user." unless params[ :user ]
-      raise "Could not create UserGroupMembership without group." unless params[ :group ]
-      user = params[ :user ]
+      raise "Could not create UserGroupMembership without user." unless params[:user] || params[:user_id] || params[:user_title]
+      raise "Could not create UserGroupMembership without group." unless params[ :group ] || params[:group_id]
+      user = params[:user]
+      user ||= User.find params[:user_id] if params[:user_id]
+      user ||= User.find_by_title params[:user_title] if params[:user_title]
       group = params[ :group ]
+      group ||= Group.find params[:group_id] if params[:group_id]
       user.parent_groups << group
       return UserGroupMembership.find_by( user: user, group: group )
     end
@@ -58,7 +62,10 @@ class UserGroupMembership < DagLink
   #
   def self.find_all_by( params )
     user = params[ :user ]
+    user ||= User.find params[:user_id] if params[:user_id]
+    user ||= User.find_by_title params[:user_title] if params[:user_title]
     group = params[ :group ]
+    group ||= Group.find params[:group_id] if params[:group_id]
     links = UserGroupMembership
       .where( :descendant_type => "User" )
       .where( :ancestor_type => "Group" )
@@ -241,6 +248,15 @@ class UserGroupMembership < DagLink
     self.descendant
   end
   
+  def user=(new_user)
+    self.descendant_id = new_user.id
+    self.descendant_type = 'User'
+  end
+  
+  def user_id
+    self.descendant_id
+  end
+    
   def user_title
     user.try(:title)
   end
@@ -251,6 +267,16 @@ class UserGroupMembership < DagLink
   def group
     self.ancestor
   end
+  
+  def group_id
+    self.ancestor_id
+  end
+  
+  def ensure_correct_ancestor_and_descendant_type
+    self.ancestor_type = 'Group'
+    self.descendant_type = 'User'
+  end
+  private :ensure_correct_ancestor_and_descendant_type
 
   
   # Associated Corporation

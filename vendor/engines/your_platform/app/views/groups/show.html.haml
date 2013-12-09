@@ -17,7 +17,7 @@
 -#     = upcoming_events_list_for_group( @group )
 
 -# listing members
-%h1
+%h1.section.members
   = t :members
   %span.members_count
     (#{h @group.descendant_users.count})
@@ -34,11 +34,7 @@
       %ul.child_users
         - if @child_users.count > 0
           - for user in @child_users do
-            %li
-              = link_to user.title, user
-              - if can? :manage, user
-                %span.show_only_in_edit_mode
-                  = workflow_execution_links_for( group: @group, user: user )
+            = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
 
         / structured view of sub groups
       - if @child_users.count == 0 && @group.child_groups.count > 0

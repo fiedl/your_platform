@@ -4,6 +4,11 @@ class UserGroupMembershipsController < ApplicationController
   authorize_resource
 
   respond_to :json
+  
+  def create
+    @user_id = User.find_by_title(params[:user_group_membership][:user_title]).id
+    @user_group_membership = UserGroupMembership.create(params[:user_group_membership].merge({user_id: @user_id}))
+  end
 
   def show
     # update  # 2013-02-03 SF: This seems wrong, does it not?

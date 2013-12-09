@@ -60,7 +60,8 @@ ready = ->
           else
             @value = ui.item.value
 
-      event.preventDefault()  if event.keyCode is $.ui.keyCode.TAB and $(this).data("autocomplete").menu.active
+      if event and (event.keyCode is $.ui.keyCode.TAB) and $(this).data("autocomplete").menu.active
+        event.preventDefault()  
   )
 
   # issue fix:

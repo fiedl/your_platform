@@ -51,12 +51,13 @@ class UsersController < ApplicationController
   end
 
   def autocomplete_title
-    query = ""
-    query ||= params[:term] if params[ :term ]
+    query = params[:term] if params[ :term ]
     query ||= params[ :query ] if params[ :query ]
-    @users = User.all.select { |user| user.title.downcase.include? query.downcase }
+    query ||= ""
+    @users = User.all.select { |user| user.title && user.title.downcase.include?(query.downcase) }
     # render json: json_for_autocomplete(@users, :title)
-    render json: @users.to_json( :methods => [ :title ] )
+    # render json: @users.to_json( :methods => [ :title ] )
+    render json: @users.map(&:title)
   end
 
   def forgot_password

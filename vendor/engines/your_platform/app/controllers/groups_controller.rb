@@ -24,7 +24,7 @@ class GroupsController < ApplicationController
 
       # @posts = @group.posts.order("sent_at DESC").limit(10)
       
-      @new_user_group_membership = @group.memberships.new
+      @new_user_group_membership = @group.build_membership
     end
     respond_with @group
     metric_logger.log_event @group.attributes, type: :show_group

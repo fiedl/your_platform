@@ -9,6 +9,7 @@ describe UserGroupMembership do
     @other_group = Group.create( name: "Group 2" )
     @group.parent_groups << @super_group
     @other_group.parent_groups << @super_group
+    @other_user = create(:user)
     @user = User.create( first_name: "John", last_name: "Doe", :alias => "j.doe" )
   end
 
@@ -47,6 +48,10 @@ describe UserGroupMembership do
     UserGroupMembership.create( user: @user, group: @other_group )
   end
   
+  def create_another_membership
+    UserGroupMembership.create( user: @other_user, group: @group )
+  end
+  
   def find_other_membership
     UserGroupMembership.find_by( user: @user, group: @other_group )
   end
@@ -58,6 +63,7 @@ describe UserGroupMembership do
   def create_memberships
     create_membership
     create_other_membership
+    create_another_membership
     # the indirect membership is created implicitly, becuase @group and @super_group are already connected.
   end
 
@@ -72,6 +78,10 @@ describe UserGroupMembership do
     it "should raise an error if argument is missing" do
       expect { UserGroupMembership.create( user: @user ) }.should raise_error RuntimeError
       expect { UserGroupMembership.create( group: @group ) }.should raise_error RuntimeError
+    end
+    it "should be able to identify a user by its 'user_title'" do
+      UserGroupMembership.create( user_title: @user.title, group_id: @group.id )
+      @user.parents.should include @group
     end
   end
 
@@ -95,6 +105,11 @@ describe UserGroupMembership do
           .should include( find_indirect_membership_with_deleted, find_other_membership_with_deleted )
         UserGroupMembership.find_all_by( user: @user )
           .should_not include( find_membership_with_deleted )
+      end
+      it "should be able to identify users by 'user_title'" do
+        UserGroupMembership.find_all_by( user_title: @user.title ).each do |membership|
+          membership.user_id.should == @user.id
+        end
       end
     end
     describe ".find_all_by.with_deleted" do
@@ -475,15 +490,42 @@ describe UserGroupMembership do
   # ====================================================================================================
 
   describe "Access Method to Assiciation" do
-    before { create_membership }
-    subject { find_membership }
+    before { @membership = create_membership }
+    subject { @membership }
 
     describe "#user" do
-      its( :user ) { should == @user }
+      its(:user) { should == @user }
     end
-
+    describe "#user=" do
+      subject { @membership.user = @other_user }
+      it "should assign a user to the membership" do
+        @membership.user.should == @user
+        subject
+        @membership.user.should == @other_user
+      end
+    end
+    describe "#user_id" do
+      subject { @membership.user_id }
+      it { should == @user.id }
+    end
+    describe "#user_title" do
+      subject { @membership.user_title }
+      it { should == @user.title }
+    end
+    describe "#user_title=" do
+      subject { @membership.user_title = @other_user.title }
+      it "should assign the user matching the title to the membership" do
+        @membership.user.should == @user
+        subject
+        @membership.user.should == @other_user
+      end
+    end
     describe "#group" do
-      its( :group ) { should == @group }
+      its(:group) { should == @group }
+    end
+    describe "#group_id" do
+      subject { @membership.group_id }
+      it { should == @group.id }
     end
   end
 

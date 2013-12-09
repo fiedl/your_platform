@@ -1,0 +1,11 @@
+text_field = $('.user-select-input.new-membership');
+button = $('.add-user-button');
+
+text_field.val('');
+button.button('reset');
+text_field.focus();
+
+$('.members_count').text("(<%=j @user_group_membership.group.descendant_users.count.to_s %>)");
+
+new_list_item = $("<%=j render partial: 'user_group_memberships/list_item', locals: {user_group_membership: @user_group_membership} %>");
+new_list_item.prependTo('ul.child_users').hide().show('scale', {}, 900);

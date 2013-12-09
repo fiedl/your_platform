@@ -180,6 +180,14 @@ class Group < ActiveRecord::Base
   def memberships
     UserGroupMembership.find_all_by_group self 
   end
+  
+  def build_membership
+    self.links_as_parent.build(descendant_type: 'User').becomes(UserGroupMembership)
+  end
+  
+  def direct_memberships
+    UserGroupMembership.find_all_by_group(self).where(direct: true)
+  end
 
   # This returns the UserGroupMembership object that represents the membership of the 
   # given user in this group.
