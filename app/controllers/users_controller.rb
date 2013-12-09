@@ -54,7 +54,9 @@ class UsersController < ApplicationController
     query = params[:term] if params[ :term ]
     query ||= params[ :query ] if params[ :query ]
     query ||= ""
-    @users = User.all.select { |user| user.title && user.title.downcase.include?(query.downcase) }
+    
+    @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", "%#{query}%")
+
     # render json: json_for_autocomplete(@users, :title)
     # render json: @users.to_json( :methods => [ :title ] )
     render json: @users.map(&:title)
