@@ -3,6 +3,7 @@ button = $('.add-user-button');
 
 text_field.val('');
 button.button('reset');
+text_field.attr('disabled', false);
 text_field.focus();
 
 $('.members_count').text("(<%=j @user_group_membership.group.descendant_users.count.to_s %>)");

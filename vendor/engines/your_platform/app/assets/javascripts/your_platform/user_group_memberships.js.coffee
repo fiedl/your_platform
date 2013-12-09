@@ -15,6 +15,7 @@ ready = ->
     # if text is entered, send the form and switch to 'loading'.
     else
       $('.add-user-button').button('loading')
+      $('input#user_group_membership_user_title').attr('disabled', 'disabled')
       
   )
   
