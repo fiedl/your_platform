@@ -1,16 +1,21 @@
-
+#
 # In this application, all user group memberships, i.e. memberships of a certain
-# user in a certail group, are stored implicitly in the dag_links table in order
+# user in a certain group, are stored implicitly in the dag_links table in order
 # to minimize the number of database queries that are necessary to find out
 # whether a user is member in a certain group through an indirect membership.
 #
 # This class allows abstract access to the UserGroupMemberships themselves,
 # and to their properties like since when the membership exists.
+#
 class UserGroupMembership < DagLink
 
   attr_accessible :created_at, :deleted_at, :archived_at, :created_at_date_formatted
   before_validation :ensure_correct_ancestor_and_descendant_type
+  
+  # Validity Range
+  # ====================================================================================================
 
+  include UserGroupMembershipMixins::ValidityRange
 
   # General Properties
   # ====================================================================================================
@@ -109,136 +114,136 @@ class UserGroupMembership < DagLink
 #  end
 
 
-  # Temporal Scope Methods
-  # ====================================================================================================
-
-  # Return the same membership as it was/is/will be at a certain point in time.
-  # This can be used, for example to get one or more memberships at a certain point in time.
-  # This is a scope method and can be chained to other ActiveRecord::Relation objects.
-  #
-  #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago )
-  #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago ).count
-  #    UserGroupMembership.find_by( user: u, group: g ).at_time( Time.current + 30.minutes ).present?
-  #
-  def at_time( time )
-    memberships = UserGroupMembership
-      .find_all_by( user: self.user, group: self.group )
-      .with_deleted
-      .where( "created_at < ?", time ).where( "deleted_at IS NULL OR deleted_at > ?", time )
-    return nil if memberships.count == 0
-    return memberships.first if memberships.count == 1
-    return memberships
-  end
-
-
-  # Save and Destroy Methods
-  # ====================================================================================================
-
-  # Save the current membership and auto-save also the direct memberships
-  # associated with the current (maybe indirect) membership.
-  #
-  def save(*args)
-    unless direct?
-      first_created_direct_membership.save if first_created_direct_membership
-      last_deleted_direct_membership.save if last_deleted_direct_membership
-    end
-    super(*args)
-  end
-
-  # Destroy this membership, but reload the dataset from the database in order to get access
-  # to the datetime of deletion.
+  # # Temporal Scope Methods
+  # # ====================================================================================================
   # 
-  def destroy
-    if self.destroyable?
-      super
-    else
-      destroy_direct_memberships
-    end
-#    UserGroupMembership.with_deleted.find self.id
-  end
-
-  def archive
-    destroy  # using acts_as_paranoid
-  end
-
-  # This is a helper to destroy all direct memberships of this membership.
-  # This is called in #destroy.
-  #
-  def destroy_direct_memberships
-    for direct_membership in self.direct_memberships
-      direct_membership.destroy
-    end
-  end
-
-  # This really deletes a membership from the database. 
-  # Since this won't call any callbacks, the links depending on this one are not updated,
-  # meaning for reasons of database consistency, this is not to be run on 
-  # links where deleted_at == nil. 
-  # If you really delete a link, you have to use these two methods:
+  # # Return the same membership as it was/is/will be at a certain point in time.
+  # # This can be used, for example to get one or more memberships at a certain point in time.
+  # # This is a scope method and can be chained to other ActiveRecord::Relation objects.
+  # #
+  # #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago )
+  # #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago ).count
+  # #    UserGroupMembership.find_by( user: u, group: g ).at_time( Time.current + 30.minutes ).present?
+  # #
+  # def at_time( time )
+  #   memberships = UserGroupMembership
+  #     .find_all_by( user: self.user, group: self.group )
+  #     .with_deleted
+  #     .where( "created_at < ?", time ).where( "deleted_at IS NULL OR deleted_at > ?", time )
+  #   return nil if memberships.count == 0
+  #   return memberships.first if memberships.count == 1
+  #   return memberships
+  # end
   # 
-  #   link.destroy  # now it has a :deleted_at and all dependent links are updated
-  #   link.delete!
-  #
-  def delete!
-    if self.deleted_at
-      DagLink.delete_all!( id: self.id ) 
-    else
-      raise 'for reasons of database consistency, you have to call destroy() first and then delete!().'
-    end
-  end
-
-  # Status Instance Methods
-  # ====================================================================================================   
-
-  def deleted?
-    return true if not UserGroupMembership.find_by( user: self.user, group: self.group )
-  end
-
-
-  # Timestamps Methods: Beginning and end of a membership
-  # ====================================================================================================
-
-  def created_at
-    return read_attribute( :created_at ) if direct?
-    first_created_direct_membership.created_at if first_created_direct_membership
-  end
-  def created_at=( created_at )
-    return super( created_at ) if direct?
-    first_created_direct_membership.created_at = created_at if first_created_direct_membership
-  end
-
-  def deleted_at
-    return read_attribute( :deleted_at ) if direct?
-    return nil if direct_memberships_now.count > 0 # there are still un-deleted direct memberships
-    last_deleted_direct_membership.deleted_at if last_deleted_direct_membership
-  end
-  def deleted_at=( deleted_at )
-    return super( deleted_at ) if direct?
-    last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
-  end
-
-  def archived_at
-    deleted_at
-  end
-  def archived_at=( archived_at )
-    deleted_at = archived_at
-  end
-
-  # This method is used in the views, since it is more convenient just to edit the date
-  # rather then date and time when specifying the date of joining a group.
-  #
-  def created_at_date
-    self.created_at.to_date
-  end
-  def created_at_date=( created_at_date )
-    self.created_at = created_at_date.to_datetime
-  end
-  def created_at_date_formatted
-    I18n.localize self.created_at_date
-  end
-  def created_at_date_formatted=( created_at_date_formatted )
-    self.created_at_date = created_at_date_formatted
-  end
+  # 
+  # # Save and Destroy Methods
+  # # ====================================================================================================
+  # 
+  # # Save the current membership and auto-save also the direct memberships
+  # # associated with the current (maybe indirect) membership.
+  # #
+  # def save(*args)
+  #   unless direct?
+  #     first_created_direct_membership.save if first_created_direct_membership
+  #     last_deleted_direct_membership.save if last_deleted_direct_membership
+  #   end
+  #   super(*args)
+  # end
+  # 
+  # # Destroy this membership, but reload the dataset from the database in order to get access
+  # # to the datetime of deletion.
+  # # 
+  # def destroy
+  #   if self.destroyable?
+  #     super
+  #   else
+  #     destroy_direct_memberships
+  #   end
+# #    UserGroupMembership.with_deleted.find self.id
+  # end
+  # 
+  # def archive
+  #   destroy  # using acts_as_paranoid
+  # end
+  # 
+  # # This is a helper to destroy all direct memberships of this membership.
+  # # This is called in #destroy.
+  # #
+  # def destroy_direct_memberships
+  #   for direct_membership in self.direct_memberships
+  #     direct_membership.destroy
+  #   end
+  # end
+  # 
+  # # This really deletes a membership from the database. 
+  # # Since this won't call any callbacks, the links depending on this one are not updated,
+  # # meaning for reasons of database consistency, this is not to be run on 
+  # # links where deleted_at == nil. 
+  # # If you really delete a link, you have to use these two methods:
+  # # 
+  # #   link.destroy  # now it has a :deleted_at and all dependent links are updated
+  # #   link.delete!
+  # #
+  # def delete!
+  #   if self.deleted_at
+  #     DagLink.delete_all!( id: self.id ) 
+  #   else
+  #     raise 'for reasons of database consistency, you have to call destroy() first and then delete!().'
+  #   end
+  # end
+  # 
+  # # Status Instance Methods
+  # # ====================================================================================================   
+  # 
+  # def deleted?
+  #   return true if not UserGroupMembership.find_by( user: self.user, group: self.group )
+  # end
+  # 
+  # 
+  # # Timestamps Methods: Beginning and end of a membership
+  # # ====================================================================================================
+  # 
+  # def created_at
+  #   return read_attribute( :created_at ) if direct?
+  #   first_created_direct_membership.created_at if first_created_direct_membership
+  # end
+  # def created_at=( created_at )
+  #   return super( created_at ) if direct?
+  #   first_created_direct_membership.created_at = created_at if first_created_direct_membership
+  # end
+  # 
+  # def deleted_at
+  #   return read_attribute( :deleted_at ) if direct?
+  #   return nil if direct_memberships_now.count > 0 # there are still un-deleted direct memberships
+  #   last_deleted_direct_membership.deleted_at if last_deleted_direct_membership
+  # end
+  # def deleted_at=( deleted_at )
+  #   return super( deleted_at ) if direct?
+  #   last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
+  # end
+  # 
+  # def archived_at
+  #   deleted_at
+  # end
+  # def archived_at=( archived_at )
+  #   deleted_at = archived_at
+  # end
+  # 
+  # # This method is used in the views, since it is more convenient just to edit the date
+  # # rather then date and time when specifying the date of joining a group.
+  # #
+  # def created_at_date
+  #   self.created_at.to_date
+  # end
+  # def created_at_date=( created_at_date )
+  #   self.created_at = created_at_date.to_datetime
+  # end
+  # def created_at_date_formatted
+  #   I18n.localize self.created_at_date
+  # end
+  # def created_at_date_formatted=( created_at_date_formatted )
+  #   self.created_at_date = created_at_date_formatted
+  # end
 
 
   # Access Methods to Associated User and Group
