@@ -6,17 +6,25 @@ class PagesController < ApplicationController
   def show
     if @page
       if @page.redirect_to
-        redirect_to @page.redirect_to
+        target = @page.redirect_to
+        
+        # In order to avoid multiple redirects, we force https manually here
+        # in production.
+        #
+        target.merge!({protocol: "https://"}) if target.kind_of?(Hash) && Rails.env.production?
+        
+        redirect_to target
         return
       end
 
       @blog_entries = @page.blog_entries.limit(10)
-      
+
       @title = @page.title
       @navable = @page
       @page = @page.becomes(Page)  # rather than BlogPost etc.
     end
     respond_with @page
+    metric_logger.log_event @page.attributes, type: :show_page
   end
 
   def update

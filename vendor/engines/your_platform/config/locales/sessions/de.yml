@@ -2,12 +2,14 @@ de:
   login:                    Anmelden
   login_name:               Anmeldename
   password:                 Passwort
-  login_name_explanation:   Name, E-Mail-Adresse, Alias
+  login_name_explanation:   'Vor- und Zuname, E-Mail-Adresse, oder Alias'
 
   login_failed:             Anmeldung fehlgeschlagen.
   no_user_found:            Es wurde kein übereinstimmender Benutzer gefunden.
   wrong_password:           Das angegebene Passwort war falsch.
   user_has_no_account:      Der Benutzer hat kein aktives Benutzerkonto.
+  
+  unauthorized_please_sign_in:    'Zugriff nicht gestattet. Bitte melden Sie sich zunächst am System an.'
 
   good_bye:                 Auf Wiedersehen!
   logout:                   Abmelden
@@ -25,8 +27,8 @@ de:
   remember_me:              Anmeldestatus merken
 
   reset_password_instructions:
-    hello:                  "Guten Tag, "
-    introduction:           "Jemand hat die Änderung Ihres Passworts beantragt. Sie können Ihr Passwort auf folgender Seite ändern:"
-    change_password:        Passwort ändern
-    ignore_notice:          Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese Email.
-    change_notice:          Ihr Passwort wird sich nicht ändern, wenn sie obigem Link nicht folgen.
+    hello:                  'Guten Tag, '
+    introduction:           'Jemand hat die Änderung Ihres Passworts beantragt. Sie können Ihr Passwort auf folgender Seite ändern:'
+    change_password:        'Passwort ändern'
+    ignore_notice:          'Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese E-Mail'
+    change_notice:          'Ihr Passwort wird sich nicht ändern, wenn sie obigem Link nicht folgen.'

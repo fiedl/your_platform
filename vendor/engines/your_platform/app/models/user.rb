@@ -127,6 +127,10 @@ class User < ActiveRecord::Base
     date_of_birth_profile_field.try(:save)
   end
   private :save_date_of_birth_profile_field
+  
+  def find_or_create_date_of_birth_profile_field
+    date_of_birth_profile_field || ( build_date_of_birth_profile_field.save && date_of_birth_profile_field)
+  end
 
   def localized_date_of_birth
     I18n.localize self.date_of_birth if self.date_of_birth
@@ -509,6 +513,26 @@ class User < ActiveRecord::Base
     group.guests.include? self
   end
 
+  # Developer Status
+  # ==========================================================================================
+
+  # This method returns whether the user is a developer. This is needed, for example, 
+  # to determine if some features are presented to the current_user. 
+  # 
+  def developer?
+    self.developer
+  end
+  def developer
+    self.member_of? Group.developers
+  end
+  def developer=( mark_as_developer )
+    if mark_as_developer
+      Group.developers.assign_user self
+    else
+      Group.developers.unassign_user self
+    end
+  end  
+  
   # Hidden
   # ==========================================================================================
   #
@@ -564,7 +588,7 @@ class User < ActiveRecord::Base
   end
 
 
-  # Debug Helpers
+  # Helpers
   # ==========================================================================================
 
   # The string returned by this method represents the user in the rails console.
@@ -575,6 +599,6 @@ class User < ActiveRecord::Base
   def inspect
     "User: " + self.alias
   end
-
+  
 end
 

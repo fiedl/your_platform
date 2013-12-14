@@ -294,6 +294,25 @@ describe Group do
       subject { @group.memberships }
       it { should include( @membership1, @membership2 ) }
     end
+    
+    describe "#direct_memberships" do
+      before do
+        @ancestor_group = @group.parent_groups.create
+        @indirect_membership = UserGroupMembership.find_by( user: @user1, group: @ancestor_group )
+      end
+      subject { @group.direct_memberships }
+      it { should include @membership1 }
+      it { should_not include @indirect_membership }
+    end
+    
+    describe "#buid_membership" do
+      subject { @group.build_membership }
+      it { should be_kind_of UserGroupMembership }
+      its(:group) { should == @group }
+      its(:descendant_type) { should == 'User' }
+      its(:descendant_id) { should == nil }
+      its(:new_record?) { should == true }
+    end
 
     describe "#membership_of" do
       subject { @group.membership_of( @user1 ) }

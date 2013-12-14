@@ -7,6 +7,9 @@ class ApplicationController < ActionController::Base
   before_filter :redirect_www_subdomain, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
+  before_filter :log_generic_metric_event
+  helper_method :metric_logger
+  before_filter :authorize_miniprofiler
   
   # This method returns the currently signed in user.
   #
@@ -64,6 +67,7 @@ class ApplicationController < ActionController::Base
   end
   
   private
+  
   def extract_locale_from_accept_language_header
     # see: http://guides.rubyonrails.org/i18n.html
     if request.env['HTTP_ACCEPT_LANGUAGE'] and not Rails.env.test?
@@ -72,6 +76,34 @@ class ApplicationController < ActionController::Base
   end
   def browser_language_if_supported_by_app
     ([extract_locale_from_accept_language_header] & I18n.available_locales).first
+  end
+  
+  # This logs the event using a metric storage.
+  # Here, we use fnordmetric. The metrics can be viewed via
+  #
+  #   http://localhost:4242
+  #
+  # when the deamon is started via
+  #
+  #   bundle exec foreman start fnordmetric
+  #
+  def log_generic_metric_event
+    type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
+    metric_logger.log_event( { id: params[:id] }, type: type)
+    metric_logger.log_event( { request_type: type }, type: :generic_request)
+    metric_logger.log_cpu_usage
+  end
+  def metric_logger
+    @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
+  end
+  
+  # MiniProfiler is a tool that shows the page load time in the top left corner of
+  # the browser. But, in production, this feature should only be visible to developers.
+  #
+  # If the current_user can? :read the :mini_profiler, is defined in the Ability class.
+  #
+  def authorize_miniprofiler
+    Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
   end
 
 end

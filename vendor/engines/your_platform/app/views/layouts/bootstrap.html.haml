@@ -94,14 +94,14 @@
         .span9#content_area
           = flash_area
           = html_convert_h1_to_boxes( yield )
-    %footer.footer
+    %footer.footer#footer
       %div.container.narrow.row-fluid
         %ul.footer-links
           %li
             %a(href="https://github.com/fiedl/your_platform") github
           %li.muted ·
           %li
-            %a(href="#")= t(:imprint)
+            %a= link_to t(:imprint), Page.find_by_flag(:imprint)
           %li.muted ·
           %li= language_switcher_html
 

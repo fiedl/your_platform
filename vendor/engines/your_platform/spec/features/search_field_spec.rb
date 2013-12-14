@@ -40,6 +40,8 @@ feature "Search Field", js: true do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "blarzfoo" )
         @user3 = create( :user, last_name: "cannonfoo" )
+        @user3.profile_fields.create( label: "Home Address", value: "Foo Platz 1, Erlangen", type: "ProfileFieldTypes::Address" )
+        @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
 
         fill_in 'query', with: "foo\n" # \n hits enter
       end

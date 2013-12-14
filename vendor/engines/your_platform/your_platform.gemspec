@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.summary     = "Administrative and social network platform for closed user groups."
   s.description = s.summary
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   # Dependencies 
@@ -79,7 +79,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
 
   # Edit Mode
-  s.add_dependency 'edit_mode', '>= 0.0.9'                                             # MIT License
+  s.add_dependency 'edit_mode', '>= 1.0.0'                                             # MIT License
 
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
@@ -92,7 +92,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'will_paginate', '> 3.0'
   
   # Gallery View
-  s.add_dependency 'rubylight', '1.0.3.2'   # Creative Commons
+  s.add_dependency 'rubylight', '1.0.3.2'                                              # Creative Commons
+  
+  # Metrics
+  s.add_dependency 'fnordmetric'                                                       # MIT License
+  s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
@@ -100,6 +104,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "2.10.0"
   s.add_development_dependency "guard", "1.0.1"
   s.add_development_dependency "guard-rspec", "0.5.5"
-
 
 end

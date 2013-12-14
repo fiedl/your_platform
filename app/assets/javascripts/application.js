@@ -13,11 +13,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-// require make-js-more-like-ruby
 //= require angular
 //= require angular-resource
 //= require jquery-ui
-//= require jquery.ui.all
+//= require jquery.ui.effect.all
 //= require jquery.purr
 //= require jquery.ui.datepicker-de
 //= require_boxes

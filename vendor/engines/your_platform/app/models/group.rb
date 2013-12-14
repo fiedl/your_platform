@@ -6,6 +6,17 @@
 # 
 class Group < ActiveRecord::Base
   
+  attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                    :token, # (optional) a short-name, abbreviation of the group's name, in 
+                            # a global context; example: 'A'
+                    :internal_token, # (optional) an internal abbreviation, i.e. used by the 
+                                     # members of the group; example: 'AC'
+                    :extensive_name, # (optional) a long version of the group's name;
+                                     # example: 'The Corporation of A'
+                    :direct_member_titles_string # Used for inline-editing: The comma-separated
+                                                 # titles of the child users of the group.
+                    )
+  
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
   is_structureable( ancestor_class_names: %w(Group Page), 
@@ -20,6 +31,7 @@ class Group < ActiveRecord::Base
   include GroupMixins::Roles
   include GroupMixins::Guests
   include GroupMixins::HiddenUsers
+  include GroupMixins::Developers
 
   include GroupMixins::Import
 
@@ -168,6 +180,14 @@ class Group < ActiveRecord::Base
   def memberships
     UserGroupMembership.find_all_by_group self 
   end
+  
+  def build_membership
+    self.links_as_parent.build(descendant_type: 'User').becomes(UserGroupMembership)
+  end
+  
+  def direct_memberships
+    UserGroupMembership.find_all_by_group(self).where(direct: true)
+  end
 
   # This returns the UserGroupMembership object that represents the membership of the 
   # given user in this group.
@@ -238,6 +258,6 @@ class Group < ActiveRecord::Base
   #  def self.last
   #    self.all.last.becomes self
   #  end
-  
+
 end
 

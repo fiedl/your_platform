@@ -28,6 +28,9 @@ Wingolfsplattform::Application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for nginx
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
+  # This uses a redirect and does not set the default protocol for hyperlinks.
+  # For wingolfsplattform, the redirect is already done via nginx.
+  #
   # config.force_ssl = true
 
   # See everything in the log (default is :info)
@@ -67,7 +70,7 @@ Wingolfsplattform::Application.configure do
 
   # Load Secret Settings
   # -> moved to config/application.rb
-    
+
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
 
@@ -80,7 +83,7 @@ Wingolfsplattform::Application.configure do
       in config/secrets.yml.
     "
   end
-  
+
   config.action_mailer.smtp_settings = {
     address: 'smtp.1und1.de',
     user_name: 'wingolfsplattform@wingolf.org',
@@ -88,8 +91,16 @@ Wingolfsplattform::Application.configure do
     domain: 'wingolfsplattform.org',
     enable_starttls_auto: true,
     # only if certificate malfunctions:
-    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE    
+    # openssl_verify_mode: OpenSSL::SSL::VERIFY_NONE
   }
-  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'http' }
+  
+  # Rails-4 syntax:  (see http://stackoverflow.com/a/12609856/2066546)
+  #   config.action_mailer.default_options = {    
+  #     from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
+  #   }
+  # Rails-3 syntax:
+  ActionMailer::Base.default from: 'Wingolfsplattform <wingolfsplattform@wingolf.org>'
+  
+  config.action_mailer.default_url_options = { host: 'wingolfsplattform.org', protocol: 'https' }
 
 end

@@ -1,0 +1,9 @@
+-# locals: user_group_membership, user, group
+- user_group_membership ||= UserGroupMembership.find_by( user: user, group: group )
+- user ||= user_group_membership.user
+- group ||= user_group_membership.group
+%li
+  = link_to user.title, user
+  - if can? :manage, user
+    %span.show_only_in_edit_mode
+      = workflow_execution_links_for( group: group, user: user )

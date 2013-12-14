@@ -238,6 +238,26 @@ describe User do
       its(:new_record?) { should == false }
     end
   end
+  describe "#find_or_create_date_of_birth_profile_field" do
+    subject { @user.find_or_create_date_of_birth_profile_field }
+    describe "for no date of birth field existing" do
+      it { should be_kind_of ProfileField }
+      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:new_record?) { should == false }
+      its(:id) { should be_kind_of Integer }
+     end
+     describe "for a date of birth existing in the database" do
+       before do
+         @user.date_of_birth = "1900-01-01".to_date
+         @user.save
+         @user = User.find(@user.id)
+       end
+       it { should be_kind_of ProfileField }
+       its(:type) { should == "ProfileFieldTypes::Date" }
+       its('value.to_date') { should == "1900-01-01".to_date }
+       its(:new_record?) { should == false }
+     end
+  end
 
   describe "postal address: " do
     before do
@@ -897,6 +917,44 @@ describe User do
         @group.guests << @user
       end
       it { should == true }
+    end
+  end
+
+
+  # Developers
+  # ==========================================================================================
+
+  describe "#developer?" do
+    subject { @user.developer? }
+    describe "for no developers group existing" do
+      it { should == false }
+    end
+    describe "for the user being no member of the developers group" do
+      before { Group.create_developers_group }
+      it { should == false }
+    end
+    describe "for the user being member of the developers group" do
+      before { Group.create_developers_group.assign_user @user }
+      it { should == true }
+    end
+  end
+  describe "#developer = " do
+    describe "true" do
+      subject { @user.developer = true }
+      it "should assign the user to the developers group" do
+        @user.should_not be_member_of Group.developers
+        subject
+        @user.should be_member_of Group.developers
+      end
+    end
+    describe "false" do
+      before { @user.developer = true }
+      subject { @user.developer = false }
+      it "should un-assign the user from the developers group" do
+        @user.should be_member_of Group.developers
+        subject
+        @user.should_not be_member_of Group.developers
+      end
     end
   end
 

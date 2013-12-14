@@ -1,0 +1,1 @@
+require 'active_record_metric_events_extension'

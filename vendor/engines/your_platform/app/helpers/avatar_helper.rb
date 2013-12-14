@@ -21,10 +21,22 @@ module AvatarHelper
     # locally as well. Otherwise a 'http://localhost/...' would be 
     # submitted to gravatar as source of the default image.
     # 
-    options[:gravatar][:default] ||= "https://wingolfsplattform.org/assets/avatar_128.png" 
+    options[:gravatar][:default] ||= user_avatar_default_url 
     
     render partial: 'shared/avatar', locals: { email: email, options: options }
 
   end
-
+  
+  def user_avatar_url( user, options = {} )
+    options[:gravatar] ||= {}
+    options[:gravatar][:default] ||= user_avatar_default_url
+    options[:gravatar][:size] ||= 36
+    options[:gravatar][:secure] = true
+    gravatar_image_url(user.email, options)
+  end
+  
+  def user_avatar_default_url
+    "https://wingolfsplattform.org/assets/avatar_128.png"
+  end
+  
 end

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
   def index
     begin
-      redirect_to Group.everyone
+      redirect_to group_path(Group.everyone)
     rescue
       raise "No basic groups are present, yet. Try `rake bootstrap:all`."
     end
@@ -19,6 +19,7 @@ class UsersController < ApplicationController
       format.html # show.html.erb
                   #format.json { render json: @profile.sections }  # TODO
     end
+    metric_logger.log_event @user.attributes.merge({name: @user.name, title: @user.title}), type: :show_user
   end
 
   def new
@@ -50,12 +51,15 @@ class UsersController < ApplicationController
   end
 
   def autocomplete_title
-    query = ""
-    query ||= params[:term] if params[ :term ]
+    query = params[:term] if params[ :term ]
     query ||= params[ :query ] if params[ :query ]
-    @users = User.all.select { |user| user.title.downcase.include? query.downcase }
-    #render json: json_for_autocomplete(@users, :title)
-    render json: @users.to_json( :methods => [ :title ] )
+    query ||= ""
+    
+    @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", "%#{query}%")
+
+    # render json: json_for_autocomplete(@users, :title)
+    # render json: @users.to_json( :methods => [ :title ] )
+    render json: @users.map(&:title)
   end
 
   def forgot_password

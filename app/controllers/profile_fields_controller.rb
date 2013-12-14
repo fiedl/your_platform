@@ -5,7 +5,7 @@ class ProfileFieldsController < ApplicationController
   respond_to :json, :js
 
   def create
-    type = params[:profile_field][:type] || ProfileFieldTypes::Custom.name
+    type = secure_profile_field_type || 'ProfileFieldTypes::Custom'
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
@@ -27,9 +27,24 @@ class ProfileFieldsController < ApplicationController
   
   def load_profileable
     if params[ :profileable_type ].present? && params[ :profileable_id ].present?
-      @profileable = params[ :profileable_type ].constantize.find( params[ :profileable_id ] )
+      @profileable = secure_profileable_type.constantize.find( params[ :profileable_id ] )
     end
   end
+  
+  def secure_profileable_type
+    if not params[:profileable_type].in? ["User", "Group"]
+      raise "security interrupt: '#{params[:profileable_type]}' is no permitted profileable object type."
+    end
+    params[:profileable_type]
+  end
+  
+  def secure_profile_field_type
+    if not params[:profile_field][:type].in? ([''] + ProfileField.possible_types)
+      raise "security interrupt: '#{params[:profile_field][:type]}' is not a permitted profile field type."
+    end
+    params[:profile_field][:type]
+  end
+    
 
 #   before_filter        :find_profileable
 # #  before_filter        :load_profile_field_as_instance_variable

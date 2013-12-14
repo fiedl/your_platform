@@ -19,6 +19,6 @@
     %dt
       = t('password') + ':'
     %dd
-      = link_to t('send_new_password'), forgot_password_user_path(@user.id), method: :put
+      = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
 
   = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'

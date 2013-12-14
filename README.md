@@ -12,8 +12,6 @@ Sebastian Fiedlschuster  E 06  (B-xx)
 
 Die laufende Seite ist erreichbar unter http://wingolfsplattform.org.
 
-HTTP-Auth-Login: `aki`, Passwort: `deleted-string`
-
 **Continuous Deployment**: Der `master`-Branch wird nach einem Push automatisch auf wingolfsplattform.org bereitgestellt.
 Den aktuell bereitgestellten Commit kann man hier abfragen: http://wingolfsplattform.org:4567
 
