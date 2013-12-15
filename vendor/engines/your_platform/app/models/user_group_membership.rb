@@ -16,6 +16,7 @@ class UserGroupMembership < DagLink
   # ====================================================================================================
 
   include UserGroupMembershipMixins::ValidityRange
+  include UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
 
   # General Properties
   # ====================================================================================================
@@ -45,8 +46,11 @@ class UserGroupMembership < DagLink
       user ||= User.find_by_title params[:user_title] if params[:user_title]
       group = params[ :group ]
       group ||= Group.find params[:group_id] if params[:group_id]
-      user.parent_groups << group
-      return UserGroupMembership.find_by( user: user, group: group )
+      
+      super(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
+      
+      #user.parent_groups << group
+      #return UserGroupMembership.find_by( user: user, group: group )
     end
   end
 
@@ -105,100 +109,6 @@ class UserGroupMembership < DagLink
   end
 
 
-#  def self.find_membership_structure_by_user_and_root_group( user, group )
-#    child_groups_where_the_user_is_member = group.child_group & user.ancestor_groups
-#    child_hash = child_groups_where_the_user_is_member.collect do |child_group|
-#      self.find_membershipself.find_membership_structure_by_user_and_root_group( user, child_group )
-#    end
-#    return {     
-#  end
-
-
-  # # Temporal Scope Methods
-  # # ====================================================================================================
-  # 
-  # # Return the same membership as it was/is/will be at a certain point in time.
-  # # This can be used, for example to get one or more memberships at a certain point in time.
-  # # This is a scope method and can be chained to other ActiveRecord::Relation objects.
-  # #
-  # #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago )
-  # #    UserGroupMembership.find_all_by_user( u ).at_time( 1.hour.ago ).count
-  # #    UserGroupMembership.find_by( user: u, group: g ).at_time( Time.current + 30.minutes ).present?
-  # #
-  # def at_time( time )
-  #   memberships = UserGroupMembership
-  #     .find_all_by( user: self.user, group: self.group )
-  #     .with_deleted
-  #     .where( "created_at < ?", time ).where( "deleted_at IS NULL OR deleted_at > ?", time )
-  #   return nil if memberships.count == 0
-  #   return memberships.first if memberships.count == 1
-  #   return memberships
-  # end
-  # 
-  # 
-  # # Save and Destroy Methods
-  # # ====================================================================================================
-  # 
-  # # Save the current membership and auto-save also the direct memberships
-  # # associated with the current (maybe indirect) membership.
-  # #
-  # def save(*args)
-  #   unless direct?
-  #     first_created_direct_membership.save if first_created_direct_membership
-  #     last_deleted_direct_membership.save if last_deleted_direct_membership
-  #   end
-  #   super(*args)
-  # end
-  # 
-  # # Destroy this membership, but reload the dataset from the database in order to get access
-  # # to the datetime of deletion.
-  # # 
-  # def destroy
-  #   if self.destroyable?
-  #     super
-  #   else
-  #     destroy_direct_memberships
-  #   end
-# #    UserGroupMembership.with_deleted.find self.id
-  # end
-  # 
-  # def archive
-  #   destroy  # using acts_as_paranoid
-  # end
-  # 
-  # # This is a helper to destroy all direct memberships of this membership.
-  # # This is called in #destroy.
-  # #
-  # def destroy_direct_memberships
-  #   for direct_membership in self.direct_memberships
-  #     direct_membership.destroy
-  #   end
-  # end
-  # 
-  # # This really deletes a membership from the database. 
-  # # Since this won't call any callbacks, the links depending on this one are not updated,
-  # # meaning for reasons of database consistency, this is not to be run on 
-  # # links where deleted_at == nil. 
-  # # If you really delete a link, you have to use these two methods:
-  # # 
-  # #   link.destroy  # now it has a :deleted_at and all dependent links are updated
-  # #   link.delete!
-  # #
-  # def delete!
-  #   if self.deleted_at
-  #     DagLink.delete_all!( id: self.id ) 
-  #   else
-  #     raise 'for reasons of database consistency, you have to call destroy() first and then delete!().'
-  #   end
-  # end
-  # 
-  # # Status Instance Methods
-  # # ====================================================================================================   
-  # 
-  # def deleted?
-  #   return true if not UserGroupMembership.find_by( user: self.user, group: self.group )
-  # end
-  # 
   # 
   # # Timestamps Methods: Beginning and end of a membership
   # # ====================================================================================================
@@ -332,21 +242,25 @@ class UserGroupMembership < DagLink
   # Here, group2 and grou3 are children of group1. user is member of group2 and group3.
   # Hence, the indirect membership of user and group1 will include both direct memberships.
   #
-  def direct_memberships
+  def direct_memberships(options = {})
     descendant_groups_of_self_group = self.group.descendant_groups
     descendant_group_ids_of_self_group = descendant_groups_of_self_group.collect { |group| group.id }
     group_ids = descendant_group_ids_of_self_group + [ self.group.id ]
+    
     memberships = UserGroupMembership
+    if options[:with_invalid] || self.read_attribute( :valid_to )
+      # If the membership itself is invalidated, also consider the invalidated direct memberships.
+      # Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
+      # `direct_memberships` in order to have the invalidated direct memberships included.
+      memberships = memberships.with_invalid 
+    end
+    
+    memberships = memberships
       .find_all_by_user( self.user )
       .where( :direct => true )
-      .where( :ancestor_id => group_ids )
-
-    # If the membership itself is deleted, also consider the deleted direct memberships.
-    # Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
-    # `direct_memberships` in order to have the deleted direct memberships included.
-    #
-    memberships = memberships.with_deleted if self.read_attribute( :deleted_at )
-    memberships = memberships.order( :created_at )
+      .where( :ancestor_id => group_ids, :ancestor_type => 'Group' )
+      
+    memberships = memberships.order( :valid_from )
     memberships
   end
 
@@ -365,29 +279,29 @@ class UserGroupMembership < DagLink
   end
 
 
-  # In order to set and get the correct inherited datetime of creation and deletion,
-  # one has to find the first created direct membership and the last deleted 
-  # direct membership, as shown in the following schema.
-  #
-  #
-  #     A1                                                      A2
-  #     |-- indirect membership ----------------------------------|
-  #
-  #     b1                          b2
-  #     |-- direct membership 1 -----|
-  #                                  |-- direct membership 2 -----|
-  #                                  c1                         c2
-  #
-  # The following datetimes should be the same:
-  # A1 = b1,  A2 = c2,  b2 = c1
-  #
-  def first_created_direct_membership
-    @first_created_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :created_at ).first
-  end
-
-  def last_deleted_direct_membership
-    @last_deleted_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :deleted_at ).last
-  end
+  # # In order to set and get the correct inherited datetime of creation and deletion,
+  # # one has to find the first created direct membership and the last deleted 
+  # # direct membership, as shown in the following schema.
+  # #
+  # #
+  # #     A1                                                      A2
+  # #     |-- indirect membership ----------------------------------|
+  # #
+  # #     b1                          b2
+  # #     |-- direct membership 1 -----|
+  # #                                  |-- direct membership 2 -----|
+  # #                                  c1                         c2
+  # #
+  # # The following datetimes should be the same:
+  # # A1 = b1,  A2 = c2,  b2 = c1
+  # #
+  # def first_created_direct_membership
+  #   @first_created_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :created_at ).first
+  # end
+  # 
+  # def last_deleted_direct_membership
+  #   @last_deleted_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :deleted_at ).last
+  # end
 
 
   # Methods to Change the Membership
@@ -399,12 +313,18 @@ class UserGroupMembership < DagLink
   #      |---- user       =>          |---- user
   # 
   def move_to_group( group_to_move_in, options = {} )
-    date = options[:date].to_datetime if options[:date].present?
-    user_to_move = self.user
-    self.archive
-    self.update_attribute( :archived_at, date ) if date
-    new_membership = UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
-    new_membership.update_attribute( :created_at, date ) if date
+    # date = options[:date].to_datetime if options[:date].present?
+    # user_to_move = self.user
+    # self.archive
+    # self.update_attribute( :archived_at, date ) if date
+    # new_membership = UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
+    # new_membership.update_attribute( :created_at, date ) if date
+    # return new_membership
+    
+    time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
+    invalidate at: time
+    new_membership = UserGroupMembership.create(user: self.user, group: group_to_move_in)
+    new_membership = update_attribute(:valid_from, time)
     return new_membership
   end
 

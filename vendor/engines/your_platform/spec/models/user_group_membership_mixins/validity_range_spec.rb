@@ -9,7 +9,27 @@ describe UserGroupMembershipMixins::ValidityRange do
   end
   
   specify "preliminaries" do
+    @membership.should_not be_changed
+    @membership.id.should be_kind_of Integer
     @membership.should be_kind_of UserGroupMembership
+  end
+  
+  describe "#valid_from" do
+    subject { @membership.valid_from }
+    it { should be_kind_of Time }
+    it "should be set to the created_at date by default" do
+      subject.to_i.should == @membership.created_at.to_i
+    end
+  end
+  describe "#valid_to" do
+    subject { @membership.valid_to }
+    describe "being unset" do
+      it { should == nil }
+    end
+    describe "being set" do
+      before { @membership.valid_to = 1.hour.ago }
+      it { should be_kind_of Time }
+    end
   end
   
   describe "#make_invalid" do
@@ -93,7 +113,10 @@ describe UserGroupMembershipMixins::ValidityRange do
     end
   end
   describe "#valid_at?(time)" do
-    before { @time = 1.hour.ago }
+    before do
+      @time = 1.hour.ago
+      @membership.update_attribute(:valid_from, @time)
+    end
     subject { @membership.valid_at? @time }
     it "should check whether the membership is valid in terms of the validity range at the given time" do
       @membership.valid_at?(@time).should == true
@@ -105,9 +128,12 @@ describe UserGroupMembershipMixins::ValidityRange do
   describe "(temporal scopes)" do
     before do
       @valid_membership = @membership
+      @valid_membership.update_attribute(:valid_from, 2.hours.ago)
       @group2 = create(:group)
       @time = 1.hour.ago
-      @invalid_membership = UserGroupMembership.create(user: @user, group: @group2).invalidate(@time)
+      @invalid_membership = UserGroupMembership.create(user: @user, group: @group2)
+      @invalid_membership.valid_from = 2.hours.ago
+      @invalid_membership.invalidate(@time)
       @query = UserGroupMembership.find_all_by_user(@user)
     end
     

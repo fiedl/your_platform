@@ -23,13 +23,22 @@
 module UserGroupMembershipMixins::ValidityRange
   
   extend ActiveSupport::Concern
+
+  included do 
+    attr_accessible :valid_from, :valid_to
+    before_validation :set_valid_from_to_now
+    
+    default_scope { only_valid }
+  end
+  
   
   # Attributes in the database
   # ====================================================================================================
-  
-  included do
-    attr_accessible :valid_from, :valid_to
+
+  def set_valid_from_to_now
+    self.valid_from ||= Time.zone.now
   end
+  private :set_valid_from_to_now
   
   
   # Invalidation
@@ -73,7 +82,7 @@ module UserGroupMembershipMixins::ValidityRange
   #     membership.valid_at? Time.zone.now
   # 
   def valid_at?(time)
-    (valid_from == nil || valid_from <= time) && (valid_to == nil || valid_to >= time)
+    (self.valid_from == nil || self.valid_from <= time) && (self.valid_to == nil || self.valid_to >= time)
   end
 
   # This method checks whether the present time lies within the validity range
@@ -87,10 +96,6 @@ module UserGroupMembershipMixins::ValidityRange
   # Temporal scopes
   # ====================================================================================================
   
-  included do 
-    default_scope { only_valid }
-  end
-    
   module ClassMethods
   
     # This scope returns limits the query to memberships whose validity ranges match the
