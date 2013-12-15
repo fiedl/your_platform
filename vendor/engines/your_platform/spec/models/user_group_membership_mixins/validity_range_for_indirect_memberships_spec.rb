@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships, :focus do
+describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
 
   # Memberships:
   #
@@ -28,10 +28,15 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships, :focus 
     @direct_group_a.assign_user @user
     @indirect_membership = UserGroupMembership.find_by_user_and_group(@user, @indirect_group)
     @direct_membership_a = UserGroupMembership.find_by_user_and_group(@user, @direct_group_a)
-    @direct_membership_a.update_attribute(:valid_from, 2.hours.ago)
-    @time = 1.hour.ago
-    @direct_membership_a.move_to_group @direct_group_b, at: @time
+    @direct_membership_a.move_to_group @direct_group_b
     @direct_membership_b = UserGroupMembership.find_by_user_and_group(@user, @direct_group_b)
+    @t1 = 2.hours.ago
+    @t2 = 1.hour.ago
+    @t3 = nil
+    @direct_membership_a.update_attribute(:valid_from, @t1)
+    @direct_membership_a.update_attribute(:valid_to, @t2)
+    @direct_membership_b.update_attribute(:valid_from, @t2)
+    @direct_membership_b.update_attribute(:valid_to, @t3)
   end
   
   specify "preliminaries" do
@@ -55,16 +60,24 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships, :focus 
     it "should set the valid_from  attribute of the earliset direct membership" do
       subject
       @indirect_membership.save
-      @direct_membership_a.reload.valid_from.should == @time
+      @direct_membership_a.reload.valid_from.to_i.should == @time.to_i
     end
   end
   
   describe "#valid_to" do
     subject { @indirect_membership.valid_to }
-    pending
+    it "should be the valid_to attribute of the latest direct membership" do
+      subject.to_i.should == @direct_membership_b.valid_to.to_i
+    end
   end
   describe "#valid_to=" do
-    pending
+    before { @time = 30.minutes.ago }
+    subject { @indirect_membership.valid_to = @time }
+    it "should set the valid_to addtirbute of the last direct membership" do
+      subject
+      @indirect_membership.save
+      @direct_membership_b.reload.valid_to.to_i.should == @time.to_i
+    end
   end
   
   describe "#earliest_direct_membership" do
@@ -94,5 +107,45 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships, :focus 
     end
   end
 
+  
+  # Validity Check
+  # ====================================================================================================
+  
+  describe "#valid_at?(time)" do
+    subject { @indirect_membership.valid_at? @time_to_check }
+    specify "preliminaries" do
+      @indirect_membership.earliest_direct_membership.valid_from.to_i.should == @t1.to_i
+      @indirect_membership.earliest_direct_membership.valid_to.to_i.should == @t2.to_i
+      @indirect_membership.latest_direct_membership.valid_from.to_i.should == @t2.to_i
+      @indirect_membership.latest_direct_membership.valid_to.should == @t3
+    end
+    it "should return false before the early direct membership" do
+      @time_to_check = 3.hours.ago
+      subject.should == false
+    end
+    it "should return true for the duration of the early direct membership" do
+      @time_to_check = 1.5.hours.ago
+      subject.should == true
+    end
+    it "should return true for the duration of the late direct membership" do
+      @time_to_check = 0.5.hours.ago
+      subject.should == true
+    end
+  end
+  
+  
+  # Temporal scopes
+  # ====================================================================================================
+  
+  describe "#at_time" do
+    subject { UserGroupMembership.find_all_by_user(@user).at_time(30.minutes.ago) }
+    it "should find the direct membership" do
+      subject.should include @direct_membership_b
+    end
+    it "should find the indirect membership as well" do
+      subject.should include @indirect_membership
+    end
+  end
+  
 
 end
