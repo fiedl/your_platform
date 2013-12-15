@@ -131,6 +131,26 @@ module UserGroupMembershipMixins::ValidityRange
     def only_invalid
       with_invalid.where("valid_to < ?", Time.zone.now)
     end
+    
+    # This scope limits the query to memberships that are valid at the present time.
+    # This is the default bahaviour. 
+    #
+    def now
+      only_valid
+    end
+
+    # This scope limits the query to memberships that are invalid at the present time.
+    # 
+    def in_the_past
+      only_invalid
+    end
+
+    # This scope widens the query such that also memberships that are not valid at the
+    # present time are returned.
+    # 
+    def now_and_in_the_past
+      with_invalid
+    end
   
   end
   

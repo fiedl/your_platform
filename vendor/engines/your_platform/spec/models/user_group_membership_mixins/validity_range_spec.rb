@@ -176,6 +176,28 @@ describe UserGroupMembershipMixins::ValidityRange do
         subject.should_not include @invalid_membership
       end
     end
+    
+    describe "#now" do
+      subject { @query.now }
+      it "should return only memberships that are currently valid" do
+        subject.should include @valid_membership
+        subject.should_not include @invalid_membership
+      end
+    end
+    describe "#in_the_past" do
+      subject { @query.in_the_past }
+      it "should return only memberships that are currently invalid" do
+        subject.should_not include @valid_membership
+        subject.should include @invalid_membership
+      end
+    end
+    describe "#now_and_in_the_past" do
+      subject { @query.now_and_in_the_past }
+      it "should return both valid and invalid memberships" do
+        subject.should include @valid_membership
+        subject.should include @invalid_membership
+      end
+    end
   end
   
 end

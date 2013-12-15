@@ -109,53 +109,6 @@ class UserGroupMembership < DagLink
   end
 
 
-  # 
-  # # Timestamps Methods: Beginning and end of a membership
-  # # ====================================================================================================
-  # 
-  # def created_at
-  #   return read_attribute( :created_at ) if direct?
-  #   first_created_direct_membership.created_at if first_created_direct_membership
-  # end
-  # def created_at=( created_at )
-  #   return super( created_at ) if direct?
-  #   first_created_direct_membership.created_at = created_at if first_created_direct_membership
-  # end
-  # 
-  # def deleted_at
-  #   return read_attribute( :deleted_at ) if direct?
-  #   return nil if direct_memberships_now.count > 0 # there are still un-deleted direct memberships
-  #   last_deleted_direct_membership.deleted_at if last_deleted_direct_membership
-  # end
-  # def deleted_at=( deleted_at )
-  #   return super( deleted_at ) if direct?
-  #   last_deleted_direct_membership.deleted_at = deleted_at if last_deleted_direct_membership
-  # end
-  # 
-  # def archived_at
-  #   deleted_at
-  # end
-  # def archived_at=( archived_at )
-  #   deleted_at = archived_at
-  # end
-  # 
-  # # This method is used in the views, since it is more convenient just to edit the date
-  # # rather then date and time when specifying the date of joining a group.
-  # #
-  # def created_at_date
-  #   self.created_at.to_date
-  # end
-  # def created_at_date=( created_at_date )
-  #   self.created_at = created_at_date.to_datetime
-  # end
-  # def created_at_date_formatted
-  #   I18n.localize self.created_at_date
-  # end
-  # def created_at_date_formatted=( created_at_date_formatted )
-  #   self.created_at_date = created_at_date_formatted
-  # end
-
-
   # Access Methods to Associated User and Group
   # ====================================================================================================   
 
@@ -279,31 +232,6 @@ class UserGroupMembership < DagLink
   end
 
 
-  # # In order to set and get the correct inherited datetime of creation and deletion,
-  # # one has to find the first created direct membership and the last deleted 
-  # # direct membership, as shown in the following schema.
-  # #
-  # #
-  # #     A1                                                      A2
-  # #     |-- indirect membership ----------------------------------|
-  # #
-  # #     b1                          b2
-  # #     |-- direct membership 1 -----|
-  # #                                  |-- direct membership 2 -----|
-  # #                                  c1                         c2
-  # #
-  # # The following datetimes should be the same:
-  # # A1 = b1,  A2 = c2,  b2 = c1
-  # #
-  # def first_created_direct_membership
-  #   @first_created_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :created_at ).first
-  # end
-  # 
-  # def last_deleted_direct_membership
-  #   @last_deleted_direct_membership ||= direct_memberships_now_and_in_the_past.reorder( :deleted_at ).last
-  # end
-
-
   # Methods to Change the Membership
   # ====================================================================================================  
 
@@ -313,14 +241,6 @@ class UserGroupMembership < DagLink
   #      |---- user       =>          |---- user
   # 
   def move_to_group( group_to_move_in, options = {} )
-    # date = options[:date].to_datetime if options[:date].present?
-    # user_to_move = self.user
-    # self.archive
-    # self.update_attribute( :archived_at, date ) if date
-    # new_membership = UserGroupMembership.create( user: user_to_move, group: group_to_move_in )
-    # new_membership.update_attribute( :created_at, date ) if date
-    # return new_membership
-    
     time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
     invalidate at: time
     new_membership = UserGroupMembership.create(user: self.user, group: group_to_move_in)
@@ -332,7 +252,6 @@ class UserGroupMembership < DagLink
     self.move_to_group( new_group, options )
   end
   
-
 end
 
 
