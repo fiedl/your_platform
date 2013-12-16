@@ -232,6 +232,17 @@ class UserGroupMembership < DagLink
   end
 
 
+  # Access Methods to Associated Indirect Memberships
+  # ====================================================================================================  
+
+  def indirect_memberships
+    self.group.ancestor_groups.collect do |ancestor_group|
+      UserGroupMembership.find_by_user_and_group(self.user, ancestor_group)
+    end.select do |item|
+      item != nil
+    end
+  end
+
   # Methods to Change the Membership
   # ====================================================================================================  
 

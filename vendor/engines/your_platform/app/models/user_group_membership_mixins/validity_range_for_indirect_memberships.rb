@@ -24,6 +24,10 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   
   extend ActiveSupport::Concern
   
+  included do
+    after_save :recalculate_indirect_validity_ranges_if_needed
+  end
+
 
   # Validity Range Attributes
   # ====================================================================================================
@@ -61,28 +65,72 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
     self.direct? ? super : earliest_direct_membership.try(:valid_from)
   end
   def valid_from=( valid_from )
-    self.direct? ? super(valid_from) : earliest_direct_membership.try(:valid_from=, valid_from)
+    if self.direct? 
+      super(valid_from) 
+      @need_to_recalculate_indirect_memberships = true
+    else
+      earliest_direct_membership.try(:valid_from=, valid_from)
+    end
   end
   
   def valid_to
     self.direct? ? super : latest_direct_membership.try(:valid_to)
   end
   def valid_to=( valid_to )
-    self.direct? ? super(valid_to) : latest_direct_membership.try(:valid_to=, valid_to)
+    if self.direct? 
+      super(valid_to) 
+      @need_to_recalculate_indirect_memberships = true
+    else
+      latest_direct_membership.try(:valid_to=, valid_to)
+    end
   end
 
   # Save the current membership and auto-save also the direct memberships
   # associated with the current (maybe indirect) membership.
   #
   def save(*args)
+    super(*args)
     unless self.direct?
       earliest_direct_membership.try(:save)
       latest_direct_membership.try(:save)
     end
-    super(*args)
+  end
+
+  # This method recalculates the validity range for an indirect membership.
+  # This becomes necessary whenever the validity range of a direct membership is changed, so that
+  # the validity range of the indirect memberships can be used in database queries,
+  # for example, when using scopes.
+  #
+  # Attention: At this point, this mechanism does not cover the validity range of
+  # indirect memberships where there should be a gap in the membership:
+  # 
+  #     *----------*     *----------* (indirect membership with gap in validity range)
+  #          |--------|--------|
+  #     *----------*           |      (direct membership 1)
+  #                      *----------* (direct membership 2)
+  #
+  # TODO: This has to be fiexed, probably when switching to neo4j.
+  #
+  def recalculate_validity_range_from_direct_memberships
+    unless direct?
+      write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
+      write_attribute :valid_to, latest_direct_membership.try(:valid_to)
+    end
   end
   
+  def recalculate_indirect_validity_ranges_if_needed
+    if self.direct? and @need_to_recalculate_indirect_memberships == true
+      self.indirect_memberships.each do |indirect_membership|
+        indirect_membership.recalculate_validity_range_from_direct_memberships
+        indirect_membership.save
+      end
+    end
+  end
+  private :recalculate_indirect_validity_ranges_if_needed
   
+  
+
+
   # Invalidation
   # ====================================================================================================
   

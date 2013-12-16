@@ -90,6 +90,27 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     it { should == @direct_membership_b }
   end
   
+  describe "#recalculate_validity_range_from_direct_memberships" do
+    before do
+      @t1 = 10.hours.ago; @t2 = 8.hours.ago; @t3 = 37.minutes.ago
+      @direct_membership_a.update_attribute(:valid_from, @t1)
+      @direct_membership_a.update_attribute(:valid_to, @t2)
+      @direct_membership_b.update_attribute(:valid_from, @t2)
+      @direct_membership_b.update_attribute(:valid_to, @t3)
+    end
+    subject { @indirect_membership.recalculate_validity_range_from_direct_memberships }
+    it "should make the indirect validity range match the direct memberships' combined range" do
+      subject
+      @indirect_membership.valid_from.to_i.should == @t1.to_i
+      @indirect_membership.valid_to.to_i.should == @t3.to_i
+    end
+    it "should write the indirect ranges to the database" do
+      subject
+      @indirect_membership.read_attribute(:valid_from).to_i.should == @t1.to_i
+      @indirect_membership.read_attribute(:valid_to).to_i.should == @t3.to_i
+    end
+  end
+  
   
   # Invalidation
   # ====================================================================================================
@@ -139,11 +160,32 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
   
   describe "#at_time" do
     subject { UserGroupMembership.find_all_by_user(@user).at_time(30.minutes.ago) }
+    specify "preliminaries" do
+      @direct_membership_a.valid_from.to_i.should == @t1.to_i
+      @direct_membership_a.valid_to.to_i.should == @t2.to_i
+      @direct_membership_b.valid_from.to_i.should == @t2.to_i
+      @direct_membership_b.valid_to.should == @t3
+      @indirect_membership.valid_from.to_i.should == @t1.to_i
+      @indirect_membership.valid_to.should == @t3
+      # @indirect_membership.read_attribute(:valid_from).to_i.should == @t1.to_i
+      # @indirect_membership.read_attribute(:valid_to).should == @t3
+    end
     it "should find the direct membership" do
       subject.should include @direct_membership_b
     end
     it "should find the indirect membership as well" do
       subject.should include @indirect_membership
+    end
+  end
+  
+  describe "#only_valid" do
+    subject { UserGroupMembership.only_valid.find_all_by_user(@user) }
+    it "should find the valid indirect memberships" do
+      subject.should include @indirect_membership
+    end
+    it "should not find the invalid indirect memberships" do
+      @direct_membership_b.invalidate at: 20.minutes.ago
+      subject.should_not include @indirect_membership
     end
   end
   

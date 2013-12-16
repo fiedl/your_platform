@@ -286,6 +286,17 @@ describe UserGroupMembership do
       end
     end
   end
+  
+
+  # Access Methods to Associated Indirect Memberships
+  # ====================================================================================================  
+  
+  describe "#indirect_memberships" do
+    before { @membership = UserGroupMembership.create(user: @user, group: @group) }
+    subject { @membership.indirect_memberships }
+    it { should include find_indirect_membership }
+    it { should_not include find_membership }
+  end
 
 
   # More Tests for Indirect Memberships

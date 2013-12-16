@@ -20,7 +20,7 @@ module GroupMixins::Memberships
     # memberships.
     #
     has_many( :memberships, 
-              class_name: 'UserGroupMembership', #inverse_of: :groups, # TODO: make :groups an association in UserGroupMembership
+              class_name: 'UserGroupMembership',
               foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group' } )
     
     # This associates all memberships of the group that are direct, i.e. direct 

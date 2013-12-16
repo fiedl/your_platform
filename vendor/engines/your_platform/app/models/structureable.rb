@@ -64,11 +64,6 @@ module Structureable
     #
     include StructureableMixins::HasSpecialGroups
     
-    # In order to let GroupMemberships have a ValidityRange, we have to override
-    # some methods provided by acts_as_dag or neo4j_ancestry.
-    #
-    include StructureableMixins::ValidityRange
-
     include StructureableInstanceMethods
   end
 
