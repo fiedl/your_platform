@@ -949,7 +949,7 @@ describe User do
     end
     describe "false" do
       before { @user.developer = true }
-      subject { @user.developer = false }
+      subject { @user.developer = false; sleep 1.1 }
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
@@ -976,7 +976,7 @@ describe User do
       end
     end
     describe "false" do
-      subject { @user.hidden = false }
+      subject { @user.hidden = false; sleep 1.1 }
       describe "for the user being hidden" do
         before { @user.hidden = true }
         it "should remove the user from the hidden_users group" do

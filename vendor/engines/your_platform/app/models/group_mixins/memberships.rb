@@ -9,8 +9,6 @@ module GroupMixins::Memberships
   # TODO: Refactor conditions to rails 4 standard when migrating to rails 4.
   # See, for example, https://github.com/fiedl/neo4j_ancestry/blob/master/lib/models/neo4j_ancestry/active_record_additions.rb#L117.
   
-  # TODO: Indirekte Memberships müssen auch den Scopes unterworfen sein, d.h. ungültige ausblenden.
-    
   included do
 
     # User Group Memberships
@@ -21,14 +19,14 @@ module GroupMixins::Memberships
     #
     has_many( :memberships, 
               class_name: 'UserGroupMembership',
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group' } )
+              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User' } )
     
     # This associates all memberships of the group that are direct, i.e. direct 
     # parent_group-child_user memberships.
     #
     has_many( :direct_memberships,
               class_name: 'UserGroupMembership', 
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', direct: true } )
+              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User', direct: true } )
               
     # This associates all memberships of the group that are indirect, i.e. 
     # ancestor_group-descendant_user memberships, where groups are between the
@@ -36,7 +34,7 @@ module GroupMixins::Memberships
     #
     has_many( :indirect_memberships,
               class_name: 'UserGroupMembership', 
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', direct: false } )
+              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User', direct: false } )
      
     
     #  This method builds a new membership having this group (self) as group associated.

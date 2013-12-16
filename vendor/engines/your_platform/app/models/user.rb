@@ -47,7 +47,13 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
-
+  
+  
+  # Mixins
+  # ==========================================================================================
+  
+  include UserMixins::Memberships
+  include UserMixins::Identification
 
   # General Properties
   # ==========================================================================================
@@ -249,13 +255,6 @@ class User < ActiveRecord::Base
   # Groups
   # ------------------------------------------------------------------------------------------
 
-  # This returns all groups the user is currently a member of. In terms of the DAG model,
-  # this method returns all ancestor groups.
-  #
-  def groups
-    self.ancestor_groups
-  end
-
   def add_to_group_if_requested
     if self.add_to_group
       group = add_to_group if add_to_group.kind_of? Group
@@ -335,20 +334,6 @@ class User < ActiveRecord::Base
   end
 
 
-  # Memberships
-  # ------------------------------------------------------------------------------------------
-
-  # Returns all UserGroupMemberships for this user.
-  # Since this is an ActiveRelation object, one can chain other conditions, like:
-  #
-  #     some_user.memberships.with_deleted
-  #     some_user.memberships.in_the_past
-  #
-  def memberships
-    UserGroupMembership.find_all_by_user self
-  end
-
-
   # Relationships
   # ------------------------------------------------------------------------------------------
 
@@ -410,16 +395,6 @@ class User < ActiveRecord::Base
   end
 
 
-
-  # User Identification and Authentification
-  # ==========================================================================================
-
-  include UserMixins::Identification
-
-  # The authentication is handled by devise, now.
-  # See: https://github.com/plataformatec/devise
-
-
   # Roles and Rights
   # ==========================================================================================
 
@@ -434,17 +409,22 @@ class User < ActiveRecord::Base
     return :admin if self.admin_of? structureable
     return :member if self.member_of? structureable
   end
-
-  # Members
+  
+  # Member Status
   # ------------------------------------------------------------------------------------------
-
-  # This method says whether the user (self) is a member of the given structureable
-  # object. This may be used to determine if the user has, for example, the read to
-  # read that object.
+  
+  # This method is a dirty hack to preserve the obsolete role model mechanism, 
+  # which is currently not in use, since the abilities are defined directly in the 
+  # Ability class.
   #
-  def member_of?( structureable )
-    return false if not structureable.respond_to? :descendant_users
-    structureable.descendant_users.include? self
+  # TODO: refactor it together with the role model mechanism.
+  #
+  def member_of?( object )
+    if object.kind_of? Group
+      self.groups.include? object  # This uses the validity range mechanism
+    else
+      self.ancestors.include? object
+    end
   end
 
   # Admins
