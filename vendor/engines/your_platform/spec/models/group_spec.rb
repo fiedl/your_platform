@@ -162,42 +162,6 @@ describe Group do
       end
     end
 
-    describe "#assign_user" do
-      it "should assign the user to the group" do
-        @group.child_users.should_not include( @user )
-        @group.assign_user( @user )
-        @group.reload
-        @group.child_users.should include( @user )
-      end
-      describe "for users that are already members" do
-        before { @group.child_users << @user }
-        it "should just keep them as members" do
-          @group.child_users.should include( @user )
-          @group.assign_user( @user )
-          @group.reload
-          @group.child_users.should include( @user )
-        end
-      end
-    end
-
-    describe "#unassign_user" do
-      describe "if the user is a member" do
-        before { @group.child_users << @user }
-        it "should remove the membership" do
-          @group.child_users.should include( @user )
-          @group.unassign_user( @user )
-          @group.reload
-          @group.child_users.should_not include( @user )
-        end
-      end
-      describe "if the user is not a member" do
-        it "should not raise an error" do
-          @group.child_users.should_not include( @user )
-          expect { @group.unassign_user( @user ) }.to_not raise_error
-        end
-      end
-    end
-
   end
 
 

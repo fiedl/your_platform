@@ -6,38 +6,52 @@ module GroupMixins::Memberships
   
   extend ActiveSupport::Concern
   
-
-  # User Group Memberships
-  # ==========================================================================================
+  # TODO: Refactor conditions to rails 4 standard when migrating to rails 4.
+  # See, for example, https://github.com/fiedl/neo4j_ancestry/blob/master/lib/models/neo4j_ancestry/active_record_additions.rb#L117.
   
-  # This returns all UserGroupMembership objects of the group, including indirect 
-  # memberships.
-  #
-  def memberships
-    UserGroupMembership.find_all_by_group self 
+  # TODO: Clean up group_spec.
+    
+  included do
+
+    # User Group Memberships
+    # ==========================================================================================
+    
+    # This associates all UserGroupMembership objects of the group, including indirect 
+    # memberships.
+    #
+    has_many( :memberships, 
+              class_name: 'UserGroupMembership', #inverse_of: :groups, # TODO: make :groups an association in UserGroupMembership
+              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group' } )
+    
+    # This associates all memberships of the group that are direct, i.e. direct 
+    # parent_group-child_user memberships.
+    #
+    has_many( :direct_memberships,
+              class_name: 'UserGroupMembership', 
+              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', direct: true } )
+              
+   # This associates all memberships of the group that are indirect, i.e. 
+   # ancestor_group-descendant_user memberships, where groups are between the
+   # ancestor_group and the descendant_user.
+   #
+   has_many( :indirect_memberships,
+             class_name: 'UserGroupMembership', 
+             foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', direct: false } )
+    
   end
 
-  # This returns all memberships of the group that are direct, i.e. direct 
-  # parent_group-child_user memberships.
+  #  This method builds a new membership having this group (self) as group associated.
   #
-  def direct_memberships
-    UserGroupMembership.find_all_by_group(self).where(direct: true)
+  def build_membership
+    direct_memberships.build(descendant_type: 'User')
   end
   
-
-
+  # This returns the UserGroupMembership object that represents the membership of the 
+  # given user in this group.
   # 
-  # def build_membership
-  #   self.links_as_parent.build(descendant_type: 'User').becomes(UserGroupMembership)
-  # end
-  # 
-  # 
-  # # This returns the UserGroupMembership object that represents the membership of the 
-  # # given user in this group.
-  # # 
-  # def membership_of( user )
-  #   UserGroupMembership.find_by_user_and_group( user, self )
-  # end
+  def membership_of( user )
+    memberships.where(descendant_id: user.id).first
+  end
   
 
   # User Assignment
@@ -47,7 +61,7 @@ module GroupMixins::Memberships
   # create a UserGroupMembership.
   #
   def assign_user( user, options = {} )
-    if user and not user.in?(self.child_users)
+    if user and not user.in?(self.direct_members)
       membership = UserGroupMembership.create(user: user, group: self)
   
       time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
@@ -61,10 +75,24 @@ module GroupMixins::Memberships
   # of the given user in this group.
   #
   def unassign_user( user, options = {} )
-    time_of_unassignment = options[:at] || options[:time] || Time.zone.now
-    UserGroupMembership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
+    if user and user.in?(self.members)
+      time_of_unassignment = options[:at] || options[:time] || Time.zone.now
+      UserGroupMembership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
+    end
   end
   
+  
+
+
+  # Members
+  # ==========================================================================================
+  
+  def members
+    descendant_users
+  end
+  def direct_members
+    child_users
+  end
   
   
   # # Users
