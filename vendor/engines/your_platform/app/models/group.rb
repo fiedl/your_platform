@@ -26,6 +26,7 @@ class Group < ActiveRecord::Base
 
   has_many :posts
 
+  include GroupMixins::Memberships
   include GroupMixins::Everyone  
   include GroupMixins::Corporations
   include GroupMixins::Roles
@@ -98,61 +99,6 @@ class Group < ActiveRecord::Base
   end
 
 
-  # Users
-  # ------------------------------------------------------------------------------------------
-
-  # These methods override the standard association methods for descendant_users
-  # and child_users to make sure that the `everyone` Groups do have *all* users
-  # as children and descendants.
-  #
-  def descendant_users
-    if self.has_flag?( :everyone )
-      return User.where(true)
-    else
-      return super 
-    end
-  end
-
-  def child_users
-    if self.has_flag?( :everyone )      
-      return User.where(true)
-    else
-      return super
-    end
-  end
-
-  # This assings the given user as a member to the group, i.e. this will
-  # create a UserGroupMembership.
-  #
-  def assign_user( user, options = {} )
-    if user
-      unless user.in? self.child_users
-        self.child_users << user
-      end
-
-      if options[:joined_at].present?
-        membership = UserGroupMembership.find_by_user_and_group( user, self )
-        if membership
-          membership.created_at = options[:joined_at].to_datetime
-          membership.save
-        end
-      end
-
-      return membership || UserGroupMembership.find_by_user_and_group( user, self )
-    end
-  end
-
-  # This method will remove a UserGroupMembership, i.e. terminate the membership
-  # of the given user in this group.
-  #
-  def unassign_user( user )
-    link = DagLink.find_edge( self.becomes( Group ), user )
-    if link
-      link.destroy if link.destroyable?
-    end
-  end
-
-
   # Groups
   # ------------------------------------------------------------------------------------------
 
@@ -170,67 +116,6 @@ class Group < ActiveRecord::Base
     self.becomes(Corporation).in? Corporation.all
   end
 
-
-  # User Group Memberships
-  # ------------------------------------------------------------------------------------------
-
-  # This returns all UserGroupMembership objects of the group, including indirect 
-  # memberships.
-  #
-  def memberships
-    UserGroupMembership.find_all_by_group self 
-  end
-  
-  def build_membership
-    self.links_as_parent.build(descendant_type: 'User').becomes(UserGroupMembership)
-  end
-  
-  def direct_memberships
-    UserGroupMembership.find_all_by_group(self).where(direct: true)
-  end
-
-  # This returns the UserGroupMembership object that represents the membership of the 
-  # given user in this group.
-  # 
-  def membership_of( user )
-    UserGroupMembership.find_by_user_and_group( user, self )
-  end
-
-  # This returns a string of the titles of the direct members of this group. This is used
-  # for in-place editing, for example.
-  # 
-  # The string would be something like this:
-  # 
-  #    "#{user1.title}, #{user2.title}, ..."
-  #
-  def direct_member_titles_string
-    child_users.collect { |user| user.title }.join( ", " )
-  end
-
-  # This sets the memberships of a group according to the given string of user titles.
-  # 
-  # For example, after calling
-  # 
-  #    direct_member_titles_string = "#{user1.title}, #{user2.title}",
-  # 
-  # the users `user1` and `user2` are the only direct members of the group.
-  # The memberships are removed using the standard methods, which means that the memberships
-  # are only marked as deleted. See: acts_as_paranoid_dag gem.
-  #
-  def direct_member_titles_string=( titles_string )
-    new_members_titles = titles_string.split( "," )
-    new_members = new_members_titles.collect do |title|
-      u = User.find_by_title( title.strip )
-      self.errors.add :direct_member_titles_string, 'user not found: #{title}' unless u
-      u
-    end
-    for member in child_users
-      unassign_user member unless member.in? new_members if member
-    end
-    for new_member in new_members
-      assign_user new_member if new_member
-    end
-  end
 
   # Adding objects
   # --------------
