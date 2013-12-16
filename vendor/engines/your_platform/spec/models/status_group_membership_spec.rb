@@ -196,7 +196,7 @@ describe StatusGroupMembership do
       end
       it "should return current memberships, but not expired memberships" do
         subject.should include @membership
-        @membership.destroy
+        @membership.invalidate at: 2.minutes.ago
         StatusGroupMembership.find_all_by_user( @user ).should_not include @membership
       end
     end
@@ -205,7 +205,7 @@ describe StatusGroupMembership do
       subject { StatusGroupMembership.find_all_by_user( @user ).now }
       it "should return current memberships, but not expired memberships" do
         subject.should include @membership
-        @membership.destroy
+        @membership.invalidate at: 2.minutes.ago
         StatusGroupMembership.find_all_by_user( @user ).now.should_not include @membership
       end
     end
@@ -214,7 +214,7 @@ describe StatusGroupMembership do
       subject { StatusGroupMembership.find_all_by_user( @user ).now_and_in_the_past }
       it "should return current memberships and expired ones" do
         subject.should include @membership
-        @membership.destroy
+        @membership.invalidate at: 2.minutes.ago
         StatusGroupMembership.find_all_by_user( @user ).now_and_in_the_past
           .should include @membership
       end
@@ -224,7 +224,7 @@ describe StatusGroupMembership do
       subject { StatusGroupMembership.find_all_by_user( @user ).in_the_past }
       it "should return only expired memberships" do
         subject.should_not include @membership
-        @membership.destroy
+        @membership.invalidate at: 2.minutes.ago
         StatusGroupMembership.find_all_by_user( @user ).in_the_past
           .should include @membership
       end

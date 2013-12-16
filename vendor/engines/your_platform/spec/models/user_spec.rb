@@ -583,8 +583,8 @@ describe User do
     it "should be the same as UserGroupMembership.find_all_by_user" do
       subject.should == UserGroupMembership.find_all_by_user( @user )
     end
-    it "should allow to chain other ActiveRelation scopes, like `with_deleted`" do
-      subject.with_deleted.should == [ @membership ]
+    it "should allow to chain other ActiveRelation scopes, like `only_valid`" do
+      subject.only_valid.should == [ @membership ]
     end
   end
 
@@ -994,7 +994,6 @@ describe User do
       end
     end
   end
-
 
 
   # Finder Methods

@@ -10,15 +10,13 @@ class StatusGroupMembership < UserGroupMembership
   # Since rails apparently does not support Multi Table Inheritance,
   # this associated model takes the additional properties.
   # 
-  has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership, autosave: true
+  has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership #, autosave: true
 
   delegate( :promoted_by_workflow, :promoted_by_workflow=,
             :promoted_on_event, :promoted_on_event=,
-            :workflow, :workflow=, :event, :event=,   # alias methods
-            to: :status_group_membership_info )
-
-
-  after_initialize :build_status_group_membership_info_if_nil
+            :workflow, :workflow=, 
+            :event, :event=,   # alias methods
+            to: :find_or_create_status_group_membership_info )
 
   attr_accessible :event_by_name
 
@@ -27,7 +25,7 @@ class StatusGroupMembership < UserGroupMembership
   # ==========================================================================================
 
   def create_event( params )
-    self.status_group_membership_info.create_promoted_on_event( params )
+    find_or_create_status_group_membership_info.create_promoted_on_event( params )
   end
 
   # Access the event (promoted_on_event) by its name, since this is the way
@@ -151,14 +149,11 @@ class StatusGroupMembership < UserGroupMembership
   # ==========================================================================================
 
   private 
-
-  # Since methods of this associated object are delegated to this class, the associated object
-  # is required to exist. Thus, if it is nil, build one!
-  #
-  def build_status_group_membership_info_if_nil
-    build_status_group_membership_info unless status_group_membership_info
-  end
   
+  def find_or_create_status_group_membership_info
+    status_group_membership_info || create_status_group_membership_info
+  end
+   
   # When .save is called on this instance, but only the associated object has changed through 
   # the delegated methods, this instance is not marked as changed. As a result, any call of 
   # .save will fail.
@@ -166,21 +161,9 @@ class StatusGroupMembership < UserGroupMembership
   # This method compensates for the missing automatism.
   #
   def save_status_group_membership_info_if_changed
-    if status_group_membership_info.event
-      if status_group_membership_info.event.changed? or status_group_membership_info.event.id.nil?
-        status_group_membership_info.promoted_on_event_id_will_change!
-        status_group_membership_info.event.save! 
-      end
-    end
-
-    if status_group_membership_info.workflow
-      if status_group_membership_info.workflow.changed? or status_group_membership_info.workflow.id.nil?
-        status_group_membership_info.promoted_on_workflow_id_will_change!
-        status_group_membership_info.workflow.save! 
-      end
-    end
-
-    status_group_membership_info.save! if status_group_membership_info.changed?
+    find_or_create_status_group_membership_info.promoted_by_workflow.try(:save)
+    find_or_create_status_group_membership_info.promoted_on_event.try(:save)
+    find_or_create_status_group_membership_info.save
   end
 
 end
