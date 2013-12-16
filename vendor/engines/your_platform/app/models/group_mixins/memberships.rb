@@ -88,11 +88,14 @@ module GroupMixins::Memberships
   # ==========================================================================================
   
   def members
-    descendant_users
+    memberships.collect { |m| m.user }
   end
   def direct_members
     child_users
   end
+  # def direct_members<<( new_member )
+  #   child_users << new_member
+  # end
   
   
   # # Users

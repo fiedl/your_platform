@@ -37,6 +37,15 @@ describe GroupMixins::Memberships, :focus do
       it { should include @indirect_membership1, @indirect_membership2 }
       it { should_not include @membership1, @membership2 }
     end
+    describe "for a group having invalidated memberships" do
+      before { @membership1.invalidate at: 10.minutes.ago }
+      subject { @group.memberships }
+      it { should include @membership2 }
+      it { should == [ @membership2 ] }
+      it "should not list the invalidated memberships, i.e. respect the default scope" do
+        subject.should_not include @membership1
+      end
+    end
   end
     
   describe "#direct_memberships" do
@@ -110,8 +119,8 @@ describe GroupMixins::Memberships, :focus do
       it "should remove the membership" do
         @group.members.should include @user
         @group.unassign_user @user
-        @group.reload
-        @group.members.reload.should_not include @user
+        sleep 1.1  # to make sure the validity range time condition works
+        @group.reload.members.should_not include @user
       end
     end
     describe "if the user is not a member" do
@@ -123,10 +132,9 @@ describe GroupMixins::Memberships, :focus do
   end
 
 
-  describe "#unassign_user           [at: time]" do
-    pending
-  end
-    
+  # Members
+  # ==========================================================================================
+
   describe "#members" do
     pending
   end
