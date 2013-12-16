@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GroupMixins::Memberships, :focus do
+describe GroupMixins::Memberships do
   
   #   @indirect_group
   #        |------------ @group
@@ -81,6 +81,7 @@ describe GroupMixins::Memberships, :focus do
     its(:ancestor_id) { should == @group.id }
     its(:descendant_type) { should == 'User' }
     its(:descendant_id) { should == nil }
+    its(:new_record?) { should == true }    
   end
   
   describe "#membership_of( user )" do
@@ -136,15 +137,102 @@ describe GroupMixins::Memberships, :focus do
   # ==========================================================================================
 
   describe "#members" do
-    pending
+    describe "for a group having direct members" do
+      subject { @group.members }
+      it { should include @user1, @user2 }
+    end
+    describe "for a group having indirect members" do
+      subject { @indirect_group.members }
+      it { should include @user1, @user2 }
+    end
+    describe "for a group having invalidated memberships" do
+      before { @membership1.invalidate at: 10.minutes.ago }
+      subject { @group.members }
+      it { should include @user2 }
+      it { should_not include @user1 }
+    end
+    describe "for a group having invalidated indirect memberships" do
+      before { @membership1.invalidate at: 10.minutes.ago }
+      subject { @indirect_group.members }
+      it { should include @user2 }
+      it { should_not include @user1 }
+    end
+  end
+  describe "#members << user" do
+    subject { @group2.members << @user }
+    it "should assign the given user as new direct member" do
+      @user.should_not be_in @group2.members
+      subject
+      @user.should be_in @group2.members
+      @user.should be_in @group2.direct_members
+    end
+  end
+  describe "#members.destroy(user)" do
+    describe "for the membership being direct" do
+      subject { @group.members.destroy(@user1) }
+      it "should remove the user from the members list" do
+        @user1.should be_in @group.members
+        subject
+        @user1.should_not be_in @group.members
+      end
+      it "should remove the membership permanently" do
+        subject
+        UserGroupMembership.with_invalid.find_by_user_and_group(@user1, @group).should == nil
+      end
+    end
+    describe "for the membership being indirect" do
+      subject { @indirect_group.members.destroy(@user1) }
+      it "should raise an error" do
+        expect { subject }.to raise_error
+      end
+    end
   end
     
   describe "#direct_members" do
-    pending
+    describe "for a group having direct members" do
+      subject { @group.direct_members }
+      it { should include @user1, @user2 }
+    end
+    describe "for a group having indirect members" do
+      subject { @indirect_group.direct_members }
+      it { should_not include @user1, @user2 }
+    end
+    describe "for a group having invalidated memberships" do
+      before { @membership1.invalidate at: 10.minutes.ago }
+      subject { @group.direct_members }
+      it { should include @user2 }
+      it { should_not include @user1 }
+    end
   end
     
   describe "#indirect_members" do
-    pending
+    describe "for a group having direct members" do
+      subject { @group.indirect_members }
+      it { should_not include @user1, @user2 }
+    end
+    describe "for a group having indirect members" do
+      subject { @indirect_group.indirect_members }
+      it { should include @user1, @user2 }
+    end
+    describe "for a group having invalidated memberships" do
+      before { @membership1.invalidate at: 10.minutes.ago }
+      subject { @indirect_group.indirect_members }
+      it { should include @user2 }
+      it { should_not include @user1 }
+    end
   end
+  
+  describe "#direct_member_titles_string" do
+    subject { @group.direct_members_titles_string }
+    it { should == "#{@user1.title}, #{@user2.title}" }
+  end
+  describe "#direct_member_titles_string=" do
+    before { @group.direct_members_titles_string = "#{@user1.title}"; sleep 1.1 }
+    it "should set the memberships according to the titles" do
+      @group.reload.memberships.should include( @membership1 )
+      @group.reload.memberships.should_not include( @membership2 )
+    end
+  end
+  
     
 end

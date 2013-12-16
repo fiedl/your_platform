@@ -15,7 +15,7 @@ module GroupMixins::Everyone
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
   end
 
-  # Everyone
+  # Everyone Group
   # ==========================================================================================
   #
   # The 'root group', which is the highest in the group hierarchy.
@@ -42,5 +42,31 @@ module GroupMixins::Everyone
       find_everyone_group || raise('special group :everyone does not exist.')
     end
   end
-
+  
+  
+  # Members
+  # ==========================================================================================
+  
+  # This method overrides the default association to emulate the bahaviour that really every
+  # user is member of the :everyone group.
+  #
+  def members
+    if self.has_flag? :everyone
+      User.where(true)
+    else
+      super
+    end
+  end
+  
+  # This method overrides the default association to emulate the bahaviour that really every
+  # user is direct member of the :everyone group.
+  #
+  def direct_members
+    if self.has_flag? :everyone
+      User.where(true)
+    else
+      super
+    end
+  end
+  
 end

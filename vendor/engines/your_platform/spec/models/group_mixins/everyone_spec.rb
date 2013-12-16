@@ -4,7 +4,7 @@ require 'spec_helper'
 describe GroupMixins::Everyone do
 
 
-  # Everyone
+  # Everyone Group
   # ==========================================================================================
 
   describe "everyone_group" do
@@ -26,6 +26,38 @@ describe GroupMixins::Everyone do
         subject.should == @everyone_group
         subject.has_flag?( :everyone ).should == true
       end
+    end
+  end
+  
+  
+  # Members
+  # ==========================================================================================
+
+  before do
+    @user = create(:user)
+    @group = create(:group)
+    @everyone_group = Group.find_everyone_group
+  end
+
+  describe "#members" do
+    subject { @everyone_group.members }
+    it "should include users that are in no group at all" do
+      subject.should include @user
+    end
+    it "should include users that are in any unrelated group" do
+      @group.assign_user @user
+      subject.should include @user
+    end
+  end
+  
+  describe "#direct_members" do
+    subject { @everyone_group.direct_members }
+    it "should include users that are in no group at all" do
+      subject.should include @user
+    end
+    it "should include users that are in any unrelated group" do
+      @group.assign_user @user
+      subject.should include @user
     end
   end
 

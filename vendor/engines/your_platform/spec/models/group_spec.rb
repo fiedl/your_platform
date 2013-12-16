@@ -114,6 +114,7 @@ describe Group do
     end
   end
 
+
   # Users
   # ------------------------------------------------------------------------------------------
 
@@ -123,7 +124,6 @@ describe Group do
       @user = create( :user )
       @group = create( :group )
       @subgroup = create( :group ); @group.child_groups << @subgroup
-      @everyone_group = Group.find_everyone_group
     end
 
     describe "#descendant_users" do
@@ -135,13 +135,6 @@ describe Group do
           subject.should include( @user )
         end
       end
-      describe "for the everyone group" do
-        subject { @everyone_group.descendant_users }
-        
-        it "should return all users, even those not explicitely added as dag descendants" do
-          subject.should include( @user )
-        end
-      end
     end
 
     describe "#child_users" do
@@ -150,13 +143,6 @@ describe Group do
         subject { @group.child_users }
 
         it "should return all child users" do
-          subject.should include( @user )
-        end
-      end
-      describe "for the everyone group" do
-        subject { @everyone_group.child_users }
-        
-        it "should return all users, even though not explicitely added as dag children" do
           subject.should include( @user )
         end
       end
@@ -238,64 +224,6 @@ describe Group do
         it { should == false }
       end
     end
-  end
-
-
-  # User Group Memberships
-  # ------------------------------------------------------------------------------------------
-  
-  describe "(User Group Memberships)" do
-
-    before do
-      @group = create( :group )
-      @user1 = create( :user ); @group.assign_user( @user1 )
-      @user2 = create( :user ); @group.assign_user( @user2 )
-      @membership1 = UserGroupMembership.find_by( user: @user1, group: @group )
-      @membership2 = UserGroupMembership.find_by( user: @user2, group: @group )
-    end
-
-    describe "#memberships" do
-      subject { @group.memberships }
-      it { should include( @membership1, @membership2 ) }
-    end
-    
-    describe "#direct_memberships" do
-      before do
-        @ancestor_group = @group.parent_groups.create
-        @indirect_membership = UserGroupMembership.find_by( user: @user1, group: @ancestor_group )
-      end
-      subject { @group.direct_memberships }
-      it { should include @membership1 }
-      it { should_not include @indirect_membership }
-    end
-    
-    describe "#buid_membership" do
-      subject { @group.build_membership }
-      it { should be_kind_of UserGroupMembership }
-      its(:group) { should == @group }
-      its(:descendant_type) { should == 'User' }
-      its(:descendant_id) { should == nil }
-      its(:new_record?) { should == true }
-    end
-
-    describe "#membership_of" do
-      subject { @group.membership_of( @user1 ) }
-      it { should == @membership1 }
-    end
-
-    describe "#direct_member_titles_string" do
-      subject { @group.direct_member_titles_string }
-      it { should == "#{@user1.title}, #{@user2.title}" }
-    end
-
-    describe "#direct_member_titles_string=" do
-      before { @group.direct_member_titles_string = "#{@user1.title}" }
-      it "should set the memberships according to the titles" do
-        @group.memberships.should include( @membership1 )
-        @group.memberships.should_not include( @membership2 )
-      end
-    end
-
   end
 
 
