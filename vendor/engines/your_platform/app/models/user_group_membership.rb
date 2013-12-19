@@ -36,19 +36,25 @@ class UserGroupMembership < DagLink
   #    membership = UserGroupMembership.create( user: u, group: g )
   #
   def self.create( params )
+    p "========================"
+    p 1
     if UserGroupMembership.find_by( params ).present?
       raise 'Membership already exists: id = ' + UserGroupMembership.find_by( params ).id.to_s
     else
       raise "Could not create UserGroupMembership without user." unless params[:user] || params[:user_id] || params[:user_title]
       raise "Could not create UserGroupMembership without group." unless params[ :group ] || params[:group_id]
+      p 2
       user = params[:user]
       user ||= User.find params[:user_id] if params[:user_id]
       user ||= User.find_by_title params[:user_title] if params[:user_title]
+      p 3
       group = params[ :group ]
       group ||= Group.find params[:group_id] if params[:group_id]
-      
-      super(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
-      
+      p 4, group, user
+      r = super(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
+      p 5
+      p r
+      return r
       #user.parent_groups << group
       #return UserGroupMembership.find_by( user: user, group: group )
     end
