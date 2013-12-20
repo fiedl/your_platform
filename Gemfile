@@ -80,14 +80,6 @@ gem 'colored'								# MIT License
 # Auto Completion
 #gem 'rails3-jquery-autocomplete'					# MIT Licenses
 
-# Deployment with Capistrano.
-# Capistrano runs locally, not on the remote server.
-group :development do
-  gem 'capistrano' #, '~>2.11.2'
-  gem 'capistrano_colors'
-  gem 'net-ssh', '2.4.0'
-end
-
 # Debug Tools
 group :development do
 
