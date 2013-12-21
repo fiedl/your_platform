@@ -46,11 +46,18 @@ bundle exec rake db:test:prepare
 bundle exec rake
 ```
 
+
 ### your_platform
 
 Der abstrakte Teil des Quellcodes, d.h. derjenige Teil, der auch von anderen Organisationen als dem Wingolf verwendet werden kann, ist in der [`your_platform`-Engine](vendor/engines/your_platform) unterzubringen. Die Konkretisierung und Anpassung auf die wingolfitischen Bedürfnisse erfolgt in der Haupt-Applikation. 
 
 Dieser aufgespaltete Zustand ist noch nicht vollständig erreicht. Der aktuelle Stand ist der [Migrations-Matrix](https://docs.google.com/spreadsheet/ccc?key=0ApsXX8JdKfoOdFVOSXdoSWp6MkVxWmVCUXU2U0IteWc&pli=1#gid=0) zu entnehmen.
+
+
+### Code Documentation
+
+* [Code-Dokumentation auf rubydoc.info](http://rubydoc.info/github/fiedl/wingolfsplattform/master/frames)
+* Lokal kann die Dokumentation mit dem Kommando `yardoc` erzeugt werden.
 
 
 ### Links
