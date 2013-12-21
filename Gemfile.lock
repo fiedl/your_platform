@@ -1,4 +1,10 @@
 GIT
+  remote: git://github.com/fiedl/Google-Maps-for-Rails.git
+  revision: c159503f5b244f0528482020f6d81215264149ad
+  specs:
+    gmaps4rails (2.0.1)
+
+GIT
   remote: git://github.com/jejacks0n/mercury
   revision: d3b085e1b7e1e801efe298bb826a4730179455af
   specs:
@@ -13,12 +19,6 @@ GIT
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
-
-GIT
-  remote: git@github.com:fiedl/Google-Maps-for-Rails.git
-  revision: c159503f5b244f0528482020f6d81215264149ad
-  specs:
-    gmaps4rails (2.0.1)
 
 PATH
   remote: vendor/engines/your_platform
