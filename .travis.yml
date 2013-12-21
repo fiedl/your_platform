@@ -2,8 +2,12 @@ rvm:
   - "2.0.0"
 env: 
   - "RAILS_ENV=test DB=mysql"
+install:
+  - sudo apt-get -y install pwgen libicu-dev
+  - bundle install
 before_script:
-  - sh -c "sudo apt-get -y install pwgen"
-  - sh -c "cp config/database.travis.yml config/database.yml"
-  - sh -c "mkdir -p public/uploads"
-  - sh -c "bundle & bundle exec rake db:drop db:create db:migrate"
+  - cp config/database.travis.yml config/database.yml
+  - mkdir -p public/uploads
+  - bundle exec rake db:drop db:create db:migrate
+script:
+  - bundle exec rake
