@@ -41,7 +41,7 @@ uploads
 public/assets
 
 # Ignore sensitive import data
-import/deleted-string_data
+import/previous_data
 
 # Other things to ignore, suggested by github.
 *.rbc

@@ -9,7 +9,7 @@ namespace :data_migration do
   desc "Import BV information"
   task import_bv_information: :environment do
     p "Task: Import BV information"
-    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+    csv_rows( "previous_data/groups.csv" ) do |row|
       if row[ 'cn' ]
         if row[ 'cn' ].include? "BV "
           bv = Bv.by_token row[ 'cn' ]
@@ -24,7 +24,7 @@ namespace :data_migration do
   desc "Import Wah information"
   task import_wah_information: :environment do
     p "Task: Import Wah (Wingolf am Hochschulort) information"
-    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+    csv_rows( "previous_data/groups.csv" ) do |row|
       if row[ 'cn' ]
         if row[ 'cn' ].include? "WV "
           if row[ 'dn' ].include? "o=Verbindungen"
@@ -42,7 +42,7 @@ namespace :data_migration do
   desc "Import Aktivitas information"
   task import_aktivitas_information: :environment do
     p "Task: Import Aktivitas information"
-    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+    csv_rows( "previous_data/groups.csv" ) do |row|
       if row[ 'cn' ]
         if row[ 'cn' ].include? "WV " 
           if row[ 'dn' ].include? "o=Verbindungen"
@@ -61,7 +61,7 @@ namespace :data_migration do
   desc "Import Philisterschaft information"
   task import_philisterschaft_information: :environment do
     p "Task: Import Philisterschaft information"
-    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+    csv_rows( "previous_data/groups.csv" ) do |row|
       if row[ 'cn' ]
         if row[ 'cn' ].include? "PhV " 
           if row[ 'dn' ].include? "o=Philister"
@@ -84,7 +84,7 @@ namespace :data_migration do
   desc "Import Hausverein information"
   task import_hausverein_information: :environment do 
     p "Task: Import Hausverein information"
-    csv_rows( "deleted-string_data/groups.csv" ) do |row|
+    csv_rows( "previous_data/groups.csv" ) do |row|
       if row[ 'cn' ]
         if row[ 'cn' ].include? "PhV " 
           if row[ 'dn' ].include? "o=Philister"
