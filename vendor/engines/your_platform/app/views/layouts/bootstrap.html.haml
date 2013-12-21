@@ -27,6 +27,7 @@
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
     = gmaps4rails_api_script_tags
+    = sublime_script_tag
   %body{:class => controller.controller_name, data: { locale: I18n.locale }}
     - if user_account_signed_in?
       #logged-in-bar.navbar.navbar-fixed-top
