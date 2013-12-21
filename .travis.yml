@@ -8,6 +8,6 @@ install:
 before_script:
   - cp config/database.travis.yml config/database.yml
   - mkdir -p public/uploads
-  - bundle exec rake db:drop db:create db:migrate
+  - bundle exec rake db:create db:migrate db:test:prepare
 script:
   - bundle exec rake
