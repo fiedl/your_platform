@@ -1,5 +1,6 @@
 ## Wingolfsplattform
 
+[![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)
@@ -9,12 +10,12 @@ Nähere Informationen zum Anforderungsspektrum unter http://wingolf.org/ak-inter
 
 **Ansprechpartner**:
 Sebastian Fiedlschuster  E 06  (B-xx)
-<deleted-string>
 
 ### Status
 
 Status                                                                                                                                                            | Beschreibung
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------
+[![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)                                    | Wingolfsplattform Version
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)  | Build Status on `production`
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)              | Build Status on `master`
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)                             | Code Climate (4=good, 1=bad)
