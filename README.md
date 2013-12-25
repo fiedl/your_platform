@@ -4,6 +4,7 @@
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)
+[![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)
 
 Dies ist der Quellcode der entstehenden neuen Plattform von Wingolfsbund und VAW, der sog. **Wingolfsplattform**. Die Plattform soll vier Hauptaufgaben erfüllen: Hilfestellung bei der Verwaltung der Mitglieder des Wingolfs, Netzwerk der Mitglieder, Austausch von Informationen und Dokumenten, Präsentation nach außen. 
 Nähere Informationen zum Anforderungsspektrum unter http://wingolf.org/ak-internet.
@@ -19,6 +20,7 @@ Status                                                                          
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)  | Build Status on `production`
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)              | Build Status on `master`
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)                             | Code Climate (4=good, 1=bad)
+[![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)                                          | Gemnasium Gem Dependency Monitor
 
 ### Production
 
