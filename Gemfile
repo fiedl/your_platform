@@ -98,10 +98,10 @@ end
 
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
-  gem 'guard', '1.0.1'
+  gem 'guard', '~> 2.2.5'
   gem 'guard-focus'
-  gem 'rspec-rails', '2.10.0'
-  gem 'guard-rspec', '0.5.5'
+  gem 'rspec-rails'
+  gem 'guard-rspec'
 #  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
