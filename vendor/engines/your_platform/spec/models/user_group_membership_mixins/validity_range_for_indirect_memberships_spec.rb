@@ -28,8 +28,7 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     @direct_group_a.assign_user @user
     @indirect_membership = UserGroupMembership.find_by_user_and_group(@user, @indirect_group)
     @direct_membership_a = UserGroupMembership.find_by_user_and_group(@user, @direct_group_a)
-    @direct_membership_a.move_to_group @direct_group_b
-    @direct_membership_b = UserGroupMembership.find_by_user_and_group(@user, @direct_group_b)
+    @direct_membership_b = @direct_membership_a.move_to_group(@direct_group_b)
     @t1 = 2.hours.ago
     @t2 = 1.hour.ago
     @t3 = nil
@@ -40,7 +39,8 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
   end
   
   specify "preliminaries" do
-    @direct_membership_a.valid_from.should < @direct_membership_b.valid_from
+    @direct_membership_a.valid_from.to_i.should < @direct_membership_b.valid_from.to_i
+    
     #@direct_membership_a.valid_to.should < @direct_membership_b.valid_to
   end
   

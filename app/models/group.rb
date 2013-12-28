@@ -59,10 +59,6 @@ class Group
     Group.find_by_flag(:wbl_abo)
   end
 
-  def self.wbl_abo
-    self.wbl_abo_group
-  end
-
   def self.find_or_create_wbl_abo_group
     if self.wbl_abo_group
       return self.wbl_abo_group 
@@ -76,10 +72,13 @@ class Group
     end
   end
  
-  def self.wbl_abo!
+  def self.wbl_abo
     self.find_or_create_wbl_abo_group
   end
 
+  def self.wbl_abo!
+    self.wbl_abo_group
+  end
 
 end
 

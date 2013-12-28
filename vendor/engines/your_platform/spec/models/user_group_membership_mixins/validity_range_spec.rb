@@ -6,6 +6,7 @@ describe UserGroupMembershipMixins::ValidityRange do
     @user = create(:user)
     @group = create(:group)
     @membership = UserGroupMembership.create(user: @user, group: @group)
+    @membership.reload
   end
   
   specify "preliminaries" do

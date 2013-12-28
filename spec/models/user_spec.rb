@@ -9,11 +9,12 @@ describe User do
 
   describe "#title" do
     before do
-      @corporation = create( :wah_group )
-      @user.parent_groups << @corporation.aktivitas
+      @corporation = create(:wah_group)
+      @corporation.aktivitas.assign_user @user, at: 1.hour.ago
     end
     subject { @user.title }
     it "should return the user's name and his aktivitaetszahl" do
+      @user.reload
       @user.name.blank?.should be_false
       @user.aktivitaetszahl.blank?.should be_false
       subject.should == @user.name + "  " + @user.aktivitaetszahl
@@ -23,9 +24,9 @@ describe User do
   describe "#bv" do
     before do
       @bv = create( :bv_group )
-      @bv.child_users << @user
+      @bv.assign_user @user, at: 1.hour.ago
     end
-    subject { @user.bv }
+    subject { @user.reload.bv }
     it "should return the user's bv" do
       subject.should == @bv
     end
@@ -37,12 +38,12 @@ describe User do
       @corporationH = create( :corporation_with_status_groups, :token => "H" )
 
       @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
-      @first_membership_E.update_attributes( created_at: "2006-12-01".to_datetime )
+      @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
       @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
-      @first_membership_H.update_attributes( created_at: "2008-12-01".to_datetime )
-      @first_membership_E.destroy
+      @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
+      @first_membership_E.invalidate
       @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
-      @second_membership_E.update_attributes( created_at: "2013-12-01".to_datetime )
+      @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
     end
     subject { @user.aktivitaetszahl }
     it "should return the composed aktivitaetszahl" do
@@ -111,17 +112,18 @@ describe User do
     describe "#wingolfsblaetter_abo = true" do
       subject { @user.wingolfsblaetter_abo = true }
       it "should assign the user to the @abonnenten_group" do
-        @abonnenten_group.child_users.should_not include @user
+        @abonnenten_group.direct_members.should_not include @user
         subject
-        Group.find(@abonnenten_group.id).child_users.should include @user
+        Group.find(@abonnenten_group.id).direct_members.should include @user
       end
     end
     describe "#wingolfsblaetter_abo = false" do
       before { @abonnenten_group.assign_user @user }
-      subject { @user.wingolfsblaetter_abo = false }
+      subject { @user.reload.wingolfsblaetter_abo = false }
       it "should un-assign the user to the @abonnenten_group" do
         subject
-        Group.find(@abonnenten_group.id).child_users.should_not include @user
+        sleep 1.1
+        Group.find(@abonnenten_group.id).direct_members.should_not include @user
       end
     end
 

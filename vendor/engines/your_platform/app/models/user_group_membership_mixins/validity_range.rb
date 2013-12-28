@@ -37,8 +37,8 @@ module UserGroupMembershipMixins::ValidityRange
 
   def set_valid_from_to_now
     self.valid_from ||= Time.zone.now
+    return self
   end
-  private :set_valid_from_to_now
   
   
   # Invalidation

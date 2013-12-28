@@ -73,7 +73,7 @@ module GroupMixins::Erstbandphilister
   # Redefined User Association Methods
   # ------------------------------------------------------------------------------------------
 
-  def users
+  def members
     if is_erstbandphilister_parent_group?
       
       philisterschaft = self.parent_groups.first
@@ -82,7 +82,7 @@ module GroupMixins::Erstbandphilister
       end
       corporation = philisterschaft.parent_groups.first.becomes( Corporation )
 
-      erstbandphilister_user_ids = philisterschaft.descendant_users.select do |user|
+      erstbandphilister_user_ids = philisterschaft.members.select do |user|
         # a user is erstbandphilister of a corporation if the corporation is the
         # first corporation the user has joined.
         #
@@ -95,17 +95,9 @@ module GroupMixins::Erstbandphilister
     end
   end
   
-  def child_users
+  def direct_members
     if is_erstbandphilister_parent_group?
-      return users
-    else
-      return super
-    end
-  end
-
-  def descendant_users
-    if is_erstbandphilister_parent_group?
-      return users
+      return members
     else
       return super
     end

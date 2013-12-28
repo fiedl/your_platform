@@ -296,7 +296,7 @@ class User < ActiveRecord::Base
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
   def corporations
-    my_corporations = ( self.ancestor_groups & Group.corporations ) if Group.corporations_parent
+    my_corporations = ( self.groups & Group.corporations ) if Group.corporations_parent
     my_corporations ||= []
     my_corporations = my_corporations.collect { |group| group.becomes( Corporation ) }
     return my_corporations

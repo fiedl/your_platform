@@ -25,10 +25,7 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    if Bv.all and self.ancestor_groups
-      bv_of_this_user = ( Bv.all & self.ancestor_groups ).first
-    end
-    return bv_of_this_user.becomes Bv if bv_of_this_user
+    (Bv.all & self.groups).try(:first).try(:becomes, Bv)
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
@@ -36,11 +33,11 @@ class User
   def aktivitaetszahl
     if self.corporations
       self.corporations
-        .sort_by { |corporation| corporation.membership_of(self).created_at } # order by date of joining
+        .sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
         .collect do |corporation| 
         if not (self.guest_of?(corporation)) and not (self.former_member_of_corporation?(corporation))
           year_of_joining = ""
-          year_of_joining = corporation.membership_of( self ).created_at.to_s[2, 2] if corporation.membership_of( self ).created_at
+          year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
           #corporation.token + "\u2009" + year_of_joining
           token = corporation.token; token ||= ""
           token + aktivitaetszahl_addition_for(corporation) + year_of_joining

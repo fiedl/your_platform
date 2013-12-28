@@ -10,7 +10,7 @@ describe Corporation do
       @user = create( :user )
 
       @first_membership = UserGroupMembership.create( user: @user, group: @first_corporation )
-      @first_membership.created_at = 1.year.ago
+      @first_membership.valid_from = 1.year.ago
       @first_membership.save
 
       @second_membership = UserGroupMembership.create( user: @user, group: @second_corporation )
