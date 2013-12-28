@@ -3,6 +3,7 @@
 [![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)
+[![Coverage Status](https://coveralls.io/repos/fiedl/wingolfsplattform/badge.png)](https://coveralls.io/r/fiedl/wingolfsplattform)
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)
 [![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)
 
@@ -19,8 +20,10 @@ Status                                                                          
 [![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)                                    | Wingolfsplattform Version
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)  | Build Status on `production`
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)              | Build Status on `master`
+[![Coverage Status](https://coveralls.io/repos/fiedl/wingolfsplattform/badge.png)](https://coveralls.io/r/fiedl/wingolfsplattform)                                | Test Coverage on `master`
 [![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)                             | Code Climate (4=good, 1=bad)
 [![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)                                          | Gemnasium Gem Dependency Monitor
+
 
 ### Production
 
