@@ -100,5 +100,12 @@ class Ability
       end
 
     end
+    
+    # Imprint
+    # Make sure all users (even if not logged in) can read the imprint.
+    can :read, Page do |page|
+      page.has_flag? :imprint
+    end
+    
   end
 end
