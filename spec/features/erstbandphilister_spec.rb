@@ -9,7 +9,7 @@ feature "Erstbandphilister" do
     @regular_philister_group = @philisterschaft_group.child_groups.create(name: "Philister")
     @philisterschaft_group.create_erstbandphilister_parent_group
     @philister_user = create(:user_with_account)
-    @regular_philister_group.assign_user @philister_user
+    @regular_philister_group.assign_user @philister_user, at: 10.minutes.ago
 
     login(@philister_user)
   end
