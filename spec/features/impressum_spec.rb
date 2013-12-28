@@ -18,6 +18,13 @@ feature 'Impressum' do
       
       page.should have_content "This is the imprint."
     end
+    scenario 'viewing imprint if not logged in' do
+      visit root_path
+      within "#footer" do
+        click_on I18n.t(:imprint)
+      end
+      page.should have_content "This is the imprint."
+    end
   end
   
   describe 'for no imprint Page existing' do

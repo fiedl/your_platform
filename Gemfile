@@ -80,14 +80,6 @@ gem 'colored'								# MIT License
 # Auto Completion
 #gem 'rails3-jquery-autocomplete'					# MIT Licenses
 
-# Deployment with Capistrano.
-# Capistrano runs locally, not on the remote server.
-group :development do
-  gem 'capistrano' #, '~>2.11.2'
-  gem 'capistrano_colors'
-  gem 'net-ssh', '2.4.0'
-end
-
 # Debug Tools
 group :development do
 
@@ -185,11 +177,15 @@ gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
 # see https://github.com/luislavena/rb-readline/issues/84#issuecomment-17335885
 #gem 'rb-readline', '~> 0.5.0', group: :development, require: 'readline'
 
-gem 'gmaps4rails', '~> 2.0.1', git: 'git@github.com:fiedl/Google-Maps-for-Rails.git'
+gem 'gmaps4rails', '~> 2.0.1', git: 'git://github.com/fiedl/Google-Maps-for-Rails.git'
 
 # To customly set timeout time we need rack-timeout
 gem 'rack-timeout'
 
 # Metrics
 gem 'fnordmetric', '1.0.0'
+
+# Code Coverage Badge
+gem 'coveralls', require: false
+
 

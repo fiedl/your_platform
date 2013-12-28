@@ -34,6 +34,9 @@
 # 
 # SimpleCov         Tool to detect the test coverage of our code.
 #                   https://github.com/colszowka/simplecov
+# 
+# Coveralls         Tool to add a code coverage badge.
+#                   https://coveralls.io/docs/ruby
 #
 
 # Required Basic Libraries
@@ -99,6 +102,9 @@ Spork.prefork do
   unless ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
+
+    require 'coveralls'
+    Coveralls.wear! 'rails'
   end
 
 
