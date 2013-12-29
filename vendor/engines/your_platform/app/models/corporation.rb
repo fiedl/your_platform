@@ -27,7 +27,7 @@ class Corporation < Group
   #
   def status_groups 
     self.descendant_groups.select do |group|
-      group.descendant_groups.count == 0
+      group.has_no_subgroups_other_than_the_officers_parent?
     end
   end
 

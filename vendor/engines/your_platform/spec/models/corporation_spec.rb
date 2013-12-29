@@ -52,6 +52,15 @@ describe Corporation do
     it "should not include unrelated groups" do
       subject.should_not include @another_group
     end
+    describe "after calling admins" do
+      before { @admins_parent = @status_group.admins_parent }
+      it "should still return the correct status groups" do
+        subject.should include @status_group
+      end
+      it "should not return the officers groups" do
+        subject.should_not include @admins_parent
+      end
+    end
   end
 
 

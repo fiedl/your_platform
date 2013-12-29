@@ -8,8 +8,8 @@ module CorporateVitaHelper
 
   def status_group_memberships_for_user_and_corporation( user, corporation )
     StatusGroupMembership
-      .find_all_by_user_and_corporation( user, corporation )
       .now_and_in_the_past
+      .find_all_by_user_and_corporation( user, corporation )
   end
 
   def status_group_membership_valid_from_best_in_place( membership )
