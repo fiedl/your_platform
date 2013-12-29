@@ -22,6 +22,7 @@ module ProfileSteps
         expect{
           click_on I18n.t(:remove)
           page.should have_no_selector('.profile_field_parent', visible: true)
+          wait_for_ajax
         }.to change{ all('.profile_field_parent').count }.by -1
       end
 
@@ -50,12 +51,19 @@ module ProfileSteps
         page.should have_selector('.remove_button', visible: true)
         click_on I18n.t(:remove)
       end
-
+    
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       page.should have_selector('ul.profile_fields')
       page.save_screenshot('tmp/screenshot.png')
-      #puts all('.remove_button').count.to_s + ' remove buttons'
-      #puts all('.profile_field_parent', visible: true).count.to_s + ' profile fields'
-    }.to change{ all('.profile_field_parent').count }.by -1
+      
+      # p "============================================================================", type
+      wait_for_ajax
+      # puts all('.remove_button').count.to_s + ' remove buttons'
+      # puts all('.profile_field_parent', visible: true).count.to_s + ' profile fields'
+    }.to change{ all('.profile_field_parent').count }.by -1 
+  end
+  
+  def wait_for_ajax
+    sleep 1
   end
 end
