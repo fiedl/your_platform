@@ -148,7 +148,7 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.6.2)
+    coffee-script-source (1.6.3)
     colored (1.2)
     commonjs (0.2.7)
     coveralls (0.7.0)
@@ -176,8 +176,7 @@ GEM
       eventmachine (>= 0.12.9)
     erubis (2.7.0)
     eventmachine (1.0.3)
-    execjs (1.4.0)
-      multi_json (~> 1.0)
+    execjs (2.0.2)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.3.0)
@@ -408,7 +407,7 @@ GEM
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
-    turbolinks (1.1.1)
+    turbolinks (2.1.0)
       coffee-rails
     twitter-bootstrap-rails (2.2.4)
       actionpack (>= 3.1)
