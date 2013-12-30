@@ -76,8 +76,8 @@ describe UserGroupMembership do
       @user.parents.should include( @group )
     end
     it "should raise an error if argument is missing" do
-      expect { UserGroupMembership.create( user: @user ) }.should raise_error RuntimeError
-      expect { UserGroupMembership.create( group: @group ) }.should raise_error RuntimeError
+      expect { UserGroupMembership.create( user: @user ) }.to raise_error RuntimeError
+      expect { UserGroupMembership.create( group: @group ) }.to raise_error RuntimeError
     end
     it "should be able to identify a user by its 'user_title'" do
       UserGroupMembership.create( user_title: @user.title, group_id: @group.id )
@@ -239,7 +239,7 @@ describe UserGroupMembership do
     describe "for direct links" do
       describe "for existing memberships" do
         it "should raise an error, since the database consistency would be desturbed without a proper destroy call" do
-          expect { find_membership.delete! }.should raise_error RuntimeError
+          expect { find_membership.delete! }.to raise_error RuntimeError
         end
       end
       describe "for memberships with #deleted_at not nil" do
