@@ -33,6 +33,43 @@ describe UserGroupMembershipMixins::ValidityRange do
     end
   end
   
+  describe "#valid_from_localized_date" do
+    subject { @membership.valid_from_localized_date }
+    describe "if no valid_from given" do
+      before { @membership.valid_from = nil }
+      it { should == "" }
+    end
+    describe "if a datetime given" do
+      before do
+        @time = "1.1.2013 12:30 UTC".to_datetime
+        @membership.valid_from = @time 
+      end
+      it { should == "01.01.2013" }
+    end
+  end
+  describe "#valid_from_localized_date=" do
+    describe "setting a date string" do
+      subject { @membership.valid_from_localized_date = "1.1.2013" }
+      it "should set the correct date" do
+        subject
+        @membership.valid_from.to_date.should == "1.1.2013".to_date
+      end
+    end
+    describe "setting an empty string" do
+      subject { @membership.valid_from_localized_date = "" }
+      it "should set valid_from to nil" do
+        subject
+        @membership.valid_from.should == nil
+      end
+    end
+    describe "setting an invalid date" do
+      subject { @membership.valid_from_localized_date = "FOO BAR" }
+      it "should raise an error" do
+        expect { subject }.to raise_error
+      end
+    end
+  end
+  
   describe "#make_invalid" do
     describe "with time argument" do
       before { @time = 1.hour.ago }

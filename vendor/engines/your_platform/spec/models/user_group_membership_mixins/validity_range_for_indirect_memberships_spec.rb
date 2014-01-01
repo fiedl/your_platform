@@ -90,7 +90,7 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     it { should == @direct_membership_b }
   end
   
-  describe "#recalculate_validity_range_from_direct_memberships" do
+  describe "#recalculate_validity_range_from_direct_memberships", :focus do
     before do
       @t1 = 10.hours.ago; @t2 = 8.hours.ago; @t3 = 37.minutes.ago
       @direct_membership_a.update_attribute(:valid_from, @t1)
@@ -109,9 +109,113 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
       @indirect_membership.read_attribute(:valid_from).to_i.should == @t1.to_i
       @indirect_membership.read_attribute(:valid_to).to_i.should == @t3.to_i
     end
+    it "should persist in the graph" do
+      subject
+      DagLink.find(@indirect_membership.id).valid_from.to_i.should == @t1.to_i
+      DagLink.find(@indirect_membership.id).valid_to.to_i.should == @t3.to_i
+    end
+    describe "for the earliest valid_from being nil" do
+      before { @direct_membership_a.update_attribute(:valid_from, nil) }
+      it "should set the indirect valid_from to nil" do
+        subject
+        @indirect_membership.read_attribute(:valid_from).should == nil
+      end
+    end
+    describe "(bug fix: reproducing status group membership scenario)" do
+      #   @corporation
+      #        |------- @intermediate_group
+      #                         |------------ @status_group
+      #                         |                  |--------- (@user)
+      #                         | 
+      #                         |------------ @second_status_group
+      #                                            |--------- @user
+      before do
+        @corporation = create( :corporation, name: "Corporation" )
+        @intermediate_group = create( :group, name: "Not a Status Group" )
+        @status_group = create( :group, name: "Status Group" )
+        @intermediate_group.parent_groups << @corporation
+        @status_group.parent_groups << @intermediate_group
+        @user = create( :user )
+        @status_group.assign_user @user
+        @membership = UserGroupMembership.find_by_user_and_group( @user, @status_group )
+        #  .becomes( StatusGroupMembership )
+        @intermediate_group_membership = UserGroupMembership
+          .find_by_user_and_group( @user, @intermediate_group )#.becomes StatusGroupMembership
+        @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
+        @membership.update_attribute(:valid_from, 1.year.ago)
+        @corpo_membership = UserGroupMembership.find_by_user_and_group(@user, @corporation)
+      end
+      specify "prelims" do
+        @user.should be_kind_of User
+        @corporation.should be_kind_of Corporation
+        @corporation.descendants.should include @intermediate_group, @status_group, @second_status_group, @user
+        @intermediate_group.descendants.should include @status_group, @second_status_group, @user
+        @status_group.descendants.should include @user
+      end
+      describe "promoting the membership" do
+        subject { @second_membership = @membership.move_to(@second_status_group, at: 20.day.ago) }
+        # @membership          valid_from: 1.year.ago,   valid_to: 20.days.ago
+        # @second_membership   valid_from: 20.days.ago,  valid_to: nil
+        # @corpo_membership    valid_from: 1.year.ago,   valid_to: nil
+        before { subject }
+        #before do
+        #  @corpo_membership.recalculate_validity_range_from_direct_memberships
+        #  @corpo_membership.save
+        #end
+          
+        it "should update the valid_from and valid_to of the indirect membership" do
+          @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
+          @corpo_membership.read_attribute(:valid_to).should == nil
+        end
+        it "should update the validity range persistent" do
+          @reloaded_corpo_membership = UserGroupMembership.find(@corpo_membership.id)
+          @reloaded_corpo_membership.should == @corpo_membership
+          @reloaded_corpo_membership.valid_from.to_date.should == 1.year.ago.to_date
+          @reloaded_corpo_membership.valid_to.should == nil
+        end
+        it "should update the valid_from and valid_to of the corresponding graph link" do
+          @link = DagLink.find(@corpo_membership.id)
+          @link.valid_from.to_date.should == 1.year.ago.to_date
+          @link.valid_to.should == nil
+        end
+        it "should update the graph structure" do
+          @second_status_group.descendants.should include @user
+          @corporation.descendants.should include @user
+        end
+        it "should update the corporation members correctly" do
+          @corporation.members.should include @user
+          @user.should be_member_of @corporation
+        end
+        specify "the corporation members should match the memberships in number" do
+          @corporation.memberships.count.should > 0
+          @corporation.memberships.count.should == @corporation.members.count
+        end
+        specify "the indirect membership should be included in the memberships associated with the corporation" do
+          @corporation.memberships.should include @corpo_membership
+        end
+        it "should make no difference if the validity range is forcefully updated" do
+          @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
+          @corpo_membership.read_attribute(:valid_to).should == nil
+
+          @membership.update_attribute(:valid_from, 1.year.ago)
+          @membership.update_attribute(:valid_to, 20.days.ago)
+          @second_membership.update_attribute(:valid_from, 20.days.ago)
+          @second_membership.update_attribute(:valid_to, nil)
+
+          @corpo_membership = UserGroupMembership.find(@corpo_membership.id)
+          @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
+          @corpo_membership.read_attribute(:valid_to).should == nil
+        end
+        specify "the memberships should have no errors" do
+          @corpo_membership.errors.count.should == 0
+          @membership.errors.count.should == 0
+          @second_membership.errors.count.should == 0
+        end
+      end
+    end
   end
   
-  
+    
   # Invalidation
   # ====================================================================================================
   

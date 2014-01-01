@@ -47,12 +47,12 @@ class UserGroupMembershipsController < ApplicationController
 
   def find_membership
     if params[ :id ].present?
-      @user_group_membership = UserGroupMembership.with_deleted.find( params[ :id ] )
+      @user_group_membership = UserGroupMembership.with_invalid.find( params[ :id ] )
     else
       user = User.find params[ :user_id ] if params[ :user_id ]
       group = Group.find params[ :group_id ] if params[ :group_id ]
       if user && group
-        @user_group_membership = UserGroupMembership.with_deleted.find_by_user_and_group user, group
+        @user_group_membership = UserGroupMembership.with_invalid.find_by_user_and_group user, group
       end
     end
   end

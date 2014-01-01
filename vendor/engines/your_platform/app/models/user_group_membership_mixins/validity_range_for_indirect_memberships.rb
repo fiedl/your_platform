@@ -101,7 +101,7 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   # the validity range of the indirect memberships can be used in database queries,
   # for example, when using scopes.
   #
-  # Attention: At this point, this mechanism does not cover the validity range of
+  # **Attention**: At this point, this mechanism does not cover the validity range of
   # indirect memberships where there should be a gap in the membership:
   # 
   #     *----------*     *----------* (indirect membership with gap in validity range)
@@ -113,12 +113,16 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   #
   def recalculate_validity_range_from_direct_memberships
     unless direct?
+      p "RECALC", self
       write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
       write_attribute :valid_to, latest_direct_membership.try(:valid_to)
+      self.valid_from_will_change!
+      self.valid_to_will_change!
     end
   end
   
   def recalculate_indirect_validity_ranges_if_needed
+    p "CALLER", self
     if self.direct? and @need_to_recalculate_indirect_memberships == true
       self.indirect_memberships.each do |indirect_membership|
         indirect_membership.recalculate_validity_range_from_direct_memberships

@@ -14,7 +14,7 @@ module CorporateVitaHelper
 
   def status_group_membership_valid_from_best_in_place( membership )
     best_in_place( membership,
-                   :valid_from,  # type: :date,
+                   :valid_from_localized_date,  # type: :date,
                    path: user_group_membership_path( id: membership.id,
                                                      controller: :user_group_memberships,
                                                      action: :update,

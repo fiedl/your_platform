@@ -39,13 +39,13 @@ feature 'Corporate Vita', js: true do
 
     describe 'promoting users (i.e. change their status)' do
       it 'should be possible to promote users' do
-
+        save_and_open_page
         # run the first workflow
         within '.box.first' do
           click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
-
+        save_and_open_page
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -82,15 +82,15 @@ feature 'Corporate Vita', js: true do
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @created_at_formatted = I18n.localize @membership.created_at.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
 
-          page.should have_content @created_at_formatted
+          page.should have_content @valid_from_formatted
 
           # activate inplace editing of the date_field
           first('.best_in_place.status_group_date_of_joining').click
 
           within first '.best_in_place.status_group_date_of_joining' do
-            page.should have_field 'created_at_date_formatted', with: @created_at_formatted
+            page.should have_field 'valid_from_date_localized', with: @valid_from_formatted
           end
 
           # TODO: TEST THIS!
@@ -158,7 +158,7 @@ feature 'Corporate Vita', js: true do
       it 'should not be possible to change the date' do
         within('#corporate_vita') do
 
-          @created_at_formatted = I18n.localize @membership.created_at.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
 
           #page.should have_content @created_at_formatted #why does this fail?
 

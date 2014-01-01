@@ -141,6 +141,13 @@ describe StatusGroupMembership do
     # Some methods need to work with them as well as with the original Corporation class.
   end
 
+  #   @corporation
+  #        |------- @intermediate_group
+  #                         |------------ @status_group
+  #                         |                  |--------- @user
+  #                         | 
+  #                         |------------ @second_status_group
+  # 
   describe "Finder Methods: " do
     before do
       @corporation = create( :corporation )
@@ -156,6 +163,8 @@ describe StatusGroupMembership do
         .becomes( StatusGroupMembership )
       @intermediate_group_membership = UserGroupMembership
         .find_by_user_and_group( @user, @intermediate_group ).becomes StatusGroupMembership
+        
+      @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
     end
 
     describe ".find_all_by_corporation" do
@@ -235,6 +244,35 @@ describe StatusGroupMembership do
       it "should return the memberships of the user in the status groups of the corporation" do
         subject.should include @membership
       end
+    end
+    
+    #   @corporation
+    #        |------- @intermediate_group
+    #                         |------------ @status_group
+    #                         |                  |--------- (@user)
+    #                         | 
+    #                         |------------ @second_status_group
+    #                                            |--------- @user
+    #
+    describe ".now_and_in_the_past.find_all_by_user_and_corporation", :focus do
+      before do
+        @membership.update_attribute(:valid_from, 1.year.ago)
+        @second_membership = @membership.move_to(@second_status_group, at: 20.day.ago)
+      end
+      subject { StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation) }
+      specify "prelims" do
+        @user.should be_kind_of User
+        @corporation.should be_kind_of Corporation
+        @corporation.descendants.should include @intermediate_group, @status_group, @second_status_group, @user
+        @intermediate_group.descendants.should include @status_group, @second_status_group, @user
+        @status_group.descendants.should include @user
+        @second_status_group.descendants.should include @user
+        @corporation.members.should include @user
+        @user.should be_member_of @corporation
+      end
+      #it { should include @second_membership }
+      #it { should include @membership }
+      #it { should_not include @intermediate_group_membership }
     end
 
   end

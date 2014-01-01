@@ -34,6 +34,13 @@ module UserGroupMembershipMixins::ValidityRange
   
   # Attributes in the database
   # ====================================================================================================
+  
+  def valid_from_localized_date
+    self.valid_from ? I18n.localize(self.valid_from.try(:to_date)) : ""
+  end
+  def valid_from_localized_date=(new_date)
+    self.valid_from = new_date.to_datetime
+  end
 
   def set_valid_from_to_now
     self.valid_from ||= Time.zone.now

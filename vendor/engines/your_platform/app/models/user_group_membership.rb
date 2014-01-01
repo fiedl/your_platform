@@ -265,6 +265,9 @@ class UserGroupMembership < DagLink
     new_membership.update_attribute(:valid_from, time)
     return new_membership
   end
+  def move_to(group, options = {})
+    move_to_group(group, options)
+  end
 
   def promote_to( new_group, options = {} )
     self.move_to_group( new_group, options )
