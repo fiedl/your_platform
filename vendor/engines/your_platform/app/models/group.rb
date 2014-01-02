@@ -33,6 +33,7 @@ class Group < ActiveRecord::Base
   include GroupMixins::Guests
   include GroupMixins::HiddenUsers
   include GroupMixins::Developers
+  include GroupMixins::Officers
 
   include GroupMixins::Import
 

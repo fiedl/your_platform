@@ -16,7 +16,7 @@ class Corporation < Group
     return true if user.corporations.count == 1
     this_membership_valid_from = UserGroupMembership.find_by_user_and_group( user, self ).valid_from
     user.memberships.each do |membership|
-      return false if membership.valid_from < this_membership_valid_from
+      return false if membership.valid_from.to_i < this_membership_valid_from.to_i
     end
     return true
   end

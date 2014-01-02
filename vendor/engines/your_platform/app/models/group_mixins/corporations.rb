@@ -123,12 +123,4 @@ module GroupMixins::Corporations
     end
   end
 
-  # This method determines if the group has no subgroups other than the officers
-  # special group. This is used to determine whether the group is a status group.
-  # 
-  def has_no_subgroups_other_than_the_officers_parent?
-    (self.child_groups.count == 0) or
-      ((self.child_groups.count == 1) and (self.child_groups.first.has_flag?(:officers_parent)))
-  end
-
 end

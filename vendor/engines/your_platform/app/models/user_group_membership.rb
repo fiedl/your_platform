@@ -54,7 +54,7 @@ class UserGroupMembership < DagLink
         
       # This needs to be called manually, since DagLink won't call the proper callback.
       #
-      new_membership.set_valid_from_to_now
+      new_membership.set_valid_from_to_now(true)
       new_membership.save
       
       return new_membership

@@ -42,8 +42,8 @@ module UserGroupMembershipMixins::ValidityRange
     self.valid_from = new_date.to_datetime
   end
 
-  def set_valid_from_to_now
-    self.valid_from ||= Time.zone.now if self.new_record?
+  def set_valid_from_to_now(force = false)
+    self.valid_from ||= Time.zone.now if self.new_record? or force
     return self
   end
   

@@ -53,12 +53,18 @@ describe Corporation do
       subject.should_not include @another_group
     end
     describe "after calling admins" do
-      before { @admins_parent = @status_group.admins_parent }
+      before do
+        @admins_parent = @status_group.admins_parent
+        @officers_parent = @status_group.officers_parent
+      end
       it "should still return the correct status groups" do
         subject.should include @status_group
       end
-      it "should not return the officers groups" do
-        subject.should_not include @admins_parent
+      it "should not return the officers parent groups" do
+        subject.should_not include @officers_parent
+      end
+      it "should return the admins parent groups such that being admin is considered a status" do
+        subject.should include @admins_parent
       end
     end
   end
