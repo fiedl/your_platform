@@ -93,17 +93,13 @@ feature 'Corporate Vita', js: true do
             page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
           end
 
-          # TODO: TEST THIS!
-          #       But, at the moment, this raises an Capybara::Poltergeist::ObsoleteNode error.
-          #
-          # # enter new date of joining and press enter to save.
-          # # then check if the date has been changed in the database.
-          # @new_date = 10.days.ago.to_date
-          # fill_in "created_at_date_formatted", with: (I18n.localize(@new_date) + "\n")
-          # page.should_not have_selector("input")
-          # page.should have_content I18n.localize(@new_date)
-          # sleep 1  # wait for ajax
-          # UserGroupMembership.now_and_in_the_past.find(@membership.id).created_at.to_date.should == @new_date
+          @new_date = 10.days.ago.to_date
+          fill_in "valid_from_localized_date", with: (I18n.localize(@new_date) + "\n")
+          page.should_not have_selector("input")
+          page.should have_content I18n.localize(@new_date)
+          
+          sleep 1  # wait for ajax
+          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end

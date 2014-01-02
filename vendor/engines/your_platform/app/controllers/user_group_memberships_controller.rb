@@ -22,18 +22,15 @@ class UserGroupMembershipsController < ApplicationController
     attributes = params[ :user_group_membership ]
     attributes ||= params[ :status_group_membership ]
 
-    @user_group_membership.update_attributes( attributes )
-#    if @user_group_membership.update_attributes( attributes )
-#      respond_to do |format|
-#        format.json do
-#          #head :ok
-#          respond_with_bip @user_group_membership
-#        end
-#      end
-      respond_with @user_group_membership
-#    else
-#      raise "updating attributes of user_group_membership has failed: " + @user_group_membership.errors.full_messages.first
-#    end
+    if @user_group_membership.update_attributes!( attributes )
+      respond_to do |format|
+        format.json do
+          #head :ok
+          #respond_with_bip @user_group_membership
+          respond_with @user_group_membership
+        end
+      end
+    end
   end
 
   def destroy

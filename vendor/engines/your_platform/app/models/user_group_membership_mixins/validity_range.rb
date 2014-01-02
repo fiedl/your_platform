@@ -25,7 +25,7 @@ module UserGroupMembershipMixins::ValidityRange
   extend ActiveSupport::Concern
 
   included do 
-    attr_accessible :valid_from, :valid_to
+    attr_accessible :valid_from, :valid_to, :valid_from_localized_date
     before_validation :set_valid_from_to_now
     
     default_scope { only_valid }
@@ -40,6 +40,7 @@ module UserGroupMembershipMixins::ValidityRange
   end
   def valid_from_localized_date=(new_date)
     self.valid_from = new_date.to_datetime
+    valid_from_will_change!
   end
 
   def set_valid_from_to_now(force = false)

@@ -116,11 +116,8 @@ group :test do
   gem 'simplecov', require: false
 end
 
-# This is for testing on wingolfsplattform.org -- since travis-pro has expired.
 group :test do
-  # simulating enter via "\n" does not work after 1.1.2
-  # https://github.com/jonleighton/poltergeist/issues/388
-  gem 'poltergeist', '1.1.2'  # 1.1.2: \n works, 1.2.0 works not, 1.4.1
+  gem 'poltergeist', '1.5.0'
 end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
