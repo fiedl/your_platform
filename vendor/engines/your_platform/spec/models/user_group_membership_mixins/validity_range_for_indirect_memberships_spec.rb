@@ -142,9 +142,8 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
         @user = create( :user )
         @status_group.assign_user @user
         @membership = UserGroupMembership.find_by_user_and_group( @user, @status_group )
-        #  .becomes( StatusGroupMembership )
         @intermediate_group_membership = UserGroupMembership
-          .find_by_user_and_group( @user, @intermediate_group )#.becomes StatusGroupMembership
+          .find_by_user_and_group( @user, @intermediate_group )
         @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
         @membership.update_attribute(:valid_from, 1.year.ago)
         @corpo_membership = UserGroupMembership.find_by_user_and_group(@user, @corporation)
@@ -163,15 +162,6 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
         # @corpo_membership    valid_from: 1.year.ago,   valid_to: nil
         before { subject }
 
-        # TODO: LÖSCHEN:
-        # Der folgende `before`-Block löst das Problem von Hand.
-        # Es liegt also daran, dass die Recalculation nicht getriggert wird.
-        #
-        #before do
-        #  @corpo_membership.recalculate_validity_range_from_direct_memberships
-        #  @corpo_membership.save
-        #end
-          
         it "should update the valid_from and valid_to of the indirect membership" do
           @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
           @corpo_membership.read_attribute(:valid_to).should == nil

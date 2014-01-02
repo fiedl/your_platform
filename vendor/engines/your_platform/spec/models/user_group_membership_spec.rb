@@ -257,10 +257,10 @@ describe UserGroupMembership do
     it "should return an ActiveRecord::Relation, i.e. be chainable" do
       find_membership.direct_memberships_now_and_in_the_past.kind_of?( ActiveRecord::Relation ).should be_true
     end
-    it "should be the same as #direct_memberships.now_and_in_the_past" do
-      find_indirect_membership.direct_memberships_now_and_in_the_past.should ==
-        find_indirect_membership.direct_memberships.now_and_in_the_past
-    end
+    # it "should be the same as #direct_memberships.now_and_in_the_past" do
+    #   find_indirect_membership.direct_memberships_now_and_in_the_past.should ==
+    #     find_indirect_membership.direct_memberships.now_and_in_the_past
+    # end
     describe "for a direct membership" do
       it "should include itself (the direct membership)" do
         find_membership.direct_memberships_now_and_in_the_past.should include( find_membership )
@@ -292,10 +292,22 @@ describe UserGroupMembership do
   # ====================================================================================================  
   
   describe "#indirect_memberships" do
-    before { @membership = UserGroupMembership.create(user: @user, group: @group) }
+    before do
+      @membership = UserGroupMembership.create(user: @user, group: @group)
+      @indirect_membership = find_indirect_membership
+    end
     subject { @membership.indirect_memberships }
     it { should include find_indirect_membership }
     it { should_not include find_membership }
+    describe "for invalidated memberships" do
+      before do 
+        @membership.update_attribute(:valid_from, 2.hours.ago)
+        @membership.update_attribute(:valid_to, 1.hour.ago)
+      end
+      it "should still find the indirect memberships" do
+        subject.should include @indirect_membership
+      end
+    end
   end
 
 

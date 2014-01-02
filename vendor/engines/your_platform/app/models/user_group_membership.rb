@@ -223,6 +223,10 @@ class UserGroupMembership < DagLink
     memberships = memberships.order( :valid_from )
     memberships
   end
+  
+  def direct_memberships_now_and_in_the_past
+    direct_memberships(with_invalid: true)
+  end
 
   # Returns the direct groups shown in the figures above in the description of
   # `direct_memberships`.
@@ -237,12 +241,6 @@ class UserGroupMembership < DagLink
 
   def indirect_memberships
     self.group.ancestor_groups.collect do |ancestor_group|
-      
-      # TODO: Hier ist der Fehler.
-      # Wenn hier kein `with_invalid`-Scope steht, werden die indirekten Memberships nicht 
-      # aufgeführt, die aber zur Berechnung erforderlich sind.
-      # TODO: Integrationstest!
-            
       UserGroupMembership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
     end.select do |item|
       item != nil

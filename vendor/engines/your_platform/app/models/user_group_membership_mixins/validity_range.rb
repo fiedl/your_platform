@@ -130,7 +130,14 @@ module UserGroupMembershipMixins::ValidityRange
     # present time are returned.
     # 
     def with_invalid
+
+      # TODO: Replace the brute-force `unscoped` by a more specific term like
+      # `except(:valid_from).except(:valid_to)`. 
+      # But so far, this has caused several tests to fail, which would have to be 
+      # fixed.
+      #
       unscoped
+
     end
     
     # This scope limits the query to memberships that are invalid at the present time.
