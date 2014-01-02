@@ -79,11 +79,11 @@ class StatusGroupMembership < UserGroupMembership
     raise 'Expect parameter to be a Corporation' unless corporation.kind_of? Corporation
     status_groups = corporation.status_groups
     status_group_ids = status_groups.collect { |group| group.id }
-    links = StatusGroupMembership
+    links = self
       .where( :descendant_type => "User" )
       .where( :ancestor_type => "Group" )
       .where( :ancestor_id => status_group_ids )
-      .order( :created_at )
+      .order( :valid_from )
     return links
   end
 
@@ -93,12 +93,12 @@ class StatusGroupMembership < UserGroupMembership
     raise 'Expect parameter to be a User' unless user.kind_of? User
     status_groups = user.status_groups
     status_group_ids = status_groups.collect { |group| group.id }
-    links = StatusGroupMembership
+    links = self
       .where( :descendant_type => "User" )
       .where( :descendant_id => user.id )
       .where( :ancestor_type => "Group" )
       .where( :ancestor_id => status_group_ids )
-      .order( :created_at )
+      .order( :valid_from )
     return links
   end
 
@@ -108,9 +108,19 @@ class StatusGroupMembership < UserGroupMembership
     self.find_all_by_user( user ).find_all_by_corporation( corporation )
   end
 
+  # This method overrides the default finder method in order to make
+  # sure the returned object is of the StatusGroupMembership type.
+  #
   def self.find_by_user_and_group( user, group )
+    self
+      .where(ancestor_id: group.id, ancestor_type: 'Group')
+      .where(descendant_id: user.id, descendant_type: 'User')
+      .limit(1)
+      .first
+    
     # The #becomes method won't work here.
-    StatusGroupMembership.find( super( user, group ).id ) 
+    #membership = super( user, group )
+    #membership ? StatusGroupMembership.with_invalid.find(membership.id) : nil
   end
 
 

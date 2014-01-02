@@ -359,7 +359,7 @@ class User < ActiveRecord::Base
   end
 
   def workflows_for(group)
-    (([group] + group.descendant_groups) & self.ancestor_groups)
+    (([group] + group.descendant_groups) & self.groups)
       .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
   end
 

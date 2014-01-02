@@ -165,6 +165,13 @@ describe StatusGroupMembership do
         .find_by_user_and_group( @user, @intermediate_group ).becomes StatusGroupMembership
         
       @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
+      
+      @other_corporation = create(:corporation_with_status_groups)
+      @membership_in_other_corporation = @other_corporation.status_groups.first.assign_user(@user)
+        .becomes(StatusGroupMembership)
+      
+      @other_user = create(:user)
+      @membership_of_other_user = @status_group.assign_user(@other_user).becomes(StatusGroupMembership)
     end
 
     describe ".find_all_by_corporation" do
@@ -244,6 +251,12 @@ describe StatusGroupMembership do
       it "should return the memberships of the user in the status groups of the corporation" do
         subject.should include @membership
       end
+      it "should not return memberships in other corporations" do
+        subject.should_not include @membership_in_other_corporation
+      end
+      it "should not return memberships of other users" do
+        subject.should_not include @membership_of_other_user
+      end
     end
     
     #   @corporation
@@ -257,7 +270,7 @@ describe StatusGroupMembership do
     describe ".now_and_in_the_past.find_all_by_user_and_corporation" do
       before do
         @membership.update_attribute(:valid_from, 1.year.ago)
-        @second_membership = @membership.move_to(@second_status_group, at: 20.day.ago)
+        @second_membership = @membership.move_to(@second_status_group, at: 20.days.ago)
           .becomes(StatusGroupMembership)
       end
       subject { StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation) }
@@ -270,6 +283,7 @@ describe StatusGroupMembership do
         @second_status_group.descendants.should include @user
         @corporation.members.should include @user
         @user.should be_member_of @corporation
+        @membership.valid_to.to_date.should == 20.days.ago.to_date
       end
       it { should include @second_membership }
       it { should include @membership }
@@ -277,4 +291,60 @@ describe StatusGroupMembership do
     end
 
   end
+  
+
+  # Status Workflow in model layer (bug fix)
+  # ==========================================================================================
+
+  describe "(status workflow scenario)" do
+  
+    before do
+      @user = create(:user)
+      @corporation = create(:corporation_with_status_groups)
+      @status_groups = @corporation.status_groups
+
+      @first_status_group = @status_groups.first
+      @second_status_group = @status_groups.second
+
+      @first_status_group.assign_user @user
+
+      @first_promotion_workflow = create( :promotion_workflow, name: 'First Promotion',
+                                          :remove_from_group_id => @first_status_group.id,
+                                          :add_to_group_id => @second_status_group.id )
+      @first_promotion_workflow.parent_groups << @first_status_group
+    end
+    
+    def status_groups_of_user_and_corporation
+      StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation)
+    end
+    def first_status_group_membership
+      StatusGroupMembership.with_invalid.find_by_user_and_group(@user, @first_status_group)
+    end
+    def second_status_group_membership
+      StatusGroupMembership.with_invalid.find_by_user_and_group(@user, @second_status_group)
+    end
+    
+    describe "prelims" do
+      specify "first_status_group_membership should find the membership even if invalidated" do
+        first_status_group_membership.should_not == nil
+        first_status_group_membership.invalidate at: 1.hour.ago
+        first_status_group_membership.should_not == nil
+      end
+    end
+    
+    describe "executing the first promotion workflow" do
+      subject { @first_promotion_workflow.execute(user_id: @user.id); @user.reload }
+      it "should add the second status group to the user's status groups" do
+        status_groups_of_user_and_corporation.should_not include second_status_group_membership
+        subject
+        status_groups_of_user_and_corporation.should include second_status_group_membership
+      end
+      it "should not remove the first status group from the user's status groups" do
+        status_groups_of_user_and_corporation.should include first_status_group_membership
+        subject
+        status_groups_of_user_and_corporation.should include first_status_group_membership
+      end
+    end
+
+  end  
 end

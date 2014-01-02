@@ -7,7 +7,7 @@ feature 'Corporate Vita', js: true do
   background do
     @user = create( :user_with_account )
     @corporation = create( :corporation_with_status_groups )
-    @status_groups = @corporation.child_groups
+    @status_groups = @corporation.status_groups
   end
 
   describe 'as admin:' do
@@ -39,13 +39,13 @@ feature 'Corporate Vita', js: true do
 
     describe 'promoting users (i.e. change their status)' do
       it 'should be possible to promote users' do
-        save_and_open_page
+
         # run the first workflow
         within '.box.first' do
           click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
-        save_and_open_page
+        
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -90,7 +90,7 @@ feature 'Corporate Vita', js: true do
           first('.best_in_place.status_group_date_of_joining').click
 
           within first '.best_in_place.status_group_date_of_joining' do
-            page.should have_field 'valid_from_date_localized', with: @valid_from_formatted
+            page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
           end
 
           # TODO: TEST THIS!

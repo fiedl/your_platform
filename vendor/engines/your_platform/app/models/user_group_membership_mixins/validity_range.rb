@@ -73,6 +73,14 @@ module UserGroupMembershipMixins::ValidityRange
   def invalidate(time = Time.zone.now)
     self.make_invalid(time)
   end
+  
+  # This method determines whether the membership can be invalidated.
+  # Direct memberships can be invalidated, whereas indirect memberships cannot.
+  # The validity of indirect memberships is derived from the validity of the direct ones.
+  #
+  def can_be_invalidated?
+    self.direct?
+  end
 
 
   # Validity Check
