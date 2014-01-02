@@ -231,20 +231,19 @@ class UserGroupMembership < DagLink
     direct_memberships.collect { |membership| membership.group }
   end
 
-  def direct_memberships_now_and_in_the_past
-    self.direct_memberships.now_and_in_the_past
-  end
-  def direct_memberships_now
-    self.direct_memberships.where( :deleted_at => nil )
-  end
-
 
   # Access Methods to Associated Indirect Memberships
   # ====================================================================================================  
 
   def indirect_memberships
     self.group.ancestor_groups.collect do |ancestor_group|
-      UserGroupMembership.find_by_user_and_group(self.user, ancestor_group)
+      
+      # TODO: Hier ist der Fehler.
+      # Wenn hier kein `with_invalid`-Scope steht, werden die indirekten Memberships nicht 
+      # aufgeführt, die aber zur Berechnung erforderlich sind.
+      # TODO: Integrationstest!
+            
+      UserGroupMembership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
     end.select do |item|
       item != nil
     end

@@ -254,10 +254,11 @@ describe StatusGroupMembership do
     #                         |------------ @second_status_group
     #                                            |--------- @user
     #
-    describe ".now_and_in_the_past.find_all_by_user_and_corporation", :focus do
+    describe ".now_and_in_the_past.find_all_by_user_and_corporation" do
       before do
         @membership.update_attribute(:valid_from, 1.year.ago)
         @second_membership = @membership.move_to(@second_status_group, at: 20.day.ago)
+          .becomes(StatusGroupMembership)
       end
       subject { StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation) }
       specify "prelims" do
@@ -270,9 +271,9 @@ describe StatusGroupMembership do
         @corporation.members.should include @user
         @user.should be_member_of @corporation
       end
-      #it { should include @second_membership }
-      #it { should include @membership }
-      #it { should_not include @intermediate_group_membership }
+      it { should include @second_membership }
+      it { should include @membership }
+      it { should_not include @intermediate_group_membership }
     end
 
   end

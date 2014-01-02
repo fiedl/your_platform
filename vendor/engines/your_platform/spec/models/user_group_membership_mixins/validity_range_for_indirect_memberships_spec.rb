@@ -90,7 +90,7 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     it { should == @direct_membership_b }
   end
   
-  describe "#recalculate_validity_range_from_direct_memberships", :focus do
+  describe "#recalculate_validity_range_from_direct_memberships" do
     before do
       @t1 = 10.hours.ago; @t2 = 8.hours.ago; @t3 = 37.minutes.ago
       @direct_membership_a.update_attribute(:valid_from, @t1)
@@ -116,6 +116,10 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     end
     describe "for the earliest valid_from being nil" do
       before { @direct_membership_a.update_attribute(:valid_from, nil) }
+      specify "prelims" do
+        @reloaded_direct_membership_a = UserGroupMembership.with_invalid.find(@direct_membership_a.id)
+        @reloaded_direct_membership_a.read_attribute(:valid_from).should == nil
+      end
       it "should set the indirect valid_from to nil" do
         subject
         @indirect_membership.read_attribute(:valid_from).should == nil
@@ -158,6 +162,11 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
         # @second_membership   valid_from: 20.days.ago,  valid_to: nil
         # @corpo_membership    valid_from: 1.year.ago,   valid_to: nil
         before { subject }
+
+        # TODO: LÖSCHEN:
+        # Der folgende `before`-Block löst das Problem von Hand.
+        # Es liegt also daran, dass die Recalculation nicht getriggert wird.
+        #
         #before do
         #  @corpo_membership.recalculate_validity_range_from_direct_memberships
         #  @corpo_membership.save
@@ -205,11 +214,6 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
           @corpo_membership = UserGroupMembership.find(@corpo_membership.id)
           @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
           @corpo_membership.read_attribute(:valid_to).should == nil
-        end
-        specify "the memberships should have no errors" do
-          @corpo_membership.errors.count.should == 0
-          @membership.errors.count.should == 0
-          @second_membership.errors.count.should == 0
         end
       end
     end

@@ -113,7 +113,6 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   #
   def recalculate_validity_range_from_direct_memberships
     unless direct?
-      p "RECALC", self
       write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
       write_attribute :valid_to, latest_direct_membership.try(:valid_to)
       self.valid_from_will_change!
@@ -122,11 +121,17 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   end
   
   def recalculate_indirect_validity_ranges_if_needed
-    p "CALLER", self
+
+    # TODO: Prints entfernen, nachdem der Fehler behoben ist.
+    
+    #print "~~ #{self.group.name} is asking to recalc. direct: #{self.direct?} needed? #{@need_to_recalculate_indirect_memberships} \n"
     if self.direct? and @need_to_recalculate_indirect_memberships == true
+      #print "~~ indirects: #{self.indirect_memberships}"
       self.indirect_memberships.each do |indirect_membership|
         indirect_membership.recalculate_validity_range_from_direct_memberships
         indirect_membership.save
+        #print "-- #{self.group.name} is asking #{indirect_membership.group.name} to recalc. valid from #{indirect_membership.valid_from} to #{indirect_membership.valid_to}.\n"
+        
       end
     end
   end
