@@ -155,6 +155,14 @@ Spork.prefork do
     config.include RSpec::Matchers
     config.include Rails.application.routes.url_helpers
     config.include FactoryGirl::Syntax::Methods
+    
+    # This introduces the method `wait_for_ajax`, which can be used when the Capybara
+    # matchers do not wait properly for ajax code to be finished. 
+    # This is just a sleep command with a time determined by a simple benchmark.
+    # 
+    # see spec/support/wait_for_ajax.rb
+    #
+    config.include WaitForAjax 
 
 
     # Database Wiping Policy

@@ -98,7 +98,7 @@ feature 'Corporate Vita', js: true do
           page.should_not have_selector("input")
           page.should have_content I18n.localize(@new_date)
           
-          sleep 1  # wait for ajax
+          wait_for_ajax
           UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
