@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 feature "Search Field", js: true do
@@ -15,7 +14,9 @@ feature "Search Field", js: true do
     context "if there is only one matching user" do
       before do
         @user1 = create( :user, last_name: "foo" )
-        fill_in 'query', with: "foo\n" # \n hits enter
+        fill_in 'query', with: "foo"
+        
+        press_enter in: 'query'
       end
       specify "searching for foo should redirect to the user page" do
         page.should have_content( @user1.title )
@@ -27,7 +28,8 @@ feature "Search Field", js: true do
       before do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "foobar" )
-        fill_in 'query', with: "foo\n" # \n hits enter
+        fill_in 'query', with: "foo"
+        press_enter in: 'query'
       end
       specify "searching for foo should list both users" do
         page.should have_content( I18n.t( :found_users ) )
@@ -43,7 +45,8 @@ feature "Search Field", js: true do
         @user3.profile_fields.create( label: "Home Address", value: "Foo Platz 1, Erlangen", type: "ProfileFieldTypes::Address" )
         @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
 
-        fill_in 'query', with: "foo\n" # \n hits enter
+        fill_in 'query', with: "foo"
+        press_enter in: 'query'
       end
       specify "searching for foo should list each user only once" do
         page.should have_content( I18n.t( :found_users ) )
@@ -63,7 +66,8 @@ feature "Search Field", js: true do
   describe "finding pages" do
     before do
       @page = create( :page, title: "foo" )
-      fill_in 'query', with: "foo\n"
+      fill_in 'query', with: "foo"
+      press_enter in: 'query'
     end
     subject { page }
     it { should have_content( @page.title ) }
@@ -72,7 +76,8 @@ feature "Search Field", js: true do
   describe "finding groups" do
     before do
       @group = create( :group, name: "foo" )
-      fill_in 'query', with: "foo\n"
+      fill_in 'query', with: "foo"
+      press_enter in: 'query'
     end
     subject { page }
     it { should have_content( @group.title ) }
@@ -81,14 +86,11 @@ feature "Search Field", js: true do
   describe "a space should be interpreted as a wild card" do
     before do
       @page = create( :page, title: "foo some bar page" )
-      fill_in 'query', with: "foo bar\n"
+      fill_in 'query', with: "foo bar"
+      press_enter in: 'query'
     end
     subject { page }
     it { should have_content( @page.title ) }
-  end
-
-  def hit_enter_in(selector)
-    page.execute_script("var input = $(\"#{selector}\"); input.trigger('keypress', [13]);")
   end
 
 end

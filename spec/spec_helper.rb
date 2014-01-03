@@ -169,7 +169,11 @@ Spork.prefork do
     # 
     # see spec/support/wait_for_ajax.rb
     #
-    config.include WaitForAjax 
+    config.include WaitForAjax
+    
+    # This introduces the methods `send_key(field_id, key)` and `press_enter(field_id)`.
+    #
+    config.include PressEnter
 
 
     # Database Wiping Policy
