@@ -54,6 +54,12 @@ require 'spork'
 # uncomment the following line to use spork with the debugger
 # require 'spork/ext/ruby-debug'
 
+# To create an online coverage report on coveralls.io, 
+# init their gem here.
+#
+require 'coveralls'
+Coveralls.wear! 'rails'
+
 
 # Requirements and Configurations Cached by Spork
 # ==========================================================================================
@@ -102,9 +108,6 @@ Spork.prefork do
   unless ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
-
-    require 'coveralls'
-    Coveralls.wear! 'rails'
   end
 
 

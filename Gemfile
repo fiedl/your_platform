@@ -182,7 +182,7 @@ gem 'rack-timeout'
 # Metrics
 gem 'fnordmetric', '1.0.0'
 
-# Code Coverage Badge
+# Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
 
