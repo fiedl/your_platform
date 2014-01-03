@@ -94,8 +94,9 @@ feature 'Corporate Vita', js: true do
           end
 
           @new_date = 10.days.ago.to_date
-          fill_in "valid_from_localized_date", with: (I18n.localize(@new_date) + "\n")
-          page.should_not have_selector("input")
+          fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
+          
+          page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
           
           wait_for_ajax
