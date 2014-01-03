@@ -136,6 +136,13 @@ Spork.prefork do
     Capybara::Poltergeist::Driver.new(app, inspector: true)
   end
   Capybara.javascript_driver = :poltergeist
+  
+  # Set the time that Capybara should wait for ajax requests to be finished.
+  # The default is 2 seconds.
+  # 
+  # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
+  # 
+  Capybara.default_wait_time = 5
 
 
   # Rspec Configuration
