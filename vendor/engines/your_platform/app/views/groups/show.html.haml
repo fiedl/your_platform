@@ -37,7 +37,7 @@
             = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
 
 / officers
-- if @group.officers && ( @group.officers.count > 0 || can?(:manage, @group) )
+- if @group.officers_parent.descendant_users && ( @group.officers_parent.descendant_users.count > 0 || can?(:manage, @group) )
   %h1.officers.section= t :officers
   %span#officers
     %dl
