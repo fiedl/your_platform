@@ -20,6 +20,9 @@ class GroupsController < ApplicationController
       @direct_members = @group.direct_members
       @direct_members = @direct_members.page(params[:page]).per_page(25) # pagination
 
+      @members = @group.members
+      @members = @members.page(params[:page]).per_page(25) # pagination
+
       @map_address_fields = map_address_fields
 
       # @posts = @group.posts.order("sent_at DESC").limit(10)

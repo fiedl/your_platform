@@ -30,26 +30,11 @@
     %span#group_members
 
       / child users
-      = will_paginate @direct_members if @direct_members
+      = will_paginate @members if @members
       %ul.child_users
-        - if @direct_members.count > 0
-          - for user in @direct_members do
+        - if @members.count > 0
+          - for user in @members do
             = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
-
-        / structured view of sub groups
-      - if @direct_members.count == 0 && @group.child_groups.count > 0
-        - for child_group in @group.child_groups do
-          -if can? :read, child_group
-            %h2
-              = link_to child_group.title, child_group
-              (#{h child_group.members.count})
-            %ul
-              - for user in child_group.members do
-                %li
-                  = link_to user.title, user
-                  - if can? :manage, user
-                    %span.show_only_in_edit_mode
-                      = workflow_execution_links_for( group: child_group, user: user )
 
 / officers
 - if @group.officers && ( @group.officers.count > 0 || can?(:manage, @group) )
