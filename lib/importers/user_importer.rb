@@ -2,7 +2,7 @@
 require 'importers/importer'
 
 #
-# This file contains the code to import users from the deleted-string csv export.
+# This file contains the code to import users from the netenv csv export.
 # Import users like this:
 #
 #   require 'importers/user_import'
@@ -32,7 +32,7 @@ class UserImporter < Importer
                 user.reset_memberships_in_corporations
                 user.handle_primary_corporation( user_data, progress )
                 user.handle_current_corporations( user_data )
-                user.handle_deleted-string_status( user_data.deleted-string_status )
+                user.handle_netenv_status( user_data.netenv_status )
                 user.handle_former_corporations( user_data )
                 user.perform_consistency_check_for_aktivitaetszahl( user_data )
                 user.handle_deceased( user_data )
@@ -49,13 +49,13 @@ class UserImporter < Importer
 
   private
 
-  # Ignore old dummy users from deleted-string database.
+  # Ignore old dummy users from netenv database.
   #
   def handle_dummies( data, &block ) 
-    if data.deleted-string_aktivitaetszahl.in? ["?????", "02", "03", "234", "VAW", "wingolf 00", "Wingolf 06", "wingolf 07"]
+    if data.netenv_aktivitaetszahl.in? ["?????", "02", "03", "234", "VAW", "wingolf 00", "Wingolf 06", "wingolf 07"]
       warning = { message: "Ignoring dummy user #{data.w_nummer}.",
         user_uid: data.uid, name: data.name,
-        aktivitaetszahl: data.deleted-string_aktivitaetszahl
+        aktivitaetszahl: data.netenv_aktivitaetszahl
       }
       progress.log_ignore(warning)
     else
@@ -64,7 +64,7 @@ class UserImporter < Importer
   end
 
   def handle_deleted( data, &block )
-    if data.deleted-string_status == :deleted
+    if data.netenv_status == :deleted
       warning = { message: "Ignoring deleted user #{data.w_nummer}.",
         user_uid: data.uid, name: data.name }
       progress.log_ignore(warning)
@@ -279,17 +279,17 @@ class UserData < ImportDataset
     d(:epdorgmembershipendreason) == "verstorben"
   end
 
-  def ehemalige_deleted-string_aktivitaetszahl
+  def ehemalige_netenv_aktivitaetszahl
     d(:epdwingolfformeractivities)
   end
 
-  def deleted-string_aktivitaetszahl
+  def netenv_aktivitaetszahl
     d(:epdwingolfactivity)
   end
 
   def aktivitaetszahl
-    if deleted-string_aktivitaetszahl
-      deleted-string_aktivitaetszahl.gsub(" Eph ", "?Eph?").gsub(" Stft ", "?Stft?")
+    if netenv_aktivitaetszahl
+      netenv_aktivitaetszahl.gsub(" Eph ", "?Eph?").gsub(" Stft ", "?Stft?")
         .gsub(" Nstft ", "?Nstft?").gsub(" ", "").gsub(",", " ").gsub("?", " ")
     end
   end
@@ -306,14 +306,14 @@ class UserData < ImportDataset
   end
   
   def current_corporations
-    corporations_by_deleted-string_aktivitaetszahl( self.deleted-string_aktivitaetszahl )
+    corporations_by_netenv_aktivitaetszahl( self.netenv_aktivitaetszahl )
   end
 
   def former_corporations
-    corporations_by_deleted-string_aktivitaetszahl( self.ehemalige_deleted-string_aktivitaetszahl )
+    corporations_by_netenv_aktivitaetszahl( self.ehemalige_netenv_aktivitaetszahl )
   end
 
-  def corporations_by_deleted-string_aktivitaetszahl( str ) 
+  def corporations_by_netenv_aktivitaetszahl( str ) 
     # str == "E 12, Fr NStft 13"
     if str.present?
 
@@ -353,7 +353,7 @@ class UserData < ImportDataset
     d(:description).split("|")
   end
 
-  def deleted-string_org_membership_end_date
+  def netenv_org_membership_end_date
     d(:epdorgmembershipenddate).to_datetime
   end
   
@@ -386,11 +386,11 @@ class UserData < ImportDataset
   end
 
   def date_of_birth
-    d(:epdbirthdate).to_date
-    #begin
-    #rescue # wrong date format
-    #raise ''
-    #return nil
+    begin
+      d(:epdbirthdate).to_date
+    rescue # wrong date format
+      return nil
+    end
   end
 
   def alias
@@ -408,14 +408,14 @@ class UserData < ImportDataset
     d(:uid)
   end
 
-  def deleted-string_status 
+  def netenv_status 
     d(:epdstatus).to_sym
   end
 
   def aktivmeldungsdatum
     if (d(:epdorgmembershipstartdate)) and (d(:epdwingolfmutterverbindaktivmeldung)) 
       if (d(:epdwingolfmutterverbindaktivmeldung) != d(:epdorgmembershipstartdate))
-        raise 'deleted-string data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
+        raise 'netenv data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
       else
         return (d(:epdorgmembershipstartdate) || d(:epdwingolfmutterverbindaktivmeldung)).to_datetime
       end
@@ -441,7 +441,7 @@ class UserData < ImportDataset
   end
   
   def aktivitaet_by_corporation( corporation )
-    parts = (deleted-string_aktivitaetszahl.try(:split, ", ") || []) + (ehemalige_deleted-string_aktivitaetszahl.try(:split, ", ") || [])
+    parts = (netenv_aktivitaetszahl.try(:split, ", ") || []) + (ehemalige_netenv_aktivitaetszahl.try(:split, ", ") || [])
     parts.select { |part| part.start_with?(corporation.token + " ") }.first
   end
   def ehrenphilister?( corporation )
@@ -549,7 +549,7 @@ module UserImportMethods
     #p "-----"
   end
 
-  def handle_deleted-string_status( status )
+  def handle_netenv_status( status )
     self.hidden = true if status == :silent
     if status == :deleted
       raise 'trying to handle deleted user, but all deleted users should have been filtered out.' 
@@ -563,7 +563,7 @@ module UserImportMethods
       end
       self.corporations.each do |corporation|
         group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
-        group_to_assign.assign_user self, joined_at: user_data.deleted-string_org_membership_end_date
+        group_to_assign.assign_user self, joined_at: user_data.netenv_org_membership_end_date
       end
     end
   end
@@ -579,7 +579,7 @@ module UserImportMethods
     # Reception
     if user_data.receptionsdatum
       if (user_data.philistrationsdatum) and (user_data.receptionsdatum > user_data.philistrationsdatum)
-        warning = { message: 'inconsistent deleted-string data: philistration before reception! ingoring reception.',
+        warning = { message: 'inconsistent netenv data: philistration before reception! ingoring reception.',
                     name: self.name, uid: user_data.w_nummer, 
                     philistrationsdatum: user_data.philistrationsdatum,
                     receptionsdatum: user_data.receptionsdatum }
@@ -640,7 +640,7 @@ module UserImportMethods
   def reset_memberships_in_corporations
     groups = self.parent_groups & Group.corporations_parent.descendant_groups
     groups.each do |group|
-      UserGroupMembership.with_deleted.find_by_user_and_group(self, group).destroy_permanently
+      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
     end
   end
   
