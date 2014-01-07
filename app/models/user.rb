@@ -94,6 +94,10 @@ class User
   def w_nummer
     self.profile_fields.where(label: "W-Nummer").first.try(:value)
   end
+  
+  def self.find_by_w_nummer(wnr)
+    ProfileField.where(label: "W-Nummer", value: wnr).first.try(:profileable)
+  end
 
 
   # Abo Wingolfsblätter
