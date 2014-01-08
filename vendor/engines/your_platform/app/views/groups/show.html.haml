@@ -20,7 +20,7 @@
 %h1.section.members
   = t :members
   %span.members_count
-    (#{h @group.descendant_users.count})
+    (#{h @group.members.count})
 %div
   - if @group
     - if can? :manage, @group
@@ -30,21 +30,21 @@
     %span#group_members
 
       / child users
-      = will_paginate @child_users if @child_users
+      = will_paginate @direct_members if @direct_members
       %ul.child_users
-        - if @child_users.count > 0
-          - for user in @child_users do
+        - if @direct_members.count > 0
+          - for user in @direct_members do
             = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
 
         / structured view of sub groups
-      - if @child_users.count == 0 && @group.child_groups.count > 0
+      - if @direct_members.count == 0 && @group.child_groups.count > 0
         - for child_group in @group.child_groups do
           -if can? :read, child_group
             %h2
               = link_to child_group.title, child_group
-              (#{h child_group.descendant_users.count})
+              (#{h child_group.members.count})
             %ul
-              - for user in child_group.descendant_users do
+              - for user in child_group.members do
                 %li
                   = link_to user.title, user
                   - if can? :manage, user
@@ -64,9 +64,9 @@
             = officer_group.name
         %dd
           - if can? :manage, officer_group
-            = multiple_users_best_in_place officer_group, :direct_member_titles_string
+            = multiple_users_best_in_place officer_group, :direct_members_titles_string
           - else
-            = officer_group.descendant_users.collect { |member| link_to member.title, member }.join(", ")
+            = officer_group.members.collect { |member| link_to member.title, member }.join(", ")
 
 / large map
 %h1.large_map.section= t :map

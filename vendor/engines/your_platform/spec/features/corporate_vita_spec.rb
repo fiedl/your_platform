@@ -7,7 +7,7 @@ feature 'Corporate Vita', js: true do
   background do
     @user = create( :user_with_account )
     @corporation = create( :corporation_with_status_groups )
-    @status_groups = @corporation.child_groups
+    @status_groups = @corporation.status_groups
   end
 
   describe 'as admin:' do
@@ -45,7 +45,7 @@ feature 'Corporate Vita', js: true do
           click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
-
+        
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -82,28 +82,25 @@ feature 'Corporate Vita', js: true do
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @created_at_formatted = I18n.localize @membership.created_at.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
 
-          page.should have_content @created_at_formatted
+          page.should have_content @valid_from_formatted
 
           # activate inplace editing of the date_field
           first('.best_in_place.status_group_date_of_joining').click
 
           within first '.best_in_place.status_group_date_of_joining' do
-            page.should have_field 'created_at_date_formatted', with: @created_at_formatted
+            page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
           end
 
-          # TODO: TEST THIS!
-          #       But, at the moment, this raises an Capybara::Poltergeist::ObsoleteNode error.
-          #
-          # # enter new date of joining and press enter to save.
-          # # then check if the date has been changed in the database.
-          # @new_date = 10.days.ago.to_date
-          # fill_in "created_at_date_formatted", with: (I18n.localize(@new_date) + "\n")
-          # page.should_not have_selector("input")
-          # page.should have_content I18n.localize(@new_date)
-          # sleep 1  # wait for ajax
-          # UserGroupMembership.now_and_in_the_past.find(@membership.id).created_at.to_date.should == @new_date
+          @new_date = 10.days.ago.to_date
+          fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
+          
+          page.should have_no_selector("input")
+          page.should have_content I18n.localize(@new_date)
+          
+          wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
+          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end
@@ -158,7 +155,7 @@ feature 'Corporate Vita', js: true do
       it 'should not be possible to change the date' do
         within('#corporate_vita') do
 
-          @created_at_formatted = I18n.localize @membership.created_at.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
 
           #page.should have_content @created_at_formatted #why does this fail?
 

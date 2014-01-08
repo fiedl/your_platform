@@ -2,7 +2,6 @@ require 'spec_helper'
 
 describe UserGroupMembership do
 
-
   before do
     @group = Group.create( name: "Group 1" )
     @super_group = Group.create( name: "Parent Group of Groups 1 and 2" )
@@ -19,7 +18,6 @@ describe UserGroupMembership do
     @super_group.should_not == nil
   end
 
-
   def create_membership
     UserGroupMembership.create( user: @user, group: @group )
   end
@@ -28,20 +26,16 @@ describe UserGroupMembership do
     UserGroupMembership.find_by( user: @user, group: @group )
   end
 
-  def find_membership_with_deleted
-    UserGroupMembership.find_all_by( user: @user, group: @group ).with_deleted.first
+  def find_membership_now_and_in_the_past
+    UserGroupMembership.find_all_by( user: @user, group: @group ).now_and_in_the_past.first
   end
-
-#  def create_indirect_membership
-#    UserGroupMembership.create( user: @user, group: @super_group )
-#  end
 
   def find_indirect_membership
     UserGroupMembership.find_by( user: @user, group: @super_group )
   end
 
-  def find_indirect_membership_with_deleted
-    UserGroupMembership.find_all_by( user: @user, group: @super_group ).with_deleted.first
+  def find_indirect_membership_now_and_in_the_past
+    UserGroupMembership.find_all_by( user: @user, group: @super_group ).now_and_in_the_past.first
   end
 
   def create_other_membership
@@ -56,8 +50,8 @@ describe UserGroupMembership do
     UserGroupMembership.find_by( user: @user, group: @other_group )
   end
 
-  def find_other_membership_with_deleted
-    UserGroupMembership.find_all_by( user: @user, group: @other_group).with_deleted.first
+  def find_other_membership_now_and_in_the_past
+    UserGroupMembership.find_all_by( user: @user, group: @other_group).now_and_in_the_past.first
   end
 
   def create_memberships
@@ -99,12 +93,12 @@ describe UserGroupMembership do
       it "should find all memberships for a group" do
         UserGroupMembership.find_all_by( group: @group ).should include( find_membership )
       end
-      it "should not find deleted memberships" do
-        find_membership.destroy
+      it "should not find memberships that are invalid at the present time" do
+        find_membership.update_attribute(:valid_to, 1.hour.ago)
         UserGroupMembership.find_all_by( user: @user )
-          .should include( find_indirect_membership_with_deleted, find_other_membership_with_deleted )
+          .should_not include( find_membership_now_and_in_the_past )
         UserGroupMembership.find_all_by( user: @user )
-          .should_not include( find_membership_with_deleted )
+          .should include find_other_membership
       end
       it "should be able to identify users by 'user_title'" do
         UserGroupMembership.find_all_by( user_title: @user.title ).each do |membership|
@@ -112,11 +106,11 @@ describe UserGroupMembership do
         end
       end
     end
-    describe ".find_all_by.with_deleted" do
-      before { find_membership.destroy }
-      it "should find all memberships, including the deleted ones" do
-        UserGroupMembership.find_all_by( user: @user ).with_deleted
-          .should include( find_membership_with_deleted, find_indirect_membership, find_other_membership )
+    describe ".find_all_by.now_and_in_the_past" do
+      before { find_membership.make_invalid }
+      it "should find all memberships, including the ones that are invalid at the present time" do
+        UserGroupMembership.find_all_by( user: @user ).now_and_in_the_past
+          .should include( find_membership_now_and_in_the_past, find_indirect_membership, find_other_membership )
       end
     end
 
@@ -146,6 +140,7 @@ describe UserGroupMembership do
     end
   end
 
+<<<<<<< HEAD
   # Temporal Scope Methods
   # ====================================================================================================
 
@@ -296,6 +291,8 @@ describe UserGroupMembership do
     end
   end
 
+=======
+>>>>>>> 842d07722b30e050a4464cf205a930f64bc556d0
   describe "#== ( other_membership ), i.e. euality relation, " do
     it "should return true if the two objects represent the same membership" do
       membership = create_membership
@@ -303,187 +300,6 @@ describe UserGroupMembership do
       membership.should == same_membership
     end
   end
-
-
-  # Timestamps Methods: Beginning and end of a membership
-  # ====================================================================================================
-
-  describe "#created_at" do
-    it "should be the time of creation" do
-      time_before_creation = Time.current
-      create_membership
-      find_membership.created_at.to_i.should >= time_before_creation.to_i
-      find_membership.created_at.to_i.should <= Time.current.to_i
-      # Note: to_i is necessary, since the elapsed time is too short to be recognized by a datetime string.
-    end
-    describe "for an indirect membership" do
-      it "should return the datetime of the direct membership" do
-        create_memberships
-        find_membership.update_attributes( created_at: 1.hour.ago ) # assume the *direct* membership has been created earlier
-        find_indirect_membership.created_at.should < 50.minutes.ago # ask for the *indirect* membership's :created_at
-      end
-    end
-  end
-
-  describe "#created_at=" do
-    it "should set the time of creation, i.e. the beginning of the membership" do
-      membership = create_membership
-      membership.created_at = 1.hour.ago
-      membership.save
-      membership.created_at.to_i.should == 1.hour.ago.to_i
-      membership.at_time( 30.minutes.ago ).present?.should be_true
-      membership.at_time( Time.current + 30.minutes ).present?.should be_true
-      membership.destroy
-      membership = find_membership_with_deleted
-      membership.at_time( Time.current + 30.minutes ).present?.should be_false
-    end
-    describe "for an indirect membership" do
-      it "should modify the datetime of the direct membership" do
-        create_memberships
-        indirect_membership = find_indirect_membership
-        indirect_membership.created_at = 1.hour.ago
-        indirect_membership.save
-        find_indirect_membership.created_at.should < 50.minutes.ago
-      end
-    end
-  end
-
-  describe "#deleted_at" do
-    it "should be nil before deletion" do
-      membership = create_membership
-      membership.deleted_at.should == nil
-    end
-    it "should be the time of deletion" do
-      membership = create_membership
-      time_before_deletion = Time.current
-      membership.destroy
-      membership = find_membership_with_deleted
-      membership.deleted_at.to_i.should >= time_before_deletion.to_i
-      membership.deleted_at.to_i.should <= Time.current.to_i
-    end
-    describe "for an indirect membership" do
-      it "should return the datetime of the direct membership" do
-        create_membership
-        find_membership.destroy
-        find_membership_with_deleted.update_attributes( created_at: 2.hours.ago, deleted_at: 1.hour.ago )
-        find_indirect_membership_with_deleted.deleted_at.should < 50.minutes.ago
-      end
-      specify "check boundary conditions, since this spec has previously caused problems" do
-        create_membership
-        find_other_membership.should == nil
-        find_membership_with_deleted.deleted_at.should == nil
-        find_indirect_membership_with_deleted.deleted_at.should == nil
-
-        find_membership.destroy
-        find_other_membership.should == nil
-        find_membership.should == nil
-        find_membership_with_deleted.should_not == nil
-        find_membership_with_deleted.deleted_at.should_not == nil
-        find_indirect_membership.should == nil
-        find_indirect_membership_with_deleted.should_not == nil
-        find_indirect_membership_with_deleted.direct?.should == false
-        find_indirect_membership_with_deleted.direct_memberships_now
-          .should_not include( find_membership_with_deleted )
-        find_indirect_membership_with_deleted.direct_memberships_now_and_in_the_past
-          .should include( find_membership_with_deleted )
-        find_indirect_membership_with_deleted.deleted_at.should_not == nil
-      end
-    end
-    describe "for an indirect membership of two direct memberships, where only one has been deleted" do
-      it "should return nil, since the direct membership still persists" do
-        create_memberships
-        find_membership.destroy
-        find_indirect_membership_with_deleted.deleted_at.should == nil
-      end
-      specify "check if the boundary conditions are fulfilled, since this spec has caused problems, previously" do
-        create_memberships
-        find_membership_with_deleted.deleted_at.should == nil
-        find_other_membership_with_deleted.deleted_at.should == nil
-        find_indirect_membership_with_deleted.deleted_at.should == nil
-
-        find_membership.destroy
-        find_membership_with_deleted.deleted_at.should_not == nil
-        find_other_membership_with_deleted.deleted_at.should == nil
-        find_indirect_membership_with_deleted.deleted_at.should == nil
-      end
-    end
-  end
-
-  describe "#deleted_at=" do
-    it "should set the time of deletion, i.e. the termination of the membership" do
-      membership = create_membership
-      membership.destroy
-      membership = find_membership_with_deleted
-      membership.deleted_at = Time.current + 1.hour
-      membership.save
-      membership.at_time( Time.current + 30.minutes ).present?.should be_true
-      membership.at_time( Time.current + 2.hours ).present?.should be_false
-    end
-    describe "for an indirect membership" do
-      it "should modify the datetime of the direct membership" do
-        create_membership
-        find_membership.destroy
-        find_membership_with_deleted.update_attributes( created_at: 2.hours.ago )
-        indirect_membership = find_indirect_membership_with_deleted
-        indirect_membership.deleted_at = 1.hour.ago
-        indirect_membership.save
-        find_membership_with_deleted.deleted_at.should < 50.minutes.ago
-      end
-    end
-    describe "for an indirect membership of two direct memberships, where only one has been deleted" do
-      it "still persists. Therefore, setting :deleted_at doesn't make sense." do
-        create_memberships
-        find_membership.destroy
-        find_indirect_membership.present?.should be_true
-      end
-    end
-  end
-
-  describe "#created_at_date" do
-    before { @membership = create_membership }
-    subject { @membership.created_at_date }
-    it "should return the date of creation" do
-      subject.should == @membership.created_at.to_date
-    end
-  end
-  describe "#created_at_date=" do
-    before do
-      @membership = create_membership 
-      @new_created_at = 1.year.ago
-      @new_created_at_date = @new_created_at.to_date
-    end
-    subject { @membership.created_at_date = @new_created_at_date }
-    it "should set the create_at value correctly" do
-      subject
-      @membership.created_at_date.should == @new_created_at_date
-      @membership.created_at.to_date.should == @new_created_at_date
-    end
-  end
-  describe "#created_at_date_formatted" do
-    before { @membership = create_membership }
-    subject { @membership.created_at_date_formatted }
-    it "should return a string" do
-      subject.should be_kind_of String
-    end
-    it "should return the localized date of creation" do
-      subject.should == I18n.localize( @membership.created_at.to_date )
-    end
-  end
-  describe "#created_at_date_formatted=" do
-    before do
-      @membership = create_membership
-      @new_created_at = 1.year.ago
-      @new_created_at_formatted = I18n.localize( @new_created_at.to_date )
-    end
-    subject { @membership.created_at_date_formatted = @new_created_at_formatted }
-    it "should set the created_at value correctly" do
-      subject
-      @membership.created_at_date_formatted.should == @new_created_at_formatted
-      @membership.created_at_date.should == @new_created_at.to_date
-      @membership.created_at.to_date.should == @new_created_at.to_date
-    end
-  end
-
 
 
   # Access Methods to Associated User and Group
@@ -594,10 +410,10 @@ describe UserGroupMembership do
     it "should return an ActiveRecord::Relation, i.e. be chainable" do
       find_membership.direct_memberships_now_and_in_the_past.kind_of?( ActiveRecord::Relation ).should be_true
     end
-    it "should be the same as #direct_memberships.now_and_in_the_past" do
-      find_indirect_membership.direct_memberships_now_and_in_the_past.should ==
-        find_indirect_membership.direct_memberships.now_and_in_the_past
-    end
+    # it "should be the same as #direct_memberships.now_and_in_the_past" do
+    #   find_indirect_membership.direct_memberships_now_and_in_the_past.should ==
+    #     find_indirect_membership.direct_memberships.now_and_in_the_past
+    # end
     describe "for a direct membership" do
       it "should include itself (the direct membership)" do
         find_membership.direct_memberships_now_and_in_the_past.should include( find_membership )
@@ -623,49 +439,28 @@ describe UserGroupMembership do
       end
     end
   end
-
-  describe "#first_created_direct_membership" do
-    before do
-      @user = create(:user)
-
-      # The @user will be indirect member of these corporations:
-      @corporationE = create( :corporation_with_status_groups, :token => "E" )
-      @corporationH = create( :corporation_with_status_groups, :token => "H" )
-
-      # The @user will be direct member of these status groups, which are subgroups of the corporations:
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
-      @first_membership_E.update_attributes( created_at: "2006-12-01".to_datetime )
-      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
-      @first_membership_H.update_attributes( created_at: "2008-12-01".to_datetime )
-      @first_membership_E.destroy
-      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
-      @second_membership_E.update_attributes( created_at: "2013-12-01".to_datetime )
-
-      @membershipE = UserGroupMembership.find_by_user_and_group(@user, @corporationE)
-    end
-    subject { @membershipE.first_created_direct_membership }
-    
-    specify "verify which memberships are direct and which are indirect" do
-      @membershipE.direct?.should == false
-      @first_membership_E.reload.direct?.should == true
-      @second_membership_E.reload.direct?.should == true
-      @first_membership_H.reload.direct?.should == true
-    end
   
-    it "should return the direct sub-membership, which has been created first" do
-      subject.should == @first_membership_E.becomes(UserGroupMembership)
-    end
-  end
 
-  describe "#last_deleted_direct_membership" do
+  # Access Methods to Associated Indirect Memberships
+  # ====================================================================================================  
+  
+  describe "#indirect_memberships" do
     before do
-      create_memberships
-      find_membership.destroy
-      sleep 1.2 # in order to be able to discriminate the two datetimes
-      find_other_membership.destroy
+      @membership = UserGroupMembership.create(user: @user, group: @group)
+      @indirect_membership = find_indirect_membership
     end
-    subject { find_indirect_membership_with_deleted.last_deleted_direct_membership }
-    it { should == find_other_membership_with_deleted }
+    subject { @membership.indirect_memberships }
+    it { should include find_indirect_membership }
+    it { should_not include find_membership }
+    describe "for invalidated memberships" do
+      before do 
+        @membership.update_attribute(:valid_from, 2.hours.ago)
+        @membership.update_attribute(:valid_to, 1.hour.ago)
+      end
+      it "should still find the indirect memberships" do
+        subject.should include @indirect_membership
+      end
+    end
   end
 
 
@@ -684,46 +479,46 @@ describe UserGroupMembership do
 
     subject { @indirect_membership }
 
-    it "should have the same date of creation as the direct membership" do
-      @indirect_membership.created_at.should == @membership.created_at
+    it "should have the same validity range (valid_from) as the direct membership" do
+      @indirect_membership.valid_from.should == @membership.valid_from
     end
 
-    it "should have the same date of deletion as the direct membership" do
-      @indirect_membership.deleted_at.should == @membership.deleted_at
+    it "should have the same validity range (valid_to) as the direct membership" do
+      @indirect_membership.valid_to.should == @membership.valid_to
     end
 
-    it "should also effect the direct membership on change of date of creation" do
+    it "should also effect the direct membership on change of the valid_from date" do
       new_time = 1.hour.ago
-      @membership.created_at = new_time
+      @membership.valid_from = new_time
       @membership.save
-      @indirect_membership.created_at.to_i.should == new_time.to_i
+      @indirect_membership.valid_from.to_i.should == new_time.to_i
     end
 
-    it "should also effect the direct membership on change of date of deletion" do
+    it "should also effect the direct membership on change of the valid_to date" do
       new_time = Time.current + 1.hour
-      @membership.destroy
-      @membership.deleted_at = new_time
+      @membership.invalidate
+      @membership.valid_to = new_time
       @membership.save
       @indirect_membership.reload
-      @indirect_membership.deleted_at.to_i.should == new_time.to_i
+      @indirect_membership.valid_to.to_i.should == new_time.to_i
     end
 
-    it "should be effected by the direct membership on change of date of creation" do
+    it "should be effected by the direct membership on change of the valid_from date" do
       new_time = 1.hour.ago
-      @indirect_membership.created_at = new_time
+      @indirect_membership.valid_from = new_time
       @indirect_membership.save
       @membership.reload
-      @membership.created_at.to_i.should == new_time.to_i
+      @membership.valid_from.to_i.should == new_time.to_i
     end
 
-    it "should be effected by the direct membership on change of date of deletion" do
+    it "should be effected by the direct membership on change of the valid_to date" do
       new_time = Time.current + 1.hour
-      @membership.destroy # need to destroy the *direct* membership, ...
+      @membership.invalidate # need to archive the *direct* membership, ...
       @indirect_membership.reload
-      @indirect_membership.deleted_at = new_time # but can change the time of the *indirect*.
+      @indirect_membership.valid_to = new_time # but can change the time of the *indirect*.
       @indirect_membership.save
       @membership.reload
-      @membership.deleted_at.to_i.should == new_time.to_i
+      @membership.valid_to.to_i.should == new_time.to_i
     end
   end
 
@@ -734,8 +529,9 @@ describe UserGroupMembership do
     before do
       create_membership
       find_membership.move_to_group( @other_group )
+      sleep 1.1 # just to make sure the time comparison works
     end
-    it "should destroy the direct membership" do
+    it "should hide old direct membership" do
       find_membership.should == nil
     end
     it "should create a new membership between the user and the given group" do

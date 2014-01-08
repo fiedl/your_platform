@@ -54,6 +54,12 @@ require 'spork'
 # uncomment the following line to use spork with the debugger
 # require 'spork/ext/ruby-debug'
 
+# To create an online coverage report on coveralls.io, 
+# init their gem here.
+#
+require 'coveralls'
+Coveralls.wear! 'rails'
+
 
 # Requirements and Configurations Cached by Spork
 # ==========================================================================================
@@ -102,9 +108,6 @@ Spork.prefork do
   unless ENV['DRB']
     require 'simplecov'
     SimpleCov.start 'rails'
-
-    require 'coveralls'
-    Coveralls.wear! 'rails'
   end
 
 
@@ -136,6 +139,13 @@ Spork.prefork do
     Capybara::Poltergeist::Driver.new(app, inspector: true)
   end
   Capybara.javascript_driver = :poltergeist
+  
+  # Set the time that Capybara should wait for ajax requests to be finished.
+  # The default is 2 seconds.
+  # 
+  # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
+  # 
+  Capybara.default_wait_time = 5
 
 
   # Rspec Configuration
@@ -155,6 +165,18 @@ Spork.prefork do
     config.include RSpec::Matchers
     config.include Rails.application.routes.url_helpers
     config.include FactoryGirl::Syntax::Methods
+    
+    # This introduces the method `wait_for_ajax`, which can be used when the Capybara
+    # matchers do not wait properly for ajax code to be finished. 
+    # This is just a sleep command with a time determined by a simple benchmark.
+    # 
+    # see spec/support/wait_for_ajax.rb
+    #
+    config.include WaitForAjax
+    
+    # This introduces the methods `send_key(field_id, key)` and `press_enter(field_id)`.
+    #
+    config.include PressEnter
 
 
     # Database Wiping Policy

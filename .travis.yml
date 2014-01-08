@@ -1,7 +1,7 @@
 rvm:
   - "2.1.0"
 env: 
-  - "RAILS_ENV=test DB=mysql"
+  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true"
 install:
   - sudo apt-get -y install pwgen libicu-dev
   - bundle install

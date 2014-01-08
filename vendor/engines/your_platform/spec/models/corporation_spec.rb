@@ -10,7 +10,7 @@ describe Corporation do
       @user = create( :user )
 
       @first_membership = UserGroupMembership.create( user: @user, group: @first_corporation )
-      @first_membership.created_at = 1.year.ago
+      @first_membership.valid_from = 1.year.ago
       @first_membership.save
 
       @second_membership = UserGroupMembership.create( user: @user, group: @second_corporation )
@@ -51,6 +51,21 @@ describe Corporation do
     end
     it "should not include unrelated groups" do
       subject.should_not include @another_group
+    end
+    describe "after calling admins" do
+      before do
+        @admins_parent = @status_group.admins_parent
+        @officers_parent = @status_group.officers_parent
+      end
+      it "should still return the correct status groups" do
+        subject.should include @status_group
+      end
+      it "should not return the officers parent groups" do
+        subject.should_not include @officers_parent
+      end
+      it "should return the admins parent groups such that being admin is considered a status" do
+        subject.should include @admins_parent
+      end
     end
   end
 

@@ -15,7 +15,6 @@ module GroupMixins::Corporations
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
   end
 
-
   # Corporations
   # ==========================================================================================
   #
@@ -68,7 +67,7 @@ module GroupMixins::Corporations
     # Find corporation groups of a certain user.
     #
     def find_corporation_groups_of( user )
-      ancestor_groups_of_user = user.ancestor_groups
+      ancestor_groups_of_user = user.groups
       corporation_groups = Group.find_corporation_groups if Group.find_corporations_parent_group
       return ancestor_groups_of_user & corporation_groups if ancestor_groups_of_user and corporation_groups
     end
@@ -105,7 +104,7 @@ module GroupMixins::Corporations
     # are displayed separately.
     #
     def find_corporations_branch_groups_of( user )
-      ancestor_groups = user.ancestor_groups
+      ancestor_groups = user.groups
       corporations_branch = self.find_corporations_branch_groups
       return ancestor_groups & corporations_branch if ancestor_groups and corporations_branch
     end
@@ -117,12 +116,11 @@ module GroupMixins::Corporations
     # are displayed separately.
     #
     def find_non_corporations_branch_groups_of( user )
-      ancestor_groups = user.ancestor_groups
+      ancestor_groups = user.groups
       corporations_branch = self.find_corporations_branch_groups
       corporations_branch = [] unless corporations_branch
       return ancestor_groups - corporations_branch
     end
-
   end
 
 end

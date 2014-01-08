@@ -63,7 +63,4 @@ module ProfileSteps
     }.to change{ all('.profile_field_parent').count }.by -1 
   end
   
-  def wait_for_ajax
-    sleep 1
-  end
 end

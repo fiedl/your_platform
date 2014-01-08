@@ -41,7 +41,7 @@ module GroupsHelper
   def membership_li( user, group )
     content_tag :li do
       c = link_to group.title, group
-      membership = UserGroupMembership.find_by_user_and_group( user, group )
+      membership = UserGroupMembership.with_invalid.find_by_user_and_group( user, group )
       c += remove_button( membership ) if membership.destroyable?
       c
     end
@@ -50,7 +50,7 @@ module GroupsHelper
   def sub_group_membership_lis( options = {} )
     c = ""
     c += membership_li( options[ :user ], options[ :group ] )
-    sub_groups_where_user_is_member = options[ :group ].child_groups & options[ :user ].ancestor_groups
+    sub_groups_where_user_is_member = options[ :group ].child_groups & options[ :user ].groups
     current_indent = options[ :indent ] + 1
     max_indent = options[ :max_indent ]
     current_indent = max_indent if current_indent > max_indent

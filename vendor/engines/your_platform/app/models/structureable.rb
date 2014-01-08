@@ -63,7 +63,7 @@ module Structureable
     # This mixin loads the necessary methods to interact with them.
     #
     include StructureableMixins::HasSpecialGroups
-
+    
     include StructureableInstanceMethods
   end
 

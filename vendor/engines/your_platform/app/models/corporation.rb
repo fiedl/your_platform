@@ -12,11 +12,11 @@ class Corporation < Group
   # corporation.
   #
   def is_first_corporation_this_user_has_joined?( user )
-    return false if not user.ancestor_groups.include? self
+    return false if not user.groups.include? self
     return true if user.corporations.count == 1
-    this_membership_created_at = UserGroupMembership.find_by_user_and_group( user, self ).created_at
+    this_membership_valid_from = UserGroupMembership.find_by_user_and_group( user, self ).valid_from
     user.memberships.each do |membership|
-      return false if membership.created_at < this_membership_created_at
+      return false if membership.valid_from.to_i < this_membership_valid_from.to_i
     end
     return true
   end
@@ -27,7 +27,7 @@ class Corporation < Group
   #
   def status_groups 
     self.descendant_groups.select do |group|
-      group.descendant_groups.count == 0
+      group.has_no_subgroups_other_than_the_officers_parent?
     end
   end
 

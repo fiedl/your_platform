@@ -44,7 +44,3 @@ feature "Postal Address Flag" do
 
   end
 end
-
-def wait_for_ajax
-  sleep 0.5
-end

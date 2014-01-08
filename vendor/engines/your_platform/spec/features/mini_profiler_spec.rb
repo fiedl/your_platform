@@ -31,8 +31,4 @@ feature "MiniProfiler", :js do
     end
   end
   
-  def wait_for_ajax
-    #sleep 3
-  end
-  
 end

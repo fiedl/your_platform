@@ -107,7 +107,7 @@ group :test, :development do
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
 end
 group :test do
-  gem 'capybara' ,'>=2.0.2'
+  gem 'capybara'
   gem 'launchy'
   gem 'factory_girl_rails', '>= 4.0.0' # '1.4.0'
   gem 'database_cleaner'
@@ -116,11 +116,8 @@ group :test do
   gem 'simplecov', require: false
 end
 
-# This is for testing on wingolfsplattform.org -- since travis-pro has expired.
 group :test do
-  # simulating enter via "\n" does not work after 1.1.2
-  # https://github.com/jonleighton/poltergeist/issues/388
-  gem 'poltergeist', '1.1.2'  # 1.1.2: \n works, 1.2.0 works not, 1.4.1
+  gem 'poltergeist', '1.5.0'
 end
 
 # Automatische Anzeige des Red-Green-Refactor-Zyklus.
@@ -185,7 +182,7 @@ gem 'rack-timeout'
 # Metrics
 gem 'fnordmetric', '1.0.0'
 
-# Code Coverage Badge
+# Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
 

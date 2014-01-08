@@ -26,14 +26,15 @@ describe GroupMixins::Erstbandphilister do
       @philisterschaft_c = @corporation_c.philisterschaft
 
       @user = create( :user )
-      @user.parent_groups << @philister_a
-      @user.parent_groups << @philister_b
+      @membership_a = @philister_a.assign_user @user, at: "1960-01-01".to_datetime
+      @membership_b = @philister_b.assign_user @user, at: "1962-01-01".to_datetime
       
-      @membership_a = UserGroupMembership.find_by_user_and_group( @user, @philister_a )
-      @membership_a.created_at = "1960-01-01"; @membership_a.save
-      @membership_b = UserGroupMembership.find_by_user_and_group( @user, @philister_b )
-      @membership_b.created_at = "1962-01-01"; @membership_b.save
-
+      @user.reload
+    end
+    
+    specify "prelims" do
+      @membership_a.reload.valid_from.year.should == 1960
+      @membership_b.reload.valid_from.year.should == 1962
     end
 
 
@@ -134,14 +135,15 @@ describe GroupMixins::Erstbandphilister do
     # Redefined User Association Methods
     # ------------------------------------------------------------------------------------------
 
-    describe "#users" do
+    describe "#members" do
       specify "presumption: @user is erstbandphilister of A but not of B" do
-        UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_a ).created_at.should <
-          UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_b ).created_at
-        @erstbandphilister_a.users.should include( @user )
-        @erstbandphilister_b.users.should_not include( @user )
+        @user.reload
+        UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_a ).valid_from.should <
+          UserGroupMembership.find_by_user_and_group( @user, @philisterschaft_b ).valid_from
+        @erstbandphilister_a.reload.members.should include @user
+        @erstbandphilister_b.reload.members.should_not include @user
       end
-      subject { @erstbandphilister_a.users }
+      subject { @erstbandphilister_a.members }
       it "should return the child users" do
         subject.should include @user
       end
@@ -151,15 +153,9 @@ describe GroupMixins::Erstbandphilister do
       end
     end
 
-    describe "#child_users" do
-      it "should be the same as #users" do
-        @erstbandphilister_a.child_users.should == @erstbandphilister_a.users
-      end
-    end
-
-    describe "#descendant_users" do
-      it "should be the same as #users" do
-        @erstbandphilister_a.descendant_users.should == @erstbandphilister_a.users
+    describe "#direct_members" do
+      it "should be the same as #members" do
+        @erstbandphilister_a.direct_members.should == @erstbandphilister_a.members
       end
     end
 

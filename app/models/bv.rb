@@ -46,15 +46,11 @@ class Bv < Group
   end
 
   # Ordnet den +user+ diesem BV zu und trägt ihn ggf. aus seinem vorigen BV aus.
-  def assign_user( user )
+  #
+  def assign_user( user, options = {} )
     Bv.unassign_user user
+    super(user, options)
 
-#    user.parent_groups << self
-#    p "PARENT_GROUPS"
-#    p user.parent_groups
-
-    new_bv = self
-    new_bv.child_users << user
     # TODO: Hier muss noch der entsprechende Workflow später getriggert werden, 
     # damit die automatischen Benachrichtigungen versandt werden.
   end
@@ -62,12 +58,7 @@ class Bv < Group
   # Trägt einen Benutzer aus seinem eigenen BV aus.
   def self.unassign_user( user )
     old_bv = user.bv
-    if old_bv
-      link = DagLink.find_edge( old_bv.becomes( Group ), user ) 
-      link.destroy if link.destroyable? if link
-    end
+    old_bv.try(:unassign_user, user)
   end
-
-
 
 end

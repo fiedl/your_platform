@@ -15,7 +15,7 @@ module WorkflowKit
       user = User.find( params[ :user_id ] ) 
       group = Group.find( params[ :group_id ] )
 
-      UserGroupMembership.find_by( user: user, group: group ).destroy
+      UserGroupMembership.find_by( user: user, group: group ).invalidate
     end
   end
 end

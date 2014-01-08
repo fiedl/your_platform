@@ -8,13 +8,13 @@ module CorporateVitaHelper
 
   def status_group_memberships_for_user_and_corporation( user, corporation )
     StatusGroupMembership
-      .find_all_by_user_and_corporation( user, corporation )
       .now_and_in_the_past
+      .find_all_by_user_and_corporation( user, corporation )
   end
 
-  def status_group_membership_created_at_best_in_place( membership )
+  def status_group_membership_valid_from_best_in_place( membership )
     best_in_place( membership,
-                   :created_at_date_formatted,  # type: :date,
+                   :valid_from_localized_date,  # type: :date,
                    path: user_group_membership_path( id: membership.id,
                                                      controller: :user_group_memberships,
                                                      action: :update,

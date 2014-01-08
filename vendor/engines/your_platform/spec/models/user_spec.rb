@@ -583,8 +583,8 @@ describe User do
     it "should be the same as UserGroupMembership.find_all_by_user" do
       subject.should == UserGroupMembership.find_all_by_user( @user )
     end
-    it "should allow to chain other ActiveRelation scopes, like `with_deleted`" do
-      subject.with_deleted.should == [ @membership ]
+    it "should allow to chain other ActiveRelation scopes, like `only_valid`" do
+      subject.only_valid.should == [ @membership ]
     end
   end
 
@@ -949,7 +949,7 @@ describe User do
     end
     describe "false" do
       before { @user.developer = true }
-      subject { @user.developer = false }
+      subject { @user.developer = false; sleep 1.1 }
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
@@ -976,7 +976,7 @@ describe User do
       end
     end
     describe "false" do
-      subject { @user.hidden = false }
+      subject { @user.hidden = false; sleep 1.1 }
       describe "for the user being hidden" do
         before { @user.hidden = true }
         it "should remove the user from the hidden_users group" do
@@ -994,7 +994,6 @@ describe User do
       end
     end
   end
-
 
 
   # Finder Methods

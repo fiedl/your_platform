@@ -80,7 +80,7 @@ describe GroupMixins::Corporations do
         subject.should_not include( @corporations_parent_group )
       end
     end
-
+    
   end
 
 end
