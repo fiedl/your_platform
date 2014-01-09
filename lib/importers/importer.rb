@@ -9,37 +9,20 @@ require 'colored'
 class Importer
 
   def initialize( args = {} )
-    self.file_name = args[:file_name]
-    self.update_policy = args[:update_policy]
+    raise 'please provide a :filename argument to specify the input csv file.' unless args[:filename]
+    self.filename = args[:filename]
     self.filter = args[:filter]
     @object_class_name = ""  # e.g. "User"
   end
 
   # This attribute refers to the file name of the file to import
   #
-  def file_name=( file_name )
-    raise "File #{file_name} does not exist." if not File.exists? file_name
-    @file_name = file_name
+  def filename=( filename )
+    raise "File #{filename} does not exist." if not File.exists? filename
+    @filename = filename
   end
-  def file_name
-    @file_name
-  end
-
-  # This attribute refers to the policy for existing entries.
-  # Possible values:
-  #
-  #   :ignore, :update, :replace
-  #
-  # Defaults to `:ignore`.
-  #
-  def update_policy=(update_policy)
-    unless [ :ignore, :update, :replace ].include? update_policy
-      raise 'No valid update policy. Possible values: :ignore, :update, :replace.' 
-    end
-    @update_policy = update_policy
-  end
-  def update_policy
-    @update_policy ||= :ignore
+  def filename
+    @filename
   end
 
   # This attribute refers to the filter applied to the import sequence.
@@ -65,27 +48,31 @@ class Importer
     @progress_indicator ||= ProgressIndicator.new
   end
   
-  # This deals with datasets that have been already imported
-  # with regard to the update policy.
-  #
-  def handle_existing( data, &block )
-    if data.already_imported?
-      if update_policy == :ignore
-        progress.log_ignore( { message: "Dataset already imported.", dataset: data.data_hash } ) 
-        object = nil
-      end
-      if update_policy == :replace
-        data.existing_user.destroy 
-        object = @object_class_name.constantize.new  # e.g.  User.new 
-      end
-      if update_policy == :update
-        object = data.already_imported_object
-      end
-      yield( object ) if update_policy == :update || update_policy == :replace
-    else
-      yield( @object_class_name.constantize.new )  # e.g.  User.new
-    end
+  def log
+    @log ||= Log.new
   end
+  
+  # # This deals with datasets that have been already imported
+  # # with regard to the update policy.
+  # #
+  # def handle_existing( data, &block )
+  #   if data.already_imported?
+  #     if update_policy == :ignore
+  #       progress.log_ignore( { message: "Dataset already imported.", dataset: data.data_hash } ) 
+  #       object = nil
+  #     end
+  #     if update_policy == :replace
+  #       data.existing_user.destroy 
+  #       object = @object_class_name.constantize.new  # e.g.  User.new 
+  #     end
+  #     if update_policy == :update
+  #       object = data.already_imported_object
+  #     end
+  #     yield( object ) if update_policy == :update || update_policy == :replace
+  #   else
+  #     yield( @object_class_name.constantize.new )  # e.g.  User.new
+  #   end
+  # end
 
 end
 
@@ -94,19 +81,19 @@ class ImportFile
 
   # Arguments for initialization:
   # 
-  #   file_name
+  #   filename
   #   data_class_name     e.g. "UserData"
   #
   def initialize( args = {} )
-    @file_name = args[:file_name]
+    @filename = args[:filename]
     @data_class_name = args[:data_class_name]
 
-    raise "File #{@file_name} does not exist." if not File.exists? @file_name
+    raise "File #{@filename} does not exist." if not File.exists? @filename
     raise "Data class not found: #{@data_class_name}" if not @data_class_name.constantize.kind_of? Class
   end
 
   def each_row( &block )
-    CSV.foreach( @file_name, headers: true, col_sep: ";" ) do |row|
+    CSV.foreach( @filename, headers: true, col_sep: ";", :row_sep => :auto ) do |row|
       yield( @data_class_name.constantize.new( row.to_hash ) )
     end
   end
@@ -167,14 +154,20 @@ class ProgressIndicator
     @failures = []
     @warnings = []
     @ignores = []
-    @counters = { success: 0, failure: 0, warning: 0, ignored: 0 }
+    @updates = []
+    @counters = { success: 0, update: 0, failure: 0, warning: 0, ignored: 0 }
   end
 
-  def log_success
-    print ".".green
+  def log_success(update = false)
+    if update
+      print "u".green
+      @counters[:update] += 1
+    else
+      print ".".green
+    end
     @counters[:success] += 1
   end
-
+  
   # This method logs a failure. It prints a red "F" and logs the given
   # failure_report for output when calling `print_status_report`.
   # 
@@ -190,13 +183,13 @@ class ProgressIndicator
   # See `log_failure`.
   #
   def log_warning( warning_report = nil )
-    print "w".yellow
+    print "W".yellow
     @counters[:warning] += 1
     @warnings << warning_report if warning_report
   end
 
   def log_ignore( ignore_report = nil )
-    print "."
+    print "I"
     @counters[:ignored] += 1
     @ignores << ignore_report if ignore_report
   end
@@ -205,7 +198,7 @@ class ProgressIndicator
     print "\n"
     print "Import Finished. "
     print "#{@counters[:ignored]} ignored. "
-    print "#{@counters[:success]} successful imports. ".green
+    print "#{@counters[:success]} successful imports, including #{@counters[:update]} updates. ".green
     print "#{@counters[:warning]} warnings. ".yellow
     print "#{@counters[:failure]} failures.".red
     print "\n"
@@ -224,5 +217,44 @@ class ProgressIndicator
     end
     
   end
+end
 
+class Log
+  def head( text )
+    info ""
+    info "==========================================================".blue
+    info text.blue
+    info "==========================================================".blue
+  end
+  def section( heading )
+    info ""
+    info heading.blue
+    info "----------------------------------------------------------".blue
+  end
+  def info( text )
+    self.write text
+  end
+  def success( text )
+    self.write text.green
+  end
+  def error( text )
+    self.write text.red
+  end
+  def warning( text )
+    self.write "Warning: ".yellow.bold + text.yellow
+  end
+  def prompt( text )
+    self.write "$ " + text.bold
+  end
+  def write( text )
+    @filter_out ||= []
+    @filter_out.each do |expression|
+      text = text.gsub(expression, "[...]")
+    end
+    print text + "\n"
+  end
+  def filter_out( expression )
+    @filter_out ||= []
+    @filter_out << expression
+  end
 end

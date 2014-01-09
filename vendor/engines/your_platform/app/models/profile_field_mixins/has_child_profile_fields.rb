@@ -27,6 +27,8 @@ module ProfileFieldMixins::HasChildProfileFields
 
     before_save :build_child_fields_if_absent
     after_save :save_child_profile_fields
+    
+    attr_accessible *keys
 
     include HasChildProfileFieldsInstanceMethods
 

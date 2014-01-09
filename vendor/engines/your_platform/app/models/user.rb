@@ -566,6 +566,10 @@ class User < ActiveRecord::Base
       .collect { |ef| ef.profileable }
     return matching_users.to_a
   end
+  
+  def self.find_by_email( email )
+    self.find_all_by_email(email).first
+  end
 
 
   # Helpers
