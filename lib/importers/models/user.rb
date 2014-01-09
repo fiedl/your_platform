@@ -34,6 +34,7 @@ class User
     
   def import_general_profile_fields_from( netenv_user )
     # Name, Geburtsdatum bereits importiert.
+    add_profile_field :former_name, value: netenv_user.former_name, type: 'General'
     add_profile_field :personal_title, value: netenv_user.personal_title, type: 'General', force: true
     add_profile_field :academic_degree, value: netenv_user.academic_degree, type: 'General', force: true
     add_profile_field :cognomen, value: netenv_user.cognomen, type: 'General', force: true
@@ -59,15 +60,46 @@ class User
       add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
     else
       add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "", type: 'Study'
-      add_profile_field :study, from: netenv_user.erstes_fachsemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
+      add_profile_field :further_study, from: netenv_user.erstes_fachsemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
     end
   end
   
   def import_professional_profile_fields_from( netenv_user )
-    # TODO: Berufsgruppe
-    # TODO: Tätigkeitsbereich
-    # TODO: Beschäftigungsstatus
-    # TODO: Sprachen
+    
+    # Beschäftigungsstatus
+    add_profile_field :employment_status, value: netenv_user.employment_status, type: 'ProfessionalCategory'
+    
+    # Amtsbezeichnung
+    add_profile_field :employment_title, value: netenv_user.employment_title, type: 'ProfessionalCategory'
+    
+    # Berufsgruppen
+    netenv_user.professional_categories.each do |category|
+      add_profile_field :professional_category, value: category, type: 'ProfessionalCategory'
+    end
+    
+    # Tätigkeitsbereiche
+    netenv_user.occupational_areas.each do |area|
+      add_profile_field :occupational_area, value: area, type: 'ProfessionalCategory'
+    end
+    
+    # Sprachen
+    netenv_user.native_languages.each do |language|
+      add_profile_field :native_language, value: language, type: 'Competence'
+    end
+    netenv_user.language_skills.each do |language|
+      add_profile_field :language, value: language, type: 'Competence'
+    end
+    
+    # Berufliche Erfahrung als: Berufsberater, Entwickler, Projektleiter
+    professional_experiences.each do |experience|
+      add_profile_field :experience_as, value: experience, type: 'Competence'
+    end
+    
+    # Weitere Fertigkeiten
+    netenv_user.general_skills.each do |skill|
+      add_profile_field :skill, value: skill, type: 'Competence'
+    end
+    
   end
   
   def import_bank_profile_fields_from( netenv_user )

@@ -69,6 +69,10 @@ class NetenvUser
   # Allgemeine Informationen zur Person
   # =======================================================================
   
+  def former_name
+    data_hash_value :epdwingolfoldsn
+  end
+  
   def date_of_birth
     begin
       data_hash_value(:epdbirthdate).to_date
@@ -170,11 +174,19 @@ class NetenvUser
     data_hash_value :epdproflabeledurl
   end
   
+  def requests   # Gesuche
+    (data_hash_value(:epdwingolfangebotesearch) || "").split("|")
+  end
+  
+  def request_freetext
+    data_hash_value :epdwingolfangebotesearchdescription
+  end
+  
   
   # Beruf
   # =======================================================================
   
-  def employment_status
+  def employment_status  # dt. Beschäftigungsstatus
     data_hash_value :epdprofworktype
   end
   
@@ -186,10 +198,48 @@ class NetenvUser
     ( data_hash_value('epdprofposition') ? data_hash_value('epdprofposition') : "" ).split("|")
   end
 
-  def occupational_areas # dt. Berufsfelder
+  def occupational_areas # dt. Berufsfelder, Tätigkeitsbereiche
     ( data_hash_value('epdprofbusinesscateogory') ? data_hash_value('epdprofbusinesscateogory') : "" ).split("|") +
       ( data_hash_value('epdproffieldofemployment') ? data_hash_value('epdproffieldofemployment') : "" ).split("|")
   end
+  
+  def native_languages
+    (data_hash_value(:epdnativelanguage) || "").split("|")
+  end
+  
+  def language_skills
+    (data_hash_value(:epdforeignlanguages) || "").split("|")
+  end
+  
+  def general_skills
+    (data_hash_value(:epdwingolfgeneralcompetence) || "").split("|")
+  end
+  
+  def professional_experiences  # mögliche Werte: Berufsberater, Entwickler, Projektleiter
+    (data_hash_value(:epdwingolfprofcompetence) || "").split("|")
+  end
+  
+  def offering_freetext
+    data_hash_value :epdwingolfangeboteberufsberfreetime
+  end
+  
+  def offerings
+    (data_hash_value(:epdwingolfangeboteberufsberavailible) || "").split("|")
+  end
+  
+  def activity_freetext  # Tätigkeit
+    data_hash_value :epdprofcompbusinessdescr
+  end
+  
+  def offering_talk_about  # Biete Vortrag zum Thema
+    data_hash_value :epdwingolfangebotevortragtitle
+  end
+  
+  def offering_training   # Biete Praktika
+    data_hash_value :epdwingolfangebotepraktikafreetime
+  end
+  
+  
   
   
   # Bank-Verbindung

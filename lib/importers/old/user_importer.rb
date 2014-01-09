@@ -43,59 +43,27 @@ class UserImporter < Importer
     progress.print_status_report
   end
 
-  private
-
-  def handle_existing_email( data, &block )
-    if data.email_already_exists_for_other_user?
-      warning = { message: "Email #{data.email} already exists. Keeping the existing one, ignoring the new one.",
-        user_uid: data.uid, name: data.name }
-      progress.log_warning(warning)
-      data.email = nil
-    end
-    yield(warning)
-  end
-
-end
-
-class String
-  alias old_to_datetime to_datetime
-  def to_datetime
-    if (self[4..8] == "0000") || (self.length == 4)  # 20030000 || 2003
-      str = self[0..3] + "-01-01" # 2003-01-01
-      return str.to_datetime
-    else
-      old_to_datetime.in_time_zone
-    end
-  end
 end
 
 class UserData < ImportDataset
 
-  #
-  # def attributes
-  #   {
-  #     first_name:         self.first_name,
-  #     last_name:          self.last_name,
-  #     updated_at:         d('modifyTimestamp').to_datetime,
-  #     created_at:         d('createTimestamp').to_datetime,
-  #   }
-  # end
   # 
   # def profile_fields_array
   #   
   #   academic_degrees.each do |degree|
   #     add_profile_field :academic_degree, value: degree, type: "AcademicDegree"
   #   end
+  ##
+  #
+  #
   #   
-  #   add_profile_field :employment_title, value: employment_title, type: 'ProfessionalCategory'
-  #   professional_categories.each do |category|
-  #     add_profile_field :professional_category, value: category, type: 'ProfessionalCategory'
-  #   end
-  #   occupational_areas.each do |area|
-  #     add_profile_field :occupational_area, value: area, type: 'ProfessionalCategory'
-  #   end
-  #   add_profile_field :employment_status, value: d('epdprofworktype'), type: 'ProfessionalCategory'
+  #   
+  #
   #   #    add_profile_field :employment, { type: 'Employment' }.merge(employment)
+  #
+  #
+  #
+  #
   #   
   #   add_profile_field :bank_account, bank_account.merge( { type: "BankAccount" } )
   #   
