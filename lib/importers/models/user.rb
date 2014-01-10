@@ -14,8 +14,8 @@ class User
     self.first_name = netenv_user.first_name
     self.last_name = netenv_user.last_name
     self.email = netenv_user.email
-    self.alias = netenv_user.alias if netenv_user.alias.present?
-    self.save
+    self.alias = netenv_user.alias || netenv_user.w_nummer
+    self.save!
     self.date_of_birth = netenv_user.date_of_birth
     self.add_profile_field 'W-Nummer', value: netenv_user.w_nummer, type: 'General' 
   end
@@ -57,7 +57,9 @@ class User
 
   def import_study_profile_fields_from( netenv_user )
     if netenv_user.erstes_fachsemester == netenv_user.erstes_studiensemester
-      add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
+      if netenv_user.erstes_fachsemester.present?
+        add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
+      end
     else
       add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "", type: 'Study'
       add_profile_field :further_study, from: netenv_user.erstes_fachsemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
@@ -73,14 +75,15 @@ class User
     add_profile_field :employment_title, value: netenv_user.employment_title, type: 'ProfessionalCategory'
     
     # Berufsgruppen
-    netenv_user.professional_categories.each do |category|
-      add_profile_field :professional_category, value: category, type: 'ProfessionalCategory'
-    end
+    label = ( netenv_user.professional_categories.count > 1 ? :professional_categories : :professional_category )
+    add_profile_field label, value: netenv_user.professional_categories.join(", "), type: 'ProfessionalCategory'
     
     # Tätigkeitsbereiche
-    netenv_user.occupational_areas.each do |area|
-      add_profile_field :occupational_area, value: area, type: 'ProfessionalCategory'
-    end
+    label = ( netenv_user.occupational_areas.count > 1 ? :occupational_areas : :occupational_area )
+    add_profile_field label, value: netenv_user.occupational_areas.join(", "), type: 'ProfessionalCategory'
+    
+    # Tätigkeit (Freitext)
+    add_profile_field :activity, value: netenv_user.activity_freetext, type: 'ProfessionalCategory'
     
     # Sprachen
     netenv_user.native_languages.each do |language|
@@ -91,7 +94,7 @@ class User
     end
     
     # Berufliche Erfahrung als: Berufsberater, Entwickler, Projektleiter
-    professional_experiences.each do |experience|
+    netenv_user.professional_experiences.each do |experience|
       add_profile_field :experience_as, value: experience, type: 'Competence'
     end
     
@@ -100,15 +103,34 @@ class User
       add_profile_field :skill, value: skill, type: 'Competence'
     end
     
+    # Angebote
+    netenv_user.offerings.each do |offering|
+      add_profile_field :i_offer, value: offering, type: 'Competence'
+    end
+    add_profile_field :i_offer_talk_about, value: netenv_user.offering_talk_about, type: 'Competence'  # Vortrag zum Thema
+    add_profile_field :i_offer_training, value: netenv_user.offering_training, type: 'Competence'  # Praktika
+    add_profile_field :i_offer, value: netenv_user.offering_freetext, type: 'Competence'
+    
+    # Gesuche
+    netenv_user.requests.each do |request|
+      add_profile_field :request, value: "Ich suche: #{request}", type: 'Competence'
+    end
+    add_profile_field :request, value: netenv_user.request_freetext, type: 'Competence'
+    
   end
   
   def import_bank_profile_fields_from( netenv_user )
-    # TODO: Bankverbindung
+    add_profile_field :bank_account, netenv_user.bank_account.merge({ type: 'BankAccount' })
   end
   
   def import_communication_profile_fields_from( netenv_user )
-    # TODO: Wingolfsblätter ja/nein
-    # TODO: Namensfeld für Wingolfspost
+    
+    # Wingolfsblätter ja/nein
+    self.wingolfsblaetter_abo = netenv_user.wbl_abo?
+    
+    # Namensfeld für Wingolfspost
+    add_profile_field :name_field_wingolfspost, text_above_name: netenv_user.text_above_name, name_prefix: netenv_user.name_prefix, name_suffix: netenv_user.name_suffix, text_below_name: netenv_user.text_below_name, type: 'NameSurrounding'
+
   end
   
   def add_profile_field( label, args )
@@ -135,9 +157,18 @@ class User
   end
   private :profile_field_exists?
   
-  # 
+  
+  # Mitgliedschaft in Korporationen
   # =======================================================================
   
+  def import_corporation_memberships_from( netenv_user )
+    self.reset_corporation_memberships
+  end
   
+  def reset_corporation_memberships
+    (self.parent_groups & Group.corporations_parent.descendant_groups).each do |group|
+      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
+    end
+  end
     
 end

@@ -65,6 +65,10 @@ class UserImporter < Importer
       user.import_professional_profile_fields_from netenv_user
       user.import_bank_profile_fields_from netenv_user
       user.import_communication_profile_fields_from netenv_user
+      
+      # Mitgliedschaften in Korporationen importieren.
+      # 
+      user.import_corporation_memberships_from netenv_user
 
       # Zeitstempel des Datensatzes importieren.
       # created_at, updated_at.

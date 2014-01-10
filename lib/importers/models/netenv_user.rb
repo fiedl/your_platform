@@ -174,14 +174,6 @@ class NetenvUser
     data_hash_value :epdproflabeledurl
   end
   
-  def requests   # Gesuche
-    (data_hash_value(:epdwingolfangebotesearch) || "").split("|")
-  end
-  
-  def request_freetext
-    data_hash_value :epdwingolfangebotesearchdescription
-  end
-  
   
   # Beruf
   # =======================================================================
@@ -219,18 +211,22 @@ class NetenvUser
     (data_hash_value(:epdwingolfprofcompetence) || "").split("|")
   end
   
-  def offering_freetext
-    data_hash_value :epdwingolfangeboteberufsberfreetime
-  end
-  
-  def offerings
-    (data_hash_value(:epdwingolfangeboteberufsberavailible) || "").split("|")
-  end
-  
   def activity_freetext  # Tätigkeit
     data_hash_value :epdprofcompbusinessdescr
   end
   
+  def offerings
+    study_offerings + professional_offerings
+  end
+  
+  def professional_offerings
+    (data_hash_value(:epdwingolfangeboteberufsberavailible) || "").split("|")
+  end
+  
+  def study_offerings
+    (data_hash_value(:epdwingolfangebotestudienfreetime) || "").split("|")
+  end
+
   def offering_talk_about  # Biete Vortrag zum Thema
     data_hash_value :epdwingolfangebotevortragtitle
   end
@@ -239,7 +235,18 @@ class NetenvUser
     data_hash_value :epdwingolfangebotepraktikafreetime
   end
   
+  def offering_freetext
+    data_hash_value :epdwingolfangeboteberufsberfreetime
+  end
+
+  def requests   # Gesuche
+    (data_hash_value(:epdwingolfangebotesearch) || "").split("|")
+  end
   
+  def request_freetext
+    data_hash_value :epdwingolfangebotesearchdescription
+  end
+
   
   
   # Bank-Verbindung
@@ -254,6 +261,30 @@ class NetenvUser
       :iban => data_hash_value('epdbankiban'), 
       :bic => data_hash_value('epdbankswiftcode') 
     }
+  end
+  
+  
+  # Kommunikation
+  # =======================================================================
+  
+  def wbl_abo?
+    data_hash_value(:epdwingolfmagazine) == "Y"
+  end
+  
+  def text_above_name  # Bevorzugte Anrede
+    data_hash_value :epdwingolfpreferredanrede
+  end
+  
+  def name_prefix
+    personal_title
+  end
+  
+  def name_suffix
+    data_hash_value :epdwingolfnamesuffix2
+  end
+  
+  def text_below_name
+    data_hash_value :epdnamesuffix
   end
   
   

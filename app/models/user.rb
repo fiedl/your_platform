@@ -81,7 +81,7 @@ class User
 
     pf = self.profile_fields.create(label: :name_field_wingolfspost, type: "ProfileFieldTypes::NameSurrounding")
       .becomes(ProfileFieldTypes::NameSurrounding)
-    pf.text_above_name = ""; pf.name_prefix = "Herrn"; name_postfix = ""; text_below_name = ""
+    pf.text_above_name = ""; pf.name_prefix = "Herrn"; pf.name_suffix = ""; pf.text_below_name = ""
     pf.save
 
     self.wingolfsblaetter_abo = true

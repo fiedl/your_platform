@@ -24,8 +24,8 @@ class UserImporter < Importer
     #             p user_data.uid
     #             user.update_attributes( user_data.attributes )
     #             user.save
-                user.import_profile_fields( user_data.profile_fields_array, update_policy)
-                user.reset_memberships_in_corporations
+    #             user.import_profile_fields( user_data.profile_fields_array, update_policy)
+    #             user.reset_memberships_in_corporations
                 user.handle_primary_corporation( user_data, progress )
                 user.handle_current_corporations( user_data )
                 user.handle_netenv_status( user_data.netenv_status )
@@ -47,32 +47,6 @@ end
 
 class UserData < ImportDataset
 
-  # 
-  # def profile_fields_array
-  #   
-  #   academic_degrees.each do |degree|
-  #     add_profile_field :academic_degree, value: degree, type: "AcademicDegree"
-  #   end
-  ##
-  #
-  #
-  #   
-  #   
-  #
-  #   #    add_profile_field :employment, { type: 'Employment' }.merge(employment)
-  #
-  #
-  #
-  #
-  #   
-  #   add_profile_field :bank_account, bank_account.merge( { type: "BankAccount" } )
-  #   
-  #   @profile_fields
-  # # end
-  # 
-  # def phone_format( phone_number )
-  #   ProfileFieldTypes::Phone.format_phone_number(phone_number) if phone_number
-  # end
   
   # TODO: WO EINFÜGEN?
   def contact_name
@@ -103,36 +77,6 @@ end
 
 
 module UserImportMethods
-
-  # The profile_fields_hash should look like this:
-  #
-  #   profile_fields_hash_array = [ { label: 'Work Address', value: "my work address...", type: "Address" },
-  #                                 { label: 'Work Phone', value: "1234", type: "Phone" },
-  #                                 { label: 'Bank Account', type: "BankAccount", account_number: "1234", iban: "567", ... },
-  #                                 ... ]
-  #
-  def import_profile_fields( profile_fields_hash_array, update_policy )
-    return nil if self.profile_fields.count > 0 && update_policy == :ignore
-    self.profile_fields.destroy_all if update_policy == :replace
-    profile_fields_hash_array.each do |profile_field_hash|
-      unless profile_field_exists?(profile_field_hash)
-        profile_field = self.profile_fields.build
-        profile_field.import_attributes( profile_field_hash )
-        profile_field.save
-      end
-    end
-  end
-
-  def profile_field_exists?( attrs )
-    self.profile_fields.where( label: attrs[:label], value: attrs[:value] ).count > 0
-  end
-
-  def update_attributes( attrs )
-    attrs.each do |key,value|
-      self.send( "#{key}=", value )
-    end
-    self.save
-  end
 
   def assign_to_groups( groups )
     p "TODO: GROUP ASSIGNMENT"
@@ -228,13 +172,7 @@ module UserImportMethods
     end
   end
   
-  def reset_memberships_in_corporations
-    groups = self.parent_groups & Group.corporations_parent.descendant_groups
-    groups.each do |group|
-      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
-    end
-  end
-  
+
   def perform_consistency_check_for_aktivitaetszahl( user_data )
     if user_data.aktivitaetszahl.to_s != self.reload.aktivitaetszahl.to_s
       raise "consistency check failed: aktivitaetszahl '#{user_data.aktivitaetszahl}' not reconstructed properly.

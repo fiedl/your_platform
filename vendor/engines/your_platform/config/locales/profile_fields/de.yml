@@ -1,9 +1,13 @@
 de:
+  former_name: Geburtsname
+  
   address: Adresse
   study_address: Semesteranschrift
   parental_address: Heimatanschrift
   home_address: Heimatanschrift
   work_address: Geschäftliche Anschrift
+  home_email: E-Mail privat
+  work_email: E-Mail geschäftlich
   home_phone: Telefon privat
   work_phone: Telefon geschäftlich
   home_fax: Fax privat
@@ -27,11 +31,25 @@ de:
   role: Rolle
   position: Position
   task: Aufgabenfeld
-
+  employment_title: Amtsbezeichnung
+  activity: Tätigkeit
+  native_language: Muttersprache
+  language: Sprache
+  i_offer: Ich biete
+  i_offer_talk_about: Ich biete Vorträge zum Thema
+  i_offer_training: Ich biete Praktika
+  request: Gesuch
+  skill: Fertigkeit
+  experience_as: Erfahrungen als
+  professional_categories: Berufsgruppen
+  occupational_areas: Tätigkeitsbereiche
+  
   study: Studium
   university: Universität
   subject: Fach
   specialization: Spezialisierung
   further_study: Weiteres Studium
+  
+  name_suffix: Text hinter dem Namen
 
   further_information: Weitere Informationen
