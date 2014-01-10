@@ -30,6 +30,12 @@ class Corporation < Group
       group.has_no_subgroups_other_than_the_officers_parent?
     end
   end
+  
+  # This method returns the status group with the given name.
+  # 
+  def status_group(group_name)
+    status_groups.select { |g| g.name == group_name }.first
+  end
 
   # This method returns all corporations in the database.
   # Usage: corporations = Corporation.all

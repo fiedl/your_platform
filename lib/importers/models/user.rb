@@ -163,6 +163,7 @@ class User
   
   def import_corporation_memberships_from( netenv_user )
     self.reset_corporation_memberships
+    self.import_primary_corporation_from netenv_user
   end
   
   def reset_corporation_memberships
@@ -170,5 +171,32 @@ class User
       UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
     end
   end
+  
+  def import_primary_corporation_from( netenv_user )
+    
+    corporation = netenv_user.primary_corporation
+    
+    # Aktivmeldung
+    raise 'no aktivmeldungsdatum given.' unless netenv_user.aktivmeldungsdatum
+    hospitanten = corporation.status_group("Hospitanten")
+    membership_hospitanten = hospitanten.assign_user self, at: netenv_user.aktivmeldungsdatum
+    
+    # Reception
+    if netenv_user.receptionsdatum
+      krassfuxen = corporation.status_group("Kraßfuxen")
+      membership_krassfuxen = membership_hospitanten.promote_to krassfuxen, at: netenv_user.receptionsdatum
+    end
+    
+    # Burschung
+    if netenv_user.burschungsdatum
+      burschen = corporation.status_group("Aktive Burschen")
+      current_membership = self.reload.current_status_membership_in corporation
+      membership_burschen = current_membership.promote_to burschen, at: netenv_user.burschungsdatum
+    end
+    
+    
+    
+  end
+  
     
 end

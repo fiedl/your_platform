@@ -342,6 +342,10 @@ class NetenvUser
     end
   end
   
+  def primary_corporation
+    self.corporations.first
+  end
+  
   def current_corporations
     corporations_by_netenv_aktivitätszahl( self.netenv_aktivitätszahl )
   end
@@ -371,19 +375,21 @@ class NetenvUser
   # =======================================================================
   
   def aktivmeldungsdatum
-    if (data_hash_value(:epdorgmembershipstartdate)) and (data_hash_value(:epdwingolfmutterverbindaktivmeldung)) 
-      if (data_hash_value(:epdwingolfmutterverbindaktivmeldung) != data_hash_value(:epdorgmembershipstartdate))
-        raise 'netenv data conflict: aktivmeldungsdatum and orgmembershipstart both given and unequal.'
-      else
-        return (data_hash_value(:epdorgmembershipstartdate) || data_hash_value(:epdwingolfmutterverbindaktivmeldung)).to_datetime
-      end
-    else
-      # need to reconstruct the date using the aktivitätszahl attribute, since no
-      # actual date is given.
-      raise 'could not identify first corporation of user' if not corporations.first
-      raise 'could not reconstruct year of joining' if not year_of_joining(corporations.first)
-      return "#{year_of_joining(corporations.first)}-01-01".to_datetime
-    end
+    date = aktivmeldungsdatum_in_mutterverbindung || aktivmeldungsdatum_im_wingolfsbund || aktivmeldungsdatum_aus_aktivitaetszahl
+  end
+  
+  def aktivmeldungsdatum_in_mutterverbindung
+    data_hash_value(:epdwingolfmutterverbindaktivmeldung).try(:to_datetime)
+  end
+  
+  def aktivmeldungsdatum_im_wingolfsbund
+    data_hash_value(:epdorgmembershipstartdate).try(:to_datetime)
+  end
+  
+  def aktivmeldungsdatum_aus_aktivitaetszahl
+    raise 'could not identify first corporation of user' if not corporations.first
+    raise 'could not reconstruct year of joining' if not year_of_joining(corporations.first)
+    return "#{year_of_joining(corporations.first)}-01-01".to_datetime
   end
   
   def receptionsdatum

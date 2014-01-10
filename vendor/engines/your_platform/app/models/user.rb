@@ -322,7 +322,7 @@ class User < ActiveRecord::Base
   end
 
   def current_status_membership_in( corporation )
-    current_status_groups = (corporation.status_groups & self.ancestor_groups)
+    current_status_groups = (corporation.status_groups & self.groups)
     if current_status_groups.count > 1
       raise 'selection algorithm not unique, yet. Please correct this.'
     end

@@ -104,12 +104,6 @@ module UserImportMethods
   end
 
   def handle_primary_corporation( user_data, progress )
-    corporation = user_data.corporations.first
-    
-    # Aktivmeldung
-    raise 'aktivmeldungsdatum not given' if not user_data.aktivmeldungsdatum
-    hospitanten = corporation.descendant_groups.find_by_name("Hospitanten")
-    membership_hospitant = hospitanten.assign_user self, joined_at: user_data.aktivmeldungsdatum
     
     # Reception
     if user_data.receptionsdatum

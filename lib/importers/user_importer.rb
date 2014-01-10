@@ -68,6 +68,7 @@ class UserImporter < Importer
       
       # Mitgliedschaften in Korporationen importieren.
       # 
+      check_corporation_memberships_consistency_for netenv_user
       user.import_corporation_memberships_from netenv_user
 
       # Zeitstempel des Datensatzes importieren.
@@ -128,6 +129,41 @@ class UserImporter < Importer
   
   def find_existing_user_for(netenv_user)
     User.find_by_w_nummer(netenv_user.w_nummer)
+  end
+  
+  def check_corporation_memberships_consistency_for(netenv_user)
+    
+    # Aktivmeldungsdatum?
+    if not netenv_user.aktivmeldungsdatum
+      warning = { message: 'no aktivmeldungsdatum present.',
+                  name: netenv_user.name, w_nummer: netenv_user.w_nummer }
+      progress.log_failure(warning)
+    end
+    
+    # Aktivmeldungsdatum inkonsistent?
+    if ( netenv_user.aktivmeldungsdatum_in_mutterverbindung and
+         netenv_user.aktivmeldungsdatum_im_wingolfsbund and
+         (netenv_user.aktivmeldungsdatum_im_wingolfsbund != netenv_user.aktivmeldungsdatum_in_mutterverbindung)
+         )
+      warning = { message: 'inconsistent aktivmeldungsdatum: the date of joining wingolfsbund is unequal to the date of joining of the primary corporation.',
+                  name: netenv_user.name, w_nummer: netenv_user.w_nummer,
+                  aktivmeldungsdatum_im_wingolfsbund: netenv_user.aktivmeldungsdatum_im_wingolfsbund,
+                  aktivmeldungsdatum_in_mutterverbindung: netenv_user.aktivmeldungsdatum_in_mutterverbindung,
+                  mutterverbindung: netenv_user.primary_corporation.token }
+      progress.log_failure(warning)
+    end
+    
+    # Receptionsdatum > Philistrationsdatum?
+    if netenv_user.philistrationsdatum and netenv_user.receptionsdatum
+      if netenv_user.receptionsdatum > netenv_user.philistrationsdatum
+        warning = { message: 'inconsistent netenv data: philistration before reception!',
+                    name: netenv_user.name, w_nummer: netenv_user.w_nummer, 
+                    philistrationsdatum: netenv_user.philistrationsdatum,
+                    receptionsdatum: netenv_user.receptionsdatum }
+        progress.log_warning(warning)
+      end
+    end
+    
   end
   
 end
