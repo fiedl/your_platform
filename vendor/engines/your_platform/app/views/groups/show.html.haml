@@ -49,12 +49,8 @@
             = officer_group.name
         %dd
           - if can? :manage, officer_group
-            = officer_group.parents.first.name
-            = officer_group.parents.first.parents.first.name
             = multiple_users_best_in_place officer_group, :direct_members_titles_string
           - else
-            = officer_group.parents.first.name
-            = officer_group.parents.first.parents.first.name
             = officer_group.direct_members_titles_string
 
 / large map
