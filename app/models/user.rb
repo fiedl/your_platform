@@ -10,6 +10,7 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 class User
 
   attr_accessible :wingolfsblaetter_abo, :hidden
+  after_commit    :flush_cache
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -19,7 +20,7 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    ( name + "  " + aktivitaetszahl ).strip if name && aktivitaetszahl
+    ( name + "  " + cached_aktivitaetszahl ).strip if name && cached_aktivitaetszahl
   end
   
   # This method returns the bv (Bezirksverband) the user is associated with.
@@ -45,7 +46,15 @@ class User
       end.join( " " )
     end
   end
+
+  def cached_aktivitaetszahl
+    Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
+  end
   
+  def flush_cache
+    Rails.cache.delete([self, "aktivitaetszahl"])
+  end
+
   def aktivitaetszahl_addition_for( corporation )
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter")
