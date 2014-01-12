@@ -38,8 +38,7 @@
 
 / officers
 - if @group.find_officers_groups.count > 0
-  %h1.officers.section
-  = t :officers
+  %h1.officers.section= t :officers
   %span#officers
     %dl
       - for officer_group in @group.find_officers_groups
@@ -50,9 +49,13 @@
             = officer_group.name
         %dd
           - if can? :manage, officer_group
+            = officer_group.parents.first.name
+            = officer_group.parents.first.parents.first.name
             = multiple_users_best_in_place officer_group, :direct_members_titles_string
           - else
-            = officer_group.members.collect { |member| link_to member.title, member }.join(", ")
+            = officer_group.parents.first.name
+            = officer_group.parents.first.parents.first.name
+            = officer_group.direct_members_titles_string
 
 / large map
 %h1.large_map.section= t :map
