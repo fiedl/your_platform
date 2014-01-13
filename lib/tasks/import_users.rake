@@ -18,9 +18,9 @@ namespace :import do
     require 'importers/user_importer'
     
     importer = UserImporter.new( filename: "import/netenv_data/Members_production_2012-01-17.csv", 
-                                 filter: { last_name: "Fiedlschuster" }
-                                 # filter: { w_nummer: 'W53167' }
-                                 # filter: { first_name: "Thomas", last_name: "Fischer" }
+                                 # filter: { last_name: "Fiedlschuster" }
+                                 # filter: { w_nummer: 'W51809' }
+                                 filter: { first_name: "Thomas", last_name: "Fischer", w_nummer: 'W51809' }
                                  )
     
     importer.import
