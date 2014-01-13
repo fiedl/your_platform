@@ -91,7 +91,7 @@ class StatusGroupMembership < UserGroupMembership
   #
   def self.find_all_by_user( user )
     raise 'Expect parameter to be a User' unless user.kind_of? User
-    status_groups = user.status_groups
+    status_groups = user.status_groups(with_invalid: true)
     status_group_ids = status_groups.collect { |group| group.id }
     links = self
       .where( :descendant_type => "User" )

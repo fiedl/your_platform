@@ -57,7 +57,15 @@ describe StatusGroup do
       it "should be equivalent to User#status_groups" do
         subject.should == @user.status_groups
       end
-      
+
+      describe "(with_invalid: true)" do
+        subject { StatusGroup.find_all_by_user(@user, with_invalid: true) }
+        it { should include @status_a_1, @status_a_2 }
+        it "should be equivalent to User#status_groups(with_invalid: true)" do
+          subject.should == @user.status_groups(with_invalid: true)
+        end
+      end
+
     end
   end
   

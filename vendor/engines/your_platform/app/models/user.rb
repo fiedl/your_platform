@@ -309,8 +309,11 @@ class User < ActiveRecord::Base
   # This returns all status groups of the user, i.e. groups that represent the member
   # status of the user in a corporation.
   #
-  def status_groups
-    StatusGroup.find_all_by_user(self)
+  # options:
+  #   :with_invalid  =>  true, false
+  #
+  def status_groups(options = {})
+    StatusGroup.find_all_by_user(self, options)
   end
 
   def status_group_memberships
