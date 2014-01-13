@@ -10,7 +10,6 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 class User
 
   attr_accessible :wingolfsblaetter_abo, :hidden
-  after_commit    :flush_cache
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -51,10 +50,6 @@ class User
     Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
   end
   
-  def flush_cache
-    Rails.cache.delete([self, "aktivitaetszahl"])
-  end
-
   def aktivitaetszahl_addition_for( corporation )
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter")

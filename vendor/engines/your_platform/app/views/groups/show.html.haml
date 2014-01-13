@@ -37,7 +37,7 @@
             = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
 
 / officers
-- if @group.find_officers_groups.count > 0
+- if @group.find_officers_groups.any?
   %h1.officers.section= t :officers
   %span#officers
     %dl

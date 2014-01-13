@@ -3,6 +3,12 @@ module GroupsHelper
   def my_groups_table
     groups_of_user_table current_user if current_user
   end
+
+  def cached_my_groups_table
+    if current_user
+      Rails.cache.fetch([current_user, "my_groups_table"]) { my_groups_table }
+    end
+  end
   
   def groups_of_user_table( user )
     content_tag :table, :class => "user_groups" do

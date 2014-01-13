@@ -26,9 +26,8 @@
               %li.backendBarItem.dropdown
                 -# link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' }
                 = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'
-                - cache(:controller => "layouts", :action => "wingolf") do
-                  %ul.dropdown-menu
-                    = my_groups_table
+                %ul.dropdown-menu
+                  = cached_my_groups_table
               /
                 \//
                 <haml:silent>             if current_user.role_for( @navable )
