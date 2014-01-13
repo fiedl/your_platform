@@ -292,7 +292,6 @@ describe StatusGroupMembership do
 
   end
   
-
   # Status Workflow in model layer (bug fix)
   # ==========================================================================================
 
@@ -346,5 +345,6 @@ describe StatusGroupMembership do
       end
     end
 
-  end  
+  end 
+  
 end

@@ -270,6 +270,20 @@ class UserGroupMembership < DagLink
     self.move_to_group( new_group, options )
   end
   
+  
+  # Destroy
+  # ==========================================================================================
+  
+  # The regular destroy method won't trigger DagLink's callbacks properly,
+  # causing the former dag link bug. By calling the DagLink's destroy method
+  # we'll ensure the callbacks are called and indirect memberships are destroyed
+  # correctly.
+  # 
+  def destroy
+    DagLink.where(id: self.id).first.destroy
+  end
+  
+  
 end
 
 

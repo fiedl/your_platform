@@ -155,6 +155,7 @@ class StatusGroupMembership < UserGroupMembership
     save
   end
 
+
   # Callback Methods for the Delegation to status_group_membership_info
   # ==========================================================================================
 

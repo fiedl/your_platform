@@ -386,4 +386,43 @@ describe UserGroupMembership do
     end
   end
   
+  
+  # Destroy
+  # ==========================================================================================
+  
+  describe "#destroy" do
+    describe "for nested structures   (bug fix)" do
+      # 
+      # @corporation
+      #      |-------- @status_1 ---------------- @user  | p
+      #      |-------- @group_a                          | r
+      #      |            |------- @status_2 ---- @user  | o
+      #      |                                           | m
+      #      |-------- @group_b                          | o
+      #                   |------- @status_3 ---- @user  | t
+      #                                                  V e
+      before do
+        @user = create(:user)
+        @corporation = create(:corporation)
+        @status_1 = @corporation.child_groups.create
+        @group_a = @corporation.child_groups.create
+        @status_2 = @group_a.child_groups.create
+        @group_b = @corporation.child_groups.create
+        @status_3 = @group_b.child_groups.create
+        @membership_1 = @status_1.assign_user @user, at: 1.year.ago
+        @membership_2 = @membership_1.promote_to @status_2, at: 10.minutes.ago
+        @membership_3 = @membership_2.promote_to @status_3, at: 2.minutes.ago
+      end
+      subject do
+        @user.parent_groups.each do |group|
+          UserGroupMembership.with_invalid.find_by_user_and_group(@user, group).destroy
+        end
+      end
+      it "should not raise an error (bug fix)" do
+        expect { subject }.not_to raise_error
+      end
+    end
+  end
+  
+  
 end
