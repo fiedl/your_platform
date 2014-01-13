@@ -105,20 +105,6 @@ module UserImportMethods
 
   def handle_primary_corporation( user_data, progress )
     
-    # Reception
-    if user_data.receptionsdatum
-      if (user_data.philistrationsdatum) and (user_data.receptionsdatum > user_data.philistrationsdatum)
-        warning = { message: 'inconsistent netenv data: philistration before reception! ingoring reception.',
-                    name: self.name, uid: user_data.w_nummer, 
-                    philistrationsdatum: user_data.philistrationsdatum,
-                    receptionsdatum: user_data.receptionsdatum }
-        progress.log_warning(warning)
-      else
-        krassfuxen = corporation.descendant_groups.find_by_name("Kraßfuxen")
-        membership_krassfux = membership_hospitant.promote_to krassfuxen, date: user_data.receptionsdatum
-      end
-    end
-    
     # Burschung
     if user_data.burschungsdatum
       burschen = corporation.descendant_groups.find_by_name("Aktive Burschen")

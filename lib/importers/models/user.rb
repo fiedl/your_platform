@@ -167,36 +167,70 @@ class User
   end
   
   def reset_corporation_memberships
+    p "RESET"
     (self.parent_groups & Group.corporations_parent.descendant_groups).each do |group|
-      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
+      p "DESTROYING MEMBERSHIP IN #{group.name} ..."
+      p_debug
+      
+      # ACHTUNG:
+      # DAS FUNKTIONIERT:
+      self.links_as_child.where(ancestor_type: 'Group', ancestor_id: group.id).first.destroy      
+      # DAS NICHT:
+      #UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy      
+      # TODO: FIXEN!
+      # TODO: SPEC SCHREIBEN!
+      # TODO: KOMMENTARE UND DEBUG IN DIESER DATEI LÖSCHEN.
+
+
     end
   end
+  
+  def p_debug
+    (self.reload.parent_groups & Group.corporations_parent.descendant_groups).each do |group|
+      p "  #{group.name}"
+      p "    #{UserGroupMembership.with_invalid.find_by_user_and_group(self, group).indirect_memberships.collect { |m| [m.group.name, m.count ] }}"
+    end
+  end
+      
   
   def import_primary_corporation_from( netenv_user )
     
     corporation = netenv_user.primary_corporation
     
+    p "AKTIVMELDUNG"
+    p_debug
     # Aktivmeldung
     raise 'no aktivmeldungsdatum given.' unless netenv_user.aktivmeldungsdatum
     hospitanten = corporation.status_group("Hospitanten")
     membership_hospitanten = hospitanten.assign_user self, at: netenv_user.aktivmeldungsdatum
-    
+
+    p "RECEPTION"
+    p_debug    
     # Reception
     if netenv_user.receptionsdatum
       krassfuxen = corporation.status_group("Kraßfuxen")
       membership_krassfuxen = membership_hospitanten.promote_to krassfuxen, at: netenv_user.receptionsdatum
     end
     
+    p "BURSCHUNG"
+    p_debug
     # Burschung
     if netenv_user.burschungsdatum
       burschen = corporation.status_group("Aktive Burschen")
       current_membership = self.reload.current_status_membership_in corporation
       membership_burschen = current_membership.promote_to burschen, at: netenv_user.burschungsdatum
     end
-    
-    
+
+    p "PHILISTRATION"
+    p_debug    
+    # Philistration
+    if netenv_user.philistrationsdatum
+      philister = corporation.status_group("Philister")
+      current_membership = self.reload.current_status_membership_in corporation
+      membership_philister = current_membership.promote_to philister, at: netenv_user.philistrationsdatum
+    end
+    p "FERTIG"
     
   end
   
-    
 end
