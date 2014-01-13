@@ -25,10 +25,8 @@ class Corporation < Group
   # In this general context, each leaf group of the corporation is a status group.
   # But this is likely to be overridden by the main application.
   #
-  def status_groups 
-    self.descendant_groups.select do |group|
-      group.has_no_subgroups_other_than_the_officers_parent?
-    end
+  def status_groups
+    StatusGroup.find_all_by_corporation(self)
   end
   
   # This method returns the status group with the given name.

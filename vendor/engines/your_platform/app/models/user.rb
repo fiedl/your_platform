@@ -310,9 +310,7 @@ class User < ActiveRecord::Base
   # status of the user in a corporation.
   #
   def status_groups
-    self.corporations.collect do |corporation|
-      corporation.status_groups
-    end.flatten & self.ancestor_groups
+    StatusGroup.find_all_by_user(self)
   end
 
   def status_group_memberships
@@ -322,15 +320,13 @@ class User < ActiveRecord::Base
   end
 
   def current_status_membership_in( corporation )
-    current_status_groups = (corporation.status_groups & self.groups)
-    if current_status_groups.count > 1
-      raise 'selection algorithm not unique, yet. Please correct this.'
+    if status_group = current_status_group_in(corporation)
+      StatusGroupMembership.find_by_user_and_group(self, status_group)
     end
-    if current_status_groups.count == 0
-      return nil
-    else
-      StatusGroupMembership.find_by_user_and_group( self, current_status_groups.first )
-    end
+  end
+  
+  def current_status_group_in( corporation )
+    StatusGroup.find_by_user_and_corporation(self, corporation)
   end
 
 

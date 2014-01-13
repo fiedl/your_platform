@@ -23,4 +23,13 @@ module GroupMixins::Officers
       ((self.child_groups.count == 1) and (self.child_groups.first.has_flag?(:officers_parent)))
   end
   
+  # This method determines if the group is an officers group.
+  #
+  def is_officers_group?
+    self.ancestor_groups.each do |group|
+      return true if group.has_flag? :officers_parent
+    end
+    return false
+  end
+  
 end

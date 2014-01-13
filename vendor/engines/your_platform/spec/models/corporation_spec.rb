@@ -63,8 +63,8 @@ describe Corporation do
       it "should not return the officers parent groups" do
         subject.should_not include @officers_parent
       end
-      it "should return the admins parent groups such that being admin is considered a status" do
-        subject.should include @admins_parent
+      it "should not return the admins parent groups such that being admin is not considered a status" do
+        subject.should_not include @admins_parent
       end
     end
   end
