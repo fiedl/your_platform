@@ -29,8 +29,8 @@ class UserGroupMembership < DagLink
   end
 
   def flush_cache
-    Rails.cache.delete([self.descendant, "my_groups_table"])
-    Rails.cache.delete([self.descendant, "aktivitaetszahl"])
+    Rails.cache.delete([self.user, "my_groups_table"])
+    Rails.cache.delete([self.user, "aktivitaetszahl"])
   end
 
   # Creation Class Method

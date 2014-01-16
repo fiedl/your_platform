@@ -114,6 +114,14 @@ module StructureableMixins::Roles
     admins_parent.descendant_users
   end
 
+  def find_admins
+    unless find_admins_parent_group.nil?
+      find_admins_parent_group.descendant_users
+    else
+      []
+    end
+  end
+
 
   # Main Admins
   # ==========================================================================================

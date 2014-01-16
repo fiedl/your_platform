@@ -32,7 +32,7 @@ describe User do
     end
   end
 
-  describe "aktivitaetszahl" do
+  describe "#aktivitaetszahl" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationH = create( :corporation_with_status_groups, :token => "H" )
@@ -57,7 +57,7 @@ describe User do
     end
   end
 
-  describe "cached aktivitaetszahl" do
+  describe "#cached_aktivitaetszahl" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationH = create( :corporation_with_status_groups, :token => "H" )
