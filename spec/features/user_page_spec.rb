@@ -67,7 +67,7 @@ feature 'User page', js: false do
 
           click_on I18n.t(:add)
           wait_for_ajax
-          
+
           page.should have_selector('.profile_field')
           within first '.profile_field' do
             #
@@ -118,6 +118,19 @@ feature 'User page', js: false do
         end
       end
 
+      scenario 'the vita section should be editable', js: true do
+        within '.box.section.corporate_vita' do
+          subject.should have_selector('a.edit_button', visible: true)
+        end
+      end
+
+      scenario "the section #{I18n.t(:communication)} should be editable", js: true do
+        within('.box.section.communication') do
+          click_on I18n.t(:edit)
+          page.should have_selector('select', :visible => true)
+        end
+      end
+
     end
 
 
@@ -152,6 +165,10 @@ feature 'User page', js: false do
             subject.should have_no_selector('a.add_button', visible: true)
             subject.should have_no_selector('.remove_button', visible: true)
           end
+        end
+
+        scenario "the section #{I18n.t(:communication)} should not be editable", js: true do
+          subject.should have_no_selector('a.edit_button', visible: true)
         end
 
         scenario 'the empty sections should not be visible' do
@@ -194,6 +211,13 @@ feature 'User page', js: false do
           subject.should have_selector('.box.section.organizations')
         end
 
+        scenario 'the vita section should not be editable', js: true do
+          within '.box.section.corporate_vita' do
+            subject.should have_no_selector('a.edit_button', visible: true)
+            subject.should have_no_selector('a.add_button', visible: true)
+            subject.should have_no_selector('.remove_button', visible: true)
+          end
+        end
 
         scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
           within('.box.section.contact_information') do
@@ -207,6 +231,12 @@ feature 'User page', js: false do
             page.should have_selector('.radio', :visible => true)
 
             page.should have_selector('a.add_button', visible: true)
+          end
+        end
+        scenario "the section #{I18n.t(:communication)} should be editable", js: true do
+          within('.box.section.communication') do
+            click_on I18n.t(:edit)
+            page.should have_selector('select', :visible => true)
           end
         end
 
