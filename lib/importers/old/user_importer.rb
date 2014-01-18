@@ -84,13 +84,6 @@ module UserImportMethods
     #p "-----"
   end
 
-  def perform_consistency_check_for_aktivitaetszahl( user_data )
-    if user_data.aktivitaetszahl.to_s != self.reload.aktivitaetszahl.to_s
-      raise "consistency check failed: aktivitaetszahl '#{user_data.aktivitaetszahl}' not reconstructed properly.
-        The reconstructed one is '#{self.aktivitaetszahl}'."
-    end
-  end
-
 end
 
 User.send( :include, UserImportMethods )

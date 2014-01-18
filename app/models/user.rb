@@ -30,7 +30,7 @@ class User
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
-  def aktivitaetszahl
+  def aktivitätszahl
     if self.corporations
       self.corporations
         .sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
@@ -44,6 +44,9 @@ class User
         end
       end.join( " " )
     end
+  end
+  def aktivitaetszahl
+    aktivitätszahl
   end
 
   def cached_aktivitaetszahl

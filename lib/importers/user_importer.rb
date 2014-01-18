@@ -71,6 +71,7 @@ class UserImporter < Importer
       # 
       check_corporation_memberships_consistency_for netenv_user
       user.import_corporation_memberships_from netenv_user
+      perform_consistency_check_for_aktivitaetszahl_for user, netenv_user
 
       # Benutzer ggf. verstecken.
       #
@@ -168,7 +169,14 @@ class UserImporter < Importer
         progress.log_warning(warning)
       end
     end
-    
   end
+  
+  def perform_consistency_check_for_aktivitaetszahl_for( user, netenv_user )
+    if netenv_user.aktivitätszahl.to_s != user.aktivitätszahl.to_s
+      raise "consistency check failed: aktivitätszahl '#{netenv_user.aktivitätszahl}' not reconstructed properly.
+        The reconstructed one is '#{user.aktivitätszahl}'."
+    end
+  end
+
   
 end
