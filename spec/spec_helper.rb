@@ -145,7 +145,7 @@ Spork.prefork do
   # 
   # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
   # 
-  Capybara.default_wait_time = 5
+  Capybara.default_wait_time = 15
 
 
   # Rspec Configuration

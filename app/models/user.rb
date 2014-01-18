@@ -19,7 +19,7 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    ( name + "  " + aktivitaetszahl ).strip if name && aktivitaetszahl
+    ( name + "  " + cached_aktivitaetszahl ).strip if name && cached_aktivitaetszahl
   end
   
   # This method returns the bv (Bezirksverband) the user is associated with.
@@ -44,6 +44,10 @@ class User
         end
       end.join( " " )
     end
+  end
+
+  def cached_aktivitaetszahl
+    Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
   end
   
   def aktivitaetszahl_addition_for( corporation )

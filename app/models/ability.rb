@@ -45,7 +45,7 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if Group.find_everyone_group.try(:admins) && user.in?(Group.find_everyone_group.admins)
+      if Group.find_everyone_group.try(:find_admins) && user.in?(Group.find_everyone_group.find_admins)
         can :manage, :all
 
       else
@@ -80,16 +80,19 @@ class Ability
         # and all users within their groups. They can also execute workflows.
         #
         can :manage, Group do |group|
-          (group.admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user))
+          group.find_admins.include?(user) || 
+          (group.ancestors.collect do |ancestor| 
+            ancestor.find_admins.include?(user) 
+          end.count { |bool| bool }>0)
         end
         can :manage, User do |other_user|
-          other_user.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+          other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
         end
         can :execute, Workflow do |workflow|
-          workflow.ancestor_groups.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+          workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
         end
         can :manage, Page do |page|
-          page.admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.admins }.flatten.include?(user)
+          page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
         end
         
         # DEVELOPERS

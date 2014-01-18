@@ -92,6 +92,28 @@ describe StructureableMixins::Roles do
     end
   end
 
+  describe "#find_admins" do
+    subject { @my_structureable.admins }
+    context "if the admins_parent_group exists" do
+      before { @my_structureable.create_admins_parent_group } 
+      it { should == [] }
+    end
+    context "if admin users exist" do
+      before do 
+        @admin_user = create( :user )
+        @my_structureable.admins_parent.child_users << @admin_user
+      end
+      it "should return an array of admin users" do
+        subject.should == [ @admin_user ]
+      end
+    end
+    context "if the admins-parent group does not exist" do
+      it "should return an empty array" do
+        subject.should == []
+      end
+    end
+  end
+
   describe "#admins <<" do
     before { @admin_user = create( :user ) }
     subject { @my_structureable.admins << @admin_user }

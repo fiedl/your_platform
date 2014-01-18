@@ -17,8 +17,8 @@ class GroupsController < ApplicationController
     if @group
       point_navigation_to @group
       
-      @direct_members = @group.direct_members
-      @direct_members = @direct_members.page(params[:page]).per_page(25) # pagination
+      @members = @group.members
+      @members = @members.page(params[:page]).per_page(25) # pagination
 
       @map_address_fields = map_address_fields
 

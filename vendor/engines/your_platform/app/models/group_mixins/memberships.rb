@@ -118,7 +118,7 @@ module GroupMixins::Memberships
 
     # This associates the group members (users), direct ones as well as indirect ones.
     #
-    has_many :members, through: :memberships, source: :descendant, source_type: 'User'
+    has_many :members, through: :memberships, source: :descendant, source_type: 'User', :uniq => true
 
     # This associates only the direct group members (users).
     #

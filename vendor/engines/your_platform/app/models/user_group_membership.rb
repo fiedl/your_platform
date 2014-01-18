@@ -11,7 +11,8 @@ class UserGroupMembership < DagLink
 
   attr_accessible :created_at, :deleted_at, :archived_at, :created_at_date_formatted
   before_validation :ensure_correct_ancestor_and_descendant_type
-  
+  after_commit      :flush_cache
+
   # Validity Range
   # ====================================================================================================
 
@@ -27,6 +28,10 @@ class UserGroupMembership < DagLink
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
 
+  def flush_cache
+    Rails.cache.delete([self.user, "my_groups_table"])
+    Rails.cache.delete([self.user, "aktivitaetszahl"])
+  end
 
   # Creation Class Method
   # ====================================================================================================

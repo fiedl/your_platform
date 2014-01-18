@@ -32,7 +32,7 @@ describe User do
     end
   end
 
-  describe "aktivitaetszahl" do
+  describe "#aktivitaetszahl" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationH = create( :corporation_with_status_groups, :token => "H" )
@@ -47,6 +47,31 @@ describe User do
     end
     subject { @user.aktivitaetszahl }
     it "should return the composed aktivitaetszahl" do
+      subject.should == "E06 H08"
+    end
+    it "should include only the right years (bug fix)" do
+      subject.should_not == "H08 E13"
+    end
+    it "should not use the wrong order (bug fix)" do
+      subject.should_not == "H08 E06"
+    end
+  end
+
+  describe "#cached_aktivitaetszahl" do
+    before do
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
+      @first_membership_E.invalidate
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
+    end
+    subject { @user.cached_aktivitaetszahl }
+    it "should return the composed cached aktivitaetszahl" do
       subject.should == "E06 H08"
     end
     it "should include only the right years (bug fix)" do
