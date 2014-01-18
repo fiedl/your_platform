@@ -164,6 +164,7 @@ class User
   def import_corporation_memberships_from( netenv_user )
     self.reset_corporation_memberships
     self.import_primary_corporation_from netenv_user
+    self.import_secondary_corporations_from netenv_user
   end
   
   def reset_corporation_memberships
@@ -173,7 +174,6 @@ class User
   end
   
   def import_primary_corporation_from( netenv_user )
-    
     corporation = netenv_user.primary_corporation
     
     # Aktivmeldung
@@ -200,7 +200,33 @@ class User
       current_membership = self.reload.current_status_membership_in corporation
       membership_philister = current_membership.promote_to philister, at: netenv_user.philistrationsdatum
     end
-    
+  end
+  
+  def import_secondary_corporations_from( netenv_user )
+    netenv_user.secondary_corporations.each do |corporation|
+      year_of_joining = netenv_user.year_of_joining(corporation)
+      assumed_date_of_joining = year_of_joining.to_datetime
+      
+      if netenv_user.bandaufnahme_als_aktiver?( corporation )
+        group_to_assign = corporation.status_group("Aktive Burschen")
+      elsif netenv_user.bandverleihung_als_philister?( corporation )
+        group_to_assign = corporation.status_group("Philister")
+      end
+      
+      if netenv_user.ehrenphilister?(corporation)
+        group_to_assign = corporation.status_group("Ehrenphilister")
+      end
+
+      raise 'could not identify group to assign this user' if not group_to_assign
+      group_to_assign.assign_user self, at: assumed_date_of_joining
+      
+      if netenv_user.stifter?(corporation)
+        corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: assumed_date_of_joining
+      end
+      if netenv_user.neustifter?(corporation)
+        corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: assumed_date_of_joining
+      end
+    end
   end
   
 end

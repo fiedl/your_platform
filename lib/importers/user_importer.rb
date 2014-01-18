@@ -1,5 +1,6 @@
 require 'importers/importer'
 require 'importers/models/user'
+require 'importers/models/string'
 require 'importers/models/profile_field'
 require 'importers/models/netenv_user'
 
