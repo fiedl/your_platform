@@ -346,6 +346,10 @@ class NetenvUser
     self.corporations.first
   end
   
+  def secondary_corporations
+    current_corporations - [ primary_corporation ]
+  end
+  
   def current_corporations
     corporations_by_netenv_aktivitätszahl( self.netenv_aktivitätszahl )
   end

@@ -26,8 +26,8 @@ class UserImporter < Importer
     #             user.save
     #             user.import_profile_fields( user_data.profile_fields_array, update_policy)
     #             user.reset_memberships_in_corporations
-                user.handle_primary_corporation( user_data, progress )
-                user.handle_current_corporations( user_data )
+    #             user.handle_primary_corporation( user_data, progress )
+    #             user.handle_current_corporations( user_data )
                 user.handle_netenv_status( user_data.netenv_status )
                 user.handle_former_corporations( user_data )
                 user.perform_consistency_check_for_aktivitaetszahl( user_data )
@@ -103,55 +103,6 @@ module UserImportMethods
     end
   end
 
-  def handle_primary_corporation( user_data, progress )
-    
-    # Burschung
-    if user_data.burschungsdatum
-      burschen = corporation.descendant_groups.find_by_name("Aktive Burschen")
-      membership_burschen = self.reload.current_status_membership_in(corporation)
-        .promote_to burschen, date: user_data.burschungsdatum
-    end
-    
-    # Philistration
-    if user_data.philistrationsdatum
-      philister = corporation.descendant_groups.find_by_name("Philister")
-      membership_philister = self.reload.current_status_membership_in(corporation)
-        .promote_to philister, date: user_data.philistrationsdatum
-    end
-  end
-
-  def handle_current_corporations( user_data )
-    user_data.current_corporations.each do |corporation|
-      year_of_joining = user_data.year_of_joining(corporation)
-      group_to_assign = nil
-      if user_data.aktivmeldungsdatum.year.to_s == year_of_joining
-        # Already handled by #handle_primary_corporation.
-      else
-        date_of_joining = year_of_joining.to_datetime
-        if user_data.bandaufnahme_als_aktiver?( corporation )
-          group_to_assign = corporation.descendant_groups.find_by_name("Aktive Burschen")
-        elsif user_data.bandverleihung_als_philister?( corporation )
-          group_to_assign = corporation.descendant_groups.find_by_name("Philister")
-        end
-        
-        if user_data.ehrenphilister?(corporation)
-          group_to_assign = corporation.descendant_groups.find_by_name("Ehrenphilister")
-        end
-
-        raise 'could not identify group to assign this user' if not group_to_assign
-        group_to_assign.assign_user self, joined_at: date_of_joining
-        
-        if user_data.stifter?(corporation)
-          corporation.descendant_groups.find_by_name("Stifter").assign_user self, joined_at: date_of_joining
-        end
-        if user_data.neustifter?(corporation)
-          corporation.descendant_groups.find_by_name("Neustifter").assign_user self, joined_at: date_of_joining
-        end
-        
-      end
-    end
-  end
-  
 
   def perform_consistency_check_for_aktivitaetszahl( user_data )
     if user_data.aktivitaetszahl.to_s != self.reload.aktivitaetszahl.to_s
