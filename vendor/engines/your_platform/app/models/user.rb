@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :first_name, :last_name
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
-  validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9.-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email }
+  validates_format_of       :email, :with => /^[a-z0-9_.-]+@[a-z0-9.-]+\.[a-z.]+$/i, :if => Proc.new { |user| user.email.present? }
 
   has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
      :organizations, :bank_account_information]
@@ -147,6 +147,22 @@ class User < ActiveRecord::Base
     rescue
       self.date_of_birth = nil
     end
+  end
+  
+  
+  # Date of Death
+  #
+  def date_of_death
+    profile_fields.where(label: 'date_of_death').first.try(:value)
+  end
+  def set_date_of_death_if_unset(new_date_of_death)
+    new_date_of_death = I18n.localize(new_date_of_death.to_date)
+    unless self.date_of_death
+      profile_fields.create(type: "ProfileFieldTypes::General", label: 'date_of_death', value: new_date_of_death)
+    end
+  end
+  def dead?
+    date_of_death ? true : false
   end
 
 

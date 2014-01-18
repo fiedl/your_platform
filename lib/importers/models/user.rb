@@ -170,11 +170,12 @@ class User
   # =======================================================================
   
   def import_corporation_memberships_from( netenv_user )
-    self.reset_corporation_memberships
-    self.import_primary_corporation_from netenv_user
-    self.import_secondary_corporations_from netenv_user
-    self.import_stifter_status_from netenv_user
-    self.import_former_corporations_from
+    reset_corporation_memberships
+    import_primary_corporation_from netenv_user
+    import_secondary_corporations_from netenv_user
+    import_stifter_status_from netenv_user
+    import_exit_events_from netenv_user
+    import_death_from netenv_user
   end
   
   def reset_corporation_memberships
@@ -253,10 +254,21 @@ class User
     end
   end
   
-  def import_former_corporations_from( netenv_user )
+  def import_exit_events_from( netenv_user )
     netenv_user.former_corporations.each do |corporation|
-      reason = netenv_user.reason_for_exit(corporation)
+      
+      reason = netenv_user.reason_for_exit(corporation)  || "ausgetreten"
       date = netenv_user.date_of_exit(corporation)
+      
+      # Unassign user from previous groups in that corporation.
+      (self.parent_groups & corporation.descendant_groups).each do |status_group|
+        
+        # Wenn kein Austrittsdatum vermerkt ist, wird das Datum der Statusgruppe übernommen.
+        date ||= UserGroupMembership.with_invalid.find_by_user_and_group(self, status_group).try(:valid_from)
+
+        status_group.unassign_user self, at: date
+      end
+
       former_members_parent_group = corporation.child_groups.find_by_flag(:former_members_parent)
       if reason == "ausgetreten"
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Schlicht Ausgetretene")
@@ -264,15 +276,35 @@ class User
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
       end
       
-      # Unassign user from previous status groups of this corporation.
-      (self.status_groups & corporation.status_groups).each do |status_group|
-        status_group.unassign_user self
-      end
-      
       # Assign user to new status group.
       group_to_assign.assign_user self, at: date
     end
   end
   
+  def import_death_from( netenv_user )
+    if netenv_user.verstorben?
+      
+      date_of_death = netenv_user.netenv_org_membership_end_date
+      
+      # Aus allen Gruppen austragen, außer der 'hidden_users'-Gruppe.
+      self.direct_groups.each do |group|
+        unless group.has_flag? :hidden_users
+          group.unassign_user self, at: date_of_death
+        end
+      end
+      
+      # In die Verstorbenen-Gruppen der Korporationen eintragen.
+      # Hier müssen die `corporations` von `netenv_user`, nicht von `self` 
+      # abgefragt werden, da die Gruppen-Mitgliedschaften ja schon entwertet sind.
+      #
+      netenv_user.corporations.each do |corporation|
+        group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
+        group_to_assign.assign_user self, at: date_of_death
+      end
+      
+      # Set global date_of_death field.
+      self.set_date_of_death_if_unset(date_of_death)
+    end
+  end
   
 end

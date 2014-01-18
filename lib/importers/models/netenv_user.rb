@@ -449,12 +449,12 @@ class NetenvUser
   
   def reason_for_exit( corporation = nil ) 
     # 31.12.2008 - ausgetreten - durch WV Bo|23.01.2009 - ausgetreten - durch WV Hm
-    reason = description_of_exit(corporation).split(" - ").second
+    reason = description_of_exit(corporation).split(" - ").second if description_of_exit(corporation)
   end
 
   def date_of_exit( corporation = nil )
     # 31.12.2008 - ausgetreten - durch WV Bo|23.01.2009 - ausgetreten - durch WV Hm
-    date = description_of_exit(corporation).split(" - ").first.to_datetime
+    date = description_of_exit(corporation).split(" - ").first.to_datetime if description_of_exit(corporation)
   end
 
   def description_of_exit( corporation = nil )
@@ -468,7 +468,7 @@ class NetenvUser
   end
 
   def descriptions 
-    data_hash_value(:description).split("|")
+    data_hash_value(:description).try(:split, "|") || []
   end
 
   def netenv_org_membership_end_date

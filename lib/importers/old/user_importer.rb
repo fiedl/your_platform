@@ -29,9 +29,9 @@ class UserImporter < Importer
     #             user.handle_primary_corporation( user_data, progress )
     #             user.handle_current_corporations( user_data )
     #             user.handle_netenv_status( user_data.netenv_status )
-                user.handle_former_corporations( user_data )
+    #             user.handle_former_corporations( user_data )
                 user.perform_consistency_check_for_aktivitaetszahl( user_data )
-                user.handle_deceased( user_data )
+    #             user.handle_deceased( user_data )
                 user.assign_to_groups( user_data.groups )
                 progress.log_success unless email_warning
               end
@@ -84,43 +84,10 @@ module UserImportMethods
     #p "-----"
   end
 
-  def handle_deceased( user_data )
-    if user_data.deceased?
-      if self.corporations.count == 0
-        raise 'the user has no corporations, yet. please handle_deceased after assigning the user to corporations.'
-      end
-      self.corporations.each do |corporation|
-        group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
-        group_to_assign.assign_user self, joined_at: user_data.netenv_org_membership_end_date
-      end
-    end
-  end
-
-
   def perform_consistency_check_for_aktivitaetszahl( user_data )
     if user_data.aktivitaetszahl.to_s != self.reload.aktivitaetszahl.to_s
       raise "consistency check failed: aktivitaetszahl '#{user_data.aktivitaetszahl}' not reconstructed properly.
         The reconstructed one is '#{self.aktivitaetszahl}'."
-    end
-  end
-
-  def handle_former_corporations( user_data )
-    user_data.former_corporations.each do |corporation|
-      reason = user_data.reason_for_exit(corporation)
-      date = user_data.date_of_exit(corporation)
-      former_members_parent_group = corporation.child_groups.find_by_flag(:former_members_parent)
-      if reason == "ausgetreten"
-        group_to_assign = former_members_parent_group.child_groups.find_by_name("Schlicht Ausgetretene")
-      elsif reason == "gestrichen"
-        group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
-      end
-      
-      # Remove user from previous status groups of this corporation.
-      (self.status_groups & corporation.status_groups).each do |status_group|
-        status_group.unassign_user self
-      end
-      
-      group_to_assign.assign_user self, joined_at: date
     end
   end
 
