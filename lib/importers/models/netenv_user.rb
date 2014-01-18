@@ -64,6 +64,9 @@ class NetenvUser
   def deleted?
     netenv_status == :deleted
   end
+  def hidden?
+    netenv_status == :silent
+  end
   
 
   # Allgemeine Informationen zur Person
@@ -423,15 +426,21 @@ class NetenvUser
   end
 
   def bandaufnahme_als_aktiver?( corporation )
-    return true if not philistrationsdatum
-    raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
-    year_of_joining(corporation) < philistrationsdatum.year.to_s
+    
+    # Wenn ein Philistrationsdatum bekannt ist, wird dieses zum Vergleich verwendet.
+    if philistrationsdatum
+      raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
+      year_of_joining(corporation) < philistrationsdatum.year.to_s
+      
+    # Wenn kein Philistrationsdatum bekannt ist, wird stattdessen willkürlich angenommen,
+    # dass eine Bandaufnahme innerhalb der sechs Jahre nach Aktivmeldung als Aktiver erfolgt.
+    else
+      year_of_joining(corporation).to_datetime < aktivmeldungsdatum + 6.years
+    end
   end
 
   def bandverleihung_als_philister?( corporation )
-    return false if not philistrationsdatum
-    raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
-    year_of_joining(corporation) > philistrationsdatum.year.to_s
+    not bandaufnahme_als_aktiver?(corporation)
   end
   
   
@@ -484,6 +493,10 @@ class NetenvUser
     [ "18#{yy}", "19#{yy}", "20#{yy}" ].each do |year|
       return year if year > self.date_of_birth.year.to_s
     end
+  end
+  
+  def assumed_date_of_joining( corporation )
+    year_of_joining(corporation).to_datetime
   end
   
   

@@ -67,6 +67,10 @@ class UserImporter < Importer
       user.import_bank_profile_fields_from netenv_user
       user.import_communication_profile_fields_from netenv_user
       
+      # Benutzer ggf. verstecken.
+      #
+      user.import_hidden_status_from netenv_user
+      
       # Mitgliedschaften in Korporationen importieren.
       # 
       check_corporation_memberships_consistency_for netenv_user

@@ -28,7 +28,7 @@ class UserImporter < Importer
     #             user.reset_memberships_in_corporations
     #             user.handle_primary_corporation( user_data, progress )
     #             user.handle_current_corporations( user_data )
-                user.handle_netenv_status( user_data.netenv_status )
+    #             user.handle_netenv_status( user_data.netenv_status )
                 user.handle_former_corporations( user_data )
                 user.perform_consistency_check_for_aktivitaetszahl( user_data )
                 user.handle_deceased( user_data )
@@ -82,13 +82,6 @@ module UserImportMethods
     p "TODO: GROUP ASSIGNMENT"
     #p groups
     #p "-----"
-  end
-
-  def handle_netenv_status( status )
-    self.hidden = true if status == :silent
-    if status == :deleted
-      raise 'trying to handle deleted user, but all deleted users should have been filtered out.' 
-    end
   end
 
   def handle_deceased( user_data )

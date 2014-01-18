@@ -156,6 +156,14 @@ class User
     self.profile_fields.where(label: label, value: args[:value], type: args[:type]).count > 0
   end
   private :profile_field_exists?
+
+
+  # Status: Hidden
+  # =======================================================================
+
+  def import_hidden_status_from( netenv_user )
+    self.hidden = true if netenv_user.hidden?
+  end
   
   
   # Mitgliedschaft in Korporationen
@@ -165,6 +173,8 @@ class User
     self.reset_corporation_memberships
     self.import_primary_corporation_from netenv_user
     self.import_secondary_corporations_from netenv_user
+    self.import_stifter_status_from netenv_user
+    self.import_former_corporations_from
   end
   
   def reset_corporation_memberships
@@ -176,29 +186,39 @@ class User
   def import_primary_corporation_from( netenv_user )
     corporation = netenv_user.primary_corporation
     
-    # Aktivmeldung
-    raise 'no aktivmeldungsdatum given.' unless netenv_user.aktivmeldungsdatum
-    hospitanten = corporation.status_group("Hospitanten")
-    membership_hospitanten = hospitanten.assign_user self, at: netenv_user.aktivmeldungsdatum
-
-    # Reception
-    if netenv_user.receptionsdatum
-      krassfuxen = corporation.status_group("Kraßfuxen")
-      membership_krassfuxen = membership_hospitanten.promote_to krassfuxen, at: netenv_user.receptionsdatum
-    end
+    if netenv_user.ehrenphilister?(corporation)
+      
+      # Ehrenphilister
+      ehrenphilister = corporation.status_group("Ehrenphilister")
+      membership_ehrenphilister = ehrenphilister.assign_user self, at: netenv_user.aktivmeldungsdatum
+      
+    else
     
-    # Burschung
-    if netenv_user.burschungsdatum
-      burschen = corporation.status_group("Aktive Burschen")
-      current_membership = self.reload.current_status_membership_in corporation
-      membership_burschen = current_membership.promote_to burschen, at: netenv_user.burschungsdatum
-    end
-
-    # Philistration
-    if netenv_user.philistrationsdatum
-      philister = corporation.status_group("Philister")
-      current_membership = self.reload.current_status_membership_in corporation
-      membership_philister = current_membership.promote_to philister, at: netenv_user.philistrationsdatum
+      # Aktivmeldung
+      raise 'no aktivmeldungsdatum given.' unless netenv_user.aktivmeldungsdatum
+      hospitanten = corporation.status_group("Hospitanten")
+      membership_hospitanten = hospitanten.assign_user self, at: netenv_user.aktivmeldungsdatum
+     
+      # Reception
+      if netenv_user.receptionsdatum
+        krassfuxen = corporation.status_group("Kraßfuxen")
+        membership_krassfuxen = membership_hospitanten.promote_to krassfuxen, at: netenv_user.receptionsdatum
+      end
+      
+      # Burschung
+      if netenv_user.burschungsdatum
+        burschen = corporation.status_group("Aktive Burschen")
+        current_membership = self.reload.current_status_membership_in corporation
+        membership_burschen = current_membership.promote_to burschen, at: netenv_user.burschungsdatum
+      end
+     
+      # Philistration
+      if netenv_user.philistrationsdatum
+        philister = corporation.status_group("Philister")
+        current_membership = self.reload.current_status_membership_in corporation
+        membership_philister = current_membership.promote_to philister, at: netenv_user.philistrationsdatum
+      end
+      
     end
   end
   
@@ -219,14 +239,40 @@ class User
 
       raise 'could not identify group to assign this user' if not group_to_assign
       group_to_assign.assign_user self, at: assumed_date_of_joining
-      
+    end
+  end
+  
+  def import_stifter_status_from( netenv_user )
+    netenv_user.corporations.each do |corporation|
       if netenv_user.stifter?(corporation)
-        corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: assumed_date_of_joining
+        corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: netenv_user.assumed_date_of_joining(corporation)
       end
       if netenv_user.neustifter?(corporation)
-        corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: assumed_date_of_joining
+        corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: netenv_user.assumed_date_of_joining(corporation)
       end
     end
   end
+  
+  def import_former_corporations_from( netenv_user )
+    netenv_user.former_corporations.each do |corporation|
+      reason = netenv_user.reason_for_exit(corporation)
+      date = netenv_user.date_of_exit(corporation)
+      former_members_parent_group = corporation.child_groups.find_by_flag(:former_members_parent)
+      if reason == "ausgetreten"
+        group_to_assign = former_members_parent_group.child_groups.find_by_name("Schlicht Ausgetretene")
+      elsif reason == "gestrichen"
+        group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
+      end
+      
+      # Unassign user from previous status groups of this corporation.
+      (self.status_groups & corporation.status_groups).each do |status_group|
+        status_group.unassign_user self
+      end
+      
+      # Assign user to new status group.
+      group_to_assign.assign_user self, at: date
+    end
+  end
+  
   
 end
