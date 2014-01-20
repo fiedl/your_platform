@@ -53,6 +53,23 @@ describe StructureableMixins::Roles do
     end
   end
 
+  describe "#create_admins_parent_group" do
+    subject { @my_structureable.create_admins_parent_group }
+    context "if existant" do
+      before { @my_structureable.create_admins_parent_group }
+      it "should raise an error" do
+        expect { subject }.to raise_error
+      end
+    end
+    context "if absent" do
+      it "create the group" do
+        @my_structureable.find_admins_parent_group.should == nil
+        @admins_parent_group = subject
+        @my_structureable.find_admins_parent_group.should == @admins_parent_group
+      end
+    end
+  end
+
   describe "#admins" do
     subject { @my_structureable.admins }
     context "if the admins_parent_group exists" do
