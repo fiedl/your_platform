@@ -49,18 +49,22 @@ namespace :wingolf_groups do
     # make the sub-groups "Philister" and "Ehrenphilister" of the "Philisterschaft" groups
     # be slim in the vertical menu and in the breadcrumb.
     groups_to_slim = Corporation.all.collect do |wah|
-      wah.philisterschaft.child_groups.collect do |child_group|
-        if child_group.name.in? [ "Philister", "Ehrenphilister" ]
-          child_group
-        else
-          []
+      unless wah.philisterschaft.nil?
+        wah.philisterschaft.child_groups.collect do |child_group|
+          if child_group.name.in? [ "Philister", "Ehrenphilister" ]
+            child_group
+          else
+            []
+          end
         end
       end
     end.flatten
     for group in groups_to_slim
-      group.nav_node.slim_menu = true
-      group.nav_node.slim_breadcrumb = true
-      group.save
+      unless group.nil?
+        group.nav_node.slim_menu = true
+        group.nav_node.slim_breadcrumb = true
+        group.save
+      end
     end
   end
 

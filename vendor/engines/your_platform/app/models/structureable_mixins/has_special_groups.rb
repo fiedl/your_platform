@@ -81,6 +81,16 @@ module StructureableMixins::HasSpecialGroups
       object_to_create = options[:parent_element].try(:child_groups) 
       object_to_create ||= Group unless options[:local]
 
+      #prevent creation of :officers_parent under :officers_parent or :admins_parent
+      if group_flag == :officers_parent
+        unless options[:parent_element].nil?
+	        if options[:parent_element].has_flag?( :officers_parent ) ||
+             options[:parent_element].has_flag?( :admins_parent )
+            raise "No officer group allowed under an admin or officer group!"
+          end
+        end
+      end
+
       new_special_group = object_to_create.create
       new_special_group.add_flag( group_flag.to_sym )
       new_special_group.update_attribute( :name, group_flag.to_s.gsub(/_parent$/, "" ) )
@@ -89,7 +99,12 @@ module StructureableMixins::HasSpecialGroups
     end
 
     def find_or_create_special_group( group_flag, options = {} )
-      find_special_group(group_flag, options) || create_special_group(group_flag, options)
+      find_special_group(group_flag, options) or
+      begin
+        create_special_group(group_flag, options)
+      rescue
+        nil
+      end
     end
 
   end

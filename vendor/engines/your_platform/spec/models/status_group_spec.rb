@@ -20,7 +20,7 @@ describe StatusGroup do
     @status_a_1 = @intermediate_group.child_groups.create(name: "Status a 1")
     @status_a_2 = @intermediate_group.child_groups.create(name: "Status a 2")
     @officers_parent = @corporation_a.create_officers_parent_group
-    @admins_parent = @corporation_a.create_admins_parent_group
+    @admins_parent = @corporation_a.find_or_create_admins_parent_group
     
     @corporation_b = create(:corporation)
     @status_b_1 = @corporation_b.child_groups.create(name: "Status b 1")
