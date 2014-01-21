@@ -40,7 +40,10 @@ class NetenvUser
   end
 
   def email
-    data_hash_value :mail
+    self.emails.last
+  end
+  def emails
+    data_hash_value(:mail).try(:split, "|") || []
   end
   def do_not_import_primary_email
     @data_hash[:mail] = ""
@@ -61,8 +64,11 @@ class NetenvUser
   def netenv_status
     data_hash_value(:epdstatus).try(:to_sym)
   end
+  def netenv_org_status
+    data_hash_value(:epdorgstatusofperson).try(:to_sym)
+  end
   def deleted?
-    netenv_status == :deleted
+    (netenv_status == :deleted) or netenv_org_status.blank?
   end
   def hidden?
     netenv_status == :silent
@@ -319,12 +325,12 @@ class NetenvUser
   # Aktivitätszahl
   # =======================================================================
   
-  def ehemalige_netenv_aktivitätszahl
-    data_hash_value(:epdwingolfformeractivities)
+  def netenv_aktivitätszahl
+    fix_netenv_aktivitätszahl_format data_hash_value :epdwingolfactivity
   end
 
-  def netenv_aktivitätszahl
-    data_hash_value(:epdwingolfactivity)
+  def ehemalige_netenv_aktivitätszahl
+    fix_netenv_aktivitätszahl_format data_hash_value :epdwingolfformeractivities
   end
 
   def aktivitätszahl
@@ -333,6 +339,28 @@ class NetenvUser
         .gsub(" Nstft ", "?Nstft?").gsub(" ", "").gsub(",", " ").gsub("?", " ")
     end
   end
+  
+  # Nach Information Büscher handelt es sich bei der Klammer-Schreibweise lediglich um 
+  # eine ältere Notation. Die Schreibweisen "(E 32)" und "E 32" bedeuten die gleiche
+  # Aktivität. Daher werden hier die Klammern schlicht entfernt, um eine einheitliche
+  # Verarbeitung zu ermöglichen.
+  #
+  def remove_brackets(str)
+    str.gsub("(", "").gsub(")", "") if str
+  end
+  private :remove_brackets
+  
+  # Diese Methode korrigiert einige Inkonsistenzen in der Form der 
+  # netenv_aktivitätszahl:
+  # 
+  #   * Klammern ohne Bedeutung entfernen
+  #   * Leerzeichen am Anfang und am Ende entfernen
+  #   * doppelte Leerzeichen entfernen
+  # 
+  def fix_netenv_aktivitätszahl_format(str)
+    remove_brackets(str).gsub("  ", " ").strip if str
+  end
+  private :fix_netenv_aktivitätszahl_format
   
   
   # Korporationen
@@ -364,9 +392,6 @@ class NetenvUser
   def corporations_by_netenv_aktivitätszahl( str ) 
     # str == "E 12, Fr NStft 13"
     if str.present?
-
-      raise 'TODO: HANDLE (E 12)-TYPE AKTIVITÄTSZAHLEN' if str.start_with? "("
-
       corporation_tokens = str.gsub(" Eph", "").gsub(" Stft", "").gsub(" Nstft", "")
         .gsub(/[0-9 ]+/, "").gsub(" ", "").split(",") 
       corporations = corporation_tokens.collect do |token|
@@ -383,6 +408,13 @@ class NetenvUser
   
   def aktivmeldungsdatum
     date = aktivmeldungsdatum_in_mutterverbindung || aktivmeldungsdatum_im_wingolfsbund || aktivmeldungsdatum_aus_aktivitaetszahl
+    if date.year != aktivmeldungsdatum_aus_aktivitaetszahl.year
+      # Für Fälle, in denen ein Aktivmeldungsdatum angegeben ist, das der Aktivitätszahl widerspricht,
+      # wird die Aktivätszahl als korrekt angenommen, da diese eher auffallen dürfte.
+      # Beispiel: W51032
+      date = aktivmeldungsdatum_aus_aktivitaetszahl 
+    end
+    return date
   end
   
   def aktivmeldungsdatum_in_mutterverbindung
@@ -491,7 +523,8 @@ class NetenvUser
     # 61 -> 1861?  1961?  2061?
     #              ----
     [ "18#{yy}", "19#{yy}", "20#{yy}" ].each do |year|
-      return year if year > self.date_of_birth.year.to_s
+      # Wenn kein Geburtsdatum angegeben ist, nehmen wir eine zeitnahe Aktivmeldung an.
+      return year if year > (self.date_of_birth || 99.years.ago).year.to_s
     end
   end
   

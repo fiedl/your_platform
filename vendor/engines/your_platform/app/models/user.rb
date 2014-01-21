@@ -432,11 +432,19 @@ class User < ActiveRecord::Base
   # which is currently not in use, since the abilities are defined directly in the 
   # Ability class.
   #
+  # Options:
+  # 
+  #   with_invalid, also_in_the_past : true/false
+  #
   # TODO: refactor it together with the role model mechanism.
   #
-  def member_of?( object )
+  def member_of?( object, options = {} )
     if object.kind_of? Group
-      self.groups.include? object  # This uses the validity range mechanism
+      if options[:with_invalid] or options[:also_in_the_past]
+        self.ancestor_groups.include? object
+      else  # only current memberships:
+        self.groups.include? object  # This uses the validity range mechanism
+      end
     else
       self.ancestors.include? object
     end

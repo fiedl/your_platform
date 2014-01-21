@@ -17,12 +17,18 @@ class UserImporter < Importer
     log.section "Import Parameters"
     log.info "Import file:   #{@filename}"
     log.info "Import filter: #{@filter || 'none'}"
+    log.info "Continue import with #{@continue_with}." if @continue_with
     
     log.section "Progress"
     log.info ". = successfully created, u = successfully updated, I = ignored, W = warning, F = failure"
     
     import_file = ImportFile.new( filename: @filename, data_class_name: "NetenvUser" )
     import_file.each_row do |netenv_user|
+      
+      # Wenn bei einem bestimmten Benutzer fortgesetzt werden soll, vorige Datensätze
+      # ohne jeden Hinweis übergehen.
+      #
+      next if before_point_of_continuation?(netenv_user, @continue_with)
       
       # Benutzer, die dem Import-Filter nicht entsprechen, werden übergangen.
       # Der Import-Filter wird beim Aufruf des Imports in lib/tasks/import_users.rake
@@ -42,9 +48,10 @@ class UserImporter < Importer
       # Falls die E-Mail-Adresse bereits im neuen System vergeben ist, und zwar einem
       # anderen Benutzer, liegt hier vermutlich ein Fehler vor. Deswegen wird eine Warnung
       # angezeigt. Der vorhandene Benutzer behält seine E-Mail-Adresse. Der zweite Benutzer
-      # wird zwar angelegt, aber ohne E-Mail-Adresse.
+      # wird zwar angelegt, aber ohne E-Mail-Adresse. 
+      # Ferner werden ungültige E-Mail-Adressen nicht mit ins System importiert.
       # 
-      netenv_user.do_not_import_primary_email if email_duplicate? netenv_user
+      netenv_user.do_not_import_primary_email if email_issue? netenv_user
       
       # Existierenden Benutzer des neuen Systems heraussuchen oder einen neuen Benutzer
       # anlegen, falls noch keiner existiert.
@@ -93,6 +100,13 @@ class UserImporter < Importer
     progress.print_status_report
   end
   
+  def before_point_of_continuation?(netenv_user, continue_with)
+    if continue_with.present? and (netenv_user.w_nummer < continue_with)
+      progress.log_skip
+      return true
+    end
+  end  
+  
   def dummy_user?(netenv_user)
     if netenv_user.dummy_user?
       warning = { message: "Ignoring dummy user #{netenv_user.w_nummer}.",
@@ -113,9 +127,12 @@ class UserImporter < Importer
     end
   end
   
+  def email_issue?(netenv_user)
+    return false if netenv_user.email.blank?
+    email_duplicate?(netenv_user) or wrong_email_format?(netenv_user)
+  end
+  
   def email_duplicate?(netenv_user)
-    return false unless netenv_user.email.present?
-
     existing_user_with_this_email = User.find_by_email(netenv_user.email)
     return false unless existing_user_with_this_email
 
@@ -124,6 +141,15 @@ class UserImporter < Importer
         w_nummer: netenv_user.w_nummer, name: netenv_user.name, email: netenv_user.email,
         existing_user: existing_user_with_this_email.w_nummer, existing_user_name: existing_user_with_this_email.name 
       }
+      progress.log_warning(warning)
+      return true
+    end
+  end
+  
+  def wrong_email_format?(netenv_user)
+    if (not netenv_user.email.include?('@')) or (not netenv_user.email.include?('.'))
+      warning = { message: "Email '#{netenv_user.email}' invalid. Not importing this email address.",
+                  w_nummer: netenv_user.w_nummer, email: netenv_user.email }
       progress.log_warning(warning)
       return true
     end
@@ -158,6 +184,17 @@ class UserImporter < Importer
                   mutterverbindung: netenv_user.primary_corporation.token }
       progress.log_failure(warning)
     end
+
+    if netenv_user.aktivmeldungsdatum_aus_aktivitaetszahl.year != (netenv_user.aktivmeldungsdatum_in_mutterverbindung || netenv_user.aktivmeldungsdatum_im_wingolfsbund).try(:year)
+      if (netenv_user.aktivmeldungsdatum_in_mutterverbindung || netenv_user.aktivmeldungsdatum_im_wingolfsbund)
+        warning = { message: 'inconsistent aktivmeldungsdatum: the given aktivmeldungsdatum does not match the aktivitätszahl.',
+                    name: netenv_user.name, w_nummer: netenv_user.w_nummer,
+                    aktivmeldungsdatum: netenv_user.aktivmeldungsdatum,
+                    aktivitätszahl: netenv_user.aktivitätszahl
+                  }
+        progress.log_warning(warning)
+      end
+    end
     
     # Receptionsdatum > Philistrationsdatum?
     if netenv_user.philistrationsdatum and netenv_user.receptionsdatum
@@ -172,7 +209,8 @@ class UserImporter < Importer
   end
   
   def perform_consistency_check_for_aktivitaetszahl_for( user, netenv_user )
-    if netenv_user.aktivitätszahl.to_s != user.aktivitätszahl.to_s
+    if netenv_user.aktivitätszahl.to_s != user.reload.aktivitätszahl.to_s
+      p user.w_nummer
       raise "consistency check failed: aktivitätszahl '#{netenv_user.aktivitätszahl}' not reconstructed properly.
         The reconstructed one is '#{user.aktivitätszahl}'."
     end

@@ -12,8 +12,22 @@ class Importer
     raise 'please provide a :filename argument to specify the input csv file.' unless args[:filename]
     self.filename = args[:filename]
     self.filter = args[:filter]
+    self.continue_with = args[:continue_with]
+    
     @object_class_name = ""  # e.g. "User"
   end
+  
+  # This specifies where to continue an import.
+  # Accepted values are w_nummer attributes.
+  #
+  def continue_with=( continue_with )
+    raise 'continue_with has to be a w_nummer (e.g. "W12345").' if not (continue_with.blank? || continue_with.start_with?("W"))
+    @continue_with = continue_with
+  end
+  def continue_with 
+    @continue_with
+  end
+  
 
   # This attribute refers to the file name of the file to import
   #
@@ -192,6 +206,10 @@ class ProgressIndicator
     print "I"
     @counters[:ignored] += 1
     @ignores << ignore_report if ignore_report
+  end
+  
+  def log_skip
+    print "-"
   end
 
   def print_status_report
