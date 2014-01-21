@@ -111,7 +111,7 @@ module StructureableMixins::Roles
   end
 
   def admins
-    unless admins_parent.nil?
+    if admins_parent
       admins_parent.descendant_users
     else
       []

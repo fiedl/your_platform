@@ -83,7 +83,7 @@ module StructureableMixins::HasSpecialGroups
 
       #prevent creation of :officers_parent under :officers_parent or :admins_parent
       if group_flag == :officers_parent
-        unless options[:parent_element].nil?
+        if options[:parent_element]
 	        if options[:parent_element].has_flag?( :officers_parent ) ||
              options[:parent_element].has_flag?( :admins_parent )
             raise "No officer group allowed under an admin or officer group!"
