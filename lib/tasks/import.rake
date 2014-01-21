@@ -29,8 +29,6 @@ namespace :import do
     $log.section "Agenda"
     display_agenda_for tasks_to_execute
     
-    $log.section "Let's get going!"
-    
     execute tasks_to_execute
     
     $log.section "Import Complete."
@@ -52,7 +50,6 @@ namespace :import do
   
   def execute(tasks_to_execute)
     tasks_to_execute.each do |task_to_execute|
-      $log.prompt "rake #{task_to_execute}"
       Rake::Task[task_to_execute].invoke
     end
   end

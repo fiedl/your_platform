@@ -294,10 +294,16 @@ class User
       end
       
       # In die Verstorbenen-Gruppen der Korporationen eintragen.
+      #
       # Hier müssen die `corporations` von `netenv_user`, nicht von `self` 
       # abgefragt werden, da die Gruppen-Mitgliedschaften ja schon entwertet sind.
       #
-      netenv_user.corporations.each do |corporation|
+      # Nicht in die Verstorbenen-Gruppen der Korporationen eintragen, aus denen
+      # der Benutzer ausgetreten war. Wingolfit auf Lebenszeit ist man nur, 
+      # wenn man nicht ausgetreten ist. Sonst wird auch die Aktivitätszahl
+      # falsch berechnet.
+      #
+      netenv_user.current_corporations.each do |corporation|
         group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
         group_to_assign.assign_user self, at: date_of_death
       end
