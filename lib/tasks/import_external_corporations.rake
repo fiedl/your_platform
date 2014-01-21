@@ -1,5 +1,7 @@
 namespace :import do
-  task external_corporations: :environment do
+  
+  desc "Import external corporations (Falkensteiner Bund)"
+  task :external_corporations => ['environment', 'bootstrap:all'] do
 
     require 'importers/external_corporations_importer'
 

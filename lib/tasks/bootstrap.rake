@@ -6,6 +6,10 @@
 require 'importers/models/log'
 
 namespace :bootstrap do
+  
+  task :print_info do
+    Log.new.section "Bootstrapping: Creating basic groups and pages."
+  end
 
   desc "Add basic groups"
   task basic_groups: :environment do
@@ -70,12 +74,13 @@ namespace :bootstrap do
   # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
   desc "Populate database with basic groups and pages."
   task :all => [
-                :basic_groups,
-                :basic_nav_node_properties,
-                :add_basic_pages,
-                :add_help_page,
-                :wbl_abo_group,
-                :add_flags_to_basic_pages
-               ]
+    :print_info,
+    :basic_groups,
+    :basic_nav_node_properties,
+    :add_basic_pages,
+    :add_help_page,
+    :wbl_abo_group,
+    :add_flags_to_basic_pages
+  ]
 
 end

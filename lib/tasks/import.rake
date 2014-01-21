@@ -5,7 +5,15 @@ namespace :import do
   desc "Import all date from structure files and data files of the netenv system."
   task :all do
 
-    tasks_to_execute = [ 'bootstrap:all', 'import:corporations' ]
+    tasks_to_execute = [ 
+      'bootstrap:all',
+      'import:corporations',
+      'import:bvs',
+      'import:external_corporations',
+      'import:standard_workflows',
+      'import:group_profiles',
+      'import:users'
+    ]
 
     
     $log = Log.new
@@ -13,6 +21,10 @@ namespace :import do
     $log.head "Wingolfsplattform Import System"
     $log.info "Welcome. Please grab a beer and sit back."
     $log.info "This script will import everything for you."
+    
+    $log.section "Import files"
+    $log.info "Import folder: " + File.join(Rails.root, "import/")
+    $log.warning "Make sure the CSV files end with an empty line."
     
     $log.section "Agenda"
     display_agenda_for tasks_to_execute

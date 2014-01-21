@@ -1,7 +1,7 @@
 
 require 'csv'
 require 'colored'
-require 'lib/import/models/log'
+require 'importers/models/log'
 
 # This class handles import into the database.
 # It is the super class for several special importers, such as the UserImporter.
