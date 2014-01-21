@@ -48,7 +48,7 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # This method returns all Page objects that can be regarded as blog entries of self.
-  # Blog entries are simply child pages of self that have the :blog_entry flag. 
+  # Blog entries are simply child pages of self that have the :blog_entry flag.
   # They won't show up in the vertical menu.
   #
   # Page: "My Blog"
@@ -99,7 +99,7 @@ class Page < ActiveRecord::Base
     intranet_root.add_flag :intranet_root
     return intranet_root
   end
-  
+
   def self.intranet_root
     self.find_or_create_intranet_root
   end
@@ -112,7 +112,7 @@ class Page < ActiveRecord::Base
   end
 
   def self.find_or_create_help_page
-    self.find_help_page || self.created_help_page
+    self.find_help_page || self.create_help_page
   end
 
   def self.create_help_page
