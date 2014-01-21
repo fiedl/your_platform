@@ -356,9 +356,23 @@ class NetenvUser
   #   * Klammern ohne Bedeutung entfernen
   #   * Leerzeichen am Anfang und am Ende entfernen
   #   * doppelte Leerzeichen entfernen
+  #   * Ersetzung der schweizer Kürzel
   # 
   def fix_netenv_aktivitätszahl_format(str)
-    remove_brackets(str).gsub("  ", " ").strip if str
+    if str
+      str = remove_brackets(str).gsub("  ", " ").strip
+      
+      # TODO: Schweizer Kürzel abklären.
+      # Es gibt wohl Inkonsistenzen in der Abkürzung der schweizer Verbindungen.
+      #   Schwizerhüsli Basilensis      "Basel"
+      #   Zähringia Bernensis           "Bern"
+      #   Carolingia Turicensis         "Z", "Ca", "C"
+      #   Valdésia Lausannensis         "La"
+      #
+      str = str.gsub("Ca ", "Z ")
+      str = str.gsub("C ", "Z ")
+      
+    end
   end
   private :fix_netenv_aktivitätszahl_format
   
@@ -461,7 +475,9 @@ class NetenvUser
     
     # Wenn ein Philistrationsdatum bekannt ist, wird dieses zum Vergleich verwendet.
     if philistrationsdatum
-      raise 'Grenzfall!' if year_of_joining(corporation) == philistrationsdatum.year.to_s
+      # Im Grenzfall, wo Philistrationsjahr und Jahr der Bandaufnahme/Bandverleihung 
+      # gleich sind, wird angenommen, das das Band als Philister verliehen wurde.
+      #
       year_of_joining(corporation) < philistrationsdatum.year.to_s
       
     # Wenn kein Philistrationsdatum bekannt ist, wird stattdessen willkürlich angenommen,
@@ -500,7 +516,15 @@ class NetenvUser
   end
 
   def descriptions 
-    data_hash_value(:description).try(:split, "|") || []
+    if data_hash_value(:description).present?
+      data_hash_value(:description)
+        .gsub(";", "|")
+        .gsub("\n", "|")
+        .split("|")
+        .select { |desc| desc.present? }
+    else
+      []
+    end
   end
 
   def netenv_org_membership_end_date
