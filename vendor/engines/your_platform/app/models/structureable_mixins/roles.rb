@@ -111,7 +111,11 @@ module StructureableMixins::Roles
   end
 
   def admins
-    admins_parent.descendant_users
+    if admins_parent
+      admins_parent.descendant_users
+    else
+      []
+    end
   end
 
   def find_admins

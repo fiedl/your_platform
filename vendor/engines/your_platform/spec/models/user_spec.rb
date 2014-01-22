@@ -781,7 +781,7 @@ describe User do
   describe "#admin_of" do
     before do 
       @group = create( :group, name: "Directly Administrated Group" )
-      @group.create_admins_parent_group
+      @group.find_or_create_admins_parent_group
       @group.admins_parent.child_users << @user
     end
     subject { @user.admin_of }
@@ -796,7 +796,7 @@ describe User do
     end
     context "for the user being admin" do
       before do
-        @group.create_admins_parent_group
+        @group.find_or_create_admins_parent_group
         @group.admins_parent.child_users << @user  # the @user is direct admin of @group
       end
       context "for directly administrated objects" do
@@ -830,7 +830,7 @@ describe User do
   describe "#directly_administrated_objects" do
     before do
       @group = create( :group, name: "Directly Administrated Group" )
-      @group.create_admins_parent_group
+      @group.find_or_create_admins_parent_group
     end
     subject { @user.directly_administrated_objects }
     it { should be_kind_of Array }
@@ -845,7 +845,7 @@ describe User do
   describe "#administrated_objects" do
     before do
       @group = create( :group, name: "Administrated Group" )
-      @group.create_admins_parent_group
+      @group.find_or_create_admins_parent_group
     end
     subject { @user.administrated_objects }
     it { should be_kind_of Array }

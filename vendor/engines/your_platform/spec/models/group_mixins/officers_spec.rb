@@ -24,7 +24,7 @@ describe GroupMixins::Officers do
     end
     
     describe "for the group having an admins group" do
-      before { @group.create_admins_parent_group }
+      before { @group.find_or_create_admins_parent_group }
       it { should == true }
     end
     

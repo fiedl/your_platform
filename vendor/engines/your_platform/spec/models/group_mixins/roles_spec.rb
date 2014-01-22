@@ -7,7 +7,7 @@ describe GroupMixins::Roles do
       @some_group = create( :group )
       @sub_group = create( :group ); @sub_group.parent_groups << @some_group
       @officers_parent = @sub_group.create_officers_parent_group
-      @admins_parent = @sub_group.create_admins_parent_group
+      @admins_parent = @sub_group.find_or_create_admins_parent_group
       @main_admins_parent = @sub_group.create_main_admins_parent_group
     end
     context "for an officers_parent_group" do
