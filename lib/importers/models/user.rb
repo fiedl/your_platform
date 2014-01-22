@@ -1,4 +1,4 @@
-require_dependency 'app/models/user'
+require File.join(Rails.root, 'app/models/user')
 
 class User
   

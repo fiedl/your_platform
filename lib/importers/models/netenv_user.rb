@@ -362,15 +362,18 @@ class NetenvUser
     if str
       str = remove_brackets(str).gsub("  ", " ").strip
       
-      # TODO: Schweizer Kürzel abklären.
-      # Es gibt wohl Inkonsistenzen in der Abkürzung der schweizer Verbindungen.
-      #   Schwizerhüsli Basilensis      "Basel"
-      #   Zähringia Bernensis           "Bern"
-      #   Carolingia Turicensis         "Z", "Ca", "C"
-      #   Valdésia Lausannensis         "La"
+      # Die schweizer Verbindungen sind nicht immer auf gleiche Art in die Aktivitätszahlen
+      # eingetragen. Daher muss hier eine Ersetzung stattfinden, um sie zu vereinheitlichen.
       #
-      str = str.gsub("Ca ", "Z ")
-      str = str.gsub("C ", "Z ")
+      #   Schwizerhüsli Basilensis      "Basel",       "S!"
+      #   Zähringia Bernensis           "Bern",  "Z",  "Z!"
+      #   Carolingia Turicensis         "Ca",          "C!"
+      #   Valdésia Lausannensis         "La",          "V!"
+      #
+      str = str.gsub("Basel ", "S! ")
+      str = str.gsub("Bern ", "Z! ").gsub("Z ", "Z! ")
+      str = str.gsub("Ca ", "C! ")
+      str = str.gsub("La ", "V! ")
       
     end
   end

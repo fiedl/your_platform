@@ -1,4 +1,4 @@
-require_dependency 'app/models/profile_field'
+require File.join(Rails.root, 'app/models/profile_field')
 
 class ProfileField
   
