@@ -131,9 +131,13 @@ class NavNode < ActiveRecord::Base
     path = []
     current_navable = self.navable
     until current_navable.nil?
-      current_navable = current_navable.parents.select do |parent| 
-        parent.respond_to? :nav_node
-      end.first
+      if current_navable.kind_of? User
+        current_navable = UserGroupMembership.find_all_by_user( current_navable ).now.last.group
+      else
+        current_navable = current_navable.parents.select do |parent| 
+          parent.respond_to? :nav_node
+        end.first
+      end
       path << current_navable if current_navable
     end
     path.reverse
