@@ -6,7 +6,22 @@
 require 'importers/models/log'
 
 namespace :bootstrap do
-  
+
+  # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
+  desc "Populate database with basic groups and pages."
+  task :all => [
+    'tmp:clear',
+    'environment',
+    'print_info',
+    'basic_groups',
+    'basic_nav_node_properties',
+    'add_basic_pages',
+    'add_help_page',
+    'wbl_abo_group',
+    'add_flags_to_basic_pages',
+    'add_structure'
+  ]
+    
   task :print_info do
     Log.new.section "Bootstrapping: Creating basic groups and pages."
   end
@@ -32,7 +47,7 @@ namespace :bootstrap do
   desc "Set some nav node properties of the basic groups"
   task basic_nav_node_properties: :environment do
     p "Task: Set some basic nav node properties"
-    n = Group.everyone.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
+    n = Group.everyone.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.hidden_menu = true; n.save; n = nil
     n = Group.corporations_parent.nav_node; n.slim_menu = true; n.slim_breadcrumb = true; n.save; n = nil
   end
 
@@ -53,7 +68,7 @@ namespace :bootstrap do
   task add_help_page: :environment do
     p "Task: Add help page."
     help = Page.find_or_create_help_page
-    help.update_attributes(title: :help)
+    help.update_attributes(title: "Hilfe")
     unless Page.find_intranet_root.child_pages.include? help
       help.parent_pages << Page.find_intranet_root
     end
@@ -63,24 +78,37 @@ namespace :bootstrap do
     p "Task: Add Flags to Basic Pages"
     Page.find_by_title( "wingolf.org" ).add_flag :root
     Page.find_by_title( "Mitglieder-Start" ).add_flag :intranet_root
-    Page.find_by_title( :help ).add_flag :help
+    Page.find_by_title( "Hilfe" ).add_flag :help
   end
 
   task wbl_abo_group: :environment do
     p "Task: Adding Wingolfsblätter Abo Group"
     Group.find_or_create_wbl_abo_group
   end
+  
+  task :add_structure => [:environment] do
+    p "Task: Add basic structure."
+    # 
+    # root
+    #   |--- intranet_root
+    #             |----------- everyone
+    #             |                |--------- corporations_parent
+    #             |                |--------- bvs_parent
+    #             |                |--------- hidden_users
+    #             |
+    #             |---------------- corporations_parent
+    #             |---------------- bvs_parent
+    #             |---------------- help
+    #
+    Page.find_root << Page.find_intranet_root
+    Page.find_intranet_root << Group.everyone
+    Group.everyone << Group.find_corporations_parent_group
+    Group.everyone << Group.find_bvs_parent_group
+    Group.everyone << Group.hidden_users
+    Page.find_intranet_root << Group.find_corporations_parent_group
+    Page.find_intranet_root << Group.find_bvs_parent_group
+    Page.find_intranet_root << Page.find_help_page
+  end
 
-  # see: http://stackoverflow.com/questions/62201/how-and-whether-to-populate-rails-application-with-initial-data
-  desc "Populate database with basic groups and pages."
-  task :all => [
-    :print_info,
-    :basic_groups,
-    :basic_nav_node_properties,
-    :add_basic_pages,
-    :add_help_page,
-    :wbl_abo_group,
-    :add_flags_to_basic_pages
-  ]
 
 end
