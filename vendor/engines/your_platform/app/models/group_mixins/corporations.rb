@@ -52,9 +52,10 @@ module GroupMixins::Corporations
     end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
+    # But do not include the officers_parent, which would be also a child.
     #
     def find_corporation_groups
-      self.corporations_parent.try(:child_groups) || []
+      ( self.corporations_parent.try(:child_groups) || [] ) - [ self.corporations_parent.find_officers_parent_group ]
     end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
@@ -92,7 +93,7 @@ module GroupMixins::Corporations
     #      |----- other_group_2
     #
     def find_corporations_branch_groups
-      if Group.corporations_parent
+      if Group.find_corporations_parent_group
         return [ Group.corporations_parent ] + Group.corporations_parent.descendant_groups
       end
     end
