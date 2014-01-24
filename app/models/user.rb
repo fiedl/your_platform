@@ -100,6 +100,10 @@ class User
   def w_nummer
     self.profile_fields.where(label: "W-Nummer").first.try(:value)
   end
+  def w_nummer=(str)
+    field = profile_fields.where(label: "W-Nummer").first || profile_fields.create(type: 'ProfileFieldTypes::General', label: 'W-Nummer')
+    field.update_attribute(:value, str)
+  end
   
   def self.find_by_w_nummer(wnr)
     ProfileField.where(label: "W-Nummer", value: wnr).first.try(:profileable)
