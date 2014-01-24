@@ -87,6 +87,12 @@ describe Corporation do
     it "should not find the non-corporation groups" do
       subject.should_not include @non_corporation_group
     end
+    it "should not find the officers_parent group of the corporations_parent" do
+      @corporations_parent = Group.find_corporations_parent_group
+      @officers_parent = @corporations_parent.create_officers_parent_group
+      subject.should_not include @officers_parent
+      subject.should_not include @officers_parent.becomes(Corporation)
+    end
   end
 
 end

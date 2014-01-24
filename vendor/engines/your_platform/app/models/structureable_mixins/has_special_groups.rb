@@ -82,6 +82,7 @@ module StructureableMixins::HasSpecialGroups
       object_to_create ||= Group unless options[:local]
 
       #prevent creation of :officers_parent under :officers_parent or :admins_parent
+      #
       if group_flag == :officers_parent
         if options[:parent_element]
 	        if options[:parent_element].has_flag?( :officers_parent ) ||

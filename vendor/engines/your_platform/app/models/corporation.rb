@@ -37,14 +37,14 @@ class Corporation < Group
 
   # This method returns all corporations in the database.
   # Usage: corporations = Corporation.all
+  #
+  # The Group.corporations_parent special group is defined in
+  # GroupMixins::Corporations.
   # 
   def self.all
-    # The find_corporation_groups method is created by the GroupMixins::SpecialGroups module.
-    Corporation.find_corporation_groups.collect do |group|
-      # This conversion is necessary, since the find_corporation_groups method uses 
-      # the child_groups method, which returns Group-type objects.
-      group.becomes Corporation 
-    end
+    (Group.find_corporations_parent_group.try(:child_groups) || [])
+      .collect { |group| group.becomes Corporation }
+      .select { |group| not group.has_flag? :officers_parent }
   end
 
 end

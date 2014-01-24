@@ -55,7 +55,38 @@ module GroupMixins::Corporations
     # But do not include the officers_parent, which would be also a child.
     #
     def find_corporation_groups
-      ( self.corporations_parent.try(:child_groups) || [] ) - [ self.corporations_parent.find_officers_parent_group ]
+      # p "---"
+      # p ( self.corporations_parent.try(:child_groups) || [] )
+      # p [ self.corporations_parent.find_officers_parent_group ]
+      # p ( self.corporations_parent.try(:child_groups) || [] ) - [ self.corporations_parent.find_officers_parent_group ]
+      
+      # ( self.corporations_parent.try(:child_groups) || [] ) - [ self.corporations_parent.try(:find_officers_parent_group) ]
+      
+      # #p "---"
+      # (self.corporations_parent.try(:child_groups) || []).select do |group|
+      #   p group
+      #   not group.has_flag? :officers_parent
+      # end
+      
+      #p corporations_parent.child_groups == corporations_parent.child_groups.to_a.select { |g| true }
+
+
+      # corporations_parent.child_groups
+      # corporations_parent.child_groups.to_a  #.select { |g| true }
+      
+      ## TODO Das Problem scheint das implizite .to_a zu sein.
+      
+      
+      # groups = corporations_parent!.child_groups
+      # if groups.kind_of? ActiveRecord::Relation
+      #   officers_parent_id = corporations_parent.find_officers_parent_group.try(:id)
+      #   groups.where('groups.id != ?', officers_parent_id)
+      # elsif groups.kind_of? Array
+      #   groups - [ self.corporations_parent.find_officers_parent_group ]
+      # end
+      
+      find_corporations_parent_group.try(:child_groups) || []
+      
     end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.
