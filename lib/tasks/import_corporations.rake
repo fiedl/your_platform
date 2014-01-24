@@ -9,8 +9,8 @@ namespace :import do
     'bootstrap:all',
     'corporations:print_header',
     'corporations:import_wingolf_am_hochschulort_groups',
-    'corporations:import_sub_structure_of_wingolf_am_hochschulort_groups',
     'corporations:import_wah_vertagte',
+    'corporations:import_sub_structure_of_wingolf_am_hochschulort_groups',
     'corporations:set_default_nav_attributes',
     'corporations:add_erstbandphilister_parent_groups'
   ]
@@ -93,12 +93,11 @@ namespace :import do
       if File.exists? file_name
         counter = 0
         CSV.foreach file_name, headers: true, col_sep: ';' do |row|
-          new_wah_group = Group.create( row.to_hash )
-          new_wah_group.child_groups.create( name: "Philisterschaft" )
-          new_wah_group.parent_groups << Group.corporations_parent
+          new_corporation = Group.create( row.to_hash )
+          new_corporation.parent_groups << Group.corporations_parent
           counter += 1
         end
-        p "Wah Groups created: " + counter.to_s
+        p "Corporations created: " + counter.to_s
       end
     end
 
