@@ -27,6 +27,7 @@ namespace :import do
     create_user(id: 2,  first_name: "Eternal", last_name: "Mystery", :alias => "W64742").update_attribute(:w_nummer, "W64742")
     create_user(id: 10, first_name: "Eternal", last_name: "Mystery", :alias => "W64410").update_attribute(:w_nummer, "W64410")
     create_user(id: 22, first_name: "Eternal", last_name: "Mystery", :alias => "W53838").update_attribute(:w_nummer, "W53838")
+    create_user(id: 42, first_name: "Eternal", last_name: "Mystery", :alias => "W64744").update_attribute(:w_nummer, "W64744")
     
     print "ok.\n"
     
