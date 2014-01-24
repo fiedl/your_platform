@@ -55,16 +55,27 @@ module UserMixins::Memberships
 
     # This associates the groups the user is member of, direct as well as indirect.
     #
-    has_many :groups, through: :memberships, source: :ancestor, source_type: 'Group'
+    has_many(:groups, 
+      through: :memberships,
+      source: :ancestor, source_type: 'Group',
+      conditions: { 'dag_links.descendant_type' => 'User' }
+      )
 
     # This associates only the direct groups.
     #
-    has_many :direct_groups, through: :direct_memberships, source: :ancestor, source_type: 'Group'
+    has_many(:direct_groups, 
+      through: :direct_memberships, 
+      source: :ancestor, source_type: 'Group',
+      conditions: { 'dag_links.descendant_type' => 'User', 'dag_links.direct' => true }
+      )
     
     # This associates only the indirect groups.
     #
-    has_many :indirect_groups, through: :indirect_memberships, source: :ancestor, source_type: 'Group'
-    
+    has_many(:indirect_groups, 
+      through: :indirect_memberships, 
+      source: :ancestor, source_type: 'Group',
+      conditions: { 'dag_links.descendant_type' => 'User', 'dag_links.direct' => false }
+      )
     
   end
 end
