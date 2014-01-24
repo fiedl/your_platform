@@ -360,7 +360,8 @@ class NetenvUser
   # 
   def fix_netenv_aktivitätszahl_format(str)
     if str
-      str = remove_brackets(str).gsub("  ", " ").strip
+      str = remove_brackets(str)
+      str = str.gsub(",", ", ").gsub("   ", " ").gsub("  ", " ").strip
       
       # Die schweizer Verbindungen sind nicht immer auf gleiche Art in die Aktivitätszahlen
       # eingetragen. Daher muss hier eine Ersetzung stattfinden, um sie zu vereinheitlichen.

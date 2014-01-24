@@ -82,7 +82,7 @@ class UsersController < ApplicationController
   
   def handle_mystery_user
     if (params[:id].to_i == 1) and (not User.where(id: 1).present?)
-      redirect_to group_path(Group.everyone), :notice => "I bring order to chaos. I am the one that is many."
+      redirect_to group_path(Group.everyone), :notice => "I bring order to chaos. I am the beginning, the end, the one who is many."
       return true
     end
   end
