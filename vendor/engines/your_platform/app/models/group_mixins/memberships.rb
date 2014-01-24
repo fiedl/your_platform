@@ -118,15 +118,30 @@ module GroupMixins::Memberships
 
     # This associates the group members (users), direct ones as well as indirect ones.
     #
-    has_many :members, through: :memberships, source: :descendant, source_type: 'User', :uniq => true
+    # Attention! The conditions on the `memberships` association are ignored by Rails 3
+    # when generating the SQL query. This is why the conditions have to be repeated here.
+    #
+    has_many(:members, 
+      through: :memberships, 
+      source: :descendant, source_type: 'User', :uniq => true, 
+      conditions: { 'dag_links.ancestor_type' => 'Group' }
+      )
 
     # This associates only the direct group members (users).
     #
-    has_many :direct_members, through: :direct_memberships, source: :descendant, source_type: 'User'
+    has_many(:direct_members, 
+      through: :direct_memberships, 
+      source: :descendant, source_type: 'User',
+      conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true }
+      )
     
     # This associates only the indirect group members (users).
     #
-    has_many :indirect_members, through: :indirect_memberships, source: :descendant, source_type: 'User'
+    has_many(:indirect_members, 
+      through: :indirect_memberships, 
+      source: :descendant, source_type: 'User',
+      conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false }
+      )
     
   end
 end
