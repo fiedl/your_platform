@@ -26,7 +26,7 @@ class ExternalCorporationsImporter < Importer
     
     log.section "Import Parameters"
     log.info "Import file:   #{@filename}"
-    log.info "Import filter: #{@filter}"
+    log.info "Import filter: #{@filter || 'none'}"
     
     log.section "Progress"
     
