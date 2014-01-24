@@ -365,12 +365,12 @@ class NetenvUser
       # Die schweizer Verbindungen sind nicht immer auf gleiche Art in die Aktivitätszahlen
       # eingetragen. Daher muss hier eine Ersetzung stattfinden, um sie zu vereinheitlichen.
       #
-      #   Schwizerhüsli Basilensis      "Basel",       "S!"
+      #   Schwizerhüsli Basilensis      "Basel", "Ba", "S!"
       #   Zähringia Bernensis           "Bern",  "Z",  "Z!"
       #   Carolingia Turicensis         "Ca",          "C!"
       #   Valdésia Lausannensis         "La",          "V!"
       #
-      str = str.gsub("Basel ", "S! ")
+      str = str.gsub("Basel ", "S! ").gsub("Ba ", "S! ")
       str = str.gsub("Bern ", "Z! ").gsub("Z ", "Z! ")
       str = str.gsub("Ca ", "C! ")
       str = str.gsub("La ", "V! ")
@@ -531,7 +531,7 @@ class NetenvUser
   end
 
   def netenv_org_membership_end_date
-    data_hash_value(:epdorgmembershipenddate).to_datetime
+    data_hash_value(:epdorgmembershipenddate).try(:to_datetime)
   end
     
   

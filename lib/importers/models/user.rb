@@ -285,7 +285,8 @@ class User
     if netenv_user.verstorben?
       
       date_of_death = netenv_user.netenv_org_membership_end_date
-      
+      date_of_death ||= self.memberships.order(:valid_from).last.valid_from + 1.day
+            
       # Aus allen Gruppen austragen, außer der 'hidden_users'-Gruppe.
       self.direct_groups.each do |group|
         unless group.has_flag? :hidden_users
