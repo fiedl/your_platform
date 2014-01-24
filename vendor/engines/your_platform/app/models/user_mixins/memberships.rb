@@ -57,7 +57,7 @@ module UserMixins::Memberships
     #
     has_many(:groups, 
       through: :memberships,
-      source: :ancestor, source_type: 'Group',
+      source: :ancestor, source_type: 'Group', :uniq => true,
       conditions: { 'dag_links.descendant_type' => 'User' }
       )
 
@@ -65,7 +65,7 @@ module UserMixins::Memberships
     #
     has_many(:direct_groups, 
       through: :direct_memberships, 
-      source: :ancestor, source_type: 'Group',
+      source: :ancestor, source_type: 'Group', :uniq => true,
       conditions: { 'dag_links.descendant_type' => 'User', 'dag_links.direct' => true }
       )
     
@@ -73,7 +73,7 @@ module UserMixins::Memberships
     #
     has_many(:indirect_groups, 
       through: :indirect_memberships, 
-      source: :ancestor, source_type: 'Group',
+      source: :ancestor, source_type: 'Group', :uniq => true,
       conditions: { 'dag_links.descendant_type' => 'User', 'dag_links.direct' => false }
       )
     

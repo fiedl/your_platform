@@ -123,7 +123,7 @@ module GroupMixins::Memberships
     #
     has_many(:members, 
       through: :memberships, 
-      source: :descendant, source_type: 'User', :uniq => true, 
+      source: :descendant, source_type: 'User', :uniq => true,
       conditions: { 'dag_links.ancestor_type' => 'Group' }
       )
 
@@ -131,7 +131,7 @@ module GroupMixins::Memberships
     #
     has_many(:direct_members, 
       through: :direct_memberships, 
-      source: :descendant, source_type: 'User',
+      source: :descendant, source_type: 'User', :uniq => true,
       conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true }
       )
     
@@ -139,7 +139,7 @@ module GroupMixins::Memberships
     #
     has_many(:indirect_members, 
       through: :indirect_memberships, 
-      source: :descendant, source_type: 'User',
+      source: :descendant, source_type: 'User', :uniq => true,
       conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false }
       )
     
