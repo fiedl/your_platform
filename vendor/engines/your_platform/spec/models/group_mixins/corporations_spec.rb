@@ -43,7 +43,7 @@ describe GroupMixins::Corporations do
       
       # FIXME: This does not work for some obscure reason. 
       # Whenever the corporations are needed without the officers_parent group,
-      # please use Corporation#all, which works.
+      # please use `Corporation.all`, which works.
       #
       # # it "should not include the officers_parent" do
       # #   @officers_parent = @corporations_parent_group.find_or_create_officers_parent_group

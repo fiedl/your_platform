@@ -30,10 +30,10 @@ namespace :import do
 
     task import_sub_structure_of_wingolf_am_hochschulort_groups: :environment do
       STDOUT.sync = true
-      print "\n" + "Task: Import default substructure for wingolf_am_hochschulort groups. \n".cyan
+      print "\n" + "Task: Import default substructure for Corporation groups. \n".cyan
 
       counter = 0
-      Group.corporations.each do |corporation|
+      Corporation.all.each do |corporation|
         if corporation.child_groups.count == 0
           if corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
             counter += 1
@@ -45,7 +45,7 @@ namespace :import do
           print ".".yellow # nothing to do for this group
         end
       end
-      print "\n" + ( "Added sub structure for " + counter.to_s + " groups.\n" ).green
+      print "\n" + ( "Added sub structure for " + counter.to_s + " Corporations.\n" ).green
     end
 
     # Dieser Task importiert die Gruppenstruktur für Wingolf-am-Hochschulort-Gruppen,
@@ -55,7 +55,7 @@ namespace :import do
     # vereitelt werden können.
     #
     task import_and_update_sub_structure_of_wah_groups: :environment do
-      Group.corporations.each do |corporation|
+      Corporation.all.each do |corporation|
         corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
       end
     end
