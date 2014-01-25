@@ -359,6 +359,7 @@ class NetenvUser
   #   * fehlende Leerzeichen zwischen Verbindungskürzel und Jahreszahl ergänzen
   #   * doppelte Leerzeichen entfernen
   #   * Ersetzung der schweizer Kürzel
+  #   * Sonderfälle berücksichtigen
   # 
   def fix_netenv_aktivitätszahl_format(str)
     if str
@@ -378,6 +379,11 @@ class NetenvUser
       str = str.gsub("Bern ", "Z! ")
       str = str.gsub("Ca ", "C! ").gsub("Z ", "C! ")
       str = str.gsub("La ", "V! ")
+      
+      # Es gibt ein paar Fälle von Philistern mit irregulärer Aktivitätszahl.
+      # TODO: Mit Geschäftsstelle klären, wie verfahren werden soll.
+      # 
+      str = str.gsub("Hg 59, Be 58", "Be 58, Hg 59")  # W53802
       
     end
   end
