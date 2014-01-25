@@ -355,6 +355,8 @@ class NetenvUser
   # 
   #   * Klammern ohne Bedeutung entfernen
   #   * Leerzeichen am Anfang und am Ende entfernen
+  #   * fehlende Leerzeichen nach Komma ergänzen
+  #   * fehlende Leerzeichen zwischen Verbindungskürzel und Jahreszahl ergänzen
   #   * doppelte Leerzeichen entfernen
   #   * Ersetzung der schweizer Kürzel
   # 
@@ -362,6 +364,7 @@ class NetenvUser
     if str
       str = remove_brackets(str)
       str = str.gsub(",", ", ").gsub("   ", " ").gsub("  ", " ").strip
+      str = str.gsub(/([A-Za-z])([0-9])/, "\\1 \\2")
       
       # Die schweizer Verbindungen sind nicht immer auf gleiche Art in die Aktivitätszahlen
       # eingetragen. Daher muss hier eine Ersetzung stattfinden, um sie zu vereinheitlichen.
