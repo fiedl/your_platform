@@ -1,3 +1,7 @@
 de:
-  error_has_occurred:                    Bitte um Verständnis
-  not_all_features_are_implemented_yet:  "Bitte beachten Sie, dass noch nicht alle Funktionen fertiggestellt sind. Daher sind noch nicht alle Bereiche der Plattform nutzbar. \n\n Wenn Sie jedoch der Ansicht sind, hier einen Fehler gefunden zu haben, würde sich der Arbeitskreis Internet über einen kurzen Fehlerbericht freuen: deleted-string. Vielen Dank!"
+  error_has_occurred:                    Ein Fehler ist aufgetreten
+  not_all_features_are_implemented_yet:  "Die neue Wingolfsplattform ist derzeit noch im Aufbau. Daher sind eventuell noch nicht alle Bereiche zugänglich. So wie es aussieht, ist jedoch ein Fehler aufgetreten, der von den Plattform-Testern noch nicht erfasst wurde. \n\n Wenn Du einen Augenblick Zeit hast, melde diesen Fehler doch bitte den Bundesbrüdern, die die Plattform testen, per E-Mail an die Verteiler-Adresse <a href='mailto:plattform-tester@wingolf.org'>plattform-tester@wingolf.org</a>. Beschreibe den Bundesbrüdern bitte auch, wie es zu dem Fehler gekommen ist, damit sie ihn reproduzieren können. \n\n Vielen Dank! \n Die Mitglieder des Arbeitskreises Internet"
+  
+  
+  
+  
