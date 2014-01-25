@@ -162,11 +162,12 @@ describe GroupMixins::Memberships do
         @group_unique1 = create(:group)
         @group_unique2 = create(:group)
         @group_unique2.parent_groups << @group_unique1
+        @group_unique3 = create(:group)
+        @group_unique3.parent_groups << @group_unique2
         @user_unique = create(:user)
-        @group_unique1 << @user_unique
-        @group_unique1 << @user_unique
         @group_unique2 << @user_unique
-        @user_unique.reload
+        @group_unique2 << @user_unique
+        @group_unique3 << @user_unique
       end
       subject { @group_unique1.members }
       it { should include @user_unique }
@@ -218,18 +219,30 @@ describe GroupMixins::Memberships do
       it { should include @user2 }
       it { should_not include @user1 }
     end
-    describe "direct_members are unique" do
+    describe "group with only indirect members" do
       before do
         @group_unique1 = create(:group)
         @group_unique2 = create(:group)
         @group_unique2.parent_groups << @group_unique1
         @user_unique = create(:user)
-        @group_unique1 << @user_unique
-        @group_unique1 << @user_unique
         @group_unique2 << @user_unique
-        @user_unique.reload
       end
       subject { @group_unique1.direct_members }
+      it { should have(0).items }
+    end
+    describe "group with direct and indirect member" do
+      before do
+        @group_unique1 = create(:group)
+        @group_unique2 = create(:group)
+        @group_unique2.parent_groups << @group_unique1
+        @group_unique3 = create(:group)
+        @group_unique3.parent_groups << @group_unique2
+        @user_unique = create(:user)
+        @group_unique2 << @user_unique
+        @group_unique2 << @user_unique
+        @group_unique3 << @user_unique
+      end
+      subject { @group_unique2.direct_members }
       it { should include @user_unique }
       it { should have(1).item }
     end
@@ -250,21 +263,27 @@ describe GroupMixins::Memberships do
       it { should include @user2 }
       it { should_not include @user1 }
     end
-    describe "indirect_members are unique" do
+    describe "group with indirect members only" do
       before do
         @group_unique1 = create(:group)
         @group_unique2 = create(:group)
         @group_unique2.parent_groups << @group_unique1
+        @group_unique3 = create(:group)
+        @group_unique3.parent_groups << @group_unique2
+        @group_unique4 = create(:group)
+        @group_unique4.parent_groups << @group_unique1
         @user_unique1 = create(:user)
         @user_unique2 = create(:user)
-        @group_unique1 << @user_unique1
-        @group_unique1 << @user_unique1
         @group_unique2 << @user_unique1
-        @group_unique2 << @user_unique2
+        @group_unique2 << @user_unique1
+        @group_unique3 << @user_unique1
+        @group_unique3 << @user_unique2
+        @group_unique4 << @user_unique2
       end
       subject { @group_unique1.indirect_members }
+      it { should have(2).items }
+      it { should include @user_unique1 }
       it { should include @user_unique2 }
-      it { should have(1).item }
     end
   end
   

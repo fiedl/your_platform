@@ -34,7 +34,7 @@ class User
     if self.corporations
       self.corporations
       .select { |corporation| not (self.guest_of?(corporation)) and not (self.former_member_of_corporation?(corporation)) }
-      .sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
+      .sort_by { |corporation| corporation.membership_of(self).valid_from  or Time.zone.now-9000000000 } # order by date of joining
       .collect do |corporation| 
         year_of_joining = ""
         year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
