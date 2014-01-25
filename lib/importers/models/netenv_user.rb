@@ -367,13 +367,13 @@ class NetenvUser
       # eingetragen. Daher muss hier eine Ersetzung stattfinden, um sie zu vereinheitlichen.
       #
       #   Schwizerhüsli Basilensis      "Basel", "Ba", "S!"
-      #   Zähringia Bernensis           "Bern",  "Z",  "Z!"
-      #   Carolingia Turicensis         "Ca",          "C!"
+      #   Zähringia Bernensis           "Bern",        "Z!"
+      #   Carolingia Turicensis         "Ca",    "Z"   "C!"
       #   Valdésia Lausannensis         "La",          "V!"
       #
       str = str.gsub("Basel ", "S! ").gsub("Ba ", "S! ")
-      str = str.gsub("Bern ", "Z! ").gsub("Z ", "Z! ")
-      str = str.gsub("Ca ", "C! ")
+      str = str.gsub("Bern ", "Z! ")
+      str = str.gsub("Ca ", "C! ").gsub("Z ", "C! ")
       str = str.gsub("La ", "V! ")
       
     end
