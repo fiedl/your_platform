@@ -12,6 +12,7 @@ class UserGroupMembership < DagLink
   attr_accessible :created_at, :deleted_at, :archived_at, :created_at_date_formatted
   before_validation :ensure_correct_ancestor_and_descendant_type
   after_commit      :flush_cache
+  before_destroy    :flush_cache
 
   # Validity Range
   # ====================================================================================================
