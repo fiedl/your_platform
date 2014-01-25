@@ -381,9 +381,9 @@ class NetenvUser
       str = str.gsub("La ", "V! ")
       
       # Es gibt ein paar Fälle von Philistern mit irregulärer Aktivitätszahl.
-      # TODO: Mit Geschäftsstelle klären, wie verfahren werden soll.
       # 
-      str = str.gsub("Hg 59, Be 58", "Be 58, Hg 59")  # W53802
+      str = str.gsub("Hg 59, Be 58", "Be 58, Hg 59")  # W53802. Telefonisch bestätigt. War falsch eingetragen.
+      str = str.gsub("J 00, L 02", "Je 00, L 02")  # W54315. Jena falsch abgekürzt.
       
     end
   end
