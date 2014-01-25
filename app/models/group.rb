@@ -80,5 +80,22 @@ class Group
     self.wbl_abo_group
   end
 
+  # This returns whether the group is special.
+  # This means that the group is special, e.g.
+  # an officers group or a Wingolfsblätter-Abonnenten or
+  # BV
+  def is_special_group?
+    self.has_flag?( :wbl_abo ) or
+    self.has_flag?( :bvs_parent ) or
+    self.has_flag?( :officers_parent ) or
+    self.ancestor_groups.select do |ancestor|
+      ancestor.has_flag?(:officers_parent)
+    end.any? or
+    self.ancestor_groups.select do |ancestor|
+      ancestor.has_flag?(:bvs_parent)
+    end.any?
+  end
+
+
 end
 

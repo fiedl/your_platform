@@ -32,4 +32,14 @@ module GroupMixins::Officers
     return false
   end
   
+  # This returns whether the group is special.
+  # This means that the group is special, e.g.
+  # an officers group
+  def is_special_group?
+    self.has_flag?( :officers_parent ) or
+    self.ancestor_groups.select do |ancestor|
+      ancestor.has_flag?(:officers_parent)
+    end.any?
+  end
+
 end

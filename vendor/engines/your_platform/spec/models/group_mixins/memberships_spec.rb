@@ -157,6 +157,21 @@ describe GroupMixins::Memberships do
       it { should include @user2 }
       it { should_not include @user1 }
     end
+    describe "members are unique" do
+      before do
+        @group_unique1 = create(:group)
+        @group_unique2 = create(:group)
+        @group_unique2.parent_groups << @group_unique1
+        @user_unique = create(:user)
+        @group_unique1 << @user_unique
+        @group_unique1 << @user_unique
+        @group_unique2 << @user_unique
+        @user_unique.reload
+      end
+      subject { @group_unique1.members }
+      it { should include @user_unique }
+      it { should have(1).item }
+    end
   end
   describe "#members << user" do
     subject { @group2.members << @user }
@@ -203,6 +218,21 @@ describe GroupMixins::Memberships do
       it { should include @user2 }
       it { should_not include @user1 }
     end
+    describe "direct_members are unique" do
+      before do
+        @group_unique1 = create(:group)
+        @group_unique2 = create(:group)
+        @group_unique2.parent_groups << @group_unique1
+        @user_unique = create(:user)
+        @group_unique1 << @user_unique
+        @group_unique1 << @user_unique
+        @group_unique2 << @user_unique
+        @user_unique.reload
+      end
+      subject { @group_unique1.direct_members }
+      it { should include @user_unique }
+      it { should have(1).item }
+    end
   end
     
   describe "#indirect_members" do
@@ -219,6 +249,22 @@ describe GroupMixins::Memberships do
       subject { @indirect_group.indirect_members }
       it { should include @user2 }
       it { should_not include @user1 }
+    end
+    describe "indirect_members are unique" do
+      before do
+        @group_unique1 = create(:group)
+        @group_unique2 = create(:group)
+        @group_unique2.parent_groups << @group_unique1
+        @user_unique1 = create(:user)
+        @user_unique2 = create(:user)
+        @group_unique1 << @user_unique1
+        @group_unique1 << @user_unique1
+        @group_unique2 << @user_unique1
+        @group_unique2 << @user_unique2
+      end
+      subject { @group_unique1.indirect_members }
+      it { should include @user_unique2 }
+      it { should have(1).item }
     end
   end
   
