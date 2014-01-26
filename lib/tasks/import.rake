@@ -12,7 +12,8 @@ namespace :import do
       'import:external_corporations',
       'import:standard_workflows',
       'import:group_profiles',
-      'import:users'
+      'import:users',
+      'cache:users'
     ]
 
     
