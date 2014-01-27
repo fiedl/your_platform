@@ -39,21 +39,25 @@ describe Group do
     end
 
     describe "#is_special_group?" do
+      subject { @group.is_special_group? }
+      describe "for a normal group" do
+        it { should == false }
+      end
+    end
+
+    describe "#is_special_group?" do
+      subject { @bvs_parent_group.is_special_group? }
+      describe "for the bvs parent group" do
+        it { should == true }
+      end
+    end
+
+    describe "#is_special_group?" do
       subject { @bv_group.is_special_group? }
       describe "for the bv group" do
         it { should == true }
       end
-
-      describe "for the bvs parent group" do
-        before { @bvs_parent_group.is_special_group? }
-        it { should == true }
-      end
-
-      describe "for the group" do
-        before { @group.is_special_group? }
-        it { should == true }
-      end
     end
-  end
 
+  end
 end
