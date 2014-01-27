@@ -273,7 +273,7 @@ class User
     netenv_user.former_corporations.each do |corporation|
       
       reason = netenv_user.reason_for_exit(corporation)  || "ausgetreten"
-      date = netenv_user.date_of_exit(corporation)
+      date = netenv_user.date_of_exit(corporation) || netenv_user.netenv_org_membership_end_date
       
       # Unassign user from previous groups in that corporation.
       (self.parent_groups & corporation.descendant_groups).each do |status_group|

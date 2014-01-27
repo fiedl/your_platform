@@ -330,6 +330,13 @@ class NetenvUser
   end
 
   def ehemalige_netenv_aktivitätszahl
+    
+    # Es gibt Fälle, z.B. W65397, wo fälschlicherweise als ehemalige Aktivitätszahl
+    # und als aktuelle Aktivitätszahl das gleiche eingegeben ist. Im Einzelfall ist 
+    # zu prüfen, was die plausiblere Angabe ist.
+    #
+    return nil if w_nummer == "W65397"  # Kein Austritt vermerkt. Wird aktuell als Mitglied geführt.
+    
     fix_netenv_aktivitätszahl_format data_hash_value :epdwingolfformeractivities
   end
 
@@ -384,6 +391,15 @@ class NetenvUser
       # 
       str = str.gsub("Hg 59, Be 58", "Be 58, Hg 59")  # W53802. Telefonisch bestätigt. War falsch eingetragen.
       str = str.gsub("J 00, L 02", "Je 00, L 02")  # W54315. Jena falsch abgekürzt.
+      str = str.gsub("HV ", "Hv ")  # W64248. Hannover falsch abgekürzt.
+      str = str.gsub("Cacl ", "CaCl ")  # W64409. Clausthaler Wingolf Catena falsch abgekürzt.
+      str = str.gsub("M 05", "M 04") if w_nummer == "W64573"  # W64573. Aktivmeldungsdatum von 2004. Zwischenzeitlich ausgetreten.
+      str = str.gsub("Be 06", "Be 95") if w_nummer == "W64682"  # W64682. Aktivmeldung 1995, konsistentes Geburtsdatum. Aktivitätszahl vermutlich falsch eingetragen. BV-Wechsel war 2006.
+      str = str.gsub("Hm 09", "Hm 08") if w_nummer == "W65085"  # W65085. Aktivmeldung 2008.
+      
+      str = str.gsub("Dr 93, Dr Nstft 97", "Dr Nstft 93")  # W54409. TODO: Diese Aktivitätszahl muss noch gedeutet und das Programm entsprechend angepasst werden. Zunächst Telefonat, um die korrekte Aktivitätszahl festzustellen.
+      
+
       
     end
   end
@@ -459,7 +475,15 @@ class NetenvUser
   end
   
   def receptionsdatum
-    data_hash_value(:epdwingolfmutterverbindrezeption).try(:to_datetime)
+    date = data_hash_value(:epdwingolfmutterverbindrezeption).try(:to_datetime)
+    return nil unless date
+    
+    # Es gibt Fälle, z.B. W64562, wo das Receptionsdatum eher dem Geburtsdatum entspricht
+    # und nicht nach dem Aktivmeldungsdatum liegt. In diesem Fall sollte das Receptions-
+    # datum ignoriert werden, da es sonst die Aktivitätszahl verfälscht.
+    #
+    return nil if date_of_birth.to_datetime == date.to_datetime
+    return date
   end
 
   def burschungsdatum
@@ -524,8 +548,17 @@ class NetenvUser
     strs = self.descriptions
       .select{ |d| d.match(" #{corporation.token}$") }
       .select{ |d| d.include?("ausgetreten") || d.include?("gestrichen") }
+
     raise 'selection algorithm returnet non-uniqe result. please correct the algorithm for this case.' if strs.count > 1
-    return strs.first
+    str = strs.first
+    
+    # Es gibt Fälle, in denen sich nicht an die Syntax gehalten wurde. 
+    # Diese müssen hier von Hand nachgebessert werden.
+    #
+    if str.present?
+      str = str.gsub(" -durch ", " - durch ")
+      str = str.gsub(/^ausgetreten durch /, " - ausgetreten - durch" )  # z.B. W54888
+    end
   end
 
   def descriptions 
@@ -563,6 +596,12 @@ class NetenvUser
       # Wenn kein Geburtsdatum angegeben ist, nehmen wir eine zeitnahe Aktivmeldung an.
       return year if year > (self.date_of_birth || 99.years.ago).year.to_s
     end
+
+    # Fix: W64301 hat einen (unsinnigen) Geburtstag angegeben, der nach dem Aktivmeldungsdatum liegt.
+    # In diesem Fall wird die Schleife oben vollständig durchlaufen ohne `return`.
+    #
+    return "19#{yy}" if "20#{yy}" > Time.zone.now.year.to_s
+    return "20#{yy}"
   end
   
   def assumed_date_of_joining( corporation )
@@ -585,7 +624,11 @@ class NetenvUser
     netenv_aktivitätszahl.in?(["?????", "02", "03", "234", "VAW", "wingolf 00", "Wingolf 06", "wingolf 07"]) or
       (email.try(:include?, '@netenv') and email.try(:include?, 'iron.com'))  or
       name == "Tphil Tphil" or 
-      name == "testadmin testadmin"
+      name == "testadmin testadmin" or
+      w_nummer == "duser" or
+      last_name == "Tester" or 
+      last_name == "Testgjesdal" or
+      last_name == "testadmin"
   end
     
   
