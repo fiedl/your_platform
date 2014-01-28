@@ -11,6 +11,7 @@ class UserGroupMembership < DagLink
 
   before_validation :ensure_correct_ancestor_and_descendant_type
   after_commit      :flush_cache
+  before_destroy    :flush_cache
 
   # Validity Range
   # ====================================================================================================
@@ -29,6 +30,7 @@ class UserGroupMembership < DagLink
 
   def flush_cache
     Rails.cache.delete([self.user, "my_groups_table"])
+    Rails.cache.delete([self.user, "last_group_in_first_corporation"])
     Rails.cache.delete([self.user, "aktivitaetszahl"])  # TODO: Move to wingolfsplattform!
   end
 

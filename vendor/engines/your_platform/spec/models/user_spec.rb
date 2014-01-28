@@ -530,7 +530,86 @@ describe User do
     end
   end
 
+  describe "#first_corporation" do
+    before do
+      @corporation1 = create( :corporation )
+      @corporation2 = create( :corporation )
+      @subgroup1 = create( :group )
+      @subgroup1.parent_groups << @corporation1
+      @subgroup2 = create( :group )
+      @subgroup2.parent_groups << @corporation2
+      @user.save
+      @user.parent_groups << @subgroup1
+      @user.parent_groups << @subgroup2
+      @user.reload
+    end
+    subject { @user.first_corporation }
+    it "should return the user's first corporation" do
+      subject.should == @corporation1
+    end
+  end
 
+  describe "#my_groups_in_first_corporation" do
+    before do
+      @corporation1 = create( :corporation )
+      @corporation1.name = "corporation1"
+      @corporation2 = create( :corporation )
+      @corporation2.name = "corporation2"
+      @subgroup1 = create( :group )
+      @subgroup1.name = "subgroup1"
+      @subgroup1.parent_groups << @corporation1
+      @subgroup2 = create( :group )
+      @subgroup2.name = "subgroup2"
+      @subgroup2.parent_groups << @corporation2
+      @subgroup3 = create( :group )
+      @subgroup3.name = "subgroup3"
+      @subgroup3.parent_groups << @corporation1.admins_parent
+      @user.save
+      @user.parent_groups << @subgroup1
+      @user.parent_groups << @subgroup1.admins_parent
+      @user.parent_groups << @corporation1.admins_parent
+      @user.parent_groups << @subgroup2
+      @user.parent_groups << @subgroup2.admins_parent
+      @user.parent_groups << @corporation2.admins_parent
+      @user.parent_groups << @subgroup3.admins_parent
+      @user.reload
+    end
+    subject { @user.my_groups_in_first_corporation }
+    it "should return the non special groups of user's first corporation" do
+      subject.should == [ @subgroup1 ]
+    end
+  end
+
+  describe "#cached_last_group_in_first_corporation" do
+    before do
+      @corporation1 = create( :corporation )
+      @corporation1.name = "corporation1"
+      @corporation2 = create( :corporation )
+      @corporation2.name = "corporation2"
+      @subgroup1 = create( :group )
+      @subgroup1.name = "subgroup1"
+      @subgroup1.parent_groups << @corporation1
+      @subgroup2 = create( :group )
+      @subgroup2.name = "subgroup2"
+      @subgroup2.parent_groups << @corporation2
+      @subgroup3 = create( :group )
+      @subgroup3.name = "subgroup3"
+      @subgroup3.parent_groups << @corporation1
+      @user.save
+      @user.parent_groups << @subgroup1
+      @user.parent_groups << @subgroup3
+      @user.parent_groups << @subgroup1.admins_parent
+      @user.parent_groups << @corporation1.admins_parent
+      @user.parent_groups << @subgroup2
+      @user.parent_groups << @subgroup2.admins_parent
+      @user.parent_groups << @corporation2.admins_parent
+      @user.reload
+    end
+    subject { @user.cached_last_group_in_first_corporation }
+    it "should return the last non special group of user's first corporation" do
+      subject.should == @subgroup3
+    end
+  end
   # Status Groups
   # ------------------------------------------------------------------------------------------
 

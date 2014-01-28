@@ -314,8 +314,42 @@ class User < ActiveRecord::Base
   def corporations
     my_corporations = ( self.groups & Group.corporations ) if Group.corporations_parent
     my_corporations ||= []
-    my_corporations = my_corporations.collect { |group| group.becomes( Corporation ) }
-    return my_corporations
+    my_corporations.collect { |group| group.becomes( Corporation ) }
+  end
+
+  # This returns the first corporation where the user is still member of or nil
+  def first_corporation
+    if self.corporations
+      self.corporations.select do |corporation|
+        not ( self.guest_of?( corporation )) and
+        not ( self.former_member_of_corporation?( corporation ))
+      end.sort_by do |corporation|
+        corporation.membership_of( self ).valid_from or Time.zone.now
+      end.first
+    end
+  end
+
+  # This returns the groups within the first corporation
+  # where the user is still member of in the order of entering the group.
+  # The groups must not be special and the user most not be a special member.
+  def my_groups_in_first_corporation
+    if first_corporation
+      my_memberships = UserGroupMembership.find_all_by_user( self )
+      my_memberships = my_memberships.now.reorder{ |membership| membership.valid_from }
+      my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
+      my_groups ||= []
+      my_groups.select do |group|
+        first_corporation.in?( group.ancestor_groups )
+      end.reject { |group| group.is_special_group? or self.guest_of?( group ) }
+    else
+      []
+    end
+  end
+
+  def cached_last_group_in_first_corporation
+    Rails.cache.fetch( [self, "last_group_in_first_corporation"] ) do
+      my_groups_in_first_corporation.last
+    end
   end
 
 

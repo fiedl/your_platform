@@ -33,9 +33,12 @@ class User
   def aktivitätszahl
     if self.corporations
       self.corporations
-      .select { |corporation| not (self.guest_of?(corporation)) and not (self.former_member_of_corporation?(corporation)) }
-      .sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
-      .collect do |corporation| 
+      .select do |corporation|
+        not (self.guest_of?(corporation)) and
+        not (self.former_member_of_corporation?(corporation)) and
+        corporation.membership_of(self).valid_from
+      end.sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
+      .collect do |corporation|
         year_of_joining = ""
         year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
         #corporation.token + "\u2009" + year_of_joining

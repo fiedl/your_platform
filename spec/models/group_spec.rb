@@ -13,6 +13,7 @@ describe Group do
       # in this context, this should be a group, but FactoryGirl returns a Bv-type object.
       @bv_group = create( :bv_group ).becomes Group 
       @bvs_parent_group = @bv_group.parent_groups.first
+      @group = create( :group )
     end
 
     describe ".find_bvs_parent_group" do
@@ -36,7 +37,27 @@ describe Group do
         Group.find_bvs_parent_group.should_not == nil
       end
     end
-    
-  end
 
+    describe "#is_special_group?" do
+      subject { @group.is_special_group? }
+      describe "for a normal group" do
+        it { should == false }
+      end
+    end
+
+    describe "#is_special_group?" do
+      subject { @bvs_parent_group.is_special_group? }
+      describe "for the bvs parent group" do
+        it { should == true }
+      end
+    end
+
+    describe "#is_special_group?" do
+      subject { @bv_group.is_special_group? }
+      describe "for the bv group" do
+        it { should == true }
+      end
+    end
+
+  end
 end

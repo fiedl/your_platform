@@ -34,5 +34,30 @@ describe GroupMixins::Officers do
     end
     
   end
+
+  describe "#is_special_group?" do
+    subject { @group.is_special_group? }
+
+    describe "for the group" do
+      it { should == false }
+    end
+
+    describe "for the group under an officers parent group" do
+      before do 
+        @group2 = create( :group )
+        @group2.create_officers_parent_group << @group
+      end
+      it { should == true }
+    end
+
+    describe "for the group under an admins group" do
+      before do 
+        @group2 = create( :group )
+        @group2.create_admins_parent_group << @group
+      end
+      it { should == true }
+    end
+
+  end
   
 end
