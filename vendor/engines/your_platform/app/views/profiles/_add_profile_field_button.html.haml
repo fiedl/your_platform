@@ -1,6 +1,7 @@
 - if section.profile_field_types.count == 1
   = add_button( url_for( :controller => :profile_fields,
                          :profileable_id => profileable.id,
+                         :profileable_type => profileable.class.name,
                          :profile_field => {:type => section.profile_field_types.first},
                          :section => section.title), :method => 'post')
 - if section.profile_field_types.count > 1

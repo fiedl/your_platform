@@ -28,6 +28,12 @@ class ProfileFieldsController < ApplicationController
   def load_profileable
     if params[ :profileable_type ].present? && params[ :profileable_id ].present?
       @profileable = secure_profileable_type.constantize.find( params[ :profileable_id ] )
+    else if params[ :profileable_type ].present?
+      raise "Profileable id is missing!"
+    else if params[ :profileable_id ].present?
+      raise "Profileable type is missing!"
+    else
+      raise "Profileable type and id are missing!"
     end
   end
   
