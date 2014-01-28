@@ -8,7 +8,8 @@ class String
     # Beispielsweise der 31. November. Das muss hier korrigiert werden, da sonst ein Fehler 
     # erzeugt wird.
     #
-    self.gsub!("1131", "1130") if self[4..7] == "1131"
+    self.gsub!("0431", "0430") if self[4..7] == "0431" # April
+    self.gsub!("1131", "1130") if self[4..7] == "1131" # November
     self.gsub!(/^6110000000000Z/, "20061101000000Z")   # W64492. Sonst wird das als Jahr 6110 erkannt.
     self.gsub!(/^061020000000Z/,  "20061020000000Z")   # W64720
     self.gsub!(/^061108000000Z/,  "20061108000000Z")   # W64720
