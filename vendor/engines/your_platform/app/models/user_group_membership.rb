@@ -13,11 +13,25 @@ class UserGroupMembership < DagLink
   after_commit      :flush_cache
   before_destroy    :flush_cache
 
+
   # Validity Range
   # ====================================================================================================
 
   include UserGroupMembershipMixins::ValidityRange
   include UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
+  
+  
+  # May Need Review Flag
+  # ====================================================================================================
+
+  # Some memberships may contain information that need review, e.g. when a validity range
+  # was entered by assumption.
+  #
+  # This is stored as the flag :needs_review.
+  #
+  has_many_flags
+  may_need_review
+  
 
   # General Properties
   # ====================================================================================================

@@ -153,8 +153,7 @@ class ProfileField < ActiveRecord::Base
   #
   # This is stored as the flag :needs_review.
   #
-  extend ProfileFieldMixins::NeedsReview
-  include ProfileFieldMixins::NeedsReview::InstanceMethods
+  may_need_review
    
 end
 
