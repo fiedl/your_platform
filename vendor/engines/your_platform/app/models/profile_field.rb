@@ -6,7 +6,7 @@ class ProfileField < ActiveRecord::Base
   belongs_to             :profileable, polymorphic: true
   
   include ProfileFieldMixins::HasChildProfileFields
-
+  
   # Only allow the type column to be an existing class name.
   #
   validates_each :type do |record, attr, value| 
@@ -146,6 +146,15 @@ class ProfileField < ActiveRecord::Base
       'ProfileFieldTypes::Date', 'ProfileFieldTypes::AcademicDegree'
     ]
   end
-
+  
+  
+  # Some profile fields may contain values that need review, e.g. when an email could
+  # not be delivered to an email address.
+  #
+  # This is stored as the flag :needs_review.
+  #
+  extend ProfileFieldMixins::NeedsReview
+  include ProfileFieldMixins::NeedsReview::InstanceMethods
+   
 end
 
