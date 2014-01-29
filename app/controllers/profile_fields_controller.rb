@@ -1,7 +1,7 @@
 class ProfileFieldsController < ApplicationController
 
+  prepend_before_filter :load_profileable, :only => :create
   load_and_authorize_resource
-  before_filter :load_profileable
   respond_to :json, :js
 
   def create
@@ -28,6 +28,12 @@ class ProfileFieldsController < ApplicationController
   def load_profileable
     if params[ :profileable_type ].present? && params[ :profileable_id ].present?
       @profileable = secure_profileable_type.constantize.find( params[ :profileable_id ] )
+    elsif params[ :profileable_type ].blank? and params[ :profileable_id ].blank?
+      raise "Profileable type and id are missing!"
+    elsif params[ :profileable_type ].blank?
+      raise "Profileable type is missing!"
+    else
+      raise "Profileable id is missing!"
     end
   end
   
