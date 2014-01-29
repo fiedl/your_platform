@@ -37,8 +37,12 @@ module MayNeedReview
     def needs_review
       self.needs_review?
     end
-    def needs_review=(does_need_review)
-      if does_need_review
+    def needs_review=(new_needs_review)
+      new_needs_review = false if new_needs_review == "false"
+      if new_needs_review != self.needs_review
+        attribute_will_change!(:needs_review) 
+      end
+      if new_needs_review
         self.add_flag :needs_review
       else
         self.remove_flag :needs_review

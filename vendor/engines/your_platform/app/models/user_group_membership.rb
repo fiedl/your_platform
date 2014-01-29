@@ -31,6 +31,7 @@ class UserGroupMembership < DagLink
   #
   has_many_flags
   may_need_review
+  attr_accessible :needs_review
   
 
   # General Properties
