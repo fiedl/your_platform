@@ -460,6 +460,10 @@ class NetenvUser
     return date
   end
   
+  def angegebenes_aktivmeldungsdatum
+    aktivmeldungsdatum_im_wingolfsbund || aktivmeldungsdatum_in_mutterverbindung
+  end
+  
   def aktivmeldungsdatum_in_mutterverbindung
     data_hash_value(:epdwingolfmutterverbindaktivmeldung).try(:to_datetime)
   end
@@ -482,7 +486,7 @@ class NetenvUser
     # und nicht nach dem Aktivmeldungsdatum liegt. In diesem Fall sollte das Receptions-
     # datum ignoriert werden, da es sonst die Aktivitätszahl verfälscht.
     #
-    return nil if date_of_birth.to_datetime == date.to_datetime
+    return nil if date_of_birth.try(:to_datetime) == date.to_datetime
     return date
   end
 

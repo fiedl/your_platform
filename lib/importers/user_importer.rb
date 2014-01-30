@@ -109,7 +109,7 @@ class UserImporter < Importer
   
   def dummy_user?(netenv_user)
     if netenv_user.dummy_user?
-      warning = { message: "Ignoring dummy user #{netenv_user.w_nummer}.",
+      warning = { message: "Der Test-Benutzer #{netenv_user.w_nummer} wird nicht importiert. Kein Handlungsbedarf.",
         w_nummer: netenv_user.w_nummer, name: netenv_user.name,
         netenv_aktivitätszahl: netenv_user.netenv_aktivitätszahl
       }
@@ -120,7 +120,7 @@ class UserImporter < Importer
   
   def deleted_user?(netenv_user)
     if netenv_user.deleted?
-      warning = { message: "Ignoring deleted user #{netenv_user.w_nummer}.",
+      warning = { message: "Der Benutzer #{netenv_user.w_nummer} wurde als gelöscht markiert und wird nicht importiert. Kein Handlungsbedarf.",
                   w_nummer: netenv_user.w_nummer, name: netenv_user.name }
       progress.log_ignore(warning)
       return true
@@ -137,7 +137,7 @@ class UserImporter < Importer
     return false unless existing_user_with_this_email
 
     if existing_user_with_this_email.w_nummer != netenv_user.w_nummer
-      warning = { message: "Email #{netenv_user.email} duplicate. The user #{existing_user_with_this_email.w_nummer} was here first. The user #{netenv_user.w_nummer} is imported, but WITHOUT EMAIL ADDRESS.",
+      warning = { message: "Doppelt vergebene E-Mail-Adresse #{netenv_user.email}. In diesem Import wird sie dem Benutzer #{existing_user_with_this_email.w_nummer} zugeschrieben. Der Benutzer #{netenv_user.w_nummer} wird ohne E-Mail-Adresse importiert. Telefonischer Rücksprache erforderlich.",
         w_nummer: netenv_user.w_nummer, name: netenv_user.name, email: netenv_user.email,
         existing_user: existing_user_with_this_email.w_nummer, existing_user_name: existing_user_with_this_email.name 
       }
@@ -148,7 +148,7 @@ class UserImporter < Importer
   
   def wrong_email_format?(netenv_user)
     if (not netenv_user.email.include?('@')) or (not netenv_user.email.include?('.'))
-      warning = { message: "Email '#{netenv_user.email}' invalid. Not importing this email address.",
+      warning = { message: "Die E-Mail-Adresse '#{netenv_user.email}' des Benutzers #{netenv_user.w_nummer} ist ungültig und wird nicht importiert.",
                   w_nummer: netenv_user.w_nummer, email: netenv_user.email }
       progress.log_warning(warning)
       return true
@@ -167,7 +167,7 @@ class UserImporter < Importer
     
     # Aktivmeldungsdatum?
     if not netenv_user.aktivmeldungsdatum
-      warning = { message: 'no aktivmeldungsdatum present.',
+      warning = { message: 'Kein Aktivmeldungsdatum angegeben.',
                   name: netenv_user.name, w_nummer: netenv_user.w_nummer }
       progress.log_failure(warning)
     end
@@ -177,19 +177,19 @@ class UserImporter < Importer
          netenv_user.aktivmeldungsdatum_im_wingolfsbund and
          (netenv_user.aktivmeldungsdatum_im_wingolfsbund != netenv_user.aktivmeldungsdatum_in_mutterverbindung)
          )
-      warning = { message: 'inconsistent aktivmeldungsdatum: the date of joining wingolfsbund is unequal to the date of joining of the primary corporation.',
+      warning = { message: 'Inkonsistentes Aktivmeldungsdatum: Das Beitrittsdatum in den Wingolfsbund weicht vom Aktivmeldungsdatum in der Mutterverbindung ab.',
                   name: netenv_user.name, w_nummer: netenv_user.w_nummer,
                   aktivmeldungsdatum_im_wingolfsbund: netenv_user.aktivmeldungsdatum_im_wingolfsbund,
                   aktivmeldungsdatum_in_mutterverbindung: netenv_user.aktivmeldungsdatum_in_mutterverbindung,
                   mutterverbindung: netenv_user.primary_corporation.token }
-      progress.log_failure(warning)
+      progress.log_warning(warning)
     end
 
-    if netenv_user.aktivmeldungsdatum_aus_aktivitaetszahl.year != (netenv_user.aktivmeldungsdatum_in_mutterverbindung || netenv_user.aktivmeldungsdatum_im_wingolfsbund).try(:year)
-      if (netenv_user.aktivmeldungsdatum_in_mutterverbindung || netenv_user.aktivmeldungsdatum_im_wingolfsbund)
-        warning = { message: 'inconsistent aktivmeldungsdatum: the given aktivmeldungsdatum does not match the aktivitätszahl.',
+    if netenv_user.aktivmeldungsdatum_aus_aktivitaetszahl.year != netenv_user.angegebenes_aktivmeldungsdatum.try(:year)
+      if netenv_user.angegebenes_aktivmeldungsdatum
+        warning = { message: 'Inkonsistentes Aktivmeldungsdatum: Das Aktivmeldungsdatum widerspricht der Aktivitätszahl.',
                     name: netenv_user.name, w_nummer: netenv_user.w_nummer,
-                    aktivmeldungsdatum: netenv_user.aktivmeldungsdatum,
+                    angegebenes_aktivmeldungsdatum: netenv_user.angegebenes_aktivmeldungsdatum,
                     aktivitätszahl: netenv_user.aktivitätszahl
                   }
         progress.log_warning(warning)
@@ -199,7 +199,7 @@ class UserImporter < Importer
     # Receptionsdatum > Philistrationsdatum?
     if netenv_user.philistrationsdatum and netenv_user.receptionsdatum
       if netenv_user.receptionsdatum > netenv_user.philistrationsdatum
-        warning = { message: 'inconsistent netenv data: philistration before reception!',
+        warning = { message: 'Inkonsistenz: Das Philistrationsdatum liegt vor dem Receptionsdatum.',
                     name: netenv_user.name, w_nummer: netenv_user.w_nummer, 
                     philistrationsdatum: netenv_user.philistrationsdatum,
                     receptionsdatum: netenv_user.receptionsdatum }
@@ -215,6 +215,5 @@ class UserImporter < Importer
         The reconstructed one is '#{user.aktivitätszahl}'."
     end
   end
-
   
 end
