@@ -73,11 +73,15 @@ class GroupsController < ApplicationController
   # https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Controller
   #
   def map_address_fields
-    user_ids = @group.descendant_users.collect { |user| user.id }
-    user_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
-    group_ids = ([@group] + @group.descendant_groups).collect { |group| group.id }
-    group_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: group_ids )
-    (user_address_fields + group_address_fields)
+    if (@group.descendant_users.count<260)
+      user_ids = @group.descendant_users.collect { |user| user.id }
+      user_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
+      group_ids = ([@group] + @group.descendant_groups).collect { |group| group.id }
+      group_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: group_ids )
+      (user_address_fields + group_address_fields)
+    else
+      []
+    end
   end
 
 end

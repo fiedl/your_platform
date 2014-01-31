@@ -1,7 +1,4 @@
--# locals: user_group_membership, user, group
-- user_group_membership ||= UserGroupMembership.find_by( user: user, group: group )
-- user ||= user_group_membership.user
-- group ||= user_group_membership.group
+-# locals: user, group
 %li
   = link_to user.title, user
   - if can? :manage, user
