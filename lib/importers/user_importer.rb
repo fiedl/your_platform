@@ -210,9 +210,13 @@ class UserImporter < Importer
   
   def perform_consistency_check_for_aktivitaetszahl_for( user, netenv_user )
     if netenv_user.aktivitätszahl.to_s != user.reload.aktivitätszahl.to_s
-      p user.w_nummer
-      raise "consistency check failed: aktivitätszahl '#{netenv_user.aktivitätszahl}' not reconstructed properly.
-        The reconstructed one is '#{user.aktivitätszahl}'."
+      warning = { 
+        message: "Konsistenzprüfung fehlgeschlagen: Die rekonstruierte Aktivitätszahl '#{user.aktivitätszahl}' entspricht nicht der angegebenen Aktivitätszahl '#{netenv_user.aktivitätszahl}' des Benutzers #{netenv_user.w_nummer}. Dieser Benutzer muss nach Korrektur erneut importiert werden. Sonst hat ein Nicht-Wingolfit evtl. zu viele Rechte!",
+        name: netenv_user.name, w_nummer: netenv_user.w_nummer,
+        angegebene_aktivitätszahl: netenv_user.aktivitätszahl,
+        rekonstruierte_aktivitätszahl: user.aktivitätszahl
+      }
+      progress.log_failure(warning)
     end
   end
   

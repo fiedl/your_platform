@@ -326,6 +326,13 @@ class NetenvUser
   # =======================================================================
   
   def netenv_aktivitätszahl
+
+    # Es gibt Fälle, z.B. W65397, wo fälschlicherweise als ehemalige Aktivitätszahl
+    # und als aktuelle Aktivitätszahl das gleiche eingegeben ist. Im Einzelfall ist 
+    # zu prüfen, was die plausiblere Angabe ist.
+    #
+    return nil if w_nummer == "W51241"  # Austritt vermerkt. Wird aktuell als ausgetreten geführt.
+
     fix_netenv_aktivitätszahl_format data_hash_value :epdwingolfactivity
   end
 
