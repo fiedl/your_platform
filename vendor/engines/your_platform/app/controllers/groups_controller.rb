@@ -36,8 +36,8 @@ class GroupsController < ApplicationController
   end
 
   def create
-    if params[:parent_type].present? && params[:parent_id].present?
-      @parent = params[:parent_type].constantize.find(params[:parent_id]).child_groups
+    if secure_parent_type.present? && params[:parent_id].present?
+      @parent = secure_parent_type.constantize.find(params[:parent_id]).child_groups
     else
       @parent = Group
     end
@@ -82,6 +82,10 @@ class GroupsController < ApplicationController
     else
       []
     end
+  end
+  
+  def secure_parent_type
+    params[:parent_type] if params[:parent_type].in? ['Group', 'Page']
   end
 
 end

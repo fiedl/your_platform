@@ -33,8 +33,8 @@ class PagesController < ApplicationController
   end
 
   def create
-    if params[:parent_type].present? && params[:parent_id].present?
-      @parent = params[:parent_type].constantize.find(params[:parent_id]).child_pages
+    if secure_parent_type.present? && params[:parent_id].present?
+      @parent = secure_parent_type.constantize.find(params[:parent_id]).child_pages
     else
       @parent = Page
     end
@@ -42,6 +42,12 @@ class PagesController < ApplicationController
     @new_page.author = current_user
     @new_page.save
     redirect_to @new_page
+  end
+  
+private
+  
+  def secure_parent_type
+    params[:parent_type] if params[:parent_type].in? ['Page', 'Group']
   end
 
 end

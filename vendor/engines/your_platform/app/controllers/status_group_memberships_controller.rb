@@ -22,7 +22,7 @@ class StatusGroupMembershipsController < ApplicationController
   private
 
   def find_membership
-    @status_group_membership = StatusGroupMembership.with_deleted.find( params[ :id ] ) if params[ :id ].present?
+    @status_group_membership = StatusGroupMembership.with_invalid.find( params[ :id ] ) if params[ :id ].present?
   end
   
 end

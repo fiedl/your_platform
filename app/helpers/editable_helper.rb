@@ -5,11 +5,11 @@ module EditableHelper
 
   # Erzeugt <span class="editable" data-show-url=... data-edit-url=... ></span>.
   # Parameter: css_class, object
-  def editable_span_tag( params, &block )
-    css_class = params[ :css_class ]
-    object = params[ :object ]
-    controller = params[ :controller ]
-    id = params[ :id ]
+  def editable_span_tag( args, &block )
+    css_class = args[ :css_class ]
+    object = args[ :object ]
+    controller = args[ :controller ]
+    id = args[ :id ]
     
     urls = {}
     [ 'show', 'edit', 'update', 'create', 'new' ].each do |action| 
