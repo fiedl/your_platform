@@ -22,8 +22,8 @@ class User
   
   def import_timestamps_from( netenv_user )
     User.record_timestamps = false
-    self.updated_at = netenv_user.updated_at
-    self.created_at = netenv_user.created_at
+    self.updated_at = netenv_user.updated_at if netenv_user.updated_at
+    self.created_at = netenv_user.created_at if netenv_user.created_at
     self.save
     User.record_timestamps = true
   end

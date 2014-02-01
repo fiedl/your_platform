@@ -54,11 +54,11 @@ class NetenvUser
   # =======================================================================
   
   def created_at
-    data_hash_value('createTimestamp').to_datetime
+    data_hash_value('createTimestamp').try(:to_datetime)
   end
   
   def updated_at
-    data_hash_value('modifyTimestamp').to_datetime
+    data_hash_value('modifyTimestamp').try(:to_datetime)
   end
   
   def netenv_status
