@@ -29,8 +29,9 @@ namespace :import do
       p "Task: Import BV information"
       csv_rows($groups_import_file) do |row|
         if row[ 'cn' ]
-          if row[ 'cn' ].include? "BV "
+          if row[ 'cn' ].match(/^BV [0-9][0-9]$/)
             bv = Bv.find_by_token row[ 'cn' ]
+            raise "Bezirksverband '#{row['cn']}' nicht in der Datenbank des neuen Systems gefunden." unless bv
             infos = row.to_hash
             import_group_profile_info bv, infos
             import_bank_account bv, infos
@@ -44,10 +45,11 @@ namespace :import do
       p "Task: Import Wah (Wingolf am Hochschulort) information"
       csv_rows($groups_import_file) do |row|
         if row[ 'cn' ]
-          if row[ 'cn' ].include? "WV "
+          if row[ 'cn' ].include? "WV " and not row[ 'cn' ].include? "Journalist" and not row[ 'cn' ].include? "Editor"
             if row[ 'dn' ].include? "o=Verbindungen"
               token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
               wah = Corporation.find_by_token( token ) # Wingolf-am-Hochschulort-Gruppe
+              raise "Wingolfsverbindung '#{token}' nicht in der Datenbank des neuen Systems gefunden." unless wah
               infos = row.to_hash
               import_address wah, infos
               import_group_profile_info wah, infos
@@ -62,7 +64,7 @@ namespace :import do
       p "Task: Import Aktivitas information"
       csv_rows($groups_import_file) do |row|
         if row[ 'cn' ]
-          if row[ 'cn' ].include? "WV " 
+          if row[ 'cn' ].include? "WV " and not row[ 'cn' ].include? "Journalist" and not row[ 'cn' ].include? "Editor"
             if row[ 'dn' ].include? "o=Verbindungen"
               token = row[ 'cn' ][3..-1] # "Ef" aus "WV Ef"
               aktivitas = Corporation.find_by_token( token ).aktivitas
@@ -81,10 +83,11 @@ namespace :import do
       p "Task: Import Philisterschaft information"
       csv_rows($groups_import_file) do |row|
         if row[ 'cn' ]
-          if row[ 'cn' ].include? "PhV " 
+          if row[ 'cn' ].include? "PhV " and not row[ 'cn' ].include? "Journalist" and not row[ 'cn' ].include? "Editor"
             if row[ 'dn' ].include? "o=Philister"
-              if not row[ 'cn' ].include? "bandphilister" 
+              if not row[ 'cn' ].include? "bandphilister" and not row['cn'].include? "bandträger im"
                 token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
+                raise "Korporation '#{token}' nicht in der Datenbank des neuen Systems gefunden." unless Corporation.find_by_token(token)
                 philisterschaft = Corporation.find_by_token( token ).philisterschaft
                 infos = row.to_hash
                 philisterschaft.extensive_name = infos[ 'ou' ]
@@ -104,9 +107,9 @@ namespace :import do
       p "Task: Import Hausverein information"
       csv_rows($groups_import_file) do |row|
         if row[ 'cn' ]
-          if row[ 'cn' ].include? "PhV " 
+          if row[ 'cn' ].include? "PhV " and not row[ 'cn' ].include? "Journalist" and not row[ 'cn' ].include? "Editor"
             if row[ 'dn' ].include? "o=Philister"
-              if not row[ 'cn' ].include? "bandphilister" 
+              if not row[ 'cn' ].include? "bandphilister" and not row['cn'].include? "bandträger im" 
                 token = row[ 'cn' ][4..-1] # "Ef" aus "PhV Ef"
                 hausverein = Corporation.find_by_token( token ).hausverein
                 if hausverein
