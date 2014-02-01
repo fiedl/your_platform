@@ -1,4 +1,4 @@
--# locals: user_group_membership, user, group
+- # locals: (user_group_membership)  or  (user, group)
 - user_group_membership ||= UserGroupMembership.find_by( user: user, group: group )
 - user ||= user_group_membership.user
 - group ||= user_group_membership.group
