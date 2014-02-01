@@ -403,6 +403,7 @@ class NetenvUser
       str = str.gsub("M 05", "M 04") if w_nummer == "W64573"  # W64573. Aktivmeldungsdatum von 2004. Zwischenzeitlich ausgetreten.
       str = str.gsub("Be 06", "Be 95") if w_nummer == "W64682"  # W64682. Aktivmeldung 1995, konsistentes Geburtsdatum. Aktivitätszahl vermutlich falsch eingetragen. BV-Wechsel war 2006.
       str = str.gsub("Hm 09", "Hm 08") if w_nummer == "W65085"  # W65085. Aktivmeldung 2008.
+      str = str.gsub("HB ", "Hb ")  # W51944. Hamburg falsch abgekürzt.
       
       str = str.gsub("Dr 93, Dr Nstft 97", "Dr Nstft 93")  # W54409. TODO: Diese Aktivitätszahl muss noch gedeutet und das Programm entsprechend angepasst werden. Zunächst Telefonat, um die korrekte Aktivitätszahl festzustellen.
       
