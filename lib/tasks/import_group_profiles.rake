@@ -3,7 +3,7 @@ require 'colored'
 
 namespace :import do
   
-  $groups_import_file = "import/netenv_data/Groups_production_2012-01-17.csv" 
+  $groups_import_file = "import/netenv_data/2014-01-31/wingolf_groups.csv" 
   
   desc "Import group profiles from netenv system."
   task :group_profiles => [
