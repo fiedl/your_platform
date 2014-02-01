@@ -27,12 +27,12 @@ class ApplicationController
     
     # TODO: The layout should be saved in the user's preferences, i.e. interface settings.
     layout = "wingolf"
-    layout = "bootstrap" if ENV[ 'RAILS_ENV' ] == 'test'
+    layout = "bootstrap" if Rails.env.test?
+    
+    layout = "wingolf" if params[:layout] == "wingolf"
+    layout = "bootstrap" if params[:layout] == "bootstrap"
 
-    if params[ :layout ]
-      layout = params[ :layout ] 
-    end
     return layout
   end
-
+  
 end
