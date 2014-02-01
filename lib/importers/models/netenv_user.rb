@@ -277,7 +277,7 @@ class NetenvUser
   # =======================================================================
   
   def wbl_abo?
-    data_hash_value(:epdwingolfmagazine) == "Y"
+    (data_hash_value(:epdwingolfmagazine) == "Y") and not ehemaliger?
   end
   
   def text_above_name  # Bevorzugte Anrede
@@ -311,7 +311,7 @@ class NetenvUser
     status == "Philister"
   end
   def ehemaliger?
-    status == "Ehemaliger"
+    status == "Ehemaliger" || netenv_org_membership_end_date.present?
   end
 
   def verstorben?
@@ -378,6 +378,7 @@ class NetenvUser
   def fix_netenv_aktivitätszahl_format(str)
     if str
       str = remove_brackets(str)
+      str = str.gsub(/^,/, "").gsub(/,$/, "")
       str = str.gsub(",", ", ").gsub("   ", " ").gsub("  ", " ").strip
       str = str.gsub(/([A-Za-z])([0-9])/, "\\1 \\2")
       
