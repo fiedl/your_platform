@@ -92,8 +92,9 @@ group :development do
 end
 
 # Security Tools
-group :development do
-  gem 'brakeman', '~> 2.2.0'
+group :development, :test do
+  gem 'brakeman', '>= 2.3.1'
+  gem 'guard-brakeman', '>= 0.8.1'
 end
 
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests

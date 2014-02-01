@@ -44,3 +44,13 @@ guard( 'rspec', :version => 2,
 
 end
 
+guard 'brakeman', :run_on_start => true do
+  watch(%r{^app/.+\.(erb|haml|rhtml|rb)$})
+  watch(%r{^config/.+\.rb$})
+  watch(%r{^lib/.+\.rb$})
+  watch(%r{^vendor/engines/your_platform/app/.+\.(erb|haml|rhtml|rb)$})
+  watch(%r{^vendor/engines/your_platform/lib/.+\.(rb)$})
+  watch(%r{^vendor/engines/your_platform/config/.+\.(rb)$})
+  watch('vendor/engines/your_platform/your_platform.gemspec')
+  watch('Gemfile')
+end
