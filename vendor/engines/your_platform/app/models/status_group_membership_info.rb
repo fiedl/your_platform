@@ -1,4 +1,6 @@
 class StatusGroupMembershipInfo < ActiveRecord::Base
+  
+  attr_accessible
 
   belongs_to :membership, touch: true, class_name: "StatusGroupMembership", inverse_of: :status_group_membership_info 
 

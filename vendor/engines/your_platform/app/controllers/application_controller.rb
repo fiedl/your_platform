@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+  protect_from_forgery
 
   layout "bootstrap"
 
@@ -60,7 +61,7 @@ class ApplicationController < ActionController::Base
   #   3. Use the default locale if no other could be determined.
   #
   def set_locale
-    cookies[:locale] = params[:locale] if params[:locale].present? and params[:locale].in? I18n.available_locales
+    cookies[:locale] = secure_locale_param if params[:locale].present?
     cookies[:locale] = nil if params[:locale] and params[:locale] == ""
     cookies[:locale] = nil if cookies[:locale] == ""
     I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
@@ -68,14 +69,30 @@ class ApplicationController < ActionController::Base
   
   private
   
-  def extract_locale_from_accept_language_header
+  # This method prevents a DoS attack.
+  #
+  def secure_locale_param
+    if params[:locale].present? and params[:locale].in? I18n.available_locales.collect { |l| l.to_s }
+      params[:locale] 
+    end
+  end
+  
+  def secure_locale_from_accept_language_header
+    # This comparison is to prevent a DoS attack.
+    # See: http://brakemanscanner.org/docs/warning_types/denial_of_service/
+    #
+    I18n.available_locales.select do |locale|
+      locale.to_s == locale_from_accept_language_header
+    end.first
+  end
+  def locale_from_accept_language_header
     # see: http://guides.rubyonrails.org/i18n.html
     if request.env['HTTP_ACCEPT_LANGUAGE'] and not Rails.env.test?
-      request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first.to_sym
+      request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
     end
   end
   def browser_language_if_supported_by_app
-    ([extract_locale_from_accept_language_header] & I18n.available_locales).first
+    secure_locale_from_accept_language_header
   end
   
   # This logs the event using a metric storage.

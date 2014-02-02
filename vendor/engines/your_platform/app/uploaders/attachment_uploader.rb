@@ -122,5 +122,10 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     basename = File.basename(filename).gsub(/.#{extension}$/, '')
     Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension, version: version )
   end
+  
+
+  def self.valid_versions
+    [:thumb, :video_thumb]
+  end
 
 end

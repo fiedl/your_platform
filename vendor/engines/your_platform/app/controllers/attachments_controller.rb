@@ -42,14 +42,25 @@ class AttachmentsController < ApplicationController
   #
   def download
     path = ""
-    if params[:version]
-      if @attachment.file.versions[params[:version].to_sym]
-        path = @attachment.file.versions[params[:version].to_sym].current_path
+    if secure_version
+      if @attachment.file.versions[secure_version]
+        path = @attachment.file.versions[secure_version].current_path
       end
     else
       path = @attachment.file.current_path
     end
     send_file path, x_sendfile: true
+  end
+  
+private
+
+  # This method secures the version parameter from a DoS attack.
+  # See: http://brakemanscanner.org/docs/warning_types/denial_of_service/
+  #
+  def secure_version
+    @secure_version ||= AttachmentUploader.valid_versions.select do |version|
+      version.to_s == params[:version]
+    end.first
   end
 
 end

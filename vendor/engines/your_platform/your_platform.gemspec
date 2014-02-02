@@ -18,14 +18,14 @@ Gem::Specification.new do |s|
   s.summary     = "Administrative and social network platform for closed user groups."
   s.description = s.summary
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
   # Dependencies 
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
-  s.add_dependency "rails", "~> 3.2.6"
+  s.add_dependency "rails", "~> 3.2.11"
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
 

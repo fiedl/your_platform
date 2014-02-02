@@ -45,7 +45,7 @@ PATH
       less-rails (= 2.2.6)
       phony
       rack-mini-profiler (>= 0.9.0.pre)
-      rails (~> 3.2.6)
+      rails (~> 3.2.11)
       rails-i18n
       redcarpet
       rmagick (>= 2.13.2)
