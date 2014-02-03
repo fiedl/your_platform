@@ -44,9 +44,9 @@ get '/' do
   html = "
   <html><head>
     <title>Live Event Display</title>
-    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/jquery-1.10.2.min.js'></script>
-    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/TweenMax.min.js'></script>
-    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/angular.min.js'></script>
+    <script type='text/javascript' src='http://code.jquery.com/jquery-latest.min.js'></script>
+    <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js'></script>
+    <script type='text/javascript' src='http://www.cooltextjs.com/js/angular.min.js'></script>
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.animations.js'></script>      
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.min.js'></script>      
     <script language='javascript'>
@@ -82,6 +82,20 @@ get '/' do
       </span>
     </div>
   
+    <script language='javascript'>
+    $('#live_event_text').cooltext({
+       sequence:[
+          {
+             action:'animation',
+             animation:[#{animation_names_str}],
+             stagger:150,
+             delay:2
+          }
+       ],
+       cycle: true
+    });
+    </script>
+  
   </body></html>
   "
   
@@ -95,5 +109,14 @@ end
 
 def format_string(str)
   str.gsub("\n", "<br>")
+end
+
+def animation_names
+  range = 101..200
+  range.collect { |i| "cool#{i}" }
+end
+
+def animation_names_str
+  "'" + animation_names.join("','") + "'"
 end
 
