@@ -44,9 +44,9 @@ get '/' do
   html = "
   <html><head>
     <title>Live Event Display</title>
-    <script type='text/javascript' src='http://code.jquery.com/jquery-latest.min.js'></script>
-    <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js'></script>
-    <script type='text/javascript' src='http://www.cooltextjs.com/js/angular.min.js'></script>
+    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/jquery-1.10.2.min.js'></script>
+    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/TweenMax.min.js'></script>
+    <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/angular.min.js'></script>
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.animations.js'></script>      
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.min.js'></script>      
     <script language='javascript'>
@@ -57,7 +57,7 @@ get '/' do
     <style type='text/css'>
       body {
         background-color: #111;
-        background-image: url('https://winglfsplattform.org/images/presentation-bg.jpg');
+        background-image: url('https://wingolfsplattform.org/images/presentation-bg.jpg');
         background-size: auto 100%;
       }
       #wrapper {
