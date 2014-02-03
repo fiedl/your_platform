@@ -6,12 +6,13 @@
 # The content of the file /var/wingolfsplattform/tmp/live_event.txt
 # is displayed.
 #
-# http://wingolfsplattform.org:
+#     http://wingolfsplattform.org:4568
 #
 # Launch this tool: 
-# 
-#     ruby script/live_event_display.rb
-#     nohup ruby script/live_event_display.rb > /dev/null &
+#
+#     cd script/live_event_display/
+#     bundle exec ruby run.rb
+#     nohup bundle exec ruby run.rb > /dev/null &
 #
 
 require 'sinatra'
@@ -30,8 +31,8 @@ helpers do
   end
 
   def authorized?
-    correct_username = "aki"
-    correct_password = "aki"
+    correct_username = "wingolf"
+    correct_password = "wingolf"
     @auth ||=  Rack::Auth::Basic::Request.new(request.env)
     @auth.provided? and @auth.basic? and @auth.credentials and @auth.credentials == [correct_username, correct_password]
   end
@@ -89,7 +90,7 @@ get '/' do
 end
 
 def event_text_file_content
-  format_string File.read File.expand_path '../../tmp/live_event.txt', __FILE__
+  format_string File.read File.expand_path '../../../tmp/live_event.txt', __FILE__
 end
 
 def format_string(str)
