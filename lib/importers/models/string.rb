@@ -13,10 +13,12 @@ class String
     self.gsub!(/^6110000000000Z/, "20061101000000Z")   # W64492. Sonst wird das als Jahr 6110 erkannt.
     self.gsub!(/^061020000000Z/,  "20061020000000Z")   # W64720
     self.gsub!(/^061108000000Z/,  "20061108000000Z")   # W64720
-    
     self.gsub!("0Z", "00Z") if self.length == 14       # Eine Stelle zu kurz. Z.B. W52570.
 
     if self.blank?
+      return nil
+
+    elsif self.start_with? "0000"
       return nil
     
     elsif (self[4..8] == "00000") || (self.length == 4)  # 20030000 || 2003
