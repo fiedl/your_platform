@@ -570,7 +570,8 @@ class NetenvUser
     #
     if str.present?
       str = str.gsub(" -durch ", " - durch ")
-      str = str.gsub(/^ausgetreten durch /, " - ausgetreten - durch" )  # z.B. W54888
+      str = str.gsub(/^ausgetreten durch /, " - ausgetreten - durch" )  # z.B. W54888 im Export 2012
+      str = str.gsub(" - ausgetreten durch ", " - ausgetreten - durch ")  # z.B. W54888 im Export 2014
     end
   end
 
