@@ -80,13 +80,10 @@ class Ability
         # and all users within their groups. They can also execute workflows.
         #
         can :manage, Group do |group|
-          group.find_admins.include?(user) || 
-          (group.ancestors.collect do |ancestor| 
-            ancestor.find_admins.include?(user) 
-          end.count { |bool| bool }>0)
+          group.cached_ancestor_admins.include?(user)
         end
         can :manage, User do |other_user|
-          other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+          other_user.cached_admins.include?(user)
         end
         can :execute, Workflow do |workflow|
           workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)

@@ -24,6 +24,11 @@ feature "Sessions" do
       fill_in 'user_account_login', with: "John Doe"
       fill_in 'user_account_password', with: @password
       click_button I18n.t( :login )
+      wait_for_ajax; wait_for_ajax
+      wait_for_ajax; wait_for_ajax
+      wait_for_ajax; wait_for_ajax
+      wait_for_ajax; wait_for_ajax
+      wait_for_ajax; wait_for_ajax
       
       page.should have_content( "John Doe" )
       page.should have_content( I18n.t( :logout ) )

@@ -12,6 +12,8 @@ feature 'User page', js: false do
     background do
       User.destroy_all
       @user = create(:user_with_account, :with_corporate_vita, :with_address)
+      @other_user = create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address)
+      @user_wo_account = create(:user)
     end
 
 
@@ -20,7 +22,7 @@ feature 'User page', js: false do
         visit user_path(@user)
       end
 
-      #it { should have_content "Access denied" }
+      it { should have_content I18n.t(:unauthorized_please_sign_in) }
     end
 
 
@@ -94,6 +96,8 @@ feature 'User page', js: false do
           subject.should have_selector("a#add_#{field_name2}_field")
 
           click_on I18n.t(field_name)
+          wait_for_ajax; wait_for_ajax
+          wait_for_ajax; wait_for_ajax
           subject.should have_selector('.profile_field')
           within first '.profile_field' do
             #
@@ -135,12 +139,11 @@ feature 'User page', js: false do
 
 
     describe 'when signed in as a regular user' do
-      describe 'and visiting a foreign profile' do
-        let(:profile) { create(:user, :with_profile_fields, :with_corporate_vita, :with_address) }
+      describe 'and visiting another profile' do
 
         background do
-          login(:user)
-          visit user_path(profile)
+          login(@user)
+          visit user_path(@other_user)
         end
 
         scenario 'the profile sections should not be editable', js: true do
@@ -177,11 +180,10 @@ feature 'User page', js: false do
       end
 
       describe 'and visiting the own profile' do
-        let(:user) { create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address) }
-
+        
         background do
-          login(user)
-          visit user_path(user)
+          login(@user)
+          visit user_path(@user)
         end
 
         scenario 'the profile sections should be editable', js: true do
@@ -240,29 +242,53 @@ feature 'User page', js: false do
           end
         end
 
+        scenario "the section #{I18n.t(:study_information)} should be editable", js: true do
+          within('.box.section.study_information') do
+            click_on I18n.t(:edit)
+            page.should have_selector('a.add_button', visible: true)
+            click_on I18n.t(:add)
+
+            page.should have_selector('a.save_button', visible: true)
+            page.should have_selector('.profile_field')
+            within first '.profile_field' do
+              #
+              # Fields: Label, From, To, Uni, Fach, Spezialisierung -> 6 fields
+              #
+              page.should have_selector('input[type=text]', count: 6)
+            end
+            fill_in "label", with: "StudiumUniversale"
+            click_on I18n.t(:save)
+            wait_for_ajax; wait_for_ajax
+            page.should have_content("StudiumUniversale")
+
+            visit user_path(@user)
+            page.should have_content("StudiumUniversale")
+          end
+        end
       end
     end
+  end
 
-    describe 'of a user without account' do
-      let(:user) { create(:user) }
+  describe 'of a user without account' do
+    describe 'when signed in as admin' do
 
-      describe 'when signed in as admin' do
+      background do
+        login(:admin)
+print @user_wo_account.id.to_s
+print @user_wo_account.account.to_s
+        visit user_path(@user_wo_account)
+      end
 
-        background do
-          login(:admin)
-          visit user_path(user)
-        end
+      scenario 'the section \'Zugangsdaten\'', js: true do
+        within('.box.section.access') do
+          page.should have_content(I18n.t :user_has_no_account)
+          @user_wo_account.account should be_nil
 
-        scenario 'the section \'Zugangsdaten\'', js: true do
-          within('.box.section.access') do
-            page.should have_content(I18n.t :user_has_no_account)
+          click_on I18n.t(:edit)
+          page.should have_link(I18n.t(:create_account) )
 
-            click_on I18n.t(:edit)
-            page.should have_link(I18n.t(:create_account) )
-
-            expect { click_on I18n.t(:create_account) }.to change(UserAccount, :count).by 1
-            user.account should_not be_nil
-          end
+          expect { click_on I18n.t(:create_account) }.to change(UserAccount, :count).by 1
+          @user_wo_account.account should_not be_nil
         end
       end
 

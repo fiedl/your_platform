@@ -126,6 +126,19 @@ module StructureableMixins::Roles
     end
   end
 
+  # admins of this group and of all ancestor groups
+  def ancestor_admins
+    result = find_admins
+    ancestors.collect do |ancestor|
+      result |= ancestor.find_admins
+    end
+    result.flatten
+  end
+
+  def cached_ancestor_admins
+    Rails.cache.fetch([self, "ancestor_admins"]) { ancestor_admins }
+  end
+
 
   # Main Admins
   # ==========================================================================================

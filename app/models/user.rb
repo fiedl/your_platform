@@ -2,14 +2,15 @@
 
 # This extends the your_platform User model.
 require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
+require "bv"
 
 # This class represents a user of the platform. A user may or may not have an account.
 # While the most part of the user class is contained in the your_platform engine, 
 # this re-opened class contains all wingolf-specific additions to the user model.
 #
 class User
-
   attr_accessible :wingolfsblaetter_abo, :hidden
+
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -149,6 +150,18 @@ class User
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
+  end
+
+  # Admin for this user
+  # =====================================================================================
+  # Admin for this user are all admins of any ancestor group of this user
+
+  def admins
+    self.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten
+  end
+
+  def cached_admins
+    Rails.cache.fetch([self, "admins"]) { admins }
   end
 
 end
