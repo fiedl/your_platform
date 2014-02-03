@@ -16,11 +16,11 @@ class NetenvUser
   # =======================================================================
     
   def first_name
-    data_hash_value(:givenName).strip
+    data_hash_value(:givenName).try(:strip)
   end
   
   def last_name
-    data_hash_value(:sn).strip
+    data_hash_value(:sn).try(:strip)
   end
   
   def name
@@ -638,6 +638,7 @@ class NetenvUser
   def dummy_user?
     netenv_aktivitätszahl.in?(["?????", "02", "03", "234", "VAW", "wingolf 00", "Wingolf 06", "wingolf 07"]) or
       (email.try(:include?, '@netenv') and email.try(:include?, 'iron.com'))  or
+      last_name == "Geschäftsstelle des Wingolfs" or
       name == "Tphil Tphil" or 
       name == "testadmin testadmin" or
       w_nummer == "duser" or
