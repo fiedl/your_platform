@@ -378,6 +378,7 @@ class NetenvUser
   def fix_netenv_aktivitätszahl_format(str)
     if str
       str = remove_brackets(str)
+      str = str.gsub(";", ",")
       str = str.gsub(/^,/, "").gsub(/,$/, "")
       str = str.gsub(",", ", ").gsub("   ", " ").gsub("  ", " ").strip
       str = str.gsub(/([A-Za-z])([0-9])/, "\\1 \\2")
