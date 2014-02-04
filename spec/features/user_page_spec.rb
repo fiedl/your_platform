@@ -13,7 +13,6 @@ feature 'User page', js: false do
       User.destroy_all
       @user = create(:user_with_account, :with_corporate_vita, :with_address)
       @other_user = create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address)
-      @user_wo_account = create(:user)
     end
 
 
@@ -273,16 +272,14 @@ feature 'User page', js: false do
     describe 'when signed in as admin' do
 
       background do
+        @user_wo_account = create(:user)
         login(:admin)
-print @user_wo_account.id.to_s
-print @user_wo_account.account.to_s
         visit user_path(@user_wo_account)
       end
 
       scenario 'the section \'Zugangsdaten\'', js: true do
         within('.box.section.access') do
           page.should have_content(I18n.t :user_has_no_account)
-          @user_wo_account.account should be_nil
 
           click_on I18n.t(:edit)
           page.should have_link(I18n.t(:create_account) )

@@ -47,7 +47,6 @@ class UserGroupMembership < DagLink
     Rails.cache.delete([self.user, "my_groups_table"])
     Rails.cache.delete([self.user, "last_group_in_first_corporation"])
     Rails.cache.delete([self.user, "aktivitaetszahl"])  # TODO: Move to wingolfsplattform!
-    Rails.cache.delete([self.user, "corporate_vita_for_user"])
     Rails.cache.delete([self.user, "admins"])  # TODO: Move to wingolfsplattform!
     Rails.cache.delete([self.group, "ancestor_admins"])
   end

@@ -126,7 +126,7 @@ class User
     self.member_of? wbl_abo_group
   end
   def wingolfsblaetter_abo=(new_abo_status)
-    if new_abo_status == true || new_abo_status == "true"
+    if new_abo_status == true || new_abo_status == "true" || new_abo_status == ""
       wbl_abo_group.assign_user self
     else
       wbl_abo_group.unassign_user self
