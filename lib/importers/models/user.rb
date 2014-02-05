@@ -192,6 +192,7 @@ class User
       # Ehrenphilister
       ehrenphilister = corporation.status_group("Ehrenphilister")
       membership_ehrenphilister = ehrenphilister.assign_user self, at: netenv_user.aktivmeldungsdatum
+      membership_ehrenphilister.needs_review! if netenv_user.aktivmeldungsdatum_geschätzt?
       
     else
     
@@ -199,6 +200,7 @@ class User
       raise 'no aktivmeldungsdatum given.' unless netenv_user.aktivmeldungsdatum
       hospitanten = corporation.status_group("Hospitanten")
       membership_hospitanten = hospitanten.assign_user self, at: netenv_user.aktivmeldungsdatum
+      membership_hospitanten.needs_review! if netenv_user.aktivmeldungsdatum_geschätzt?
      
       # Reception
       if netenv_user.receptionsdatum
@@ -218,6 +220,7 @@ class User
         philister = corporation.status_group("Philister")
         current_membership = self.reload.current_status_membership_in corporation
         membership_philister = current_membership.promote_to philister, at: netenv_user.philistrationsdatum
+        membership_philister.needs_review! if netenv_user.philistrationsdatum_geschätzt?
       end
       
     end
@@ -228,20 +231,26 @@ class User
     last_date_of_joining = netenv_user.aktivmeldungsdatum
     
     netenv_user.secondary_corporations.each do |corporation|
+      
+      beitrittsdatum = netenv_user.beitrittsdatum(corporation)
+      if netenv_user.beitrittsdatum_geschätzt?(corporation)
 
-      # Wenn zwei Bandaufnahmen im gleichen Jahr sind, aber nicht bekannt ist, an welchem Datum
-      # sie jeweils stattfanden, muss trotzdem die Reihenfolge der Bandaufnahmen berücksichtigt
-      # werden. Also wird jeweils verglichen, ob das die nächste Bandaufnahme im gleichen Jahr
-      # war wie die vorige und dann im Zweifel ein Tag zum angenommenen Datum dazugezählt, damit
-      # die Reihenfolge erhalten bleibt.
-      #
-      year_of_joining = netenv_user.year_of_joining(corporation)
-      if last_date_of_joining.year.to_s == year_of_joining.to_s
-        assumed_date_of_joining = last_date_of_joining + 1.day
-      else
-        assumed_date_of_joining = year_of_joining.to_datetime
+        # Wenn zwei Bandaufnahmen im gleichen Jahr sind, aber nicht bekannt ist, an welchem Datum
+        # sie jeweils stattfanden, muss trotzdem die Reihenfolge der Bandaufnahmen berücksichtigt
+        # werden. Also wird jeweils verglichen, ob das die nächste Bandaufnahme im gleichen Jahr
+        # war wie die vorige und dann im Zweifel ein Tag zum angenommenen Datum dazugezählt, damit
+        # die Reihenfolge erhalten bleibt.
+        #
+        year_of_joining = netenv_user.year_of_joining(corporation)
+        if last_date_of_joining.year.to_s == year_of_joining.to_s
+          assumed_date_of_joining = last_date_of_joining + 1.day
+        else
+          assumed_date_of_joining = year_of_joining.to_datetime
+        end
+        last_date_of_joining = assumed_date_of_joining
+        
+        beitrittsdatum = assumed_date_of_joining
       end
-      last_date_of_joining = assumed_date_of_joining
       
       if netenv_user.bandaufnahme_als_aktiver?( corporation )
         group_to_assign = corporation.status_group("Aktive Burschen")
@@ -254,17 +263,20 @@ class User
       end
 
       raise 'could not identify group to assign this user' if not group_to_assign
-      group_to_assign.assign_user self, at: assumed_date_of_joining
+      membership = group_to_assign.assign_user self, at: beitrittsdatum
+      membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
     end
   end
   
   def import_stifter_status_from( netenv_user )
     netenv_user.corporations.each do |corporation|
       if netenv_user.stifter?(corporation)
-        corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: netenv_user.assumed_date_of_joining(corporation)
+        membership = corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: netenv_user.beitrittsdatum(corporation)
+        membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
       end
       if netenv_user.neustifter?(corporation)
-        corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: netenv_user.assumed_date_of_joining(corporation)
+        membership = corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: netenv_user.beitrittsdatum(corporation)
+        membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
       end
     end
   end
@@ -274,11 +286,13 @@ class User
       
       reason = netenv_user.reason_for_exit(corporation)  || "ausgetreten"
       date = netenv_user.date_of_exit(corporation) || netenv_user.netenv_org_membership_end_date
+      date_estimated = false
       
       # Unassign user from previous groups in that corporation.
       (self.parent_groups & corporation.descendant_groups).each do |status_group|
         
         # Wenn kein Austrittsdatum vermerkt ist, wird das Datum der Statusgruppe übernommen.
+        date_estimated = true unless date
         date ||= UserGroupMembership.with_invalid.find_by_user_and_group(self, status_group).try(:valid_from)
 
         status_group.unassign_user self, at: date
@@ -291,8 +305,14 @@ class User
         group_to_assign = former_members_parent_group.child_groups.find_by_name("Gestrichene")
       end
       
+      unless date
+        date = netenv_user.beitrittsdatum(corporation)
+        date_estimated = true
+      end
+      
       # Assign user to new status group.
-      group_to_assign.assign_user self, at: date
+      membership = group_to_assign.assign_user self, at: date
+      membership.needs_review! if date_estimated
     end
   end
   
@@ -301,6 +321,8 @@ class User
       
       date_of_death = netenv_user.netenv_org_membership_end_date
       date_of_death ||= self.memberships.order(:valid_from).last.valid_from + 1.day
+      
+      todesdatum_geschätzt = netenv_user.netenv_org_membership_end_date.blank?
             
       # Aus allen Gruppen austragen, außer der 'hidden_users'-Gruppe.
       self.direct_groups.each do |group|
@@ -321,7 +343,8 @@ class User
       #
       netenv_user.current_corporations.each do |corporation|
         group_to_assign = corporation.child_groups.find_by_flag(:deceased_parent)
-        group_to_assign.assign_user self, at: date_of_death
+        membership = group_to_assign.assign_user self, at: date_of_death
+        membership.needs_review! if todesdatum_geschätzt
       end
       
       # Set global date_of_death field.
