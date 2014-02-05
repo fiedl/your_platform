@@ -508,9 +508,22 @@ class NetenvUser
     return nil if date_of_birth.try(:to_datetime) == date.to_datetime
     return date
   end
+  
+  def receptionsdatum_geschätzt?
+    data_hash_value(:epdwingolfmutterverbindrezeption).try(:datetime_is_estimate?)
+  end
+  
+  def reception_als_konkneipant?
+    (last_known_status_group_in( primary_corporation ) == "Konkneipant") or
+    (letzter_angegebener_status_als_aktiver == "Konkneipant")
+  end
 
   def burschungsdatum
     data_hash_value(:epdwingolfmutterverbindburschung).try(:to_datetime)
+  end
+  
+  def burschungsdatum_geschätzt?
+    data_hash_value(:epdwingolfmutterverbindburschung).try(:datetime_is_estimate?)
   end
 
   def philistrationsdatum
@@ -518,15 +531,28 @@ class NetenvUser
   end
   
   def angegebenes_philistrationsdatum
-    data_hash_value(:epdwingolfaktuelverbindphilistration).try(:to_datetime)
+    data_hash_value(:epdwingolfaktuelverbindphilistration).try(:to_datetime) || philistrationsdatum_from_description
+  end
+  
+  def angegebenes_philistrationsdatum_geschätzt?
+    data_hash_value(:epdwingolfaktuelverbindphilistration).try(:datetime_is_estimate?)
   end
   
   def geschätztes_philistrationsdatum
-    aktivmeldungsdatum
+    aktivmeldungsdatum if philister?
   end
   
   def philistrationsdatum_geschätzt?
-    angegebenes_philistrationsdatum.blank?
+    angegebenes_philistrationsdatum.blank? || angegebenes_philistrationsdatum_geschätzt?
+  end
+  
+  def philistrationsdatum_from_description
+    descriptions.each do |str|
+      # "Philistration am 02.06.2005"
+      str = str.match(/^Philistration am (.*)$/)
+      return str[1].to_datetime if str
+    end
+    return nil
   end
   
   def aktivität_by_corporation( corporation )
@@ -542,6 +568,21 @@ class NetenvUser
   def neustifter?( corporation )
     aktivität_by_corporation(corporation).include? "Nstft"
   end
+  
+  def letzter_angegebener_status_als_aktiver
+    data_hash_value :epdwingolfaktuelverbindstatus
+  end
+  # 
+  # def letzter_status_als_aktiver
+  #   letzter_angegebener_status_als_aktiver || letzter_ladp_status_als_aktiver
+  # end
+  # 
+  # def letzte_statusgruppe_als_aktiver
+  #   group_name = "Konkneipanten" if letzter_status_als_aktiver == "Konkneipant"
+  #   group_name = "Inaktive Burschen loci" if letzter_status_als_aktiver == "Inaktiver Bursch"
+  #   group_name = "Aktive Burschen" if letzter_status_als_aktiver == "Aktiver Bursch"
+  #   primary_corporation.status_group(group_name)
+  # end
 
 
   # Bandaufnahmen
@@ -642,7 +683,74 @@ class NetenvUser
   def netenv_org_membership_end_date
     data_hash_value(:epdorgmembershipenddate).try(:to_datetime)
   end
+
+
+  # Aktueller Status in den Verbindungen
+  # =======================================================================
+  
+  def verbindungsstatus_ldap_assignments
+    data_hash_value(:epddynagroupsstatus).try(:split, "|") || []
+  end
+  
+  def dynamische_gruppen_ldap_assignments
+    data_hash_value(:epddynagroups).try(:split, "|") || []
+  end
+  
+  # Aus altem Import-Mechanismus:
+  # 
+  # def ldap_groups
+  #   ldap_group_string = d('epddynagroups') 
+  #   ldap_group_string += "|" + d('epddynagroupsstatus') if d('epddynagroupsstatus')
+  #   ldap_assignments = ldap_group_string.split("|")
+  #   ldap_group_paths = []
+  #   ldap_assignments.each do |assignment| # assignment = "o=asd,ou=def"
+  #     ldap_group_path = []
+  #     ldap_category_assignments = assignment.split(",")
+  #     ldap_category_assignments.each do |category_assignment|
+  #       ldap_category, ldap_group = category_assignment.split("=")
+  #       #ldap_group_path << { ldap_category => ldap_group }
+  #       ldap_group_path << ldap_group
+  #     end
+  #     ldap_group_paths << ldap_group_path
+  #   end
+  #   ldap_group_paths
+  # end
+  
+  def ldap_assignments
+    dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments
+  end
+  
+  def last_known_status_in( corporation )
+    assignments_in_corporation = ldap_assignments.select do |ldap_assignment|
+
+      # Beispiele für ldap_assignment:
+      #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+      #   "o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+      #   "ou=groups,dc=wingolf,dc=org"
+      #   "o=wv_e_-_konkneipant,o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+      #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Konkneipant"
+      
+      ldap_assignment.include?("o=#{corporation.token}") and ldap_assignment.match(/dc=org\$\$(.*)$/)
+    end
     
+    if assignments_in_corporation.count > 1
+      raise "Status assignment of user #{self.w_nummer} in corporation #{corporation.token} not unique." 
+    end
+    
+    if assignments_in_corporation.first
+      status_name = assignments_in_corporation.first.match(/dc=org\$\$(.*)$/)[1] 
+    end
+    return status_name
+  end
+  
+  def last_known_status_group_in( corporation )
+    status_name = last_known_status_in( corporation )
+    group_name = "Konkneipanten" if status_name == "Konkneipant"
+    group_name = "Inaktive Burschen loci" if status_name == "Inaktiver Bursch"
+    group_name = "Aktive Burschen" if status_name == "Aktiver Bursch"
+    return corporation.status_group(group_name)
+  end
+  
   
   # Hilfsfunktionen zur Datums-Konvertierung
   # =======================================================================
@@ -697,6 +805,6 @@ class NetenvUser
       last_name == "Testgjesdal" or
       last_name == "testadmin"
   end
-    
+  
   
 end

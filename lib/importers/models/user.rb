@@ -204,8 +204,13 @@ class User
      
       # Reception
       if netenv_user.receptionsdatum
-        krassfuxen = corporation.status_group("Kraßfuxen")
-        membership_krassfuxen = membership_hospitanten.promote_to krassfuxen, at: netenv_user.receptionsdatum
+        if netenv_user.reception_als_konkneipant?
+          group = corporation.status_group("Konkneipanten")
+        else
+          group = corporation.status_group("Kraßfuxen")
+        end
+        membership = membership_hospitanten.promote_to group, at: netenv_user.receptionsdatum
+        membership.needs_review! if netenv_user.receptionsdatum_geschätzt?
       end
       
       # Burschung
@@ -213,6 +218,17 @@ class User
         burschen = corporation.status_group("Aktive Burschen")
         current_membership = self.reload.current_status_membership_in corporation
         membership_burschen = current_membership.promote_to burschen, at: netenv_user.burschungsdatum
+        membership_burschen.needs_review! if netenv_user.burschungsdatum_geschätzt?
+      end
+      
+      # Auch wenn kein Datum vorhanden, ggf. den letzten Status als Aktiver eintragen.
+      letzte_statusgruppe_als_aktiver = netenv_user.last_known_status_group_in corporation
+      if letzte_statusgruppe_als_aktiver
+        current_membership = self.reload.current_status_membership_in corporation
+        unless letzte_statusgruppe_als_aktiver == current_membership.group
+          new_membership = current_membership.promote_to letzte_statusgruppe_als_aktiver, at: (current_membership.valid_from + 1.hour)
+          new_membership.needs_review!
+        end
       end
      
       # Philistration

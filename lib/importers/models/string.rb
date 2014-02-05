@@ -3,18 +3,8 @@ class String
   alias old_to_datetime to_datetime
   
   def to_datetime
+    self.replace_flaws!
     
-    # In manchen Fällen wurde ein nicht existentes Datum angegeben. 
-    # Beispielsweise der 31. November. Das muss hier korrigiert werden, da sonst ein Fehler 
-    # erzeugt wird.
-    #
-    self.gsub!("0431", "0430") if self[4..7] == "0431" # April
-    self.gsub!("1131", "1130") if self[4..7] == "1131" # November
-    self.gsub!(/^6110000000000Z/, "20061101000000Z")   # W64492. Sonst wird das als Jahr 6110 erkannt.
-    self.gsub!(/^061020000000Z/,  "20061020000000Z")   # W64720
-    self.gsub!(/^061108000000Z/,  "20061108000000Z")   # W64720
-    self.gsub!("0Z", "00Z") if self.length == 14       # Eine Stelle zu kurz. Z.B. W52570.
-
     if self.blank?
       return nil
 
@@ -33,6 +23,24 @@ class String
       old_to_datetime.in_time_zone
 
     end
+  end
+  
+  def datetime_is_estimate?
+    self.replace_flaws!
+    (self[4..8] == "00000") or (self.length == 4) or (self[6..8] == "000")
+  end
+  
+  def replace_flaws!
+    # In manchen Fällen wurde ein nicht existentes Datum angegeben. 
+    # Beispielsweise der 31. November. Das muss hier korrigiert werden, da sonst ein Fehler 
+    # erzeugt wird.
+    #
+    self.gsub!("0431", "0430") if self[4..7] == "0431" # April
+    self.gsub!("1131", "1130") if self[4..7] == "1131" # November
+    self.gsub!(/^6110000000000Z/, "20061101000000Z")   # W64492. Sonst wird das als Jahr 6110 erkannt.
+    self.gsub!(/^061020000000Z/,  "20061020000000Z")   # W64720
+    self.gsub!(/^061108000000Z/,  "20061108000000Z")   # W64720
+    self.gsub!("0Z", "00Z") if self.length == 14       # Eine Stelle zu kurz. Z.B. W52570.
   end
   
 end
