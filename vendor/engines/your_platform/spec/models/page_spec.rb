@@ -35,6 +35,64 @@ describe Page do
     subject.should respond_to( :attachments )
     subject.attachments.should == []
   end
+  
+
+  # Quick Assignment of Children
+  # ----------------------------------------------------------------------------------------------------
+  
+  describe "#<<", :focus do
+    before { @page = create(:page) }
+    subject { @page << @object_to_add }
+    
+    describe "( page )" do
+      before { @object_to_add = create(:page) }
+      before { subject }
+      it "should add the other page as a child" do
+        @page.children.should include @object_to_add
+      end
+    end
+    
+    describe "( blog_post )" do
+      before { @object_to_add = create(:blog_post) }
+      before { subject }
+      it "should add the blog post as a child" do
+        @page.children.should include @object_to_add
+      end
+    end
+    
+    describe "( group )" do
+      before { @object_to_add = create(:group) }
+      before { subject }
+      it "should add the group as a child" do
+        @page.children.should include @object_to_add
+      end
+    end
+    
+    describe "adding an object that is already a descendant" do
+      #
+      #  @group
+      #     |----- @page
+      #     |        |
+      #     |        | <----------------- this relation is added
+      #     |        |
+      #     |----- @object_to_add
+      #
+      before do
+        @object_to_add = create(:page)
+        @group = create(:group)
+        @group.child_pages << @object_to_add
+        @page = create(:page)
+        @page.parent_groups << @group
+      end
+      before { subject }
+      it "should add the object as a direct child" do
+        @page.children.should include @object_to_add
+      end
+      it "should not unassign the object of the group" do
+        @group.children.should include @object_to_add
+      end
+    end
+  end
 
 
   # Redirection

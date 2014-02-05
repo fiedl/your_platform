@@ -134,5 +134,5 @@ describe UserMixins::Memberships do
     it { should include @indirect_group }
     it { should_not include @group }
   end
-    
+  
 end

@@ -817,7 +817,7 @@ describe User do
     end
   end
 
-  # Members
+  # Member Status
   # ------------------------------------------------------------------------------------------
 
   describe "#member_of?" do
@@ -852,7 +852,21 @@ describe User do
         @user.member_of?( @another_object ).should == false
       end
     end
+    context "for the user being a former member of the group" do
+      before { @group.unassign_user @user, at: 2.minutes.ago }
+      subject { @user.member_of? @group }
+      it { should == false }
+    end
+    context "for the user being a former indirect member of the group" do
+      before do
+        @ancestor_group = @group.ancestor_groups.create
+        @group.unassign_user @user, at: 2.minutes.ago
+      end
+      subject { @user.member_of? @ancestor_group }
+      it { should == false }
+    end
   end
+
 
   # Admins
   # ------------------------------------------------------------------------------------------

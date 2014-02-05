@@ -43,12 +43,6 @@ module UserMixins::Memberships
       memberships.where(ancestor_id: group.id).limit(1).first
     end
     
-    # This returns whether the user is a member of the given group, direct or indirect.
-    #
-    def member_of?( group )
-      groups.include? group
-    end
-    
     
     # Groups the user is member of
     # ==========================================================================================
