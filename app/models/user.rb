@@ -2,7 +2,6 @@
 
 # This extends the your_platform User model.
 require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
-require "bv"
 
 # This class represents a user of the platform. A user may or may not have an account.
 # While the most part of the user class is contained in the your_platform engine, 
@@ -26,7 +25,9 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    (Bv.all & self.groups).try(:first).try(:becomes, Bv)
+    if self.groups
+      (Bv.all & self.groups).try(:first).try(:becomes, Bv)
+    end
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".

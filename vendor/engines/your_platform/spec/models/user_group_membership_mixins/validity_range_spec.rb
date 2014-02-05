@@ -101,7 +101,8 @@ describe UserGroupMembershipMixins::ValidityRange do
       it "should set the end of the validity to the current time" do
         @membership.valid_to.should == nil
         subject
-        @membership.valid_to.to_i.should == Time.zone.now.to_i
+        @membership.valid_to.to_i.should > Time.zone.now.to_i-2
+        @membership.valid_to.to_i.should < Time.zone.now.to_i+2
       end
     end
   end
