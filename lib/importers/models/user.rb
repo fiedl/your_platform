@@ -286,12 +286,14 @@ class User
   
   def import_stifter_status_from( netenv_user )
     netenv_user.corporations.each do |corporation|
+      date = netenv_user.beitrittsdatum(corporation)
+      date ||= self.membership_in(corporation).valid_from
       if netenv_user.stifter?(corporation)
-        membership = corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: netenv_user.beitrittsdatum(corporation)
+        membership = corporation.descendant_groups.find_by_name("Stifter").assign_user self, at: date
         membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
       end
       if netenv_user.neustifter?(corporation)
-        membership = corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: netenv_user.beitrittsdatum(corporation)
+        membership = corporation.descendant_groups.find_by_name("Neustifter").assign_user self, at: date
         membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
       end
     end

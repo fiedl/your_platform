@@ -479,6 +479,11 @@ class NetenvUser
     angegebenes_aktivmeldungsdatum.present? and ( angegebenes_aktivmeldungsdatum.year != aktivmeldungsdatum_aus_aktivitaetszahl.year )
   end
   
+  def angegebenes_aktivmeldungsdatum_geschätzt?
+    (data_hash_value(:epdwingolfmutterverbindaktivmeldung).present? and data_hash_value(:epdwingolfmutterverbindaktivmeldung).datetime_is_estimate?) or
+      (data_hash_value(:epdorgmembershipstartdate).present? and data_hash_value(:epdorgmembershipstartdate).datetime_is_estimate?)
+  end
+  
   def aktivmeldungsdatum_in_mutterverbindung
     data_hash_value(:epdwingolfmutterverbindaktivmeldung).try(:to_datetime)
   end
@@ -494,7 +499,9 @@ class NetenvUser
   end
   
   def aktivmeldungsdatum_geschätzt?
-    angegebenes_aktivmeldungsdatum.blank? or angegebenes_aktivmeldungsdatum_passt_nicht_zur_aktivitätszahl?
+    angegebenes_aktivmeldungsdatum.blank? or 
+      angegebenes_aktivmeldungsdatum_geschätzt? or
+      angegebenes_aktivmeldungsdatum_passt_nicht_zur_aktivitätszahl?
   end
   
   def receptionsdatum
@@ -572,17 +579,7 @@ class NetenvUser
   def letzter_angegebener_status_als_aktiver
     data_hash_value :epdwingolfaktuelverbindstatus
   end
-  # 
-  # def letzter_status_als_aktiver
-  #   letzter_angegebener_status_als_aktiver || letzter_ladp_status_als_aktiver
-  # end
-  # 
-  # def letzte_statusgruppe_als_aktiver
-  #   group_name = "Konkneipanten" if letzter_status_als_aktiver == "Konkneipant"
-  #   group_name = "Inaktive Burschen loci" if letzter_status_als_aktiver == "Inaktiver Bursch"
-  #   group_name = "Aktive Burschen" if letzter_status_als_aktiver == "Aktiver Bursch"
-  #   primary_corporation.status_group(group_name)
-  # end
+
 
 
   # Bandaufnahmen
@@ -591,7 +588,7 @@ class NetenvUser
   def bandaufnahme_als_aktiver?( corporation )
     
     # Wenn ein Philistrationsdatum bekannt ist, wird dieses zum Vergleich verwendet.
-    if not art_der_bandaufnahme_geschätzt?
+    if philistrationsdatum
       
       # Im Grenzfall, wo Philistrationsjahr und Jahr der Bandaufnahme/Bandverleihung 
       # gleich sind, wird angenommen, das das Band als Philister verliehen wurde.
@@ -609,19 +606,11 @@ class NetenvUser
     not bandaufnahme_als_aktiver?(corporation)
   end
   
-  def art_der_bandaufnahme_geschätzt?
-    # Wenn kein Philistrationsdatum angegeben ist, muss die Art der Bandaufnahme,
-    # d.h. ob das Band als Aktiver oder Philister aufgenommen wurde, geschätzt werden.
-    #
-    philistrationsdatum.blank?
-  end
-
   def beitrittsdatum_geschätzt?( corporation )
     if corporation == primary_corporation
       aktivmeldungsdatum_geschätzt?
     else
-      # FIXME: Im Moment wird das echte Beitrittsdatum offenbar ignoriert.
-      true
+      angegebenes_bandaufnahmedatum.blank? or (angegebenes_bandaufnahmedatum.year != assumed_date_of_joining(corporation).year)
     end
   end
   
@@ -629,9 +618,22 @@ class NetenvUser
     if corporation == primary_corporation
       aktivmeldungsdatum
     else
-      # FIXME: Im Moment wird das echte Beitrittsdatum für sekundäre Korporationen offenbar ignoriert.
-      assumed_date_of_joining( corporation )
+      # Es gibt nur ein weiteres vermerktes Bandaufnahmedatum. Wenn es insgesamt drei Korporationen 
+      # gibt, ist die Information verloren. Anhand des Jahres wird geprüft, ob es sich hier um das 
+      # richtige Datum handelt.
+      #
+      if angegebenes_bandaufnahmedatum
+        if angegebenes_bandaufnahmedatum.year == assumed_date_of_joining(corporation).year
+          return angegebenes_bandaufnahmedatum
+        else
+          return assumed_date_of_joining( corporation )
+        end
+      end
     end
+  end
+  
+  def angegebenes_bandaufnahmedatum
+    data_hash_value(:epdwingolfbandaufnahmedate).try(:to_datetime) || data_hash_value(:epdwingolfbandverleihungdate).try(:to_datetime)
   end
   
   
