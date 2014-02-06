@@ -1,12 +1,14 @@
 # -*- coding: utf-8 -*-
 
 class Password < String
+  
+  PASSWORD_LENGTH = 12
 
   # This simply creates a new password using `pwgen`.
   # Example: 
   #     new_password = Password.generate
   def self.generate
-    return pwgen_password if pwgen_password.length == 8
+    return pwgen_password if pwgen_password.length == PASSWORD_LENGTH
     return Passgen::generate( pronounceable: true )
   end
   
@@ -18,7 +20,7 @@ class Password < String
   end
 
   def self.pwgen_password
-    Password.new( `pwgen -N 1 -n -c -B`.to_s[0..-2] )
+    Password.new( `pwgen #{PASSWORD_LENGTH} -N 1 -n -c -B`.to_s[0..-2] )
   end
 
 end
