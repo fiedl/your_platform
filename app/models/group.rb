@@ -49,7 +49,7 @@ class Group
   end
 
   def self.find_bv_groups
-    self.find_bvs_parent_group.child_groups if self.find_bvs_parent_group
+    self.find_bvs_parent_group.try(:child_groups) || []
   end
 
   # Wingolfsblätter-Abonnenten
