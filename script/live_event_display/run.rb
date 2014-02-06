@@ -56,6 +56,7 @@ get '/' do
     </script>
     <style type='text/css'>
       body {
+        overflow: hidden;
         background-color: #111;
         background-image: url('https://wingolfsplattform.org/images/presentation-bg.jpg');
         background-size: auto 100%;
