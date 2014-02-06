@@ -61,7 +61,7 @@ module StructureableMixins::Roles
   # officers_parent group.
   #
   def find_officers_groups
-    self.officers_parent.descendant_groups
+    self.officers_parent.try(:descendant_groups) || []
   end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
