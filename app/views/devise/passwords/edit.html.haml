@@ -3,14 +3,14 @@
   = devise_error_messages!
   = f.hidden_field :reset_password_token
 
-  %div
-    = f.label :password, t('new_password')
-    = f.password_field :password, :autofocus => true
+  - # %div
+  - #   = f.label :password, t('new_password')
+  - #   = f.password_field :password, :autofocus => true
+  - # 
+  - # %div
+  - #   = f.label :password_confirmation, t('confirm_new_password')
+  - #   = f.password_field :password_confirmation
 
-  %div
-    = f.label :password_confirmation, t('confirm_new_password')
-    = f.password_field :password_confirmation
-
-  = f.submit t 'submit_changed_password'
+  = f.submit t 'send_new_password', :class => 'btn btn-success'
 
 = render 'devise/shared/links'
