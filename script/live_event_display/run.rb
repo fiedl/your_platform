@@ -104,6 +104,10 @@ get '/' do
   
 end
 
+post '/trigger' do
+  push_trigger
+end
+
 def event_text_file_content
   format_string File.read File.expand_path '../../../tmp/live_event.txt', __FILE__
 end
@@ -119,5 +123,10 @@ end
 
 def animation_names_str
   "'" + animation_names.join("','") + "'"
+end
+
+def push_trigger
+  filename = File.expand_path '../../../tmp/account_activation.trigger', __FILE__ 
+  File.open(filename, 'w') { |file| file.write "triggered at: #{Time.now.to_s}" }
 end
 
