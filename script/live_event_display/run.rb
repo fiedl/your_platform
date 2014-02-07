@@ -105,7 +105,10 @@ get '/' do
 end
 
 post '/trigger' do
+  content_type :json
+  headers['Access-Control-Allow-Origin'] = '*'
   push_trigger
+  'ok'
 end
 
 def event_text_file_content
