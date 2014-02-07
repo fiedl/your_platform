@@ -81,6 +81,49 @@ describe User do
       subject.should_not == "H08 E06"
     end
   end
+  
+  describe "#wingolfit?", :focus do
+    before { @user = create(:user) }
+    subject { @user.wingolfit? }
+    describe "for freshly created user" do
+      it { should == false }
+    end
+    describe "for a user that has just an account" do
+      before { @user = create(:user_with_account) }
+      it { should == false }
+    end
+    describe "for a member of a Corporation status group (except guests)" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @membership = @corporation.status_groups.first.assign_user @user
+      end
+      it { should == true}
+      describe "when the member has died" do
+        before { @user.set_date_of_death_if_unset "01.01.2006" }
+        it { should == true }
+      end
+      describe "when the user terminated his membership" do
+        before do
+          @former_members = @corporation.child_groups.create
+          @former_members.add_flag :former_members_parent
+          @membership.promote_to @former_members, at: 2.minutes.ago
+        end
+        it { should == false }
+      end
+    end
+    describe "for a guest of a corporation" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @corporation.find_or_create_guests_parent_group.assign_user @user
+      end
+      it { should == false }
+      describe "when the guest has died" do
+        before { @user.set_date_of_death_if_unset "01.01.2006" }
+        it { should == false }
+      end
+    end
+    
+  end  
 
   describe "#fill_in_template_profile_information" do
 

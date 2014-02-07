@@ -111,6 +111,24 @@ class User
   def self.find_by_w_nummer(wnr)
     ProfileField.where(label: "W-Nummer", value: wnr).first.try(:profileable)
   end
+  
+  
+  # Wingolfit?
+  # ==========================================================================================
+
+  # This method checks whether the user classifies as wingolfit.
+  #
+  #   * Users who terminated their membership in wingolf are considered not to be wingolfit.
+  #   * Users who died while being member are considered as wingolfit.
+  #   * Users with hospitant status are considered as wingolfit.
+  #   * Users with guest status are not considered as wingolfit.
+  #
+  # This all comes down to this: 
+  # A user is a wingolfit if he has an aktivitätszahl.
+  #
+  def wingolfit?
+    self.aktivitätszahl.present?
+  end
 
 
   # Abo Wingolfsblätter

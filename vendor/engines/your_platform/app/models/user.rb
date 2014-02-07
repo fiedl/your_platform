@@ -164,6 +164,9 @@ class User < ActiveRecord::Base
   def dead?
     date_of_death ? true : false
   end
+  def alive?
+    not dead?
+  end
 
 
   # Primary Postal Address
@@ -221,6 +224,9 @@ class User < ActiveRecord::Base
   def has_account?
     return true if self.account
     return false
+  end
+  def has_no_account?
+    not self.account.present?
   end
 
   # This method activates the user account, i.e. grants the user the right to log in.
