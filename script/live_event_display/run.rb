@@ -52,7 +52,7 @@ get '/' do
     <script language='javascript'>
       setTimeout(function(){
          window.location.reload(1);
-      }, 60000);
+      }, 15000);
     </script>
     <style type='text/css'>
       body {
