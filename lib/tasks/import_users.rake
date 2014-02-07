@@ -9,8 +9,8 @@ namespace :import do
     
     importer = UserImporter.new( filename: "import/netenv_data/2014-01-31/wingolf_users.csv", 
                                  # filter: { last_name: "Fiedlschuster" }
-                                 # filter: { w_nummer: 'W51395' }
-                                 # continue_with: 'W51043'
+                                 # filter: { w_nummer: 'W51043' }
+                                 # continue_with: 'W51882'
                                  # filter: { first_name: "Thomas", last_name: "Fischer", w_nummer: 'W51809' }
                                  )
     

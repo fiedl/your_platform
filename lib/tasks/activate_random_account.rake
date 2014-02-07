@@ -114,10 +114,11 @@ namespace :activate do
       if system_stage == "/Stage 2 Armed Mode/"
         account_id = nil
         
-        # TODO
-        # user.activate_account
-        # user.send_new_password
-        # account_id = user.account.id
+        # ======= DANGER ZONE ========
+        user.activate_account
+        user.account.send_new_password
+        account_id = user.account.id
+        # ============================
         
         if account_id
           log.success "Account activated: #{account_id}"
