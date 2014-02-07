@@ -21,7 +21,7 @@ class Importer
   # Accepted values are w_nummer attributes.
   #
   def continue_with=( continue_with )
-    raise 'continue_with has to be a w_nummer (e.g. "W12345").' if not (continue_with.blank? || continue_with.start_with?("W"))
+    raise 'continue_with has to be a w_nummer (e.g. "W12345") or :last_user.' if not (continue_with.blank? || (continue_with == :last_user) || continue_with.start_with?("W"))
     @continue_with = continue_with
   end
   def continue_with 

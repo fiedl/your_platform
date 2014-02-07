@@ -8,7 +8,8 @@
 #
 # ## Cron
 #
-# In cron:    bundle exec rake activate:random_account >> /var/wingolfsplattform/log/account_activation.log
+# In cron:    
+#   cd /var/wingolfsplattform && RAILS_ENV=production /opt/rbenv/shims/bundle exec rake activate:random_account >> /var/wingolfsplattform/log/account_activation.log 2>&1
 #
 # Der Cron-Job kann deaktiviert werden, sobald das System die Abbruchs-E-Mail versandt hat,
 # d.h. nun alle Benutzer-Accounts aktiviert sind.
