@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   
   root :to => 'root#index'
 
-  devise_for :user_accounts, :controllers => {:sessions => 'sessions', :passwords => 'passwords'}
+  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
   devise_scope :user_account do
     match 'sign_in' => 'devise/sessions#new', as: :sign_in
     match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
