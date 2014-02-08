@@ -49,11 +49,6 @@ get '/' do
     <script type='text/javascript' src='http://www.cooltextjs.com/js/angular.min.js'></script>
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.animations.js'></script>      
     <script type='text/javascript' src='https://wingolfsplattform.org/js/vendor/cooltext/cooltext.min.js'></script>      
-    <script language='javascript'>
-      setTimeout(function(){
-         window.location.reload(1);
-      }, 15000);
-    </script>
     <style type='text/css'>
       body {
         overflow: hidden;
@@ -84,17 +79,30 @@ get '/' do
     </div>
   
     <script language='javascript'>
-    $('#live_event_text').cooltext({
-       sequence:[
-          {
-             action:'animation',
-             animation:[#{animation_names_str}],
-             stagger:150,
-             delay:2
-          }
-       ],
-       cycle: true
-    });
+
+      function load_and_animate() {
+        $.get('/text', function(data) {
+          $('#live_event_text').remove();
+          $('#wrapper').append('<div id=\"live_event_text\">' + data + '</div>');
+          $('#live_event_text').cooltext({
+             sequence:[
+                {
+                   action:'animation',
+                   animation:[#{animation_names_str}],
+                   stagger:150,
+                   delay:2
+                }
+             ],
+             cycle: true
+          });
+        });
+      }
+      
+      setInterval(function() {
+        load_and_animate();
+      } , 15000);
+      load_and_animate();
+
     </script>
   
   </body></html>
@@ -111,8 +119,13 @@ post '/trigger' do
   'ok'
 end
 
+get '/text' do
+  event_text_file_content
+end
+
 def event_text_file_content
-  format_string File.read File.expand_path '../../../tmp/live_event.txt', __FILE__
+  filename = File.expand_path '../../../tmp/live_event.txt', __FILE__
+  format_string File.open(filename, 'r:UTF-8') { |file| file.read }
 end
 
 def format_string(str)
