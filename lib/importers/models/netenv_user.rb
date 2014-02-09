@@ -735,11 +735,21 @@ class NetenvUser
       ldap_assignment.include?("o=#{corporation.token}") and ldap_assignment.match(/dc=org\$\$(.*)$/)
     end
     
-    if assignments_in_corporation.count > 1
-      raise "Status assignment of user #{self.w_nummer} in corporation #{corporation.token} not unique." 
-    end
+    # if assignments_in_corporation.count > 1
+    #   pp assignments_in_corporation
+    #   raise "Status assignment of user #{self.w_nummer} in corporation #{corporation.token} not unique."
+    #   #
+    #   # Offenbar aber gibt es Benutzer, die gleichzeitig als Aktiver und Inaktiver eingetragen sind.
+    #   # Da ich annehme, dass hier vergessen wurde, eine Gruppe auszutragen, setze ich fest,
+    #   # dass einfach die letzte Mitgliedschaft als gültig angesehen wird.
+    #   # 
+    #   # ["o=Hv,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Aktiver Bursch",
+    #   # "o=Hv,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Inaktiver non-loci"]
+    #   # Status assignment of user W64710 in corporation Hv not unique.
+    #   #
+    # end
     
-    if assignments_in_corporation.first
+    if assignments_in_corporation.last
       status_name = assignments_in_corporation.first.match(/dc=org\$\$(.*)$/)[1] 
     end
     return status_name
