@@ -758,7 +758,8 @@ class NetenvUser
   def last_known_status_group_in( corporation )
     status_name = last_known_status_in( corporation )
     group_name = "Konkneipanten" if status_name == "Konkneipant"
-    group_name = "Inaktive Burschen loci" if status_name == "Inaktiver Bursch"
+    group_name = "Inaktive Burschen loci" if (status_name == "Inaktiver Bursch") or (status_name == "Inaktiver loci")
+    group_name = "Inaktive Burschen non loci" if status_name == "Inaktiver non-loci"
     group_name = "Aktive Burschen" if status_name == "Aktiver Bursch"
     return corporation.status_group(group_name)
   end
