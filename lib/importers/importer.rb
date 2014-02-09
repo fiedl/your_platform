@@ -13,6 +13,7 @@ class Importer
     self.filename = args[:filename]
     self.filter = args[:filter]
     self.continue_with = args[:continue_with]
+    self.results_log_file = args[:log_results]
     
     @object_class_name = ""  # e.g. "User"
   end
@@ -38,6 +39,17 @@ class Importer
   def filename
     @filename
   end
+  
+  # The filename of the log file where results should be logged as they come
+  # in case the script breaks.
+  #
+  def results_log_file=(filename)
+    filename = File.join(Rails.root, filename) unless filename.start_with? '/'
+    @results_log_file = filename
+  end
+  def results_log_file
+    @results_log_file
+  end
 
   # This attribute refers to the filter applied to the import sequence.
   # The filter is a Hash defining attributes the records to import should have.
@@ -59,7 +71,7 @@ class Importer
   # for a final status report.
   #
   def progress
-    @progress_indicator ||= ProgressIndicator.new
+    @progress_indicator ||= ProgressIndicator.new(:results_log_file => results_log_file)
   end
   
   def log
@@ -163,13 +175,14 @@ end
 
 class ProgressIndicator
 
-  def initialize
+  def initialize(options)
     STDOUT.sync = true
     @failures = []
     @warnings = []
     @ignores = []
     @updates = []
     @counters = { success: 0, update: 0, failure: 0, warning: 0, ignored: 0 }
+    @results_log_file = options[:results_log_file]
   end
 
   def log_success(update = false)
@@ -192,6 +205,7 @@ class ProgressIndicator
     print "F".red
     @counters[:failure] += 1
     @failures << failure_report if failure_report
+    log_to_file failure_report, 'FAILURE'
   end
 
   # See `log_failure`.
@@ -200,12 +214,14 @@ class ProgressIndicator
     print "W".yellow
     @counters[:warning] += 1
     @warnings << warning_report if warning_report
+    log_to_file warning_report, 'Warning'
   end
 
   def log_ignore( ignore_report = nil )
     print "I"
     @counters[:ignored] += 1
     @ignores << ignore_report if ignore_report
+    log_to_file warning_report, 'Info'
   end
   
   def log_skip
@@ -233,7 +249,18 @@ class ProgressIndicator
       print "\nFailures:\n".red
       puts @failures
     end
-    
   end
+
+  def log_to_file(object, category = 'Info')
+    if @results_log_file.present?
+      File.open(@results_log_file, 'a') do |file|
+        file.puts Time.zone.now
+        file.puts "#{category}:"
+        file.puts object
+        file.puts "\n"
+      end
+    end
+  end
+
 end
 
