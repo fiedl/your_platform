@@ -588,12 +588,12 @@ class NetenvUser
   def bandaufnahme_als_aktiver?( corporation )
     
     # Wenn ein Philistrationsdatum bekannt ist, wird dieses zum Vergleich verwendet.
-    if philistrationsdatum
+    if angegebenes_philistrationsdatum
       
       # Im Grenzfall, wo Philistrationsjahr und Jahr der Bandaufnahme/Bandverleihung 
       # gleich sind, wird angenommen, das das Band als Philister verliehen wurde.
       #
-      year_of_joining(corporation) < philistrationsdatum.year.to_s
+      year_of_joining(corporation) < angegebenes_philistrationsdatum.year.to_s
       
     # Wenn kein Philistrationsdatum bekannt ist, wird stattdessen willkürlich angenommen,
     # dass eine Bandaufnahme innerhalb der sechs Jahre nach Aktivmeldung als Aktiver erfolgt.
@@ -718,20 +718,20 @@ class NetenvUser
   #   ldap_group_paths
   # end
   
+
+  # Beispiele für ldap_assignment:
+  #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+  #   "o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+  #   "ou=groups,dc=wingolf,dc=org"
+  #   "o=wv_e_-_konkneipant,o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
+  #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Konkneipant"
+  #
   def ldap_assignments
     dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments
   end
   
   def last_known_status_in( corporation )
     assignments_in_corporation = ldap_assignments.select do |ldap_assignment|
-
-      # Beispiele für ldap_assignment:
-      #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
-      #   "o=Verbindungen,ou=groups,dc=wingolf,dc=org"
-      #   "ou=groups,dc=wingolf,dc=org"
-      #   "o=wv_e_-_konkneipant,o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org"
-      #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Konkneipant"
-      
       ldap_assignment.include?("o=#{corporation.token}") and ldap_assignment.match(/dc=org\$\$(.*)$/)
     end
     
@@ -748,10 +748,11 @@ class NetenvUser
     #   # Status assignment of user W64710 in corporation Hv not unique.
     #   #
     # end
-    
+
     if assignments_in_corporation.last
-      status_name = assignments_in_corporation.first.match(/dc=org\$\$(.*)$/)[1] 
+      status_name = assignments_in_corporation.last.match(/dc=org\$\$(.*)$/)[1] 
     end
+    
     return status_name
   end
   
@@ -773,8 +774,18 @@ class NetenvUser
   end
   
   def bv_token
-    # TODO Testen u.a. für W51580: sollte BV 22 sein.
-    data_hash_value(:epdwingolfbezirksverband) || data_hash_value(:epdregionalarea) || data_hash_value(:epdprofregionalarea)
+    bv_token_from_ldap || data_hash_value(:epdwingolfbezirksverband) || data_hash_value(:epdregionalarea) || data_hash_value(:epdprofregionalarea)
+  end
+  
+  def bv_token_from_ldap
+    bv_ldap_assignment.match(/^o=(BV [0-9][0-9]),/)[1] if bv_ldap_assignment
+  end
+
+  def bv_ldap_assignment
+    # o=BV 22,o=BV,ou=groups,dc=wingolf,dc=org
+    ldap_assignments.select do |assignment|
+      assignment.match /,o=BV,/
+    end.first
   end
   
   def bv_token_ok?(token)

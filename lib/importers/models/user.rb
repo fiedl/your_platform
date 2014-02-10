@@ -284,6 +284,10 @@ class User
     end
   end
   
+  def import_current_status_via_ldap_from( netenv_user )
+    
+  end
+  
   def import_stifter_status_from( netenv_user )
     netenv_user.corporations.each do |corporation|
       date = netenv_user.beitrittsdatum(corporation)

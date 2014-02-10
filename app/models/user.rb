@@ -118,7 +118,7 @@ class User
   end
   
   def self.find_by_w_nummer(wnr)
-    ProfileField.where(label: "W-Nummer", value: wnr).first.try(:profileable)
+    ProfileField.where(label: "W-Nummer", value: wnr).last.try(:profileable)
   end
   
   
