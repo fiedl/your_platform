@@ -31,7 +31,7 @@ class Bookmark < ActiveRecord::Base
   end
 
   def self.find_by_user_and_bookmarkable( user, bookmarkable )
-    self.find_all_by_user( user ).find_all_by_bookmarkable( bookmarkable ).first
+    (self.find_all_by_user( user ) & self.find_all_by_bookmarkable( bookmarkable )).first
   end
 
   def self.find_all_by_user( user )

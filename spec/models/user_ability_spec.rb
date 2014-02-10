@@ -101,7 +101,7 @@ describe "User: abilities" do
       the_user.should_not be_able_to :manage, @other_user
     end
   end
-  
+
   context "when the user is a local admin of a page" do
     before do
       @page = create(:page)

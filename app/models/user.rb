@@ -25,9 +25,7 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    if Bv.all & self.groups
-      (Bv.all & self.groups).try(:first).try(:becomes, Bv)
-    end
+    (Bv.all & self.groups).try(:first).try(:becomes, Bv)
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
@@ -127,9 +125,9 @@ class User
     self.member_of? wbl_abo_group
   end
   def wingolfsblaetter_abo=(new_abo_status)
-    if new_abo_status == true || new_abo_status == "true" || new_abo_status == ""
+    if new_abo_status == true || new_abo_status == "true"
       wbl_abo_group.assign_user self
-    else
+    else new_abo_status == false || new_abo_status == "false"
       wbl_abo_group.unassign_user self
     end
   end
@@ -151,18 +149,6 @@ class User
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
-  end
-
-  # Admin for this user
-  # =====================================================================================
-  # Admin for this user are all admins of any ancestor group of this user
-
-  def admins
-    self.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten
-  end
-
-  def cached_admins
-    Rails.cache.fetch([self, "admins"]) { admins }
   end
 
 end

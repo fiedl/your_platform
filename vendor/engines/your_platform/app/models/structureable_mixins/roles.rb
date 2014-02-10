@@ -61,7 +61,7 @@ module StructureableMixins::Roles
   # officers_parent group.
   #
   def find_officers_groups
-    self.officers_parent.descendant_groups
+    self.officers_parent.try( :descendant_groups )
   end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
@@ -111,32 +111,37 @@ module StructureableMixins::Roles
   end
 
   def admins
-    if admins_parent
-      admins_parent.descendant_users
-    else
-      []
-    end
+    find_or_create_admins_parent_group.try( :descendant_users ) || []
   end
 
   def find_admins
-    unless find_admins_parent_group.nil?
-      find_admins_parent_group.descendant_users
-    else
-      []
-    end
+    find_admins_parent_group.try( :descendant_users ) || []
   end
 
-  # admins of this group and of all ancestor groups
-  def ancestor_admins
-    result = find_admins
-    ancestors.collect do |ancestor|
-      result |= ancestor.find_admins
-    end
-    result.flatten
+  # Structurable admins
+  # Structurable admins are users that are either admins of this structurable (page or group) or
+  # structurable admin of a parent structurable.
+  def structurable_admins
+    self.find_admins | self.parents.collect do |parent|
+      parent.cached_structurable_admins
+    end.flatten.uniq
   end
 
-  def cached_ancestor_admins
-    Rails.cache.fetch([self, "ancestor_admins"]) { ancestor_admins }
+  def cached_structurable_admins
+    Rails.cache.fetch([self, "structurable_admins"]) { structurable_admins }
+  end
+
+  # User admins
+  # User admins are users that are either admins of this structurable (page or group) or of
+  # a parent group.
+  def user_admins
+    self.find_admins | self.parent_groups.collect do |parent|
+      parent.cached_user_admins
+    end.flatten.uniq
+  end
+
+  def cached_user_admins
+    Rails.cache.fetch([self, "user_admins"]) { user_admins }
   end
 
 

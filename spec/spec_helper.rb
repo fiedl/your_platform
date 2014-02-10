@@ -217,9 +217,9 @@ Spork.prefork do
       DatabaseCleaner.start
 
       # create the basic objects that are needed for all specs
-      Group.create_everyone_group
-      Group.create_corporations_parent_group
-      Group.create_bvs_parent_group
+      Group.find_or_create_everyone_group
+      Group.find_or_create_corporations_parent_group
+      Group.find_or_create_bvs_parent_group
       Page.create_root
       Page.create_intranet_root
 
