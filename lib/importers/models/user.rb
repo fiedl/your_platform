@@ -174,13 +174,15 @@ class User
     import_primary_corporation_from netenv_user
     import_secondary_corporations_from netenv_user
     import_stifter_status_from netenv_user
+    import_current_ldap_status_from netenv_user
     import_exit_events_from netenv_user
     import_death_from netenv_user
   end
   
   def reset_corporation_memberships
     (self.parent_groups & Group.corporations_parent.descendant_groups).each do |group|
-      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy      
+      membership = UserGroupMembership.with_invalid.find_by_user_and_group(self, group)
+      membership.destroy if membership.destroyable?
     end
   end
   
@@ -221,16 +223,6 @@ class User
         membership_burschen.needs_review! if netenv_user.burschungsdatum_geschätzt?
       end
       
-      # Auch wenn kein Datum vorhanden, ggf. den letzten Status als Aktiver eintragen.
-      letzte_statusgruppe_als_aktiver = netenv_user.last_known_status_group_in corporation
-      if letzte_statusgruppe_als_aktiver
-        current_membership = self.reload.current_status_membership_in corporation
-        unless letzte_statusgruppe_als_aktiver == current_membership.group
-          new_membership = current_membership.promote_to letzte_statusgruppe_als_aktiver, at: (current_membership.valid_from + 1.hour)
-          new_membership.needs_review!
-        end
-      end
-     
       # Philistration
       if netenv_user.philistrationsdatum
         philister = corporation.status_group("Philister")
@@ -277,15 +269,23 @@ class User
       if netenv_user.ehrenphilister?(corporation)
         group_to_assign = corporation.status_group("Ehrenphilister")
       end
-
+      
       raise 'could not identify group to assign this user' if not group_to_assign
       membership = group_to_assign.assign_user self, at: beitrittsdatum
       membership.needs_review! if netenv_user.beitrittsdatum_geschätzt?(corporation)
     end
   end
   
-  def import_current_status_via_ldap_from( netenv_user )
-    
+  def import_current_ldap_status_from( netenv_user )
+    for corporation in netenv_user.corporations
+      group = netenv_user.last_known_status_group_in corporation
+      current_membership = self.reload.current_status_membership_in corporation
+      if current_membership and current_membership.group and group and (current_membership.group.id != group.id)
+        date = current_membership.valid_from + 1.hour
+        membership = current_membership.move_to group, at: date
+        membership.needs_review!
+      end
+    end
   end
   
   def import_stifter_status_from( netenv_user )
@@ -307,7 +307,8 @@ class User
     netenv_user.former_corporations.each do |corporation|
       
       reason = netenv_user.reason_for_exit(corporation)  || "ausgetreten"
-      date = netenv_user.date_of_exit(corporation) || netenv_user.netenv_org_membership_end_date
+      date = netenv_user.date_of_exit(corporation) 
+      date ||= netenv_user.netenv_org_membership_end_date unless netenv_user.verstorben? # sonst ist das das Sterbedatum
       date_estimated = false
       
       # Unassign user from previous groups in that corporation.
@@ -345,10 +346,27 @@ class User
       date_of_death ||= self.memberships.order(:valid_from).last.valid_from + 1.day
       
       todesdatum_geschätzt = netenv_user.netenv_org_membership_end_date.blank?
-            
-      # Aus allen Gruppen austragen, außer der 'hidden_users'-Gruppe.
+      
+      # Im folgenden wird der Benutzer aus bestehenden Gruppen ausgetragen.
+      #
+      # Aber nicht aus den Ausgetretenen-Gruppen austragen, da sonst nicht bekannt ist,
+      # welchen Status der jeweilige Benutzer in dieser Korporation hat.
+      # Er wird sonst vielleicht von der Rechteverwaltung falsch einsortiert.
+      # Oder es wird nichteinmal erkannt, dass er mit dieser Korporation etwas zu tun
+      # hatte, d.h. sie erscheint auch nicht in der Vita.
+      #
+      # Zu diesem Zweck erfassen, welche Gruppen es sind, aus denen der Benutzer
+      # nicht ausgetragen werden soll.
+      #
+      former_members_groups = self.corporations.collect do |corporation|
+        corporation.child_groups.find_by_flag(:former_members_parent).descendant_groups
+      end.flatten
+      
+      # Aus allen Gruppen austragen, außer den genannten former_members-Gruppen und
+      # der 'hidden_users'-Gruppe.
+      #
       self.direct_groups.each do |group|
-        unless group.has_flag? :hidden_users
+        unless group.has_flag?(:hidden_users) or group.in?(former_members_groups)
           group.unassign_user self, at: date_of_death
         end
       end

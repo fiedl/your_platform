@@ -732,7 +732,12 @@ class NetenvUser
   
   def last_known_status_in( corporation )
     assignments_in_corporation = ldap_assignments.select do |ldap_assignment|
-      ldap_assignment.include?("o=#{corporation.token}") and ldap_assignment.match(/dc=org\$\$(.*)$/)
+      ldap_assignment.include?("o=#{corporation.token}") and not ldap_assignment.include?("erstbandtraeger")
+    end
+    
+    status_names = assignments_in_corporation.collect do |assignment|
+      match = assignment.match(/dc=org\$\$(.*)$/) || assignment.match(/^o=#{corporation.token},o=(Philister),/)
+      match[1] if match
     end
     
     # if assignments_in_corporation.count > 1
@@ -749,20 +754,21 @@ class NetenvUser
     #   #
     # end
 
-    if assignments_in_corporation.last
-      status_name = assignments_in_corporation.last.match(/dc=org\$\$(.*)$/)[1] 
-    end
-    
-    return status_name
+    return status_names.last
   end
   
   def last_known_status_group_in( corporation )
     status_name = last_known_status_in( corporation )
+    
     group_name = "Konkneipanten" if status_name == "Konkneipant"
     group_name = "Inaktive Burschen loci" if (status_name == "Inaktiver Bursch") or (status_name == "Inaktiver loci")
     group_name = "Inaktive Burschen non loci" if status_name == "Inaktiver non-loci"
     group_name = "Aktive Burschen" if status_name == "Aktiver Bursch"
-    return corporation.status_group(group_name)
+    group_name ||= status_name
+    
+    status_group = corporation.status_group(group_name)
+    raise "Status group '#{group_name}' not found for corporation '#{corporation.token}'." if status_name.present? and not status_group
+    return status_group
   end
 
 
