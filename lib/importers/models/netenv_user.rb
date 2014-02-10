@@ -763,6 +763,43 @@ class NetenvUser
     group_name = "Aktive Burschen" if status_name == "Aktiver Bursch"
     return corporation.status_group(group_name)
   end
+
+
+  # Bezirksverbände
+  # =======================================================================
+  
+  def bv
+    Bv.find_by_token(bv_token) if bv_token_ok?(bv_token)
+  end
+  
+  def previous_bv
+    Bv.find_by_token(previous_bv_token) if bv_token_ok?(previous_bv_token)
+  end
+  
+  def bv_token
+  end
+  
+  def bv_token_ok?(token)
+    token.present? and token.match /^BV [0-9][0-9]$/
+  end
+  
+  def previous_bv_token
+  end
+  
+  def joined_bv_at
+  end
+  
+  def joined_previous_bv_at
+  end
+  
+  def joined_bv_at_is_estimate?
+  end
+  
+  def joined_previous_bv_at_is_estimate?
+  end
+  
+  
+
   
   
   # Hilfsfunktionen zur Datums-Konvertierung
