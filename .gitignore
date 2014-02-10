@@ -40,6 +40,9 @@ uploads
 # ignore assets folder
 public/assets
 
+# Ignore licensed vendor scripts
+public/js/vendor/cooltext
+
 # Ignore sensitive import data
 import/netenv_data
 
