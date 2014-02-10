@@ -17,6 +17,7 @@ class UserImporter < Importer
     
     log.section "Import Parameters"
     log.info "Import file:   #{@filename}"
+    log.info "Results log:   #{@results_log_file}" if @results_log_file.present?
     log.info "Import filter: #{@filter || 'none'}"
     log.info "Continue import with #{@continue_with}." if @continue_with
     
@@ -80,6 +81,10 @@ class UserImporter < Importer
       check_corporation_memberships_consistency_for netenv_user
       user.import_corporation_memberships_from netenv_user
       perform_consistency_check_for_aktivitaetszahl_for user, netenv_user
+      
+      # BV-Zuordnung.
+      #
+      user.import_bv_membership_from netenv_user
 
       # Benutzer ggf. verstecken.
       #

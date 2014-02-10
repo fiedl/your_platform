@@ -27,6 +27,15 @@ class User
   def bv
     (Bv.all & self.groups).try(:first).try(:becomes, Bv)
   end
+  
+  def bv_membership
+    UserGroupMembership.find_by_user_and_group(self, bv) if bv
+  end
+  
+  def bv_beitrittsdatum
+    bv_membership.valid_from if bv
+  end
+    
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #

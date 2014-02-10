@@ -1,0 +1,6 @@
+%span.label-wrapper
+  %span.attribute-label Bezirksverband
+%span.value-wrapper
+  %span.attribute-value
+    = link_to @user.bv.name, @user.bv
+    = " (#{I18n.t :since} #{I18n.localize @user.bv_beitrittsdatum.to_date})"

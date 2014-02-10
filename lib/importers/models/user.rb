@@ -370,4 +370,11 @@ class User
     end
   end
   
+  def import_bv_membership_from( netenv_user )
+    if netenv_user.bv
+      membership = netenv_user.bv.assign_user self, at: netenv_user.bv_beitrittsdatum
+      membership.needs_review! if netenv_user.bv_beitrittsdatum_geschätzt?
+    end
+  end
+  
 end

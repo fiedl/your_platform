@@ -772,34 +772,27 @@ class NetenvUser
     Bv.find_by_token(bv_token) if bv_token_ok?(bv_token)
   end
   
-  def previous_bv
-    Bv.find_by_token(previous_bv_token) if bv_token_ok?(previous_bv_token)
-  end
-  
   def bv_token
+    # TODO Testen u.a. für W51580: sollte BV 22 sein.
+    data_hash_value(:epdwingolfbezirksverband) || data_hash_value(:epdregionalarea) || data_hash_value(:epdprofregionalarea)
   end
   
   def bv_token_ok?(token)
     token.present? and token.match /^BV [0-9][0-9]$/
   end
   
-  def previous_bv_token
+  def angegebenes_bv_beitrittsdatum
+    data_hash_value(:epdwingolfregionalareasincedate).try(:to_datetime)
   end
   
-  def joined_bv_at
+  def bv_beitrittsdatum
+    angegebenes_bv_beitrittsdatum || philistrationsdatum || aktivmeldungsdatum
   end
   
-  def joined_previous_bv_at
+  def bv_beitrittsdatum_geschätzt?
+    not angegebenes_bv_beitrittsdatum.present?
   end
   
-  def joined_bv_at_is_estimate?
-  end
-  
-  def joined_previous_bv_at_is_estimate?
-  end
-  
-  
-
   
   
   # Hilfsfunktionen zur Datums-Konvertierung
