@@ -196,7 +196,8 @@ class UserImporter < Importer
         warning = { message: 'Inkonsistentes Aktivmeldungsdatum: Das Aktivmeldungsdatum widerspricht der Aktivitätszahl.',
                     name: netenv_user.name, w_nummer: netenv_user.w_nummer,
                     angegebenes_aktivmeldungsdatum: netenv_user.angegebenes_aktivmeldungsdatum,
-                    aktivitätszahl: netenv_user.aktivitätszahl
+                    netenv_aktivitätszahl: netenv_user.netenv_aktivitätszahl,
+                    ehemalige_netenv_aktivitätszahl: netenv_user.ehemalige_netenv_aktivitätszahl
                   }
         progress.log_warning(warning)
       end

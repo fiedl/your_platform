@@ -393,9 +393,22 @@ class User
   end
   
   def import_bv_membership_from( netenv_user )
+    reset_bv_memberships
     if netenv_user.bv
       membership = netenv_user.bv.assign_user self, at: netenv_user.bv_beitrittsdatum
       membership.needs_review! if netenv_user.bv_beitrittsdatum_geschätzt?
+      
+      # Nur lebende Wingolfiten dürfen Mitglied im BV bleiben.
+      #
+      unless self.wingolfit? and self.alive?
+        membership.invalidate at: netenv_user.netenv_org_membership_end_date
+      end
+    end
+  end
+  
+  def reset_bv_memberships
+    (Bv.all & self.parent_groups).each do |group|
+      UserGroupMembership.with_invalid.find_by_user_and_group(self, group).destroy
     end
   end
   
