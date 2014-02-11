@@ -97,6 +97,12 @@ group :development, :test do
   gem 'guard-brakeman', '>= 0.8.1'
 end
 
+# Documentation Tools
+group :development, :test do
+  gem 'yard'
+  gem 'redcarpet'
+end
+
 # RSpec, see: http://ruby.railstutorial.org/chapters/static-pages#sec:first_tests
 group :test, :development do
   gem 'guard', '~> 2.2.5'

@@ -1,1 +1,1 @@
-app/**/*.rb vendor/engines/your_platform/app/**/*.rb - README.md LICENSE.md AGPL.txt
+app/**/*.rb vendor/engines/your_platform/app/**/*.rb - README.md LICENSE.md AGPL.txt --markup markdown

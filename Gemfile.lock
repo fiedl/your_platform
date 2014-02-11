@@ -420,6 +420,7 @@ GEM
     xpath (2.0.0)
       nokogiri (~> 1.3)
     yajl-ruby (1.1.0)
+    yard (0.8.7.3)
 
 PLATFORMS
   ruby
@@ -462,6 +463,7 @@ DEPENDENCIES
   rack-timeout
   rails (~> 3.2.11)
   rb-inotify (~> 0.9)
+  redcarpet
   rspec-rails
   sass-rails (~> 3.2.3)
   simplecov
@@ -470,4 +472,5 @@ DEPENDENCIES
   turbolinks (>= 1.0)
   uglifier (>= 1.0.3)
   unicorn
+  yard
   your_platform!
