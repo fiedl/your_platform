@@ -2,7 +2,7 @@ de:
   login:                    Anmelden
   login_name:               Anmeldename
   password:                 Passwort
-  login_name_explanation:   'Vor- und Zuname, E-Mail-Adresse, oder Alias'
+  login_name_explanation:   'Vor- und Zuname, E-Mail-Adresse oder Alias'
 
   login_failed:             Anmeldung fehlgeschlagen.
   no_user_found:            Es wurde kein übereinstimmender Benutzer gefunden.
