@@ -127,7 +127,7 @@ class User
   def wingolfsblaetter_abo=(new_abo_status)
     if new_abo_status == true || new_abo_status == "true"
       wbl_abo_group.assign_user self
-    else new_abo_status == false || new_abo_status == "false"
+    elsif new_abo_status == false || new_abo_status == "false"
       wbl_abo_group.unassign_user self
     end
   end
