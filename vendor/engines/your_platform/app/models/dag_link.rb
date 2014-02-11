@@ -7,12 +7,12 @@ class DagLink < ActiveRecord::Base
   before_destroy    :flush_cache
 
   def flush_cache
-    if self.descendant_type = "Group"
+    if self.descendant_type == "Group"
       if Group.exists?( self.descendant_id )
         desc_group = Group.find( self.descendant_id )
       end
     end
-    if self.descendant_type = "Page"
+    if self.descendant_type == "Page"
       if Page.exists?( self.descendant_id )
         desc_page = Page.find( self.descendant_id )
       end
@@ -24,7 +24,7 @@ class DagLink < ActiveRecord::Base
 
     # if ancestor group is admin group, also flush admins cache
     # for all descendant groups and pages of administred group or page
-    if self.ancestor_type = "Group"
+    if self.ancestor_type == "Group"
       if Group.exists?( self.ancestor_id )
         anc_group = Group.find( self.ancestor_id )
       end

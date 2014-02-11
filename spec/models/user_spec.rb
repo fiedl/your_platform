@@ -47,14 +47,13 @@ describe User do
     end
   end
 
-  describe ".w_nummer" do
-    subject { @user.w_nummer }
+  describe ".find_by_w_nummer" do
     before do
       @user.w_nummer="W12345"
-      @user2 = User.find_by_w_nummer("W12345")
     end
+    subject { User.find_by_w_nummer("W12345") }
     it "should deliver the right user" do
-      should == @user2.w_nummer
+      should == @user
     end
   end
 
