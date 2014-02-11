@@ -22,7 +22,7 @@ class SearchController < ApplicationController
 
       # browse profile fields
       #
-      profile_fields = ProfileField.where("value like ?", q).collect do |profile_field|
+      profile_fields = ProfileField.where("value like ? or label like ?", q, q).collect do |profile_field|
         profile_field.parent || profile_field
       end.uniq
       profile_fields.each do |profile_field|
