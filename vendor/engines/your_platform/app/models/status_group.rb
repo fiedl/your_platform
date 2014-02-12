@@ -7,9 +7,7 @@
 class StatusGroup < Group
   
   def self.find_all_by_corporation(corporation)
-    corporation.descendant_groups.select do |group|
-      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-    end
+    corporation.leaf_groups
   end
   
   def self.find_all_by_user(user, options = {})

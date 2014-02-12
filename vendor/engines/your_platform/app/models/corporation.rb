@@ -20,6 +20,16 @@ class Corporation < Group
     end
     return true
   end
+  
+  # This returns all sub-groups of the corporation that have no
+  # sub-groups of their ownes except for officer groups. 
+  # This is needed for the selection of status groups.
+  #
+  def leaf_groups
+    self.descendant_groups.select do |group|
+      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+    end
+  end
 
   # This method returns all status groups of the corporation.
   # In this general context, each leaf group of the corporation is a status group.

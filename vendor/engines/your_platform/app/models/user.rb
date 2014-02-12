@@ -359,6 +359,22 @@ class User < ActiveRecord::Base
   end
 
 
+  # Corporate Vita
+  # ==========================================================================================
+
+  def corporate_vita_memberships_in(corporation)
+    
+    # StatusGroupMembership
+    #   .now_and_in_the_past
+    #   .find_all_by_user_and_corporation( self, corporation )
+    
+    groups = corporation.leaf_groups & self.parent_groups
+    group_ids = groups.collect { |group| group.id }
+    
+    UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where( ancestor_id: group_ids, ancestor_type: 'Group' )
+  end
+
+
   # Status Groups
   # ------------------------------------------------------------------------------------------
 
