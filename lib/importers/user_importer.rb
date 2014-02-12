@@ -42,6 +42,11 @@ class UserImporter < Importer
       # 
       next if dummy_user? netenv_user
       
+      # Duplikat-Benutzer werden ignoriert.
+      # Siehe Trello-Karte: https://trello.com/c/Fv4eMohq/510-doppelte-user
+      #
+      next if duplicate_or_mistaken_user? netenv_user
+      
       # Benutzer, die in der Datenbank des bisherigen Betreibers als gelöscht markiert
       # sind, wurden versehentlich angelegt. Ihre Daten werden nicht importiert.
       #
@@ -116,6 +121,17 @@ class UserImporter < Importer
   def dummy_user?(netenv_user)
     if netenv_user.dummy_user?
       warning = { message: "Der Test-Benutzer #{netenv_user.w_nummer} wird nicht importiert. Kein Handlungsbedarf.",
+        w_nummer: netenv_user.w_nummer, name: netenv_user.name,
+        netenv_aktivitätszahl: netenv_user.netenv_aktivitätszahl
+      }
+      progress.log_ignore(warning)
+      return true
+    end
+  end
+  
+  def duplicate_or_mistaken_user?(netenv_user)
+    if netenv_user.duplicate_or_mistaken_user?
+      warning = { message: "Der fälschlicherweise angelegte Duplikat-Benutzer #{netenv_user.w_nummer} wird nicht importiert. Kein Handlungsbedarf.",
         w_nummer: netenv_user.w_nummer, name: netenv_user.name,
         netenv_aktivitätszahl: netenv_user.netenv_aktivitätszahl
       }

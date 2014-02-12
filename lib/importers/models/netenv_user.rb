@@ -866,5 +866,14 @@ class NetenvUser
       last_name == "testadmin"
   end
   
+  def duplicate_or_mistaken_user?
+    #
+    # Die Duplikate und fälschlicherweise angelegten Benutzer wurden in einem mehrstufigen Verfahren
+    # ermittelt, teilweise durch telefonische Rückfrage.
+    # 
+    # Siehe: https://trello.com/c/Fv4eMohq/510-doppelte-user
+    #
+    w_nummer.in? ["W51007", "W64276", "W54116", "W54508", "W55062", "W64201", "W64485", "W64565", "W64598", "W64613", "W64926", "W64928", "W64991", "W64993", "W65192", "W65246", "W65257", "W65613", "W65693", "W65648"]
+  end
   
 end
