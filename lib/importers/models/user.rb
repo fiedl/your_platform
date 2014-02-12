@@ -162,7 +162,11 @@ class User
   # =======================================================================
 
   def import_hidden_status_from( netenv_user )
-    self.hidden = true if netenv_user.hidden?
+    if netenv_user.hidden? and not netenv_user.verstorben?
+      self.hidden = true 
+    else
+      self.hidden = false
+    end
   end
   
   
