@@ -784,7 +784,8 @@ class NetenvUser
   end
   
   def bv_token_from_ldap
-    bv_ldap_assignment.match(/^o=(BV [0-9][0-9]),/)[1] if bv_ldap_assignment
+    match = bv_ldap_assignment.match(/^o=(BV [0-9][0-9]),/) if bv_ldap_assignment
+    match[1] if match
   end
 
   def bv_ldap_assignment

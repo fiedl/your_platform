@@ -86,6 +86,7 @@ class UserImporter < Importer
       check_corporation_memberships_consistency_for netenv_user
       user.import_corporation_memberships_from netenv_user
       perform_consistency_check_for_aktivitaetszahl_for user, netenv_user
+      make_sure_all_corporation_memberships_have_been_imported_for user, netenv_user
       
       # BV-Zuordnung.
       #
@@ -240,6 +241,22 @@ class UserImporter < Importer
         rekonstruierte_aktivitätszahl: user.aktivitätszahl
       }
       progress.log_failure(warning)
+    end
+  end
+  
+  # Sicherstellen, dass für alle Korporationen, die in Netenv für diesen Benutzer eingetragen sind,
+  # auch im neuen System einge Mitgliedschaft vorliegt.
+  #
+  def make_sure_all_corporation_memberships_have_been_imported_for( user, netenv_user )
+    for corporation in netenv_user.corporations 
+      if not user.reload.in? corporation.descendant_users
+        warning = {
+          message: "Konsistenzprüfung fehlgeschlagen: Für den Benutzer #{user.w_nummer} ist im alten System eine Mitgliedschaft in der Korporation '#{corporation.token}' vorgesehen. Es wurde jedoch keine solche Mitgliedschaft importiert. Prüfung und Korrektur des Import-Skripts sowie erneuter Import sind erforderlich.",
+          name: netenv_user.name, w_nummer: user.w_nummer,
+          corporation: corporation.token
+        }
+        progress.log_failure(warning)
+      end
     end
   end
   
