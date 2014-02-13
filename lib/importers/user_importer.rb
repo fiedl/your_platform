@@ -78,6 +78,7 @@ class UserImporter < Importer
       user.import_contact_profile_fields_from netenv_user
       user.import_study_profile_fields_from netenv_user
       user.import_professional_profile_fields_from netenv_user
+      user.import_profile_fields_about_me_from netenv_user
       user.import_bank_profile_fields_from netenv_user
       user.import_communication_profile_fields_from netenv_user
       

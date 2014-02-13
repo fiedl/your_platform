@@ -111,20 +111,23 @@ class User
     netenv_user.general_skills.each do |skill|
       add_profile_field :skill, value: skill, type: 'Competence'
     end
-    
+  end
+  
+  def import_profile_fields_about_me_from( netenv_user )
+
     # Angebote
     netenv_user.offerings.each do |offering|
-      add_profile_field :i_offer, value: offering, type: 'Competence'
+      add_profile_field :i_offer, value: offering, type: 'About'
     end
-    add_profile_field :i_offer_talk_about, value: netenv_user.offering_talk_about, type: 'Competence'  # Vortrag zum Thema
-    add_profile_field :i_offer_training, value: netenv_user.offering_training, type: 'Competence'  # Praktika
-    add_profile_field :i_offer, value: netenv_user.offering_freetext, type: 'Competence'
+    add_profile_field :i_offer_talk_about, value: netenv_user.offering_talk_about, type: 'About'  # Vortrag zum Thema
+    add_profile_field :i_offer_training, value: netenv_user.offering_training, type: 'About'  # Praktika
+    add_profile_field :i_offer, value: netenv_user.offering_freetext, type: 'About'
     
     # Gesuche
     netenv_user.requests.each do |request|
-      add_profile_field :request, value: "Ich suche: #{request}", type: 'Competence'
+      add_profile_field :request, value: "Ich suche: #{request}", type: 'About'
     end
-    add_profile_field :request, value: netenv_user.request_freetext, type: 'Competence'
+    add_profile_field :request, value: netenv_user.request_freetext, type: 'About'
     
   end
   
