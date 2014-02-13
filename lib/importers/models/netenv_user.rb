@@ -767,7 +767,10 @@ class NetenvUser
   #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Konkneipant"
   #
   def ldap_assignments
-    dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments
+    (dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments).collect do |assignment|
+      # Koe -> Kö, damit es auch erkannt wird. Beispiel: W65066
+      assignment.gsub("o=Koe", "o=Kö")
+    end
   end
   
   def last_known_status_in( corporation )
@@ -820,7 +823,12 @@ class NetenvUser
   end
   
   def bv_token
-    bv_token_from_ldap || data_hash_value(:epdwingolfbezirksverband) || data_hash_value(:epdregionalarea) || data_hash_value(:epdprofregionalarea)
+    bv_token_from_ldap 
+    #
+    # Die übrigen Spalten sollen ignoriert werden, da diese zum Teil auch für Aktive gesetzt sind,
+    # während nur Philister einem BV zugeordnet werden sollen:
+    # 
+    #   || data_hash_value(:epdwingolfbezirksverband) || data_hash_value(:epdregionalarea) || data_hash_value(:epdprofregionalarea)
   end
   
   def bv_token_from_ldap
