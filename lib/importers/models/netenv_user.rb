@@ -126,6 +126,18 @@ class NetenvUser
     data_hash_value :epdeduarea
   end
   
+  def type_of_study
+    # "Bachelor/Master", "Diplom", "Kirchliche Prüfung", "Magister", "Promotion", "Staatsprüfung"
+    type = data_hash_value :epdwingolfedustudystatus
+    type = "Bachelor-Master-Studium"         if type == "Bachelor/Master"
+    type = "Diplom-Studium"                  if type == "Diplom"
+    type = "Studium mit kirchlicher Prüfung" if type == "Kirchliche Prüfung"
+    type = "Magister-Studium"                if type == "Magister"
+    type = "Promotion"                       if type == "Promotion"
+    type = "Studium mit Staatsprüfung"       if type == "Staatsprüfung"
+    return type
+  end
+  
   # Kontakt-Informationen
   # =======================================================================
 
@@ -165,6 +177,10 @@ class NetenvUser
   
   def mobile
     data_hash_value :mobile
+  end
+  
+  def work_mobile
+    data_hash_value :epdprofmobilephone
   end
   
   def home_fax
@@ -805,7 +821,7 @@ class NetenvUser
   end
   
   def angegebenes_bv_beitrittsdatum
-    data_hash_value(:epdwingolfregionalareasincedate).try(:to_datetime)
+    data_hash_value(:epdwingolfregionalareasincedate).try(:to_datetime) || data_hash_value(:epdwingolfbezverbandmembershipstart).try(:to_datetime)
   end
   
   def bv_beitrittsdatum

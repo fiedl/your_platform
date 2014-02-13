@@ -56,6 +56,7 @@ class User
     add_profile_field :home_phone, value: netenv_user.home_phone, type: 'Phone'
     add_profile_field :work_phone, value: netenv_user.work_phone, type: 'Phone'
     add_profile_field :mobile, value: netenv_user.mobile, type: 'Phone'
+    add_profile_field :work_mobile, value: netenv_user.work_mobile, type: 'Phone'
     add_profile_field :home_fax, value: netenv_user.home_fax, type: 'Phone'
     add_profile_field :work_fax, value: netenv_user.work_fax, type: 'Phone'
     add_profile_field :homepage, value: netenv_user.homepage, type: 'Homepage'
@@ -63,13 +64,14 @@ class User
   end
 
   def import_study_profile_fields_from( netenv_user )
+    study_label = netenv_user.type_of_study
     if netenv_user.erstes_fachsemester == netenv_user.erstes_studiensemester
       if netenv_user.erstes_fachsemester.present?
-        add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
+        add_profile_field (study_label || :study), from: netenv_user.erstes_studiensemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
       end
     else
       add_profile_field :study, from: netenv_user.erstes_studiensemester, subject: "", type: 'Study'
-      add_profile_field :further_study, from: netenv_user.erstes_fachsemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
+      add_profile_field (study_label || :further_study), from: netenv_user.erstes_fachsemester, subject: "Studium #{netenv_user.educational_area}", type: 'Study'
     end
   end
   
