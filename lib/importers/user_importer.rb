@@ -9,7 +9,13 @@ class UserImporter < Importer
   def initialize( args = {} )
     super(args)
     @object_class_name = "User"
-    @continue_with = User.last.try(:w_nummer) if @continue_with.in? [:last_user, :auto]
+    if @continue_with.in? [:last_user, :auto]
+      if File.exists? @continue_with_file
+        @continue_with = File.open(@continue_with_file, 'r') { |file| file.read }
+      else
+        @continue_with = nil
+      end
+    end
   end
   
   def import
@@ -51,6 +57,11 @@ class UserImporter < Importer
       # sind, wurden versehentlich angelegt. Ihre Daten werden nicht importiert.
       #
       next if deleted_user? netenv_user
+      
+      # Den Benutzer festhalten, bei dem der Import gerade ist, sodass man dem Import
+      # mit der Option 'continue_with: :last_user' fortgesetzt werden kann.
+      #
+      save_point_of_continuation_for netenv_user
       
       # Falls die E-Mail-Adresse bereits im neuen System vergeben ist, und zwar einem
       # anderen Benutzer, liegt hier vermutlich ein Fehler vor. Deswegen wird eine Warnung
@@ -260,6 +271,12 @@ class UserImporter < Importer
         progress.log_failure(warning)
       end
     end
+  end
+  
+  # Den Benutzer abspeichern, bei dem wir gerade sind.
+  #
+  def save_point_of_continuation_for( netenv_user )
+    File.open(@continue_with_file, 'w') { |file| file.write netenv_user.w_nummer } if @continue_with_file
   end
   
 end
