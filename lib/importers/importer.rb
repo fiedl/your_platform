@@ -224,7 +224,7 @@ class ProgressIndicator
     print "I"
     @counters[:ignored] += 1
     @ignores << ignore_report if ignore_report
-    log_to_file warning_report, 'Info'
+    log_to_file ignore_report, 'Info'
   end
   
   def log_skip
