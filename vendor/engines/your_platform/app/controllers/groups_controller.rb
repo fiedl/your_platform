@@ -73,11 +73,14 @@ class GroupsController < ApplicationController
   # https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Controller
   #
   def map_address_fields
-    if (@group.descendant_users.count<260)
-      user_ids = @group.descendant_users.collect { |user| user.id }
+    if @group.members.count < 260  # arbitrary limit by jbx26. TODO Remove this when obsolete.
+      
+      user_ids = @group.member_ids
       user_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids )
-      group_ids = ([@group] + @group.descendant_groups).collect { |group| group.id }
+      
+      group_ids = [ @group.id ] + @group.descendant_group_ids
       group_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: group_ids )
+      
       (user_address_fields + group_address_fields)
     else
       []
