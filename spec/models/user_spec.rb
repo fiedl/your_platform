@@ -34,16 +34,26 @@ describe User do
 
   describe "#w_nummer" do
     subject { @user.w_nummer }
-    it "should be initial" do
-      should be_nil
+    describe "initially" do
+      it { should be_nil }
+    end
+    describe "after setting it to a valid value" do
+      before { @user.w_nummer = "W12345" }
+      it { should == "W12345" }
     end
   end
 
   describe "#w_nummer=" do
-    subject { @user.w_nummer }
-    before { @user.w_nummer="W12345" }
-    it "should be set" do
-      should == "W12345"
+    subject { @user.w_nummer = "W12345" }
+    it "should set the w_nummer" do
+      @user.w_nummer.should == nil
+      subject
+      @user.w_nummer.should == "W12345"
+    end
+    it "should persist" do
+      @user.w_nummer.should == nil
+      subject
+      @user.reload.w_nummer.should == "W12345"
     end
   end
 

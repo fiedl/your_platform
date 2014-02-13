@@ -277,7 +277,7 @@ feature 'User page', js: false do
         visit user_path(@user_wo_account)
       end
 
-      scenario 'the section \'Zugangsdaten\'', js: true do
+      scenario 'the section for account information', js: true do
         within('.box.section.access') do
           page.should have_content(I18n.t :user_has_no_account)
 
