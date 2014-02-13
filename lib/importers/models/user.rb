@@ -44,8 +44,15 @@ class User
   def import_contact_profile_fields_from( netenv_user )
     add_profile_field :home_email, value: netenv_user.home_email, type: 'Email' unless netenv_user.home_email == netenv_user.email
     add_profile_field :work_email, value: netenv_user.work_email, type: 'Email' unless netenv_user.work_email == netenv_user.email
-    add_profile_field netenv_user.home_address_label, value: netenv_user.home_address, type: 'Address'
-    add_profile_field netenv_user.work_address_label, value: netenv_user.work_address, type: 'Address'
+    
+    home_address_field = add_profile_field netenv_user.home_address_label, value: netenv_user.home_address, type: 'Address'
+    work_address_field = add_profile_field netenv_user.work_address_label, value: netenv_user.work_address, type: 'Address'
+    if netenv_user.preferred_address == :work_address
+      work_address_field.becomes(ProfileFieldTypes::Address).wingolfspost = true if work_address_field
+    else
+      home_address_field.becomes(ProfileFieldTypes::Address).wingolfspost = true if home_address_field
+    end
+    
     add_profile_field :home_phone, value: netenv_user.home_phone, type: 'Phone'
     add_profile_field :work_phone, value: netenv_user.work_phone, type: 'Phone'
     add_profile_field :mobile, value: netenv_user.mobile, type: 'Phone'
@@ -139,9 +146,11 @@ class User
     if (args[:force] or one_argument_present?(args))
       args.delete(:force)
       if not profile_field_exists?(label, args)
-        self.profile_fields.create.import_attributes(args.merge( { label: label } ))
+        new_field = self.profile_fields.create
+        new_field.import_attributes(args.merge( { label: label } ))
       end
     end
+    return new_field
   end
 
   def one_argument_present?( args )

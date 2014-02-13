@@ -40,7 +40,7 @@ class NetenvUser
   end
 
   def email
-    self.emails.last
+    self.emails.last || home_email || work_email
   end
   def emails
     data_hash_value(:mail).try(:split, "|") || []
@@ -181,6 +181,11 @@ class NetenvUser
   
   def work_homepage
     data_hash_value :epdproflabeledurl
+  end
+  
+  def preferred_address
+    flag = data_hash_value(:epdpreferredcontactaddress)  # "", "prof_address", "address_personal"
+    (flag == 'prof_address') ? :work_address : :home_address
   end
   
   
