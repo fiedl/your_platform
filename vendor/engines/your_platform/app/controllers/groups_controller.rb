@@ -17,7 +17,7 @@ class GroupsController < ApplicationController
     if @group
       point_navigation_to @group
       
-      @members = @group.members
+      @members = @group.members.order(:last_name, :first_name)
       @members = @members.page(params[:page]).per_page(25) # pagination
 
       @map_address_fields = map_address_fields

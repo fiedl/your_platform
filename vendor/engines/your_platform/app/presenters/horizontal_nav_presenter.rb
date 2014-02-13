@@ -80,7 +80,9 @@ class HorizontalNavPresenter < BasePresenter
   end
   
   def title_for(object)
-    object[:title] || object.title
+    title = object[:title] if object
+    title ||= object.title if object
+    title ||= ""
   end
   
   def shortened_title_for(object)

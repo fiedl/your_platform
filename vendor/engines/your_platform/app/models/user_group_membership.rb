@@ -10,9 +10,6 @@
 class UserGroupMembership < DagLink
 
   before_validation :ensure_correct_ancestor_and_descendant_type
-  after_commit      :flush_cache
-  before_destroy    :flush_cache
-
 
   # Validity Range
   # ====================================================================================================
@@ -43,11 +40,14 @@ class UserGroupMembership < DagLink
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
 
+  # Override the navables method in order to add Bvs to the horizontal nav.
+  #
+  alias_method :orig_flush_cache, :flush_cache
   def flush_cache
+    orig_flush_cache
     Rails.cache.delete([self.user, "my_groups_table"])
     Rails.cache.delete([self.user, "corporate_vita_for_user"])
     Rails.cache.delete([self.user, "last_group_in_first_corporation"])
-    Rails.cache.delete([self.user, "aktivitaetszahl"])  # TODO: Move to wingolfsplattform!
   end
 
   # Creation Class Method

@@ -13,3 +13,18 @@ Geocoder::Lookup::Test.add_stub(
     }
 ]
 )
+Geocoder::Lookup::Test.add_stub(
+    "44 Rue de Stalingrad, Grenoble, Frankreich", [
+    {
+        latitude: 45.178876,
+        longitude: 5.726019,
+        address: "44 Rue de Stalingrad, Grenoble, Frankreich",
+        state: 'Grenoble',
+        state_code: 'GRE',
+        country: 'France',
+        country_code: 'FR',
+        city: 'Grenoble',
+        postal_code: '38000'
+    }
+]
+)

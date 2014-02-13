@@ -32,6 +32,31 @@ describe User do
     end
   end
 
+  describe "#w_nummer" do
+    subject { @user.w_nummer }
+    it "should be initial" do
+      should be_nil
+    end
+  end
+
+  describe "#w_nummer=" do
+    subject { @user.w_nummer }
+    before { @user.w_nummer="W12345" }
+    it "should be set" do
+      should == "W12345"
+    end
+  end
+
+  describe ".find_by_w_nummer" do
+    before do
+      @user.w_nummer="W12345"
+    end
+    subject { User.find_by_w_nummer("W12345") }
+    it "should deliver the right user" do
+      should == @user
+    end
+  end
+
   describe "#aktivitaetszahl" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
@@ -198,4 +223,3 @@ describe User do
   end
   
 end
-

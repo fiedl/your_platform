@@ -8,8 +8,8 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 # this re-opened class contains all wingolf-specific additions to the user model.
 #
 class User
-
   attr_accessible :wingolfsblaetter_abo, :hidden
+
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -156,7 +156,7 @@ class User
   def wingolfsblaetter_abo=(new_abo_status)
     if new_abo_status == true || new_abo_status == "true"
       wbl_abo_group.assign_user self
-    else
+    elsif new_abo_status == false || new_abo_status == "false"
       wbl_abo_group.unassign_user self
     end
   end
