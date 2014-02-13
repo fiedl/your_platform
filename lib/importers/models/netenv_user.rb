@@ -706,6 +706,25 @@ class NetenvUser
   def netenv_org_membership_end_date
     data_hash_value(:epdorgmembershipenddate).try(:to_datetime)
   end
+  
+
+  # Weitere Hinweis-Freitext-Felder
+  # =======================================================================
+
+  def freetext_descriptions
+    descriptions_without_standard_format + netenv_org_descriptions
+  end
+
+  def netenv_org_descriptions
+    data_hash_value(:epdorgdescription).try(:split, "|") || []
+  end
+  
+  def descriptions_without_standard_format
+    descriptions.select do |str|
+      not str.include? " - durch "
+    end
+  end
+  
 
 
   # Aktueller Status in den Verbindungen

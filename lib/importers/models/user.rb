@@ -128,6 +128,16 @@ class User
       add_profile_field :request, value: "Ich suche: #{request}", type: 'About'
     end
     add_profile_field :request, value: netenv_user.request_freetext, type: 'About'
+
+    # Bemerkungen der Administratoren
+    if netenv_user.freetext_descriptions.count > 0
+      markdown_bullet_list = ([""] + netenv_user.freetext_descriptions).join("\n* ")
+      add_profile_field( 
+        :comments_by_admin,
+        type: 'About', 
+        value: markdown_bullet_list
+      )
+    end
     
   end
   
