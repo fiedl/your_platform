@@ -803,6 +803,9 @@ class NetenvUser
   def last_known_status_group_in( corporation )
     status_name = last_known_status_in( corporation )
     
+    group_name = "Hospitanten" if status_name == "Hospitant"
+    group_name = "Kraßfuxen" if status_name == "Fux" || status_name == "Kraßfux"
+    group_name = "Brandfuxen" if status_name == "Brandfux"
     group_name = "Konkneipanten" if status_name == "Konkneipant"
     group_name = "Inaktive Burschen loci" if (status_name == "Inaktiver Bursch") or (status_name == "Inaktiver loci")
     group_name = "Inaktive Burschen non loci" if status_name == "Inaktiver non-loci"
