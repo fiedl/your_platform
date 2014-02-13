@@ -88,14 +88,16 @@ class User
     self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
     self.profile_fields.create(label: :homepage, type: "ProfileFieldTypes::Homepage")
 
-    self.profile_fields.create(label: :study, type: "ProfileFieldTypes::Study")
+    pf = self.profile_fields.build(label: :study, type: "ProfileFieldTypes::Study")
+    pf.becomes(ProfileFieldTypes::Study).save
 
     self.profile_fields.create(label: :professional_category, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :occupational_area, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :employment_status, type: "ProfileFieldTypes::ProfessionalCategory")
     self.profile_fields.create(label: :languages, type: "ProfileFieldTypes::Competence")
     
-    self.profile_fields.create(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
+    pf = self.profile_fields.build(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
+    pf.becomes(ProfileFieldTypes::BankAccount).save
 
     pf = self.profile_fields.create(label: :name_field_wingolfspost, type: "ProfileFieldTypes::NameSurrounding")
       .becomes(ProfileFieldTypes::NameSurrounding)

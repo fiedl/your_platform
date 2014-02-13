@@ -12,8 +12,8 @@ namespace :import do
                                  # filter: { last_name: "Fiedlschuster" }
                                  # filter: { w_nummer: 'W65066' }
                                  # continue_with: 'W64710'
-                                 # continue_with: :last_user
-                                 filter: { first_name: "Thomas", last_name: "Fischer", w_nummer: 'W51809' },
+                                 continue_with: :last_user
+                                 # filter: { first_name: "Thomas", last_name: "Fischer", w_nummer: 'W51809' },
                                  )
     
     importer.import

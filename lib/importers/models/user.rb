@@ -440,4 +440,62 @@ class User
     end
   end
   
+  
+  def create_template_profile_fields_where_non_existant
+    
+    if self.profile_fields.where(label: :personal_title).count == 0
+      self.profile_fields.create(label: :personal_title, type: "ProfileFieldTypes::General")
+    end
+    if self.profile_fields.where(label: :academic_degree).count == 0
+      self.profile_fields.create(label: :academic_degree, type: "ProfileFieldTypes::AcademicDegree")
+    end
+    if self.profile_fields.where(label: :cognomen).count == 0
+      self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
+    end
+    if self.profile_fields.where(label: :klammerung).count == 0
+      self.profile_fields.create(label: :klammerung, type: "ProfileFieldTypes::Klammerung")
+    end
+
+    if self.profile_fields.where(type: "ProfileFieldTypes::Address").count == 0
+      self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address")
+      self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address")
+    end
+    if self.profile_fields.where(type: "ProfileFieldTypes::Phone").count == 0
+      self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone")
+      self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone")
+      self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
+    end
+
+    if self.profile_fields.where(type: "ProfileFieldTypes::Study").count == 0
+      pf = self.profile_fields.build(label: :study, type: "ProfileFieldTypes::Study")
+      pf.becomes(ProfileFieldTypes::Study).save
+    end
+    
+    if self.profile_fields.where(label: :professional_category).count == 0
+      self.profile_fields.create(label: :professional_category, type: "ProfileFieldTypes::ProfessionalCategory")
+    end
+    if self.profile_fields.where(label: :occupational_area).count == 0
+      self.profile_fields.create(label: :occupational_area, type: "ProfileFieldTypes::ProfessionalCategory")
+    end
+    if self.profile_fields.where(label: :employment_status).count == 0
+      self.profile_fields.create(label: :employment_status, type: "ProfileFieldTypes::ProfessionalCategory")
+    end
+    if self.profile_fields.where(label: [:language, :languages, :native_language, :native_languages]).count == 0
+      self.profile_fields.create(label: :languages, type: "ProfileFieldTypes::Competence")
+    end
+    
+    if self.profile_fields.where(label: :bank_account).count == 0
+      pf = self.profile_fields.build(label: :bank_account, type: "ProfileFieldTypes::BankAccount")
+      pf.becomes(ProfileFieldTypes::BankAccount).save
+    end
+
+    if self.profile_fields.where(type: "ProfileFieldTypes::NameSurrounding").count == 0
+      pf = self.profile_fields.create(label: :name_field_wingolfspost, type: "ProfileFieldTypes::NameSurrounding")
+        .becomes(ProfileFieldTypes::NameSurrounding)
+      pf.text_above_name = ""; pf.name_prefix = "Herrn"; pf.name_suffix = ""; pf.text_below_name = ""
+      pf.save
+    end
+
+  end
+  
 end

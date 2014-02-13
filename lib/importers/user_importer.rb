@@ -81,6 +81,7 @@ class UserImporter < Importer
       user.import_profile_fields_about_me_from netenv_user
       user.import_bank_profile_fields_from netenv_user
       user.import_communication_profile_fields_from netenv_user
+      user.create_template_profile_fields_where_non_existant
       
       # Mitgliedschaften in Korporationen importieren.
       # 
