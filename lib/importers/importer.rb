@@ -44,8 +44,10 @@ class Importer
   # in case the script breaks.
   #
   def results_log_file=(filename)
-    filename = File.join(Rails.root, filename) unless filename.start_with? '/'
-    @results_log_file = filename
+    if filename.present?
+      filename = File.join(Rails.root, filename) unless filename.start_with? '/'
+      @results_log_file = filename
+    end
   end
   def results_log_file
     @results_log_file

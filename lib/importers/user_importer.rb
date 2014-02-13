@@ -9,7 +9,7 @@ class UserImporter < Importer
   def initialize( args = {} )
     super(args)
     @object_class_name = "User"
-    @continue_with = User.last.w_nummer if @continue_with.in? [:last_user, :auto]
+    @continue_with = User.last.try(:w_nummer) if @continue_with.in? [:last_user, :auto]
   end
   
   def import
