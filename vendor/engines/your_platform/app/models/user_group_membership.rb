@@ -44,6 +44,7 @@ class UserGroupMembership < DagLink
   #
   alias_method :orig_flush_cache, :flush_cache
   def flush_cache
+    raise "flush_cache UserGroupMembership"
     orig_flush_cache
     Rails.cache.delete([self.user, "my_groups_table"])
     Rails.cache.delete([self.user, "corporate_vita_for_user"])

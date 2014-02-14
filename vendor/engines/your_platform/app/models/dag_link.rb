@@ -7,6 +7,8 @@ class DagLink < ActiveRecord::Base
   before_destroy    :flush_cache
 
   def flush_cache
+    raise "flush_cache DagLink"
+
     if self.descendant_type == "Group"
       if Group.exists?( self.descendant_id )
         desc_group = Group.find( self.descendant_id )
