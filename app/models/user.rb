@@ -140,6 +140,18 @@ class User
   def wingolfit?
     self.aktivitätszahl.present?
   end
+  
+  def aktiver?
+    (group_names & ["Aktivitas", "Activitas"]).count > 0
+  end
+  
+  def philister?
+    group_names.include? "Philisterschaft"
+  end
+  
+  def group_names
+    self.groups.collect { |group| group.name }
+  end
 
 
   # Abo Wingolfsblätter
