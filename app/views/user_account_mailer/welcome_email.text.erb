@@ -1,6 +1,31 @@
 <%=t :welcome_to_wingolfsplattform %>
 ====================================================
 
-<%= new_user_account_session_url %>
-Login: <%=h @user.alias %>
-Passwort: <%=h @password %>
+<%=t :dear %> <%= @bundesbruder_or_philister %> <%= @user.last_name%>,
+
+<%=t :with_this_mail_you_get_the_account_data_for_wingolfsplattform %>
+
+<%=t :url %>: <%= root_url %>
+<%=t :login_name %>: <%= @user.alias %>
+<%=t :password %>: <%= @password %>
+
+<%=t :you_get_to_the_platform_via_wingolfsplattform_org %>
+
+<%=t :identify_with_login_name_and_type_password %>
+
+<%=t :feel_free_to_click_save_password %>
+
+<%=t :with_login_problems_contact_plattform_admins %>
+
+<%=t :more_contact_infos_at_wingolfsplattform_org %>
+
+<%=t :bbr_regards %>
+<%=t :the_members_of_ak_internet %>
+
+
+
+----------------------------------------------------
+
+<%=t :this_message_has_been_generated_automatically %>
+https://wingolfsplattform.org
+
