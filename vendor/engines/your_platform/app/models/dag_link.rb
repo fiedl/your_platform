@@ -7,8 +7,6 @@ class DagLink < ActiveRecord::Base
   before_destroy    :flush_cache
 
   def flush_cache
-    raise "flush_cache DagLink"
-
     if self.descendant_type == "Group"
       if Group.exists?( self.descendant_id )
         desc_group = Group.find( self.descendant_id )
@@ -34,7 +32,8 @@ class DagLink < ActiveRecord::Base
     if anc_group
       if anc_group.has_flag?( :admins_parent )
         officer_groups = anc_group.parent_groups.select { |x| x.has_flag?( :officers_parent ) } || []
-        administred = officer_groups.first.parents.try( :first )
+        administreds = officer_groups.collect{ |x| x.parents } || []
+        administred = administreds.collect{ |y| y.try( :first ) }
         groups = administred.try( :descendant_groups ) || []
         groups.each do |x|
           Rails.cache.delete([x, "structurable_admins"])

@@ -141,7 +141,7 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   # inherts from the direct ones.
   #
   def make_invalid(time = Time.zone.now)
-    raise 'An indirect membership cannot be invalidated.' unless direct?
+    raise 'An indirect membership cannot be invalidated. ' + self.user.id.to_s + ' ' + self.group.id.to_s unless direct?
     super
   end
   
