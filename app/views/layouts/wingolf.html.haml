@@ -28,20 +28,20 @@
                 = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'
                 %ul.dropdown-menu
                   = cached_my_groups_table
-              /
-                \//
-                <haml:silent>             if current_user.role_for( @navable )
-                </haml:silent><haml:block>              <li class="backendBarItem"><a>
-                Role: <haml:loud> current_user.role_for( @navable ) </haml:loud>
-                </a></li>
-                </haml:block>            //
+              - # /
+              - #   \//
+              - #   <haml:silent>             if current_user.role_for( @navable )
+              - #   </haml:silent><haml:block>              <li class="backendBarItem"><a>
+              - #   Role: <haml:loud> current_user.role_for( @navable ) </haml:loud>
+              - #   </a></li>
+              - #   </haml:block>            //
               - if can? :manage, @navable
                 %li.backendBarItem
                   = link_to t(:youareadmin), '#'
-              %li.backendBarItem.dropdown
-                = link_to t(:bookmarks), my_bookmarks_path
-                %ul.dropdown-menu.my-favorites
-                  = bookmarked_objects_lis( current_user )
+              - # %li.backendBarItem.dropdown
+              - #   = link_to t(:bookmarks), my_bookmarks_path
+              - #   %ul.dropdown-menu.my-favorites
+              - #     = bookmarked_objects_lis( current_user )
               %li.last.backendBarItem
                 = link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete
           .clear
@@ -61,8 +61,8 @@
         #contentBgLayer3
           #content_wrapper
             #toolbar
-              %span#star_tool
-                = star_tool( current_user, @navable )
+              - # %span#star_tool
+              - #   = star_tool( current_user, @navable )
               %span#breadcrumb
                 = breadcrumb_ul
               %span#site_tools
