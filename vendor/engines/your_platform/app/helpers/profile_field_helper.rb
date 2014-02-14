@@ -32,7 +32,7 @@ module ProfileFieldHelper
                       :section => args[:profile_section],
                       :label => label_in_english_with_underscores
                     ),
-             :id => "add_#{args[:profile_field_type].demodulize.underscore}_field",
+             :id => "add_#{label_in_english_with_underscores}_field",
              :remote => true,
              :method => 'post'
            )
