@@ -61,13 +61,13 @@ class BulkGeoCoder
     if @invalid.count > 0
       print "\n"
       print "#{@invalid.count} invalid addresses:\n".yellow
-      p @invalid
+      pp @invalid
     end
 
     if @failed.count > 0
       print "\n"
       print "#{@failed.count} addresses failed to geocode:\n".red
-      p @failed
+      pp @failed
     end
 
   end
@@ -77,7 +77,7 @@ class BulkGeoCoder
   end
 
   def geocode_address_field_if_ungeocoded( address_field )
-    if address_field.geocoded?
+    if address_field.geocoded? or address_field.value.nil?
       print "."
       @counter -=1 # these are free
     else
@@ -86,13 +86,13 @@ class BulkGeoCoder
         print ".".green # everything fine
         @quota_counter = 0
       elsif address_field.geocoded? && address_field.country_code.nil?
-        print ".".yellow # invalid address
+        print "w".yellow # invalid address
         @quota_counter = 0
         @invalid << { title: address_field.profileable.title, address: address_field.value, 
           profile_field_id: address_field.id }
       else
-        p address_field
-        print ".".red # query error
+        # p address_field
+        print "F".red # query error
         @quota_counter += 1        
         @failed << { title: address_field.profileable.title, address: address_field.value, 
           profile_field_id: address_field.id }
