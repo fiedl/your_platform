@@ -3,10 +3,10 @@ class DagLink < ActiveRecord::Base
 
   attr_accessible :ancestor_id, :ancestor_type, :count, :descendant_id, :descendant_type, :direct
   acts_as_dag_links polymorphic: true
-  after_commit      :flush_cache
-  before_destroy    :flush_cache
+  after_commit      :flush_cache_dag
+  before_destroy    :flush_cache_dag
 
-  def flush_cache
+  def flush_cache_dag
     if self.descendant_type == "Group"
       if Group.exists?( self.descendant_id )
         desc_group = Group.find( self.descendant_id )
