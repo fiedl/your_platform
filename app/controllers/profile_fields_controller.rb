@@ -14,9 +14,10 @@ class ProfileFieldsController < ApplicationController
       format.js
     end
   end
-  
+
   def update
-    respond_with @profile_field.update_attributes(params[:profile_field])
+    @profile_field.update_attributes(params[:profile_field])
+    respond_with_bip @profile_field
   end
   
   def destroy

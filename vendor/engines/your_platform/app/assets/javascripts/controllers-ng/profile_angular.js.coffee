@@ -133,6 +133,7 @@
     $scope.save() if newState == false
   )
   $scope.$on( 'clickOutside', ->
+    $scope.editMode = false
     $scope.save() if not $scope.editMode
   )
   $scope.edit = ->
