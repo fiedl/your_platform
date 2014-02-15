@@ -781,7 +781,7 @@ class NetenvUser
     status_names = assignments_in_corporation.collect do |assignment|
       match = assignment.match(/dc=org\$\$(.*)$/) || assignment.match(/^o=#{corporation.token},o=(Philister),/)
       match[1] if match
-    end
+    end.select { |status_name| status_name != nil }
     
     # if assignments_in_corporation.count > 1
     #   pp assignments_in_corporation
