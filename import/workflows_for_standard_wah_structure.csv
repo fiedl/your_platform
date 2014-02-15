@@ -3,8 +3,8 @@ Aktivmeldung;           Keilgäste;                                    Gäste;  
 Reception;              Hospitanten;                                  Hospitanten;                      Kraßfuxen;                   Rezipiert einen Hospitanten, sodass er Kraßfux wird.
 Branderung;             Kraßfuxen;                                    Kraßfuxen;                        Brandfuxen;                  Brandert einen Kraßfuxen, sodass er Brandfux wird.
 Burschung;              Brandfuxen;                                   Brandfuxen;                       Aktive Burschen;             Burscht einen Brandfuxen, sodass er aktiver Bursch wird. 
-Inaktivierung loci;     Aktive Burschen, Inaktive Burschen non loci;  Aktive Burschen, Inaktive Burschen non loci;                         Inaktive Burschen loci;	     Inaktiviert einen Burschen zum Inaktiven am Ort.
-Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Aktive Burschen, Inaktive Burschen loci;                         Inaktive Burschen non loci;  Inaktiviert einen Burschen zum auswärtigen Inaktiven.
+Inaktivierung loci;     Aktive Burschen, Inaktive Burschen non loci;  Burschen;                         Inaktive Burschen loci;	     Inaktiviert einen Burschen zum Inaktiven am Ort.
+Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Burschen;                         Inaktive Burschen non loci;  Inaktiviert einen Burschen zum auswärtigen Inaktiven.
 Reaktivierung;          Inaktive Burschen;                            Inaktive Burschen;                Aktive Burschen;             Reaktiviert einen inaktiven Burschen zum aktiven Burschen.
 Konkneipierung;         Hospitanten;                                  Hospitanten;                      Konkneipanten;               Macht einen Hospitanten zum Konkneipanten.
 Philistration;          Burschen, Konkneipanten;                      Aktivitas;                        Philister;                   Philistriert einen Burschen oder Konkneipanten zum ordentlichen Philister.
