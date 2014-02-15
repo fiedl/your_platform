@@ -12,7 +12,7 @@ feature 'User page', js: false do
     background do
       User.destroy_all
       @user = create(:user_with_account, :with_corporate_vita, :with_address)
-      @other_user = create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address)
+      @other_user = create(:user_with_account, :with_profile_fields, :with_corporate_vita, :with_address, :with_bank_account)
     end
 
 
@@ -175,6 +175,11 @@ feature 'User page', js: false do
 
         scenario 'the empty sections should not be visible' do
           subject.should have_no_selector('.box.section.organizations')
+        end
+
+        scenario 'the bank account section should not be visible' do
+          subject.should have_no_selector('h1', text: I18n.t(:bank_account_information))
+
         end
       end
 
