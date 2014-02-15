@@ -34,7 +34,7 @@
       %ul.child_users
         - if @members.count > 0
           - for user in @members do
-            = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
+            = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group} if can? :read, user
 
 / officers
 - if @group.find_officers_groups.any?
