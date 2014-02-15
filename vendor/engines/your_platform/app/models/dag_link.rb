@@ -32,8 +32,8 @@ class DagLink < ActiveRecord::Base
     if anc_group
       if anc_group.has_flag?( :admins_parent )
         officer_groups = anc_group.parent_groups.select { |x| x.has_flag?( :officers_parent ) } || []
-        administreds = officer_groups.collect{ |x| x.parents } || []
-        administred = administreds.collect{ |y| y.try( :first ) }
+        administreds = officer_groups.collect{ |x| x.parents }.flatten || []
+        administred = administreds.collect{ |y| y.try( :first ) }.try( :first )
         groups = administred.try( :descendant_groups ) || []
         groups.each do |x|
           Rails.cache.delete([x, "structurable_admins"])
