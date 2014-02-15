@@ -75,7 +75,7 @@ class Ability
 
         # Normal users cannot see hidden users, except for self.
         cannot :read, User do |user_to_show|
-          (user_to_show.hidden?) && (!user_to_show.alive?) && (user != user_to_show)
+          (user_to_show.hidden?  || !user_to_show.alive?) && (user != user_to_show)
         end
 
         # Normal users cannot see the former_members_parent groups
