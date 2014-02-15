@@ -69,6 +69,7 @@ namespace :import do
                   w.steps.create( brick_name: "RemoveFromGroupBrick", parameters: { :group_id => group.id } )
                 end
                 w.steps.create( brick_name: "AddToGroupBrick", parameters: { :group_id => add_to_group.id } )
+                w.steps.create( brick_name: "LastMembershipNeedsReviewBrick" )
     
                 for parent_group in workflow_belongs_to_groups
                   w.parent_groups << parent_group
