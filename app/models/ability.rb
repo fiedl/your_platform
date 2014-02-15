@@ -55,6 +55,15 @@ class Ability
         can :download, :all
         can :crud, User, :id => user.id
 
+        cannot :read, ProfileField do |field|
+          parent_field = field
+          while parent_field.parent != nil do
+            parent_field = parent_field.parent
+          end
+
+          parent_field.type == ProfileFieldTypes::BankAccount.name && parent_field.profileable.id != user.id
+        end
+
         can :crud, ProfileField do |field|
           parent_field = field
           while parent_field.parent != nil do

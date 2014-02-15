@@ -22,6 +22,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_bank_account do
+      after :create do |user|
+        user.profile_fields.create(type: ProfileFieldTypes::BankAccount.name)
+      end
+    end
+
     trait :with_corporate_vita do
       after :create do |user|
         corporation = create( :corporation_with_status_groups )
