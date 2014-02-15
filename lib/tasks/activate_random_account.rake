@@ -99,6 +99,8 @@ namespace :activate do
     #
     if not user
       log.warning 'No account left that needs activation. Exit 1.'
+      log.info "Going back to /Stage 0 Idle Mode/."
+      switch_back_to_stage_zero
       exit 1  # exit status 1 so that cron will report this via email.
     else
       
@@ -178,6 +180,13 @@ namespace :activate do
     end
     stage = "/Stage 0 Idle Mode/" unless stage.present?
     return stage
+  end
+  
+  def switch_back_to_stage_zero
+    filename = File.join(Rails.root, 'tmp', 'account_activation.stage')
+    if File.exists? filename
+      File.delete filename
+    end
   end
   
   def trigger_pressed?
