@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 module WorkflowKit
   class RemoveFromGroupBrick < Brick
     def name 
@@ -15,7 +14,14 @@ module WorkflowKit
       user = User.find( params[ :user_id ] ) 
       group = Group.find( params[ :group_id ] )
 
-      UserGroupMembership.find_by( user: user, group: group ).invalidate
+      membership = UserGroupMembership.find_by( user: user, group: group )
+      if membership
+        if membership.direct?
+          membership.invalidate
+        else
+          membership.direct_memberships.each { |m| m.invalidate } 
+        end
+      end
     end
   end
 end
