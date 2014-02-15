@@ -305,7 +305,7 @@ class User
   end
   
   def import_current_ldap_status_from( netenv_user )
-    for corporation in netenv_user.corporations
+    for corporation in self.corporations
       group = netenv_user.last_known_status_group_in corporation
       current_membership = self.reload.current_status_membership_in corporation
       if current_membership and current_membership.group and group and (current_membership.group.id != group.id)
