@@ -46,6 +46,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :hidden do
+      after :create do |user|
+        user.hidden = true
+      end
+    end
+
     # user with associated user account
     #
     factory :user_with_account do
