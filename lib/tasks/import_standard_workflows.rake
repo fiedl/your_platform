@@ -63,13 +63,17 @@ namespace :import do
     
               if workflow_belongs_to_groups.count > 0
                 workflow_counter += 1
-    
                 w = Workflow.create( name: workflow_name, description: workflow_description )
+                
+                sequence_counter = 0
                 remove_from_groups.collect do |group|
-                  w.steps.create( brick_name: "RemoveFromGroupBrick", parameters: { :group_id => group.id } )
+                  sequence_counter += 1
+                  w.steps.create( brick_name: "RemoveFromGroupBrick", parameters: { :group_id => group.id }, sequence_index: sequence_counter )
                 end
-                w.steps.create( brick_name: "AddToGroupBrick", parameters: { :group_id => add_to_group.id } )
-                w.steps.create( brick_name: "LastMembershipNeedsReviewBrick" )
+                sequence_counter += 1
+                w.steps.create( brick_name: "AddToGroupBrick", parameters: { :group_id => add_to_group.id }, sequence_index: sequence_counter )
+                sequence_counter += 1
+                w.steps.create( brick_name: "LastMembershipNeedsReviewBrick", sequence_index: sequence_counter )
     
                 for parent_group in workflow_belongs_to_groups
                   w.parent_groups << parent_group
