@@ -38,7 +38,7 @@ module ProfileHelper
     can? :crud, profileable
   end
 
-  def has_visible_fields_?( section )
+  def has_visible_fields?( section )
     section.profile_fields.select{|field| can? :read, field}.count > 0
   end
 
@@ -47,7 +47,7 @@ module ProfileHelper
   # (b) all sections are to be shown (by force).
   #
   def show_this_section?( section )
-    has_visible_fields_?(section) or show_all_sections?(section.profileable)
+    has_visible_fields?(section) or show_all_sections?(section.profileable)
   end
 
   def map_of_address_profile_fields( address_profile_fields )
