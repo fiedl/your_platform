@@ -15,7 +15,14 @@ module WorkflowKit
       user = User.find( params[ :user_id ] ) 
       group = Group.find( params[ :group_id ] )
 
-      UserGroupMembership.find_by( user: user, group: group ).invalidate
+      membership = UserGroupMembership.find_by( user: user, group: group )
+      if membership  # probably the user was not in the group
+        if membership.direct? # probably the group is a group without direct members
+          membership.invalidate
+        else
+          membership.direct_memberships.each { |m| m.invalidate } 
+        end
+      end
     end
   end
 end
