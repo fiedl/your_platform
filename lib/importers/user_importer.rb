@@ -77,50 +77,42 @@ class UserImporter < Importer
       updating_user = find_existing_user_for(netenv_user) ? true : false
       user = find_or_build_user_for netenv_user
       
-      ## # Grundlegende Attribute übernehmen.
-      ## # Vor- und Zuname, E-Mail-Adresse, W-Nummer, Geburtsdatum.
-      ## # 
-      ## user.import_basic_attributes_from netenv_user
-      ## user.save
-      ## 
-      ## # Profilfelder importieren.
-      ## # 
-      ## user.import_general_profile_fields_from netenv_user
-      ## user.import_contact_profile_fields_from netenv_user
-      ## user.import_study_profile_fields_from netenv_user
-      ## user.import_professional_profile_fields_from netenv_user
-      ## user.import_profile_fields_about_me_from netenv_user
-      ## user.import_bank_profile_fields_from netenv_user
-      ## user.import_communication_profile_fields_from netenv_user
-      ## user.create_template_profile_fields_where_non_existant
-      ## 
-      ## # Mitgliedschaften in Korporationen importieren.
-      ## # 
-      ## check_corporation_memberships_consistency_for netenv_user
-      ## user.import_corporation_memberships_from netenv_user
-      ## perform_consistency_check_for_aktivitaetszahl_for user, netenv_user
-      ## make_sure_all_corporation_memberships_have_been_imported_for user, netenv_user
-      ## 
-      ## # BV-Zuordnung.
-      ## #
-      ## user.import_bv_membership_from netenv_user
-      ## 
-      ## # Benutzer ggf. verstecken.
-      ## #
-      ## user.import_hidden_status_from netenv_user
-      ## 
-      ## # Zeitstempel des Datensatzes importieren.
-      ## # created_at, updated_at.
-      ## #
-      ## user.import_timestamps_from netenv_user
+      # Grundlegende Attribute übernehmen.
+      # Vor- und Zuname, E-Mail-Adresse, W-Nummer, Geburtsdatum.
+      # 
+      user.import_basic_attributes_from netenv_user
+      user.save
       
-      ## TODO REMOVE THIS BLOCK AND RESTORE ORIGINAL FUNCTIONALITY
+      # Profilfelder importieren.
+      # 
+      user.import_general_profile_fields_from netenv_user
+      user.import_contact_profile_fields_from netenv_user
+      user.import_study_profile_fields_from netenv_user
+      user.import_professional_profile_fields_from netenv_user
+      user.import_profile_fields_about_me_from netenv_user
+      user.import_bank_profile_fields_from netenv_user
+      user.import_communication_profile_fields_from netenv_user
+      user.create_template_profile_fields_where_non_existant
       
-      if user.id
-        user.import_current_ldap_status_from netenv_user
-      end
+      # Mitgliedschaften in Korporationen importieren.
+      # 
+      check_corporation_memberships_consistency_for netenv_user
+      user.import_corporation_memberships_from netenv_user
+      perform_consistency_check_for_aktivitaetszahl_for user, netenv_user
+      make_sure_all_corporation_memberships_have_been_imported_for user, netenv_user
       
-      ## /TODO
+      # BV-Zuordnung.
+      #
+      user.import_bv_membership_from netenv_user
+      
+      # Benutzer ggf. verstecken.
+      #
+      user.import_hidden_status_from netenv_user
+      
+      # Zeitstempel des Datensatzes importieren.
+      # created_at, updated_at.
+      #
+      user.import_timestamps_from netenv_user
       
       # Fortschritt festhalten. In Abhängigkeit davon, ob ein neuer Benutzer angelegt oder
       # ein vorhandener aktualisiert wurde, wird ein entsprechendes Symbol angezeigt.
