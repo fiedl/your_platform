@@ -58,9 +58,6 @@ require 'workflow_kit'
 require 'phony' 
 require 'will_paginate'
 
-# Gallery View
-require 'rubylight'
-
 # Metrics
 require 'fnordmetric'
 require 'rack-mini-profiler'
