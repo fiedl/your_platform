@@ -91,9 +91,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
   
-  # Gallery View
-  s.add_dependency 'rubylight', '1.0.3.2'                                              # Creative Commons
-  
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License

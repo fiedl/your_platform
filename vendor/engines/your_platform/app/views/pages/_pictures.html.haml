@@ -1,0 +1,6 @@
+- if page.attachments_by_type( "image" ).count > 0
+  %h1= t :pictures
+  .pictures
+    .galleria
+      - for attachment in page.attachments_by_type( "image" )
+        = render partial: 'attachments/picture', locals: { attachment: attachment }

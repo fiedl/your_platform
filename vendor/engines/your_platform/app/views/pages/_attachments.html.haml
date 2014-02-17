@@ -1,8 +1,13 @@
-- if (page.attachments.count > 0) or can?(:manage, page)
+- if can? :update, page
+  - attachments = page.attachments
+- else
+  - attachments = page.attachments.find_without_types( "video", "image" )
+
+- if (attachments.count > 0) or can?(:update, page)
   %h1= t :attachments
   %div.attachments
     %table.attachments
-      - for attachment in page.attachments.find_without_types( "video", "image" )
+      - for attachment in attachments
         = render attachment
     - if can? :manage, page
       %span.add_attachment

@@ -49,7 +49,7 @@ class AttachmentsController < ApplicationController
     else
       path = @attachment.file.current_path
     end
-    send_file path, x_sendfile: true
+    send_file path, x_sendfile: true, disposition: :inline
   end
   
 private

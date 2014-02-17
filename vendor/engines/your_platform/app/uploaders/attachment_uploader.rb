@@ -59,6 +59,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
       "thumb.png"
     end
   end
+  
+  version :medium, :if => :image? do
+    process :resize_to_limit => [ 800, 600 ]
+  end
+  
   # 
   # version :video_thumb, :if => :video? do
   #   process :create_video_thumb
@@ -72,6 +77,12 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     new_file && new_file.content_type.present? && 
       (new_file.content_type.include?('image') || new_file.content_type.include?('pdf'))
   end
+  
+  def image?( new_file )
+    new_file && new_file.content_type.present? && new_file.content_type.include?('image')
+  end
+  
+  
   # 
   # def video?( new_file )
   #   new_file.content_type.include?('video')
@@ -125,7 +136,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   
 
   def self.valid_versions
-    [:thumb, :video_thumb]
+    [:thumb, :medium, :video_thumb]
   end
 
 end
