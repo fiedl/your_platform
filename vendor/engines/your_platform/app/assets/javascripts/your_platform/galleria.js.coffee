@@ -21,7 +21,7 @@ ready = ->
       )
     )
     
-    Galleria.loadAssetTheme 'classic'
+    Galleria.loadTheme '/js/vendor/galleria/themes/classic.js'
     Galleria.run '.galleria'
   
 $(document).ready(ready)
