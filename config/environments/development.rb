@@ -33,6 +33,7 @@ Wingolfsplattform::Application.configure do
   config.assets.compress = false
 
   # Expands the lines which load the assets
+  # When set to false, compiled assets would be used in development.
   config.assets.debug = true
 
 

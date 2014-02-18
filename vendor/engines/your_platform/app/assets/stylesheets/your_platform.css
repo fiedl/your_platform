@@ -1,6 +1,6 @@
 /*
  * require ../../../vendor/assets/sylesheets/flags
  *= require edit_mode
- *= require_tree ../../../vendor/assets/stylesheets/galleria/
+ *= require gallery/galleria/classic
  *= require_tree ./your_platform
  */

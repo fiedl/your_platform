@@ -90,6 +90,7 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
+  s.add_dependency 'rails-gallery', '>= 0.3.3'                                         # MIT License
   
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License

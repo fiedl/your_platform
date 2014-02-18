@@ -6,7 +6,8 @@
 //= require twitter/bootstrap
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
-//= require_tree ../../../vendor/assets/javascripts/galleria/
+//= require gallery/galleria
+//= require gallery/galleria/classic
 //= require app-ng
 //= require_tree ./services-ng
 //= require_tree ./models-ng
