@@ -79,7 +79,23 @@ describe GroupsController do
         assigns(:members).should_not be_empty
       end
 
-      it 'should not show map markers of hidden members'
+      it 'assigns addresses of members of the requested group to @map_address_fields' do
+        group = create(:group, :with_users)
+        get :show, id: group
+        assigns(:map_address_fields).should_not be_empty
+      end
+
+      it 'assigns addresses of hidden members to @map_address_fields' do
+        group = create(:group, :with_hidden_user)
+        get :show, id: group
+        assigns(:map_address_fields).should_not be_empty
+      end
+
+      it 'assigns addresses of dead members to @map_address_fields' do
+        group = create(:group, :with_dead_user)
+        get :show, id: group
+        assigns(:map_address_fields).should_not be_empty
+      end
     end
 
     describe 'POST #create' do

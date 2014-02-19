@@ -11,7 +11,7 @@ FactoryGirl.define do
     trait :with_users do
       after :create do |group|
         10.times do
-          user = create(:user)
+          user = create(:user, :with_address)
           group.child_users << user
         end
       end
@@ -20,14 +20,14 @@ FactoryGirl.define do
 
     trait :with_hidden_user do
       after :create do |group|
-        user = create(:user, :hidden, last_name: 'Hidden')
+        user = create(:user, :with_address, :hidden, last_name: 'Hidden')
         group.child_users << user
       end
     end
 
     trait :with_dead_user do
       after :create do |group|
-        user = create(:user, :dead, last_name: 'Dead')
+        user = create(:user, :with_address, :dead, last_name: 'Dead')
         group.child_users << user
       end
     end
