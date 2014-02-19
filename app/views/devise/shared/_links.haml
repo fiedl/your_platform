@@ -1,3 +1,5 @@
+%p
+
 - if controller_name != 'sessions'
   = link_to t(:login), new_session_path(resource_name)
   %br
@@ -22,3 +24,12 @@
   - resource_class.omniauth_providers.each do |provider|
     = link_to "Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider)
     %br
+
+
+%hr
+
+%p
+  Die alte 
+  %a(href="http://wingolf.netenviron.com") Netenviron-Plattform
+  kann noch bis zum 31.03.2014 zum Abrufen von Infromationen verwendet werden:
+  %a(href="http://wingolf.netenviron.com") http://wingolf.netenviron.com
