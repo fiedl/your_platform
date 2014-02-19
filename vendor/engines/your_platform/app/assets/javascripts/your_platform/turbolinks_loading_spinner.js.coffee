@@ -21,7 +21,7 @@
       <div class="modal-body card-body">
         <!--i class="icon-spinner icon-spin icon-2x"></i-->
         <i class="' + icon + ' icon-2x"></i>
-        &emsp;Inhalt wird geladen. Bitte kurz warten ...
+        &emsp;Inhalt wird geladen. Bitte warten ...
       </div>
     </div>
   '
@@ -29,6 +29,10 @@
   add_spinner: ->
     $('body').append(@spinner_html(@icon(), @title()))
     $('body div#page-spinner').modal({keyboard: false})
+    $('body div#page-spinner').css('z-index', '-1')
+    setTimeout( ->
+      $('body div#page-spinner').hide().css('z-index', 1500).show('fade')
+    , 2000)
   remove_spinner: ->
     clearTimeout(@spinner)
     $('div#page-spinner').modal('hide')
