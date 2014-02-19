@@ -19,8 +19,8 @@ gem 'mysql2'								# MIT License
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets, :production, 'testing-aki' do
-  gem 'sass-rails',   '~> 3.2.3'					# MIT License
-  gem 'coffee-rails', '~> 3.2.1'					# MIT License
+  gem 'sass-rails',   '>= 3.2.3'					# MIT License
+  gem 'coffee-rails', '>= 3.2.1'					# MIT License
 #  gem 'coffee-script', '1.4.0' # need this at 1.4.0 for mercury, at the moment
     # see https://github.com/jejacks0n/mercury/issues/349
 
@@ -190,9 +190,12 @@ gem 'gmaps4rails', '~> 2.0.1', git: 'git://github.com/fiedl/Google-Maps-for-Rail
 gem 'rack-timeout'
 
 # Metrics
-gem 'fnordmetric', '1.0.0'
+gem 'fnordmetric'
 
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
+# Temporary Dependency Resolving
+# TODO Remove when obsolete
+gem 'tilt', '~> 1.4.1'
 
