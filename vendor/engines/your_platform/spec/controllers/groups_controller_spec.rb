@@ -45,7 +45,7 @@ describe GroupsController do
 
       it 'renders the :index view' do
         get :index
-        response.should be_success
+        response.should render_template :index
       end
     end
 
@@ -61,8 +61,25 @@ describe GroupsController do
         response.should render_template :show
       end
 
-      it 'should not show map markers of hidden members' do
+      it 'assigns members of the requested group to @members' do
+        group = create(:group, :with_users)
+        get :show, id: group
+        assigns(:members).should_not be_empty
       end
+
+      it 'assigns hidden members to @members' do
+        group = create(:group, :with_hidden_user)
+        get :show, id: group
+        assigns(:members).should_not be_empty
+      end
+
+      it 'assigns dead members to @members' do
+        group = create(:group, :with_dead_user)
+        get :show, id: group
+        assigns(:members).should_not be_empty
+      end
+
+      it 'should not show map markers of hidden members'
     end
 
     describe 'POST #create' do
