@@ -35,7 +35,7 @@ ready = ->
       #   },
       #   display: 'title'
       # } )
-
+      
       $(this).autocomplete
         source: (request, response) ->
           $.getJSON autocomplete_input_element.data('autocomplete-url'),

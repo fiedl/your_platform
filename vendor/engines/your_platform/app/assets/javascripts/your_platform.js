@@ -8,10 +8,10 @@
 //= require jquery-fileupload/vendor/tmpl
 //= require gallery/galleria
 //= require gallery/galleria/classic
-//= require app-ng
-//= require_tree ./services-ng
-//= require_tree ./models-ng
-//= require_tree ./filters-ng
-//= require_tree ./directives-ng
-//= require_tree ./controllers-ng
+// TODO     require app-ng
+// TODO     require_tree ./services-ng
+// TODO     require_tree ./models-ng
+// TODO     require_tree ./filters-ng
+// TODO     require_tree ./directives-ng
+// TODO     require_tree ./controllers-ng
 //= require_tree ./your_platform

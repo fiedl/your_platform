@@ -15,10 +15,10 @@
 //= require turbolinks
 //= require angular
 //= require angular-resource
-//= require jquery-ui
-//= require jquery.ui.effect.all
+//= require jquery.ui.all
+// require jquery.ui.effect.all
 //= require jquery.purr
-//= require jquery.ui.datepicker-de
+// TODO    require jquery.ui.datepicker-de
 //= require_boxes
 //= require gmaps4rails
 //= require make-js-more-like-ruby
