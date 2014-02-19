@@ -5,7 +5,7 @@
     %title= website_title_with_app_name
     = stylesheet_link_tag    'wingolf_layout', :media => 'all'
     = stylesheet_link_tag    'application', :media => 'all'
-    = stylesheet_link_tag    '/stylesheets/vendor/galleria/themes/classic' if @navable.try(:kind_of?, Page)
+    = stylesheet_link_tag    '/stylesheets/vendor/galleria/themes/classic'
     = favicon_link_tag 'favicon.ico'
     = favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png'
     = javascript_include_tag 'application'

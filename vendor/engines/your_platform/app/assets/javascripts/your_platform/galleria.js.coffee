@@ -8,7 +8,8 @@ ready = ->
       initialTransition: 'fade',
       assets: false,  # The images are not serverd as assets but by the attachments controller.
       _toggleInfo: true,
-      autoplay: 9000,
+      preload: 4,
+      # autoplay: 9000,
       popupLinks: true
     })
     
