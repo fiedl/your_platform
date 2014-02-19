@@ -25,6 +25,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_dead_user do
+      after :create do |group|
+        user = create(:user, :dead, last_name: 'Dead')
+        group.child_users << user
+      end
+    end
+
   end
 
 end

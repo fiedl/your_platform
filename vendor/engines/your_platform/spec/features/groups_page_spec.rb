@@ -59,16 +59,15 @@ feature "Groups Page" do
 
   describe 'when logged in as regular user' do
     background do
-      @group = create(:group, :with_users, :with_hidden_user)
-
+      @group = create(:group, :with_users, :with_hidden_user, :with_dead_user)
       login(:user)
     end
 
-    scenario 'should not render hidden members' do
+    scenario 'should not render list entries for hidden or dead members' do
       visit group_path(@group)
       page.should have_selector '#group_members ul.child_users li', count: 10
       page.should have_no_text 'Hidden'
-
+      page.should have_no_text 'Dead'
     end
 
   end
