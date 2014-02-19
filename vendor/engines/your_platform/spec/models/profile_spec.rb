@@ -13,7 +13,7 @@ describe Profile do
       attr_accessible :name
       is_structureable( ancestor_class_names: %w(MyStructureable),
                         descendant_class_names: %w(MyStructureable Group User Workflow Page) )
-      has_profile_fields sections: [ :general, :contact ]
+      has_profile_fields sections: [ :general, :group ]
     end
 
     @profileable = MyStructureable.create(name: "My Profileable")
@@ -63,11 +63,11 @@ describe Profile do
   end
   
   describe "#sections_by_title" do
-    subject { @profile.sections_by_title([:contact, :general]) }
+    subject { @profile.sections_by_title([:group, :general]) }
     it "should return an array of ProfileSections where the titles matche the given titles" do
       subject.should be_kind_of Array
       subject.first.should be_kind_of ProfileSection
-      subject.collect { |section| section.title }.should == [:contact, :general]
+      subject.collect { |section| section.title }.should == [:group, :general]
     end
   end
 

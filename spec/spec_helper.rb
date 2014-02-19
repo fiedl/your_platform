@@ -178,6 +178,10 @@ Spork.prefork do
     #
     config.include PressEnter
 
+    # Devise test helper for controller tests
+    config.include Devise::TestHelpers, :type => :controller
+    config.extend ControllerMacros, :type => :controller
+
 
     # Database Wiping Policy
     # ......................................................................................

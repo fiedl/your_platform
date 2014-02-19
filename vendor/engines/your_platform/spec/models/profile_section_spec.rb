@@ -13,7 +13,7 @@ describe ProfileSection do
       attr_accessible :name
       is_structureable( ancestor_class_names: %w(MyStructureable),
                         descendant_class_names: %w(MyStructureable Group User Workflow Page) )
-      has_profile_fields sections: [ :general, :contact ]
+      has_profile_fields sections: [ :general, :group ]
     end
 
     @profileable = MyStructureable.create(name: "My Profileable")
