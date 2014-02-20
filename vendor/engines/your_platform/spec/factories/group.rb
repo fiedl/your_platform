@@ -8,24 +8,29 @@ FactoryGirl.define do
     sequence( :internal_token ) { |n| "#{n}G" }
 
 
-    trait :with_users do
+    trait :with_members do
       after :create do |group|
         10.times do
-          user = create(:user)
+          user = create(:user, :with_address)
           group.child_users << user
         end
       end
     end
 
 
-    trait :with_hidden_user do
+    trait :with_hidden_member do
       after :create do |group|
-        user = create(:user, :hidden, last_name: 'Hidden')
+        user = create(:user, :with_address, :hidden, last_name: 'Hidden')
         group.child_users << user
       end
     end
 
+    trait :with_dead_member do
+      after :create do |group|
+        user = create(:user, :with_address, :dead, last_name: 'Dead')
+        group.child_users << user
+      end
+    end
   end
-
 end
 

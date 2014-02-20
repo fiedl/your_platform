@@ -52,6 +52,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :dead do
+      after :create do |user|
+        user.set_date_of_death_if_unset 1.day.ago
+      end
+    end
+
     # user with associated user account
     #
     factory :user_with_account do
