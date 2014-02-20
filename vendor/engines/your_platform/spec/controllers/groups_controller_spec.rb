@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe GroupsController do
   context 'when not logged in' do
-    describe 'Get #index' do
+    describe 'GET #index' do
       it 'should return 302 not authorized' do
         get :index
         response.status.should eq(302)
@@ -36,7 +36,7 @@ describe GroupsController do
   context 'when logged in as admin' do
     login_admin
 
-    describe 'Get #index' do
+    describe 'GET #index' do
       it 'populates an array of groups' do
         group = create(:group)
         get :index
@@ -154,6 +154,76 @@ describe GroupsController do
           put :update, id: @group, group: attributes_for(:group, name: nil)
           response.should render_template :edit
         end
+      end
+    end
+  end
+
+  context 'when logged in as regular user' do
+    login_user
+
+    describe 'GET #index' do
+      it 'populates an array of groups' do
+        pending 'a bug prevents @groups to be assigned for non admins'
+        group = create(:group)
+        get :index
+        assigns(:groups).should include(group)
+      end
+
+      it 'renders the :index view' do
+        get :index
+        response.should render_template :index
+      end
+    end
+
+    describe 'GET #show' do
+      it 'assigns the requested group to @group' do
+        group = create(:group)
+        get :show, id: group
+        assigns(:group).should eq(group)
+      end
+
+      it 'renders the show template' do
+        get :show, id: create(:group)
+        response.should render_template :show
+      end
+
+      it 'assigns members of the requested group to @members' do
+        group = create(:group, :with_users)
+        get :show, id: group
+        assigns(:members).should_not be_empty
+      end
+
+      it 'assigns addresses of members of the requested group to @map_address_fields' do
+        group = create(:group, :with_users)
+        get :show, id: group
+        assigns(:map_address_fields).should_not be_empty
+      end
+
+      it 'does not assign addresses of hidden members to @map_address_fields' do
+        group = create(:group, :with_hidden_user)
+        get :show, id: group
+        assigns(:map_address_fields).should be_empty
+      end
+
+      it 'does not assign addresses of dead members to @map_address_fields' do
+        group = create(:group, :with_dead_user)
+        get :show, id: group
+        assigns(:map_address_fields).should be_empty
+      end
+    end
+
+    describe 'POST #create' do
+      it 'returns 302 not authorized' do
+        post :create
+        response.status.should eq(302)
+      end
+    end
+
+    describe 'PUT #update' do
+      it 'respond with 302 not authorized' do
+        group = create(:group)
+        put :update, id: group, group: attributes_for(:group)
+        response.status.should eq(302)
       end
     end
   end
