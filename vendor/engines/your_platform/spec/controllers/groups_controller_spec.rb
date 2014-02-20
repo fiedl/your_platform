@@ -62,37 +62,37 @@ describe GroupsController do
       end
 
       it 'assigns members of the requested group to @members' do
-        group = create(:group, :with_users)
+        group = create(:group, :with_members)
         get :show, id: group
         assigns(:members).should_not be_empty
       end
 
       it 'assigns hidden members to @members' do
-        group = create(:group, :with_hidden_user)
+        group = create(:group, :with_hidden_member)
         get :show, id: group
         assigns(:members).should_not be_empty
       end
 
       it 'assigns dead members to @members' do
-        group = create(:group, :with_dead_user)
+        group = create(:group, :with_dead_member)
         get :show, id: group
         assigns(:members).should_not be_empty
       end
 
       it 'assigns addresses of members of the requested group to @map_address_fields' do
-        group = create(:group, :with_users)
+        group = create(:group, :with_members)
         get :show, id: group
         assigns(:map_address_fields).should_not be_empty
       end
 
       it 'assigns addresses of hidden members to @map_address_fields' do
-        group = create(:group, :with_hidden_user)
+        group = create(:group, :with_hidden_member)
         get :show, id: group
         assigns(:map_address_fields).should_not be_empty
       end
 
       it 'assigns addresses of dead members to @map_address_fields' do
-        group = create(:group, :with_dead_user)
+        group = create(:group, :with_dead_member)
         get :show, id: group
         assigns(:map_address_fields).should_not be_empty
       end
@@ -188,25 +188,25 @@ describe GroupsController do
       end
 
       it 'assigns members of the requested group to @members' do
-        group = create(:group, :with_users)
+        group = create(:group, :with_members)
         get :show, id: group
         assigns(:members).should_not be_empty
       end
 
       it 'assigns addresses of members of the requested group to @map_address_fields' do
-        group = create(:group, :with_users)
+        group = create(:group, :with_members)
         get :show, id: group
         assigns(:map_address_fields).should_not be_empty
       end
 
       it 'does not assign addresses of hidden members to @map_address_fields' do
-        group = create(:group, :with_hidden_user)
+        group = create(:group, :with_hidden_member)
         get :show, id: group
         assigns(:map_address_fields).should be_empty
       end
 
       it 'does not assign addresses of dead members to @map_address_fields' do
-        group = create(:group, :with_dead_user)
+        group = create(:group, :with_dead_member)
         get :show, id: group
         assigns(:map_address_fields).should be_empty
       end

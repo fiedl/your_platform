@@ -59,7 +59,7 @@ feature "Groups Page" do
 
   describe 'when logged in as regular user' do
     background do
-      @group = create(:group, :with_users, :with_hidden_user, :with_dead_user)
+      @group = create(:group, :with_members, :with_hidden_member, :with_dead_member)
       login(:user)
     end
 
