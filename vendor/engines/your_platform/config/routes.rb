@@ -8,7 +8,8 @@ Rails.application.routes.draw do
     match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
   end
   
-  match "search" => "search#index", as: "search"
+  get 'search/guess', to: "search#lucky_guess"
+  get :search, to: "search#index"
 
   resources :users do
     get :autocomplete_title, on: :collection

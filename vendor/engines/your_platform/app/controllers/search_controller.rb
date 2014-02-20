@@ -5,7 +5,7 @@ class SearchController < ApplicationController
 
   def index
     query_string = params[ :query ]
-    if not query_string.empty?
+    if query_string.present?
       
       # log search query for metrics analysis
       #
@@ -14,7 +14,7 @@ class SearchController < ApplicationController
       # browse users, pages and groups
       #
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
-      @users = User.where( "first_name like ? or last_name like ?", q, q )
+      @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
         .order( :last_name, :first_name )
       @pages = Page.where( "title like ?", q )
         .order( :title )
@@ -59,6 +59,32 @@ class SearchController < ApplicationController
     @navable = Page.find_intranet_root
     @title = "Suche: #{query_string}"
 
+  end
+  
+  # This action results in a redirection to the search result
+  # considered to be a lucky guess.
+  #
+  #     /search/guess?query=FooBar
+  #     would redirect to the Page with the title "FooBar".
+  #
+  def lucky_guess
+    query_string = params[:query]
+    if query_string.present?
+      @result = Page.where(title: query_string).limit(1).first
+      @result ||= Group.where(name: query_string).limit(1).first
+      @result ||= User.where("CONCAT(first_name, ' ', last_name) = ?", query_string).limit(1).first
+      @result ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", "#{query_string}%").select do |user|
+        user.title == query_string
+      end.first
+      p @result
+      if @result
+        redirect_to @result if can? :read, @result
+      else
+        redirect_to :action => :index
+      end
+    else
+      redirect_to :action => :index
+    end
   end
 
   private
