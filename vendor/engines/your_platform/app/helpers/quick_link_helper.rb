@@ -9,7 +9,7 @@
 module QuickLinkHelper
   
   def replace_quick_link_tags(text)
-    text.gsub(/\[\[.*\]\]/) { |query| link_tag_from_search_query(query.gsub('[', '').gsub(']', '')) }
+    text.gsub(/\[\[.*\]\]/) { |query| link_tag_from_search_query(query.gsub('[', '').gsub(']', '')) } if text.present?
   end
   
   private
