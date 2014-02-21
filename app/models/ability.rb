@@ -7,7 +7,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  def initialize(user, options = {})
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -45,7 +45,7 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if Group.find_everyone_group.try(:find_admins) && user.in?(Group.find_everyone_group.find_admins)
+      if (not options[:preview_as_user]) and Group.find_everyone_group.try(:find_admins) and user.in?(Group.find_everyone_group.find_admins)
         can :manage, :all
 
       else
