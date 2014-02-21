@@ -1,24 +1,10 @@
 # This extends the your_platform ProfileFieldTypes module.
-require_dependency YourPlatform::Engine.root.join( 'app/models/profile_field_types' ).to_s
-
-
-# Template
-#
-# class SpecialProfileField < ProfileField
-#   def self.model_name; ProfileField.model_name; end#
-#
-#   def display_html
-#     self.value
-#   end
-#
-# end
-
+require_dependency YourPlatform::Engine.root.join( 'app/models/profile_field_types/address' ).to_s
 
 module ProfileFieldTypes
 
   # Address Information
-  # ==========================================================================================
-
+  #
   class Address
 
     attr_accessible :wingolfspost
@@ -65,32 +51,5 @@ module ProfileFieldTypes
     end
 
   end
-
-
-  # Studies Information
-  # ==========================================================================================
-
-  class Study < ProfileField
-    def self.model_name; ProfileField.model_name; end
-
-    has_child_profile_fields :from, :to, :university, :subject, :specialization
-
-    # If the single study has no label, just say 'Study'.
-    #
-    def label
-      super || I18n.translate( :study, default: "Study" )
-    end
-
-  end
-
   
-  # Wingolf-spezifisch
-  # ==========================================================================================
-
-  class Klammerung < ProfileField
-    def self.model_name; ProfileField.model_name; end
-    
-  end
-
 end
-
