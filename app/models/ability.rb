@@ -86,22 +86,22 @@ class Ability
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
 
-        # LOCAL ADMINS
-        # Local admins can manage their groups, this groups' subgroups 
-        # and all users within their groups. They can also execute workflows.
-        #
-        can :manage, Group do |group|
-          group.cached_structurable_admins.include?(user)
-        end
-        can :manage, User do |other_user|
-          other_user.user_admins.include?(user)
-        end
-        can :execute, Workflow do |workflow|
-          workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-        end
-        can :manage, Page do |page|
-          page.cached_structurable_admins.include?(user)
-        end
+        # # LOCAL ADMINS
+        # # Local admins can manage their groups, this groups' subgroups 
+        # # and all users within their groups. They can also execute workflows.
+        # #
+        # can :manage, Group do |group|
+        #   group.cached_structurable_admins.include?(user)
+        # end
+        # can :manage, User do |other_user|
+        #   other_user.user_admins.include?(user)
+        # end
+        # can :execute, Workflow do |workflow|
+        #   workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+        # end
+        # can :manage, Page do |page|
+        #   page.cached_structurable_admins.include?(user)
+        # end
         
         # DEVELOPERS
         if user.developer?
