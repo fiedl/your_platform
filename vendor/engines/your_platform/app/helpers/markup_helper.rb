@@ -10,7 +10,6 @@
 module MarkupHelper
   
   def markup(text)
-    p "=========", text
     markdown replace_quick_link_tags text
   end
   

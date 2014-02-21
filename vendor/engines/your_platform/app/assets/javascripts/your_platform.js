@@ -8,6 +8,7 @@
 //= require jquery-fileupload/vendor/tmpl
 //= require gallery/galleria
 //= require gallery/galleria/classic
+//= require bind-first/jquery.bind-first-0.2.3
 // TODO     require app-ng
 // TODO     require_tree ./services-ng
 // TODO     require_tree ./models-ng
