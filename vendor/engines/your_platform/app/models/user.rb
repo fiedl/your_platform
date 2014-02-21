@@ -637,14 +637,20 @@ class User < ActiveRecord::Base
   # This method returns the first user matching the given title.
   #
   def self.find_by_title( title )
-    User.all.select { |user| user.title == title }.first
+    self.where("? LIKE CONCAT('%', first_name, ' ', last_name, '%')", title).select do |user|
+      user.title == title
+    end.first
   end
+  
+  def self.find_by_name( name )
+    self.find_all_by_name(name).limit(1).first
+  end    
 
   # This method finds all users having the given name attribute.
   # notice: case insensitive
   #
-  def self.find_all_by_name( name ) # TODO: Test this; # TODO: optimize using where
-    User.all.select { |user| user.name.downcase == name.downcase }
+  def self.find_all_by_name( name ) # TODO: Test this
+    self.where("CONCAT(first_name, ' ', last_name) = ?", name)
   end
 
   # This method finds all users having the given email attribute.

@@ -19,7 +19,7 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    ( name + "  " + cached_aktivitaetszahl ).strip if name && cached_aktivitaetszahl
+    ( name + " " + cached_aktivitaetszahl ).strip if name && cached_aktivitaetszahl
   end
   
   # This method returns the bv (Bezirksverband) the user is associated with.

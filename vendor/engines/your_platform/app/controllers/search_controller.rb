@@ -72,15 +72,12 @@ class SearchController < ApplicationController
     if query_string.present?
       @result = Page.where(title: query_string).limit(1).first
       @result ||= Group.where(name: query_string).limit(1).first
-      @result ||= User.where("CONCAT(first_name, ' ', last_name) = ?", query_string).limit(1).first
-      @result ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", "#{query_string}%").select do |user|
-        user.title == query_string
-      end.first
-      p @result
+      @result ||= User.find_by_name(query_string)
+      @result ||= User.find_by_title(query_string)
       if @result
         redirect_to @result if can? :read, @result
       else
-        redirect_to :action => :index
+        redirect_to :action => :index, query: query_string
       end
     else
       redirect_to :action => :index

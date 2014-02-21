@@ -1175,6 +1175,14 @@ describe User do
       User.find_all_by_name( @user.name.downcase ).should include( @user )
     end
   end
+  
+  describe ".find_by_name" do
+    before do
+      @user = create( :user )
+    end
+    subject { User.find_by_name( @user.name ) }
+    it { should == @user }
+  end
 
   describe ".find_all_by_email" do
     before do

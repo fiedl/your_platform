@@ -17,8 +17,23 @@ describe User do
       @user.reload
       @user.name.blank?.should be_false
       @user.aktivitaetszahl.blank?.should be_false
-      subject.should == @user.name + "  " + @user.aktivitaetszahl
+      subject.should == @user.name + " " + @user.aktivitaetszahl
     end
+  end
+  
+  describe ".find_by_title" do
+    before do
+      @user = create :user
+      @corporation = create :corporation
+      @corporation.assign_user @user
+      create :user
+      create :user
+    end
+    subject { User.find_by_title(@user.title) }
+    specify "prelims" do
+      @user.title.length.should > @user.name.length
+    end
+    it { should == @user }
   end
 
   describe "#bv" do
@@ -117,7 +132,7 @@ describe User do
     end
   end
   
-  describe "#wingolfit?", :focus do
+  describe "#wingolfit?" do
     before { @user = create(:user) }
     subject { @user.wingolfit? }
     describe "for freshly created user" do
