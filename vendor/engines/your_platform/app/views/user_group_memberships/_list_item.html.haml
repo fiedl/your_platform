@@ -2,7 +2,12 @@
 - user ||= user_group_membership.user
 - group ||= user_group_membership.group
 %li
-  = link_to user.title, user
-  - if can? :manage, user
-    %span.show_only_in_edit_mode
-      = workflow_execution_links_for( group: group, user: user )
+  = link_to user do
+    = succeed ',' do
+      %strong= user.last_name
+    = succeed ',' do
+      = user.first_name
+    = user.title.gsub(user.name, "")
+  -# - if can? :manage, user
+  -#   %span.show_only_in_edit_mode
+  -#     = workflow_execution_links_for( group: group, user: user )
