@@ -33,8 +33,8 @@ feature "Search Field", js: true do
       end
       specify "searching for foo should list both users" do
         page.should have_content( I18n.t( :found_users ) )
-        page.should have_content( @user1.title )
-        page.should have_content( @user2.title )
+        page.should have_content( "#{@user1.last_name}, #{@user1.first_name}" )
+        page.should have_content( "#{@user1.last_name}, #{@user1.first_name}" )
       end
     end
     context "if there are more users matching" do
@@ -50,12 +50,12 @@ feature "Search Field", js: true do
       end
       specify "searching for foo should list each user only once" do
         page.should have_content( I18n.t( :found_users ) )
-        page.should have_content( @user1.title )
-        page.should have_content( @user2.title )
-        page.should have_content( @user3.title )
-        u1 = find('div.users_found').all(:css, 'a', :text => @user1.title)
-        u2 = find('div.users_found').all(:css, 'a', :text => @user2.title)
-        u3 = find('div.users_found').all(:css, 'a', :text => @user3.title)
+        page.should have_content( @user1.last_name )
+        page.should have_content( @user2.last_name )
+        page.should have_content( @user3.last_name )
+        u1 = find('div.users_found').all(:css, 'a', :text => @user1.last_name)
+        u2 = find('div.users_found').all(:css, 'a', :text => @user2.last_name)
+        u3 = find('div.users_found').all(:css, 'a', :text => @user3.last_name)
         u1.size.should == 1
         u2.size.should == 1
         u3.size.should == 1

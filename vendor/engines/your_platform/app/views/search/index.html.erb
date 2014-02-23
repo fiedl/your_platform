@@ -14,8 +14,12 @@
 <div>
   <ul>
     <div class="users_found">
-      <% for object in @users %>
-      <li><%= link_to object.title, object %></li>
+      <% for user in @users %>
+      <li>
+        <%= link_to user do %>
+          <%= render partial: 'users/user_title', locals: {user: user} %>
+        <% end %>
+      </li>
       <% end %>
     </div>
   </ul>
