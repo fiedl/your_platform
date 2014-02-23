@@ -8,6 +8,8 @@ class Ability
   include CanCan::Ability
 
   def initialize(user, options = {})
+    preview_as_user = true if options[:preview_as_user]
+    
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -45,7 +47,7 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if (not options[:preview_as_user]) and Group.find_everyone_group.try(:find_admins) and user.in?(Group.find_everyone_group.find_admins)
+      if (not preview_as_user) and Group.find_everyone_group.try(:find_admins) and user.in?(Group.find_everyone_group.find_admins)
         can :manage, :all
 
       else
@@ -90,20 +92,22 @@ class Ability
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
-        can :manage, Group do |group|
-          (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
-          # group.cached_structurable_admins.include?(user)
-        end
-        can :manage, User do |other_user|
-          other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-          # other_user.user_admins.include?(user)
-        end
-        can :execute, Workflow do |workflow|
-          workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-        end
-        can :manage, Page do |page|
-          page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-          # page.cached_structurable_admins.include?(user)
+          unless preview_as_user
+          can :manage, Group do |group|
+            (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
+            # group.cached_structurable_admins.include?(user)
+          end
+          can :manage, User do |other_user|
+            other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+            # other_user.user_admins.include?(user)
+          end
+          can :execute, Workflow do |workflow|
+            workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+          end
+          can :manage, Page do |page|
+            page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+            # page.cached_structurable_admins.include?(user)
+          end
         end
         
         # DEVELOPERS
