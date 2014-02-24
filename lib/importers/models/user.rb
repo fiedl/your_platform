@@ -278,6 +278,7 @@ class User
         # die Reihenfolge erhalten bleibt.
         #
         year_of_joining = netenv_user.year_of_joining(corporation)
+
         if last_date_of_joining.year.to_s == year_of_joining.to_s
           assumed_date_of_joining = last_date_of_joining + 1.day
         else
@@ -305,7 +306,7 @@ class User
   end
   
   def import_current_ldap_status_from( netenv_user )
-    for corporation in self.corporations
+    for corporation in self.reload.corporations
       group = netenv_user.last_known_status_group_in corporation
       current_membership = self.reload.current_status_membership_in corporation
       if current_membership and current_membership.group and group and (current_membership.group.id != group.id)
@@ -498,4 +499,12 @@ class User
 
   end
   
+  
+  # Zugeordneter Netenv-Datensatz
+  # =======================================================================
+  
+  def netenv_user
+    NetenvUser.find_by_w_nummer self.w_nummer
+  end
+
 end

@@ -782,8 +782,14 @@ class NetenvUser
   def ldap_assignments
     (dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments).collect do |assignment|
       # Koe -> Kö, damit es auch erkannt wird. Beispiel: W65066
-      assignment.gsub("o=Koe", "o=Kö")
+      # Erf -> Ef. Beispiel: W65620
+      # koe -> Kö, da auch manchmal kleingeschrieben. Beispiel: W51977
+      assignment.gsub("o=Koe", "o=Kö").gsub("o=Erf", "o=Ef").gsub("o=koe", "o=Kö")
     end
+  end
+  
+  def ldap_assignments_in( corporation )
+    ldap_assignments.select { |assignment| assignment.include? "o=#{corporation.token}" }
   end
   
   def last_known_status_in( corporation )
