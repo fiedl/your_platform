@@ -20,29 +20,31 @@ namespace :patch do
       require 'importers/models/string'
     end
         
-    task :print_info do
+    task :print_info => [:requirements] do
       log.head "User Patcher"
       log.info "Dieser Task führt Korrekturen durch, die nach einem abgeschlossenen 'rake import:users' notwendig sind."
       log.info "Trello: https://trello.com/c/KI457uFK/540-import-patches"
       log.info ""
     end
     
-    task :user_cannot_be_aktiver_and_philister_at_the_same_time => [:environment, :requirements] do
-      log.section "Zeitgleich Aktiver und Philister"
-      log.info "Ein Benutzer kann nicht gleichzeitig Aktiver und Philister sein."
+    task :subsequent_philistrations => [:environment, :requirements, :print_info] do
+      log.section "Philistrationen nachreichen."
+      log.info "Ein Benutzer kann idR. nicht gleichzeitig Aktiver und Philister sein. Bei solchen Benutzern"
+      log.info "ist wahrscheinlich die Information über die Philistration verloren gegangen."
+      log.info "Die Korporations-Mitgliedschaften dieser Benutzer müssen (mit dem verbsserten"
+      log.info "Import-System) neu importiert werden."
+      log.info ""
       log.info "Betroffene Fälle:"
       
       User.find_each do |user|
         if user.wingolfit? and user.aktiver? and user.philister?
-          log.info user.w_nummer
+          user.import_corporation_memberships_from user.netenv_user
+          log.info "#{user.title} (#{user.w_nummer})"
         end
       end
-      
-      # p NetenvUser.find_by_w_nummer( "W64742" ).corporations
-      
     end
     
-    task :hide_non_wingolfits => [:environment, :requirements] do
+    task :hide_non_wingolfits => [:environment, :requirements, :print_info] do
       log.section "Nicht-Wingolfiten verstecken"
       log.info "Alle Benutzer, die keine Wingolfiten sind, sollen als versteckt markiert werden,"
       log.info "damit sie nur von Administratoren gesehen werden können."
@@ -62,7 +64,7 @@ namespace :patch do
       log.info "Nach der Korrektur versteckte Benutzer: #{Group.hidden_users.members.count}"
     end
     
-    task :delete_users_without_ldap_assignments => [:environment, :requirements] do
+    task :delete_users_without_ldap_assignments => [:environment, :requirements, :print_info] do
       log.section "Benutzer ohne LDAP-Zuordnung löschen."
       log.info "Benutzer ohne LDAP-Zuordnung werden in Netenv als gelöscht betrachtet,"
       log.info "ohne dabei gesondert als gelöscht markiert zu sein."
@@ -82,7 +84,7 @@ namespace :patch do
       end
     end
     
-    task :remove_activities_without_wv_or_phv_membership => [:environment, :requirements] do
+    task :remove_activities_without_wv_or_phv_membership => [:environment, :requirements, :print_info] do
       log.section "Korporationsmitgliedschaften entfernen, wenn nicht mehr in WV oder PhV Mitglied."
       log.info "Es gibt Benutzer (z.B. W54613), deren Aktivitätszahl nicht aktualisiert wurde,"
       log.info "als die Mitgliedschaft endete. Dank der Aktivitätszahl wurden sie aber wieder"
@@ -108,7 +110,7 @@ namespace :patch do
       
     end
     
-    task :reimport_ef_corporation_memberships => [:environment, :requirements] do
+    task :reimport_ef_corporation_memberships => [:environment, :requirements, :print_info] do
       log.section "Re-Import der Erfurter Aktiven"
       log.info "Da Erfurt (Ef) im Netenv-LDAP als 'Erf' kodiert war, ist hier ein erneuter Import"
       log.info "der UserGroupMemberships der Korporationen der Erfurter Aktiven von Nöten,"
