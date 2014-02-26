@@ -17,9 +17,58 @@ class GroupsController < ApplicationController
     if @group
       point_navigation_to @group
       
-      @members = @group.members.order(:last_name, :first_name)
-      @members = @members.page(params[:page]).per_page(25) # pagination
-      @large_map_address_fields = map_address_fields
+      # If this is a collection group, e.g. the corporations_parent group, 
+      # do not list the single members.
+      if @group.child_group_ids.count > 10
+        @members = nil
+        @child_groups = @group.child_groups - [@group.find_officers_parent_group]
+      else
+        @members = @group.members.order(:last_name, :first_name)
+        @members = @members.page(params[:page]).per_page(25) # pagination
+      end
+      
+      # On collection groups, e.g. the corporations_parent group, only the
+      # groups should be shown on the map. These groups have a lot of
+      # child groups with address profile fields.
+      #
+      if child_groups_map_profile_fields.count > 0
+        @users_map_profile_fields = []
+        @groups_map_profile_fields = child_groups_map_profile_fields
+      elsif child_groups_map_profile_fields.count == 0
+        
+        # To prevent long loading times, users map profile fields should only
+        # be loaded when there are not too many.
+        #
+        # TODO: Remove this when the map addresses are cached.
+        # TODO: Cache map address fields.
+        #
+        if @group.member_ids.count < 100  # arbitrary limit.
+          @users_map_profile_fields = users_map_profile_fields
+        else
+          @users_map_profile_fields = []
+        end
+        
+        # Only if there are descendant group address fields, fill the variable
+        # for the large map. If there is only the own address, the view
+        # will render a small map instead of the large one.
+        #
+        if descendant_groups_map_profile_fields.count > 0
+          @groups_map_profile_fields = own_map_profile_fields + descendant_groups_map_profile_fields
+        else
+          @groups_map_profile_fields = []
+        end
+        
+      end
+      
+      # TODO: Make this more efficient.
+      # This can be done by using @user_map_profile_fields and @group_map_profile_fields
+      # separately when creating the map, because then, there is no need to check the
+      # type of the profileable. 
+      # But, this makes no sense at the moment, since the profileable objects have
+      # to be loaded anyway, since we need the title of the profileables.
+      #
+      @large_map_address_fields = @users_map_profile_fields + @groups_map_profile_fields
+
       # @posts = @group.posts.order("sent_at DESC").limit(10)
       @new_user_group_membership = @group.build_membership
     end
@@ -65,25 +114,24 @@ class GroupsController < ApplicationController
     end
   end  
   
-  # This method collects the address fields for displaying the large map
+  # These methods collect the address fields for displaying the large map
   # on group pages.
   #
   # https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Controller
   #
-  def map_address_fields
-    if @group.members.count < 260  # arbitrary limit by jbx26. TODO Remove this when obsolete.
-      
-      user_ids = @group.member_ids
-      user_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: user_ids ).select{|address| can? :read, address}
-      
-      group_ids = [ @group.id ] + @group.descendant_group_ids
-      group_address_fields = ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: group_ids )
-      
-      (user_address_fields + group_address_fields)
-    else
-      []
-    end
+  def descendant_groups_map_profile_fields
+    @descendant_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.descendant_group_ids )
   end
+  def child_groups_map_profile_fields
+    @child_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.child_group_ids )
+  end
+  def own_map_profile_fields
+    @own_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.id )
+  end
+  def users_map_profile_fields
+    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @group.member_ids ).select{|address| can? :read, address}
+  end
+    
   
   def secure_parent_type
     params[:parent_type] if params[:parent_type].in? ['Group', 'Page']
