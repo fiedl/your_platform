@@ -3,8 +3,6 @@
 [![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)
-[![Coverage Status](https://coveralls.io/repos/fiedl/wingolfsplattform/badge.png)](https://coveralls.io/r/fiedl/wingolfsplattform)
-[![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)
 [![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)
 
 Dies ist der Quellcode der entstehenden neuen Plattform von Wingolfsbund und VAW, der sog. **Wingolfsplattform**. Die Plattform soll vier Hauptaufgaben erfüllen: Hilfestellung bei der Verwaltung der Mitglieder des Wingolfs, Netzwerk der Mitglieder, Austausch von Informationen und Dokumenten, Präsentation nach außen. 
@@ -15,9 +13,11 @@ Sebastian Fiedlschuster  E 06  (B-xx)
 
 ### Status
 
+**Hinweis:** Die Anzeigen "Coverage" und "Code Climate" beziehen sich derzeit nur auf den wingolf-spezifischen Konkretisierungs-Teil, nicht aber auf den Großteil des Codes, der unter `your_platform` abgelegt ist. Ferner werden die von Natur aus unschönen Import-Skripte miteinbezogen. Bis auch `your_platform` erfasst werden kann, sind diese Anzeigen daher nicht als repräsentativ zu betrachten.
+
 Status                                                                                                                                                            | Beschreibung
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------
-[![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)                                    | Wingolfsplattform Version
+[![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/)                                    | Wingolfsplattform Version
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)  | Build Status on `production`
 [![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)              | Build Status on `master`
 [![Coverage Status](https://coveralls.io/repos/fiedl/wingolfsplattform/badge.png)](https://coveralls.io/r/fiedl/wingolfsplattform)                                | Test Coverage on `master`
