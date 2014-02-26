@@ -13,3 +13,10 @@
 # ActiveSupport::Inflector.inflections do |inflect|
 #   inflect.acronym 'RESTful'
 # end
+
+ActiveSupport::Inflector.inflections do |inflect|
+  inflect.singular /^(.*)en$/i, '\1'                        # "Konkneipanten" => "Konkneipant"
+  inflect.singular /^(.*)e (.*)en$/i, '\1er \2'             # "Aktive Burschen" => "Aktiver Bursch"
+  inflect.singular /^(.*)e (.*)en (.*)$/i, '\1er \2 \3'     # "Inaktive Burschen loci" => "Inaktiver Bursch loci"
+  inflect.singular /^(.*)ene$/, '\1ener'                    # "Ausgetretene" => "Ausgetretener"
+end

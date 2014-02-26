@@ -17,7 +17,7 @@
                 = status_group_membership_valid_from_best_in_place( membership )
               - else
                 = membership.valid_from_localized_date
-            %td.membership_group= link_to membership.group.title, membership.group, :class => 'status_group_label'
+            %td.membership_group= link_to membership.group.title.singularize, membership.group, :class => 'status_group_label'
             -# %td= status_group_membership_promoted_on_event( membership )
   - if user == current_user
     %hr
