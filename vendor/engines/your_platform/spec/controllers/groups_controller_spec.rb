@@ -79,22 +79,22 @@ describe GroupsController do
         assigns(:members).should_not be_empty
       end
 
-      it 'assigns addresses of members of the requested group to @map_address_fields' do
+      it 'assigns addresses of members of the requested group to @large_map_address_fields' do
         group = create(:group, :with_members)
         get :show, id: group
-        assigns(:map_address_fields).should_not be_empty
+        assigns(:large_map_address_fields).should_not be_empty
       end
 
-      it 'assigns addresses of hidden members to @map_address_fields' do
+      it 'assigns addresses of hidden members to @large_map_address_fields' do
         group = create(:group, :with_hidden_member)
         get :show, id: group
-        assigns(:map_address_fields).should_not be_empty
+        assigns(:large_map_address_fields).should_not be_empty
       end
 
-      it 'assigns addresses of dead members to @map_address_fields' do
+      it 'assigns addresses of dead members to @large_map_address_fields' do
         group = create(:group, :with_dead_member)
         get :show, id: group
-        assigns(:map_address_fields).should_not be_empty
+        assigns(:large_map_address_fields).should_not be_empty
       end
     end
 
@@ -193,22 +193,22 @@ describe GroupsController do
         assigns(:members).should_not be_empty
       end
 
-      it 'assigns addresses of members of the requested group to @map_address_fields' do
+      it 'assigns addresses of members of the requested group to @large_map_address_fields' do
         group = create(:group, :with_members)
         get :show, id: group
-        assigns(:map_address_fields).should_not be_empty
+        assigns(:large_map_address_fields).should_not be_empty
       end
 
-      it 'does not assign addresses of hidden members to @map_address_fields' do
+      it 'does not assign addresses of hidden members to @large_map_address_fields' do
         group = create(:group, :with_hidden_member)
         get :show, id: group
-        assigns(:map_address_fields).should be_empty
+        assigns(:large_map_address_fields).should be_empty
       end
 
-      it 'does not assign addresses of dead members to @map_address_fields' do
+      it 'does not assign addresses of dead members to @large_map_address_fields' do
         group = create(:group, :with_dead_member)
         get :show, id: group
-        assigns(:map_address_fields).should be_empty
+        assigns(:large_map_address_fields).should be_empty
       end
     end
 

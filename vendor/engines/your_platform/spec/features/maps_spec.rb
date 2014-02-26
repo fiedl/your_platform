@@ -32,8 +32,18 @@ feature "Maps", js: true do
   end
   
   scenario "visting a group page and looking at the members' map" do
+    @group = create(:group)
+    @group.assign_user @user
+    
+    # the second user is needed, since the large map is not shown for only
+    # one address field.
+    #
+    @another_user = create(:user)
+    @another_user.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Pariser Platz 1\n 10117 Berlin")
+    @group.assign_user @another_user
+    
     login(:user)
-    visit group_path(Group.everyone)
+    visit group_path(@group)
     
     within(".large_map.section") do
       page.should have_selector "div.gmnoprint"
