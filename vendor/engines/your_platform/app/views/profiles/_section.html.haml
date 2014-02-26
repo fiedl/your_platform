@@ -3,11 +3,19 @@
 -#   section                 ProfileSection
 -#   profile_field_options   Hash
 -#
-%h1{:class => "section #{section.title}"}= t section.title
+- large_map = @large_map_address_fields.try(:any?)
+- if section.title.to_sym == :contact_information
+  - small_map_address_fields = section.profileable.profile_fields_by_type("ProfileFieldTypes::Address")
+  - small_map = small_map_address_fields.any? and not large_map
+- with_small_map_class = small_map ? 'with_small_map' : ''
+
+%h1{:class => "section #{section.title} #{with_small_map_class}"}= t section.title
 %div{:id => "section_#{section.title}"}
-  - if section.title.to_sym == :contact_information
-    - if section.profileable.kind_of?(User) &&  (section.profileable.profile_fields_by_type("ProfileFieldTypes::Address").count > 0)
-      %span.contact_section.map.do_not_show_in_edit_mode
-        = map_of_address_profile_fields( section.profileable.profile_fields_by_type( "ProfileFieldTypes::Address" ) )
+
+  - if (section.title.to_sym == :contact_information) and small_map
+    %span.contact_section.map.do_not_show_in_edit_mode
+      = map_of_address_profile_fields small_map_address_fields
+
   = render partial: 'profiles/profile_section_ul', locals: { section: section, profile_field_options: profile_field_options }
+
   = render partial: 'profiles/add_profile_field_button', locals: { section: section, profileable: section.profileable }

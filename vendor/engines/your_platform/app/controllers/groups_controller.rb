@@ -19,13 +19,11 @@ class GroupsController < ApplicationController
       
       @members = @group.members.order(:last_name, :first_name)
       @members = @members.page(params[:page]).per_page(25) # pagination
-
-      @map_address_fields = map_address_fields
-
+      @large_map_address_fields = map_address_fields
       # @posts = @group.posts.order("sent_at DESC").limit(10)
-      
       @new_user_group_membership = @group.build_membership
     end
+    
     respond_with @group
     metric_logger.log_event @group.attributes, type: :show_group
   end
