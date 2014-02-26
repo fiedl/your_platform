@@ -12,17 +12,30 @@ class NetenvUser
   end
   
   def self.find_by_w_nummer( w_nummer )
-    filename = File.join(Rails.root, 'import/netenv_data/users.csv')
-    raise 'please symlink import/netenv_data/users.csv first.' unless File.exists? filename
-    
-    ImportFile.new(filename: filename, data_class_name: 'NetenvUser').each_row do |netenv_user|
+    self.find_each do |netenv_user|
       return netenv_user if netenv_user.w_nummer == w_nummer
+    end
+  end
+  
+  def self.find_each
+    import_file.each_row do |netenv_user|
+      yield netenv_user
     end
   end
   
   def data_hash_value( key )
     @data_hash[ key ] || @data_hash[ key.to_s ]
-  end  
+  end
+  
+  def self.import_filename
+    filename = File.join(Rails.root, 'import/netenv_data/users.csv')
+    raise 'please symlink import/netenv_data/users.csv first.' unless File.exists? filename
+    return filename
+  end
+  
+  def self.import_file
+    ImportFile.new(filename: import_filename, data_class_name: 'NetenvUser')
+  end
   
   
   # Name, Zugangsdaten

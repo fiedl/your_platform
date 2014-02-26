@@ -288,11 +288,13 @@ class User
         
         beitrittsdatum = assumed_date_of_joining
       end
-      
+
       if netenv_user.bandaufnahme_als_aktiver?( corporation )
         group_to_assign = corporation.status_group("Aktive Burschen")
+        raise 'status group "Aktive Burschen" not found. Try to run "rake fix:officers".' unless group_to_assign
       elsif netenv_user.bandverleihung_als_philister?( corporation )
         group_to_assign = corporation.status_group("Philister")
+        raise 'status group "Philister" not found. Try to run "rake fix:officers".' unless group_to_assign
       end
       
       if netenv_user.ehrenphilister?(corporation)
