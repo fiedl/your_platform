@@ -1,13 +1,22 @@
+# Nach dem Import der Benutzer sind einige Patches erforderlich, um fehlerhafte Daten
+# in der Netenv-Datenbank zu korrigieren.
+#
+# Siehe Trello: https://trello.com/c/KI457uFK/540-import-patches
+#
 namespace :patch do
 
+  # Beachtung der Reihenfolge wichtig!
+  #
   task :users => [
-    'environment',
-    'requirements',
-    'users:print_info',
-    'users:reimport_ef_corporation_memberships',
-    'users:hide_non_wingolfits',
-    'users:remove_activities_without_wv_or_phv_membership'
-#    'users:user_cannot_be_aktiver_and_philister_at_the_same_time'
+    'environment',                                       # Nummerierung gemäß der Kommentare in Trello:
+    'users:requirements',                                # https://trello.com/c/KI457uFK/540-import-patches
+    'users:print_info',                                  #
+    'fix:officers',                                      # (6) Amtsträger-Gruppen
+    'users:reimport_ef_corporation_memberships',         # (3) Ef-Aktive erneut importieren
+    'users:delete_users_without_ldap_assignments',       # (4) Benutzer ohne LDAP-String löschen
+    'users:hide_non_wingolfits',                         # (1) Nicht-Wingolfiten verstecken
+    'users:subsequent_philistrations',                   # (5) Philistrationen nachreichen
+    'users:find_users_with_missing_wv_or_phv_membership' # (2) Auf weitere Inkonsistenzen überprüfen
   ]
   
   namespace :users do
@@ -84,13 +93,18 @@ namespace :patch do
       end
     end
     
-    task :remove_activities_without_wv_or_phv_membership => [:environment, :requirements, :print_info] do
-      log.section "Korporationsmitgliedschaften entfernen, wenn nicht mehr in WV oder PhV Mitglied."
+    task :find_users_with_missing_wv_or_phv_membership => [:environment, :requirements, :print_info] do
+      log.section "Inkonsistenzen suchen: Benutzer mit fehlender WV- oder PhV-Mitgliedschaft."
       log.info "Es gibt Benutzer (z.B. W54613), deren Aktivitätszahl nicht aktualisiert wurde,"
       log.info "als die Mitgliedschaft endete. Dank der Aktivitätszahl wurden sie aber wieder"
       log.info "in die entsprechenden Korporationen importiert, was nun korrigiert werden muss."
       log.info ""
-      log.info "Korrigierte Benutzer:"
+      log.info "Da der Zustand nicht eindeutig rekonstruierbar ist, ist hier manuelle Eingabe"
+      log.info "erforderlich. Einige Benutzer wurden bereits überprüft. Bitte Ergebnisse von"
+      log.info "https://trello.com/c/KI457uFK/540-import-patches vergleichen."
+      log.info ""
+      log.warning "Möglicher Handlungsbedarf bei:"
+      log.warning ""
 
       User.find_each do |user|
         if user.aktivitätszahl.present?
@@ -98,11 +112,10 @@ namespace :patch do
             if (not corporation.token.include? "!") and # keine Schweizer, da für diese keine LDAP-Gruppen existieren
               not (user.guest_of?(corporation)) and 
               not (user.former_member_of_corporation?(corporation)) and
+              (user.alive?) and
               (user.netenv_user.ldap_assignments_in(corporation).count == 0)
 
-              log.info "#{user.title} (#{user.w_nummer})"
-              
-              # TODO
+              log.warning "#{user.title} (#{user.w_nummer})"
             end
           end
         end
