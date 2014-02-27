@@ -19,7 +19,17 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    ( name + " " + cached_aktivitaetszahl ).strip if name && cached_aktivitaetszahl
+    "#{name} #{cached_aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
+  end
+  
+  # For dead users, there is a cross symbol in the title.
+  # (✝,✞,✟)
+  # 
+  # More characters in this table:
+  # http://www.utf8-chartable.de/unicode-utf8-table.pl?start=9984&names=2&utf8=-&unicodeinhtml=hex
+  # 
+  def string_for_death_symbol
+    "(✟)" if dead?
   end
   
   # This method returns the bv (Bezirksverband) the user is associated with.
