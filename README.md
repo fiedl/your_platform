@@ -68,6 +68,22 @@ Dieser aufgespaltete Zustand ist noch nicht vollständig erreicht. Der aktuelle 
 * Lokal kann die Dokumentation mit dem Kommando `yardoc` erzeugt werden.
 
 
+### Regelmäßige Sicherheits-Test
+
+* Alle Entwickler möchten sich bitte mit den [Rails Security Guide](http://guides.rubyonrails.org/security.html) vertraut machen.
+* Regelmäßig sollte [brakeman](https://github.com/presidentbeef/brakeman) ausgeführt werden, um nach gängigen Sicherheitslücken zu suchen.
+
+  ```
+  gem update brakeman
+  cdw
+  brakeman -o ~/Desktop/brakeman.html
+  cdy
+  brakeman -o ~/Desktop/your_platform.brakeman.html
+  ```
+  
+* *brakeman* ist außerdem in unsere *guard*-Konfiguration eingebunden, sodass die guard-Ausgabe auch Brakeman-Sicherheitsmeldungen enthält.
+
+
 ### Links
 
 * [Trello Board "AK Internet: Entwicklung"](https://trello.com/board/ak-internet-entwicklung/50006d110ad48e941e8496d2)
