@@ -38,7 +38,7 @@
               - #   </haml:block>            //
               - if can? :manage, @navable
                 %li.backendBarItem
-                  = link_to t(:you_are_admin), params.merge(preview_as: 'user'), {title: 'Click here for a preview as a regular user.'}
+                  = link_to t(:you_are_admin), {preview_as: 'user', query: params[:query], page: params[:page]}, {title: 'Click here for a preview as a regular user.'}
               - # %li.backendBarItem.dropdown
               - #   = link_to t(:bookmarks), my_bookmarks_path
               - #   %ul.dropdown-menu.my-favorites
