@@ -1,5 +1,37 @@
 require 'fnordmetric'
 
+# ## Encoding Fix
+#
+# In order to fix an encoding issue where the input data is mistakenly identified as US-ASCII where
+# the data is really UTF-8, this method is overridden here. 
+#
+# The original method can be found here:
+# https://github.com/rails/rails/blob/3-2-stable/activesupport/lib/active_support/json/encoding.rb
+#
+module ActiveSupport
+  module JSON
+    module Encoding
+      class Encoder
+        def encode(value, use_options = true)
+
+          if value.kind_of? String
+            utf8_value = value.dup  # clone without frozen
+            utf8_value = utf8_value.force_encoding('UTF-8')
+          else
+            utf8_value = value
+          end
+
+          check_for_circular_references(utf8_value) do
+            jsonified = use_options ? utf8_value.as_json(options_for(utf8_value)) : utf8_value.as_json
+            jsonified.encode_json(self)
+          end
+        end
+      end
+    end
+  end
+end
+
+
 FnordMetric.namespace :wingolfsplattform do
   
   toplist_gauge :popular_pages, title: "Popular Pages"
