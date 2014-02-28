@@ -87,7 +87,7 @@ namespace :patch do
               # Nach Bundessatzung muss das Ehren-Band das erste Band sein. Bahndaufnahme 
               # regulärer Bänder ist möglich.
               # 
-              if corporation == corporations.first
+              if corporation == user.corporations.first
                 log.warning "Der folgende Benutzer bedarf händischer Kontrolle."
                 log.warning "    Das Ehren-Band muss nach Bundessatzung das erste Band sein."
                 log.warning " >  #{user.title} (#{user.w_nummer})  [#{corporation.token}]"
