@@ -45,7 +45,34 @@ class User
   def bv_beitrittsdatum
     bv_membership.valid_from if bv
   end
+  
+  def adapt_bv_to_postal_address
+    self.groups(true) # reload groups
+    new_bv = postal_address_field.bv
+    if new_bv and bv and (new_bv != bv)
+      new_membership = self.bv_membership.move_to new_bv
+    elsif new_bv and not bv
+      new_membership = new_bv.assign_user self
+    end
+    self.groups(true) # reload groups
+  end
     
+    
+  # Diejenige Anschrift, die als "Wingolfspost"-Anschrift markiert wurde.
+  #
+  def postal_address
+    postal_address_field.value
+  end
+
+  # If an address field is marked as postal address field, prefer this. Otherwise, take the 
+  # first address field as postal address field.
+  #
+  def postal_address_field
+    (address_fields.select { |address_field| address_field.wingolfspost == true } + address_fields).first
+  end
+  def address_fields
+    profile_fields.where(type: 'ProfileFieldTypes::Address')
+  end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #

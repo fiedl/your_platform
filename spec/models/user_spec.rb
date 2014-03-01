@@ -247,4 +247,80 @@ describe User do
 
   end
   
+  describe "#adapt_bv_to_postal_address", :focus do
+    before do
+      @bv1 = create(:bv_group, name: "BV 01 Berlin", token: "BV 01")
+      @bv2 = create(:bv_group, name: "BV 45 Europe", token: "BV 45")
+      @address1 = "Pariser Platz 1\n 10117 Berlin"
+      @address2 = "44 Rue de Stalingrad, Grenoble, Frankreich"
+      @address_field1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: @address1).becomes ProfileFieldTypes::Address
+      @address_field2 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: @address2).becomes ProfileFieldTypes::Address
+      BvMapping.create(bv_name: "BV 01", plz: "10117")
+    end
+    subject { @user.adapt_bv_to_postal_address }
+    
+    specify "prelims" do
+      Bv.by_address(@address1).should == @bv1
+      Bv.by_address(@address2).should == @bv2
+    end
+    describe "for no bv membership existing" do
+      describe "if no address is selected as postal address" do
+        it "should assign the user to the BV the matches the first entered address" do
+          subject
+          @user.bv.should == @bv1
+          @address_field1.bv.should == @bv1
+        end
+      end
+    end
+    describe "for an address being selected as postal address that already matches the current BV" do
+      before do
+        @bv1.assign_user @user
+        @address_field1.wingolfspost = true
+      end
+      it "should keep the memberships as they are" do
+        subject
+        @user.bv.should == @bv1
+        
+        # a double dag link would indicate that the membership had been created twice.
+        @user.bv_membership.count.should == 1
+      end
+    end
+    describe "for an address being selected as postal address that matches a new BV" do
+      before do
+        @membership1 = @bv1.assign_user @user
+        @address_field2.wingolfspost = true
+      end
+      specify "prelims" do
+        @address_field2.bv.should == @bv2
+        @user.postal_address_field.should == @address_field2
+      end
+      it "should assign the user to the new BV" do
+        subject
+        sleep 1.1  # because of the time comparison of valid_from/valid_to.
+        @user.reload.bv.should == @bv2
+      end
+      it "should end the current BV membership" do
+        subject
+        @membership1.reload.valid_to.should_not == nil
+      end
+    end
+    describe "for an address being selected that does not match a BV" do
+      before do
+        @membership2 = @bv2.assign_user @user
+        BvMapping.destroy_all
+        @address_field1.wingolfspost = true
+      end
+      specify "prelims" do
+        Bv.by_address(@address1).should == nil
+        @address_field1.bv.should == nil
+      end
+      it "should continue the old BV membership" do
+        p "LAST"
+        subject
+        @user.bv.should == @bv2
+        @membership2.reload.valid_to.should == nil
+      end
+    end
+  end
+  
 end
