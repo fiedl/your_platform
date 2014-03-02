@@ -55,6 +55,18 @@ class User
     if self.philister?
       new_bv = postal_address_field.bv
       if new_bv and bv and (new_bv != bv)
+        
+        # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
+        # membership has to be destroyed if the user previously had been a member
+        # of the new bv. When DagLinks are allowed to exist several times, remove
+        # this hack:
+        #
+        if old_membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group(self, new_bv)
+          if old_membership != bv_membership
+            old_membership.destroy
+          end
+        end
+        
         new_membership = self.bv_membership.move_to new_bv
       elsif new_bv and not bv
         new_membership = new_bv.assign_user self
