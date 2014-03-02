@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancan'                                                            # MIT License
 
   # To use ActiveModel has_secure_password (password encryption)
-  s.add_dependency 'bcrypt-ruby', '>= 3.0.1'                                           # MIT License 
+  s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
 
   # Template Engines
   # haml template language, http://haml.info
@@ -85,7 +85,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
   
   # Workflow Kit
-  s.add_dependency 'workflow_kit', '~> 0.0.6.alpha'                                    # MIT License
+  s.add_dependency 'workflow_kit', '~> 0.0.7'                                          # MIT License
 
   # View Helpers
   s.add_dependency 'phony'                                         
