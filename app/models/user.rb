@@ -53,7 +53,7 @@ class User
   def adapt_bv_to_postal_address
     self.groups(true) # reload groups
     if self.philister?
-      new_bv = postal_address_field.bv
+      new_bv = postal_address_field_or_first_address_field.bv
       if new_bv and bv and (new_bv != bv)
         
         # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
@@ -73,23 +73,6 @@ class User
       end
       self.groups(true) # reload groups
     end
-  end
-    
-    
-  # Diejenige Anschrift, die als "Wingolfspost"-Anschrift markiert wurde.
-  #
-  def postal_address
-    postal_address_field.value
-  end
-
-  # If an address field is marked as postal address field, prefer this. Otherwise, take the 
-  # first address field as postal address field.
-  #
-  def postal_address_field
-    (address_fields.select { |address_field| address_field.wingolfspost == true } + address_fields).first
-  end
-  def address_fields
-    profile_fields.where(type: 'ProfileFieldTypes::Address')
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
