@@ -46,15 +46,21 @@ class User
     bv_membership.valid_from if bv
   end
   
+  # Diese Methode passt den BV des Benutzers der aktuellen Postanschrift an.
+  # Achtung: Nur Philister sind BVs zugeordnet. Wenn der Benutzer Aktiver ist,
+  # tut diese Methode nichts.
+  #
   def adapt_bv_to_postal_address
     self.groups(true) # reload groups
-    new_bv = postal_address_field.bv
-    if new_bv and bv and (new_bv != bv)
-      new_membership = self.bv_membership.move_to new_bv
-    elsif new_bv and not bv
-      new_membership = new_bv.assign_user self
+    if self.philister?
+      new_bv = postal_address_field.bv
+      if new_bv and bv and (new_bv != bv)
+        new_membership = self.bv_membership.move_to new_bv
+      elsif new_bv and not bv
+        new_membership = new_bv.assign_user self
+      end
+      self.groups(true) # reload groups
     end
-    self.groups(true) # reload groups
   end
     
     
