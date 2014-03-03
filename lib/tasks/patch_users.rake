@@ -8,7 +8,8 @@ namespace :patch do
   #
   task :users => [
     'users:part1',
-    'users:part2'
+    'users:part2',
+    'users:part3'
   ]
   
   namespace :users do
@@ -48,6 +49,13 @@ namespace :patch do
       'print_info',
       'remove_ehrenphilistres_from_regular_philister_groups', # (7) Ehrenphilister. Beispiel: W65507
       'make_sft_and_nstft_memberships_continue'               # (8) Stifter und Neustifter
+    ]
+    
+    task :part3 => [
+      'environment',
+      'requirements',
+      'print_info',
+      'subsequent_philistrations_for_partly_exited_members'   # (9) Philistration für teilw. Ausgetr. nachreichen
     ]
     
     task :remove_ehrenphilistres_from_regular_philister_groups => [:environment, :requirements, :print_info] do
@@ -147,6 +155,39 @@ namespace :patch do
           log.info "#{user.title} (#{user.w_nummer})"
         end
       end
+    end
+    
+    task :subsequent_philistrations_for_partly_exited_members => [:environment, :requirements, :print_info] do
+      log.section "Philistrationen nachreichen für teilweise Ausgetretene."
+      log.info "Für Benutzer, die aus allen Verbindungen, in denen sie bereits Philister waren,"
+      log.info "ausgetreten waren, hat der vorige Mechanismus zum Nachreichen von Philistrationen"
+      log.info "nicht funktioniert, was hiermit korrigiert wird."
+      log.info ""
+      
+      # Beispiel zum Testen: W51687
+      
+      alle_aktiven = Group.where(name: "Aktivitas").collect { |aktivitas| aktivitas.members }.flatten.uniq
+      log.info "Zur Zeit sind im Wingolf #{alle_aktiven.count} Aktive gemeldet."
+      
+      aktive_und_gleichzeitig_philister = alle_aktiven.select { |user| user.parent_groups.collect { |group| group.name }.include? "Philister" }
+      log.info "Davon sind #{aktive_und_gleichzeitig_philister.count} gleichzeitig als Philister eingetragen."
+      log.info ""
+      
+      log.info "Korrigierte Benutzer:"
+      
+      for user in aktive_und_gleichzeitig_philister
+        user.import_corporation_memberships_from user.netenv_user
+        log.info "#{user.title} (#{user.w_nummer})"
+      end
+
+      log.info ""
+      log.success "Fertig."
+      log.info ""
+
+      alle_aktiven = Group.where(name: "Aktivitas").collect { |aktivitas| aktivitas.members }.flatten.uniq
+      log.info "Zur Zeit sind im Wingolf #{alle_aktiven.count} Aktive gemeldet."
+      aktive_und_gleichzeitig_philister = alle_aktiven.select { |user| user.parent_groups.collect { |group| group.name }.include? "Philister" }
+      log.info "Davon sind #{aktive_und_gleichzeitig_philister.count} gleichzeitig als Philister eingetragen."
     end
     
     task :hide_non_wingolfits => [:environment, :requirements, :print_info] do
