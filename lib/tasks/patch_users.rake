@@ -55,7 +55,8 @@ namespace :patch do
       'environment',
       'requirements',
       'print_info',
-      'subsequent_philistrations_for_partly_exited_members'   # (9) Philistration für teilw. Ausgetr. nachreichen
+      'subsequent_philistrations_for_partly_exited_members',  # (9) Philistration für teilw. Ausgetr. nachreichen
+      'find_users_with_missing_wv_or_phv_membership'          # (2) Auf Inkonsistenzen prüfen
     ]
     
     task :remove_ehrenphilistres_from_regular_philister_groups => [:environment, :requirements, :print_info] do
