@@ -177,8 +177,9 @@ namespace :patch do
       log.info "Korrigierte Benutzer:"
       
       for user in aktive_und_gleichzeitig_philister
+        print "#{user.w_nummer} ... "
         user.import_corporation_memberships_from user.netenv_user
-        log.info "#{user.title} (#{user.w_nummer})"
+        log.success "#{user.title} (#{user.w_nummer})"
       end
 
       log.info ""

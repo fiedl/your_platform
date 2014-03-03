@@ -793,7 +793,13 @@ class NetenvUser
   #   "o=E,o=Verbindungen,ou=groups,dc=wingolf,dc=org$$Konkneipant"
   #
   def ldap_assignments
-    (dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments).collect do |assignment|
+    
+    # ACHTUNG: verbindungsstatus_ldap_assignments erhält meist fehlerhafte, veraltete Informationen.
+    # Diese sollten besser nicht verwendet werden. Beispiel: W64525.
+    #
+    # (dynamische_gruppen_ldap_assignments + verbindungsstatus_ldap_assignments).collect do |assignment|
+    #
+    dynamische_gruppen_ldap_assignments.collect do |assignment|
       # Koe -> Kö, damit es auch erkannt wird. Beispiel: W65066
       # Erf -> Ef. Beispiel: W65620
       # koe -> Kö, da auch manchmal kleingeschrieben. Beispiel: W51977

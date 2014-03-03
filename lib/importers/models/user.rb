@@ -1,4 +1,5 @@
 require File.join(Rails.root, 'app/models/user')
+require File.join(Rails.root, 'lib/importers/models/group')
 
 class User
   
@@ -208,7 +209,7 @@ class User
   end
   
   def reset_corporation_memberships
-    (self.parent_groups & Group.corporations_parent.descendant_groups).each do |group|
+    (self.reload.parent_groups(true) & Group.corporations_parent.descendant_groups).each do |group|
       membership = UserGroupMembership.with_invalid.find_by_user_and_group(self, group)
       membership.destroy if membership.destroyable?
     end
