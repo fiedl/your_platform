@@ -55,6 +55,7 @@ namespace :patch do
       'environment',
       'requirements',
       'print_info',
+      'reimport_users_with_bad_dag_link_counter',             # (10) Benutzer mit falschen Dag-Countern korrigieren.
       'subsequent_philistrations_for_partly_exited_members',  # (9) Philistration für teilw. Ausgetr. nachreichen
       'find_users_with_missing_wv_or_phv_membership'          # (2) Auf Inkonsistenzen prüfen
     ]
@@ -165,7 +166,7 @@ namespace :patch do
       log.info "nicht funktioniert, was hiermit korrigiert wird."
       log.info ""
       
-      # Beispiel zum Testen: W51687
+      # Beispiel zum Testen: W51687, W64525
       
       alle_aktiven = Group.where(name: "Aktivitas").collect { |aktivitas| aktivitas.members }.flatten.uniq
       log.info "Zur Zeit sind im Wingolf #{alle_aktiven.count} Aktive gemeldet."
@@ -190,6 +191,34 @@ namespace :patch do
       log.info "Zur Zeit sind im Wingolf #{alle_aktiven.count} Aktive gemeldet."
       aktive_und_gleichzeitig_philister = alle_aktiven.select { |user| user.parent_groups.collect { |group| group.name }.include? "Philister" }
       log.info "Davon sind #{aktive_und_gleichzeitig_philister.count} gleichzeitig als Philister eingetragen."
+    end
+    
+    task :reimport_users_with_bad_dag_link_counter => [:environment, :requirements, :print_info] do
+      log.section "Benutzer neu importieren, wenn sie fehlerhafte DagLink-Counter haben."
+      log.info "Es gibt Benutzer, die aufgrund fehlerhafter LDAP-Daten defekte"
+      log.info "DagLinks (mit Counter 0) haben. Deren Mitgliedschaften müssen neu importiert werden."
+      log.info ""
+      log.info "Korrigierte Benutzer:"
+      
+      DagLink.where(count: 0, descendant_id: nil).delete_all
+      users = DagLink.where(count: 0).collect { |link| link.descendant }.uniq
+
+      counter = 0
+      for user in users
+        counter += 1
+        print "#{user.w_nummer} ... "
+        
+        user.links_as_descendant.delete_all
+        
+        user.import_corporation_memberships_from user.netenv_user
+        user.import_bv_membership_from user.netenv_user
+        user.import_hidden_status_from user.netenv_user
+        
+        log.success "#{user.title} (#{user.w_nummer})"
+      end
+      
+      log.info ""
+      log.success "#{counter} Benutzer korrigiert."
     end
     
     task :hide_non_wingolfits => [:environment, :requirements, :print_info] do
