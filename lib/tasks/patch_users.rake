@@ -180,6 +180,7 @@ namespace :patch do
       for user in aktive_und_gleichzeitig_philister
         print "#{user.w_nummer} ... "
         user.import_corporation_memberships_from user.netenv_user
+        user.delete_cached_aktivitaetszahl
         log.success "#{user.title} (#{user.w_nummer})"
       end
 
@@ -213,6 +214,7 @@ namespace :patch do
         user.import_corporation_memberships_from user.netenv_user
         user.import_bv_membership_from user.netenv_user
         user.import_hidden_status_from user.netenv_user
+        user.delete_cached_aktivitaetszahl
         
         log.success "#{user.title} (#{user.w_nummer})"
       end

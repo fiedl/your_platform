@@ -102,6 +102,10 @@ class User
     Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
   end
   
+  def delete_cached_aktivitaetszahl
+    Rails.cache.delete [self, "aktivitaetszahl"]
+  end
+  
   def aktivitaetszahl_addition_for( corporation )
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter"), also_in_the_past: true
