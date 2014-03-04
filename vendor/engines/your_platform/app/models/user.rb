@@ -329,18 +329,38 @@ class User < ActiveRecord::Base
     my_corporations.collect { |group| group.becomes( Corporation ) }
   end
 
-  # This returns the first corporation where the user is still member of or nil
-  def first_corporation
-    if self.corporations
-      self.corporations.select do |corporation|
-        not ( self.guest_of?( corporation )) and
-        not ( self.former_member_of_corporation?( corporation ))
-      end.sort_by do |corporation|
-        corporation.membership_of( self ).valid_from or Time.zone.now
-      end.first
+  # This returns the corporations the user is currently member of.
+  #
+  def current_corporations
+    self.corporations.select do |corporation|
+      Role.of(self).in(corporation).current_member?
+    end || []
+  end
+  
+  # This returns the same as `current_corporations`, but sorted by the
+  # date of joining the corporations, earliest joining first.
+  #
+  def sorted_current_corporations
+    current_corporations.sort_by do |corporation|
+      corporation.membership_of(self).valid_from || Time.zone.now
     end
   end
-
+    
+  # This returns the first corporation where the user is still member of or nil
+  #
+  def first_corporation
+    # if self.corporations
+    #   self.corporations.select do |corporation|
+    #     not ( self.guest_of?( corporation )) and
+    #     not ( self.former_member_of_corporation?( corporation ))
+    #   end.sort_by do |corporation|
+    #     corporation.membership_of( self ).valid_from or Time.zone.now
+    #   end.first
+    # end
+    
+    sorted_current_corporations.first
+  end
+  
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
@@ -505,10 +525,10 @@ class User < ActiveRecord::Base
       if options[:with_invalid] or options[:also_in_the_past]
         self.ancestor_groups.include? object
       else  # only current memberships:
-        self.groups.include? object  # This uses the validity range mechanism
+        self.groups.include? object.becomes(Group)  # This uses the validity range mechanism
       end
     else
-      self.ancestors.include? object
+      self.ancestors.include? object.becomes(Group)
     end
   end
 

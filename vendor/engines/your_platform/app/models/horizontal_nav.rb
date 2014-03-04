@@ -15,7 +15,7 @@ class HorizontalNav
   end
   
   def navables
-    [ Page.find_intranet_root ] + (@user.try(:corporations) || [])
+    [ Page.find_intranet_root ] + (@user.try(:current_corporations) || [])
   end
   
   def currently_in_intranet?
