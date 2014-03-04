@@ -47,10 +47,14 @@ class HorizontalNavPresenter < BasePresenter
     object = link_object
     object = link_object.except(:title) if link_object.kind_of? Hash
     link_to title, object
-  end    
+  end
+  
+  def current_navable
+    horizontal_nav.current_navable
+  end
   
   def navable_is_currently_shown?( navable )
-    navable == horizontal_nav.current_navable
+    navable == current_navable
   end
   
   def navable_is_most_special_category?( navable )
