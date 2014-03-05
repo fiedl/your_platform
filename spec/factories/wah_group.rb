@@ -11,10 +11,9 @@ FactoryGirl.define do
       Group.create_everyone_group unless Group.find_everyone_group
       Group.create_corporations_parent_group unless Group.find_corporations_parent_group
       Group.corporations << corporation
-      corporation.child_groups.create( name: "Aktivitas" )
-      corporation.child_groups.create( name: "Philisterschaft" )
+      corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
+      corporation.reload
     end
-
 
   end
 

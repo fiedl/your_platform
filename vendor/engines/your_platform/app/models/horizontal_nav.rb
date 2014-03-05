@@ -9,13 +9,17 @@ class HorizontalNav
   end
   
   def link_objects 
-    objects = navables
+    objects = cached_navables
     objects << { title: I18n.t(:sign_in), :controller => :sessions, :action => :new } if not logged_in?
     objects
   end
   
   def navables
     [ Page.find_intranet_root ] + (@user.try(:current_corporations).try(:collect) { |corporation| corporation.becomes(Group) } || [])
+  end
+  
+  def cached_navables
+    Rails.cache.fetch [@user, 'horizontal_nav_navables'] { self.navables }
   end
   
   def currently_in_intranet?
