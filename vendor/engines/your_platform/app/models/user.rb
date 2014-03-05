@@ -523,12 +523,12 @@ class User < ActiveRecord::Base
   def member_of?( object, options = {} )
     if object.kind_of? Group
       if options[:with_invalid] or options[:also_in_the_past]
-        self.ancestor_groups.include? object
+        self.ancestor_groups.include? object.try(:becomes, Group)
       else  # only current memberships:
-        self.groups.include? object.becomes(Group)  # This uses the validity range mechanism
+        self.groups.include? object.try(:becomes, Group)  # This uses the validity range mechanism
       end
     else
-      self.ancestors.include? object.becomes(Group)
+      self.ancestors.include? object
     end
   end
 
