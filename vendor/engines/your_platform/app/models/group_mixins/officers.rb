@@ -19,8 +19,13 @@ module GroupMixins::Officers
   # special group. This is used to determine whether the group is a status group.
   # 
   def has_no_subgroups_other_than_the_officers_parent?
-    (self.child_groups.count == 0) or
-      ((self.child_groups.count == 1) and (self.child_groups.first.has_flag?(:officers_parent)))
+    #
+    # TODO: Refactor this!
+    #
+    (self.child_groups - self.child_groups.where(name: ["Amtsträger", "officers"])).count == 0
+    
+    # (self.child_groups.count == 0) or
+    #   ((self.child_groups.count == 1) and (self.child_groups.first.has_flag?(:officers_parent)))
   end
   
   # This method determines if the group is an officers group.
