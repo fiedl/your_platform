@@ -42,8 +42,9 @@ module ProfileSteps
 
       page.should have_content(I18n.t(field_name))
       click_on I18n.t(field_name)
-      wait_for_ajax
-      page.should have_no_selector("a#add_#{field_name}_field", visible: true)
+      # Warum sollte es nur z.B. eine Adresse geben?
+      # Es ist doch gut, dass man zwei Adressen angeben kann. 
+      page.should have_selector("a#add_#{field_name}_field", visible: true)
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
     }.to change{ all('.profile_field_parent').count }.by 1
 
