@@ -247,7 +247,7 @@ describe User do
 
   end
   
-  describe "#adapt_bv_to_postal_address", :focus do
+  describe "#adapt_bv_to_postal_address" do
     before do
       @bv1 = create(:bv_group, name: "BV 01 Berlin", token: "BV 01")
       @bv2 = create(:bv_group, name: "BV 45 Europe", token: "BV 45")
@@ -343,6 +343,54 @@ describe User do
         @user.reload.bv.should == nil
       end
     end
+  end
+  
+  
+  describe "#mark_as_deceased" do
+    before { @date = 1.day.ago }
+    subject { @user.mark_as_deceased(at: @date) }
+    
+    describe "the user being member of a bv" do
+      before do
+        @bv = create(:bv_group)
+        @bv_membership = @bv.assign_user @user
+      end
+      it "should end the bv membership" do
+        @bv_membership.valid_to.should == nil
+        subject
+        @bv_membership.reload.valid_to.should_not == nil
+      end
+    end
+    describe "the user being member of corporations" do
+      before do
+        @corporation_a = create(:wah_group)
+        @corporation_b = create(:wah_group)
+        @corporation_a.status_group("Philister").assign_user @user, at: 1.year.ago
+        @corporation_b.status_group("Philister").assign_user @user, at: 1.year.ago
+      end
+      it "should set the status to deceased in these corporations" do
+        subject
+        @user.reload.current_status_group_in(@corporation_a).should == @corporation_a.deceased
+        @user.current_status_group_in(@corporation_b).should == @corporation_b.deceased
+      end
+    end
+    describe "the user being a former member of a corporation" do
+      before do
+        @corporation_a = create(:wah_group)
+        @membership = @corporation_a.assign_user @user, at: 2.years.ago
+        @membership.promote_to @corporation_a.status_group("Schlicht Ausgetretene"), at: 1.year.ago
+      end
+      it "should not set the status to deceased in this corporation" do
+        # Ein Wingolfit bleibt auch nach seinem Tode ein Wingolfit. Er behält seine
+        # Aktivitätszahl. Ein Ausgetretener verliert sie.
+        #
+        subject
+        @user.reload.current_status_group_in(@corporation_a).should == @corporation_a.status_group("Schlicht Ausgetretene")
+        @user.current_status_group_in(@corporation_a).should_not == @corporation_a.deceased
+        @user.current_corporations.should_not include @corporation_a
+      end
+    end
+    
   end
   
 end

@@ -116,6 +116,14 @@ class Group < ActiveRecord::Base
   def corporation?
     self.becomes(Corporation).in? Corporation.all
   end
+  
+  
+  def find_deceased_members_parent_group
+    self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
+  end
+  def deceased
+    find_deceased_members_parent_group
+  end
 
 
   # Adding objects

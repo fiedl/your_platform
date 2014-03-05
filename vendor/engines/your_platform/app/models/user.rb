@@ -167,7 +167,27 @@ class User < ActiveRecord::Base
   def alive?
     not dead?
   end
-
+  
+  # Example:
+  # 
+  #   user.mark_as_deceased at: "2014-03-05".to_datetime
+  #
+  def mark_as_deceased(options = {})
+    date = options[:at] || Time.zone.now
+    self.current_corporations.each do |corporation|
+      self.current_status_membership_in(corporation).move_to corporation.deceased, at: date
+    end
+    end_all_non_corporation_memberships at: date
+    set_date_of_death_if_unset(date)
+  end
+  
+  def end_all_non_corporation_memberships(options = {})
+    date = options[:at] || Time.zone.now
+    for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
+      UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
+    end
+  end
+  
 
   # Primary Postal Address
   #
