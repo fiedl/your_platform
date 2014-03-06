@@ -14,7 +14,7 @@ module ProfileFieldTypes
     # This method returns the Bv associated with the given address.
     #
     def bv
-      geo_location.bv if geo_location
+      self.geo_location.bv if self.geo_location
     end
 
     # The html output method is overridden here, in order to display the bv as well.
@@ -34,9 +34,7 @@ module ProfileFieldTypes
 
         # more infos on how to use the link_to helper in models:
         # http://stackoverflow.com/questions/4713571/view-helper-link-to-in-model-class
-
       end
-
       ActionController::Base.helpers.simple_format( text_to_display )
     end
     
