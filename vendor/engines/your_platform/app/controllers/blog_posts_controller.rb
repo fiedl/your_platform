@@ -2,10 +2,9 @@
 # This controller is just for adding a blog post via AJAX.
 #
 class BlogPostsController < PagesController
-  
+  prepend_before_filter :set_inheritance_instance_variable
   load_and_authorize_resource
-  before_filter :set_inheritance_instance_variable
-  respond_to :js 
+  respond_to :json, :js
   
   def show
     redirect_to page_url(id: params[:id])
@@ -20,7 +19,17 @@ class BlogPostsController < PagesController
     @blog_post.content = "–"
     @blog_post.save!
     @blog_post.parent_pages << Page.find(params[:parent_id])
-    respond_with @blog_post
+    @page = @blog_post
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def update
+print "Page "+ params.to_s + "\n"
+    set_inheritance_instance_variable
+    @blog_post.update_attributes params[ :blog_post ].select { |k,v| v.present? }
+    respond_with_bip(@blog_post)
   end
   
   private
