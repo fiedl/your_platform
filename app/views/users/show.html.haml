@@ -8,7 +8,13 @@
   %ul.attributes
     %li.name.attribute= render partial: 'user_name_attribute'
     = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
-    = profile_field_lis @user.profile.section(:general).fields, lock_label: true, no_remove: true
+    - if @user.w_nummer
+      %li.w_nummer.attribute
+        %span.label-wrapper 
+          %span.label.profile_field_label W-Nummer
+        %span.value-wrapper= @user.w_nummer
+    - general_fields = @user.profile.section(:general).fields - @user.profile_fields.where(label: 'W-Nummer')
+    = profile_field_lis general_fields, lock_label: true, no_remove: true
     - if @user.bv
       %li.bv.attribute= render partial: 'user_bv_attribute'
     = render partial: 'users/dead_badge', locals: { user: @user }
