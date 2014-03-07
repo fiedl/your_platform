@@ -1,5 +1,5 @@
 %h1
-  - if page.becomes(Page) == @navable.becomes(Page)
+  - if page.try(:becomes, Page) == @navable.try(:becomes, Page)
     = best_in_place_if can?(:update, page), page, :title
   - else  # Blog Entries:
     = link_to(page) do
