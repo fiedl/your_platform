@@ -390,6 +390,14 @@ describe User do
         @user.current_corporations.should_not include @corporation_a
       end
     end
+    describe "the user having a wingolfsblaetter_abo" do
+      before { @user.wingolfsblaetter_abo = true }
+      it "should end the wingolfsblaetter_abo" do
+        @user.reload
+        subject
+        @user.reload.wingolfsblaetter_abo.should == false
+      end
+    end
     
   end
   
