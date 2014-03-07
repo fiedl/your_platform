@@ -1,8 +1,9 @@
 %h1
-  - if can? :update, page
-    = best_in_place(page, :title)
-  - else
-    = page.title
+  - if page.becomes(Page) == @navable.becomes(Page)
+    = best_in_place_if can?(:update, page), page, :title
+  - else  # Blog Entries:
+    = link_to(page) do
+      = best_in_place_if can?(:update, page), page, :title
 %div.page
   %div.page_header
     - if page.author
