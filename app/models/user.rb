@@ -39,11 +39,11 @@ class User
   end
   
   def bv_membership
-    UserGroupMembership.find_by_user_and_group(self, self.bv) if self.bv
+    UserGroupMembership.find_by_user_and_group(self, bv) if bv
   end
   
   def bv_beitrittsdatum
-    self.bv_membership.valid_from if self.bv
+    bv_membership.valid_from if bv
   end
   
   # Diese Methode passt den BV des Benutzers der aktuellen Postanschrift an.
@@ -54,7 +54,7 @@ class User
     self.groups(true) # reload groups
     if self.philister?
       new_bv = postal_address_field_or_first_address_field.bv
-      if new_bv and self.bv and (new_bv != self.bv)
+      if new_bv and bv and (new_bv != bv)
         
         # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
         # membership has to be destroyed if the user previously had been a member

@@ -45,13 +45,12 @@ module ProfileSteps
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
 
       page.should have_content(I18n.t(field_name))
+      page.save_screenshot('tmp/screenshot3.png')
       click_on I18n.t(field_name)
       wait_for_ajax; wait_for_ajax
-      # Warum sollte es nur z.B. eine Adresse unter Kontaktinformationen geben?
-      # Es ist doch gut, dass man zwei Adressen angeben kann! 
-      #page.should have_no_selector("a#add_#{field_name}_field", visible: true)
+      page.save_screenshot('tmp/screenshot4.png')
+      page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
-      #page.save_screenshot('tmp/screenshot3.png')
     }.to change{ all('.profile_field_parent').count }.by 1
 
     expect {
