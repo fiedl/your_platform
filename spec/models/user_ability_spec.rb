@@ -74,6 +74,24 @@ describe "User: abilities" do
     the_user.should be_able_to :read, @bank_account_of_group
   end
   
+  describe "if other users are hidden" do
+    before do
+      @hidden_user = create(:user)
+      @hidden_user.hidden = true
+    end
+    he "should not be able to see the hidden users" do
+      the_user.should_not be_able_to :read, @hidden_user
+    end
+  end
+  describe "if the user is hidden himself" do
+    before { user.hidden = true}
+    he "should be able to read himself" do
+      user.hidden.should == true
+      the_user.should be_able_to :read, user
+    end
+  end
+  
+  
   context "when the user is a local admin" do
     before do
       @group = create(:group)

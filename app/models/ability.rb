@@ -79,8 +79,9 @@ class Ability
         end
 
         # Normal users cannot see hidden users, except for self.
+        #
         cannot :read, User do |user_to_show|
-          (user_to_show.hidden?  || !user_to_show.alive?) && (user != user_to_show)
+          user_to_show.hidden? and (user != user_to_show)
         end
 
         # Normal users cannot see the former_members_parent groups
@@ -93,7 +94,7 @@ class Ability
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
-          unless preview_as_user
+        unless preview_as_user
           can :manage, Group do |group|
             (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
             # group.cached_structurable_admins.include?(user)
