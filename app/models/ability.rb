@@ -64,8 +64,9 @@ class Ability
           end
 
           is_bank_account = parent_field.type == ProfileFieldTypes::BankAccount.name
-          is_foreign_bank_account = (is_bank_account && parent_field.profileable.id != user.id)
-          is_foreign_bank_account || cannot?(:read, parent_field.profileable)
+          is_foreign_user_bank_account = (is_bank_account && parent_field.profileable.kind_of?(User) && parent_field.profileable.id != user.id)
+
+          is_foreign_user_bank_account || cannot?(:read, parent_field.profileable)
         end
 
         can :crud, ProfileField do |field|

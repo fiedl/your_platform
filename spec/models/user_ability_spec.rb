@@ -51,7 +51,7 @@ describe "User: abilities" do
     the_user.should be_able_to :destroy, @profile_field
     the_user.should_not be_able_to :manage, @profile_field
   end
-  he "should be able to read anything" do
+  he "should be able to read anything (exceptions are below)" do
     @page = create(:page)
     the_user.should be_able_to :read, @page
     @group = create(:group)
@@ -62,6 +62,16 @@ describe "User: abilities" do
   he "should be able to download anything" do
     @attachment = Attachment.new
     the_user.should be_able_to :download, @attachment
+  end
+  he "should not be able to read the bank account information of other users" do
+    @other_user = create(:user)
+    @bank_account_of_other_user = @other_user.profile_fields.create(type: 'ProfileFieldTypes::BankAccount')
+    the_user.should_not be_able_to :read, @bank_account_of_other_user
+  end
+  he "should be able to read the bank account information of groups" do
+    @group = create(:group)
+    @bank_account_of_group = @group.profile_fields.create(type: 'ProfileFieldTypes::BankAccount')
+    the_user.should be_able_to :read, @bank_account_of_group
   end
   
   context "when the user is a local admin" do
