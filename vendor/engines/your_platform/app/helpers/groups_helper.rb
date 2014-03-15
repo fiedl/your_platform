@@ -48,7 +48,7 @@ module GroupsHelper
     content_tag :li do
       c = link_to group.title, group
       membership = UserGroupMembership.with_invalid.find_by_user_and_group( user, group )
-      c += remove_button( membership ) if membership.destroyable?
+      c += remove_button( membership ) if membership.destroyable? and can?(:destroy, membership)
       c
     end
   end
