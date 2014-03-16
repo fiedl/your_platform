@@ -147,10 +147,10 @@ namespace :activate do
           return user 
         else
           $blacklisted_users << user
+          write_blacklisted_users_to_cache
         end
       end
     end
-    write_blacklisted_users_to_cache
   end
 
   def find_random_user
@@ -201,7 +201,7 @@ namespace :activate do
   end
   
   def read_blacklisted_users_from_cache
-    $blacklisted_users = Rails.cache.fetch(["account_activation_blacklist"]) { $blacklisted_users || [] }
+    $blacklisted_users = Rails.cache.fetch("account_activation_blacklist") { $blacklisted_users || [] }
   end
   def write_blacklisted_users_to_cache
     Rails.cache.write("account_activation_blacklist", $blacklisted_users)
