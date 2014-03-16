@@ -139,6 +139,7 @@ namespace :activate do
   
   def find_appropriate_random_user
     $blacklisted_users = []
+    read_blacklisted_users_from_cache
     until ($blacklisted_users.uniq.count == find_all_users_without_account.count) do
       user = find_random_user_without_account
       if not user.in? $blacklisted_users
@@ -149,6 +150,7 @@ namespace :activate do
         end
       end
     end
+    write_blacklisted_users_to_cache
   end
 
   def find_random_user
@@ -196,6 +198,13 @@ namespace :activate do
   def set_event_display(text)
     filename = File.join(Rails.root, 'tmp', 'live_event.txt')
     File.open(filename, 'w') { |file| file.write(text) }
+  end
+  
+  def read_blacklisted_users_from_cache
+    $blacklisted_users = Rails.cache.fetch(["account_activation_blacklist"]) { $blacklisted_users || [] }
+  end
+  def write_blacklisted_users_to_cache
+    Rails.cache.write("account_activation_blacklist", $blacklisted_users)
   end
 
 end
