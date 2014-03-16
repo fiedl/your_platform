@@ -63,13 +63,17 @@ feature "Groups Page" do
       login(:user)
     end
 
-    scenario 'should not render list entries for hidden or dead members' do
+    scenario 'should not render list entries for hidden members' do
       visit group_path(@group)
-      page.should have_selector '#group_members ul.child_users li', count: 10
+      page.should have_selector '#group_members ul.child_users li', count: 11
       page.should have_no_text 'Hidden'
-      page.should have_no_text 'Dead'
     end
-
+    
+    scenario 'should render list entries for dead members' do
+      visit group_path(@group)
+      page.should have_selector '#group_members ul.child_users li', count: 11
+      page.should have_text 'Dead'
+    end
   end
   
   scenario 'viewing the members list of a corporation' do

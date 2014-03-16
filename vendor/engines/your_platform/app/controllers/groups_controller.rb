@@ -129,7 +129,7 @@ class GroupsController < ApplicationController
     @own_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.id )
   end
   def users_map_profile_fields
-    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @group.member_ids ).select{|address| can? :read, address}
+    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @group.member_ids ).includes(:profileable).select{|address| can?(:read, address) && address.profileable.alive?}
   end
     
   
