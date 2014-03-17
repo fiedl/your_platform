@@ -676,7 +676,21 @@ class User < ActiveRecord::Base
   def former_member_of_corporation?( corporation )
     self.member_of? corporation.child_groups.find_by_flag(:former_members_parent)
   end
+  
 
+  # Group Flags
+  # ==========================================================================================
+  
+  # This efficiently returns all flags of the groups the user is currently in.
+  #
+  # For example, ony can find out with one sql query whether a user is hidden:
+  # 
+  #     user.group_flags.include? 'hidden_users'
+  # 
+  def group_flags
+    groups.joins(:flags).select('flags.key as flag').collect { |g| g.flag }
+  end
+  
   # Finder Methods
   # ==========================================================================================
 
@@ -712,6 +726,46 @@ class User < ActiveRecord::Base
   
   def self.find_by_email( email )
     self.find_all_by_email(email).first
+  end
+  
+  def self.with_group_flags
+    self.joins(:groups => :flags)
+  end
+  
+  def self.with_group_flag(flag)
+    self.with_group_flags.where("flags.key = ?", flag)
+  end
+  
+  def self.hidden
+    self.with_group_flag('hidden_users')
+  end
+  
+  def self.deceased
+    self.joins(:profile_fields).where(:profile_fields => {label: 'date_of_death'})
+  end
+  
+  def self.deceased_ids
+    self.deceased.select('users.id').collect { |user| user.id }
+  end
+  
+  def self.alive
+    if self.deceased_ids.count > 0
+      self.where('NOT users.id IN (?)', self.deceased_ids)
+    else
+      self.where(true)
+    end
+  end
+  
+  def self.without_account
+    self.includes(:account).where(:user_accounts => { :user_id => nil })
+  end
+  
+  def self.with_email
+    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFieldTypes::Email', '')
+  end
+  
+  def self.applicable_for_new_account
+    self.without_account.alive.with_email
   end
 
 

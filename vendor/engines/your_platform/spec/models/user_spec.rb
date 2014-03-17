@@ -1117,6 +1117,21 @@ describe User do
   end
 
 
+  # Group Flags
+  # ==========================================================================================
+
+  describe "#group_flags" do
+    before { @user = create(:user) }
+    subject { @user.group_flags }
+    describe "for the user being hidden" do
+      before { @user.hidden = true }
+      it { should include 'hidden_users' }
+    end
+    describe "for the user not being hidden" do
+      it { should_not include 'hidden_users' }
+    end
+  end
+
   # Finder Methods
   # ==========================================================================================
 
@@ -1194,6 +1209,115 @@ describe User do
       User.find_all_by_email( @user.email.upcase ).should include( @user )
       User.find_all_by_email( @user.email.downcase ).should include( @user )
     end
+  end
+  
+  describe ".hidden" do
+    before do
+      @hidden_user = create(:user); @hidden_user.hidden = true
+      @visible_user = create(:user)
+    end
+    subject { User.hidden }
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should include @hidden_user }
+    it { should_not include @visible_user }
+    it "should be chainable" do
+      subject.where(id: @hidden_user.id).should == User.where(id: @hidden_user.id).hidden
+      subject.count.should > 0
+    end
+  end
+  
+  describe ".deceased" do
+    before do
+      @deceased_user = create(:user); @deceased_user.mark_as_deceased(at: 1.year.ago)
+      @alive_user = create(:user)
+    end
+    subject { User.deceased }
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should include @deceased_user }
+    it { should_not include @alive_user }
+    it "should be chainable" do
+      subject.where(id: @deceased_user.id).to_a.should == User.where(id: @deceased_user.id).deceased.to_a
+    end
+  end
+
+  describe ".alive" do
+    before do
+      @deceased_user = create(:user); @deceased_user.mark_as_deceased(at: 1.year.ago)
+      @alive_user = create(:user)
+    end
+    subject { User.alive }
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should_not include @deceased_user }
+    it { should include @alive_user }
+    it "should be chainable" do
+      subject.where(id: @alive_user.id).to_a.should == User.where(id: @alive_user.id).alive.to_a
+    end
+    specify "there should be no user that is deceased and alive" do
+      User.alive.deceased.should == []
+      User.deceased.alive.should == []
+    end
+  end
+  
+  describe ".without_account" do
+    before do
+      @user_with_account = create(:user_with_account)
+      @user_without_account = create(:user)
+    end
+    subject { User.without_account }
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should include @user_without_account }
+    it { should_not include @user_with_account }
+    it "should be chainable" do
+      subject.where(id: @user_without_account.id).to_a.should == User.where(id: @user_without_account.id).without_account.to_a
+    end
+  end
+  
+  describe ".with_email" do
+    before do
+      @user_with_email = create(:user)
+      @user_without_email = create(:user)
+      @user_without_email.profile_fields.destroy_all
+      @user_with_empty_email = create(:user)
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')  # to circumvent validation
+    end
+    subject { User.with_email }
+    specify "prelims" do
+      @user_with_empty_email.email.should == ""
+    end
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should include @user_with_email }
+    it { should_not include @user_without_email }
+    it { should_not include @user_with_empty_email }
+    it "should be chainable" do
+      subject.where(id: @user_with_email.id).to_a.should == User.where(id: @user_with_email.id).with_email.to_a
+    end
+  end
+  
+  describe ".applicable_for_new_account", :focus do
+    before do
+      @hidden_user = create(:user); @hidden_user.hidden = true
+      @visible_user = create(:user)
+      @deceased_user = create(:user); @deceased_user.mark_as_deceased(at: 1.year.ago)
+      @alive_user = create(:user)
+      @user_with_account = create(:user_with_account)
+      @user_without_account = create(:user)
+      @user_with_email = create(:user)
+      @user_without_email = create(:user)
+      @user_without_email.profile_fields.destroy_all
+      @user_with_empty_email = create(:user)
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')
+    end
+    subject { User.applicable_for_new_account }
+    it { should be_kind_of ActiveRecord::Relation }
+    it { should include @hidden_user }
+    it { should include @visible_user }
+    it { should_not include @deceased_user }
+    it { should include @alive_user }
+    it { should_not include @user_with_account }
+    it { should include @user_without_account }
+    it { should include @user_with_email }
+    it { should_not include @user_without_email }
+    it { should_not include @user_with_empty_email }
   end
 
 end
