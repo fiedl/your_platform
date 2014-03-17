@@ -68,6 +68,7 @@ namespace :activate do
   task :random_account => [:environment] do
     
     require 'importers/models/log'
+
     log = Log.new
     log.section 'Task: Activate random user account'
     log.info "Time:              #{I18n.localize Time.zone.now}"
@@ -138,15 +139,16 @@ namespace :activate do
   end
   
   def find_appropriate_random_user
-    $blacklisted_users = []
+    $blacklisted_user_ids = []
     read_blacklisted_users_from_cache
-    until ($blacklisted_users.uniq.count == find_all_users_without_account.count) do
+    until ($blacklisted_user_ids.uniq.count == find_all_users_without_account.count) do
       user = find_random_user_without_account
-      if not user.in? $blacklisted_users
+      if not user.id.in? $blacklisted_user_ids
         if user_is_appropriate?(user)
           return user 
         else
-          $blacklisted_users << user
+          read_blacklisted_users_from_cache  # for tasks running in parallel
+          $blacklisted_user_ids << user.id
           write_blacklisted_users_to_cache
         end
       end
@@ -201,10 +203,10 @@ namespace :activate do
   end
   
   def read_blacklisted_users_from_cache
-    $blacklisted_users = Rails.cache.fetch("account_activation_blacklist") { $blacklisted_users || [] }
+    $blacklisted_user_ids = Rails.cache.fetch("account_activation_blacklist") { $blacklisted_user_ids || [] }
   end
   def write_blacklisted_users_to_cache
-    Rails.cache.write("account_activation_blacklist", $blacklisted_users)
+    Rails.cache.write("account_activation_blacklist", $blacklisted_user_ids)
   end
 
 end
