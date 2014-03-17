@@ -18,8 +18,8 @@ class ProfileFieldsController < ApplicationController
 
   def update
     @profile_field = ProfileField.find(params[:id])
-    clazz = @profile_field.type.constantize
-    @profile_field = @profile_field.becomes( clazz )
+    profile_field_class = @profile_field.type.constantize
+    @profile_field = @profile_field.becomes( profile_field_class )
     updated = @profile_field.update_attributes(params[:profile_field])
     respond_with_bip @profile_field
   end

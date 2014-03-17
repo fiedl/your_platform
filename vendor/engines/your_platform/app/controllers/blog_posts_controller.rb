@@ -26,7 +26,6 @@ class BlogPostsController < PagesController
   end
 
   def update
-print "Page "+ params.to_s + "\n"
     set_inheritance_instance_variable
     @blog_post.update_attributes params[ :blog_post ].select { |k,v| v.present? }
     respond_with_bip(@blog_post)
