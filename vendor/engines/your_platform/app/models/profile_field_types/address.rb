@@ -45,7 +45,7 @@ module ProfileFieldTypes
     def plz ;           geo_information :plz           end
 
     def geo_information( key )
-      return nil if self.value=="-"
+      return nil if self.value == "-"
       geo_location.send( key ) if self.value
     end
 

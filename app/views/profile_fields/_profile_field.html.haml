@@ -35,7 +35,7 @@
     - if profile_field.children.count == 0
       - if can? :update, profile_field
         = best_in_place profile_field, :value, 
-                          { type: input_type, classes: 'value' }.merge(display_method)
+                          { type: input_type, nil: "…", classes: 'value' }.merge(display_method)
       - else
         - if display_method[:display_as]
           = profile_field.send(display_method[:display_as])
