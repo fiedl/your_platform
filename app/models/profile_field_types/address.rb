@@ -34,9 +34,7 @@ module ProfileFieldTypes
 
         # more infos on how to use the link_to helper in models:
         # http://stackoverflow.com/questions/4713571/view-helper-link-to-in-model-class
-
       end
-
       ActionController::Base.helpers.simple_format( text_to_display )
     end
     

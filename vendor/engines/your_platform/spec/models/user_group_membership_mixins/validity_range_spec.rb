@@ -19,7 +19,8 @@ describe UserGroupMembershipMixins::ValidityRange do
     subject { @membership.valid_from }
     it { should be_kind_of Time }
     it "should be set to the created_at date by default" do
-      subject.to_i.should == @membership.created_at.to_i
+      subject.to_i.should > @membership.created_at.to_i-2
+      subject.to_i.should < @membership.created_at.to_i+2
     end
   end
   describe "#valid_to" do

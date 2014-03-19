@@ -2,6 +2,7 @@ module ProfileSteps
   def section_should_be_editable(section, field_types = nil)
     within(".box.section.#{section}") do
       click_on I18n.t(:edit)
+      wait_for_ajax; wait_for_ajax
 
       page.should have_selector('a.add_button', visible: true)
 
@@ -34,14 +35,20 @@ module ProfileSteps
   def test_field_type(type)
     #puts type.to_s + ' with ' + @user.profile_fields.count.to_s
     field_name = type.name.demodulize.underscore
+    #page.save_screenshot('tmp/screenshot1.png')
     click_on I18n.t(:add)
+    wait_for_ajax; wait_for_ajax
+    #page.save_screenshot('tmp/screenshot2.png')
 
     expect {
       #page.should have_selector("a#add_#{field_name}_field", visible: true)
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
 
       page.should have_content(I18n.t(field_name))
+      page.save_screenshot('tmp/screenshot3.png')
       click_on I18n.t(field_name)
+      wait_for_ajax; wait_for_ajax
+      page.save_screenshot('tmp/screenshot4.png')
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
     }.to change{ all('.profile_field_parent').count }.by 1
@@ -54,7 +61,6 @@ module ProfileSteps
     
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       page.should have_selector('ul.profile_fields')
-      page.save_screenshot('tmp/screenshot.png')
       
       # p "============================================================================", type
       wait_for_ajax

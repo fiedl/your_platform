@@ -66,7 +66,6 @@ class User
             old_membership.destroy
           end
         end
-        
         new_membership = self.bv_membership.move_to new_bv
       elsif new_bv and not bv
         new_membership = new_bv.assign_user self

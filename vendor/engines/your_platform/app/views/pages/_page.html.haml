@@ -1,9 +1,9 @@
 %h1
   - if page.try(:becomes, Page) == @navable.try(:becomes, Page)
-    = best_in_place_if can?(:update, page), page, :title
+    = best_in_place_if can?(:update, page), page, :title, display_as: :title, nil: "…"
   - else  # Blog Entries:
     = link_to(page) do
-      = best_in_place_if can?(:update, page), page, :title
+      = best_in_place_if can?(:update, page), page, :title, display_as: :title, nil: "…"
 %div.page
   %div.page_header
     - if page.author
@@ -19,7 +19,7 @@
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
       - if can? :update, page
-        = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup
+        = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "…"
       - else
         = markup(page.content)
 

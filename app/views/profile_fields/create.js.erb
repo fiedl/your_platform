@@ -17,4 +17,10 @@ created_profile_field.apply_edit_mode();
 created_profile_field.find(".editable").trigger("edit");
 
 <% # Set the focus to the first field (except for the label => second) %>
-created_profile_field.find("input[type=text]")[1].focus();
+if (created_profile_field.find("input[type=text]").length > 1){
+  created_profile_field.find("input[type=text]")[1].focus();
+}else{
+  var textBox = created_profile_field.find("textarea");
+  textBox.focus();
+  textBox.select();
+}

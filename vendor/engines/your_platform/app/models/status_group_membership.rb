@@ -105,7 +105,17 @@ class StatusGroupMembership < UserGroupMembership
   # Returns all memberships of the given user in the given corporation.
   #
   def self.find_all_by_user_and_corporation( user, corporation )
-    self.find_all_by_user( user ).find_all_by_corporation( corporation )
+    raise 'Expect parameter to be a User' unless user.kind_of? User
+    status_groups = user.status_groups(with_invalid: true)
+    status_groups &= corporation.status_groups
+    status_group_ids = status_groups.collect { |group| group.id }
+    links = self
+      .where( :descendant_type => "User" )
+      .where( :descendant_id => user.id )
+      .where( :ancestor_type => "Group" )
+      .where( :ancestor_id => status_group_ids )
+      .order( :valid_from )
+    return links
   end
 
   # This method overrides the default finder method in order to make

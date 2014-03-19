@@ -9,14 +9,18 @@ class ProfileFieldsController < ApplicationController
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
-    @profile_field.save
+    @profile_field.value = "-"
+    @profile_field.save if @profile_field.changed?
     respond_to do |format|
       format.js
     end
   end
 
   def update
-    @profile_field.update_attributes(params[:profile_field])
+    @profile_field = ProfileField.find(params[:id])
+    profile_field_class = @profile_field.type.constantize
+    @profile_field = @profile_field.becomes( profile_field_class )
+    updated = @profile_field.update_attributes(params[:profile_field])
     respond_with_bip @profile_field
   end
   
@@ -27,6 +31,9 @@ class ProfileFieldsController < ApplicationController
   private
   
   def load_profileable
+    if params[ :section ].present?
+      @section = params[ :section ]
+    end
     if params[ :profileable_type ].present? && params[ :profileable_id ].present?
       @profileable = secure_profileable_type.constantize.find( params[ :profileable_id ] )
     elsif params[ :profileable_type ].blank? and params[ :profileable_id ].blank?
