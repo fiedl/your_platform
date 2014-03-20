@@ -156,7 +156,14 @@ namespace :activate do
   end
   
   def find_random_user_applicable_for_new_account
-    User.applicable_for_new_account.order('RAND()').limit(1).first
+    User
+      .applicable_for_new_account  # not dead, has no account, has email
+      .joins(:groups).where('dag_links.valid_to IS NULL')  # only current groups
+      .where('groups.name IN (?)', ['Aktivitas', 'Philisterschaft'])  # only wingolfits
+      .uniq
+      .order('RAND()')
+      .limit(1)
+      .first
   end
   
   def find_random_user
