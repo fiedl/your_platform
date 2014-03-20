@@ -139,19 +139,12 @@ namespace :activate do
   end
   
   def find_appropriate_random_user
-    p "ACCOUNTS", UserAccount.count
-    p "WINGOLFITEN", alle_wingolfiten.count
-    p "APPLICABLE YOUR_PLATFORM",  User.applicable_for_new_account.count
-    p "APPLICABLES", find_all_applicable_users.count
-    
     $blacklisted_user_ids = []
     read_blacklisted_users_from_cache
     until (find_all_applicable_users.count == 0) do
       user = find_random_user_applicable_for_new_account
-      print "#{user.w_nummer}? "
       if not user.id.in? $blacklisted_user_ids
         if user_is_appropriate?(user)
-          print "!\n"
           return user 
         else
           read_blacklisted_users_from_cache  # for tasks running in parallel
@@ -163,8 +156,6 @@ namespace :activate do
   end
   
   def find_random_user_applicable_for_new_account
-    p "find..."  
-
     find_all_applicable_users.order('RAND()').limit(1).first
   end
   
