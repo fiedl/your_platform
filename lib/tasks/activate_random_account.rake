@@ -139,9 +139,14 @@ namespace :activate do
   end
   
   def find_appropriate_random_user
+    p "ACCOUNTS", UserAccount.count
+    p "WINGOLFITEN", alle_wingolfiten.count
+    p "APPLICABLE YOUR_PLATFORM",  User.applicable_for_new_account.count
+    p "APPLICABLES", find_all_applicable_users.count
+    
     $blacklisted_user_ids = []
     read_blacklisted_users_from_cache
-    until ($blacklisted_user_ids.uniq.count == find_all_users_without_account.count) do
+    until (find_all_applicable_users.count == 0) do
       user = find_random_user_applicable_for_new_account
       print "#{user.w_nummer}? "
       if not user.id.in? $blacklisted_user_ids
@@ -158,14 +163,15 @@ namespace :activate do
   end
   
   def find_random_user_applicable_for_new_account
+    p "find..."  
+
+    find_all_applicable_users.order('RAND()').limit(1).first
+  end
+  
+  def find_all_applicable_users
     User
-      .applicable_for_new_account  # not dead, has no account, has email
-      .joins(:groups).where('dag_links.valid_to IS NULL')  # only current groups
-      .where('groups.name IN (?)', ['Aktivitas', 'Philisterschaft'])  # only wingolfits
-      .uniq
-      .order('RAND()')
-      .limit(1)
-      .first
+      .applicable_for_new_account
+      .where(id: alle_wingolfiten_ids)
   end
   
   def find_random_user
@@ -180,11 +186,22 @@ namespace :activate do
     User.includes(:account).where(:user_accounts => { :user_id => nil })
   end
   
+  def alle_wingolfiten
+    $alle_wingolfiten ||= User
+      .joins(:groups).where('dag_links.valid_to IS NULL')
+      .where('groups.name IN (?)', ['Aktivitas', 'Philisterschaft'])
+      .uniq
+  end
+  
+  def alle_wingolfiten_ids
+    $alle_wingolfiten_ids ||= alle_wingolfiten.collect { |user| user.id }
+  end
+  
   def user_is_appropriate?(user)
-    user.present? and
-    user.has_no_account? and 
-    user.wingolfit? and 
-    user.alive? and
+    user.present? &&
+    user.has_no_account? &&
+    user.wingolfit? &&
+    user.alive? &&
     user.email.present?
   end
   
