@@ -142,7 +142,7 @@ namespace :activate do
     $blacklisted_user_ids = []
     read_blacklisted_users_from_cache
     until ($blacklisted_user_ids.uniq.count == find_all_users_without_account.count) do
-      user = find_random_user_without_account
+      user = find_random_user_applicable_for_new_account
       if not user.id.in? $blacklisted_user_ids
         if user_is_appropriate?(user)
           return user 
@@ -154,7 +154,11 @@ namespace :activate do
       end
     end
   end
-
+  
+  def find_random_user_applicable_for_new_account
+    User.applicable_for_new_account.order('RAND()').limit(1).first
+  end
+  
   def find_random_user
     User.order('RAND()').limit(1).first
   end
