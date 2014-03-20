@@ -34,7 +34,11 @@
   %span.value-wrapper
     - if profile_field.children.count == 0
       - if can? :update, profile_field
-        = best_in_place profile_field, :value, 
+        - if profile_field.value.blank?
+          = best_in_place profile_field, :value,
+                          { type: input_type, nil: "—", classes: 'value' }.merge(display_method)
+        - else
+          = best_in_place profile_field, :value,
                           { type: input_type, nil: "…", classes: 'value' }.merge(display_method)
       - else
         - if display_method[:display_as]

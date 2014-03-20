@@ -16,7 +16,7 @@ class BlogPostsController < PagesController
     @blog_post || raise('No @blog_post created by cancan.')
     @blog_post.title = I18n.t(:new_blog_post)
     @blog_post.author = current_user
-    @blog_post.content = "-"
+    @blog_post.content = "—"
     @blog_post.save!
     @blog_post.parent_pages << Page.find(params[:parent_id])
     @page = @blog_post

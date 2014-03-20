@@ -1,6 +1,9 @@
 %h1
   - if can? :update, page
-    = best_in_place(page, :title, display_as: :title, nil: "…")
+    - if page.title.blank?
+      = best_in_place(page, :title, display_as: :title, nil: "—")
+    - else
+      = best_in_place(page, :title, display_as: :title, nil: "…")
   - else
     = page.title
 %div.page
@@ -18,7 +21,10 @@
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
       - if can? :update, page
-        = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "…"
+        - if page.content.blank?
+          = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "—"
+        - else
+          = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "…"
       - else
         = markup(page.content)
 
