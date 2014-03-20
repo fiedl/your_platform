@@ -17,5 +17,15 @@ class Corporation
   def hausverein
     self.child_groups.select{ |child| child.name == "Hausverein" or child.name == "Wohnheimsverein" }.first
   end
-
+  
+  def verstorbene
+    self.child_groups.where(name: "Verstorbene").first
+  end
+  
+  def self.find_all_wingolf_corporations
+    self.all.select do |corporation|
+      not corporation.token.include? "!"  # Falkensteiner!
+    end
+  end
+  
 end

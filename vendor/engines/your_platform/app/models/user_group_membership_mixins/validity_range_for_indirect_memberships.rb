@@ -113,10 +113,23 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   #
   def recalculate_validity_range_from_direct_memberships
     unless direct?
-      write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
-      write_attribute :valid_to, latest_direct_membership.try(:valid_to)
       self.valid_from_will_change!
       self.valid_to_will_change!
+      write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
+      write_attribute :valid_to, latest_direct_membership.try(:valid_to)
+    end
+  end
+  
+  def recalculate_validity_range_from_direct_memberships!
+    unless direct?
+      self.valid_from_will_change!
+      self.valid_to_will_change!
+      recalculate_validity_range_from_direct_memberships
+      self.valid_from_will_change!
+      self.valid_to_will_change!
+      save!
+    else
+      raise "Recalculating the validity range makes only sense for indirect memberships. This is a direct one. Membership id: #{self.id}."
     end
   end
   

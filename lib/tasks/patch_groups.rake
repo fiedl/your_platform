@@ -20,7 +20,8 @@ namespace :patch do
       'environment',
       'requirements',
       'print_info',
-      'add_wingolf_super_groups'
+      'add_wingolf_super_groups',
+      'recalculate_membership_validity_ranges_for_super_groups'
     ]
     
     task :add_wingolf_super_groups => [:environment, :requirements, :print_info] do
@@ -45,33 +46,71 @@ namespace :patch do
         alle_philister.add_flag :alle_philister
       end
       
-      for corporation in [Corporation.find_by_token("Be")]
-        log.info corporation.name
+      unless alle_verstorbenen_wingolfiten = Group.find_by_flag(:alle_verstorbenen_wingolfiten)
+        alle_verstorbenen_wingolfiten = alle_wingolfiten.child_groups.create name: "Alle verstorbenen Wingolfiten"
+        alle_verstorbenen_wingolfiten.add_flag :alle_verstorbenen_wingolfiten
+      end
 
-        if corporation.aktivitas
-          alle_aktiven << corporation.aktivitas 
-          for user in corporation.aktivitas.descendant_users
-          #   UserGroupMembership.with_invalid.find_by_user_and_group(user, alle_aktiven).recalculate_validity_range_from_direct_memberships
-          #   UserGroupMembership.with_invalid.find_by_user_and_group(user, alle_wingolfiten).recalculate_validity_range_from_direct_memberships
-            Rails.cache.delete [current_user, "my_groups_table"]
-            print "."
-          end
+      log.info "Binde Korporationen ein:"
+      for corporation in Corporation.find_all_wingolf_corporations
+        print "#{corporation.name} "
+
+        if corporation.aktivitas and not corporation.aktivitas.in? alle_aktiven.child_groups
+          print "."
+          alle_aktiven.child_groups << corporation.aktivitas
+        else
+          print ".".yellow
+        end
+        
+        if corporation.philisterschaft and not corporation.philisterschaft.in? alle_philister.child_groups
+          print "."
+          alle_philister.child_groups << corporation.philisterschaft 
+        else
+          print ".".yellow
+        end
+        
+        if corporation.verstorbene and not corporation.verstorbene.in? alle_verstorbenen_wingolfiten.child_groups
+          print "."
+          alle_verstorbenen_wingolfiten.child_groups << corporation.verstorbene 
+        else
+          print ".".yellow
         end
 
-        if corporation.philisterschaft
-          alle_philister << corporation.philisterschaft
-          # for user in corporation.philisterschaft.descendant_users
-          #   UserGroupMembership.with_invalid.find_by_user_and_group(user, alle_philister).recalculate_validity_range_from_direct_memberships
-          #   UserGroupMembership.with_invalid.find_by_user_and_group(user, alle_wingolfiten).recalculate_validity_range_from_direct_memberships
-          #   print "."
-          # end
-        end
         print "\n"
       end
       
       log.success "Fertig."
     end
+    
+    task :recalculate_membership_validity_ranges_for_super_groups => [:environment, :requirements, :print_info] do
+      log.section "Gültigkeitszeiträume für Mitgliedschaften in Zusammenfassungsgruppen neu berechnen."
+      log.info "Wenn Gruppen-Beziehungen nachträglich hinzugefügt werden, müssen ggf. die Gültigkeitszeiträume neu abgeleitet werden."
+      log.info ""
 
+      groups = [
+        Group.find_by_flag(:alle_wingolfiten),
+        Group.find_by_flag(:alle_aktiven),
+        Group.find_by_flag(:alle_philister)
+      ]
+      
+      counter = 0
+      User.find_each do |user|
+        for group in groups
+          membership = UserGroupMembership.with_invalid.find_by_user_and_group(user, group)
+          if membership
+            membership.recalculate_validity_range_from_direct_memberships!
+            Rails.cache.delete [user, "my_groups_table"]
+            print ".".green
+            counter += 1 
+          else
+            print "."
+          end
+        end
+      end
+      
+      log.info ""
+      log.success "#{counter} UserGroupMemberships aktualisiert."
+    end
   end
   
   def log
