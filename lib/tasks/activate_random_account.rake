@@ -143,8 +143,10 @@ namespace :activate do
     read_blacklisted_users_from_cache
     until ($blacklisted_user_ids.uniq.count == find_all_users_without_account.count) do
       user = find_random_user_applicable_for_new_account
+      print "#{user.w_nummer}? "
       if not user.id.in? $blacklisted_user_ids
         if user_is_appropriate?(user)
+          print "!\n"
           return user 
         else
           read_blacklisted_users_from_cache  # for tasks running in parallel
