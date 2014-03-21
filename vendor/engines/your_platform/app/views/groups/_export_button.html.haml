@@ -1,0 +1,11 @@
+%div.btn-group.group_export.pull-right
+  %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+    %i.icon-list-alt
+    Liste herunterladen
+    .caret
+  %ul.dropdown-menu
+    %li.nav-header Tabellen
+    %li
+      = link_to group_path(@group, :format => :csv) do
+        %i.icon-list-alt
+        Geburtstagsliste

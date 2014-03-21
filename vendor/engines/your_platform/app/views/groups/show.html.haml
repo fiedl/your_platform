@@ -26,6 +26,7 @@
     %span.members_count
       (#{h @group.members.count})
   %div
+    = render partial: 'export_button'
     - if @group and @new_user_group_membership
       - if can? :manage, @group
         %span.show_only_in_edit_mode.add_membership
