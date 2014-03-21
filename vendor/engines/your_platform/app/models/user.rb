@@ -216,6 +216,19 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
+  
+  
+  # Other infos from profile fields
+  # ------------------------------------------------------------------------------------------
+
+  def personal_title
+    profile_fields.where(label: 'personal_title').first.try(:value).try(:strip)
+  end
+  def academic_degree
+    profile_fields.where(label: 'academic_degree').first.try(:value).try(:strip)
+  end
+
+
 
 
   # Associated Objects

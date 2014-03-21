@@ -35,6 +35,7 @@ class Group < ActiveRecord::Base
   include GroupMixins::Developers
   include GroupMixins::Officers
 
+  include GroupMixins::Csv
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
@@ -139,33 +140,6 @@ class Group < ActiveRecord::Base
   end
   
   
-  # Export to CSV
-  # ==========================================================================================
-  
-  def members_to_csv
-    CSV.generate(col_sep: ';', quote_char: '"') do |csv|
-      csv << [
-        I18n.t(:last_name),
-        I18n.t(:first_name),
-        '',
-        I18n.t(:date_of_birth),
-        I18n.t(:age)
-      ]
-      self.members.sort_by do |member|
-        member.date_of_birth.try(:strftime, "%m-%d") || ''
-      end.each do |member|
-        csv << [
-          member.last_name,
-          member.first_name,
-          member.title.gsub(member.name, '').strip,
-          member.date_of_birth.nil? ? '' : I18n.localize(member.date_of_birth), 
-          member.date_of_birth.nil? ? '' : member.age
-        ]
-      end
-    end
-  end
-  
-
   # Finder Methods
   # ==========================================================================================
 

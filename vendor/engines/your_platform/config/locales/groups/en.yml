@@ -28,4 +28,12 @@ en:
 
   add_member:                     Add Member
   
+  download_list:                  Download list
+  tables:                         Tables
+  name_list:                      Name list
+  birthday_list:                  Birthday list
+  address_list:                   Address list
+  phone_list:                     Phone list
+  email_list:                     Email list
+  current_age:                    Current age
   

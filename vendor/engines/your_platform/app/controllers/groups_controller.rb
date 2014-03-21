@@ -77,7 +77,10 @@ class GroupsController < ApplicationController
     
     respond_to do |format|
       format.html
-      format.csv { send_data @group.members_to_csv }  # render text: @group.members_to_csv
+      format.csv do
+        # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
+        send_data @group.members_to_csv(params[:list])
+      end
     end
     
     metric_logger.log_event @group.try(:attributes), type: :show_group
