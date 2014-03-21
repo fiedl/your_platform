@@ -1,7 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require 'rails/all'
-
+require 'csv'
 
 # ENGINE LOAD PATCH
 # This code loads the engine codes before the main app. This makes it possible
