@@ -41,9 +41,4 @@ de:
   yes:                                                     Ja
   no:                                                      Nein
 
-  text_above_name:                                         Zeile über dem Namen
-  text_below_name:                                         Zeile unter dem Namen
-  name_prefix:                                             Text vor dem Namen
-  name_postfix:                                            Text hinter dem Namen
-  
   confirm_review:                                          Richtigkeit der Angabe bestätigen

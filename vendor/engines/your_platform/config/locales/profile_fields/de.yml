@@ -53,6 +53,10 @@ de:
   specialization: Spezialisierung
   further_study: Weiteres Studium
   
+  text_above_name: Zeile über dem Namen
+  text_below_name: Zeile unter dem Namen
+  name_prefix: Text vor dem Namen
   name_suffix: Text hinter dem Namen
+  name_postfix: Text hinter dem Namen
 
   further_information: Weitere Informationen

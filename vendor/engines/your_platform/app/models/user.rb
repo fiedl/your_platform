@@ -206,7 +206,7 @@ class User < ActiveRecord::Base
   # Primary Postal Address or, if not existent, the first address field.
   #
   def postal_address_field_or_first_address_field
-    postal_address_field || profile_fields.where(type: "ProfileFieldTypes::Address").first
+    postal_address_field || profile_fields.where(type: "ProfileFieldTypes::Address").where("value != ? AND NOT value IS NULL", '').first
   end
 
   # This method returns the postal address of the user.
@@ -220,15 +220,39 @@ class User < ActiveRecord::Base
   
   # Other infos from profile fields
   # ------------------------------------------------------------------------------------------
-
+  
+  def profile_field_value(label)
+    profile_fields.where(label: label).first.try(:value).try(:strip)
+  end
   def personal_title
-    profile_fields.where(label: 'personal_title').first.try(:value).try(:strip)
+    profile_field_value 'personal_title'
   end
   def academic_degree
-    profile_fields.where(label: 'academic_degree').first.try(:value).try(:strip)
+    profile_field_value 'academic_degree'
   end
 
-
+  def name_surrounding_profile_field
+    profile_fields.where(type: "ProfileFieldTypes::NameSurrounding").first
+  end
+  def text_above_name
+    name_surrounding_profile_field.try(:text_above_name).try(:strip)
+  end
+  def text_below_name
+    name_surrounding_profile_field.try(:text_below_name).try(:strip)
+  end
+  def name_prefix
+    name_surrounding_profile_field.try(:name_prefix).try(:strip)
+  end
+  def name_suffix
+    name_surrounding_profile_field.try(:name_suffix).try(:strip)
+  end
+  
+  def postal_address_with_name_surrounding
+    ("#{text_above_name}\n" +
+    ("#{name_prefix} #{personal_title} #{name} #{name_suffix}").gsub("  ", " ").strip + "\n"
+    "#{text_below_name}\n" +
+    postal_address).strip
+  end
 
 
   # Associated Objects
