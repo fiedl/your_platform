@@ -1,27 +1,28 @@
-%div.btn-group.group_export.pull-right
-  %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
-    %i.icon-list-alt
-    = t :download_list
-    .caret
-  %ul.dropdown-menu
-    %li.nav-header= t :tables
-    %li
-      = link_to group_path(@group, :format => :csv) do
-        %i.icon-list-alt
-        = t :name_list
-    %li
-      = link_to group_path(@group, :format => :csv, :list => :birthday_list) do
-        %i.icon-list-alt
-        = t :birthday_list
-    %li
-      = link_to group_path(@group, :format => :csv, :list => :address_list) do
-        %i.icon-list-alt
-        = t :address_list
-    %li
-      = link_to group_path(@group, :format => :csv, :list => :phone_list) do
-        %i.icon-list-alt
-        = t :phone_list
-    %li
-      = link_to group_path(@group, :format => :csv, :list => :email_list) do
-        %i.icon-list-alt
-        = t :email_list
+- if can? :manage, @group
+  %div.btn-group.group_export.pull-right
+    %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
+      %i.icon-list-alt
+      = t :download_list
+      .caret
+    %ul.dropdown-menu
+      %li.nav-header= t :tables
+      %li
+        = link_to group_path(@group, :format => :csv) do
+          %i.icon-list-alt
+          = t :name_list
+      %li
+        = link_to group_path(@group, :format => :csv, :list => :birthday_list) do
+          %i.icon-list-alt
+          = t :birthday_list
+      %li
+        = link_to group_path(@group, :format => :csv, :list => :address_list) do
+          %i.icon-list-alt
+          = t :address_list
+      %li
+        = link_to group_path(@group, :format => :csv, :list => :phone_list) do
+          %i.icon-list-alt
+          = t :phone_list
+      %li
+        = link_to group_path(@group, :format => :csv, :list => :email_list) do
+          %i.icon-list-alt
+          = t :email_list
