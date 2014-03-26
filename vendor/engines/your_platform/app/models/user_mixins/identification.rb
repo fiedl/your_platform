@@ -40,14 +40,20 @@ module UserMixins::Identification
     # Otherwise, the method returns `nil`.
     #
     def identify( login_string )
-      matching_users = self.find_all_by_identification_string( login_string )
-      if matching_users.count == 1
-        return matching_users.first
-      else
-        return nil
+      
+      # prioritize alias (bug fix)
+      #
+      matching_user = self.find_by_alias(login_string)
+      
+      unless matching_user
+        matching_users = self.find_all_by_identification_string( login_string )
+        if matching_users.count == 1
+          matching_user = matching_users.first
+        end
       end
-    end
 
+      return matching_user
+    end
   end
 
 end

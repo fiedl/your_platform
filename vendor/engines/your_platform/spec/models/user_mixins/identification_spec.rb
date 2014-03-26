@@ -4,7 +4,7 @@ describe UserMixins::Identification do
 
   before do
     @user1 = create( :user, first_name: "John", last_name: "Doe", email: "john.doe@example.com", :alias => "john.doe" )
-    @user2 = create( :user, first_name: "James", last_name: "Doe", email: "james.doe@example.com", :alias => "doe" )
+    @user2 = create( :user, first_name: "James", last_name: "Doe", email: "james.doe@example.com", :alias => "james.doe" )
   end
 
   describe ".attributes_used_for_identification" do
@@ -40,9 +40,25 @@ describe UserMixins::Identification do
     context "if the last name is identical to the alias (bug fix)" do
       before do
         @user1.destroy # since only @user2 should be present for this test 
+        @user2.update_attribute(:alias, 'doe')
+      end
+      specify "prerequisites" do
+        @user2.alias.downcase.should == @user2.last_name.downcase
       end
       it "should return the one matching user" do
         User.identify( "doe" ).should == @user2
+      end
+    end
+    context "for several users having the same last name and one of them having the last name as alias (bug fix)" do
+      before do
+        @user2.update_attribute(:alias, 'doe')
+      end
+      specify "prerequisistes" do
+        @user2.last_name.downcase.should == @user2.alias.downcase
+        @user2.last_name.downcase.should == @user1.last_name.downcase
+      end
+      it "should return the user identified by the alias" do
+        User.identify("doe").should == @user2
       end
     end
   end
