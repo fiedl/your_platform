@@ -15,4 +15,11 @@ ready = ->
 				event.preventDefault()
 	)
 
+	$(document).on('focus', 'input', (event) ->
+		$(event.target).select()
+	)
+
+	$(document).on('focus', 'textarea', (event) ->
+		$(event.target).select()
+	)
 $(document).on('ready page:load', ready)

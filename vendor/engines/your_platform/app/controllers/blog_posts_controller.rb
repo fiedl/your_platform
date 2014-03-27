@@ -27,7 +27,7 @@ class BlogPostsController < PagesController
 
   def update
     set_inheritance_instance_variable
-    @blog_post.update_attributes params[ :blog_post ].select { |k,v| v.present? }
+    @blog_post.update_attributes params[ :blog_post ].select { |k,v| v.present? && (v != "—")}
     respond_with_bip(@blog_post)
   end
   
