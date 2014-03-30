@@ -45,10 +45,10 @@ module ProfileSteps
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
 
       page.should have_content(I18n.t(field_name))
-      page.save_screenshot('tmp/screenshot3.png')
+      #page.save_screenshot('tmp/screenshot3.png')
       click_on I18n.t(field_name)
       wait_for_ajax; wait_for_ajax
-      page.save_screenshot('tmp/screenshot4.png')
+      #page.save_screenshot('tmp/screenshot4.png')
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       #puts all('.profile_field_parent').count.to_s + ' profile fields'
     }.to change{ all('.profile_field_parent').count }.by 1
