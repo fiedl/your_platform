@@ -249,6 +249,7 @@ describe User do
   
   describe "#adapt_bv_to_postal_address" do
     before do
+      @bv0 = create(:bv_group, name: "BV 00 Unbekannt Verzogene", token: "BV 00")
       @bv1 = create(:bv_group, name: "BV 01 Berlin", token: "BV 01")
       @bv2 = create(:bv_group, name: "BV 45 Europe", token: "BV 45")
       @address1 = "Pariser Platz 1\n 10117 Berlin"
@@ -326,6 +327,25 @@ describe User do
           subject
           @user.bv.should == @bv2
           @membership2.reload.valid_to.should == nil
+        end
+      end
+      describe "for a user without address" do
+        before do
+          @user.profile_fields.destroy_all
+          @user.reload
+        end
+        it "should assign the user to BV 00" do
+          subject
+          @user.bv.token.should == "BV 00"
+        end
+      end
+      describe "if the bv could not be determined by plz" do
+        before do
+          BvMapping.destroy_all
+        end
+        it "should assign no bv" do
+          subject
+          @user.bv.should == nil
         end
       end
     end

@@ -52,8 +52,13 @@ class User
   #
   def adapt_bv_to_postal_address
     self.groups(true) # reload groups
-    if self.philister?
-      new_bv = postal_address_field_or_first_address_field.bv
+    if self.philister? 
+      if postal_address_field_or_first_address_field.try(:value).try(:present?)
+        new_bv = postal_address_field_or_first_address_field.bv
+      else
+        # Wenn keine Adresse gegeben ist, in den BV 00 (Unbekannt Verzogen) verschieben.
+        new_bv = Bv.find_by_token("BV 00")
+      end
       if new_bv and bv and (new_bv != bv)
         
         # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
