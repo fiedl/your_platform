@@ -19,6 +19,9 @@ class Log
   def error( text )
     self.write text.red
   end
+  def failure( text )
+    self.error(text)
+  end
   def warning( text )
     self.write "Warning: ".yellow.bold + text.yellow
   end

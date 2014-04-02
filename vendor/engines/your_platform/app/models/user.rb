@@ -193,12 +193,11 @@ class User < ActiveRecord::Base
       UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
-  
 
   # Primary Postal Address
   #
   def postal_address_field
-    self.profile_fields.where(type: "ProfileFieldTypes::Address").select do |address_field|
+    self.address_profile_fields.select do |address_field|
       address_field.postal_address? == true
     end.first
   end
@@ -206,7 +205,7 @@ class User < ActiveRecord::Base
   # Primary Postal Address or, if not existent, the first address field.
   #
   def postal_address_field_or_first_address_field
-    postal_address_field || profile_fields.where(type: "ProfileFieldTypes::Address").where("value != ? AND NOT value IS NULL", '').first
+    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first
   end
 
   # This method returns the postal address of the user.
@@ -810,7 +809,18 @@ class User < ActiveRecord::Base
   def self.applicable_for_new_account
     self.without_account.alive.with_email
   end
-
+  
+  def self.with_postal_address
+    self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
+  end
+  
+  def self.without_postal_address
+    User.all - User.with_postal_address
+  end
+  
+  def self.joins_groups
+    self.joins(:groups).where('dag_links.valid_to IS NULL')
+  end
 
   # Helpers
   # ==========================================================================================
