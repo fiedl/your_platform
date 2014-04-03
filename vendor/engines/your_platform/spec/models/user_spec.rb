@@ -1321,7 +1321,7 @@ describe User do
     it { should_not include @user_with_empty_email }
   end
   
-  describe "(postal address finder methods)", :focus do
+  describe "(postal address finder methods)" do
     before do
       @user_with_address = create(:user)
       @user_with_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")

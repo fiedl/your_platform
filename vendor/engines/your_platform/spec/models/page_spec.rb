@@ -40,7 +40,7 @@ describe Page do
   # Quick Assignment of Children
   # ----------------------------------------------------------------------------------------------------
   
-  describe "#<<", :focus do
+  describe "#<<" do
     before { @page = create(:page) }
     subject { @page << @object_to_add }
     
