@@ -814,8 +814,12 @@ class User < ActiveRecord::Base
     self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
   end
   
+  def self.with_postal_address_ids
+    self.with_postal_address.collect { |user| user.id }
+  end
+  
   def self.without_postal_address
-    User.all - User.with_postal_address
+    self.where('NOT users.id IN (?)', self.with_postal_address_ids)
   end
   
   def self.joins_groups

@@ -610,6 +610,7 @@ describe User do
       subject.should == @subgroup3
     end
   end
+  
   # Status Groups
   # ------------------------------------------------------------------------------------------
 
@@ -1293,7 +1294,7 @@ describe User do
     end
   end
   
-  describe ".applicable_for_new_account", :focus do
+  describe ".applicable_for_new_account" do
     before do
       @hidden_user = create(:user); @hidden_user.hidden = true
       @visible_user = create(:user)
@@ -1318,6 +1319,32 @@ describe User do
     it { should include @user_with_email }
     it { should_not include @user_without_email }
     it { should_not include @user_with_empty_email }
+  end
+  
+  describe "(postal address finder methods)", :focus do
+    before do
+      @user_with_address = create(:user)
+      @user_with_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
+      @user_without_address = create(:user)
+      @user_with_empty_address = create(:user)
+      @user_with_empty_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "")
+    end
+  
+    describe ".with_postal_address" do
+      subject { User.with_postal_address }
+      it { should be_kind_of ActiveRecord::Relation }
+      it { should include @user_with_address }
+      it { should_not include @user_without_address }
+      it { should_not include @user_with_empty_address }
+    end
+    
+    describe ".without_postal_address" do
+      subject { User.without_postal_address }
+      it { should be_kind_of ActiveRecord::Relation }
+      it { should include @user_without_address }
+      it { should include @user_with_empty_address }
+      it { should_not include @user_with_address }
+    end
   end
 
 end
