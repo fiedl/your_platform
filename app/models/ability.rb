@@ -90,6 +90,10 @@ class Ability
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
 
+        can :update, UserGroupMembership do |user_group_membership|
+          user_group_membership.user == user
+        end
+
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.

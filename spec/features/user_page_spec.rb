@@ -121,12 +121,6 @@ feature 'User page', js: false do
         end
       end
 
-      scenario 'the vita section should be editable', js: true do
-        within '.box.section.corporate_vita' do
-          subject.should have_selector('a.edit_button', visible: true)
-        end
-      end
-
       scenario "the section #{I18n.t(:communication)} should be editable", js: true do
         within('.box.section.communication') do
           click_on I18n.t(:edit)
@@ -155,14 +149,6 @@ feature 'User page', js: false do
           end
 
           within '.box.section.career_information' do
-            subject.should have_no_selector('a.edit_button', visible: true)
-            subject.should have_no_selector('a.add_button', visible: true)
-            subject.should have_no_selector('.remove_button', visible: true)
-          end
-        end
-
-        scenario 'the vita section should not be editable', js: true do
-          within '.box.section.corporate_vita' do
             subject.should have_no_selector('a.edit_button', visible: true)
             subject.should have_no_selector('a.add_button', visible: true)
             subject.should have_no_selector('.remove_button', visible: true)
@@ -215,14 +201,6 @@ feature 'User page', js: false do
 
         scenario 'the empty sections should be visible' do
           subject.should have_selector('.box.section.organizations')
-        end
-
-        scenario 'the vita section should not be editable', js: true do
-          within '.box.section.corporate_vita' do
-            subject.should have_no_selector('a.edit_button', visible: true)
-            subject.should have_no_selector('a.add_button', visible: true)
-            subject.should have_no_selector('.remove_button', visible: true)
-          end
         end
 
         scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do

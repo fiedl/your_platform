@@ -107,6 +107,78 @@ feature 'Corporate Vita', js: true do
     end
   end
 
+  describe 'as normal user visiting the own profile:' do
+
+    background do
+      @status_groups.first.assign_user @user
+
+      @first_promotion_workflow = create( :promotion_workflow, name: 'First Promotion',
+          :remove_from_group_id => @status_groups.first.id,
+      :add_to_group_id => @status_groups.second.id )
+      @first_promotion_workflow.parent_groups << @status_groups.first
+
+      @second_promotion_workflow = create( :promotion_workflow, name: 'Second Promotion',
+          :remove_from_group_id => @status_groups.second.id,
+      :add_to_group_id => @status_groups.last.id )
+      @second_promotion_workflow.parent_groups << @status_groups.second
+
+      login(@user)
+      visit user_path( @user )
+    end
+
+    describe 'viewing the user page' do
+      subject { page } # user profile page
+      it 'should list the status group the user is a member of' do
+        page.should have_content @status_groups.first.name
+        page.should have_no_content @status_groups.last.name
+      end
+    end
+
+    describe 'promoting himself (i.e. change his status)' do
+      it 'should not be possible to promote himself' do
+        # run the second workflow
+        within '.box.first' do
+          page.should have_no_button I18n.t(:change_status)
+        end
+      end
+    end
+
+    describe 'change the date of promotion afterwards' do
+      before do
+        @first_promotion_workflow.execute( user_id: @user.id )
+        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        visit user_path( @user )
+      end
+
+      it 'should be possible to change the date' do
+        within('#corporate_vita') do
+
+          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+
+          page.should have_content @valid_from_formatted
+
+          # activate inplace editing of the date_field
+          first('.best_in_place.status_group_date_of_joining').click
+
+          within first '.best_in_place.status_group_date_of_joining' do
+            page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
+          end
+
+          @new_date = 10.days.ago.to_date
+          fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
+
+          page.should have_no_selector("input")
+          page.should have_content I18n.localize(@new_date)
+
+          wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
+          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+
+        end
+      end
+    end
+  end
+
+
   describe 'as different user:' do
 
     background do
