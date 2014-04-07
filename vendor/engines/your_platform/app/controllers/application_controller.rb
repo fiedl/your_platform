@@ -108,7 +108,6 @@ class ApplicationController < ActionController::Base
     type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
     metric_logger.log_event( { id: params[:id] }, type: type)
     metric_logger.log_event( { request_type: type }, type: :generic_request)
-    metric_logger.log_cpu_usage
   end
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
