@@ -9,7 +9,7 @@ class ProfileFieldsController < ApplicationController
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
-    @profile_field.value = "-"
+    @profile_field.value = "—"
     @profile_field.save if @profile_field.changed?
     respond_to do |format|
       format.js
@@ -18,7 +18,11 @@ class ProfileFieldsController < ApplicationController
 
   def update
     @profile_field = ProfileField.find(params[:id])
-    profile_field_class = @profile_field.type.constantize
+    if @profile_field.type.in? ["ProfileFieldTypes::Address",			"ProfileFieldTypes::AcademicDegree",	"ProfileFieldTypes::Klammerung", "ProfileFieldTypes::BankAccount",		"ProfileFieldTypes::Competence", 			"ProfileFieldTypes::Custom", 			"ProfileFieldTypes::Date", "ProfileFieldTypes::Email",					"ProfileFieldTypes::Description", 		"ProfileFieldTypes::Employment", "ProfileFieldTypes::General", 			"ProfileFieldTypes::Homepage",				"ProfileFieldTypes::NameSurrounding", "ProfileFieldTypes::Organization", 	"ProfileFieldTypes::Phone",						"ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Study"]
+      profile_field_class = @profile_field.type.constantize
+    else
+      raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
+    end
     @profile_field = @profile_field.becomes( profile_field_class )
     updated = @profile_field.update_attributes(params[:profile_field])
     respond_with_bip @profile_field

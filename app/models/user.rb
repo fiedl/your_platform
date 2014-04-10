@@ -60,7 +60,8 @@ class User
         new_bv = Bv.find_by_token("BV 00")
       end
       if new_bv and bv and (new_bv != bv)
-        
+        current_membership = self.bv_membership
+
         # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
         # membership has to be destroyed if the user previously had been a member
         # of the new bv. When DagLinks are allowed to exist several times, remove
@@ -71,7 +72,9 @@ class User
             old_membership.destroy
           end
         end
-        new_membership = self.bv_membership.move_to new_bv
+        
+        raise 'no current bv membership' unless current_membership
+        new_membership = current_membership.move_to new_bv
       elsif new_bv and not bv
         new_membership = new_bv.assign_user self
       end

@@ -6,7 +6,12 @@ module ProfileFieldTypes
     def self.model_name; ProfileField.model_name; end
 
     def display_html
-      ActionController::Base.helpers.mail_to self.value
+      mail = self.value || ""
+      if mail == "—"
+        mail
+      else
+        ActionController::Base.helpers.mail_to mail
+      end
     end
   end
   
