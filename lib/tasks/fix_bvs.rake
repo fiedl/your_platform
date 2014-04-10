@@ -70,7 +70,7 @@ namespace :fix do
         raise 'no membership' unless correct_membership.kind_of? UserGroupMembership
         
         if user.reload.bv
-          print "#{user.reload.bv.token} ist korrekt. Austragen aus: "
+          log.info "#{user.reload.bv.token} ist korrekt."
         else
           log.failure "konnte keinem BV zugeordnet werden. Kontrolle erforderlich!"
         end
@@ -123,7 +123,10 @@ namespace :fix do
   end
   
   def alle_philister_mit_mehreren_bvs
-    User.joins_groups.where(:groups => {name: "Bezirksverbände"}).where('dag_links.count > 1').uniq
+    bv_ids = Bv.all.collect { |bv| bv.id }
+    bv_users = User.joins_groups.where(:groups => {id: bv_ids})
+    users_in_multiple_bvs = bv_users - bv_users.uniq
+    return users_in_multiple_bvs
   end
 
   def alle_philister_ohne_bv
