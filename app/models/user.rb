@@ -42,8 +42,33 @@ class User
     UserGroupMembership.find_by_user_and_group(self, bv) if bv
   end
   
+  # Es kann sein, dass der Benutzer durch einen Fehler mehreren BVs zugeordnet ist.
+  # Diese Methode gibt alle aktuellen BV-Mitgliedschaften zurück, nicht aber 
+  # eventuelle BV-Ämter-Mitgliedschaften.
+  #
+  def bv_memberships
+    (Bv.all & self.groups).collect do |bv|
+      UserGroupMembership.find_by_user_and_group(self, bv)
+    end - [nil]
+  end
+  
   def bv_beitrittsdatum
     bv_membership.valid_from if bv
+  end
+  
+  # Diese Methode gibt den BV zurück, in dem sich der Benutzer gemäß seiner
+  # aktuellen Postanschrift befinden sollte.
+  # Achtung: Nur Philister sind BVs zugeordnet. Für Aktive wird `nil` zurückgegeben.
+  #
+  def correct_bv
+    if self.philister?
+      if postal_address_field_or_first_address_field.try(:value).try(:present?)
+        postal_address_field_or_first_address_field.bv
+      else
+        # Wenn keine Adresse gegeben ist, in den BV 00 (Unbekannt Verzogen) verschieben.
+        Bv.find_by_token("BV 00")
+      end
+    end
   end
   
   # Diese Methode passt den BV des Benutzers der aktuellen Postanschrift an.
@@ -52,31 +77,56 @@ class User
   #
   def adapt_bv_to_postal_address
     self.groups(true) # reload groups
-    if self.philister? 
-      if postal_address_field_or_first_address_field.try(:value).try(:present?)
-        new_bv = postal_address_field_or_first_address_field.bv
-      else
-        # Wenn keine Adresse gegeben ist, in den BV 00 (Unbekannt Verzogen) verschieben.
-        new_bv = Bv.find_by_token("BV 00")
-      end
-      if new_bv and bv and (new_bv != bv)
-        
-        # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
-        # membership has to be destroyed if the user previously had been a member
-        # of the new bv. When DagLinks are allowed to exist several times, remove
-        # this hack:
-        #
-        if old_membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group(self, new_bv)
-          if old_membership != bv_membership
-            old_membership.destroy
-          end
+    new_bv = self.correct_bv
+    if new_bv and bv and (new_bv != bv)
+      #
+      # 1. Der Benutzer muss in einen neuen BV Verschoben werden.
+      #
+      
+      # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
+      # membership has to be destroyed if the user previously had been a member
+      # of the new bv. When DagLinks are allowed to exist several times, remove
+      # this hack:
+      #
+      if old_membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group(self, new_bv)
+        if old_membership != bv_membership
+          old_membership.destroy
         end
-        new_membership = self.bv_membership.move_to new_bv
-      elsif new_bv and not bv
-        new_membership = new_bv.assign_user self
       end
-      self.groups(true) # reload groups
+
+      new_membership = self.bv_membership.move_to new_bv
+
+    elsif new_bv and not bv
+      #
+      # 2. Der Benutzer wird erstmalig einem BV zugeordnet.
+      #
+      new_membership = new_bv.assign_user self
+    else
+      #
+      # 3. Der alte BV ist der neue BV. Nichts zu tun.
+      #
+      new_membership = self.bv_membership
     end
+    self.reload.invalidate_all_bv_memberships_but_the_correct_one
+    
+    # This hack would work:
+    # 
+    # sleep 3
+    
+    self.groups(true) # reload groups
+    return new_membership
+  end
+  
+  # Falls überschüssige BV-Mitgliedschaften vorhanden sind, diese entfernen.
+  #
+  def invalidate_all_bv_memberships_but_the_correct_one
+    bv_memberships.each do |membership|
+
+      p "invalidate #{membership.group.name} ..."
+
+      membership.invalidate at: 1.minute.ago unless membership.group == self.bv.becomes(Group)
+    end
+    return self.bv_membership
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".

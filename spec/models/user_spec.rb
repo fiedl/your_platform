@@ -279,6 +279,9 @@ describe User do
             @user.bv.should == @bv1
             @address_field1.bv.should == @bv1
           end
+          it "should return the new membership" do
+            subject.should == UserGroupMembership.find_by_user_and_group(@user, @bv1)
+          end
         end
       end
       describe "for an address being selected as postal address that already matches the current BV" do
@@ -293,6 +296,10 @@ describe User do
           # a double dag link would indicate that the membership had been created twice.
           @user.bv_membership.count.should == 1
         end
+        it "should return the kept membership" do
+          old_membership = @user.reload.bv_membership
+          subject.should == old_membership
+        end
       end
       describe "for an address being selected as postal address that matches a new BV" do
         before do
@@ -305,12 +312,22 @@ describe User do
         end
         it "should assign the user to the new BV" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          sleep 5  # strangely, otherwise, the test is red.
           @user.reload.bv.should == @bv2
         end
         it "should end the current BV membership" do
           subject
           @membership1.reload.valid_to.should_not == nil
+        end
+        it "should return the new membership", :focus do
+          new_membership = subject
+          
+          # sleep 5  # strangely, otherwise, the test is red.
+          # @user.reload.groups(true)
+          p UserGroupMembership.with_invalid.find_by_user_and_group(@user, @bv2)
+          
+          
+          new_membership.should == UserGroupMembership.find_by_user_and_group(@user, @bv2)
         end
       end
       describe "for an address being selected that does not match a BV" do
@@ -328,6 +345,7 @@ describe User do
           @user.bv.should == @bv2
           @membership2.reload.valid_to.should == nil
         end
+        it { should == @membership2 }
       end
       describe "for a user without address" do
         before do
@@ -338,6 +356,9 @@ describe User do
           subject
           @user.bv.token.should == "BV 00"
         end
+        it "should return the new membership" do
+          subject.should == UserGroupMembership.find_by_user_and_group(@user, @bv0)
+        end
       end
       describe "if the bv could not be determined by plz" do
         before do
@@ -346,6 +367,33 @@ describe User do
         it "should assign no bv" do
           subject
           @user.bv.should == nil
+        end
+        it { should == nil }
+      end
+      describe "for the user having multiple bv memberships" do
+        before do
+          @membership0 = @bv0.assign_user @user
+          @membership1 = @bv1.assign_user @user
+          @address_field2.wingolfspost = true  # the correct bv is @bv2.
+        end
+        it "should remove all old memberships" do
+          subject
+          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          UserGroupMembership.find_by_user_and_group(@user, @bv0).should == nil
+          UserGroupMembership.find_by_user_and_group(@user, @bv1).should == nil
+        end
+        specify "the user should only have ONE bv membership, now" do
+          subject
+          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          (@user.groups(true) & Bv.all).count.should == 1
+        end
+        it "should assign the user to the correct bv" do
+          subject
+          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          @user.reload.bv.should == @bv2
+        end
+        it "should return the new membership", :focus do
+          subject.should == UserGroupMembership.find_by_user_and_group(@user, @bv2)
         end
       end
     end
@@ -362,6 +410,7 @@ describe User do
         sleep 1.1
         @user.reload.bv.should == nil
       end
+      it { should == nil }      
     end
   end
   
