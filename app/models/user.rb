@@ -42,9 +42,9 @@ class User
     UserGroupMembership.find_by_user_and_group(self, bv) if bv
   end
   
-  # Es kann sein, dass der Benutzer durch einen Fehler mehreren BVs zugeordnet ist.
-  # Diese Methode gibt alle aktuellen BV-Mitgliedschaften zurück, nicht aber 
-  # eventuelle BV-Ämter-Mitgliedschaften.
+  # Diese Methode gibt die BVs zurück, denen der Benutzer zugewiesen ist. In der Regel
+  # ist jeder Philister genau einem BV zugeordnet. Durch Fehler kann es jedoch dazu kommen,
+  # dass er mehreren BVs zugeordnet ist.
   #
   def bv_memberships
     (Bv.all & self.groups).collect do |bv|
@@ -56,12 +56,15 @@ class User
     bv_membership.valid_from if bv
   end
   
-  # Diese Methode gibt den BV zurück, in dem sich der Benutzer gemäß seiner
-  # aktuellen Postanschrift befinden sollte.
-  # Achtung: Nur Philister sind BVs zugeordnet. Für Aktive wird `nil` zurückgegeben.
+  # Diese Methode gibt den BV zurück, dem der Benutzer aufgrund seiner Postanschrift
+  # zugeordnet sein sollte. Der eingetragene BV kann und darf davon abweisen, da er
+  # in Sonderfällen auch händisch zugewiesen werden kann.
+  #
+  # Achtung: Nur Philister sind BVs zugeordnet. Wenn der Benutzer Aktiver ist,
+  # gibt diese Methode `nil` zurück.
   #
   def correct_bv
-    if self.philister?
+    if self.philister? 
       if postal_address_field_or_first_address_field.try(:value).try(:present?)
         postal_address_field_or_first_address_field.bv
       else
@@ -77,56 +80,55 @@ class User
   #
   def adapt_bv_to_postal_address
     self.groups(true) # reload groups
-    new_bv = self.correct_bv
-    if new_bv and bv and (new_bv != bv)
-      #
-      # 1. Der Benutzer muss in einen neuen BV Verschoben werden.
-      #
-      
+    new_bv = correct_bv
+    
+    # Fall 0: Es konnte kein neuer BV identifiziert werden.
+    # In diesem Fall wird aus Konsistenzgründen die aktuelle BV-Mitgliedschaft
+    # zurückgegeben, da der BV dann nicht verändert werden soll.
+    #
+    if not new_bv
+      new_membership = self.bv_membership
+    
+    # Fall 1: Es ist noch kein BV zugewiesen. Es wird schlicht der neue zugewiesen.
+    #
+    elsif new_bv and not bv
+      new_membership = new_bv.assign_user self
+
+    # Fall 2: Es ist bereits ein BV zugewiesen. Der neue BV ist auch der alte
+    # BV. Die Mitgliedschaft muss also nicht geändert werden.
+    #
+    elsif new_bv and (new_bv == bv)
+      new_membership = self.bv_membership
+
+    # Fall 3: Es ist bereits ein BV zugewiesen. Der neue BV weicht davon ab.
+    # Die Mitgliedschaft muss also geändert werden.
+    #
+    elsif new_bv and bv and (new_bv != bv)
+
       # FIXME: For the moment, DagLinks have to be unique. Therefore, the old 
       # membership has to be destroyed if the user previously had been a member
       # of the new bv. When DagLinks are allowed to exist several times, remove
       # this hack:
       #
       if old_membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group(self, new_bv)
-        if old_membership != bv_membership
+        if old_membership != self.bv_membership
           old_membership.destroy
         end
       end
 
       new_membership = self.bv_membership.move_to new_bv
-
-    elsif new_bv and not bv
-      #
-      # 2. Der Benutzer wird erstmalig einem BV zugeordnet.
-      #
-      new_membership = new_bv.assign_user self
-    else
-      #
-      # 3. Der alte BV ist der neue BV. Nichts zu tun.
-      #
-      new_membership = self.bv_membership
     end
-    self.reload.invalidate_all_bv_memberships_but_the_correct_one
     
-    # This hack would work:
-    # 
-    # sleep 3
-    
+    # Korrekturlauf: Durch einen Fehler kann es sein, dass ein Benutzer mehreren
+    # BVs zugeordnet ist. Deshalb werden hier die übrigen BV-Mitgliedschaften
+    # deaktiviert, damit er nur noch dem neuen BV zugeordnet ist.
+    #
+    for membership in self.bv_memberships
+      membership.invalidate at: 1.minute.ago if membership != new_membership
+    end
+
     self.groups(true) # reload groups
     return new_membership
-  end
-  
-  # Falls überschüssige BV-Mitgliedschaften vorhanden sind, diese entfernen.
-  #
-  def invalidate_all_bv_memberships_but_the_correct_one
-    bv_memberships.each do |membership|
-
-      p "invalidate #{membership.group.name} ..."
-
-      membership.invalidate at: 1.minute.ago unless membership.group == self.bv.becomes(Group)
-    end
-    return self.bv_membership
   end
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
