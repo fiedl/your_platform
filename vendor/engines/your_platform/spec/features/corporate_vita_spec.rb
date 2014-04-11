@@ -176,6 +176,19 @@ feature 'Corporate Vita', js: true do
         end
       end
     end
+
+    describe 'if the date of the promotion was erroneously changed to a date in the future' do
+      before do
+        @first_promotion_workflow.execute( user_id: @user.id )
+        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership.valid_from = 1.day.from_now
+        visit user_path( @user )
+      end
+
+      it 'should still be visible in the profile' do
+        page.should have_content @status_groups.first.name
+      end
+    end
   end
 
 
