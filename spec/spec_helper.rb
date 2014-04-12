@@ -107,7 +107,6 @@ Spork.prefork do
   #
   unless ENV['DRB']
     require 'simplecov'
-    SimpleCov.start 'rails'
   end
 
 
@@ -317,7 +316,6 @@ Spork.each_run do
   #
   if ENV['DRB']
     require 'simplecov'
-    SimpleCov.start 'rails'
   end
   
 end
