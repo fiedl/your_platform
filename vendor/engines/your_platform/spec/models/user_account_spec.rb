@@ -47,4 +47,35 @@ describe UserAccount do
     end
   end
 
+  describe '#email=' do
+    it 'should not raise an exception when set because it is required by devise for an error case' do
+      expect{@account.email = 'invalid@example.org'}.to_not raise_error
+    end
+  end
+
+  describe '#identify_user_account' do
+    describe 'with invalid login name' do
+      it 'should return nil' do
+        UserAccount.identify_user_account('invalid').should be_nil
+      end
+    end
+
+    describe 'with valid email' do
+      it 'should return the user account' do
+        expect(UserAccount.identify_user_account(@user.email)).to eq(@account)
+      end
+    end
+
+    describe 'with valid alias' do
+      it 'should return the user account' do
+        expect(UserAccount.identify_user_account(@user.alias)).to eq(@account)
+      end
+    end
+
+    describe 'with valid name' do
+      it 'should return the user account' do
+        expect(UserAccount.identify_user_account(@user.name)).to eq(@account)
+      end
+    end
+  end
 end

@@ -16,6 +16,8 @@ en:
       timeout: "Your session expired, please sign in again to continue."
       unauthenticated: "You need to sign in or sign up before continuing."
       unconfirmed: "You have to confirm your account before continuing."
+      user_account:
+        not_found_in_database: 'No matching user found.'
     mailer:
       confirmation_instructions:
         subject: "Confirmation instructions"

@@ -5,7 +5,6 @@ en:
   login_name_explanation:   'Your first and last name, email address, or alias'
 
   login_failed:             Login Failed.
-  no_user_found:            No matching user found.
   wrong_password:           Wrong password.
   user_has_no_account:      The user does not have an active user account.
   

@@ -5,7 +5,6 @@ de:
   login_name_explanation:   'Vor- und Zuname, E-Mail-Adresse oder Alias'
 
   login_failed:             Anmeldung fehlgeschlagen.
-  no_user_found:            Es wurde kein übereinstimmender Benutzer gefunden.
   wrong_password:           Das angegebene Passwort war falsch.
   user_has_no_account:      Der Benutzer hat kein aktives Benutzerkonto.
   

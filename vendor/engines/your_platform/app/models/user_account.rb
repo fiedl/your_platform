@@ -53,11 +53,13 @@ class UserAccount < ActiveRecord::Base
 
   delegate :email, :to => :user, :allow_nil => true
 
-  # HACK: This method seems to be required by the PasswordController and is missing, 
+  # HACK: These methods seem to be required by the PasswordController and are missing
   # since we have a virtual email field. 
   # TODO: If we ever change the Password authentication 
-  # field to login, remove this method.
-  #
+  def email= value
+    #dummy required by devise to create an 'error' user account
+  end
+
   def email_changed?
     false
   end
@@ -76,8 +78,9 @@ class UserAccount < ActiveRecord::Base
     # What can go wrong?
     # 1. No user could match the login string.
     users_that_match_the_login_string = User.find_all_by_identification_string( login_string )
-    raise 'no_user_found' unless users_that_match_the_login_string.count > 0
-    
+    #raise 'no_user_found' unless users_that_match_the_login_string.count > 0
+    return nil unless users_that_match_the_login_string.count > 0
+
     # 2. The user may not have an active user account.
     users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.find_all do |user|
       user.has_account? 
