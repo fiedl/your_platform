@@ -16,20 +16,75 @@ feature 'Sessions' do
       it { should have_link I18n.t(:forgot_password) }
     end
 
-    it 'should allow to create a new session' do
-      @user = create(:user)
-      @user.create_account = true
-      @user.save
-      @password = @user.account.password
+    describe 'filling in a valid password' do
+      before do
+        @user = create(:user)
+        @user.create_account = true
+        @user.save
+        @password = @user.account.password
+      end
 
-      fill_in 'user_account_login', with: @user.name
-      fill_in 'user_account_password', with: @password
-      
-      Timeout::timeout(30) do
+      it 'should allow to create a new session with user name' do
+        fill_in 'user_account_login', with: @user.name
+        fill_in 'user_account_password', with: @password
+
+        Timeout::timeout(30) do
+          click_button I18n.t(:login)
+        end
+        page.should have_content(@user.name)
+        page.should have_content(I18n.t(:logout))
+      end
+
+      it 'should allow to create a new session with email' do
+        fill_in 'user_account_login', with: @user.email
+        fill_in 'user_account_password', with: @password
+
+        Timeout::timeout(30) do
+          click_button I18n.t(:login)
+        end
+        page.should have_content(@user.name)
+        page.should have_content(I18n.t(:logout))
+      end
+
+      it 'should allow to create a new session with alias' do
+        fill_in 'user_account_login', with: @user.alias
+        fill_in 'user_account_password', with: @password
+
+        Timeout::timeout(30) do
+          click_button I18n.t(:login)
+        end
+        page.should have_content(@user.name)
+        page.should have_content(I18n.t(:logout))
+      end
+    end
+
+    describe 'filling in an invalid password' do
+      before do
+        @user = create(:user_with_account)
+        fill_in 'user_account_login', with: @user.name
+        fill_in 'user_account_password', with: 'invalid'
         click_button I18n.t(:login)
       end
-      page.should have_content(@user.name)
-      page.should have_content(I18n.t(:logout))
+
+      it { should have_no_content(@user.name) }
+      it { should have_no_content(I18n.t(:logout)) }
+      it { should have_content I18n.t('devise.failure.invalid')}
+    end
+
+    describe 'filling in an invalid login name' do
+      before do
+        @user = create(:user)
+        @user.create_account = true
+        @user.save
+        @password = @user.account.password
+        fill_in 'user_account_login', with: 'invalid'
+        fill_in 'user_account_password', with: @password
+        click_button I18n.t(:login)
+      end
+
+      it { should have_no_content(@user.name) }
+      it { should have_no_content(I18n.t(:logout)) }
+      it { should have_content I18n.t('devise.failure.user_account.not_found_in_database')}
     end
 
   end
