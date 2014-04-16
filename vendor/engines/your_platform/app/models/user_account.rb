@@ -118,42 +118,5 @@ class UserAccount < ActiveRecord::Base
     raise 'attempt to send welcome email with empty password' unless self.password
     UserAccountMailer.welcome_email( self.user, self.password ).deliver
   end
-    
-  # This sends a welcome email to the user of the newly created user account.
-  # TODO: Move this to the controller level.
-  #
-  # def send_welcome_email_if_just_created
-  #   if id_changed? # If the id of the record has changed, this is a new record.
-  #     send_welcome_email
-  #   end
-  # end  
-  
-  
-  # This overrides the devise method that would assign a newly entered password.
-  # But: We do not support custom passwords, currently. Thus, this method actually
-  # sends a password via email.
-  # 
-  # FIXME: This should not happen here in the model. The method name does not suggest
-  # that an email is sent by it. 
-  #
-  # For now, this dirty hack is used, because it's quite hard to override the devise
-  # controller in this manner.
-  #
-  # This `update` action will trigger the reset:
-  # https://github.com/plataformatec/devise/blob/master/app/controllers/devise/passwords_controller.rb#L30
-  #
-  # This is how one would override a devise controller:
-  # http://stackoverflow.com/questions/3546289/override-devise-registrations-controller
-  #
-  # Make sure the views are moved from views/devise/passwords/... to views/passwords/... .
-  #
-  # The `reset_password_by_token` method shows how to find the matching user account, here
-  # named as `recoverable`:
-  # https://github.com/plataformatec/devise/blob/d75fd56f150f006aee51dcafc7157454190de570/lib/devise/models/recoverable.rb#L109
-  #
-  def reset_password!(new_password, new_password_confirmed)
-    send_new_password
-  end
-  
 
 end

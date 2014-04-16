@@ -165,7 +165,9 @@ Spork.prefork do
     config.include RSpec::Matchers
     config.include Rails.application.routes.url_helpers
     config.include FactoryGirl::Syntax::Methods
-    
+    config.include(EmailSpec::Helpers)
+    config.include(EmailSpec::Matchers)
+
     # This introduces the method `wait_for_ajax`, which can be used when the Capybara
     # matchers do not wait properly for ajax code to be finished. 
     # This is just a sleep command with a time determined by a simple benchmark.

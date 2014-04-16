@@ -25,6 +25,8 @@ de:
       signed_in: 'Sie sind nun am System angemeldet. Falls Sie an einem fremden Rechner (Internetcafé etc.) arbeiten, vergessen Sie bitte nicht, sich später wieder abzumelden (rechts oben).'
       signed_out: 'Erfolgreich abgemeldet.'
     passwords:
+      user_account:
+       no_token: 'Sie können diese Seite nur von einer Passwortänderungsmail heraus besuchen. Wenn Sie von einer Passwortänderungsmail kommen, stellen Sie bitte sicher, dass sie die Vollständige Adresse (URL) verwendet haben.'
       send_instructions: 'Sie erhalten in wenigen Minuten eine E-Mail mit der Anleitung, wie Sie ihr Passwort zurücksetzen können.'
       updated: 'Ein neues Passwort wurde generiert und an Ihre E-Mail-Adresse versandt. Sie sind jetzt angemeldet.'
       updated_not_active: 'Ihr Passwort wurde geändert.'
