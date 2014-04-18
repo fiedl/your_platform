@@ -1,5 +1,6 @@
 /*
  * require ../../../vendor/assets/sylesheets/flags
  *= require edit_mode
+ *= require ./password_strength
  *= require_tree ./your_platform
  */
