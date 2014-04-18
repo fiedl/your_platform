@@ -14,6 +14,6 @@
   = f.submit t :submit_changed_password, :class => 'btn btn-success'
 
 = render 'devise/shared/links'
-= javascript_include_tag 'zxcvbn/password_strength'
+= javascript_include_tag 'password_strength'
 %script{:type=>'text/javascript'}
   PasswordStrength.watch("#user_account_password", "#user_account_password_confirmation");
