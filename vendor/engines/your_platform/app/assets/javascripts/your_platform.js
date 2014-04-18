@@ -8,8 +8,6 @@
 //= require jquery-fileupload/vendor/tmpl
 //= require gallery/galleria
 //= require gallery/galleria/classic
-//= require zxcvbn/zxcvbn-async
-//= require zxcvbn/password_strength
 // TODO     require app-ng
 // TODO     require_tree ./services-ng
 // TODO     require_tree ./models-ng

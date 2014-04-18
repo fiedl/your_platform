@@ -136,5 +136,5 @@ var PasswordStrength = {
     }
 };
 
-// inline copy of /assets/zxcvbn-async.js
-(function() { var a; a=function(){ var a,b; b=document.createElement("script"); b.src="/assets/zxcvbn/zxcvbn-async.js"; b.type="text/javascript"; b.async=!0; a=document.getElementsByTagName("script")[0]; return a.parentNode.insertBefore(b,a) }; document.readyState == 'complete' ? setTimeout(a, 0) : (null!=window.attachEvent?window.attachEvent("onload",a):window.addEventListener("load",a,!1)) }).call(this);
+// inline copy of https://github.com/dropbox/zxcvbn/blob/master/zxcvbn-async.js
+(function() { var a; a=function(){ var a,b; b=document.createElement("script"); b.src="//dl.dropbox.com/u/209/zxcvbn/zxcvbn.js"; b.type="text/javascript"; b.async=!0; a=document.getElementsByTagName("script")[0]; return a.parentNode.insertBefore(b,a) }; document.readyState == 'complete' ? setTimeout(a, 0) : (null!=window.attachEvent?window.attachEvent("onload",a):window.addEventListener("load",a,!1)) }).call(this);
