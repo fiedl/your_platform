@@ -3,10 +3,11 @@
   = devise_error_messages!
   = f.hidden_field :reset_password_token
 
+  - #%div{:data => { password_strength_advice: t('password_strength.advice'), very_weak: t('password_strength.very_weak'), weak: t('password_strength.weak'), mediumk: t('password_strength.medium'), good: t('password_strength.good'), strong: t('password_strength.weak') }}
   %div
     = f.label :password, t('new_password')
-    = f.password_field :password, :autofocus => true
-
+    = f.password_field(:password, :autofocus => true)
+  %div.password_strength_container{:data => { password_strength_advice: t('password_strength.advice'), score_descriptions: t([:s0, :s1, :s2, :s3, :s4], scope: 'password_strength.score_descriptions') }}
   %div
     = f.label :password_confirmation, t('confirm_new_password')
     = f.password_field :password_confirmation
