@@ -6,6 +6,16 @@ var PasswordStrength = {
 
         var container = $('.password_strength_container');
 
+        // get configuration
+        var advice = container.data('password-strength-advice');
+        var min_score = container.data('min-score');
+        if (min_score == null || min_score < 0 || min_score > 4) {
+            min_score = 3;
+        }
+        var user_inputs = container.data('user-inputs');
+        var score_description_map = container.data('score-descriptions')
+
+        // create control
         var bg_elm = $('<div class="password_strength_bg" />');
         container.append(bg_elm);
 
@@ -13,37 +23,28 @@ var PasswordStrength = {
         elm.cur_score = 0;
         container.append(elm);
 
+        
         //add separators
         for (var i = 1; i <= 3; i++) {
             var style = {left: 25*i + '%'};
             container.append($('<div class="password_strength_separator" />').css(style));
         }
 
-        var advice = container.data('password-strength-advice');
-        var min_score = container.data('min-score');
-        if (min_score == null || min_score < 0 || min_score > 4) {
-            min_score = 3;
-        }
-        var user_inputs = container.data('user-inputs');
-
-        //shoutout to the nice guys from http://glyphicons.com/
         var info_button = $("<div class='password_strength_icon'/>");
-
         info_button.css("display", 'none');
         info_button.tooltip({trigger: "hover"});
-
         info_button.click(function (e) {e.preventDefault();});
 
+        //shoutout to the nice guys from http://glyphicons.com/
         var info_icon = $("<i class='icon-info-sign'/>");
         info_button.append(info_icon);
 
         container.append(info_button);
 
+
         var password_desc = $('<div class="password_strength_desc" />');
-        //password_desc.text('&nbsp;');
         container.append(password_desc);
 
-        var score_description_map = container.data('score-descriptions')
 
         var last_pwd = '';
         var last_confirmation_pwd = '';
