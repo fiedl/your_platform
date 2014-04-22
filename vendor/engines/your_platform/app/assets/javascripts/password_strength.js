@@ -22,13 +22,16 @@ var PasswordStrength = {
         var advice = container.data('password-strength-advice');
 
         //shoutout to the nice guys from http://glyphicons.com/
-        var info_button = $("<i class='icon-info-sign'/>");
+        var info_button = $("<div class='password_strength_icon'/>");
 
         info_button.css("display", 'none');
         info_button.tooltip({trigger: "hover"});
-        info_button.prop("title", advice);
 
         info_button.click(function (e) {e.preventDefault();});
+
+        var info_icon = $("<i class='icon-info-sign'/>");
+        info_button.append(info_icon);
+
         container.append(info_button);
 
         var password_desc = $('<div class="password_strength_desc" />');
