@@ -20,6 +20,10 @@ var PasswordStrength = {
         }
 
         var advice = container.data('password-strength-advice');
+        var min_score = container.data('min-score');
+        if (min_score == null || min_score < 0 || min_score > 4) {
+            min_score = 3;
+        }
 
         //shoutout to the nice guys from http://glyphicons.com/
         var info_button = $("<div class='password_strength_icon'/>");
@@ -84,7 +88,7 @@ var PasswordStrength = {
             container.addClass('password_strength_score' + score)
             password_desc.text(pwd.length ? word : "");
 
-            if (pwd.length && score < 3) {
+            if (pwd.length && score < min_score) {
                 info_button.show();
             } else {
                 info_button.hide();
@@ -97,7 +101,7 @@ var PasswordStrength = {
                 confirmation_input.css("background-color", "");
             }
 
-            if (score < 4 || password_mismatch ) {
+            if (score < min_score || password_mismatch ) {
                 submit.prop("disabled", true);
             } else {
                 submit.removeProp("disabled");
