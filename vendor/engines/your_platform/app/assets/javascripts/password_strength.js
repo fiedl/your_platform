@@ -24,6 +24,7 @@ var PasswordStrength = {
         if (min_score == null || min_score < 0 || min_score > 4) {
             min_score = 3;
         }
+        var user_inputs = container.data('user-inputs');
 
         //shoutout to the nice guys from http://glyphicons.com/
         var info_button = $("<div class='password_strength_icon'/>");
@@ -76,7 +77,7 @@ var PasswordStrength = {
                 }
             }
             if (!found_triggerword) {
-                score = PasswordStrength.score(pwd);
+                score = PasswordStrength.score(pwd, user_inputs);
                 tooltip = advice;
                 word = score_description_map[score]
             }
@@ -118,14 +119,11 @@ var PasswordStrength = {
 
         setInterval(animator, 350);
     },
-    get_user_inputs: function () {
-        return ["wingolf", "kanne", "bier", "bierjunge", "bundesbruder", "bibel", "gott"];
-    },
-    score: function (str) {
+    score: function (str, user_inputs) {
         if (!window.zxcvbn) {
             return 0;
         }
-        var result = zxcvbn(str, PasswordStrength.get_user_inputs());
+        var result = zxcvbn(str, user_inputs);
         return result.score;
     }
 };
