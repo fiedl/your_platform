@@ -19,15 +19,11 @@ var PasswordStrength = {
             container.append($('<div class="password_strength_separator" />').css(style));
         }
 
-        //var advice = "A good password is easy to remember but hard for a stranger to guess. Uncommon words work well, but only if you use several. Also helpful: non-standard uPPercasing, creative spelllling, personal neologisms, and non-obvious numbers and symbols (using $ for s or 0 for o is too obvious!)";
         var advice = container.data('password-strength-advice');
 
         //shoutout to the nice guys from http://glyphicons.com/
         var info_button = $("<i class='icon-info-sign'/>");
 
-        //var info_button = $("<a href='#' tabindex='-1' class='password_strength_icon' />");
-        //info_button.val(Sprite.make('web', 'information'));
-        //info_button.text('?');
         info_button.css("display", 'none');
         info_button.tooltip({trigger: "hover"});
         info_button.prop("title", advice);
@@ -53,29 +49,37 @@ var PasswordStrength = {
             last_pwd = pwd;
             last_confirmation_pwd = confirmation_pwd;
 
-            var score, word;
+            var score, word, tooltip;
+            var found_triggerword = false;
 
-            if (pwd == 'correcthorsebatterystaple' || pwd == 'Tr0ub4dour&3' || pwd == 'Tr0ub4dor&3') { // easteregg
-                score = 0;
-                word = ['', 'lol'];
-                if (pwd == 'correcthorsebatterystaple') {
-                    // TRANSLATORS this text is displayed rarely, whenever a user selects a password that is from this comic:
-                    // http://imgs.xkcd.com/comics/password_strength.png
-                    info_button.prop("title","Whoa there, don't take advice from a webcomic too literally ;)")
-                } else {
-                    // TRANSLATORS this text is displayed rarely, whenever a user selects a password that is from this comic:
-                    // http://imgs.xkcd.com/comics/password_strength.png
-                    info_button.prop("title","Guess again")
+            var triggerwords = container.data('triggerwords')
+            // triggerword[0]: the actual triggerword
+            // triggerword[1]: the description response
+            // triggerword[2]: the tooltip
+
+            if (triggerwords != null) {
+                for (var i = 0; i< triggerwords.length; ++i){
+                    var triggerword = triggerwords[i]
+                    if (pwd.match(new RegExp(triggerword[0]))){
+                        score = 0;
+                        word = triggerword[1];
+                        tooltip = triggerword[2];
+                        found_triggerword = true;
+                    }
                 }
-            } else {
-                score = PasswordStrength.score(pwd);
-                info_button.prop("title", advice);
             }
+            if (!found_triggerword) {
+                score = PasswordStrength.score(pwd);
+                tooltip = advice;
+                word = score_description_map[score]
+            }
+
+            info_button.prop("title", tooltip);
 
             container.removeClass()
             container.addClass('password_strength_container')
             container.addClass('password_strength_score' + score)
-            password_desc.text(pwd.length ? score_description_map[score] : "");
+            password_desc.text(pwd.length ? word : "");
 
             if (pwd.length && score < 3) {
                 info_button.show();
