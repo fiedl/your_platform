@@ -126,10 +126,14 @@ module GroupMixins::Csv
   # sowie ihren jeweiligen Eintrittsdaten der Statusgruppen aufgeführt.
   # 
   def member_development_to_csv
-    status_groups = if self.corporation?
-      self.becomes(Corporation).status_groups
-    end || []
+    status_groups = self.leaf_groups
+
+    # FIXME: The leaf groups should not return any officer group.
+    # Make this fix unneccessary:
+    status_groups = status_groups - self.descendant_groups.where(name: ['officers', 'Amtsträger'])
+
     status_group_names = status_groups.collect { |group| group.name }
+    status_group_ids = status_groups.collect { |group| group.id }
     
     CSV.generate(csv_options) do |csv|
       csv << [
@@ -139,10 +143,11 @@ module GroupMixins::Csv
         I18n.t(:date_of_birth),
         I18n.t(:date_of_death)
       ] + status_group_names
-      
       self.members.each do |member|
+        links = member.links_as_child_for_groups
         status_group_membership_dates = status_groups.collect do |status_group|
-          datetime = UserGroupMembership.find_by_user_and_group(member, status_group).try(:valid_from)
+          link = links.select { |link| link.ancestor_id == status_group.id }.first
+          datetime = link.try(:valid_from)
           date = datetime.try(:to_date)
           localized_date = I18n.localize(date) if date
           localized_date || ''
