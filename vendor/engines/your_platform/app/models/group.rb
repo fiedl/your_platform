@@ -118,6 +118,17 @@ class Group < ActiveRecord::Base
     self.becomes(Corporation).in? Corporation.all
   end
   
+  # This returns all sub-groups of the corporation that have no
+  # sub-groups of their ownes except for officer groups. 
+  # This is needed for the selection of status groups.
+  #
+  def leaf_groups
+    self.descendant_groups.includes(:flags).select do |group|
+      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+    end
+  end
+  
+  
   
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
