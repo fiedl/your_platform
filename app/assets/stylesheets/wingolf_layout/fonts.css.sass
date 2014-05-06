@@ -1,0 +1,209 @@
+//
+// ## Wingolf Layout Font Definitions
+//
+// In this file, all font settings for the wingolf layout are defined.
+// In that way, the font settings can easily be adjusted at one place.
+// 
+// Trello: https://trello.com/c/5k6dOXFA/600-font-schaltstelle-einrichten
+// UserVoice: https://wingolf.uservoice.com/forums/237354-allgemein/suggestions/5637826-schriftart
+//
+// This file is written in CSS/SASS.
+// For a short guide, see http://sass-lang.com/guide.
+//
+
+// Main Elements
+// ===================================================================================
+
+// Everything
+//
+body
+  font-family: 'AdobeGaramondPro'
+
+// Standard Content
+//
+#content
+  font-size: 13px
+
+// Content Boxes
+//
+#content * .box
+  .head
+    h1
+      text-transform: uppercase
+      font-size: 18px
+    input
+      font-size: 18px
+  .content
+    font-size: 13px
+    h2
+      font-size: 13pt
+
+// Hyperlinks
+a
+  text-decoration: none
+  &:hover
+    text-decoration: underline
+
+// Red Session Bar on Top
+//
+#backendBar
+  .content
+    a
+      font-weight: bold
+      font-size: 13px
+    ul.backendBarItems
+      li.backendBarItem
+        a
+          text-decoration: none
+        
+
+// Breadcrumb Bar
+//
+#breadcrumb
+  ul
+    font-weight: bold
+    li.slim.crumb
+      font-weight: normal
+
+// Horizontal Navigation
+//
+#horizontal_nav
+  ul
+    li
+      font-weight: bold
+      font-size: 13px
+      text-transform: uppercase
+      letter-spacing: 3px
+      a
+        text-decoration: none
+        
+// Vertical Navigation ("Menu")
+//
+.vertical_menu 
+  ul
+    * a
+      font:
+        size: 12px
+        weight: bold
+      text:
+        decoration: none
+        transform: uppercase
+      letter-spacing: 1.3px
+    
+
+
+
+// Toolbar
+//
+#toolbar
+  font-family: 'AdobeGaramondPro', Helvetica
+  font-weight: bold
+  font-size: 13px
+  text-decoration: none
+  * a
+    text-decoration: none
+
+// Footer
+//
+#footer_navi
+  a
+    text-decoration: none
+    text-transform: uppercase
+    font-size: 11px
+    font-weight: bold
+
+// Forms
+//
+input
+  font-family: 'AdobeGaramondPro', Helvetica
+  font-size: 12px
+  font-weight: bold
+.text, .password
+  font-family: 'AdobeGaramondPro', Helvetica
+  font-size: 12px
+  font-weight: bold
+.footnotes
+  font-size: 95%
+  font-weight: normal
+form.formtastic fieldset ol li 
+  p.inline-hints
+    font-weight: normal
+
+// Profile Fields
+//
+ul.attributes, ul.profile_fields
+  .label, .attribute-label
+    font-weight: bold
+    font-size: 13px
+    text-shadow: none
+  li
+    .profile_field_label
+      font-weight: bold
+  li.profile_field_child
+    .label
+      font-weight: normal !important
+.box.section.study_information, .box.section.organizations, .box.section.career_information
+  li.profile_field_child
+    span.label
+      font-weight: normal
+    
+
+
+// Special Adjustments
+// ===================================================================================
+
+// Dropdown Lists: Section Headings
+// For example, status workflows or export downloads.
+//
+.btn-group.workflow_triggers, .btn-group.group_export
+  li.nav-header
+    font-weight: bold
+    font-size: 11px
+    font-family: Helvetica
+    line-height: 20px
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5)
+    text-transform: uppercase  
+
+// Autocomplete Lists
+//
+ul.ui-autocomplete
+  li
+    a
+      font-size: 10pt
+
+// Bootstrap Buttons
+//
+.btn
+  font-family: Awesome
+
+// Tables within Content Boxes
+//
+div.box
+  div.content
+    table
+      td
+        font-weight: normal
+
+// Definition Lists
+//
+dd
+  font-weight: normal
+  dl
+    span
+      dt
+        font-weight: normal
+
+// Junction words like "and", "or", "of".
+//
+.junction_expression
+  font-weight: normal
+
+// Workflow Edit View
+//
+div.workflow_steps
+  ol
+    li
+      .brick-name
+        font-weight: bold
+      .brick-description
+        font-weight: normal
