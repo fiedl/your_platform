@@ -1,5 +1,5 @@
 rvm:
-  - "2.1.1"
+  - "2.1.2"
 env: 
   - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true"
 install:
