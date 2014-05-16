@@ -73,7 +73,7 @@ Gem::Specification.new do |s|
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
-  s.add_dependency 'rmagick', '>=2.13.2'
+  s.add_dependency 'mini_magick'
   s.add_dependency 'jquery-fileupload-rails'
 
   # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
