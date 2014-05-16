@@ -16,22 +16,31 @@ describe AttachmentUploader do
   
   describe "PDF upload" do
     before do
-      pdf_fixture_path = "#{support_dir}/uploads/pdf-upload.pdf"
-      @uploader.store!(File.open(pdf_fixture_path))
+      @pdf_fixture_path = "#{support_dir}/uploads/pdf-upload.pdf"
     end
-    after do
-      @uploader.remove!
+    describe "prelims: " do
+      specify "the fixture pdf should be present" do
+        File.exists?(@pdf_fixture_path).should == true
+      end
     end
-    subject { @uploader }
-    it "should store the file" do
-      @uploader.identifier.should == "pdf-upload.pdf"
-      @uploader.current_path.should include "/uploads/", "/test_env/", "/attachments/", "/pdf-upload.pdf", "/#{@attachment.id}/"
-    end
-    its('file.content_type') { should include "/pdf" }
-    describe "#thumb" do
-      subject { @uploader.thumb }
-      it "should have the correct size (pixels)" do
-        subject.should be_no_larger_than(100,100)
+    describe "storing the file: " do
+      before do
+        @uploader.store!(File.open(@pdf_fixture_path))
+      end
+      after do
+        @uploader.remove!
+      end
+      subject { @uploader }
+      it "should store the file" do
+        @uploader.identifier.should == "pdf-upload.pdf"
+        @uploader.current_path.should include "/uploads/", "/test_env/", "/attachments/", "/pdf-upload.pdf", "/#{@attachment.id}/"
+      end
+      its('file.content_type') { should include "/pdf" }
+      describe "#thumb" do
+        subject { @uploader.thumb }
+        it "should have the correct size (pixels)" do
+          subject.should be_no_larger_than(100,100)
+        end
       end
     end
   end
