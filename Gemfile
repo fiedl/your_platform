@@ -201,3 +201,10 @@ gem 'tilt', '~> 1.4.1'
 
 # Maintenance Mode
 gem 'turnout'
+
+
+# fix workflow kit until the update to rails 4.
+# workflow_kit 0.0.8 only supports rails 4.
+# TODO: remove this line when migrating to rails 4:
+gem 'workflow_kit', '0.0.7'
+
