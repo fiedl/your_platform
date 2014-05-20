@@ -208,3 +208,4 @@ gem 'turnout'
 # TODO: remove this line when migrating to rails 4:
 gem 'workflow_kit', '0.0.7'
 
+gem 'newrelic_rpm'

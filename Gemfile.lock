@@ -266,6 +266,7 @@ GEM
     mini_portile (0.5.2)
     multi_json (1.10.0)
     mysql2 (0.3.15)
+    newrelic_rpm (3.8.1.221)
     nokogiri (1.6.1)
       mini_portile (~> 0.5.0)
     orm_adapter (0.5.0)
@@ -465,6 +466,7 @@ DEPENDENCIES
   mercury-rails!
   meta_request
   mysql2
+  newrelic_rpm
   nokogiri
   passgen
   poltergeist (= 1.5.0)
