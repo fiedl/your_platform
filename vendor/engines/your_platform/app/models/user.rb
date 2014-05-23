@@ -92,6 +92,19 @@ class User < ActiveRecord::Base
   def title
     name
   end
+  
+  # This sets the format of the User urls to be
+  # 
+  #     example.com/users/24-john-doe
+  #
+  # rather than just
+  #
+  #     example.com/users/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
+  
 
   # This accessors allow to access the gender of the user rather than just asking if the
   # user is female as allowed by the ActiveRecord accessor.

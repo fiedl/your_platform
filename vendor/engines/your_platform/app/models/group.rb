@@ -59,6 +59,19 @@ class Group < ActiveRecord::Base
   def name
     I18n.t( super.to_sym, default: super ) if super
   end
+  
+  # This sets the format of the Group urls to be
+  # 
+  #     example.com/groups/24-planeswalkers
+  #
+  # rather than just
+  #
+  #     example.com/groups/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
+  
 
 
   # Associated Objects

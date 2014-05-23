@@ -8,6 +8,22 @@ class Page < ActiveRecord::Base
   has_many :attachments, as: :parent, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+
+
+  # Url
+  # ----------------------------------------------------------------------------------------------------
+
+  # This sets the format of the Page urls to be
+  # 
+  #     example.com/pages/24-products
+  #
+  # rather than just
+  #
+  #     example.com/pages/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
   
   
   # Quick Assignment of Children
