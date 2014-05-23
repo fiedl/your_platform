@@ -6,9 +6,9 @@ class UserGroupMembershipsController < ApplicationController
   respond_to :json
   
   def create
-    if params[:user_group_membership][:user_title].present?
-      @user_id = User.find_by_title(params[:user_group_membership][:user_title]).id
-      @user_group_membership = UserGroupMembership.create(params[:user_group_membership].merge({user_id: @user_id}))
+    if membership_params[:user_title].present?
+      @user_id = User.find_by_title(membership_params[:user_title]).id
+      @user_group_membership = UserGroupMembership.create(membership_params.merge({user_id: @user_id}))
     else
       head :no_content
     end
@@ -19,10 +19,7 @@ class UserGroupMembershipsController < ApplicationController
   end
 
   def update
-    attributes = params[ :user_group_membership ]
-    attributes ||= params[ :status_group_membership ]
-
-    if @user_group_membership.update_attributes!( attributes )
+    if @user_group_membership.update_attributes!( membership_params )
       respond_to do |format|
         format.json do
           #head :ok
@@ -41,6 +38,19 @@ class UserGroupMembershipsController < ApplicationController
   end
 
   private
+
+  def membership_params
+    unrestricted_params = [:valid_to, :valid_from, :user_title, :user_id, :group_id, :id,
+                    :valid_from_localized_date]
+    unfiltered_params = params.require(:user_group_membership) || params.require(:status_group_membership)
+    if can? :manage, @user_group_membership
+      restricted_params = unrestricted_params + [:needs_review, :ancestor_id, :ancestor_type, :descendant_id,
+                                                     :descendant_type]
+      unfiltered_params.permit(*restricted_params)
+    elsif can? :update, @user_group_membership
+      unfiltered_params.permit(*unrestricted_params)
+    end
+  end
 
   def find_membership
     if params[ :id ].present?
