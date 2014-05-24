@@ -51,6 +51,15 @@ describe "User: abilities" do
     the_user.should be_able_to :destroy, @profile_field
     the_user.should_not be_able_to :manage, @profile_field
   end
+  context 'when the user is in a group' do
+    before do
+      @group = create(:group)
+      @group.members << user
+    end
+    he 'should be able to edit his own user group membership dates' do
+      the_user.should be_able_to :update, UserGroupMembership.find_by_user_and_group(user, @group)
+    end
+  end
   he "should be able to read anything (exceptions are below)" do
     @page = create(:page)
     the_user.should be_able_to :read, @page

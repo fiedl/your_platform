@@ -10,7 +10,7 @@
           %tr{ class: "membership #{needs_review_class}" }
             %td
               - if needs_review
-                = link_to(user_group_membership_path(membership, "user_group_membership[needs_review]" => false), method: :put, remote: true, :class => "btn btn-small btn-success confirm-review-button", title: I18n.t(:confirm_review)) do
+                = link_to(user_group_membership_path(membership, 'user_group_membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
                   %i.icon-ok.icon-white 
             %td.membership_valid_from
               - if can? :update, membership
@@ -19,12 +19,4 @@
                 = membership.valid_from_localized_date
             %td.membership_group= link_to membership.group.title.singularize, membership.group, :class => 'status_group_label'
             -# %td= status_group_membership_promoted_on_event( membership )
-  - if user == current_user
-    %hr
-    %p
-      %strong Hinweis:
-      Änderungen können im Moment nicht selbst eingetragen werden, sondern 
-      müssen per E-Mail an die Bundesbrüder aus der Administratoren-Gruppe
-      gesendet werden: 
-      %a(href='mailto:plattform-admins@wingolf.org') plattform-admins@wingolf.org
 
