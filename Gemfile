@@ -192,6 +192,10 @@ gem 'rack-timeout'
 # Metrics
 gem 'fnordmetric'
 
+# Profiling
+gem 'rack-mini-profiler'
+gem 'flamegraph'
+
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
