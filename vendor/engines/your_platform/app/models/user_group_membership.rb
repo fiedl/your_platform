@@ -10,8 +10,6 @@
 class UserGroupMembership < DagLink
 
   before_validation :ensure_correct_ancestor_and_descendant_type
-  after_commit      :flush_cache_ugm
-  before_destroy    :flush_cache_ugm
 
   # Validity Range
   # ====================================================================================================
@@ -42,12 +40,15 @@ class UserGroupMembership < DagLink
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
 
-  # Override the flush_cache_ugm method in order to delete specific cache
-  #
-  def flush_cache_ugm
+  def delete_cache_usergroupmembership
     Rails.cache.delete([self.user, "my_groups_table"])
     Rails.cache.delete([self.user, "corporate_vita_for_user"])
     Rails.cache.delete([self.user, "last_group_in_first_corporation"])
+  end
+
+  def save( *args )
+    delete_cache_usergroupmembership
+    super( *args )
   end
 
   # Creation Class Method

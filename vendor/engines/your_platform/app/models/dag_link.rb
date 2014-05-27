@@ -3,10 +3,13 @@ class DagLink < ActiveRecord::Base
 
   attr_accessible :ancestor_id, :ancestor_type, :count, :descendant_id, :descendant_type, :direct
   acts_as_dag_links polymorphic: true
-  after_commit      :flush_cache_dag
-  before_destroy    :flush_cache_dag
 
-  def flush_cache_dag
+  def save( *args )
+    delete_cache_daglink
+    super( *args )
+  end
+
+  def delete_cache_daglink
     if self.descendant_type == "Group"
       if Group.exists?( self.descendant_id )
         desc_group = Group.find( self.descendant_id )
@@ -17,9 +20,17 @@ class DagLink < ActiveRecord::Base
         desc_page = Page.find( self.descendant_id )
       end
     end
+    if self.descendant_type == "User"
+      if User.exists?( self.descendant_id )
+        desc_user = User.find( self.descendant_id )
+      end
+    end
     if desc_group || desc_page
       Rails.cache.delete([desc_group||desc_page, "structurable_admins"])
       Rails.cache.delete([desc_group||desc_page, "user_admins"])
+    end
+    if desc_user
+      desc_user.delete_cache
     end
 
     # if ancestor group is admin group, also flush admins cache
