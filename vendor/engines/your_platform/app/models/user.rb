@@ -52,6 +52,7 @@ class User < ActiveRecord::Base
   
   def delete_cache
     delete_cached_last_group_in_first_corporation
+    delete_cached_current_corporations
   end
 
   # Mixins
@@ -185,7 +186,7 @@ class User < ActiveRecord::Base
   #
   def mark_as_deceased(options = {})
     date = options[:at] || Time.zone.now
-    self.current_corporations.each do |corporation|
+    self.cached_current_corporations.each do |corporation|
       self.current_status_membership_in(corporation).move_to corporation.deceased, at: date
     end
     end_all_non_corporation_memberships at: date
@@ -404,11 +405,21 @@ class User < ActiveRecord::Base
     end || []
   end
   
+  def cached_current_corporations
+    Rails.cache.fetch( [self, "current_corporations"] ) do
+      current_corporations
+    end
+  end
+
+  def delete_cached_current_corporations
+    Rails.cache.delete( [self, "current_corporations"] )
+  end
+
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    current_corporations.sort_by do |corporation|
+    cached_current_corporations.sort_by do |corporation|
       corporation.membership_of(self).valid_from || Time.zone.now
     end
   end

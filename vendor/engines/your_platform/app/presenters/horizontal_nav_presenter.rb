@@ -69,7 +69,7 @@ class HorizontalNavPresenter < BasePresenter
   
   def categories_the_current_navable_falls_in
     if horizontal_nav.current_navable
-      horizontal_nav.cached_navables.select do |navable|
+      horizontal_nav.navables.select do |navable|
         ( horizontal_nav.current_navable.ancestors + [ horizontal_nav.current_navable ] ).include? navable
       end
     end
