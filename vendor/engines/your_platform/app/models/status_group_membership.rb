@@ -20,7 +20,6 @@ class StatusGroupMembership < UserGroupMembership
 
   attr_accessible :event_by_name
 
-  
   # Alias Methods For Delegated Methods
   # ==========================================================================================
 

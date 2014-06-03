@@ -162,6 +162,12 @@ class User
     Rails.cache.delete [self, "aktivitaetszahl"]
   end
   
+  alias_method :orig_delete_cache, :delete_cache
+  def delete_cache
+    delete_cached_aktivitaetszahl
+    orig_delete_cache
+  end
+
   def aktivitaetszahl_addition_for( corporation )
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter"), also_in_the_past: true
