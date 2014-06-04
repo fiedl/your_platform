@@ -104,7 +104,6 @@ class Ability
           end
           can :manage, User do |other_user|
             other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-            # other_user.user_admins.include?(user)
           end
           can :execute, Workflow do |workflow|
             workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)

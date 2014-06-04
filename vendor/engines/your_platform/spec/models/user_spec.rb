@@ -1056,34 +1056,6 @@ describe User do
     end
   end
 
-  describe "#user_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group with user" )
-      @group << @user
-    end
-    subject { @user.user_admins }
-    it { should be_empty }
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "the admin of user's group is the admin of the user" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-    context "for no admin in the group" do
-      before do
-        @admin.destroy
-      end
-      it "after destroy" do
-        should be_empty
-      end
-    end
-  end
-
   # Main Admins
   # ------------------------------------------------------------------------------------------
 
