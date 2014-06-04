@@ -119,9 +119,6 @@ class Ability
         # DEVELOPERS
         if user.developer?
           can :use, Rack::MiniProfiler
-
-          # Use TogetherJS Collaborative Tool
-          can :use, :together_js
         end
         
       end
