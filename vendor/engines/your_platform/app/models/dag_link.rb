@@ -26,7 +26,6 @@ class DagLink < ActiveRecord::Base
       end
     end
     if desc_group || desc_page
-      Rails.cache.delete([desc_group||desc_page, "structurable_admins"])
       Rails.cache.delete([desc_group||desc_page, "user_admins"])
     end
     if desc_user
@@ -47,12 +46,10 @@ class DagLink < ActiveRecord::Base
         administred = administreds.try( :first )
         groups = administred.try( :descendant_groups ) || []
         groups.each do |x|
-          Rails.cache.delete([x, "structurable_admins"])
           Rails.cache.delete([x, "user_admins"])
         end
         pages = administred.try( :descendant_pages ) || []
         pages.each do |x|
-          Rails.cache.delete([x, "structurable_admins"])
           Rails.cache.delete([x, "user_admins"])
         end
       end

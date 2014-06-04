@@ -101,7 +101,6 @@ class Ability
         unless preview_as_user
           can :manage, Group do |group|
             (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
-            # group.cached_structurable_admins.include?(user)
           end
           can :manage, User do |other_user|
             other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
@@ -112,7 +111,6 @@ class Ability
           end
           can :manage, Page do |page|
             page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-            # page.cached_structurable_admins.include?(user)
           end
         end
         
