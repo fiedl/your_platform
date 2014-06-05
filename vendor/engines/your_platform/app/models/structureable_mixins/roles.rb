@@ -118,20 +118,6 @@ module StructureableMixins::Roles
     find_admins_parent_group.try( :descendant_users ) || []
   end
 
-  # User admins
-  # User admins are users that are either admins of this structurable (page or group) or of
-  # a parent group.
-  def user_admins
-    self.find_admins | self.parent_groups.collect do |parent|
-      parent.cached_user_admins
-    end.flatten.uniq
-  end
-
-  def cached_user_admins
-    Rails.cache.fetch([self, "user_admins"]) { user_admins }
-  end
-
-
   # Main Admins
   # ==========================================================================================
   #

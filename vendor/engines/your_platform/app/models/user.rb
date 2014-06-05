@@ -671,18 +671,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Admin for this user
-  # =====================================================================================
-  #
-  # Admin for this user are all user admins of any group of this user
-  def user_admins
-    result = []
-    groups.collect do |group|
-      result |= group.cached_user_admins
-    end
-    result
-  end
-
   # Main Admins
   # ------------------------------------------------------------------------------------------
 
