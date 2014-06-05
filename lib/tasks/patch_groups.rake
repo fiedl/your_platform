@@ -99,7 +99,6 @@ namespace :patch do
           membership = UserGroupMembership.with_invalid.find_by_user_and_group(user, group)
           if membership
             membership.recalculate_validity_range_from_direct_memberships!
-            Rails.cache.delete [user, "my_groups_table"]
             print ".".green
             counter += 1 
           else
