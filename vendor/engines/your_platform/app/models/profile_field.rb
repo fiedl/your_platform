@@ -77,13 +77,33 @@ class ProfileField < ActiveRecord::Base
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   # 
   def value
-    if children.count > 0
+    if cached_children_count > 0
       ( [ super ] + children.collect { |child| child.value } ).join(", ")
     else
       super
     end
   end
   
+  # Overwrite save to ensure that the cache is deleted in case of changes.
+  #
+  def save( *args )
+    delete_cache
+    super( *args )
+  end
+
+  def delete_cache
+    delete_cached_children_count
+    parent.delete_cache if parent
+  end
+
+  def cached_children_count
+    Rails.cache.fetch([self, "children_count"]) { children.count }
+  end
+
+  def delete_cached_children_count
+    Rails.cache.delete [self, "children_count"]
+  end
+
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
   # Example: For a ProfileFieldTypes::FooBar-type profile field, this method returns 'foo_bar'.
   #

@@ -41,7 +41,11 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Organization do
-  subject { ProfileFieldTypes::Organization.create() }
+  before do
+    @organization = ProfileFieldTypes::Organization.create()
+  end
+
+  subject { @organization }
   
   # Here it is only tested whether the methods exist. The functionality is
   # provided by the same mechanism as tested unter the BankAccount section.
@@ -52,6 +56,11 @@ describe ProfileFieldTypes::Organization do
   it { should respond_to( :from= ) }
   it { should respond_to( :role ) }
   it { should respond_to( :role= ) }
+
+  describe "#cached_children_count" do
+    subject { @organization.cached_children_count }
+    it { should == 3 }
+  end
 end
 
 
@@ -59,10 +68,20 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Email do
-  describe ".create" do
-    subject { ProfileFieldTypes::Email.create( label: "Email" ) }
-    its( 'children.count' ) { should == 0 }
+  before do
+    @email = ProfileFieldTypes::Email.create( label: "Email" )
   end
+
+  describe "#children.count" do
+    subject { @email.children.count }
+    it { should == 0 }
+  end
+
+  describe "#cached_children_count" do
+    subject { @email.cached_children_count }
+    it { should == 0 }
+  end
+
 end
 
 
@@ -358,6 +377,11 @@ describe ProfileFieldTypes::BankAccount do
         end
       end
     end
+  end
+
+  describe "#cached_children_count" do
+    subject { @bank_account.cached_children_count }
+    it { should == 6 }
   end
 
 end  
