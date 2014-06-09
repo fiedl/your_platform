@@ -1,5 +1,5 @@
 module AutoCompletionHelper
-  
+
   def multiple_users_best_in_place( object, attribute )
     # autocomplete_field_tag :user_title, '', autocomplete_title_users_path %>
     best_in_place( object, attribute, 

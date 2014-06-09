@@ -50,7 +50,7 @@ namespace :patch do
       counter = 0
       Aktivitas.all.each do |aktivitas|
         if not aktivitas.officers_parent.child_groups.find_by_flag(:senior)
-          senior_group = aktivitas.officers_parent.child_groups.create(name: "Senior")
+          senior_group = aktivitas.officers_parent.child_groups.create(name: "Senior (x)")
           senior_group.add_flag :senior
           
           counter += 1

@@ -117,7 +117,7 @@ class GroupsController < ApplicationController
   # 
   def group_params
     if can? :manage, @group
-      params.require(:group).permit(:name, :token, :internal_token, :extensive_name)  # TODO: Additionally needed?
+      params.require(:group).permit(:name, :token, :internal_token, :extensive_name, :direct_members_titles_string)  # TODO: Additionally needed?
     elsif can? :update, @group
       params.require(:group).permit(:name, :token, :internal_token, :extensive_name)
     end
