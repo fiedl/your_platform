@@ -41,7 +41,6 @@ class UserGroupMembership < DagLink
   end
 
   def delete_cache_usergroupmembership
-    Rails.cache.delete([self.user, "my_groups_table"])
     Rails.cache.delete([self.user, "corporate_vita_for_user"])
     Rails.cache.delete([self.user, "last_group_in_first_corporation"])
   end
