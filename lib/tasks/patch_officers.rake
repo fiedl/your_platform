@@ -79,12 +79,14 @@ namespace :patch do
       log.section "Leiter der Bezirksverbände anlegen"
       counter = 0
       Bv.all.each do |bv|
-        if not bv.officers_parent.child_groups.find_by_flag(:bv_leiter)
-          leiter_group = bv.officers_parent.child_groups.create(name: "BV-Leiter")
-          leiter_group.add_flag :bv_leiter
-          
-          counter += 1
-          print ".".green
+        if bv.name.start_with? 'BV'  # bug fix hack for wrong bv groups.
+          if not bv.officers_parent.child_groups.find_by_flag(:bv_leiter)
+            leiter_group = bv.officers_parent.child_groups.create(name: "BV-Leiter")
+            leiter_group.add_flag :bv_leiter
+            
+            counter += 1
+            print ".".green
+          end
         end
       end
       print "\n"
