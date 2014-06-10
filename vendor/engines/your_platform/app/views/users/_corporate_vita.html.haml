@@ -1,6 +1,6 @@
 - if user
   %table{ id: 'corporate_vita' }
-    - for corporation in user.corporations
+    - for corporation in user.cached_corporations
       %tr
         %th{ colspan: 3}= corporation.title
         - memberships = user.corporate_vita_memberships_in corporation

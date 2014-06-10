@@ -41,7 +41,6 @@ class UserGroupMembership < DagLink
   end
 
   def delete_cache_usergroupmembership
-    Rails.cache.delete([self.user, "corporate_vita_for_user"])
     Rails.cache.delete([self.user, "last_group_in_first_corporation"])
   end
 
@@ -190,7 +189,7 @@ class UserGroupMembership < DagLink
   #
   def corporation
     if self.group && self.user
-      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
+      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.cached_corporations ).first
     end
   end
 

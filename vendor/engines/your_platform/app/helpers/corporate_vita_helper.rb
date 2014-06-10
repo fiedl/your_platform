@@ -1,11 +1,4 @@
 module CorporateVitaHelper
-
-  def cached_corporate_vita_for_user( user)
-    if user
-      Rails.cache.fetch([user, "corporate_vita_for_user"]) { corporate_vita_for_user( user ) }
-    end
-  end
-
   def corporate_vita_for_user( user )
     render partial: 'users/corporate_vita', locals: { 
       user: @user,
