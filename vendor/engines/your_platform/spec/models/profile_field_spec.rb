@@ -16,12 +16,32 @@ describe ProfileField do
 
   it { should respond_to( :profileable ) }
 
+  describe "#profileable" do
+    describe "for un-structured or parent profile fields" do
+      it "should return just the assigned profileable" do
+        @user = create(:user)
+        @profile_field = @user.profile_fields.create(label: "Address", type: "ProfileFieldTypes::Address")
+        @profile_field.profileable.should == @user
+      end
+    end
+    describe "for child profile fields" do
+      it "should return the parent's profileable" do
+        @user = create(:user)
+        @profile_field = @user.profile_fields.create(label: "Bank Account", type: 'ProfileFieldTypes::BankAccount').becomes(ProfileFieldTypes::BankAccount)
+        @profile_field.account_holder = "John Doe"
+        @child_profile_field = @profile_field.children.first
+        @child_profile_field.profileable.should == @user
+      end
+    end
+  end
+
   describe "acts_as_tree" do
     it { should respond_to( :parent ) }
     it { should respond_to( :children ) }
   end
 
   it { should respond_to( :display_html ) }
+  
 
 end
 

@@ -70,12 +70,7 @@ class Ability
         end
 
         can :crud, ProfileField do |field|
-          parent_field = field
-          while parent_field.parent != nil do
-            parent_field = parent_field.parent
-          end
-
-          !parent_field.profileable || parent_field.profileable.id == user.id
+          (field.profileable == user) || field.profileable.nil?
         end
 
         # Normal users cannot see hidden users, except for self.
@@ -110,6 +105,11 @@ class Ability
           end
           can :manage, Page do |page|
             page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+          end
+          can :manage, ProfileField do |profile_field|
+            if profile_field.profileable
+              profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+            end
           end
         end
         

@@ -114,6 +114,20 @@ describe "User: abilities" do
       @group.assign_user @other_user
       the_user.should be_able_to :manage, @other_user
     end
+    he "should be able to manage the users' profile fields" do
+      @other_user = create(:user)
+      @group.assign_user @other_user
+      @profile_field = @other_user.profile_fields.create(label: "Home Address", type: 'ProfileFieldTypes::Address')
+      the_user.should be_able_to :manage, @profile_field
+    end
+    he "should be able to update the user's structured profile fields" do
+      @other_user = create(:user)
+      @group.assign_user @other_user
+      @profile_field = @other_user.profile_fields.create(label: "Bank Account", type: 'ProfileFieldTypes::BankAccount').becomes(ProfileFieldTypes::BankAccount)
+      @profile_field.account_holder = "John Doe"
+      @child_profile_field = @profile_field.children.first
+      the_user.should be_able_to :update, @child_profile_field
+    end
     he "should be able to manage subgroups" do
       @subgroup = create(:group)
       @subgroup.parent_groups << @group

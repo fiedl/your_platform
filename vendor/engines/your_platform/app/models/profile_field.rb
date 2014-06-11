@@ -134,6 +134,22 @@ class ProfileField < ActiveRecord::Base
   # Furthermore, this method modifies the intializer to build the child fields
   # on build of the main profile_field.
   extend ProfileFieldMixins::HasChildProfileFields
+  
+  # For child profile fields, this returns the profileable of the parent.
+  # For parents, this returns just the assigned profileable.
+  #
+  # This has to be here, since child profile fields do not have the
+  # `has_child_profile_fields` call in their classes.
+  #
+  alias_method :orig_profileable, :profileable
+  def profileable
+    if parent.present?
+      parent.profileable
+    else
+      orig_profileable
+    end
+  end
+  
 
   # In order to namespace the type classes of the profile_fields, we place them
   # in a module. In order to be able to use the type column without including
