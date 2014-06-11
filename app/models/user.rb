@@ -134,8 +134,8 @@ class User
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
   def aktivitätszahl
-    if self.corporations
-      self.corporations
+    if self.cached_corporations
+      self.cached_corporations
       .select do |corporation|
         not (self.guest_of?(corporation)) and
         not (self.former_member_of_corporation?(corporation)) and

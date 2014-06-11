@@ -530,6 +530,54 @@ describe User do
     end
   end
 
+  describe "#cached_corporations" do
+    before do
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationS = create( :corporation_with_status_groups, :token => "S" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @subgroup = create( :group );
+      @subgroup.parent_groups << @corporationE
+      @user.save
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @user.parent_groups << @subgroup
+      @user.reload
+    end
+    subject { @user.cached_corporations }
+    it "should return an array of the user's corporations" do
+      should == @user.corporations
+    end
+    context "when user entered corporation S" do
+      before do
+        @user.cached_corporations
+        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+    context "when user entered corporation H as guest" do
+      before do
+        @user.cached_corporations
+        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+    context "when user left corporation E" do
+      before do
+        @user.cached_corporations
+        former_group = @corporationE.child_groups.create
+        former_group.add_flag :former_members_parent
+        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
+        @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+  end
+
   describe "#current_corporations" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
@@ -587,7 +635,7 @@ describe User do
       @user.parent_groups << @subgroup
       @user.reload
     end
-    subject { @user.current_corporations }
+    subject { @user.cached_current_corporations }
     it "should return an array of the user's corporations" do
       should == @user.corporations
     end

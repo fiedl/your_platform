@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   def delete_cache
     delete_cached_last_group_in_first_corporation
     delete_cached_current_corporations
+    delete_cached_corporations
   end
 
   # Mixins
@@ -410,10 +411,20 @@ class User < ActiveRecord::Base
     my_corporations.collect { |group| group.becomes( Corporation ) }
   end
 
+  def cached_corporations
+    Rails.cache.fetch( [self, "corporations"] ) do
+      corporations
+    end
+  end
+
+  def delete_cached_corporations
+    Rails.cache.delete( [self, "corporations"] )
+  end
+
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    self.corporations.select do |corporation|
+    self.cached_corporations.select do |corporation|
       Role.of(self).in(corporation).current_member?
     end || []
   end
