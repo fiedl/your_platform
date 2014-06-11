@@ -22,5 +22,7 @@
 //= require_boxes
 //= require gmaps4rails
 //= require make-js-more-like-ruby
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 //= require your_platform
 //= require_tree .

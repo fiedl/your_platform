@@ -20,6 +20,14 @@ GIT
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
 
+GIT
+  remote: git://github.com/rweng/jquery-datatables-rails.git
+  revision: d637e0967dc66e9824345009ad74fbfdb1e4349f
+  specs:
+    jquery-datatables-rails (1.12.2)
+      jquery-rails
+      sass-rails
+
 PATH
   remote: vendor/engines/your_platform
   specs:
@@ -471,6 +479,7 @@ DEPENDENCIES
   guard-focus
   guard-rspec
   guard-spork
+  jquery-datatables-rails!
   jquery-rails
   jquery-ui-rails
   json

@@ -131,7 +131,7 @@ class ApplicationController < ActionController::Base
         trackable: object,
         key: action_name,
         owner: current_user,
-        parameters: params
+        parameters: params.except('authenticity_token')
       )
     end
   end

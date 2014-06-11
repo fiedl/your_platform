@@ -1,17 +1,19 @@
 %h1 Aktivitäts-Log
 %div
-  %table
-    %tr
-      %th Time
-      %th Who
-      %th Action
-      %th Object
-      %th Params
-    - @activities.each do |activity|
+  %table.activities.datatable.display
+    %thead
       %tr
-        %td= activity.created_at
-        %td= link_to activity.owner.try(:title), activity.owner
-        %td= activity.key
-        - object_title = activity.trackable.title if activity.trackable.respond_to?(:title)
-        %td= link_to (object_title || activity.trackable.class.name), activity.trackable
-        %td= activity.parameters
+        %th Time
+        %th Who
+        %th Action
+        %th Object
+        %th Params
+    %tbody
+      - @activities.each do |activity|
+        %tr
+          %td= activity.created_at
+          %td= link_to activity.owner.try(:title), activity.owner
+          %td= activity.key
+          - object_title = activity.trackable.title if activity.trackable.respond_to?(:title)
+          %td= link_to (object_title || activity.trackable.class.name), activity.trackable
+          %td= activity.parameters

@@ -10,6 +10,9 @@
  *
  *= require_self
  *= require jquery.ui.all
+ *= require jquery.ui.core
+ *= require jquery.ui.theme
+ *= require dataTables/src/demo_table_jui
  *= require formtastic
  *= require your_platform
  *= require font-awesome
