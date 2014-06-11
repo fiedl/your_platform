@@ -85,9 +85,16 @@ class Ability
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
 
+        # Normal users can update their own membership validity range.
+        #
         can :update, UserGroupMembership do |user_group_membership|
           user_group_membership.user == user
         end
+        
+        # Normal users cannot see the activity log, for the moment.
+        # Only global admins can.
+        #
+        cannot :read, PublicActivity::Activity
 
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 

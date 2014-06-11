@@ -82,6 +82,12 @@ describe "User: abilities" do
     @bank_account_of_group = @group.profile_fields.create(type: 'ProfileFieldTypes::BankAccount')
     the_user.should be_able_to :read, @bank_account_of_group
   end
+  he "should not be able to see the temporary activity log." do
+    PublicActivity::Activity.create
+    
+    the_user.should_not be_able_to :read, PublicActivity::Activity
+    the_user.should_not be_able_to :read, PublicActivity::Activity.first
+  end
   
   describe "if other users are hidden" do
     before do
