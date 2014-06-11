@@ -11,7 +11,7 @@ class ErrorsController < ApplicationController
     @exception = env["action_dispatch.exception"]
     respond_to do |format|
       format.html #{ render action: request.path[1..-1] }
-      format.json { render json: {status: request.path[1..-1], error: @exception.message} }
+      format.json { render json: {status: request.path[1..-1], error: (@exception.message || "Zeitüberschreitung (Timeout).")} }
     end
   end
 
