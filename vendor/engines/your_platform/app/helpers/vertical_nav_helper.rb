@@ -21,6 +21,10 @@ module VerticalNavHelper
       return html_code.html_safe
     end
   end
+  
+  def show_vertical_nav?
+    @navable.present?
+  end
 
   private
 

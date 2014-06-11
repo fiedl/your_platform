@@ -72,16 +72,22 @@
                 = edit_button
             %span#content_area
             #content
-              .content_twoCols.content_twoCols-20-80
-                .content_twoCols_left
-                  = vertical_nav
-                .content_twoCols_right
-                  = flash_area
-                  = replace_unicode_special_chars_by_html_escape_strings( |
-                      convert_to_content_box { yield }                    |
-                    )                                                     |
-                \ 
-                .clear
+              - if show_vertical_nav?
+                .content_twoCols.content_twoCols-20-80
+                  .content_twoCols_left
+                    = vertical_nav
+                  .content_twoCols_right
+                    = flash_area
+                    = replace_unicode_special_chars_by_html_escape_strings( |
+                        convert_to_content_box { yield }                    |
+                      )                                                     |
+                  \ 
+                  .clear
+              - else
+                = flash_area
+                = replace_unicode_special_chars_by_html_escape_strings( |
+                    convert_to_content_box { yield }                    |
+                  )                                                     |
     #footer
       #footer_bg
       #footer_navi
