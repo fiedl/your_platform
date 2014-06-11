@@ -63,6 +63,9 @@ require 'rails-gallery'
 require 'fnordmetric'
 require 'rack-mini-profiler'
 
+# Activity Logger
+require 'public_activity'
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

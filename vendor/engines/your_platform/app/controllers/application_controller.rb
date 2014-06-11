@@ -12,6 +12,8 @@ class ApplicationController < ActionController::Base
   helper_method :metric_logger
   before_filter :authorize_miniprofiler
   
+  after_filter  :log_activity
+  
   # This method returns the currently signed in user.
   #
   def current_user
@@ -111,6 +113,27 @@ class ApplicationController < ActionController::Base
   end
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
+  end
+  
+  # Generic Activity Logger
+  #
+  def log_activity
+    if not action_name.in? ["index", "show"]
+      begin
+        type = self.class.name.gsub("Controller", "").singularize
+        id = params[:id]
+        object = type.constantize.find(id)
+      rescue
+        # there is no object associated, e.g. for the RootController
+      end
+      
+      PublicActivity::Activity.create(
+        trackable: object,
+        key: action_name,
+        owner: current_user,
+        parameters: params
+      )
+    end
   end
   
   # MiniProfiler is a tool that shows the page load time in the top left corner of
