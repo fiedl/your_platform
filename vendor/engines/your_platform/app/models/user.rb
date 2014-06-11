@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
+  require_dependency 'app/models/corporation' # fixes caching issue. TODO: remove this in Rails 4.
+  
 
   attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
                             :add_to_corporation, :date_of_birth, :localized_date_of_birth
