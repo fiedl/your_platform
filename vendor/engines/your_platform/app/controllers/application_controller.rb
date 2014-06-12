@@ -118,7 +118,7 @@ class ApplicationController < ActionController::Base
   # Generic Activity Logger
   #
   def log_activity
-    if not action_name.in? ["index", "show"]
+    if not action_name.in? ["index", "show", "download", "autocomplete_title"]
       begin
         type = self.class.name.gsub("Controller", "").singularize
         id = params[:id]
