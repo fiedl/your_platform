@@ -82,6 +82,51 @@ feature 'User page', js: false do
           page.should have_no_selector('li')
         end
       end
+      
+      scenario "editing the 'study information' box", js: true do
+        within '.box.section.study_information' do
+          
+          # Adding a study profile field.
+          #
+          click_on I18n.t :edit
+          click_on I18n.t :add
+          fill_in 'label', with: 'Undergraduate Studies'
+          within('.profile_field.from')       { fill_in 'value', with: "2006" }
+          within('.profile_field.to')         { fill_in 'value', with: "2008" }
+          within('.profile_field.university') { fill_in 'value', with: "FAU Erlangen" }
+          within('.profile_field.subject')    { fill_in 'value', with: "Physics" }
+          find('.save_button').click
+
+          wait_for_ajax
+          @user.profile_fields.where(type: 'ProfileFieldTypes::Study').count.should == 1
+          study_field = @user.profile_fields.where(type: 'ProfileFieldTypes::Study').first.becomes(ProfileFieldTypes::Study)
+          study_field.label.should == "Undergraduate Studies"
+          study_field.from.should == "2006"
+          study_field.to.should == "2008"
+          study_field.university.should == "FAU Erlangen"
+          study_field.subject.should == "Physics"
+          study_field.specialization.should_not be_present
+          
+          # Changing the study field.
+          #
+          within '.profile_field.subject' do
+            find('.best_in_place').click  # Physics
+            fill_in 'value', with: "Theoretical and Experimental Physics\n"
+          
+            wait_for_ajax
+            study_field.reload.subject.should == "Theoretical and Experimental Physics"
+          end
+          
+          # Removing the study field.
+          #
+          click_on I18n.t :edit
+          find('.remove_button').click
+          find('.save_button').click
+          
+          wait_for_ajax
+          @user.profile_fields.where(type: 'ProfileFieldTypes::Study').count.should == 0
+        end
+      end
 
       scenario "the section #{I18n.t(:career_information)} should be editable", js: true do
         within '.box.section.career_information' do

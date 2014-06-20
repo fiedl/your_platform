@@ -3,6 +3,7 @@
 -# in order to display complex information such as bank account information.
 -#
 - profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
+- profile_field_css_class += " #{profile_field.key}" if profile_field.parent_id
 - input_type = 'input'
 - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
 -# # For the moment, no 'date' type. The date selector does not work properly with edit_mode.

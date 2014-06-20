@@ -18,8 +18,8 @@ class ProfileFieldsController < ApplicationController
 
   def update
     @profile_field = ProfileField.find(params[:id])
-    if @profile_field.type.in? ["ProfileFieldTypes::Address",			"ProfileFieldTypes::AcademicDegree",	"ProfileFieldTypes::Klammerung", "ProfileFieldTypes::BankAccount",		"ProfileFieldTypes::Competence", 			"ProfileFieldTypes::Custom", 			"ProfileFieldTypes::Date", "ProfileFieldTypes::Email",					"ProfileFieldTypes::Description", 		"ProfileFieldTypes::Employment", "ProfileFieldTypes::General", 			"ProfileFieldTypes::Homepage",				"ProfileFieldTypes::NameSurrounding", "ProfileFieldTypes::Organization", 	"ProfileFieldTypes::Phone",						"ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Study"]
-      profile_field_class = @profile_field.type.constantize
+    if @profile_field.type.to_s.in? ProfileField.possible_types
+      profile_field_class = @profile_field.type.try(:constantize) || ProfileField
     else
       raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
     end

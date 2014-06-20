@@ -72,7 +72,7 @@ class ProfileField < ActiveRecord::Base
     label_text = self.underscored_type if not label_text.present?
     translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text.present?
   end
-
+  
   # If the field has children, their values are included in the main field's value.
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   # 
@@ -179,7 +179,8 @@ class ProfileField < ActiveRecord::Base
       'ProfileFieldTypes::Competence', 'ProfileFieldTypes::BankAccount',
       'ProfileFieldTypes::Description', 'ProfileFieldTypes::Phone',
       'ProfileFieldTypes::NameSurrounding', 'ProfileFieldTypes::Homepage',
-      'ProfileFieldTypes::Date', 'ProfileFieldTypes::AcademicDegree'
+      'ProfileFieldTypes::Date', 'ProfileFieldTypes::AcademicDegree', 
+      '' # Empty string is allowed, for example for child profile fields.
     ]
   end
   
