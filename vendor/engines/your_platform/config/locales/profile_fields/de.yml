@@ -18,6 +18,11 @@ de:
   mobile: Mobil
   work_mobile: Mobiltelefon geschäftlich
   custom: Benutzerdefiniert
+
+  postal_code: Postleitzahl (PLZ)
+  town: Stadt
+  country: Land
+  country_code: Länder-Kennzeichen
   
   account: Konto
   account_holder: Kontoinhaber

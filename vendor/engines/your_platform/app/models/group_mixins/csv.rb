@@ -84,7 +84,8 @@ module GroupMixins::Csv
   
   def members_addresses_to_csv
     
-    # TODO: plz, Straße, Stadt, Land extra. (Wunsch Gernsbach.)
+    # TODO: Add the streat as a separate column.
+    # This was requested at the meeting at Gernsbach, Jun 2014.
     
     CSV.generate(csv_options) do |csv|
       csv << [
@@ -94,6 +95,10 @@ module GroupMixins::Csv
         I18n.t(:address),
         I18n.t(:address),
         I18n.t(:last_updated_at),
+        I18n.t(:postal_code),
+        I18n.t(:town),
+        I18n.t(:country),
+        I18n.t(:country_code),
         I18n.t(:personal_title),
         I18n.t(:text_above_name),
         I18n.t(:text_below_name),
@@ -102,6 +107,7 @@ module GroupMixins::Csv
       ]
       self.members.each do |member|
         address_field = member.postal_address_field_or_first_address_field
+        geo = address_field.geo_location
         if address_field.updated_at.to_date > "2014-02-28".to_date 
           # if the date is earlier, the date is actually the date
           # of the data migration and should not be shown.
@@ -114,6 +120,10 @@ module GroupMixins::Csv
           member.postal_address_with_name_surrounding,
           address_field.value,
           updated_at,
+          geo.postal_code,
+          geo.city,
+          geo.country,
+          geo.country_code,
           member.personal_title,
           member.text_above_name,
           member.text_below_name,

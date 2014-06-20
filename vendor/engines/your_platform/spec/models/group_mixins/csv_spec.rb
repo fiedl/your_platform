@@ -40,7 +40,7 @@ describe GroupMixins::Csv do
   describe "#members_addresses_to_csv" do
     subject { @group.members_addresses_to_csv }
     before do
-      @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: 'Pariser Platz 1\n 10117 Berlin')
+      @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
       @address1.update_attribute(:updated_at, "2014-06-20".to_datetime)
       @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
       @name_surrounding.name_prefix = "Dr."
@@ -51,8 +51,8 @@ describe GroupMixins::Csv do
       @user.save
     end
     it { should == 
-      "Nachname;Vorname;\"\";Adresse;Adresse;Zuletzt aktualisiert am;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen\n" + 
-      "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};\"Herrn\nDr. #{@user.name} M.Sc.\n#{@user.postal_address}\";#{@user.postal_address};20.06.2014;;Herrn;\"\";Dr.;M.Sc.\n"
+      "Nachname;Vorname;\"\";Adresse;Adresse;Zuletzt aktualisiert am;Postleitzahl (PLZ);Stadt;Land;Länder-Kennzeichen;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen\n" + 
+      "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};\"Herrn\nDr. #{@user.name} M.Sc.\nPariser Platz 1\n10117 Berlin\";\"#{@user.postal_address}\";20.06.2014;10117;Berlin;Germany;DE;;Herrn;\"\";Dr.;M.Sc.\n"
     }
   end
 end

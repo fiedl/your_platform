@@ -5,3 +5,8 @@ en:
   credit_institution: Credit Institution
   iban: IBAN
   bic: BIC
+  
+  postal_code: Postal Code
+  town: Town
+  country: Country
+  country_code: Country Code
