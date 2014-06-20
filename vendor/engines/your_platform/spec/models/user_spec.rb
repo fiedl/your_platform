@@ -294,6 +294,84 @@ describe User do
         end
       end
     end
+    describe "#postal_address_with_name_surrounding" do
+      subject { @user.postal_address_with_name_surrounding }
+      before do
+        @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+        @name_surrounding.name_prefix = "Dr."
+        @name_surrounding.name_suffix = "M.Sc."
+        @name_surrounding.text_above_name = "Herrn"
+        @name_surrounding.text_below_name = "Bankdirektor"
+        @name_surrounding.save
+        @user.save
+      end
+      specify "prelims" do
+        @user.name_surrounding_profile_field.should == @name_surrounding
+        @user.name_surrounding_profile_field.text_above_name.should == "Herrn"
+        @user.text_above_name.should == "Herrn"
+      end
+      it { should == 
+        "Herrn\n" +
+        "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+        "Bankdirektor\n" +
+        @user.postal_address
+      }
+      describe "when no name surroundings are given" do
+        before { @name_surrounding.destroy }
+        it { should == "#{@user.name}\n#{@user.postal_address}" }
+      end
+      describe "when the user has the same personal title as given in the name prefix" do
+        before do
+          @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+          @user.save
+        end
+        it "should not print it twice" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is no text below the name" do
+        before { @name_surrounding.update_attributes(text_below_name: "") }
+        it "should leave no blank line" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          @user.postal_address
+        end
+      end
+      describe "when there is no text above the name" do
+        before { @name_surrounding.update_attributes(text_above_name: "") }
+        it "should not begin with a blnak line" do
+          subject.should == 
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is neither prefix nor personal title" do
+        before { @name_surrounding.update_attributes(name_prefix: '') }
+        it "should set no spaces before the name" do
+          subject.should == 
+          "Herrn\n" +
+          "#{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is no name suffix" do
+        before { @name_surrounding.update_attributes(name_suffix: '') }
+        it "should set no spaces after the name" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name}\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+    end
   end
 
   

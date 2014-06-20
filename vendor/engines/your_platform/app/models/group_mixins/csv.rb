@@ -83,6 +83,9 @@ module GroupMixins::Csv
   end
   
   def members_addresses_to_csv
+    
+    # TODO: plz, Straße, Stadt, Land extra. (Wunsch Gernsbach.)
+    
     CSV.generate(csv_options) do |csv|
       csv << [
         I18n.t(:last_name),

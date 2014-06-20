@@ -267,10 +267,17 @@ class User < ActiveRecord::Base
   end
   
   def postal_address_with_name_surrounding
-    ("#{text_above_name}\n" +
-    ("#{name_prefix} #{personal_title} #{name} #{name_suffix}").gsub("  ", " ").strip + "\n"
-    "#{text_below_name}\n" +
-    postal_address).strip
+    text_before_the_name = name_prefix
+    text_before_the_name += " #{personal_title}" if name_prefix != personal_title
+    ("#{text_above_name}\n" + 
+      "#{text_before_the_name} #{name} #{name_suffix}\n" + 
+      "#{text_below_name}\n" +
+      postal_address
+    ).gsub('  ', ' ')
+    .gsub("\n\n", "\n")
+    .gsub(" \n", "\n")
+    .gsub("\n ", "\n")
+    .strip
   end
 
 
