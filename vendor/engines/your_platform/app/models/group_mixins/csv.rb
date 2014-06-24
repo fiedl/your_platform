@@ -106,7 +106,7 @@ module GroupMixins::Csv
         I18n.t(:name_prefix),
         I18n.t(:name_suffix)
       ]
-      self.members.each do |member|
+      self.members.order(:last_name).each do |member|
         address_field = member.postal_address_field_or_first_address_field
         geo = address_field.geo_location
         if address_field.updated_at.to_date > "2014-02-28".to_date 
@@ -144,7 +144,7 @@ module GroupMixins::Csv
         I18n.t('profile_field.label'),
         I18n.t(:phone_number)
       ]
-      self.members.each do |member|
+      self.members.order(:last_name).each do |member|
         member.phone_profile_fields.each do |phone_field|
           csv << [
             member.last_name,
