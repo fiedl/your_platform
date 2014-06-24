@@ -373,6 +373,19 @@ describe User do
       end
     end
   end
+  
+  describe "#phone_profile_fields" do
+    subject { @user.phone_profile_fields }
+    before do
+      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '123456').becomes(ProfileFieldTypes::Phone)
+      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFieldTypes::Phone', value: '123457').becomes(ProfileFieldTypes::Phone)
+      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '01234').becomes(ProfileFieldTypes::Phone)
+      @user.reload
+    end
+    it { should include @phone_field }
+    it { should_not include @fax_field }
+    it { should include @mobile_field }
+  end
 
   
   # Associated Objects

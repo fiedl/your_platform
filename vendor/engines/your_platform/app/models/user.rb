@@ -236,6 +236,14 @@ class User < ActiveRecord::Base
     postal_address_field_or_first_address_field.try(:value)
   end
   
+  # Phone Profile Fields
+  # 
+  def phone_profile_fields
+    profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
+      not field.label.downcase.include? 'fax'
+    end
+  end
+  
   
   # Other infos from profile fields
   # ------------------------------------------------------------------------------------------
