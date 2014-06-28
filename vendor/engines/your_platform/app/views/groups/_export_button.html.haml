@@ -26,3 +26,7 @@
         = link_to group_path(@group, :format => :csv, :list => :email_list) do
           %i.icon-list-alt
           = t :email_list
+      %li
+        = link_to group_path(@group, :format => :csv, :list => :member_development) do
+          %i.icon-list-alt
+          = t :member_development
