@@ -30,6 +30,7 @@ module GroupMixins::Csv
       when 'birthday_list' then members_birthdays_to_csv
       when 'address_list' then members_addresses_to_csv
       when 'phone_list' then members_phone_numbers_to_csv
+      when 'email_list' then members_emails_to_csv
       when 'member_development' then member_development_to_csv
       else members_names_to_csv
     end
@@ -152,6 +153,29 @@ module GroupMixins::Csv
             member.title.gsub(member.name, '').strip,
             phone_field.label,
             phone_field.value
+          ]
+        end
+      end
+    end
+  end
+  
+  def members_emails_to_csv
+    CSV.generate(csv_options) do |csv|
+      csv << [
+        I18n.t(:last_name),
+        I18n.t(:first_name),
+        '',
+        I18n.t('profile_field.label'),
+        I18n.t(:email_address)
+      ]
+      self.members.order(:last_name).each do |member|
+        member.profile_fields.where(type: 'ProfileFieldTypes::Email').each do |email_field|
+          csv << [
+            member.last_name,
+            member.first_name,
+            member.title.gsub(member.name, '').strip,
+            email_field.label,
+            email_field.value
           ]
         end
       end

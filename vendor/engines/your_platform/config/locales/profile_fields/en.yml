@@ -16,5 +16,7 @@ en:
   country: Country
   country_code: Country Code
 
+  email_address: Email Address
+
   phone: Phone
   phone_number: Phone Number
