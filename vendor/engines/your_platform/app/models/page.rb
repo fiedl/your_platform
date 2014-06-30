@@ -8,7 +8,10 @@ class Page < ActiveRecord::Base
   has_many :attachments, as: :parent, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
-
+  
+  def delete_cache
+    delete_cache_structureable
+  end
 
   # Url
   # ----------------------------------------------------------------------------------------------------

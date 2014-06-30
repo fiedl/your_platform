@@ -116,7 +116,7 @@ describe StructureableMixins::Roles do
 
   describe "#cached_find_admins" do
     before do
-      @group = create( :group )
+      @group = create(:group)
     end
     subject { @group.cached_find_admins }
     context "if the admins-parent group does not exist" do
@@ -127,31 +127,35 @@ describe StructureableMixins::Roles do
     end
     context "if the admins_parent_group exists" do
       before do
+        @group.find_or_create_admins_parent_group
         @group.cached_find_admins
-        @group.create_admins_parent_group
-      end
-      it "should return strutureable's admins" do 
-        should == @group.find_admins
-      end
-    end
-    context "if admin users exist" do
-      before do 
-        @group.cached_find_admins
-        @admin_user = create( :user )
-        @group.admins_parent << @admin_user
       end
       it { should == @group.find_admins }
     end
-    context "if new admin added" do
+    context "if an admin users exists" do
       before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.admins_parent << admin_user
         @group.cached_find_admins
-        @group.create_admins_parent_group
-        @admin_user1 = create( :user )
-        @group.admins_parent << @admin_user1
-        @admin_user1.reload
-        @admin_user2 = create( :user )
-        @group.admins_parent.child_users << @admin_user2
-        @admin_user2.reload
+      end
+      it { should == @group.find_admins }
+    end
+    context "if new admin is added via group" do
+      before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.cached_find_admins
+        @group.admins_parent << admin_user
+      end
+      it { should == @group.find_admins }
+    end
+    context "if new admin is added via child_users" do
+      before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.cached_find_admins
+        @group.admins_parent.child_users << admin_user
       end
       it { should == @group.find_admins }
     end

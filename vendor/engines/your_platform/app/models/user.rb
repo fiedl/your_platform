@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
     delete_cached_last_group_in_first_corporation
     delete_cached_current_corporations
     delete_cached_corporations
+    delete_cache_structureable
   end
 
   # Mixins

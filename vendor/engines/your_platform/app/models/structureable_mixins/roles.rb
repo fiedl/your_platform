@@ -140,6 +140,10 @@ module StructureableMixins::Roles
     Rails.cache.delete( [self, "find_admins"] )
   end
 
+  def delete_cache_roles
+    delete_cached_find_admins
+  end
+
   # Main Admins
   # ==========================================================================================
   #

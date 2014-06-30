@@ -40,7 +40,10 @@ class Group < ActiveRecord::Base
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
 
-  
+  def delete_cache
+    delete_cache_structureable
+  end
+    
   # General Properties
   # ==========================================================================================
 
@@ -161,7 +164,7 @@ class Group < ActiveRecord::Base
     end
   end
   
-  
+ 
   # Finder Methods
   # ==========================================================================================
 

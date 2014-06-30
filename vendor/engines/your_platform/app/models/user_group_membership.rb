@@ -40,15 +40,6 @@ class UserGroupMembership < DagLink
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
 
-  def delete_cache_usergroupmembership
-    Rails.cache.delete([self.user, "last_group_in_first_corporation"])
-  end
-
-  def save( *args )
-    delete_cache_usergroupmembership
-    super( *args )
-  end
-
   # Creation Class Method
   # ====================================================================================================
 

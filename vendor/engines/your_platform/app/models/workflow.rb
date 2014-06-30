@@ -3,6 +3,10 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
 
   is_structureable   ancestor_class_names: %w(Group)
 
+  def delete_cache
+    delete_cache_structureable
+  end
+
   def title
     name
   end
@@ -19,5 +23,5 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   def wah_group  # => TODO: corporation
     ( self.ancestor_groups & Corporation.all ).first
   end
-
+  
 end
