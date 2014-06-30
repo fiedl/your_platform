@@ -72,8 +72,6 @@ class Group < ActiveRecord::Base
     "#{id} #{title}".parameterize
   end
   
-
-
   # Associated Objects
   # ==========================================================================================
 

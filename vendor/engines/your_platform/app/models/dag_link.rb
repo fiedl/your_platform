@@ -18,6 +18,34 @@ class DagLink < ActiveRecord::Base
     if desc_user
       desc_user.delete_cache
     end
+    if self.ancestor_type == "Event"
+      if Event.exists?( self.ancestor_id )
+        ancestor = Event.find( self.ancestor_id )
+      end
+    end
+    if self.ancestor_type == "Group"
+      if Group.exists?( self.ancestor_id )
+        ancestor = Group.find( self.ancestor_id )
+      end
+    end
+    if self.ancestor_type == "Page"
+      if Page.exists?( self.ancestor_id )
+        ancestor = Page.find( self.ancestor_id )
+      end
+    end
+    if self.ancestor_type == "User"
+      if User.exists?( self.ancestor_id )
+        ancestor = User.find( self.ancestor_id )
+      end
+    end
+    if self.ancestor_type == "Workflow"
+      if Workflow.exists?( self.ancestor_id )
+        ancestor = Workflow.find( self.ancestor_id )
+      end
+    end
+    if ancestor
+#      ancestor.delete_cache_structureable
+    end
   end
 
 end

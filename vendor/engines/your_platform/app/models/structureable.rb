@@ -110,6 +110,10 @@ module Structureable
       self.destroy_dag_links
     end
 
+    def delete_cache_structureable
+      delete_cached_find_admins
+    end
+
   end
 
 end
