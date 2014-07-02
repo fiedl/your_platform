@@ -19,6 +19,7 @@ de:
       invalid_token: 'Der Anmelde-Token ist ungültig.'
       timeout: 'Ihre Sitzung ist abgelaufen, bitte melden Sie sich erneut an.'
       inactive: 'Ihr Account ist nicht aktiv.'
+      not_found_in_database: 'Ungültige Anmeldedaten.'
     sessions:
       signed_in: 'Sie sind nun am System angemeldet. Falls Sie an einem fremden Rechner (Internetcafé etc.) arbeiten, vergessen Sie bitte nicht, sich später wieder abzumelden (rechts oben).'
       signed_out: 'Erfolgreich abgemeldet.'
