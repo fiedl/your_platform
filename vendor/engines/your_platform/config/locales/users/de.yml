@@ -1,4 +1,6 @@
 de:
+  person:                     Person
+  
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag
   age:                        Alter
@@ -6,3 +8,5 @@ de:
   user_hidden:                Benutzer versteckt
   hidden_users_can_only_be_seen_by_admins:   'Versteckte Benutzer können nur von zuständigen Administratoren gesehen werden. Für alle anderen Benutzer sind sie unsichtbar.'
   user_dead:                  Verstorben
+  deceased:                   Verstorben
+  event_of_death:             Todesfall

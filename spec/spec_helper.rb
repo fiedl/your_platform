@@ -225,6 +225,7 @@ Spork.prefork do
       Group.find_or_create_bvs_parent_group
       Page.create_root
       Page.create_intranet_root
+      Workflow.find_or_create_mark_as_deceased_workflow
 
     end
 

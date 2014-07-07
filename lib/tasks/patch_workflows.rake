@@ -2,7 +2,8 @@ namespace :patch do
 
   #
   task :workflows => [
-    'workflows:part1'
+    'workflows:part1',
+    'workflows:part2'
   ]
   
   namespace :workflows do
@@ -22,6 +23,10 @@ namespace :patch do
       'requirements',
       'print_info',
       'add_bv_assignment_to_philistration'
+    ]
+    
+    task :part2 => [
+      'add_deceased_workflow'
     ]
     
     task :add_bv_assignment_to_philistration => [:environment, :requirements, :print_info] do
@@ -46,6 +51,18 @@ namespace :patch do
       print "\n"
       log.info ""
       log.success "#{counter} Workflows modified."
+    end
+    
+    task :add_deceased_workflow => [:environment, :requirements, :print_info] do
+      log.section "Workflow hinzufügen: Todesfall."
+      
+      if Workflow.where(name: "Todesfall").present?
+        log.warning "Workflow mit dem Namen 'Todesfall' bereits vorhanden. Es werden keine Änderungen vorgenommen."
+      else
+        Workflow.find_or_create_mark_as_deceased_workflow
+        
+        log.success "Fertg."
+      end
     end
 
   end

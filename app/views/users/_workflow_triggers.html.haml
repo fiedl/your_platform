@@ -3,7 +3,7 @@
   - @user.workflows_by_corporation.each do |corporation_title, workflows|
     - executable_workflows = workflows.select { |workflow| can? :execute, workflow }
     - executable_workflows_by_corporation[corporation_title] = executable_workflows if executable_workflows.any?
-  - if executable_workflows_by_corporation.any?
+  - if executable_workflows_by_corporation.any? or (@user.wingolfit? and @user.alive?)
     %div.btn-group.workflow_triggers.pull-right
       %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
         %i.icon-chevron-up
@@ -15,3 +15,8 @@
             %li.nav-header= corporation_title
             - for workflow in workflows
               %li= link_to_workflow workflow, user: @user
+        -# TODO: Replace this hard-coded stuff by a workflow with parameter modal:
+        %li.nav-header= I18n.t(:event_of_death)
+        %li
+          %a.deceased_trigger{href: '#', data: {modal_body: render(partial: 'users/deceased_modal')}}
+            = "✟ #{I18n.t(:deceased)}"

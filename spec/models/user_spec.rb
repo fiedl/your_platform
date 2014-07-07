@@ -534,6 +534,14 @@ describe User do
         @user.reload.wingolfsblaetter_abo.should == false
       end
     end
+    describe "the user having an account" do
+      before { @account = @user.activate_account }
+      it "should destroy the account" do
+        @user.account.should be_kind_of UserAccount
+        subject
+        @user.reload.account.should == nil
+      end
+    end
     
   end
   

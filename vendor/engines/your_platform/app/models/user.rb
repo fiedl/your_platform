@@ -200,11 +200,12 @@ class User < ActiveRecord::Base
   #
   def mark_as_deceased(options = {})
     date = options[:at] || Time.zone.now
-    self.cached_current_corporations.each do |corporation|
+    self.current_corporations.each do |corporation|
       self.current_status_membership_in(corporation).move_to corporation.deceased, at: date
     end
     end_all_non_corporation_memberships at: date
     set_date_of_death_if_unset(date)
+    account.try(:destroy)
   end
   
   def end_all_non_corporation_memberships(options = {})
