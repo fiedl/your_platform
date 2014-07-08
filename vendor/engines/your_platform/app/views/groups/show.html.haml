@@ -20,24 +20,17 @@
 = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]))
 
 -# listing members
-- if @members
+- if @memberships
   %h1.section.members
     = t :members
-    %span.members_count
-      (#{h @group.members.count})
   %div
     = render partial: 'export_button'
     - if @group and @new_user_group_membership
       - if can? :manage, @group
         %span.show_only_in_edit_mode.add_membership
           = render partial: 'user_group_memberships/new'
-  
       %span#group_members
-        = will_paginate @members if @members
-        %ul.child_users
-          - if @members.count > 0
-            - for user in @members do
-              = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group} if can?(:read, user) and not Role.of(user).in(@group).former_member?
+        = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
 
 / officers
 - if @group.find_officers_groups.any?

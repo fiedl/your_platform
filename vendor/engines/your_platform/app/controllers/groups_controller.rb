@@ -21,11 +21,10 @@ class GroupsController < ApplicationController
         # If this is a collection group, e.g. the corporations_parent group, 
         # do not list the single members.
         if @group.child_group_ids.count > 15
-          @members = nil
+          @memberships = nil
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
-          @members = @group.members.order(:last_name, :first_name)
-          @members = @members.page(params[:page]).per_page(25) # pagination
+          @memberships = @group.memberships.limit(10)
         end
         
         # On collection groups, e.g. the corporations_parent group, only the
