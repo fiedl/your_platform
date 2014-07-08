@@ -81,6 +81,9 @@ class GroupsController < ApplicationController
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
         send_data @group.members_to_csv(params[:list])
       end
+      format.pdf do
+        send_data(@group.members_to_pdf, filename: "#{@group.name.parameterize}.pdf", type: 'application/pdf', disposition: 'inline')
+      end
     end
     
     metric_logger.log_event @group.try(:attributes), type: :show_group

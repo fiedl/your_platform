@@ -99,6 +99,9 @@ Gem::Specification.new do |s|
   
   # Activity Feed
   s.add_dependency 'public_activity', '~> 1.4.1'                                       # MIT License
+  
+  # PDF Export
+  s.add_dependency 'prawn'
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

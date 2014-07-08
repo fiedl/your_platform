@@ -66,6 +66,9 @@ require 'rack-mini-profiler'
 # Activity Logger
 require 'public_activity'
 
+# PDF Export
+require 'prawn'
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

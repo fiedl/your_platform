@@ -5,7 +5,12 @@
       = t :download_list
       .caret
     %ul.dropdown-menu
-      %li.nav-header= t :tables
+      %li.nav-header=t :pdf_files
+      %li
+        = link_to group_path(@group, :format => :pdf) do
+          %i.icon-th
+          =t :address_labels
+      %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"
       %li
         = link_to group_path(@group, :format => :csv) do
           %i.icon-list-alt

@@ -112,6 +112,16 @@ class Group < ActiveRecord::Base
   def upcoming_events
     self.events.upcoming
   end
+  
+  
+  # Adress Labels (PDF)
+  #
+  def members_to_pdf
+    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: Time.zone.now).render
+  end
+  def members_postal_addresses
+    members.collect { |user| user.postal_address_with_name_surrounding }
+  end
 
 
   # Groups
