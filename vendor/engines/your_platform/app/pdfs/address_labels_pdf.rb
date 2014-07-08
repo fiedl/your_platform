@@ -18,7 +18,7 @@ class AddressLabelsPdf < Prawn::Document
       for y in 0..7
        for x in 0..2
          grid(y, x).bounding_box do
-           text addresses[p * 24 + y * 3 + x]
+           text addresses[p * 24 + y * 3 + x], size: 10.pt
          end
        end
       end
