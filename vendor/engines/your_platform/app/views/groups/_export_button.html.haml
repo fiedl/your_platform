@@ -4,10 +4,10 @@
       %i.icon-list-alt
       = t :download_list
       .caret
-    %ul.dropdown-menu
+    %ul.dropdown-menu.list_export
       %li.nav-header=t :pdf_files
-      %li
-        = link_to group_path(@group, :format => :pdf) do
+      %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
+        = link_to group_path(@group, :format => :pdf), :class => 'address_labels_export_button' do
           %i.icon-th
           =t :address_labels
       %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"

@@ -237,6 +237,10 @@ class User < ActiveRecord::Base
     postal_address_field_or_first_address_field.try(:value)
   end
   
+  def postal_address_in_one_line
+    postal_address.split("\n").collect { |line| line.strip }.join(", ")
+  end
+  
   # Phone Profile Fields
   # 
   def phone_profile_fields

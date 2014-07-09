@@ -116,8 +116,8 @@ class Group < ActiveRecord::Base
   
   # Adress Labels (PDF)
   #
-  def members_to_pdf
-    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: Time.zone.now).render
+  def members_to_pdf(options = {sender: ''})
+    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: Time.zone.now, **options).render
   end
   def members_postal_addresses
     members.collect { |user| user.postal_address_with_name_surrounding }

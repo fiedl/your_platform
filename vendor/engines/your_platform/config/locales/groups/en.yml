@@ -39,4 +39,6 @@ en:
   current_age:                    Current age
   pdf_files:                      PDF Files
   address_labels:                 Address Labels
+  sender:                         Sender
+  create_address_labels_pdf:      Create PDF with Address Labels
   

@@ -2,12 +2,13 @@ require 'prawn/measurement_extensions'
 
 class AddressLabelsPdf < Prawn::Document
   
-  def initialize(addresses, options = {title: '', updated_at: Time.zone.now})
+  def initialize(addresses, options = {title: '', updated_at: Time.zone.now, sender: ''})
     super(page_size: 'A4', top_margin: 5.mm, bottom_margin: 5.mm, left_margin: 10.mm, right_margin: 10.mm)
     
     @document_title = options[:title]
     @document_updated_at = options[:updated_at]
     @required_page_count = (addresses.count / 24).round + 1
+    @sender = options[:sender]
         
     define_grid columns: 3, rows: 8, gutter: 5.mm
     
@@ -18,7 +19,9 @@ class AddressLabelsPdf < Prawn::Document
       for y in 0..7
        for x in 0..2
          grid(y, x).bounding_box do
-           text addresses[p * 24 + y * 3 + x], size: 10.pt
+           address = addresses[p * 24 + y * 3 + x]
+           sender_line if @sender and address
+           text address, size: 10.pt
          end
        end
       end
@@ -26,6 +29,11 @@ class AddressLabelsPdf < Prawn::Document
     end
     
     # grid.show_all
+  end
+  
+  def sender_line
+    text "<u>#{@sender}</u>", size: 5.pt, inline_format: true
+    move_down 2.mm
   end
   
   def page_header_text

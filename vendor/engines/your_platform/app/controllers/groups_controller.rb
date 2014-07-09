@@ -82,7 +82,8 @@ class GroupsController < ApplicationController
         send_data @group.members_to_csv(params[:list])
       end
       format.pdf do
-        send_data(@group.members_to_pdf, filename: "#{@group.name.parameterize}.pdf", type: 'application/pdf', disposition: 'inline')
+        options = {sender: params[:sender]}
+        send_data(@group.members_to_pdf(options), filename: "#{@group.name.parameterize}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
     

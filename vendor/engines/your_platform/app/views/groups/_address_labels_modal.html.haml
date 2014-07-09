@@ -1,0 +1,15 @@
+%div.export_modal.modal.hide.fade
+  = form_tag(group_path(@group, :format => :pdf), {:method => :get}) do
+    
+    %div.modal-header
+      %h3= "#{I18n.t(:address_labels)}: #{@group.name}"
+    %div.modal-body
+      %table
+        %tr
+          %th=t :sender
+          %td
+            - sender_text = "#{current_user.name}, #{current_user.postal_address_in_one_line}"
+            %input.address_label_sender_field{name: 'sender', value: sender_text}
+    
+    %div.modal-footer
+      = submit_tag(I18n.t(:create_address_labels_pdf), class: 'btn btn-primary confirm_address_labels_pdf_export')

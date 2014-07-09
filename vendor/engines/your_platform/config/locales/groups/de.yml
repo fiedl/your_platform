@@ -41,6 +41,8 @@ de:
   last_updated_at:                Zuletzt aktualisiert am
   pdf_files:                      PDF-Dateien
   address_labels:                 Adress-Etiketten
+  sender:                         Absender
+  create_address_labels_pdf:      PDF mit Adress-Etiketten erstellen
   
   
   
