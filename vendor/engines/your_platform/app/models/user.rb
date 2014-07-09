@@ -238,7 +238,7 @@ class User < ActiveRecord::Base
   end
   
   def postal_address_in_one_line
-    postal_address.split("\n").collect { |line| line.strip }.join(", ")
+    postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
   end
   
   # Phone Profile Fields
