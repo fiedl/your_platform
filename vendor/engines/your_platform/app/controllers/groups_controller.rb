@@ -82,6 +82,10 @@ class GroupsController < ApplicationController
         send_data @group.members_to_csv(params[:list])
       end
       format.pdf do
+        if params[:sender].present?
+          # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
+          session[:address_labels_pdf_sender] = params[:sender]
+        end
         options = {sender: params[:sender]}
         send_data(@group.members_to_pdf(options), filename: "#{@group.name.parameterize}.pdf", type: 'application/pdf', disposition: 'inline')
       end
