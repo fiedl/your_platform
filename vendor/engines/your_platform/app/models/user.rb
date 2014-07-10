@@ -280,12 +280,12 @@ class User < ActiveRecord::Base
   end
   
   def postal_address_with_name_surrounding
-    text_before_the_name = name_prefix
+    text_before_the_name = name_prefix || ""
     text_before_the_name += " #{personal_title}" if name_prefix != personal_title
     ("#{text_above_name}\n" + 
       "#{text_before_the_name} #{name} #{name_suffix}\n" + 
       "#{text_below_name}\n" +
-      postal_address
+      (postal_address || "")
     ).gsub('  ', ' ')
     .gsub("\n\n", "\n")
     .gsub(" \n", "\n")
@@ -432,6 +432,7 @@ class User < ActiveRecord::Base
   end
 
   def cached_corporations
+    Corporation
     Rails.cache.fetch( [self, "corporations"] ) do
       corporations
     end
@@ -450,6 +451,7 @@ class User < ActiveRecord::Base
   end
   
   def cached_current_corporations
+    Corporation
     Rails.cache.fetch( [self, "current_corporations"] ) do
       current_corporations
     end

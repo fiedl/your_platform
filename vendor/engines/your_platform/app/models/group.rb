@@ -117,10 +117,20 @@ class Group < ActiveRecord::Base
   # Adress Labels (PDF)
   #
   def members_to_pdf(options = {sender: ''})
-    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: Time.zone.now, **options).render
+    timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    AddressLabelsPdf.new(cached_members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
     members.collect { |user| user.postal_address_with_name_surrounding }
+  end
+  def cached_members_postal_addresses
+    Rails.cache.fetch ['Group', id, 'cached_members_postal_addresses'], expires_in: 24.hours do
+      members_postal_addresses
+    end
+  end
+  def cached_members_postal_addresses_created_at
+    CacheAdditions
+    Rails.cache.created_at ['Group', id, 'cached_members_postal_addresses']
   end
 
 
