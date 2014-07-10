@@ -17,16 +17,10 @@ namespace :cache do
   
   task :members_postal_addresses do
     log.section "Post-Anschrift-Sammlungen von Gruppen-Mitgliedern (z.B. für Adress-Etiketten)"
-    Group.find_each do |group|
-      if (group.members.count > 10) and 
-          (group.id > 1) and # for security reasons, do not cache the :everyone group.
-          (group.child_groups.count < 15) # no super groups (Corporations, BVs, etc.)
-        
-        group.cached_members_postal_addresses
-        print ".".green
-      else
-        print "."
-      end
+    
+    User.find_each do |user|
+      user.cached_postal_address_with_name_surrounding
+      print ".".green
     end
     log.success "\nFertig."
   end

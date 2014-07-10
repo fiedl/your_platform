@@ -292,6 +292,20 @@ class User < ActiveRecord::Base
     .gsub("\n ", "\n")
     .strip
   end
+  
+  def cached_postal_address_with_name_surrounding
+    Rails.cache.fetch(['User', id, 'postal_address_with_name_surrounding'], expires_in: 1.week) do
+      postal_address_with_name_surrounding
+    end
+  end
+  def delete_cached_postal_address_with_name_surrounding
+    Rails.cache.delete ['User', id, 'postal_address_with_name_surrounding']
+  end
+  def cached_postal_address_with_name_surrounding_created_at
+    CacheAdditions
+    Rails.cache.created_at ['User', id, 'postal_address_with_name_surrounding']
+  end
+  
 
 
   # Associated Objects
