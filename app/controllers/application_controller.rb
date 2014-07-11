@@ -29,6 +29,7 @@ class ApplicationController
     layout = "wingolf"
     layout = "bootstrap" if Rails.env.test?
     
+    layout = "minimal" if params[:layout] == "minimal"
     layout = "wingolf" if params[:layout] == "wingolf"
     layout = "bootstrap" if params[:layout] == "bootstrap"
 
