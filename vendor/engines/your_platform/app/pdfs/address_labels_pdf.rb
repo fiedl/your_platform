@@ -21,7 +21,7 @@ class AddressLabelsPdf < Prawn::Document
          grid(y, x).bounding_box do
            address = addresses[p * 24 + y * 3 + x]
            sender_line if @sender and address
-           text address, size: 10.pt
+           text address, size: text_size(address)
          end
        end
       end
@@ -36,6 +36,30 @@ class AddressLabelsPdf < Prawn::Document
     move_down 2.mm
   end
   
+  # This method is to adjust the font size according to the number of lines
+  # required in order to have all addresses fit into their box, but have the
+  # font as large as possible.
+  #
+  def text_size(str)
+    if str.present?
+      return 12.pt if num_of_lines_required(str) < 5
+      return 10.pt if num_of_lines_required(str) < 7
+    end
+    return 8.pt
+  end
+  
+  # This method estimates the number of lines required for the given string.
+  # Some lines are longer than 35 characters and they will broken into the
+  # new line in the PDF. Therefore we need this estimate.
+  #
+  def num_of_lines_required(str)
+    if str.present?
+      str.lines.collect { |line| (line.length * 1.0 / 35).floor + 1 }.sum
+    else
+      0
+    end
+  end
+    
   def page_header_text
     "Druck auf Zweckform 3475, 70x36 mm², 24 Stk pro Blatt, DIN-A4"
   end
