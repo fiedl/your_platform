@@ -279,18 +279,13 @@ class User < ActiveRecord::Base
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
   
+  def address_label
+    AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
+      self.name_surrounding_profile_field, self.personal_title)
+  end
+  
   def postal_address_with_name_surrounding
-    text_before_the_name = name_prefix || ""
-    text_before_the_name += " #{personal_title}" if name_prefix != personal_title
-    ("#{text_above_name}\n" + 
-      "#{text_before_the_name} #{name} #{name_suffix}\n" + 
-      "#{text_below_name}\n" +
-      (postal_address || "")
-    ).gsub('  ', ' ')
-    .gsub("\n\n", "\n")
-    .gsub(" \n", "\n")
-    .gsub("\n ", "\n")
-    .strip
+    address_label.to_s
   end
   
   def cached_postal_address_with_name_surrounding
