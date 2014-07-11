@@ -278,28 +278,29 @@ class User < ActiveRecord::Base
   def name_suffix
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
-  
+
+  def postal_address_with_name_surrounding
+    address_label.to_s
+  end
+
   def address_label
     AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
       self.name_surrounding_profile_field, self.personal_title)
   end
-  
-  def postal_address_with_name_surrounding
-    address_label.to_s
+  def cached_address_label
+    AddressLabel
+    Rails.cache.fetch(['User', id, 'address_label'], expires_in: 1.week) { address_label }
   end
-  
-  def cached_postal_address_with_name_surrounding
-    Rails.cache.fetch(['User', id, 'postal_address_with_name_surrounding'], expires_in: 1.week) do
-      postal_address_with_name_surrounding
-    end
+  def delete_cached_address_label
+    Rails.cache.delete ['User', id, 'address_label']
   end
-  def delete_cached_postal_address_with_name_surrounding
-    Rails.cache.delete ['User', id, 'postal_address_with_name_surrounding']
-  end
-  def cached_postal_address_with_name_surrounding_created_at
+  def cached_address_label_created_at
     CacheAdditions
-    Rails.cache.created_at ['User', id, 'postal_address_with_name_surrounding']
+    Rails.cache.created_at ['User', id, 'address_label']
   end
+  
+  
+
   
 
 

@@ -12,14 +12,14 @@ namespace :cache do
   
   task :all => [
     :environment, :requirements, :print_info,
-    :members_postal_addresses
+    :address_labels
   ]
   
-  task :members_postal_addresses do
-    log.section "Post-Anschrift-Sammlungen von Gruppen-Mitgliedern (z.B. für Adress-Etiketten)"
+  task :address_labels do
+    log.section "Adress-Etiketten der Post-Anschriften"
     
     User.find_each do |user|
-      user.cached_postal_address_with_name_surrounding
+      user.cached_address_label
       print ".".green
     end
     log.success "\nFertig."

@@ -121,10 +121,13 @@ class Group < ActiveRecord::Base
     AddressLabelsPdf.new(cached_members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def cached_members_postal_addresses
-    members.collect { |user| user.cached_postal_address_with_name_surrounding }
+    members
+      .collect { |user| user.cached_address_label }
+      .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
+      .collect { |address_label| address_label.to_s }
   end
   def cached_members_postal_addresses_created_at
-    members.collect { |user| user.cached_postal_address_with_name_surrounding_created_at }.min
+    members.collect { |user| user.cached_address_label_created_at }.min
   end
 
 
