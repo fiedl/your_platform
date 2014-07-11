@@ -63,7 +63,7 @@ module ProfileFieldTypes
     def postal_address
       self.has_flag? :postal_address
     end 
-    def postal_address=(new_postal_address) 
+    def postal_address=(new_postal_address)
       if new_postal_address != self.postal_address
         if new_postal_address
           self.clear_postal_address
@@ -71,6 +71,7 @@ module ProfileFieldTypes
         else
           self.remove_flag :postal_address
         end
+        self.delete_cache
       end
     end
     def postal_address?

@@ -93,7 +93,8 @@ class ProfileField < ActiveRecord::Base
 
   def delete_cache
     delete_cached_children_count
-    parent.delete_cache if parent
+    parent.try(:delete_cache)
+    profileable.try(:delete_cache)
   end
 
   def cached_children_count

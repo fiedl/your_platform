@@ -127,7 +127,7 @@ class Group < ActiveRecord::Base
       .collect { |address_label| address_label.to_s }
   end
   def cached_members_postal_addresses_created_at
-    members.collect { |user| user.cached_address_label_created_at }.min
+    members.collect { |user| user.cached_address_label_created_at || Time.zone.now }.min
   end
 
 
