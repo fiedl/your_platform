@@ -46,6 +46,10 @@ class GroupsController < ApplicationController
           end
         end
         
+        # Make sure only members that are allowed to be seen are in this array!
+        #
+        @members.select! { |member| can?(:read, member) }
+        
         # On collection groups, e.g. the corporations_parent group, only the
         # groups should be shown on the map. These groups have a lot of
         # child groups with address profile fields.
@@ -164,7 +168,7 @@ class GroupsController < ApplicationController
     @own_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.id )
   end
   def users_map_profile_fields
-    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @group.member_ids ).includes(:profileable).select{|address| can?(:read, address) && address.profileable.alive?}
+    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @members.collect { |member| member.id } ).includes(:profileable)
   end
     
   

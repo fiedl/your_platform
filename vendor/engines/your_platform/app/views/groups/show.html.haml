@@ -36,7 +36,7 @@
           - if @members.count < 301
             - if @members.count > 0
               - for user in @members do
-                = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group} if can?(:read, user)
+                = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
           - else
             %p= "#{@members.count} #{I18n.t(:members)}"
 
