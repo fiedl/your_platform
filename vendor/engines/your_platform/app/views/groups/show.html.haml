@@ -23,8 +23,6 @@
 - if @members
   %h1.section.members
     = t :members
-    %span.members_count
-      (#{h @group.members.count})
   %div
     = render partial: 'export_button'
     - if @group and @new_user_group_membership
@@ -34,7 +32,7 @@
   
       %span#group_members
         %ul.child_users
-          - if @members.count > 0
+          - if @members.count > 0 and @members.count < 301
             - for user in @members do
 
 / officers
