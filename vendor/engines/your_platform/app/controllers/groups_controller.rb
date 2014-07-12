@@ -20,14 +20,28 @@ class GroupsController < ApplicationController
         
         # If this is a collection group, e.g. the corporations_parent group, 
         # do not list the single members.
+        #
         if @group.child_group_ids.count > 15
           @members = nil
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
-          @members = @group.members.order(:last_name, :first_name)
+          
+          # For corporation groups, there has been some confusion, which members
+          # are shown in the list. Thus, modify the list to match the users' 
+          # expectations.
+          #
           if @group.corporation?
-            @members -= @group.becomes(Corporation).former_members
-            @members -= @group.becomes(Corporation).deceased_members
+            @corporation = @group.becomes(Corporation)
+            if @corporation.respond_to? :aktivitas # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
+              @members = @corporation.aktivitas.members.order(:last_name) + @corporation.philisterschaft.members.order(:last_name)
+            else
+              @members = @corporation.members.order(:last_name, :first_name) - @corporation.former_members - @corporation.deceased_members
+            end
+          else
+            
+            # This is the standard case:
+            #
+            @members = @group.members.order(:last_name, :first_name)
           end
         end
         
