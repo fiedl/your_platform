@@ -23,6 +23,8 @@
 - if @members
   %h1.section.members
     = t :members
+    %span.members_count
+      (#{@members.count})
   %div
     = render partial: 'export_button'
     - if @group and @new_user_group_membership
