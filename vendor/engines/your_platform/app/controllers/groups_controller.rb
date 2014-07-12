@@ -27,6 +27,7 @@ class GroupsController < ApplicationController
           @members = @group.members.order(:last_name, :first_name)
           if @group.corporation?
             @members -= @group.becomes(Corporation).former_members
+            @members -= @group.becomes(Corporation).deceased_members
           end
         end
         
