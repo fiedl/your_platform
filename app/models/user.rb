@@ -22,6 +22,13 @@ class User
     "#{name} #{cached_aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
   end
   
+  def cached_title
+    Rails.cache.fetch(['User', id, 'title'], expire_in: 1.week) { title }
+  end
+  def delete_cached_title
+    Rails.cache.delete ['User', id, 'title']
+  end
+  
   # For dead users, there is a cross symbol in the title.
   # (✝,✞,✟)
   # 
@@ -164,6 +171,7 @@ class User
   
   alias_method :orig_delete_cache, :delete_cache
   def delete_cache
+    delete_cached_title
     delete_cached_aktivitaetszahl
     orig_delete_cache
   end

@@ -10,14 +10,7 @@ class DagLink < ActiveRecord::Base
   end
 
   def delete_cache_daglink
-    if self.descendant_type == "User"
-      if User.exists?( self.descendant_id )
-        desc_user = User.find( self.descendant_id )
-      end
-    end
-    if desc_user
-      desc_user.delete_cache
-    end
+    descendant.delete_cache if descendant.try(:respond_to?, :delete_cache)
   end
 
 end
