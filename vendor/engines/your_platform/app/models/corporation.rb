@@ -34,6 +34,21 @@ class Corporation < Group
   def status_group(group_name)
     status_groups.select { |g| g.name == group_name }.first
   end
+  
+  # This method lists all former members of the corporation. This is not determined
+  # by the user group membership validity range but by the membership in the 
+  # former_members sub group, since all members of subgroups are considered also 
+  # members of the group.
+  #
+  def former_members
+    child_groups.find_by_flag(:former_members_parent).members
+  end
+  
+  # This method lists all deceased members of the corporation.
+  #
+  def deceased_members
+    child_groups.find_by_flag(:deceased_parent).members
+  end
 
   # This method returns all corporations in the database.
   # Usage: corporations = Corporation.all

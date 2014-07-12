@@ -782,7 +782,7 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def former_member_of_corporation?( corporation )
-    self.member_of? corporation.child_groups.find_by_flag(:former_members_parent)
+    corporation.becomes(Corporation).former_members.include? self
   end
   
 

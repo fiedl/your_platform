@@ -25,7 +25,9 @@ class GroupsController < ApplicationController
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
           @members = @group.members.order(:last_name, :first_name)
-          @members = @members.page(params[:page]).per_page(25) # pagination
+          if @group.corporation?
+            @members -= @group.becomes(Corporation).former_members
+          end
         end
         
         # On collection groups, e.g. the corporations_parent group, only the
