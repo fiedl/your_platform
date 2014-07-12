@@ -32,7 +32,8 @@ class GroupsController < ApplicationController
           #
           if @group.corporation?
             @corporation = @group.becomes(Corporation)
-            if @corporation.respond_to? :aktivitas # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
+            if @corporation.respond_to?(:aktivitas) and @corporation.aktivitas and @corporation.philisterschaft 
+              # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
               @members = @corporation.aktivitas.members.order(:last_name) + @corporation.philisterschaft.members.order(:last_name)
             else
               @members = @corporation.members.order(:last_name, :first_name) - @corporation.former_members - @corporation.deceased_members
