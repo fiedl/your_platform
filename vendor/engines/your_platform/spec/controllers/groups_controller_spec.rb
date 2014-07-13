@@ -79,17 +79,17 @@ describe GroupsController do
         assigns(:members).should_not be_empty
       end
 
-      it 'assigns addresses of members of the requested group to @large_map_address_fields' do
-        group = create(:group, :with_members)
-        get :show, id: group
-        assigns(:large_map_address_fields).should_not be_empty
-      end
-
-      it 'assigns addresses of hidden members to @large_map_address_fields' do
-        group = create(:group, :with_hidden_member)
-        get :show, id: group
-        assigns(:large_map_address_fields).should_not be_empty
-      end
+      # it 'assigns addresses of members of the requested group to @large_map_address_fields' do
+      #   group = create(:group, :with_members)
+      #   get :show, id: group
+      #   assigns(:large_map_address_fields).should_not be_empty
+      # end
+      # 
+      # it 'assigns addresses of hidden members to @large_map_address_fields' do
+      #   group = create(:group, :with_hidden_member)
+      #   get :show, id: group
+      #   assigns(:large_map_address_fields).should_not be_empty
+      # end
     end
 
     describe 'POST #create' do
@@ -187,17 +187,17 @@ describe GroupsController do
         assigns(:members).should_not be_empty
       end
 
-      it 'assigns addresses of members of the requested group to @large_map_address_fields' do
-        group = create(:group, :with_members)
-        get :show, id: group
-        assigns(:large_map_address_fields).should_not be_empty
-      end
-
-      it 'does not assign addresses of hidden members to @large_map_address_fields' do
-        group = create(:group, :with_hidden_member)
-        get :show, id: group
-        assigns(:large_map_address_fields).should be_empty
-      end
+      # it 'assigns addresses of members of the requested group to @large_map_address_fields' do
+      #   group = create(:group, :with_members)
+      #   get :show, id: group
+      #   assigns(:large_map_address_fields).should_not be_empty
+      # end
+      # 
+      # it 'does not assign addresses of hidden members to @large_map_address_fields' do
+      #   group = create(:group, :with_hidden_member)
+      #   get :show, id: group
+      #   assigns(:large_map_address_fields).should be_empty
+      # end
     end
 
     describe 'POST #create' do
