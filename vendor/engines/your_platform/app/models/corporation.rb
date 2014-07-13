@@ -43,11 +43,17 @@ class Corporation < Group
   def former_members
     child_groups.find_by_flag(:former_members_parent).try(:members) || []
   end
+  def former_members_memberships
+    child_groups.find_by_flag(:former_members_parent).try(:memberships) || []
+  end
   
   # This method lists all deceased members of the corporation.
   #
   def deceased_members
     child_groups.find_by_flag(:deceased_parent).try(:members) || []
+  end
+  def deceased_members_memberships
+    child_groups.find_by_flag(:deceased_parent).try(:memberships) || []
   end
 
   # This method returns all corporations in the database.

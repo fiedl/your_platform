@@ -22,7 +22,7 @@ class GroupsController < ApplicationController
         # do not list the single members.
         #
         if @group.child_group_ids.count > 15
-          @memberships = nil
+          @memberships = []
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
           
@@ -34,21 +34,25 @@ class GroupsController < ApplicationController
             @corporation = @group.becomes(Corporation)
             if @corporation.respond_to?(:aktivitas) and @corporation.aktivitas and @corporation.philisterschaft 
               # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
-              @members = @corporation.aktivitas.members.order(:last_name) + @corporation.philisterschaft.members.order(:last_name)
+              @memberships = @corporation.aktivitas.memberships.includes(:descendant) + @corporation.philisterschaft.memberships.includes(:descendant)
             else
-              @members = @corporation.members.order(:last_name, :first_name) - @corporation.former_members - @corporation.deceased_members
+              @memberships = @corporation.memberships.includes(:descendant) - @corporation.former_members_memberships - @corporation.deceased_members_memberships
             end
           else
             
             # This is the standard case:
             #
-            @members = @group.members.order(:last_name, :first_name)
+            @memberships = @group.memberships
           end
         end
         
         # Make sure only members that are allowed to be seen are in this array!
         #
-        @members.select! { |member| can?(:read, member) }
+        @memberships.select! { |membership| can?(:read, membership.user) }
+        
+        # Fill also the members into a separate variable.
+        #
+        @members = @memberships.collect { |membership| membership.user }
         
         # fill_map_address_fields
         @large_map_address_fields = []
