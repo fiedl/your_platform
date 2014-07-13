@@ -7,7 +7,7 @@ class DagLink < ActiveRecord::Base
   after_save :delete_cache
   
   def delete_cache
-    ancestor.delete_cache if ancestor.respond_to? :delete_cache
-    descendant.delete_cache if descendant.respond_to? :delete_cache
+#    ancestor.delete_cache if ancestor.respond_to? :delete_cache
+#    descendant.delete_cache if descendant.respond_to? :delete_cache
   end
 end
