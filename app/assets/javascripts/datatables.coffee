@@ -44,20 +44,20 @@ ready = ->
   language_options = ->
     if $('body').data('locale') == 'de'
       {
-        "sEmptyTable":     "Keine Daten in der Tabelle vorhanden",
+        "sEmptyTable":     "Keine Daten in der Tabelle vorhanden.",
         "sInfo":           "_START_ bis _END_ von _TOTAL_ Einträgen",
         "sInfoEmpty":      "0 bis 0 von 0 Einträgen",
-        "sInfoFiltered":   "(gefiltert von _MAX_ Einträgen)",
+        "sInfoFiltered":   "(gefiltert von insgesamt _MAX_ Einträgen)",
         "sInfoPostFix":    "",
         "sInfoThousands":    ".",
         "sLengthMenu":     "_MENU_ Einträge anzeigen",
-        "sLoadingRecords":   "Wird geladen...",
-        "sProcessing":     "Bitte warten...",
+        "sLoadingRecords":   "Wird geladen ...",
+        "sProcessing":     "Bitte warten ...",
         "sSearch":         "Suchen",
         "sZeroRecords":    "Keine Einträge vorhanden.",
         "oPaginate": {
           "sFirst":      "Erste",
-          "sPrevious":   "Zurück",
+          "sPrevious":   "Vorige",
           "sNext":       "Nächste",
           "sLast":       "Letzte"
         },
