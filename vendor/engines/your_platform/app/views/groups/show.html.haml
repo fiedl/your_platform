@@ -20,7 +20,7 @@
 = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]))
 
 -# listing members
-- if @memberships.try(:any?)
+- if @memberships.try(:any?) || can?(:manage, @group)
   %h1.section.members
     = t :members
     %span.members_count
@@ -32,6 +32,7 @@
         %span.show_only_in_edit_mode.add_membership
           = render partial: 'user_group_memberships/new'
       %span#group_members
+        %ul.new_child_users
         .child_users
           - if @members.count < 301
             - if @members.count > 0
