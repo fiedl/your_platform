@@ -1,4 +1,46 @@
 ready = ->
+  
+  # Sorting by date in German:
+  # http://datatables.net/plug-ins/sorting/date-de
+  #
+  jQuery.extend jQuery.fn.dataTableExt.oSort,
+    "de_date-asc": (a, b) ->
+      x = undefined
+      y = undefined
+      if $.trim(a) isnt ""
+        deDatea = $.trim(a).split(" ")
+        deDatea2 = deDatea[0].split(".")
+        x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
+      else
+        x = Infinity # = l'an 1000 ...
+      if $.trim(b) isnt ""
+        deDateb = $.trim(b).split(" ")
+        deDateb = deDateb[0].split(".")
+        y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
+      else
+        y = Infinity
+      z = ((if (x < y) then -1 else ((if (x > y) then 1 else 0))))
+      z
+
+    "de_date-desc": (a, b) ->
+      x = undefined
+      y = undefined
+      if $.trim(a) isnt ""
+        deDatea = $.trim(a).split(" ")
+        deDatea2 = deDatea[0].split(".")
+        x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
+      else
+        x = Infinity
+      if $.trim(b) isnt ""
+        deDateb = $.trim(b).split(" ")
+        deDateb = deDateb[0].split(".")
+        y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
+      else
+        y = Infinity
+      z = ((if (x < y) then 1 else ((if (x > y) then -1 else 0))))
+      z
+  
+  
   language_options = ->
     if $('body').data('locale') == 'de'
       {
@@ -40,7 +82,10 @@ ready = ->
     "order": [[0, "desc"]]
   }, common_configuration))
   $('.datatable.members').dataTable(jQuery.extend({
-    "order": [[0, "asc"]]
+    "order": [[0, "asc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 3}
+    ]
   }, common_configuration))
   
 $(document).ready(ready)
