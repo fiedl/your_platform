@@ -85,7 +85,17 @@ module GroupMixins::Memberships
         assign_user new_member if new_member
       end
     end
-
+    
+    def cached_memberships
+      UserGroupMembership
+      Rails.cache.fetch(['Group', 'memberships', self.id]) do
+        memberships.includes(:descendant).to_a
+      end
+    end
+    
+    def delete_cache
+      Rails.cache.delete(['Group', 'memberships', self.id])
+    end
 
     # User Assignment
     # ==========================================================================================

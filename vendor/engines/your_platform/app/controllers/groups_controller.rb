@@ -22,7 +22,7 @@ class GroupsController < ApplicationController
         # do not list the single members.
         #
         if @group.child_group_ids.count > 15
-          @members = nil
+          @memberships = nil
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
           
@@ -50,49 +50,11 @@ class GroupsController < ApplicationController
         #
         @members.select! { |member| can?(:read, member) }
         
-        # On collection groups, e.g. the corporations_parent group, only the
-        # groups should be shown on the map. These groups have a lot of
-        # child groups with address profile fields.
-        #
-        if child_groups_map_profile_fields.count > 0
-          @users_map_profile_fields = []
-          @groups_map_profile_fields = child_groups_map_profile_fields
-        elsif child_groups_map_profile_fields.count == 0
-          
-          # To prevent long loading times, users map profile fields should only
-          # be loaded when there are not too many.
-          #
-          # TODO: Remove this when the map addresses are cached.
-          # TODO: Cache map address fields.
-          #
-          if @group.member_ids.count < 100  # arbitrary limit.
-            @users_map_profile_fields = users_map_profile_fields
-          else
-            @users_map_profile_fields = []
-          end
-          
-          # Only if there are descendant group address fields, fill the variable
-          # for the large map. If there is only the own address, the view
-          # will render a small map instead of the large one.
-          #
-          if descendant_groups_map_profile_fields.count > 0
-            @groups_map_profile_fields = own_map_profile_fields + descendant_groups_map_profile_fields
-          else
-            @groups_map_profile_fields = []
-          end
-          
-        end
-        
-        # TODO: Make this more efficient.
-        # This can be done by using @user_map_profile_fields and @group_map_profile_fields
-        # separately when creating the map, because then, there is no need to check the
-        # type of the profileable. 
-        # But, this makes no sense at the moment, since the profileable objects have
-        # to be loaded anyway, since we need the title of the profileables.
-        #
-        @large_map_address_fields = @users_map_profile_fields + @groups_map_profile_fields
+        # fill_map_address_fields
+        @large_map_address_fields = []
         
         # @posts = @group.posts.order("sent_at DESC").limit(10)
+        
         @new_user_group_membership = @group.build_membership
       end
     end
@@ -151,7 +113,58 @@ class GroupsController < ApplicationController
     elsif can? :update, @group
       params.require(:group).permit(:name, :token, :internal_token, :extensive_name)
     end
-  end  
+  end
+  
+  def fill_map_address_fields
+    fill_small_map_address_fields
+    fill_large_map_address_fields
+  end
+  
+  def fill_small_map_address_fields
+    # On collection groups, e.g. the corporations_parent group, only the
+    # groups should be shown on the map. These groups have a lot of
+    # child groups with address profile fields.
+    #
+    if child_groups_map_profile_fields.count > 0
+      @users_map_profile_fields = []
+      @groups_map_profile_fields = child_groups_map_profile_fields
+    elsif child_groups_map_profile_fields.count == 0
+      
+      # To prevent long loading times, users map profile fields should only
+      # be loaded when there are not too many.
+      #
+      # TODO: Remove this when the map addresses are cached.
+      # TODO: Cache map address fields.
+      #
+      if @group.member_ids.count < 100  # arbitrary limit.
+        @users_map_profile_fields = users_map_profile_fields
+      else
+        @users_map_profile_fields = []
+      end
+      
+      # Only if there are descendant group address fields, fill the variable
+      # for the large map. If there is only the own address, the view
+      # will render a small map instead of the large one.
+      #
+      if descendant_groups_map_profile_fields.count > 0
+        @groups_map_profile_fields = own_map_profile_fields + descendant_groups_map_profile_fields
+      else
+        @groups_map_profile_fields = []
+      end
+    end
+  end
+  
+  def fill_large_map_address_fields
+    # TODO: Make this more efficient.
+    # This can be done by using @user_map_profile_fields and @group_map_profile_fields
+    # separately when creating the map, because then, there is no need to check the
+    # type of the profileable. 
+    # But, this makes no sense at the moment, since the profileable objects have
+    # to be loaded anyway, since we need the title of the profileables.
+    #
+    @large_map_address_fields = @users_map_profile_fields + @groups_map_profile_fields
+  end
+  
   
   # These methods collect the address fields for displaying the large map
   # on group pages.

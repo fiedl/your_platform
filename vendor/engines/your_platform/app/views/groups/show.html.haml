@@ -20,7 +20,7 @@
 = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]))
 
 -# listing members
-- if @members
+- if @members    #@memberships
   %h1.section.members
     = t :members
     %span.members_count
@@ -32,11 +32,10 @@
         %span.show_only_in_edit_mode.add_membership
           = render partial: 'user_group_memberships/new'
       %span#group_members
-        %ul.child_users
+        .child_users
           - if @members.count < 301
             - if @members.count > 0
-              - for user in @members do
-                = render partial: 'user_group_memberships/list_item', locals: {user: user, group: @group}
+              = render partial: 'groups/member_list', locals: {members: @members, group: @group}#{memberships: @memberships, group: @group}
           - else
             %p= "#{@members.count} #{I18n.t(:members)}"
 
