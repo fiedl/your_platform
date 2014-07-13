@@ -6,13 +6,13 @@
       %th Aktivitätszahl
       %th Seit
   %tbody
-    - for membership in memberships do
-      - user = membership.user
-      - if can?(:read, user) and not Role.of(user).in(group).former_member?
-        %tr
-          %td= user.last_name
-          %td= user.first_name
-          %td= user.name_suffix
-          %td= localize(membership.valid_from.to_date) if membership.valid_from
+    -#- for membership in memberships do
+    - for user in members
+      -#- user = membership.user
+      %tr
+        %td= user.last_name
+        %td= user.first_name
+        %td= user.cached_name_suffix
+        %td= "" #localize(membership.valid_from.to_date) if membership.valid_from
       
       -# = render partial: 'user_group_memberships/list_item', locals: {user: user, group: group} if can?(:read, user) and not Role.of(user).in(group).former_member?

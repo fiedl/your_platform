@@ -103,10 +103,6 @@ class User < ActiveRecord::Base
     name
   end
   
-  def name_suffix
-    title.gsub(name, '').strip(' ')
-  end
-  
   # This sets the format of the User urls to be
   # 
   #     example.com/users/24-john-doe
