@@ -14,13 +14,15 @@ feature "Erstbandphilister" do
     login(@philister_user)
   end
 
-  specify "visit corporation site and navigate to the erstbandphilister site" do
+  scenario "visit corporation site and navigate to the erstbandphilister site" do
     visit group_path(@corporation)
     within(".vertical_menu") { click_on "Philisterschaft" }
     within(".vertical_menu") { click_on "Erstbandphilister" }
     within("#content_area") do
       page.should have_content "Erstbandphilister"
-      page.should have_content "#{@philister_user.last_name}, #{@philister_user.first_name}, #{@philister_user.aktivitätszahl}"
+      page.should have_content @philister_user.last_name
+      page.should have_content @philister_user.first_name
+      page.should have_content @philister_user.aktivitätszahl
       @philister_user.title.length.should > 5
     end
   end

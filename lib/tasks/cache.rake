@@ -12,25 +12,16 @@ namespace :cache do
   
   task :all => [
     :environment, :requirements, :print_info,
-    :address_labels,
-    :user_titles
+    :users
   ]
   
-  task :address_labels do
-    log.section "Adress-Etiketten der Post-Anschriften"
+  task :users do
+    log.section "Benutzer-Caches"
     
     User.find_each do |user|
       user.cached_address_label
-      print ".".green
-    end
-    log.success "\nFertig."
-  end
-  
-  task :user_titles do
-    log.section "Name und Aktivitätszahl"
-    
-    User.find_each do |user|
       user.cached_title
+      user.cached_first_corporation
       print ".".green
     end
     log.success "\nFertig."

@@ -56,6 +56,7 @@ class User < ActiveRecord::Base
     delete_cached_last_group_in_first_corporation
     delete_cached_current_corporations
     delete_cached_corporations
+    delete_cached_first_corporation
     delete_cached_address_label
   end
 
@@ -497,6 +498,13 @@ class User < ActiveRecord::Base
     
     sorted_current_corporations.first
   end
+  def cached_first_corporation
+    Rails.cache.fetch(['User', id, 'first_corporation'], expires_in: 1.week ) { first_corporation }
+  end
+  def delete_cached_first_corporation
+    Rails.cache.delete ['User', id, 'first_corporation']
+  end
+  
   
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
