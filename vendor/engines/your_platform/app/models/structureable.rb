@@ -109,7 +109,9 @@ module Structureable
     def destroy_links
       self.destroy_dag_links
     end
-
+    
+    def delete_cache_structureable
+      delete_cache_roles
+    end
   end
-
 end

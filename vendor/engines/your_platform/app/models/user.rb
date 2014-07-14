@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
     delete_cached_corporations
     delete_cached_first_corporation
     delete_cached_address_label
+    delete_cache_structureable
   end
 
   # Mixins

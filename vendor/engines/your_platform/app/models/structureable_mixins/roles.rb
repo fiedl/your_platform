@@ -95,11 +95,18 @@ module StructureableMixins::Roles
   end
 
   def create_admins_parent_group
+    delete_cached_find_admins
     create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
   end
 
   def find_or_create_admins_parent_group
-    find_or_create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
+      find_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group) or
+      begin
+        delete_cached_find_admins
+        create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group)
+      rescue
+        nil
+      end
   end
 
   def admins_parent
@@ -116,6 +123,25 @@ module StructureableMixins::Roles
 
   def find_admins
     find_admins_parent_group.try( :descendant_users ) || []
+  end
+
+  def cached_find_admins
+    Rails.cache.fetch( [self, "find_admins"] ) do
+      find_admins
+    end
+  end
+ 
+  def delete_cached_find_admins
+    if is_a? Group
+      if has_flag?( :admins_parent ) or has_flag?( :officers_parent )
+        parent_groups.collect{ |parent| parent.delete_cached_find_admins }
+      end
+    end
+    Rails.cache.delete( [self, "find_admins"] )
+  end
+
+  def delete_cache_roles
+    delete_cached_find_admins
   end
 
   # Main Admins
