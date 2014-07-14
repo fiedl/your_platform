@@ -22,6 +22,9 @@ namespace :cache do
       user.cached_address_label
       user.cached_title
       user.cached_first_corporation
+      user.cached_aktivitaetszahl
+      user.cached_last_group_in_first_corporation
+      
       print ".".green
     end
     log.success "\nFertig."
