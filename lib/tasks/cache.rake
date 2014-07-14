@@ -12,7 +12,8 @@ namespace :cache do
   
   task :all => [
     :environment, :requirements, :print_info,
-    :users
+    :users,
+    :user_group_memberships
   ]
   
   task :users do
@@ -29,4 +30,18 @@ namespace :cache do
     end
     log.success "\nFertig."
   end
+  
+  task :user_group_memberships do
+    log.section "Benutzer-Gruppen-Mitgliedschaften"
+    
+    User.find_each do |user|
+      user.memberships.each do |membership|
+        membership.cached_valid_from
+      end
+      
+      print ".".green
+    end
+    log.success "\nFertig."
+  end
+  
 end
