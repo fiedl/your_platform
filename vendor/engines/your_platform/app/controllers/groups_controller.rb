@@ -42,7 +42,7 @@ class GroupsController < ApplicationController
             
             # This is the standard case:
             #
-            @memberships = @group.memberships
+            @memberships = @group.memberships.includes(:descendant)
           end
         end
         

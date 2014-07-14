@@ -114,7 +114,7 @@ class User < ActiveRecord::Base
   #     example.com/users/24
   #
   def to_param
-    "#{id} #{title}".parameterize
+    "#{id} #{cached_title}".parameterize
   end
   
 
