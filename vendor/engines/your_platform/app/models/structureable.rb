@@ -112,6 +112,9 @@ module Structureable
     def ancestors_cache_key
       "Group#{ancestor_group_ids}Page#{ancestor_page_ids}User#{ancestor_user_ids}"
     end
+    def children_cache_key
+      "Group#{child_group_ids}Page#{child_page_ids}User#{child_user_ids}"
+    end
 
     def destroy_links
       self.destroy_dag_links

@@ -9,16 +9,11 @@ module VerticalNavHelper
   # Generates the HTML code for a vertical menu, where the given navable object, 
   # e.g. a Page or a User, is the currently active element.
   #
-  def vertical_menu_for( navable )
+  def vertical_menu_for(navable)
     if navable
-      html_code = ""
-      active_navable = navable
-      ancestor_navables = navable.nav_node.ancestor_navables
-      child_navables = navable.navable_children
-      html_code += menu_elements( ancestor_navables, :ancestor )
-      html_code += menu_element( active_navable, :active )
-      html_code += menu_elements( child_navables, :child )
-      return html_code.html_safe
+      menu_elements_html(cached_ancestor_navables(navable), :ancestor) +
+      menu_element(navable, :active) +
+      menu_elements_html(cached_child_navables(navable), :child)
     end
   end
   
@@ -27,14 +22,31 @@ module VerticalNavHelper
   end
 
   private
+  
+  def cached_ancestor_navables(navable)
+    Rails.cache.fetch([navable, 'ancestor_navables', navable.ancestors_cache_key]) { ancestor_navables(navable) }
+  end
+  def ancestor_navables(navable)
+    non_hidden_navables(navable.nav_node.ancestor_navables, :ancestor)
+  end
+  
+  def cached_child_navables(navable)
+    Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key]) { child_navables(navable) }
+  end
+  def child_navables(navable)
+    non_hidden_navables(navable.navable_children, :child)
+  end
+  
+  def non_hidden_navables(navables, element_class)
+    navables.select do |navable|
+      not(navable.nav_node.hidden_menu and element_class == :child) and
+      not(navable.nav_node.slim_menu and element_class == :ancestor)
+    end
+  end
 
-  def menu_elements( objects, element_class )
-    objects.collect do |object|
-      should_not_be_displayed = false
-      should_not_be_displayed = true if object.nav_node.hidden_menu and element_class == :child
-      should_not_be_displayed = true if object.nav_node.slim_menu and element_class == :ancestor
-      should_not_be_displayed = true if cannot? :read, object
-      menu_element( object, element_class ) unless should_not_be_displayed 
+  def menu_elements_html(objects, element_class)
+    objects.select { |object| can?(:read, object) }.collect do |object|
+      menu_element(object, element_class)
     end.join.html_safe
   end
 
