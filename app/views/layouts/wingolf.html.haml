@@ -22,7 +22,7 @@
               %li.first.backendBarItem
                 %span.user_avatar
                   = render 'layouts/session_bar_avatar'
-                %span.user_name
+                %span.user_name#user_name{data: {email: current_user.email, id: current_user.id, title: current_user.cached_title}}
                   = link_to current_user.cached_title, main_app.user_path( current_user )
               %li.backendBarItem
                 = link_to t(:my_profile), current_user, :class => 'my_profile'
@@ -55,7 +55,7 @@
         #header_logo
           = link_to( image_tag( 'logo.png' ), root_path )
         #header_help
-          = link_to_special_page(t(:help), :help, :class => 'btn btn-info'  )
+          = link_to_special_page(t(:help), :help, :class => 'btn btn-info', data: {uv_trigger: 'contact'} )
         #header_search
           = render partial: 'shared/search_box'
         #horizontal_nav= horizontal_nav
