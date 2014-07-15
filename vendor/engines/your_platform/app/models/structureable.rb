@@ -110,10 +110,10 @@ module Structureable
     # For example, this is used in the breadcrumb helper.
     #
     def ancestors_cache_key
-      "Group#{ancestor_group_ids}Page#{ancestor_page_ids}User#{ancestor_user_ids}"
+      "Group#{ancestor_group_ids if respond_to?(:ancestor_group_ids)}Page#{ancestor_page_ids if respond_to?(:ancestor_page_ids)}User#{ancestor_user_ids if respond_to?(:ancestor_user_ids)}"
     end
     def children_cache_key
-      "Group#{child_group_ids}Page#{child_page_ids}User#{child_user_ids}"
+      "Group#{child_group_ids if respond_to?(:child_group_ids)}Page#{child_page_ids if respond_to?(:child_page_ids)}User#{child_user_ids if respond_to?(:child_user_ids)}"
     end
 
     def destroy_links

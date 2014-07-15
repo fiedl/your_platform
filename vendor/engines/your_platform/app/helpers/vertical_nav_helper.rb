@@ -24,6 +24,7 @@ module VerticalNavHelper
   private
   
   def cached_ancestor_navables(navable)
+    NavNode
     Rails.cache.fetch([navable, 'ancestor_navables', navable.ancestors_cache_key]) { ancestor_navables(navable) }
   end
   def ancestor_navables(navable)
@@ -31,6 +32,7 @@ module VerticalNavHelper
   end
   
   def cached_child_navables(navable)
+    NavNode
     Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key]) { child_navables(navable) }
   end
   def child_navables(navable)
