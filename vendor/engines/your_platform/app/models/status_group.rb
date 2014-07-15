@@ -7,7 +7,7 @@
 class StatusGroup < Group
   
   def self.find_all_by_corporation(corporation)
-    corporation.leaf_groups
+    corporation.cached_leaf_groups
   end
   
   def self.find_all_by_user(user, options = {})
