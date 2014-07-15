@@ -42,7 +42,7 @@ class Group < ActiveRecord::Base
 
   def delete_cache
     delete_cache_structureable
-#    delete_cached_leaf_groups
+    delete_cached_leaf_groups
   end
     
   # General Properties
