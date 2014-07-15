@@ -3,9 +3,18 @@ module BreadcrumbsHelper
   
   # This returns the html code for an unordered list containing the
   # bread crumb elements.
+  #
   def breadcrumb_ul
-    return breadcrumb_ul_for_navable @navable if @navable
+    cached_breadcrumb_ul
+  end
+  
+  def cached_breadcrumb_ul
+    return cached_breadcrumb_ul_for_navable @navable if @navable
     return breadcrumb_ul_for_navables @navables if @navables
+  end
+  
+  def cached_breadcrumb_ul_for_navable(navable)
+    Rails.cache.fetch([navable, 'breadcrumb_ul_for_navable', navable.ancestors_cache_key]) { breadcrumb_ul_for_navable(navable) }
   end
   
   def breadcrumb_ul_for_navable( navable )

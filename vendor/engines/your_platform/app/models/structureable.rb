@@ -105,6 +105,13 @@ module Structureable
 
       end  
     end
+    
+    # This somehow identifies which are the ancestors of this structureable.
+    # For example, this is used in the breadcrumb helper.
+    #
+    def ancestors_cache_key
+      "Group#{ancestor_group_ids}Page#{ancestor_page_ids}User#{ancestor_user_ids}"
+    end
 
     def destroy_links
       self.destroy_dag_links

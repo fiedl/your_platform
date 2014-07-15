@@ -67,9 +67,7 @@
               - # %span#star_tool
               - #   = star_tool( current_user, @navable )
               %span#breadcrumb
-                = breadcrumb_ul
-              %span#site_tools
-                = edit_button
+                = cached_breadcrumb_ul
             %span#content_area
             #content
               - if show_vertical_nav?
