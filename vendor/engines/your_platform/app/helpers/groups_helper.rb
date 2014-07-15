@@ -32,6 +32,10 @@ module GroupsHelper
     end.html_safe
   end
   
+  def cached_groups_of_user_table(user)
+    Rails.cache.fetch(['groups_of_user_table', user.membership_ids]) { groups_of_user_table(user) }
+  end
+  
   private
 
   def membership_li( user, group )
