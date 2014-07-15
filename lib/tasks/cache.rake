@@ -16,8 +16,14 @@ namespace :cache do
     :user_group_memberships
   ]
   
-  task :users do
+  task :users => [:environment] do
     log.section "Benutzer-Caches"
+    
+    # Load classes before reading those objects from cache.
+    Corporation
+    Flag
+    AddressLabel
+    UserGroupMembership
     
     User.find_each do |user|
       user.cached_address_label
