@@ -1,3 +1,5 @@
+#= require uservoice_framework
+
 ready = ->
 
   # Include the UserVoice JavaScript SDK (only needed once on a page)

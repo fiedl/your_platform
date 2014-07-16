@@ -79,7 +79,7 @@
       %span#search_box
         = render partial: 'shared/search_box'
       %span#header_help.pull-right
-        = link_to_special_page(t(:help), :help, :class => 'btn btn-mini btn-info'  )
+        = render partial: 'layouts/help_button'
       %span#category_indicator= horizontal_nav
       %ul
         / class="breadcrumb"
