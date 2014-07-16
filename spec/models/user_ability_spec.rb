@@ -99,9 +99,12 @@ describe "User: abilities" do
     end
   end
   describe "if the user is hidden himself" do
-    before { user.hidden = true}
+    before do
+      user.cached_hidden
+      user.hidden = true
+    end
     he "should be able to read himself" do
-      user.hidden.should == true
+      user.cached_hidden.should == true
       the_user.should be_able_to :read, user
     end
   end

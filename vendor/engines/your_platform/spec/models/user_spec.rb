@@ -1288,31 +1288,60 @@ describe User do
   # Hidden Users
   # ==========================================================================================
 
-  describe "#hidden?" do
+  describe '#hidden?' do
     subject { @user.hidden? }
   end
 
-  describe "#hidden=" do
-    describe "true" do
+  describe '#cached_hidden' do
+    subject { @user.cached_hidden }
+    describe 'for the user not being hidden' do
+      before do
+        @user.cached_hidden
+        @user.hidden = true
+      end
+      it { should == @user.hidden }
+    end
+    describe 'for the user being hidden' do
+      before do
+        @user.hidden = true
+        @user.cached_hidden
+        @user.hidden = false
+      end
+      it { should == @user.hidden }
+    end
+  end
+
+  describe '#hidden=' do
+    describe 'true' do
       subject { @user.hidden = true }
-      it "shoud assign the user to the hidden_users group" do
-        @user.should_not be_member_of Group.hidden_users
-        subject
-        @user.should be_member_of Group.hidden_users
+      describe 'for the user being hidden' do
+        before { @user.hidden = true }
+        it 'should make sure user is in the hidden_users group' do
+          @user.should be_member_of Group.hidden_users
+          subject
+          @user.should be_member_of Group.hidden_users
+        end
+      end
+      describe 'for the user not being hidden' do
+        it 'should assign the user to the hidden_users group' do
+          @user.should_not be_member_of Group.hidden_users
+          subject
+          @user.should be_member_of Group.hidden_users
+        end
       end
     end
-    describe "false" do
+    describe 'false' do
       subject { @user.hidden = false; sleep 1.1 }
-      describe "for the user being hidden" do
+      describe 'for the user being hidden' do
         before { @user.hidden = true }
-        it "should remove the user from the hidden_users group" do
+        it 'should remove the user from the hidden_users group' do
           @user.should be_member_of Group.hidden_users
           subject
           @user.should_not be_member_of Group.hidden_users
         end
       end
-      describe "for the user not being hidden" do
-        it "should make sure the user is not in the hidden_users group" do
+      describe 'for the user not being hidden' do
+        it 'should make sure the user is not in the hidden_users group' do
           @user.should_not be_member_of Group.hidden_users
           subject
           @user.should_not be_member_of Group.hidden_users

@@ -58,6 +58,7 @@ class User < ActiveRecord::Base
     delete_cached_corporations
     delete_cached_first_corporation
     delete_cached_address_label
+  #  delete_cached_hidden
     delete_cache_structureable
   end
 
@@ -775,7 +776,14 @@ class User < ActiveRecord::Base
   #
 
   def hidden?
-    self.hidden
+    self.cached_hidden
+  end
+
+  def cached_hidden
+    ids = Rails.cache.fetch([self, 'hidden'], expires_in: 1.week) { hidden}
+  end
+  def delete_cached_hidden
+     Rails.cache.delete( [self, 'hidden'] )
   end
 
   def hidden
