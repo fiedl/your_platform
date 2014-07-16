@@ -13,10 +13,10 @@ namespace :cache do
   task :all => [
     :environment, :requirements, :print_info,
     :users,
-    :user_group_memberships
+    :memberships
   ]
   
-  task :users => [:environment] do
+  task :users => [:environment, :requirements, :print_info] do
     log.section "Benutzer-Caches"
     
     # Load classes before reading those objects from cache.
@@ -37,7 +37,7 @@ namespace :cache do
     log.success "\nFertig."
   end
   
-  task :user_group_memberships do
+  task :memberships => [:environment, :requirements, :print_info] do
     log.section "Benutzer-Gruppen-Mitgliedschaften"
     
     User.find_each do |user|

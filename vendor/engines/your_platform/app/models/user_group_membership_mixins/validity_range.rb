@@ -49,14 +49,6 @@ module UserGroupMembershipMixins::ValidityRange
   end
   
   
-  def cached_valid_from
-    Rails.cache.fetch(['UserGroupMembership', id, 'valid_from'], expires_in: 1.week) { self.valid_from }
-  end
-  def delete_cached_valid_from
-    Rails.cache.delete ['UserGroupMembership', id, 'valid_from']
-  end
-  
-  
   # Invalidation
   # ====================================================================================================
   
