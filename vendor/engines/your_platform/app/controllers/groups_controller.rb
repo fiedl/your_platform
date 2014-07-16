@@ -66,10 +66,12 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html
       format.csv do
+        authorize! :export_member_list, @group  # Require special authorization!
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
         send_data @group.members_to_csv(params[:list])
       end
       format.pdf do
+        authorize! :export_member_list, @group  # Require special authorization!
         if params[:sender].present?
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]

@@ -120,6 +120,13 @@ class Ability
           end
         end
         
+        # LOCAL OFFICERS
+        # Local officers can export the member lists of their groups.
+        #
+        can :export_member_list, Group do |group|
+          user.in? group.officers
+        end        
+        
         # DEVELOPERS
         if user.developer?
           can :use, Rack::MiniProfiler

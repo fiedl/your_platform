@@ -88,6 +88,9 @@ describe "User: abilities" do
     the_user.should_not be_able_to :read, PublicActivity::Activity
     the_user.should_not be_able_to :read, PublicActivity::Activity.first
   end
+  he "should not be able to export the member list" do
+    the_user.should_not be_able_to :export_member_list, @group
+  end 
   
   describe "if other users are hidden" do
     before do
@@ -177,6 +180,17 @@ describe "User: abilities" do
       @subgroup << @other_user 
       the_user.should_not be_able_to :update, @other_user
     end
+  end
+  
+  context "when the user is officer of a group" do
+    before do
+      @group = create :group
+      @officer_group = @group.officers_groups.create(name: "Secretary")
+      @officer_group.assign_user user
+    end
+    he "should be able to export the member list" do
+      the_user.should be_able_to :export_member_list, @group
+    end 
   end
 end
   
