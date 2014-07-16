@@ -67,8 +67,9 @@ class GroupsController < ApplicationController
       format.html
       format.csv do
         authorize! :export_member_list, @group  # Require special authorization!
+        file_title = "#{@group.name} #{Time.zone.now}".parameterize
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
-        send_data @group.members_to_csv(params[:list])
+        send_data @group.members_to_csv(params[:list], filename: "#{file_title}.csv")
       end
       format.pdf do
         authorize! :export_member_list, @group  # Require special authorization!
@@ -77,7 +78,8 @@ class GroupsController < ApplicationController
           session[:address_labels_pdf_sender] = params[:sender]
         end
         options = {sender: params[:sender]}
-        send_data(@group.members_to_pdf(options), filename: "#{@group.name.parameterize}.pdf", type: 'application/pdf', disposition: 'inline')
+        file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
+        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
     
