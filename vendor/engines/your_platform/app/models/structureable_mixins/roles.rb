@@ -66,6 +66,20 @@ module StructureableMixins::Roles
   def officers_groups
     find_officers_groups
   end
+  
+  def direct_officers
+    self.find_officers_parent_group.try(:descendant_users) || []
+  end
+  
+  def officers_of_self_and_parent_groups
+    direct_officers + (parent_groups.collect { |parent_group| parent_group.direct_officers }.flatten)
+  end
+  def cached_officers_of_self_and_parent_groups
+    Rails.cache.fetch([self, 'officers_of_self_and_parent_groups'], expires_in: 1.week) { officers_of_self_and_parent_groups }
+  end
+  def delete_cached_officers_of_self_and_parent_groups
+    Rails.cache.delete [self, 'officers_of_self_and_parent_groups']
+  end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
   #
@@ -145,6 +159,7 @@ module StructureableMixins::Roles
 
   def delete_cache_roles
     delete_cached_find_admins
+    delete_cached_officers_of_self_and_parent_groups
   end
 
   # Main Admins

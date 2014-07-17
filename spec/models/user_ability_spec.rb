@@ -187,10 +187,18 @@ describe "User: abilities" do
       @group = create :group
       @officer_group = @group.officers_groups.create(name: "Secretary")
       @officer_group.assign_user user
+      @sub_group = @group.child_groups.create(name: "Sub Group")
+      @parent_group = @group.parent_groups.create(name: "Parent Group")
     end
     he "should be able to export the member list" do
       the_user.should be_able_to :export_member_list, @group
-    end 
+    end
+    he "should be able to export the member lists of the sub groups" do
+      the_user.should be_able_to :export_member_list, @sub_group
+    end
+    he "should not be able to export the member list of parent groups" do
+      the_user.should_not be_able_to :export_member_list, @parent_group
+    end
   end
 end
   

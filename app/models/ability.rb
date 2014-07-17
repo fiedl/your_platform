@@ -124,7 +124,7 @@ class Ability
         # Local officers can export the member lists of their groups.
         #
         can :export_member_list, Group do |group|
-          user.in? group.officers
+          user.in? group.cached_officers_of_self_and_parent_groups
         end        
         
         # DEVELOPERS

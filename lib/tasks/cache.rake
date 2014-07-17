@@ -13,7 +13,8 @@ namespace :cache do
   task :all => [
     :environment, :requirements, :print_info,
     :users,
-    :memberships
+    :memberships, 
+    :groups
   ]
   
   task :users => [:environment, :requirements, :print_info] do
@@ -50,4 +51,18 @@ namespace :cache do
     log.success "\nFertig."
   end
   
+  task :groups => [:environment, :requirements, :print_info] do
+    log.section "Gruppen"
+    
+    # Load classes before reading from cache.
+    User
+    
+    Group.find_each do |group|
+      group.cached_find_admins
+      group.cached_officers_of_self_and_parent_groups
+      
+      print ".".green
+    end
+    log.success "\nFertig."
+  end
 end
