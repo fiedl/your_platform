@@ -42,8 +42,8 @@ class AddressLabelsPdf < Prawn::Document
   #
   def text_size(str)
     if str.present?
-      return 12.pt if num_of_lines_required(str) < 5
-      return 10.pt if num_of_lines_required(str) < 7
+      return 12.pt if num_of_lines_required(str, 12.pt) < 5
+      return 10.pt if num_of_lines_required(str, 10.pt) < 6
     end
     return 8.pt
   end
@@ -52,9 +52,10 @@ class AddressLabelsPdf < Prawn::Document
   # Some lines are longer than 35 characters and they will broken into the
   # new line in the PDF. Therefore we need this estimate.
   #
-  def num_of_lines_required(str)
+  def num_of_lines_required(str, font_size = 12.pt)
+    @available_width ||= (210.mm - 20.mm - 2 * 10.mm)/3
     if str.present?
-      str.lines.collect { |line| (line.length * 1.0 / 35).floor + 1 }.sum
+      str.lines.collect { |line| (width_of(line, size: font_size) / @available_width).floor + 1 }.sum
     else
       0
     end
