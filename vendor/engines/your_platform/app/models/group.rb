@@ -42,6 +42,7 @@ class Group < ActiveRecord::Base
 
   def delete_cache
     delete_cache_structureable
+    delete_cached_leaf_groups
   end
     
   # General Properties
@@ -159,8 +160,15 @@ class Group < ActiveRecord::Base
     end
   end
   
-  
-  
+  def cached_leaf_groups
+    ids = Rails.cache.fetch([self, 'leaf_groups'], expires_in: 1.week) { leaf_groups.collect{ |group| group.id } }
+    Group.find ids
+  end
+
+  def delete_cached_leaf_groups
+    Rails.cache.delete( [self, 'leaf_groups'] )
+  end
+
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
   end

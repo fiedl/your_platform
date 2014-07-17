@@ -224,6 +224,78 @@ describe Group do
         it { should == false }
       end
     end
+    
+    describe '#leaf_groups' do
+      subject { @group.leaf_groups }
+      describe 'for the group being a corporation' do
+        before { @group = create(:corporation) }
+        it { should == [] }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @status_groups = @group.status_groups
+        end
+        it { should == @status_groups }
+      end
+      describe 'for the group being a corporation with admin, normal and status groups' do
+        before do
+        @group = create(:corporation)
+        @group.find_or_create_admins_parent_group
+        @status_1 = @group.child_groups.create
+        @group_a = @group.child_groups.create
+        @status_2 = @group_a.child_groups.create
+        @group_b = @group.child_groups.create
+        @status_3 = @group_b.child_groups.create
+        end
+        it 'should contain all status groups' do 
+          should include(@status_1)
+          should include(@status_2)
+          should include(@status_3)
+          should_not include(@group_a)
+          should_not include(@group_b)
+          should_not include(@group.admins_parent)
+        end
+      end
+    end
+
+    describe '#cached_leaf_groups' do
+      subject { @group.cached_leaf_groups }
+      describe 'for the group being a corporation' do
+        before do
+          @group = create(:corporation)
+          @group.cached_leaf_groups
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @group.cached_leaf_groups
+        end
+        it { should == @group.cached_leaf_groups }
+      end
+      describe 'for the group being a corporation with admin groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached_leaf_groups
+          @group.find_or_create_admins_parent_group
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with normal and status groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached_leaf_groups
+          @status_1 = @group.child_groups.create
+          @group_a = @group.child_groups.create
+          @status_2 = @group_a.child_groups.create
+          @group_b = @group.child_groups.create
+          @status_3 = @group_b.child_groups.create
+        end
+        it { should == @group.leaf_groups }
+      end
+    end
   end
 
 

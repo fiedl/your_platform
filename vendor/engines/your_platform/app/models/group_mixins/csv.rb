@@ -187,7 +187,7 @@ module GroupMixins::Csv
   # sowie ihren jeweiligen Eintrittsdaten der Statusgruppen aufgeführt.
   # 
   def member_development_to_csv
-    status_groups = self.leaf_groups
+    status_groups = self.cached_leaf_groups
 
     # FIXME: The leaf groups should not return any officer group.
     # Make this fix unneccessary:
