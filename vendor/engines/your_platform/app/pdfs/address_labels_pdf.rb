@@ -20,6 +20,7 @@ class AddressLabelsPdf < Prawn::Document
        for x in 0..2
          grid(y, x).bounding_box do
            address = addresses[p * 24 + y * 3 + x]
+           address = address.try(:gsub, ", ", "\n")
            sender_line if @sender and address
            text address, size: text_size(address)
          end
@@ -44,8 +45,9 @@ class AddressLabelsPdf < Prawn::Document
     if str.present?
       return 12.pt if num_of_lines_required(str, 12.pt) < 5
       return 10.pt if num_of_lines_required(str, 10.pt) < 6
+      return 8.pt if num_of_lines_required(str, 8.pt) < 8
     end
-    return 8.pt
+    return 7.pt
   end
   
   # This method estimates the number of lines required for the given string.
