@@ -21,6 +21,14 @@ GIT
       treetop (~> 1.4.8)
 
 GIT
+  remote: git://github.com/prawnpdf/prawn.git
+  revision: 9bbca196e683af6e5e7749793a4cce2a7bec946f
+  specs:
+    prawn (1.2.0)
+      pdf-core (~> 0.2.5)
+      ttfunk (~> 1.2.0)
+
+GIT
   remote: git://github.com/rweng/jquery-datatables-rails.git
   revision: d637e0967dc66e9824345009ad74fbfdb1e4349f
   specs:
@@ -294,9 +302,6 @@ GEM
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
     polyglot (0.3.4)
-    prawn (1.1.0)
-      pdf-core (~> 0.2.5)
-      ttfunk (~> 1.2.0)
     pry (0.9.12.4)
       coderay (~> 1.0)
       method_source (~> 0.8)
@@ -499,6 +504,7 @@ DEPENDENCIES
   nokogiri
   passgen
   poltergeist (= 1.5.0)
+  prawn!
   pry
   rack-mini-profiler
   rack-timeout

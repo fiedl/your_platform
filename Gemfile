@@ -214,4 +214,4 @@ gem 'workflow_kit', '0.0.7'
 
 gem 'newrelic_rpm'
 gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
-
+gem 'prawn', github: 'prawnpdf/prawn'

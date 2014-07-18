@@ -9,7 +9,7 @@ class AddressLabelsPdf < Prawn::Document
     @document_updated_at = options[:updated_at]
     @required_page_count = (addresses.count / 24).round + 1
     @sender = options[:sender]
-        
+    
     define_grid columns: 3, rows: 8, gutter: 10.mm
     
     for p in (0..(@required_page_count - 1))
@@ -22,7 +22,7 @@ class AddressLabelsPdf < Prawn::Document
            address = addresses[p * 24 + y * 3 + x]
            address = address.try(:gsub, ", ", "\n")
            sender_line if @sender and address
-           text address, size: text_size(address)
+           text address, size: text_size(address), fallback_fonts: fallback_fonts
          end
        end
       end
@@ -78,5 +78,49 @@ class AddressLabelsPdf < Prawn::Document
     bounding_box([0, -0.5.cm], width: 18.5.cm, height: 0.5.cm) do
       text page_footer_text, size: 8.pt, align: :center
     end
+  end
+  
+  def fallback_fonts
+    define_fonts
+    ["dejavu", "times", 'kai', 'action_man']
+  end
+  
+  def define_fonts
+    # The idea to use fallback fonts to have chinese characters supported along
+    # with other UTF-8 characters, was taken from:
+    # http://stackoverflow.com/a/11097644/2066546
+    
+    kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
+    action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
+    dejavu = "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
+
+    font_families.update("dejavu" => {
+      :normal      => dejavu,
+      :italic      => dejavu,
+      :bold        => dejavu,
+      :bold_italic => dejavu
+    })
+
+    #Times is defined in prawn
+    font_families.update("times" => {
+      :normal => "Times-Roman",
+      :italic      => "Times-Italic",
+      :bold        => "Times-Bold",
+      :bold_italic => "Times-BoldItalic"
+    })
+
+    font_families.update("action_man" => {
+      :normal      => { :file => action_man_path, :font => "ActionMan" },
+      :italic      => { :file => action_man_path, :font => "ActionMan-Italic" },
+      :bold        => { :file => action_man_path, :font => "ActionMan-Bold" },
+      :bold_italic => { :file => action_man_path, :font => "ActionMan-BoldItalic" }
+    })
+
+    font_families.update("kai" => {
+      :normal => { :file => kai, :font => "Kai" },
+      :bold   => kai,
+      :italic => kai,
+      :bold_italic => kai
+    })
   end
 end
