@@ -16,7 +16,7 @@ class SearchController < ApplicationController
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
         .order( :last_name, :first_name )
-      @pages = Page.where( "title like ?", q )
+      @pages = Page.where("title like ? OR content like ?", q, q)
         .order( :title )
       @groups = Group.where( "name like ?", q )
 
@@ -32,6 +32,11 @@ class SearchController < ApplicationController
           @groups << profile_field.profileable
         end
       end
+      
+      # browse attachments
+      #
+      attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
+      @pages += attachments.collect { |attachment| attachment.parent }
       
       # eleminiate duplicate results
       #
