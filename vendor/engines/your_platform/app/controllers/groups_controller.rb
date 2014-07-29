@@ -21,7 +21,7 @@ class GroupsController < ApplicationController
         # If this is a collection group, e.g. the corporations_parent group, 
         # do not list the single members.
         #
-        if @group.child_group_ids.count > 15
+        if @group.group_of_groups?
           @memberships = []
           @child_groups = @group.child_groups - [@group.find_officers_parent_group]
         else
@@ -54,6 +54,7 @@ class GroupsController < ApplicationController
         #
         @members = @memberships.collect { |membership| membership.user }
         
+        # for performance reasons deactivated for the moment.
         # fill_map_address_fields
         @large_map_address_fields = []
         

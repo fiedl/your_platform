@@ -76,6 +76,19 @@ class Group < ActiveRecord::Base
     "#{id} #{title}".parameterize
   end
   
+  
+  # Mark this group of groups, i.e. the primary members of the group are groups,
+  # not users. This does not effect the DAG structure, but may affect the way
+  # the group is displayed.
+  #
+  def group_of_groups?
+    has_flag? :group_of_groups
+  end
+  def group_of_groups=(add_the_flag)
+    add_the_flag ? add_flag(:group_of_groups) : remove_flag(:group_of_groups)
+  end
+  
+  
   # Associated Objects
   # ==========================================================================================
 

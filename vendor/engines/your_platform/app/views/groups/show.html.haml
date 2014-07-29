@@ -34,7 +34,7 @@
       %span#group_members
         %ul.new_child_users
         .child_users
-          - if @members.count < 301
+          - if @members.count < 1000
             - if @members.count > 0
               = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
           - else
