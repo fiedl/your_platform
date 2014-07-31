@@ -43,6 +43,7 @@ class Group < ActiveRecord::Base
   def delete_cache
     delete_cache_structureable
     delete_cached_leaf_groups
+    delete_cached_corporation
   end
     
   # General Properties
@@ -157,6 +158,12 @@ class Group < ActiveRecord::Base
     ([ self ] + ancestor_groups).select do |group|
       group.corporation?
     end.first.try(:becomes, Corporation)
+  end
+  def cached_corporation
+    Rails.cache.fetch([self, 'corporation'], expire_in: 1.week) { corporation }
+  end
+  def delete_cached_corporation
+    Rails.cache.delete [self, 'corporation']
   end
 
   def corporation?

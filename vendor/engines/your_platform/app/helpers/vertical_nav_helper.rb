@@ -11,9 +11,14 @@ module VerticalNavHelper
   #
   def vertical_menu_for(navable)
     if navable
-      menu_elements_html(cached_ancestor_navables(navable), :ancestor) +
-      menu_element(navable, :active) +
-      menu_elements_html(cached_child_navables(navable), :child)
+      @ancestor_navables = cached_ancestor_navables(navable)
+      @active_navable = navable
+      @active_navables = [@active_navable]
+      @child_navables = cached_child_navables(navable)
+      
+      menu_elements_html(@ancestor_navables, :ancestor) +
+      menu_element(@active_navable, :active) +
+      menu_elements_html(@child_navables, :child)
     end
   end
   
@@ -53,10 +58,23 @@ module VerticalNavHelper
   end
 
   def menu_element( object, element_class )
-    title = object.title
     content_tag( :li, :class => element_class ) do 
-      link_to title, object
+      link_to(menu_element_title(object), object)
     end
   end
   
+  def menu_element_title(object)
+    if append_corporation_to_menu_element_title?(object)
+      "#{object.title} (#{object.cached_corporation.title})"
+    else
+      object.title
+    end
+  end
+  
+  def append_corporation_to_menu_element_title?(object)
+    object.kind_of?(Group) &&
+      object.cached_corporation &&
+      (not object.cached_corporation.becomes(Group).in?(@ancestor_navables + @active_navables)) &&
+      (not object.cached_corporation.becomes(Group) == object)
+  end
 end

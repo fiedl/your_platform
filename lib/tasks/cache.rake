@@ -60,6 +60,7 @@ namespace :cache do
     Group.find_each do |group|
       group.cached_find_admins
       group.cached_officers_of_self_and_parent_groups
+      group.cached_corporation
       
       print ".".green
     end
