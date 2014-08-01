@@ -56,6 +56,7 @@ namespace :cache do
     
     # Load classes before reading from cache.
     User
+    Page
     
     Group.find_each do |group|
       group.cached_find_admins
