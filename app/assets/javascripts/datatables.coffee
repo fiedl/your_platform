@@ -82,7 +82,7 @@ ready = ->
     "order": [[0, "desc"]]
   }, common_configuration))
   $('.datatable.members').dataTable(jQuery.extend({
-    "order": [[0, "asc"]],
+    "order": [[3, "desc"]],
     columnDefs: [
       { type: 'de_date', targets: 3}
     ]

@@ -42,7 +42,7 @@ class GroupsController < ApplicationController
             
             # This is the standard case:
             #
-            @memberships = @group.memberships.includes(:descendant)
+            @memberships = @group.memberships.includes(:descendant).order(valid_from: :desc)
           end
         end
         
