@@ -44,6 +44,7 @@ class Group < ActiveRecord::Base
     delete_cache_structureable
     delete_cached_leaf_groups
     delete_cached_corporation
+    delete_cache_for_officers_group
   end
     
   # General Properties
