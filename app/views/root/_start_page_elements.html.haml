@@ -1,0 +1,3 @@
+= render partial: 'root/latest_members_box', locals: {box_heading: 'Aktivmeldungen', group: Group.where(name: 'Alle Aktiven').first}
+= render partial: 'root/latest_members_box', locals: {box_heading: 'Philistrationen', group: Group.where(name: 'Alle Philister').first}
+= render partial: 'root/latest_members_box', locals: {box_heading: 'Todesfälle', group: Group.where(name: 'Alle verstorbenen Wingolfiten').first}

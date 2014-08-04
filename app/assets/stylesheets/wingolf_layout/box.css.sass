@@ -1,7 +1,8 @@
 
 #content * .box
-  position: relative
   width: 100%
+  display: inline-block
+  position: relative
   border: 1px solid #d6d3cd
   background: repeat
   background-image: image-url("content_bg.jpg") 
@@ -12,9 +13,6 @@
       td.box_heading
       td.box_toolbar
         text-align: right
-    h1
-      padding: 15px 0 0 9px
-      margin: 0
   .minimize
     position: absolute
     top: 16px
@@ -37,3 +35,38 @@
 .box.first
   background: repeat scroll 0 0 transparent !important
   background-image: image-url("bg_bundeswappen.gif") !important
+
+.col3
+  display: block
+  clear: left
+  width: 100%
+  .box
+    .head
+      h1
+        padding: 15px 0 0 9px
+        margin: 0
+
+.col2
+  width: 63%
+  float: left
+
+.col1
+  display: inline-block
+  width: 32.7%
+  .box
+    left: 20px
+    .head
+      padding-left: 9px
+      padding-top: 9px
+      h2
+        margin: 0
+        padding: 0
+    .content
+      ul
+        padding-left: 2px
+        li
+          list-style: none
+          margin-bottom: 3px
+
+.right
+  float: right

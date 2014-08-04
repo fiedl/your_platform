@@ -1,0 +1,15 @@
+%div.box.right
+  %div.head
+    %h2= box_heading
+  %div.divider
+  %div.content
+    %ul
+      - if group
+        - for membership in UserGroupMembership.with_invalid.find_all_by_group(group).reorder('valid_from DESC').limit(3)
+          %li
+            = "#{link_to(membership.user.title, membership.user)},".html_safe
+            = localize membership.cached_valid_from.to_date
+        %p
+          = "Insgesamt #{UserGroupMembership.this_year.find_all_by_group(group).count} dieses Jahr."
+        %p.list_all
+          = link_to I18n.t(:show_all), group

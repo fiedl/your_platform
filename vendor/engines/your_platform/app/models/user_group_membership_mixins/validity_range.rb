@@ -174,6 +174,10 @@ module UserGroupMembershipMixins::ValidityRange
     def now_and_in_the_past
       with_invalid
     end
+    
+    def this_year
+      with_invalid.where("valid_from >= ?", "#{Time.zone.now.year}-01-01 00:00:00")
+    end
   
   end
   
