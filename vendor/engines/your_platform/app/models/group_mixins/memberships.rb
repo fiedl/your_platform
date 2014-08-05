@@ -88,13 +88,38 @@ module GroupMixins::Memberships
     
     def cached_memberships
       UserGroupMembership
-      Rails.cache.fetch(['Group', 'memberships', self.id]) do
+      Rails.cache.fetch(['Group', 'memberships', self.id], expires_in: 1.week) do
         memberships.includes(:descendant).to_a
       end
     end
-    
-    def delete_cache
+    def delete_cached_memberships
       Rails.cache.delete(['Group', 'memberships', self.id])
+    end
+    
+    def latest_memberships
+      # TODO: Fix this syntax when migrating to Rails 4.
+      # self.memberships.with_invalid...
+      UserGroupMembership.with_invalid.find_all_by_group(self).reorder('valid_from DESC').limit(10).includes(:descendant)
+    end
+    def cached_latest_memberships
+      UserGroupMembership
+      Rails.cache.fetch(['Group', self.id, 'latest_memberships'], expires_in: 1.week) { latest_memberships.to_a }
+    end
+    def delete_cached_latest_memberships
+      Rails.cache.delete ['Group', self.id, 'latest_memberships']
+    end
+    
+    def memberships_this_year
+      # TODO: Fix this syntax when migrating to Rails 4.
+      # self.memberships.this_year...
+      UserGroupMembership.this_year.find_all_by_group(self)
+    end
+    def cached_memberships_this_year
+      UserGroupMembership
+      Rails.cache.fetch(['Group', self.id, 'memberships_this_year'], expires_in: 1.week) { memberships_this_year.to_a }
+    end
+    def delete_cached_memberships_this_year
+      Rails.cache.delete ['Group', self.id, 'memberships_this_year']
     end
 
     # User Assignment

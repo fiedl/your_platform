@@ -58,11 +58,16 @@ namespace :cache do
     # Load classes before reading from cache.
     User
     Page
+    NavNode
     
     Group.find_each do |group|
       group.cached_find_admins
       group.cached_officers_of_self_and_parent_groups
       group.cached_corporation
+      group.cached_leaf_groups
+      group.cached_memberships
+      group.cached_latest_memberships
+      cached_memberships_this_year
       
       print ".".green
     end
