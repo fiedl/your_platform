@@ -5,7 +5,7 @@
   %div.content
     %ul
       - if group
-        - for membership in group.cached_latest_memberships.last(3)
+        - for membership in group.cached_latest_memberships.first(3)
           %li
             = "#{link_to(membership.user.cached_title, membership.user)},".html_safe
             = localize membership.cached_valid_from.to_date
