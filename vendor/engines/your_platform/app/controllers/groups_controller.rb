@@ -34,7 +34,8 @@ class GroupsController < ApplicationController
             @corporation = @group.becomes(Corporation)
             if @corporation.respond_to?(:aktivitas) and @corporation.aktivitas and @corporation.philisterschaft 
               # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
-              @memberships = @corporation.aktivitas.memberships.includes(:descendant) + @corporation.philisterschaft.memberships.includes(:descendant)
+              aktivitas_and_philisterschaft_member_ids = @corporation.aktivitas.member_ids + @corporation.philisterschaft.member_ids
+              @memberships = @corporation.memberships.where(descendant_id: aktivitas_and_philisterschaft_member_ids).includes(:descendant)
             else
               @memberships = @corporation.memberships.includes(:descendant) - @corporation.former_members_memberships - @corporation.deceased_members_memberships
             end
