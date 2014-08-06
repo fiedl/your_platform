@@ -19,7 +19,7 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    "#{name} #{cached_aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
+    "#{name} #{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
   end
   
   def cached_title
@@ -145,8 +145,8 @@ class User
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
   def aktivitätszahl
-    if self.cached_corporations
-      self.cached_corporations
+    if self.corporations
+      self.corporations
       .select do |corporation|
         not (self.guest_of?(corporation)) and
         not (self.former_member_of_corporation?(corporation)) and
