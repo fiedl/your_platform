@@ -58,17 +58,23 @@ namespace :cache do
     User
     Page
     NavNode
+    Corporation
     
     Group.find_each do |group|
-      group.cached_find_admins
-      group.cached_officers_of_self_and_parent_groups
-      group.cached_corporation
-      group.cached_leaf_groups
-      group.cached_memberships
-      group.cached_latest_memberships
-      cached_memberships_this_year
+      begin
+        group.cached_find_admins
+        group.cached_officers_of_self_and_parent_groups
+        group.cached_corporation
+        group.cached_leaf_groups
+        group.cached_memberships
+        group.cached_latest_memberships
+        group.cached_memberships_this_year
       
-      print ".".green
+        print ".".green
+      rescue => e
+        print "F\n".red
+        print "Error caching group #{group.id}: #{e.message}.\n".red
+      end
     end
     log.success "\nFertig."
   end
