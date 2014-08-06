@@ -140,6 +140,10 @@ describe "User: abilities" do
       @child_profile_field = @profile_field.children.first
       the_user.should be_able_to :update, @child_profile_field
     end
+    he "should be able to manage the profile fields of the group" do
+      @profile_field = @group.profile_fields.create(label: "Bank Account", type: 'ProfileFieldTypes::BankAccount').becomes(ProfileFieldTypes::BankAccount)
+      the_user.should be_able_to :manage, @profile_field
+    end
     he "should be able to manage subgroups" do
       @subgroup = create(:group)
       @subgroup.parent_groups << @group

@@ -115,7 +115,8 @@ class Ability
           end
           can :manage, ProfileField do |profile_field|
             if profile_field.profileable
-              profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
+              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.cached_find_admins.include?(user)) ||
+                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
             end
           end
         end
