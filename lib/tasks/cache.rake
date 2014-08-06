@@ -43,7 +43,6 @@ namespace :cache do
     
     User.find_each do |user|
       user.memberships.each do |membership|
-        membership.recalculate_validity_range_from_direct_memberships
         membership.cached_valid_from
       end
       
