@@ -53,15 +53,6 @@ class User < ActiveRecord::Base
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
   
-  def delete_cache
-    delete_cached_last_group_in_first_corporation
-    delete_cached_current_corporations
-    delete_cached_corporations
-    delete_cached_first_corporation
-    delete_cached_address_label
-    delete_cached_hidden
-    delete_cache_structureable
-  end
 
   # Mixins
   # ==========================================================================================
@@ -115,8 +106,11 @@ class User < ActiveRecord::Base
   #
   #     example.com/users/24
   #
+  # This method uses a cache on purpose, since it is directly used by rails
+  # to construct the url.
+  #
   def to_param
-    "#{id} #{cached_title}".parameterize
+    "#{id} #{cached(:title)}".parameterize
   end
   
 
@@ -294,21 +288,6 @@ class User < ActiveRecord::Base
     AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
       self.name_surrounding_profile_field, self.personal_title)
   end
-  def cached_address_label
-    AddressLabel
-    Rails.cache.fetch(['User', id, 'address_label'], expires_in: 1.week) { address_label }
-  end
-  def delete_cached_address_label
-    Rails.cache.delete ['User', id, 'address_label']
-  end
-  def cached_address_label_created_at
-    CacheAdditions
-    Rails.cache.created_at ['User', id, 'address_label']
-  end
-  
-  
-
-  
 
 
   # Associated Objects
@@ -467,41 +446,19 @@ class User < ActiveRecord::Base
     my_corporations.collect { |group| group.becomes( Corporation ) }
   end
 
-  def cached_corporations
-    Corporation
-    Rails.cache.fetch( [self, "corporations"] ) do
-      corporations
-    end
-  end
-
-  def delete_cached_corporations
-    Rails.cache.delete( [self, "corporations"] )
-  end
-
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    self.cached_corporations.select do |corporation|
+    self.corporations.select do |corporation|
       Role.of(self).in(corporation).current_member?
     end || []
-  end
-  
-  def cached_current_corporations
-    Corporation
-    Rails.cache.fetch( [self, "current_corporations"] ) do
-      current_corporations
-    end
-  end
-
-  def delete_cached_current_corporations
-    Rails.cache.delete( [self, "current_corporations"] )
   end
 
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    cached_current_corporations.sort_by do |corporation|
+    current_corporations.sort_by do |corporation|
       corporation.membership_of(self).valid_from || Time.zone.now
     end
   end
@@ -520,13 +477,6 @@ class User < ActiveRecord::Base
     
     sorted_current_corporations.first
   end
-  def cached_first_corporation
-    Rails.cache.fetch(['User', id, 'first_corporation'], expires_in: 1.week ) { first_corporation }
-  end
-  def delete_cached_first_corporation
-    Rails.cache.delete ['User', id, 'first_corporation']
-  end
-  
   
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
@@ -544,16 +494,11 @@ class User < ActiveRecord::Base
       []
     end
   end
-
-  def cached_last_group_in_first_corporation
-    Rails.cache.fetch( [self, "last_group_in_first_corporation"] ) do
-      my_groups_in_first_corporation.last
-    end
+  
+  def last_group_in_first_corporation
+    my_groups_in_first_corporation.last
   end
 
-  def delete_cached_last_group_in_first_corporation
-    Rails.cache.delete( [self, "last_group_in_first_corporation"] )
-  end
 
   # Corporate Vita
   # ==========================================================================================
@@ -564,7 +509,7 @@ class User < ActiveRecord::Base
     #   .now_and_in_the_past
     #   .find_all_by_user_and_corporation( self, corporation )
     
-    groups = corporation.cached_leaf_groups & self.parent_groups
+    groups = corporation.leaf_groups & self.parent_groups
     group_ids = groups.collect { |group| group.id }
     
     UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where( ancestor_id: group_ids, ancestor_type: 'Group' )
@@ -796,14 +741,7 @@ class User < ActiveRecord::Base
   #
 
   def hidden?
-    self.cached_hidden
-  end
-
-  def cached_hidden
-    ids = Rails.cache.fetch([self, 'hidden'], expires_in: 1.week) { hidden}
-  end
-  def delete_cached_hidden
-     Rails.cache.delete( [self, 'hidden'] )
+    self.hidden
   end
 
   def hidden

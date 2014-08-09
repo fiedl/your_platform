@@ -14,6 +14,14 @@ module StructureableMixins::Roles
 
   included do
   end
+  
+  def delete_caches_concerning_roles
+    if is_a? Group
+      if has_flag?(:admins_parent) or has_flag?(:officers_parent)
+        parent_groups.collect { |parent| parent.delete_cached(:find_admins) }
+      end
+    end
+  end
 
 
   # Officers
@@ -74,12 +82,6 @@ module StructureableMixins::Roles
   def officers_of_self_and_parent_groups
     direct_officers + (parent_groups.collect { |parent_group| parent_group.direct_officers }.flatten)
   end
-  def cached_officers_of_self_and_parent_groups
-    Rails.cache.fetch([self, 'officers_of_self_and_parent_groups'], expires_in: 1.week) { officers_of_self_and_parent_groups }
-  end
-  def delete_cached_officers_of_self_and_parent_groups
-    Rails.cache.delete [self, 'officers_of_self_and_parent_groups']
-  end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
   #
@@ -112,14 +114,14 @@ module StructureableMixins::Roles
   end
 
   def create_admins_parent_group
-    delete_cached_find_admins
+    delete_cached(:find_admins)
     create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
   end
 
   def find_or_create_admins_parent_group
       find_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group) or
       begin
-        delete_cached_find_admins
+        delete_cached(:find_admins)
         create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group)
       rescue
         nil
@@ -142,25 +144,6 @@ module StructureableMixins::Roles
     find_admins_parent_group.try( :descendant_users ) || []
   end
 
-  def cached_find_admins
-    Rails.cache.fetch( [self, "find_admins"] ) do
-      find_admins
-    end
-  end
- 
-  def delete_cached_find_admins
-    if is_a? Group
-      if has_flag?( :admins_parent ) or has_flag?( :officers_parent )
-        parent_groups.collect{ |parent| parent.delete_cached_find_admins }
-      end
-    end
-    Rails.cache.delete( [self, "find_admins"] )
-  end
-
-  def delete_cache_roles
-    delete_cached_find_admins
-    delete_cached_officers_of_self_and_parent_groups
-  end
 
   # Main Admins
   # ==========================================================================================
