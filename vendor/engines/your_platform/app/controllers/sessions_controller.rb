@@ -13,5 +13,10 @@ class SessionsController < Devise::SessionsController
     super
     metric_logger.register_session
   end
+  
+  def destroy
+    current_user.update_last_seen_activity(nil)
+    super
+  end
 
 end

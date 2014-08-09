@@ -15,6 +15,8 @@ class GroupsController < ApplicationController
 
   def show
     if @group
+      current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
+
       if request.format.html?
         point_navigation_to @group
         

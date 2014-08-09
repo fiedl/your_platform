@@ -15,6 +15,12 @@ class UsersController < ApplicationController
   end
 
   def show
+    if current_user == @user
+      current_user.update_last_seen_activity("sieht sich sein eigenes Profil an", @user)
+    else
+      current_user.try(:update_last_seen_activity, "sieht sich das Profil von #{@user.cached_title} an", @user)
+    end
+    
     respond_to do |format|
       format.html # show.html.erb
                   #format.json { render json: @profile.sections }  # TODO

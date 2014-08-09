@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140611170614) do
+ActiveRecord::Schema.define(:version => 20140808223512) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -109,6 +109,15 @@ ActiveRecord::Schema.define(:version => 20140611170614) do
     t.string   "token"
     t.string   "extensive_name"
     t.string   "internal_token"
+  end
+
+  create_table "last_seen_activities", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "description"
+    t.integer  "link_to_object_id"
+    t.string   "link_to_object_type"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "nav_nodes", :force => true do |t|

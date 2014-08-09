@@ -41,6 +41,7 @@ class User < ActiveRecord::Base
   has_many                  :relationships_as_second_user, foreign_key: 'user2_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user2
 
   has_many                  :bookmarks
+  has_many                  :last_seen_activities
 
   is_navable
 
@@ -397,6 +398,24 @@ class User < ActiveRecord::Base
   end
   private :build_account_if_requested
 
+
+  # Activities
+  # ------------------------------------------------------------------------------------------
+
+  def find_or_build_last_seen_activity
+    last_seen_activities.last || last_seen_activities.build
+  end
+  
+  def update_last_seen_activity(description = nil, object = nil)
+    if description
+      activity = find_or_build_last_seen_activity
+      activity.description = description
+      activity.link_to_object = object
+      activity.save
+    else
+      last_seen_activities.destroy_all
+    end
+  end
 
   # Groups
   # ------------------------------------------------------------------------------------------

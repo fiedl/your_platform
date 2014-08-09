@@ -5,6 +5,8 @@ class PagesController < ApplicationController
 
   def show
     if @page
+      current_user.try(:update_last_seen_activity, "sieht sich Informationen an: #{@page.title}", @page)
+
       if @page.redirect_to
         target = @page.redirect_to
         
@@ -23,8 +25,8 @@ class PagesController < ApplicationController
       @navable = @page
       @page = @page.becomes(Page)  # rather than BlogPost etc.
     end
-    respond_with @page
     metric_logger.log_event @page.attributes, type: :show_page
+    respond_with @page
   end
 
   def update

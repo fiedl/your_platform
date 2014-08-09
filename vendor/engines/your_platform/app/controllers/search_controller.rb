@@ -10,6 +10,7 @@ class SearchController < ApplicationController
       # log search query for metrics analysis
       #
       metric_logger.log_event({query: query_string}, type: :search)
+      current_user.try(:update_last_seen_activity, "sucht gerade etwas", nil)
 
       # browse users, pages and groups
       #

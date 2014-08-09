@@ -74,6 +74,7 @@
                 .content_twoCols.content_twoCols-20-80
                   .content_twoCols_left
                     = vertical_nav
+                    = render partial: 'last_seen_activities/index'
                   .content_twoCols_right
                     = flash_area
                     = replace_unicode_special_chars_by_html_escape_strings( |
