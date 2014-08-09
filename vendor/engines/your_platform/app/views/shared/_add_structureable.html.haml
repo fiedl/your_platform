@@ -8,3 +8,6 @@
       = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
     %li
       = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
+    %li
+      - # This might not really belong here, but the user might suspect it to be here:
+      = link_to "Aktivmeldung eintragen", new_user_path
