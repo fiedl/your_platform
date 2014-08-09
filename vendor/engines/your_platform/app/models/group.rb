@@ -206,10 +206,11 @@ class Group < ActiveRecord::Base
   
   def <<(object)
     if object.kind_of? User
-      self.child_users << object unless self.child_users.include? object
-    end
-    if object.kind_of? Group
+      self.assign_user(object) unless self.child_users.include? object
+    elsif object.kind_of? Group
       self.child_groups << object unless self.child_groups.include? object
+    else
+      raise "Case not handled yet. Please implement this. It's easy :)"
     end
   end
   
