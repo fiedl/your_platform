@@ -409,6 +409,7 @@ class User < ActiveRecord::Base
   def update_last_seen_activity(description = nil, object = nil)
     if description
       activity = find_or_build_last_seen_activity
+      activity.touch # even if the attributes didn't change. The user probably hit 'reload' then.
       activity.description = description
       activity.link_to_object = object
       activity.save
