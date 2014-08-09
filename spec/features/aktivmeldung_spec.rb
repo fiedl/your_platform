@@ -18,7 +18,9 @@ feature "Aktivmeldung" do
   specify "click 'Aktivmeldung' and add a new user" do
     
     visit root_path
-    click_on "Aktivmeldung eintragen"
+    within('.aktivmeldung_eintragen') do
+      click_on first("Aktivmeldung eintragen")
+    end
 
     page.should have_content "Aktivmeldung eintragen"
     fill_in I18n.t(:first_name), with: "Bundesbruder"
