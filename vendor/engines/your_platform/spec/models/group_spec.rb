@@ -314,7 +314,12 @@ describe Group do
       it "should add the user as a child user" do
         @group.child_users.should_not include @user
         subject
-        @group.child_users.should include @user
+        sleep 1.1  # TODO: time_travel when migrated to Rails 4
+        @group.child_users(true).should include @user
+      end
+      it "should set the valid_from attribute on the membership" do
+        subject
+        UserGroupMembership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
       end
     end
     

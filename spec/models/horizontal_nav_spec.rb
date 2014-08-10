@@ -47,7 +47,7 @@ describe HorizontalNav do
     end
     
     describe "for the user being member of a bv" do
-      before { @bv << @user }
+      before { @bv.child_users << @user }
       it { should include @bv }
     end
   end
