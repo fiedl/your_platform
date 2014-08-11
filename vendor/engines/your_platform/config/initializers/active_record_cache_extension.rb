@@ -1,1 +1,1 @@
-ActiveRecord::Base.extend ActiveRecordCacheExtension
+ActiveRecord::Base.send(:include, ActiveRecordCacheExtension)
