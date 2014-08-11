@@ -2,15 +2,13 @@
   - for activity in LastSeenActivity.current
     
     - if can? :read, activity.user
-      - title = "#{activity.user.cached_title} #{activity.description}."
+      - title = "#{activity.user.cached(:title)} #{activity.description}."
       %span.last_seen_activity.has_tooltip{title: title, data: {toggle: 'tooltip', placement: 'bottom'}}
         = link_to activity.user do
           = user_avatar(activity.user, title: '')
       
       - if activity.link_to_object && can?(:read, activity.link_to_object)
-        - obj_title = activity.link_to_object.cached_title if activity.link_to_object.respond_to? :cached_title
-        - obj_title ||= activity.link_to_object.title
-        - title = "Auch ansehen: #{obj_title}"
+        - title = "Auch ansehen: #{activity.link_to_object.cached(:title)}"
         %span.follow_activity.has_tooltip{title: title, data: {toggle: 'tooltip', placement: 'bottom'}}
           = link_to activity.link_to_object do
             %i.icon-circle-arrow-right.icon-large

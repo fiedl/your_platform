@@ -77,8 +77,8 @@ describe ProfileFieldTypes::Organization do
   it { should respond_to( :role ) }
   it { should respond_to( :role= ) }
 
-  describe "#cached_children_count" do
-    subject { @organization.cached_children_count }
+  describe "#cached(:children_count)" do
+    subject { @organization.cached(:children_count) }
     it { should == 3 }
   end
 end
@@ -97,8 +97,8 @@ describe ProfileFieldTypes::Email do
     it { should == 0 }
   end
 
-  describe "#cached_children_count" do
-    subject { @email.cached_children_count }
+  describe "#cached(:children_count)" do
+    subject { @email.cached(:children_count) }
     it { should == 0 }
   end
 
@@ -399,8 +399,8 @@ describe ProfileFieldTypes::BankAccount do
     end
   end
 
-  describe "#cached_children_count" do
-    subject { @bank_account.cached_children_count }
+  describe "#cached(:children_count)" do
+    subject { @bank_account.cached(:children_count) }
     it { should == 6 }
   end
 

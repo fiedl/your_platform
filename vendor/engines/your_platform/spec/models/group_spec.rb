@@ -259,26 +259,26 @@ describe Group do
       end
     end
 
-    describe '#cached_leaf_groups' do
-      subject { @group.cached_leaf_groups }
+    describe '#cached(:leaf_groups)' do
+      subject { @group.cached(:leaf_groups) }
       describe 'for the group being a corporation' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
         end
         it { should == @group.leaf_groups }
       end
       describe 'for the group being a corporation with status groups' do
         before do
           @group = create(:corporation_with_status_groups)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
         end
-        it { should == @group.cached_leaf_groups }
+        it { should == @group.cached(:leaf_groups) }
       end
       describe 'for the group being a corporation with admin groups' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
           @group.find_or_create_admins_parent_group
         end
         it { should == @group.leaf_groups }
@@ -286,7 +286,7 @@ describe Group do
       describe 'for the group being a corporation with normal and status groups' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
           @status_1 = @group.child_groups.create
           @group_a = @group.child_groups.create
           @status_2 = @group_a.child_groups.create

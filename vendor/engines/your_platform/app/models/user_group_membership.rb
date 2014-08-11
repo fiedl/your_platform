@@ -180,7 +180,7 @@ class UserGroupMembership < DagLink
   #
   def corporation
     if self.group && self.user
-      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.cached_corporations ).first
+      ( ( self.group.ancestor_groups + [ self.group ] ) && self.user.corporations ).first
     end
   end
 

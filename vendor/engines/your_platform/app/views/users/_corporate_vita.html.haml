@@ -1,9 +1,9 @@
 - if user
   %table{ id: 'corporate_vita' }
-    - for corporation in user.cached_corporations
+    - for corporation in user.cached(:corporations)
       %tr
         %th{ colspan: 3}= corporation.title
-        - memberships = user.corporate_vita_memberships_in corporation
+        - memberships = user.cached(:corporate_vita_memberships_in, corporation)
         - for membership in memberships
           - needs_review = (can?(:manage, user) && membership.needs_review?)
           - needs_review_class = needs_review ? 'needs_review' : ''
