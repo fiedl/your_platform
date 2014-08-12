@@ -8,8 +8,8 @@ Inaktivierung non loci; Aktive Burschen, Inaktive Burschen loci;      Burschen; 
 Reaktivierung;          Inaktive Burschen;                            Inaktive Burschen;                Aktive Burschen;             Reaktiviert einen inaktiven Burschen zum aktiven Burschen.
 Konkneipierung;         Hospitanten;                                  Hospitanten;                      Konkneipanten;               Macht einen Hospitanten zum Konkneipanten.
 Philistration;          Burschen, Konkneipanten;                      Aktivitas;                        Philister;                   Philistriert einen Burschen oder Konkneipanten zum ordentlichen Philister.
-Streichung;             ;                                             Aktivitas, Philisterschaft;       Gestrichene;                 Streicht eine Person von der Mitgliederliste, z.B. wenn unerreichbar oder zahlungsunwillig.
-Schlichter Austritt;    ;                                             Aktivitas, Philisterschaft;       Schlicht Ausgetretene;       Regulärer Austritt, wenn eine Person ihren Austritt selbst erklärt hat.
-Ehrenhafter Austritt;   ;                                             Aktivitas, Philisterschaft;       Ehrenhaft Ausgetretene;      Austritt, wenn der Convent einen ehrenhaften Austritt gewährt hat.
+Streichung;             Aktivitas, Philisterschaft;                   Aktivitas, Philisterschaft;       Gestrichene;                 Streicht eine Person von der Mitgliederliste, z.B. wenn unerreichbar oder zahlungsunwillig.
+Schlichter Austritt;    Aktivitas, Philisterschaft;                   Aktivitas, Philisterschaft;       Schlicht Ausgetretene;       Regulärer Austritt, wenn eine Person ihren Austritt selbst erklärt hat.
+Ehrenhafter Austritt;   Aktivitas, Philisterschaft;                   Aktivitas, Philisterschaft;       Ehrenhaft Ausgetretene;      Austritt, wenn der Convent einen ehrenhaften Austritt gewährt hat.
 Dimissio i.p.;          Aktivitas;                                    Aktivitas, Philisterschaft;       Rausgeworfene (Dimissio);    Rauswurf per Dimissio in perpetuum.
 Exclusio;               Aktivitas;                                    Aktivitas, Philisterschaft;       Rausgeworfene (Exclusio);    Rauswurf per Exclisop. Dies ist nach §62 der Bundessatzung nur durch übereinstimmenden Beschluss aller Wingolfsverbindungen der Person möglich.
