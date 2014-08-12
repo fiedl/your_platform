@@ -34,7 +34,7 @@ namespace :import do
         wah_counter = 0
         workflow_counter = 0
     
-        for corporation in Corporation.all  # [Corporation.find_by_token("H")]   # for testing
+        for corporation in Corporation.all   # [Corporation.find_by_token("H")]   # for testing
           old_workflow_counter = workflow_counter
     
           CSV.foreach file_name, headers: true, col_sep: ';' do |row|
@@ -53,14 +53,14 @@ namespace :import do
             unless corporation.descendant_workflows.collect { |workflow| workflow.name }.include?(workflow_name)
     
               workflow_belongs_to_groups = workflow_belongs_to_group_names.collect do |group_name|
-                group = corporation.descendant_group.where(name: group_name).first
-                log.warning "Gruppe #{group_name} in Corporation #{corporation.token} nicht gefunden. Bitte Workflow #{workflow_name} überprüfen!"
+                group = corporation.descendant_groups.where(name: group_name).first
+                log.warning "Gruppe #{group_name} in Corporation #{corporation.token} nicht gefunden. Bitte Workflow '#{workflow_name}' überprüfen!" unless group
                 group
               end - [ nil ]
-              workflow_belongs_to_group << corporation if workflow_belongs_to_groups.count == 0
+              workflow_belongs_to_groups << corporation if workflow_belongs_to_groups.count == 0
               remove_from_groups = remove_from_group_names.collect do |group_name|
                 group = corporation.descendant_groups.where(name: group_name).first
-                log.warning "Gruppe #{group_name} in Corporation #{corporation.token} nicht gefunden. Bitte Workflow #{workflow_name} überprüfen!"
+                log.warning "Gruppe #{group_name} in Corporation #{corporation.token} nicht gefunden. Bitte Workflow '#{workflow_name}' überprüfen!" unless group
                 group
               end - [ nil ]
               add_to_group = corporation.descendant_groups.where(name: add_to_group_name).first
