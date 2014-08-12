@@ -39,12 +39,14 @@ namespace :patch do
       for workflow in workflows
         last_step = workflow.steps.order(:sequence_index).last
 
-        new_step = workflow.steps.build
-        new_step.sequence_index = last_step.sequence_index + 1
-        new_step.brick_name = "AutoAssignBvBrick"
-        new_step.save
-        
-        counter += 1
+        if last_step.brick_name != "AutoAssignBvBrick"
+          new_step = workflow.steps.build
+          new_step.sequence_index = last_step.sequence_index + 1
+          new_step.brick_name = "AutoAssignBvBrick"
+          new_step.save
+          
+          counter += 1
+        end
         print ".".green
       end
       
@@ -57,7 +59,7 @@ namespace :patch do
       log.section "Workflow hinzufügen: Todesfall."
       
       if Workflow.where(name: "Todesfall").present?
-        log.warning "Workflow mit dem Namen 'Todesfall' bereits vorhanden. Es werden keine Änderungen vorgenommen."
+        log.success "Workflow mit dem Namen 'Todesfall' bereits vorhanden. Es werden keine Änderungen vorgenommen."
       else
         Workflow.find_or_create_mark_as_deceased_workflow
         
