@@ -3,13 +3,6 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
 
   is_structureable   ancestor_class_names: %w(Group)
 
-  def execute(params = nil)
-    # Make sure it is within a transaction.
-    # TODO: Fix this in the gem.
-    # TODO: Remove this hack below when using the new gem with rails 4.
-    ActiveRecord::Base.transaction { super(params) }
-  end
-
   def delete_cache
     delete_cache_structureable
   end
