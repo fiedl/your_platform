@@ -3,7 +3,8 @@ namespace :patch do
   #
   task :workflows => [
     'workflows:part1',
-    'workflows:part2'
+    'workflows:part2',
+    'workflows:part3'
   ]
   
   namespace :workflows do
@@ -27,6 +28,10 @@ namespace :patch do
     
     task :part2 => [
       'add_deceased_workflow'
+    ]
+    
+    task :part3 => [
+      'destroy_account_in_former_members_workflows'
     ]
     
     task :add_bv_assignment_to_philistration => [:environment, :requirements, :print_info] do
@@ -66,7 +71,30 @@ namespace :patch do
         log.success "Fertg."
       end
     end
-
+    
+    task :destroy_account_in_former_members_workflows => [:environment, :requirements, :print_info] do
+      log.section "Workflows für Ehemalige ergänzen."
+      log.info "* Entferne Gruppenmitgliedschaften, sofern nötig."
+      log.info "* Sperre Zugang, sofern kein Wingolfit mehr."
+      
+      counter = 0
+      workflow_names = ['Streichung', 'Schlichter Austritt', 'Ehrenhafter Austritt', 'Dimissio i.p.', 'Exclusio']
+      Workflow.where(name: workflow_names).each do |workflow|
+        last_step = workflow.steps.order(:sequence_index).last
+        
+        unless last_step.brick_name == "DestroyAccountAndEndMembershipsIfNeededBrick"
+          new_step = workflow.steps.build
+          new_step.sequence_index = last_step.sequence_index + 1
+          new_step.brick_name = "DestroyAccountAndEndMembershipsIfNeededBrick"
+          new_step.save
+          
+          counter += 1
+        end
+        print ".".green
+      end
+      print "\n"
+      log.success "#{counter} Workflows korrigiert."
+    end
   end
   
   def log
