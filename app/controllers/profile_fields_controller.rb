@@ -20,8 +20,7 @@ class ProfileFieldsController < ApplicationController
     if current_user == @profile_field.profileable
       current_user.update_last_seen_activity("pflegt sein eigenes Profil", current_user)
     else
-      title = @profile_field.profileable.cached_title if @profile_field.profileable.respond_to? :cached_title
-      title ||= @profile_field.profileable.title
+      title = @profile_field.profileable.cached(:title)
       current_user.update_last_seen_activity("bearbeitet ein Profil: #{title}", @profile_field.profileable)
     end
     

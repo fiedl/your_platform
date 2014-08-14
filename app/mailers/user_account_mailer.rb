@@ -7,7 +7,7 @@ class UserAccountMailer < ActionMailer::Base
     # Bundesbrüder, die nur in Estland aktiv sind, bekommen diese E-Mail auf englisch,
     # alle anderen auf deutsch.
     #
-    if @user.cached_corporations.collect { |corporation| corporation.token } == ["Dp"]
+    if @user.cached(:corporations).collect { |corporation| corporation.token } == ["Dp"]
       locale = :en
     else
       locale = :de
