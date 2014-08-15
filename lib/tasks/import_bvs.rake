@@ -139,6 +139,17 @@ namespace :import do
       BvMapping.find_or_create plz: '83565', bv_name: 'BV 38'
       BvMapping.find_or_create plz: '85598', bv_name: 'BV 38'
       
+      # 2014-08-16
+      # UserVoice: https://wingolf.uservoice.com/admin/tickets/94
+      # Trello: https://trello.com/c/VCeC7ne5/586-fehlende-bv-zuordnungen
+      #
+      BvMapping.find_or_create plz: '52428', bv_name: 'BV 19c'
+      BvMapping.find_or_create plz: '47546', bv_name: 'BV 19a'
+      BvMapping.find_or_create plz: '51515', bv_name: 'BV 19c'
+      BvMapping.find_or_create plz: '41209', bv_name: 'BV 19b'
+      BvMapping.find_or_create plz: '09107', bv_name: 'BV 42'
+      BvMapping.where(plz: '59348').first.update_attributes bv_name: 'BV 12' # Lüdinghausen
+      
       log.success "Fertig."
     end
     
