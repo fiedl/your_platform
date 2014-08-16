@@ -47,7 +47,7 @@ describe HorizontalNav do
     end
     
     describe "for the user being member of a bv" do
-      before { @bv << @user }
+      before { @bv.assign_user @user, at: 1.hour.ago; @user.reload }
       it { should include @bv }
     end
   end

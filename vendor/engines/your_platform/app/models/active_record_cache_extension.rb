@@ -10,7 +10,7 @@ module ActiveRecordCacheExtension
   end
   
   def delete_cached(method_name)
-    Rails.cache.delete_matched "#{self.class.table_name}/#{id}/#{method_name}/*"
+    Rails.cache.delete_matched "#{self.class.table_name}/#{id}/#{method_name}"
   end
   
   def delete_cache
