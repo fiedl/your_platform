@@ -150,6 +150,50 @@ namespace :import do
       BvMapping.find_or_create plz: '09107', bv_name: 'BV 42'
       BvMapping.where(plz: '59348').first.update_attributes bv_name: 'BV 12' # Lüdinghausen
       
+      # 2014-08-16
+      # Korrektur fehlerhafter Einträge gemäß Vademecum 2005 und 2012.
+      # Trello: https://trello.com/c/VCeC7ne5/586-fehlende-bv-zuordnungen
+      #
+      BvMapping.where(plz: '89343').first.update_attributes bv_name: 'BV 38'
+      BvMapping.where(plz: '65817').first.update_attributes bv_name: 'BV 26'
+      BvMapping.where(plz: '48291').first.update_attributes bv_name: 'BV 12'
+      BvMapping.where(plz: '49377').first.update_attributes bv_name: 'BV 04'
+      BvMapping.where(plz: '04600').first.update_attributes bv_name: 'BV 28'
+      BvMapping.where(plz: '74930').first.update_attributes bv_name: 'BV 31'
+      BvMapping.where(plz: '91094').first.update_attributes bv_name: 'BV 37'
+      BvMapping.where(plz: '59929').first.update_attributes bv_name: 'BV 22'
+      BvMapping.where(plz: '35114').first.update_attributes bv_name: 'BV 24'
+      BvMapping.where(plz: '27607').first.update_attributes bv_name: 'BV 04'
+      BvMapping.where(plz: '78647').first.update_attributes bv_name: 'BV 34'
+      BvMapping.where(plz: '27333').first.update_attributes bv_name: 'BV 04'
+      BvMapping.where(plz: '74749').first.update_attributes bv_name: 'BV 34'
+      BvMapping.where(plz: '91077').first.update_attributes bv_name: 'BV 37'
+      BvMapping.where(plz: '57627').first.update_attributes bv_name: 'BV 21'
+      BvMapping.where(plz: '50374').first.update_attributes bv_name: 'BV 20'
+      BvMapping.where(plz: '33142').first.update_attributes bv_name: 'BV 16'
+      BvMapping.where(plz: '26871').first.update_attributes bv_name: 'BV 11'
+      BvMapping.where(plz: '75428').first.update_attributes bv_name: 'BV 34'
+      BvMapping.where(plz: '56477').first.update_attributes bv_name: 'BV 21'
+      BvMapping.where(plz: '38527').first.update_attributes bv_name: 'BV 09'
+      BvMapping.where(plz: '21629').first.update_attributes bv_name: 'BV 05'
+      BvMapping.where(plz: '38536').first.update_attributes bv_name: 'BV 09'
+      BvMapping.where(plz: '26871').first.update_attributes bv_name: 'BV 11'
+      BvMapping.where(plz: '97453').first.update_attributes bv_name: 'BV 36'
+      BvMapping.where(plz: '86470').first.update_attributes bv_name: 'BV 38'
+      BvMapping.where(plz: '57612').first.update_attributes bv_name: 'BV 21'
+      BvMapping.where(plz: '22844').first.update_attributes bv_name: 'BV 02'
+      BvMapping.where(plz: '56457').first.update_attributes bv_name: 'BV 21'
+      BvMapping.where(plz: '65239').first.update_attributes bv_name: 'BV 26'
+      BvMapping.where(plz: '48231').first.update_attributes bv_name: 'BV 12'
+      BvMapping.where(plz: '65239').first.update_attributes bv_name: 'BV 26'
+      BvMapping.where(plz: '99837').first.update_attributes bv_name: 'BV 24'
+      BvMapping.where(plz: '91301').first.update_attributes bv_name: 'BV 37'
+      BvMapping.where(plz: '68766').first.update_attributes bv_name: 'BV 32'
+      BvMapping.where(plz: '49459').first.update_attributes bv_name: 'BV 12'
+      BvMapping.where(plz: '91077').first.update_attributes bv_name: 'BV 37'
+      BvMapping.where(plz: '27637').first.update_attributes bv_name: 'BV 04'
+      BvMapping.where(plz: '48291').first.update_attributes bv_name: 'BV 12'
+      
       log.success "Fertig."
     end
     

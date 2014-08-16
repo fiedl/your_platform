@@ -116,13 +116,15 @@ namespace :fix do
       log.info "korrigiert und im Folgenden aufgelistet:"
       log.info ""
       
-      for user in alle_philister
+      for user in alle_philister.reorder(:id)
         if user.postal_address_field.try(:bv) && user.bv && (user.postal_address_field.bv != user.bv)
-          print "* Korrigiere BV von Benutzer #{user.id} (#{user.cached_title}, wohnhaft in #{user.postal_address_field.city}): #{user.bv.token} -> "
+          log.info "* (#{user.id}) #{user.cached_title}, wohnhaft in #{user.postal_address_field.plz} #{user.postal_address_field.city}: #{user.bv.token} -> #{user.postal_address_field.bv.token}"
           
           user.adapt_bv_to_postal_address
           
-          print "#{user.reload.bv.token}\n"
+          if user.postal_address_field.bv != user.reload.bv
+            log.warning "    -> BV-Neuzuordnung fehlgeschlagen. Bitte manuell überprüfen."
+          end
         end
       end
       log.success "Fertig."
