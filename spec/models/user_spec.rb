@@ -107,7 +107,7 @@ describe User do
     end
   end
 
-  describe "#cached_aktivitaetszahl" do
+  describe "#cached(:aktivitaetszahl)" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationH = create( :corporation_with_status_groups, :token => "H" )
@@ -121,7 +121,7 @@ describe User do
       @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
     end
-    subject { @user.cached_aktivitaetszahl }
+    subject { @user.cached(:aktivitaetszahl) }
     it "should return the composed cached aktivitaetszahl" do
       subject.should == "E06 H08"
     end
@@ -133,7 +133,7 @@ describe User do
     end
     describe "if currently 'E06 H08' and after adding S in 2014 it" do
       before do
-        @user.cached_aktivitaetszahl
+        @user.cached(:aktivitaetszahl)
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2014-05-01".to_datetime)
         @user.reload
@@ -142,7 +142,7 @@ describe User do
     end
     describe "if currently 'E06 H08' and after leaving H it" do
       before do
-        @user.cached_aktivitaetszahl
+        @user.cached(:aktivitaetszahl)
         @first_membership_H.invalidate( "2014-05-01".to_datetime )
         @user.reload
       end

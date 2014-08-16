@@ -176,6 +176,11 @@ Spork.prefork do
     # This introduces the methods `send_key(field_id, key)` and `press_enter(field_id)`.
     #
     config.include PressEnter
+    
+    # Debug
+    # Call `debug` to enter pry.
+    #
+    config.include Debug
 
     # Devise test helper for controller tests
     config.include Devise::TestHelpers, :type => :controller
