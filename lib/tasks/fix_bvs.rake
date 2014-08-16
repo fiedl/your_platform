@@ -22,8 +22,8 @@ namespace :fix do
       'print_info',
       'assign_unassigned_philistres_to_bvs',
       'list_users_without_postal_address',
-      'list_addresses_without_bv',
-      'correct_bv_assignments_of_all_philistres'
+      'list_addresses_without_bv'
+      # 'correct_bv_assignments_of_all_philistres'  # Deactivated for now. There are manual assignments for a reason.
     ]
     
     task :assign_unassigned_philistres_to_bvs => [:environment, :requirements, :print_info] do
