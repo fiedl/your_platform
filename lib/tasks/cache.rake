@@ -32,6 +32,7 @@ namespace :cache do
       user.cached_first_corporation
       user.cached_aktivitaetszahl
       user.cached_last_group_in_first_corporation
+      user.cached_date_of_birth
       
       print ".".green
     end

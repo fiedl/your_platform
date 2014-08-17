@@ -60,6 +60,7 @@ class User < ActiveRecord::Base
     delete_cached_first_corporation
     delete_cached_address_label
     delete_cached_hidden
+    delete_cached_date_of_birth
     delete_cache_structureable
   end
 
@@ -176,9 +177,21 @@ class User < ActiveRecord::Base
     end
   end
   
+  def cached_date_of_birth
+    Rails.cache.fetch([self, 'date_of_birth'], expires_in: 1.month) { date_of_birth }
+  end
+  def delete_cached_date_of_birth
+    Rails.cache.delete [self, 'date_of_birth']
+  end
+  
   def age
     now = Time.now.utc.to_date
     dob = self.date_of_birth
+    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+  end
+  def cached_age  # TODO: Remove when implementing new model caching.
+    now = Time.now.utc.to_date
+    dob = self.cached_date_of_birth
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
   

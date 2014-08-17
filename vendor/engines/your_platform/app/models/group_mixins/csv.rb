@@ -75,10 +75,10 @@ module GroupMixins::Csv
         csv << [
           member.last_name,
           member.first_name,
-          member.title.gsub(member.name, '').strip,
-          member.date_of_birth.nil? ? '' : I18n.localize(member.date_of_birth.change(:year => Time.zone.now.year)), 
-          member.date_of_birth.nil? ? '' : I18n.localize(member.date_of_birth), 
-          member.date_of_birth.nil? ? '' : member.age
+          member.cached_name_suffix,
+          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth.change(:year => Time.zone.now.year)), 
+          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth), 
+          member.cached_date_of_birth.nil? ? '' : member.cached_age
         ]
       end
     end
