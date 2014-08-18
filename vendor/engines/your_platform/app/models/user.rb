@@ -454,13 +454,10 @@ class User < ActiveRecord::Base
     end
     unless self.add_to_corporation.blank?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
-      corporation ||= Group.find( add_to_corporation ) if add_to_corporation.to_i
+      corporation ||= Group.find( add_to_corporation ) if add_to_corporation.kind_of? Fixnum
       if corporation
-        #
-        # TODO: Move to wingolfsplattform. THIS IS WINGOLF SPECIFIC!!
-        #
-        hospitanten_group = corporation.descendant_groups.where(name: "Hospitanten").first
-        hospitanten_group.assign_user self
+        status_group = corporation.becomes(Corporation).status_groups.first || raise('no status group in this corporation!')
+        status_group.assign_user self
       end
     end
   end

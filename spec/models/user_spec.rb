@@ -545,4 +545,31 @@ describe User do
     
   end
   
+  # User Creation
+  # ==========================================================================================
+  
+  describe ".create" do
+    before { @params = {first_name: "Jochen", last_name: "Kanne"} }
+    subject { @user = User.create(@params) }
+    describe "when #add_to_corporation is set to a wah id" do
+      before do
+        @corporation = create(:wah_group)
+        @params.merge!({:add_to_corporation => @corporation.id})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+      it "should add the user to the Hospitanten status group for this standard-structured case" do
+        subject
+        @corporation.status_group("Hospitanten").members.should include @user
+      end
+      it "should add the user to the Nicht-Recipierte-Fuxen group if the first status group is named like that" do
+        @corporation.status_group("Hospitanten").update_attributes(name: "Nicht-Recipierte Fuxen")
+        subject
+        @corporation.status_group("Nicht-Recipierte Fuxen").members.should include @user
+      end
+    end
+  end
+    
 end
