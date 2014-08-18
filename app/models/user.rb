@@ -49,6 +49,13 @@ class User
     (Bv.all & self.groups).try(:first).try(:becomes, Bv)
   end
   
+  def cached_bv
+    Rails.cache.fetch(['User', id, 'bv'], expires_in: 2.weeks) { bv }
+  end
+  def delete_cached_bv
+    Rails.cache.delete ['User', id, 'bv']
+  end
+  
   def bv_membership
     UserGroupMembership.find_by_user_and_group(self, bv) if bv
   end
@@ -177,6 +184,7 @@ class User
   def delete_cache
     delete_cached_title
     delete_cached_aktivitaetszahl
+    delete_cached_bv
     orig_delete_cache
   end
 

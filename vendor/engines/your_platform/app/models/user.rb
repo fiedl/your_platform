@@ -178,10 +178,10 @@ class User < ActiveRecord::Base
   end
   
   def cached_date_of_birth
-    Rails.cache.fetch([self, 'date_of_birth'], expires_in: 1.month) { date_of_birth }
+    Rails.cache.fetch(['User', id, 'date_of_birth'], expires_in: 1.month) { date_of_birth }
   end
   def delete_cached_date_of_birth
-    Rails.cache.delete [self, 'date_of_birth']
+    Rails.cache.delete ['User', id, 'date_of_birth']
   end
   
   def age
