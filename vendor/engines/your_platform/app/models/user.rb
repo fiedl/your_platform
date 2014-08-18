@@ -452,12 +452,15 @@ class User < ActiveRecord::Base
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
     end
-    unless self.add_to_corporation.blank?
+    if self.add_to_corporation.present?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
-      corporation ||= Group.find( add_to_corporation ) if add_to_corporation.kind_of? Fixnum
+      corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
+      corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
       if corporation
         status_group = corporation.becomes(Corporation).status_groups.first || raise('no status group in this corporation!')
         status_group.assign_user self
+      else
+        raise 'corporation not found.'
       end
     end
   end

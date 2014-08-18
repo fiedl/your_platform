@@ -1393,6 +1393,16 @@ describe User do
         @corporation.status_groups.first.members.should include @user
       end
     end
+    describe "when #add_to_corporation is set to a corporation id which is a String (via html form)" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation.id.to_s})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
   end
 
 
