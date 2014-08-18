@@ -70,13 +70,13 @@ module GroupMixins::Csv
         I18n.t(:current_age)
       ]
       self.members.sort_by do |member|
-        member.date_of_birth.try(:strftime, "%m-%d") || ''
+        member.cached_date_of_birth.try(:strftime, "%m-%d") || ''
       end.each do |member|
         csv << [
           member.last_name,
           member.first_name,
-          member.cached_name_suffix,
-          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth.change(:year => Time.zone.now.year)), 
+          member.cached_name_suffix,  
+          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_birthday_this_year), 
           member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth), 
           member.cached_date_of_birth.nil? ? '' : member.cached_age
         ]

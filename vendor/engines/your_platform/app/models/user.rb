@@ -195,7 +195,19 @@ class User < ActiveRecord::Base
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
   
+  def cached_birthday_this_year
+    begin
+      cached_date_of_birth.change(:year => Time.zone.now.year)
+    rescue
+      if cached_date_of_birth.month == 2 && cached_date_of_birth.day == 29
+        cached_date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
+      else
+        nil
+      end
+    end
+  end
   
+    
   # Date of Death
   #
   def date_of_death
