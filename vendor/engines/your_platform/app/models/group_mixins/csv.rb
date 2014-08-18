@@ -80,7 +80,7 @@ module GroupMixins::Csv
           member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_birthday_this_year), 
           member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth), 
           member.cached_date_of_birth.nil? ? '' : member.cached_age,
-          member.bv.try(:token) # Wingolf Hack. TODO: Move to wingolfsplattform.
+          member.cached_bv.try(:token) # Wingolf Hack. TODO: Move to wingolfsplattform.
         ]
       end
     end
