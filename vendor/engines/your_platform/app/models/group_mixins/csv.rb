@@ -67,7 +67,8 @@ module GroupMixins::Csv
         '',
         I18n.t(:birthday),
         I18n.t(:date_of_birth),
-        I18n.t(:current_age)
+        I18n.t(:current_age),
+        'BV' # Wingolf Hack. TODO: Move to wingolfsplattform.
       ]
       self.members.sort_by do |member|
         member.cached_date_of_birth.try(:strftime, "%m-%d") || ''
@@ -78,7 +79,8 @@ module GroupMixins::Csv
           member.cached_name_suffix,  
           member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_birthday_this_year), 
           member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth), 
-          member.cached_date_of_birth.nil? ? '' : member.cached_age
+          member.cached_date_of_birth.nil? ? '' : member.cached_age,
+          member.bv.try(:token) # Wingolf Hack. TODO: Move to wingolfsplattform.
         ]
       end
     end
