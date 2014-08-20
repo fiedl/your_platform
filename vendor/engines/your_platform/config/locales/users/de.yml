@@ -1,6 +1,8 @@
 de:
   person:                     Person
   
+  name_affix:                 Namenszusatz
+  
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag
   birthday_this_year:         Diesjähriger Geburtstag
@@ -12,3 +14,15 @@ de:
   user_dead:                  Verstorben
   deceased:                   Verstorben
   event_of_death:             Todesfall
+  
+  postal_address_with_name_surrounding: Postanschrift mit Name
+  postal_address:             Postanschrift
+  postal_address_updated_at:  Letzte Änderung der Postanschrift am
+  postal_address_postal_code: Postleitzahl (PLZ)
+  postal_address_town:        Stadt
+  postal_address_country:     Land
+  postal_address_country_code: Länder-Kennzeichen
+  address_label_text_above_name: Zeile über dem Namen
+  address_label_text_below_name: Zeile unter dem Namen
+  address_label_text_before_name: Text vor dem Namen
+  address_label_text_after_name: Text hinter dem Namen

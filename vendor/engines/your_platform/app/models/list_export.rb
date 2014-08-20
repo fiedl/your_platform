@@ -30,14 +30,24 @@ class ListExport
   def columns
     case preset.to_s
     when 'birthday_list'
-      [:last_name, :first_name, :cached_name_suffix, :cached_localized_birthday_this_year, :cached_localized_date_of_birth, :cached_current_age]
-    when 'address_list' then []
+      [:last_name, :first_name, :cached_name_affix, :cached_localized_birthday_this_year, 
+        :cached_localized_date_of_birth, :cached_current_age]
+    when 'address_list'
+      # TODO: Add the street as a separate column.
+      # This was requested at the meeting at Gernsbach, Jun 2014.
+      
+      [:last_name, :first_name, :cached_name_affix, :cached_postal_address_with_name_surrounding,
+        :cached_postal_address, :cached_localized_postal_address_updated_at, 
+        :cached_postal_address_postal_code, :cached_postal_address_town,
+        :cached_postal_address_country, :cached_postal_address_country_code,
+        :cached_personal_title, :cached_address_label_text_above_name, :cached_address_label_text_below_name,
+        :cached_address_label_text_before_name, :cached_address_label_text_after_name]
     when 'phone_list' then []
     when 'email_list' then []
     when 'member_development' then []
     else
       # This name_list is the default.
-      [:last_name, :first_name, :cached_name_suffix, :personal_title, :academic_degree]
+      [:last_name, :first_name, :cached_name_affix, :cached_personal_title, :cached_academic_degree]
     end
   end
   
@@ -53,6 +63,9 @@ class ListExport
       data.sort_by do |user|
         user.cached_date_of_birth.try(:strftime, "%m-%d") || ''
       end
+      
+      # TODO: Restliche nach Nachnamen sortieren.
+      
     else
       data
     end
@@ -86,5 +99,47 @@ class User
   end
   def cached_localized_date_of_birth
     I18n.localize cached_date_of_birth
+  end
+  def cached_postal_address_with_name_surrounding
+    cached_address_label.postal_address_with_name_surrounding
+  end
+  def postal_address_updated_at
+    # if the date is earlier, the date is actually the date
+    # of the data migration and should not be shown.
+    postal_address_field_or_first_address_field.updated_at.to_date if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
+  end
+  def cached_postal_address_updated_at
+    Rails.cache.fetch(['User', id, 'postal_address_updated_at'], expires_in: 1.week) { postal_address_updated_at }
+  end
+  def cached_localized_postal_address_updated_at
+    I18n.localize cached_postal_address_updated_at if cached_postal_address_updated_at
+  end
+  def cached_postal_address_postal_code
+    cached_address_label.postal_code
+  end
+  def cached_postal_address_town
+    Rails.cache.fetch(['User', id, 'postal_address_town'], expires_in: 1.week) do
+      postal_address_field_or_first_address_field.geo_location.city if postal_address_field_or_first_address_field
+    end
+  end
+  def cached_postal_address_country
+    Rails.cache.fetch(['User', id, 'postal_address_country'], expires_in: 1.week) do
+      postal_address_field_or_first_address_field.geo_location.country if postal_address_field_or_first_address_field
+    end
+  end
+  def cached_postal_address_country_code
+    cached_address_label.country_code
+  end
+  def cached_address_label_text_above_name
+    cached_address_label.text_above_name
+  end
+  def cached_address_label_text_below_name
+    cached_address_label.text_below_name
+  end
+  def cached_address_label_text_before_name
+    cached_address_label.name_prefix
+  end
+  def cached_address_label_text_after_name
+    cached_address_label.name_suffix
   end
 end

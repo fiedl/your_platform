@@ -108,6 +108,14 @@ class User < ActiveRecord::Base
     name
   end
   
+  def name_affix
+    title.gsub(name, '').strip
+  end
+  def cached_name_affix
+    cached_title.gsub(name, '').strip
+  end
+  
+  
   # This sets the format of the User urls to be
   # 
   #     example.com/users/24-john-doe
@@ -268,6 +276,9 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
+  def cached_postal_address
+    Rails.cache.fetch(['User', id, 'postal_address'], expires_in: 1.week) { postal_address }
+  end
   
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
@@ -291,8 +302,15 @@ class User < ActiveRecord::Base
   def personal_title
     profile_field_value 'personal_title'
   end
+  def cached_personal_title
+    Rails.cache.fetch(['User', id, 'personal_title'], expires_in: 1.week) { personal_title }
+  end
+  
   def academic_degree
     profile_field_value 'academic_degree'
+  end
+  def cached_academic_degree
+    Rails.cache.fetch(['User', id, 'academic_degree'], expires_in: 1.week) { academic_degree }
   end
 
   def name_surrounding_profile_field

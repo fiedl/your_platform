@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ListExport do
+describe ListExport, :focus do
   
   before do
     @group = create :group
@@ -21,13 +21,43 @@ describe ListExport do
     end
     describe "#headers" do
       subject { @list_export.headers }
-      it { should == ['Nachname', 'Vorname', 'Text hinter dem Namen', 'Diesjähriger Geburtstag', 'Geburtsdatum', 'Aktuelles Alter'] }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Diesjähriger Geburtstag', 'Geburtsdatum', 'Aktuelles Alter'] }
     end
     describe "#to_csv" do
       subject { @list_export.to_csv }
       it { should == 
-        "Nachname;Vorname;Text hinter dem Namen;Diesjähriger Geburtstag;Geburtsdatum;Aktuelles Alter\n" +
+        "Nachname;Vorname;Namenszusatz;Diesjähriger Geburtstag;Geburtsdatum;Aktuelles Alter\n" +
         "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};#{I18n.localize(@next_birthday)};#{I18n.localize(@user.date_of_birth)};#{@user.age}\n"
+      }
+    end
+  end
+  
+  describe "address_list: " do
+    before do
+      @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
+      @address1.update_attribute(:updated_at, "2014-06-20".to_datetime)
+      @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+      @name_surrounding.name_prefix = "Dr."
+      @name_surrounding.name_suffix = "M.Sc."
+      @name_surrounding.text_above_name = "Herrn"
+      @name_surrounding.text_below_name = ""
+      @name_surrounding.save
+      @user.save
+      
+      @list_export = ListExport.new(@group.members, :address_list)
+    end
+    describe "#headers" do
+      subject { @list_export.headers }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Postanschrift mit Name', 'Postanschrift', 
+        'Letzte Änderung der Postanschrift am', 'Postleitzahl (PLZ)', 'Stadt', 'Land', 'Länder-Kennzeichen', 'Persönlicher Titel',
+        'Zeile über dem Namen', 'Zeile unter dem Namen', 'Text vor dem Namen', 'Text hinter dem Namen']
+      }
+    end
+    describe "#to_csv" do
+      subject { @list_export.to_csv }
+      it { should == 
+        "Nachname;Vorname;Namenszusatz;Postanschrift mit Name;Postanschrift;Letzte Änderung der Postanschrift am;Postleitzahl (PLZ);Stadt;Land;Länder-Kennzeichen;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen\n" + 
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};\"Herrn\nDr. #{@user.name} M.Sc.\nPariser Platz 1\n10117 Berlin\";\"#{@user.postal_address}\";20.06.2014;10117;Berlin;Germany;DE;;Herrn;\"\";Dr.;M.Sc.\n"
       }
     end
   end
@@ -41,12 +71,12 @@ describe ListExport do
     end
     describe "#headers" do
       subject { @list_export.headers }
-      it { should == ['Nachname', 'Vorname', 'Text hinter dem Namen', 'Persönlicher Titel', 'Akademischer Grad'] }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Persönlicher Titel', 'Akademischer Grad'] }
     end
     describe "#to_csv" do
       subject { @list_export.to_csv }
       it { should == 
-        "Nachname;Vorname;Text hinter dem Namen;Persönlicher Titel;Akademischer Grad\n" + 
+        "Nachname;Vorname;Namenszusatz;Persönlicher Titel;Akademischer Grad\n" + 
         "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Dr.;Dr. rer. nat.\n"
       }
     end
