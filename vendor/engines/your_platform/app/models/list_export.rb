@@ -34,9 +34,10 @@ class ListExport
       [:last_name, :first_name, :cached_name_affix, :cached_localized_birthday_this_year, 
         :cached_localized_date_of_birth, :cached_current_age]
     when 'address_list'
+      #
       # TODO: Add the street as a separate column.
       # This was requested at the meeting at Gernsbach, Jun 2014.
-      
+      #
       [:last_name, :first_name, :cached_name_affix, :cached_postal_address_with_name_surrounding,
         :cached_postal_address, :cached_localized_postal_address_updated_at, 
         :cached_postal_address_postal_code, :cached_postal_address_town,
@@ -44,9 +45,10 @@ class ListExport
         :cached_personal_title, :cached_address_label_text_above_name, :cached_address_label_text_below_name,
         :cached_address_label_text_before_name, :cached_address_label_text_after_name]
     when 'phone_list'
-      # One row per phone number, not per user. See `#processed_data`.
       [:last_name, :first_name, :cached_name_affix, :phone_label, :phone_number]
-    when 'email_list' then []
+      # One row per phone number, not per user. See `#processed_data`.
+    when 'email_list'
+      [:last_name, :first_name, :cached_name_affix, :email_label, :email_address]
       # One row per email, not per user. See `#processed_data`.
     when 'member_development' then []
     else
@@ -75,6 +77,20 @@ class ListExport
           :cached_name_affix  => user.cached_name_affix,
           :phone_label        => phone_field.label,
           :phone_number       => phone_field.value
+        } }
+      }.flatten
+    when 'email_list'
+      #
+      # For the email list, one row represents one email address of a user,
+      # not a user. I.e. there can be several rows per user.
+      #
+      data.collect { |user|
+        user.profile_fields.where(type: 'ProfileFieldTypes::Email').collect { |email_field| {
+          :last_name          => user.last_name,
+          :first_name         => user.first_name,
+          :cached_name_affix  => user.cached_name_affix,
+          :email_label        => email_field.label,
+          :email_address      => email_field.value
         } }
       }.flatten
     else

@@ -85,6 +85,29 @@ describe ListExport, :focus do
     end
   end
   
+  describe "email list: " do
+    before do
+      @user.profile_fields.where(type: 'ProfileFieldTypes::Email').each { |field| field.destroy }
+      @email_field_1 = @user.profile_fields.create(label: 'Email', type: 'ProfileFieldTypes::Email', value: 'foo@example.com').becomes(ProfileFieldTypes::Email)
+      @email_field_2 = @user.profile_fields.create(label: 'Work Email', type: 'ProfileFieldTypes::Email', value: 'bar@example.com').becomes(ProfileFieldTypes::Email)
+      @user.reload
+      
+      @list_export = ListExport.new(@group.members, :email_list)
+    end
+    describe "#headers" do
+      subject { @list_export.headers }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Beschriftung', 'E-Mail-Adresse'] }
+    end
+    describe "#to_csv" do
+      subject { @list_export.to_csv }
+      it { should ==
+        "Nachname;Vorname;Namenszusatz;Beschriftung;E-Mail-Adresse\n" + 
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Email;foo@example.com\n" +
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Work Email;bar@example.com\n"
+      }
+    end
+  end
+  
   describe "name_list: " do
     before do
       @user.profile_fields.create(type: 'ProfileFieldTypes::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)

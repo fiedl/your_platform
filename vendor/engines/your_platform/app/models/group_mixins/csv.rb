@@ -40,28 +40,6 @@ module GroupMixins::Csv
   
   
   
-  def members_emails_to_csv
-    CSV.generate(csv_options) do |csv|
-      csv << [
-        I18n.t(:last_name),
-        I18n.t(:first_name),
-        '',
-        I18n.t('profile_field.label'),
-        I18n.t(:email_address)
-      ]
-      self.members.order(:last_name).each do |member|
-        member.profile_fields.where(type: 'ProfileFieldTypes::Email').each do |email_field|
-          csv << [
-            member.last_name,
-            member.first_name,
-            member.title.gsub(member.name, '').strip,
-            email_field.label,
-            email_field.value
-          ]
-        end
-      end
-    end
-  end
   
   # Diese Methode stellt Informationen zur Mitgliederbewegung in einem CSV-Format
   # zusammen. Hierfür werden die Gruppenmitglieder mit ihren wichtigsten Daten
