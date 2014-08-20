@@ -62,6 +62,29 @@ describe ListExport, :focus do
     end
   end
   
+  describe "#phone_list: " do
+    before do
+      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '123456').becomes(ProfileFieldTypes::Phone)
+      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFieldTypes::Phone', value: '123457').becomes(ProfileFieldTypes::Phone)
+      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '01234').becomes(ProfileFieldTypes::Phone)
+      @user.reload
+      
+      @list_export = ListExport.new(@group.members, :phone_list)
+    end
+    describe "#headers" do
+      subject { @list_export.headers }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Beschriftung', 'Telefonnummer'] }
+    end
+    describe "#to_csv" do
+      subject { @list_export.to_csv }
+      it { should ==
+        "Nachname;Vorname;Namenszusatz;Beschriftung;Telefonnummer\n" + 
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Phone;123456\n" +
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Mobile;01234\n"
+      }
+    end
+  end
+  
   describe "name_list: " do
     before do
       @user.profile_fields.create(type: 'ProfileFieldTypes::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)

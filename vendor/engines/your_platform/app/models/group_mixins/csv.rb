@@ -39,28 +39,6 @@ module GroupMixins::Csv
   
   
   
-  def members_phone_numbers_to_csv
-    CSV.generate(csv_options) do |csv|
-      csv << [
-        I18n.t(:last_name),
-        I18n.t(:first_name),
-        '',
-        I18n.t('profile_field.label'),
-        I18n.t(:phone_number)
-      ]
-      self.members.order(:last_name).each do |member|
-        member.phone_profile_fields.each do |phone_field|
-          csv << [
-            member.last_name,
-            member.first_name,
-            member.title.gsub(member.name, '').strip,
-            phone_field.label,
-            phone_field.value
-          ]
-        end
-      end
-    end
-  end
   
   def members_emails_to_csv
     CSV.generate(csv_options) do |csv|

@@ -21,10 +21,11 @@
 class ListExport
   attr_accessor :data, :preset, :csv_options
   
-  def initialize(data, preset = nil)
-    @data = data; @preset = preset
+  def initialize(initial_data, initial_preset = nil)
+    @data = initial_data; @preset = initial_preset
     @csv_options =  { col_sep: ';', quote_char: '"' }
-    data = sorted_data
+    @data = processed_data
+    @data = sorted_data
   end
   
   def columns
@@ -42,8 +43,11 @@ class ListExport
         :cached_postal_address_country, :cached_postal_address_country_code,
         :cached_personal_title, :cached_address_label_text_above_name, :cached_address_label_text_below_name,
         :cached_address_label_text_before_name, :cached_address_label_text_after_name]
-    when 'phone_list' then []
+    when 'phone_list'
+      # One row per phone number, not per user. See `#processed_data`.
+      [:last_name, :first_name, :cached_name_affix, :phone_label, :phone_number]
     when 'email_list' then []
+      # One row per email, not per user. See `#processed_data`.
     when 'member_development' then []
     else
       # This name_list is the default.
@@ -57,15 +61,36 @@ class ListExport
     end
   end
   
+  def processed_data
+    case preset.to_s
+    when 'phone_list'
+      #
+      # For the phone_list, one row represents one phone number of a user,
+      # not a user. I.e. there can be serveral rows per user.
+      #
+      data.collect { |user|
+        user.phone_profile_fields.collect { |phone_field| {
+          :last_name          => user.last_name,
+          :first_name         => user.first_name,
+          :cached_name_affix  => user.cached_name_affix,
+          :phone_label        => phone_field.label,
+          :phone_number       => phone_field.value
+        } }
+      }.flatten
+    else
+      data
+    end
+  end
+
   def sorted_data
-    case preset
+    case preset.to_s
     when 'birthday_list'
       data.sort_by do |user|
         user.cached_date_of_birth.try(:strftime, "%m-%d") || ''
       end
-      
+      #
       # TODO: Restliche nach Nachnamen sortieren.
-      
+      #
     else
       data
     end
@@ -75,7 +100,15 @@ class ListExport
     CSV.generate(csv_options) do |csv|
       csv << headers
       data.each do |row|
-        csv << columns.collect { |column_name| row.try(:send, column_name) }
+        csv << columns.collect do |column_name|
+          if row.respond_to? :values
+            row[column_name]
+          elsif row.respond_to? column_name
+            row.try(:send, column_name) 
+          else
+            raise "Don't know how to access the given attribute or value. Trying to access '#{column_name}' on '#{row}'."
+          end
+        end
       end
     end
   end
@@ -89,6 +122,10 @@ class ListExport
   end
 end
 
+# TODO: Refactor this:
+#   Whenever it makes sense, these methods should live inside the regular User class.
+#   But this should be done after introducing the new model caching mechanism.
+#
 require 'user'
 class User
   def cached_current_age
