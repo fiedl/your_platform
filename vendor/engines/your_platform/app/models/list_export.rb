@@ -73,3 +73,16 @@ class ListExport
     to_csv
   end
 end
+
+require 'user'
+class User
+  def cached_current_age
+    cached_age
+  end
+  def cached_localized_birthday_this_year
+    I18n.localize cached_birthday_this_year
+  end
+  def cached_localized_date_of_birth
+    I18n.localize cached_date_of_birth
+  end
+end

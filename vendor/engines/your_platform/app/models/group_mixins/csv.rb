@@ -59,30 +59,6 @@ module GroupMixins::Csv
     end
   end
   
-  def members_birthdays_to_csv
-    CSV.generate(csv_options) do |csv|
-      csv << [
-        I18n.t(:last_name),
-        I18n.t(:first_name),
-        '',
-        I18n.t(:birthday),
-        I18n.t(:date_of_birth),
-        I18n.t(:current_age)
-      ]
-      self.members.sort_by do |member|
-        member.cached_date_of_birth.try(:strftime, "%m-%d") || ''
-      end.each do |member|
-        csv << [
-          member.last_name,
-          member.first_name,
-          member.cached_name_suffix,  
-          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_birthday_this_year), 
-          member.cached_date_of_birth.nil? ? '' : I18n.localize(member.cached_date_of_birth), 
-          member.cached_date_of_birth.nil? ? '' : member.cached_age
-        ]
-      end
-    end
-  end
   
   def members_addresses_to_csv
     

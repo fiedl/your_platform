@@ -21,22 +21,6 @@ describe GroupMixins::Csv do
       "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};#{@user.title};Dr.;Dr. rer. nat.\n"
     }
   end
-  describe "#members_birthdays_to_csv" do
-    subject { @group.members_birthdays_to_csv }
-    before do
-      @user.date_of_birth = "1925-09-28".to_date
-      @user.save
-      @next_birthday = @user.date_of_birth.change(:year => Time.zone.now.year)
-    end
-    specify "prelims" do
-      @user.date_of_birth.should_not be_nil
-      @user.localized_date_of_birth.should == I18n.localize("1925-09-28".to_date)
-    end
-    it { should ==
-      "Nachname;Vorname;\"\";Geburtstag;Geburtsdatum;Aktuelles Alter\n" +
-      "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};#{I18n.localize(@next_birthday)};#{I18n.localize(@user.date_of_birth)};#{@user.age}\n"
-    }
-  end
   describe "#members_addresses_to_csv" do
     subject { @group.members_addresses_to_csv }
     before do
