@@ -35,7 +35,9 @@ class ListExport
     when 'phone_list' then []
     when 'email_list' then []
     when 'member_development' then []
-    else []
+    else
+      # This name_list is the default.
+      [:last_name, :first_name, :cached_name_suffix, :personal_title, :academic_degree]
     end
   end
   

@@ -36,28 +36,6 @@ module GroupMixins::Csv
     end
   end
   
-  def members_names_to_csv
-    CSV.generate(csv_options) do |csv|
-      csv << [
-        I18n.t(:last_name),
-        I18n.t(:first_name),
-        '',
-        '',
-        I18n.t(:personal_title),
-        I18n.t(:academic_degree)
-      ]
-      self.members.each do |member|
-        csv << [
-          member.last_name,
-          member.first_name,
-          member.title.gsub(member.name, '').strip,
-          member.title,
-          member.personal_title,
-          member.academic_degree
-        ]
-      end
-    end
-  end
   
   
   def members_addresses_to_csv
