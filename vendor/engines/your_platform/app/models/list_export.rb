@@ -24,6 +24,7 @@ class ListExport
   def initialize(initial_data, initial_preset = nil)
     @data = initial_data; @preset = initial_preset
     @csv_options =  { col_sep: ';', quote_char: '"' }
+    raise_error_if_data_is_not_valid
     @data = processed_data
     @data = sorted_data
   end
@@ -50,7 +51,8 @@ class ListExport
     when 'email_list'
       [:last_name, :first_name, :cached_name_affix, :email_label, :email_address]
       # One row per email, not per user. See `#processed_data`.
-    when 'member_development' then []
+    when 'member_development'
+      [:last_name, :first_name, :cached_name_affix, :cached_localized_date_of_birth, :cached_date_of_death] + @leaf_group_names
     else
       # This name_list is the default.
       [:last_name, :first_name, :cached_name_affix, :cached_personal_title, :cached_academic_degree]
@@ -58,12 +60,23 @@ class ListExport
   end
   
   def headers
-    columns.collect do |column| 
-      I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
+    columns.collect do |column|
+      if column.kind_of? Symbol
+        I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
+      else
+        column
+      end
     end
   end
   
   def processed_data
+    if preset.to_s.in?(['birthday_list', 'address_list', 'phone_list', 'email_list']) && @data.kind_of?(Group)
+      # To be able to generate lists from Groups as well as search results, these presets expect 
+      # an Array of Users as data. If a Group is given instead, just take the group members as data.
+      #
+      @data = @data.members
+    end
+
     case preset.to_s
     when 'phone_list'
       #
@@ -93,6 +106,35 @@ class ListExport
           :email_address      => email_field.value
         } }
       }.flatten
+    when 'member_development'
+      #
+      # From data being a Group, this generates one line per user. Several columns are
+      # created based on the leaf groups of the given Group.
+      #
+      @group = @data
+      @leaf_groups = @group.cached_leaf_groups
+      # FIXME: The leaf groups should not return any officer group. Make this fix unneccessary:
+      @leaf_groups -= @group.descendant_groups.where(name: ['officers', 'Amtsträger'])
+      # /FIXME
+      @leaf_group_names = @leaf_groups.collect { |group| group.name }
+      @leaf_group_ids = @leaf_groups.collect { |group| group.id }
+      
+      @group.members.collect do |user|
+        row = {
+          :last_name                      => user.last_name,
+          :first_name                     => user.first_name,
+          :cached_name_affix              => user.cached_name_affix,
+          :cached_localized_date_of_birth => user.cached_localized_date_of_birth,
+          :cached_date_of_death           => user.cached_date_of_death
+        }
+        @leaf_groups.each do |leaf_group|
+          membership = user.links_as_child_for_groups.where(ancestor_id: leaf_group.id).first
+          date = membership.try(:valid_from).try(:to_date)
+          localized_date = I18n.localize(date) if date
+          row[leaf_group.name] = (localized_date || '')
+        end
+        row
+      end
     else
       data
     end
@@ -110,6 +152,15 @@ class ListExport
     else
       data
     end
+  end
+  
+  def raise_error_if_data_is_not_valid
+    case preset.to_s
+    when 'birthday_list', 'address_list', 'phone_list', 'email_list'
+      data.kind_of?(Group) || data.first.kind_of?(User) || raise("Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
+    when 'member_development'
+      data.kind_of?(Group) || raise('The member_development list can only be generated for a Group, not an Array of Users.')
+    end    
   end
   
   def to_csv
@@ -148,10 +199,10 @@ class User
     cached_age
   end
   def cached_localized_birthday_this_year
-    I18n.localize cached_birthday_this_year
+    I18n.localize cached_birthday_this_year if cached_birthday_this_year
   end
   def cached_localized_date_of_birth
-    I18n.localize cached_date_of_birth
+    I18n.localize cached_date_of_birth if cached_date_of_birth
   end
   def cached_postal_address_with_name_surrounding
     cached_address_label.postal_address_with_name_surrounding

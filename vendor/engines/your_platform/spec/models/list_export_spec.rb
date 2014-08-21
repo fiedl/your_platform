@@ -108,6 +108,35 @@ describe ListExport, :focus do
     end
   end
   
+  describe "member_development: " do
+    before do
+      @user.direct_memberships.destroy_all
+      @corporation = create :corporation_with_status_groups
+      @status_group_names = @corporation.status_groups.collect { |group| group.name }
+      @date1 = "2006-12-01".to_datetime
+      @date2 = "2007-02-02".to_datetime
+      @date3 = "2008-04-01".to_datetime
+      @membership1 = @corporation.status_groups[0].assign_user @user, at: @date1
+      @membership2 = @membership1.move_to @corporation.status_groups[1], at: @date2
+      @membership3 = @membership2.move_to @corporation.status_groups[2], at: @date3
+      @user.reload
+      @user_title_without_name = @user.title.gsub(@user.name, '').strip
+      
+      @list_export = ListExport.new(@corporation, :member_development)
+    end
+    describe "#headers" do
+      subject { @list_export.headers }
+      it { should == ['Nachname', 'Vorname', 'Namenszusatz', 'Geburtsdatum', 'Verstorben am'] + @status_group_names }
+    end
+    describe "#to_csv" do
+      subject { @list_export.to_csv }
+      it { should ==
+        "Nachname;Vorname;Namenszusatz;Geburtsdatum;Verstorben am;Member Status 1;Member Status 2;Member Status 3\n" + 
+        "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};;;01.12.2006;02.02.2007;01.04.2008\n"
+      }
+    end
+  end
+  
   describe "name_list: " do
     before do
       @user.profile_fields.create(type: 'ProfileFieldTypes::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)

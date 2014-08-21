@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
     delete_cached_address_label
     delete_cached_hidden
     delete_cached_date_of_birth
+    delete_cached_date_of_death
     delete_cache_structureable
   end
 
@@ -217,10 +218,19 @@ class User < ActiveRecord::Base
   
     
   # Date of Death
+  # The date of death is localized already!
+  # Why?
   #
   def date_of_death
     profile_fields.where(label: 'date_of_death').first.try(:value)
   end
+  def cached_date_of_death
+    Rails.cache.fetch(['User', id, 'date_of_death'], expires_in: 1.week) { date_of_death }
+  end
+  def delete_cached_date_of_death
+     Rails.cache.delete ['User', id, 'date_of_death']
+  end
+  
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
