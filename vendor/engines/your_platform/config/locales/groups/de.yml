@@ -31,6 +31,8 @@ de:
   
   download_list:                  Liste herunterladen
   tables:                         Tabellen
+  excel_tables:                   Excel-Tabellen
+  
   name_list:                      Namensliste
   birthday_list:                  Geburtstagsliste
   address_list:                   Adressliste
