@@ -15,27 +15,27 @@
       %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"
       %li
         = link_to group_path(@group, :format => :xls) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :name_list
       %li
         = link_to group_path(@group, :format => :xls, :list => :birthday_list) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :birthday_list
       %li
         = link_to group_path(@group, :format => :xls, :list => :address_list) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :address_list
       %li
         = link_to group_path(@group, :format => :xls, :list => :phone_list) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :phone_list
       %li
         = link_to group_path(@group, :format => :xls, :list => :email_list) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :email_list
       %li
         = link_to group_path(@group, :format => :xls, :list => :member_development) do
-          %i.icon-list-alt
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
           = t :member_development
 
       %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"
