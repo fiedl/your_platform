@@ -199,16 +199,18 @@ class User < ActiveRecord::Base
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
   def cached_age  # TODO: Remove when implementing new model caching.
-    now = Time.now.utc.to_date
-    dob = self.cached_date_of_birth
-    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    if self.cached_date_of_birth
+      now = Time.now.utc.to_date
+      dob = self.cached_date_of_birth
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end
   end
   
   def cached_birthday_this_year
     begin
       cached_date_of_birth.change(:year => Time.zone.now.year)
     rescue
-      if cached_date_of_birth.month == 2 && cached_date_of_birth.day == 29
+      if cached_date_of_birth.try(:month) == 2 && cached_date_of_birth.try(:day) == 29
         cached_date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
       else
         nil

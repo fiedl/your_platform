@@ -186,11 +186,26 @@ class ListExport
   end
   
   def to_xls
-    data.to_xls(columns: columns, headers: headers, header_format: {weight: 'bold'})
+    header_format = {weight: 'bold'}
+    @data = @data.collect { |hash| HashWrapper.new(hash) } if @data.first.kind_of? Hash
+    @data.to_xls(columns: columns, headers: headers, header_format: header_format)
   end
   
   def to_s
     to_csv
+  end
+end
+
+class HashWrapper
+  def initialize(hash)
+    @hash = hash
+  end
+  
+  # This is a workaround for the to_xls gem, which requires to access the attributes
+  # by method in order to write the columns in the correct order.
+  #
+  def method_missing(method_name, *args, &block)  
+    @hash[method_name] || @hash[method_name.to_sym]
   end
 end
 
