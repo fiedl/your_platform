@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ListExport, :focus do
+describe ListExport do
   
   before do
     @group = create :group

@@ -16,7 +16,7 @@
 #   * https://github.com/splendeo/to_xls
 #   * https://github.com/zdavatz/spreadsheet
 #   * Formatting xls: http://scm.ywesee.com/?p=spreadsheet/.git;a=blob;f=lib/spreadsheet/format.rb
-#   * to_xls gem example: http://stackoverflow.com/questions/15600987/rails-export-arbitrary-array-to-excel-using-to-xls-gem
+#   * to_xls gem example: http://stackoverflow.com/questions/15600987/
 # 
 class ListExport
   attr_accessor :data, :preset, :csv_options
@@ -146,9 +146,14 @@ class ListExport
       data.sort_by do |user|
         user.cached_date_of_birth.try(:strftime, "%m-%d") || ''
       end
-      #
-      # TODO: Restliche nach Nachnamen sortieren.
-      #
+    when 'address_list', 'name_list'
+      data.sort_by do |user|
+        user.last_name + user.first_name
+      end
+    when 'phone_list', 'email_list'
+      data.sort_by do |user_hash|
+        user_hash[:last_name] + user_hash[:first_name]
+      end
     else
       data
     end
@@ -156,7 +161,7 @@ class ListExport
   
   def raise_error_if_data_is_not_valid
     case preset.to_s
-    when 'birthday_list', 'address_list', 'phone_list', 'email_list'
+    when 'birthday_list', 'address_list', 'phone_list', 'email_list', 'name_list'
       data.kind_of?(Group) || data.first.kind_of?(User) || raise("Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
     when 'member_development'
       data.kind_of?(Group) || raise('The member_development list can only be generated for a Group, not an Array of Users.')
