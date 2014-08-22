@@ -51,6 +51,9 @@ class User
   def delete_cached_bv
     Rails.cache.delete ['User', id, 'bv']
   end
+  def cached_bv_name
+    cached_bv.try(:name)
+  end
   
   def bv_membership
     UserGroupMembership.find_by_user_and_group(self, bv) if bv
