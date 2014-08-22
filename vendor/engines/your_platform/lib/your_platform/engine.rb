@@ -69,6 +69,9 @@ require 'public_activity'
 # PDF Export
 require 'prawn'
 
+# XLS Export
+require 'to_xls'
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

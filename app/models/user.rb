@@ -29,10 +29,6 @@ class User
     Rails.cache.delete ['User', id, 'title']
   end
   
-  def cached_name_suffix
-    cached_title.gsub(name, '').strip
-  end
-  
   # For dead users, there is a cross symbol in the title.
   # (✝,✞,✟)
   # 
@@ -54,6 +50,9 @@ class User
   end
   def delete_cached_bv
     Rails.cache.delete ['User', id, 'bv']
+  end
+  def cached_bv_name
+    cached_bv.try(:name)
   end
   
   def bv_membership

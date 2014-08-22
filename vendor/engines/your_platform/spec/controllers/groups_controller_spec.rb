@@ -90,6 +90,39 @@ describe GroupsController do
       #   get :show, id: group
       #   assigns(:large_map_address_fields).should_not be_empty
       # end
+      
+      describe "(list exports)", :focus do
+        let(:group) { create :group, :with_members }
+      
+        it 'generates an address label pdf' do
+          get :show, id: group.id, format: 'pdf'
+          response.content_type.should == 'application/pdf'
+        end
+      
+        it 'generates excel name lists' do
+          get :show, id: group.id, format: 'xls'
+          response.content_type.should include 'application/xls'
+        end
+        
+        for preset in ['name_list', 'birthday_list', 'phone_list', 'email_list', 'member_development']
+          it "generates an excel #{preset}" do
+            get :show, id: group.id, format: 'xls', list: preset
+            response.content_type.should include 'application/xls'
+          end
+        end
+        
+        it 'generates csv name lists' do
+          get :show, id: group.id, format: 'csv'
+          response.content_type.to_s.should == 'text/csv'
+        end
+        
+        for preset in ['name_list', 'birthday_list', 'phone_list', 'email_list', 'member_development']
+          it "generates an csv #{preset}" do
+            get :show, id: group.id, format: 'csv', list: preset
+            response.content_type.to_s.should == 'text/csv'
+          end
+        end
+      end
     end
 
     describe 'POST #create' do

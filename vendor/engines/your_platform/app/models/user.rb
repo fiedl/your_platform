@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
     delete_cached_address_label
     delete_cached_hidden
     delete_cached_date_of_birth
+    delete_cached_date_of_death
     delete_cache_structureable
   end
 
@@ -107,6 +108,14 @@ class User < ActiveRecord::Base
   def title
     name
   end
+  
+  def name_affix
+    title.gsub(name, '').strip
+  end
+  def cached_name_affix
+    cached_title.gsub(name, '').strip
+  end
+  
   
   # This sets the format of the User urls to be
   # 
@@ -190,16 +199,18 @@ class User < ActiveRecord::Base
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
   def cached_age  # TODO: Remove when implementing new model caching.
-    now = Time.now.utc.to_date
-    dob = self.cached_date_of_birth
-    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    if self.cached_date_of_birth
+      now = Time.now.utc.to_date
+      dob = self.cached_date_of_birth
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end
   end
   
   def cached_birthday_this_year
     begin
       cached_date_of_birth.change(:year => Time.zone.now.year)
     rescue
-      if cached_date_of_birth.month == 2 && cached_date_of_birth.day == 29
+      if cached_date_of_birth.try(:month) == 2 && cached_date_of_birth.try(:day) == 29
         cached_date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
       else
         nil
@@ -209,10 +220,19 @@ class User < ActiveRecord::Base
   
     
   # Date of Death
+  # The date of death is localized already!
+  # Why?
   #
   def date_of_death
     profile_fields.where(label: 'date_of_death').first.try(:value)
   end
+  def cached_date_of_death
+    Rails.cache.fetch(['User', id, 'date_of_death'], expires_in: 1.week) { date_of_death }
+  end
+  def delete_cached_date_of_death
+     Rails.cache.delete ['User', id, 'date_of_death']
+  end
+  
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
@@ -268,6 +288,9 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
+  def cached_postal_address
+    Rails.cache.fetch(['User', id, 'postal_address'], expires_in: 1.week) { postal_address }
+  end
   
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
@@ -291,8 +314,15 @@ class User < ActiveRecord::Base
   def personal_title
     profile_field_value 'personal_title'
   end
+  def cached_personal_title
+    Rails.cache.fetch(['User', id, 'personal_title'], expires_in: 1.week) { personal_title }
+  end
+  
   def academic_degree
     profile_field_value 'academic_degree'
+  end
+  def cached_academic_degree
+    Rails.cache.fetch(['User', id, 'academic_degree'], expires_in: 1.week) { academic_degree }
   end
 
   def name_surrounding_profile_field
