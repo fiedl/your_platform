@@ -24,6 +24,9 @@ en:
   confirm_new_password:     Confirm new password
   submit_changed_password:  Change my password
   remember_me:              Remember me
+  current_password:         Current password
+  change_password_blank_notice: (leave blank if you don't want to change it)
+  change_password_current_password_notice: (we need your current password to confirm your changes)
 
   reset_password_instructions:
     hello:                  Hello

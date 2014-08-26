@@ -1,0 +1,31 @@
+%h1= t(:change_password)
+= form_for(resource, :as => resource_name, :url => registration_path(resource_name), :html => { :method => :put }) do |f|
+  = devise_error_messages!
+
+  %div
+    = f.label :email
+    = f.email_field :email, :autofocus => true
+
+  - if devise_mapping.confirmable? && resource.pending_reconfirmation?
+    %div Currently waiting confirmation for: = resource.unconfirmed_email
+
+  %div
+    = f.label :password, t(:new_password)
+    %i= t(:change_password_blank_notice)
+    %br/
+    = f.password_field :password, :autocomplete => "off"
+
+  %div
+    = f.label :password_confirmation, t(:confirm_new_password)
+    = f.password_field :password_confirmation
+
+  %div
+    = f.label :current_password, t(:current_password)
+    %i= t(:change_password_current_password_notice)
+    %br/
+    = f.password_field :current_password
+
+  %div= f.submit t(:submit_changed_password)
+
+=# link_to "Back", :back
+

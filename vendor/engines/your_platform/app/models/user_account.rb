@@ -32,7 +32,7 @@ class UserAccount < ActiveRecord::Base
   #   Lockable: locks an account after a specified number of failed sign-in attempts. 
   #     Can unlock via email or after a specified time period.
   # 
-  devise :database_authenticatable, :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable
   attr_accessible :password, :password_confirmation, :remember_me
 
   # Virtual attribute for authenticating by either username, alias or email

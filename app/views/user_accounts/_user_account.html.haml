@@ -16,10 +16,14 @@
               = best_in_place @user, attribute.to_sym
 .show_only_in_edit_mode
   %dl
-    - if can? :manage, @user
+    - if can? :edit, @user
       %dt
         = t('password') + ':'
-      %dd
-        = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
-
-      = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
+      - if @user == current_user
+        %dd
+          = link_to t(:change_password), edit_user_account_registration_path, :class => 'btn btn-success'
+      - if can? :manage, @user
+        %dd
+          = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
+        %dd
+          = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'

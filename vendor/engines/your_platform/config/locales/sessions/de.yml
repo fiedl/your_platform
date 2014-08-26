@@ -24,6 +24,10 @@ de:
   confirm_new_password:     Passwort bestätigen
   submit_changed_password:  Passwort ändern
   remember_me:              Anmeldestatus merken
+  current_password:         Aktuelles Passwort
+  change_password_blank_notice: (Feld leer lassen, wenn das Passwort nicht geändert werden soll)
+  change_password_current_password_notice: (Das aktuelle Passwort wird benötigt, um die Änderung zu bestätigen)
+
 
   reset_password_instructions:
     hello:                  'Guten Tag, '
