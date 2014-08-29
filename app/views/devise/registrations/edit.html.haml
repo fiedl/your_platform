@@ -9,8 +9,8 @@
     = f.label :password, t(:new_password)
     %i= t(:change_password_blank_notice)
     %br/
-    = f.password_field :password, :autocomplete => "off"
-
+    = f.password_field :password, :autocomplete => "off", :autofocus => true
+  %div.password_strength_container{:data => { min_score: 4, password_strength_advice: t('password_strength.advice'), score_descriptions: t([:s0, :s1, :s2, :s3, :s4], scope: 'password_strength.score_descriptions'), user_inputs: %w(wingolf kanne bier bierjunge bundesbruder bibel gott), triggerwords: [['[Bb]ierjunge[!]*', 'hängt!', 'doppelt!'],['correcthorsebatterystaple','lol',"Whoa there, don't take advice from a webcomic too literally"], ['Tr0ub4do[u]?r&3','lol','Guess again']] }}
   %div
     = f.label :password_confirmation, t(:confirm_new_password)
     = f.password_field :password_confirmation
@@ -24,4 +24,6 @@
   %div= f.submit t(:submit_changed_password)
 
 =# link_to "Back", :back
-
+= javascript_include_tag 'password_strength'
+%script{:type=>'text/javascript'}
+  PasswordStrength.watch("#user_account_password", "#user_account_password_confirmation");
