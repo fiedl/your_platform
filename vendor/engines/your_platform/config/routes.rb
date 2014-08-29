@@ -2,18 +2,14 @@ Rails.application.routes.draw do
   
   root :to => 'root#index'
 
-  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
+  # Users should be allowed to change their password(update registration), but not to sign up(create registration)
+  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]
   devise_scope :user_account do
     match 'sign_in' => 'devise/sessions#new', as: :sign_in
     match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
+    get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
+    put 'change_password/:id' => 'devise/registrations#update', :as => 'registration' #todo: change to patch in rails 4.0
   end
-
-  # Users should be allowed to change their password(update registration), but not to sign up(create registration)
-  devise_for :user_accounts, :skip => [:registration]
-    as :user_account do
-      get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
-      put 'change_password/:id' => 'devise/registration#update', :as => 'registration'
-    end
 
   get 'search/guess', to: "search#lucky_guess"
   get :search, to: "search#index"

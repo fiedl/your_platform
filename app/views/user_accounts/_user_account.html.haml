@@ -21,7 +21,7 @@
         = t('password') + ':'
       - if @user == current_user
         %dd
-          = link_to t(:change_password), edit_user_account_registration_path, :class => 'btn btn-success'
+          = link_to t(:change_password), edit_registration_path, :class => 'btn btn-success'
       - if can? :manage, @user
         %dd
           = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'

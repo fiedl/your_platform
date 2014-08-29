@@ -1,41 +1,5 @@
 require 'spec_helper'
 
-module FlashHelpers
-
-  def has_notice?(message)
-    has_selector?('div.alert.alert-info', :text => message)
-  end
-
-  def has_error_message?(message)
-    has_selector?('div.alert.alert-danger', :text => message)
-  end
-
-  def has_warning?(message)
-    has_selector?('div.alert.alert-warning', :text => message)
-  end
-
-  def has_validation_errors?
-    has_selector?('.field_with_errors')
-  end
-
-end
-
-module UserAccountHelpers
-  def logged_in?
-    has_link?(I18n.t(:logout))
-  end
-
-  def logged_out?
-    has_no_link?(I18n.t(:logout))
-  end
-
-  def not_logged_in?
-    logged_out?
-  end
-end
-
-Capybara::Session.send(:include, FlashHelpers)
-Capybara::Session.send(:include, UserAccountHelpers)
 
 feature 'Sessions' do
   describe 'New Session Page' do  # to show the browser while testing, e.g. use `js: true`.
@@ -55,9 +19,7 @@ feature 'Sessions' do
 
     describe 'filling in a valid password' do
       before do
-        @user = create(:user)
-        @user.create_account = true
-        @user.save
+        @user = create(:user_with_account)
         @password = @user.account.password
       end
 
@@ -186,9 +148,7 @@ feature 'Sessions' do
 
     describe 'with valid password reset token' do
       before do
-        @user = create(:user)
-        @user.create_account = true
-        @user.save
+        @user = create(:user_with_account)
 
         visit new_user_account_password_path
         fill_in 'user_account_email', with: @user.email
@@ -202,7 +162,7 @@ feature 'Sessions' do
       it {should have_field('user_account_password_confirmation')}
       it {should have_button(I18n.t(:submit_changed_password))}
 
-      describe 'and matching password confirmation' do
+      describe 'and matching password and confirmation' do
         before do
           @password = 'Password123'
           fill_in 'user_account_password', with: @password
