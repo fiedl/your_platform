@@ -261,15 +261,15 @@ class User
   # A user is a wingolfit if he has an aktivitätszahl.
   #
   def wingolfit?
-    self.aktivitätszahl.present?
+    philister? || aktiver?
   end
   
   def aktiver?
-    (group_names & ["Aktivitas", "Activitas"]).count > 0
+    Group.alle_aktiven.members.include? self
   end
   
   def philister?
-    group_names.include? "Philisterschaft"
+    Group.alle_philister.members.include? self
   end
   
   def group_names

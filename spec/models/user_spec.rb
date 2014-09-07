@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe User do
@@ -9,7 +8,7 @@ describe User do
 
   describe "#title" do
     before do
-      @corporation = create(:wah_group)
+      @corporation = create(:wingolf_corporation)
       @corporation.aktivitas.assign_user @user, at: 1.hour.ago
     end
     subject { @user.title }
@@ -84,8 +83,8 @@ describe User do
 
   describe "#aktivitaetszahl" do
     before do
-      @corporationE = create( :corporation_with_status_groups, :token => "E" )
-      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @corporationE = create( :wingolf_corporation, :token => "E" )
+      @corporationH = create( :wingolf_corporation, :token => "H" )
 
       @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
@@ -109,9 +108,9 @@ describe User do
 
   describe "#cached_aktivitaetszahl" do
     before do
-      @corporationE = create( :corporation_with_status_groups, :token => "E" )
-      @corporationH = create( :corporation_with_status_groups, :token => "H" )
-      @corporationS = create( :corporation_with_status_groups, :token => "S" )
+      @corporationE = create( :wingolf_corporation, :token => "E" )
+      @corporationH = create( :wingolf_corporation, :token => "H" )
+      @corporationS = create( :wingolf_corporation, :token => "S" )
 
       @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
@@ -162,7 +161,7 @@ describe User do
     end
     describe "for a member of a Corporation status group (except guests)" do
       before do
-        @corporation = create(:corporation_with_status_groups)
+        @corporation = create(:wingolf_corporation)
         @membership = @corporation.status_groups.first.assign_user @user
       end
       it { should == true}
@@ -181,7 +180,7 @@ describe User do
     end
     describe "for a guest of a corporation" do
       before do
-        @corporation = create(:corporation_with_status_groups)
+        @corporation = create(:wingolf_corporation)
         @corporation.find_or_create_guests_parent_group.assign_user @user
       end
       it { should == false }
@@ -280,8 +279,8 @@ describe User do
     
     describe "the user being philister" do
       before do
-        @wah = create(:wah_group)
-        @wah.philisterschaft.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.philisterschaft.assign_user @user
       end
       specify "prelims" do
         @user.philister?.should == true
@@ -308,8 +307,8 @@ describe User do
     end
     describe "the user being aktiver" do
       before do
-        @wah = create(:wah_group)
-        @wah.aktivitas.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.aktivitas.assign_user @user
       end
       specify "prelims" do
         @user.aktiver?.should == true
@@ -337,8 +336,8 @@ describe User do
     end
     describe "for the user being philister" do
       before do
-        @wah = create(:wah_group)
-        @wah.philisterschaft.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.philisterschaft.assign_user @user
       end
       specify "prelims" do
         @user.philister?.should == true
@@ -466,8 +465,8 @@ describe User do
     end
     describe "for the user being aktiver" do
       before do
-        @wah = create(:wah_group)
-        @wah.aktivitas.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.aktivitas.assign_user @user
       end
       specify "prelims" do
         @user.aktiver?.should == true
@@ -499,8 +498,8 @@ describe User do
     end
     describe "the user being member of corporations" do
       before do
-        @corporation_a = create(:wah_group)
-        @corporation_b = create(:wah_group)
+        @corporation_a = create(:wingolf_corporation)
+        @corporation_b = create(:wingolf_corporation)
         @corporation_a.status_group("Philister").assign_user @user, at: 1.year.ago
         @corporation_b.status_group("Philister").assign_user @user, at: 1.year.ago
       end
@@ -512,7 +511,7 @@ describe User do
     end
     describe "the user being a former member of a corporation" do
       before do
-        @corporation_a = create(:wah_group)
+        @corporation_a = create(:wingolf_corporation)
         @membership = @corporation_a.assign_user @user, at: 2.years.ago
         @membership.promote_to @corporation_a.status_group("Schlicht Ausgetretene"), at: 1.year.ago
       end
@@ -553,7 +552,7 @@ describe User do
     subject { @user = User.create(@params) }
     describe "when #add_to_corporation is set to a wah id" do
       before do
-        @corporation = create(:wah_group)
+        @corporation = create(:wingolf_corporation)
         @params.merge!({:add_to_corporation => @corporation.id})
       end
       it "should add the user to the first status group of this corporation" do
