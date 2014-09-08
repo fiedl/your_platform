@@ -95,6 +95,31 @@ namespace :patch do
       print "\n"
       log.success "#{counter} Workflows korrigiert."
     end
+    
+    # Eingabe von Tim Zimmermann:
+    # In Tübingen können Konkneipanten auch zu Inaktiven (loci und non-loci) werden.
+    # Der Vorgang heißt ebenso Inaktivierung.
+    # SF 2014-09-08
+    #
+    task :inaktivierung_tuebinger_konkneipanten => [:environment, :requirements, :print_info] do
+      log.section "Inaktivierung Tübinger Konkneipanten"
+      
+      corporation = Corporation.find_by_token("T")
+      workflow_loci = corporation.descendant_workflows.where(name: 'Inaktivierung loci').first
+      workflow_non_loci = corporation.descendant_workflows.where(name: 'Inaktivierung non loci').first
+      konkneipanten_group = corporation.status_group('Konkneipanten')
+      
+      new_step = workflow_loci.steps.create brick_name: "RemoveFromGroupBrick"
+      new_step.parameters.create key: 'group_id', value: konkneipanten_group.id
+      
+      new_step = workflow_non_loci.steps.create brick_name: "RemoveFromGroupBrick"
+      new_step.parameters.create key: 'group_id', value: konkneipanten_group.id
+      
+      workflow_loci.parent_groups << konkneipanten_group
+      workflow_non_loci.parent_groups << konkneipanten_group
+
+      log.success "Workflows zur Inaktivierung nun auch für Tübinger Konkneipanten vergfügbar."
+    end
   end
   
   def log
