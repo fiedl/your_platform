@@ -25,6 +25,7 @@ namespace :cache do
     Flag
     AddressLabel
     UserGroupMembership
+    Bv
     
     User.find_each do |user|
       user.cached_address_label
