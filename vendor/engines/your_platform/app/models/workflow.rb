@@ -25,11 +25,15 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
   
   def self.find_or_create_mark_as_deceased_workflow
-    Workflow.where(name: "Todesfall").first || self.create_mark_as_deceased_workflow
+    self.find_mark_as_deceased_workflow || self.create_mark_as_deceased_workflow
+  end
+  
+  def self.find_mark_as_deceased_workflow
+    Workflow.where(name: "Todesfall").first
   end
   
   def self.create_mark_as_deceased_workflow
-    raise 'Workflow already present.' if Workflow.where(name: "Todesfall").first
+    raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
     workflow = Workflow.create(name: "Todesfall")
     step = workflow.steps.build
     step.sequence_index = 1
