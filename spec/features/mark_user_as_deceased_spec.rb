@@ -38,7 +38,7 @@ feature 'Mark user as deceased' do
     page.should have_text @user.reload.title
     page.should have_text "(✟)"
     page.should have_text localized_date
-    @user.current_status_group_in(@corporation).should == @verstorbene
+    @user.current_status_group_in(@corporation.reload).should == @verstorbene
     
     visit group_path(@verstorbene)
     page.should have_text @user.last_name

@@ -1,10 +1,20 @@
 module ActiveRecordCacheExtension
   extend ActiveSupport::Concern
   
-  def cached(method_name)
-    Rails.cache.fetch([self, method_name], expires_in: 1.week) do 
-      result = send(method_name)
-      Marshal.dump(result) # This circumvents a bug: https://github.com/mperham/dalli/issues/250
+  def cached(method_name, arguments = nil)
+    Rails.cache.fetch([self, method_name, arguments], expires_in: 1.week) do
+      
+      # Call the method, with or without arguments.
+      result = arguments ? send(method_name, *arguments) : send(method_name)
+      
+      # Not all ActiveRecord::Relation objects can be stored in cache.
+      # Convert them to Arrays. Otherwise, this might raise an 'cannot dump' error.
+      result = result.to_a if result.kind_of? ActiveRecord::Relation
+      
+      # This circumvents a bug: https://github.com/mperham/dalli/issues/250
+      Marshal.dump(result)
+      
+      # Store the result in cache.
       result
     end
   end
