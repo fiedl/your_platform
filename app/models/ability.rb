@@ -127,6 +127,9 @@ class Ability
                 profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
             end
           end
+          can :manage, UserGroupMembership do |membership|
+            can? :manage, membership.user
+          end
         end
         
         # LOCAL OFFICERS

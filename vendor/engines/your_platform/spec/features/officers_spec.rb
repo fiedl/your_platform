@@ -53,7 +53,7 @@ feature "Officers Management" do
       find(".save_button").click
     end
     
-    wait_for_ajax
+    wait_for_ajax; wait_for_ajax
     @group.officers_parent.child_groups.where(name: "President").first.members.should include @new_user
     @group.officers_parent.child_groups.where(name: "President").first.members.should_not include @user
   end
