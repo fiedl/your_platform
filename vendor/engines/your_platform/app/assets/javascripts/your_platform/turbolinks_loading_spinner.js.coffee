@@ -20,8 +20,7 @@
       <div class="modal-header card-title"><h3>' + title + '</h3></div>
       <div class="modal-body card-body">
         <!--i class="icon-spinner icon-spin icon-2x"></i-->
-        <!--i class="' + icon + ' icon-2x"></i-->
-        <img src="/images/fussball.png" />  
+        <i class="' + icon + ' icon-2x"></i>
         &emsp;Inhalt wird geladen. Bitte warten ...
       </div>
     </div>
