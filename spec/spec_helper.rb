@@ -223,6 +223,9 @@ Spork.prefork do
         DatabaseCleaner.strategy = :truncation
       end
       DatabaseCleaner.start
+      
+      # Clear the cache.
+      Rails.cache.clear
 
       # create the basic objects that are needed for all specs
       Group.find_or_create_everyone_group

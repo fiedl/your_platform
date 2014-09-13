@@ -273,10 +273,10 @@ class User < ActiveRecord::Base
   def text_below_name
     name_surrounding_profile_field.try(:text_below_name).try(:strip)
   end
-  def name_prefix
+  def text_before_name
     name_surrounding_profile_field.try(:name_prefix).try(:strip)
   end
-  def name_suffix
+  def text_after_name
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
 

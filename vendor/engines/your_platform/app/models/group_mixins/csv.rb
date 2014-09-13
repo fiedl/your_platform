@@ -129,8 +129,8 @@ module GroupMixins::Csv
           member.personal_title,
           member.text_above_name,
           member.text_below_name,
-          member.name_prefix,
-          member.name_suffix
+          member.text_before_name,
+          member.text_after_name
         ]
       end
     end

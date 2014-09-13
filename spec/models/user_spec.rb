@@ -137,6 +137,7 @@ describe User do
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2014-05-01".to_datetime)
         @user.reload
+        sleep 0.3  # Otherwise it fails randomly.
       end
       it { should == "E06 H08 S14" }
     end
@@ -145,6 +146,7 @@ describe User do
         @user.cached(:aktivitaetszahl)
         @first_membership_H.invalidate( "2014-05-01".to_datetime )
         @user.reload
+        sleep 0.3  # Otherwise it fails randomly.
       end
       it { should == "E06" }
     end

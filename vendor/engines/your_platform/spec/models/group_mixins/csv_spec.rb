@@ -41,7 +41,8 @@ describe GroupMixins::Csv do
     subject { @group.members_addresses_to_csv }
     before do
       @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
-      @address1.update_attribute(:updated_at, "2014-06-20".to_datetime)
+      @address1.update_column :updated_at, "2014-06-20".to_datetime
+
       @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
       @name_surrounding.name_prefix = "Dr."
       @name_surrounding.name_suffix = "M.Sc."
@@ -49,6 +50,9 @@ describe GroupMixins::Csv do
       @name_surrounding.text_below_name = ""
       @name_surrounding.save
       @user.save
+    end
+    specify "prelims" do
+      @address1.reload.updated_at.should == "2014-06-20".to_datetime
     end
     it { should == 
       "Nachname;Vorname;\"\";Adresse;Adresse;Zuletzt aktualisiert am;Postleitzahl (PLZ);Stadt;Land;Länder-Kennzeichen;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen\n" + 

@@ -260,7 +260,7 @@ describe Group do
     end
 
     describe '#cached(:leaf_groups)' do
-      subject { @group.cached(:leaf_groups) }
+      subject { @group.reload.cached(:leaf_groups) }
       describe 'for the group being a corporation' do
         before do
           @group = create(:corporation)
@@ -287,6 +287,10 @@ describe Group do
         before do
           @group = create(:corporation)
           @group.cached(:leaf_groups)
+          
+          sleep 1.1  # TODO: Replace by time_travel
+          
+          # The creation of this group structure should reset the cache.
           @status_1 = @group.child_groups.create
           @group_a = @group.child_groups.create
           @status_2 = @group_a.child_groups.create
@@ -314,7 +318,7 @@ describe Group do
       it "should add the user as a child user" do
         @group.child_users.should_not include @user
         subject
-        @group.child_users.should include @user
+        @group.reload.child_users.should include @user
       end
     end
     

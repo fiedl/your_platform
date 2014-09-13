@@ -9,7 +9,7 @@ class DagLink < ActiveRecord::Base
   
   def delete_cache
     super
-    ancestor.delete_cache if ancestor.try(:respond_to?, :delete_cache)
-    descendant.delete_cache if descendant.try(:respond_to?, :delete_cache)
+    ancestor.delete_cache
+    descendant.delete_cache
   end
 end

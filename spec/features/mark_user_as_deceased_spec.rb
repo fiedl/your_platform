@@ -34,6 +34,9 @@ feature 'Mark user as deceased' do
       fill_in 'localized_date_of_death', with: localized_date
       click_on I18n.t(:confirm)
     end
+
+    # wait for it to be finished:
+    page.should have_no_text I18n.t(:confirm), visible: true
     
     page.should have_text @user.reload.title
     page.should have_text "(✟)"

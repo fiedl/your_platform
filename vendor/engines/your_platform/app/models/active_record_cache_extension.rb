@@ -20,6 +20,7 @@ module ActiveRecordCacheExtension
   end
   
   def invalidate_cache
+    # Be careful in specs. This takes one second to count as invalid.
     self.touch
   end
   
@@ -35,7 +36,7 @@ module ActiveRecordCacheExtension
   
   def cache_created_at(method_name)
     #CacheAdditions
-    Rails.cache.created_at [self, method_name]
+    Rails.cache.created_at [self, method_name, arguments]
   end
   
   module ClassMethods
