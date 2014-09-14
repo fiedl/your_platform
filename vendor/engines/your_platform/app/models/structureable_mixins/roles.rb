@@ -17,8 +17,15 @@ module StructureableMixins::Roles
   
   def delete_caches_concerning_roles
     if is_a? Group
-      if has_flag?(:admins_parent) or has_flag?(:officers_parent)
-        parent_groups.collect { |parent| parent.delete_cached(:find_admins) }
+      # For an admins_parent, this is called recursively until the original group
+      # is reached.
+      #
+      #   group
+      #     |---- officers_parent
+      #                |------------ admins_parent
+      #
+      if has_flag?(:officers_parent) || has_flag?(:admins_parent)
+        parent_groups.each { |group| group.delete_cache }
       end
     end
   end

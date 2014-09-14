@@ -43,6 +43,7 @@ class Group < ActiveRecord::Base
   def delete_cache
     super
     delete_caches_concerning_roles
+    delete_cache_for_officers_group
   end
     
   # General Properties

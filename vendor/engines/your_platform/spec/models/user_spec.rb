@@ -640,6 +640,8 @@ describe User do
     context "when user entered corporation S" do
       before do
         @user.cached(:corporations)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -649,6 +651,8 @@ describe User do
     context "when user entered corporation H as guest" do
       before do
         @user.cached(:corporations)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -733,6 +737,8 @@ describe User do
     context "when user entered corporation S" do
       before do
         @user.cached(:current_corporations)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -751,6 +757,8 @@ describe User do
     context "when user left corporation E" do
       before do
         @user.cached(:current_corporations)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
         second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
@@ -1297,7 +1305,10 @@ describe User do
     describe 'for the user not being hidden' do
       before do
         @user.cached(:hidden)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         @user.hidden = true
+        @user.reload
       end
       it { should == @user.hidden }
     end

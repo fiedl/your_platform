@@ -146,7 +146,10 @@ describe StructureableMixins::Roles do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.cached(:find_admins)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         @group.admins_parent << admin_user
+        @group.reload
       end
       it { should == @group.find_admins }
     end
@@ -155,7 +158,10 @@ describe StructureableMixins::Roles do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.cached(:find_admins)
+        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+
         @group.admins_parent.child_users << admin_user
+        @group.reload
       end
       it { should == @group.find_admins }
     end
