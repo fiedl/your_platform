@@ -120,7 +120,7 @@ describe GroupMixins::Memberships do
       it "should remove the membership" do
         @group.members.should include @user
         @group.unassign_user @user
-        sleep 1.1  # to make sure the validity range time condition works
+        time_travel 2.seconds
         @group.reload.members.should_not include @user
       end
     end
@@ -292,7 +292,7 @@ describe GroupMixins::Memberships do
     it { should == "#{@user1.title}, #{@user2.title}" }
   end
   describe "#direct_member_titles_string=" do
-    before { @group.direct_members_titles_string = "#{@user1.title}"; sleep 1.1 }
+    before { @group.direct_members_titles_string = "#{@user1.title}"; time_travel 2.seconds }
     it "should set the memberships according to the titles" do
       @group.reload.memberships.should include( @membership1 )
       @group.reload.memberships.should_not include( @membership2 )

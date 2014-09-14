@@ -193,7 +193,7 @@ describe ProfileFieldTypes::Address do
       before { @address_field.geocode }
       it "should not query again" do
         @queried_at = @address_field.geo_location.queried_at
-        sleep 1.3
+        time_travel 2.seconds
         subject
         @address_field.geo_location.queried_at.should_not > @queried_at
       end

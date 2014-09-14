@@ -121,6 +121,7 @@ group :test do
   gem 'guard-spork'
   gem 'spork'
   gem 'simplecov', require: false
+  gem 'timecop'  # time_travel
 end
 
 group :test do

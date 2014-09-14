@@ -136,8 +136,8 @@ describe User do
         @user.cached(:aktivitaetszahl)
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2014-05-01".to_datetime)
+        time_travel 2.seconds
         @user.reload
-        sleep 0.7  # Otherwise it fails randomly.
       end
       it { should == "E06 H08 S14" }
     end
@@ -145,8 +145,8 @@ describe User do
       before do
         @user.cached(:aktivitaetszahl)
         @first_membership_H.invalidate( "2014-05-01".to_datetime )
+        time_travel 2.seconds
         @user.reload
-        sleep 0.7  # Otherwise it fails randomly.
       end
       it { should == "E06" }
     end
@@ -260,7 +260,7 @@ describe User do
       subject { @user.reload.wingolfsblaetter_abo = false }
       it "should un-assign the user to the @abonnenten_group" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         Group.find(@abonnenten_group.id).direct_members.should_not include @user
       end
     end
@@ -385,7 +385,7 @@ describe User do
         end
         it "should assign the user to the new BV" do
           subject
-          sleep 1.1  # because of the validity range time comparison
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should end the current BV membership" do
@@ -447,18 +447,18 @@ describe User do
         end
         it "should remove all old memberships" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           UserGroupMembership.find_by_user_and_group(@user, @bv0).should == nil
           UserGroupMembership.find_by_user_and_group(@user, @bv1).should == nil
         end
         specify "the user should only have ONE bv membership, now" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           (@user.groups(true) & Bv.all).count.should == 1
         end
         it "should assign the user to the correct bv" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should return the new membership" do
@@ -476,7 +476,7 @@ describe User do
       end
       it "should not assign a bv" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         @user.reload.bv.should == nil
       end
       it { should == nil }      

@@ -376,7 +376,7 @@ describe UserGroupMembership do
     before do
       create_membership
       find_membership.move_to_group( @other_group )
-      sleep 1.1 # just to make sure the time comparison works
+      time_travel 2.seconds
     end
     it "should hide old direct membership" do
       find_membership.should == nil

@@ -287,8 +287,7 @@ describe Group do
         before do
           @group = create(:corporation)
           @group.cached(:leaf_groups)
-          
-          sleep 1.1  # TODO: Replace by time_travel
+          wait_for_cache
           
           # The creation of this group structure should reset the cache.
           @status_1 = @group.child_groups.create

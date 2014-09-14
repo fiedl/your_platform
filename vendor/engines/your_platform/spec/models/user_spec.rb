@@ -640,7 +640,7 @@ describe User do
     context "when user entered corporation S" do
       before do
         @user.cached(:corporations)
-        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        wait_for_cache
         
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
@@ -651,7 +651,7 @@ describe User do
     context "when user entered corporation H as guest" do
       before do
         @user.cached(:corporations)
-        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        wait_for_cache
 
         first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
@@ -737,7 +737,7 @@ describe User do
     context "when user entered corporation S" do
       before do
         @user.cached(:current_corporations)
-        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        wait_for_cache
 
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
@@ -757,7 +757,7 @@ describe User do
     context "when user left corporation E" do
       before do
         @user.cached(:current_corporations)
-        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        wait_for_cache
 
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
@@ -1283,7 +1283,7 @@ describe User do
     end
     describe "false" do
       before { @user.developer = true }
-      subject { @user.developer = false; sleep 1.1 }
+      subject { @user.developer = false; time_travel 2.seconds }
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
@@ -1305,7 +1305,7 @@ describe User do
     describe 'for the user not being hidden' do
       before do
         @user.cached(:hidden)
-        sleep 1.2  # to give it time to invalidate # TODO: time_travel
+        wait_for_cache
 
         @user.hidden = true
         @user.reload
@@ -1342,7 +1342,7 @@ describe User do
       end
     end
     describe 'false' do
-      subject { @user.hidden = false; sleep 1.1 }
+      subject { @user.hidden = false; time_travel 2.seconds }
       describe 'for the user being hidden' do
         before { @user.hidden = true }
         it 'should remove the user from the hidden_users group' do
