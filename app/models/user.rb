@@ -9,7 +9,17 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 #
 class User
   attr_accessible :wingolfsblaetter_abo, :hidden
-
+  
+  # This method is called by a nightly rake task to renew the cache of this object.
+  #
+  def fill_cache
+    cached(:title)
+    cached(:aktivitaetszahl)
+    cached(:aktivitätszahl)
+    cached(:address_label)
+    cached(:first_corporation)
+    cached(:last_group_in_first_corporation)
+  end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden

@@ -27,12 +27,8 @@ namespace :cache do
     UserGroupMembership
     
     User.find_each do |user|
-      user.cached_address_label
-      user.cached_title
-      user.cached_first_corporation
-      user.cached_aktivitaetszahl
-      user.cached_last_group_in_first_corporation
-      
+      user.fill_cache
+
       print ".".green
     end
     log.success "\nFertig."
@@ -43,7 +39,7 @@ namespace :cache do
     
     User.find_each do |user|
       user.memberships.each do |membership|
-        membership.cached_valid_from
+        membership.fill_cache
       end
       
       print ".".green
@@ -62,13 +58,7 @@ namespace :cache do
     
     Group.find_each do |group|
       begin
-        group.cached_find_admins
-        group.cached_officers_of_self_and_parent_groups
-        group.cached_corporation
-        group.cached_leaf_groups
-        group.cached_memberships
-        group.cached_latest_memberships
-        group.cached_memberships_this_year
+        group.fill_cache
       
         print ".".green
       rescue => e
