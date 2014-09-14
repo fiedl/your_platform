@@ -75,6 +75,17 @@ FactoryGirl.define do
         Group.find_everyone_group.admins << admin
       end
     end
-
+    
+    factory :local_admin do
+      ignore do
+        of nil  # syntax: create(:local_admin, of: @group)
+      end
+      create_account true
+      after :create do |admin, evaluator|
+        raise 'Please set object to administrate, e.g.:  create :local_admin, of: @group' unless evaluator.of.respond_to?(:admins)
+        evaluator.of.admins << admin
+      end
+    end
+    
   end
 end

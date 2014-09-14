@@ -160,11 +160,20 @@ describe "User: abilities" do
       @workflow.parent_groups << @group
       the_user.should be_able_to :execute, @workflow
     end
+    he "should be able to execute the mark_as_deceased workflow, which is a global workflow" do
+      @workflow = Workflow.find_or_create_mark_as_deceased_workflow
+      the_user.should be_able_to :execute, @workflow
+    end
     he "should not be able to manage unrelated groups or users" do
       @other_group = create(:group)
       the_user.should_not be_able_to :manage, @other_group
       @other_user = create(:user)
       the_user.should_not be_able_to :manage, @other_user
+    end
+    he "should be able to manage the group's users' memberships" do
+      @other_user = create(:user)
+      @membership = @group.assign_user @other_user
+      the_user.should be_able_to :manage, @membership
     end
   end
 

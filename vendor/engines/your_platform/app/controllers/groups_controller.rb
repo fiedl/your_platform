@@ -17,7 +17,7 @@ class GroupsController < ApplicationController
     if @group
       current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
 
-      if request.format.html?
+      if request.format.html? || request.format.xls? || request.format.csv?
         point_navigation_to @group
         
         # If this is a collection group, e.g. the corporations_parent group, 
@@ -67,14 +67,35 @@ class GroupsController < ApplicationController
       end
     end
     
+    if request.format.csv? || request.format.xls?
+      list_preset = params[:list]
+      list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
+      @file_title = "#{@group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
+
+      if list_preset == 'member_development'
+        @list_export = ListExport.new(@group, list_preset)
+      else
+        @list_export = ListExport.new(@members, list_preset)
+      end
+    end
+    
     respond_to do |format|
       format.html
       format.csv do
         authorize! :export_member_list, @group  # Require special authorization!
-        file_title = "#{@group.name} #{params[:list]} #{Time.zone.now}".parameterize
+        
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
-        send_data @group.members_to_csv(params[:list]), filename: "#{file_title}.csv"
+        #bom = "\377\376".force_encoding('utf-16le')
+        bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
+        
+        csv_data = bom + @list_export.to_csv
+        send_data csv_data, filename: "#{@file_title}.csv"
       end
+      format.xls do
+        authorize! :export_member_list, @group  # Require special authorization!
+
+        send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', filename: "#{@file_title}.xls")
+      end  
       format.pdf do
         authorize! :export_member_list, @group  # Require special authorization!
         if params[:sender].present?

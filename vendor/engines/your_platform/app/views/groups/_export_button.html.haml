@@ -5,11 +5,39 @@
       = t :download_list
       .caret
     %ul.dropdown-menu.list_export
+
       %li.nav-header=t :pdf_files
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
         = link_to group_path(@group, :format => :pdf), :class => 'address_labels_export_button' do
           %i.icon-th
           =t :address_labels
+
+      %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"
+      %li
+        = link_to group_path(@group, :format => :xls) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :name_list
+      %li
+        = link_to group_path(@group, :format => :xls, :list => :birthday_list) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :birthday_list
+      %li
+        = link_to group_path(@group, :format => :xls, :list => :address_list) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :address_list
+      %li
+        = link_to group_path(@group, :format => :xls, :list => :phone_list) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :phone_list
+      %li
+        = link_to group_path(@group, :format => :xls, :list => :email_list) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :email_list
+      %li
+        = link_to group_path(@group, :format => :xls, :list => :member_development) do
+          %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+          = t :member_development
+
       %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"
       %li
         = link_to group_path(@group, :format => :csv) do

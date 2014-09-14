@@ -108,7 +108,15 @@ class Ability
             other_user.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
           end
           can :execute, Workflow do |workflow|
-            workflow.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+            # Local admins can execute workflows of groups they're admins of.
+            # And they can execute the mark_as_deceased workflow, which is a global workflow,
+            # if they do administrate a group.
+            #
+            if workflow == Workflow.find_mark_as_deceased_workflow
+              user.directly_administrated_objects.select { |obj| obj.kind_of?(Group) }.count > 0
+            else
+              workflow.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+            end
           end
           can :manage, Page do |page|
             page.cached(:find_admins).include?(user) || page.ancestors.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
@@ -118,6 +126,9 @@ class Ability
               (profile_field.profileable.kind_of?(Group) && profile_field.profileable.cached(:find_admins).include?(user)) ||
                 profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
             end
+          end
+          can :manage, UserGroupMembership do |membership|
+            can? :manage, membership.user
           end
         end
         

@@ -122,6 +122,7 @@ group :test do
   gem 'spork'
   gem 'simplecov', require: false
   gem 'timecop'  # time_travel
+  gem 'fuubar' # better progress bar for specs
 end
 
 group :test do

@@ -14,11 +14,20 @@ class User
   #
   def fill_cache
     cached(:title)
+    cached(:name_affix)
     cached(:aktivitaetszahl)
     cached(:aktivitätszahl)
     cached(:address_label)
-    cached(:first_corporation)
     cached(:last_group_in_first_corporation)
+    cached(:current_corporations)
+    cached(:corporations)
+    cached(:first_corporation)
+    cached(:bv)
+    cached(:date_of_birth)
+    cached(:date_of_death)
+    cached(:age)
+    cached(:birthday_this_year)
+    cached(:hidden)
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
@@ -30,10 +39,6 @@ class User
   # 
   def title
     "#{name} #{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
-  end
-  
-  def name_suffix
-    title.gsub(name, '').strip
   end
   
   # For dead users, there is a cross symbol in the title.
@@ -50,6 +55,10 @@ class User
   #
   def bv
     (Bv.all & self.groups).try(:first).try(:becomes, Bv)
+  end
+  
+  def cached_bv_name
+    cached(:bv).try(:name)
   end
   
   def bv_membership
@@ -242,15 +251,15 @@ class User
   # A user is a wingolfit if he has an aktivitätszahl.
   #
   def wingolfit?
-    self.aktivitätszahl.present?
+    philister? || aktiver?
   end
   
   def aktiver?
-    (group_names & ["Aktivitas", "Activitas"]).count > 0
+    Group.alle_aktiven.members.include? self
   end
   
   def philister?
-    group_names.include? "Philisterschaft"
+    Group.alle_philister.members.include? self
   end
   
   def group_names

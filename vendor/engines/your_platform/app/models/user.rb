@@ -98,6 +98,11 @@ class User < ActiveRecord::Base
     name
   end
   
+  def name_affix
+    title.gsub(name, '').strip
+  end
+  
+  
   # This sets the format of the User urls to be
   # 
   #     example.com/users/24-john-doe
@@ -175,13 +180,35 @@ class User < ActiveRecord::Base
     dob = self.date_of_birth
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
+  def cached_age  # TODO: Remove when implementing new model caching.
+    if self.cached_date_of_birth
+      now = Time.now.utc.to_date
+      dob = self.cached_date_of_birth
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end
+  end
   
+  def birthday_this_year
+    begin
+      date_of_birth.change(:year => Time.zone.now.year)
+    rescue
+      if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
+        date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
+      else
+        nil
+      end
+    end
+  end
   
+    
   # Date of Death
+  # The date of death is localized already!
+  # Why?
   #
   def date_of_death
     profile_fields.where(label: 'date_of_death').first.try(:value)
   end
+  
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
@@ -237,6 +264,9 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
+  def cached_postal_address
+    Rails.cache.fetch(['User', id, 'postal_address'], expires_in: 1.week) { postal_address }
+  end
   
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
@@ -260,8 +290,15 @@ class User < ActiveRecord::Base
   def personal_title
     profile_field_value 'personal_title'
   end
+  def cached_personal_title
+    Rails.cache.fetch(['User', id, 'personal_title'], expires_in: 1.week) { personal_title }
+  end
+  
   def academic_degree
     profile_field_value 'academic_degree'
+  end
+  def cached_academic_degree
+    Rails.cache.fetch(['User', id, 'academic_degree'], expires_in: 1.week) { academic_degree }
   end
 
   def name_surrounding_profile_field
@@ -406,15 +443,15 @@ class User < ActiveRecord::Base
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
     end
-    unless self.add_to_corporation.blank?
+    if self.add_to_corporation.present?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
-      corporation ||= Group.find( add_to_corporation ) if add_to_corporation.to_i
+      corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
+      corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
       if corporation
-        #
-        # TODO: Move to wingolfsplattform. THIS IS WINGOLF SPECIFIC!!
-        #
-        hospitanten_group = corporation.descendant_groups.where(name: "Hospitanten").first
-        hospitanten_group.assign_user self
+        status_group = corporation.becomes(Corporation).status_groups.first || raise('no status group in this corporation!')
+        status_group.assign_user self
+      else
+        raise 'corporation not found.'
       end
     end
   end
@@ -571,7 +608,7 @@ class User < ActiveRecord::Base
   end
 
   def workflows_for(group)
-    (([group] + group.descendant_groups) & self.groups)
+    (([group.becomes(Group)] + group.descendant_groups) & self.groups)
       .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
   end
 

@@ -35,7 +35,6 @@ class Group < ActiveRecord::Base
   include GroupMixins::Developers
   include GroupMixins::Officers
 
-  include GroupMixins::Csv
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import

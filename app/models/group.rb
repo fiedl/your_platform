@@ -107,6 +107,15 @@ class Group
       ancestor.has_flag?(:bvs_parent)
     end.any?
   end
+  
+  
+  
+  def self.alle_aktiven
+    self.find_or_create_special_group :alle_aktiven
+  end
+  def self.alle_philister
+    self.find_or_create_special_group :alle_philister
+  end
 
 
 end

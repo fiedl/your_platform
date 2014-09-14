@@ -5,10 +5,9 @@ feature 'Mark user as deceased' do
   
   before do
     @user = create :user
-    @corporation = create :corporation
-    @corporation.child_groups.create(name: "Philisterschaft") # triggers creation of sub groups.
-    @philister = @corporation.status_group("Philister")
-    @verstorbene = @corporation.child_groups.create(name: "Verstorbene")
+    @corporation = create :wingolf_corporation
+    @philister = @corporation.descendant_groups.where(name: 'Philister').first
+    @verstorbene = @corporation.descendant_groups.where(name: 'Verstorbene').first
     @membership = @philister.assign_user @user, at: 1.day.ago
     Workflow.find_or_create_mark_as_deceased_workflow
     @user.reload

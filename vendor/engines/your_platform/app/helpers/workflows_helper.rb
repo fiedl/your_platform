@@ -7,12 +7,20 @@ module WorkflowsHelper
     title += " (#{workflow.wah_group.name})" if workflow.wah_group
     workflow_params = { user_id: user.id }
     link_to(
-            (tag(:i, :class => "icon-chevron-up") + " " + workflow.name).html_safe,
+            (tag(:i, :class => workflow_icon(workflow)) + " " + workflow.name).html_safe,
             workflow_kit.execute_workflow_path( workflow, workflow_params ), 
             method: :put,
             :class => 'workflow_trigger',
             title: title
             )
+  end
+  
+  def workflow_icon(workflow)
+    if workflow.steps.collect { |step| step.brick_name }.include? 'DestroyAccountAndEndMembershipsIfNeededBrick'
+      "icon-remove"
+    else
+      "icon-chevron-up"
+    end
   end
   
   def workflow_execution_links_for( options )

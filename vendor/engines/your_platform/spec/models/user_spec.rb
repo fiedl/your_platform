@@ -1377,6 +1377,46 @@ describe User do
     end
   end
 
+
+  # User Creation
+  # ==========================================================================================
+  
+  describe ".create" do
+    before { @params = {first_name: "Johnny", last_name: "Doe"} }
+    subject { @user = User.create(@params) }
+    describe "when #add_to_corporation is set to a corporation" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+    describe "when #add_to_corporation is set to a corporation id" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation.id})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+    describe "when #add_to_corporation is set to a corporation id which is a String (via html form)" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation.id.to_s})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+  end
+
+
   # Finder Methods
   # ==========================================================================================
 
