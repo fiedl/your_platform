@@ -1,6 +1,6 @@
 = succeed ',' do
   %strong= user.last_name
 %span>= ' ' + user.first_name
-- suffix = user.cached(:name_suffix)
-- if suffix.present?
-  = ', ' + suffix
+- affix = user.cached(:name_affix)
+- if affix.present?
+  = ', ' + affix

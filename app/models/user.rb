@@ -18,6 +18,8 @@ class User
     cached(:aktivitaetszahl)
     cached(:aktivitätszahl)
     cached(:address_label)
+    cached(:postal_address)
+    cached(:postal_address_updated_at)
     cached(:last_group_in_first_corporation)
     cached(:current_corporations)
     cached(:corporations)
@@ -28,6 +30,8 @@ class User
     cached(:age)
     cached(:birthday_this_year)
     cached(:hidden)
+    cached(:personal_title)
+    cached(:academic_degree)
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
@@ -55,10 +59,6 @@ class User
   #
   def bv
     (Bv.all & self.groups).try(:first).try(:becomes, Bv)
-  end
-  
-  def cached_bv_name
-    cached(:bv).try(:name)
   end
   
   def bv_membership

@@ -1,6 +1,6 @@
 class AddressLabel
   attr_accessor :name
-  attr_accessor :postal_address, :postal_code, :country_code
+  attr_accessor :postal_address, :postal_code, :country_code, :country, :city
   attr_accessor :text_above_name, :text_below_name, :name_prefix, :name_suffix
   attr_accessor :personal_title
   
@@ -9,6 +9,8 @@ class AddressLabel
     self.postal_address = address_field.try(:value)
     self.postal_code = address_field.try(:postal_code)
     self.country_code = address_field.try(:country_code)
+    self.country = address_field.try(:geo_location).try(:country)
+    self.city = address_field.try(:geo_location).try(:city)
     self.text_above_name = name_surrounding_field.try(:text_above_name).try(:strip)
     self.text_below_name = name_surrounding_field.try(:text_below_name).try(:strip)
     self.name_prefix = name_surrounding_field.try(:name_prefix).try(:strip)

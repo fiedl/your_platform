@@ -568,7 +568,8 @@ describe User do
       it "should add the user to the Nicht-Recipierte-Fuxen group if the first status group is named like that" do
         @corporation.status_group("Hospitanten").update_attributes(name: "Nicht-Recipierte Fuxen")
         subject
-        @corporation.status_group("Nicht-Recipierte Fuxen").members.should include @user
+        time_travel 2.seconds
+        @corporation.reload.status_group("Nicht-Recipierte Fuxen").members.should include @user
       end
     end
   end

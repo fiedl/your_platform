@@ -180,13 +180,6 @@ class User < ActiveRecord::Base
     dob = self.date_of_birth
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
-  def cached_age  # TODO: Remove when implementing new model caching.
-    if self.cached_date_of_birth
-      now = Time.now.utc.to_date
-      dob = self.cached_date_of_birth
-      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-    end
-  end
   
   def birthday_this_year
     begin
@@ -264,13 +257,22 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
-  def cached_postal_address
-    Rails.cache.fetch(['User', id, 'postal_address'], expires_in: 1.week) { postal_address }
-  end
   
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
   end
+
+  # Returns when the postal address has been updated last.
+  #
+  def postal_address_updated_at
+    # if the date is earlier, the date is actually the date
+    # of the data migration and should not be shown.
+    #
+    if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
+      postal_address_field_or_first_address_field.updated_at.to_date 
+    end
+  end
+
   
   # Phone Profile Fields
   # 
@@ -290,15 +292,9 @@ class User < ActiveRecord::Base
   def personal_title
     profile_field_value 'personal_title'
   end
-  def cached_personal_title
-    Rails.cache.fetch(['User', id, 'personal_title'], expires_in: 1.week) { personal_title }
-  end
   
   def academic_degree
     profile_field_value 'academic_degree'
-  end
-  def cached_academic_degree
-    Rails.cache.fetch(['User', id, 'academic_degree'], expires_in: 1.week) { academic_degree }
   end
 
   def name_surrounding_profile_field

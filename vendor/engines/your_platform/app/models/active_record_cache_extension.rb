@@ -34,9 +34,37 @@ module ActiveRecordCacheExtension
     #Rails.cache.delete_matched "#{self.class.table_name}/#{id}/*"
   end
   
-  def cache_created_at(method_name)
+  def cache_created_at(method_name, arguments = nil)
     #CacheAdditions
     Rails.cache.created_at [self, method_name, arguments]
+  end
+  
+  # This method ensures that no app cache is used to produce the result.
+  # If you call
+  #
+  #    user.uncached :title
+  #
+  # this calls `user.title` but makes sure, no app cache is used at all.
+  # Note: This does not prevent the sql cache to be used.
+  #
+  # You could use this in specs:
+  #
+  #     user.cached(:title).should == user.uncached(:title)
+  #
+  # ## What about user.title?
+  #
+  # Usually, user.title returns the uncached version; but if cached methods
+  # are used in the implementation of `User#title` then `user.title` does use these
+  # caches. If you call `user.uncached(:title)`, all app caches are ignored.
+  #
+  def uncached(method_name, args = nil)
+    Rails.cache.uncached do
+      if args
+        self.send method_name, *args
+      else
+        self.send method_name
+      end
+    end
   end
   
   module ClassMethods

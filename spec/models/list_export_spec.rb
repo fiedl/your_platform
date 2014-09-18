@@ -39,7 +39,7 @@ describe ListExport do
   describe "address_list: " do
     before do
       @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
-      @address1.update_attribute(:updated_at, "2014-06-20".to_datetime)
+      @address1.update_column(:updated_at, "2014-06-20".to_datetime)
       @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
       @name_surrounding.name_prefix = "Dr."
       @name_surrounding.name_suffix = "M.Sc."

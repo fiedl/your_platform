@@ -36,6 +36,7 @@ feature 'Mark user as deceased' do
 
     # wait for it to be finished:
     page.should have_no_text I18n.t(:confirm), visible: true
+    wait_for_ajax
     
     page.should have_text @user.reload.title
     page.should have_text "(✟)"
