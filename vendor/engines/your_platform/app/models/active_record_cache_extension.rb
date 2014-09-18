@@ -1,7 +1,39 @@
+#
+# To understand our caching conventions, have a look at our wiki page:
+# https://github.com/fiedl/wingolfsplattform/wiki/Caching
+# 
 module ActiveRecordCacheExtension
   extend ActiveSupport::Concern
   
-  def cached(method_name, arguments = nil)
+  # Case 1: Use it to call a cached method result.
+  # 
+  #     user.cached(:name)
+  #
+  # Case 2: Use it to call a cached method with arguments.
+  # Use this with care, since there is a cache for each argument!
+  #
+  #     user.cached(:membership_in, group)
+  #
+  # Case 3: Use it with a block within a method definition.
+  # This moves the responsibility to cache into the model itself.
+  # 
+  #     class User
+  #       def name
+  #         cached { "#{first_name} #{last_name}" }
+  #       end
+  #     end
+  #     
+  #     user.name  # already uses the cache!
+  #
+  def cached(method_name = nil, arguments = nil, &block)
+    if method_name
+      cached_method(method_name, arguments)
+    else
+      cached_block(&block)
+    end
+  end
+  
+  def cached_method(method_name, arguments = nil)
     Rails.cache.fetch([self, method_name, arguments], expires_in: 1.week) do
       
       # Call the method, with or without arguments.
@@ -18,6 +50,19 @@ module ActiveRecordCacheExtension
       result
     end
   end
+  private :cached_method
+  
+  def cached_block
+    # This gives the method name that called the #cached method.
+    # See: http://www.ruby-doc.org/core-2.1.2/Kernel.html
+    #
+    method_name = caller_locations(2,1)[0].label
+    
+    Rails.cache.fetch([self, method_name], expires_in: 1.week) do
+      yield
+    end
+  end
+  private :cached_block
   
   def invalidate_cache
     # Be careful in specs. This takes one second to count as invalid.

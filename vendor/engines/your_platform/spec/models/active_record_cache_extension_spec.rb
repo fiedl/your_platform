@@ -81,6 +81,46 @@ describe ActiveRecordCacheExtension do
     end
   end
   
+  describe "#cached { ... }" do
+    before do
+      class User
+        def foo
+          cached { Time.zone.now }
+        end
+      end
+      
+      @user = create(:user)
+    end
+    subject { @user.foo }
+    
+    describe "with no cached value stored" do
+      it "should return the fresh value of the given method" do
+        subject.should == Rails.cache.uncached { subject }
+      end
+    end
+    describe "with a cached value stored" do
+      before do
+        @cached_foo = @user.foo
+        wait_for_cache
+      end
+      it "should return the cached value" do
+        subject.should == @cached_foo
+      end
+    end
+    describe "with a cache in place and the real value having changed" do
+      before do
+        @old_cached_foo = @user.foo
+        wait_for_cache
+        @user.touch
+        wait_for_cache
+      end
+      it "should return the new value" do
+        subject.should_not == @old_cached_foo
+        subject.should == Rails.cache.uncached { subject }
+      end
+    end
+  end
+  
   
   describe "#uncached" do
     subject { @user.uncached(:title) }
