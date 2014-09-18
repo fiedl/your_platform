@@ -119,6 +119,15 @@ describe ActiveRecordCacheExtension do
         subject.should == Rails.cache.uncached { subject }
       end
     end
+    describe "calling #cached(:method) when method is defined using a cached block" do
+      subject { @user.cached(:foo) }
+      before do
+        @user.foo
+        wait_for_cache
+        @user.reload
+      end
+      it { should == @user.foo }
+    end
   end
   
   
