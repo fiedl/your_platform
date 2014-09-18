@@ -1,0 +1,1 @@
+require 'cache_store_extension'

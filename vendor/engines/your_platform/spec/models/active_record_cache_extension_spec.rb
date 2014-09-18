@@ -1,3 +1,4 @@
+require 'spec_helper'
 
 describe ActiveRecordCacheExtension do
 
@@ -76,6 +77,51 @@ describe ActiveRecordCacheExtension do
           subject.should == @user.reload.corporate_vita_memberships_in(@corporation)
           subject.should include @new_membership
         end
+      end
+    end
+  end
+  
+  
+  describe "#uncached" do
+    subject { @user.uncached(:title) }
+    
+    describe "with no cached value stored" do
+      it "should return the fresh value of the given method" do
+        subject.should == @user.reload.title
+      end
+    end
+    describe "with a cached value stored" do
+      before do
+        @cached_title = @user.cached(:title)
+
+        # Change the title (which contains the last_name) without
+        # triggering the cache invalidation.
+        @user.update_column :last_name, "Dinglehopper"
+        wait_for_cache
+      end
+      it "should still return the fresh value" do
+        subject.should == @user.reload.title
+      end
+      it "should not return the cached value" do
+        subject.should_not == @cached_title
+      end
+      
+      it "should be the same as Rails.cache.uncached { ... }" do
+        subject.should == Rails.cache.uncached { @user.reload.title }
+      end
+    end
+    describe "with a cache in place and the real value having changed" do
+      before do
+        @old_cached_title = @user.cached(:title)
+        wait_for_cache
+        @user.last_name = "Dinglehopper"
+        @user.save
+        wait_for_cache
+      end
+      it "should return the new value" do
+        subject.should == @user.reload.title
+        subject.should include "Dinglehopper"
+        subject.should_not == @old_cached_title
       end
     end
   end
