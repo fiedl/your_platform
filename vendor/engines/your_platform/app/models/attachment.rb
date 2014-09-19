@@ -37,7 +37,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def self.find_without_types( *types )
-    where( true ).all.collect do |attachment|
+    self.where(true).to_a.collect do |attachment|
       re = attachment
       for type in types
         if not attachment.content_type

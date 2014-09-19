@@ -1,7 +1,6 @@
-- if can? :update, page
-  - attachments = page.attachments
-- else
-  - attachments = page.attachments.find_without_types( "video", "image" )
+- attachments = page.attachments.order('created_at DESC')
+- unless can? :update, page
+  - attachments = attachments.find_without_types( "video", "image" )
 
 - if (attachments.count > 0) or can?(:update, page)
   %h1= t :attachments
