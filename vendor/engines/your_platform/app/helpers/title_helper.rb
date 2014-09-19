@@ -50,7 +50,7 @@ module TitleHelper
   end
   
   def application_name 
-    Rails.application.class.parent_name
+    AppVersion.app_name
   end
   
   def app_name

@@ -102,6 +102,8 @@
               =t(:feedback)
         .clear
       #footer_line
+      .clear
+      #version_footer= app_version_footer
               
     = debug(params) if Rails.env.development?
     = yield :scripts
