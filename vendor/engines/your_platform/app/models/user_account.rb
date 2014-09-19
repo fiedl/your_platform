@@ -61,6 +61,16 @@ class UserAccount < ActiveRecord::Base
   def email_changed?
     false
   end
+  
+  # Configure each account to *not* automatically log out when the browser is closed.
+  # After a system reboot, the user is still logged in, which is the expected behaviour
+  # for this application.
+  #
+  # This useses devise's rememberable module.
+  #
+  def remember_me
+    true
+  end
 
   # Used by devise to identify the correct user account by the given strings.
   #
