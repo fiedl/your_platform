@@ -1,5 +1,4 @@
 ready = ->
-  $("a[rel=popover]").popover()
   $(".has_tooltip").tooltip()
   $("a[rel=tooltip]").tooltip()
 
