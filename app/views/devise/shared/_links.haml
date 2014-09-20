@@ -24,12 +24,3 @@
   - resource_class.omniauth_providers.each do |provider|
     = link_to "Sign in with #{provider.to_s.titleize}", omniauth_authorize_path(resource_name, provider)
     %br
-
-
-%hr
-
-%p
-  Die alte 
-  %a(href="http://wingolf.netenviron.com") Netenviron-Plattform
-  kann noch zum Abrufen von Informationen verwendet werden:
-  %a(href="http://wingolf.netenviron.com") http://wingolf.netenviron.com
