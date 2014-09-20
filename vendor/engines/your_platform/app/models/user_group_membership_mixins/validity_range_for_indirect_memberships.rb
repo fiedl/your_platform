@@ -143,25 +143,6 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   end
   private :recalculate_indirect_validity_ranges_if_needed
   
-  
-  
-  def cached_valid_from
-    begin
-      return Rails.cache.fetch(['UserGroupMembership', id, 'valid_from'], expires_in: 1.week) do
-        recalculate_validity_range_from_direct_memberships
-        valid_from
-      end
-    rescue 
-      # Apparently, ruby/rails can't cache dates before 1900. 
-      # "ArgumentError: year too big to marshal: 1813 UTC"
-      # FIXME: Find out what the issue is and fix it.
-      return valid_from
-    end
-  end
-  def delete_cached_valid_from
-    Rails.cache.delete ['UserGroupMembership', id, 'valid_from']
-  end
-  
 
 
   # Invalidation

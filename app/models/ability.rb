@@ -47,7 +47,7 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if (not preview_as_user) and Group.find_everyone_group.try(:cached_find_admins) and user.in?(Group.find_everyone_group.cached_find_admins)
+      if (not preview_as_user) and user.in?(Role.cached_global_admins)
         can :manage, :all
 
       else
@@ -102,10 +102,10 @@ class Ability
         #
         unless preview_as_user
           can :manage, Group do |group|
-            (group.cached_find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user))
+            (group.cached(:find_admins).include?(user)) || (group.ancestors.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user))
           end
           can :manage, User do |other_user|
-            other_user.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
+            other_user.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
           end
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
@@ -115,16 +115,16 @@ class Ability
             if workflow == Workflow.find_mark_as_deceased_workflow
               user.directly_administrated_objects.select { |obj| obj.kind_of?(Group) }.count > 0
             else
-              workflow.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
+              workflow.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
             end
           end
           can :manage, Page do |page|
-            page.cached_find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
+            page.cached(:find_admins).include?(user) || page.ancestors.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
           end
           can :manage, ProfileField do |profile_field|
             if profile_field.profileable
-              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.cached_find_admins.include?(user)) ||
-                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached_find_admins }.flatten.include?(user)
+              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.cached(:find_admins).include?(user)) ||
+                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
             end
           end
           can :manage, UserGroupMembership do |membership|
@@ -136,7 +136,7 @@ class Ability
         # Local officers can export the member lists of their groups.
         #
         can :export_member_list, Group do |group|
-          user.in? group.cached_officers_of_self_and_parent_groups
+          user.in? group.cached(:officers_of_self_and_parent_groups)
         end        
         
         # DEVELOPERS

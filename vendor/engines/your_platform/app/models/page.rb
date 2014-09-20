@@ -9,9 +9,6 @@ class Page < ActiveRecord::Base
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
   
-  def delete_cache
-    delete_cache_structureable
-  end
 
   # Url
   # ----------------------------------------------------------------------------------------------------

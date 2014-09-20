@@ -165,6 +165,11 @@ Spork.prefork do
     config.include Rails.application.routes.url_helpers
     config.include FactoryGirl::Syntax::Methods
     
+    # TimeTravel abilities: time_travel 2.seconds
+    # This can be used for caching, validity range, etc.
+    #
+    config.include TimeTravel
+
     # This introduces the method `wait_for_ajax`, which can be used when the Capybara
     # matchers do not wait properly for ajax code to be finished. 
     # This is just a sleep command with a time determined by a simple benchmark.
@@ -173,9 +178,19 @@ Spork.prefork do
     #
     config.include WaitForAjax
     
+    # Also, wait for the cache to invalidate.
+    # This can be done with time_travel.
+    #
+    config.include WaitForCache
+    
     # This introduces the methods `send_key(field_id, key)` and `press_enter(field_id)`.
     #
     config.include PressEnter
+    
+    # Debug
+    # Call `debug` to enter pry.
+    #
+    config.include Debug
 
     # Devise test helper for controller tests
     config.include Devise::TestHelpers, :type => :controller
@@ -218,6 +233,9 @@ Spork.prefork do
         DatabaseCleaner.strategy = :truncation
       end
       DatabaseCleaner.start
+      
+      # Clear the cache.
+      Rails.cache.clear
 
       # create the basic objects that are needed for all specs
       Group.find_or_create_everyone_group

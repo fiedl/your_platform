@@ -77,7 +77,7 @@ class ProfileField < ActiveRecord::Base
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   # 
   def value
-    if cached_children_count > 0
+    if cached(:children_count) > 0
       ( [ super ] + children.collect { |child| child.value } ).join(", ")
     else
       super
@@ -92,17 +92,13 @@ class ProfileField < ActiveRecord::Base
   end
 
   def delete_cache
-    delete_cached_children_count
+    super
     parent.try(:delete_cache)
-    profileable.delete_cache if profileable and profileable.respond_to? :delete_cache
+    profileable.delete_cache if profileable && profileable.respond_to?(:delete_cache)
   end
-
-  def cached_children_count
-    Rails.cache.fetch([self, "children_count"]) { children.count }
-  end
-
-  def delete_cached_children_count
-    Rails.cache.delete [self, "children_count"]
+  
+  def children_count
+    children.count
   end
 
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.

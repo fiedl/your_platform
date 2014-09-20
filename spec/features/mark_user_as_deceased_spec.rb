@@ -33,11 +33,15 @@ feature 'Mark user as deceased' do
       fill_in 'localized_date_of_death', with: localized_date
       click_on I18n.t(:confirm)
     end
+
+    # wait for it to be finished:
+    page.should have_no_text I18n.t(:confirm), visible: true
+    wait_for_ajax
     
     page.should have_text @user.reload.title
     page.should have_text "(✟)"
     page.should have_text localized_date
-    @user.current_status_group_in(@corporation).should == @verstorbene
+    @user.current_status_group_in(@corporation.reload).should == @verstorbene
     
     visit group_path(@verstorbene)
     page.should have_text @user.last_name

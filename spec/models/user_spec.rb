@@ -106,7 +106,7 @@ describe User do
     end
   end
 
-  describe "#cached_aktivitaetszahl" do
+  describe "#cached(:aktivitaetszahl)" do
     before do
       @corporationE = create( :wingolf_corporation, :token => "E" )
       @corporationH = create( :wingolf_corporation, :token => "H" )
@@ -120,7 +120,7 @@ describe User do
       @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
     end
-    subject { @user.cached_aktivitaetszahl }
+    subject { @user.cached(:aktivitaetszahl) }
     it "should return the composed cached aktivitaetszahl" do
       subject.should == "E06 H08"
     end
@@ -132,17 +132,19 @@ describe User do
     end
     describe "if currently 'E06 H08' and after adding S in 2014 it" do
       before do
-        @user.cached_aktivitaetszahl
+        @user.cached(:aktivitaetszahl)
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2014-05-01".to_datetime)
+        time_travel 2.seconds
         @user.reload
       end
       it { should == "E06 H08 S14" }
     end
     describe "if currently 'E06 H08' and after leaving H it" do
       before do
-        @user.cached_aktivitaetszahl
+        @user.cached(:aktivitaetszahl)
         @first_membership_H.invalidate( "2014-05-01".to_datetime )
+        time_travel 2.seconds
         @user.reload
       end
       it { should == "E06" }
@@ -257,7 +259,7 @@ describe User do
       subject { @user.reload.wingolfsblaetter_abo = false }
       it "should un-assign the user to the @abonnenten_group" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         Group.find(@abonnenten_group.id).direct_members.should_not include @user
       end
     end
@@ -382,7 +384,7 @@ describe User do
         end
         it "should assign the user to the new BV" do
           subject
-          sleep 1.1  # because of the validity range time comparison
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should end the current BV membership" do
@@ -444,18 +446,18 @@ describe User do
         end
         it "should remove all old memberships" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           UserGroupMembership.find_by_user_and_group(@user, @bv0).should == nil
           UserGroupMembership.find_by_user_and_group(@user, @bv1).should == nil
         end
         specify "the user should only have ONE bv membership, now" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           (@user.groups(true) & Bv.all).count.should == 1
         end
         it "should assign the user to the correct bv" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should return the new membership" do
@@ -473,7 +475,7 @@ describe User do
       end
       it "should not assign a bv" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         @user.reload.bv.should == nil
       end
       it { should == nil }      
@@ -566,7 +568,8 @@ describe User do
       it "should add the user to the Nicht-Recipierte-Fuxen group if the first status group is named like that" do
         @corporation.status_group("Hospitanten").update_attributes(name: "Nicht-Recipierte Fuxen")
         subject
-        @corporation.status_group("Nicht-Recipierte Fuxen").members.should include @user
+        time_travel 2.seconds
+        @corporation.reload.status_group("Nicht-Recipierte Fuxen").members.should include @user
       end
     end
   end

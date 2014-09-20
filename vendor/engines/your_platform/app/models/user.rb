@@ -53,17 +53,6 @@ class User < ActiveRecord::Base
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
   
-  def delete_cache
-    delete_cached_last_group_in_first_corporation
-    delete_cached_current_corporations
-    delete_cached_corporations
-    delete_cached_first_corporation
-    delete_cached_address_label
-    delete_cached_hidden
-    delete_cached_date_of_birth
-    delete_cached_date_of_death
-    delete_cache_structureable
-  end
 
   # Mixins
   # ==========================================================================================
@@ -112,9 +101,6 @@ class User < ActiveRecord::Base
   def name_affix
     title.gsub(name, '').strip
   end
-  def cached_name_affix
-    cached_title.gsub(name, '').strip
-  end
   
   
   # This sets the format of the User urls to be
@@ -125,8 +111,11 @@ class User < ActiveRecord::Base
   #
   #     example.com/users/24
   #
+  # This method uses a cache on purpose, since it is directly used by rails
+  # to construct the url.
+  #
   def to_param
-    "#{id} #{cached_title}".parameterize
+    "#{id} #{cached(:title)}".parameterize
   end
   
 
@@ -186,32 +175,18 @@ class User < ActiveRecord::Base
     end
   end
   
-  def cached_date_of_birth
-    Rails.cache.fetch(['User', id, 'date_of_birth'], expires_in: 1.month) { date_of_birth }
-  end
-  def delete_cached_date_of_birth
-    Rails.cache.delete ['User', id, 'date_of_birth']
-  end
-  
   def age
     now = Time.now.utc.to_date
     dob = self.date_of_birth
     now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
   end
-  def cached_age  # TODO: Remove when implementing new model caching.
-    if self.cached_date_of_birth
-      now = Time.now.utc.to_date
-      dob = self.cached_date_of_birth
-      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-    end
-  end
   
-  def cached_birthday_this_year
+  def birthday_this_year
     begin
-      cached_date_of_birth.change(:year => Time.zone.now.year)
+      date_of_birth.change(:year => Time.zone.now.year)
     rescue
-      if cached_date_of_birth.try(:month) == 2 && cached_date_of_birth.try(:day) == 29
-        cached_date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
+      if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
+        date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
       else
         nil
       end
@@ -225,12 +200,6 @@ class User < ActiveRecord::Base
   #
   def date_of_death
     profile_fields.where(label: 'date_of_death').first.try(:value)
-  end
-  def cached_date_of_death
-    Rails.cache.fetch(['User', id, 'date_of_death'], expires_in: 1.week) { date_of_death }
-  end
-  def delete_cached_date_of_death
-     Rails.cache.delete ['User', id, 'date_of_death']
   end
   
   def set_date_of_death_if_unset(new_date_of_death)
@@ -288,13 +257,22 @@ class User < ActiveRecord::Base
   def postal_address
     postal_address_field_or_first_address_field.try(:value)
   end
-  def cached_postal_address
-    Rails.cache.fetch(['User', id, 'postal_address'], expires_in: 1.week) { postal_address }
-  end
   
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
   end
+
+  # Returns when the postal address has been updated last.
+  #
+  def postal_address_updated_at
+    # if the date is earlier, the date is actually the date
+    # of the data migration and should not be shown.
+    #
+    if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
+      postal_address_field_or_first_address_field.updated_at.to_date 
+    end
+  end
+
   
   # Phone Profile Fields
   # 
@@ -314,15 +292,9 @@ class User < ActiveRecord::Base
   def personal_title
     profile_field_value 'personal_title'
   end
-  def cached_personal_title
-    Rails.cache.fetch(['User', id, 'personal_title'], expires_in: 1.week) { personal_title }
-  end
   
   def academic_degree
     profile_field_value 'academic_degree'
-  end
-  def cached_academic_degree
-    Rails.cache.fetch(['User', id, 'academic_degree'], expires_in: 1.week) { academic_degree }
   end
 
   def name_surrounding_profile_field
@@ -334,10 +306,10 @@ class User < ActiveRecord::Base
   def text_below_name
     name_surrounding_profile_field.try(:text_below_name).try(:strip)
   end
-  def name_prefix
+  def text_before_name
     name_surrounding_profile_field.try(:name_prefix).try(:strip)
   end
-  def name_suffix
+  def text_after_name
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
 
@@ -349,21 +321,6 @@ class User < ActiveRecord::Base
     AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
       self.name_surrounding_profile_field, self.personal_title)
   end
-  def cached_address_label
-    AddressLabel
-    Rails.cache.fetch(['User', id, 'address_label'], expires_in: 1.week) { address_label }
-  end
-  def delete_cached_address_label
-    Rails.cache.delete ['User', id, 'address_label']
-  end
-  def cached_address_label_created_at
-    CacheAdditions
-    Rails.cache.created_at ['User', id, 'address_label']
-  end
-  
-  
-
-  
 
 
   # Associated Objects
@@ -522,41 +479,19 @@ class User < ActiveRecord::Base
     my_corporations.collect { |group| group.becomes( Corporation ) }
   end
 
-  def cached_corporations
-    Corporation
-    Rails.cache.fetch( [self, "corporations"] ) do
-      corporations
-    end
-  end
-
-  def delete_cached_corporations
-    Rails.cache.delete( [self, "corporations"] )
-  end
-
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    self.cached_corporations.select do |corporation|
+    self.corporations.select do |corporation|
       Role.of(self).in(corporation).current_member?
     end || []
-  end
-  
-  def cached_current_corporations
-    Corporation
-    Rails.cache.fetch( [self, "current_corporations"] ) do
-      current_corporations
-    end
-  end
-
-  def delete_cached_current_corporations
-    Rails.cache.delete( [self, "current_corporations"] )
   end
 
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    cached_current_corporations.sort_by do |corporation|
+    current_corporations.sort_by do |corporation|
       corporation.membership_of(self).valid_from || Time.zone.now
     end
   end
@@ -575,13 +510,6 @@ class User < ActiveRecord::Base
     
     sorted_current_corporations.first
   end
-  def cached_first_corporation
-    Rails.cache.fetch(['User', id, 'first_corporation'], expires_in: 1.week ) { first_corporation }
-  end
-  def delete_cached_first_corporation
-    Rails.cache.delete ['User', id, 'first_corporation']
-  end
-  
   
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
@@ -599,16 +527,11 @@ class User < ActiveRecord::Base
       []
     end
   end
-
-  def cached_last_group_in_first_corporation
-    Rails.cache.fetch( [self, "last_group_in_first_corporation"] ) do
-      my_groups_in_first_corporation.last
-    end
+  
+  def last_group_in_first_corporation
+    my_groups_in_first_corporation.last
   end
 
-  def delete_cached_last_group_in_first_corporation
-    Rails.cache.delete( [self, "last_group_in_first_corporation"] )
-  end
 
   # Corporate Vita
   # ==========================================================================================
@@ -619,7 +542,7 @@ class User < ActiveRecord::Base
     #   .now_and_in_the_past
     #   .find_all_by_user_and_corporation( self, corporation )
     
-    groups = corporation.cached_leaf_groups & self.parent_groups
+    groups = corporation.leaf_groups & self.parent_groups
     group_ids = groups.collect { |group| group.id }
     
     UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where( ancestor_id: group_ids, ancestor_type: 'Group' )
@@ -851,14 +774,7 @@ class User < ActiveRecord::Base
   #
 
   def hidden?
-    self.cached_hidden
-  end
-
-  def cached_hidden
-    ids = Rails.cache.fetch([self, 'hidden'], expires_in: 1.week) { hidden}
-  end
-  def delete_cached_hidden
-     Rails.cache.delete( [self, 'hidden'] )
+    self.hidden
   end
 
   def hidden

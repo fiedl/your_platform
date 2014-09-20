@@ -52,4 +52,15 @@ class Role
     group.corporation? and user.former_member_of_corporation?(group)
   end
   
+  
+  
+  # This finder method returns all global admins.
+  #
+  def self.global_admins
+    Group.find_everyone_group.try(:find_admins) || []
+  end
+  def self.cached_global_admins
+    Group.find_everyone_group.try(:cached, :find_admins) || []
+  end
+  
 end

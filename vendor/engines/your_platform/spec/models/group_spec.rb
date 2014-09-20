@@ -259,26 +259,26 @@ describe Group do
       end
     end
 
-    describe '#cached_leaf_groups' do
-      subject { @group.cached_leaf_groups }
+    describe '#cached(:leaf_groups)' do
+      subject { @group.reload.cached(:leaf_groups) }
       describe 'for the group being a corporation' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
         end
         it { should == @group.leaf_groups }
       end
       describe 'for the group being a corporation with status groups' do
         before do
           @group = create(:corporation_with_status_groups)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
         end
-        it { should == @group.cached_leaf_groups }
+        it { should == @group.cached(:leaf_groups) }
       end
       describe 'for the group being a corporation with admin groups' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
           @group.find_or_create_admins_parent_group
         end
         it { should == @group.leaf_groups }
@@ -286,7 +286,10 @@ describe Group do
       describe 'for the group being a corporation with normal and status groups' do
         before do
           @group = create(:corporation)
-          @group.cached_leaf_groups
+          @group.cached(:leaf_groups)
+          wait_for_cache
+          
+          # The creation of this group structure should reset the cache.
           @status_1 = @group.child_groups.create
           @group_a = @group.child_groups.create
           @status_2 = @group_a.child_groups.create
@@ -314,8 +317,7 @@ describe Group do
       it "should add the user as a child user" do
         @group.child_users.should_not include @user
         subject
-        sleep 1.1  # TODO: time_travel when migrated to Rails 4
-        @group.child_users(true).should include @user
+        @group.reload.child_users.should include @user
       end
       it "should set the valid_from attribute on the membership" do
         subject

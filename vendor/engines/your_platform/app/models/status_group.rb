@@ -7,12 +7,12 @@
 class StatusGroup < Group
   
   def self.find_all_by_corporation(corporation)
-    corporation.cached_leaf_groups
+    corporation.cached(:leaf_groups)
   end
   
   def self.find_all_by_user(user, options = {})
     user_groups = options[:with_invalid] ? user.ancestor_groups : user.groups
-    user.cached_corporations.collect do |corporation|
+    user.cached(:corporations).collect do |corporation|
       StatusGroup.find_all_by_corporation(corporation)
     end.flatten & user_groups
   end

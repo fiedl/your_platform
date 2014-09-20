@@ -18,7 +18,7 @@ class UsersController < ApplicationController
     if current_user == @user
       current_user.update_last_seen_activity("sieht sich sein eigenes Profil an", @user)
     else
-      current_user.try(:update_last_seen_activity, "sieht sich das Profil von #{@user.cached_title} an", @user)
+      current_user.try(:update_last_seen_activity, "sieht sich das Profil von #{@user.cached(:title)} an", @user)
     end
     
     respond_to do |format|

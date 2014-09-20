@@ -76,6 +76,12 @@ class ListExport
       #
       @data = @data.members
     end
+    
+    # Make the extended methods available that are defined below.
+    #
+    if @data.respond_to?(:first) && @data.first.kind_of?(User)
+      @data = @data.collect { |user| user.becomes(ListExportUser) }
+    end
 
     case preset.to_s
     when 'phone_list'
@@ -112,6 +118,7 @@ class ListExport
       # created based on the leaf groups of the given Group.
       #
       @group = @data
+      @group = @group.becomes(ListExportGroup)
       @leaf_groups = @group.cached_leaf_groups
       # FIXME: The leaf groups should not return any officer group. Make this fix unneccessary:
       @leaf_groups -= @group.descendant_groups.where(name: ['officers', 'Amtsträger'])
@@ -120,6 +127,7 @@ class ListExport
       @leaf_group_ids = @leaf_groups.collect { |group| group.id }
       
       @group.members.collect do |user|
+        user = user.becomes(ListExportUser)
         row = {
           :last_name                      => user.last_name,
           :first_name                     => user.first_name,
@@ -214,7 +222,34 @@ end
 #   But this should be done after introducing the new model caching mechanism.
 #
 require 'user'
-class User
+class ListExportUser < User
+  
+  # Gerneral Attributes
+  #
+  def cached_personal_title
+    cached(:personal_title)
+  end
+  def cached_academic_degree
+    cached(:academic_degree)
+  end
+  
+  # Birthday, Date of Birth, Date of Death
+  #
+  def cached_date_of_birth
+    cached(:date_of_birth)
+  end
+  def cached_name_affix
+    cached(:name_affix)
+  end
+  def cached_birthday_this_year
+    cached(:birthday_this_year)
+  end
+  def cached_date_of_death
+    cached(:date_of_death)
+  end
+  def cached_age
+    cached(:age)
+  end
   def cached_current_age
     cached_age
   end
@@ -224,16 +259,20 @@ class User
   def cached_localized_date_of_birth
     I18n.localize cached_date_of_birth if cached_date_of_birth
   end
+  
+  # Address
+  #
+  def cached_postal_address
+    cached(:postal_address)
+  end
+  def cached_address_label
+    cached(:address_label)
+  end
   def cached_postal_address_with_name_surrounding
     cached_address_label.postal_address_with_name_surrounding
   end
-  def postal_address_updated_at
-    # if the date is earlier, the date is actually the date
-    # of the data migration and should not be shown.
-    postal_address_field_or_first_address_field.updated_at.to_date if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
-  end
   def cached_postal_address_updated_at
-    Rails.cache.fetch(['User', id, 'postal_address_updated_at'], expires_in: 1.week) { postal_address_updated_at }
+    cached(:postal_address_updated_at)
   end
   def cached_localized_postal_address_updated_at
     I18n.localize cached_postal_address_updated_at if cached_postal_address_updated_at
@@ -242,14 +281,10 @@ class User
     cached_address_label.postal_code
   end
   def cached_postal_address_town
-    Rails.cache.fetch(['User', id, 'postal_address_town'], expires_in: 1.week) do
-      postal_address_field_or_first_address_field.geo_location.city if postal_address_field_or_first_address_field
-    end
+    cached_address_label.city
   end
   def cached_postal_address_country
-    Rails.cache.fetch(['User', id, 'postal_address_country'], expires_in: 1.week) do
-      postal_address_field_or_first_address_field.geo_location.country if postal_address_field_or_first_address_field
-    end
+    cached_address_label.country
   end
   def cached_postal_address_country_code
     cached_address_label.country_code
@@ -265,5 +300,11 @@ class User
   end
   def cached_address_label_text_after_name
     cached_address_label.name_suffix
+  end
+end
+
+class ListExportGroup < Group
+  def cached_leaf_groups
+    cached(:leaf_groups)
   end
 end

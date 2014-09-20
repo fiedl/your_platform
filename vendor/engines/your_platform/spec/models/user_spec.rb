@@ -621,7 +621,7 @@ describe User do
     end
   end
 
-  describe "#cached_corporations" do
+  describe "#cached(:corporations)" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationS = create( :corporation_with_status_groups, :token => "S" )
@@ -633,13 +633,15 @@ describe User do
       @user.parent_groups << @subgroup
       @user.reload
     end
-    subject { @user.cached_corporations }
+    subject { @user.cached(:corporations) }
     it "should return an array of the user's corporations" do
       should == @user.corporations
     end
     context "when user entered corporation S" do
       before do
-        @user.cached_corporations
+        @user.cached(:corporations)
+        wait_for_cache
+        
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -648,7 +650,9 @@ describe User do
     end
     context "when user entered corporation H as guest" do
       before do
-        @user.cached_corporations
+        @user.cached(:corporations)
+        wait_for_cache
+
         first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -657,7 +661,7 @@ describe User do
     end
     context "when user left corporation E" do
       before do
-        @user.cached_corporations
+        @user.cached(:corporations)
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
         second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
@@ -714,7 +718,7 @@ describe User do
    end
   end
 
-  describe "#cached_current_corporations" do
+  describe "#cached(:current_corporations)" do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationS = create( :corporation_with_status_groups, :token => "S" )
@@ -726,13 +730,15 @@ describe User do
       @user.parent_groups << @subgroup
       @user.reload
     end
-    subject { @user.cached_current_corporations }
+    subject { @user.cached(:current_corporations) }
     it "should return an array of the user's corporations" do
       should == @user.corporations
     end
     context "when user entered corporation S" do
       before do
-        @user.cached_current_corporations
+        @user.cached(:current_corporations)
+        wait_for_cache
+
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -741,7 +747,7 @@ describe User do
     end
     context "when user entered corporation H as guest" do
       before do
-        @user.cached_current_corporations
+        @user.cached(:current_corporations)
         first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -750,7 +756,9 @@ describe User do
     end
     context "when user left corporation E" do
       before do
-        @user.cached_current_corporations
+        @user.cached(:current_corporations)
+        wait_for_cache
+
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
         second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
@@ -812,7 +820,7 @@ describe User do
     end
   end
 
-  describe "#cached_last_group_in_first_corporation" do
+  describe "#cached(:last_group_in_first_corporation)" do
     before do
       @corporation1 = create( :corporation )
       @corporation1.name = "corporation1"
@@ -837,7 +845,7 @@ describe User do
       @user.parent_groups << @corporation2.admins_parent
       @user.reload
     end
-    subject { @user.cached_last_group_in_first_corporation }
+    subject { @user.cached(:last_group_in_first_corporation) }
     it "should return the last non special group of user's first corporation" do
       subject.should == @subgroup3
     end
@@ -1275,7 +1283,7 @@ describe User do
     end
     describe "false" do
       before { @user.developer = true }
-      subject { @user.developer = false; sleep 1.1 }
+      subject { @user.developer = false; time_travel 2.seconds }
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
@@ -1292,19 +1300,22 @@ describe User do
     subject { @user.hidden? }
   end
 
-  describe '#cached_hidden' do
-    subject { @user.cached_hidden }
+  describe '#cached(:hidden)' do
+    subject { @user.cached(:hidden) }
     describe 'for the user not being hidden' do
       before do
-        @user.cached_hidden
+        @user.cached(:hidden)
+        wait_for_cache
+
         @user.hidden = true
+        @user.reload
       end
       it { should == @user.hidden }
     end
     describe 'for the user being hidden' do
       before do
         @user.hidden = true
-        @user.cached_hidden
+        @user.cached(:hidden)
         @user.hidden = false
       end
       it { should == @user.hidden }
@@ -1331,7 +1342,7 @@ describe User do
       end
     end
     describe 'false' do
-      subject { @user.hidden = false; sleep 1.1 }
+      subject { @user.hidden = false; time_travel 2.seconds }
       describe 'for the user being hidden' do
         before { @user.hidden = true }
         it 'should remove the user from the hidden_users group' do

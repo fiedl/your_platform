@@ -104,7 +104,7 @@ class GroupsController < ApplicationController
         end
         options = {sender: params[:sender]}
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
-        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
+        send_data(@group.cached_members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
     

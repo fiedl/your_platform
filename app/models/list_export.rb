@@ -17,3 +17,9 @@ class ListExport
   end
 
 end
+
+class ListExportUser
+  def cached_bv_name
+    cached(:bv).try(:name)
+  end
+end

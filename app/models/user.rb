@@ -9,7 +9,30 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 #
 class User
   attr_accessible :wingolfsblaetter_abo, :hidden
-
+  
+  # This method is called by a nightly rake task to renew the cache of this object.
+  #
+  def fill_cache
+    cached(:title)
+    cached(:name_affix)
+    cached(:aktivitaetszahl)
+    cached(:aktivitätszahl)
+    cached(:address_label)
+    cached(:postal_address)
+    cached(:postal_address_updated_at)
+    cached(:last_group_in_first_corporation)
+    cached(:current_corporations)
+    cached(:corporations)
+    cached(:first_corporation)
+    cached(:bv)
+    cached(:date_of_birth)
+    cached(:date_of_death)
+    cached(:age)
+    cached(:birthday_this_year)
+    cached(:hidden)
+    cached(:personal_title)
+    cached(:academic_degree)
+  end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -20,13 +43,6 @@ class User
   # 
   def title
     "#{name} #{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
-  end
-  
-  def cached_title
-    Rails.cache.fetch(['User', id, 'title'], expire_in: 1.week) { title }
-  end
-  def delete_cached_title
-    Rails.cache.delete ['User', id, 'title']
   end
   
   # For dead users, there is a cross symbol in the title.
@@ -43,16 +59,6 @@ class User
   #
   def bv
     (Bv.all & self.groups).try(:first).try(:becomes, Bv)
-  end
-  
-  def cached_bv
-    Rails.cache.fetch(['User', id, 'bv'], expires_in: 2.weeks) { bv }
-  end
-  def delete_cached_bv
-    Rails.cache.delete ['User', id, 'bv']
-  end
-  def cached_bv_name
-    cached_bv.try(:name)
   end
   
   def bv_membership
@@ -169,22 +175,6 @@ class User
   end
   def aktivitaetszahl
     aktivitätszahl
-  end
-
-  def cached_aktivitaetszahl
-    Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
-  end
-  
-  def delete_cached_aktivitaetszahl
-    Rails.cache.delete [self, "aktivitaetszahl"]
-  end
-  
-  alias_method :orig_delete_cache, :delete_cache
-  def delete_cache
-    delete_cached_title
-    delete_cached_aktivitaetszahl
-    delete_cached_bv
-    orig_delete_cache
   end
 
   def aktivitaetszahl_addition_for( corporation )

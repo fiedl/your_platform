@@ -40,13 +40,9 @@ class Group < ActiveRecord::Base
   after_create     :import_default_group_structure  # from GroupMixins::Import
 
   def delete_cache
-    delete_cache_structureable
-    delete_cached_leaf_groups
-    delete_cached_corporation
+    super
+    delete_caches_concerning_roles
     delete_cache_for_officers_group
-    delete_cached_memberships
-    delete_cached_latest_memberships
-    delete_cached_memberships_this_year
   end
     
   # General Properties
@@ -135,18 +131,18 @@ class Group < ActiveRecord::Base
   
   # Adress Labels (PDF)
   #
-  def members_to_pdf(options = {sender: ''})
+  def cached_members_to_pdf(options = {sender: ''})
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
     AddressLabelsPdf.new(cached_members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def cached_members_postal_addresses
     members
-      .collect { |user| user.cached_address_label }
+      .collect { |user| user.cached(:address_label) }
       .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
       .collect { |address_label| address_label.to_s }
   end
   def cached_members_postal_addresses_created_at
-    members.collect { |user| user.cached_address_label_created_at || Time.zone.now }.min
+    members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
   end
 
 
@@ -161,12 +157,6 @@ class Group < ActiveRecord::Base
     ([ self ] + ancestor_groups).select do |group|
       group.corporation?
     end.first.try(:becomes, Corporation)
-  end
-  def cached_corporation
-    Rails.cache.fetch([self, 'corporation'], expire_in: 1.week) { corporation }
-  end
-  def delete_cached_corporation
-    Rails.cache.delete [self, 'corporation']
   end
 
   def corporation?
@@ -183,15 +173,6 @@ class Group < ActiveRecord::Base
     end
   end
   
-  def cached_leaf_groups
-    ids = Rails.cache.fetch([self, 'leaf_group_ids'], expires_in: 1.week) { leaf_groups.collect{ |group| group.id } }
-    Group.find ids
-  end
-
-  def delete_cached_leaf_groups
-    Rails.cache.delete( [self, 'leaf_group_ids'] )
-  end
-
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
   end

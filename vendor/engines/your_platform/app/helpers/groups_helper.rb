@@ -8,7 +8,7 @@ module GroupsHelper
         c = content_tag :td do
           content_tag :ul do
             
-            corporation_groups = user.cached_current_corporations
+            corporation_groups = user.cached(:current_corporations)
             if corporation_groups
               corporation_groups.collect do |group|
                 sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
