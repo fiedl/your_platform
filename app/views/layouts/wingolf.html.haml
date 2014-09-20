@@ -95,7 +95,7 @@
             %a(href="https://github.com/fiedl/wingolfsplattform") Github
           - if current_user
             %li
-              %a.has_popover{href: '#', data: {toggle: 'popover', placement: 'top', title: 'IRC-Chat'}} IRC
+              %a.has_popover{href: 'irc://kornbluth.freenode.net/wingolfsplattform', data: {placement: 'top', title: 'IRC-Chat'}} IRC
               -# kornbluth.freenode.net, Frankfurt
               .popover_content
                 %ul
@@ -106,7 +106,7 @@
                   %li
                     %a.btn(href="irc://kornbluth.freenode.net/wingolfsplattform") Mit Chat verbinden
             %li
-              %a.has_popover{href: '#', data: {toggle: 'popover', placement: 'top', title: 'Mumble-Konferenz'}} Mumble
+              %a.has_popover{href: 'mumble://wingolfsplattform.org', data: {placement: 'top', title: 'Mumble-Konferenz'}} Mumble
               -# kornbluth.freenode.net, Frankfurt
               .popover_content
                 %ul

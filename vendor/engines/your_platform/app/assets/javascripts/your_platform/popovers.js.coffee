@@ -1,26 +1,29 @@
 ready = ->
   # $("a[rel=popover]").popover()
+  
   $(".has_popover").popover({
-    html: true
-    #container: $(this),
+    html: true,
+    trigger: 'manual',  # handled below
     content: (->
       $(this).next('.popover_content').html()
     )
   })
-  
-  $(".has_popover").click( (e)->
-    e.preventDefault()
-    e.stopPropagation()
-  )
 
-  $(".popover_content").click( (e)->
-    e.preventDefault()
-    e.stopPropagation()
-  )
+  $('.has_popover').click (event) ->
+    $(".has_popover").not(this).popover('hide')  # close all the other popovers
+    $(this).popover('show')
+    event.preventDefault()
+    event.stopPropagation()
+    return false
+
+  $('body').on 'click', '.popover_content', ->
+    #$('.popover_content').click (event) ->
+    event.preventDefault()
+    event.stopPropagation()
+    return false
   
-  $('body').click(->
+  $('body').click ->
     $(".has_popover").popover('hide')
-  )
 
 $(document).ready(ready)
 $(document).on('page:load', ready)
