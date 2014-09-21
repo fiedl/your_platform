@@ -70,13 +70,13 @@ module ActiveRecordCacheExtension
   end
   
   def delete_cached(method_name)
-    invalidate_cache
-    #Rails.cache.delete_matched "#{self.class.table_name}/#{id}/#{method_name}"
+    #invalidate_cache
+    Rails.cache.delete_matched "#{self.class.table_name}/#{id}/#{method_name}"
   end
   
   def delete_cache
-    invalidate_cache
-    #Rails.cache.delete_matched "#{self.class.table_name}/#{id}/*"
+    #invalidate_cache
+    Rails.cache.delete_matched "#{self.class.table_name}/#{id}/*"
   end
   
   def cache_created_at(method_name, arguments = nil)
