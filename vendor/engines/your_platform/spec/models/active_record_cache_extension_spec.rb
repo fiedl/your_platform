@@ -28,7 +28,7 @@ describe ActiveRecordCacheExtension do
         wait_for_cache
 
         subject.should == @cached_title
-        subject.should_not == @user.reload.title
+        subject.should_not == @user.reload.uncached(:title)
       end
     end
     describe "with a cache in place and the real value having changed" do

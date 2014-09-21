@@ -136,7 +136,7 @@ describe User do
 
   describe "#date_of_birth=" do
     before { @date_of_birth = 24.years.ago.to_date }
-    subject { @user.date_of_birth = @date_of_birth }
+    subject { @user.date_of_birth = @date_of_birth; @user.save }
     it "should set the date of birth" do
       @user.date_of_birth.should == nil
       subject
@@ -165,7 +165,7 @@ describe User do
     end
   end
   describe "#localized_date_of_birth=" do
-    subject { @user.localized_date_of_birth = @given_string }
+    subject { @user.localized_date_of_birth = @given_string; @user.save }
     describe "for setting a valid date of birth" do
       before { @given_string = "11.01.1987" }
       it "should set the date correctly" do

@@ -13,25 +13,37 @@ class User
   # This method is called by a nightly rake task to renew the cache of this object.
   #
   def fill_cache
-    cached(:title)
-    cached(:name_affix)
-    cached(:aktivitaetszahl)
-    cached(:aktivitätszahl)
-    cached(:address_label)
-    cached(:postal_address)
-    cached(:postal_address_updated_at)
-    cached(:last_group_in_first_corporation)
-    cached(:current_corporations)
-    cached(:corporations)
-    cached(:first_corporation)
-    cached(:bv)
-    cached(:date_of_birth)
-    cached(:date_of_death)
-    cached(:age)
-    cached(:birthday_this_year)
-    cached(:hidden)
-    cached(:personal_title)
-    cached(:academic_degree)
+    aktivitaetszahl
+    name_affix
+    title
+    
+    bv
+    bv_membership
+    w_nummer
+    aktiver?
+    philister?
+    
+    date_of_birth
+    date_of_death  
+    birthday_this_year
+    age
+    
+    postal_address
+    address_label
+    postal_address_updated_at
+    
+    corporations
+    current_corporations
+    sorted_current_corporations
+    my_groups_in_first_corporation
+    
+    for corporation in corporations
+      corporate_vita_memberships_in corporation
+    end
+    
+    hidden
+    personal_title
+    academic_degree
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
@@ -42,7 +54,11 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    "#{name} #{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
+    cached { "#{name} #{name_affix}".gsub("  ", " ").strip }
+  end
+  
+  def name_affix
+    cached { "#{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip }
   end
   
   # For dead users, there is a cross symbol in the title.
@@ -58,11 +74,11 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    (Bv.all & self.groups).try(:first).try(:becomes, Bv)
+    cached { (Bv.all & self.groups).try(:first).try(:becomes, Bv) }
   end
   
   def bv_membership
-    UserGroupMembership.find_by_user_and_group(self, bv) if bv
+    cached { UserGroupMembership.find_by_user_and_group(self, bv) if bv }
   end
   
   # Diese Methode gibt die BVs zurück, denen der Benutzer zugewiesen ist. In der Regel
@@ -157,20 +173,22 @@ class User
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
   def aktivitätszahl
-    if self.corporations
-      self.corporations
-      .select do |corporation|
-        not (self.guest_of?(corporation)) and
-        not (self.former_member_of_corporation?(corporation)) and
-        corporation.membership_of(self).valid_from
-      end.sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
-      .collect do |corporation|
-        year_of_joining = ""
-        year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
-        #corporation.token + "\u2009" + year_of_joining
-        token = corporation.token; token ||= ""
-        token + aktivitaetszahl_addition_for(corporation) + year_of_joining
-      end.join(" ")
+    cached do 
+      if self.corporations
+        self.corporations
+        .select do |corporation|
+          not (self.guest_of?(corporation)) and
+          not (self.former_member_of_corporation?(corporation)) and
+          corporation.membership_of(self).valid_from
+        end.sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
+        .collect do |corporation|
+          year_of_joining = ""
+          year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
+          #corporation.token + "\u2009" + year_of_joining
+          token = corporation.token; token ||= ""
+          token + aktivitaetszahl_addition_for(corporation) + year_of_joining
+        end.join(" ")
+      end
     end
   end
   def aktivitaetszahl
@@ -225,7 +243,7 @@ class User
   # ==========================================================================================
   
   def w_nummer
-    self.profile_fields.where(label: "W-Nummer").first.try(:value)
+    cached { self.profile_fields.where(label: "W-Nummer").first.try(:value) }
   end
   def w_nummer=(str)
     field = profile_fields.where(label: "W-Nummer").first || profile_fields.create(type: 'ProfileFieldTypes::General', label: 'W-Nummer')
@@ -255,11 +273,11 @@ class User
   end
   
   def aktiver?
-    Group.alle_aktiven.members.include? self
+    cached { Group.alle_aktiven.members.include? self }
   end
   
   def philister?
-    Group.alle_philister.members.include? self
+    cached { Group.alle_philister.members.include? self }
   end
   
   def group_names

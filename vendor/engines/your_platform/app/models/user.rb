@@ -115,7 +115,7 @@ class User < ActiveRecord::Base
   # to construct the url.
   #
   def to_param
-    "#{id} #{cached(:title)}".parameterize
+    "#{id} #{title}".parameterize
   end
   
 
@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
   # Date of Birth
   #
   def date_of_birth
-    date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
+    cached { date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field }
   end
   def date_of_birth=( date_of_birth )
     find_or_build_date_of_birth_profile_field.value = date_of_birth
@@ -176,19 +176,23 @@ class User < ActiveRecord::Base
   end
   
   def age
-    now = Time.now.utc.to_date
-    dob = self.date_of_birth
-    now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    cached do
+      now = Time.now.utc.to_date
+      dob = self.date_of_birth
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    end
   end
   
   def birthday_this_year
-    begin
-      date_of_birth.change(:year => Time.zone.now.year)
-    rescue
-      if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
-        date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
-      else
-        nil
+    cached do
+      begin
+        date_of_birth.change(:year => Time.zone.now.year)
+      rescue
+        if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
+          date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
+        else
+          nil
+        end
       end
     end
   end
@@ -199,7 +203,7 @@ class User < ActiveRecord::Base
   # Why?
   #
   def date_of_death
-    profile_fields.where(label: 'date_of_death').first.try(:value)
+    cached { profile_fields.where(label: 'date_of_death').first.try(:value) }
   end
   
   def set_date_of_death_if_unset(new_date_of_death)
@@ -255,7 +259,7 @@ class User < ActiveRecord::Base
   # Otherwise, the first address of the user is used.
   #
   def postal_address
-    postal_address_field_or_first_address_field.try(:value)
+    cached { postal_address_field_or_first_address_field.try(:value) }
   end
   
   def postal_address_in_one_line
@@ -265,11 +269,13 @@ class User < ActiveRecord::Base
   # Returns when the postal address has been updated last.
   #
   def postal_address_updated_at
-    # if the date is earlier, the date is actually the date
-    # of the data migration and should not be shown.
-    #
-    if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
-      postal_address_field_or_first_address_field.updated_at.to_date 
+    cached do
+      # if the date is earlier, the date is actually the date
+      # of the data migration and should not be shown.
+      #
+      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
+        postal_address_field_or_first_address_field.updated_at.to_date 
+      end
     end
   end
 
@@ -290,11 +296,11 @@ class User < ActiveRecord::Base
     profile_fields.where(label: label).first.try(:value).try(:strip)
   end
   def personal_title
-    profile_field_value 'personal_title'
+    cached { profile_field_value 'personal_title' }
   end
   
   def academic_degree
-    profile_field_value 'academic_degree'
+    cached { profile_field_value 'academic_degree' }
   end
 
   def name_surrounding_profile_field
@@ -318,8 +324,10 @@ class User < ActiveRecord::Base
   end
 
   def address_label
-    AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
-      self.name_surrounding_profile_field, self.personal_title)
+    cached do
+      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
+        self.name_surrounding_profile_field, self.personal_title)
+    end
   end
 
 
@@ -474,25 +482,31 @@ class User < ActiveRecord::Base
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
   def corporations
-    my_corporations = ( self.groups & Group.corporations ) if Group.corporations_parent
-    my_corporations ||= []
-    my_corporations.collect { |group| group.becomes( Corporation ) }
+    cached do
+      my_corporations = ( self.groups & Group.corporations ) if Group.corporations_parent
+      my_corporations ||= []
+      my_corporations.collect { |group| group.becomes( Corporation ) }
+    end
   end
 
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    self.corporations.select do |corporation|
-      Role.of(self).in(corporation).current_member?
-    end || []
+    cached do
+      self.corporations.select do |corporation|
+        Role.of(self).in(corporation).current_member?
+      end || []
+    end
   end
 
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    current_corporations.sort_by do |corporation|
-      corporation.membership_of(self).valid_from || Time.zone.now
+    cached do
+      current_corporations.sort_by do |corporation|
+        corporation.membership_of(self).valid_from || Time.zone.now
+      end
     end
   end
     
@@ -515,16 +529,18 @@ class User < ActiveRecord::Base
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
   def my_groups_in_first_corporation
-    if first_corporation
-      my_memberships = UserGroupMembership.find_all_by_user( self )
-      my_memberships = my_memberships.now.reorder{ |membership| membership.valid_from }
-      my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
-      my_groups ||= []
-      my_groups.select do |group|
-        first_corporation.in?( group.ancestor_groups )
-      end.reject { |group| group.is_special_group? or self.guest_of?( group ) }
-    else
-      []
+    cached do
+      if first_corporation
+        my_memberships = UserGroupMembership.find_all_by_user( self )
+        my_memberships = my_memberships.now.reorder{ |membership| membership.valid_from }
+        my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
+        my_groups ||= []
+        my_groups.select do |group|
+          first_corporation.in?( group.ancestor_groups )
+        end.reject { |group| group.is_special_group? or self.guest_of?( group ) }
+      else
+        []
+      end
     end
   end
   
@@ -537,15 +553,16 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    
-    # StatusGroupMembership
-    #   .now_and_in_the_past
-    #   .find_all_by_user_and_corporation( self, corporation )
-    
-    groups = corporation.leaf_groups & self.parent_groups
-    group_ids = groups.collect { |group| group.id }
-    
-    UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where( ancestor_id: group_ids, ancestor_type: 'Group' )
+    Rails.cache.fetch([self, 'corporate_vita_memberships_in', corporation], expires_in: 1.week) do
+      # StatusGroupMembership
+      #   .now_and_in_the_past
+      #   .find_all_by_user_and_corporation( self, corporation )
+      
+      groups = corporation.leaf_groups & self.parent_groups
+      group_ids = groups.collect { |group| group.id }
+      
+      UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where( ancestor_id: group_ids, ancestor_type: 'Group' )
+    end
   end
 
 
@@ -778,7 +795,7 @@ class User < ActiveRecord::Base
   end
 
   def hidden
-    self.member_of? Group.hidden_users
+    cached { self.member_of? Group.hidden_users }
   end
 
   def hidden=(hidden)
