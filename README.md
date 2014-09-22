@@ -1,4 +1,5 @@
 ## Wingolfsplattform
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/fiedl/wingolfsplattform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 [![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
