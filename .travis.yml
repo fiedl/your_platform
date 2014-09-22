@@ -12,3 +12,10 @@ before_script:
   - bundle exec rake db:create db:migrate db:test:prepare
 script:
   - bundle exec rake
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/53f5cd27c87a47426f47
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: false     # default: false
