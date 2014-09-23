@@ -62,7 +62,7 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   end
   
   def valid_from
-    self.direct? ? super : earliest_direct_membership.try(:valid_from)
+    self.direct? ? super : cached { earliest_direct_membership.try(:valid_from) }
   end
   def valid_from=( valid_from )
     if self.direct? 

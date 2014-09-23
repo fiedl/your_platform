@@ -93,6 +93,7 @@ describe User do
       @first_membership_E.invalidate
       @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
+      @user.reload
     end
     subject { @user.aktivitaetszahl }
     it "should return the composed aktivitaetszahl" do

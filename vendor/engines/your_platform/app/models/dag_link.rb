@@ -7,6 +7,10 @@ class DagLink < ActiveRecord::Base
   after_create :delete_cache
   after_save :delete_cache
   
+  def fill_cache
+    valid_from
+  end
+
   def delete_cache
     super
     ancestor.delete_cache
