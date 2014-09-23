@@ -39,15 +39,7 @@ module ActiveRecordCacheExtension
       # Call the method, with or without arguments.
       result = arguments ? send(method_name, *arguments) : send(method_name)
       
-      # Not all ActiveRecord::Relation objects can be stored in cache.
-      # Convert them to Arrays. Otherwise, this might raise an 'cannot dump' error.
-      result = result.to_a if result.kind_of? ActiveRecord::Relation
-      
-      # This circumvents a bug: https://github.com/mperham/dalli/issues/250
-      Marshal.dump(result)
-      
-      # Store the result in cache.
-      result
+      process_result_for_caching(result)
     end
   end
   private :cached_method
@@ -59,10 +51,24 @@ module ActiveRecordCacheExtension
     method_name = caller_locations(2,1)[0].label
     
     Rails.cache.fetch([self, method_name], expires_in: 1.week) do
-      yield
+      process_result_for_caching(yield)
     end
   end
   private :cached_block
+  
+  def process_result_for_caching(result)
+    # Not all ActiveRecord::Relation objects can be stored in cache.
+    # Convert them to Arrays. Otherwise, this might raise an 'cannot dump' error.
+    result = result.to_a if result.kind_of? ActiveRecord::Relation
+    
+    # This circumvents a bug: https://github.com/mperham/dalli/issues/250
+    Marshal.dump(result)
+    
+    # Store the result in cache.
+    return result
+  end
+  private :process_result_for_caching
+  
   
   def invalidate_cache
     # Be careful in specs. This takes one second to count as invalid.
