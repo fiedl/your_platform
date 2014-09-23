@@ -20,42 +20,32 @@ class GroupsController < ApplicationController
       if request.format.html? || request.format.xls? || request.format.csv?
         point_navigation_to @group
         
-        # If this is a collection group, e.g. the corporations_parent group, 
-        # do not list the single members.
-        #
-        if @group.group_of_groups?
-          @memberships = []
-          @child_groups = @group.child_groups - [@group.find_officers_parent_group]
-        else
-          
-          # For corporation groups, there has been some confusion, which members
-          # are shown in the list. Thus, modify the list to match the users' 
-          # expectations.
+        Rack::MiniProfiler.step('groups#show controller: fetch memberships') do 
+          # If this is a collection group, e.g. the corporations_parent group, 
+          # do not list the single members.
           #
-          if @group.corporation?
-            @corporation = @group.becomes(Corporation)
-            if @corporation.respond_to?(:aktivitas) and @corporation.aktivitas and @corporation.philisterschaft 
-              # FIXME This is a Wingolf-specific hack! For, example, this could be moved into `@corporation.corporation_members` vs. `@corporation.members`.
-              aktivitas_and_philisterschaft_member_ids = @corporation.aktivitas.member_ids + @corporation.philisterschaft.member_ids
-              @memberships = @corporation.memberships.where(descendant_id: aktivitas_and_philisterschaft_member_ids).includes(:descendant)
-            else
-              @memberships = @corporation.memberships.includes(:descendant) - @corporation.former_members_memberships - @corporation.deceased_members_memberships
-            end
+          if @group.group_of_groups?
+            @memberships = []
+            @child_groups = @group.child_groups - [@group.find_officers_parent_group]
+
+          # This is a regular group.
+          #
           else
-            
-            # This is the standard case:
-            #
-            @memberships = @group.memberships.includes(:descendant).order(valid_from: :desc)
+            @memberships = @group.memberships_for_member_list
           end
         end
         
-        # Make sure only members that are allowed to be seen are in this array!
-        #
-        @memberships.select! { |membership| can?(:read, membership.user) }
+        Rack::MiniProfiler.step('groups#show controller: cancan') do
+          # Make sure only members that are allowed to be seen are in this array!
+          #
+          @memberships.select! { |membership| can?(:read, membership.user) }
+        end
         
-        # Fill also the members into a separate variable.
-        #
-        @members = @memberships.collect { |membership| membership.user }
+        Rack::MiniProfiler.step('groups#show controller: fetch members') do
+          # Fill also the members into a separate variable.
+          #
+          @members = @memberships.collect { |membership| membership.user }
+        end
         
         # for performance reasons deactivated for the moment.
         # fill_map_address_fields

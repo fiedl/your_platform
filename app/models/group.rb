@@ -19,6 +19,8 @@ class Group
     cached(:memberships)
     cached(:latest_memberships)
     cached(:memberships_this_year)
+
+    memberships_for_member_list
   end
   
 
@@ -106,6 +108,25 @@ class Group
     self.ancestor_groups.select do |ancestor|
       ancestor.has_flag?(:bvs_parent)
     end.any?
+  end
+  
+  
+  # In member lists of corporations do not show
+  # former and deceased members as well as members
+  # of special groups associated with this corporation
+  # as subgroups---such as certain mailing lists.
+  #
+  def memberships_for_member_list
+    cached do
+      if corporation?
+        aktivitas_and_philisterschaft_member_ids = 
+          becomes(Corporation).aktivitas.member_ids + 
+          becomes(Corporation).philisterschaft.member_ids
+        memberships.where(descendant_id: aktivitas_and_philisterschaft_member_ids)
+      else
+        memberships_including_members
+      end
+    end
   end
   
   

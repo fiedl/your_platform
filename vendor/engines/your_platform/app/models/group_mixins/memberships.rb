@@ -87,7 +87,29 @@ module GroupMixins::Memberships
     end
     
     def memberships_including_members
-      memberships.includes(:descendant)
+      memberships.includes(:descendant).order(valid_from: :desc)
+    end
+    
+    # This returns the memberships that appear in the member list
+    # of the group.
+    #
+    # For a regular group, these are just the usual memberships.
+    # For a corporation, the members of the 'former members' subgroup
+    # of the corporation are excluded, even though they still have 
+    # memberships.
+    #
+    def memberships_for_member_list
+      cached do
+        if corporation?
+          (
+            memberships_including_members 
+            - becomes(Corporation).former_members_memberships
+            - becomes(Corporation).deceased_members_memberships
+          )
+        else
+          memberships_including_members
+        end
+      end
     end
     
     def latest_memberships
