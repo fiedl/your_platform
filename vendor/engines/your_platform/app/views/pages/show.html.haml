@@ -1,5 +1,6 @@
-- if params[:controller] == 'root'
+- if @page.has_flag? :intranet_root
   %div.col2
+    = render 'root/what_is_new'
     = render @page
   %div.col1
     = render partial: 'root/start_page_elements'
@@ -23,6 +24,3 @@
   
   - for blog_entry_page in @blog_entries
     = render partial: 'pages/page', object: blog_entry_page
-
-
-
