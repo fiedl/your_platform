@@ -130,18 +130,25 @@ class Group < ActiveRecord::Base
   
   # Adress Labels (PDF)
   #
+  def members_to_pdf(options = {sender: ''})
+    cached_members_to_pdf(options)
+  end
   def cached_members_to_pdf(options = {sender: ''})
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
     AddressLabelsPdf.new(cached_members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def cached_members_postal_addresses
-    members
-      .collect { |user| user.cached(:address_label) }
-      .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
-      .collect { |address_label| address_label.to_s }
+    cached do
+      members
+        .collect { |user| user.cached(:address_label) }
+        .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
+        .collect { |address_label| address_label.to_s }
+    end
   end
   def cached_members_postal_addresses_created_at
-    members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+    cached do
+      members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+    end
   end
 
 
@@ -153,9 +160,11 @@ class Group < ActiveRecord::Base
   end
 
   def corporation
-    ([ self ] + ancestor_groups).select do |group|
-      group.corporation?
-    end.first.try(:becomes, Corporation)
+    cached do
+      ([ self ] + ancestor_groups).select do |group|
+        group.corporation?
+      end.first.try(:becomes, Corporation)
+    end
   end
 
   def corporation?
@@ -167,8 +176,10 @@ class Group < ActiveRecord::Base
   # This is needed for the selection of status groups.
   #
   def leaf_groups
-    self.descendant_groups.includes(:flags).select do |group|
-      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+    cached do
+      self.descendant_groups.includes(:flags).select do |group|
+        group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+      end
     end
   end
   

@@ -13,13 +13,20 @@ class Group
   #
   def fill_cache
     cached(:officers_of_self_and_parent_groups)
-    cached(:corporation)
-    cached(:leaf_groups)
-    cached(:memberships)
-    cached(:latest_memberships)
-    cached(:memberships_this_year)
 
+    # Memberships
     memberships_for_member_list
+    memberships_this_year
+    latest_memberships
+        
+    # Other Groups
+    leaf_groups
+    corporation
+    
+    # Address Labels
+    cached_members_postal_addresses
+    cached_members_postal_addresses_created_at
+    
   end
   
 

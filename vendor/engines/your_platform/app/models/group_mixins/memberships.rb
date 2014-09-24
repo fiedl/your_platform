@@ -113,15 +113,19 @@ module GroupMixins::Memberships
     end
     
     def latest_memberships
-      # TODO: Fix this syntax when migrating to Rails 4.
-      # self.memberships.with_invalid...
-      UserGroupMembership.with_invalid.find_all_by_group(self).reorder('valid_from DESC').limit(10).includes(:descendant)
+      cached do
+        # TODO: Fix this syntax when migrating to Rails 4.
+        # self.memberships.with_invalid...
+        UserGroupMembership.with_invalid.find_all_by_group(self).reorder('valid_from DESC').limit(10).includes(:descendant)
+      end
     end
     
     def memberships_this_year
-      # TODO: Fix this syntax when migrating to Rails 4.
-      # self.memberships.this_year...
-      UserGroupMembership.this_year.find_all_by_group(self)
+      cached do
+        # TODO: Fix this syntax when migrating to Rails 4.
+        # self.memberships.this_year...
+        UserGroupMembership.this_year.find_all_by_group(self)
+      end
     end
 
     # User Assignment
