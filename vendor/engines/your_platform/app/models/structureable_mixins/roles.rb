@@ -18,6 +18,7 @@ module StructureableMixins::Roles
   def fill_cache
     super
     find_admins
+    officers_of_self_and_parent_groups
   end
   
   def delete_cache
@@ -97,7 +98,9 @@ module StructureableMixins::Roles
   end
   
   def officers_of_self_and_parent_groups
-    direct_officers + (parent_groups.collect { |parent_group| parent_group.direct_officers }.flatten)
+    cached do
+      direct_officers + (parent_groups.collect { |parent_group| parent_group.direct_officers }.flatten)
+    end
   end
 
   # This method returns all officer users, as well all of this group as of its subgroups.

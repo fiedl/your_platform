@@ -12,7 +12,6 @@ class Group
   # This method is called by a nightly rake task to renew the cache of this object.
   #
   def fill_cache
-    cached(:officers_of_self_and_parent_groups)
 
     # Memberships
     memberships_for_member_list
@@ -26,7 +25,7 @@ class Group
     # Address Labels
     cached_members_postal_addresses
     cached_members_postal_addresses_created_at
-    
+
   end
   
 
