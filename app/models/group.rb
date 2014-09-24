@@ -120,8 +120,8 @@ class Group
     cached do
       if corporation?
         aktivitas_and_philisterschaft_member_ids = 
-          becomes(Corporation).aktivitas.member_ids + 
-          becomes(Corporation).philisterschaft.member_ids
+          (becomes(Corporation).aktivitas.try(:member_ids) || []) + 
+          (becomes(Corporation).philisterschaft.try(:member_ids) || [])
         memberships.where(descendant_id: aktivitas_and_philisterschaft_member_ids)
       else
         memberships_including_members

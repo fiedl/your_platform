@@ -76,23 +76,4 @@ feature "Groups Page" do
     end
   end
   
-  scenario 'viewing the members list of a corporation' do
-    @user = create(:user)
-    @corporation = create(:corporation).becomes(Group)
-    @membership = @corporation.assign_user @user, at: 1.year.ago
-    @former_members = @corporation.child_groups.create(name: "Former Members")
-    @former_members.add_flag :former_members_parent
-        
-    login :user
-    visit group_path(@corporation)
-
-    page.should have_text @user.last_name
-    
-    # The list should not contain former members.
-    #
-    @membership.promote_to @former_members, at: 10.days.ago
-    visit group_path(@corporation)
-    page.should have_no_text @user.last_name
-  end
-
 end
