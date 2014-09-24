@@ -17,8 +17,10 @@ module StructureableMixins::Roles
   
   def fill_cache
     super
-    find_admins
-    officers_of_self_and_parent_groups
+    if respond_to?(:child_groups) # TODO: Refactor this. It should be possible to find the admins for a user.
+      find_admins
+      officers_of_self_and_parent_groups
+    end
   end
   
   def delete_cache
