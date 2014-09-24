@@ -28,9 +28,14 @@ namespace :cache do
     Bv
     
     User.find_each do |user|
-      user.fill_cache
+      begin
+        user.fill_cache
 
-      print ".".green
+        print ".".green
+      rescue => e
+        print "F\n".red
+        print "Error caching user #{user.id}: #{e.message}.\n".red
+      end        
     end
     log.success "\nFertig."
   end
@@ -40,7 +45,12 @@ namespace :cache do
     
     User.find_each do |user|
       user.memberships.each do |membership|
-        membership.fill_cache
+        begin
+          membership.fill_cache
+        rescue => e
+          print "F\n".red
+          print "Error caching membership #{membership.id}: #{e.message}.\n".red
+        end        
       end
       
       print ".".green
