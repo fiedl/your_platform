@@ -10,7 +10,9 @@ feature "Help Page" do
 
   scenario "clicking on the help button and viewing the help page" do
     visit root_path
-    click_on I18n.t(:help)
+    within('#header_help') do
+      click_on I18n.t(:help)
+    end
 
     within("#content_area") do
       page.should have_content I18n.t(:help)
