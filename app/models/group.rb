@@ -12,7 +12,6 @@ class Group
   # This method is called by a nightly rake task to renew the cache of this object.
   #
   def fill_cache
-    cached(:find_admins)
     cached(:officers_of_self_and_parent_groups)
     cached(:corporation)
     cached(:leaf_groups)

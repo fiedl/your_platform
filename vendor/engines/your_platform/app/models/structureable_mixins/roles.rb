@@ -15,6 +15,16 @@ module StructureableMixins::Roles
   included do
   end
   
+  def fill_cache
+    super
+    find_admins
+  end
+  
+  def delete_cache
+    super
+    delete_caches_concerning_roles
+  end
+  
   def delete_caches_concerning_roles
     if is_a? Group
       # For an admins_parent, this is called recursively until the original group
@@ -28,8 +38,8 @@ module StructureableMixins::Roles
         parent_groups.each { |group| group.delete_cache }
       end
     end
-  end
-
+  end    
+  
 
   # Officers
   # ==========================================================================================
@@ -148,7 +158,7 @@ module StructureableMixins::Roles
   end
 
   def find_admins
-    find_admins_parent_group.try( :descendant_users ) || []
+    cached { find_admins_parent_group.try( :descendant_users ) } || []
   end
 
 

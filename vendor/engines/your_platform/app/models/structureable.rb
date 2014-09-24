@@ -64,11 +64,14 @@ module Structureable
     #
     include StructureableMixins::HasSpecialGroups
     
-    include StructureableInstanceMethods
+    # To use `prepend` here allows to call `super` in the methods
+    # defined in the module `StructureableInstanceMethods`.
+    #
+    prepend StructureableInstanceMethods
   end
 
   module StructureableInstanceMethods
-
+    
     # Include Rules, e.g. let this object have admins.
     # 
     include StructureableMixins::Roles
