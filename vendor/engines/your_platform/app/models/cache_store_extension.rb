@@ -15,7 +15,9 @@ module ActiveSupport
       alias_method :original_fetch, :fetch
       def fetch(key, options = {}, &block)
         rescue_from_undefined_class_or_module do
-          original_fetch(key, {force: @ignore_cache}.merge(options), &block)
+          rescue_from_other_errors(block) do
+            original_fetch(key, {force: @ignore_cache}.merge(options), &block)
+          end
         end
       end
       
@@ -38,6 +40,33 @@ module ActiveSupport
         end
       end
       private :rescue_from_undefined_class_or_module
+      
+      # # This provides a solution to errors like
+      # # "year too big to marshal: 16 UTC".
+      # #
+      # # Note that this error confusingly does not neccessarily have
+      # # something to do with caching dates.
+      # #
+      # def rescue_from_too_big_to_marshal
+      #   begin
+      #     yield
+      #   rescue ArgumentError, NameError => exc
+      #     if exc.message.match(%r|year too big to marshal: (.+)|)
+      #       yield.reload  # Reloading the ActiveRecord objects can help.
+      #     else
+      #       raise exc
+      #     end
+      #   end
+      # end
+      
+      def rescue_from_other_errors(block_without_fetch, &block_with_fetch)
+        begin
+          yield
+        rescue
+          block_without_fetch.call  # Circumvent the caching at all.
+        end
+      end
+      private :rescue_from_other_errors
       
     end
   end
