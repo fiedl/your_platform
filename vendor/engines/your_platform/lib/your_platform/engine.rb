@@ -15,6 +15,9 @@ require 'strong_parameters'
 require 'acts-as-dag'
 require 'acts_as_tree'
 
+# Caching
+require 'redis-rails'
+
 # Authentification
 require 'devise'
 

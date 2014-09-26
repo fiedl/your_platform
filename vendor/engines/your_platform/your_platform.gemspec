@@ -37,6 +37,9 @@ Gem::Specification.new do |s|
   # DAG Structure, https://github.com/resgraph/acts-as-dag
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
+  
+  # Caching
+  s.add_dependency 'redis-rails'
 
   # Authentification
   s.add_dependency 'devise', '2.2.3'   # TODO: try to update                           # MIT License

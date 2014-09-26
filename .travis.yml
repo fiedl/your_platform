@@ -2,6 +2,8 @@ rvm:
   - "2.1.2"
 env: 
   - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis"
+services:
+  - redis-server
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler

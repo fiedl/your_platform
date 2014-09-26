@@ -9,7 +9,8 @@ Wingolfsplattform::Application.configure do
 
   # Caching
   config.action_controller.perform_caching = true
-  config.cache_store = :file_store, Rails.root.join("tmp/app_cache")
+  # config.cache_store = :file_store, Rails.root.join("tmp/app_cache")
+  config.cache_store = :redis_store, 'redis://localhost:6379/0/cache_production_stage', { expires_in: 1.week }
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false
