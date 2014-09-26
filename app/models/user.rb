@@ -172,7 +172,7 @@ class User
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
-  def aktivitätszahl
+  def aktivitaetszahl
     cached do 
       if self.corporations
         self.corporations
@@ -191,8 +191,8 @@ class User
       end
     end
   end
-  def aktivitaetszahl
-    aktivitätszahl
+  def aktivitätszahl
+    aktivitaetszahl
   end
 
   def aktivitaetszahl_addition_for( corporation )
