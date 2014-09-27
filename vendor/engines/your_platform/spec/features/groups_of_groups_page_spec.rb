@@ -8,6 +8,10 @@ feature "Group of Groups Page" do
     @corporations_parent = Group.corporations_parent
     @corporations_parent.add_flag :group_of_groups
     @officer_group = create(:group, name: "Officer of Operations")
+    @another_officers_group = create(:group, name: "Executing Officer")
+    @user = create :user
+    @officer_group << @user
+    @another_officers_group << @user
 
     login :user
   end
@@ -29,7 +33,6 @@ feature "Group of Groups Page" do
     visit group_path(@corporations_parent)
     page.should have_text @officer_group.name
     
-    @another_officers_group = create(:group, name: "Executing Officer")
     @corporation.officers_parent << @another_officers_group  # This should invalidate the cache.
     
     visit group_path(@corporations_parent)
@@ -39,7 +42,6 @@ feature "Group of Groups Page" do
   
   scenario 'looking up officers of subgroups of corporations' do
     @corporation.officers_parent << @officer_group
-    @another_officers_group = create(:group, name: "Executing Officer")
     @subgroup = @corporation.child_groups.create name: "Subgroup"
     @subgroup.officers_parent << @another_officers_group
     
@@ -54,7 +56,6 @@ feature "Group of Groups Page" do
     visit group_path(@corporations_parent)
     page.should have_text @officer_group.name
     
-    @another_officers_group = create(:group, name: "Executing Officer")
     @subgroup = @corporation.child_groups.create name: "Subgroup"
     @subgroup.officers_parent << @another_officers_group  # This should invalidate the cache.
     
