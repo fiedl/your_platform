@@ -81,9 +81,7 @@ module StructureableMixins::Roles
   # and of the descendant groups of the structureable object.
   #
   def find_officers_parent_groups_of_self_and_of_descendant_groups
-    officers_parent_groups = ( [self] + self.descendant_groups ).collect do |group|
-      group.find_special_group(:officers_parent)
-    end.select { |group| group.present? }
+    [self.find_officers_parent_group] + self.descendant_groups.find_all_by_flag(:officers_parent) - [nil]
   end
 
   # This method lists all officer groups of the group, i.e. all subgroups of the
