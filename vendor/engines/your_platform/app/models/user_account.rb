@@ -75,21 +75,31 @@ class UserAccount < ActiveRecord::Base
   # Used by devise to identify the correct user account by the given strings.
   #
   def self.find_first_by_auth_conditions(warden_conditions)
-    login = warden_conditions[:login] || warden_conditions[:email]
-    return self.identify_user_account(login) if login # user our own identification system for virtual attributes
-    where(warden_conditions).first # use devise identification system for auth tokens and the like.
+    login_string = warden_conditions[:login] || warden_conditions[:email]
+    return UserAccount.identify(login_string) if login_string
+    return UserAccount.where(warden_conditions).first # use devise identification system for auth tokens and the like.
   end
 
   # Tries to identify a user based on the given `login_string`.
-  def self.identify_user_account( login_string )
-
+  # This can be one of those defined in `User.attributes_used_for_identification`,
+  # currently, `[:alias, :last_name, :name, :email]`.
+  #
+  # Bug fix: The alias is prioritized, such that a user having the alias *doe*
+  # can be identified by this alias even if there are other users with surname *Doe*.
+  #
+  def self.identify(login_string)
+    
+    # Priorization: Check alias first. (Bug fix)
+    user_identified_by_alias = User.find_by_alias(login_string)
+    users_that_match_the_login_string = [ User.find_by_alias(login_string) ] if user_identified_by_alias
+    
     # What can go wrong?
     # 1. No user could match the login string.
-    users_that_match_the_login_string = User.find_all_by_identification_string( login_string )
+    users_that_match_the_login_string ||= User.find_all_by_identification_string(login_string)
     raise 'no_user_found' unless users_that_match_the_login_string.count > 0
     
     # 2. The user may not have an active user account.
-    users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.find_all do |user|
+    users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.select do |user|
       user.has_account? 
     end
     raise 'user_has_no_account' unless users_that_match_the_login_string_and_have_an_account.count > 0
@@ -126,15 +136,6 @@ class UserAccount < ActiveRecord::Base
     UserAccountMailer.welcome_email( self.user, self.password ).deliver
   end
     
-  # This sends a welcome email to the user of the newly created user account.
-  # TODO: Move this to the controller level.
-  #
-  # def send_welcome_email_if_just_created
-  #   if id_changed? # If the id of the record has changed, this is a new record.
-  #     send_welcome_email
-  #   end
-  # end  
-  
   
   # This overrides the devise method that would assign a newly entered password.
   # But: We do not support custom passwords, currently. Thus, this method actually

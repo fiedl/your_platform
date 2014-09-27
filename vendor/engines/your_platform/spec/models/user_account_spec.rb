@@ -46,5 +46,51 @@ describe UserAccount do
       end
     end
   end
-
+  
+  describe ".identify" do
+    before do
+      @user1 = create :user_with_account, first_name: "John", last_name: "Doe", email: "john.doe@example.com", :alias => "doe"
+      @user2 = create :user_with_account, first_name: "James", last_name: "Doe", email: "james.doe@example.com", :alias => "james.doe"
+    end
+    
+    context "for an empty login string" do
+      it "should raise an error" do
+        expect { UserAccount.identify('') }.to raise_error
+      end
+    end
+    context "if only one user is matching" do
+      it "should return the one matching user account" do
+        UserAccount.identify("james.doe").should == @user2.account
+        UserAccount.identify("james.doe@example.com").should == @user2.account
+        UserAccount.identify("John Doe").should == @user1.account
+      end
+    end
+    context "for multiple users with the same last name" do
+      before { @user1.update_attributes(:alias => '') }
+      it "should raise an error" do
+        expect { UserAccount.identify('doe') }.to raise_error 'identification_not_unique'
+      end
+    end
+    context "if the last name is identical to the alias (bug fix)" do
+      before do
+        @user1.destroy # since only @user2 should be present for this test 
+        @user2.update_attribute(:alias, 'doe')
+      end
+      specify "prerequisites" do
+        @user2.alias.downcase.should == @user2.last_name.downcase
+      end
+      it "should return the one matching user" do
+        UserAccount.identify('doe').should == @user2.account
+      end
+    end
+    context "for several users having the same last name and one of them having the last name as alias (bug fix)" do
+      specify "prerequisistes" do
+        @user1.last_name.downcase.should == @user1.alias.downcase
+        @user2.last_name.downcase.should == @user1.last_name.downcase
+      end
+      it "should return the user identified by the alias" do
+        UserAccount.identify("doe").should == @user1.account
+      end
+    end
+  end
 end

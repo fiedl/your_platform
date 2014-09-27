@@ -994,26 +994,6 @@ describe User do
   end
 
 
-  # User Identification
-  # ==========================================================================================
-
-  describe ".identify" do
-    before { @user.save; @user.reload }
-    describe "with a valid and matching login_string" do
-      subject { User.identify( @user.alias ) }
-      it { should == @user }
-    end
-    describe "with an empty login string" do
-      subject { User.identify( "" ) }
-      it { should == nil }
-    end
-    describe "with a nonsense login string" do
-      subject { User.identify( "schnidddlprmpf!" ) }
-      it { should == nil }
-    end
-  end
-
-
   # Roles
   # ==========================================================================================
 

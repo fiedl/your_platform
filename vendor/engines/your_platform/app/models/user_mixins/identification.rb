@@ -32,28 +32,5 @@ module UserMixins::Identification
       end.flatten.uniq
     end
 
-    # This method tries to identify a user by a login_string that is entered during the
-    # login process. The login_string may be an email address, an alias, the last name
-    # or first_name plus last_name.
-    #
-    # If a user could be identified, the user is returned.
-    # Otherwise, the method returns `nil`.
-    #
-    def identify( login_string )
-      
-      # prioritize alias (bug fix)
-      #
-      matching_user = self.find_by_alias(login_string)
-      
-      unless matching_user
-        matching_users = self.find_all_by_identification_string( login_string )
-        if matching_users.count == 1
-          matching_user = matching_users.first
-        end
-      end
-
-      return matching_user
-    end
   end
-
 end
