@@ -111,6 +111,9 @@ module GroupMixins::Memberships
         end
       end
     end
+    def memberships_for_member_list_count
+      cached { memberships_for_member_list.count }
+    end
     
     def latest_memberships
       cached do

@@ -74,18 +74,23 @@ ready = ->
     "sPaginationType": "bootstrap",
     "bJQueryUI": true,
     "lengthMenu": [ 10, 20, 50, 100, 1000 ],
-    "pageLength": 20,
     "language": language_options()
   }
   
   $('.datatable.activities').dataTable(jQuery.extend({
+    "pageLength": 20,
     "order": [[0, "desc"]]
   }, common_configuration))
   $('.datatable.members').dataTable(jQuery.extend({
+    "pageLength": 20,
     "order": [[3, "desc"]],
     columnDefs: [
       { type: 'de_date', targets: 3}
     ]
+  }, common_configuration))
+  $('.datatable.groups').dataTable(jQuery.extend({
+    "order": [[1, "desc"]],
+    "pageLength": 100
   }, common_configuration))
   
 $(document).ready(ready)

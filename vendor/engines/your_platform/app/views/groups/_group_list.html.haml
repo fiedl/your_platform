@@ -1,0 +1,23 @@
+%table.groups.child_groups.datatable.display
+  %thead
+    %tr
+      %th=t :name
+      -#%th.has_tooltip{title: I18n.t(:number_of_members)}=t :members
+      %th=t :members
+      %th=t :officers
+      
+  %tbody
+    - for group in groups do
+      %tr
+        %td
+          %strong= link_to group.name, group
+        %td= group.memberships_for_member_list_count
+        %td
+          - cache [group, 'group_of_groups_table', 'officers'] do
+            - (group.find_officers_parent_group.try(:child_groups).try(:limit, 4) || []).each do |officer_group|
+              %p
+                %span>= officer_group.name
+                = ':'
+                - officer_group.members.each do |officer|
+                  = link_to officer.title, officer
+            
