@@ -34,24 +34,32 @@ module ActiveRecordCacheExtension
   end
   
   def cached_method(method_name, arguments = nil)
-    Rails.cache.fetch([self, method_name, arguments], expires_in: 1.week) do
-      
-      # Call the method, with or without arguments.
-      result = arguments ? send(method_name, *arguments) : send(method_name)
-      
-      process_result_for_caching(result)
+    cached_block(method_name: method_name, arguments: arguments) do
+      arguments ? send(method_name, *arguments) : send(method_name)
     end
   end
   private :cached_method
   
-  def cached_block
+  # options: 
+  #   method_name
+  #   arguments
+  #
+  def cached_block(options = {}, &block)
     # This gives the method name that called the #cached method.
     # See: http://www.ruby-doc.org/core-2.1.2/Kernel.html
     #
-    method_name = caller_locations(2,1)[0].label
-    
-    Rails.cache.fetch([self, method_name], expires_in: 1.week) do
-      process_result_for_caching(yield)
+    if options[:method_name] && options[:arguments]
+      key = [options[:method_name], options[:arguments]]
+    elsif options[:method_name]
+      key = options[:method_name]
+    else
+      caller_method_name = caller_locations(2,1)[0].label
+      key = caller_method_name
+    end
+    rescue_from_too_big_to_marshal(block) do
+      Rails.cache.fetch([self, key], expires_in: 1.week) do
+        process_result_for_caching(yield)
+      end
     end
   end
   private :cached_block
@@ -68,6 +76,19 @@ module ActiveRecordCacheExtension
     return result
   end
   private :process_result_for_caching
+  
+  def rescue_from_too_big_to_marshal(block_without_caching, &block_with_caching)
+    begin
+      yield
+    rescue ArgumentError, NameError => exc
+      if exc.message.include? 'year too big to marshal'
+        block_without_caching.call
+      else
+        raise exc
+      end
+    end
+  end
+  private :rescue_from_too_big_to_marshal
   
   
   def invalidate_cache

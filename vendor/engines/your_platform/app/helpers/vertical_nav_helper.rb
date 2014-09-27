@@ -37,8 +37,9 @@ module VerticalNavHelper
   end
   
   def cached_child_navables(navable)
-    NavNode
-    Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key], expires_in: 1.week) { child_navables(navable) }
+    #NavNode
+    #Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key], expires_in: 1.week) { child_navables(navable) }
+    child_navables(navable)
   end
   def child_navables(navable)
     non_hidden_navables(navable.navable_children, :child)
