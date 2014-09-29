@@ -33,7 +33,7 @@
 
   - # value
   %span.value-wrapper
-    - if profile_field.cached(:children_count) == 0
+    - if profile_field.children_count == 0
       - if can? :update, profile_field
         - if profile_field.value.blank?
           = best_in_place profile_field, :value,
@@ -47,7 +47,7 @@
         - elsif display_method[:display_with] == :markdown
           = markdown(profile_field.value)
           
-    - if profile_field.cached(:children_count) > 0
+    - if profile_field.children_count > 0
       %ul
         - profile_field.children.each do |child_field|
           = render partial: 'profile_fields/profile_field', object: child_field

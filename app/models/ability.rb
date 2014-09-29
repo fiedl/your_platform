@@ -102,10 +102,10 @@ class Ability
         #
         unless preview_as_user
           can :manage, Group do |group|
-            (group.cached(:find_admins).include?(user)) || (group.ancestors.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user))
+            (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
           end
           can :manage, User do |other_user|
-            other_user.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+            other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
           end
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
@@ -115,16 +115,16 @@ class Ability
             if workflow == Workflow.find_mark_as_deceased_workflow
               user.directly_administrated_objects.select { |obj| obj.kind_of?(Group) }.count > 0
             else
-              workflow.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+              workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
             end
           end
           can :manage, Page do |page|
-            page.cached(:find_admins).include?(user) || page.ancestors.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+            page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
           end
           can :manage, ProfileField do |profile_field|
             if profile_field.profileable
-              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.cached(:find_admins).include?(user)) ||
-                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.cached(:find_admins) }.flatten.include?(user)
+              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.find_admins.include?(user)) ||
+                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
             end
           end
           can :manage, UserGroupMembership do |membership|

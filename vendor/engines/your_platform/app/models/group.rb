@@ -131,16 +131,13 @@ class Group < ActiveRecord::Base
   # Adress Labels (PDF)
   #
   def members_to_pdf(options = {sender: ''})
-    cached_members_to_pdf(options)
-  end
-  def cached_members_to_pdf(options = {sender: ''})
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
-    AddressLabelsPdf.new(cached_members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
+    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
-  def cached_members_postal_addresses
+  def members_postal_addresses
     cached do
       members
-        .collect { |user| user.cached(:address_label) }
+        .collect { |user| user.address_label }
         .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
         .collect { |address_label| address_label.to_s }
     end

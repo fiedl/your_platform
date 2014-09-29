@@ -10,7 +10,7 @@ class UserGroupMembership
   # This method is called by a nightly rake task to renew the cache of this object.
   #
   def fill_cache
-    cached(:valid_from)
+    valid_from
   end
 
 end

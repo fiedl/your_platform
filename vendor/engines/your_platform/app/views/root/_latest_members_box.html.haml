@@ -5,13 +5,13 @@
   %div.content
     %ul
       - if group
-        - for membership in group.cached(:latest_memberships).first(3)
+        - for membership in group.latest_memberships.first(3)
           %li
-            = "#{link_to(membership.user.cached(:title), membership.user)},".html_safe
+            = "#{link_to(membership.user.title, membership.user)},".html_safe
             %br
-            = localize membership.cached(:valid_from).to_date
+            = localize membership.valid_from.to_date
         %p
-          = "Insgesamt #{group.cached(:memberships_this_year).count} dieses Jahr."
+          = "Insgesamt #{group.memberships_this_year.count} dieses Jahr."
         %p.list_all
           = link_to I18n.t(:show_all), group
 

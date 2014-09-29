@@ -20,6 +20,6 @@ end
 
 class ListExportUser
   def cached_bv_name
-    cached(:bv).try(:name)
+    bv.try(:name)
   end
 end

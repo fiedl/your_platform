@@ -32,30 +32,30 @@ class ListExport
   def columns
     case preset.to_s
     when 'birthday_list'
-      [:last_name, :first_name, :cached_name_affix, :cached_localized_birthday_this_year, 
-        :cached_localized_date_of_birth, :cached_current_age]
+      [:last_name, :first_name, :name_affix, :localized_birthday_this_year, 
+        :localized_date_of_birth, :current_age]
     when 'address_list'
       #
       # TODO: Add the street as a separate column.
       # This was requested at the meeting at Gernsbach, Jun 2014.
       #
-      [:last_name, :first_name, :cached_name_affix, :cached_postal_address_with_name_surrounding,
-        :cached_postal_address, :cached_localized_postal_address_updated_at, 
-        :cached_postal_address_postal_code, :cached_postal_address_town,
-        :cached_postal_address_country, :cached_postal_address_country_code,
-        :cached_personal_title, :cached_address_label_text_above_name, :cached_address_label_text_below_name,
-        :cached_address_label_text_before_name, :cached_address_label_text_after_name]
+      [:last_name, :first_name, :name_affix, :postal_address_with_name_surrounding,
+        :postal_address, :cached_localized_postal_address_updated_at, 
+        :postal_address_postal_code, :postal_address_town,
+        :postal_address_country, :postal_address_country_code,
+        :personal_title, :address_label_text_above_name, :address_label_text_below_name,
+        :address_label_text_before_name, :address_label_text_after_name]
     when 'phone_list'
-      [:last_name, :first_name, :cached_name_affix, :phone_label, :phone_number]
+      [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
     when 'email_list'
-      [:last_name, :first_name, :cached_name_affix, :email_label, :email_address]
+      [:last_name, :first_name, :name_affix, :email_label, :email_address]
       # One row per email, not per user. See `#processed_data`.
     when 'member_development'
-      [:last_name, :first_name, :cached_name_affix, :cached_localized_date_of_birth, :cached_date_of_death] + @leaf_group_names
+      [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
     else
       # This name_list is the default.
-      [:last_name, :first_name, :cached_name_affix, :cached_personal_title, :cached_academic_degree]
+      [:last_name, :first_name, :name_affix, :personal_title, :academic_degree]
     end
   end
   
@@ -93,7 +93,7 @@ class ListExport
         user.phone_profile_fields.collect { |phone_field| {
           :last_name          => user.last_name,
           :first_name         => user.first_name,
-          :cached_name_affix  => user.cached_name_affix,
+          :name_affix         => user.name_affix,
           :phone_label        => phone_field.label,
           :phone_number       => phone_field.value
         } }
@@ -107,7 +107,7 @@ class ListExport
         user.profile_fields.where(type: 'ProfileFieldTypes::Email').collect { |email_field| {
           :last_name          => user.last_name,
           :first_name         => user.first_name,
-          :cached_name_affix  => user.cached_name_affix,
+          :name_affix         => user.name_affix,
           :email_label        => email_field.label,
           :email_address      => email_field.value
         } }
@@ -119,7 +119,7 @@ class ListExport
       #
       @group = @data
       @group = @group.becomes(ListExportGroup)
-      @leaf_groups = @group.cached_leaf_groups
+      @leaf_groups = @group.leaf_groups
       # FIXME: The leaf groups should not return any officer group. Make this fix unneccessary:
       @leaf_groups -= @group.descendant_groups.where(name: ['officers', 'Amtsträger'])
       # /FIXME
@@ -131,9 +131,9 @@ class ListExport
         row = {
           :last_name                      => user.last_name,
           :first_name                     => user.first_name,
-          :cached_name_affix              => user.cached_name_affix,
-          :cached_localized_date_of_birth => user.cached_localized_date_of_birth,
-          :cached_date_of_death           => user.cached_date_of_death
+          :name_affix                     => user.name_affix,
+          :localized_date_of_birth        => user.localized_date_of_birth,
+          :date_of_death                  => user.date_of_death
         }
         @leaf_groups.each do |leaf_group|
           membership = user.links_as_child_for_groups.where(ancestor_id: leaf_group.id).first
@@ -152,7 +152,7 @@ class ListExport
     case preset.to_s
     when 'birthday_list'
       data.sort_by do |user|
-        user.cached_date_of_birth.try(:strftime, "%m-%d") || ''
+        user.date_of_birth.try(:strftime, "%m-%d") || ''
       end
     when 'address_list', 'name_list'
       data.sort_by do |user|
@@ -224,52 +224,22 @@ end
 require 'user'
 class ListExportUser < User
   
-  # Gerneral Attributes
-  #
-  def cached_personal_title
-    cached(:personal_title)
-  end
-  def cached_academic_degree
-    cached(:academic_degree)
-  end
-  
   # Birthday, Date of Birth, Date of Death
   #
-  def cached_date_of_birth
-    cached(:date_of_birth)
+  def current_age
+    age
   end
-  def cached_name_affix
-    cached(:name_affix)
+  def localized_birthday_this_year
+    I18n.localize birthday_this_year if birthday_this_year
   end
-  def cached_birthday_this_year
-    cached(:birthday_this_year)
-  end
-  def cached_date_of_death
-    cached(:date_of_death)
-  end
-  def cached_age
-    cached(:age)
-  end
-  def cached_current_age
-    cached_age
-  end
-  def cached_localized_birthday_this_year
-    I18n.localize cached_birthday_this_year if cached_birthday_this_year
-  end
-  def cached_localized_date_of_birth
-    I18n.localize cached_date_of_birth if cached_date_of_birth
+  def localized_date_of_birth
+    I18n.localize date_of_birth if date_of_birth
   end
   
   # Address
   #
-  def cached_postal_address
-    cached(:postal_address)
-  end
-  def cached_address_label
-    cached(:address_label)
-  end
-  def cached_postal_address_with_name_surrounding
-    cached_address_label.postal_address_with_name_surrounding
+  def postal_address_with_name_surrounding
+    address_label.postal_address_with_name_surrounding
   end
   def cached_postal_address_updated_at
     cached(:postal_address_updated_at)
@@ -277,34 +247,31 @@ class ListExportUser < User
   def cached_localized_postal_address_updated_at
     I18n.localize cached_postal_address_updated_at if cached_postal_address_updated_at
   end
-  def cached_postal_address_postal_code
-    cached_address_label.postal_code
+  def postal_address_postal_code
+    address_label.postal_code
   end
-  def cached_postal_address_town
-    cached_address_label.city
+  def postal_address_town
+    address_label.city
   end
-  def cached_postal_address_country
-    cached_address_label.country
+  def postal_address_country
+    address_label.country
   end
-  def cached_postal_address_country_code
-    cached_address_label.country_code
+  def postal_address_country_code
+    address_label.country_code
   end
-  def cached_address_label_text_above_name
-    cached_address_label.text_above_name
+  def address_label_text_above_name
+    address_label.text_above_name
   end
-  def cached_address_label_text_below_name
-    cached_address_label.text_below_name
+  def address_label_text_below_name
+    address_label.text_below_name
   end
-  def cached_address_label_text_before_name
-    cached_address_label.name_prefix
+  def address_label_text_before_name
+    address_label.name_prefix
   end
-  def cached_address_label_text_after_name
-    cached_address_label.name_suffix
+  def address_label_text_after_name
+    address_label.name_suffix
   end
 end
 
 class ListExportGroup < Group
-  def cached_leaf_groups
-    cached(:leaf_groups)
-  end
 end

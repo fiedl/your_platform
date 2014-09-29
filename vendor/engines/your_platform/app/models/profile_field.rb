@@ -77,7 +77,7 @@ class ProfileField < ActiveRecord::Base
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   # 
   def value
-    if cached(:children_count) > 0
+    if children_count > 0
       ( [ super ] + children.collect { |child| child.value } ).join(", ")
     else
       super

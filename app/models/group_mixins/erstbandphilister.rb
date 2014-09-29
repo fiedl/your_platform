@@ -95,13 +95,10 @@ module GroupMixins::Erstbandphilister
     end
   end
   
-  # Warning: This method uses a cache intentionally: Usually, fetching all memberships does not take long.
-  # But for erstbandphilister groups it does. But, we don't call cached(:memberships).
-  #
   def memberships
     if is_erstbandphilister_parent_group?
-      membership_ids = self.corporation.philisterschaft.cached(:memberships_including_members).select do |membership|
-        membership.user.cached(:first_corporation) == corporation
+      membership_ids = self.corporation.philisterschaft.memberships_including_members.select do |membership|
+        membership.user.first_corporation == corporation
       end.collect { |membership| membership.id }
       UserGroupMembership.where(id: membership_ids)
     else

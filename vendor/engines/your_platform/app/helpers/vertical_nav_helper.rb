@@ -66,7 +66,7 @@ module VerticalNavHelper
   
   def menu_element_title(object)
     if append_corporation_to_menu_element_title?(object)
-      "#{object.title} (#{object.cached(:corporation).title})"
+      "#{object.title} (#{object.corporation.title})"
     else
       object.title
     end
@@ -74,8 +74,8 @@ module VerticalNavHelper
   
   def append_corporation_to_menu_element_title?(object)
     object.kind_of?(Group) &&
-      object.cached(:corporation) &&
-      (not object.cached(:corporation).becomes(Group).in?(@ancestor_navables + @active_navables)) &&
-      (not object.cached(:corporation).becomes(Group) == object)
+      object.corporation &&
+      (not object.corporation.becomes(Group).in?(@ancestor_navables + @active_navables)) &&
+      (not object.corporation.becomes(Group) == object)
   end
 end
