@@ -107,7 +107,7 @@ class Ability
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
-        unless preview_as_user
+        if user.admin_of_anything? and not preview_as_user
           can :manage, Group do |group|
             (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
           end

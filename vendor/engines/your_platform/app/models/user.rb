@@ -700,6 +700,10 @@ class User < ActiveRecord::Base
   # Admins
   # ------------------------------------------------------------------------------------------
 
+  def admin_of_anything?
+    groups.find_all_by_flag(:admins_parent).count > 0
+  end
+
   # This method finds all objects the user is an administrator of.
   #
   def admin_of
