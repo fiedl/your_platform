@@ -196,9 +196,9 @@ describe GroupsController do
         assigns(:groups).should include(group)
       end
 
-      it 'renders the :index view' do
+      it 'returns 302 not authorized' do
         get :index
-        response.should render_template :index
+        response.status.should eq(302)
       end
     end
 
