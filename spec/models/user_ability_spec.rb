@@ -92,6 +92,54 @@ describe "User: abilities" do
     the_user.should_not be_able_to :export_member_list, @group
   end 
   
+  context "(reading pages and documents)" do
+    before do
+      @group = create(:group)
+      @page_of_group = @group.child_pages.create name: "This page belongs to the group."
+      @attachment_of_group = @page_of_group.attachments.create description: "This attachments belongs to the group."
+      @subpage_of_group = @page_of_group.child_pages.create name: "This subpage belongs to the group."
+      @subpage_attachment_of_group = @subpage_of_group.attachments.create description: "This attachments belongs to the group."
+      @subgroup = @group.child_groups.create name: "Subgroup"
+      @page_of_subgroup = @subgroup.child_pages.create name: "This page belongs to the subgroup."
+      @attachment_of_subgroup = @page_of_subgroup.attachments.create description: "This attachments belongs to the subgroup."
+    end
+    context "when the user is not member of a group" do
+      he { should_not be_able_to :read, @page_of_group }
+      he { should_not be_able_to :download, @attachment_of_group }
+    end
+    context "when the user is member of a group, but not of a subgroup" do
+      before { @group.assign_user user, at: 1.hour.ago }
+      he { should be_able_to :read, @page_of_group }
+      he { should be_able_to :read, @subpage_of_group }
+      he { should_not be_able_to :read, @page_of_subgroup }
+      he { should be_able_to :download, @attachment_of_group }
+      he { should be_able_to :download, @subpage_attachment_of_group }
+      he { should_not be_able_to :download, @attachment_of_subgroup }
+      context "when another link is created later (this avoids ancestor_groups.last in Page#group)" do
+        before { @page_of_group.parent_groups.create name: "Another group" }
+        he { should be_able_to :read, @page_of_group }
+        he { should be_able_to :read, @subpage_of_group }
+        he { should_not be_able_to :read, @page_of_subgroup }
+        he { should be_able_to :download, @attachment_of_group }
+        he { should be_able_to :download, @subpage_attachment_of_group }
+        he { should_not be_able_to :download, @attachment_of_subgroup }
+      end
+    end
+    context "when the user is member of a subgroup (ergo also of the group)" do
+      before { @subgroup.assign_user user, at: 1.hour.ago }
+      he { should be_able_to :read, @page_of_group }
+      he { should be_able_to :read, @subpage_of_group }
+      he { should be_able_to :read, @page_of_subgroup }
+      he { should be_able_to :download, @attachment_of_group }
+      he { should be_able_to :download, @subpage_attachment_of_group }
+      he { should be_able_to :download, @attachment_of_subgroup }
+    end
+    context "when the page does not have a group associated" do
+      before { @page_without_group = create :page }
+      he { should be_able_to :read, @page_without_group }
+    end
+  end
+  
   describe "if other users are hidden" do
     before do
       @hidden_user = create(:user)

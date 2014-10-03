@@ -10,6 +10,30 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
   
 
+  def fill_cache
+    group
+  end
+  
+  # This is the group the page belongs to, for example:
+  #
+  #     group_1
+  #       |----- group_2
+  #       |        |------ page_2 : belongs to group_2
+  #       |
+  #       |--------------- page_1 : belongs to group_1
+  #
+  def group
+    # Do not use `ancestor_groups.last` here. Where this would work somethimes, it depends on the
+    # order of creation of the links.
+    cached do
+      next_parent = parent_groups.first || parent_pages.first
+      until next_parent.nil? or next_parent.kind_of? Group
+        next_parent = next_parent.parent_groups.first || next_parent.parent_pages.first
+      end
+      next_parent
+    end
+  end
+
   # Url
   # ----------------------------------------------------------------------------------------------------
 

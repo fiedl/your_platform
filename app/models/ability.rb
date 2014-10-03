@@ -56,6 +56,13 @@ class Ability
         can :read, :all
         can :download, :all
         can :crud, User, :id => user.id
+        
+        cannot :read, Page do |page|
+          page.group and not page.group.members.include?(user)
+        end
+        cannot :download, Attachment do |attachment|
+          attachment.parent.try(:group) and not attachment.parent.try(:group).try(:members).try(:include?, user)
+        end
 
         cannot :read, ProfileField do |field|
           parent_field = field
