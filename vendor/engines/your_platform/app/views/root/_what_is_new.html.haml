@@ -1,7 +1,8 @@
-%h1= translate :what_is_new
+%h1.what_is_new= translate :what_is_new
 %div.what_is_new
   %ul
-    - for page in Page.order('created_at DESC').limit(5)
+    - temp_page_counter = 0  # counter to avoid iterations within the following select block:
+    - for page in Page.order('created_at DESC').limit(30).select { |page| (temp_page_counter += 1) <= 5 && can?(:read, page) }.first(5)
       %li
         %strong>= link_to (page.title.present? ? page.title : translate(:untitled)), page
         , 
