@@ -35,7 +35,7 @@ module ProfileHelper
   # i.e. if somebody looks at his own profile.
   #
   def show_all_sections?( profileable )
-    can? :crud, profileable
+    can? :update, profileable
   end
 
   def has_visible_fields?( section )
