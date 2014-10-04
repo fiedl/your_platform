@@ -43,6 +43,7 @@ module StructureableMixins::Roles
       end
     end
     descendants.each do |descendant| 
+      descendant.delete_cached :admins_of_ancestors
       descendant.delete_cached :admins_of_self_and_ancestors
     end
   end    
@@ -176,8 +177,16 @@ module StructureableMixins::Roles
     cached { find_admins_parent_group.try( :descendant_users ) } || []
   end
   
+  def admins_of_ancestors
+    cached { ancestors.collect { |ancestor| ancestor.find_admins }.flatten }
+  end
+  
+  def admins_of_ancestor_groups
+    cached { ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten }
+  end
+  
   def admins_of_self_and_ancestors
-    cached { (find_admins + ancestors.collect { |ancestor| ancestor.find_admins }).flatten }
+    cached { find_admins + admins_of_ancestors }
   end
 
 

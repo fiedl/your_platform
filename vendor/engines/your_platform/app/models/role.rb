@@ -59,8 +59,5 @@ class Role
   def self.global_admins
     Group.find_everyone_group.try(:find_admins) || []
   end
-  def self.cached_global_admins
-    Group.find_everyone_group.try(:cached, :find_admins) || []
-  end
   
 end

@@ -14,7 +14,8 @@ namespace :cache do
     :environment, :requirements, :print_info,
     :users,
     :memberships, 
-    :groups
+    :groups,
+    :pages
   ]
   
   task :users => [:environment, :requirements, :print_info] do
@@ -75,6 +76,25 @@ namespace :cache do
       rescue => e
         print "F\n".red
         print "Error caching group #{group.id}: #{e.message}.\n".red
+      end
+    end
+    log.success "\nFertig."
+  end
+  
+  task :pages => [:environment, :requirements, :print_info] do
+    log.section "Inhaltsseiten"
+    
+    # Load classes before reading from cache.
+    # ...
+    
+    Page.find_each do |page|
+      begin
+        page.fill_cache
+      
+        print ".".green
+      rescue => e
+        print "F\n".red
+        print "Error caching page #{page.id}: #{e.message}.\n".red
       end
     end
     log.success "\nFertig."

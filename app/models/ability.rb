@@ -47,92 +47,101 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if (not preview_as_user) and user.in?(Role.cached_global_admins)
+      if user.in? Role.global_admins and not preview_as_user
         can :manage, :all
 
       else
-
-        # Users that are no admins can read all and edit their own profile.
-        can :read, :all
-        can :download, :all
-        can :crud, User, :id => user.id
         
-        cannot :read, Page do |page|
-          page.group and not page.group.members.include?(user)
+        # ATTENTION: Do not use `can :read, :all` anymore.
+        # Anything that can be read has to be specified explicitely.
+        
+        # REGULAR USERS
+        can :read, Page do |page|
+          page.group.nil? || page.group.members.include?(user)
         end
-        cannot :download, Attachment do |attachment|
-          attachment.parent.try(:group) and not attachment.parent.try(:group).try(:members).try(:include?, user)
+        can :download, Attachment do |attachment|
+          attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
         end
 
+        can :read, Group  # exceptions below:
+        
+        # Regular users cannot see the former_members_parent groups
+        # and their descendant groups.
+        #
+        cannot :read, Group do |group|
+          group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
+        end
+        
+        can :read, User  # exceptions below:
+
+        # Regular users cannot see hidden users, except for self.
+        #
+        cannot :read, User do |user_to_show|
+          user_to_show.hidden? && (user != user_to_show)
+        end
+        
+        # Regular users can update their own profile.
+        #
+        can :update, User, :id => user.id
+        
+        # Regular users can read profile fields of profiles they are allowed to see.
+        # Exceptions below.
+        #
+        can :read, ProfileField do |profile_field|
+          can? :read, profile_field.profileable
+        end
+        
+        # Regular users can only see their own bank accounts
+        # as well as bank accounts of non-user objects, i.e. groups.
+        #
         cannot :read, ProfileField do |field|
           parent_field = field
           while parent_field.parent != nil do
             parent_field = parent_field.parent
           end
 
-          is_bank_account = parent_field.type == ProfileFieldTypes::BankAccount.name
-          is_foreign_user_bank_account = (is_bank_account && parent_field.profileable.kind_of?(User) && parent_field.profileable.id != user.id)
-
-          is_foreign_user_bank_account || cannot?(:read, parent_field.profileable)
+          (parent_field.type == 'ProfileFieldTypes::BankAccount') &&
+            parent_field.profileable.kind_of?(User) && (parent_field.profileable.id != user.id)
         end
-
+        
+        # Regular users can create, update or destroy own profile fields.
+        #
         can :crud, ProfileField do |field|
           (field.profileable == user) || field.profileable.nil?
         end
 
-        # Normal users cannot see hidden users, except for self.
-        #
-        cannot :read, User do |user_to_show|
-          user_to_show.hidden? and (user != user_to_show)
-        end
-
-        # Normal users cannot see the former_members_parent groups
-        # and their descendant groups.
-        cannot :read, Group do |group|
-          group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
-        end
-
-        # Normal users can update their own membership validity range.
+        # Regular users can update their own validity ranges of memberships
+        # in order to update their corporate vita.
         #
         can :update, UserGroupMembership do |user_group_membership|
           user_group_membership.user == user
         end
         
-        # Normal users cannot see the activity log, for the moment.
-        # Only global admins can.
-        #
-        cannot :read, PublicActivity::Activity
-
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
         if user.admin_of_anything? and not preview_as_user
           can :manage, Group do |group|
-            (group.find_admins.include?(user)) || (group.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user))
+            group.admins_of_self_and_ancestors.include? user
           end
           can :manage, User do |other_user|
-            other_user.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+            other_user.admins_of_ancestor_groups.include? user
           end
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
-            # And they can execute the mark_as_deceased workflow, which is a global workflow,
+            # And they can execute the mark_as_deceased workflow, which is a global workflow.
             # if they do administrate a group.
             #
-            if workflow == Workflow.find_mark_as_deceased_workflow
-              user.directly_administrated_objects.select { |obj| obj.kind_of?(Group) }.count > 0
-            else
-              workflow.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-            end
+            (workflow == Workflow.find_mark_as_deceased_workflow) ||
+              workflow.admins_of_ancestors.include?(user)
           end
           can :manage, Page do |page|
-            page.find_admins.include?(user) || page.ancestors.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
+            page.admins_of_self_and_ancestors.include? user
           end
           can :manage, ProfileField do |profile_field|
-            if profile_field.profileable
-              (profile_field.profileable.kind_of?(Group) && profile_field.profileable.find_admins.include?(user)) ||
-                profile_field.profileable.ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten.include?(user)
-            end
+            profile_field.profileable.nil? ||  # in order to create profile fields
+              can?(:manage, profile_field.profileable)
           end
           can :manage, UserGroupMembership do |membership|
             can? :manage, membership.user
@@ -147,19 +156,21 @@ class Ability
         end        
         
         # DEVELOPERS
-        if user.developer?
-          can :use, Rack::MiniProfiler
+        can :use, Rack::MiniProfiler do
+          user.developer?
         end
         
       end
+      
+    else  # not logged in
+
+      # Imprint
+      # Make sure all users (even if not logged in) can read the imprint.
+      #
+      can :read, Page do |page|
+        page.has_flag? :imprint
+      end
 
     end
-    
-    # Imprint
-    # Make sure all users (even if not logged in) can read the imprint.
-    can :read, Page do |page|
-      page.has_flag? :imprint
-    end
-    
   end
 end
