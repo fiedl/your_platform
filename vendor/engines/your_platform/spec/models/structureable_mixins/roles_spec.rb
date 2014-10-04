@@ -91,6 +91,57 @@ describe StructureableMixins::Roles do
       end
     end
   end
+  
+  describe "#admins_of_self_and_ancestors" do
+    subject { @my_structureable.admins_of_self_and_ancestors }
+    before do
+      # @ancestor1 -> admin1
+      #    |------- @ancestor2 -> admin2
+      #    |            |------- @my_structureable -> my_admin
+      #    |
+      #    |------- @no_ancestor -> other_admin
+      #
+      @ancestor2 = @my_structureable.parent_my_structureables.create name: 'Ancestor 2'
+      @ancestor1 = @ancestor2.parent_my_structureables.create name: 'Ancestor 1'
+      @no_ancestor = @ancestor1.child_my_structureables.create name: 'No Ancestor'
+      
+      @admin1 = create :user
+      @admin2 = create :user
+      @my_admin = create :user
+      @other_admin = create :user
+      
+      @ancestor1.admins << @admin1
+      @ancestor2.admins << @admin2
+      @my_structureable.admins << @my_admin
+      @no_ancestor.admins << @other_admin
+      
+      @my_structureable.reload
+    end
+    it "should include the ancestors' admins" do
+      subject.should include @admin1
+      subject.should include @admin2
+    end
+    it "should include the own direct admins" do
+      subject.should include @my_admin
+    end
+    it "should not include admins that are neither direct admins nor ancestors' admins" do
+      subject.should_not include @other_admin
+    end
+    describe "(caching)" do
+      describe "after changing an ancestor's admins" do
+        before do
+          @my_structureable.admins_of_self_and_ancestors  # creates the cache
+          @ancestor1.admins.destroy(@admin1)
+          wait_for_cache
+          @my_structureable.reload
+        end
+        it "should refresh the cached value" do
+          subject.should_not include @admin1
+          subject.should include @admin2, @my_admin
+        end
+      end
+    end
+  end
 
   describe "#find_admins" do
     subject { @my_structureable.admins }

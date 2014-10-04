@@ -6,6 +6,7 @@ class DagLink < ActiveRecord::Base
 
   after_create :delete_cache
   after_save :delete_cache
+  before_destroy :delete_cache
   
   def fill_cache
     valid_from
