@@ -276,11 +276,11 @@ describe StatusGroupMembership do
       subject { StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation) }
       specify "prelims" do
         @user.should be_kind_of User
-        @corporation.should be_kind_of Corporation
+        @corporation.reload.should be_kind_of Corporation
         @corporation.descendants.should include @intermediate_group, @status_group, @second_status_group, @user
-        @intermediate_group.descendants.should include @status_group, @second_status_group, @user
-        @status_group.descendants.should include @user
-        @second_status_group.descendants.should include @user
+        @intermediate_group.reload.descendants.should include @status_group, @second_status_group, @user
+        @status_group.reload.descendants.should include @user
+        @second_status_group.reload.descendants.should include @user
         @corporation.members.should include @user
         @user.should be_member_of @corporation
         @membership.valid_to.to_date.should == 20.days.ago.to_date

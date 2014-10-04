@@ -7,6 +7,7 @@ feature "Aktivmeldung" do
     @corporation = create(:corporation)
     @aktivitas_group = @corporation.child_groups.create(name: "Aktivitas")
     @intranet_root = Page.create(title: "Intranet Root").add_flag(:intranet_root)
+    @corporation.reload
 
     login(:admin)
   end
