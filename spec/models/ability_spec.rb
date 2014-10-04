@@ -60,6 +60,16 @@ describe "User: abilities" do
       the_user.should be_able_to :update, UserGroupMembership.find_by_user_and_group(user, @group)
     end
   end
+  he "should be able to update his account, e.g. his password" do
+    the_user.should be_able_to :update, user.account
+  end
+  he "should not be able to create an account" do
+    the_user.should_not be_able_to :create, UserAccount
+  end
+  he "should not be able to destroy his account" do
+    the_user.should_not be_able_to :destroy, user.account
+  end
+
   he "should be able to read anything (exceptions are below)" do
     @page = create(:page)
     the_user.should be_able_to :read, @page

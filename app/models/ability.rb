@@ -83,6 +83,7 @@ class Ability
         # Regular users can update their own profile.
         #
         can :update, User, :id => user.id
+        can :update, UserAccount, :user_id => user.id
         
         # Regular users can read profile fields of profiles they are allowed to see.
         # Exceptions below.

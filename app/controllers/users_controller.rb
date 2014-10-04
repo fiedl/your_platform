@@ -4,7 +4,7 @@ class UsersController < ApplicationController
   respond_to :html, :json, :js
 
   before_filter :find_user, only: [:show, :update, :forgot_password]
-  authorize_resource
+  authorize_resource except: [:forgot_password]
 
   def index
     begin
@@ -69,6 +69,7 @@ class UsersController < ApplicationController
   end
 
   def forgot_password
+    authorize! :update, @user.account
     @user.account.send_new_password
     flash[:notice] = I18n.t(:new_password_has_been_sent_to, user_name: @user.title)
     redirect_to :back

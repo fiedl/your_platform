@@ -17,17 +17,18 @@
     
 .show_only_in_edit_mode
   %dl
-    - if can? :manage, @user
+    - if can? :update, @user
       %dt
         Zugang zur Plattform
       %dd
         = "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am #{localize(@user.account.created_at)}. Zuletzt wurde am #{localize(@user.account.updated_at)} ein neues Passwort per E-Mail übersandt."
       %dt
         = t('password') + ':'
-      %dd
+      %dd.request_new_password
         = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
+    - if can? :manage, @user
       %dt
         Zugang zur Plattform sperren:
-      %dd
+      %dd.lock_account
         = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
         (Dies sperrt nur den Zugang zur Plattform. Alle Daten bleiben erhalten.)

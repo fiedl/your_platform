@@ -292,6 +292,29 @@ feature 'User page', js: false do
             page.should have_content("StudiumUniversale")
           end
         end
+        
+        scenario "Looking at the section 'access' and requesting a new password", js: true do
+          within('.box.section.access') do
+            page.should have_text @user.alias
+            page.should have_text @user.last_name
+            page.should have_text @user.name
+            page.should have_text @user.email
+            
+            click_on I18n.t(:edit)
+            page.should have_selector "input[type=text]", count: 5  # alias, last_name, first_name + last_name, email
+            page.should have_text "Zugang zur Plattform"
+            page.should have_text "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am"
+            page.should have_text "Zuletzt wurde am"
+            page.should have_text "ein neues Passwort per E-Mail übersandt."
+            
+            page.should have_selector '.request_new_password'
+            page.should have_no_selector '.lock_account'
+            
+            click_on I18n.t(:send_new_password)
+          end
+          page.should have_no_selector '.request_new_password', visible: true
+          page.should have_text "Zugriff nicht gestattet. Bitte melden Sie sich zunächst am System an." # Denn: Das alte Passwort ist ja nun nicht mehr gültig!
+        end
       end
     end
   end
