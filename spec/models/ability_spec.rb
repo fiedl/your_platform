@@ -30,7 +30,7 @@ describe "User: abilities" do
   subject { ability }
   let(:the_user) { subject }
   
-  context "when the user is a global admin" do
+  context "when the user is a global admin", :focus do
     before { user.global_admin = true }
     he "should be able to manage everything" do
       @page = create(:page)
@@ -39,6 +39,18 @@ describe "User: abilities" do
       the_user.should be_able_to :manage, @group
       @other_user = create(:user)
       the_user.should be_able_to :manage, @other_user
+    end
+    specify "turning the switch on and off should change the abilities accordingly and not cause caching issues" do
+      @page = create(:page)
+      the_user.should be_able_to :manage, @page
+      
+      user.global_admin = false
+      wait_for_cache
+      Ability.new(User.find user.id).should_not be_able_to :manage, @page
+      
+      user.global_admin = true
+      wait_for_cache
+      Ability.new(User.find user.id).should be_able_to :manage, @page
     end
   end
   
@@ -273,5 +285,6 @@ describe "User: abilities" do
       the_user.should_not be_able_to :export_member_list, @parent_group
     end
   end
+  
 end
   
