@@ -118,6 +118,10 @@ class Ability
           user_group_membership.user == user
         end
         
+        # All users can join events.
+        #
+        can :join, Event        
+        
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
@@ -154,7 +158,16 @@ class Ability
         #
         can :export_member_list, Group do |group|
           user.in? group.officers_of_self_and_parent_groups
-        end        
+        end
+        
+        # Local officers can create events in their groups.
+        #
+        can :create_event, Group do |group|
+          user.in? group.officers_of_self_and_parent_groups
+        end
+        can :update, Event do |event|
+          user.in? event.group.officers_of_self_and_parent_groups
+        end
         
         # DEVELOPERS
         can :use, Rack::MiniProfiler do

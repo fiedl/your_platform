@@ -1,7 +1,0 @@
-%ul
-  - for event in events do
-    %li 
-      %span{ :class => "event start_at_date" }
-        = link_to localize( event.start_at.to_date, :format => :long ), events_path( :start_at_date =>event.start_at.to_date )
-      %span{ :class => "event start_at_time" }= localize( event.start_at, :format =>:time )
-      %span{ :class => "event name" }= link_to( event.name, event )

@@ -31,6 +31,11 @@ Rails.application.routes.draw do
   resources :status_group_memberships
   resources :relationships
 
+  resources :events do
+    post :join, to: 'events#join'
+    delete :leave, to: 'events#leave'
+  end
+
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
   

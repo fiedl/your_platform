@@ -19,7 +19,7 @@ class Group < ActiveRecord::Base
   
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
-  is_structureable( ancestor_class_names: %w(Group Page), 
+  is_structureable( ancestor_class_names: %w(Group Page Event), 
                     descendant_class_names: %w(Group User Page Workflow Event) )
   is_navable
   has_profile_fields
@@ -124,7 +124,7 @@ class Group < ActiveRecord::Base
   # ------------------------------------------------------------------------------------------
 
   def upcoming_events
-    self.events.upcoming
+    self.descendant_events.upcoming
   end
   
   

@@ -12,7 +12,6 @@ Wingolfsplattform::Application.routes.draw do
   # get "angular_test", controller: "angular_test", action: "index"
 
   resources :posts
-  resources :events  
 
   match "users/new/:alias" => "users#new"
 

@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :description, :end_at, :name, :start_at
+  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at
 
   is_structureable ancestor_class_names: %w(Group), descendant_class_names: %w(Group)
   is_navable
@@ -32,6 +32,59 @@ class Event < ActiveRecord::Base
   def groups
     self.parent_groups
   end
+  
+  # Times
+  # ==========================================================================================
+  
+  def localized_start_at
+    I18n.localize start_at.to_time if start_at.present?
+  end
+  def localized_start_at=(string)
+    attribute_will_change! :start_at
+    #self.start_at = string.present? ? Time.parse(string) : nil
+    self.start_at = string  # conversion handled by the delocalize gem
+  end
+  
+  def localized_end_at
+    I18n.localize end_at.to_time if end_at.present?
+  end
+  def localized_end_at=(string)
+    attribute_will_change! :end_at
+    #self.end_at = string.present? ? Time.parse(string) : nil
+    self.end_at = string  # conversion handled by the delocalize gem
+  end
+  
+
+
+  # Contact People and Attendees
+  # ==========================================================================================
+  
+  def find_contact_people_group
+    find_special_group :contact_people
+  end
+  def create_contact_people_group
+    create_special_group :contact_people
+  end
+  def contact_people_group
+    find_contact_people_group || create_contact_people_group
+  end
+  def contact_people
+    contact_people_group.child_users
+  end
+  
+  def find_attendees_group
+    find_special_group :attendees
+  end
+  def create_attendees_group
+    create_special_group :attendees
+  end
+  def attendees_group
+    find_attendees_group || create_attendees_group
+  end
+  def attendees
+    attendees_group.child_users
+  end
+  
 
   # Scopes
   # ==========================================================================================

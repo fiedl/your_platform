@@ -10,7 +10,7 @@ RSpec.configure do |c|
   c.alias_example_to :he
 end
 
-describe "User: abilities" do
+describe Ability do
   
   # I'm sorry. I do have problems with cancan's terminology, here.
   # For me, the User can do something, i.e. I would ask 
@@ -30,7 +30,7 @@ describe "User: abilities" do
   subject { ability }
   let(:the_user) { subject }
   
-  context "when the user is a global admin", :focus do
+  context "when the user is a global admin" do
     before { user.global_admin = true }
     he "should be able to manage everything" do
       @page = create(:page)
@@ -162,6 +162,15 @@ describe "User: abilities" do
     end
   end
   
+  context "(joining events)" do
+    before do
+      @group = create :group
+      @event = @group.child_events.create
+    end
+    he { should be_able_to :join, @event }
+    he { should_not be_able_to :create_event, @group }
+  end
+  
   describe "if other users are hidden" do
     before do
       @hidden_user = create(:user)
@@ -283,6 +292,21 @@ describe "User: abilities" do
     end
     he "should not be able to export the member list of parent groups" do
       the_user.should_not be_able_to :export_member_list, @parent_group
+    end
+
+    he "should be able to create an event in his group" do
+      the_user.should be_able_to :create_event, @group
+    end
+    he "should be able to update events in his group" do
+      @event = @group.child_events.create
+      the_user.should be_able_to :update, @event
+    end
+    he "should be able to create events in subgroups of his group" do
+      the_user.should be_able_to :create_event, @sub_group
+    end
+    he "should be able to update events in subgroups of his group" do
+      @event = @sub_group.child_events.create
+      the_user.should be_able_to :update, @event
     end
   end
   

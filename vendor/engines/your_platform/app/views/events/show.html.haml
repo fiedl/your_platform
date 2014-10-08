@@ -1,0 +1,45 @@
+%h1= best_in_place_if can?(:update, @event), @event, :name
+%div
+  %table.event_details
+    %tr.description
+      %th=t :description
+      %td= best_in_place_if can?(:update, @event), @event, :description, placeholder: I18n.t(:description), type: 'textarea'
+    %tr.start_at
+      %th=t :start_at
+      %td= best_in_place_if can?(:update, @event), @event, :localized_start_at, type: 'datetime'
+    %tr.end_at
+      %th
+        =t :end_at
+        = surround '(', ')' do
+          =t :optional
+      %td= best_in_place_if can?(:update, @event), @event, :localized_end_at, type: 'datetime'
+    %tr.location
+      %th=t :location
+      %td= best_in_place_if can?(:update, @event), @event, :location
+    %tr.contact_person
+      %th=t :contact_person
+      %td= multiple_users_best_in_place @event.contact_people_group, :direct_members_titles_string
+        
+%h1=t :attendees
+%div
+  %div#attendees_avatars
+    = render partial: 'groups/member_avatars', locals: {group: @event.attendees_group}
+  
+  - if can? :join, @event
+    %p.center
+      - if @event.attendees.include? current_user
+        - join_button_hidden_class = 'hidden'
+      - else
+        - leave_button_hidden_class = 'hidden'
+      %a.btn.btn-success#join_event{href: event_join_path(@event, format: 'json'), class: join_button_hidden_class}
+        %i.icon-user
+        An dieser Veranstaltung teilnehmen
+      %a.btn.btn-danger#leave_event{href: event_leave_path(@event, format: 'json'), class: leave_button_hidden_class}
+        %i.icon-user
+        Doch nicht teilnehmen
+  
+  - if can? :update, @event
+    %p.center
+      %a.btn.has_tooltip{title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {position: 'bottom'}}
+        %i.icon-envelope
+        = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"

@@ -16,6 +16,7 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
+    @navable = @event
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }
@@ -41,6 +42,9 @@ class EventsController < ApplicationController
   # POST /events.json
   def create
     @event = Event.new(params[:event])
+    
+    # TODO
+    # @event.contact_people << current_user
 
     respond_to do |format|
       if @event.save
@@ -57,12 +61,12 @@ class EventsController < ApplicationController
   # PUT /events/1.json
   def update
     respond_to do |format|
-      if @event.update_attributes(params[:event])
+      if @event.update_attributes!(params[:event])
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-        format.json { head :no_content }
+        format.json { respond_with_bip(@event) }
       else
         format.html { render action: "edit" }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
+        format.json { respond_with_bip(@event) }
       end
     end
   end
@@ -77,4 +81,41 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  
+  # POST /events/1/join
+  def join
+    change_attendance(true)
+  end
+  def leave
+    change_attendance(false)
+  end
+  
+  private 
+  
+  def change_attendance(join = true)
+    @event = Event.find params[:event_id]
+    authorize! :join, @event
+
+    if join
+      @event.attendees_group.assign_user current_user, at: Time.zone.now
+    else
+      @event.attendees_group.child_users.destroy(current_user)
+    end
+
+    respond_to do |format|
+      format.html { redirect_to event_url(@event) }
+      format.json do
+        render json: {
+          attendees_avatars: render_to_string(
+            partial: 'groups/member_avatars.html.haml', 
+            layout: false,
+            formats: [:json, :html],
+            locals: {group: @event.attendees_group}
+          )
+        }
+      end
+    end
+  end
+  
 end
