@@ -7,7 +7,7 @@ class EventMailer < ActionMailer::Base
     @text_before_event_table ||= text
     @event = event
     
-    to_emails = recipients.map &:email
+    to_emails = recipients.collect { |user| "#{user.title} <#{user.email}>" }
     mail to: to_emails, from: current_user.email, subject: event.title
   end
 end

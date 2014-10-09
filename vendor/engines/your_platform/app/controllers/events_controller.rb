@@ -79,6 +79,14 @@ class EventsController < ApplicationController
   def leave
     change_attendance(false)
   end
+  def join_via_get
+    # Only allow GET from email links.
+    if params[:email_confirm] == 'true'
+      join
+    else
+      redirect_to Event.find(params[:event_id])
+    end
+  end
   
   def change_attendance(join = true)
     @event = Event.find params[:event_id]
@@ -117,14 +125,16 @@ class EventsController < ApplicationController
     authorize! :update, @event
     
     @text = params[:text]
+    @recipients = []
     
     if params['recipient'] == 'me'
-      recipients = [current_user]
-      EventMailer.invitation_email(@text, recipients, @event, current_user).deliver
-      
+      @recipients = [current_user]
     elsif params['recipient'].kind_of? Integer
       group = Group.find params['recipient']
+      @recipients = group.members
     end
+    
+    EventMailer.invitation_email(@text, @recipients, @event, current_user).deliver
     
     respond_to do |format|
       format.html { redirect_to event_url(@event) }

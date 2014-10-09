@@ -33,6 +33,7 @@ Rails.application.routes.draw do
 
   resources :events do
     post :join, to: 'events#join'
+    get :join, to: 'events#join_via_get', as: 'join_via_get'
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
