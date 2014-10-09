@@ -13,6 +13,9 @@ module AvatarHelper
     #options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
     options[:gravatar][:secure] = true
+    
+    options[:class] ||= ""
+    options[:class] += " img-rounded"
 
     # Default Url
     # Instead of 
