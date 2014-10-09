@@ -120,6 +120,7 @@ class Ability
         
         # All users can join events.
         #
+        can :read, Event
         can :join, Event        
         
         # LOCAL ADMINS

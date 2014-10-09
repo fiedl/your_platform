@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body style="font-family: Helvetica; line-height: 150%">
+    
+    <a href="https://wingolfsplattform.org">
+      <img src="https://wingolfsplattform.org/images/logo-wingolfsplattform.png" width="300px" align="right">
+    </a><br />
+    
+    <%= simple_format @text_before_event_table %>
+    
+    <h2><%= link_to @event.title, event_url(@event)%></h2>
+    
+    <table>
+      <tr>
+        <th align="right"><%=t :description %></th>
+        <td width="15"></td>
+        <td><%= simple_format(@event.description) %></td>
+      </tr>
+      <tr>
+        <th align="right"><%=t :start_at %></th>
+        <td width="15"></td>
+        <td><%=l @event.start_at %></td>
+      </tr>
+      <% if @event.end_at %>
+        <tr>
+          <th align="right"><%=t :end_at %></th>
+          <td width="15"></td>
+          <td><%=l @event.end_at %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <th align="right"><%=t :location %></th>
+        <td width="15"></td>
+        <td><%= @event.location %></td>
+      </tr>  
+      <tr>
+        <th align="right"><%=t :contact_people %></th>
+        <td width="15"></td>
+        <td><%= user_links(@event.contact_people) %></td>
+      </tr>
+      <tr>
+        <th align="right"><%=t :details %></th>
+        <td width="15"></td>
+        <td><%= link_to "Details zur Veranstaltung auf der Plattform anzeigen.", event_url(@event)%></td>
+      </tr>
+      <tr>
+        <th align="right"><%=t :attendance %></th>
+        <td width="15"></td>
+        <td><%= link_to "„Ich nehme teil!“ (Teilnahme eintragen.)", event_join_url(@event, email_confirm: true)%></td>
+      </tr>
+      <tr>
+        <th align="right">Kalender</th>
+        <td width="15"></td>
+        <td><%= link_to "Veranstaltung in Kalender exportieren.", event_url(@event, format: 'ics')%></td>
+      </tr>
+    </table>
+    
+    <%= simple_format @text_after_event_table %>        
+  </body>
+</html>

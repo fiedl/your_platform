@@ -23,35 +23,24 @@ class EventsController < ApplicationController
     end
   end
 
-  # GET /events/new
-  # GET /events/new.json
-  def new
-    @event = Event.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @event }
-    end
-  end
-
-  # GET /events/1/edit
-  def edit
-  end
-
   # POST /events
   # POST /events.json
   def create
     @event = Event.new(params[:event])
+    @event.name ||= I18n.t(:enter_name_of_event_here)
+    @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
     
-    # TODO
-    # @event.contact_people << current_user
-
     respond_to do |format|
       if @event.save
-        format.html { redirect_to @event, notice: 'Event was successfully created.' }
+        @group = Group.find(params[:group_id])
+        @event.parent_groups << @group
+        @event.contact_people << current_user
+        @event[:path] = event_path(@event)
+        
+        format.html { redirect_to @event }
         format.json { render json: @event, status: :created, location: @event }
       else
-        format.html { render action: "new" }
+        format.html { redirect_to :back }
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
@@ -91,8 +80,6 @@ class EventsController < ApplicationController
     change_attendance(false)
   end
   
-  private 
-  
   def change_attendance(join = true)
     @event = Event.find params[:event_id]
     authorize! :join, @event
@@ -115,6 +102,33 @@ class EventsController < ApplicationController
           )
         }
       end
+    end
+  end
+  private :change_attendance
+  
+  
+  # POST /events/:event_id/invite/:recipient
+  # params:
+  #   - recipient
+  #   - text
+  #   - event_id
+  def invite
+    @event = Event.find params[:event_id]
+    authorize! :update, @event
+    
+    @text = params[:text]
+    
+    if params['recipient'] == 'me'
+      recipients = [current_user]
+      EventMailer.invitation_email(@text, recipients, @event, current_user).deliver
+      
+    elsif params['recipient'].kind_of? Integer
+      group = Group.find params['recipient']
+    end
+    
+    respond_to do |format|
+      format.html { redirect_to event_url(@event) }
+      format.json { head :no_content }
     end
   end
   

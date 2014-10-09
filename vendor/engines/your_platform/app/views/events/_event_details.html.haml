@@ -1,0 +1,23 @@
+%table.event_details
+  %tr.description
+    %th=t :description
+    %td= best_in_place_if can?(:update, @event), @event, :description, placeholder: I18n.t(:description), type: 'textarea'
+  %tr.start_at
+    %th=t :start_at
+    %td= best_in_place_if can?(:update, @event), @event, :localized_start_at, type: 'datetime'
+  %tr.end_at
+    %th
+      =t :end_at
+      = surround '(', ')' do
+        =t :optional
+    %td= best_in_place_if can?(:update, @event), @event, :localized_end_at, type: 'datetime'
+  %tr.location
+    %th=t :location
+    %td= best_in_place_if can?(:update, @event), @event, :location
+  %tr.contact_person
+    %th=t :contact_person
+    %td
+      - if can? :update, @event
+        = multiple_users_best_in_place @event.contact_people_group, :direct_members_titles_string
+      - else
+        = user_links(@event.contact_people)

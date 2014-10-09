@@ -34,6 +34,7 @@ Rails.application.routes.draw do
   resources :events do
     post :join, to: 'events#join'
     delete :leave, to: 'events#leave'
+    post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
 
   resources :bookmarks

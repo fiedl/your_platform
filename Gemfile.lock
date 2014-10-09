@@ -281,6 +281,8 @@ GEM
     less-rails (2.2.6)
       actionpack (>= 3.1)
       less (~> 2.2.0)
+    letter_opener (1.2.0)
+      launchy (~> 2.2)
     libv8 (3.16.14.3)
     listen (2.4.0)
       celluloid (>= 0.15.2)
@@ -536,6 +538,7 @@ DEPENDENCIES
   jquery-ui-rails
   json
   launchy
+  letter_opener
   mail!
   mailman
   mercury-rails!

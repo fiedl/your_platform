@@ -167,6 +167,7 @@ describe Ability do
       @group = create :group
       @event = @group.child_events.create
     end
+    he { should be_able_to :read, @event }
     he { should be_able_to :join, @event }
     he { should_not be_able_to :create_event, @group }
   end
