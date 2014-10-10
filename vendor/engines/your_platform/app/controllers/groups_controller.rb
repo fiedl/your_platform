@@ -1,6 +1,7 @@
 class GroupsController < ApplicationController
-  respond_to :html, :json, :csv
+  respond_to :html, :json, :csv, :ics
   load_and_authorize_resource
+  skip_authorize_resource only: :show  # handled manually due to ics export.
   
   def index
     point_navigation_to Page.intranet_root
@@ -14,7 +15,9 @@ class GroupsController < ApplicationController
   end
 
   def show
-    if @group
+    # ATTENTION: This show action needs to handle authorization manually!
+    
+    if @group and not request.format.ics?
       current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
 
       if request.format.html? || request.format.xls? || request.format.csv?
@@ -69,10 +72,15 @@ class GroupsController < ApplicationController
       end
     end
     
+    # ATTENTION: This show action needs to handle authorization manually!
+    #
     respond_to do |format|
-      format.html
+      format.html do
+        authorize! :read, @group
+      end
       format.csv do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
         
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
         #bom = "\377\376".force_encoding('utf-16le')
@@ -82,12 +90,15 @@ class GroupsController < ApplicationController
         send_data csv_data, filename: "#{@file_title}.csv"
       end
       format.xls do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
 
         send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', filename: "#{@file_title}.xls")
       end  
       format.pdf do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
+        
         if params[:sender].present?
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]
@@ -95,6 +106,14 @@ class GroupsController < ApplicationController
         options = {sender: params[:sender]}
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
         send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
+      end
+      format.ics do
+        # Do not require :read here, since ics export could be possible
+        # without login.
+        #
+        authorize! :ics_export, @group
+        
+        render text: @group.child_events.to_ics
       end
     end
     

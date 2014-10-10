@@ -1,5 +1,9 @@
 %h1= best_in_place_if can?(:update, @event), @event, :name
 %div
+  %span.ics_export_buttons
+    %a.btn#ics_export.has_tooltip{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+      %i.icon-calendar
+      Kalender-Export
   = render partial: 'events/event_details'
         
 %h1=t :attendees

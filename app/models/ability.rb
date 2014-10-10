@@ -185,7 +185,15 @@ class Ability
       can :read, Page do |page|
         page.has_flag? :imprint
       end
-
+      
+      # iCalendar (ICS) Export
+      # All users can export calendars without login, since 
+      # feeding to calendar applications should work.
+      #
+      # TODO: Check personal token
+      #
+      can :ics_export, Group
+      
     end
   end
 end

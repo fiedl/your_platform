@@ -6,8 +6,16 @@
 - # EventsHelper#group_to_create_the_event_in
 
 - if events.count > 0 || force_show
-  %h1.upcoming_events=t :upcoming_events
+  %h1.upcoming_events=t :events
   %div
+    %span.ics_abo_buttons
+      - if @group
+        %a.has_tooltip#ics_abo{href: group_url(@group, format: 'ics', protocol: 'webcal'), title: "Kalender-Abo (ICS, iCal): Veranstaltungen von '#{@group.name}' im Kalender auf dem eigenen Rechner abonnieren.", data: {placement: 'top'}}
+          %i.icon-calendar
+      - else
+        %a.btn.has_tooltip#ics_abo{href: '#', title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten. (Empfohlen.)", data: {placement: 'top'}}
+          %i.icon-calendar
+          Kalender-Abo!
     %ul.upcoming_events
       - for event in events do
         - group = event.group
@@ -28,10 +36,10 @@
           %span{class: "event name"}
             %strong
               = link_to event.name, event
-    - if group_to_create_the_event_for && can?(:create_event, group_to_create_the_event_for)
-      %p.right
+    %p.right
+      - if group_to_create_the_event_for && can?(:create_event, group_to_create_the_event_for)
         %a.btn#create_event{href: events_path(group_id: group_to_create_the_event_for.id, format: 'json')}
-          %i.icon-calendar
+          %i.icon-plus
           =t :add_event_for
           = surround "'", "'" do
             = group_to_create_the_event_for.name

@@ -76,6 +76,9 @@ require 'prawn'
 # XLS Export
 require 'to_xls'
 
+# ICS Export (iCal)
+require 'icalendar'
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

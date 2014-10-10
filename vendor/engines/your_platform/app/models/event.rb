@@ -12,6 +12,10 @@ class Event < ActiveRecord::Base
   def title
     name
   end
+  
+  def to_param
+    "#{id} #{name} #{start_at.year}-#{start_at.month}-#{start_at.day}".parameterize
+  end
 
 
   # Groups
@@ -116,6 +120,63 @@ class Event < ActiveRecord::Base
                 :ancestor_type => "Group", :ancestor_id => group_ids
               } )
       .order( :start_at )
-  end 
+  end
+  
+  def self.find_all_by_user(user)
+    self.find_all_by_groups(user.groups).direct
+  end
+  
 
+  # Calendar Export
+  # ==========================================================================================
+
+  def to_icalendar_event
+    e = Icalendar::Event.new
+    e.dtstart = Icalendar::Values::DateTime.new(self.start_at)
+    e.dtend = Icalendar::Values::DateTime.new(self.end_at || self.start_at + 1.hour)
+    e.summary = self.name
+    e.description = self.description
+    e.location = self.location
+    e.url = self.url
+    e.uid = e.url
+    e.created = Icalendar::Values::DateTime.new(self.created_at)
+    e.last_modified = Icalendar::Values::DateTime.new(self.updated_at)
+    return e
+  end
+  
+  def to_icalendar
+    cal = Icalendar::Calendar.new
+    cal.add_event self.to_icalendar_event
+    cal.publish
+    return cal
+  end
+
+  def to_ics
+    self.to_icalendar.to_ical
+  end
+  
+  def to_ical
+    self.to_ics
+  end
+  
+  # Example:
+  #     Group.find(12).events.to_ics
+  #
+  def self.to_ics
+    self.to_icalendar.to_ical
+  end
+  
+  def self.to_icalendar
+    cal = Icalendar::Calendar.new
+    where(true).each do |event|
+      cal.add_event event.to_icalendar_event
+    end
+    cal.publish
+    return cal
+  end
+  
+  def self.to_ical
+    self.to_ics
+  end
+  
 end

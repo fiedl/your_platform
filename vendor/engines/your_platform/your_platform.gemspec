@@ -109,6 +109,9 @@ Gem::Specification.new do |s|
   
   # PDF Export
   s.add_dependency 'prawn'
+  
+  # ICS Export (iCal)
+  s.add_dependency 'icalendar'
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
