@@ -37,7 +37,11 @@ class Role
   end
   
   def current_member?
-    member? and not guest? and not former_member?
+    member? && full_member?
+  end
+  
+  def full_member?
+    (([group] + group.descendant_groups) & user.groups.find_all_by_flag(:full_members)).count > 0
   end
     
   def member?

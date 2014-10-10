@@ -63,6 +63,18 @@ class Group < ActiveRecord::Base
     I18n.t( super.to_sym, default: super ) if super
   end
   
+  def extensive_name
+    if has_flag? :attendees
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :contact_people
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :admins_parent
+      name + ": " + parent_groups.first.parent_groups.first.name
+    else
+      name
+    end
+  end
+  
   # This sets the format of the Group urls to be
   # 
   #     example.com/groups/24-planeswalkers
@@ -122,9 +134,13 @@ class Group < ActiveRecord::Base
 
   # Events
   # ------------------------------------------------------------------------------------------
+  
+  def events
+    self.descendant_events
+  end
 
   def upcoming_events
-    self.descendant_events.upcoming
+    self.events.upcoming
   end
   
   

@@ -3,10 +3,10 @@ require 'spec_helper'
 describe HorizontalNav do
   
   before do
-    @user = create(:user)
-    @corporation_a = create(:wah_group)
-    @corporation_b = create(:wah_group)
-    @bv = create(:bv_group)
+    @user = create :user
+    @corporation_a = create :wingolf_corporation
+    @corporation_b = create :wingolf_corporation
+    @bv = create :bv_group
     
     @horizontal_nav = HorizontalNav.new(user: @user, current_navable: Page.find_intranet_root)
   end
@@ -37,6 +37,8 @@ describe HorizontalNav do
         @corporation_a.status_group("Philister") << @user
         @membership = @corporation_b.status_group("Philister").assign_user @user, at: 1.hour.ago
         @membership.move_to @corporation_b.status_group("Schlicht Ausgetretene")
+        
+        @horizontal_nav = HorizontalNav.new(user: @user, current_navable: Page.find_intranet_root)
       end
       it "should include the corporations the user is still member in" do
         subject.should include @corporation_a.becomes(Group)

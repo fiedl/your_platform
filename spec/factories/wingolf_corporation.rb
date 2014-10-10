@@ -15,6 +15,8 @@ FactoryGirl.define do
       corporation.import_default_group_structure "default_group_sub_structures/wingolf_am_hochschulort_children.yml"
       corporation.reload
       
+      corporation.child_groups.where(name: ['Aktivitas', 'Philisterschaft']).each { |g| g.add_flag :full_members }
+      
       Group.alle_aktiven << corporation.child_groups.where(name: 'Aktivitas').first
       Group.alle_philister << corporation.child_groups.where(name: 'Philisterschaft').first
     end

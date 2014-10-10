@@ -121,11 +121,18 @@ module GroupMixins::Corporations
     # This is used, for example, in the my-groups view, where the corporations groups
     # are displayed separately.
     #
+    # Some special groups are excluded manually, since they are not expected to show up
+    # in the groups list, e.g. attendee groups of corporation events.
+    #
     def find_non_corporations_branch_groups_of( user )
       ancestor_groups = user.groups
       corporations_branch = self.find_corporations_branch_groups
       corporations_branch = [] unless corporations_branch
-      return ancestor_groups - corporations_branch
+      return ancestor_groups - 
+        corporations_branch - 
+        Group.find_all_by_flag(:attendees) -
+        Group.find_all_by_flag(:contact_people) -
+        Group.find_all_by_flag(:officers_parent)
     end
   end
 

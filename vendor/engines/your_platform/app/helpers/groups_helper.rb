@@ -33,14 +33,14 @@ module GroupsHelper
   end
   
   def cached_groups_of_user_table(user)
-    Rails.cache.fetch(['groups_of_user_table', user.membership_ids]) { groups_of_user_table(user) }
+    Rails.cache.fetch([user, 'groups_of_user_table'], expires_in: 1.week) { groups_of_user_table(user) }
   end
   
   private
 
   def membership_li( user, group )
     content_tag :li do
-      c = link_to group.title, group
+      c = link_to group.extensive_name, group
       membership = UserGroupMembership.with_invalid.find_by_user_and_group( user, group )
       c += remove_button( membership ) if membership.destroyable? and can?(:destroy, membership)
       c

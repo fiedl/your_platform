@@ -145,6 +145,7 @@ class UserAccount < ActiveRecord::Base
       break token unless UserAccount.where(auth_token: token).first
     end
     self.update_attribute :auth_token, token
+    token
   end
 
   def send_welcome_email
