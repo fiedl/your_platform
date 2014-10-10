@@ -7,7 +7,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user, options = {})
+  def initialize(user, params = [], options = {})
     preview_as_user = true if options[:preview_as_user]
     
     # Define abilities for the passed in user here. For example:
@@ -177,23 +177,34 @@ class Ability
         
       end
       
-    else  # not logged in
+    end  # not logged in:
 
-      # Imprint
-      # Make sure all users (even if not logged in) can read the imprint.
-      #
-      can :read, Page do |page|
-        page.has_flag? :imprint
-      end
-      
-      # iCalendar (ICS) Export
-      # All users can export calendars without login, since 
-      # feeding to calendar applications should work.
-      #
-      # TODO: Check personal token
-      #
-      can :ics_export, Group
-      
+    # Imprint
+    # Make sure all users (even if not logged in) can read the imprint.
+    #
+    can :read, Page do |page|
+      page.has_flag? :imprint
     end
+    
+    # Listing Events and iCalendar (ICS) Export:
+    #
+    # There are event lists on public websites and webcal feeds.
+    # Therefore the user might not be logged in through a regular
+    # session. Some public feeds can be seen by anyone. Other
+    # feeds require an auth token.
+    # 
+    can :index_events, Group do |group|
+      # Any registered user (identified by an auth token)
+      # can index the events of any group.
+      params[:token] && UserAccount.find_by_auth_token(params[:token])
+    end
+    can :index_events, User do |other_user|
+      # To index the events relevant to a certain user,
+      # one has to provide the correct auth token that corresponds
+      # to that user.
+      params[:token] && UserAccount.find_by_auth_token(params[:token]) == other_user.account
+    end
+    can :index_public_events, :all
+    
   end
 end

@@ -54,7 +54,7 @@ class ApplicationController
     options = {}
     options[:preview_as_user] = true if params[:preview_as] == 'user'
 
-    @current_ability ||= ::Ability.new(current_user, options)
+    @current_ability ||= ::Ability.new(current_user, params, options)
   end
   
 end

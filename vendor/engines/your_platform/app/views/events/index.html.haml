@@ -1,0 +1,24 @@
+- @title = title_for_events_index  # see EventsHelper
+- set_title @title  # set html title tag
+
+%h1.section.events= @title
+%div
+  %table.datatable.events
+    %thead
+      %tr
+        %th=t :name
+        %th Datum
+        %th=t :group
+        %th=t :corporation
+        %th=t :contact_people
+        %th=t :attendees
+    %tbody
+      - for event in @events
+        %tr.event
+          %td.name
+            %strong= link_to(event.name, event)
+          %td.date= localize event.start_at.to_date
+          %td.group_name= event.group ? link_to(event.group.name, event.group) : ''
+          %td.corporation_name= event.group.try(:corporation) ? link_to(event.group.corporation.token, event.group.corporation) : ''
+          %td.contact_people= user_links(event.contact_people)
+          %td.attendees= event.attendees.count

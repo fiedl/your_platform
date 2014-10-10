@@ -1,7 +1,6 @@
 class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
   load_and_authorize_resource
-  skip_authorize_resource only: :show  # handled manually due to ics export.
   
   def index
     point_navigation_to Page.intranet_root
@@ -15,9 +14,7 @@ class GroupsController < ApplicationController
   end
 
   def show
-    # ATTENTION: This show action needs to handle authorization manually!
-    
-    if @group and not request.format.ics?
+    if @group
       current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
 
       if request.format.html? || request.format.xls? || request.format.csv?
@@ -72,8 +69,6 @@ class GroupsController < ApplicationController
       end
     end
     
-    # ATTENTION: This show action needs to handle authorization manually!
-    #
     respond_to do |format|
       format.html do
         authorize! :read, @group
@@ -106,14 +101,6 @@ class GroupsController < ApplicationController
         options = {sender: params[:sender]}
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
         send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
-      end
-      format.ics do
-        # Do not require :read here, since ics export could be possible
-        # without login.
-        #
-        authorize! :ics_export, @group
-        
-        render text: @group.child_events.to_ics
       end
     end
     

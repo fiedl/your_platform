@@ -43,8 +43,8 @@ class UserAccount < ActiveRecord::Base
   before_validation        :generate_password_if_unset
                              # This needs to run before validation, since validation
                              # requires a password to be set in order to allow saving the account.
-                             # See ressources of `has_secure_password` above. 
-
+                             # See ressources of `has_secure_password` above.
+  
   before_save              :generate_password_if_unset
                              # This is required, because, apparently, the `before_validation` callback is not called
                              # if the account is created via an association (like User.create( ... , create_account: true )).
@@ -129,7 +129,23 @@ class UserAccount < ActiveRecord::Base
         self.generate_password
       end
     end
-  end      
+  end
+  
+  def auth_token
+    super || generate_auth_token!
+  end
+  
+  def generate_auth_token!
+    # see also: https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
+    #
+    raise 'auth_token already set' if self.read_attribute(:auth_token)
+    token = ''
+    loop do
+      token = Devise.friendly_token + Devise.friendly_token
+      break token unless UserAccount.where(auth_token: token).first
+    end
+    self.update_attribute :auth_token, token
+  end
 
   def send_welcome_email
     raise 'attempt to send welcome email with empty password' unless self.password

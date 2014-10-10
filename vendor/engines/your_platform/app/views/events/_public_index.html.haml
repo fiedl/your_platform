@@ -1,0 +1,16 @@
+- # locals:
+- events ||= []
+
+-#%ul.public_events
+- # = render partial: 'events/events_lis', locals: {events: events}
+
+%p.public_events
+  - for event in events do
+    %p.event
+      %small
+        = localize event.start_at, format: '%d.%m.%Y, %H:%M'
+        - if event.location.present?
+          |
+          = event.location
+      %br
+      = link_to event.title, event

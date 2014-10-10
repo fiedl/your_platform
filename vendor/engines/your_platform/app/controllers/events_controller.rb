@@ -1,15 +1,59 @@
 class EventsController < ApplicationController
 
   load_and_authorize_resource
+  skip_authorize_resource only: :index
 
   # GET /events
   # GET /events.json
+  #
+  # ATTENTION: The index action has to handly authorization manually!
+  #
   def index
-    @events = Event.all
+    
+    # Which events should be listed
+    @group = Group.find params[:group_id] if params[:group_id]
+    @user = Group.find params[:user_id] if params[:user_id]
+    @user ||= current_user
+    @user ||= UserAccount.find_by_auth_token(params[:token]).try(:user) if params[:token].present?
+    @all = params[:all]
+    @on_local_website = params[:published_on_local_website]
+    @on_global_website = params[:published_on_global_website]
+    @public = @on_local_website || @on_global_website
+    
+    # Check the permissions.
+    if @all
+      authorize! :index_events, :all
+    elsif @group
+      @public ? authorize!(:index_public_events, :all) : authorize!(:index_events, @group)
+    elsif @user
+      authorize! :index_events, @user
+    end  
+    
+    # Collect the events to list.
+    if @all
+      @events = Event.where(true)
+    elsif @group
+      @events = Event.find_all_by_group(@group)
+      @navable = @group
+    elsif @user
+      @events = Event.find_all_by_user(@user)
+      @navable = @user
+    end
+    
+    # Filter if only published events are requested.
+    @events = @events.where publish_on_local_website: true if @on_local_website
+    @events = @events.where publish_on_global_website: true if @on_global_website
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html do
+        if @on_local_website or @on_global_website
+          render partial: 'events/public_index', locals: {events: @events}
+        else
+          # index.html.haml
+        end
+      end
       format.json { render json: @events }
+      format.ics { send_data @events.to_ics, filename: "#{@group.try(:name)} #{Time.zone.now}".parameterize + ".ics" }
     end
   end
 
@@ -20,6 +64,7 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @event }
+      format.ics { render text: @event.to_ics }
     end
   end
 
