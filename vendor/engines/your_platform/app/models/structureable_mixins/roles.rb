@@ -43,12 +43,12 @@ module StructureableMixins::Roles
       if has_flag?(:officers_parent) || has_flag?(:admins_parent)
         parent_groups.each do |group| 
           group.delete_cache
-          group.descendants.each do |descendant| 
-            descendant.delete_cached :admins_of_ancestors
-            descendant.delete_cached :admins_of_self_and_ancestors
-          end
         end
       end
+    end
+    if descendants.count > 0
+      bulk_delete_cached :admins_of_ancestors, descendants
+      bulk_delete_cached :admins_of_self_and_ancestors, descendants
     end
   end    
   

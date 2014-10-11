@@ -135,7 +135,7 @@ describe StructureableMixins::Roles do
           wait_for_cache
           @my_structureable.reload
         end
-        it "should refresh the cached value" do  # TODO fix this when refactoring the cache deletion
+        it "should refresh the cached value" do
           subject.should_not include @admin1
           subject.should include @admin2, @my_admin
         end
