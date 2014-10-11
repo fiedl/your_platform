@@ -44,9 +44,16 @@ module StructureableMixins::Roles
         parent_groups.each { |group| group.delete_cache }
       end
     end
-    descendants.each do |descendant| 
-      descendant.delete_cached :admins_of_ancestors
-      descendant.delete_cached :admins_of_self_and_ancestors
+    
+    # # this works:
+    # #
+    # descendants.each do |descendant| 
+    #   descendant.delete_cached :admins_of_ancestors
+    #   descendant.delete_cached :admins_of_self_and_ancestors
+    # end
+    if descendants.count > 0
+      bulk_delete_cached :admins_of_ancestors, descendants
+      bulk_delete_cached :admins_of_self_and_ancestors, descendants
     end
   end    
   

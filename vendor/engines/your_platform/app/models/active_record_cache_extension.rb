@@ -101,20 +101,14 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/#{method_name}/*"
   end
   
+  def bulk_delete_cached(method_name, objects)
+    ids = objects.map &:id
+    regex = /.*\/(#{ids.join('|')})(-.*|)\/#{method_name}.*/
+    Rails.cache.delete_regex regex
+  end
+  
   def delete_cache
-    begin
-      Rails.cache.delete_matched "#{self.cache_key}/*"
-    rescue ArgumentError, NameError => exc
-      if exc.message.include?('invalid %-encoding')
-        # The cache keys can't be deleted the usual way. We have to wait for them to expire.
-        # Invalidate the cache keys though.
-        #
-        invalidate_cache
-        sleep 1.2  # in order to wait for the cache to be expired based on updated_at
-      else
-        raise exc
-      end
-    end
+    Rails.cache.delete_matched "#{self.cache_key}/*"
   end
   
   def cache_created_at(method_name, arguments = nil)
