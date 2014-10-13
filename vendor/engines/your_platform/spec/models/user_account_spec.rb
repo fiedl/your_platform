@@ -47,6 +47,20 @@ describe UserAccount do
     end
   end
   
+  describe "#auth_token" do
+    subject { @account.auth_token }
+    describe "just after creating the account" do
+      it { should be_present }
+      it { should be_kind_of String }
+      its(:length) { should >= 40 }
+    end
+    specify "calling it twice should not change the token" do
+      token1 = subject
+      token2 = subject
+      token1.should == token2
+    end
+  end
+  
   describe ".identify" do
     before do
       @user1 = create :user_with_account, first_name: "John", last_name: "Doe", email: "john.doe@example.com", :alias => "doe"

@@ -36,6 +36,7 @@ require 'font-awesome-rails'
 
 # In Place Editing
 require 'best_in_place'
+require 'delocalize'
 
 # Geo Coding
 require 'geocoder'
@@ -74,6 +75,9 @@ require 'prawn'
 
 # XLS Export
 require 'to_xls'
+
+# ICS Export (iCal)
+require 'icalendar'
 
 module YourPlatform
   class Engine < ::Rails::Engine

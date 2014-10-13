@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140808223512) do
+ActiveRecord::Schema.define(:version => 20141010134300) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -75,8 +75,11 @@ ActiveRecord::Schema.define(:version => 20140808223512) do
     t.text     "description"
     t.datetime "start_at"
     t.datetime "end_at"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.string   "location"
+    t.boolean  "publish_on_global_website"
+    t.boolean  "publish_on_local_website"
   end
 
   create_table "flags", :force => true do |t|
@@ -197,6 +200,7 @@ ActiveRecord::Schema.define(:version => 20140808223512) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "auth_token"
   end
 
   add_index "user_accounts", ["reset_password_token"], :name => "index_user_accounts_on_reset_password_token", :unique => true

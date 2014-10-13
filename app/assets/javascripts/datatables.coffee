@@ -92,6 +92,14 @@ ready = ->
     "order": [[1, "desc"]],
     "pageLength": 100
   }, common_configuration))
+  $('.datatable.events').dataTable(jQuery.extend({
+    "order": [[1, "desc"]],
+    "pageLength": 100,
+    columnDefs: [
+      { type: 'de_date', targets: 1}
+    ]
+  }, common_configuration))
+  
   
 $(document).ready(ready)
 $(document).on('page:load', ready)

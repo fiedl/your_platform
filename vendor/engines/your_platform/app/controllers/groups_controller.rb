@@ -1,5 +1,5 @@
 class GroupsController < ApplicationController
-  respond_to :html, :json, :csv
+  respond_to :html, :json, :csv, :ics
   load_and_authorize_resource
   
   def index
@@ -70,9 +70,12 @@ class GroupsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html
+      format.html do
+        authorize! :read, @group
+      end
       format.csv do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
         
         # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
         #bom = "\377\376".force_encoding('utf-16le')
@@ -82,12 +85,15 @@ class GroupsController < ApplicationController
         send_data csv_data, filename: "#{@file_title}.csv"
       end
       format.xls do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
 
         send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', filename: "#{@file_title}.xls")
       end  
       format.pdf do
-        authorize! :export_member_list, @group  # Require special authorization!
+        authorize! :read, @group
+        authorize! :export_member_list, @group
+        
         if params[:sender].present?
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]

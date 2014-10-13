@@ -1,0 +1,22 @@
+- # locals:
+- events ||= []
+
+- for event in events do
+  - group = event.group
+  - corporation = group.try(:corporation)
+  %li.upcoming_event
+    %span.event.info
+      = succeed ',' do
+        %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
+      -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
+      = succeed ',' do 
+        %span{class: "event start_at_time"}= localize event.start_at, :format => :time
+      - if group
+        %span{class: "event group"}
+        = link_to group.name, group
+        - if corporation && (corporation.id != group.id)
+          = surround '(', ')' do
+            = link_to corporation.token, corporation
+    %span{class: "event name"}
+      %strong
+        = link_to event.name, event

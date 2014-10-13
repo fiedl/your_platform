@@ -105,6 +105,15 @@ describe User do
     it "should not use the wrong order (bug fix)" do
       subject.should_not == "H08 E06"
     end
+    context "when joining an event of a corporation" do
+      before do
+        @corporationZ = create :wingolf_corporation, token: 'Z'
+        @event = @corporationZ.child_events.create
+        @event.attendees << @user
+        @user.reload
+      end
+      it { should_not include @corporationZ.token }
+    end
   end
 
   describe "#cached(:aktivitaetszahl)" do

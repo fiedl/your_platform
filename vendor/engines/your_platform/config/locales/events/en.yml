@@ -1,0 +1,18 @@
+en:
+  events: Events
+  upcoming_events: Upcoming Events
+  start_at: Start at
+  end_at: End at
+  contact_person: Contact Person
+  contact_people: Contact People
+  attendees: Attendees
+  location: Location
+  add_event: Add Event
+  add_event: Add Event For
+  enter_name_of_event_here: Enter the name of the event here
+  
+  my_events: My Events
+  all_events: All Events
+  events_of: Events of
+  events_on_global_website: Events published on the global website
+  events_on_local_website: Events published on the local website

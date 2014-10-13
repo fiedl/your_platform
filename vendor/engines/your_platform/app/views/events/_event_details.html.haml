@@ -1,0 +1,54 @@
+%table.event_details
+  %tr.description
+    %th=t :description
+    %td= best_in_place_if can?(:update, @event), @event, :description, placeholder: I18n.t(:description), type: 'textarea'
+  %tr.start_at
+    %th=t :start_at
+    %td= best_in_place_if can?(:update, @event), @event, :localized_start_at, type: 'datetime'
+  %tr.end_at
+    %th
+      =t :end_at
+      - if can? :update, @event
+        = surround '(', ')' do
+          =t :optional
+    %td= best_in_place_if can?(:update, @event), @event, :localized_end_at, type: 'datetime'
+  %tr.location
+    %th=t :location
+    %td= best_in_place_if can?(:update, @event), @event, :location
+  %tr.contact_people
+    %th=t :contact_people
+    %td
+      - if can? :update, @event
+        = multiple_users_best_in_place @event.contact_people_group, :direct_members_titles_string
+      - else
+        = user_links(@event.contact_people)
+  - if can? :update, @event
+    %tr.publish_in_group
+      %th=t :publish
+      %td
+        = "Dieses Ereignis wird in der Gruppe"
+        = link_to @event.group.name, @event.group
+        = "annonciert."
+    %tr
+      %th
+      %td= "Jeder Wingolfit kann sich selbst als Teilnehmer eintragen."
+    %tr.publish_on_local_website
+      %th
+      %td
+        = best_in_place @event, :publish_on_local_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf lokaler Homepage veröffentlichen"], ['true', "Auf lokaler Homepage veröffentlichen"]]
+        –
+        = link_to group_events_public_url(group_id: @event.group) do
+          %i.icon-list-alt
+        = link_to group_events_public_url(group_id: @event.group, format: 'ics') do
+          %i.icon-calendar
+        
+    %tr.publish_on_global_website
+      %th
+      %td
+        = best_in_place @event, :publish_on_global_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (wingolf.org)"], ['true', "Auf öffentlicher Homepage veröffentlichen (wingolf.org)"]]
+        –
+        = link_to public_events_url do
+          %i.icon-list-alt
+        = link_to public_events_url(format: 'ics') do
+          %i.icon-calendar
+        

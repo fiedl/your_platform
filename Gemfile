@@ -89,6 +89,8 @@ group :development do
   gem 'better_errors'              # see Railscasts #402
   gem 'binding_of_caller'
   gem 'meta_request'
+  
+  gem 'letter_opener'
 end
 
 # Security Tools

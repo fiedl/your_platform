@@ -12,11 +12,8 @@
 -# - if @posts && @posts.count > 0
 -#   = render partial: 'posts/posts', locals: { posts: @posts }
 
--# / umcoming events
--# - if @group.events.upcoming && ( @group.events.upcoming.count > 0 || can?(:manage, @group) )
--#   %h1.section.upcoming_events Kommende Veranstaltungen
--#   %div
--#     = upcoming_events_list_for_group( @group )
+-# umcoming events
+= render partial: 'shared/upcoming_events', locals: {events: @group.upcoming_events, force_show: can?(:manage, @group), parent_group: @group}
 
 - unless @child_groups
   -# contact info

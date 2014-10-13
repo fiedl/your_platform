@@ -9,10 +9,13 @@ module AvatarHelper
     options[:size] ||= 36
     options[:gravatar] ||= {}
     options[:gravatar][:size] ||= options[:size]
-    options[:alt] ||= "Gravatar: #{email}"
-    options[:title] ||= options[:alt]
+    #options[:alt] ||= "Gravatar: #{email}"
+    #options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
     options[:gravatar][:secure] = true
+    
+    options[:class] ||= ""
+    options[:class] += " img-rounded"
 
     # Default Url
     # Instead of 
@@ -23,7 +26,7 @@ module AvatarHelper
     # 
     options[:gravatar][:default] ||= user_avatar_default_url 
     
-    render partial: 'shared/avatar', locals: { email: email, options: options }
+    render partial: 'shared/avatar', formats: [:html], locals: { email: email, options: options }
 
   end
   

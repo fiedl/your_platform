@@ -7,7 +7,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user, options = {})
+  def initialize(user, params = {}, options = {})
     preview_as_user = true if options[:preview_as_user]
     
     # Define abilities for the passed in user here. For example:
@@ -118,6 +118,19 @@ class Ability
           user_group_membership.user == user
         end
         
+        # All users can join events.
+        #
+        can :read, Event
+        can :join, Event
+        can :leave, Event
+        can :index_events, User do |other_user|
+          other_user == user
+        end
+        
+        # Name auto completion
+        #
+        can :autocomplete_title, User
+        
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
@@ -154,7 +167,19 @@ class Ability
         #
         can :export_member_list, Group do |group|
           user.in? group.officers_of_self_and_parent_groups
-        end        
+        end
+        
+        # Local officers can create events in their groups.
+        #
+        can :create_event, Group do |group|
+          user.in? group.officers_of_self_and_parent_groups
+        end
+        can :update, Event do |event|
+          user.in? event.group.officers_of_self_and_parent_groups
+        end
+        can :update, Group do |group|
+          group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+        end
         
         # DEVELOPERS
         can :use, Rack::MiniProfiler do
@@ -163,15 +188,34 @@ class Ability
         
       end
       
-    else  # not logged in
+    end  # not logged in:
 
-      # Imprint
-      # Make sure all users (even if not logged in) can read the imprint.
-      #
-      can :read, Page do |page|
-        page.has_flag? :imprint
-      end
-
+    # Imprint
+    # Make sure all users (even if not logged in) can read the imprint.
+    #
+    can :read, Page do |page|
+      page.has_flag? :imprint
     end
+    
+    # Listing Events and iCalendar (ICS) Export:
+    #
+    # There are event lists on public websites and webcal feeds.
+    # Therefore the user might not be logged in through a regular
+    # session. Some public feeds can be seen by anyone. Other
+    # feeds require an auth token.
+    # 
+    can :index_events, Group do |group|
+      # Any registered user (identified by an auth token)
+      # can index the events of any group.
+      params[:token].present? && UserAccount.find_by_auth_token(params[:token])
+    end
+    can :index_events, User do |other_user|
+      # To index the events relevant to a certain user,
+      # one has to provide the correct auth token that corresponds
+      # to that user.
+      params[:token].present? && (UserAccount.find_by_auth_token(params[:token]) == other_user.account)
+    end
+    can :index_public_events, :all
+    
   end
 end

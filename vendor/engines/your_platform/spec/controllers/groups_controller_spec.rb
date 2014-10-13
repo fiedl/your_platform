@@ -91,7 +91,7 @@ describe GroupsController do
       #   assigns(:large_map_address_fields).should_not be_empty
       # end
       
-      describe "(list exports)", :focus do
+      describe "(list exports)" do
         let(:group) { create :group, :with_members }
       
         it 'generates an address label pdf' do
