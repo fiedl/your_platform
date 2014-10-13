@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
 
   load_and_authorize_resource
-  skip_authorize_resource only: :index
+  skip_authorize_resource only: [:index, :create]
 
   # GET /events
   # GET /events.json
@@ -21,8 +21,10 @@ class EventsController < ApplicationController
     @public = @on_local_website || @on_global_website
     
     # Check the permissions.
-    if @all
+    if @all and not @public
       authorize! :index_events, :all
+    elsif @all and @public
+      authorize! :index_public_events, :all
     elsif @group
       @public ? authorize!(:index_public_events, :all) : authorize!(:index_events, @group)
     elsif @user
@@ -70,17 +72,22 @@ class EventsController < ApplicationController
 
   # POST /events
   # POST /events.json
+  #
+  # ATTENTION: The create action has to handly authorization manually!
+  #
   def create
+    @group = Group.find(params[:group_id])
+    authorize! :create_event, @group
+    
     @event = Event.new(params[:event])
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
     
     respond_to do |format|
       if @event.save
-        @group = Group.find(params[:group_id])
         @event.parent_groups << @group
         @event.contact_people << current_user
-        @event[:path] = event_path(@event)
+        @event[:path] = event_path(@event) # in order to add the path to the json object
         
         format.html { redirect_to @event }
         format.json { render json: @event, status: :created, location: @event }
@@ -148,9 +155,10 @@ class EventsController < ApplicationController
       format.json do
         render json: {
           attendees_avatars: render_to_string(
-            partial: 'groups/member_avatars.html.haml', 
+            partial: 'groups/member_avatars', 
             layout: false,
             formats: [:json, :html],
+            handlers: [:haml],
             locals: {group: @event.attendees_group}
           )
         }

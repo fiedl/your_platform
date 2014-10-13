@@ -169,7 +169,10 @@ describe Ability do
     end
     he { should be_able_to :read, @event }
     he { should be_able_to :join, @event }
+    he { should be_able_to :leave, @event }
     he { should_not be_able_to :create_event, @group }
+    he { should be_able_to :index_events, user }
+    he { should_not be_able_to :index_event, create(:user) }
   end
   
   describe "if other users are hidden" do
@@ -188,6 +191,15 @@ describe Ability do
     he "should be able to read himself" do
       user.hidden.should == true
       the_user.should be_able_to :read, user
+    end
+  end
+
+  describe "(auto-completion)" do
+    he "should be able to use a name-auto-complete list" do
+      the_user.should be_able_to :autocomplete_title, User
+    end
+    specify "users without account should not be able to use the name-auto-complete list" do
+      Ability.new(nil).should_not be_able_to :autocomplete_title, User
     end
   end
   
@@ -308,6 +320,10 @@ describe Ability do
     he "should be able to update events in subgroups of his group" do
       @event = @sub_group.child_events.create
       the_user.should be_able_to :update, @event
+    end
+    he "should be able to update the contact people of an event" do
+      @event = @group.child_events.create
+      the_user.should be_able_to :update, @event.contact_people_group
     end
   end
   

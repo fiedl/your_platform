@@ -187,6 +187,10 @@ Spork.prefork do
     #
     config.include PressEnter
     
+    # Auto complete fields
+    #
+    config.include AutoComplete
+    
     # Debug
     # Call `debug` to enter pry.
     #

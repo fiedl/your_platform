@@ -8,14 +8,15 @@
   %tr.end_at
     %th
       =t :end_at
-      = surround '(', ')' do
-        =t :optional
+      - if can? :update, @event
+        = surround '(', ')' do
+          =t :optional
     %td= best_in_place_if can?(:update, @event), @event, :localized_end_at, type: 'datetime'
   %tr.location
     %th=t :location
     %td= best_in_place_if can?(:update, @event), @event, :location
-  %tr.contact_person
-    %th=t :contact_person
+  %tr.contact_people
+    %th=t :contact_people
     %td
       - if can? :update, @event
         = multiple_users_best_in_place @event.contact_people_group, :direct_members_titles_string
@@ -46,8 +47,8 @@
       %td
         = best_in_place @event, :publish_on_global_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (wingolf.org)"], ['true', "Auf öffentlicher Homepage veröffentlichen (wingolf.org)"]]
         –
-        = link_to events_public_url do
+        = link_to public_events_url do
           %i.icon-list-alt
-        = link_to events_public_url(format: 'ics') do
+        = link_to public_events_url(format: 'ics') do
           %i.icon-calendar
         

@@ -34,7 +34,7 @@ Rails.application.routes.draw do
   resources :status_group_memberships
   resources :relationships
 
-  get 'events/public', to: 'events#index', published_on_global_website: true, all: true
+  get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'
   resources :events do
     post :join, to: 'events#join'
     get :join, to: 'events#join_via_get', as: 'join_via_get'

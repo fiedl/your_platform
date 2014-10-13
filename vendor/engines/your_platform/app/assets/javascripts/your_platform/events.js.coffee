@@ -42,6 +42,7 @@ ready = ->
       success: (r) -> 
         btn.button('reset')
         btn.hide()
+        $('#leave_event').removeClass 'hidden'
         $('#leave_event').show()
         $('#attendees_avatars').html(r.attendees_avatars)
       }
@@ -49,7 +50,7 @@ ready = ->
     btn.data('loading-text', btn.text() + " ...")
     btn.button('loading')
     event.preventDefault()
-
+  
   $('#leave_event').click (event)->
     btn = $(this)
     $.ajax({
@@ -58,6 +59,7 @@ ready = ->
       success: (r)->
         btn.button('reset')
         btn.hide()
+        $('#join_event').removeClass 'hidden'
         $('#join_event').show()
         $('#attendees_avatars').html(r.attendees_avatars)
       }
@@ -69,6 +71,7 @@ ready = ->
   $('#toggle_invite').click (click_event)->
     $(this).data('loading-text', $(this).text())
     $(this).button('loading')
+    $('form#invite').removeClass('hidden')
     $('form#invite').show()
     click_event.preventDefault()
     

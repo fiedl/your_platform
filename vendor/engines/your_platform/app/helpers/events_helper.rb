@@ -9,7 +9,7 @@ module EventsHelper
   end
 
   def first_group_the_current_user_can_create_events_for
-    current_user.groups.find_all_by_flag(:officers_parent).first.parent_groups.first
+    current_user.groups.find_all_by_flag(:officers_parent).first.try(:parent_groups).try(:first)
   end
   
   def title_for_events_index
