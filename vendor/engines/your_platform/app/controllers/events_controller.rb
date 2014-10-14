@@ -45,6 +45,9 @@ class EventsController < ApplicationController
     # Filter if only published events are requested.
     @events = @events.where publish_on_local_website: true if @on_local_website
     @events = @events.where publish_on_global_website: true if @on_global_website
+    
+    # Add the Cross-origin resource sharing header for public requests.
+    response.headers['Access-Control-Allow-Origin'] = '*' if @public
 
     respond_to do |format|
       format.html do
