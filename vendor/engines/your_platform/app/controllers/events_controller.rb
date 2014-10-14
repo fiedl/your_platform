@@ -46,6 +46,9 @@ class EventsController < ApplicationController
     @events = @events.where publish_on_local_website: true if @on_local_website
     @events = @events.where publish_on_global_website: true if @on_global_website
     
+    # Order events
+    @events = @events.order :start_at
+    
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public
 
