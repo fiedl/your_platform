@@ -37,8 +37,7 @@ describe HorizontalNav do
         @corporation_a.status_group("Philister") << @user
         @membership = @corporation_b.status_group("Philister").assign_user @user, at: 1.hour.ago
         @membership.move_to @corporation_b.status_group("Schlicht Ausgetretene")
-        
-        @horizontal_nav = HorizontalNav.new(user: @user, current_navable: Page.find_intranet_root)
+        time_travel 2.seconds
       end
       it "should include the corporations the user is still member in" do
         subject.should include @corporation_a.becomes(Group)

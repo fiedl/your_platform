@@ -95,15 +95,26 @@ describe StructureableMixins::Roles do
   describe "#admins_of_self_and_ancestors" do
     subject { @my_structureable.admins_of_self_and_ancestors }
     before do
+      # ATTENTION: For cache deletion, the `descendants` method is called 
+      # on the ancestors.
+      # Since the ancestor classes are not patched to include the
+      # `MyStructureable` as descendants,
+      # they are not included in the cache deletion process. To test cache
+      # deletion properly,
+      # we can't use `MyStructureable`. Therefore, we use a `Group` here
+      # instead.
+      #
+      @my_structureable = create :group, name: "My Structureable"
+
       # @ancestor1 -> admin1
       #    |------- @ancestor2 -> admin2
       #    |            |------- @my_structureable -> my_admin
       #    |
       #    |------- @no_ancestor -> other_admin
       #
-      @ancestor2 = @my_structureable.parent_my_structureables.create name: 'Ancestor 2'
-      @ancestor1 = @ancestor2.parent_my_structureables.create name: 'Ancestor 1'
-      @no_ancestor = @ancestor1.child_my_structureables.create name: 'No Ancestor'
+      @ancestor2 = @my_structureable.parent_groups.create name: 'Ancestor 2'
+      @ancestor1 = @ancestor2.parent_groups.create name: 'Ancestor 1'
+      @no_ancestor = @ancestor1.child_groups.create name: 'No Ancestor'
       
       @admin1 = create :user
       @admin2 = create :user
@@ -138,6 +149,9 @@ describe StructureableMixins::Roles do
         it "should refresh the cached value" do
           subject.should_not include @admin1
           subject.should include @admin2, @my_admin
+        end
+        specify "the admin should still be in the database after calling destroy on the association" do
+          User.find(@admin1.id).should be_present
         end
       end
     end

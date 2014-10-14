@@ -41,6 +41,7 @@ class Group < ActiveRecord::Base
 
   def delete_cache
     super
+    ancestor_groups.each { |g| g.delete_cached(:leaf_groups) }
     delete_cache_for_officers_group
   end
     

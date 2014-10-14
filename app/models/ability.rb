@@ -175,7 +175,7 @@ class Ability
           user.in? group.officers_of_self_and_parent_groups
         end
         can :update, Event do |event|
-          user.in? event.group.officers_of_self_and_parent_groups
+          event.group && user.in?(event.group.officers_of_self_and_parent_groups)
         end
         can :update, Group do |group|
           group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
