@@ -188,12 +188,14 @@ class EventsController < ApplicationController
     
     if params['recipient'] == 'me'
       @recipients = [current_user]
-    elsif params['recipient'].kind_of? Integer
-      group = Group.find params['recipient']
+    elsif params['recipient'].to_i > 0
+      group = Group.find params['recipient'].to_i
       @recipients = group.members
     end
     
-    EventMailer.invitation_email(@text, @recipients, @event, current_user).deliver
+    for recipient in @recipients
+      EventMailer.invitation_email(@text, [recipient], @event, current_user).deliver
+    end
     
     respond_to do |format|
       format.html { redirect_to event_url(@event) }
