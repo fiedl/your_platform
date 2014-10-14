@@ -10,7 +10,7 @@ class HorizontalNav
   
   def link_objects 
     objects = navables
-    objects << { title: I18n.t(:sign_in), :controller => :sessions, :action => :new } if not logged_in?
+    objects << { title: I18n.t(:sign_in), :controller => '/sessions', :action => :new } if not logged_in?
     objects
   end
   
