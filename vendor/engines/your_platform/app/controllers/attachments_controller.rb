@@ -8,7 +8,7 @@ class AttachmentsController < ApplicationController
   def create
     #@attachment = Attachment.new(params[:attachment])
     #@attachment.save
-    @attachment = Attachment.create
+    @attachment = Attachment.create!
     @attachment.update_attributes(params[:attachment])
   end
 

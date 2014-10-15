@@ -127,11 +127,11 @@ class ApplicationController < ActionController::Base
         # there is no object associated, e.g. for the RootController
       end
       
-      PublicActivity::Activity.create(
+      PublicActivity::Activity.create!(
         trackable: object,
         key: action_name,
         owner: current_user,
-        parameters: params.except('authenticity_token')
+        parameters: params.except('authenticity_token').except('attachment')
       )
     end
   end
