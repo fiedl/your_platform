@@ -9,7 +9,7 @@
 - #          (If there are blog entries, it is not clear where to put
 - #          the attachment.)
 - #
-- if (attachments.count > 0) or (can?(:update, page) and @blog_entries.count == 0)
+- if (attachments.count > 0) or (can?(:update, page) and not @blog_entries.present?)
   %h1= t :attachments
   %div.attachments
     %table.attachments
