@@ -10,12 +10,16 @@
     = render @page
 
 %div.col3
-  %div.attachment_global_drop_zone
-    %div.center.large
-      %i.icon-file
-      %i.icon-picture= # icon-camera
-      %i.icon-facetime-video
-    = t :drop_files_here
+  - # Use the drop zone only if there are no blog entries.
+  - # Otherwise, the system won't know where to put the attachment.
+  - #
+  - if @blog_entries.count == 0
+    %div.attachment_global_drop_zone
+      %div.center.large
+        %i.icon-file
+        %i.icon-picture= # icon-camera
+        %i.icon-facetime-video
+      = t :drop_files_here
   
   - if can? :manage, @page
     %div.blog_tools.box
@@ -23,5 +27,7 @@
         %i.icon-plus
         = I18n.t(:add_blog_entry)
   
-  - for blog_entry_page in @blog_entries
-    = render partial: 'pages/page', object: blog_entry_page
+  - if @blog_entries.count > 0
+    #blog_entries
+      - for blog_entry_page in @blog_entries
+        = render partial: 'pages/page', object: blog_entry_page

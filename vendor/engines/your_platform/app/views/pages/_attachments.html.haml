@@ -2,7 +2,14 @@
 - unless can? :update, page
   - attachments = attachments.find_without_types( "video", "image" )
 
-- if (attachments.count > 0) or can?(:update, page)
+- # Show attachments box if:
+- #   (a) There are attachments.
+- #   (b) The user can add attachments,
+- #          but there are not blog entries.
+- #          (If there are blog entries, it is not clear where to put
+- #          the attachment.)
+- #
+- if (attachments.count > 0) or (can?(:update, page) and @blog_entries.count == 0)
   %h1= t :attachments
   %div.attachments
     %table.attachments
@@ -10,4 +17,4 @@
         = render attachment
     - if can? :manage, page
       %span.add_attachment
-        = render partial: 'pages/add_attachment'
+        = render partial: 'pages/add_attachment', locals: {page: page}
