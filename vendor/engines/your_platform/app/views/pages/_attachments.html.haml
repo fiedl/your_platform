@@ -10,7 +10,7 @@
 - #          the attachment.)
 - #
 - if (attachments.count > 0) or (can?(:update, page) and not @blog_entries.present?)
-  %h1= t :attachments
+  %h1.attachments= t :attachments
   %div.attachments
     %table.attachments
       - for attachment in attachments

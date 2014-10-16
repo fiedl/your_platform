@@ -30,6 +30,7 @@ class PagesController < ApplicationController
   end
 
   def update
+    params[:blog_post] ||= params[:page]  # required for blog posts in respond_with_bip
     @page.update_attributes params[ :page ]
     respond_with_bip(@page)
   end

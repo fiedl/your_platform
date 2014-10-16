@@ -6,11 +6,9 @@ ready = ->
   # 
   $('.best_in_place * a').on('click', (e)->
     e.stopPropagation()
-    return false
   )
-  $(document).on('click', '.best_in_place * a', (e)->
+  $('.best_in_place').on('click', 'a', (e)->
     e.stopPropagation()
-    return false
   )
   
   # Do not follow links, when editing the link in an input field.
