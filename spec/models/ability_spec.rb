@@ -267,6 +267,26 @@ describe Ability do
       @membership = @group.assign_user @other_user
       the_user.should be_able_to :manage, @membership
     end
+    he "should not be able to rename admin groups" do
+      @admins_group = @group.admins_parent
+      the_user.should_not be_able_to :rename, @admins_group
+    end
+    he "should be able to rename a regular subgroup" do
+      @subgroup = @group.child_groups.create
+      the_user.should be_able_to :rename, @subgroup
+    end
+    he "should be able to assign and unassign members of the group and regular subgroups" do
+      @subgroup = @group.child_groups.create
+      the_user.should be_able_to :update_memberships, @subgroup
+      the_user.should be_able_to :update_memberships, @group
+    end
+    he "should not be able to assign and unassign admins" do
+      @admins_group = @group.admins_parent
+      @subgroup = @group.child_groups.create
+      @subgroup_admins_group = @subgroup.admins_parent
+      the_user.should_not be_able_to :update_memberships, @admins_group
+      the_user.should_not be_able_to :update_memberships, @subgroup_admins_group
+    end
   end
 
   context "when the user is a local admin of a page" do

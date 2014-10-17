@@ -6,6 +6,9 @@ module AutoCompletionHelper
                    html_attrs: { 
                      'data-autocomplete-url' => autocomplete_title_users_path,
                      :class => 'multiple-users-select-input'
+                   },
+                   display_with: lambda { |str|
+                     str.split(",").collect { |name| link_to(name.strip, search_guess_path(query: name.strip)) }.join(", ").html_safe
                    } )
   end
 
