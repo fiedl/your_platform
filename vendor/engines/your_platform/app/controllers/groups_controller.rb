@@ -109,7 +109,7 @@ class GroupsController < ApplicationController
 
   def update
     @group.update_attributes(group_params)
-    respond_with @group
+    respond_with_bip @group.reload
   end
 
   def create
@@ -137,11 +137,10 @@ class GroupsController < ApplicationController
   #   http://railscasts.com/episodes/371-strong-parameters
   # 
   def group_params
-    if can? :manage, @group
-      params.require(:group).permit(:name, :token, :internal_token, :extensive_name, :direct_members_titles_string)  # TODO: Additionally needed?
-    elsif can? :update, @group
-      params.require(:group).permit(:name, :token, :internal_token, :extensive_name)
-    end
+    permitted_keys = []
+    permitted_keys += [:name, :token, :internal_token, :extensive_name] if can? :rename, @group
+    permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
+    params.require(:group).permit(*permitted_keys)
   end
   
   def fill_map_address_fields

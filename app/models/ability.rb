@@ -139,6 +139,14 @@ class Ability
           can :manage, Group do |group|
             group.admins_of_self_and_ancestors.include? user
           end
+          cannot :rename, Group do |group|
+            group.flags.present?
+          end
+          cannot :update_memberships, Group do |group|
+            # only global admins are allowed to manage local admins.
+            #
+            group.has_flag? :admins_parent
+          end
           can :manage, User do |other_user|
             other_user.admins_of_ancestor_groups.include? user
           end
