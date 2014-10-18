@@ -13,8 +13,8 @@ class ProfileField
   self.singleton_class.send :alias_method, :orig_possible_types, :possible_types
   def self.possible_types
     self.orig_possible_types + [
-      'ProfileFieldTypes::Study',
-      'ProfileFieldTypes::Klammerung'
+      ProfileFieldTypes::Study,
+      ProfileFieldTypes::Klammerung
     ]
   end
   

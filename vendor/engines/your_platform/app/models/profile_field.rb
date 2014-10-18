@@ -169,15 +169,14 @@ class ProfileField < ActiveRecord::Base
   # List all possible types. This is needed for code injection security checks.
   #
   def self.possible_types
-    ['ProfileFieldTypes::General', 'ProfileFieldTypes::Custom', 
-      'ProfileFieldTypes::Organization', 'ProfileFieldTypes::Email',
-      'ProfileFieldTypes::Address', 'ProfileFieldTypes::About',
-      'ProfileFieldTypes::Employment', 'ProfileFieldTypes::ProfessionalCategory',
-      'ProfileFieldTypes::Competence', 'ProfileFieldTypes::BankAccount',
-      'ProfileFieldTypes::Description', 'ProfileFieldTypes::Phone',
-      'ProfileFieldTypes::NameSurrounding', 'ProfileFieldTypes::Homepage',
-      'ProfileFieldTypes::Date', 'ProfileFieldTypes::AcademicDegree', 
-      '' # Empty string is allowed, for example for child profile fields.
+    [ProfileFieldTypes::General, ProfileFieldTypes::Custom, 
+      ProfileFieldTypes::Organization, ProfileFieldTypes::Email,
+      ProfileFieldTypes::Address, ProfileFieldTypes::About,
+      ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory,
+      ProfileFieldTypes::Competence, ProfileFieldTypes::BankAccount,
+      ProfileFieldTypes::Description, ProfileFieldTypes::Phone,
+      ProfileFieldTypes::NameSurrounding, ProfileFieldTypes::Homepage,
+      ProfileFieldTypes::Date, ProfileFieldTypes::AcademicDegree
     ]
   end
   

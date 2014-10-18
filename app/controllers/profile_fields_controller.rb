@@ -25,12 +25,12 @@ class ProfileFieldsController < ApplicationController
     end
     
     @profile_field = ProfileField.find(params[:id])
-    if @profile_field.type.to_s.in? ProfileField.possible_types
-      profile_field_class = @profile_field.type.try(:constantize) || ProfileField
-    else
+    profile_field_class = ProfileField if @profile_field.type.blank?
+    profile_field_class ||= ProfileField.possible_types.find { |possible_type| possible_type.to_s == @profile_field.type }
+    if profile_field_class.nil?
       raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
     end
-    @profile_field = @profile_field.becomes( profile_field_class )
+    @profile_field = @profile_field.becomes(profile_field_class)
     updated = @profile_field.update_attributes(params[:profile_field])
     respond_with_bip @profile_field
   end
@@ -64,7 +64,7 @@ class ProfileFieldsController < ApplicationController
   end
   
   def secure_profile_field_type
-    if not params[:profile_field][:type].in? ([''] + ProfileField.possible_types)
+    if not params[:profile_field][:type].in? ([''] + ProfileField.possible_types.map(&:to_s))
       raise "security interrupt: '#{params[:profile_field][:type]}' is not a permitted profile field type."
     end
     params[:profile_field][:type]

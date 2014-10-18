@@ -58,7 +58,7 @@ class ApplicationController
     #
     if @current_ability.nil?
       currently_displayed_object = @navable
-      currently_displayed_object ||= params[:controller].singularize.camelize.constantize.unscoped.find(params[:id]) if params[:id]
+      currently_displayed_object ||= controller_name.classify.constantize.unscoped.find(params[:id]) if params[:id]
       currently_displayed_object ||= Group.everyone  # this causes to determine the role for searches and indices based on the role for the everyone group.
       
       params[:preview_as] ||= load_preview_as_from_cookie
