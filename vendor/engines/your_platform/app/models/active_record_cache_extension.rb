@@ -112,7 +112,7 @@ module ActiveRecordCacheExtension
   end
   
   def cache_created_at(method_name, arguments = nil)
-    #CacheAdditions
+    CacheAdditions
     Rails.cache.created_at [self, method_name, arguments]
   end
   
