@@ -29,6 +29,18 @@ module SessionSteps
       fill_in 'user_account_password', with: password
       click_button I18n.t(:login)
     end
+    
+    page.should have_no_text I18n.t(:login)
+    accept_terms_of_use
+    
+  end
+  
+  def accept_terms_of_use
+    if page.has_text? I18n.t(:terms_of_use)
+      check :accept
+      click_on I18n.t(:confirm)
+    end
+    page.should have_no_selector '.terms_of_use'
   end
 
   def logout

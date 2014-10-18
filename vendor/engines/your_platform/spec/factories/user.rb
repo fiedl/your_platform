@@ -57,6 +57,12 @@ FactoryGirl.define do
         user.set_date_of_death_if_unset 1.day.ago
       end
     end
+    
+    trait :accepted_terms_of_use do
+      after :create do |user|
+        user.accept_terms TermsOfUseController.current_terms_stamp
+      end
+    end
 
     # user with associated user account
     #

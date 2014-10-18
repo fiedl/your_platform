@@ -40,11 +40,16 @@ feature "UserForgotPassword" do
       password.should be_present
       
       visit sign_out_path
+      page.should have_text I18n.t(:login)
+      
       visit sign_in_path
       fill_in 'user_account_login', with: @user.alias
       fill_in 'user_account_password', with: password
       click_button I18n.t :login
+      page.should have_no_text I18n.t :login
       
+      accept_terms_of_use
+
       page.should have_text 'Was ist neu?'
     end
   end
