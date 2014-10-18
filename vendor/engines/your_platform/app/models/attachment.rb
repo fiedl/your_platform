@@ -1,8 +1,9 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :description, :file, :parent_id, :parent_type, :title
+  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author
 
   belongs_to :parent, polymorphic: true
-
+  belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+  
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes

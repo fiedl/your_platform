@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141018143449) do
+ActiveRecord::Schema.define(:version => 20141018221751) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -36,10 +36,11 @@ ActiveRecord::Schema.define(:version => 20141018143449) do
     t.text     "description"
     t.integer  "parent_id"
     t.string   "parent_type"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.string   "content_type"
     t.integer  "file_size"
+    t.integer  "author_user_id"
   end
 
   create_table "bookmarks", :force => true do |t|

@@ -1,6 +1,8 @@
 class PagesController < ApplicationController
 
   load_and_authorize_resource
+  skip_authorize_resource only: [:create]
+  
   respond_to :html, :json
 
   def show
@@ -34,14 +36,17 @@ class PagesController < ApplicationController
     @page.update_attributes params[ :page ]
     respond_with_bip(@page)
   end
-
+  
   def create
     if secure_parent_type.present? && params[:parent_id].present?
-      @parent = secure_parent_type.constantize.find(params[:parent_id]).child_pages
+      @parent = secure_parent_type.constantize.find(params[:parent_id])
+      @association = @parent.child_pages
+      authorize! :create_page_for, @parent
     else
-      @parent = Page
+      @association = Page
+      authorize! :create, Page
     end
-    @new_page = @parent.create( title: I18n.t(:new_page) )
+    @new_page = @association.create( title: I18n.t(:new_page) )
     @new_page.author = current_user
     @new_page.save
     redirect_to @new_page

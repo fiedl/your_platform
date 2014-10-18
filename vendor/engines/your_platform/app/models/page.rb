@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to
+  attr_accessible        :content, :title, :redirect_to, :author
 
   is_structureable       ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
   is_navable

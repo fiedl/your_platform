@@ -205,7 +205,7 @@ class Ability
         # LOCAL OFFICERS
         # Local officers can export the member lists of their groups.
         #
-        if preview_as.blank? or preview_as == 'officer'
+        if preview_as.blank? or preview_as.in? ['officer', 'admin']
           can :export_member_list, Group do |group|
             user.in? group.officers_of_self_and_ancestor_groups
           end
@@ -220,6 +220,31 @@ class Ability
           end
           can :update, Group do |group|
             group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+          end
+          
+          # Create, update and destroy Pages
+          #
+          can :create_page_for, [Group, Page] do |parent|
+            parent.officers_of_self_and_ancestors.include?(user)
+          end
+          can :update, Page do |page|
+            (page.author == user) && (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+          end
+          can :destroy, Page do |page|
+            can? :update, page
+          end
+          
+          # Create, update and destroy Attachments
+          #
+          can :create_attachment_for, Page do |page|
+            (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+          end
+          can :update, Attachment do |attachment|
+            (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
+            ((attachment.author == user) || (attachment.parent.author == user))
+          end
+          can :destroy, Attachment do |attachment|
+            can? :update, attachment
           end
         end
         

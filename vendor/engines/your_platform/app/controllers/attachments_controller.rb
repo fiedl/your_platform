@@ -1,14 +1,18 @@
 class AttachmentsController < ApplicationController
   
   load_and_authorize_resource
+  skip_authorize_resource only: [:create]
   
   def index
   end
 
   def create
-    #@attachment = Attachment.new(params[:attachment])
-    #@attachment.save
-    @attachment = Attachment.create!
+    if secure_parent
+      authorize! :create_attachment_for, secure_parent
+    else
+      authorize! :create, Attachment
+    end
+    @attachment = Attachment.create! author: current_user
     @attachment.update_attributes(params[:attachment])
   end
 
@@ -61,6 +65,10 @@ private
     @secure_version ||= AttachmentUploader.valid_versions.select do |version|
       version.to_s == params[:version]
     end.first
+  end
+  
+  def secure_parent
+    Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
   end
 
 end

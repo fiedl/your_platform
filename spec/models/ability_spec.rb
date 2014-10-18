@@ -252,41 +252,200 @@ describe Ability do
       @sub_group = @group.child_groups.create(name: "Sub Group")
       @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")
       @parent_group = @group.parent_groups.create(name: "Parent Group")
+      @unrelated_group = create :group
     end
-    he "should be able to export the member list" do
-      the_user.should be_able_to :export_member_list, @group
-    end
-    he "should be able to export the member lists of the sub groups" do
-      the_user.should be_able_to :export_member_list, @sub_group
-    end
-    he "should be able to export the member list fo the sub sub group" do
-      the_user.should be_able_to :export_member_list, @sub_sub_group
-    end
-    he "should not be able to export the member list of parent groups" do
-      the_user.should_not be_able_to :export_member_list, @parent_group
+    describe "(list export)" do
+      he "should be able to export the member list" do
+        the_user.should be_able_to :export_member_list, @group
+      end
+      he "should be able to export the member lists of the sub groups" do
+        the_user.should be_able_to :export_member_list, @sub_group
+      end
+      he "should be able to export the member list fo the sub sub group" do
+        the_user.should be_able_to :export_member_list, @sub_sub_group
+      end
+      he "should not be able to export the member list of parent groups" do
+        the_user.should_not be_able_to :export_member_list, @parent_group
+      end
     end
 
-    he "should be able to create an event in his group" do
-      the_user.should be_able_to :create_event, @group
+    describe "(events)" do
+      he "should be able to create an event in his group" do
+        the_user.should be_able_to :create_event, @group
+      end
+      he "should be able to update events in his group" do
+        @event = @group.child_events.create
+        the_user.should be_able_to :update, @event
+      end
+      he "should be able to create events in subgroups of his group" do
+        the_user.should be_able_to :create_event, @sub_group
+      end
+      he "should be able to update events in subgroups of his group" do
+        @event = @sub_group.child_events.create
+        the_user.should be_able_to :update, @event
+      end
+      he "should be able to update events in sub sub groups of his group" do
+        @event = @sub_sub_group.child_events.create
+        the_user.should be_able_to :update, @event
+      end
+      he "should be able to update the contact people of an event" do
+        @event = @group.child_events.create
+        the_user.should be_able_to :update, @event.contact_people_group
+      end
     end
-    he "should be able to update events in his group" do
-      @event = @group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to create events in subgroups of his group" do
-      the_user.should be_able_to :create_event, @sub_group
-    end
-    he "should be able to update events in subgroups of his group" do
-      @event = @sub_group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to update events in sub sub groups of his group" do
-      @event = @sub_sub_group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to update the contact people of an event" do
-      @event = @group.child_events.create
-      the_user.should be_able_to :update, @event.contact_people_group
+    
+    describe "(pages and uploads)" do
+      describe "(update pages)" do
+        he "should be able to update pages he has created within his group" do
+          @page = @group.child_pages.create author: user
+          the_user.should be_able_to :update, @page
+        end
+        he "should be able to update pages he has created within the group's subgroups" do
+          @page = @sub_group.child_pages.create author: user
+          the_user.should be_able_to :update, @page
+        end
+        he "should be able to update sub pages he has created within the group" do
+          @page = @group.child_pages.create.child_pages.create author: user
+          the_user.should be_able_to :update, @page
+        end
+        he "should not be able update unrelated pages" do
+          @page = create :page
+          the_user.should_not be_able_to :update, @page
+        end
+        he "should not be able to update pages created by other users within his group" do
+          @page = @group.child_pages.create author: create(:user)
+          the_user.should_not be_able_to :update, @page
+        end
+        he "should not be able to updated his pages when he is no officer for this page" do
+          @page = create :page, author: user
+          the_user.should_not be_able_to :update, @page
+        end
+      end
+      
+      describe "(create pages)" do
+        he "should be able to create pages under his group" do
+          the_user.should be_able_to :create_page_for, @group
+        end
+        he "should be able to create sub pages under his group" do
+          @page = @group.child_pages.create
+          the_user.should be_able_to :create_page_for, @page
+        end
+        he "should be able to create pages under subgroups of his group" do
+          the_user.should be_able_to :create_page_for, @sub_group
+          the_user.should be_able_to :create_page_for, @sub_sub_group
+        end
+        he "should not be able to create unrelated pages" do
+          the_user.should_not be_able_to :create, Page
+          the_user.should_not be_able_to :create_page_for, @parent_group
+          the_user.should_not be_able_to :create_page_for, @unrelated_group
+        end
+      end
+      
+      describe "(destroy pages)" do
+        he "should be able to destroy his own pages within his group" do
+          @page = @group.child_pages.create author: user
+          the_user.should be_able_to :destroy, @page
+        end
+        he "should not be able to destroy his page when he is not an officer" do
+          @page = create :page, author: user
+          the_user.should_not be_able_to :destroy, @page
+        end
+        he "should not be able to destroy pages of other users" do
+          @page = @group.child_pages.create author: create(:user)
+          the_user.should_not be_able_to :destroy, @page
+        end
+      end
+      
+      describe "(adding attachments)" do
+        describe "(while officer)" do
+          he "should be able to add attachments to his own pages" do
+            @page = @group.child_pages.create author: user  # officer and author
+            the_user.should be_able_to :create_attachment_for, @page
+          end
+          he "should be able to add attachments to other pages within his group" do
+            @page = @group.child_pages.create author: create(:user)  # officer, but no author
+            the_user.should be_able_to :create_attachment_for, @page
+          end
+          he "should not be able to add attachments to unrelated pages" do
+            the_user.should_not be_able_to :create_attachment_for, @unrelated_page
+            the_user.should_not be_able_to :create_attachment_for, @parent_page
+          end
+        end
+        describe "(when no officer)" do
+          he "should not be able to add attachments to his own pages" do
+            @page = create :page, author: user
+            the_user.should_not be_able_to :create_attachment_for, @page
+          end
+        end
+      end
+      
+      describe "(updating attachments)" do
+        describe "(while officer)" do
+          he "should be able to update attachments to his own pages" do
+            @page = @group.child_pages.create author: user
+            @attachment = @page.attachments.create
+            the_user.should be_able_to :update, @attachment
+          end
+          he "should be able to update attachments he has created" do
+            @page = @group.child_pages.create
+            @attachment = @page.attachments.create author: user
+            the_user.should be_able_to :update, @attachment
+          end
+          he "should not be able to update attachments to other pages within his group" do
+            @page = @group.child_pages.create  # no page author
+            @attachment = @page.attachments.create  # no attachment author
+            the_user.should_not be_able_to :update, @attachment
+          end
+          he "should not be able to create unrelated attachments" do
+            the_user.should_not be_able_to :create, Attachment
+          end
+        end
+        describe "(when no officer)" do
+          he "should not be able to update his attachments" do
+            @page = create :page
+            @attachment = @page.attachments.create author: user
+            the_user.should_not be_able_to :update, @attachment
+          end
+          he "should not be able to update attachments of pages he has created" do
+            @page = create :page, author: user
+            @attachment = @page.attachments.create
+            the_user.should_not be_able_to :update, @attachment
+          end
+        end
+      end
+      
+      describe "(destroying attachments)" do
+        describe "(while officer)" do
+          he "should be able to destroy attachments to his own pages" do
+            @page = @group.child_pages.create author: user
+            @attachment = @page.attachments.create author: create(:user)
+            the_user.should be_able_to :destroy, @attachment
+          end
+          he "should be able to destroy his own attachments" do
+            @page = @group.child_pages.create author: create(:user)
+            @attachment = @page.attachments.create author: user
+            the_user.should be_able_to :destroy, @attachment
+          end
+          he "should not be able to destroy attachments of pages of other authors" do
+            @page = @group.child_pages.create author: create(:user)
+            @attachment = @page.attachments.create
+            the_user.should_not be_able_to :destroy, @attachment
+          end
+        end
+        describe "(when no officer)" do
+          he "should not be able to destroy his attachments" do
+            @page = create :page  # he is no officer for this page
+            @attachment = @page.attachments.create author: user  # but author
+            the_user.should_not be_able_to :destroy, @attachment
+          end
+          he "should not be able to destroy attachments of pages he has created" do
+            @page = create :page, author: user  # author, but no officer
+            @attachment = @page.attachments.create
+            the_user.should_not be_able_to :destroy, @attachment
+          end
+        end
+      end
+      
     end
   end
   

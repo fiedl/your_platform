@@ -40,7 +40,7 @@
         %i.icon-facetime-video
       = t :drop_files_here
   
-  - if can? :manage, @page
+  - if can? :create_page_for, @page
     %div.blog_tools.box
       = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
         %i.icon-plus
