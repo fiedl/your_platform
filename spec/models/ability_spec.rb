@@ -30,30 +30,11 @@ describe Ability do
   subject { ability }
   let(:the_user) { subject }
   
-  context "when the user is a global admin" do
-    before { user.global_admin = true }
-    he "should be able to manage everything" do
-      @page = create(:page)
-      the_user.should be_able_to :manage, @page
-      @group = create(:group)
-      the_user.should be_able_to :manage, @group
-      @other_user = create(:user)
-      the_user.should be_able_to :manage, @other_user
-    end
-    specify "turning the switch on and off should change the abilities accordingly and not cause caching issues" do
-      @page = create(:page)
-      the_user.should be_able_to :manage, @page
-      
-      user.global_admin = false
-      wait_for_cache
-      Ability.new(User.find user.id).should_not be_able_to :manage, @page
-      
-      user.global_admin = true
-      wait_for_cache
-      Ability.new(User.find user.id).should be_able_to :manage, @page
-    end
-  end
   
+  # 
+  # Regular Users
+  # 
+    
   he "should be able to edit his own profile fields" do
     @profile_field = user.profile_fields.create(type: "ProfileFieldTypes::Phone", value: "123-456789")
 
@@ -203,7 +184,84 @@ describe Ability do
     end
   end
   
+  #
+  # Officers
+  #
   
+  context "when the user is officer of a group" do
+    before do
+      @group = create :group
+      @officer_group = @group.officers_groups.create(name: "Secretary")
+      @officer_group.assign_user user
+      @sub_group = @group.child_groups.create(name: "Sub Group")
+      @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")
+      @parent_group = @group.parent_groups.create(name: "Parent Group")
+    end
+    he "should be able to export the member list" do
+      the_user.should be_able_to :export_member_list, @group
+    end
+    he "should be able to export the member lists of the sub groups" do
+      the_user.should be_able_to :export_member_list, @sub_group
+    end
+    he "should be able to export the member list fo the sub sub group" do
+      the_user.should be_able_to :export_member_list, @sub_sub_group
+    end
+    he "should not be able to export the member list of parent groups" do
+      the_user.should_not be_able_to :export_member_list, @parent_group
+    end
+
+    he "should be able to create an event in his group" do
+      the_user.should be_able_to :create_event, @group
+    end
+    he "should be able to update events in his group" do
+      @event = @group.child_events.create
+      the_user.should be_able_to :update, @event
+    end
+    he "should be able to create events in subgroups of his group" do
+      the_user.should be_able_to :create_event, @sub_group
+    end
+    he "should be able to update events in subgroups of his group" do
+      @event = @sub_group.child_events.create
+      the_user.should be_able_to :update, @event
+    end
+    he "should be able to update events in sub sub groups of his group" do
+      @event = @sub_sub_group.child_events.create
+      the_user.should be_able_to :update, @event
+    end
+    he "should be able to update the contact people of an event" do
+      @event = @group.child_events.create
+      the_user.should be_able_to :update, @event.contact_people_group
+    end
+  end
+  
+  #
+  # Local page admins
+  #
+  
+  context "when the user is a local admin of a page" do
+    before do
+      @page = create(:page)
+      @page.admins << user
+    end
+    he "should be able to manage this page" do
+      the_user.should be_able_to :manage, @page
+    end
+    he "should be able to manage subgroups of this page" do
+      @subgroup = @page.child_groups.create
+      the_user.should be_able_to :manage, @subgroup
+    end
+    he "should NOT be able to manage descendant users" do
+      @subgroup = @page.child_groups.create
+      @other_user = create(:user)
+      @subgroup << @other_user 
+      the_user.should_not be_able_to :update, @other_user
+    end
+  end
+    
+  #
+  # Local group admins
+  #
+    
   context "when the user is a local admin" do
     before do
       @group = create(:group)
@@ -289,69 +347,31 @@ describe Ability do
     end
   end
 
-  context "when the user is a local admin of a page" do
-    before do
-      @page = create(:page)
-      @page.admins << user
-    end
-    he "should be able to manage this page" do
-      the_user.should be_able_to :manage, @page
-    end
-    he "should be able to manage subgroups of this page" do
-      @subgroup = @page.child_groups.create
-      the_user.should be_able_to :manage, @subgroup
-    end
-    he "should NOT be able to manage descendant users" do
-      @subgroup = @page.child_groups.create
-      @other_user = create(:user)
-      @subgroup << @other_user 
-      the_user.should_not be_able_to :update, @other_user
-    end
-  end
+  # 
+  # Global Admins
+  #
   
-  context "when the user is officer of a group" do
-    before do
-      @group = create :group
-      @officer_group = @group.officers_groups.create(name: "Secretary")
-      @officer_group.assign_user user
-      @sub_group = @group.child_groups.create(name: "Sub Group")
-      @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")
-      @parent_group = @group.parent_groups.create(name: "Parent Group")
+  context "when the user is a global admin" do
+    before { user.global_admin = true }
+    he "should be able to manage everything" do
+      @page = create(:page)
+      the_user.should be_able_to :manage, @page
+      @group = create(:group)
+      the_user.should be_able_to :manage, @group
+      @other_user = create(:user)
+      the_user.should be_able_to :manage, @other_user
     end
-    he "should be able to export the member list" do
-      the_user.should be_able_to :export_member_list, @group
-    end
-    he "should be able to export the member lists of the sub groups" do
-      the_user.should be_able_to :export_member_list, @sub_group
-    end
-    he "should be able to export the member list fo the sub sub group" do
-      the_user.should be_able_to :export_member_list, @sub_sub_group
-    end
-    he "should not be able to export the member list of parent groups" do
-      the_user.should_not be_able_to :export_member_list, @parent_group
-    end
-
-    he "should be able to create an event in his group" do
-      the_user.should be_able_to :create_event, @group
-    end
-    he "should be able to update events in his group" do
-      @event = @group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to create events in subgroups of his group" do
-      the_user.should be_able_to :create_event, @sub_group
-    end
-    he "should be able to update events in subgroups of his group" do
-      @event = @sub_group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to update events in sub sub groups of his group" do
-      @event = @sub_sub_group.child_events.create
-      the_user.should be_able_to :update, @event
-    end
-    he "should be able to update the contact people of an event" do
-      @event = @group.child_events.create
-      the_user.should be_able_to :update, @event.contact_people_group
+    specify "turning the switch on and off should change the abilities accordingly and not cause caching issues" do
+      @page = create(:page)
+      the_user.should be_able_to :manage, @page
+      
+      user.global_admin = false
+      wait_for_cache
+      Ability.new(User.find user.id).should_not be_able_to :manage, @page
+      
+      user.global_admin = true
+      wait_for_cache
+      Ability.new(User.find user.id).should be_able_to :manage, @page
     end
   end
   
