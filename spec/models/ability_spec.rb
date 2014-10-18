@@ -315,6 +315,7 @@ describe Ability do
       @officer_group = @group.officers_groups.create(name: "Secretary")
       @officer_group.assign_user user
       @sub_group = @group.child_groups.create(name: "Sub Group")
+      @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")
       @parent_group = @group.parent_groups.create(name: "Parent Group")
     end
     he "should be able to export the member list" do
@@ -322,6 +323,9 @@ describe Ability do
     end
     he "should be able to export the member lists of the sub groups" do
       the_user.should be_able_to :export_member_list, @sub_group
+    end
+    he "should be able to export the member list fo the sub sub group" do
+      the_user.should be_able_to :export_member_list, @sub_sub_group
     end
     he "should not be able to export the member list of parent groups" do
       the_user.should_not be_able_to :export_member_list, @parent_group
@@ -339,6 +343,10 @@ describe Ability do
     end
     he "should be able to update events in subgroups of his group" do
       @event = @sub_group.child_events.create
+      the_user.should be_able_to :update, @event
+    end
+    he "should be able to update events in sub sub groups of his group" do
+      @event = @sub_sub_group.child_events.create
       the_user.should be_able_to :update, @event
     end
     he "should be able to update the contact people of an event" do

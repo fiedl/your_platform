@@ -31,16 +31,11 @@
                 = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'
                 %ul.dropdown-menu
                   = cached_groups_of_user_table current_user
-              - # /
-              - #   \//
-              - #   <haml:silent>             if current_user.role_for( @navable )
-              - #   </haml:silent><haml:block>              <li class="backendBarItem"><a>
-              - #   Role: <haml:loud> current_user.role_for( @navable ) </haml:loud>
-              - #   </a></li>
-              - #   </haml:block>            //
-              - if can? :manage, @navable
-                %li.backendBarItem
-                  = link_to t(:you_are_admin), {preview_as: 'user', query: params[:query], page: params[:page]}, {title: 'Click here for a preview as a regular user.'}
+              
+              - # role indicator and preview menu
+              = render partial: 'layouts/role_preview_switcher'
+              
+              
               - # %li.backendBarItem.dropdown
               - #   = link_to t(:bookmarks), my_bookmarks_path
               - #   %ul.dropdown-menu.my-favorites

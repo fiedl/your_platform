@@ -23,6 +23,8 @@ module StructureableMixins::Roles
       admins_of_self_and_ancestors
       officers_of_self_and_parent_groups
       officers_groups_of_self_and_descendant_groups
+      officers_of_self_and_ancestors
+      officers_of_self_and_ancestor_groups
     end
   end
   
@@ -119,6 +121,30 @@ module StructureableMixins::Roles
       end.flatten.uniq
     end
   end
+  
+  def find_officers
+    cached do
+      if respond_to? :child_groups
+        find_officers_parent_group.try(:descendant_users) 
+      end || []
+    end
+  end
+
+  def officers_of_ancestors
+    cached { ancestors.collect { |ancestor| ancestor.find_officers }.flatten }
+  end
+  
+  def officers_of_ancestor_groups
+    cached { ancestor_groups.collect { |ancestor| ancestor.find_officers }.flatten }
+  end
+  
+  def officers_of_self_and_ancestors
+    cached { find_officers + officers_of_ancestors }
+  end
+  
+  def officers_of_self_and_ancestor_groups
+    cached { find_officers + officers_of_ancestor_groups }
+  end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
   #
@@ -178,7 +204,11 @@ module StructureableMixins::Roles
   end
 
   def find_admins
-    cached { find_admins_parent_group.try( :descendant_users ) } || []
+    cached do
+      if respond_to? :child_groups
+        find_admins_parent_group.try( :descendant_users ) 
+      end || []
+    end || []
   end
   
   def admins_of_ancestors

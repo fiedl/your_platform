@@ -9,7 +9,7 @@
 -#   = render partial: 'posts/posts', locals: { posts: @posts }
 
 -# umcoming events
-= render partial: 'shared/upcoming_events', locals: {events: @group.upcoming_events, force_show: can?(:manage, @group), parent_group: @group}
+= render partial: 'shared/upcoming_events', locals: {events: @group.upcoming_events, force_show: can?(:create_event, @group), parent_group: @group}
 
 - unless @child_groups
   -# contact info

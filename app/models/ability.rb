@@ -8,7 +8,11 @@ class Ability
   include CanCan::Ability
 
   def initialize(user, params = {}, options = {})
-    preview_as_user = true if options[:preview_as_user]
+    preview_as = options[:preview_as] # Attention: Check outside whether the user's role allowes that preview!
+    preview_as = nil if preview_as.blank?
+    preview_as_user = (preview_as == 'user')
+    preview_as_officer = (preview_as == 'officer')
+    preview_as_admin = (preview_as == 'admin')
     
     # Define abilities for the passed in user here. For example:
     #
@@ -47,7 +51,7 @@ class Ability
 
       # Only global administrators can change anything.
       #
-      if user.in? Role.global_admins and not preview_as_user
+      if user.in? Role.global_admins and not (preview_as && (preview_as != 'global_admin'))
         can :manage, :all
 
       else
@@ -135,7 +139,7 @@ class Ability
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
-        if user.admin_of_anything? and not preview_as_user
+        if user.admin_of_anything? and not (preview_as && (preview_as != 'admin'))
           can :manage, Group do |group|
             group.admins_of_self_and_ancestors.include? user
           end
@@ -173,20 +177,22 @@ class Ability
         # LOCAL OFFICERS
         # Local officers can export the member lists of their groups.
         #
-        can :export_member_list, Group do |group|
-          user.in? group.officers_of_self_and_parent_groups
-        end
-        
-        # Local officers can create events in their groups.
-        #
-        can :create_event, Group do |group|
-          user.in? group.officers_of_self_and_parent_groups
-        end
-        can :update, Event do |event|
-          event.group && user.in?(event.group.officers_of_self_and_parent_groups)
-        end
-        can :update, Group do |group|
-          group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+        if preview_as.blank? or preview_as == 'officer'
+          can :export_member_list, Group do |group|
+            user.in? group.officers_of_self_and_ancestor_groups
+          end
+          
+          # Local officers can create events in their groups.
+          #
+          can :create_event, Group do |group|
+            user.in? group.officers_of_self_and_ancestor_groups
+          end
+          can :update, Event do |event|
+            event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
+          end
+          can :update, Group do |group|
+            group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+          end
         end
         
         # DEVELOPERS

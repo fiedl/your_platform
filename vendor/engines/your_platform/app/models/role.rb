@@ -4,11 +4,14 @@
 #   Role.of(user).in(corporation).guest?  #  => true
 #   Role.find_all_by_user_and_group(user, corporation)
 #
+#   Role.of(user).for(page).to_s          #  => "admin"
+#   Role.of(user).for(user).to_s          #  => "global_admin"
+#
 class Role
   
-  def initialize(given_user, given_group)
+  def initialize(given_user, given_object)
     @user = given_user
-    @group = given_group
+    @object = given_object
   end
   
   # Example:
@@ -23,39 +26,94 @@ class Role
   # 
   #   Role.of(user).in(corporation).to_s  #  => "guest"
   #
-  def in(given_group)
-    @group = given_group
+  def in(given_object)
+    @object = given_object
     return self
+  end
+  def for(given_object)
+    self.in(given_object)
   end
   
   def user
     @user || raise('User not given, when trying to determine Role.')
   end
   
-  def group
-    @group || raise('Group not given, when trying to determine Role.')
+  def object
+    @object || raise('Object not given, when trying to determine Role.')
   end
+  def group
+    @object || raise('Group not given, when trying to determine Role.')
+  end
+  
+  #
+  # Roles for groups
+  #
   
   def current_member?
     member? && full_member?
   end
   
   def full_member?
-    (([group] + group.descendant_groups) & user.groups.find_all_by_flag(:full_members)).count > 0
+    object.kind_of?(Group) && 
+      (( ([group] + group.descendant_groups) & user.groups.find_all_by_flag(:full_members) ).count > 0)
   end
     
   def member?
-    user.member_of? group
+    object.kind_of?(Group) && user.member_of?(object)
   end
   
   def guest?
-    user.guest_of? group
+    object.kind_of?(Group) && user.guest_of?(object)
   end
   
   def former_member?
-    group.corporation? and user.former_member_of_corporation?(group)
+    object.kind_of?(Group) && object.corporation? && user.former_member_of_corporation?(object)
   end
   
+  #
+  # Roles for structureables
+  #
+  
+  def global_admin?
+    user.global_admin?
+  end
+
+  def admin?
+    global_admin? || object.admins_of_self_and_ancestors.include?(user)
+  end
+  
+  def officer?
+    global_admin? || object.officers_of_self_and_ancestors.include?(user)
+  end
+  
+  
+  # Example
+  #   Role.of(user).for(page).to_s  # => 'admin'
+  def to_s
+    return 'global_admin' if global_admin?
+    return 'admin' if admin?
+    return 'officer' if officer?
+    return 'full_member' if full_member?
+    return 'member' if member?
+    return 'guest' if guest?
+    return 'former_member' if former_member?
+    return ''
+  end
+  
+  
+  # The system allows to simulate a certain role when viewing an object.
+  # This determines which simulations are allowed.
+  # 
+  def allowed_preview_roles
+    return ['global_admin', 'admin', 'officer', 'user'] if global_admin?
+    return ['admin', 'officer', 'user'] if admin?
+    return ['officer', 'user'] if officer?
+  end
+  def allow_preview?
+    # The preview makes sense for officers and above.
+    # All above roles are also officer roles.
+    officer?
+  end
   
   
   # This finder method returns all global admins.

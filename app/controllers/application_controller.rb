@@ -52,7 +52,17 @@ class ApplicationController
   #
   def current_ability
     options = {}
-    options[:preview_as_user] = true if params[:preview_as] == 'user'
+    
+    # Preview role mechanism
+    #
+    unless @current_ability
+      currently_displayed_object = @navable
+      currently_displayed_object ||= params[:controller].singularize.camelize.constantize.unscoped.find(params[:id]) if params[:id]
+      if params[:preview_as].present? && current_user && currently_displayed_object
+        raise 'preview role not allowed!' if not params[:preview_as].in?(Role.of(current_user).for(currently_displayed_object).allowed_preview_roles)
+        options[:preview_as] = params[:preview_as]
+      end
+    end
 
     @current_ability ||= ::Ability.new(current_user, params, options)
   end
