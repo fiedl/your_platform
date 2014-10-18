@@ -184,6 +184,62 @@ describe Ability do
     end
   end
   
+  describe "(exporting lists)" do
+    before do
+      @group = create :group
+      @corporation = create :wingolf_corporation; @corporation.reload
+      @other_corporation = create :wingolf_corporation
+      @bv = create :bv_group
+    end
+    describe "being member of some group" do
+      before { @group << user }
+      he { should_not be_able_to :export_member_list, @group }
+    end
+    describe "being Bursch of a corporation" do
+      before { @corporation.status_group('Aktive Burschen') << user }
+      he { should be_able_to :export_member_list, @corporation }
+      he { should be_able_to :export_member_list, @corporation.aktivitas }
+      he { should be_able_to :export_member_list, @corporation.philisterschaft }
+      he { should be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Burschen').first }
+      he { should be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Fuxen').first }
+      he { should_not be_able_to :export_member_list, @other_corporation }
+      he { should_not be_able_to :export_member_list, @bv }
+    end
+    
+    describe "being Fux of a corporation" do
+      before { @corporation.status_group('Brandfuxen') << user }
+      he { should_not be_able_to :export_member_list, @corporation }
+      he { should_not be_able_to :export_member_list, @corporation.aktivitas }
+      he { should_not be_able_to :export_member_list, @corporation.philisterschaft }
+      he { should_not be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Burschen').first }
+      he { should_not be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Fuxen').first }
+      he { should_not be_able_to :export_member_list, @other_corporation }
+      he { should_not be_able_to :export_member_list, @bv }
+    end
+
+    describe "being Philister of a corporation" do
+      before { @corporation.status_group('Philister') << user }
+      he { should be_able_to :export_member_list, @corporation }
+      he { should be_able_to :export_member_list, @corporation.aktivitas }
+      he { should be_able_to :export_member_list, @corporation.philisterschaft }
+      he { should be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Burschen').first }
+      he { should be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Fuxen').first }
+      he { should_not be_able_to :export_member_list, @other_corporation }
+      he { should_not be_able_to :export_member_list, @bv }
+    end
+    
+    describe "being member of a BV" do
+      before { @bv << user }
+      he { should_not be_able_to :export_member_list, @corporation }
+      he { should_not be_able_to :export_member_list, @corporation.aktivitas }
+      he { should_not be_able_to :export_member_list, @corporation.philisterschaft }
+      he { should_not be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Burschen').first }
+      he { should_not be_able_to :export_member_list, @corporation.descendant_groups.where(name: 'Fuxen').first }
+      he { should_not be_able_to :export_member_list, @other_corporation }
+      he { should be_able_to :export_member_list, @bv }
+    end
+  end
+  
   #
   # Officers
   #

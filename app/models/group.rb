@@ -70,6 +70,10 @@ class Group
   def self.find_bv_groups
     (self.find_bvs_parent_group.try(:child_groups) || [])
   end
+  
+  def bv?
+    Bv.find_bv_groups.include?(self)
+  end
 
   # Wingolfsblätter-Abonnenten
   # ------------------------------------------------------------------------------------------

@@ -142,6 +142,27 @@ class Ability
         #
         can :autocomplete_title, User
         
+        # List exports
+        #   - BV-Mitgliedschaft berechtigt dazu, die Mitglieder dieses BV
+        #       zu exportieren.
+        #   - Mitgliedschaft in einer Verbindung als Bursch oder Philister
+        #       berechtigt dazu, die Mitglieder dieser Verbindung zu
+        #       exportieren.
+        #   - Normale Gruppen-Mitgliedschaften (etwa Gruppe 'Jeder' 
+        #       oder 'Wingolfsblätter-Abonnenten') berechtigen nicht zum
+        #       Export.
+        #
+        can :export_member_list, Group do |group|
+          if group.bv?
+            user.in? group.members
+          elsif group.corporation
+            user.in?(group.corporation.philisterschaft.members) or 
+            user.in?(group.corporation.descendant_groups.where(name: 'Burschen').first.members)
+          else
+            false
+          end
+        end
+        
         # LOCAL ADMINS
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
