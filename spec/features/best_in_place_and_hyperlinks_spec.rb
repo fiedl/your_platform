@@ -30,31 +30,33 @@ feature "best_in_place and hyperlinks" do
       page.should have_text 'this is the content behind the hyperlink.'
     end
     
-    scenario 'clicking on an attachment link' do
-      @page = create :page
-      @attachment = create :image_attachment, title: 'New Attachment'
-      @page.attachments << @attachment
-      visit page_path @page
-      
-      click_on 'New Attachment'
-      page.should have_no_text 'New Attachment'
-      current_url.should include "attachments/#{@attachment.id}/image-upload.png"
-    end
-    
-    scenario 'editing an attachment name in edit mode (bug fix)' do
-      @page = create :page
-      @attachment = create :image_attachment, title: 'New Attachment'
-      @page.attachments << @attachment
-      visit page_path @page
-
-      within '.box.attachments' do
-        click_on I18n.t :edit
-        fill_in :title, with: 'The new attachment title'
-        find('input[name=title]').click  # clicking in the text field should not redirect to the attachment url (bug fix)
+    if ENV['CI'] != 'travis'  # they don't support uploads
+      scenario 'clicking on an attachment link' do
+        @page = create :page
+        @attachment = create :image_attachment, title: 'New Attachment'
+        @page.attachments << @attachment
+        visit page_path @page
+        
+        click_on 'New Attachment'
+        page.should have_no_text 'New Attachment'
+        current_url.should include "attachments/#{@attachment.id}/image-upload.png"
       end
       
-      wait_for_ajax; wait_for_ajax
-      current_url.should_not include "attachments/#{@attachment.id}/image-upload.png"
+      scenario 'editing an attachment name in edit mode (bug fix)' do
+        @page = create :page
+        @attachment = create :image_attachment, title: 'New Attachment'
+        @page.attachments << @attachment
+        visit page_path @page
+      
+        within '.box.attachments' do
+          click_on I18n.t :edit
+          fill_in :title, with: 'The new attachment title'
+          find('input[name=title]').click  # clicking in the text field should not redirect to the attachment url (bug fix)
+        end
+        
+        wait_for_ajax; wait_for_ajax
+        current_url.should_not include "attachments/#{@attachment.id}/image-upload.png"
+      end
     end
     
   end
