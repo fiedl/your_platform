@@ -134,6 +134,9 @@ class User < ActiveRecord::Base
       self.female = false
     end
   end
+  def male?
+    not female?
+  end
 
   # Date of Birth
   #
@@ -920,6 +923,17 @@ class User < ActiveRecord::Base
   def self.joins_groups
     self.joins(:groups).where('dag_links.valid_to IS NULL')
   end
+  
+  
+  
+  def accept_terms(terms_stamp)
+    self.accepted_terms = terms_stamp
+    self.accepted_terms_at = Time.zone.now
+    save!
+  end
+  def accepted_terms?(terms_stamp)
+    self.accepted_terms == terms_stamp
+  end
 
   # Helpers
   # ==========================================================================================
@@ -930,7 +944,7 @@ class User < ActiveRecord::Base
   #    User: alias_of_the_first_user, User: alias_of_the_second_user, ...
   #
   def inspect
-    "User: " + self.alias
+    "User: #{self.id} #{self.alias}"
   end
   
 end

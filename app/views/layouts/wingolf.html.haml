@@ -112,6 +112,9 @@
                     %a.btn(href="mumble://wingolfsplattform.org") Mit Konferenz verbinden
           %li
             = link_to t(:imprint), Page.find_by_flag(:imprint)
+          - if current_user
+            %li
+              = link_to t(:terms_of_use), terms_path
           %li
             = language_switcher_html
           - if current_user

@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   before_filter :log_generic_metric_event
   helper_method :metric_logger
   before_filter :authorize_miniprofiler
+  before_filter :accept_terms_of_use
   
   after_filter  :log_activity
   
@@ -143,6 +144,13 @@ class ApplicationController < ActionController::Base
   #
   def authorize_miniprofiler
     Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
+  end
+  
+  
+  def accept_terms_of_use
+    if current_user and params[:controller] != 'terms_of_use' and not TermsOfUseController.accepted?(current_user)
+      redirect_to controller: 'terms_of_use', action: 'index', redirect_after: request.url
+    end
   end
 
 end

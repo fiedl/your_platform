@@ -52,6 +52,9 @@ class Ability
     # Only registered users can do or see anything.
     #
     if user
+      
+      can :read, :terms_of_use
+      can :accept, :terms_of_use
 
       # Only global administrators can change anything.
       #

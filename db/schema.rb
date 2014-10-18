@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141010134300) do
+ActiveRecord::Schema.define(:version => 20141018143449) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -209,9 +209,11 @@ ActiveRecord::Schema.define(:version => 20141010134300) do
     t.string   "alias"
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.boolean  "female"
+    t.string   "accepted_terms"
+    t.datetime "accepted_terms_at"
   end
 
   create_table "workflow_kit_parameters", :force => true do |t|

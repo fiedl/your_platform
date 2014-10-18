@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   
   root :to => 'root#index'
+  
+  get :terms, to: 'terms_of_use#index'
+  post :terms, to: 'terms_of_use#accept'
 
   devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
   devise_scope :user_account do
