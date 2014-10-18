@@ -8,7 +8,11 @@ class Ability
   include CanCan::Ability
 
   def initialize(user, params = {}, options = {})
-    preview_as = options[:preview_as] # Attention: Check outside whether the user's role allowes that preview!
+    
+    # Attention: Check outside whether the user's role allowes that preview!
+    # Currently, this is done in ApplicationController#current_ability.
+    #
+    preview_as = options[:preview_as] 
     preview_as = nil if preview_as.blank?
     preview_as_user = (preview_as == 'user')
     preview_as_officer = (preview_as == 'officer')

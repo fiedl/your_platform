@@ -9,14 +9,11 @@
     - current_view = params[:preview_as] || role.to_s
     = link_to(params.merge({preview_as: role.to_s}), class: 'dropdown-toggle') do
       = t current_view
-    %ul.dropdown-menu
-      %li.nav-header
-        = t :preview_as
-      - for preview_role in role.allowed_preview_roles
-        - active_or_not = (preview_role == current_view) ? 'active' : ''
-        %li{class: active_or_not}
-          = link_to t(preview_role), params.merge({preview_as: preview_role})
-      - #
-      - #          - if can? :manage, @navable
-      - #            %li.backendBarItem
-      - #              = link_to t(:you_are_admin), {preview_as: 'user', query: params[:query], page: params[:page]}, {title: 'Click here for a preview as a regular user.'}
+    - unless params[:preview_not_possible]
+      %ul.dropdown-menu
+        %li.nav-header
+          = t :preview_as
+        - for preview_role in role.allowed_preview_roles
+          - active_or_not = (preview_role == current_view) ? 'active' : ''
+          %li{class: active_or_not}
+            = link_to t(preview_role), params.merge({preview_as: preview_role})
