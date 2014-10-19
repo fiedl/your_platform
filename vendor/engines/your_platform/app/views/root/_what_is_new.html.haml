@@ -2,7 +2,8 @@
 %div.what_is_new
   %ul
     - temp_page_counter = 0  # counter to avoid iterations within the following select block:
-    - for page in Page.order('created_at DESC').limit(30).select { |page| (temp_page_counter += 1) <= 5 && can?(:read, page) }.first(5)
+    - number_of_news_entries = 10
+    - for page in Page.order('created_at DESC').select { |page| (temp_page_counter += 1) <= number_of_news_entries && can?(:read, page) }.first(number_of_news_entries)
       %li
         %strong>= link_to (page.title.present? ? page.title : translate(:untitled)), page
         , 
