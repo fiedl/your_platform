@@ -11,19 +11,8 @@
 
   .alert.alert-info.authorization_info
     %i{class: icon}
-    %strong Zugriffshinweis
     
-    - if subject == 'officers'
+    - if subject == 'foo'
       %ul.authorization_info
-        %li Alle Amtsträger haben das Recht, <b>Mitgliederlisten</b> zu exportieren.
-        - if navable.kind_of? Group
-          %li Alle Amtsträger können <b>Veranstaltungen</b> für diese Gruppe und ihre Untergruppen einzutragen.
-          
-        - # TODO: Activate these notices when implemented:
-        
-        - # %li Alle Amtsträger dürfen Dokumente und Anhänge hochladen.
-        - # %li Nur Administratoren dürfen die Anhänge löschen.
-        
-        - # %li Administratoren von Seiten dürfen die Seite bearbeiten und Unterseiten erstellen.
-        - # %li Administratoren von Gruppen dürfen die Mitglieder-Profile der Gruppen verwalten.
-    
+        %li Collect authorization info here.
+        %li Or override the file in the application code.

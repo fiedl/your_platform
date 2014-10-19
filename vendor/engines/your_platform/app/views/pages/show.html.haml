@@ -1,18 +1,5 @@
 - if @page.group.present? && @page.group != Group.everyone
-  .alert.alert-info#page_access
-    %i.icon-lock
-    %strong Zugriff eingeschränkt.
-    Dieser Inhalt ist unterhalb der Gruppe
-    = surround "'", "'" do
-      %b
-        = link_to @page.group.name, @page.group
-    abgelegt.
-    Zugriff auf diesen Inhalt
-    - if @page.attachments.present?
-      und beigefügte Anhänge 
-    haben daher die Mitglieder der Gruppe
-    = surround "'", "'." do
-      = link_to @page.group.name, @page.group
+  = render partial: 'shared/authorization_info', locals: {subject: 'page', page: @page}
 
 - if @page.has_flag? :intranet_root
   %div.col2
