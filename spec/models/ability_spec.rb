@@ -65,10 +65,10 @@ describe Ability do
 
   he "should be able to read anything (exceptions are below)" do
     @page = create(:page)
-    the_user.should be_able_to :read, @page
     @group = create(:group)
-    the_user.should be_able_to :read, @group
     @other_user = create(:user)
+    the_user.should be_able_to :read, @page
+    the_user.should be_able_to :read, @group
     the_user.should be_able_to :read, @other_user
   end
   he "should be able to download anything" do

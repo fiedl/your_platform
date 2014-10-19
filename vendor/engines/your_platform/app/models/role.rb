@@ -115,6 +115,30 @@ class Role
     officer?
   end
   
+  # Finding administrated objects.
+  #
+  #   Role.of(user).select_objects_where_user_is_admin(objects)
+  #   Role.of(user).administrated_users
+  #
+  def select_objects_where_user_is_admin(objects)
+    objects & administrated_objects
+  end
+  def admin_groups
+    user.groups.find_all_by_flag(:admins_parent)
+  end
+  def directly_administrated_objects
+    admin_groups.collect { |g| g.parent_groups.first.parents.first } - [nil]
+  end
+  def directly_administrated_groups
+    admin_groups.collect { |g| g.parent_groups.first.parent_groups.first } - [nil]
+  end
+  def administrated_objects
+    directly_administrated_objects.collect { |o| o.descendants }.flatten
+  end
+  def administrated_users
+    directly_administrated_groups.collect { |g| g.descendant_users }.flatten
+  end
+  
   
   # This finder method returns all global admins.
   #

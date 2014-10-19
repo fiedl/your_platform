@@ -83,13 +83,11 @@ class Ability
           group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0
         end
         
-        can :read, User  # exceptions below:
-
-        # Regular users cannot see hidden users, except for self.
+        # Regular users can read users that are not hidden.
+        # And they can read themselves.
         #
-        cannot :read, User do |user_to_show|
-          user_to_show.hidden? && (user != user_to_show)
-        end
+        can :read, User, id: User.find_all_non_hidden.map(&:id)
+        can :read, user
         
         # Regular users can update their own profile.
         #
@@ -179,9 +177,7 @@ class Ability
             #
             group.has_flag? :admins_parent
           end
-          can :manage, User do |other_user|
-            other_user.admins_of_ancestor_groups.include? user
-          end
+          can :manage, User, id: Role.of(user).administrated_users.map(&:id)
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
             # And they can execute the mark_as_deceased workflow, which is a global workflow.

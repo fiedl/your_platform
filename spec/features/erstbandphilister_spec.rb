@@ -16,6 +16,7 @@ feature "Erstbandphilister" do
   
   specify 'requirements' do
     @corporation.descendant_groups.where(name: "Erstbandphilister").first.members.should include @philister_user
+    @corporation.descendant_groups.where(name: "Erstbandphilister").first.memberships_for_member_list.count.should == 1
   end
 
   scenario "visit corporation site and navigate to the erstbandphilister site" do

@@ -809,6 +809,15 @@ class User < ActiveRecord::Base
     Group.hidden_users.assign_user self if hidden == true || hidden == "true"
     Group.hidden_users.unassign_user self if hidden == false || hidden == "false"
   end
+  
+  def self.find_all_hidden
+    self.where(id: Group.hidden_users.member_ids)
+  end
+  
+  def self.find_all_non_hidden
+    non_hidden_user_ids = User.all.map(&:id) - Group.hidden_users.member_ids
+    self.where(id: non_hidden_user_ids)  # in order to make it work with cancan.
+  end
 
   # Former Member
   # ==========================================================================================
