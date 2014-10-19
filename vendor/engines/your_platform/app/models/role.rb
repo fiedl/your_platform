@@ -108,6 +108,7 @@ class Role
     return ['global_admin', 'admin', 'officer', 'user'] if global_admin?
     return ['admin', 'officer', 'user'] if admin?
     return ['officer', 'user'] if officer?
+    return []
   end
   def allow_preview?
     # The preview makes sense for officers and above.
