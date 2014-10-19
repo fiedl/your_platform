@@ -1,6 +1,6 @@
 %h1
   - display_blank_character = page.title.blank? ? "–" : "…"
-  - if page.try(:becomes, Page) == @navable.try(:becomes, Page)
+  - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
     = best_in_place_if can?(:update, page), page, :title, display_as: :title, nil: display_blank_character
   - else  # Blog Entries:
     = link_to(page) do

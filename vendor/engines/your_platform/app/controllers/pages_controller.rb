@@ -38,10 +38,9 @@ class PagesController < ApplicationController
   end
   
   def create
-    if secure_parent_type.present? && params[:parent_id].present?
-      @parent = secure_parent_type.constantize.find(params[:parent_id])
-      @association = @parent.child_pages
-      authorize! :create_page_for, @parent
+    if secure_parent
+      @association = secure_parent.child_pages
+      authorize! :create_page_for, secure_parent
     else
       @association = Page
       authorize! :create, Page
@@ -53,6 +52,13 @@ class PagesController < ApplicationController
   end
   
 private
+
+  def secure_parent
+    # params[:parent_type] ||= params[:page][:parent_type] if params[:page]
+    # params[:parent_id] ||= params[:page][:parent_id] if params[:page]
+    params[:parent_type] ||= 'Page' if params[:parent_id]
+    secure_parent_type.constantize.find(params[:parent_id]) if secure_parent_type && params[:parent_id].present?
+  end
   
   def secure_parent_type
     params[:parent_type] if params[:parent_type].in? ['Page', 'Group']
