@@ -1,4 +1,11 @@
 GIT
+  remote: git://github.com/dblock/rspec-rerun.git
+  revision: 6b20e8598a98f9b220f4bb20331c71b7ef954116
+  specs:
+    rspec-rerun (0.2.1)
+      rspec
+
+GIT
   remote: git://github.com/fiedl/Google-Maps-for-Rails.git
   revision: c159503f5b244f0528482020f6d81215264149ad
   specs:
@@ -558,6 +565,7 @@ DEPENDENCIES
   rb-inotify (~> 0.9)
   redcarpet
   rspec-rails
+  rspec-rerun!
   sass-rails (>= 3.2.3)
   simplecov
   spork

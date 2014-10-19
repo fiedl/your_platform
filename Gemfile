@@ -111,6 +111,7 @@ group :test, :development do
   gem 'guard-focus'
   gem 'rspec-rails'
   gem 'guard-rspec'
+  gem 'rspec-rerun', github: 'dblock/rspec-rerun'
 #  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
