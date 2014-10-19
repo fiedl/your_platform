@@ -1,7 +1,7 @@
 rvm:
   - "2.1.2"
 env: 
-  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis"
+  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN={./spec/**/*_spec.rb,./vendor/engines/**/spec/**/*_spec.rb}"
 services:
   - redis-server
 before_install:
