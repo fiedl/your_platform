@@ -56,7 +56,7 @@ class ApplicationController
     
     # Preview role mechanism
     #
-    if @current_ability.nil?
+    if @current_ability.nil? and current_user
       currently_displayed_object = @navable
       currently_displayed_object ||= Group.everyone  # this causes to determine the role for searches and indices based on the role for the everyone group.
       

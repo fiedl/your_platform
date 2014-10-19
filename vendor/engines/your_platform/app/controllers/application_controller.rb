@@ -148,8 +148,13 @@ class ApplicationController < ActionController::Base
   
   
   def accept_terms_of_use
-    if current_user and not controller_name.in?(['terms_of_use', 'sessions', 'passwords']) and not TermsOfUseController.accepted?(current_user)
-      redirect_to controller: 'terms_of_use', action: 'index', redirect_after: request.url
+    if current_user && (not controller_name.in?(['terms_of_use', 'sessions', 'passwords', 'user_accounts', 'attachments', 'errors'])) && (not TermsOfUseController.accepted?(current_user))
+      if request.url.include?('redirect_after')
+        redirect_after = root_path
+      else
+        redirect_after = request.url
+      end
+      redirect_to controller: 'terms_of_use', action: 'index', redirect_after: redirect_after
     end
   end
 

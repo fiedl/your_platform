@@ -14,9 +14,6 @@ class Ability
     #
     preview_as = options[:preview_as] 
     preview_as = nil if preview_as.blank?
-    preview_as_user = (preview_as == 'user')
-    preview_as_officer = (preview_as == 'officer')
-    preview_as_admin = (preview_as == 'admin')
     
     # Define abilities for the passed in user here. For example:
     #

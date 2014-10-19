@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'
-
+  
   devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
   devise_scope :user_account do
     match 'sign_in' => 'sessions#new', as: :sign_in

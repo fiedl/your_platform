@@ -14,7 +14,7 @@ class SessionsController < Devise::SessionsController
   end
   
   def destroy
-    current_user.update_last_seen_activity(nil)
+    current_user.update_last_seen_activity(nil) if current_user
     super
   end
 

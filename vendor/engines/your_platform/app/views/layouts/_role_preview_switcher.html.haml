@@ -2,8 +2,8 @@
 - # how the page would look like for regular users and lesser
 - # roles.
 
-- role = Role.of(current_user).for(@navable)
-- if role.officer?
+- role = Role.of(current_user).for(@navable) if @navable
+- if role && role.officer?
   - active_or_not = (params[:preview_as].present? && (params[:preview_as] != role.to_s)) ? 'active' : ''
   %li{class: "backendBarItem dropdown #{active_or_not}"}
     - current_view = params[:preview_as] || role.to_s
