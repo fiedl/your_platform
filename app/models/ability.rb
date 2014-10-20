@@ -249,7 +249,7 @@ class Ability
       end
       
     end  # not logged in:
-
+    
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
     #

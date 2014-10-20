@@ -840,6 +840,27 @@ class User < ActiveRecord::Base
     groups.joins(:flags).select('flags.key as flag').collect { |g| g.flag }
   end
   
+  
+  # Global Admin Switch
+  # ==========================================================================================
+
+  def global_admin
+    self.in? Group.everyone.admins
+  end
+  def global_admin?
+    self.global_admin
+  end
+  def global_admin=(new_setting)
+    if new_setting == true
+      Group.everyone.admins << self
+    else
+      UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
+      UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
+    end
+  end
+  
+  
+  
   # Finder Methods
   # ==========================================================================================
 

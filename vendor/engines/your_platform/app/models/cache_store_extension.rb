@@ -22,8 +22,10 @@ module ActiveSupport
       end
       
       def delete_regex(regex)
-        keys = @data.keys.select { |key| key =~ regex }
-        @data.del(*keys) if keys.count > 0
+        if @data
+          keys = @data.keys.select { |key| key =~ regex }
+          @data.del(*keys) if keys.count > 0
+        end
       end
       
       # This autoloads classes or modules that are required to instanciate

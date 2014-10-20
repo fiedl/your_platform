@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
 
   # JavaScript 
   s.add_dependency "jquery-rails"
+  s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
 
   # Data Structures
   # DAG Structure, https://github.com/resgraph/acts-as-dag
@@ -68,7 +69,7 @@ Gem::Specification.new do |s|
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '>= 2.0.0.pre'                                       # MIT License
+  s.add_dependency 'gmaps4rails', '2.0.1'                                       # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,

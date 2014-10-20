@@ -1,7 +1,9 @@
 de:
   person:                     Person
   
+  first_and_last_name:        Vor- und Zuname
   name_affix:                 Namenszusatz
+  email:                      E-Mail
   
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag

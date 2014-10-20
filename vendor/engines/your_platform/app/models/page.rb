@@ -14,6 +14,15 @@ class Page < ActiveRecord::Base
     group
   end
   
+  
+  # This is the page title. If the title is not given in the
+  # database, try to translate the flag of the page, e.g. 
+  # for the 'imprint' page.
+  #
+  def title
+    super.present? ? super : I18n.translate(self.flags.first, default: '')
+  end
+  
   # This is the group the page belongs to, for example:
   #
   #     group_1
@@ -139,8 +148,9 @@ class Page < ActiveRecord::Base
     self.find_root || self.create_root
   end
 
-  def self.create_root
+  def self.create_root(attrs = {})
     root_page = Page.create(title: "Root")
+    root_page.update_attributes attrs
     root_page.add_flag :root
     n = root_page.nav_node; n.slim_menu = true; n.save; n = nil
     return root_page
@@ -157,10 +167,11 @@ class Page < ActiveRecord::Base
     self.find_intranet_root || self.create_intranet_root
   end
 
-  def self.create_intranet_root
+  def self.create_intranet_root(attrs = {})
     root_page = Page.find_by_flag :root
     root_page = self.create_root unless root_page
     intranet_root = root_page.child_pages.create(title: "Intranet")
+    intranet_root.update_attributes attrs
     intranet_root.add_flag :intranet_root
     return intranet_root
   end
@@ -181,10 +192,21 @@ class Page < ActiveRecord::Base
   end
 
   def self.create_help_page
-    help_page = Page.create(title: "Help")
+    help_page = Page.create
     help_page.add_flag :help
     n = help_page.nav_node; n.hidden_menu = true; n.save;
     return help_page
   end
-
+  
+  # imprint
+  
+  def self.create_imprint
+    imprint_page = Page.create
+    imprint_page.add_flag :imprint
+    return imprint_page
+  end
+  def self.find_imprint
+    Page.find_by_flag :imprint
+  end
+  
 end

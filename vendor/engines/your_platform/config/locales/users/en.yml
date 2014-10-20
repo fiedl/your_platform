@@ -1,6 +1,9 @@
 en:
   person:                     Person
   
+  first_and_last_name:        First and last name
+  email:                      Email
+  
   date_of_birth:              Date of birth
   birthday:                   Birthday
   age:                        Age

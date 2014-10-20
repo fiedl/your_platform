@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  def initialize(user, params = {}, options = {})
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -28,13 +28,15 @@ class Ability
     #
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
-
-    # TEMPORARY: EVERYONE CAN DO ANYTHING.
-    # TODO: Change this.
-    #
-    # This file is overridden by the app's Ability model.
-    #
-    can :manage, :all
+    
+    if user.try(:global_admin?)
+      can :manage, :all
+    elsif user
+      can :read, :all
+      can :accept, :terms_of_use
+    else
+      can :read, Page.find_imprint
+    end
 
   end
 end

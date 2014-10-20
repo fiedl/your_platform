@@ -50,14 +50,6 @@ gem 'unicorn'
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
 
-# GoogleMaps
-# moved dependency to your_platform.
-# for turbolinks experiments, use this:
-#   gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
-
-# jQuery UI
-gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
-
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License

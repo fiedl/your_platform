@@ -9,6 +9,7 @@
     - current_view = params[:preview_as] || role.to_s
     = link_to(params.merge({preview_as: role.to_s}), class: 'dropdown-toggle') do
       = t current_view
+      %b.caret
     - unless params[:preview_not_possible]
       %ul.dropdown-menu
         %li.nav-header

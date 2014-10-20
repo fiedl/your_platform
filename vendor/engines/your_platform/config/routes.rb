@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   
   root :to => 'root#index'
+  get :setup, to: 'setup#index'
+  post :setup, to: 'setup#create'
   
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'

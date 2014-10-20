@@ -1,0 +1,15 @@
+- # Dies erweitert das "Hinzufügen"-Menü, das Administratoren in der linken
+- # Menüleiste angezeigt wird.
+- #
+- # Aktivmeldungen gehören eigentlich nicht in dieses Menü, das zur 
+- # Strukturerweiterung gedacht ist. Trotzdem werden einige Benutzer
+- # die Funktion hier vermuten.
+
+- # locals:
+- #   - parent
+- #
+- # TODO: Verbindung erkennen, die gerade angezeigt wird, und bei der Aktivmeldung vorselektieren.
+
+- if show_aktivmeldungsbutton?
+  %li
+    = link_to "Aktivmeldung", new_user_path

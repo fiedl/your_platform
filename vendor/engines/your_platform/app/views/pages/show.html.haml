@@ -3,7 +3,7 @@
 
 - if @page.has_flag? :intranet_root
   %div.col2
-    = render partial: 'shared/upcoming_events', locals: {events: current_user.upcoming_events}
+    = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events) || []}
     = render partial: 'root/what_is_new'
     = render @page
   %div.col1

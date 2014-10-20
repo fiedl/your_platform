@@ -10,6 +10,7 @@ require 'rails-i18n'
 require 'strong_parameters'
 
 # JavaScript
+require 'jquery-ui-rails'
 
 # Data Structures
 require 'acts-as-dag'
@@ -86,6 +87,12 @@ module YourPlatform
 
     config.i18n.load_path += Dir[ Engine.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[ Engine.root.join('app', 'locales', '**', '*.{rb,yml}').to_s]
+    
+    # You can override this in your app's config/application.rb.
+    # But adding locales makes only sense if you add additional locales to the your_platform engine.
+    #
+    config.i18n.available_locales = [:de, :en]
+    config.i18n.default_locale = :en
 
     config.generators do |g|
       # use rspec, see: http://whilefalse.net/2012/01/25/testing-rails-engines-rspec/

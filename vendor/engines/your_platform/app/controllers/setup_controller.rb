@@ -1,0 +1,75 @@
+class SetupController < ApplicationController
+  
+  # This setup page is only for the initial setup and must
+  # not be shown later on.
+  #
+  skip_authorization_check  # suppress the regular handling by cancan
+  before_filter :handle_authorization
+  
+  # Initialize basic database entities such as a start page.
+  #
+  before_filter :bootstrap
+  
+  def index
+  end
+  
+  def create
+    
+    raise 'name not given' if params[:first_name].blank? or params[:last_name].blank?
+    raise 'email not given' if params[:email].blank?
+    raise 'no password' if params[:password].blank?
+    raise 'password too short' if params[:password].length < 9
+    raise 'password confirmation did not match' if params[:password] != params[:password_confirmation]
+    
+    user = User.new first_name: params[:first_name], last_name: params[:last_name]
+    user.email = params[:email]
+    user.generate_alias
+    user.save!
+    
+    account = user.build_account 
+    account.password = params[:password]
+    account.save!
+    
+    user.global_admin = true
+    
+    if params[:sub_organizations].present?
+      params[:sub_organizations].split("\n").each do |organization_name|
+        if organization_name.present?
+          corporation = Group.corporations_parent.child_groups.create name: organization_name 
+          full_members = corporation.child_groups.create
+          full_members.add_flag :full_members
+        end
+      end
+      Corporation.all.first.status_groups.first.assign_user user
+    end
+
+    sign_in :user_account, account
+    
+    flash[:notice] = I18n.t(:setup_complete)
+    redirect_to root_path
+    
+  end
+  
+private
+
+  def handle_authorization
+    raise 'Setup already done. To start over, wipe your database.' if User.count > 0
+  end
+  
+  def bootstrap
+    if Page.count == 0
+      
+      Group.everyone
+      Group.corporations_parent
+
+      Page.create_root title: 'example.com', redirect_to: 'http://example.com'
+      Page.create_intranet_root
+      Page.create_help_page
+      Page.create_imprint
+      
+      Page.intranet_root << Group.corporations_parent
+      
+    end
+  end
+  
+end

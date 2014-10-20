@@ -2,6 +2,7 @@
 //= require jquery.appear-1.1.1
 //= require edit_mode
 //= require slim_breadcrumb
+//= require jquery.ui.all
 //= require jquery-ui-timepicker-addon
 //= require jquery-ui-timepicker-de
 //= require best_in_place

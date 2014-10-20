@@ -19,9 +19,4 @@
       %li
         = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
 
-    - # This might not really belong here, 
-    - # but the user might suspect it to be here:
-    - #
-    - if show_aktivmeldungsbutton?
-      %li
-        = link_to "Aktivmeldung", new_user_path
+    = render partial: 'layouts/add_structureable_additions', locals: {parent: parent}

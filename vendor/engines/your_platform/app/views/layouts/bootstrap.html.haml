@@ -27,7 +27,6 @@
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
     = gmaps4rails_api_script_tags
-    = sublime_script_tag
   %body{:class => controller.controller_name, data: { locale: I18n.locale }}
     - if user_account_signed_in?
       #logged-in-bar.navbar.navbar-fixed-top
@@ -52,16 +51,17 @@
                   class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                     |
                 %ul.dropdown-menu
                   = groups_of_user_table current_user
-              - if can? :manage, @navable
-                %li.backendBarItem
-                  = link_to t(:you_are_admin), '#'
-              %li.dropdown
-                = link_to(                                                                   |
-                  ( t(:bookmarks) + ' ' + content_tag( :b, '', class: 'caret' ) ).html_safe, |
-                  my_bookmarks_path,                                                         |
-                  class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                   |
-                %ul.dropdown-menu.my-favorites
-                  = bookmarked_objects_lis( current_user )
+              
+              - # role indicator and preview menu
+              = render partial: 'layouts/role_preview_switcher'
+
+              - # %li.dropdown
+              - #   = link_to(                                                                   |
+              - #     ( t(:bookmarks) + ' ' + content_tag( :b, '', class: 'caret' ) ).html_safe, |
+              - #     my_bookmarks_path,                                                         |
+              - #     class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                   |
+              - #   %ul.dropdown-menu.my-favorites
+              - #     = bookmarked_objects_lis( current_user )
               %li.last.dropdown
                 = render 'layouts/session_bar_avatar'
                 %a.dropdown-toggle{'data-toggle' => 'dropdown', :href => '#'}
@@ -81,20 +81,41 @@
       %span#header_help.pull-right
         = render partial: 'layouts/help_button'
       %span#category_indicator= horizontal_nav
-      %ul
-        / class="breadcrumb"
-        - if user_account_signed_in?
-          %span#star_tool
-            = star_tool( current_user, @navable )
+      - # %ul
+      - #   / class="breadcrumb"
+      - #   - if user_account_signed_in?
+      - #     %span#star_tool
+      - #       = star_tool( current_user, @navable )
       %span#breadcrumb
         = breadcrumb_ul
+    
     .container-fluid
       .row-fluid
-        .span3
-          = vertical_nav
-        .span9#content_area
-          = flash_area
-          = html_convert_h1_to_boxes( yield )
+        #content
+          - if show_vertical_nav?
+            .span3
+              = vertical_nav
+              = render partial: 'last_seen_activities/index'
+            .span9#content_area
+              = flash_area
+              = replace_unicode_special_chars_by_html_escape_strings( |
+                  convert_to_content_box { yield }                    |
+                )                                                     |
+            \ 
+          - else
+            #content_area
+              = flash_area
+              = replace_unicode_special_chars_by_html_escape_strings( |
+                  convert_to_content_box { yield }                    |
+                )                                                     |    
+        
+    -#.container-fluid
+    -#  .row-fluid
+    -#    .span3
+    -#      = vertical_nav
+    -#    .span9#content_area
+    -#      = flash_area
+    -#      = html_convert_h1_to_boxes( yield )
     %footer.footer#footer
       %div.container.narrow.row-fluid
         %ul.footer-links
@@ -104,7 +125,16 @@
           %li
             %a= link_to t(:imprint), Page.find_by_flag(:imprint)
           %li.muted ·
+          - if current_user
+            %li
+              = link_to t(:terms_of_use), terms_path
+            %li.muted ·
           %li= language_switcher_html
+      #footer_line
+      .clear
+      %small
+        #version_footer= app_version_footer
+      
 
     / JavaScripts: Placed at the end of the document so the pages load faster
     = javascript_include_tag 'application'

@@ -1,0 +1,56 @@
+= form_tag setup_path, method: 'post' do
+  %h1.setup= t :welcome_to_your_platform
+  %div
+    %p= markdown t :this_setup_will_get_you_up_and_running
+  
+  %h1.language_setup= t :choose_setup_language
+  %div
+    %p= markdown t :this_sets_only_the_setup_language
+    %p= language_switcher_html
+    
+  %h1.user_setup= t :setup_admin_user
+  %div
+    %h2= t :name
+    %p= markdown t :enter_your_own_name_here_not_admin
+    %p
+      = label_tag :name, t(:first_and_last_name)
+      = text_field_tag :first_name
+      = text_field_tag :last_name
+      
+    %h2= t :user_account
+    %p
+      = label_tag :email, t(:email)
+      = email_field_tag :email
+    %p= markdown t :enter_your_unique_password_here
+    %p
+      = t :find_a_guide_how_to_create_good_passwords_in_this_comic
+      %a{href: 'https://xkcd.com/936/'} 
+        %strong "xkcd Password Strength"
+    %p
+      = label_tag :password, t(:password)
+      = password_field_tag :password
+      = label_tag :password_confirmation, t(:password_confirmation)
+      = password_field_tag :password_confirmation
+    
+  %h1.application_name= t :application_name
+  %div
+    %h2= t :name
+    %p= markdown t :enter_application_name_here
+    %p= markdown t :application_name_hint
+    %p
+      = label_tag :application_name, t(:application_name)
+      = text_field_tag :application_name
+    %h2= t :logo
+    %p= markdown t :you_may_upload_a_logo
+      
+  %h1.sub_organizations= t :initial_sub_organizations
+  %div
+    %p= markdown t :assuming_sub_structure_enter_sub_organization_names_here
+    %p= markdown t :separate_through_newlines
+    %p
+      = label_tag :sub_organizations, t(:sub_organizations)
+      = text_area_tag :sub_organizations
+  
+  %h1.continue= t :continue
+  %div
+    %p= submit_tag t(:confirm), class: 'btn btn-primary'

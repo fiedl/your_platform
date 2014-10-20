@@ -9,12 +9,9 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require jquery.ui.all
- *= require jquery.ui.core
- *= require jquery.ui.theme
- *= require dataTables/src/demo_table_jui
  *= require formtastic
  *= require your_platform
+ *= require dataTables/src/demo_table_jui
  *= require font-awesome
  *= require_tree ./all_layouts
 */
