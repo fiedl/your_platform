@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
 
   load_and_authorize_resource
-  skip_authorize_resource only: [:index, :create]
+  skip_authorize_resource only: [:index, :create, :join_via_get]
 
   # GET /events
   # GET /events.json
@@ -138,10 +138,12 @@ class EventsController < ApplicationController
     change_attendance(false)
   end
   def join_via_get
-    # Only allow GET from email links.
-    if params[:email_confirm] == 'true'
+    @event = Event.find params[:event_id]
+    if params[:email_confirm] == 'true'  # Only allow GET from email links.
+      authorize! :join, @event
       join
     else
+      authorize! :read, @event
       redirect_to Event.find(params[:event_id])
     end
   end

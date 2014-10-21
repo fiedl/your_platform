@@ -105,6 +105,14 @@ feature "Events" do
         page.should have_no_selector '.member_avatar'
       end
       
+      scenario "joining an event via get", :js do
+        visit event_join_via_get_path(@event, email_confirm: true)
+        page.should have_no_text 'Unauthorisierter Zugang'
+        page.should have_selector '.member_avatar'
+        page.should have_no_selector '#join_event', visible: true
+        page.should have_selector '#leave_event', visible: true
+      end
+      
       scenario "exporting an event" do
         visit root_path
         within('.box.upcoming_events') { click_on @event.name }
