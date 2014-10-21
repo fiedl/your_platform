@@ -55,6 +55,50 @@ describe Event do
       @event.groups.should include @group, @another_group
     end
   end
+  
+  
+  # Contact People and Attendees
+  # ==========================================================================================
+
+  describe "#contact_people" do
+    subject { @event.contact_people }
+    before { @user = create :user }
+    specify "it should return users in the contact people group" do
+      @event.contact_people.should_not include @user
+      @event.contact_people_group.assign_user @user; time_travel 2.seconds
+      @event.contact_people.should include @user
+    end
+    specify "it should not return users that left through an un-assign" do
+      @event.contact_people.should_not include @user
+      @event.contact_people_group.assign_user @user; time_travel 2.seconds
+      @event.contact_people.should include @user
+      @event.contact_people_group.unassign_user @user; time_travel 2.seconds
+      @event.contact_people.should_not include @user
+    end
+  end
+  
+  describe "#attendees" do
+    subject { @event.attendees }
+    before { @user = create :user }
+    specify "it should return joined users" do
+      @event.attendees.should_not include @user
+      @user.join @event; time_travel 2.seconds
+      @event.attendees.should include @user
+    end
+    specify "it should not return users that left through an un-assign" do
+      @event.attendees.should_not include @user
+      @user.join @event; time_travel 2.seconds
+      @event.attendees.should include @user
+      @event.attendees_group.unassign_user @user; time_travel 2.seconds
+      @event.attendees.should_not include @user
+    end
+    specify "multiple joins should not create several attendees groups (bug fix)" do
+      @user.join @event
+      @other_user = create :user; @other_user.join @event
+      subject.should include @user, @other_user
+      @event.child_groups.find_all_by_flag(:attendees).count.should == 1
+    end
+  end
 
 
   # Scopes

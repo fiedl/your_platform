@@ -157,9 +157,9 @@ class EventsController < ApplicationController
     authorize! :join, @event
 
     if join
-      @event.attendees_group.assign_user current_user, at: Time.zone.now
+      current_user.join @event
     else
-      @event.attendees_group.child_users.destroy(current_user)
+      current_user.leave @event
     end
 
     respond_to do |format|

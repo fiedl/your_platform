@@ -649,6 +649,26 @@ class User < ActiveRecord::Base
     Event.upcoming.find_all_by_groups( self.groups ).direct
   end
   
+  # This makes the user join an event or a grop.
+  #
+  def join(event_or_group)
+    if event_or_group.kind_of? Group
+      event_or_group.assign_user self
+    elsif event_or_group.kind_of? Event
+      event_or_group.attendees_group.assign_user self
+    end
+  end
+  def leave(event_or_group)
+    if event_or_group.kind_of? Group
+      # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
+      # event_or_group.members.destroy(self)  
+      raise 'We need multiple dag links between two nodes!'
+    elsif event_or_group.kind_of? Event
+      # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
+      event_or_group.attendees_group.members.destroy(self)  
+    end
+  end
+  
   
   # News Entries (Pages)
   # -------------------

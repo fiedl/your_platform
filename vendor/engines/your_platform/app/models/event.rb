@@ -73,7 +73,7 @@ class Event < ActiveRecord::Base
     find_contact_people_group || create_contact_people_group
   end
   def contact_people
-    contact_people_group.child_users
+    contact_people_group.members
   end
   
   def find_attendees_group
@@ -86,7 +86,7 @@ class Event < ActiveRecord::Base
     find_attendees_group || create_attendees_group
   end
   def attendees
-    attendees_group.child_users
+    attendees_group.members
   end
   
 

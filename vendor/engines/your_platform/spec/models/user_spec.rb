@@ -968,6 +968,49 @@ describe User do
       end
     end 
   end
+  
+  describe "#join" do
+    subject { @user.join(@event_or_group); time_travel(2.seconds) }
+    describe "(joining an event)" do
+      before { @event_or_group = @event = create(:event); subject }
+      specify { @event.attendees.should include @user}
+      specify { @event.attendees_group.members.should include @user }
+      specify "the user should be able to join and leave and re-join without error" do
+        @user.join @event; time_travel 2.seconds
+        @user.leave @event; time_travel 2.seconds
+        @user.join @event; time_travel 2.seconds
+        @event.attendees.should include @user
+      end
+    end
+    describe "(joining a group)" do
+      before { @event_or_group = @group = create(:group); subject }
+      specify { @group.members.should include @user }
+    end
+  end
+  describe "#leave" do
+    subject { @user.leave(@event_or_group); time_travel(2.seconds) }
+    before do
+      @event = create :event; @user.join @event
+      @group = create :group; @user.join @group
+      time_travel 2.seconds
+    end
+    describe "(leaving an event)" do
+      # TODO: We need multiple dag links between two nodes!
+      before { @event_or_group = @event; subject }
+      specify { @event.attendees.should_not include @user}
+      specify { @event.attendees_group.members.should_not include @user }
+      specify { @event.attendees_group.child_users.should_not include @user }
+    end
+    describe "(leaving a group)" do
+      before { @event_or_group = @group; subject }
+      # TODO: We need multiple dag links between two nodes!
+      # specify { @group.members.should_not include @user }
+      # specify { @group.members.former.should include @user }
+      # specify { @group.child_users.should include @user }
+    end
+  end
+
+
 
   # News Pages
   # ------------------------------------------------------------------------------------------
