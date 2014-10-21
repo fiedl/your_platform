@@ -561,6 +561,69 @@ describe Ability do
       the_user.should_not be_able_to :update_memberships, @subgroup_admins_group
     end
   end
+  context "avoiding caching issues when assigning local admins" do
+    #
+    # All sub objects of the group the user becomes admin of or loses admin rights for
+    # have to be updated with respect to their admins cache in order to have the changes
+    # take effect.
+    #
+    #  @parent_group
+    #     |--------- @group    <------------------------- @user becomes admin of @group
+    #                   |----- @page ------ @sub_page
+    #                   |----- @sub_group
+    #                                 |---- @sub_group_page
+    #                                 |---- @sub_group_user
+    #
+    before do
+      @parent_group = create :group, name: 'parent_group'
+      @group = @parent_group.child_groups.create name: 'group'
+      @page = @group.child_pages.create title: 'page'
+      @sub_page = @page.child_pages.create title: 'sub_page'
+      @sub_group = @group.child_groups.create name: 'sub_group'
+      @sub_group_page = @sub_group.child_pages.create title: 'sub_group_page'
+      @sub_group_user = create :user
+      @sub_group.assign_user @sub_group_user, at: 1.hour.ago
+    end
+    def the_user
+      Ability.new(User.find user.id)
+    end
+    specify "admin assignment and un-assignent should update the admin rights for the sub objects properly" do
+      
+      # 1. The user is no admin.
+      #
+      the_user.should_not be_able_to :manage, @parent_group
+      the_user.should_not be_able_to :manage, @group
+      the_user.should_not be_able_to :manage, @page
+      the_user.should_not be_able_to :manage, @sub_page
+      the_user.should_not be_able_to :manage, @sub_group
+      the_user.should_not be_able_to :manage, @sub_group_page
+      the_user.should_not be_able_to :manage, @sub_group_user
+      
+      # 2. The user becomes admin of @group.
+      #
+      @group.admins_parent.assign_user user; wait_for_cache
+      the_user.should_not be_able_to :manage, @parent_group
+      the_user.should be_able_to :manage, @group
+      the_user.should be_able_to :manage, @page
+      the_user.should be_able_to :manage, @sub_page
+      the_user.should be_able_to :manage, @sub_group
+      the_user.should be_able_to :manage, @sub_group_page
+      the_user.should be_able_to :manage, @sub_group_user
+
+      # 3. The user loses his admin status.
+      #
+      @group.admins_parent.unassign_user user; wait_for_cache
+      the_user.should_not be_able_to :manage, @parent_group
+      the_user.should_not be_able_to :manage, @group
+      the_user.should_not be_able_to :manage, @page
+      the_user.should_not be_able_to :manage, @sub_page
+      the_user.should_not be_able_to :manage, @sub_group
+      the_user.should_not be_able_to :manage, @sub_group_page
+      the_user.should_not be_able_to :manage, @sub_group_user
+      
+    end
+  end
+  
 
   # 
   # Global Admins
