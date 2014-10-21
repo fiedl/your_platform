@@ -9,6 +9,7 @@ class AttachmentsController < ApplicationController
   def create
     if secure_parent
       authorize! :create_attachment_for, secure_parent
+      secure_parent.touch
     else
       authorize! :create, Attachment
     end

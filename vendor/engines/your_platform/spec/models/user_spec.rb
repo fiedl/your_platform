@@ -969,6 +969,65 @@ describe User do
     end 
   end
 
+  # News Pages
+  # ------------------------------------------------------------------------------------------
+
+  # List news (Pages) that concern the user.
+  #
+  #                   independent_page        <--- show
+  #
+  #     root_page --- page_0                  <--- show
+  #         |
+  #     everyone ---- page_1 ---- page_2      <--- show
+  #         |
+  #         |----- group_1 ---- page_3        <--- DO NOT show
+  #         |
+  #         |----- group_2 ---- user
+  #         |        |-- page_4               <--- show
+  #         |
+  #         |--- user
+  #
+  describe "#news_pages" do
+    subject { @user.news_pages }
+    before do
+      @independent_page = create :page, title: 'independent_page'
+      @root_page = Page.find_root
+      @page_0 = @root_page.child_pages.create title: 'page_0'
+      @everyone = Group.everyone
+      @page_1 = @everyone.child_pages.create title: 'page_1'
+      @page_2 = @page_1.child_pages.create title: 'page_2'
+      @group_1 = @everyone.child_groups.create name: 'group_1'
+      @page_3 = @group_1.child_pages.create title: 'page_3'
+      @group_2 = @everyone.child_groups.create name: 'group_2'
+      @group_2.assign_user @user
+      @page_4 = @group_2.child_pages.create title: 'page_4'
+      time_travel 2.seconds
+      @user.reload
+    end
+    specify 'requirements' do
+      @group_1.members.should_not include @user
+    end
+    it "should list pages that are without group" do
+      subject.should include @independent_page
+    end
+    it "should list pages under the root page" do
+      subject.should include @page_0
+    end
+    it "should list pages directly under the everyone group" do
+      subject.should include @page_1, @page_2
+    end
+    it "should NOT list pages of groups the user is not member of" do
+      subject.should_not include @page_3
+    end
+    specify "(but users that are in @group_1 should have @page_3 listed)" do
+      @user_of_group_1 = create :user
+      @group_1.assign_user @user_of_group_1, at: 1.hour.ago
+      @user_of_group_1.reload.news_pages.should include @page_3
+    end
+    it "should list pages of other groups the user is member of" do
+      subject.should include @page_4
+    end
+  end
 
   # Roles
   # ==========================================================================================

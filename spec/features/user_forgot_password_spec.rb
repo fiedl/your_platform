@@ -50,7 +50,7 @@ feature "UserForgotPassword" do
       
       accept_terms_of_use
 
-      page.should have_text 'Was ist neu?'
+      page.should have_selector '.box.what_is_new'
     end
   end
   

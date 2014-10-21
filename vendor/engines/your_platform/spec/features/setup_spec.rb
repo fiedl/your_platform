@@ -30,7 +30,7 @@ feature 'Setup' do
       accept_terms_of_use
       @user = User.first
       
-      page.should have_text I18n.t :what_is_new
+      page.should have_selector '.box.what_is_new'
       page.should have_text @user.title
       within '#category_indicator' do
         page.should have_text 'London'

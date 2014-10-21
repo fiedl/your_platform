@@ -648,6 +648,37 @@ class User < ActiveRecord::Base
   def upcoming_events
     Event.upcoming.find_all_by_groups( self.groups ).direct
   end
+  
+  
+  # News Entries (Pages)
+  # -------------------
+  
+  # List news (Pages) that concern the user.
+  #
+  #     everyone ---- page_1 ---- page_2      <--- show
+  #         |
+  #         |----- group_1 ---- page_3        <--- DO NOT show
+  #         |
+  #         |----- group_2 ---- user
+  #         |        |-- page_4               <--- show
+  #         |
+  #         |--- user
+  #     
+  def news_pages
+    # List all pages that do not have ancestor groups
+    # which the user is no member of.
+    #
+    
+    # THIS WORKS BUT LOOKS UGLY. TODO: Refactor this:
+    group_ids_the_user_is_no_member_of = 
+      Group.pluck(:id) - self.group_ids
+    pages_that_belong_to_groups_the_user_is_no_member_of = Page
+      .includes(:ancestor_groups)
+      .where(groups: {id: group_ids_the_user_is_no_member_of})
+    Page
+      .where('NOT id IN (?)', pages_that_belong_to_groups_the_user_is_no_member_of)
+      .order('pages.updated_at DESC')
+  end
 
 
   # Bookmarked Objects

@@ -7,6 +7,10 @@ class RootController < ApplicationController
     current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)
     @navable = @page
     @blog_entries = @page.blog_entries
+    
+    # TODO: Remove the double-check can? when sure that the news_pages list only allowed pages.
+    @news_pages = current_user.news_pages.limit(10).select { |page| can? :read, page }
+    
     render "pages/show"
   end
   
