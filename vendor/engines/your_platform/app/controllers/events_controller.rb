@@ -19,6 +19,7 @@ class EventsController < ApplicationController
     @on_local_website = params[:published_on_local_website]
     @on_global_website = params[:published_on_global_website]
     @public = @on_local_website || @on_global_website
+    @limit = params[:limit].to_i
     
     # Check the permissions.
     if @all and not @public
@@ -47,7 +48,10 @@ class EventsController < ApplicationController
     @events = @events.where publish_on_global_website: true if @on_global_website
     
     # Order events
-    @events = @events.order :start_at
+    @events = @events.order events: [:start_at, :created_at]
+    
+    # Limit the number of events
+    @events = @events.limit(@limit) if @limit && @limit > 0
     
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public
