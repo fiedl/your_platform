@@ -26,12 +26,18 @@
         %i.icon-picture= # icon-camera
         %i.icon-facetime-video
       = t :drop_files_here
-  
-  - if can? :create_page_for, @page
-    %div.blog_tools.box
-      = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
-        %i.icon-plus
-        = I18n.t(:add_blog_entry)
+
+
+  - if can?(:create_page_for, @page)
+    - # No nested blog posts!
+    - # The user might suspect to create a sibling, but really would create a nested blog post.
+    - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
+    - #
+    - if (Page.find(@page.id).type != 'BlogPost')  
+      %div.blog_tools.box
+        = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
+          %i.icon-plus
+          = I18n.t(:add_blog_entry)
   
   - if @blog_entries.count > 0
     #blog_entries
