@@ -46,8 +46,16 @@ module GroupMixins::Memberships
     # This returns the UserGroupMembership object that represents the membership of the 
     # given user in this group.
     # 
-    def membership_of( user )
-      memberships.where(descendant_id: user.id).first
+    # options:
+    #   - also_in_the_past 
+    #
+    def membership_of(user, options = {})
+      if options[:also_in_the_past]
+        base = UserGroupMembership.with_invalid
+      else
+        base = UserGroupMembership
+      end
+      base.find_by_user_and_group(user, self)
     end
     
     # This returns a string of the titles of the direct members of this group. This is used

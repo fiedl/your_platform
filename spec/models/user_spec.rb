@@ -23,8 +23,8 @@ describe User do
   describe ".find_by_title" do
     before do
       @user = create :user
-      @corporation = create :corporation
-      @corporation.assign_user @user
+      @corporation = create :wingolf_corporation
+      @corporation.status_groups.first.assign_user @user
       create :user
       create :user
     end
@@ -86,12 +86,12 @@ describe User do
       @corporationE = create( :wingolf_corporation, :token => "E" )
       @corporationH = create( :wingolf_corporation, :token => "H" )
 
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Hospitanten') )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
-      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_group('Hospitanten') )
       @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
       @first_membership_E.invalidate
-      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Philister') )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
       @user.reload
     end
@@ -109,10 +109,22 @@ describe User do
       before do
         @corporationZ = create :wingolf_corporation, token: 'Z'
         @event = @corporationZ.child_events.create
-        @event.attendees << @user
+        @user.join @event; time_travel 2.seconds
         @user.reload
       end
       it { should_not include @corporationZ.token }
+      specify { @user.current_corporations.should_not include @corporationZ }
+    end
+    context "when a status membership has no valid_from (issue circumvention)" do
+      # Some users have deleted validity ranges in their vita, because they didn't know the date.
+      #
+      before { @second_membership_E.update_attributes valid_from: nil }
+      it { should == "E06 H08"}
+    end
+    context "when the validity range order does not match the created_at order (issue circumvention)" do
+      before { @first_membership_H.update_attributes valid_from: "2004-12-01".to_datetime }
+      it { should == "H04 E06"}
+      it { should_not == "E06 H04"}
     end
   end
 
@@ -122,12 +134,12 @@ describe User do
       @corporationH = create( :wingolf_corporation, :token => "H" )
       @corporationS = create( :wingolf_corporation, :token => "S" )
 
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Hospitanten') )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
-      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_group('Hospitanten') )
       @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
       @first_membership_E.invalidate
-      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Philister') )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
     end
     subject { @user.cached(:aktivitaetszahl) }

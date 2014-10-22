@@ -174,34 +174,35 @@ class User
   #
   def aktivitaetszahl
     cached do 
-      if self.corporations
-        self.corporations
-        .select do |corporation|
-          not (self.guest_of?(corporation)) and
-          not (self.former_member_of_corporation?(corporation)) and
-          corporation.membership_of(self).valid_from
-        end.sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
-        .collect do |corporation|
-          year_of_joining = ""
-          year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
-          #corporation.token + "\u2009" + year_of_joining
-          token = corporation.token; token ||= ""
-          token + aktivitaetszahl_addition_for(corporation) + year_of_joining
-        end.join(" ")
-      end
+      self.current_corporations
+        .collect { |corporation| {string: aktivitaetszahl_for(corporation), year: aktivitaetszahl_year_for(corporation)} }
+        .sort_by { |hash| hash[:year] }  # Sort by the year of joining the corporation.
+        .collect { |hash| hash[:string] }.join(" ")
     end
   end
+
   def aktivitätszahl
     aktivitaetszahl
   end
+  
+  def aktivitaetszahl_for(corporation)
+    "#{corporation.token} #{aktivitaetszahl_addition_for(corporation)} #{aktivitaetszahl_short_year_for(corporation)}".gsub('  ', '').strip
+  end
 
-  def aktivitaetszahl_addition_for( corporation )
+  def aktivitaetszahl_year_for(corporation)
+    (corporation.status_groups.collect { |status_group| status_group.membership_of(self, also_in_the_past: true).try(:valid_from) } - [nil]).min.to_s[0, 4]
+  end
+  def aktivitaetszahl_short_year_for(corporation)
+    aktivitaetszahl_year_for(corporation)[2, 2]
+  end
+
+  def aktivitaetszahl_addition_for(corporation)
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter"), also_in_the_past: true
     addition += " Nstft" if self.member_of? corporation.descendant_groups.find_by_name("Neustifter"), also_in_the_past: true
     addition += " Eph" if self.member_of? corporation.descendant_groups.find_by_name("Ehrenphilister"), also_in_the_past: true
     addition += " " if addition != ""
-    return addition
+    return addition.strip
   end
 
   # Fill-in default profile.
