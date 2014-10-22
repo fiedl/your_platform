@@ -4,12 +4,12 @@ describe ListExport do
   
   before do
     @group = create :group
-    @corporation = create :corporation
+    @corporation = create :corporation_with_status_groups
     @bv = create :bv_group, name: 'BV 01'
     @user = create :user
     
     @group.assign_user @user
-    @corporation.assign_user @user  # in order to give the @user a #title other than his #name.
+    @corporation.status_groups.first.assign_user @user  # in order to give the @user a #title other than his #name.
     @bv.assign_user @user
     
     @user_title_without_name = @user.title.gsub(@user.name, '').strip
