@@ -258,6 +258,32 @@ describe User do
        its(:new_record?) { should == false }
      end
   end
+  
+  describe "#age" do
+    subject { @user.age }
+    describe "without date of birth" do
+      it { should == nil }
+    end
+    describe "with date of birth" do
+      before { @user.date_of_birth = 24.years.ago }
+      it "should return the correct age as number" do
+        subject.should == 24
+      end
+    end
+  end
+  
+  describe "#birthday_this_year" do
+    subject { @user.birthday_this_year }
+    describe "without date of birth" do
+      it { should == nil }
+    end
+    describe "with date of birth" do
+      before { @user.date_of_birth = 24.years.ago }
+      it "should return the correct date" do
+        subject.should == Time.zone.now.to_date
+      end
+    end
+  end
 
   describe "postal address: " do
     before do
@@ -721,8 +747,8 @@ describe User do
     context "when joining an event of a corporation" do
       before do
         @event = @corporationH.child_events.create
-        @event.attendees << @user
-        @user.reload
+        @user.join @event
+        time_travel 2.seconds; @user.reload
       end
       it { should_not include @corporationH }
     end
