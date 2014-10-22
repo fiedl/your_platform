@@ -82,42 +82,44 @@ feature "PhR Uploads" do
     page.should have_text 'secret content'
   end
 
-  scenario 'members can upload documents', :js do
-    login @member
+  if ENV['CI'] != 'travis'  # they do not support uploads
+    scenario 'members can upload documents', :js do
+      login @member
+      
+      visit page_path(@phr_documents)
+      page.should have_text 'secret content'
+      
+      within '.box.attachments' do
+        click_on I18n.t :edit
+        attach_file :attachment_file, File.expand_path(File.join(__FILE__, '../../support/uploads/pdf-upload.pdf'))
+      end
+      
+      page.should have_text 'pdf-upload.pdf'
+      page.should have_no_text 'Anhang wird auf dem Server verarbeitet.'
     
-    visit page_path(@phr_documents)
-    page.should have_text 'secret content'
-    
-    within '.box.attachments' do
-      click_on I18n.t :edit
-      attach_file :attachment_file, File.expand_path(File.join(__FILE__, '../../support/uploads/pdf-upload.pdf'))
+      page.should have_text 'pdf-upload.pdf'
+      page.should have_text '200 KB'
     end
     
-    page.should have_text 'pdf-upload.pdf'
-    page.should have_no_text 'Anhang wird auf dem Server verarbeitet.'
-
-    page.should have_text 'pdf-upload.pdf'
-    page.should have_text '200 KB'
-  end
-  
-  scenario 'members can delete their uploaded documents', :js do
-    login @member
-    
-    visit page_path(@phr_documents)
-    within '.box.attachments' do
-      click_on I18n.t :edit
-      attach_file :attachment_file, File.expand_path(File.join(__FILE__, '../../support/uploads/pdf-upload.pdf'))
+    scenario 'members can delete their uploaded documents', :js do
+      login @member
+      
+      visit page_path(@phr_documents)
+      within '.box.attachments' do
+        click_on I18n.t :edit
+        attach_file :attachment_file, File.expand_path(File.join(__FILE__, '../../support/uploads/pdf-upload.pdf'))
+      end
+      page.should have_text 'pdf-upload.pdf'
+      page.should have_text '200 KB'
+      
+      pending "need to fix the remove button!"
+      
+      # within '.box.attachments' do
+      #   page.should have_selector '.remove_button', visible: true
+      #   find('.remove_button').click
+      #   page.should have_no_text 'pdf-upload.pdf'
+      # end
     end
-    page.should have_text 'pdf-upload.pdf'
-    page.should have_text '200 KB'
-    
-    pending "need to fix the remove button!"
-    
-    # within '.box.attachments' do
-    #   page.should have_selector '.remove_button', visible: true
-    #   find('.remove_button').click
-    #   page.should have_no_text 'pdf-upload.pdf'
-    # end
   end
   
   scenario 'members can create blog posts'
