@@ -1,4 +1,8 @@
-- attachments = (page.attachments.find_without_types("video", "image") + page.attachments.find_by_type("image").where(author_user_id: current_user.id) + page.attachments.find_by_type("video").where(author_user_id: current_user.id)).sort_by { |attachment| attachment.created_at }.reverse
+- attachments = page.attachments.find_without_types("video", "image")
+- if current_user
+  - attachments += page.attachments.find_by_type("image").where(author_user_id: current_user.id)
+  - attachments += page.attachments.find_by_type("video").where(author_user_id: current_user.id)
+- attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
 
 - # - attachments = .order('created_at DESC')
 - # - attachments = attachments. + attachments.find_by_types('image', 'video').where(author: current_user)
