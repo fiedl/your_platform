@@ -46,5 +46,10 @@ module BoxHelper
     
     return doc.to_s.html_safe
   end
+  
+  def show_box_edit_button?(box_class, navable)
+    return can? :create_attachment_for, navable if box_class == 'attachments'
+    return can? :update, navable
+  end
 
 end

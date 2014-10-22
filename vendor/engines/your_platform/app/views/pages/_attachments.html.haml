@@ -1,6 +1,7 @@
-- attachments = page.attachments.order('created_at DESC')
-- unless can? :update, page
-  - attachments = attachments.find_without_types( "video", "image" )
+- attachments = (page.attachments.find_without_types("video", "image") + page.attachments.find_by_type("image").where(author_user_id: current_user.id) + page.attachments.find_by_type("video").where(author_user_id: current_user.id)).sort_by { |attachment| attachment.created_at }.reverse
+
+- # - attachments = .order('created_at DESC')
+- # - attachments = attachments. + attachments.find_by_types('image', 'video').where(author: current_user)
 
 - # Show attachments box if:
 - #   (a) There are attachments.
@@ -9,6 +10,7 @@
 - #          (If there are blog entries, it is not clear where to put
 - #          the attachment.)
 - #
+
 - if (attachments.count > 0) or (can?(:create_attachment_for, page) and not @blog_entries.present?)
   %h1.attachments= t :attachments
   %div.attachments
