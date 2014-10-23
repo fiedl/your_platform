@@ -141,7 +141,7 @@ class Group < ActiveRecord::Base
   end
 
   def upcoming_events
-    self.events.upcoming
+    self.events.upcoming.order(:start_at)
   end
   
   
