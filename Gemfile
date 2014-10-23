@@ -15,6 +15,7 @@ gem 'rails', '~> 3.2'						# MIT License,
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'								# MIT License
+gem 'transaction_retry' # rescue from deadlocks
 
 # Gems used only for assets and not required
 # in production environments by default.

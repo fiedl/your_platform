@@ -199,7 +199,7 @@ feature "Events" do
       find('#create_event').click
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
     end
-    
+
     scenario "creating an event from a group page" do
       visit group_path(@group)
       find('#create_event').click
@@ -273,6 +273,41 @@ feature "Events" do
       page.should have_no_selector '#invitation_text', visible: true
     end
 
+  end
+  
+  describe "creating an event as officer of a local corporation (bug fix)", :js do
+    # We had this issue:
+    #
+    #     Started POST "/events.json?group_id=12" for 2.242.197.85 at 2014-10-23 16:54:47 +0200
+    #     Processing by EventsController#create as JSON
+    #       Parameters: {"group_id"=>"12"}
+    #       Rendered terms_of_use/_terms.html.haml (0.2ms)
+    #     Completed 422 Unprocessable Entity in 9932.8ms
+    #     
+    #     ActiveRecord::RecordInvalid (Validation failed: Ancestor has already been taken).
+    #
+    # As it turned out, this has been caused by mysql locking issues, when callbacks
+    # locked the event while adding attendees and contact_people groups.
+    #
+    background do
+      @corporation = create :corporation_with_status_groups
+      @corporation.status_groups.first.assign_user @user, at: 1.month.ago
+      @president = @corporation.officers_parent.child_groups.create name: 'President'
+      @president.assign_user @user, at: 5.days.ago
+      @other_event = create :event
+      @other_event.parent_groups << @corporation
+    end
+    scenario "creating an event as officer of a local corporation (bug fix)" do
+      login @user
+      visit root_path
+      within('#create_event') { page.should have_text @corporation.name }
+
+      find('#create_event').click
+      page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
+      within '.contact_people' do
+        page.should have_text @user.title
+      end
+    end
   end
   
 end

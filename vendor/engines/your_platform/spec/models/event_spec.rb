@@ -210,5 +210,40 @@ describe Event do
       subject.first.start_at.should < subject.last.start_at
     end
   end
-
+  
+  
+  # Structure
+  # ==========================================================================================
+  
+  # The following DAG structure should be possible in the model layer (bug fix).
+  #
+  #   @corporation
+  #        |---------- @status_group
+  #        |                     |
+  #      @event                  |
+  #        |--- @contact_people  |
+  #                          |   |
+  #                          @user
+  #
+  specify "this dag structure should work (bug fix)" do
+    @user = create :user
+    @corporation = create :corporation_with_status_groups
+    @status_group = @corporation.status_groups.first
+    @event = @corporation.child_events.create
+    @contact_people = @event.contact_people_group
+    @contact_people.assign_user @user
+  end
+  specify "this structure is created in the events controller this way" do
+    @user = create :user
+    @group = create :group
+    @group.assign_user @user
+    
+    @event = Event.new
+    @event.name ||= I18n.t(:enter_name_of_event_here)
+    @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
+    @event.save!
+    @event.parent_groups << @group
+    @event.contact_people_group.assign_user @user
+  end
+  
 end

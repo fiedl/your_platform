@@ -24,10 +24,9 @@ ready = ->
     $.ajax({
       type: 'POST',
       url: $(this).attr('href'),
-      # data: {
-      #   group_id: $(this).data('group_id')
-      # },
       success: (created_event) ->
+        $(this).data('loading-text', 'Veranstaltung wurde erstellt. Einen Moment noch, bitte.')
+        $(this).button('loading')
         window.location = created_event.path
     })
     $(this).data('loading-text', $(this).text() + " ...")

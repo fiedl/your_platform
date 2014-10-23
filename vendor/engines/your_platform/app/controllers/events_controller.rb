@@ -89,18 +89,46 @@ class EventsController < ApplicationController
     @group = Group.find(params[:group_id])
     authorize! :create_event, @group
     
-    @event = Event.new(params[:event])
+    if @group
+      @event = @group.child_events.new(params[:event])
+    else
+      Event.new(params[:event])
+    end
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
     
     respond_to do |format|
       if @event.save
-        @event.parent_groups << @group
-        @event.contact_people << current_user
-        @event[:path] = event_path(@event) # in order to add the path to the json object
         
-        format.html { redirect_to @event }
-        format.json { render json: @event, status: :created, location: @event }
+        # Attention: The save call will call some callbacks, which might cause
+        # one of the following calls to run into sql deadlock issues.
+        # ActiveRecord of Rails 3 does not resolve these issues.
+        # Therefore, we use the transaction_retry gem, which retries the
+        # call after running into locked records.
+        # 
+        # TODO: This needs to be carefully checked when we migrate to Rails 4,
+        # since the locking behaviour might have changed. The transaction_retry
+        # gem has been updated last in 2012!
+        #
+        @event.reload
+        @event.create_attendees_group
+        @event.create_contact_people_group
+        @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
+        
+        # To avoid `ActiveRecord::RecordNotFound` after the redirect, we have to
+        # make sure the record can be found.
+        #
+        # TODO: Check if this is really necessary in Rails 4 anymore.
+        #
+        begin 
+          @event = Event.find(@event)
+        rescue ActiveRecord::RecordNotFound => e
+          sleep 1
+          retry
+        end
+        
+        format.html { redirect_to event_path(@event) }
+        format.json { render json: @event.attributes.merge({path: event_path(@event)}), status: :created, location: @event }
       else
         format.html { redirect_to :back }
         format.json { render json: @event.errors, status: :unprocessable_entity }

@@ -481,6 +481,11 @@ GEM
     tins (0.13.1)
     to_xls (1.5.3)
       spreadsheet
+    transaction_isolation (1.0.3)
+      activerecord (>= 3.0.11)
+    transaction_retry (1.0.2)
+      activerecord (>= 3.0.11)
+      transaction_isolation (>= 1.0.2)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -572,6 +577,7 @@ DEPENDENCIES
   therubyracer
   tilt (~> 1.4.1)
   timecop
+  transaction_retry
   turbolinks (>= 1.0)
   turnout
   uglifier (>= 1.0.3)
