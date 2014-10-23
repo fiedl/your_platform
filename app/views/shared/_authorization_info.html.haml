@@ -41,4 +41,6 @@
       = surround "'", "'." do
         = link_to page.group.name, page.group
     
-    
+    - if subject == 'event'
+      %span.alert_title Sichtbare Veranstaltung!
+      Diese Veranstaltungsseite kann <b>von jedem Wingolfiten eingesehen</b> werden. Sie dient <i>nicht</i> dem Austausch vertraulicher Informationen. Tagesordnugnen, Protokolle und Sitzungsunterlagen sollten hier nicht hochgeladen werden, sondern unter entsprechend zugangsgeschützten Inhaltsseiten.

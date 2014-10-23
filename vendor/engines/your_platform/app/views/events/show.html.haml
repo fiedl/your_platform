@@ -1,3 +1,6 @@
+- if can? :update, @event
+  = render partial: 'shared/authorization_info', locals: {subject: 'event', icon: 'icon-eye-open'}
+
 %h1= best_in_place_if can?(:update, @event), @event, :name
 %div
   %span.ics_export_buttons
