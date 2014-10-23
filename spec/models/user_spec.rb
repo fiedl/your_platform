@@ -9,7 +9,7 @@ describe User do
   describe "#title" do
     before do
       @corporation = create(:wingolf_corporation)
-      @corporation.aktivitas.assign_user @user, at: 1.hour.ago
+      @corporation.status_group('Hospitanten').assign_user @user, at: 1.hour.ago
     end
     subject { @user.title }
     it "should return the user's name and his aktivitaetszahl" do

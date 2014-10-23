@@ -10,7 +10,7 @@ Wingolfsplattform::Application.load_tasks
 
 pattern = "{./spec/**/*_spec.rb,./vendor/engines/**/spec/**/*_spec.rb}"
 
-ENV['RSPEC_RERUN_RETRY_COUNT'] ||= '2'
+ENV['RSPEC_RERUN_RETRY_COUNT'] ||= '3'
 ENV['RSPEC_RERUN_PATTERN'] ||= pattern
 
 task default: 'rspec-rerun:spec'
