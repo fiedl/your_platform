@@ -63,7 +63,12 @@ class EventsController < ApplicationController
         if @on_local_website or @on_global_website
           render partial: 'events/public_index', locals: {events: @events}
         else
-          # index.html.haml
+          if @group
+            current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_the_calendar_of, group_name: @group.name), @group)
+          else
+            current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_events))
+          end
+          # renders "index.html.haml"
         end
       end
       format.json { render json: @events }
@@ -75,8 +80,12 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     @navable = @event
+    
     respond_to do |format|
-      format.html # show.html.erb
+      format.html do
+        current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_the_event, event_name: @event.name), @event)
+        # show.html.erb
+      end
       format.json { render json: @event }
       format.ics { render text: @event.to_ics }
     end
@@ -120,6 +129,7 @@ class EventsController < ApplicationController
         # TODO: Check if this is really necessary in Rails 4 anymore.
         #
         @event.wait_for_me_to_exist
+        current_user.try(:update_last_seen_activity, I18n.t(:is_adding_an_event), @event)
         
         format.html { redirect_to event_path(@event) }
         format.json { render json: @event.attributes.merge({path: event_path(@event)}), status: :created, location: @event }

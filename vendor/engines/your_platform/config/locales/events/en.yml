@@ -6,13 +6,21 @@ en:
   contact_person: Contact Person
   contact_people: Contact People
   attendees: Attendees
+  attendance: Attendance
   location: Location
   add_event: Add Event
-  add_event: Add Event For
+  add_event_for: Add Event For
   enter_name_of_event_here: Enter the name of the event here
+  
+  publish: Publish
   
   my_events: My Events
   all_events: All Events
   events_of: Events of
   events_on_global_website: Events published on the global website
   events_on_local_website: Events published on the local website
+  
+  is_adding_an_event: is adding an event
+  is_looking_at_events: 'is looking at events'
+  is_looking_at_the_event: "is looking at the event '%{event_name}'"
+  is_looking_at_the_calendar_of: "is looking at the calendar of '%{group_name}'"
