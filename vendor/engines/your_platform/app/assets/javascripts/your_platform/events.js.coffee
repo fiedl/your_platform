@@ -25,6 +25,7 @@ ready = ->
       type: 'POST',
       url: $(this).attr('href'),
       success: (created_event) ->
+        $(this).button('reset')
         $(this).data('loading-text', 'Veranstaltung wurde erstellt. Einen Moment noch, bitte.')
         $(this).button('loading')
         window.location = created_event.path

@@ -1,5 +1,7 @@
 class EventsController < ApplicationController
 
+  rescue_from ActiveRecord::RecordNotFound, with: :wait_for_existance
+
   load_and_authorize_resource
   skip_authorize_resource only: [:index, :create, :join_via_get]
 
@@ -89,11 +91,7 @@ class EventsController < ApplicationController
     @group = Group.find(params[:group_id])
     authorize! :create_event, @group
     
-    if @group
-      @event = @group.child_events.new(params[:event])
-    else
-      Event.new(params[:event])
-    end
+    @event = Event.new(params[:event])
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
     
@@ -111,6 +109,7 @@ class EventsController < ApplicationController
         # gem has been updated last in 2012!
         #
         @event.reload
+        @event.parent_groups << @group if @group
         @event.create_attendees_group
         @event.create_contact_people_group
         @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
@@ -120,12 +119,7 @@ class EventsController < ApplicationController
         #
         # TODO: Check if this is really necessary in Rails 4 anymore.
         #
-        begin 
-          @event = Event.find(@event)
-        rescue ActiveRecord::RecordNotFound => e
-          sleep 1
-          retry
-        end
+        @event.wait_for_me_to_exist
         
         format.html { redirect_to event_path(@event) }
         format.json { render json: @event.attributes.merge({path: event_path(@event)}), status: :created, location: @event }
@@ -234,6 +228,23 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to event_url(@event) }
       format.json { head :no_content }
+    end
+  end
+  
+private
+  
+  # For some strange reason, some ajax calls fail since the object is not yet
+  # available to the other server instance. So, try a few times before giving up.
+  #
+  def wait_for_existance
+    raise 'No id given.' unless params[:id]
+    counter = 20
+    begin
+      sleep 0.5
+      Event.find params[:id]
+    rescue ActiveRecord::RecordNotFound => e
+      counter -= 1
+      retry until counter <= 0
     end
   end
   

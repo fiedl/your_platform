@@ -10,6 +10,13 @@ feature "Events" do
     
     @other_group = create(:group)
     @other_event = @other_group.child_events.create name: "Other Event", start_at: 2.days.from_now
+    
+    # Apparently, the callbacks need time. If we don't sleep here, `ActiveRecord::RecordNotFound`
+    # is raised. In practice, we use an error handler in the EventsController due to this inconvenience.
+    # 
+    # TODO: Check if this problem still exists when migrating to Rails 4.
+    #
+    @event.wait_for_me_to_exist
   end
   
   context "for the public internet" do
@@ -208,6 +215,7 @@ feature "Events" do
     
     if ENV['CI'] != 'travis'  # this keeps failing on travis
       scenario "editing an event" do
+        sleep 3  # to give the database some time after creating the event.
         visit event_path(@event)
         within('.box.first h1') do
           find('.best_in_place').click
@@ -307,6 +315,11 @@ feature "Events" do
       within '.contact_people' do
         page.should have_text @user.title
       end
+      
+      @event = Event.last
+      @event.id.should_not == @other_event.id
+      @event.group.id.should == @corporation.id
+      @event.contact_people.should include @user
     end
   end
   
