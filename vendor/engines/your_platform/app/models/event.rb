@@ -146,6 +146,10 @@ class Event < ActiveRecord::Base
     e.summary = self.name
     e.description = self.description
     e.location = self.location
+    if self.contact_people.first
+      e.organizer = self.contact_people.first.email
+      e.organizer.ical_params = {'CN' => self.contact_people.first.title}
+    end
     e.url = self.url
     e.uid = e.url
     e.created = Icalendar::Values::DateTime.new(self.created_at)
