@@ -107,7 +107,8 @@ describe Event do
   describe ".upcoming" do
     before do 
       @upcoming_event = create( :event, start_at: 5.hours.from_now )
-      @recent_event = create( :event, start_at: 5.hours.ago )
+      @recent_event = create( :event, start_at: 2.days.ago )
+      @recent_event_today = create(:event, start_at: Date.today.to_datetime.change(hour: 0, min: 5))
       @group.child_events << @upcoming_event << @recent_event
       @unrelated_event = create( :event, start_at: 5.hours.from_now )
     end
@@ -115,8 +116,11 @@ describe Event do
     it "should return events starting in the future" do
       subject.should include @upcoming_event
     end
-    it "should not return events having started in the past" do
+    it "should not return events having started some days ago (in the past)" do
       subject.should_not include @recent_event
+    end
+    it "should return events that have started on the same day, i.e. are currently in progress" do
+      subject.should include @recent_event_today
     end
     describe "chained with .find_all_by_group" do
       subject { Event.find_all_by_group( @group ).upcoming }

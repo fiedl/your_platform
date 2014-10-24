@@ -93,13 +93,22 @@ class Event < ActiveRecord::Base
   # Scopes
   # ==========================================================================================
 
-  scope :upcoming, lambda { where( "start_at > ?", Time.zone.now ) }
+  # We used to define `upcoming` as "from now on", i.e. `start_time > Time.zone.now`.
+  # However, it is more convenient to see events that are currently in progress.
+  # Therefore, redefining `upcoming` to hide events on the next day.#
+  #
+  #        yesterday  -----  today  ----  tomorrow
+  #                              |= event, today, 20h
+  #                         |--------------------------------------->  (upcoming)
+  #
+  def upcoming?
+    ( self.start_at > Date.today.to_datetime )   # Date.today.to_datetime is 0h.
+  end
+
+  scope :upcoming, lambda { where( "start_at > ?", Date.today.to_datetime ) }
 
   scope :direct, lambda { includes( :links_as_descendant ).where( :dag_links => { :direct => true } ) }
 
-  def upcoming?
-    ( self.start_at > Time.zone.now )
-  end
 
   # Finder Methods
   # ==========================================================================================
