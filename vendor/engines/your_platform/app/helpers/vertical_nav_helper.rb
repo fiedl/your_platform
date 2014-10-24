@@ -42,7 +42,10 @@ module VerticalNavHelper
     child_navables(navable)
   end
   def child_navables(navable)
-    non_hidden_navables(navable.navable_children, :child)
+    non_hidden_navables(navable.navable_children, :child).sort_by do |object| 
+      [ ['Page', 'Group'].index(object.class.name),  # pages above groups
+      object.created_at]
+    end
   end
   
   def non_hidden_navables(navables, element_class)
