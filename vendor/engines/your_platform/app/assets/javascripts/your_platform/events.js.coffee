@@ -95,8 +95,14 @@ ready = ->
     $('#toggle_invite').button('loading')
     $('#toggle_invite').attr('title', '')
     
+  # Deactivate webcal:// links for android and windows, since they don't support it, apparently.
+  #
+  user_os = navigator.userAgent.toLowerCase()
+  if (user_os.indexOf("android") > -1) or (user_os.indexOf("windows") > -1)
+    $('#ics_abo').attr('href', $('#ics_abo').attr('href').replace('webcal://', 'https://'))
+    
   if $('.box.first * h1 .best_in_place').text() == "Bezeichnung der Veranstaltung hier eingeben"
     $('.box.first * h1 .best_in_place').trigger('click') # to edit it
-
+    
 $(document).ready(ready)
 $(document).on('page:load', ready)
