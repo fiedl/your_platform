@@ -59,7 +59,7 @@ module VerticalNavHelper
   end
 
   def menu_element( object, element_class )
-    content_tag( :li, :class => element_class ) do 
+    content_tag( :li, :class => "#{element_class} #{object.class.name.downcase}" ) do 
       link_to(menu_element_title(object), object)
     end
   end
