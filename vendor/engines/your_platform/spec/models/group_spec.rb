@@ -95,7 +95,7 @@ describe Group do
       @subgroup = @group.child_groups.create
       @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ), 
                            @subgroup.events.create( start_at: 5.hours.from_now ) ]
-      @recent_events = [ @group.events.create( start_at: 5.hours.ago ) ]
+      @recent_events = [ @group.events.create( start_at: 2.days.ago ) ]
       @unrelated_events = [ create( :event ) ]
     end
 

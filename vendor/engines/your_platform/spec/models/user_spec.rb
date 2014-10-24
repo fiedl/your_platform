@@ -955,7 +955,7 @@ describe User do
         @group2 = @group1.parent_groups.create
         @upcoming_events = [ @group1.child_events.create( start_at: 5.hours.from_now ),
                              @group2.child_events.create( start_at: 6.hours.from_now ) ]
-        @recent_events = [ @group1.child_events.create( start_at: 5.hours.ago ) ]
+        @recent_events = [ @group1.child_events.create( start_at: 2.days.ago ) ]
         @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
       end
       it { should include *@upcoming_events }
