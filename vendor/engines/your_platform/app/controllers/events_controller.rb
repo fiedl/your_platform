@@ -50,7 +50,7 @@ class EventsController < ApplicationController
     @events = @events.where publish_on_global_website: true if @on_global_website
     
     # Order events
-    @events = @events.order events: [:start_at, :created_at]
+    @events = @events.order 'events.start_at, events.created_at'
     
     # Limit the number of events
     @events = @events.limit(@limit) if @limit && @limit > 0

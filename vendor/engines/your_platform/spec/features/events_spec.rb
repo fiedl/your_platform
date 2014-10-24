@@ -45,6 +45,17 @@ feature "Events" do
       page.should have_no_text @event4.name
     end
     
+    specify "the public feed should display the events ordered by the start time" do
+      Event.destroy_all
+      @event4 = @group.child_events.create name: 'event 4', publish_on_global_website: true, start_at: 4.day.from_now
+      @event2 = @group.child_events.create name: 'event 2', publish_on_global_website: true, start_at: 2.day.from_now
+      @event3 = @group.child_events.create name: 'event 3', publish_on_global_website: true, start_at: 3.day.from_now
+      @event1 = @group.child_events.create name: 'event 1', publish_on_global_website: true, start_at: 1.day.from_now
+      
+      visit public_events_path(limit: 3)
+      page.body.should =~ /#{@event1.name}.*#{@event2.name}.*#{@event3.name}/m  # `/m` allowes newlines. 
+    end
+    
     scenario "looking at the local public events html feed" do
       visit group_events_public_path(@group)
       page.should have_no_text @other_event.name
