@@ -89,7 +89,7 @@ ready = ->
     ]
   }, common_configuration))
   $('.datatable.groups').dataTable(jQuery.extend({
-    "order": [[1, "desc"]],
+    "order": [[0, "asc"]],
     "pageLength": 100
   }, common_configuration))
   $('.datatable.events').dataTable(jQuery.extend({
