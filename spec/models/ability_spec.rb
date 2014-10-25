@@ -35,6 +35,13 @@ describe Ability do
   # Regular Users
   # 
     
+  he "should be able to update his own record with a few exceptions" do
+    the_user.should be_able_to :update, user
+    the_user.should be_able_to :change_first_name, user
+    the_user.should be_able_to :change_alias, user
+    the_user.should_not be_able_to :change_last_name, user
+    the_user.should_not be_able_to :manage, user
+  end
   he "should be able to edit his own profile fields" do
     @profile_field = user.profile_fields.create(type: "ProfileFieldTypes::Phone", value: "123-456789")
 

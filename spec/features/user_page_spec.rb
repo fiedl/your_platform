@@ -296,12 +296,11 @@ feature 'User page', js: false do
         scenario "Looking at the section 'access' and requesting a new password", js: true do
           within('.box.section.access') do
             page.should have_text @user.alias
-            page.should have_text @user.last_name
             page.should have_text @user.name
             page.should have_text @user.email
             
             click_on I18n.t(:edit)
-            page.should have_selector "input[type=text]", count: 5  # alias, last_name, first_name + last_name, email
+            page.should have_selector "input[type=text]", count: 3  # alias, first_name, email
             page.should have_text "Zugang zur Plattform"
             page.should have_text "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am"
             page.should have_text "Zuletzt wurde am"

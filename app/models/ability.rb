@@ -87,8 +87,10 @@ class Ability
         can :read, user
         
         # Regular users can update their own profile.
+        # They can change their first but not their surnames.
         #
-        can :update, User, :id => user.id
+        can [:update, :change_first_name, :change_alias], User, :id => user.id
+        
         can :update, UserAccount, :user_id => user.id
         
         # Regular users can read profile fields of profiles they are allowed to see.

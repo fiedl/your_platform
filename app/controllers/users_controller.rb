@@ -39,7 +39,7 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
     if @user.save
       @user.send_welcome_email if @user.account
       @user.fill_in_template_profile_information
@@ -52,7 +52,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes(params[:user])
+    @user.update_attributes(user_params)
     respond_with @user
   end
 
@@ -76,6 +76,26 @@ class UsersController < ApplicationController
   end
 
   private
+  
+  # This method returns the request parameters and their values as long as the user
+  # is permitted to change them. 
+  # 
+  # This mechanism protects from mass assignment hacking and replaces the old
+  # attr_accessible mechanism. 
+  # 
+  # For more information, have a look at these resources:
+  #   https://github.com/rails/strong_parameters/
+  #   http://railscasts.com/episodes/371-strong-parameters
+  # 
+  def user_params
+    permitted_keys = []
+    permitted_keys += [:first_name] if can? :change_first_name, @user
+    permitted_keys += [:alias] if can? :change_alias, @user
+    permitted_keys += [:email, :date_of_birth, :localized_date_of_birth] if can? :update, @user
+    permitted_keys += [:last_name, :name] if can? :change_last_name, @user
+    permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation] if can? :manage, @user
+    params.require(:user).permit(*permitted_keys)
+  end
 
   def find_user
     if not handle_mystery_user

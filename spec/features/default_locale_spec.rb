@@ -12,9 +12,7 @@ feature 'Default Locale' do
     visit user_path(@user)
     within ".box.section.access" do
       page.should have_text "Zugangsdaten"
-      page.should have_text "Nachname"
       page.should have_text "E-Mail"
-      page.should have_no_text "Last Name"
       page.should have_no_text "Email"
     end
   end
