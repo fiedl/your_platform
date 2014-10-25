@@ -26,7 +26,7 @@ class Corporation < Group
   # But this is likely to be overridden by the main application.
   #
   def status_groups
-    StatusGroup.find_all_by_corporation(self)
+    cached { StatusGroup.find_all_by_corporation(self) }
   end
   
   # This method returns the status group with the given name.
