@@ -518,6 +518,7 @@ describe Ability do
     he "should be able to manage subgroups" do
       @subgroup = create(:group)
       @subgroup.parent_groups << @group
+      @subgroup.reload
       the_user.should be_able_to :manage, @subgroup
     end
     he "should be able to manage users of subgroups" do

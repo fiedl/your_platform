@@ -38,10 +38,11 @@ class Group < ActiveRecord::Base
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
+  after_save       :delete_cache  # TODO: KANN DAS WEG?
 
   def delete_cache
     super
-    ancestor_groups.each { |g| g.delete_cached(:leaf_groups) }
+    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
     delete_cache_for_officers_group
   end
     

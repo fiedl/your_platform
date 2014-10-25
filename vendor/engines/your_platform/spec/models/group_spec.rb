@@ -177,7 +177,7 @@ describe Group do
         @group = create(:group)
         @corporation = create(:corporation)
       end
-      subject { @group.corporation }
+      subject { @group.reload.corporation }
       describe "for the group being a corporation" do
         before { @group = @corporation }
         it "should return self" do
