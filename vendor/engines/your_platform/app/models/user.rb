@@ -592,8 +592,16 @@ class User < ActiveRecord::Base
     end
   end
   
-  def current_status_group_in( corporation )
-    StatusGroup.find_by_user_and_corporation(self, corporation)
+  def current_status_group_in(corporation)
+    StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
+  end
+  
+  def status_group_in_primary_corporation
+    # - First try the `first_corporation`,  which does not consider corporations the user is
+    #   a former member of.
+    # - Next, use all corporations, which applies to completely excluded members.
+    #
+    cached { current_status_group_in(first_corporation || corporations.first) }
   end
 
 
