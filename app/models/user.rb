@@ -204,6 +204,10 @@ class User
     addition += " " if addition != ""
     return addition.strip
   end
+  
+  def klammerung
+    self.profile_fields.where(label: :klammerung).first.try(:value)
+  end
 
   # Fill-in default profile.
   #

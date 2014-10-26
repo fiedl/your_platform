@@ -180,7 +180,7 @@ module UserGroupMembershipMixins::ValidityRange
     end
     
     def started_after(time)
-      where("valid_from >= ?", time)
+      where('NOT valid_from IS NULL').where("valid_from >= ?", time)
     end
   
   end
@@ -189,6 +189,6 @@ end
 
 class Array
   def started_after(time)
-    self.select { |membership| membership.valid_from >= time }
+    self.select { |membership| membership.valid_from && membership.valid_from >= time }
   end
 end
