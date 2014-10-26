@@ -240,4 +240,36 @@ describe UserGroupMembershipMixins::ValidityRange do
     end
   end
   
+  describe "(validity range constraints)", :focus do
+    #
+    #                     @time                   @now
+    # ====================================================> time
+    #                |------------------------------------> @membership1
+    #                             |-----------------------> @membership2
+    #                             |-----------|             @membership3
+    #
+    #
+    before do
+      @user1 = create :user
+      @user2 = create :user
+      @user3 = create :user
+      @time = 1.year.ago
+      @now = Time.zone.now
+      @membership1 = @group.assign_user @user1, at: @time - 1.day
+      @membership2 = @group.assign_user @user2, at: @time + 1.day
+      @membership3 = @group.assign_user @user3, at: @time + 1.day; @membership3.invalidate at: 1.month.ago
+    end
+    describe ".now_and_in_the_past.started_after(time)" do
+      subject { @group.memberships.now_and_in_the_past.started_after(@time) }
+      it { should include @membership2 }
+      it { should include @membership3 }
+      it { should_not include @membership1 }
+    end
+    describe ".started_after(time)" do
+      subject { @group.memberships.started_after(@time) }
+      it { should include @membership2 }
+      it { should_not include @membership3 }
+      it { should_not include @membership1 }
+    end
+  end
 end

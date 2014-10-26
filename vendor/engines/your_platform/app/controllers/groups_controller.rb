@@ -15,11 +15,8 @@ class GroupsController < ApplicationController
 
   def show
     if @group
-      current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
 
-      if request.format.html? || request.format.xls? || request.format.csv?
-        point_navigation_to @group
-        
+      if request.format.html? || request.format.xls? || request.format.csv? || request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do 
           # If this is a collection group, e.g. the corporations_parent group, 
           # do not list the single members.
@@ -33,6 +30,12 @@ class GroupsController < ApplicationController
           else
             @memberships = @group.memberships_for_member_list
           end
+        end
+        
+        # The user might provide a `valid_from` option as constraint on the validity range.
+        # 
+        if params[:valid_from].present?
+          @memberships = @memberships.started_after(params[:valid_from].to_datetime)
         end
         
         Rack::MiniProfiler.step('groups#show controller: cancan') do
@@ -79,6 +82,12 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html do
         authorize! :read, @group
+        point_navigation_to @group
+        current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
+      end
+      format.json do
+        authorize! :read, @group
+        render json: @group.serializable_hash.merge({member_count: @memberships.count})
       end
       format.csv do
         authorize! :read, @group

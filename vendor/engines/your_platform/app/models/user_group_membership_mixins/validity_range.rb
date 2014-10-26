@@ -178,7 +178,17 @@ module UserGroupMembershipMixins::ValidityRange
     def this_year
       with_invalid.where("valid_from >= ?", "#{Time.zone.now.year}-01-01 00:00:00")
     end
+    
+    def started_after(time)
+      where("valid_from >= ?", time)
+    end
   
   end
   
+end
+
+class Array
+  def started_after(time)
+    self.select { |membership| membership.valid_from >= time }
+  end
 end
