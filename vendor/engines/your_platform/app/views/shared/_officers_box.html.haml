@@ -21,6 +21,8 @@
 
           %dt
             - if can? :rename, officer_group
+              - if current_user.developer?
+                %i.icon-wrench.icon-small.copy-to-clipboard{title: "Group.find(#{officer_group.id})"}
               = best_in_place officer_group, :name
             - else
               = officer_group.name
