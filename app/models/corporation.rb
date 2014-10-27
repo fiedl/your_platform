@@ -5,13 +5,13 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/corporation' ).to
 
 # Wingolf-am-Hochschulort-Gruppe
 class Corporation 
-
+  
   def aktivitas
-    self.child_groups.select { |child| child.name == "Aktivitas" or child.name == "Activitas" }.first
+    self.child_groups.aktivitates.first
   end
 
   def philisterschaft
-    self.child_groups.select { |child| child.name.in? ["Philisterschaft", "Altherrenschaft"] }.first
+    self.child_groups.philisterschaften.first
   end
 
   def hausverein
