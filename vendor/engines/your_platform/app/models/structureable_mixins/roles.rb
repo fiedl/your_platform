@@ -72,11 +72,14 @@ module StructureableMixins::Roles
   end
 
   def create_officers_parent_group
-    create_special_group(:officers_parent)
+    if self.ancestor_groups(true).find_all_by_flag(:officers_parent).count == 0 and not self.has_flag?(:officers_parent)
+      # Do not allow officer cascades.
+      create_special_group(:officers_parent)
+    end
   end
 
   def find_or_create_officers_parent_group
-    find_or_create_special_group(:officers_parent)
+    find_officers_parent_group || create_officers_parent_group
   end
 
   def officers_parent

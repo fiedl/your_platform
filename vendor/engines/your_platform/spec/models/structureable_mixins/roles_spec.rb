@@ -11,7 +11,7 @@ describe StructureableMixins::Roles do
   before do
     class MyStructureable < ActiveRecord::Base
       attr_accessible :name
-      is_structureable( ancestor_class_names: %w(MyStructureable),
+      is_structureable( ancestor_class_names: %w(MyStructureable Group),
                         descendant_class_names: %w(MyStructureable Group User) )
     end
 
@@ -401,6 +401,54 @@ describe StructureableMixins::Roles do
         @group1.find_admins_parent_group.should_not == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should == nil
       end
+    end
+  end
+
+
+  # Preventing Officers Cascades
+  # ------------------------------------------------------------------------------------------
+  #
+  #    group1
+  #      |----- :officers_parent 
+  #                |--------------- :admins_parent
+  #                |                      |---------- :officers_parent  <---- forbidden
+  #                |
+  #                |----- :officers_parent   <------------------------------- forbidden
+  #                |
+  #                |----- :public_relations_officer
+  #                                |
+  #                                |----- :officers_parent    <-------------- forbidden
+  #                
+  #
+  describe "preventing officer cascades: " do
+    before do
+      @group1 = create :group
+      @officers_parent = @group1.officers_parent
+      @admins_parent = @group1.admins_parent
+      @public_relations_officer = @officers_parent.child_groups.create
+    end
+    specify "it should not be possible to create an officers_parent under the admins parent" do
+      @admins_parent.officers_parent.should == nil
+      @admins_parent.create_officers_parent_group.should == nil
+      @admins_parent.reload.children.should == []
+    end
+    specify "it should not be possible to create an offiers_parent under the officers_parent" do
+      @officers_parent.officers_parent.should == nil
+      @officers_parent.create_officers_parent_group.should == nil
+      @officers_parent.reload.children.should == [@admins_parent, @public_relations_officer]
+    end
+    specify "it should not be possible to create an officers_parent under another officers group" do
+      @public_relations_officer.officers_parent.should == nil
+      @public_relations_officer.create_officers_parent_group.should == nil
+      @public_relations_officer.reload.children.should == []
+    end
+    specify "calling #admins should not create forbidden officers_parent groups" do
+      @admins_parent.admins
+      @admins_parent.reload.children.should == []
+      @officers_parent.admins
+      @officers_parent.reload.children.should == [@admins_parent, @public_relations_officer]
+      @public_relations_officer.admins
+      @public_relations_officer.reload.children.should == []
     end
   end
   
