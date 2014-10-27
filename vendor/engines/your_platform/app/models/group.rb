@@ -204,20 +204,6 @@ class Group < ActiveRecord::Base
   def deceased
     find_deceased_members_parent_group
   end
-
-
-  # Adding objects
-  # --------------
-  
-  def <<(object)
-    if object.kind_of? User
-      self.assign_user(object) unless self.child_users.include? object
-    elsif object.kind_of? Group
-      self.child_groups << object unless self.child_groups.include? object
-    else
-      raise "Case not handled yet. Please implement this. It's easy :)"
-    end
-  end
   
  
   # Finder Methods

@@ -123,5 +123,31 @@ module Structureable
       self.destroy_dag_links
     end
     
+    # Move the node to another parent.
+    #
+    def move_to(parent_node)
+      raise 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
+      self.links_as_child.destroy_all
+      parent_node << self
+    end
+    
+    # Adding child objects.
+    #
+    def <<(object)
+      if object.kind_of? User
+        raise 'Users can only be assigned to groups.' unless self.kind_of? Group
+        self.assign_user(object) unless self.child_users.include? object
+      elsif object.kind_of? Group
+        self.child_groups << object unless self.child_groups.include? object
+      elsif object.kind_of? Page
+        self.child_pages << object unless self.child_pages.include? object
+      elsif object.kind_of? Event
+        self.child_events << object unless self.child_events.include? object
+      else
+        raise "Case not handled yet. Please implement this. It's easy :)"
+      end
+    end
+    
+    
   end
 end
