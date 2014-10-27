@@ -15,7 +15,7 @@
         %td
           = Rails.cache.fetch([group, 'group_of_groups_table', 'officers'], expires_in: 1.week) do
             - capture_haml do
-              - group.officers_groups_of_self_and_descendant_groups.first(10).each do |officer_group|
+              - sort_officer_groups(group.officers_groups_of_self_and_descendant_groups).first(10).each do |officer_group|
                 - if officer_group.members.count > 0
                   %p
                     %span>= officer_group.name

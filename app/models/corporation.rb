@@ -11,7 +11,7 @@ class Corporation
   end
 
   def philisterschaft
-    self.child_groups.select { |child| child.name == "Philisterschaft" }.first
+    self.child_groups.select { |child| child.name.in? ["Philisterschaft", "Altherrenschaft"] }.first
   end
 
   def hausverein

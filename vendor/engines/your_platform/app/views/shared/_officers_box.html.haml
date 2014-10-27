@@ -11,7 +11,7 @@
       = render partial: 'shared/authorization_info', locals: {subject: 'officers', navable: structureable}
   
     %dl
-      - for officer_group in structureable.find_officers_groups
+      - sorted_officers_groups_for(structureable).each do |officer_group|
 
         - # do not display the parent group itself (bug circumvention)
         - # TODO: fix the cause of the bug that officers_parent groups are
