@@ -139,14 +139,110 @@ class Group
   end
   
   
-  
+  # Jeder
+  #   | 
+  # Alle Wingolfiten
+  #   |
+  #   |---- Alle Aktiven
+  #   |---- Alle Philister
+  #   |
+  #   |---- Alle Amtsträger
+  #               |----------- Alle Verbindungsamtsträger
+  #               |                          |----------- Alle Chargierten
+  #               |                          |                   |---------- Alle Seniores
+  #               |                          |                   |---------- Alle Fuxmajores
+  #               |                          |                   |---------- Alle Kneipwarte
+  #               |                          |                   |---------- + Bundeschargierte
+  #               |                          |
+  #               |                          |------- Alle Aktiven-Schriftwarte
+  #               |                          |------- Alle Aktiven-Kassenwarte
+  #               |                          |------- Alle Fuxen-Seniores
+  #               |                          |------- + alle übrigen WV-Amtsträger
+  #               |
+  #               |----------- Alle PhV-Amtsträger
+  #               |                      |------------- Alle Phil-x
+  #               |                      |------------- Alle Phil-Schriftwarte
+  #               |                      |------------- Alle Phil-Kassenwarte 
+  #               |
+  #               |----------- Alle BV-Amtsträger
+  #               |                      |------------- Alle BV-Leiter
+  #               |                      |------------- Alle BV-Schriftwarte
+  #               |                      |------------- Alle BV-Kassenwarte 
+  #               |
+  #               |----------- Alle Vorsitzenden (Seniores, Phil-x, BV-Leiter, Bundes-x, VAW-x)
+  #               |----------- Alle Schriftwarte (Schriftwarte + Bundes-xx + GfdW)
+  #               |----------- Alle Kassenwarte  (Kassenwarte + Bundes-xxx + GfdW)
+  #
+  #
+  def self.alle_wingolfiten
+    self.find_or_create_special_group :alle_wingolfiten
+  end
   def self.alle_aktiven
-    self.find_or_create_special_group :alle_aktiven
+    alle_wingolfiten.find_or_create_special_group :alle_aktiven
   end
   def self.alle_philister
-    self.find_or_create_special_group :alle_philister
+    alle_wingolfiten.find_or_create_special_group :alle_philister
   end
-
+  def self.alle_amtstraeger
+    alle_wingolfiten.find_or_create_special_group :alle_amtstraeger
+  end
+  def self.alle_wv_amtstraeger
+    alle_amtstraeger.find_or_create_special_group :alle_wv_amtstraeger
+  end
+  def self.alle_phv_amtstraeger
+    alle_amtstraeger.find_or_create_special_group :alle_phv_amtstraeger
+  end
+  def self.alle_bv_amtstraeger
+    alle_amtstraeger.find_or_create_special_group :alle_bv_amtstraeger
+  end
+  def self.alle_vorsitzenden
+    alle_amtstraeger.find_or_create_special_group :alle_vorsitzenden
+  end
+  def self.alle_schriftwarte
+    alle_amtstraeger.find_or_create_special_group :alle_schriftwarte
+  end
+  def self.alle_kassenwarte
+    alle_amtstraeger.find_or_create_special_group :alle_kassenwarte
+  end
+  def self.alle_chargierten
+    alle_wv_amtstraeger.find_or_create_special_group :alle_chargierten
+  end
+  def self.alle_seniores
+    alle_chargierten.find_or_create_special_group :alle_seniores
+  end
+  def self.alle_fuxmajores
+    alle_chargierten.find_or_create_special_group :alle_fuxmajores
+  end
+  def self.alle_kneipwarte
+    alle_chargierten.find_or_create_special_group :alle_kneipwarte
+  end
+  def self.alle_wv_schriftwarte
+    alle_wv_amtstraeger.find_or_create_special_group :alle_wv_schriftwarte
+  end
+  def self.alle_wv_kassenwarte
+    alle_wv_amtstraeger.find_or_create_special_group :alle_wv_kassenwarte
+  end
+  def self.alle_fuxen_seniores
+    alle_wv_amtstraeger.find_or_create_special_group :alle_fuxen_seniores
+  end
+  def self.alle_phv_vorsitzende
+    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_vorsitzende
+  end
+  def self.alle_phv_schriftwarte
+    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_schriftwarte
+  end
+  def self.alle_phv_kassenwarte
+    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_kassenwarte
+  end
+  def self.alle_bv_leiter
+    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_leiter
+  end
+  def self.alle_bv_schriftwarte
+    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_schriftwarte
+  end
+  def self.alle_bv_kassenwarte
+    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_kassenwarte
+  end
 
 end
 

@@ -7,7 +7,8 @@ namespace :patch do
     'officers:aemter_umbenennen',
     'officers:aemter_anlegen',
     'officers:chargen_in_chargengruppe_schieben',
-    'officers:admins_anlegen'
+    'officers:admins_anlegen',
+    'officers:vereinigungsgruppen'
   ]
   
   namespace :officers do
@@ -58,11 +59,13 @@ namespace :patch do
         phv: {phil_x: 'Philister-x', schriftwart: 'Philister-Schriftwart', 
           kassenwart: 'Philister-Kassenwart'},
         bv: {bv_leiter: 'BV-Leiter', schriftwart: 'BV-Schriftwart', 
-          kassenwart: 'BV-Kassenwart'}
+          kassenwart: 'BV-Kassenwart'},
+        fuxia: {fuxen_x: 'Fuxen-x'}
       }
       
       log.section "Ämterstrukturen für Activitates anlegen"
       aemterstruktur_anlegen Aktivitas.all, aemterstruktur[:wv]
+      aemterstruktur_anlegen (Aktivitas.all.collect { |a| a.descendant_groups.where(name: 'Fuxen').first }), aemterstruktur[:fuxia]
 
       log.section "Ämterstrukturen für Philisterschaften anlegen"
       aemterstruktur_anlegen Philisterschaft.all, aemterstruktur[:phv]
@@ -84,7 +87,7 @@ namespace :patch do
               officer_group.add_flag flag
               if name_or_subgroups.kind_of?(Hash)
                 name_or_subgroups.each do |flag, name|
-                  if group.officers_parent.descendant_groups.find_all_by_flag(flag).count == 0
+                  if group.officers_parent.descendant_groups.find_all_by_flag(flag).count == 0 and (group.corporation.nil? || group.corporation.descendant_groups.find_all_by_flag(flag).count == 0)
                     print "    -> #{name} (:#{flag})\n".blue
                     subgroup = officer_group.child_groups.create name: name
                     subgroup.add_flag flag
@@ -134,11 +137,178 @@ namespace :patch do
     task :admins_anlegen => [:environment, :print_info] do
       log.section "Admin-Gruppen anlegen"
       [Corporation.all + Aktivitas.all + Philisterschaft.all + Bv.all].flatten.each do |group|
-        print "-> #{group.name}\n".green
+        print "-> #{group.corporation.try(:name)} -> #{group.name}\n".green
         group.admins
       end
     end
+    
+    task :vereinigungsgruppen => [:environment, :print_info] do
+      log.section "Vereinigungsgruppen anlegen (Alle Chargierten, etc.)"                                      
 
+      log.info "Jeder"
+      Group.everyone
+
+      log.info "  | "           
+      log.info "Alle Wingolfiten"
+      Group.alle_wingolfiten
+      
+      log.info "  |"
+      log.info "  |--- Alle Aktiven"
+      Group.find_by_flag(:alle_aktiven).move_to Group.alle_wingolfiten
+      if Group.alle_aktiven.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_aktiven << aktivitas }
+      end
+      
+      log.info "  |--- Alle Philister"
+      Group.find_by_flag(:alle_philister).move_to Group.alle_wingolfiten
+      if Group.alle_philister.descendant_users.count == 0
+        Philisterschaft.all.each { |philisterschaft| Group.alle_philister << philisterschaft }
+      end
+      
+      log.info "  |"
+      log.info "  |--- Alle Amtsträger"
+      Group.alle_amtstreaeger
+      
+      log.info "         |"
+      log.info "         |---- Alle Verbindungsamtsträger"
+      Group.alle_wv_amtstraeger
+      
+      log.info "         |                   |------- Alle Chargierten"
+      Group.alle_chargierten
+      Group.alle_seniores
+      Group.alle_fuxmajores
+      Group.alle_kneipwarte
+      if Group.alle_chargierten.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_chargierten << aktivitas.descendant_groups.find_by_flag(:chargen) }
+      end
+      
+      log.info "         |                   |               |------- Alle Seniores"
+      if Group.alle_seniores.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_seniores << aktivitas.descendant_groups.find_by_flag(:senior) }
+        Group.alle_seniores << Group.find_by_flag(:bundes_x) if Group.find_by_flag(:bundes_x)
+      end
+      
+      log.info "         |                   |               |------- Alle Fuxmajores"
+      if Group.alle_fuxmajores.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_fuxmajores << aktivitas.descendant_groups.find_by_flag(:fuxmajor) }
+      end
+      
+      log.info "         |                   |               |------- Alle Kneipwarte"
+      if Group.alle_kneipwarte.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_kneipwarte << aktivitas.descendant_groups.find_by_flag(:kneipwart) }
+      end
+      
+      log.info "         |                   |               |------- + Bundeschargierte"
+      if Group.find_by_flag(:bundeschargen) and not Group.find_by_flag(:bundeschargen).parent_groups.include?(Group.alle_chargierten)
+        Group.alle_chargierten << Group.find_by_flag(:bundeschargen)
+      end
+      
+      log.info "         |                   |"
+      log.info "         |                   |------- Alle Aktiven-Schriftwarte"
+      Group.alle_wv_schriftwarte
+      if Group.alle_wv_schriftwarte.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_wv_schriftwarte << aktivitas.descendant_groups.find_by_flag(:schriftwart) }
+        Group.alle_wv_schriftwarte << Group.find_by_flag(:bundes_xx) if Group.find_by_flag(:bundes_xx)
+      end
+      
+      log.info "         |                   |------- Alle Aktiven-Kassenwarte"
+      Group.alle_wv_kassenwarte
+      if Group.alle_wv_kassenwarte.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_wv_kassenwarte << aktivitas.descendant_groups.find_by_flag(:kassenwart) }
+        Group.alle_wv_kassenwarte << Group.find_by_flag(:bundes_xxx) if Group.find_by_flag(:bundes_xxx)
+      end
+
+      log.info "         |                   |------- Alle Fuxen-Seniores"
+      Group.alle_fuxen_seniores
+      if Group.alle_fuxen_seniores.descendant_users.count == 0
+        Aktivitas.all.each { |aktivitas| Group.alle_fuxen_seniores << aktivitas.descendant_groups.find_by_flag(:fuxen_x) }
+      end
+
+      log.info "         |                   |------- + alle übrigen WV-Amtsträger"
+      Aktivitas.all.each do |aktivitas|
+        if not aktivitas.officers_parent.in? Group.alle_wv_amtstraeger.child_groups
+          Group.alle_wv_amtstraeger << aktivitas.officers_parent
+        end
+      end
+      
+      log.info "         |"
+      log.info "         |---- Alle PhV-Amtsträger"
+      Group.alle_phv_amtstraeger
+      
+      log.info "         |               |------------- Alle Phil-x"
+      Group.alle_phv_vorsitzende
+      if Group.alle_phv_vorsitzende.descendant_users.count == 0
+        Philisterschaft.all.each { |philisterschaft| Group.alle_phv_vorsitzende << philisterschaft.descendant_groups.find_by_flag(:phil_x) }
+      end
+      
+      log.info "         |               |------------- Alle Phil-Schriftwarte"
+      Group.alle_phv_schriftwarte
+      if Group.alle_phv_schriftwarte.descendant_users.count == 0
+        Philisterschaft.all.each { |philisterschaft| Group.alle_phv_schriftwarte << philisterschaft.descendant_groups.find_by_flag(:schriftwart) }
+      end
+      
+      log.info "         |               |------------- Alle Phil-Kassenwarte"
+      Group.alle_phv_kassenwarte
+      if Group.alle_phv_kassenwarte.descendant_users.count == 0
+        Philisterschaft.all.each { |philisterschaft| Group.alle_phv_kassenwarte << philisterschaft.descendant_groups.find_by_flag(:kassenwart) }
+      end
+      
+      log.info "         |"
+      log.info "         |---- Alle BV-Amtsträger"
+      Group.alle_bv_amtstraeger
+      
+      log.info "         |               |------------- Alle BV-Leiter"
+      Group.alle_bv_leiter
+      if Group.alle_bv_leiter.descendant_users.count == 0
+        Bv.all.each { |bv| Group.alle_bv_leiter << bv.descendant_groups.find_by_flag(:bv_leiter) }
+      end
+      
+      log.info "         |               |------------- Alle BV-Schriftwarte"
+      Group.alle_bv_schriftwarte
+      if Group.alle_bv_schriftwarte.descendant_users.count == 0
+        Bv.all.each { |bv| Group.alle_bv_schriftwarte << bv.descendant_groups.find_by_flag(:schriftwart) }
+      end
+      
+      log.info "         |               |------------- Alle BV-Kassenwarte"
+      Group.alle_bv_kassenwarte
+      if Group.alle_bv_kassenwarte.descendant_users.count == 0
+        Bv.all.each { |bv| Group.alle_bv_kassenwarte << bv.descendant_groups.find_by_flag(:kassenwart) }
+      end
+      
+      log.info "         |"
+      log.info "         |---- Alle Vorsitzenden (Seniores, Phil-x, BV-Leiter, Bundes-x, VAW-x)"
+      Group.alle_vorsitzenden
+      if Group.alle_vorsitzenden.descendant_users.count == 0
+        Group.alle_vorsitzenden << Group.alle_seniores
+        Group.alle_vorsitzenden << Group.alle_phv_vorsitzende
+        Group.alle_vorsitzenden << Group.alle_bv_leiter
+        Group.alle_vorsitzenden << Group.find_by_flag(:bundes_x) if Group.find_by_flag(:bundes_x)
+        Group.alle_vorsitzenden << Group.find_by_flag(:vaw_x) if Group.find_by_flag(:vaw_x)
+      end
+      
+      log.info "         |---- Alle Schriftwarte (Schriftwarte + Bundes-xx + GfdW)"
+      Group.alle_schriftwarte
+      if Group.alle_schriftwarte.descendant_users.count == 0
+        Group.alle_schriftwarte << Group.alle_wv_schriftwarte
+        Group.alle_schriftwarte << Group.alle_phv_schriftwarte
+        Group.alle_schriftwarte << Group.alle_bv_schriftwarte
+        Group.alle_schriftwarte << Group.find_by_flag(:bundes_xx) if Group.find_by_flag(:bundes_xx)
+        Group.alle_schriftwarte << Group.find_by_flag(:gfdw) if Group.find_by_flag(:gfdw)
+      end
+
+      log.info "         |---- Alle Kassenwarte  (Kassenwarte + Bundes-xxx + GfdW)"
+      Group.alle_kassenwarte
+      if Group.alle_kassenwarte.descendant_users.count == 0
+        Group.alle_kassenwarte << Group.alle_wv_kassenwarte
+        Group.alle_kassenwarte << Group.alle_phv_kassenwarte
+        Group.alle_kassenwarte << Group.alle_bv_kassenwarte
+        Group.alle_kassenwarte << Group.find_by_flag(:bundes_xxx) if Group.find_by_flag(:bundes_xxx)
+        Group.alle_kassenwarte << Group.find_by_flag(:gfdw) if Group.find_by_flag(:gfdw)
+      end
+
+      log.info "    "
+    end
+    
   end
   
   def log
