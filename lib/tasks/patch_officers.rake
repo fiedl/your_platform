@@ -34,14 +34,14 @@ namespace :patch do
       log.info "-> Kassenwarte"
       Group.where(name: 'Kassenwart').each do |group|
         group.name = 'Hauptkassenwart' if group.ancestor_groups.include? Group.alle_aktiven
-        group.name = 'Philister-Kassenwart' if group.ancestor_groups.include? Group.alle_philister
+        group.name = 'Philister-Kassenwart' if group.ancestor_groups.philisterschaften.count > 0
         group.name = 'BV-Kassenwart' if group.ancestor_groups.include? Group.bvs_parent
         group.save
       end
       log.info "-> Schriftwarte"
       Group.where(name: 'Schriftwart').each do |group|
-        group.name = 'Philister-Schriftwart' if group.ancestor_groups.include? Group.alle_philister
-        group.name = 'Philister-Kassenwart' if group.ancestor_groups.include? Group.bvs_parent
+        group.name = 'Philister-Schriftwart' if group.ancestor_groups.philisterschaften.count > 0
+        group.name = 'BV-Schriftwart' if group.ancestor_groups.include? Group.bvs_parent
         group.save
       end
       log.info "-> Philister-x"

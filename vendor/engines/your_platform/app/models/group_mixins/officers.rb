@@ -31,10 +31,7 @@ module GroupMixins::Officers
   # This method determines if the group is an officers group.
   #
   def is_officers_group?
-    self.ancestor_groups.includes(:flags).each do |group|
-      return true if group.has_flag? :officers_parent
-    end
-    return false
+    self.ancestor_groups.find_all_by_flag(:officers_parent).count > 0
   end
   
   # This returns whether the group is special.
@@ -54,8 +51,10 @@ module GroupMixins::Officers
   #
   def delete_cache_for_officers_group
     if is_officers_group?
-      dependent_groups = self.ancestor_groups.first.try(:ancestor_groups).try(:first).try(:descendant_groups) || []
-      dependent_groups.select! { |group| not group.is_officers_group? } # to avoid infinite recursion
+      dependent_groups = self.ancestor_groups.find_all_by_flag(:officers_parent)
+        .collect { |officers_parent| officers_parent.parent_groups }.flatten
+        .collect { |group| group.descendant_groups }.flatten
+        .select { |descendant_group| not descendant_group.is_officers_group? } # to avoid infinite recursion
       dependent_groups.each { |group| group.delete_cache }
     end
   end
