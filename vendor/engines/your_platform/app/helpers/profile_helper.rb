@@ -8,8 +8,12 @@ module ProfileHelper
     profile_section(section, options) if show_this_section?(section)
   end
   
-  def profile_sections_to_html(sections)
-    sections_to_be_shown(sections).collect do |section|
+  # options:
+  #   - force_show
+  # 
+  def profile_sections_to_html(sections, options = {})
+    sections = sections_to_be_shown(sections) unless options[:force_show]
+    sections.collect do |section|
       profile_section(section)
     end.join.html_safe
   end

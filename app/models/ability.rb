@@ -218,6 +218,10 @@ class Ability
           can :export_member_list, Group do |group|
             user.in? group.officers_of_self_and_ancestor_groups
           end
+
+          can :create_post_for, Group do |group|
+            user.in? group.officers_of_self_and_ancestor_groups
+          end
           
           if not read_only_mode
             # Local officers can create events in their groups.

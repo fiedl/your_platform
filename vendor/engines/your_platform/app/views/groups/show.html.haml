@@ -13,7 +13,7 @@
 
 - unless @child_groups
   -# contact info
-  = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]))
+  = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]), force_show: can?(:create_post_for, @group))
 
 -# listing members
 - if @memberships.try(:any?) || can?(:update_memberships, @group)

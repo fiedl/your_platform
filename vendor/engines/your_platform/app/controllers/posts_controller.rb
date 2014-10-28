@@ -1,4 +1,8 @@
 class PostsController < ApplicationController
+  
+  authorize_resource
+  skip_authorize_resource only: [:new, :create]
+  
   def index
     @group = Group.find(params[:group_id]) if params[:group_id].present?
     @posts = @group.posts.order('sent_at DESC') if @group
@@ -13,15 +17,16 @@ class PostsController < ApplicationController
   end
   
   def new
-    authorize! :create_post_for, @group
     @group = Group.find params[:group_id] if params[:group_id].present?
+    authorize! :create_post_for, @group
     @navable = @group
   end
   
   def create
     raise 'no group given' unless params[:group_id].present?
-    authorize! :create_post_for, @group
     @group = Group.find params[:group_id]
+    authorize! :create_post_for, @group
+
     @text = params[:text]
     @subject = params[:subject]
     
