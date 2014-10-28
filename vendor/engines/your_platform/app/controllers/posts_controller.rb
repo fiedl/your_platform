@@ -51,9 +51,11 @@ class PostsController < ApplicationController
     end
     
     respond_to do |format|
-      flash[:notice] = "Nachricht wurde an #{@recipients.count} Empfänger versandt."
-      format.html { redirect_to group_url(@group) }
-      format.json { head :no_content }
+      format.html do
+        flash[:notice] = "Nachricht wurde an #{@recipients.count} Empfänger versandt."
+        redirect_to group_url(@group)
+      end
+      format.json { render json: {recipients_count: @recipients.count} }
     end
     
   end

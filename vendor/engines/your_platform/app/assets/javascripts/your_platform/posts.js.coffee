@@ -18,6 +18,9 @@ ready = ->
       )
 
   $('#test_message, #confirm_message').click (click_event)->
+    real_message = ($(this).attr('id') == 'confirm_message')
+    if real_message
+      $('p.buttons.right').text("Nachricht wird gesendet …")
     if $('label.constrain_validity_range input').prop('checked')
       recipients_count = $('span.member_count').text()
       valid_from = $('input.valid_from').val()
@@ -29,7 +32,10 @@ ready = ->
         subject: $('input.subject').val(),
         recipients_count: recipients_count ,
         valid_from: valid_from
-      }
+      },
+      success: (r)->
+        if real_message
+          $('p.buttons.right').text("Nachricht wurde an " + r.recipients_count + " Emptfänger versandt.")
     )
     click_event.preventDefault()
 

@@ -44,3 +44,21 @@
     - if subject == 'event'
       %span.alert_title Sichtbare Veranstaltung!
       Diese Veranstaltungsseite kann <b>von jedem Wingolfiten eingesehen</b> werden. Sie dient <i>nicht</i> dem Austausch vertraulicher Informationen. Tagesordnugnen, Protokolle und Sitzungsunterlagen sollten hier nicht hochgeladen werden, sondern unter entsprechend zugangsgeschützten Inhaltsseiten.
+      
+    - if subject == 'new_post'
+      %span.alert_title Hinweise
+      %ul
+        %li 
+          Der Versand von Sammelnachrichten an die Mitglieder der Gruppe
+          = surround "'", "'" do
+            %strong= link_to navable.title, navable
+          ist deren und übergeordneten 
+          %strong Amtsträgern 
+          möglich.
+        %li
+          Die Nachrichten werden den Empfängern 
+          %strong per E-Mail zugestellt.
+        %li
+          Es ist im Moment noch 
+          %strong nicht möglich, Anhänge 
+          beizufügen. Bitte verweise stattdessen auf eine Inhaltsseite der Plattform, indem Du die entsprechende Internet-Adresse in die Nachricht kopierst.
