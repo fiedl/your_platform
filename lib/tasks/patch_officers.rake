@@ -42,10 +42,11 @@ namespace :patch do
         group.save
       end
       log.info "-> Schriftwarte"
-      Group.where(name: 'Schriftwart').each do |group|
-        group.name = 'Philister-Schriftwart' if group.ancestor_groups.philisterschaften.count > 0
-        group.name = 'BV-Schriftwart' if group.ancestor_groups.include? Group.bvs_parent
-        group.save
+      Group.find_by_flag(:alle_philister).descendant_groups.where(name: 'Schriftwart').each do |group|
+        group.update_attributes name: 'Philister-Schriftwart'
+      end
+      Group.bvs_parent.descendant_groups.where(name: 'Schriftwart').each do |group|
+        group.update_attributes name: 'BV-Schriftwart'
       end
       log.info "-> Philister-x"
       Group.where(name: 'Vorsitzender (Phil-x)').each do |group|
@@ -153,24 +154,24 @@ namespace :patch do
 
       log.info "  | "           
       log.info "Alle Wingolfiten"
-      Group.alle_wingolfiten
+      Group.alle_wingolfiten.move_to Group.everyone
       
       log.info "  |"
       log.info "  |--- Alle Aktiven"
-      Group.find_by_flag(:alle_aktiven).move_to Group.alle_wingolfiten
+      Group.alle_aktiven.move_to Group.alle_wingolfiten
       if Group.alle_aktiven.descendant_users.count == 0
         Aktivitas.all.each { |aktivitas| Group.alle_aktiven << aktivitas }
       end
       
       log.info "  |--- Alle Philister"
-      Group.find_by_flag(:alle_philister).move_to Group.alle_wingolfiten
+      Group.alle_philister.move_to Group.alle_wingolfiten
       if Group.alle_philister.descendant_users.count == 0
         Philisterschaft.all.each { |philisterschaft| Group.alle_philister << philisterschaft }
       end
       
       log.info "  |"
       log.info "  |--- Alle Amtsträger"
-      Group.alle_amtstreaeger
+      Group.alle_amtstraeger
       
       log.info "         |"
       log.info "         |---- Alle Verbindungsamtsträger"
@@ -198,7 +199,7 @@ namespace :patch do
       
       log.info "         |                   |               |------- Alle Kneipwarte"
       if Group.alle_kneipwarte.descendant_users.count == 0
-        Aktivitas.all.each { |aktivitas| Group.alle_kneipwarte << aktivitas.descendant_groups.find_by_flag(:kneipwart) }
+        Aktivitas.all.each { |aktivitas| Group.alle_kneipwarte << aktivitas.descendant_groups.find_by_flag(:kneipwart) if aktivitas.descendant_groups.find_by_flag(:kneipwart) }
       end
       
       log.info "         |                   |               |------- + Bundeschargierte"

@@ -11,7 +11,7 @@ module ActiveRecordReadOnlyExtension
       # Read only mode only applies to the web server, not the console or rake tasks,
       # since they are used for maintenance during read-only mode.
       #
-      @@read_only_mode = (read_only_trigger? and not console? and not rake_task?) if not defined?(@@read_only_mode) or @@read_only_mode.nil?
+      @@read_only_mode = (read_only_trigger? and not console? and not rake_task?) if not defined?(@@read_only_mode)
       @@read_only_mode
     end
     def read_only_trigger?

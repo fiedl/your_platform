@@ -178,10 +178,10 @@ class Group
     self.find_or_create_special_group :alle_wingolfiten
   end
   def self.alle_aktiven
-    alle_wingolfiten.find_or_create_special_group :alle_aktiven
+    self.find_or_create_special_group :alle_aktiven
   end
   def self.alle_philister
-    alle_wingolfiten.find_or_create_special_group :alle_philister
+    self.find_or_create_special_group :alle_philister
   end
   def self.alle_amtstraeger
     alle_wingolfiten.find_or_create_special_group :alle_amtstraeger
