@@ -127,8 +127,10 @@ module Structureable
     #
     def move_to(parent_node)
       raise 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
-      self.links_as_child.destroy_all
-      parent_node << self
+      if parent_node != self.parents.first
+        self.links_as_child.destroy_all
+        parent_node << self
+      end
     end
     
     # Adding child objects.

@@ -60,6 +60,17 @@ describe Structureable do
             @node.reload.parents.should_not include @parent
           end
         end
+        describe "if the new parent is the old parent" do
+          before do
+            @parent << @node
+            @new_parent = @parent
+          end
+          it "should not change the existing relation" do
+            @links_before = @node.links_as_child
+            subject
+            @node.reload.links_as_child.should == @links_before
+          end
+        end
       
       end
     end
