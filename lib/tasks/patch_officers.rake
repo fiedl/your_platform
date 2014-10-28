@@ -1,6 +1,7 @@
 # Diese Task-Sammlung dient der Anpassung von Amtsträgerstrukturen
 # an die aktuellen Anforderungen.
 #
+
 namespace :patch do
   task :officers => [
     'officers:flags_ergaenzen',
@@ -14,6 +15,8 @@ namespace :patch do
   namespace :officers do
     task :requirements do
       require 'importers/models/log'
+      Aktivitas
+      Philisterschaft
     end
     task :print_info => [:requirements] do
       log.head "Patch Officers"
