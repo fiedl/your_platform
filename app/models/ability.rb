@@ -15,6 +15,9 @@ class Ability
     preview_as = options[:preview_as] 
     preview_as = nil if preview_as.blank?
     
+    # Read-Only Mode
+    read_only_mode = options[:read_only_mode]
+    
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -56,7 +59,12 @@ class Ability
       # Only global administrators can change anything.
       #
       if user.in? Role.global_admins and not (preview_as && (preview_as != 'global_admin'))
-        can :manage, :all
+
+        if read_only_mode
+          can :read, :all
+        else
+          can :manage, :all
+        end
 
       else
         
@@ -86,12 +94,14 @@ class Ability
         can :read, User, id: User.find_all_non_hidden.map(&:id)
         can :read, user
         
-        # Regular users can update their own profile.
-        # They can change their first but not their surnames.
-        #
-        can [:update, :change_first_name, :change_alias], User, :id => user.id
-        
-        can :update, UserAccount, :user_id => user.id
+        if not read_only_mode
+          # Regular users can update their own profile.
+          # They can change their first but not their surnames.
+          #
+          can [:update, :change_first_name, :change_alias], User, :id => user.id
+          
+          can :update, UserAccount, :user_id => user.id
+        end
         
         # Regular users can read profile fields of profiles they are allowed to see.
         # Exceptions below.
@@ -113,24 +123,28 @@ class Ability
             parent_field.profileable.kind_of?(User) && (parent_field.profileable.id != user.id)
         end
         
-        # Regular users can create, update or destroy own profile fields.
-        #
-        can :crud, ProfileField do |field|
-          (field.profileable == user) || field.profileable.nil?
-        end
-
-        # Regular users can update their own validity ranges of memberships
-        # in order to update their corporate vita.
-        #
-        can :update, UserGroupMembership do |user_group_membership|
-          user_group_membership.user == user
+        if not read_only_mode
+          # Regular users can create, update or destroy own profile fields.
+          #
+          can :crud, ProfileField do |field|
+            (field.profileable == user) || field.profileable.nil?
+          end
+          
+          # Regular users can update their own validity ranges of memberships
+          # in order to update their corporate vita.
+          #
+          can :update, UserGroupMembership do |user_group_membership|
+            user_group_membership.user == user
+          end
         end
         
         # All users can join events.
         #
         can :read, Event
-        can :join, Event
-        can :leave, Event
+        if not read_only_mode
+          can :join, Event
+          can :leave, Event
+        end
         can :index_events, User do |other_user|
           other_user == user
         end
@@ -164,7 +178,7 @@ class Ability
         # Local admins can manage their groups, this groups' subgroups 
         # and all users within their groups. They can also execute workflows.
         #
-        if user.admin_of_anything? and not (preview_as && (preview_as != 'admin'))
+        if user.admin_of_anything? and not (preview_as && (preview_as != 'admin')) and not read_only_mode
           can :manage, Group do |group|
             group.admins_of_self_and_ancestors.include? user
           end
@@ -205,41 +219,43 @@ class Ability
             user.in? group.officers_of_self_and_ancestor_groups
           end
           
-          # Local officers can create events in their groups.
-          #
-          can :create_event, Group do |group|
-            user.in? group.officers_of_self_and_ancestor_groups
-          end
-          can :update, Event do |event|
-            event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
-          end
-          can :update, Group do |group|
-            group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
-          end
-          
-          # Create, update and destroy Pages
-          #
-          can :create_page_for, [Group, Page] do |parent|
-            parent.officers_of_self_and_ancestors.include?(user)
-          end
-          can :update, Page do |page|
-            (page.author == user) && (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
-          end
-          can :destroy, Page do |page|
-            can? :update, page
-          end
-          
-          # Create, update and destroy Attachments
-          #
-          can :create_attachment_for, Page do |page|
-            (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
-          end
-          can :update, Attachment do |attachment|
-            (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
-            ((attachment.author == user) || (attachment.parent.author == user))
-          end
-          can :destroy, Attachment do |attachment|
-            can? :update, attachment
+          if not read_only_mode
+            # Local officers can create events in their groups.
+            #
+            can :create_event, Group do |group|
+              user.in? group.officers_of_self_and_ancestor_groups
+            end
+            can :update, Event do |event|
+              event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
+            end
+            can :update, Group do |group|
+              group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+            end
+            
+            # Create, update and destroy Pages
+            #
+            can :create_page_for, [Group, Page] do |parent|
+              parent.officers_of_self_and_ancestors.include?(user)
+            end
+            can :update, Page do |page|
+              (page.author == user) && (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+            end
+            can :destroy, Page do |page|
+              can? :update, page
+            end
+            
+            # Create, update and destroy Attachments
+            #
+            can :create_attachment_for, Page do |page|
+              (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+            end
+            can :update, Attachment do |attachment|
+              (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
+              ((attachment.author == user) || (attachment.parent.author == user))
+            end
+            can :destroy, Attachment do |attachment|
+              can? :update, attachment
+            end
           end
         end
         

@@ -73,6 +73,7 @@
                     = render partial: 'last_seen_activities/index'
                   .content_twoCols_right
                     = flash_area
+                    = render partial: 'shared/read_only_mode_notice' if read_only_mode?
                     = replace_unicode_special_chars_by_html_escape_strings( |
                         convert_to_content_box { yield }                    |
                       )                                                     |

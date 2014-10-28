@@ -108,9 +108,11 @@ class ApplicationController < ActionController::Base
   #   bundle exec foreman start fnordmetric
   #
   def log_generic_metric_event
-    type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
-    metric_logger.log_event( { id: params[:id] }, type: type)
-    metric_logger.log_event( { request_type: type }, type: :generic_request)
+    unless read_only_mode?
+      type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
+      metric_logger.log_event( { id: params[:id] }, type: type)
+      metric_logger.log_event( { request_type: type }, type: :generic_request)
+    end
   end
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
@@ -119,7 +121,7 @@ class ApplicationController < ActionController::Base
   # Generic Activity Logger
   #
   def log_activity
-    if not action_name.in?(["index", "show", "download", "autocomplete_title"]) and not params['controller'].in?(['sessions', 'devise/sessions'])
+    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title"]) and not params['controller'].in?(['sessions', 'devise/sessions'])
       begin
         type = self.class.name.gsub("Controller", "").singularize
         id = params[:id]
@@ -148,7 +150,7 @@ class ApplicationController < ActionController::Base
   
   
   def accept_terms_of_use
-    if current_user && (not controller_name.in?(['terms_of_use', 'sessions', 'passwords', 'user_accounts', 'attachments', 'errors'])) && (not TermsOfUseController.accepted?(current_user))
+    if current_user && (not read_only_mode?) && (not controller_name.in?(['terms_of_use', 'sessions', 'passwords', 'user_accounts', 'attachments', 'errors'])) && (not TermsOfUseController.accepted?(current_user))
       if request.url.include?('redirect_after')
         redirect_after = root_path
       else
@@ -171,6 +173,9 @@ class ApplicationController < ActionController::Base
   def current_ability(reload = false)
     options = {}
     @current_ability = nil if reload
+    
+    # Read-only mode
+    options[:read_only_mode] = true if read_only_mode?
     
     # Preview role mechanism
     #
@@ -204,6 +209,13 @@ class ApplicationController < ActionController::Base
   def save_preview_as_cookie(preview_as)
     cookies[:preview_as] = preview_as
   end
+  
+  # Read-only mode for maintenance purposes.
+  #
+  def read_only_mode?
+    @read_only_mode ||= ActiveRecord::Base.read_only_mode?
+  end
+  helper_method :read_only_mode?
   
 
 end

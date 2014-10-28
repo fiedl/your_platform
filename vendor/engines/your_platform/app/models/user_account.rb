@@ -53,6 +53,10 @@ class UserAccount < ActiveRecord::Base
 
   delegate :email, :to => :user, :allow_nil => true
 
+  def readonly?
+    false # Otherwise, the user is not able to login.
+  end
+  
   # HACK: This method seems to be required by the PasswordController and is missing, 
   # since we have a virtual email field. 
   # TODO: If we ever change the Password authentication 
