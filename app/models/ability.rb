@@ -62,6 +62,7 @@ class Ability
 
         if read_only_mode
           can :read, :all
+          can :index, :all
         else
           can :manage, :all
         end
