@@ -632,6 +632,26 @@ describe Ability do
     end
   end
   
+  # 
+  # Global Officers
+  #
+  context "when the user is a global officer" do
+    before do
+      @group = create :group
+      @global_officer_group = @group.officers_parent.child_groups.create name: 'Global Science Officer'
+      @global_officer_group.add_flag :global_officer
+      @global_officer_group << user
+      
+      @any_group = create :group
+      @any_page = create :page
+      @any_user = create :user
+    end
+    he { should be_able_to :export_member_list, @any_group }
+    he { should be_able_to :create_post_for, @any_group }
+    he { should_not be_able_to :update, @any_group }
+    he { should_not be_able_to :update, @any_page }
+    he { should_not be_able_to :update, @any_user }
+  end
 
   # 
   # Global Admins

@@ -219,11 +219,14 @@ class Ability
             user.in? group.officers_of_self_and_ancestor_groups
           end
 
-          can :create_post_for, Group do |group|
-            user.in? group.officers_of_self_and_ancestor_groups
-          end
-          
           if not read_only_mode
+            
+            # Group emails
+            #
+            can :create_post_for, Group do |group|
+              user.in? group.officers_of_self_and_ancestor_groups
+            end
+
             # Local officers can create events in their groups.
             #
             can :create_event, Group do |group|
@@ -259,6 +262,22 @@ class Ability
             end
             can :destroy, Attachment do |attachment|
               can? :update, attachment
+            end
+          end
+        end
+        
+        # GLOBAL_OFFICERS
+        # Bundesämter sind im Moment mit dem Flag :global_officer versehen.
+        # Bundesamtsträger dürfen insbesondere:
+        #
+        #   - Beliebige Mitglieder-Listen exportieren
+        #   - Nachrichten an beliebige Gruppen schicken
+        #
+        if preview_as.blank? or preview_as.in? ['officer', 'admin', 'global_officer']
+          if Role.of(user).global_officer?
+            can :export_member_list, Group
+            if not read_only_mode
+              can :create_post_for, Group
             end
           end
         end

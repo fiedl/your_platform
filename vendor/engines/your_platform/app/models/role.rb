@@ -93,6 +93,7 @@ class Role
     return 'global_admin' if global_admin?
     return 'admin' if admin?
     return 'officer' if officer?
+    return 'global_officer' if global_officer?
     return 'full_member' if full_member?
     return 'member' if member?
     return 'guest' if guest?
@@ -100,20 +101,27 @@ class Role
     return ''
   end
   
+  #
+  # Global Roles
+  #
+  def global_officer?
+    global_admin? || (user.ancestor_groups.find_all_by_flag(:global_officer).count > 0)
+  end
   
   # The system allows to simulate a certain role when viewing an object.
   # This determines which simulations are allowed.
   # 
   def allowed_preview_roles
-    return ['global_admin', 'admin', 'officer', 'user'] if global_admin?
+    return ['global_admin', 'admin', 'officer', 'global_officer', 'user'] if global_admin?
     return ['admin', 'officer', 'user'] if admin?
     return ['officer', 'user'] if officer?
+    return ['user'] if global_officer?
     return []
   end
   def allow_preview?
     # The preview makes sense for officers and above.
     # All above roles are also officer roles.
-    officer?
+    officer? || global_officer?
   end
   
   # Finding administrated objects.
