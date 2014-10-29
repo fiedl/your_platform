@@ -41,6 +41,7 @@ module StructureableMixins::Roles
       #   group
       #     |---- officers_parent
       #                |------------ admins_parent
+      #                |------------ some officer group
       #
       if has_flag?(:officers_parent) || has_flag?(:admins_parent)
         parent_groups.each do |group| 
@@ -48,6 +49,7 @@ module StructureableMixins::Roles
           if group.descendants.count > 0
             bulk_delete_cached :admins_of_ancestors, group.descendants
             bulk_delete_cached :admins_of_self_and_ancestors, group.descendants
+            bulk_delete_cached "*officers*", group.descendants
           end
         end
       end

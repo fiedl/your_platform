@@ -44,19 +44,4 @@ module GroupMixins::Officers
     end.any?
   end
   
-  # This deletes the caches related to this group being an officers group.
-  # Since officers do have rights on the group structure under the group
-  # they are officers of, the cache deletion needs to be passed on to those
-  # groups.
-  #
-  def delete_cache_for_officers_group
-    if is_officers_group?
-      dependent_groups = self.ancestor_groups.find_all_by_flag(:officers_parent)
-        .collect { |officers_parent| officers_parent.parent_groups }.flatten
-        .collect { |group| group.descendant_groups }.flatten
-        .select { |descendant_group| not descendant_group.is_officers_group? } # to avoid infinite recursion
-      dependent_groups.each { |group| group.delete_cache }
-    end
-  end
-
 end
