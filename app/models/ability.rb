@@ -224,7 +224,7 @@ class Ability
             # Group emails
             #
             can :create_post_for, Group do |group|
-              user.in? group.officers_of_self_and_ancestor_groups
+              user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
             end
 
             # Local officers can create events in their groups.

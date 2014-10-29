@@ -456,6 +456,18 @@ describe Ability do
     end
   end
   
+  context "when the user is officer of an Aktivitas" do
+    before do
+      @corporation = create :wingolf_corporation
+      @aktivitas = @corporation.aktivitas
+      @officer = @aktivitas.officers_parent.child_groups.create name: 'Senior'
+      @officer << user
+    end
+    he { should be_able_to :create_post_for, @aktivitas }
+    he { should be_able_to :create_post_for, @corporation }
+    he { should be_able_to :create_post_for, @corporation.philisterschaft }
+  end
+  
   #
   # Local page admins
   #

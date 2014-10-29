@@ -1,0 +1,48 @@
+- # show officers box for a structureable
+- #
+- # locales:
+- #    structureable
+- #
+
+- if structureable.find_officers_groups.any?
+  %h1.officers.section= t :officers
+  %span#officers
+    .show_only_in_edit_mode
+      = render partial: 'shared/authorization_info', locals: {subject: 'officers', navable: structureable}
+  
+    %dl
+      - sorted_officers_groups_for(structureable).each do |officer_group|
+
+        - # do not display the parent group itself (bug circumvention)
+        - # TODO: fix the cause of the bug that officers_parent groups are
+        - # included sometimes in `structureable#find_officers_groups`.
+        - #
+        - if not officer_group.has_flag? :officers_parent
+
+          %dt
+            - if can? :rename, officer_group
+              - if current_user.developer?
+                %i.icon-wrench.icon-small.copy-to-clipboard{title: "Group.find(#{officer_group.id})"}
+              = best_in_place officer_group, :name
+            - else
+              = officer_group.name
+            - if can? :update, structureable
+              %span.group_flags.show_only_in_edit_mode
+                - for flag in officer_group.flags
+                  %span.label.label-info
+                    %i.icon-tag
+                    =t flag
+          %dd
+            %ul.officers
+              %li.direct_officers
+                - if can? :update_memberships, officer_group
+                  = multiple_users_best_in_place officer_group, :direct_members_titles_string
+                - else
+                  = user_links officer_group.members
+
+              - # Some officer group have other groups linked as children
+              - # in order to give other groups certain rights on a regular
+              - # basis. List those groups:
+              - #
+              - for subgroup in officer_group.child_groups
+                %li= link_to subgroup.name, subgroup
