@@ -3,17 +3,19 @@
 #
 
 namespace :patch do
-  task :officers => [
+  task :officers => [                                                                                                  
     'officers:flags_ergaenzen',
     'officers:aemter_umbenennen',
     'officers:aemter_anlegen',
     'officers:chargen_in_chargengruppe_schieben',
     'officers:admins_anlegen',
-    'officers:vereinigungsgruppen'
+    'officers:vereinigungsgruppen',
+    'officers:vereinigungsgruppen_benennen',
+    'officers:recalculate_memberships'
   ]
   
   namespace :officers do
-    task :requirements do
+    task :requirements => [:environment] do
       require 'importers/models/log'
       Aktivitas
       Philisterschaft
@@ -264,19 +266,19 @@ namespace :patch do
       log.info "         |               |------------- Alle BV-Leiter"
       Group.alle_bv_leiter
       if Group.alle_bv_leiter.descendant_users.count == 0
-        Bv.all.each { |bv| Group.alle_bv_leiter << bv.descendant_groups.find_by_flag(:bv_leiter) }
+        Bv.all.each { |bv| Group.alle_bv_leiter << bv.descendant_groups.find_by_flag(:bv_leiter) if bv.descendant_groups.find_by_flag(:bv_leiter)}
       end
       
       log.info "         |               |------------- Alle BV-Schriftwarte"
       Group.alle_bv_schriftwarte
       if Group.alle_bv_schriftwarte.descendant_users.count == 0
-        Bv.all.each { |bv| Group.alle_bv_schriftwarte << bv.descendant_groups.find_by_flag(:schriftwart) }
+        Bv.all.each { |bv| Group.alle_bv_schriftwarte << bv.descendant_groups.find_by_flag(:schriftwart) if bv.descendant_groups.find_by_flag(:schriftwart)}
       end
       
       log.info "         |               |------------- Alle BV-Kassenwarte"
       Group.alle_bv_kassenwarte
       if Group.alle_bv_kassenwarte.descendant_users.count == 0
-        Bv.all.each { |bv| Group.alle_bv_kassenwarte << bv.descendant_groups.find_by_flag(:kassenwart) }
+        Bv.all.each { |bv| Group.alle_bv_kassenwarte << bv.descendant_groups.find_by_flag(:kassenwart) if bv.descendant_groups.find_by_flag(:kassenwart) }
       end
       
       log.info "         |"
@@ -313,6 +315,54 @@ namespace :patch do
       log.info "    "
     end
     
+    task :recalculate_memberships => [:requirements, :print_info] do
+      log.section "Gültigkeitszeitraum für indirekte Mitgliedschaften berechnen"
+      alle_vereinigungsgruppen.each do |group|
+        print "#{group.flags.first} ... "
+        group.calculate_validity_range_of_indirect_memberships
+        print "ok.\n"
+      end
+    end
+    
+    task :vereinigungsgruppen_benennen => [:requirements, :print_info] do
+      log.section "Vereinigungsgruppen benennen"
+      alle_vereinigungsgruppen.each do |group|
+        if group.read_attribute(:name) == group.flags.first.to_s
+          group.name = I18n.t(group.flags.first, default: '')
+          log.info ":#{group.flags.first} -> #{group.name}"
+          group.save
+        end
+      end
+    end
+  end
+  
+  def alle_vereinigungsgruppen
+    [
+      Group.alle_wingolfiten,
+      Group.alle_wingolfiten,
+      Group.alle_aktiven,
+      Group.alle_philister,
+      Group.alle_amtstraeger,
+      Group.alle_wv_amtstraeger,
+      Group.alle_phv_amtstraeger,
+      Group.alle_bv_amtstraeger,
+      Group.alle_vorsitzenden,
+      Group.alle_schriftwarte,
+      Group.alle_kassenwarte,
+      Group.alle_chargierten,
+      Group.alle_seniores,
+      Group.alle_fuxmajores,
+      Group.alle_kneipwarte,
+      Group.alle_wv_schriftwarte,
+      Group.alle_wv_kassenwarte,
+      Group.alle_fuxen_seniores,
+      Group.alle_phv_vorsitzende,
+      Group.alle_phv_schriftwarte,
+      Group.alle_phv_kassenwarte,
+      Group.alle_bv_leiter,
+      Group.alle_bv_schriftwarte,
+      Group.alle_bv_kassenwarte
+    ]
   end
   
   def log

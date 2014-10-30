@@ -165,6 +165,14 @@ module GroupMixins::Memberships
     end
     
     
+    def calculate_validity_range_of_indirect_memberships
+      self.indirect_memberships.where(valid_from: nil).each do |membership| 
+        membership.recalculate_validity_range_from_direct_memberships
+        membership.save
+      end
+    end
+    
+    
     # Members
     # ==========================================================================================
 
