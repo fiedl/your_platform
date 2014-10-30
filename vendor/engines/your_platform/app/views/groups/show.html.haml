@@ -34,7 +34,7 @@
             = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
 
 - # officers
-= render partial: 'shared/officers_box', locals: {structureable: @group}
+= render partial: 'officers/officers_box', locals: {structureable: @group}
 
 -# large map
 - if @large_map_address_fields.any?

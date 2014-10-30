@@ -29,9 +29,12 @@ Rails.application.routes.draw do
     resources :posts
   end
   get :my_groups, to: 'groups#index_mine'
+  
+  resources :pages
+  
+  post :create_officers_group, to: 'officers#create_officers_group'
 
   resources :user_accounts
-  resources :pages 
   resources :blog_posts
   resources :attachments
   resources :profile_fields  

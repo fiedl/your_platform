@@ -140,6 +140,13 @@ class GroupsController < ApplicationController
     respond_with @new_group
   end
   
+  def destroy
+    @group.destroy
+    respond_to do |format|
+      format.json { head :no_content }
+    end
+  end
+  
   private
   
   # This method returns the request parameters and their values as long as the user

@@ -191,6 +191,10 @@ class Ability
             #
             group.has_flag? :admins_parent
           end
+          cannot :create_officers_group_for, Group
+          cannot :destroy, Group do |group|
+            group.descendant_users.count > 0
+          end
           can :manage, User, id: Role.of(user).administrated_users.map(&:id)
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.

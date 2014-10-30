@@ -17,8 +17,6 @@ ready = ->
           data.context.find('.processing').show()
           data.context.find('.bar').hide()
     done: (e, data) ->
-      console.log "upload done"
-      console.log data.context
       data.context.remove()
 
   $(document).bind('dragover', (e) ->

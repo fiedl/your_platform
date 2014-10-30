@@ -1,0 +1,38 @@
+- # locals:
+- #   - officer_group
+- #   - structureable
+
+%span.officer_entry
+  %dt
+    - if can?(:destroy, officer_group) and can?(:create_officers_group_for, structureable) and officer_group.descendant_users.count == 0
+      %a.btn.btn-danger#destroy_office.show_only_in_edit_mode{href: group_path(officer_group, format: 'json')}
+        %i.icon-trash
+        
+    - if can? :rename, officer_group
+      - if current_user.developer?
+        %i.icon-wrench.icon-small.copy-to-clipboard{title: "Group.find(#{officer_group.id})"}
+      = best_in_place officer_group, :name
+    - else
+      = officer_group.name
+  
+    - if can? :rename, officer_group
+      %span.group_flags.show_only_in_edit_mode
+        - for flag in officer_group.flags
+          %span.label.label-info
+            %i.icon-tag
+            =t flag
+  
+  %dd
+    %ul.officers
+      %li.direct_officers
+        - if can? :update_memberships, officer_group
+          = multiple_users_best_in_place officer_group, :direct_members_titles_string
+        - else
+          = user_links officer_group.members
+  
+      - # Some officer group have other groups linked as children
+      - # in order to give other groups certain rights on a regular
+      - # basis. List those groups:
+      - #
+      - for subgroup in officer_group.child_groups
+        %li= link_to subgroup.name, subgroup
