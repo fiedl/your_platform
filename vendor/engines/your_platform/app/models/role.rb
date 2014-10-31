@@ -70,6 +70,10 @@ class Role
     object.kind_of?(Group) && object.corporation? && user.former_member_of_corporation?(object)
   end
   
+  def deceased_member?
+    object.kind_of?(Group) && object.corporation? && user.id.in?(object.deceased_members.map(&:id)) && (not former_member?)
+  end
+  
   #
   # Roles for structureables
   #
@@ -95,9 +99,10 @@ class Role
     return 'officer' if officer?
     return 'global_officer' if global_officer?
     return 'full_member' if full_member?
-    return 'member' if member?
     return 'guest' if guest?
     return 'former_member' if former_member?
+    return 'deceased_member' if deceased_member?
+    return 'member' if member?
     return ''
   end
   

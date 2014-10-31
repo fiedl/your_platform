@@ -492,9 +492,9 @@ class User < ActiveRecord::Base
   #
   def corporations
     cached do
-      my_corporations = ( self.groups & Group.corporations ) if Group.corporations_parent
-      my_corporations ||= []
-      my_corporations.collect { |group| group.becomes( Corporation ) }
+      my_corporation_ids = (self.group_ids & Group.corporations.map(&:id) ) if Group.corporations_parent
+      my_corporation_ids ||= []
+      Corporation.find my_corporation_ids
     end
   end
 

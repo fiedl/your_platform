@@ -126,6 +126,17 @@ describe User do
       it { should == "H04 E06"}
       it { should_not == "E06 H04"}
     end
+    context "for deceased members (bug fix)" do
+      before do
+        time_travel 5.seconds
+        @user.mark_as_deceased at: 1.day.ago
+        @user.reload
+        @user.delete_cache
+      end
+      specify "Verstorbene behalten ihre Aktivitätszahl" do
+        subject.should == "E06 H08"
+      end
+    end
   end
 
   describe "#cached(:aktivitaetszahl)" do
