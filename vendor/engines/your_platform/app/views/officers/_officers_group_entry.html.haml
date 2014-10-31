@@ -24,15 +24,19 @@
   
   %dd
     %ul.officers
-      %li.direct_officers
-        - if can? :update_memberships, officer_group
-          = multiple_users_best_in_place officer_group, :direct_members_titles_string
-        - else
-          = user_links officer_group.members
+      - if officer_group.child_groups.count == 0
+        %li.direct_officers
+          - if can? :update_memberships, officer_group
+            = multiple_users_best_in_place officer_group, :direct_members_titles_string
+          - else
+            = user_links officer_group.direct_members
+      - elsif officer_group.direct_members.count > 0
+        %li.direct_officers
+          = user_links officer_group.direct_members
   
       - # Some officer group have other groups linked as children
       - # in order to give other groups certain rights on a regular
       - # basis. List those groups:
       - #
-      - for subgroup in officer_group.child_groups
+      - officer_group.child_groups.each do |subgroup|
         %li= link_to subgroup.name, subgroup
