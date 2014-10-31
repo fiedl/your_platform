@@ -175,7 +175,7 @@ class User
   def aktivitaetszahl
     cached do 
       self.corporations
-        .select { |corporation| Role.of(self).in(corporation).to_s.in? ['full_member', 'deceased_member'] }
+        .select { |corporation| role = Role.of(self).in(corporation); role.full_member? or role.deceased_member? }
         .collect { |corporation| {string: aktivitaetszahl_for(corporation), year: aktivitaetszahl_year_for(corporation)} }
         .sort_by { |hash| hash[:year] }  # Sort by the year of joining the corporation.
         .collect { |hash| hash[:string] }.join(" ")

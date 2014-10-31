@@ -137,6 +137,12 @@ describe User do
         subject.should == "E06 H08"
       end
     end
+    context "for global admins" do
+      before { @user.global_admin = true; time_travel 5.seconds }
+      it "should not suppress the aktivitaetszahl (bug fix)" do
+        subject.should == "E06 H08"
+      end
+    end
   end
 
   describe "#cached(:aktivitaetszahl)" do
