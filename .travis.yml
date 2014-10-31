@@ -1,7 +1,10 @@
 rvm:
   - "2.1.2"
 env: 
-  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN={./spec/**/*_spec.rb,./vendor/engines/**/spec/**/*_spec.rb}"
+  - "CI_CATEGORY=wingolfsplattform_features RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./spec/features/*_spec.rb"
+  - "CI_CATEGORY=wingolfsplattform_rest RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./spec/{controllers,mailers,helpers,models}{/**,}/*_spec.rb"
+  - "CI_CATEGORY=your_platform_features RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/features/*_spec.rb"
+  - "CI_CATEGORY=your_platform_rest RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/{controllers,mailers,helpers,models,uploaders}{/**,}/*_spec.rb"
 services:
   - redis-server
 before_install:
@@ -16,7 +19,7 @@ before_script:
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate db:test:prepare
 script:
-  - bundle exec rake
+  - bundle exec rake rspec-rerun:spec
 notifications:
   webhooks:
     urls:
