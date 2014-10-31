@@ -140,11 +140,20 @@ module Structureable
         raise 'Users can only be assigned to groups.' unless self.kind_of? Group
         self.assign_user(object) unless self.child_users.include? object
       elsif object.kind_of? Group
-        self.child_groups << object unless self.child_groups.include? object
+        if self.kind_of?(Group) &&
+          (existing_link = DagLink.where(ancestor_type: 'Group', descendant_type: 'Group',
+            ancestor_id: self.id, descendant_id: object.id,
+            direct: false).first)
+          existing_link.make_direct
+        else
+          self.child_groups << object unless self.child_groups.include? object
+        end
       elsif object.kind_of? Page
         self.child_pages << object unless self.child_pages.include? object
       elsif object.kind_of? Event
         self.child_events << object unless self.child_events.include? object
+      elsif object.nil?
+        raise "Something is wrong! You've tried to add nil."
       else
         raise "Case not handled yet. Please implement this. It's easy :)"
       end
