@@ -103,10 +103,10 @@ module StructureableMixins::Roles
   # officers_parent group.
   #
   def find_officers_groups
-    self.officers_parent.try(:descendant_groups) || []
+    self.find_officers_parent_group.try(:descendant_groups) || []
   end
   def officers_groups
-    find_officers_groups
+    self.officers_parent.descendant_groups
   end
   
   def direct_officers
