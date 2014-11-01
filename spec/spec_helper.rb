@@ -88,7 +88,8 @@ Spork.prefork do
   require 'nokogiri'
   require 'capybara/poltergeist'
   require 'rspec/expectations'
-
+  require 'sidekiq/testing'
+  
 
   # Required Support Files (that help you testing)
   # ----------------------------------------------------------------------------------------
@@ -145,6 +146,12 @@ Spork.prefork do
   # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
   # 
   Capybara.default_wait_time = 15
+  
+  
+  # Background Jobs:
+  # Perform all background jobs immediately.
+  #
+  Sidekiq::Testing.inline!
 
 
   # Rspec Configuration

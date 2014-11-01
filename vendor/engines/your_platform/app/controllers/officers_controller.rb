@@ -13,7 +13,7 @@ class OfficersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to @structureable }
       format.json { render json: @officers_group.attributes.merge({
-        officers_group_entry_html: render_to_string(partial: 'officers/officers_group_entry', formats: [:html], handlers: [:haml], layout: false, locals: {officer_group: @officers_group})
+        officers_group_entry_html: render_to_string(partial: 'officers/officers_group_entry', formats: [:html], handlers: [:haml], layout: false, locals: {officer_group: @officers_group, structureable: @structureable})
       })}
     end
   end

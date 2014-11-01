@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
-  after_save                :delete_cache
+  after_save                { self.delay.delete_cache }
   
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
