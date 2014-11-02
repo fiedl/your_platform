@@ -99,7 +99,8 @@ ready = ->
   #
   user_os = navigator.userAgent.toLowerCase()
   if (user_os.indexOf("android") > -1) or (user_os.indexOf("windows") > -1)
-    $('#ics_abo').attr('href', $('#ics_abo').attr('href').replace('webcal://', 'https://'))
+    if $('#ics_abo').count > 0
+      $('#ics_abo').attr('href', $('#ics_abo').attr('href').replace('webcal://', 'https://'))
     
   if $('.box.first * h1 .best_in_place').text() == "Bezeichnung der Veranstaltung hier eingeben"
     $('.box.first * h1 .best_in_place').trigger('click') # to edit it
