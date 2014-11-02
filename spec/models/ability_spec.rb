@@ -161,6 +161,7 @@ describe Ability do
     he { should_not be_able_to :create_event, @group }
     he { should be_able_to :index_events, user }
     he { should_not be_able_to :index_event, create(:user) }
+    he { should be_able_to :index_events, @group}
   end
   
   describe "if other users are hidden" do

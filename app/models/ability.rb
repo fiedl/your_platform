@@ -146,9 +146,12 @@ class Ability
           can :join, Event
           can :leave, Event
         end
+        can :index, Event
+        can :index_events, Group
         can :index_events, User do |other_user|
           other_user == user
         end
+
         
         # Name auto completion
         #
