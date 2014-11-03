@@ -125,7 +125,9 @@ class GroupsController < ApplicationController
 
   def update
     @group.update_attributes(group_params)
-    respond_with_bip @group.reload
+    respond_to do |format|
+      format.json { respond_with_bip @group.reload }
+    end
   end
 
   def create
@@ -163,6 +165,7 @@ class GroupsController < ApplicationController
     permitted_keys = []
     permitted_keys += [:name, :token, :internal_token, :extensive_name] if can? :rename, @group
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
+    permitted_keys += [:body] if can? :update, @group
     params.require(:group).permit(*permitted_keys)
   end
   

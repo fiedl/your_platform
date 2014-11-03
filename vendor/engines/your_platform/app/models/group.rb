@@ -7,6 +7,7 @@
 class Group < ActiveRecord::Base
   
   attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                    :body, # a description text displayed on the groups pages top
                     :token, # (optional) a short-name, abbreviation of the group's name, in 
                             # a global context; example: 'A'
                     :internal_token, # (optional) an internal abbreviation, i.e. used by the 

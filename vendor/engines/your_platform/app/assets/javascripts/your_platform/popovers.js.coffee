@@ -23,7 +23,16 @@ ready = ->
     return false
   
   $('body').click ->
-    $(".has_popover").popover('hide')
+    $(".has_popover").not('.stay_open').popover('hide')
+    
+  $('body').on 'click', '.close_popover', ->
+    $('.has_popover').popover('hide')
+    
+    
+    event.preventDefault()
+    event.stopPropagation()
+    return false
+
 
 $(document).ready(ready)
 $(document).on('page:load', ready)

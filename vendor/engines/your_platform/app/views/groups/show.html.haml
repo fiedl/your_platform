@@ -1,6 +1,10 @@
 - set_title @group.title
 %h1= best_in_place_if can?(:rename, @group), @group, :name
 %div
+  = best_in_place_if can?(:update, @group), @group, :body, display_with: :markup, type: :textarea
+  .show_only_in_edit_mode
+    = render partial: 'shared/markdown_help'
+    
   - if @child_groups
     = render partial: 'groups/group_list', locals: {groups: @child_groups}
 
