@@ -1,8 +1,13 @@
 var PasswordStrength = {
-    watch: function (password_input_id, password_confirmation_input_id) {
+    watch: function (password_input_id, password_confirmation_input_id, additional_validator) {
+        additional_validator = typeof additional_validator === "function"
+            ? additional_validator
+            : function () { return true; };
+
         var input = $(password_input_id);
-        var confirmation_input = $(password_confirmation_input_id)
+        var confirmation_input = $(password_confirmation_input_id);
         var submit = $(":submit");
+        submit.prop("disabled", true);
 
         var container = $('.password_strength_container');
 
@@ -13,7 +18,7 @@ var PasswordStrength = {
             min_score = 3;
         }
         var user_inputs = container.data('user-inputs');
-        var score_description_map = container.data('score-descriptions')
+        var score_description_map = container.data('score-descriptions');
 
         // create control
         var bg_elm = $('<div class="password_strength_bg" />');
@@ -48,27 +53,32 @@ var PasswordStrength = {
 
         var last_pwd = '';
         var last_confirmation_pwd = '';
+        var last_validated = false;
 
         var animator = function () {
             var pwd = input.val();
             var confirmation_pwd = confirmation_input.val();
-            if (pwd == last_pwd && confirmation_pwd == last_confirmation_pwd) {
+            var validated = additional_validator == null || additional_validator() === true;
+            if (pwd == last_pwd
+                && confirmation_pwd == last_confirmation_pwd
+                && validated == last_validated) {
                 return;
             }
             last_pwd = pwd;
             last_confirmation_pwd = confirmation_pwd;
+            last_validated = validated;
 
             var score, word, tooltip;
             var found_triggerword = false;
 
-            var triggerwords = container.data('triggerwords')
+            var triggerwords = container.data('triggerwords');
             // triggerword[0]: the actual triggerword
             // triggerword[1]: the description response
             // triggerword[2]: the tooltip
 
             if (triggerwords != null) {
                 for (var i = 0; i< triggerwords.length; ++i){
-                    var triggerword = triggerwords[i]
+                    var triggerword = triggerwords[i];
                     if (pwd.match(new RegExp(triggerword[0]))){
                         score = 0;
                         word = triggerword[1];
@@ -85,9 +95,9 @@ var PasswordStrength = {
 
             info_button.prop("title", tooltip);
 
-            container.removeClass()
-            container.addClass('password_strength_container')
-            container.addClass('password_strength_score' + score)
+            container.removeClass();
+            container.addClass('password_strength_container');
+            container.addClass('password_strength_score' + score);
             password_desc.text(pwd.length ? word : "");
 
             if (pwd.length && score < min_score) {
@@ -103,10 +113,11 @@ var PasswordStrength = {
                 confirmation_input.css("background-color", "");
             }
 
-            if (score < min_score || password_mismatch ) {
-                submit.prop("disabled", true);
-            } else {
+
+            if (score >= min_score && !password_mismatch && validated) {
                 submit.removeProp("disabled");
+            } else {
+                submit.prop("disabled", true);
             }
 
             elm.cur_score = score;
