@@ -21,10 +21,6 @@ feature 'Change Password', :js => true do
 
     describe "and clicking #{I18n.t(:change_password)}" do
       background do
-        within('.box.section.access') do
-          click_on I18n.t(:edit)
-        end
-
         click_on I18n.t(:change_password)
       end
 
