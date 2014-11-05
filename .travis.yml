@@ -10,4 +10,5 @@ before_script:
   - mkdir -p public/uploads
   - bundle exec rake db:create db:migrate db:test:prepare
 script:
-  - bundle exec rake
+  - bundle exec rspec spec/features/change_password_spec.rb 
+
