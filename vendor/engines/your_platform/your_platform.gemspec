@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redis-rails'
 
   # Authentification
-  s.add_dependency 'devise', '2.2.3'   # TODO: try to update                           # MIT License
+  s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
