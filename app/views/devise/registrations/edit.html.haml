@@ -27,7 +27,9 @@
   %div= f.submit t(:submit_changed_password)
 
 =# link_to "Back", :back
-= javascript_include_tag 'password_strength'
-:javascript
-  var validate = function () { return $('#user_account_agreement').prop('checked'); };
-  PasswordStrength.watch("#user_account_password", "#user_account_password_confirmation", validate);
+- content_for :head do
+  - capture_haml do
+    = javascript_include_tag 'password_strength', :type => 'text/javascript', :charset => 'utf-8' 
+    :javascript
+      var validate = function () { return $('#user_account_agreement').prop('checked'); };
+      PasswordStrength.watch("#user_account_password", "#user_account_password_confirmation", validate);
