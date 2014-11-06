@@ -37,9 +37,10 @@ git clone git@github.com:fiedl/wingolfsplattform.git
 cd ~/rails/wingolfsplattform
 bundle install
 bundle exec rake db:create db:migrate
-bundle exec rake bootstrap:all
 bundle exec rake db:test:prepare
 bundle exec rake
+bundle exec foreman start
+bundle exec rails server
 ```
 
 
