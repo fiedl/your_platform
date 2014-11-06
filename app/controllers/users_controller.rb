@@ -93,7 +93,7 @@ class UsersController < ApplicationController
     permitted_keys += [:alias] if can? :change_alias, @user
     permitted_keys += [:email, :date_of_birth, :localized_date_of_birth] if can? :update, @user
     permitted_keys += [:last_name, :name] if can? :change_last_name, @user
-    permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation] if can? :manage, @user
+    permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation, :hidden, :wingolfsblaetter_abo] if can? :manage, @user
     params.require(:user).permit(*permitted_keys)
   end
 
