@@ -97,6 +97,7 @@ module ActiveRecordCacheExtension
   end
   
   def delete_cached(method_name)
+    # p "DEBUG DELETE CACHED #{self} #{method_name}"
     Rails.cache.delete [self, method_name]
     Rails.cache.delete_matched "#{self.cache_key}/#{method_name}/*"
   end
@@ -104,10 +105,12 @@ module ActiveRecordCacheExtension
   def bulk_delete_cached(method_name, objects)
     ids = objects.map &:id
     regex = /.*\/(#{ids.join('|')})(-.*|)\/#{method_name}.*/
+    # p "DEBUG BULK DELETE CACHE #{regex}"
     Rails.cache.delete_regex regex
   end
   
   def delete_cache
+    # p "DEBUG DELETE CACHE #{self}"
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
   

@@ -42,8 +42,9 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
     if @user.save
       @user.send_welcome_email if @user.account
-      @user.fill_in_template_profile_information
-      redirect_to @user
+      @user.delay.fill_in_template_profile_information
+      @user.delay.fill_cache
+      redirect_to root_path
     else
       @title = t :create_user
       @user.valid?
