@@ -1,4 +1,4 @@
-%h1= @title
+%h1.aktivmeldung= @title
 %div.form
   %legend
     %p= t :enter_details_for_new_user
@@ -27,6 +27,11 @@
         //default: :male 
 
     = f.actions
+  
+  .progress.alert.alert-info.hidden
+    %strong Aktivmeldung wird eingetragen. Bitte warten.
+    Dies kann bis zu zwei Minuten dauern. 
+    Danach wirst Du zur Startseite der Plattform weitergeleitet.
 
   %div.footnotes
     * 
