@@ -32,6 +32,10 @@ class SetupController < ApplicationController
     
     user.global_admin = true
     
+    if params[:application_name].present?
+      Setting.app_name = params[:application_name]
+    end
+    
     if params[:sub_organizations].present?
       params[:sub_organizations].split("\n").each do |organization_name|
         if organization_name.present?

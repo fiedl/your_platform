@@ -51,6 +51,9 @@ Gem::Specification.new do |s|
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
 
+  # Settings
+  s.add_dependency 'rails-settings-cached', '0.2.4'
+
   # Template Engines
   # haml template language, http://haml.info
   s.add_dependency 'haml'                                                              # MIT License

@@ -49,12 +49,4 @@ module TitleHelper
     end
   end
   
-  def application_name 
-    AppVersion.app_name
-  end
-  
-  def app_name
-    application_name
-  end
-  
 end

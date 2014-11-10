@@ -12,7 +12,7 @@ en:
   find_a_guide_how_to_create_good_passwords_in_this_comic: 'Find a guide how to choose a good password in this short and humorous comic:'
   
   application_name: Application Name
-  enter_application_name_here: 'Enter the name of this application here. If you leave the field blank, the generic name "MyPlatform" is used. You can change the application name later.'
+  enter_application_name_here: 'Enter the name of this application here. If you leave the field blank, the generic name "MyPlatform" is used. You can change the application name later by changing the value of `Setting.app_name` in the rails console.'
   application_name_hint: 'Pro tip: Use a name other than the name of your organization. If your organization is the fire department, do not call the application "Fire Department" but "Fire Department Platform" or "Fire Department Intranet".'
   
   logo: Logo

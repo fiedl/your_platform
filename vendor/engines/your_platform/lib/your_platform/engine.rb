@@ -25,6 +25,9 @@ require 'devise'
 # Authorization
 require 'cancan'
 
+# Settings
+require 'rails-settings-cached'
+
 # Template Engines
 require 'haml'
 require 'redcarpet'

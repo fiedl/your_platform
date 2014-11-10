@@ -12,7 +12,7 @@ de:
   find_a_guide_how_to_create_good_passwords_in_this_comic: 'Hilfestellung, wie Sie sich ein einfach zu merkendes, schwer zu knackendes Passwort ausdenken, entnehmen Sie bitte diesem kurzen, humorvollen (englischsprachigen) Comic:'
   
   application_name: Anwendungsname
-  enter_application_name_here: 'Geben Sie hier den Namen der Anwendung ein. Wenn Sie nichts eingeben, wird der generische Name "MyPlatform" beibehalten. Sie können den Namen später noch ändern.'
+  enter_application_name_here: 'Geben Sie hier den Namen der Anwendung ein. Wenn Sie nichts eingeben, wird der generische Name "MyPlatform" beibehalten. Sie können den Namen später noch ändern, indem Sie in der Rails-Konsole den Wert `Setting.app_name` ändern.'
   application_name_hint: 'Tipp: Wählen Sie den Namen nicht identisch zum Namen Ihrer Organisation. Wenn Ihre Organisation die freiwillige Feuerwehr ist, geben Sie hier nicht "Feuerwehr", sondern "Feuerwehr-Plattform" oder "Feuerwehr-Intranet" ein.'
   
   logo: Logo

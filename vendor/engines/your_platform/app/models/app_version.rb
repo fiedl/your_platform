@@ -43,7 +43,7 @@ class AppVersion
   end
   
   def self.app_name
-    Rails.application.class.parent_name
+    Setting.app_name || Rails.application.class.parent_name
   end
 
 end
