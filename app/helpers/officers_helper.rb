@@ -1,8 +1,7 @@
+# This extends the your_platform officers helper.
+require_dependency YourPlatform::Engine.root.join('app/helpers/officers_helper').to_s
+
 module OfficersHelper
-  
-  def sorted_officers_groups_for(structureable)
-    sort_officer_groups(structureable.find_officers_groups)
-  end
   
   def sort_officer_groups(officer_groups)
     officer_groups.sort_by do |group|

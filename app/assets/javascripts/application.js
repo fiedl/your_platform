@@ -20,8 +20,6 @@
 // TODO    require jquery.ui.datepicker-de
 //= require_boxes
 //= require make-js-more-like-ruby
-//= require dataTables/jquery.dataTables
-//= require dataTables/jquery.dataTables.bootstrap
 // TODO Reintegrate gmap4rails into your_platform. We have to get away form the fork.
 //= require gmaps4rails
 //= require your_platform

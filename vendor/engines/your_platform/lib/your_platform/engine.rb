@@ -19,6 +19,9 @@ require 'acts_as_tree'
 # Caching
 require 'redis-rails'
 
+# Workers
+require 'sidekiq'
+
 # Authentification
 require 'devise'
 
@@ -66,6 +69,7 @@ require 'workflow_kit'
 require 'phony' 
 require 'will_paginate'
 require 'rails-gallery'
+require 'jquery-datatables-rails'
 
 # Metrics
 require 'fnordmetric'

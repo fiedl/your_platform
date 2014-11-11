@@ -110,9 +110,9 @@ module GroupMixins::Memberships
       cached do
         if corporation?
           (
-            memberships_including_members 
-            - becomes(Corporation).former_members_memberships
-            - becomes(Corporation).deceased_members_memberships
+            memberships_including_members - 
+              becomes(Corporation).former_members_memberships -
+              becomes(Corporation).deceased_members_memberships
           )
         else
           memberships_including_members

@@ -41,6 +41,10 @@ Gem::Specification.new do |s|
   
   # Caching
   s.add_dependency 'redis-rails'
+  
+  # Workers
+  s.add_dependency 'foreman'
+  s.add_dependency 'sidekiq'
 
   # Authentification
   s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
@@ -100,6 +104,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
   s.add_dependency 'rails-gallery', '>= 0.3.3'                                         # MIT License
+  s.add_dependency 'jquery-datatables-rails', '1.12.2'
   
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License

@@ -12,6 +12,8 @@
 //= require jquery-fileupload/vendor/tmpl
 //= require gallery/galleria
 //= require gallery/galleria/classic
+//= require dataTables/jquery.dataTables
+//= require dataTables/jquery.dataTables.bootstrap
 // TODO     require app-ng
 // TODO     require_tree ./services-ng
 // TODO     require_tree ./models-ng

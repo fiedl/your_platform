@@ -172,10 +172,6 @@ gem 'rb-inotify', '~> 0.9', group: :production
 # Encoding Detection
 gem 'charlock_holmes'
 
-# Manage Workers
-gem 'foreman', group: [:development, :production]
-gem 'sidekiq'
-
 # CMS: Mercury Editor
 gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
 
