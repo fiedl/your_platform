@@ -36,11 +36,13 @@ module GroupMixins::Corporations
     end
     
     def create_corporations_parent_group
-      create_special_group(:corporations_parent)
+      g = create_special_group(:corporations_parent)
+      g.add_flag :group_of_groups
+      return g
     end
     
     def find_or_create_corporations_parent_group
-      find_or_create_special_group(:corporations_parent)
+      find_corporations_parent_group || create_corporations_parent_group
     end
     
     def corporations_parent

@@ -11,7 +11,6 @@
  *= require_self
  *= require formtastic
  *= require your_platform
- *= require dataTables/src/demo_table_jui
  *= require font-awesome
  *= require_tree ./all_layouts
 */

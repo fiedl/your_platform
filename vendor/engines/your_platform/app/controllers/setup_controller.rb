@@ -40,7 +40,7 @@ class SetupController < ApplicationController
       params[:sub_organizations].split("\n").each do |organization_name|
         if organization_name.present?
           corporation = Group.corporations_parent.child_groups.create name: organization_name 
-          full_members = corporation.child_groups.create
+          full_members = corporation.child_groups.create name: 'full_members'
           full_members.add_flag :full_members
         end
       end

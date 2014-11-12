@@ -21,6 +21,7 @@ en:
   my_groups:                      My Groups
   sub_groups:                     Sub Groups
   members:                        Members
+  full_members:                   Full Members
   groups_of:                      Groups of
 
   details:                        Detail Information
