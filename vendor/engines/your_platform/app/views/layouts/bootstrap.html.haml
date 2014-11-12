@@ -26,7 +26,11 @@
     / For all other devices
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+    
     = gmaps4rails_api_script_tags
+    = javascript_include_tag 'application'
+    = yield :scripts
+    
   %body{:class => controller.controller_name, data: { locale: I18n.locale }}
     - if user_account_signed_in?
       #logged-in-bar.navbar.navbar-fixed-top
@@ -136,6 +140,3 @@
         #version_footer= app_version_footer
       
 
-    / JavaScripts: Placed at the end of the document so the pages load faster
-    = javascript_include_tag 'application'
-    = yield :scripts

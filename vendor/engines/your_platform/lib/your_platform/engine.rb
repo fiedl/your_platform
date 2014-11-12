@@ -71,6 +71,9 @@ require 'will_paginate'
 require 'rails-gallery'
 require 'jquery-datatables-rails'
 
+# JavaScript
+require 'jquery-turbolinks'
+
 # Metrics
 require 'fnordmetric'
 require 'rack-mini-profiler'

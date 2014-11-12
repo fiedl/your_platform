@@ -24,4 +24,3 @@ ready = ->
         document.selection.empty()
 
 $(document).ready(ready)
-$(document).on('page:load', ready)

@@ -106,6 +106,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-gallery', '>= 0.3.3'                                         # MIT License
   s.add_dependency 'jquery-datatables-rails', '1.12.2'
   
+  # JavaScript
+  s.add_dependency 'jquery-turbolinks'
+  
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License

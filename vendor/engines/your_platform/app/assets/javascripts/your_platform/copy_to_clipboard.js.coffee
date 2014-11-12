@@ -4,4 +4,3 @@ ready = ->
     window.prompt "Copy to clipboard: Ctrl+C or ⌘+C, Enter", content
 
 $(document).ready(ready)
-$(document).on('page:load', ready)

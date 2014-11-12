@@ -11,8 +11,9 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
+//
 //= require angular
 //= require angular-resource
 // require jquery.ui.effect.all
@@ -24,3 +25,5 @@
 //= require gmaps4rails
 //= require your_platform
 //= require_tree .
+//
+//= require turbolinks

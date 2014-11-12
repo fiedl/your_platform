@@ -75,6 +75,7 @@ PATH
       jquery-datatables-rails (= 1.12.2)
       jquery-fileupload-rails
       jquery-rails
+      jquery-turbolinks
       jquery-ui-rails (~> 4.2.0)
       less (= 2.2.0)
       less-rails (= 2.2.6)
@@ -287,6 +288,9 @@ GEM
     jquery-rails (3.1.0)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
+    jquery-turbolinks (2.1.0)
+      railties (>= 3.1.0)
+      turbolinks
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.1)

@@ -10,4 +10,4 @@ ready = ->
   #   e.stopPropagation() # does not work
   
 $(document).ready(ready)
-$(document).on('page:load', ready)
+

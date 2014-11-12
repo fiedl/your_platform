@@ -9,4 +9,3 @@ ready = ->
   $(document).on('focus', 'textarea', fix_textareas)
 
 $(document).ready(ready)
-$(document).on('page:load', ready)

@@ -7,4 +7,3 @@ window.UserVoice = {events:window.UserVoice||[],push:function(x){window.UserVoic
 }
 
 $(document).ready(ready);
-$(document).on('page:load', ready);

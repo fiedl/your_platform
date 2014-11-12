@@ -106,4 +106,4 @@ ready = ->
     $('.box.first * h1 .best_in_place').trigger('click') # to edit it
     
 $(document).ready(ready)
-$(document).on('page:load', ready)
+

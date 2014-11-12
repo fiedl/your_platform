@@ -24,4 +24,5 @@ ready = ->
   $(document).on('focus', 'textarea', (event) ->
     $(event.target).select()
   )
-$(document).on('ready page:load', ready)
+
+$(document).ready(ready)

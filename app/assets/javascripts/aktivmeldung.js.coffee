@@ -5,4 +5,3 @@ $(document).on 'click', '.aktivmeldung input[type=submit]', ->
   $('.progress').removeClass('hidden').show()
 
 $(document).ready(ready)
-$(document).on('page:load', ready)

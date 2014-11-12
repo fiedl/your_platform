@@ -32,4 +32,4 @@ ready = ->
   $('.galleria-errors').hide()
   
 $(document).ready(ready)
-$(document).on('page:load', ready)
+
