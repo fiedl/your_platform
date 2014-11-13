@@ -77,6 +77,14 @@ class Group < ActiveRecord::Base
     end
   end
   
+  def name_with_corporation
+    if self.corporation && self.corporation.id != self.id
+      "#{self.name} (#{self.corporation.name})"
+    else
+      self.name
+    end
+  end
+  
   # This sets the format of the Group urls to be
   # 
   #     example.com/groups/24-planeswalkers

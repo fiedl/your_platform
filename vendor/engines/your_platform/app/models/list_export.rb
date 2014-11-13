@@ -53,6 +53,8 @@ class ListExport
       # One row per email, not per user. See `#processed_data`.
     when 'member_development'
       [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
+    when 'join_statistics'
+      [:group] + ((Date.today.year - 10)..(Date.today.year)).to_a.reverse
     else
       # This name_list is the default.
       [:last_name, :first_name, :name_affix, :personal_title, :academic_degree]
@@ -143,6 +145,36 @@ class ListExport
         end
         row
       end
+    when 'join_statistics'
+      #
+      # From a list of groups, this creates one row per group.
+      # The columns count the number of memberships valid from the year given by the column.
+      #
+      #            2014   2013   2012   2011   ...
+      #  group1     24     22     25     28    ...
+      #  group2     31     28     27     32    ...
+      #   ...
+      # 
+      if @data.kind_of? Group
+        @groups = @data.child_groups
+      elsif @data.kind_of? Array
+        @groups = @data
+      end
+      @groups.collect do |group|
+        row = {}
+        columns.each do |column|
+          row[column] = if column.kind_of? Integer
+            year = column 
+            UserGroupMembership.now_and_in_the_past.find_all_by_group(group)
+              .where(valid_from: "#{year}-01-01".to_datetime..("#{year + 1}-01-01".to_datetime - 1.second))
+              .count
+              # TODO: Refactor this when allowing multiple dag links between two nodes.
+          elsif column == :group
+            group.name_with_corporation
+          end
+        end
+        row
+      end
     else
       data
     end
@@ -161,6 +193,10 @@ class ListExport
     when 'phone_list', 'email_list'
       data.sort_by do |user_hash|
         user_hash[:last_name] + user_hash[:first_name]
+      end
+    when 'join_statistics'
+      data.sort_by do |row|
+        row.first
       end
     else
       data
@@ -197,6 +233,10 @@ class ListExport
     header_format = {weight: 'bold'}
     @data = @data.collect { |hash| HashWrapper.new(hash) } if @data.first.kind_of? Hash
     @data.to_xls(columns: columns, headers: headers, header_format: header_format)
+  end
+  
+  def to_a
+    @data
   end
   
   def to_s

@@ -72,7 +72,7 @@ class GroupsController < ApplicationController
       list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
       @file_title = "#{@group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
 
-      if list_preset == 'member_development'
+      if list_preset.in? ['member_development', 'join_statistics']
         @list_export = ListExport.new(@group, list_preset)
       else
         @list_export = ListExport.new(@members, list_preset)
