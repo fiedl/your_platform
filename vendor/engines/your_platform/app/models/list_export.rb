@@ -184,7 +184,7 @@ class ListExport
     case preset.to_s
     when 'birthday_list'
       data.sort_by do |user|
-        user.date_of_birttry(:strftime, "%m-%d") || ''
+        user.date_of_birth.try(:strftime, "%m-%d") || ''
       end
     when 'address_list', 'name_list'
       data.sort_by do |user|
