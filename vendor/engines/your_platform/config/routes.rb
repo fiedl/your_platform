@@ -50,6 +50,8 @@ Rails.application.routes.draw do
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
+  
+  get :statistics, to: 'statistics#index'
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"

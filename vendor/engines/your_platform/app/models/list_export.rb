@@ -184,7 +184,7 @@ class ListExport
     case preset.to_s
     when 'birthday_list'
       data.sort_by do |user|
-        user.date_of_birth.try(:strftime, "%m-%d") || ''
+        user.date_of_birttry(:strftime, "%m-%d") || ''
       end
     when 'address_list', 'name_list'
       data.sort_by do |user|
@@ -235,12 +235,38 @@ class ListExport
     @data.to_xls(columns: columns, headers: headers, header_format: header_format)
   end
   
+  def to_html
+    ("
+      <table class='datatable joining statistics'>
+        <thead>
+          <tr>
+            " + headers.collect { |header| "<th>#{header}</th>" }.join + "
+          </tr>
+        </thead>
+        <tbody>
+          " + data.collect { |row|
+            "<tr>" + row.values.collect { |v| "<td>#{v}</td>" }.join + "</tr>"
+          }.join + "
+        </tbody>
+      </table>
+    ").html_safe
+  end
+  
   def to_a
     @data
   end
   
   def to_s
     to_csv
+  end
+  
+  private
+  
+  def helpers
+    ActionController::Base.helpers
+  end
+  def method_missing(*args, &block)
+    helpers.send(*args, &block)
   end
 end
 

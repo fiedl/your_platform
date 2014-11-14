@@ -99,6 +99,10 @@ ready = ->
       { type: 'de_date', targets: 1}
     ]
   }, common_configuration))
+  $('.datatable.statistics').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "order": [[0, "asc"]]
+  }, common_configuration))
   
   
 $(document).ready(ready)
