@@ -73,7 +73,7 @@ class Group < ActiveRecord::Base
     elsif has_flag? :admins_parent
       name + ": " + parent_groups.first.parent_groups.first.name
     else
-      name
+      super
     end
   end
   
