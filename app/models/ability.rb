@@ -183,12 +183,13 @@ class Ability
         # and all users within their groups. They can also execute workflows.
         #
         if user.admin_of_anything? and not (preview_as && (preview_as != 'admin')) and not read_only_mode
-          can :manage, Group do |group|
+          can [:manage, :change_internal_token], Group do |group|
             group.admins_of_self_and_ancestors.include? user
           end
           cannot :rename, Group do |group|
-            group.flags.present?
+            group.flags.present? || group.corporation?
           end
+          cannot :change_token, Group
           cannot :update_memberships, Group do |group|
             # only global admins are allowed to manage local admins.
             #

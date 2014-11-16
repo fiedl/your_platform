@@ -65,9 +65,12 @@
     %h1= t :further_information
     %div
       %dl
-        %dt= t :token
-        %dd= best_in_place_if can?(:rename, @group), @group, :token
-        %dt= t :internal_token
-        %dd= best_in_place_if can?(:rename, @group), @group, :internal_token
-        %dt= t :extensive_name
-        %dd= best_in_place_if can?(:rename, @group), @group, :extensive_name
+        - if @group.token.present? or can?(:change_token, @group)
+          %dt= t :token
+          %dd= best_in_place_if can?(:change_token, @group), @group, :token
+        - if @group.internal_token.present? or can?(:change_internal_token, @group)
+          %dt= t :internal_token
+          %dd= best_in_place_if can?(:change_internal_token, @group), @group, :internal_token
+        - if @group.extensive_name.present? or can?(:rename, @group)
+          %dt= t :extensive_name
+          %dd= best_in_place_if can?(:rename, @group), @group, :extensive_name

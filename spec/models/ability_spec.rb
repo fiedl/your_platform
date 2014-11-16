@@ -569,6 +569,15 @@ describe Ability do
       @subgroup = @group.child_groups.create
       the_user.should be_able_to :rename, @subgroup
     end
+    describe "the user being corporations admin" do
+      before do
+        @corporation = create :corporation
+        @corporation.admins << user
+      end
+      he { should_not be_able_to :rename, @corporation }
+      he { should_not be_able_to :change_token, @corporation }
+      he { should be_able_to :change_internal_token, @corporation }
+    end
     he "should be able to assign and unassign members of the group and regular subgroups" do
       @subgroup = @group.child_groups.create
       the_user.should be_able_to :update_memberships, @subgroup

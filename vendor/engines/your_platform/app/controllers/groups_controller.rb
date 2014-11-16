@@ -163,7 +163,9 @@ class GroupsController < ApplicationController
   # 
   def group_params
     permitted_keys = []
-    permitted_keys += [:name, :token, :internal_token, :extensive_name] if can? :rename, @group
+    permitted_keys += [:name, :extensive_name] if can? :rename, @group
+    permitted_keys += [:token] if can? :change_token, @group
+    permitted_keys += [:internal_token] if can? :change_internal_token, @group
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
     permitted_keys += [:body] if can? :update, @group
     params.require(:group).permit(*permitted_keys)
