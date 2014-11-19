@@ -360,7 +360,7 @@ describe User do
         end
       end
       describe "when there is no text below the name" do
-        before { @name_surrounding.update_attributes(text_below_name: "") }
+        before { @name_surrounding.update_attributes(text_below_name: nil) }
         it "should leave no blank line" do
           subject.should == 
           "Herrn\n" +
@@ -369,7 +369,7 @@ describe User do
         end
       end
       describe "when there is no text above the name" do
-        before { @name_surrounding.update_attributes(text_above_name: "") }
+        before { @name_surrounding.update_attributes(text_above_name: nil) }
         it "should not begin with a blnak line" do
           subject.should == 
           "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
@@ -378,7 +378,7 @@ describe User do
         end
       end
       describe "when there is neither prefix nor personal title" do
-        before { @name_surrounding.update_attributes(name_prefix: '') }
+        before { @name_surrounding.update_attributes(name_prefix: nil) }
         it "should set no spaces before the name" do
           subject.should == 
           "Herrn\n" +
@@ -388,7 +388,7 @@ describe User do
         end
       end
       describe "when there is no name suffix" do
-        before { @name_surrounding.update_attributes(name_suffix: '') }
+        before { @name_surrounding.update_attributes(name_suffix: nil) }
         it "should set no spaces after the name" do
           subject.should == 
           "Herrn\n" +
@@ -1647,11 +1647,11 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')  # to circumvent validation
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => nil)  # to circumvent validation
     end
     subject { User.with_email }
     specify "prelims" do
-      @user_with_empty_email.email.should == ""
+      @user_with_empty_email.email.should == nil
     end
     it { should be_kind_of ActiveRecord::Relation }
     it { should include @user_with_email }
@@ -1674,7 +1674,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attribute(:value, '')
     end
     subject { User.applicable_for_new_account }
     it { should be_kind_of ActiveRecord::Relation }
