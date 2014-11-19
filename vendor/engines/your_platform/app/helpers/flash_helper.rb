@@ -9,7 +9,7 @@ module FlashHelper
   def flash_area
     flash.collect do |type, message|
       alert_field(type, message)
-    end.join("\n").html_safe
+    end.join("\n").html_safe + announcement_flash
   end
   
   # Show a twitter bootstrap alert field.
@@ -25,6 +25,18 @@ module FlashHelper
     content_tag :div, :class => "alert alert-#{type}" do
       close_button + message
     end.html_safe
+  end
+  
+  def announcement_flash
+    announcement_file = File.join(Rails.root, "tmp", "announcement.md")
+    if File.exist?(announcement_file)
+      file_content = File.read(announcement_file)
+      if file_content.present?
+        content_tag :div, :class => 'alert' do
+          markup(file_content) 
+        end
+      end
+    end
   end
   
   private
