@@ -23,7 +23,7 @@ class Group
     corporation
     
     # Address Labels
-    cached_members_postal_addresses
+    members_postal_addresses
     cached_members_postal_addresses_created_at
 
   end
