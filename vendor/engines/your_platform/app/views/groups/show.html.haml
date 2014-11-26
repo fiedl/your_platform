@@ -1,7 +1,7 @@
 - set_title @group.title
 %h1= best_in_place_if can?(:rename, @group), @group, :name
 %div
-  = best_in_place_if can?(:update, @group), @group, :body, display_with: :markup, type: :textarea
+  = best_in_place_if can?(:update, @group), @group, :body, type: :textarea
   .show_only_in_edit_mode
     = render partial: 'shared/markdown_help'
     

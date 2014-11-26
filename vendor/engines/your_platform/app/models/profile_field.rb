@@ -54,7 +54,11 @@ class ProfileField < ActiveRecord::Base
   # of the value.
   #
   def display_html
-    self.value
+    if self.value.try(:include?, "\n")
+      BestInPlace::ViewHelpers.markup(self.value)
+    else
+      self.value
+    end
   end
 
   # This method returns the key, i.e. the un-translated label, 
