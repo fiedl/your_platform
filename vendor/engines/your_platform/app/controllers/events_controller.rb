@@ -52,8 +52,9 @@ class EventsController < ApplicationController
     # Order events
     @events = @events.order 'events.start_at, events.created_at'
     
-    # Limit the number of events
-    @events = @events.limit(@limit) if @limit && @limit > 0
+    # Limit the number of events.
+    # If a limit exists, make sure to return upcoming events.
+    @events = @events.upcoming.limit(@limit) if @limit && @limit > 0
     
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public
