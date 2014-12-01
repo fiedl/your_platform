@@ -165,6 +165,10 @@ class User
     for membership in self.bv_memberships
       membership.invalidate at: 1.minute.ago if membership != new_membership
     end
+    
+    # Cache zurücksetzen
+    self.delay.delete_cached :bv
+    self.delay.delete_cached :bv_membership
 
     self.groups(true) # reload groups
     return new_membership
