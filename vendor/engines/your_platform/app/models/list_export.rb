@@ -308,7 +308,7 @@ class ListExportUser < User
     address_label.postal_address_with_name_surrounding
   end
   def cached_postal_address_updated_at
-    cached(:postal_address_updated_at)
+    postal_address_updated_at
   end
   def cached_localized_postal_address_updated_at
     I18n.localize cached_postal_address_updated_at if cached_postal_address_updated_at
@@ -336,6 +336,11 @@ class ListExportUser < User
   end
   def address_label_text_after_name
     address_label.name_suffix
+  end
+  
+  def cache_key
+    # Otherwise the cached information of the user won't be used.
+    super.gsub('list_export_users/', 'users/')
   end
 end
 
