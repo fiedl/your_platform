@@ -191,6 +191,9 @@ gem 'fnordmetric'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 
+# Database Optimization: Foreign Keys
+gem 'immigrant'
+
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 

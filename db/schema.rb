@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141110193937) do
+ActiveRecord::Schema.define(:version => 20141209161946) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.integer  "author_user_id"
   end
 
+  add_index "attachments", ["author_user_id"], :name => "attachments_author_user_id_fk"
+
   create_table "bookmarks", :force => true do |t|
     t.integer  "bookmarkable_id"
     t.string   "bookmarkable_type"
@@ -50,6 +52,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  add_index "bookmarks", ["user_id"], :name => "bookmarks_user_id_fk"
 
   create_table "bv_mappings", :force => true do |t|
     t.string   "bv_name"
@@ -70,6 +74,9 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "valid_to"
     t.datetime "valid_from"
   end
+
+  add_index "dag_links", ["ancestor_id", "ancestor_type", "direct"], :name => "dag_ancestor"
+  add_index "dag_links", ["descendant_id", "descendant_type"], :name => "dag_descendant"
 
   create_table "events", :force => true do |t|
     t.string   "name"
@@ -125,6 +132,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "updated_at",          :null => false
   end
 
+  add_index "last_seen_activities", ["user_id"], :name => "last_seen_activities_user_id_fk"
+
   create_table "nav_nodes", :force => true do |t|
     t.string   "url_component"
     t.string   "breadcrumb_item"
@@ -149,6 +158,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.string   "type"
   end
 
+  add_index "pages", ["author_user_id"], :name => "pages_author_user_id_fk"
+
   create_table "posts", :force => true do |t|
     t.string   "subject"
     t.text     "text"
@@ -162,6 +173,9 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.text     "entire_message"
   end
 
+  add_index "posts", ["author_user_id"], :name => "posts_author_user_id_fk"
+  add_index "posts", ["group_id"], :name => "posts_group_id_fk"
+
   create_table "profile_fields", :force => true do |t|
     t.integer  "profileable_id"
     t.string   "label"
@@ -173,6 +187,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.integer  "parent_id"
   end
 
+  add_index "profile_fields", ["parent_id"], :name => "profile_fields_parent_id_fk"
+
   create_table "relationships", :force => true do |t|
     t.string   "name"
     t.integer  "user1_id"
@@ -180,6 +196,9 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "relationships", ["user1_id"], :name => "relationships_user1_id_fk"
+  add_index "relationships", ["user2_id"], :name => "relationships_user2_id_fk"
 
   create_table "settings", :force => true do |t|
     t.string   "var",        :null => false
@@ -217,6 +236,7 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
   end
 
   add_index "user_accounts", ["reset_password_token"], :name => "index_user_accounts_on_reset_password_token", :unique => true
+  add_index "user_accounts", ["user_id"], :name => "user_accounts_user_id_fk"
 
   create_table "users", :force => true do |t|
     t.string   "alias"
@@ -246,6 +266,8 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "updated_at",     :null => false
   end
 
+  add_index "workflow_kit_steps", ["workflow_id"], :name => "workflow_kit_steps_workflow_id_fk"
+
   create_table "workflow_kit_workflows", :force => true do |t|
     t.string   "name"
     t.string   "description"
@@ -258,5 +280,25 @@ ActiveRecord::Schema.define(:version => 20141110193937) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_foreign_key "attachments", "users", name: "attachments_author_user_id_fk", column: "author_user_id"
+
+  add_foreign_key "bookmarks", "users", name: "bookmarks_user_id_fk"
+
+  add_foreign_key "last_seen_activities", "users", name: "last_seen_activities_user_id_fk"
+
+  add_foreign_key "pages", "users", name: "pages_author_user_id_fk", column: "author_user_id"
+
+  add_foreign_key "posts", "groups", name: "posts_group_id_fk"
+  add_foreign_key "posts", "users", name: "posts_author_user_id_fk", column: "author_user_id"
+
+  add_foreign_key "profile_fields", "profile_fields", name: "profile_fields_parent_id_fk", column: "parent_id"
+
+  add_foreign_key "relationships", "users", name: "relationships_user1_id_fk", column: "user1_id"
+  add_foreign_key "relationships", "users", name: "relationships_user2_id_fk", column: "user2_id"
+
+  add_foreign_key "user_accounts", "users", name: "user_accounts_user_id_fk"
+
+  add_foreign_key "workflow_kit_steps", "workflow_kit_workflows", name: "workflow_kit_steps_workflow_id_fk", column: "workflow_id"
 
 end
