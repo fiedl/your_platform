@@ -16,7 +16,7 @@
           = surround "'", "'" do
             = link_to @group.name, @group
           seit folgendem Datum angehören:
-          %input.valid_from{value: I18n.localize(Date.today)}
+          %input.valid_from#valid_from{value: I18n.localize(Date.today)}
     %p.member_count
       Anzahl der Empfänger:
       %span.member_count{data: {query_url: group_url(@group, format: 'json')}}= @group.members.count

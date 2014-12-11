@@ -23,12 +23,28 @@ feature "Group Posts" do
   describe "as officer:", :js do
     background { login(@user) }
   
+    scenario 'Selecting conditions on recipients' do
+      visit group_path(@group)
+      find('#new_post').click
+      page.should have_text 'Anzahl der Empfänger: 2'
+
+      find('label.constrain_validity_range').click
+      # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
+      page.should have_text 'Anzahl der Empfänger: 2'
+      
+      fill_in :valid_from, with: I18n.localize('2015-12-01'.to_date)
+      # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
+      page.should have_text 'Anzahl der Empfänger: 0'
+    end
     scenario 'Sending a test message' do
       visit group_path(@group)
       find('#new_post').click
 
       fill_in :message_text, with: 'This is a test message.'
       find('#test_message').click
+      
+      page.should have_text 'Test-Nachricht wurde versandt.'
+      page.should have_text 'Erneut zum Testen an meine eigene Adresse senden.'
 
       email_text = ''
       Timeout::timeout(15) do
