@@ -200,6 +200,7 @@ class Ability
             group.descendant_users.count > 0
           end
           can :manage, User, id: Role.of(user).administrated_users.map(&:id)
+          can :manage, UserAccount, id: Role.of(user).administrated_users.map(&:account).collect { |account| account.try(:id) }
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
             # And they can execute the mark_as_deceased workflow, which is a global workflow.
