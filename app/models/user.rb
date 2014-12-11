@@ -44,6 +44,8 @@ class User
     hidden
     personal_title
     academic_degree
+    
+    administrated_aktivitates
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
@@ -315,5 +317,11 @@ class User
   end
 
 
+  # Besondere Admin-Hilfs-Methoden
+  
+  def administrated_aktivitates
+    cached { Role.of(self).administrated_aktivitates }
+  end
+  
 end
 
