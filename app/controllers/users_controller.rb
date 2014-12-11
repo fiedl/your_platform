@@ -31,6 +31,8 @@ class UsersController < ApplicationController
   def new
     @title = "Aktivmeldung eintragen" # t(:create_user)
     @user = User.new
+    
+    @corporations_of_administrated_aktivitates = current_user.administrated_aktivitates.collect(&:corporation)
 
     @group = Group.find(params[:group_id]) if params[:group_id]
     @user.add_to_corporation = @group.becomes(Corporation).id if @group && @group.corporation?

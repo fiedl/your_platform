@@ -2,20 +2,20 @@
 %div.form
   %legend
     %p= t :enter_details_for_new_user
-    %p 
-      Nach dem Klick auf 'Benutzer anlegen' werden Sie zur Profilseite des neuen Benutzers weitergeleitet, 
-      wo Sie weitere Informationen eintragen könenn.
-  %p
-    Im Moment können nur 
-    = link_to "globale Administratoren", Group.everyone.admins_parent
-    Aktivmeldungen eintragen. 
+  
+  %p 
+    Dieses Formular bitte
+    %strong nicht für Bandaufnahmen bzw. Bandverleihungen
+    verwenden, da hierdurch sonst doppelte Mitglieder-Einträge entstehen!
+    Wende Dich im Zweifel bitte an:
+    %a{href: "mailto:support@wingolf.org"} support@wingolf.org
 
   = semantic_form_for @user, action: :create do |f|
     = f.inputs do
       = f.input :first_name
       = f.input :last_name
       = f.input :email
-      = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: Corporation.all
+      = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: @corporations_of_administrated_aktivitates
       = f.input :create_account, as: :boolean
       //- if @group
       //  - sub_groups = @group.descendant_groups

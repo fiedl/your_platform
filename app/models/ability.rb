@@ -218,6 +218,9 @@ class Ability
           can :manage, UserGroupMembership do |membership|
             can? :manage, membership.user
           end
+          can :create, :aktivmeldung do
+            user.administrated_aktivitates.count > 0
+          end
         end
         
         # LOCAL OFFICERS
