@@ -59,6 +59,7 @@ class User < ActiveRecord::Base
   
   include UserMixins::Memberships
   include UserMixins::Identification
+  include ProfileableMixins::Address
 
   # General Properties
   # ==========================================================================================
@@ -246,46 +247,17 @@ class User < ActiveRecord::Base
       UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
-
-  # Primary Postal Address
-  #
-  def postal_address_field
-    self.address_profile_fields.select do |address_field|
-      address_field.postal_address? == true
-    end.first
-  end
   
-  # Primary Postal Address or, if not existent, the first address field.
-  #
-  def postal_address_field_or_first_address_field
-    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first
+  def postal_address_with_name_surrounding
+    address_label.to_s
   end
 
-  # This method returns the postal address of the user.
-  # If one address of the user has got a :postal_address flag, this address is used.
-  # Otherwise, the first address of the user is used.
-  #
-  def postal_address
-    cached { postal_address_field_or_first_address_field.try(:value) }
-  end
-  
-  def postal_address_in_one_line
-    postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
-  end
-
-  # Returns when the postal address has been updated last.
-  #
-  def postal_address_updated_at
+  def address_label
     cached do
-      # if the date is earlier, the date is actually the date
-      # of the data migration and should not be shown.
-      #
-      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
-        postal_address_field_or_first_address_field.updated_at.to_date 
-      end
+      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
+        self.name_surrounding_profile_field, self.personal_title)
     end
   end
-
   
   # Phone Profile Fields
   # 
@@ -325,18 +297,6 @@ class User < ActiveRecord::Base
   def text_after_name
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
-
-  def postal_address_with_name_surrounding
-    address_label.to_s
-  end
-
-  def address_label
-    cached do
-      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
-        self.name_surrounding_profile_field, self.personal_title)
-    end
-  end
-
 
   # Associated Objects
   # ==========================================================================================
@@ -997,23 +957,9 @@ class User < ActiveRecord::Base
     self.without_account.alive.with_email
   end
   
-  def self.with_postal_address
-    self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
-  end
-  
-  def self.with_postal_address_ids
-    self.with_postal_address.collect { |user| user.id }
-  end
-  
-  def self.without_postal_address
-    self.where('NOT users.id IN (?)', self.with_postal_address_ids)
-  end
-  
   def self.joins_groups
     self.joins(:groups).where('dag_links.valid_to IS NULL')
   end
-  
-  
   
   def accept_terms(terms_stamp)
     self.accepted_terms = terms_stamp
@@ -1023,8 +969,8 @@ class User < ActiveRecord::Base
   def accepted_terms?(terms_stamp)
     self.accepted_terms == terms_stamp
   end
-
-  # Helpers
+  
+    # Helpers
   # ==========================================================================================
 
   # The string returned by this method represents the user in the rails console.
