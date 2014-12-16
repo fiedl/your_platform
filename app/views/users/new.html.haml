@@ -15,7 +15,23 @@
       = f.input :first_name
       = f.input :last_name
       = f.input :email
+      = f.input :date_of_birth
+      
+      %h2 Verbindung
+      
       = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: @corporations_of_administrated_aktivitates
+      = f.input :aktivmeldungsdatum
+
+      %h2 Kontaktdaten
+      
+      = f.input :semesteranschrift
+      = f.input :heimatanschrift
+      = f.input :telefon
+      = f.input :mobil
+      
+      %h2 Benutzerkonto
+      
+    
       = f.input :create_account, as: :boolean
       //- if @group
       //  - sub_groups = @group.descendant_groups
