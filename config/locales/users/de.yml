@@ -39,7 +39,13 @@ de:
       user:
         first_name:              Vorname
         last_name:               Nachname
-        alias:        		 Alias
-        email:        		 E-Mail
+        date_of_birth:           Geburtsdatum
+        alias:        		       Alias
+        email:        		       E-Mail
+        aktivmeldungsdatum:      Aktivmeldungsdatum
+        study_address:           Semesteranschrift
+        home_address:            Heimatanschrift (Anschrift der Eltern)
+        phone:                   Telefon
+        mobile:                  Mobil
         create_account:          Benutzerkonto anlegen
 

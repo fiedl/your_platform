@@ -1,33 +1,46 @@
 %h1.aktivmeldung= @title
 %div.form
   %legend
-    %p= t :enter_details_for_new_user
-  
-  %p 
-    Dieses Formular bitte
-    %strong nicht für Bandaufnahmen bzw. Bandverleihungen
-    verwenden, da hierdurch sonst doppelte Mitglieder-Einträge entstehen!
-    Wende Dich im Zweifel bitte an:
-    %a{href: "mailto:support@wingolf.org"} support@wingolf.org
+    %p 
+      Bitte fülle das folgende 
+      %strong Formular vollständig 
+      mit den Details des
+      %strong neu anzulegenden Benutzers.
+    %p 
+      Dieses Formular bitte
+      %strong nicht für Bandaufnahmen bzw. Bandverleihungen
+      verwenden, da hierdurch sonst doppelte Mitglieder-Einträge entstehen!
+      Wende Dich im Zweifel bitte an:
+      %a{href: "mailto:support@wingolf.org"} support@wingolf.org
 
   = semantic_form_for @user, action: :create do |f|
+
+    = f.semantic_errors :state
+
     = f.inputs do
-      = f.input :first_name
-      = f.input :last_name
-      = f.input :email
-      = f.input :date_of_birth
+    
+      %h2 Grundlegende Informationen
+      
+      = f.input :first_name, required: true
+      = f.input :last_name, required: true
+      = f.input :date_of_birth, as: 'date_select', required: true, start_year: 1900, end_year: Time.now.year - 15
       
       %h2 Verbindung
       
-      = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: @corporations_of_administrated_aktivitates
-      = f.input :aktivmeldungsdatum
+      - corporations_collection = current_user.administrated_aktivitates.collect(&:corporation)
+      - # Pre-select corporation if only one:
+      - @user.add_to_corporation = corporations_collection.first.id if corporations_collection.count == 1
+      
+      = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection
+      = f.input :aktivmeldungsdatum, as: 'date_select'
 
       %h2 Kontaktdaten
       
-      = f.input :study_address
-      = f.input :home_address
-      = f.input :phone
-      = f.input :mobile
+      = f.input :study_address, as: 'text', input_html: {rows: 4}, required: true
+      = f.input :home_address, as: 'text', input_html: {rows: 4}, required: true
+      = f.input :email, as: 'email', required: true
+      = f.input :phone, as: 'phone'
+      = f.input :mobile, required: true
       
       %h2 Benutzerkonto
       
@@ -42,7 +55,8 @@
         // collection: [[ t( :male ), false ], [ t( :female ), :true ]], 
         //default: :male 
 
-    = f.actions
+    = f.actions do
+      = f.action :submit, label: 'Aktivmeldung bestätigen', button_html: {class: 'btn btn-large btn-primary'}
   
   .progress.alert.alert-info.hidden
     %strong Aktivmeldung wird eingetragen. Bitte warten.
