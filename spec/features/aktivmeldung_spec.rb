@@ -4,16 +4,24 @@ feature "Aktivmeldung" do
   include SessionSteps
 
   before do
-    @corporation = create :wingolf_corporation
+    @my_corporations = [create(:wingolf_corporation), create(:wingolf_corporation)]
+    @corporation = @my_corporations.first
+    @other_corporation = create(:wingolf_corporation)
     @aktivitas_group = @corporation.aktivitas
-    @intranet_root = Page.create(title: "Intranet Root").add_flag(:intranet_root)
+    @intranet_root = Page.intranet_root
     @corporation.reload
-
-    login(:admin)
+    
+    @user = create :user_with_account
+    @aktivitas_group.admins << @user
+    @my_corporations.last.admins << @user
+    time_travel 2.seconds
+    
+    login @user
   end
   
   specify "make sure the prelims are fulfilled" do
-    @corporation.descendant_groups.collect { |group| group.title }.should include "Hospitanten"
+    @corporation.descendant_groups.map(&:title).should include "Hospitanten"
+    @user.administrated_aktivitates.collect(&:corporation).should == @my_corporations
   end
 
   specify "click 'Aktivmeldung' and add a new user" do
@@ -24,45 +32,68 @@ feature "Aktivmeldung" do
     end
 
     page.should have_content "Aktivmeldung eintragen"
+    
+    within '#user_add_to_corporation_input' do
+      page.should have_content @my_corporations.first.title
+      page.should have_content @my_corporations.second.title
+      page.should have_no_content @other_corporation.title
+    end
+    
+    
     fill_in I18n.t(:first_name), with: "Bundesbruder"
     fill_in I18n.t(:last_name), with: "Kanne"
-    fill_in I18n.t(:email), with: "bbr.kanne@example.com"
-    select @corporation.title, from: I18n.t(:register_in)
-    check I18n.t(:create_account)
-
-    page.find("input[name='commit']").click
+    select "13", from: 'user_date_of_birth_3i' # formtastic day
+    select "November", from: 'user_date_of_birth_2i' # formtastic month
+    select "1986", from: 'user_date_of_birth_1i' # formtastic year
     
+    @aktivmeldungsjahr = Time.now.year - 2
+    select @corporation.title, from: I18n.t(:register_in)
+    select "2", from: 'user_aktivmeldungsdatum_3i' # formtastic day
+    select "Dezember", from: 'user_aktivmeldungsdatum_2i' # formtastic month
+    select @aktivmeldungsjahr, from: 'user_aktivmeldungsdatum_1i' # formtastic year
+    
+    fill_in I18n.t('activerecord.attributes.user.study_address'), with: "Friedrichstr. 26, 91054 Erlangen"
+    fill_in I18n.t('activerecord.attributes.user.home_address'), with: "Wunderstraße 12b, 12345 Hoffelsheim"
+    fill_in I18n.t(:email), with: "bbr.kanne@example.com"
+    fill_in I18n.t(:phone), with: "09131 123 45 56"
+    fill_in I18n.t(:mobile), with: "0161 142 82 20 20 2"
+    
+    check I18n.t(:create_account)
+    
+    click_on "Aktivmeldung bestätigen"
+
     # Jetzt ist man wieder auf der Startseite.
     # Dort gibt es den Benutzer in der Box der Aktivmeldungen.
+    
     page.should have_text 'Aktivmeldungen'
     click_on User.last.uncached(:title)
-
+    
     page.should have_content "Bundesbruder Kanne"
     page.should have_content I18n.t(:date_of_birth)
-
+     
     page.should have_content I18n.t(:personal_title)
     page.should have_content I18n.t(:academic_degree)
     page.should have_content I18n.t(:cognomen)
     page.should have_content I18n.t(:klammerung)
-
+    
     page.should have_content I18n.t(:email)
-
+    
     page.should have_content I18n.t(:home_address)
     page.should have_content I18n.t(:work_or_study_address)
     page.should have_content I18n.t(:phone)
     page.should have_content I18n.t(:mobile)
     page.should have_content I18n.t(:fax)
     page.should have_content I18n.t(:homepage)
-
+    
     page.should have_content I18n.t(:study)
-
+    
     page.should have_content I18n.t(:professional_category)
     page.should have_content I18n.t(:occupational_area)
     page.should have_content I18n.t(:employment_status)
     page.should have_content I18n.t(:languages)
-
+    
     page.should have_content I18n.t(:bank_account)
-
+    
     page.should have_content I18n.t(:name_field_wingolfspost)
     page.should have_content I18n.t(:wbl_abo)
 

@@ -32,8 +32,6 @@ class UsersController < ApplicationController
     @title = "Aktivmeldung eintragen" # t(:create_user)
     @user = User.new
     
-    @corporations_of_administrated_aktivitates = current_user.administrated_aktivitates.collect(&:corporation)
-
     @group = Group.find(params[:group_id]) if params[:group_id]
     @user.add_to_corporation = @group.becomes(Corporation).id if @group && @group.corporation?
 
@@ -41,17 +39,25 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params)
-    if @user.save
-      @user.send_welcome_email if @user.account
-      @user.delay.fill_in_template_profile_information
-      @user.delay.fill_cache
-      redirect_to root_path
-    else
-      @title = t :create_user
-      @user.valid?
-      render :action => "new"
-    end
+    @user_params = user_params
+    @basic_user_params = @user_params.select { |key, value| key.in? ['first_name', 'last_name', 'email', 'add_to_corporation', 'create_account'] }
+    @later_params = @user_params.select { |k,v| not k.in? @basic_user_params.keys }
+
+    @user = User.create(@basic_user_params)
+    @user.update_attributes(@later_params)
+    
+    # TODO: 
+    
+    # if @user.save
+    #   @user.send_welcome_email if @user.account
+    #   @user.delay.fill_in_template_profile_information
+    #   @user.delay.fill_cache
+    #   redirect_to root_path
+    # else
+    #   @title = "Aktivmeldung eintragen"
+    #   @user.valid?
+    #   render :action => "new"
+    # end
   end
 
   def update
@@ -92,11 +98,15 @@ class UsersController < ApplicationController
   # 
   def user_params
     permitted_keys = []
-    permitted_keys += [:first_name] if can? :change_first_name, @user
-    permitted_keys += [:alias] if can? :change_alias, @user
-    permitted_keys += [:email, :date_of_birth, :localized_date_of_birth] if can? :update, @user
-    permitted_keys += [:last_name, :name] if can? :change_last_name, @user
-    permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation, :hidden, :wingolfsblaetter_abo] if can? :manage, @user
+    if @user
+      permitted_keys += [:first_name] if can? :change_first_name, @user
+      permitted_keys += [:alias] if can? :change_alias, @user
+      permitted_keys += [:email, :date_of_birth, :localized_date_of_birth] if can? :update, @user
+      permitted_keys += [:last_name, :name] if can? :change_last_name, @user
+      permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation, :hidden, :wingolfsblaetter_abo] if can? :manage, @user
+    else  # user creation
+      permitted_keys += [:first_name, :last_name, :date_of_birth, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :email, :phone, :mobile, :create_account] if can? :create, :aktivmeldung
+    end
     params.require(:user).permit(*permitted_keys)
   end
 
