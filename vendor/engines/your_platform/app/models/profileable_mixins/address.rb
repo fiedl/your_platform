@@ -21,6 +21,10 @@ module ProfileableMixins::Address
   def study_address_labels
     ["Semesteranschrift", "Studienanschrift", "Study Address"]
   end
+
+  def work_or_study_address
+    work_address || study_address
+  end
   def work_or_study_address_labels
     ["Arbeits- oder Studienanschrift", "Work or Study Address"]
   end

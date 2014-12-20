@@ -281,14 +281,14 @@ class User < ActiveRecord::Base
     (landline_profile_fields + phone_profile_fields).first.try(:value)
   end
   def phone=(new_number)
-    (landline_profile_fields.first || phone_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
+    (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
   end
   
   def mobile
     (mobile_phone_profile_fields + phone_profile_fields).first.try(:value)
   end
   def mobile=(new_number)
-    (mobile_phone_profile_fields.first || phone_profile_fields.first || profile_fields.create(label: I18n.t(:mobile), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
+    (mobile_phone_profile_fields.first || profile_fields.create(label: I18n.t(:mobile), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
   end
   
   

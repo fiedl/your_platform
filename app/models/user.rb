@@ -232,10 +232,10 @@ class User
     self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
     self.profile_fields.create(label: :klammerung, type: "ProfileFieldTypes::Klammerung")
 
-    self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address")
-    self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address")
-    self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone")
-    self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone")
+    self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address") unless self.home_address
+    self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address") unless self.work_or_study_address
+    self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone") unless self.phone
+    self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone") unless self.mobile
     self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
     self.profile_fields.create(label: :homepage, type: "ProfileFieldTypes::Homepage")
 

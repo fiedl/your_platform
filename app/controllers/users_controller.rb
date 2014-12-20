@@ -39,25 +39,33 @@ class UsersController < ApplicationController
   end
 
   def create
+    #
+    # Parameter für Aktivmeldung:
+    #   :first_name, :last_name, :date_of_birth, :add_to_corporation, :aktivmeldungsdatum, 
+    #   :study_address, :home_address, :email, :phone, :mobile, :create_account
+    #
+    
     @user_params = user_params
     @basic_user_params = @user_params.select { |key, value| key.in? ['first_name', 'last_name', 'email', 'add_to_corporation', 'create_account'] }
-    @later_params = @user_params.select { |k,v| not k.in? @basic_user_params.keys }
-
-    @user = User.create(@basic_user_params)
-    @user.update_attributes(@later_params)
     
-    # TODO: 
-    
-    # if @user.save
-    #   @user.send_welcome_email if @user.account
-    #   @user.delay.fill_in_template_profile_information
-    #   @user.delay.fill_cache
-    #   redirect_to root_path
-    # else
-    #   @title = "Aktivmeldung eintragen"
-    #   @user.valid?
-    #   render :action => "new"
-    # end
+    if @user = User.create(@basic_user_params)
+      @user.date_of_birth = Date.new @user_params["date_of_birth(1i)"].to_i, @user_params["date_of_birth(2i)"].to_i, @user_params["date_of_birth(3i)"].to_i
+      @user.aktivmeldungsdatum = Date.new @user_params["aktivmeldungsdatum(1i)"].to_i, @user_params["aktivmeldungsdatum(2i)"].to_i, @user_params["aktivmeldungsdatum(3i)"].to_i
+      @user.study_address = @user_params["study_address"]
+      @user.home_address = @user_params["home_address"]
+      @user.phone = @user_params["phone"]
+      @user.mobile = @user_params["mobile"]
+      @user.save
+      
+      @user.send_welcome_email if @user.account
+      @user.delay.fill_in_template_profile_information
+      @user.delay.fill_cache
+      redirect_to root_path
+    else
+      @title = "Aktivmeldung eintragen"
+      @user.valid?
+      render :action => "new"
+    end
   end
 
   def update
