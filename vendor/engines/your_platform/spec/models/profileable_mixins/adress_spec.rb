@@ -7,14 +7,26 @@ describe ProfileableMixins::Address do
   
   describe "#address_fields" do
     subject { user.address_fields }
-    before do
-      @address_field = user.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Study Address', value: ''
-      @phone_field = user.profile_fields.create type: 'ProfileFieldTypes::Phone', label: 'Phone', value: '1234'
+    describe "for a regular user with address and phone field" do
+      before do
+        @address_field = user.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Study Address', value: ''
+        @phone_field = user.profile_fields.create type: 'ProfileFieldTypes::Phone', label: 'Phone', value: '1234'
+      end
+      it { should include @address_field.becomes(ProfileFieldTypes::Address) }
+      it { should_not include @phone_field }
+      it { should_not include @phone_field.becomes(ProfileFieldTypes::Address) }
+      it { should_not include @phone_field.becomes(ProfileFieldTypes::Phone) }
     end
-    it { should include @address_field.becomes(ProfileFieldTypes::Address) }
-    it { should_not include @phone_field }
-    it { should_not include @phone_field.becomes(ProfileFieldTypes::Address) }
-    it { should_not include @phone_field.becomes(ProfileFieldTypes::Phone) }
+
+    describe "when unsaved user without id" do
+      let(:user) { User.new }
+      describe "when address fields without profileable_id exist (bug fix)" do
+        before { ProfileField.create(type: 'ProfileFieldTypes::Address', profileable_type: 'User', label: 'Test', value: 'Test') }
+        specify { user.id.should == nil }
+        it { should == [] }
+        it { should be_kind_of ActiveRecord::Relation }
+      end
+    end
   end
   
   describe "#study_address" do

@@ -4,7 +4,7 @@ module ProfileableMixins::Address
   # Scope for profile fields that are postal addresses.
   #
   def address_fields
-    profile_fields.where(type: 'ProfileFieldTypes::Address')
+    self.id ? profile_fields.where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
   end
   
   # The postal address at the study location.
