@@ -47,8 +47,34 @@ class UsersController < ApplicationController
     
     @user_params = user_params
     @basic_user_params = @user_params.select { |key, value| key.in? ['first_name', 'last_name', 'email', 'add_to_corporation', 'create_account'] }
+
+    @required_parameters_keys = ['first_name', 'last_name', 'date_of_birth(1i)', 'date_of_birth(2i)', 'date_of_birth(3i)', 'study_address', 'home_address', 'email', 'mobile' ]
     
-    if @user = User.create(@basic_user_params)
+    # Lokale Administratoren müssen eine Verbindung angeben, da sie sonst einen Benutzer anlegen,
+    # den sie selbst nicht mehr administrieren können.
+    #
+    @required_parameters_keys += ['add_to_corporation'] if not current_user.global_admin?
+    
+    if (@user_params.select { |k,v| v.present? }.keys & @required_parameters_keys).count != @required_parameters_keys.count
+
+      # Wenn nicht alle erforderlichen Parameter angegeben wurden, muss nocheinmal nachgefragt werden.
+      
+      @title = "Aktivmeldung eintragen"
+      @user = User.new(@basic_user_params)
+      @user.valid?
+      
+      flash[:error] = 'Informationen zur Aktivmeldung wurden nicht vollständig ausgefüllt. Bitte Eingabe wiederholen.'
+      if not current_user.global_admin? and not @basic_user_params['add_to_corporation'].present?
+        flash[:error] += " Es wurde keine Verbindung angegeben. Die Aktivmeldung konnte nicht eingetragen werden."
+      end
+      
+      render :action => "new"
+      
+    else
+      
+      # Wenn alle erforderlichen Parameter angegeben wurden, kann die Aktivmeldung eingetragen werden.
+    
+      @user = User.create!(@basic_user_params)
       @user.date_of_birth = Date.new @user_params["date_of_birth(1i)"].to_i, @user_params["date_of_birth(2i)"].to_i, @user_params["date_of_birth(3i)"].to_i
       @user.aktivmeldungsdatum = Date.new @user_params["aktivmeldungsdatum(1i)"].to_i, @user_params["aktivmeldungsdatum(2i)"].to_i, @user_params["aktivmeldungsdatum(3i)"].to_i
       @user.study_address = @user_params["study_address"]
@@ -61,10 +87,7 @@ class UsersController < ApplicationController
       @user.delay.fill_in_template_profile_information
       @user.delay.fill_cache
       redirect_to root_path
-    else
-      @title = "Aktivmeldung eintragen"
-      @user.valid?
-      render :action => "new"
+      
     end
   end
 
