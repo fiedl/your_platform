@@ -76,7 +76,11 @@ class UsersController < ApplicationController
     
       @user = User.create!(@basic_user_params)
       @user.date_of_birth = Date.new @user_params["date_of_birth(1i)"].to_i, @user_params["date_of_birth(2i)"].to_i, @user_params["date_of_birth(3i)"].to_i
-      @user.aktivmeldungsdatum = Date.new @user_params["aktivmeldungsdatum(1i)"].to_i, @user_params["aktivmeldungsdatum(2i)"].to_i, @user_params["aktivmeldungsdatum(3i)"].to_i
+      
+      if @user_params["aktivmeldungsdatum(1i)"].present? and @user.corporations.count > 0
+        @user.aktivmeldungsdatum = Date.new @user_params["aktivmeldungsdatum(1i)"].to_i, @user_params["aktivmeldungsdatum(2i)"].to_i, @user_params["aktivmeldungsdatum(3i)"].to_i
+      end
+      
       @user.study_address = @user_params["study_address"]
       @user.home_address = @user_params["home_address"]
       @user.phone = @user_params["phone"]
