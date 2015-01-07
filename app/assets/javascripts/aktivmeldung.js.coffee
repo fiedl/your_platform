@@ -49,6 +49,5 @@ ready = ->
     else
       confirm_button.hide()
       $('.progress').removeClass('hidden').show()
-      #$("form.formtastic").submit()
     
 $(document).ready(ready)

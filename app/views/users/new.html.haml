@@ -40,8 +40,8 @@
 
       %h2 Kontaktdaten
       
-      = f.input :study_address, as: 'text', input_html: {rows: 4}, required: true, validate: true, input_html: { class: 'required' }
-      = f.input :home_address, as: 'text', input_html: {rows: 4}, required: true, validate: true, input_html: { class: 'required' }
+      = f.input :study_address, as: 'text', required: true, validate: true, input_html: { rows: 4, class: 'required' }
+      = f.input :home_address, as: 'text', required: true, validate: true, input_html: { rows: 4, class: 'required' }
       = f.input :email, as: 'email', required: true, validate: true, input_html: { class: 'required' }
       = f.input :phone, as: 'phone'
       = f.input :mobile, as: 'phone', required: true, validate: true, input_html: { class: 'required' }
