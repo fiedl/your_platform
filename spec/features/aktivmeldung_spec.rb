@@ -429,7 +429,7 @@ feature "Aktivmeldung" do
     select "Dezember", from: 'user_aktivmeldungsdatum_2i' # formtastic month
     select @aktivmeldungsjahr, from: 'user_aktivmeldungsdatum_1i' # formtastic year
     
-    # NICHT AUSFÜLLEN: 
+    # Leave this field out:
     # fill_in I18n.t('activerecord.attributes.user.study_address'), with: "Some Address"
     
     fill_in I18n.t('activerecord.attributes.user.home_address'), with: "44 Rue de Stalingrad, Grenoble, Frankreich"
@@ -443,20 +443,19 @@ feature "Aktivmeldung" do
 
     # Da ein Pflichtfeld fehlt, ist man nach wie vor auf der Seite "Aktivmeldung eintragen".
     page.should have_text "Aktivmeldung eintragen"
-    page.should have_text "Informationen zur Aktivmeldung wurden nicht vollständig ausgefüllt."
+    page.should have_text "Bitte fülle zunächst das Formular vollständig aus, bevor Du die Aktivmeldung bestätigtst."
     page.should have_no_text "Philistrationen" # Das wäre die Startseite.
     
     # Die vormals eingetragenen Informationen sollen aber beibehalten sein.
-    page.should have_selector("input[value='Bundesbruder']")
-    page.should have_selector("input[value='Kanne']")
-    
-    # TODO: Diese Felder überprüfen, wenn wir ClientSide-Validation haben.
-    # page.should have_text "09131 123 45 56"
-    # page.should have_text "0161 142 82 20 20 2"
+    find_field('Vorname').value.should == "Bundesbruder"
+    find_field('Nachname').value.should == "Kanne"
+    find_field('Telefon').value.should == "09131 123 45 56"
+    find_field('Mobil').value.should == "0161 142 82 20 20 2"
   end
   
   pending "with account"
   
-  # FIXME: Benutzer erscheint danach nicht auf Startseite.
+  pending "Fix: Benutzer erscheint danach nicht auf Startseite."
+  pending "Fix: Template-Felder werden nicht ausgefüllt."
 
 end

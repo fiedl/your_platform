@@ -74,6 +74,9 @@ require 'jquery-datatables-rails'
 # JavaScript
 require 'jquery-turbolinks'
 
+# Client-Side Validations
+require 'judge'
+
 # Metrics
 require 'fnordmetric'
 require 'rack-mini-profiler'

@@ -60,6 +60,7 @@ gem 'nokogiri'								# MIT License
 # see: https://github.com/justinfrench/formtastic,
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
+gem 'judge-formtastic'
 
 # JSON
 gem 'json'								# Ruby License

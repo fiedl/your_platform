@@ -21,9 +21,9 @@
     
       %h2 Grundlegende Informationen
       
-      = f.input :first_name, required: true
-      = f.input :last_name, required: true
-      = f.input :date_of_birth, as: 'date_select', required: true, start_year: 1900, end_year: Time.now.year - 15
+      = f.input :first_name, required: true, validate: true, input_html: { class: 'required' }
+      = f.input :last_name, required: true, validate: true, input_html: { class: 'required' }
+      = f.input :date_of_birth, as: 'date_select', required: true, input_html: { class: 'required' }, validate: true, start_year: 1900, end_year: Time.now.year - 15
       
       %h2 Verbindung
       
@@ -31,16 +31,20 @@
       - # Pre-select corporation if only one:
       - @user.add_to_corporation = corporations_collection.first.id if corporations_collection.count == 1
       
-      = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection
-      = f.input :aktivmeldungsdatum, as: 'date_select'
+      - if current_user.global_admin?
+        = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection
+        = f.input :aktivmeldungsdatum, as: 'date_select'
+      - else
+        = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection, required: true, validate: true, input_html: { class: 'required' }
+        = f.input :aktivmeldungsdatum, as: 'date_select', required: true, validate: true, input_html: { class: 'required' }
 
       %h2 Kontaktdaten
       
-      = f.input :study_address, as: 'text', input_html: {rows: 4}, required: true
-      = f.input :home_address, as: 'text', input_html: {rows: 4}, required: true
-      = f.input :email, as: 'email', required: true
+      = f.input :study_address, as: 'text', input_html: {rows: 4}, required: true, validate: true, input_html: { class: 'required' }
+      = f.input :home_address, as: 'text', input_html: {rows: 4}, required: true, validate: true, input_html: { class: 'required' }
+      = f.input :email, as: 'email', required: true, validate: true, input_html: { class: 'required' }
       = f.input :phone, as: 'phone'
-      = f.input :mobile, as: 'phone', required: true
+      = f.input :mobile, as: 'phone', required: true, validate: true, input_html: { class: 'required' }
       
       %h2 Benutzerkonto
       
@@ -56,6 +60,11 @@
         //default: :male 
 
     = f.actions do
+    
+      #why_fields_are_required.alert.hidden
+        %strong Bitte fülle zunächst das Formular vollständig aus, bevor Du die Aktivmeldung bestätigtst.
+        Wir hatten leider vermehrt Probleme, da Informationen nicht zuverlässig nachgereicht wurden. Daher müssen wir nun leider darauf bestehen, dass die Informationen bereits beim Eintragen der Aktivmeldungen vollständig vorliegen. Viele Dank!
+      
       = f.action :submit, label: 'Aktivmeldung bestätigen', button_html: {class: 'btn btn-large btn-primary'}
   
   .progress.alert.alert-info.hidden

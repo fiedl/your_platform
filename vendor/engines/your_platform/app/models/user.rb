@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of     :first_name, :last_name
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
-  validates_format_of       :email, :with => /\A[a-z0-9_.-]+@[a-z0-9.-]+\.[a-z.]+\z/i, :if => Proc.new { |user| user.email.present? }
+  validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
   has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
      :organizations, :bank_account_information]

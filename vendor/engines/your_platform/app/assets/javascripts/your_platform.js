@@ -20,4 +20,7 @@
 // TODO     require_tree ./filters-ng
 // TODO     require_tree ./directives-ng
 // TODO     require_tree ./controllers-ng
+//= require underscore
+//= require json2
+//= require judge
 //= require_tree ./your_platform

@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   root :to => 'root#index'
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'
@@ -15,6 +15,8 @@ Rails.application.routes.draw do
   
   get 'search/guess', to: "search#lucky_guess"
   get :search, to: "search#index"
+
+  mount Judge::Engine => '/judge'
 
   resources :users do
     get :autocomplete_title, on: :collection
