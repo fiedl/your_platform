@@ -141,8 +141,6 @@ feature "Aktivmeldung" do
     
     fill_in I18n.t(:mobile), with: "0161 142 82 20 20 2"
     
-    check I18n.t(:create_account)
-    
     click_on "Aktivmeldung bestätigen"
 
     # Jetzt ist man wieder auf der Startseite.
@@ -193,6 +191,8 @@ feature "Aktivmeldung" do
     
     page.should have_content I18n.t(:name_field_wingolfspost)
     page.should have_content I18n.t(:wbl_abo)
+    
+    User.where(first_name: 'Bundesbruder', last_name: 'Kanne').last.account.should == nil
   end
   
   scenario "leaving out the corporation as global admin" do
@@ -453,8 +453,48 @@ feature "Aktivmeldung" do
     find_field('Mobil').value.should == "0161 142 82 20 20 2"
   end
   
-  pending "with account"
-  
+  scenario "adding a user with account" do
+    login @local_admin_user
+        
+    visit root_path
+    within('.aktivmeldung_eintragen') do
+      click_on first("Aktivmeldung eintragen")
+    end
+
+    fill_in I18n.t(:first_name), with: "Bundesbruder"
+    fill_in I18n.t(:last_name), with: "Kanne"
+    select "13", from: 'user_date_of_birth_3i' # formtastic day
+    select "November", from: 'user_date_of_birth_2i' # formtastic month
+    select "1986", from: 'user_date_of_birth_1i' # formtastic year
+    
+    @aktivmeldungsjahr = Time.now.year - 2
+    select @corporation.title, from: I18n.t(:register_in)
+    select "2", from: 'user_aktivmeldungsdatum_3i' # formtastic day
+    select "Dezember", from: 'user_aktivmeldungsdatum_2i' # formtastic month
+    select @aktivmeldungsjahr, from: 'user_aktivmeldungsdatum_1i' # formtastic year
+    
+    fill_in I18n.t('activerecord.attributes.user.study_address'), with: "Some Address"
+    fill_in I18n.t('activerecord.attributes.user.home_address'), with: "44 Rue de Stalingrad, Grenoble, Frankreich"
+    fill_in I18n.t(:email), with: "bbr.kanne@example.com"
+    fill_in I18n.t(:phone), with: "09131 123 45 56"
+    fill_in I18n.t(:mobile), with: "0161 142 82 20 20 2"
+    
+    check I18n.t(:create_account)
+    
+    click_on "Aktivmeldung bestätigen"
+    
+    # Wieder auf der Startseite.
+    page.should have_text "Aktivmeldungen"
+    page.should have_text "Philistrationen"
+    
+    # Der Benutzer sollte nun einen Account haben.
+    User.where(first_name: 'Bundesbruder', last_name: 'Kanne').last.account.should be_present
+    
+    # Ihm sollte eine E-Mail zugestellt worden sein.
+    email_text = ActionMailer::Base.deliveries.last.to_s
+    email_text.should include 'Kanne'
+  end
+    
   pending "Fix: Benutzer erscheint danach nicht auf Startseite."
   pending "Fix: Template-Felder werden nicht ausgefüllt."
 
