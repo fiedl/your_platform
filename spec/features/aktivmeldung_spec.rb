@@ -495,7 +495,4 @@ feature "Aktivmeldung" do
     email_text.should include 'Kanne'
   end
     
-  pending "Fix: Benutzer erscheint danach nicht auf Startseite."
-  pending "Fix: Template-Felder werden nicht ausgefüllt."
-
 end
