@@ -1,3 +1,5 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
 
   root :to => 'root#index'
@@ -57,6 +59,14 @@ Rails.application.routes.draw do
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
+
+  # Sidekiq Web UI
+  sidekiq_constraint = lambda do |request|
+    request.env['warden'].authenticate? && request.env['warden'].user.user.global_admin?
+  end
+  constraints sidekiq_constraint do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
     

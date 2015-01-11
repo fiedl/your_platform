@@ -202,6 +202,9 @@ gem 'tilt', '~> 1.4.1'
 # Maintenance Mode
 gem 'turnout'
 
+# Sidekiq Error Web UI
+gem 'sidekiq-failures'
+
 
 # fix workflow kit until the update to rails 4.
 # workflow_kit 0.0.8 only supports rails 4.
