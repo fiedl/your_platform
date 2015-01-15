@@ -69,7 +69,8 @@ module ActiveSupport
       def rescue_from_other_errors(block_without_fetch, &block_with_fetch)
         begin
           yield
-        rescue
+        rescue => e
+          p "CACHE: RESCUE: #{e.message}"
           block_without_fetch.call  # Circumvent the caching at all.
         end
       end

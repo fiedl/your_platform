@@ -73,26 +73,51 @@ class UsersController < ApplicationController
     else
       
       # Wenn alle erforderlichen Parameter angegeben wurden, kann die Aktivmeldung eingetragen werden.
-    
-      @user = User.create!(@basic_user_params)
-      @user.date_of_birth = Date.new @user_params["date_of_birth(1i)"].to_i, @user_params["date_of_birth(2i)"].to_i, @user_params["date_of_birth(3i)"].to_i
-      
-      if @user_params["aktivmeldungsdatum(1i)"].present? and @user.corporations.count > 0
-        @user.aktivmeldungsdatum = Date.new @user_params["aktivmeldungsdatum(1i)"].to_i, @user_params["aktivmeldungsdatum(2i)"].to_i, @user_params["aktivmeldungsdatum(3i)"].to_i
-      end
-      
-      @user.study_address = @user_params["study_address"]
-      @user.home_address = @user_params["home_address"]
-      @user.phone = @user_params["phone"]
-      @user.mobile = @user_params["mobile"]
-      @user.save
-      
-      @user.send_welcome_email if @user.account
-      @user.delay.fill_in_template_profile_information
-      @user.delay.fill_cache
+
+      UsersController.delay.create_async(@basic_user_params, @user_params)
+      flash[:notice] = "Die Aktivmeldung wurde eingetragen. Es dauert ein paar Minuten, bis der neue Wingolfit auf der Plattform angezeigt wird."
       redirect_to root_path
       
     end
+  end
+  
+  # This method asynchronously creates a new user when called like this:
+  # 
+  #    UsersController.delay.create_async(@basic_user_params, @user_params)
+  #
+  def self.create_async(basic_user_params, all_user_params)
+    user = User.create!(basic_user_params)
+    
+    # $enable_tracing = false
+    # $trace_out = open('trace.txt', 'w')
+    # 
+    # set_trace_func proc { |event, file, line, id, binding, classname|
+    #   if $enable_tracing && event == 'call'
+    #     $trace_out.puts "#{Time.zone.now.to_s} #{file}:#{line} #{classname}##{id}"
+    #   end
+    # }
+    # 
+    # $enable_tracing = true
+
+    user.date_of_birth = Date.new all_user_params["date_of_birth(1i)"].to_i, all_user_params["date_of_birth(2i)"].to_i, all_user_params["date_of_birth(3i)"].to_i
+    
+    if all_user_params["aktivmeldungsdatum(1i)"].present? and user.corporations.count > 0
+      user.aktivmeldungsdatum = Date.new all_user_params["aktivmeldungsdatum(1i)"].to_i, all_user_params["aktivmeldungsdatum(2i)"].to_i, all_user_params["aktivmeldungsdatum(3i)"].to_i
+    end
+    
+    user.study_address = all_user_params["study_address"]
+    user.home_address = all_user_params["home_address"]
+    user.phone = all_user_params["phone"]
+    user.mobile = all_user_params["mobile"]
+    user.save
+    
+    user.send_welcome_email if user.account
+    
+    # FIXME: This may raise 'stack level too deep' when run through sidekiq:
+    user.fill_in_template_profile_information
+    
+    user.delay.fill_cache
+    Group.alle_aktiven.delay.fill_cache
   end
 
   def update
