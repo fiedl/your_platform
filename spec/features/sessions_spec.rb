@@ -143,7 +143,7 @@ feature 'Sessions' do
 
   end
 
-  describe 'Change Password Page' do
+  describe 'Change Password Page', js: true do
     subject { page }
 
     describe 'with valid password reset token' do
@@ -158,50 +158,64 @@ feature 'Sessions' do
         click_first_link_in_email
       end
 
-      it {should have_field('user_account_password')}
-      it {should have_field('user_account_password_confirmation')}
-      it {should have_button(I18n.t(:submit_changed_password))}
+      it { should have_field('user_account_password') }
+      it { should have_field('user_account_password_confirmation') }
+      it { should have_field(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services), :checked => false) }
+      it { should have_button(I18n.t(:submit_changed_password), disabled: true) }
 
       describe 'and matching password and confirmation' do
+        before do
+          @password = 'fordprefecthasanawesometowel!'
+          fill_in 'user_account_password', with: @password
+          fill_in 'user_account_password_confirmation', with: @password
+        end
+
+        describe 'and having checked the agreement' do
+          before do
+            check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
+            #todo remove next 2 lines of debug info
+            sleep(2.0)
+            page.save_screenshot("/home/no22/blubb.jpg")
+          end
+
+          it { should have_button(I18n.t('submit_changed_password')) }
+
+          describe '- after clicking submit'do
+            before do
+              click_button I18n.t(:submit_changed_password)
+            end
+
+            it { should have_notice(I18n.t('devise.passwords.updated')) }
+            it { should be_logged_in }
+          end
+        end
+
+        describe 'but not having checked the agreement' do
+          it { should have_button(I18n.t('submit_changed_password'), disabled: true) }
+        end
+      end
+
+      describe 'and matching simple password and confirmation' do
         before do
           @password = 'Password123'
           fill_in 'user_account_password', with: @password
           fill_in 'user_account_password_confirmation', with: @password
-          click_button I18n.t(:submit_changed_password)
+          check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
         end
 
-        it { should be_logged_in }
-        it { should have_notice(I18n.t('devise.passwords.updated')) }
+        it { should have_no_notice(I18n.t('devise.passwords.updated')) }
+        it { should have_button(I18n.t('submit_changed_password'), disabled: true) }
 
-        it 'should change the password' do
-          click_link I18n.t(:logout)
-          fill_in 'user_account_login', with: @user.name
-          fill_in 'user_account_password', with: @password
-          click_button I18n.t(:login)
-
-          page.should have_content I18n.t('devise.sessions.signed_in')
-        end
       end
 
       describe 'but without matching password confirmation' do
         before do
-          @password = 'Password123'
+          @password = 'fordprefecthasanawesometowel!'
           fill_in 'user_account_password', with: @password
           fill_in 'user_account_password_confirmation', with: 'invalid'
-          click_button I18n.t(:submit_changed_password)
         end
 
-        it { should be_not_logged_in }
-        it { should have_validation_errors }
-
-        it 'should not change the password' do
-          visit sign_in_path
-          fill_in 'user_account_login', with: @user.name
-          fill_in 'user_account_password', with: @password
-          click_button I18n.t(:login)
-
-          page.should have_content I18n.t('devise.failure.invalid')
-        end
+        it { should have_button(I18n.t('submit_changed_password'), disabled: true) }
       end
     end
 

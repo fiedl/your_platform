@@ -41,14 +41,20 @@ feature 'Change Password', :js => true do
             fill_in 'user_account_current_password', with: @current_password
           end
 
-          describe 'and having checked the agreement, after clicking submit' do
+          describe 'and having checked the agreement' do
             before do
               check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
-              page.save_screenshot("~/blubb.jpg")
-              sleep(2.0)
-              click_button I18n.t(:submit_changed_password)
             end
-            it { should have_notice(I18n.t('devise.registrations.updated')) }
+
+            it { should have_button(I18n.t('submit_changed_password')) }
+
+            describe '- after clicking submit'do
+              before do
+                click_button I18n.t(:submit_changed_password)
+              end
+              it { should have_notice(I18n.t('devise.registrations.updated')) }
+            end
+
           end
 
           describe 'but not having checked the agreement' do
@@ -75,18 +81,17 @@ feature 'Change Password', :js => true do
           check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
         end
 
-        it { should_not have_notice(I18n.t('devise.registrations.updated')) }
+        it { should have_no_notice(I18n.t('devise.registrations.updated')) }
         it { should have_button(I18n.t('submit_changed_password'), disabled: true) }
 
       end
 
       describe 'but without matching password confirmation' do
         before do
-          @password = 'Password123'
+          @password = 'fordprefecthasanawesometowel!'
           fill_in 'user_account_password', with: @password
           fill_in 'user_account_password_confirmation', with: 'invalid'
           fill_in 'user_account_current_password', with: @current_password
-          #click_button I18n.t(:submit_changed_password)
         end
 
         it { should have_button(I18n.t('submit_changed_password'), disabled: true) }
