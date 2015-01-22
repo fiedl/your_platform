@@ -55,6 +55,10 @@ class Ability
       
       can :read, :terms_of_use
       can :accept, :terms_of_use
+      
+      # For the moment, everybody can view the statistics.
+      #
+      can :index, :statistics
 
       # Only global administrators can change anything.
       #
