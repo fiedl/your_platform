@@ -1,8 +1,7 @@
 %h1.statistics=t :corporation_joining_statistics
 %div
-  = link_to group_path(Group.corporations_parent, list: 'join_statistics', format: 'csv'), class: 'btn right' do
-    -# %img{src: image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16}
+  = link_to statistics_path(format: 'csv'), class: 'btn right' do
     %i.icon-list-alt
     Als CSV-Tabelle herunterladen
 
-  = ListExport.new(Group.corporations_parent, 'join_statistics').to_html
+  = @corporation_joining_statistics_export.to_html
