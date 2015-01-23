@@ -1,4 +1,6 @@
 de:
   statistics: Statistik
   corporation_joining_statistics: Beitrittsstatistik der Korporationen
-  corporation_joining_statistics_explanation: "Tabellarisch ist pro Korporation und Beitrittsjahr aufgeführt, wie viele Bundesbrüder im genannten Jahr in die genannte Korporation auf irgendeine Art eingetreten sind. Dies umfasst sowohl Aktivmeldungen, Bandaufnahmen als Aktiver als auch Bandverleihungen als Philister, ebenso Ehrenphilistrationen. Keine Rolle aber spielt hierbei, ob die entsprechenden Bundesbrüder zwischenzeitlich ausgetreten oder philistriert sind." 
+  corporation_joining_statistics_explanation: "Tabellarisch ist pro Korporation und Beitrittsjahr aufgeführt, wie viele Bundesbrüder im genannten Jahr in die genannte Korporation auf irgendeine Art eingetreten sind. Dies umfasst sowohl Aktivmeldungen, Bandaufnahmen als Aktiver als auch Bandverleihungen als Philister, ebenso Ehrenphilistrationen. Keine Rolle aber spielt hierbei, ob die entsprechenden Bundesbrüder zwischenzeitlich ausgetreten oder philistriert sind."
+  aktivitates_join_and_persist_statistics: Beitritts- und Bestandsstatistik der Aktivitates
+  aktivitates_join_and_persist_statistics_explanation: "Tabellarisch ist pro Aktivitas und Beitrittsjahr aufgeführt, wie viele Bundesbrüder im genannten Jahr in die genannte Aktivitas auf irgendeine Art eingetreten sind (Aktivmeldung, Bandaufnahmen) und derzeit noch immer Mitglied der Aktivitas sind. (Dies ist die Statistik, die immer in den Wingolfsblättern erscheint.)"

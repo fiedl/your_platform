@@ -6,7 +6,7 @@ class StatisticsController < ApplicationController
     authorize! :index, :statistics
     
     @list_presets = [
-      'corporation_joining_statistics'
+      'corporation_joining_statistics', 'aktivitates_join_and_persist_statistics'
     ]
   end
   
@@ -18,7 +18,8 @@ class StatisticsController < ApplicationController
     case @list_preset
     when 'corporation_joining_statistics'
       @list_export = ListExport.new(Group.corporations_parent, 'join_statistics')
-    when ''
+    when 'aktivitates_join_and_persist_statistics'
+      @list_export = ListExport.new(Group.alle_aktiven, 'join_and_persist_statistics')
     else
       raise "statistics preset unknown: #{@list_preset}."
     end
@@ -29,7 +30,7 @@ class StatisticsController < ApplicationController
         authorize! :export, :statistics
         
         bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
-        send_data (bom + @list_export.to_csv), filename: ("#{@list_preset} #{Time.zone.now}".parameterize + ".csv")
+        send_data (bom + @list_export.to_csv), filename: ("#{t @list_preset} #{Time.zone.now}".parameterize + ".csv")
       end
     end
   end

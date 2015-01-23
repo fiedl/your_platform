@@ -53,7 +53,7 @@ class ListExport
       # One row per email, not per user. See `#processed_data`.
     when 'member_development'
       [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
-    when 'join_statistics'
+    when 'join_statistics', 'join_and_persist_statistics'
       [:group] + ((Date.today.year - 10)..(Date.today.year)).to_a.reverse
     else
       # This name_list is the default.
@@ -145,10 +145,13 @@ class ListExport
         end
         row
       end
-    when 'join_statistics'
+    when 'join_statistics', 'join_and_persist_statistics'
       #
       # From a list of groups, this creates one row per group.
       # The columns count the number of memberships valid from the year given by the column.
+      # 
+      # For the 'join_and_persist_statistics', only memberships are counted
+      # that are still valid, i.e. still persist.
       #
       #            2014   2013   2012   2011   ...
       #  group1     24     22     25     28    ...
@@ -165,10 +168,16 @@ class ListExport
         columns.each do |column|
           row[column] = if column.kind_of? Integer
             year = column 
-            UserGroupMembership.now_and_in_the_past.find_all_by_group(group)
-              .where(valid_from: "#{year}-01-01".to_datetime..("#{year + 1}-01-01".to_datetime - 1.second))
-              .count
-              # TODO: Refactor this when allowing multiple dag links between two nodes.
+            memberships = []
+            if preset.to_s == 'join_statistics'
+              memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(group)
+            elsif preset.to_s == 'join_and_persist_statistics'
+              memberships = UserGroupMembership.find_all_by_group(group)
+            else
+              raise 'attention, case not handled, yet!'
+            end
+            memberships = memberships.where(valid_from: "#{year}-01-01".to_datetime..("#{year + 1}-01-01".to_datetime - 1.second))
+            memberships.count # TODO: Refactor this when allowing multiple dag links between two nodes.
           elsif column == :group
             group.name_with_corporation
           end
@@ -194,7 +203,7 @@ class ListExport
       data.sort_by do |user_hash|
         user_hash[:last_name] + user_hash[:first_name]
       end
-    when 'join_statistics'
+    when 'join_statistics', 'join_and_persist_statistics'
       data.sort_by do |row|
         row.first
       end
