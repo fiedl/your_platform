@@ -82,7 +82,7 @@ class AddressLabelsPdf < Prawn::Document
   
   def fallback_fonts
     define_fonts
-    ["dejavu", "times", 'kai', 'action_man']
+    ["dejavu", "times", 'kai']
   end
   
   def define_fonts
@@ -91,7 +91,7 @@ class AddressLabelsPdf < Prawn::Document
     # http://stackoverflow.com/a/11097644/2066546
     
     kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
-    action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
+    # action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
     dejavu = "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
 
     font_families.update("dejavu" => {
@@ -109,12 +109,12 @@ class AddressLabelsPdf < Prawn::Document
       :bold_italic => "Times-BoldItalic"
     })
 
-    font_families.update("action_man" => {
-      :normal      => { :file => action_man_path, :font => "ActionMan" },
-      :italic      => { :file => action_man_path, :font => "ActionMan-Italic" },
-      :bold        => { :file => action_man_path, :font => "ActionMan-Bold" },
-      :bold_italic => { :file => action_man_path, :font => "ActionMan-BoldItalic" }
-    })
+    # font_families.update("action_man" => {
+    #   :normal      => { :file => action_man_path, :font => "ActionMan" },
+    #   :italic      => { :file => action_man_path, :font => "ActionMan-Italic" },
+    #   :bold        => { :file => action_man_path, :font => "ActionMan-Bold" },
+    #   :bold_italic => { :file => action_man_path, :font => "ActionMan-BoldItalic" }
+    # })
 
     font_families.update("kai" => {
       :normal => { :file => kai, :font => "Kai" },
