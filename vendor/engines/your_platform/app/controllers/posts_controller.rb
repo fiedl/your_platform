@@ -42,9 +42,30 @@ class PostsController < ApplicationController
       end
     end
     
-    for recipient in @recipients
-      PostMailer.post_email(@text, [recipient], @subject, current_user).deliver if recipient.email.present?
+    @send_counter = 0
+    @recipients.each do |recipient|
+      if recipient.email.present?
+        begin
+          PostMailer.post_email(@text, [recipient], @subject, current_user).deliver 
+          @send_counter += 1
+        rescue Net::SMTPFatalError => error
+          logger.debug error
+          if error.message.include? "550" # Something is wrong with the recipient's mail.
+            # If the recipient's mails does not work, we'll delete it for the moment.
+            #
+            # TODO: Fancy mechanism that marks the mail as invalid.
+            # But the new mechanism has to ensure that we don't send emails to invalid addresses.
+            # Otherwise, the server could suffer from penalties.
+            #
+            logger.warn "SMTP Error 550 on #{recipient.email}. Removing this email permanently."
+            recipient.profile_fields_by_type("ProfileFieldTypes::Email").first.destroy
+          else
+            raise error
+          end
+        end
+      end
     end
+    logger.info "Sent group email to #{@send_counter} recipients."
     
     if params[:recipient] != 'me'
       Post.create! subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
@@ -52,10 +73,10 @@ class PostsController < ApplicationController
     
     respond_to do |format|
       format.html do
-        flash[:notice] = "Nachricht wurde an #{@recipients.count} Empfänger versandt."
+        flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
         redirect_to group_url(@group)
       end
-      format.json { render json: {recipients_count: @recipients.count} }
+      format.json { render json: {recipients_count: @send_counter} }
     end
     
   end
