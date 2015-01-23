@@ -1,2 +1,4 @@
 de:
+  statistics: Statistik
   corporation_joining_statistics: Beitrittsstatistik der Korporationen
+  corporation_joining_statistics_explanation: "Tabellarisch ist pro Korporation und Beitrittsjahr aufgeführt, wie viele Bundesbrüder im genannten Jahr in die genannte Korporation auf irgendeine Art eingetreten sind. Dies umfasst sowohl Aktivmeldungen, Bandaufnahmen als Aktiver als auch Bandverleihungen als Philister, ebenso Ehrenphilistrationen. Keine Rolle aber spielt hierbei, ob die entsprechenden Bundesbrüder zwischenzeitlich ausgetreten oder philistriert sind." 

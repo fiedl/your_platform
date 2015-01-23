@@ -1,7 +1,14 @@
-%h1.statistics=t :corporation_joining_statistics
+%h1.statistics=t :statistics
 %div
-  = link_to statistics_path(format: 'csv'), class: 'btn right' do
-    %i.icon-list-alt
-    Als CSV-Tabelle herunterladen
 
-  = @corporation_joining_statistics_export.to_html
+- @list_presets.each do |list_preset|
+
+  %h1=t list_preset
+  %div
+    %p.explanation=t "#{list_preset}_explanation"
+    
+    %p.buttons
+      = link_to "#{t list_preset} anzeigen", statistics_path(list: list_preset), class: 'btn btn-primary'
+      = link_to statistics_path(list: list_preset, format: 'csv'), class: 'btn' do
+        %i.icon-list-alt
+        Als CSV-Tabelle herunterladen

@@ -1,17 +1,35 @@
 class StatisticsController < ApplicationController
   
-  skip_authorization_check only: [:index]
+  skip_authorization_check only: [:index, :show]
   
   def index
     authorize! :index, :statistics
     
-    @corporation_joining_statistics_export = ListExport.new(Group.corporations_parent, 'join_statistics')
+    @list_presets = [
+      'corporation_joining_statistics'
+    ]
+  end
+  
+  def show
+    authorize! :read, :statistics
     
+    @list_preset = params[:list] || raise('no list preset given. use parameter "list".')
+    
+    case @list_preset
+    when 'corporation_joining_statistics'
+      @list_export = ListExport.new(Group.corporations_parent, 'join_statistics')
+    when ''
+    else
+      raise "statistics preset unknown: #{@list_preset}."
+    end
+
     respond_to do |format|
       format.html  # render view
       format.csv do
+        authorize! :export, :statistics
+        
         bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
-        send_data (bom + @corporation_joining_statistics_export.to_csv), filename: ("statistics #{Time.zone.now}".parameterize + ".csv")
+        send_data (bom + @list_export.to_csv), filename: ("#{@list_preset} #{Time.zone.now}".parameterize + ".csv")
       end
     end
   end

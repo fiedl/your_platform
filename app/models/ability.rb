@@ -59,6 +59,8 @@ class Ability
       # For the moment, everybody can view the statistics.
       #
       can :index, :statistics
+      can :read, :statistics
+      can :export, :statistics
 
       # Only global administrators can change anything.
       #

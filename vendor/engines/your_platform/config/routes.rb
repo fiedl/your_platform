@@ -51,7 +51,8 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
   
-  get :statistics, to: 'statistics#index'
+  get :statistics, to: 'statistics#index', as: 'statistics'
+  get "/statistics/:list", to: 'statistics#show', as: 'statistics'
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"

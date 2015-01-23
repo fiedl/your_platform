@@ -1,0 +1,11 @@
+%p= link_to "Zurück zur Statistik-Übersicht", statistics_path
+
+%h1.statistics=t @list_preset
+%div
+  %p.explanation=t "#{@list_preset}_explanation"
+  
+  = link_to statistics_path(list: @list_preset, format: 'csv'), class: 'btn right' do
+    %i.icon-list-alt
+    Als CSV-Tabelle herunterladen
+  
+  = @list_export.to_html
