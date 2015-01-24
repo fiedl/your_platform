@@ -60,6 +60,7 @@ gem 'nokogiri'								# MIT License
 # see: https://github.com/justinfrench/formtastic,
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
+gem 'judge-formtastic'
 
 # JSON
 gem 'json'								# Ruby License
@@ -200,6 +201,9 @@ gem 'tilt', '~> 1.4.1'
 
 # Maintenance Mode
 gem 'turnout'
+
+# Sidekiq Error Web UI
+gem 'sidekiq-failures'
 
 
 # fix workflow kit until the update to rails 4.

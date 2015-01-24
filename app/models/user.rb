@@ -44,6 +44,8 @@ class User
     hidden
     personal_title
     academic_degree
+    
+    administrated_aktivitates
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
@@ -213,6 +215,14 @@ class User
   def klammerung
     self.profile_fields.where(label: :klammerung).first.try(:value)
   end
+  
+  def aktivmeldungsdatum
+    first_corporation.try(:membership_of, self).try(:valid_from).try(:to_date)
+  end
+  def aktivmeldungsdatum=(date)
+    (first_corporation || raise('user is not member of a corporation')).membership_of(self).update_attribute(:valid_from, date.to_datetime)
+  end
+  
 
   # Fill-in default profile.
   #
@@ -222,10 +232,10 @@ class User
     self.profile_fields.create(label: :cognomen, type: "ProfileFieldTypes::General")
     self.profile_fields.create(label: :klammerung, type: "ProfileFieldTypes::Klammerung")
 
-    self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address")
-    self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address")
-    self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone")
-    self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone")
+    self.profile_fields.create(label: :home_address, type: "ProfileFieldTypes::Address") unless self.home_address
+    self.profile_fields.create(label: :work_or_study_address, type: "ProfileFieldTypes::Address") unless self.work_or_study_address
+    self.profile_fields.create(label: :phone, type: "ProfileFieldTypes::Phone") unless self.phone
+    self.profile_fields.create(label: :mobile, type: "ProfileFieldTypes::Phone") unless self.mobile
     self.profile_fields.create(label: :fax, type: "ProfileFieldTypes::Phone")
     self.profile_fields.create(label: :homepage, type: "ProfileFieldTypes::Homepage")
 
@@ -315,5 +325,11 @@ class User
   end
 
 
+  # Besondere Admin-Hilfs-Methoden
+  
+  def administrated_aktivitates
+    cached { Role.of(self).administrated_aktivitates }
+  end
+  
 end
 

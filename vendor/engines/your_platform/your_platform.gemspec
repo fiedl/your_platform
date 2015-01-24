@@ -109,6 +109,9 @@ Gem::Specification.new do |s|
   # JavaScript
   s.add_dependency 'jquery-turbolinks'
   
+  # Client-Side Validations
+  s.add_dependency 'judge'
+  
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
