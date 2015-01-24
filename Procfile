@@ -1,1 +1,1 @@
-sidekiq: `which bundle` exec sidekiq
+sidekiq: `which bundle` exec sidekiq --environment $RAILS_ENV --logfile log/sidekiq.log
