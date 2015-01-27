@@ -24,8 +24,9 @@ Rails.application.routes.draw do
     get :autocomplete_title, on: :collection
     put :forgot_password, on: :member
     get :events, to: 'events#index'
-    get :settings, to: 'user_settings#index'
+    get :settings, to: 'user_settings#show'
   end
+  get :settings, to: 'user_settings#index'
 
   resources :groups do
     get :mine, on: :collection, to: 'groups#index_mine'

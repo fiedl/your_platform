@@ -2,3 +2,7 @@ de:
   user_settings: Benutzereinstellungen
   
   this_sets_the_ui_locale: 'Dies legt die Sprache der Benutzerberfläche fest:'
+  visibility: Sichtbarkeit
+  incognito: Incognito
+  incognito_explanation: 'Wenn dieses Feld markiert ist, wirst Du in der Seitenleiste nicht als online angezeigt.'
+  

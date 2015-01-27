@@ -20,10 +20,13 @@
   =l @user.accepted_terms_at
   akzeptiert.
   
-  -# %h2=t :visibility
-  -# %form
-  -#   = check_box :incognito
-  
+  %h2=t :visibility
+  %form
+    %label
+      = check_box_tag :incognito
+      %strong=t :incognito
+      = t :incognito_explanation
+    
 - if @user.has_account?  
   %h1=t :access_information
   %div
