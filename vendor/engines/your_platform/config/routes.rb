@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     put :forgot_password, on: :member
     get :events, to: 'events#index'
     get :settings, to: 'user_settings#show'
+    put :settings, to: 'user_settings#update'
   end
   get :settings, to: 'user_settings#index'
 

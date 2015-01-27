@@ -5,4 +5,4 @@ de:
   visibility: Sichtbarkeit
   incognito: Incognito
   incognito_explanation: 'Wenn dieses Feld markiert ist, wirst Du in der Seitenleiste nicht als online angezeigt.'
-  
+  incognito_warning: 'Achtung: Auch Wartungsskripte können dann nicht feststellen, dass Du online bist, wodurch es dann vorkommen kann, dass der Plattform-Server ohne Vorwarnung aufgrund von Wartungsarbeiten neugestartet wird.'

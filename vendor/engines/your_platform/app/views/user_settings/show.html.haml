@@ -21,11 +21,12 @@
   akzeptiert.
   
   %h2=t :visibility
-  %form
+  = form_for @user do |f|
     %label
-      = check_box_tag :incognito
+      = f.check_box :incognito, data: {url: user_settings_url(user_id: @user.id)}
       %strong=t :incognito
       = t :incognito_explanation
+    %p= t :incognito_warning
     
 - if @user.has_account?  
   %h1=t :access_information
