@@ -23,7 +23,7 @@
   %h2=t :visibility
   = form_for @user do |f|
     %label
-      = f.check_box :incognito, data: {url: user_settings_url(user_id: @user.id)}
+      = f.check_box :incognito, data: {url: user_settings_path(user_id: @user.id)}
       %strong=t :incognito
       = t :incognito_explanation
     %p= t :incognito_warning
