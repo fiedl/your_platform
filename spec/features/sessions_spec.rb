@@ -173,9 +173,6 @@ feature 'Sessions' do
         describe 'and having checked the agreement' do
           before do
             check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
-            #todo remove next 2 lines of debug info
-            sleep(2.0)
-            page.save_screenshot("/home/no22/blubb.jpg")
           end
 
           it { should have_button(I18n.t('submit_changed_password')) }
