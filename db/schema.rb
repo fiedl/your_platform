@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20141209161946) do
+ActiveRecord::Schema.define(:version => 20150129194501) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -98,6 +98,10 @@ ActiveRecord::Schema.define(:version => 20141209161946) do
     t.datetime "updated_at",    :null => false
   end
 
+  add_index "flags", ["flagable_id", "flagable_type", "key"], :name => "flagable_key"
+  add_index "flags", ["flagable_id", "flagable_type"], :name => "flagable"
+  add_index "flags", ["key"], :name => "key"
+
   create_table "geo_locations", :force => true do |t|
     t.string   "address"
     t.float    "latitude"
@@ -148,6 +152,8 @@ ActiveRecord::Schema.define(:version => 20141209161946) do
     t.datetime "updated_at",      :null => false
   end
 
+  add_index "nav_nodes", ["navable_id", "navable_type"], :name => "navable_type"
+
   create_table "pages", :force => true do |t|
     t.string   "title"
     t.text     "content"
@@ -188,6 +194,9 @@ ActiveRecord::Schema.define(:version => 20141209161946) do
   end
 
   add_index "profile_fields", ["parent_id"], :name => "profile_fields_parent_id_fk"
+  add_index "profile_fields", ["profileable_id", "profileable_type", "type"], :name => "profileable_type"
+  add_index "profile_fields", ["profileable_id", "profileable_type"], :name => "profileable"
+  add_index "profile_fields", ["type"], :name => "type"
 
   create_table "relationships", :force => true do |t|
     t.string   "name"
