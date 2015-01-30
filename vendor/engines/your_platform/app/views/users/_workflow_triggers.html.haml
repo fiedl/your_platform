@@ -3,7 +3,7 @@
   - @user.workflows_by_corporation.each do |corporation_title, workflows|
     - executable_workflows = workflows.select { |workflow| can? :execute, workflow }
     - executable_workflows_by_corporation[corporation_title] = executable_workflows if executable_workflows.any?
-  - if executable_workflows_by_corporation.any? or (@user.wingolfit? and @user.alive?)
+  - if executable_workflows_by_corporation.any? or (@user.markable_as_deceased?)
     %div.btn-group.workflow_triggers.pull-right
       %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
         %i.icon-chevron-up

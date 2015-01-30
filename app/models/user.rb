@@ -303,6 +303,19 @@ class User
   def group_names
     self.groups.collect { |group| group.name }
   end
+  
+  # Defines whether the user can be marked as deceased (by a workflow).
+  #
+  # Nur Wingolfiten dürfen als verstorben markiert werden, da wir davon ausgehen, dass
+  # eine Mitgliedschaft im Wingolf durch Austritt endet. Doch auch verstorbene Wingolfiten
+  # sind noch Wingoliten. Jeders Mitglied in unserer Verstorbenen-Gruppe ist also noch
+  # Wingolift. Daher darf aus Konsistenzgründen für Nicht-Wingolfiten kein Tod eingetragen 
+  # werden.
+  #
+  def markable_as_deceased?
+    alive? and wingolift?
+  end
+  
 
 
   # Abo Wingolfsblätter

@@ -58,6 +58,9 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
   
+  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
+  mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
+  
   get :statistics, to: 'statistics#index', as: 'statistics_index'
   get "/statistics/:list", to: 'statistics#show', as: 'statistics'
 

@@ -1,6 +1,6 @@
 %div.deceased_modal.modal.hide.fade
   - workflow = Workflow.find_by_name('Todesfall')
-  - workflow || raise('mark-as-deceased workflow missing. Please call "rake patch:workflows:part2".')
+  - workflow || raise('mark-as-deceased workflow missing. Please call "Workflow.find_or_create_mark_as_deceased_workflow".')
   = form_tag(workflow_kit.execute_workflow_path(workflow), {:method => :put, :class => 'deceased_modal_date_of_death'}) do
 
     %div.modal-header

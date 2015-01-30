@@ -242,6 +242,12 @@ class User < ActiveRecord::Base
     account.try(:destroy)
   end
   
+  # Defines whether the user can be marked as deceased (by a workflow).
+  #
+  def markable_as_deceased?
+    alive?
+  end
+  
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)

@@ -12,15 +12,14 @@
   %ul.attributes
     %li.name.attribute= render partial: 'user_name_attribute'
     = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
-    - if @user.w_nummer
-      %li.w_nummer.attribute
-        %span.label-wrapper 
-          %span.label.profile_field_label W-Nummer
-        %span.value-wrapper= @user.w_nummer
-    - general_fields = @user.profile.section(:general).fields - @user.profile_fields.where(label: 'W-Nummer')
+    -#- if @user.w_nummer
+    -#  %li.w_nummer.attribute
+    -#    %span.label-wrapper 
+    -#      %span.label.profile_field_label W-Nummer
+    -#    %span.value-wrapper= @user.w_nummer
+    - general_fields = @user.profile.section(:general).fields #- @user.profile_fields.where(label: 'W-Nummer')
     = profile_field_lis general_fields, lock_label: true, no_remove: true
-    - if @user.bv
-      %li.bv.attribute= render partial: 'user_bv_attribute'
+    = render partial: 'users/special_general_info_fields', locals: {user: @user}
     = render partial: 'users/dead_badge', locals: { user: @user }
     = render partial: 'users/hidden_flag_switch', locals: { user: @user }
 
@@ -67,12 +66,7 @@
 -#     = relationships_of_user_ul @user
 
 - # Communication Box
-- if can? :update, @user
-  %h1.section.communication= t(:communication)
-  %div
-    %ul.attributes
-      %li.wbl_abo.attribute= render partial: 'wbl_abo_attribute'
-      = profile_field_lis @user.profile.section(:communication).fields, no_remove: true, lock_label: true
+= render partial: 'users/communication_box', locals: {user: @user}
 
 - # Login Data
 - if can? :update, @user
