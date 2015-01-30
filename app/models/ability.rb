@@ -134,7 +134,7 @@ class Ability
           # Regular users can create, update or destroy own profile fields.
           #
           can :crud, ProfileField do |field|
-            (field.profileable == user) || field.profileable.nil?
+            field.profileable.nil? || ((field.label != 'W-Nummer') && (field.profileable == user))
           end
           
           # Regular users can update their own validity ranges of memberships

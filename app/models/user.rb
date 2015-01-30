@@ -313,7 +313,7 @@ class User
   # werden.
   #
   def markable_as_deceased?
-    alive? and wingolift?
+    alive? and wingolfit?
   end
   
 
