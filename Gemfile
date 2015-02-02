@@ -20,7 +20,6 @@ gem 'transaction_retry' # rescue from deadlocks
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets, :production, 'testing-aki' do
-  gem 'sass-rails',   '>= 3.2.3'					# MIT License
   gem 'coffee-rails', '>= 3.2.1'					# MIT License
 #  gem 'coffee-script', '1.4.0' # need this at 1.4.0 for mercury, at the moment
     # see https://github.com/jejacks0n/mercury/issues/349

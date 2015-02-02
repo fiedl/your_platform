@@ -36,10 +36,9 @@ require 'haml'
 require 'redcarpet'
 
 # Layout: Twitter Bootstrap
-require 'twitter-bootstrap-rails'
-require 'less'
-require 'less-rails'
 require 'font-awesome-rails'
+require 'bootstrap-sass'
+require 'sass-rails'
 
 # In Place Editing
 require 'best_in_place'
