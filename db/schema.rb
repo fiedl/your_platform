@@ -256,6 +256,7 @@ ActiveRecord::Schema.define(:version => 20150129194501) do
     t.boolean  "female"
     t.string   "accepted_terms"
     t.datetime "accepted_terms_at"
+    t.boolean  "incognito"
   end
 
   create_table "workflow_kit_parameters", :force => true do |t|

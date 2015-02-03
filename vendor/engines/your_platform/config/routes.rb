@@ -1,5 +1,7 @@
+require 'sidekiq/web'
+
 Rails.application.routes.draw do
-  
+
   root :to => 'root#index'
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'
@@ -16,11 +18,16 @@ Rails.application.routes.draw do
   get 'search/guess', to: "search#lucky_guess"
   get :search, to: "search#index"
 
+  mount Judge::Engine => '/judge'
+
   resources :users do
     get :autocomplete_title, on: :collection
     put :forgot_password, on: :member
     get :events, to: 'events#index'
+    get :settings, to: 'user_settings#show'
+    put :settings, to: 'user_settings#update'
   end
+  get :settings, to: 'user_settings#index'
 
   resources :groups do
     get :mine, on: :collection, to: 'groups#index_mine'
@@ -51,10 +58,22 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
   
-  get :statistics, to: 'statistics#index'
+  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
+  mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
+  
+  get :statistics, to: 'statistics#index', as: 'statistics_index'
+  get "/statistics/:list", to: 'statistics#show', as: 'statistics'
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
+
+  # Sidekiq Web UI
+  sidekiq_constraint = lambda do |request|
+    request.env['warden'].authenticate? && request.env['warden'].user.user.global_admin?
+  end
+  constraints sidekiq_constraint do
+    mount Sidekiq::Web => '/sidekiq'
+  end
   
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
     

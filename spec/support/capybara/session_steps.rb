@@ -13,9 +13,12 @@ module SessionSteps
     if parameter == :local_admin && args[:of] == nil
       raise 'Please specify the object to administrate:  login(:local_admin, of: @group)'
     end
+    if parameter.kind_of?(Symbol) and not parameter.in?([:user, :local_admin, :global_admin, :admin])
+      raise "Unknown login parameter: #{parameter}"
+    end
     
     user = parameter if parameter.kind_of? User
-    user = create(:admin) if parameter == :admin
+    user = create(:admin) if parameter == :admin or parameter == :global_admin
     user = create(:local_admin, of: args[:of]) if parameter == :local_admin
     user = create(:user_with_account) if parameter == :user
     user ||= create(:user_with_account)

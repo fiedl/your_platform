@@ -55,6 +55,12 @@ class Ability
       
       can :read, :terms_of_use
       can :accept, :terms_of_use
+      
+      # For the moment, everybody can view the statistics.
+      #
+      can :index, :statistics
+      can :read, :statistics
+      can :export, :statistics
 
       # Only global administrators can change anything.
       #
@@ -128,7 +134,7 @@ class Ability
           # Regular users can create, update or destroy own profile fields.
           #
           can :crud, ProfileField do |field|
-            (field.profileable == user) || field.profileable.nil?
+            field.profileable.nil? || ((field.label != 'W-Nummer') && (field.profileable == user))
           end
           
           # Regular users can update their own validity ranges of memberships
@@ -200,6 +206,7 @@ class Ability
             group.descendant_users.count > 0
           end
           can :manage, User, id: Role.of(user).administrated_users.map(&:id)
+          can :manage, UserAccount, id: Role.of(user).administrated_users.map(&:account).collect { |account| account.try(:id) }
           can :execute, Workflow do |workflow|
             # Local admins can execute workflows of groups they're admins of.
             # And they can execute the mark_as_deceased workflow, which is a global workflow.
@@ -217,6 +224,9 @@ class Ability
           end
           can :manage, UserGroupMembership do |membership|
             can? :manage, membership.user
+          end
+          can :create, :aktivmeldung do
+            user.administrated_aktivitates.count > 0
           end
         end
         

@@ -8,8 +8,9 @@
         - for membership in group.latest_memberships.first(3)
           %li
             = "#{link_to(membership.user.title, membership.user)},".html_safe
-            %br
-            = localize membership.valid_from.to_date
+            - if membership.valid_from
+              %br
+              = localize membership.valid_from.to_date
         %p
           = "Insgesamt #{group.memberships_this_year.count} dieses Jahr."
         %p.list_all
