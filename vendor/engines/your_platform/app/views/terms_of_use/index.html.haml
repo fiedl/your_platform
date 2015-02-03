@@ -1,0 +1,19 @@
+%h1.terms_of_use=t :terms_of_use
+%div
+  = form_tag terms_path(redirect_after: params[:redirect_after]), method: 'post' do
+    .terms
+      = render partial: 'terms'
+    .accept
+      %label{for: 'accept'}
+        - if not current_user.accepted_terms?(@current_terms_stamp)
+          %input{type: 'checkbox', value: 'agreed', name: 'accept', id: 'accept'}
+        = render partial: 'checkbox'
+    
+    - if current_user.accepted_terms?(@current_terms_stamp)
+      .accepted_at.alert.alert-success
+        Du hast diese Bedingungen am
+        = l current_user.accepted_terms_at
+        akzeptiert.
+    - else
+      .submit
+        = submit_tag t(:confirm), class: 'btn btn-primary'

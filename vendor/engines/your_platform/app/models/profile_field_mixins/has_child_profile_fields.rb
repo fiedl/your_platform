@@ -72,7 +72,7 @@ module ProfileFieldMixins::HasChildProfileFields
     end
 
     def build_child_fields_if_absent
-      if self.children.count == 0
+      if self.children_count == 0
         build_child_fields self.keys
       end
     end

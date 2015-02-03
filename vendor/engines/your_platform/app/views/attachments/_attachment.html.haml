@@ -4,17 +4,19 @@
   %td
     %span.attachment-description
       %p.attachment.title
-        - if can? :manage, attachment
-          = link_to best_in_place( attachment, :title ), attachment.file.url
-          = remove_button attachment
+
+        - if can? :update, attachment
+          = link_to best_in_place( attachment, :title, activator: 'only_manual' ), attachment.file.url
         - else
           = link_to attachment.title, attachment.file.url
+
+        - if can? :destroy, attachment
+          = remove_button attachment
+          
       %p.attachment.filename
         = link_to attachment.filename, attachment.file.url
       %p.attachment.description
-        - if can? :manage, attachment
-          = best_in_place attachment, :description
-        - else
-          = attachment.description
+        = best_in_place_if can?(:update, attachment), attachment, :description
+
       %p.attachment.filesize
         = attachment.file_size_human

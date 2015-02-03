@@ -1,10 +1,22 @@
+- # Button to add structureables under a parent structureable.
+- #
+- # locals:
+- #   - parent
+- #   - parent_id
+- #   - parent_type
+- #
+
 %div.btn-group.add-structureable
   %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
     %i.icon-plus
     = I18n.t(:add)
     %span.caret
   %ul.dropdown-menu
-    %li
-      = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
-    %li
-      = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
+    - if can? :create_page_for, parent
+      %li
+        = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
+    - if can? :create_group_for, parent
+      %li
+        = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
+
+    = render partial: 'layouts/add_structureable_additions', locals: {parent: parent}

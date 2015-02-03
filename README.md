@@ -1,4 +1,5 @@
 ## Wingolfsplattform
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/fiedl/wingolfsplattform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 [![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/gh/fiedl%2Fwingolfsplattform)
 [![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)
@@ -11,19 +12,6 @@ Nähere Informationen zum Anforderungsspektrum unter http://wingolf.org/ak-inter
 **Ansprechpartner**:
 Sebastian Fiedlschuster  E 06  (B-xx)
 
-### Status
-
-**Hinweis:** Die Anzeigen "Coverage" und "Code Climate" beziehen sich derzeit nur auf den wingolf-spezifischen Konkretisierungs-Teil, nicht aber auf den Großteil des Codes, der unter `your_platform` abgelegt ist. Ferner werden die von Natur aus unschönen Import-Skripte miteinbezogen. Bis auch `your_platform` erfasst werden kann, sind diese Anzeigen daher nicht als repräsentativ zu betrachten.
-
-Status                                                                                                                                                            | Beschreibung
------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------
-[![GitHub version](https://badge.fury.io/gh/fiedl%2Fwingolfsplattform.png)](http://badge.fury.io/)                                    | Wingolfsplattform Version
-[![Build Status on production](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=production "production")](https://travis-ci.org/fiedl/wingolfsplattform)  | Build Status on `production`
-[![Build Status on master](https://travis-ci.org/fiedl/wingolfsplattform.png?branch=master "master")](https://travis-ci.org/fiedl/wingolfsplattform)              | Build Status on `master`
-[![Coverage Status](https://coveralls.io/repos/fiedl/wingolfsplattform/badge.png)](https://coveralls.io/r/fiedl/wingolfsplattform)                                | Test Coverage on `master`
-[![Code Climate](https://codeclimate.com/github/fiedl/wingolfsplattform.png)](https://codeclimate.com/github/fiedl/wingolfsplattform)                             | Code Climate (4=good, 1=bad)
-[![Dependency Status](https://gemnasium.com/fiedl/wingolfsplattform.png)](https://gemnasium.com/fiedl/wingolfsplattform)                                          | Gemnasium Gem Dependency Monitor
-
 
 ### Production
 
@@ -35,7 +23,7 @@ Den aktuell bereitgestellten Commit kann man hier abfragen: http://wingolfsplatt
 
 ### Contribution
 
-Als Server-Side-Framework verwenden wir [Ruby on Rails](http://rubyonrails.org/) 3.2 mit Ruby 2.0 und als Client-Side-JS-Framework [AngularJS](http://angularjs.org/). Wir empfehlen die Verwendung von [rbenv](https://github.com/sstephenson/rbenv/).
+Als Server-Side-Framework verwenden wir [Ruby on Rails](http://rubyonrails.org/) 3.2 mit Ruby 2.1. Wir empfehlen die Verwendung von [rbenv](https://github.com/sstephenson/rbenv/).
 
 **[GETTING STARTED](https://github.com/fiedl/wingolfsplattform/wiki/Getting-Started)** -- von der Installation der Entwicklungsumgebung bis zum Durchführen der automatisierten Tests.
 
@@ -49,9 +37,10 @@ git clone git@github.com:fiedl/wingolfsplattform.git
 cd ~/rails/wingolfsplattform
 bundle install
 bundle exec rake db:create db:migrate
-bundle exec rake bootstrap:all
 bundle exec rake db:test:prepare
 bundle exec rake
+bundle exec foreman start
+bundle exec rails server
 ```
 
 
@@ -89,10 +78,13 @@ Dieser aufgespaltete Zustand ist noch nicht vollständig erreicht. Der aktuelle 
 * [Trello Board "AK Internet: Entwicklung"](https://trello.com/board/ak-internet-entwicklung/50006d110ad48e941e8496d2)
 * http://wingolf.org/ak-internet
 
+[![Travis-CI-Server](https://raw.githubusercontent.com/fiedl/wingolfsplattform/master/public/images/supporttravis.png)](http://travis-ci.org)  
+[![UserVoice-Ticket-System](http://upload.wikimedia.org/wikipedia/en/d/d3/UserVoice_logo.png)](http://uservoice.com)
+
 
 ### Urheber, Mitarbeiter und Lizenz
 
-Copyright (c) 2012-2013, Sebastian Fiedlschuster
+Copyright (c) 2012-2014, Sebastian Fiedlschuster
 
 Mitarbeiter: Jörg Reichardt, Manuel Zerpies, Joachim Back
 

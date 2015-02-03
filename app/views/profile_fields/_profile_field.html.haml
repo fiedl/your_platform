@@ -3,16 +3,13 @@
 -# in order to display complex information such as bank account information.
 -#
 - profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
+- profile_field_css_class += " #{profile_field.key}" if profile_field.parent_id
 - input_type = 'input'
 - input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
 -# # For the moment, no 'date' type. The date selector does not work properly with edit_mode.
 -# input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
 - no_remove ||= false
 - lock_label ||= false
-- if profile_field.type == "ProfileFieldTypes::About"
-  - display_method = { :display_with => :markdown }
-- else
-  - display_method = { :display_as => :display_html }
 
 %li{:class => profile_field_css_class, id: "profile_field_id_#{profile_field.id}" }
 
@@ -32,21 +29,10 @@
 
   - # value
   %span.value-wrapper
-    - if profile_field.children.count == 0
-      - if can? :update, profile_field
-        - if profile_field.value.blank?
-          = best_in_place profile_field, :value,
-                          { type: input_type, nil: "—", classes: 'value' }.merge(display_method)
-        - else
-          = best_in_place profile_field, :value,
-                          { type: input_type, nil: "…", classes: 'value' }.merge(display_method)
-      - else
-        - if display_method[:display_as]
-          = profile_field.send(display_method[:display_as])
-        - elsif display_method[:display_with] == :markdown
-          = markdown(profile_field.value)
+    - if profile_field.children_count == 0
+      = best_in_place_if can?(:update, profile_field), profile_field, :value, {type: input_type, classes: 'value'}
           
-    - if profile_field.children.count > 0
+    - if profile_field.children_count > 0
       %ul
         - profile_field.children.each do |child_field|
           = render partial: 'profile_fields/profile_field', object: child_field

@@ -1,0 +1,4 @@
+%div.group_member_avatars
+  - for membership in group.memberships
+    = link_to user_path(membership.user) do
+      = user_avatar(membership.user, class: 'has_tooltip member_avatar', title: "#{membership.user.title} ist seit dem #{I18n.l(membership.valid_from.to_date)} als Teilnehmer eingetragen.", data: {placement: 'bottom'})

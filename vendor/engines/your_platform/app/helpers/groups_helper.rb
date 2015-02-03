@@ -1,15 +1,5 @@
 module GroupsHelper
   
-  def my_groups_table
-    groups_of_user_table current_user if current_user
-  end
-
-  def cached_my_groups_table
-    if current_user
-      Rails.cache.fetch([current_user, "my_groups_table"]) { my_groups_table }
-    end
-  end
-  
   def groups_of_user_table( user )
     content_tag :table, :class => "user_groups" do
       content_tag :tr do
@@ -18,7 +8,7 @@ module GroupsHelper
         c = content_tag :td do
           content_tag :ul do
             
-            corporation_groups = Group.find_corporation_groups_of( user )
+            corporation_groups = user.current_corporations
             if corporation_groups
               corporation_groups.collect do |group|
                 sub_group_membership_lis( user: user, group: group, indent: 0, max_indent: 3 )
@@ -42,11 +32,15 @@ module GroupsHelper
     end.html_safe
   end
   
+  def cached_groups_of_user_table(user)
+    Rails.cache.fetch([user, 'groups_of_user_table'], expires_in: 1.week) { groups_of_user_table(user) }
+  end
+  
   private
 
   def membership_li( user, group )
     content_tag :li do
-      c = link_to group.title, group
+      c = link_to group.extensive_name, group
       membership = UserGroupMembership.with_invalid.find_by_user_and_group( user, group )
       c += remove_button( membership ) if membership.destroyable? and can?(:destroy, membership)
       c

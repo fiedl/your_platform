@@ -1,0 +1,26 @@
+de:
+  events: Veranstaltungen
+  upcoming_events: Anstehende Veranstaltungen
+  start_at: Beginn
+  end_at: Ende
+  contact_person: Ansprechpartner
+  contact_people: Ansprechpartner
+  attendees: Teilnehmer
+  attendance: Teilnahme
+  location: Ort
+  add_event: Veranstaltung eintragen
+  add_event_for: Veranstaltung eintragen für Zielgruppe
+  enter_name_of_event_here: Bezeichnung der Veranstaltung hier eingeben
+  
+  publish: Veröffentlichen
+  
+  my_events: Meine Veranstaltungen
+  all_events: Alle Veranstaltungen
+  events_of: Veranstaltungen von
+  events_on_global_website: Veranstaltungen auf der globalen öffentlichen Homepage
+  events_on_local_website: Veranstaltungen auf der lokalen öffentlichen Homepage
+  
+  is_adding_an_event: trägt eine Veranstaltung ein
+  is_looking_at_events: 'sieht sich Veranstaltungen an'
+  is_looking_at_the_event: "sieht sich die Veranstaltung '%{event_name}' an"
+  is_looking_at_the_calendar_of: "sieht sich den Kalender von '%{group_name}' an"

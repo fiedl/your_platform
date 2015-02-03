@@ -64,11 +64,14 @@ module Structureable
     #
     include StructureableMixins::HasSpecialGroups
     
-    include StructureableInstanceMethods
+    # To use `prepend` here allows to call `super` in the methods
+    # defined in the module `StructureableInstanceMethods`.
+    #
+    prepend StructureableInstanceMethods
   end
 
   module StructureableInstanceMethods
-
+    
     # Include Rules, e.g. let this object have admins.
     # 
     include StructureableMixins::Roles
@@ -105,11 +108,57 @@ module Structureable
 
       end  
     end
+    
+    # This somehow identifies which are the ancestors of this structureable.
+    # For example, this is used in the breadcrumb helper.
+    #
+    def ancestors_cache_key
+      "Group#{ancestor_group_ids if respond_to?(:ancestor_group_ids)}Page#{ancestor_page_ids if respond_to?(:ancestor_page_ids)}User#{ancestor_user_ids if respond_to?(:ancestor_user_ids)}"
+    end
+    def children_cache_key
+      "Group#{child_group_ids.sum if respond_to?(:child_group_ids)}Page#{child_page_ids.sum if respond_to?(:child_page_ids)}User#{child_user_ids.sum if respond_to?(:child_user_ids)}"
+    end
 
     def destroy_links
       self.destroy_dag_links
     end
-
+    
+    # Move the node to another parent.
+    #
+    def move_to(parent_node)
+      raise 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
+      if parent_node != self.parents.first
+        self.links_as_child.destroy_all
+        parent_node << self
+      end
+    end
+    
+    # Adding child objects.
+    #
+    def <<(object)
+      if object.kind_of? User
+        raise 'Users can only be assigned to groups.' unless self.kind_of? Group
+        self.assign_user(object) unless self.child_users.include? object
+      elsif object.kind_of? Group
+        if self.kind_of?(Group) &&
+          (existing_link = DagLink.where(ancestor_type: 'Group', descendant_type: 'Group',
+            ancestor_id: self.id, descendant_id: object.id,
+            direct: false).first)
+          existing_link.make_direct
+        else
+          self.child_groups << object unless self.child_groups.include? object
+        end
+      elsif object.kind_of? Page
+        self.child_pages << object unless self.child_pages.include? object
+      elsif object.kind_of? Event
+        self.child_events << object unless self.child_events.include? object
+      elsif object.nil?
+        raise "Something is wrong! You've tried to add nil."
+      else
+        raise "Case not handled yet. Please implement this. It's easy :)"
+      end
+    end
+    
+    
   end
-
 end

@@ -132,7 +132,7 @@ class NavNode < ActiveRecord::Base
     current_navable = self.navable
     until current_navable.nil?
       new_navable = nil
-      new_navable ||= current_navable.cached_last_group_in_first_corporation if current_navable.kind_of? User
+      new_navable ||= current_navable.status_group_in_primary_corporation if current_navable.kind_of? User
       new_navable ||= current_navable.parents.select do |parent|
         parent.respond_to? :nav_node
       end.first

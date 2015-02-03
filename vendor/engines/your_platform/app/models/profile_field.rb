@@ -54,7 +54,11 @@ class ProfileField < ActiveRecord::Base
   # of the value.
   #
   def display_html
-    self.value
+    if self.value.try(:include?, "\n")
+      BestInPlace::ViewHelpers.markup(self.value)
+    else
+      self.value
+    end
   end
 
   # This method returns the key, i.e. the un-translated label, 
@@ -72,18 +76,35 @@ class ProfileField < ActiveRecord::Base
     label_text = self.underscored_type if not label_text.present?
     translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text.present?
   end
-
+  
   # If the field has children, their values are included in the main field's value.
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   # 
   def value
-    if children.count > 0
+    if children_count > 0
       ( [ super ] + children.collect { |child| child.value } ).join(", ")
     else
       super
     end
   end
   
+  # Overwrite save to ensure that the cache is deleted in case of changes.
+  #
+  def save( *args )
+    delete_cache
+    super( *args )
+  end
+
+  def delete_cache
+    super
+    parent.try(:delete_cache)
+    profileable.delete_cache if profileable && profileable.respond_to?(:delete_cache)
+  end
+  
+  def children_count
+    children.count
+  end
+
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
   # Example: For a ProfileFieldTypes::FooBar-type profile field, this method returns 'foo_bar'.
   #
@@ -114,6 +135,22 @@ class ProfileField < ActiveRecord::Base
   # Furthermore, this method modifies the intializer to build the child fields
   # on build of the main profile_field.
   extend ProfileFieldMixins::HasChildProfileFields
+  
+  # For child profile fields, this returns the profileable of the parent.
+  # For parents, this returns just the assigned profileable.
+  #
+  # This has to be here, since child profile fields do not have the
+  # `has_child_profile_fields` call in their classes.
+  #
+  alias_method :orig_profileable, :profileable
+  def profileable
+    if parent.present?
+      parent.profileable
+    else
+      orig_profileable
+    end
+  end
+  
 
   # In order to namespace the type classes of the profile_fields, we place them
   # in a module. In order to be able to use the type column without including
@@ -136,14 +173,14 @@ class ProfileField < ActiveRecord::Base
   # List all possible types. This is needed for code injection security checks.
   #
   def self.possible_types
-    ['ProfileFieldTypes::General', 'ProfileFieldTypes::Custom', 
-      'ProfileFieldTypes::Organization', 'ProfileFieldTypes::Email',
-      'ProfileFieldTypes::Address', 'ProfileFieldTypes::About',
-      'ProfileFieldTypes::Employment', 'ProfileFieldTypes::ProfessionalCategory',
-      'ProfileFieldTypes::Competence', 'ProfileFieldTypes::BankAccount',
-      'ProfileFieldTypes::Description', 'ProfileFieldTypes::Phone',
-      'ProfileFieldTypes::NameSurrounding', 'ProfileFieldTypes::Homepage',
-      'ProfileFieldTypes::Date', 'ProfileFieldTypes::AcademicDegree'
+    [ProfileFieldTypes::General, ProfileFieldTypes::Custom, 
+      ProfileFieldTypes::Organization, ProfileFieldTypes::Email,
+      ProfileFieldTypes::Address, ProfileFieldTypes::About,
+      ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory,
+      ProfileFieldTypes::Competence, ProfileFieldTypes::BankAccount,
+      ProfileFieldTypes::Description, ProfileFieldTypes::Phone,
+      ProfileFieldTypes::NameSurrounding, ProfileFieldTypes::Homepage,
+      ProfileFieldTypes::Date, ProfileFieldTypes::AcademicDegree
     ]
   end
   

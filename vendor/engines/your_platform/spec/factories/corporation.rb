@@ -15,9 +15,10 @@ FactoryGirl.define do
 
     factory :corporation_with_status_groups do
       after :create do |corporation|
-        corporation.child_groups.create( name: "Member Status 1" )
-        corporation.child_groups.create( name: "Member Status 2" )
-        corporation.child_groups.create( name: "Member Status 3" )
+        status1 = corporation.child_groups.create( name: "Member Status 1" )
+        status2 = corporation.child_groups.create( name: "Member Status 2" )
+        status3 = corporation.child_groups.create( name: "Member Status 3" )
+        [status1, status2, status3].each { |g| g.add_flag :full_members } # in contrast to deceased
       end
     end
 

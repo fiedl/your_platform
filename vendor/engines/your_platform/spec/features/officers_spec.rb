@@ -37,5 +37,25 @@ feature "Officers Management" do
       end
     end
   end
+  
+  scenario "assigning an officer", :js => true do
+    login(:admin)
+    visit group_path(@group)
+    
+    @new_user = create(:user)
+
+    within("div.officers.section") do
+      page.should have_text "President"
+      page.should have_text @user.title
+      
+      click_on I18n.t(:edit)
+      fill_in "direct_members_titles_string", with: @new_user.title
+      find(".save_button").click
+    end
+    
+    wait_for_ajax; wait_for_ajax
+    @group.officers_parent.child_groups.where(name: "President").first.members.should include @new_user
+    @group.officers_parent.child_groups.where(name: "President").first.members.should_not include @user
+  end
 
 end

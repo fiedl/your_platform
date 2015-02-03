@@ -3,7 +3,10 @@
 #
 class BlogPostsController < PagesController
   prepend_before_filter :set_inheritance_instance_variable
+  
   load_and_authorize_resource
+  skip_authorize_resource only: [:create]
+  
   respond_to :json, :js
   
   def show
@@ -11,15 +14,19 @@ class BlogPostsController < PagesController
   end
 
   def create
-    params[:parent_id].present? || raise('A blog post requires a parent_id to identify the parent page.')
-    can?(:manage, Page.find(params[:parent_id])) || raise('Not authorized to add blog post. Make sure to have rights on the parent page.')
+    secure_parent.present? || raise('A blog post requires a parent_id to identify the parent page.')
+    authorize! :create_page_for, secure_parent
+
     @blog_post || raise('No @blog_post created by cancan.')
     @blog_post.title = I18n.t(:new_blog_post)
     @blog_post.author = current_user
     @blog_post.content = "—"
     @blog_post.save!
-    @blog_post.parent_pages << Page.find(params[:parent_id])
+    @blog_post.parent_pages << secure_parent
     @page = @blog_post
+    @navable = @blog_post            # this is needed in the BoxHelper in order to show the edit button.
+    @blog_entries = [@blog_post]     # this is needed in the BoxHelper in order to hide the attachment box.
+    @this_is_a_new_blog_post = true  # in to make the header a link.
     respond_to do |format|
       format.js
     end

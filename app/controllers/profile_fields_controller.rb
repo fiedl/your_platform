@@ -17,13 +17,20 @@ class ProfileFieldsController < ApplicationController
   end
 
   def update
-    @profile_field = ProfileField.find(params[:id])
-    if @profile_field.type.in? ["ProfileFieldTypes::Address",			"ProfileFieldTypes::AcademicDegree",	"ProfileFieldTypes::Klammerung", "ProfileFieldTypes::BankAccount",		"ProfileFieldTypes::Competence", 			"ProfileFieldTypes::Custom", 			"ProfileFieldTypes::Date", "ProfileFieldTypes::Email",					"ProfileFieldTypes::Description", 		"ProfileFieldTypes::Employment", "ProfileFieldTypes::General", 			"ProfileFieldTypes::Homepage",				"ProfileFieldTypes::NameSurrounding", "ProfileFieldTypes::Organization", 	"ProfileFieldTypes::Phone",						"ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Study"]
-      profile_field_class = @profile_field.type.constantize
+    if current_user == @profile_field.profileable
+      current_user.update_last_seen_activity("pflegt sein eigenes Profil", current_user)
     else
+      title = @profile_field.profileable.title
+      current_user.update_last_seen_activity("bearbeitet ein Profil: #{title}", @profile_field.profileable)
+    end
+    
+    @profile_field = ProfileField.find(params[:id])
+    profile_field_class = ProfileField if @profile_field.type.blank?
+    profile_field_class ||= ProfileField.possible_types.find { |possible_type| possible_type.to_s == @profile_field.type }
+    if profile_field_class.nil?
       raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
     end
-    @profile_field = @profile_field.becomes( profile_field_class )
+    @profile_field = @profile_field.becomes(profile_field_class)
     updated = @profile_field.update_attributes(params[:profile_field])
     respond_with_bip @profile_field
   end
@@ -57,7 +64,7 @@ class ProfileFieldsController < ApplicationController
   end
   
   def secure_profile_field_type
-    if not params[:profile_field][:type].in? ([''] + ProfileField.possible_types)
+    if not params[:profile_field][:type].in? ([''] + ProfileField.possible_types.map(&:to_s))
       raise "security interrupt: '#{params[:profile_field][:type]}' is not a permitted profile field type."
     end
     params[:profile_field][:type]

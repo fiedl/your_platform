@@ -1,8 +1,33 @@
 de:
+  person:                     Person
+  
+  first_and_last_name:        Vor- und Zuname
+  name_affix:                 Namenszusatz
+  email:                      E-Mail
+  
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag
+  birthday_this_year:         Diesjähriger Geburtstag
   age:                        Alter
+  current_age:                Aktuelles Alter
   
   user_hidden:                Benutzer versteckt
   hidden_users_can_only_be_seen_by_admins:   'Versteckte Benutzer können nur von zuständigen Administratoren gesehen werden. Für alle anderen Benutzer sind sie unsichtbar.'
   user_dead:                  Verstorben
+  deceased:                   Verstorben
+  event_of_death:             Todesfall
+  
+  postal_address_with_name_surrounding: Postanschrift mit Name
+  postal_address:             Postanschrift
+  postal_address_updated_at:  Letzte Änderung der Postanschrift am
+  postal_address_postal_code: Postleitzahl (PLZ)
+  postal_address_town:        Stadt
+  postal_address_country:     Land
+  postal_address_country_code: Länder-Kennzeichen
+  address_label_text_above_name: Zeile über dem Namen
+  address_label_text_below_name: Zeile unter dem Namen
+  address_label_text_before_name: Text vor dem Namen
+  address_label_text_after_name: Text hinter dem Namen
+  
+  phone_label:                Beschriftung
+  email_label:                Beschriftung

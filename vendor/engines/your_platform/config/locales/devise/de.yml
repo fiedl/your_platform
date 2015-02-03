@@ -21,6 +21,7 @@ de:
       inactive: 'Ihr Account ist nicht aktiv.'
       user_account:
         not_found_in_database: 'Es wurde kein übereinstimmender Benutzer gefunden.'
+      not_found_in_database: 'Ungültige Anmeldedaten.'
     sessions:
       signed_in: 'Sie sind nun am System angemeldet. Falls Sie an einem fremden Rechner (Internetcafé etc.) arbeiten, vergessen Sie bitte nicht, sich später wieder abzumelden (rechts oben).'
       signed_out: 'Erfolgreich abgemeldet.'

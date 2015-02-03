@@ -10,6 +10,7 @@ de:
   new_page: Neue Seite
   new_group: Neue Gruppe
 
+  untitled: Unbenannt
   edited_at: Bearbeitet am
   since: Seit
   
@@ -22,3 +23,8 @@ de:
 
   you_are_admin: Sie sind Administrator.
   feedback: Verbesserungsvorschläge
+
+  confirm: Bestätigen
+  optional: optional
+  
+  show_all: Alle anzeigen

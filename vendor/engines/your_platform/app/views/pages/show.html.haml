@@ -1,20 +1,45 @@
-= render @page
+- if @page.group.present? && @page.group != Group.everyone
+  = render partial: 'shared/authorization_info', locals: {subject: 'page', page: @page}
 
-%div.attachment_global_drop_zone
-  %div.center.large
-    %i.icon-file
-    %i.icon-picture= # icon-camera
-    %i.icon-facetime-video
-  = t :drop_files_here
+- if @page.has_flag? :intranet_root
+  %div.col2
+    = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+    = render partial: 'root/what_is_new', locals: {pages: @news_pages}
+    = render @page
+  %div.col1
+    = render partial: 'root/start_page_elements'
+- else
+  %div.col3
+    = render @page
 
-- if can? :manage, @page
-  %div.blog_tools.box
-    = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
-      %i.icon-plus
-      = I18n.t(:add_blog_entry)
+- # officers
+= render partial: 'officers/officers_box', locals: {structureable: @page}
 
-- for blog_entry_page in @blog_entries
-  = render partial: 'pages/page', object: blog_entry_page
+%div.col3
+  - # Use the drop zone only if there are no blog entries.
+  - # Otherwise, the system won't know where to put the attachment.
+  - #
+  - if @blog_entries.count == 0
+    %div.attachment_global_drop_zone
+      %div.center.large
+        %i.icon-file
+        %i.icon-picture= # icon-camera
+        %i.icon-facetime-video
+      = t :drop_files_here
 
 
-
+  - if can?(:create_page_for, @page)
+    - # No nested blog posts!
+    - # The user might suspect to create a sibling, but really would create a nested blog post.
+    - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
+    - #
+    - if (Page.find(@page.id).type != 'BlogPost')  
+      %div.blog_tools.box
+        = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
+          %i.icon-plus
+          = I18n.t(:add_blog_entry)
+  
+  - if @blog_entries.count > 0
+    #blog_entries
+      - for blog_entry_page in @blog_entries
+        = render partial: 'pages/page', object: blog_entry_page

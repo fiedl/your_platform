@@ -6,9 +6,10 @@ module VerticalNavHelper
   # Override the vertical_nav method in order to show the button "aktivmeldung"
   # in the vertical menu.
   #
-  alias_method :orig_vertical_nav, :vertical_nav
-  def vertical_nav
-    (orig_vertical_nav + content_tag(:p, aktivmeldungsbutton)).html_safe
-  end
+  # alias_method :orig_vertical_nav, :vertical_nav
+  # def vertical_nav
+  #   (orig_vertical_nav + content_tag(:p, aktivmeldungsbutton)).html_safe
+  #   # => Moved to the box on the start page.
+  # end
   
 end

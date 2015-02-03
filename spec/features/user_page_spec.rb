@@ -82,6 +82,51 @@ feature 'User page', js: false do
           page.should have_no_selector('li')
         end
       end
+      
+      scenario "editing the 'study information' box", js: true do
+        within '.box.section.study_information' do
+          
+          # Adding a study profile field.
+          #
+          click_on I18n.t :edit
+          click_on I18n.t :add
+          fill_in 'label', with: 'Undergraduate Studies'
+          within('.profile_field.from')       { fill_in 'value', with: "2006" }
+          within('.profile_field.to')         { fill_in 'value', with: "2008" }
+          within('.profile_field.university') { fill_in 'value', with: "FAU Erlangen" }
+          within('.profile_field.subject')    { fill_in 'value', with: "Physics" }
+          find('.save_button').click
+
+          wait_for_ajax
+          @user.profile_fields.where(type: 'ProfileFieldTypes::Study').count.should == 1
+          study_field = @user.profile_fields.where(type: 'ProfileFieldTypes::Study').first.becomes(ProfileFieldTypes::Study)
+          study_field.label.should == "Undergraduate Studies"
+          study_field.from.should == "2006"
+          study_field.to.should == "2008"
+          study_field.university.should == "FAU Erlangen"
+          study_field.subject.should == "Physics"
+          study_field.specialization.should_not be_present
+          
+          # Changing the study field.
+          #
+          within '.profile_field.subject' do
+            find('.best_in_place').click  # Physics
+            fill_in 'value', with: "Theoretical and Experimental Physics\n"
+          
+            wait_for_ajax
+            study_field.reload.subject.should == "Theoretical and Experimental Physics"
+          end
+          
+          # Removing the study field.
+          #
+          click_on I18n.t :edit
+          find('.remove_button').click
+          find('.save_button').click
+          
+          wait_for_ajax
+          @user.profile_fields.where(type: 'ProfileFieldTypes::Study').count.should == 0
+        end
+      end
 
       scenario "the section #{I18n.t(:career_information)} should be editable", js: true do
         within '.box.section.career_information' do
@@ -121,12 +166,6 @@ feature 'User page', js: false do
         end
       end
 
-      scenario 'the vita section should be editable', js: true do
-        within '.box.section.corporate_vita' do
-          subject.should have_selector('a.edit_button', visible: true)
-        end
-      end
-
       scenario "the section #{I18n.t(:communication)} should be editable", js: true do
         within('.box.section.communication') do
           click_on I18n.t(:edit)
@@ -155,14 +194,6 @@ feature 'User page', js: false do
           end
 
           within '.box.section.career_information' do
-            subject.should have_no_selector('a.edit_button', visible: true)
-            subject.should have_no_selector('a.add_button', visible: true)
-            subject.should have_no_selector('.remove_button', visible: true)
-          end
-        end
-
-        scenario 'the vita section should not be editable', js: true do
-          within '.box.section.corporate_vita' do
             subject.should have_no_selector('a.edit_button', visible: true)
             subject.should have_no_selector('a.add_button', visible: true)
             subject.should have_no_selector('.remove_button', visible: true)
@@ -217,14 +248,6 @@ feature 'User page', js: false do
           subject.should have_selector('.box.section.organizations')
         end
 
-        scenario 'the vita section should not be editable', js: true do
-          within '.box.section.corporate_vita' do
-            subject.should have_no_selector('a.edit_button', visible: true)
-            subject.should have_no_selector('a.add_button', visible: true)
-            subject.should have_no_selector('.remove_button', visible: true)
-          end
-        end
-
         scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
           within('.box.section.contact_information') do
             page.should have_selector('.wingolfspost', :visible => true)
@@ -267,6 +290,24 @@ feature 'User page', js: false do
 
             visit user_path(@user)
             page.should have_content("StudiumUniversale")
+          end
+        end
+        
+        scenario "Looking at the section 'access' and requesting a new password", js: true do
+          within('.box.section.access') do
+            page.should have_text @user.alias
+            page.should have_text @user.name
+            page.should have_text @user.email
+            
+            click_on I18n.t(:edit)
+            page.should have_selector "input[type=text]", count: 3  # alias, first_name, email
+            page.should have_text "Zugang zur Plattform"
+            page.should have_text "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am"
+            page.should have_text "Zuletzt wurde am"
+            page.should have_text "ein neues Passwort per E-Mail übersandt."
+
+            page.should have_link I18n.t(:change_password)
+            page.should have_no_selector '.lock_account'
           end
         end
       end

@@ -6,10 +6,17 @@ module SessionSteps
   # If the +parameter+ specifies a +:role+, a user with this role is created and logged in.
   # If +parameter+ is nil, a new user is created and logged in.
   #
-  def login( parameter = nil)
-
+  # Local admins:
+  #   login :local_admin, of: @group
+  #
+  def login(parameter = nil, args = {})
+    if parameter == :local_admin && args[:of] == nil
+      raise 'Please specify the object to administrate:  login(:local_admin, of: @group)'
+    end
+    
     user = parameter if parameter.kind_of? User
     user = create(:admin) if parameter == :admin
+    user = create(:local_admin, of: args[:of]) if parameter == :local_admin
     user = create(:user_with_account) if parameter == :user
     user ||= create(:user_with_account)
 
@@ -22,6 +29,18 @@ module SessionSteps
       fill_in 'user_account_password', with: password
       click_button I18n.t(:login)
     end
+    
+    page.should have_no_text I18n.t(:login)
+    accept_terms_of_use
+    
+  end
+  
+  def accept_terms_of_use
+    if page.has_text? I18n.t(:terms_of_use)
+      check :accept
+      click_on I18n.t(:confirm)
+    end
+    page.should have_no_selector '.terms_of_use'
   end
 
   def logout

@@ -11,7 +11,7 @@ describe StructureableMixins::Roles do
   before do
     class MyStructureable < ActiveRecord::Base
       attr_accessible :name
-      is_structureable( ancestor_class_names: %w(MyStructureable),
+      is_structureable( ancestor_class_names: %w(MyStructureable Group),
                         descendant_class_names: %w(MyStructureable Group User) )
     end
 
@@ -91,6 +91,71 @@ describe StructureableMixins::Roles do
       end
     end
   end
+  
+  describe "#admins_of_self_and_ancestors" do
+    subject { @my_structureable.admins_of_self_and_ancestors }
+    before do
+      # ATTENTION: For cache deletion, the `descendants` method is called 
+      # on the ancestors.
+      # Since the ancestor classes are not patched to include the
+      # `MyStructureable` as descendants,
+      # they are not included in the cache deletion process. To test cache
+      # deletion properly,
+      # we can't use `MyStructureable`. Therefore, we use a `Group` here
+      # instead.
+      #
+      @my_structureable = create :group, name: "My Structureable"
+
+      # @ancestor1 -> admin1
+      #    |------- @ancestor2 -> admin2
+      #    |            |------- @my_structureable -> my_admin
+      #    |
+      #    |------- @no_ancestor -> other_admin
+      #
+      @ancestor2 = @my_structureable.parent_groups.create name: 'Ancestor 2'
+      @ancestor1 = @ancestor2.parent_groups.create name: 'Ancestor 1'
+      @no_ancestor = @ancestor1.child_groups.create name: 'No Ancestor'
+      
+      @admin1 = create :user
+      @admin2 = create :user
+      @my_admin = create :user
+      @other_admin = create :user
+      
+      @ancestor1.admins << @admin1
+      @ancestor2.admins << @admin2
+      @my_structureable.admins << @my_admin
+      @no_ancestor.admins << @other_admin
+      
+      @my_structureable.reload
+    end
+    it "should include the ancestors' admins" do
+      subject.should include @admin1
+      subject.should include @admin2
+    end
+    it "should include the own direct admins" do
+      subject.should include @my_admin
+    end
+    it "should not include admins that are neither direct admins nor ancestors' admins" do
+      subject.should_not include @other_admin
+    end
+    describe "(caching)" do
+      describe "after changing an ancestor's admins" do
+        before do
+          @my_structureable.admins_of_self_and_ancestors  # creates the cache
+          @ancestor1.admins.destroy(@admin1)
+          wait_for_cache
+          @my_structureable.reload
+        end
+        it "should refresh the cached value" do
+          subject.should_not include @admin1
+          subject.should include @admin2, @my_admin
+        end
+        specify "the admin should still be in the database after calling destroy on the association" do
+          User.find(@admin1.id).should be_present
+        end
+      end
+    end
+  end
 
   describe "#find_admins" do
     subject { @my_structureable.admins }
@@ -111,6 +176,59 @@ describe StructureableMixins::Roles do
       it "should return an empty array" do
         subject.should == []
       end
+    end
+  end
+
+  describe "#cached(:find_admins)" do
+    before do
+      @group = create(:group)
+    end
+    subject { @group.cached(:find_admins) }
+    context "if the admins-parent group does not exist" do
+      before do
+        @group.cached(:find_admins)
+      end
+      it { should == @group.find_admins }
+    end
+    context "if the admins_parent_group exists" do
+      before do
+        @group.find_or_create_admins_parent_group
+        @group.cached(:find_admins)
+      end
+      it { should == @group.find_admins }
+    end
+    context "if an admin users exists" do
+      before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.admins_parent << admin_user
+        @group.cached(:find_admins)
+      end
+      it { should == @group.find_admins }
+    end
+    context "if new admin is added via group" do
+      before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.cached(:find_admins)
+        wait_for_cache
+
+        @group.admins_parent << admin_user
+        @group.reload
+      end
+      it { should == @group.find_admins }
+    end
+    context "if new admin is added via child_users" do
+      before do 
+        @group.find_or_create_admins_parent_group
+        admin_user = create(:user)
+        @group.cached(:find_admins)
+        wait_for_cache
+        
+        @group.admins_parent.child_users << admin_user
+        @group.reload
+      end
+      it { should == @group.find_admins }
     end
   end
 
@@ -139,276 +257,6 @@ describe StructureableMixins::Roles do
         @my_structureable.find_admins_parent_group.should == nil
         subject
         @my_structureable.admins.should include @admin_user
-      end
-    end
-  end
-
-  describe "#structurable_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group to test" )
-    end
-    subject { @group.structurable_admins }
-    it { should be_empty }
-
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "is admin of the group" do
-        @group.admins.should include( @admin )
-        @group.find_admins.should include( @admin )
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no admin in the group" do
-      before do
-        @group.admins_parent << @admin
-        @admin.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-      end
-      it "is also admin of the group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-        @parentgroup.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent page" do
-      before do
-        @page = create( :page )
-        @page.child_groups << @group
-        @page.admins_parent << @admin
-      end
-      it "is also admin of group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-  end
-
-  describe "#cached_structurable_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group to test" )
-    end
-    subject { @group.cached_structurable_admins }
-    it { should be_empty }
-
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "is admin of the group" do
-        @group.admins.should include( @admin )
-        @group.find_admins.should include( @admin )
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no admin in the group" do
-      before do
-        @group.admins_parent << @admin
-        @admin.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-      end
-      it "is also admin of the group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-        @parentgroup.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent page" do
-      before do
-        @page = create( :page )
-        @page.child_groups << @group
-        @page.admins_parent << @admin
-      end
-      it "is also admin of group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-  end
-
-  describe "#user_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group to test" )
-    end
-    subject { @group.user_admins }
-    it { should be_empty }
-
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "is the admin of the group" do
-        @group.admins.should include( @admin )
-        @group.find_admins.should include( @admin )
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no admin in the group" do
-      before do
-        @group.admins_parent << @admin
-        @admin.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-      end
-      it "is also admin of the group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-        @parentgroup.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent page" do
-      before do
-        @page = create( :page )
-        @page.child_groups << @group
-        @page.admins_parent << @admin
-      end
-      it "is NOT admin of group" do
-        should be_empty
-      end
-    end
-  end
-
-  describe "#cached_user_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group to test" )
-    end
-    subject { @group.cached_user_admins }
-    it { should be_empty }
-
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "the admin of group is the ancestor admin of the group" do
-        @group.admins.should include( @admin )
-        @group.find_admins.should include( @admin )
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no admin in the group" do
-      before do
-        @group.admins_parent << @admin
-        @admin.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-      end
-      it "the admin of a parent group is the ancestor admin of the group" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-
-    context "for no parent group" do
-      before do
-        @parentgroup = create( :group, name: "Parent group to test" )
-        @group.parent_groups << @parentgroup
-        @parentgroup.admins_parent << @admin
-        @parentgroup.destroy
-      end
-      it "there is no admin anymore" do
-        should be_empty
-      end
-    end
-
-    context "for an admin in parent page" do
-      before do
-        @page = create( :page )
-        @page.child_groups << @group
-        @page.admins_parent << @admin
-      end
-      it "is NOT admin of group" do
-        should be_empty
       end
     end
   end
@@ -553,6 +401,54 @@ describe StructureableMixins::Roles do
         @group1.find_admins_parent_group.should_not == @sub_group_admins_parent_group
         @group1.find_admins_parent_group.should == nil
       end
+    end
+  end
+
+
+  # Preventing Officers Cascades
+  # ------------------------------------------------------------------------------------------
+  #
+  #    group1
+  #      |----- :officers_parent 
+  #                |--------------- :admins_parent
+  #                |                      |---------- :officers_parent  <---- forbidden
+  #                |
+  #                |----- :officers_parent   <------------------------------- forbidden
+  #                |
+  #                |----- :public_relations_officer
+  #                                |
+  #                                |----- :officers_parent    <-------------- forbidden
+  #                
+  #
+  describe "preventing officer cascades: " do
+    before do
+      @group1 = create :group
+      @officers_parent = @group1.officers_parent
+      @admins_parent = @group1.admins_parent
+      @public_relations_officer = @officers_parent.child_groups.create
+    end
+    specify "it should not be possible to create an officers_parent under the admins parent" do
+      @admins_parent.officers_parent.should == nil
+      @admins_parent.create_officers_parent_group.should == nil
+      @admins_parent.reload.children.should == []
+    end
+    specify "it should not be possible to create an offiers_parent under the officers_parent" do
+      @officers_parent.officers_parent.should == nil
+      @officers_parent.create_officers_parent_group.should == nil
+      @officers_parent.reload.children.should == [@admins_parent, @public_relations_officer]
+    end
+    specify "it should not be possible to create an officers_parent under another officers group" do
+      @public_relations_officer.officers_parent.should == nil
+      @public_relations_officer.create_officers_parent_group.should == nil
+      @public_relations_officer.reload.children.should == []
+    end
+    specify "calling #admins should not create forbidden officers_parent groups" do
+      @admins_parent.admins
+      @admins_parent.reload.children.should == []
+      @officers_parent.admins
+      @officers_parent.reload.children.should == [@admins_parent, @public_relations_officer]
+      @public_relations_officer.admins
+      @public_relations_officer.reload.children.should == []
     end
   end
   

@@ -1,0 +1,26 @@
+de:
+  welcome_to_your_platform: Willkommen zu Ihrer neuen Plattform!
+  this_setup_will_get_you_up_and_running: 'Dieser Installationsbildschirm hilft Ihnen, die Plattform für den Betrieb einzurichten.'
+  
+  choose_setup_language: Sprache für diesen Installationsbildschirm auswählen
+  this_sets_only_the_setup_language: Diese Spracheinstellung betrifft nur diesen Installationsbildschirm. Jeder Benutzer kann seine Sprache selbst wählen. Die Standard-Sprache der Anwendung wird in der Datei `config/application.rb` eingestellt.
+  
+  setup_admin_user: Administrator-Benutzer einrichten
+  enter_your_own_name_here_not_admin: 'Geben Sie hier Ihren richtigen Namen an, nicht etwa "Admin" oder "Geschäftsstelle". Die Administrator-Rechte können später geändert werden.'
+  
+  enter_your_unique_password_here: 'Geben Sie außerdem ein neues Passwort für diesen Zugang ein. Dieses Passwort soll nur Ihnen, keiner anderen Person bekannt sein. Geben Sie es nicht weiter. Verwenden Sie außerdem kein Passwort, das Sie bereits bei einem anderen Dienst verwenden. Das Passwort wird in der Datenbank degeneriert gespeichert, kann also von niemandem ausgelesen werden.'
+  find_a_guide_how_to_create_good_passwords_in_this_comic: 'Hilfestellung, wie Sie sich ein einfach zu merkendes, schwer zu knackendes Passwort ausdenken, entnehmen Sie bitte diesem kurzen, humorvollen (englischsprachigen) Comic:'
+  
+  application_name: Anwendungsname
+  enter_application_name_here: 'Geben Sie hier den Namen der Anwendung ein. Wenn Sie nichts eingeben, wird der generische Name "MyPlatform" beibehalten. Sie können den Namen später noch ändern, indem Sie in der Rails-Konsole den Wert `Setting.app_name` ändern.'
+  application_name_hint: 'Tipp: Wählen Sie den Namen nicht identisch zum Namen Ihrer Organisation. Wenn Ihre Organisation die freiwillige Feuerwehr ist, geben Sie hier nicht "Feuerwehr", sondern "Feuerwehr-Plattform" oder "Feuerwehr-Intranet" ein.'
+  
+  logo: Logo
+  you_may_upload_a_logo: 'Wenn Sie möchten, könenn Sie das Rails-Logo durch Ihr eigenes Logo ersetzen, indem Sie die Datei `app/assets/images/logo.png` ersetzen. Sie können den Schritt natürlich überspringen und später erledigen.'
+  
+  initial_sub_organizations: Erste Unter-Organisationen
+  assuming_sub_structure_enter_sub_organization_names_here: 'Wir gehen davon aus, dass Ihre Organisation aus einer gewissen Anzahl von Unter-Organisationen mit eigenen Administratoren, Amtsträgern und Zuständigkeiten aufgebaut ist. Sie können, um einen ersten Eindruck zu bekommen, einige Unter-Organisationen hier nennen, etwa "Gruppe London", "Gruppe Berlin", "Gruppe Paris".'
+  separate_through_newlines: 'Trennen Sie die Organisationen durch Zeilenumbrüche. Der ersten Organisation werden Sie probehalber als Mitglied hinzugefügt.'
+  sub_organizations: Unter-Organisationen
+  
+  continue: Fortfahren

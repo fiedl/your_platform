@@ -14,7 +14,48 @@ module StructureableMixins::Roles
 
   included do
   end
-
+  
+  def fill_cache
+    super
+    if respond_to?(:child_groups) # TODO: Refactor this. It should be possible to find the admins for a user.
+      find_admins
+      admins_of_ancestors
+      admins_of_self_and_ancestors
+      officers_of_self_and_parent_groups
+      officers_groups_of_self_and_descendant_groups
+      officers_of_self_and_ancestors
+      officers_of_self_and_ancestor_groups
+    end
+  end
+  
+  def delete_cache
+    super
+    delete_caches_concerning_roles
+  end
+  
+  def delete_caches_concerning_roles
+    if is_a? Group
+      # For an admins_parent, this is called recursively until the original group
+      # is reached.
+      #
+      #   group
+      #     |---- officers_parent
+      #                |------------ admins_parent
+      #                |------------ some officer group
+      #
+      if has_flag?(:officers_parent) || has_flag?(:admins_parent)
+        parent_groups.each do |group| 
+          group.delete_cache
+          if group.descendants.count > 0
+            bulk_delete_cached :admins_of_ancestors, group.descendants
+            bulk_delete_cached :admins_of_self_and_ancestors, group.descendants
+            bulk_delete_cached "*officers*", group.descendants
+          end
+        end
+      end
+    end
+  end
+  
 
   # Officers
   # ==========================================================================================
@@ -33,11 +74,14 @@ module StructureableMixins::Roles
   end
 
   def create_officers_parent_group
-    create_special_group(:officers_parent)
+    if self.ancestor_groups(true).find_all_by_flag(:officers_parent).count == 0 and not self.has_flag?(:officers_parent)
+      # Do not allow officer cascades.
+      create_special_group(:officers_parent)
+    end
   end
 
   def find_or_create_officers_parent_group
-    find_or_create_special_group(:officers_parent)
+    find_officers_parent_group || create_officers_parent_group
   end
 
   def officers_parent
@@ -52,16 +96,59 @@ module StructureableMixins::Roles
   # and of the descendant groups of the structureable object.
   #
   def find_officers_parent_groups_of_self_and_of_descendant_groups
-    officers_parent_groups = ( [self] + self.descendant_groups ).collect do |group|
-      group.find_special_group(:officers_parent)
-    end.select { |group| group.present? }
+    [self.find_officers_parent_group] + self.descendant_groups.find_all_by_flag(:officers_parent) - [nil]
   end
 
   # This method lists all officer groups of the group, i.e. all subgroups of the
   # officers_parent group.
   #
   def find_officers_groups
-    self.officers_parent.try(:descendant_groups) || []
+    self.find_officers_parent_group.try(:descendant_groups) || []
+  end
+  def officers_groups
+    self.officers_parent.descendant_groups
+  end
+  
+  def direct_officers
+    self.find_officers_parent_group.try(:descendant_users) || []
+  end
+  
+  def officers_of_self_and_parent_groups
+    cached do
+      direct_officers + (parent_groups.collect { |parent_group| parent_group.direct_officers }.flatten)
+    end
+  end
+  
+  def officers_groups_of_self_and_descendant_groups
+    cached do
+      self.find_officers_parent_groups_of_self_and_of_descendant_groups.collect do |officers_parent|
+        officers_parent.descendant_groups
+      end.flatten.uniq
+    end
+  end
+  
+  def find_officers
+    cached do
+      if respond_to? :child_groups
+        find_officers_parent_group.try(:descendant_users) 
+      end || []
+    end
+  end
+
+  def officers_of_ancestors
+    cached { ancestors.collect { |ancestor| ancestor.find_officers }.flatten }
+  end
+  
+  def officers_of_ancestor_groups
+    cached { ancestor_groups.collect { |ancestor| ancestor.find_officers }.flatten }
+  end
+  
+  def officers_of_self_and_ancestors
+    cached { find_officers + officers_of_ancestors }
+  end
+  
+  def officers_of_self_and_ancestor_groups
+    cached { find_officers + officers_of_ancestor_groups }
   end
 
   # This method returns all officer users, as well all of this group as of its subgroups.
@@ -95,11 +182,18 @@ module StructureableMixins::Roles
   end
 
   def create_admins_parent_group
+    delete_cached(:find_admins)
     create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
   end
 
   def find_or_create_admins_parent_group
-    find_or_create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
+      find_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group) or
+      begin
+        delete_cached(:find_admins)
+        create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group)
+      rescue
+        nil
+      end
   end
 
   def admins_parent
@@ -115,33 +209,23 @@ module StructureableMixins::Roles
   end
 
   def find_admins
-    find_admins_parent_group.try( :descendant_users ) || []
+    cached do
+      if respond_to? :child_groups
+        find_admins_parent_group.try( :descendant_users ) 
+      end || []
+    end || []
   end
-
-  # Structurable admins
-  # Structurable admins are users that are either admins of this structurable (page or group) or
-  # structurable admin of a parent structurable.
-  def structurable_admins
-    self.find_admins | self.parents.collect do |parent|
-      parent.cached_structurable_admins
-    end.flatten.uniq
+  
+  def admins_of_ancestors
+    cached { ancestors.collect { |ancestor| ancestor.find_admins }.flatten }
   end
-
-  def cached_structurable_admins
-    Rails.cache.fetch([self, "structurable_admins"]) { structurable_admins }
+  
+  def admins_of_ancestor_groups
+    cached { ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten }
   end
-
-  # User admins
-  # User admins are users that are either admins of this structurable (page or group) or of
-  # a parent group.
-  def user_admins
-    self.find_admins | self.parent_groups.collect do |parent|
-      parent.cached_user_admins
-    end.flatten.uniq
-  end
-
-  def cached_user_admins
-    Rails.cache.fetch([self, "user_admins"]) { user_admins }
+  
+  def admins_of_self_and_ancestors
+    cached { find_admins + admins_of_ancestors }
   end
 
 

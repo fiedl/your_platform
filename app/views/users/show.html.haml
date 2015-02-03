@@ -1,7 +1,11 @@
 - # -*- coding: utf-8 -*-
 
 - # General Info Box
-%h1.section.general= "#{editable_first_and_last_name(@user)} &nbsp;&nbsp; #{@user.cached_aktivitaetszahl}".html_safe
+%h1.section.general.no_uppercase
+  = editable_first_and_last_name(@user)
+  &nbsp;
+  %span.regular_case
+    = @user.name_affix
 %div
   %span.avatar.thumbnail.pull-left= user_avatar(@user, size: 128)
   = render partial: 'workflow_triggers'
@@ -43,7 +47,6 @@
   %h1.section.corporate_vita= t :corporate_vita
   %div
     = render partial: 'workflow_triggers'
-    - # = cached_corporate_vita_for_user @user
     = corporate_vita_for_user @user
 
 - # Groups Box

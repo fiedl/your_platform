@@ -9,9 +9,13 @@ class SessionsController < Devise::SessionsController
   # track the users' activities.
   #
   def create
-    params[:user_account].merge!(remember_me: 1)
     super
     metric_logger.register_session
+  end
+  
+  def destroy
+    current_user.update_last_seen_activity(nil) if current_user
+    super
   end
 
 end

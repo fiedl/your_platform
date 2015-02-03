@@ -31,10 +31,7 @@ module GroupMixins::Officers
   # This method determines if the group is an officers group.
   #
   def is_officers_group?
-    self.ancestor_groups.each do |group|
-      return true if group.has_flag? :officers_parent
-    end
-    return false
+    self.ancestor_groups.find_all_by_flag(:officers_parent).count > 0
   end
   
   # This returns whether the group is special.
@@ -46,5 +43,5 @@ module GroupMixins::Officers
       ancestor.has_flag?(:officers_parent)
     end.any?
   end
-
+  
 end

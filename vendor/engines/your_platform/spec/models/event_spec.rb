@@ -55,6 +55,50 @@ describe Event do
       @event.groups.should include @group, @another_group
     end
   end
+  
+  
+  # Contact People and Attendees
+  # ==========================================================================================
+
+  describe "#contact_people" do
+    subject { @event.contact_people }
+    before { @user = create :user }
+    specify "it should return users in the contact people group" do
+      @event.contact_people.should_not include @user
+      @event.contact_people_group.assign_user @user; time_travel 2.seconds
+      @event.contact_people.should include @user
+    end
+    specify "it should not return users that left through an un-assign" do
+      @event.contact_people.should_not include @user
+      @event.contact_people_group.assign_user @user; time_travel 2.seconds
+      @event.contact_people.should include @user
+      @event.contact_people_group.unassign_user @user; time_travel 2.seconds
+      @event.contact_people.should_not include @user
+    end
+  end
+  
+  describe "#attendees" do
+    subject { @event.attendees }
+    before { @user = create :user }
+    specify "it should return joined users" do
+      @event.attendees.should_not include @user
+      @user.join @event; time_travel 2.seconds
+      @event.attendees.should include @user
+    end
+    specify "it should not return users that left through an un-assign" do
+      @event.attendees.should_not include @user
+      @user.join @event; time_travel 2.seconds
+      @event.attendees.should include @user
+      @event.attendees_group.unassign_user @user; time_travel 2.seconds
+      @event.attendees.should_not include @user
+    end
+    specify "multiple joins should not create several attendees groups (bug fix)" do
+      @user.join @event
+      @other_user = create :user; @other_user.join @event
+      subject.should include @user, @other_user
+      @event.child_groups.find_all_by_flag(:attendees).count.should == 1
+    end
+  end
 
 
   # Scopes
@@ -63,7 +107,8 @@ describe Event do
   describe ".upcoming" do
     before do 
       @upcoming_event = create( :event, start_at: 5.hours.from_now )
-      @recent_event = create( :event, start_at: 5.hours.ago )
+      @recent_event = create( :event, start_at: 2.days.ago )
+      @recent_event_today = create(:event, start_at: Date.today.to_datetime.change(hour: 0, min: 5))
       @group.child_events << @upcoming_event << @recent_event
       @unrelated_event = create( :event, start_at: 5.hours.from_now )
     end
@@ -71,8 +116,11 @@ describe Event do
     it "should return events starting in the future" do
       subject.should include @upcoming_event
     end
-    it "should not return events having started in the past" do
+    it "should not return events having started some days ago (in the past)" do
       subject.should_not include @recent_event
+    end
+    it "should return events that have started on the same day, i.e. are currently in progress" do
+      subject.should include @recent_event_today
     end
     describe "chained with .find_all_by_group" do
       subject { Event.find_all_by_group( @group ).upcoming }
@@ -166,5 +214,40 @@ describe Event do
       subject.first.start_at.should < subject.last.start_at
     end
   end
-
+  
+  
+  # Structure
+  # ==========================================================================================
+  
+  # The following DAG structure should be possible in the model layer (bug fix).
+  #
+  #   @corporation
+  #        |---------- @status_group
+  #        |                     |
+  #      @event                  |
+  #        |--- @contact_people  |
+  #                          |   |
+  #                          @user
+  #
+  specify "this dag structure should work (bug fix)" do
+    @user = create :user
+    @corporation = create :corporation_with_status_groups
+    @status_group = @corporation.status_groups.first
+    @event = @corporation.child_events.create
+    @contact_people = @event.contact_people_group
+    @contact_people.assign_user @user
+  end
+  specify "this structure is created in the events controller this way" do
+    @user = create :user
+    @group = create :group
+    @group.assign_user @user
+    
+    @event = Event.new
+    @event.name ||= I18n.t(:enter_name_of_event_here)
+    @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
+    @event.save!
+    @event.parent_groups << @group
+    @event.contact_people_group.assign_user @user
+  end
+  
 end

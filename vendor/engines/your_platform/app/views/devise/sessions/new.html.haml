@@ -6,7 +6,7 @@
       = f.text_field :login, :autofocus => true
 
     %div
-      = f.label t :password
+      = f.label :password, I18n.t(:password)
       = f.password_field :password
 
     = f.submit t :login

@@ -1,0 +1,42 @@
+= render partial: 'shared/authorization_info', locals: {subject: 'new_post', navable: @group}
+
+%h1.new.post.recipients
+  Sammelnachricht an 
+  = surround "'", "'" do
+    = @group.try(:name)
+%div
+  - if @group
+    %p.constrain_validity_range
+      %label.constrain_validity_range{for: 'constrain_validity_range'}
+        %input{type: 'checkbox', name: 'constrain_validity_range', id: 'constrain_validity_range'}
+        Zielgruppe eingrenzen
+      %ul.constrain_validity_range.hidden
+        %li 
+          Nur an Personen schicken, die der Gruppe
+          = surround "'", "'" do
+            = link_to @group.name, @group
+          seit folgendem Datum angehören:
+          %input.valid_from#valid_from{value: I18n.localize(Date.today)}
+    %p.member_count
+      Anzahl der Empfänger:
+      %span.member_count{data: {query_url: group_url(@group, format: 'json')}}= @group.members.count
+  - else
+    Keine Gruppe ausgewählt.
+
+%h1.new.post.message Nachricht
+%div
+  %form
+    %p
+      %textarea#message_text
+        = render partial: 'new_post_template_text'
+    %p
+      Betreff:
+      %input.subject{value: "[#{@group.name}] Neues von der Wingolfsplattform"}
+    %p.buttons.right
+      %a.btn#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
+        %i.icon-envelope
+        = "Zum Testen an meine eigene Adresse senden."
+      %a.btn.btn-primary#confirm_message{href: group_posts_path(group_id: @group.id, recipient: @group.id, format: 'json')}
+        %i.icon-envelope
+        = "An '#{@group.name}' senden."
+        

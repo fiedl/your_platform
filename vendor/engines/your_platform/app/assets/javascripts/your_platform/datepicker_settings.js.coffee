@@ -13,4 +13,4 @@
 #   $.datepicker.setDefaults(datepickerOptions, datepickerOptionsForLocale  )
 # 
 # $(document).ready(ready)
-# $(document).on('page:load', ready)
+# 

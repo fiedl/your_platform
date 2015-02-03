@@ -1,7 +1,8 @@
 namespace :patch do
 
   task :groups => [
-    'groups:part1'
+    'groups:part1',
+    'groups:part2'
   ]
   
   namespace :groups do
@@ -22,6 +23,10 @@ namespace :patch do
       'print_info',
       'add_wingolf_super_groups',
       'recalculate_membership_validity_ranges_for_super_groups'
+    ]
+    
+    task :part2 => [
+      'full_members_flags'
     ]
     
     task :add_wingolf_super_groups => [:environment, :requirements, :print_info] do
@@ -99,7 +104,6 @@ namespace :patch do
           membership = UserGroupMembership.with_invalid.find_by_user_and_group(user, group)
           if membership
             membership.recalculate_validity_range_from_direct_memberships!
-            Rails.cache.delete [user, "my_groups_table"]
             print ".".green
             counter += 1 
           else
@@ -110,6 +114,25 @@ namespace :patch do
       
       log.info ""
       log.success "#{counter} UserGroupMemberships aktualisiert."
+    end
+    
+    task :full_members_flags => [:environment, :requirements, :print_info] do
+      log.section "Aktivitas und Philisterschaft mit :full_members markieren"
+      log.info "Damit wird ermittelt, ob eine Person ordentliches Mitglied einer"
+      log.info "Verbindung ist."
+      
+      groups = 
+        Group.find_by_flag(:alle_aktiven).child_groups +
+        Group.find_by_flag(:alle_philister).child_groups -
+        Group.find_all_by_flag(:officers_parent)
+      
+      groups.each do |group|
+        group.add_flag :full_members
+        print ".".green
+      end
+      
+      log.info ""
+      log.info "Fertig."
     end
   end
   

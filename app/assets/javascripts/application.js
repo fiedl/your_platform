@@ -11,16 +11,19 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require jquery
+//= require jquery.turbolinks
 //= require jquery_ujs
-//= require turbolinks
+//
 //= require angular
 //= require angular-resource
-//= require jquery.ui.all
 // require jquery.ui.effect.all
 //= require jquery.purr
 // TODO    require jquery.ui.datepicker-de
 //= require_boxes
-//= require gmaps4rails
 //= require make-js-more-like-ruby
+// TODO Reintegrate gmap4rails into your_platform. We have to get away form the fork.
+//= require gmaps4rails
 //= require your_platform
 //= require_tree .
+//
+//= require turbolinks

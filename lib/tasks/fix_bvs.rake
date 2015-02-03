@@ -23,6 +23,7 @@ namespace :fix do
       'assign_unassigned_philistres_to_bvs',
       'list_users_without_postal_address',
       'list_addresses_without_bv'
+      # 'correct_bv_assignments_of_all_philistres'  # Deactivated for now. There are manual assignments for a reason.
     ]
     
     task :assign_unassigned_philistres_to_bvs => [:environment, :requirements, :print_info] do
@@ -36,7 +37,7 @@ namespace :fix do
 
       for user in alle_philister_ohne_bv
         if user.alive? and user.wingolfit?
-          print "#{user.w_nummer} ... "
+          print "* (#{user.id}) #{user.w_nummer} #{user.cached_title} ... "
           
           user.adapt_bv_to_postal_address
           
@@ -64,7 +65,7 @@ namespace :fix do
       log.info ""
 
       for user in alle_philister_mit_mehreren_bvs
-        print "#{user.w_nummer} ... "
+        print "* (#{user.id}) #{user.w_nummer} #{user.cached_title} ... "
         
         correct_membership = user.adapt_bv_to_postal_address
         raise 'no membership' unless correct_membership.kind_of? UserGroupMembership
@@ -84,7 +85,7 @@ namespace :fix do
       
       for user in alle_benutzer_ohne_postanschrift
         if user.alive? and user.wingolfit?
-          log.info "#{user.w_nummer}  #{user.title}"
+          log.info "* (#{user.id}) #{user.w_nummer} #{user.cached_title}"
         end
       end
     end
@@ -108,6 +109,27 @@ namespace :fix do
       end
     end
     
+    task :correct_bv_assignments_of_all_philistres => [:environment, :requirements, :print_info] do
+      log.section "BV-Zuordnungen aller Philister überprüfen"
+      log.info "Alle Philister werden nun durchgegangen und überprüft, ob der eingetragene"
+      log.info "zur Anschrift für Wingolfspost passt. Falls nicht, wird die BV-Zuordnung"
+      log.info "korrigiert und im Folgenden aufgelistet:"
+      log.info ""
+      
+      for user in alle_philister.reorder(:id)
+        if user.postal_address_field.try(:bv) && user.bv && (user.postal_address_field.bv != user.bv)
+          log.info "* (#{user.id}) #{user.cached_title}, wohnhaft in #{user.postal_address_field.plz} #{user.postal_address_field.city}: #{user.bv.token} -> #{user.postal_address_field.bv.token}"
+          
+          user.adapt_bv_to_postal_address
+          
+          if user.postal_address_field.bv != user.reload.bv
+            log.warning "    -> BV-Neuzuordnung fehlgeschlagen. Bitte manuell überprüfen."
+          end
+        end
+      end
+      log.success "Fertig."
+    end
+    
   end
   
   def log
@@ -115,7 +137,7 @@ namespace :fix do
   end
   
   def alle_philister
-    User.joins_groups.where(:groups => {name: "Philister"}).uniq
+    (Group.where(name: "Alle Philister").first || raise('Gruppe "Alle Philister" nicht gefunden.')).members
   end
   
   def alle_bv_philister

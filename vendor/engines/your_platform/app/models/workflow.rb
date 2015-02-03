@@ -19,5 +19,22 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   def wah_group  # => TODO: corporation
     ( self.ancestor_groups & Corporation.all ).first
   end
-
+  
+  def self.find_or_create_mark_as_deceased_workflow
+    self.find_mark_as_deceased_workflow || self.create_mark_as_deceased_workflow
+  end
+  
+  def self.find_mark_as_deceased_workflow
+    Workflow.where(name: "Todesfall").first
+  end
+  
+  def self.create_mark_as_deceased_workflow
+    raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
+    workflow = Workflow.create(name: "Todesfall")
+    step = workflow.steps.build
+    step.sequence_index = 1
+    step.brick_name = "MarkAsDeceasedBrick"
+    step.save
+    return workflow
+  end
 end

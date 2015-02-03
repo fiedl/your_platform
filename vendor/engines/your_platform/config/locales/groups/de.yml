@@ -2,6 +2,9 @@ de:
   group: Gruppe
   groups: Gruppen
   
+  corporation: Korporation
+  corporations: Korporationen
+  
   everyone: Jeder
   officers_parent: Amtsträger
   officers: Amtsträger
@@ -20,6 +23,7 @@ de:
   my_groups:                      Meine Gruppen
   sub_groups:                     Untergruppen
   members:                        Mitglieder
+  full_members:                   Ordentliche Mitglieder
   groups_of:                      Gruppen von
 
   details:                        Detail-Informationen
@@ -28,16 +32,25 @@ de:
   extensive_name:                 Ausführliche Bezeichnung
 
   add_member:                     Mitglied hinzufügen
+  number_of_members:              Anzahl der Mitglieder
   
   download_list:                  Liste herunterladen
   tables:                         Tabellen
+  excel_tables:                   Excel-Tabellen
+  
   name_list:                      Namensliste
   birthday_list:                  Geburtstagsliste
   address_list:                   Adressliste
   phone_list:                     Telefonliste
   email_list:                     E-Mail-Liste
+  member_development:             Mitglieder-Entwicklung
+  
   current_age:                    Aktuelles Alter
   last_updated_at:                Zuletzt aktualisiert am
+  pdf_files:                      PDF-Dateien
+  address_labels:                 Adress-Etiketten
+  sender:                         Absender
+  create_address_labels_pdf:      PDF mit Adress-Etiketten erstellen
   
   
   

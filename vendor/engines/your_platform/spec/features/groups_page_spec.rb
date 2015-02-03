@@ -25,7 +25,7 @@ feature "Groups Page" do
       within('.box.section.members') do
         click_on I18n.t(:add)
 
-        page.should have_selector '#group_members ul.child_users li', count: 1
+        page.should have_selector '#group_members .new_child_users li', count: 1
         page.should have_text @user.title
         find('.user-select-input').value.should == ""
       end
@@ -41,20 +41,6 @@ feature "Groups Page" do
 
     end
 
-    def fill_autocomplete(field, options = {})
-      # This method is taken from:
-      # https://github.com/joneslee85/ruby-journal-source/blob/master/source/_posts/2013-09-12-how-to-do-jqueryui-autocomplete-with-capybara-2.markdown
-
-      fill_in field, with: options[:with]
-
-      page.execute_script %Q{ $('##{field}').trigger('focus') }
-      page.execute_script %Q{ $('##{field}').trigger('keydown') }
-      selector = %Q{ul.ui-autocomplete li.ui-menu-item a:contains("#{options[:select]}")}
-
-      page.should have_selector('ul.ui-autocomplete li.ui-menu-item a')
-      page.execute_script %Q{ $('#{selector}').trigger('mouseenter').click() }
-    end
-
   end
 
   describe 'when logged in as regular user' do
@@ -65,34 +51,15 @@ feature "Groups Page" do
 
     scenario 'should not render list entries for hidden members' do
       visit group_path(@group)
-      page.should have_selector '#group_members ul.child_users li', count: 11
+      page.should have_selector '#group_members tr', count: 12
       page.should have_no_text 'Hidden'
     end
     
     scenario 'should render list entries for dead members' do
       visit group_path(@group)
-      page.should have_selector '#group_members ul.child_users li', count: 11
+      page.should have_selector '#group_members tr', count: 12
       page.should have_text 'Dead'
     end
   end
   
-  scenario 'viewing the members list of a corporation' do
-    @user = create(:user)
-    @corporation = create(:corporation).becomes(Group)
-    @membership = @corporation.assign_user @user, at: 1.year.ago
-    @former_members = @corporation.child_groups.create(name: "Former Members")
-    @former_members.add_flag :former_members_parent
-        
-    login :user
-    visit group_path(@corporation)
-
-    page.should have_text @user.last_name
-    
-    # The list should not contain former members.
-    #
-    @membership.promote_to @former_members, at: 10.days.ago
-    visit group_path(@corporation)
-    page.should have_no_text @user.last_name
-  end
-
 end

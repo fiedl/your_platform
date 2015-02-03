@@ -6,7 +6,11 @@ Wingolfsplattform::Application.configure do
 
   # Full error reports are disabled and caching is turned on
   config.consider_all_requests_local       = false
+
+  # Caching
   config.action_controller.perform_caching = true
+  # config.cache_store = :file_store, Rails.root.join("tmp/app_cache")
+  config.cache_store = :redis_store, "redis://localhost:6379/0/", { expires_in: 1.week, namespace: "#{::STAGE}_cache" }
 
   # Disable Rails's static asset server (Apache or nginx will already do this)
   config.serve_static_assets = false

@@ -7,19 +7,20 @@
 class Group < ActiveRecord::Base
   
   attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                    :body, # a description text displayed on the groups pages top
                     :token, # (optional) a short-name, abbreviation of the group's name, in 
                             # a global context; example: 'A'
                     :internal_token, # (optional) an internal abbreviation, i.e. used by the 
                                      # members of the group; example: 'AC'
                     :extensive_name, # (optional) a long version of the group's name;
                                      # example: 'The Corporation of A'
-                    :direct_member_titles_string # Used for inline-editing: The comma-separated
-                                                 # titles of the child users of the group.
+                    :direct_members_titles_string # Used for inline-editing: The comma-separated
+                                                  # titles of the child users of the group.
                     )
   
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
-  is_structureable( ancestor_class_names: %w(Group Page), 
+  is_structureable( ancestor_class_names: %w(Group Page Event), 
                     descendant_class_names: %w(Group User Page Workflow Event) )
   is_navable
   has_profile_fields
@@ -35,12 +36,16 @@ class Group < ActiveRecord::Base
   include GroupMixins::Developers
   include GroupMixins::Officers
 
-  include GroupMixins::Csv
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
+  after_save       { self.delay.delete_cache }
 
-  
+  def delete_cache
+    super
+    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
+  end
+    
   # General Properties
   # ==========================================================================================
 
@@ -57,10 +62,56 @@ class Group < ActiveRecord::Base
   # 'admins', use the translation.
   #
   def name
-    I18n.t( super.to_sym, default: super ) if super
+    I18n.t( super.to_sym, default: super ) if super.present?
   end
-
-
+  
+  def extensive_name
+    if has_flag? :attendees
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :contact_people
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :admins_parent
+      name + ": " + parent_groups.first.parent_groups.first.name
+    elsif super.present?
+      super
+    else
+      name
+    end
+  end
+  
+  def name_with_corporation
+    if self.corporation && self.corporation.id != self.id
+      "#{self.name} (#{self.corporation.name})"
+    else
+      self.name
+    end
+  end
+  
+  # This sets the format of the Group urls to be
+  # 
+  #     example.com/groups/24-planeswalkers
+  #
+  # rather than just
+  #
+  #     example.com/groups/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
+  
+  
+  # Mark this group of groups, i.e. the primary members of the group are groups,
+  # not users. This does not effect the DAG structure, but may affect the way
+  # the group is displayed.
+  #
+  def group_of_groups?
+    has_flag? :group_of_groups
+  end
+  def group_of_groups=(add_the_flag)
+    add_the_flag ? add_flag(:group_of_groups) : remove_flag(:group_of_groups)
+  end
+  
+  
   # Associated Objects
   # ==========================================================================================
 
@@ -95,9 +146,34 @@ class Group < ActiveRecord::Base
 
   # Events
   # ------------------------------------------------------------------------------------------
+  
+  def events
+    self.descendant_events
+  end
 
   def upcoming_events
-    self.events.upcoming
+    self.events.upcoming.order(:start_at)
+  end
+  
+  
+  # Adress Labels (PDF)
+  #
+  def members_to_pdf(options = {sender: ''})
+    timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
+  end
+  def members_postal_addresses
+    cached do
+      members
+        .collect { |user| user.address_label }
+        .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
+        .collect { |address_label| address_label.to_s }
+    end
+  end
+  def cached_members_postal_addresses_created_at
+    cached do
+      members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+    end
   end
 
 
@@ -109,15 +185,28 @@ class Group < ActiveRecord::Base
   end
 
   def corporation
-    ([ self ] + ancestor_groups).select do |group|
-      group.corporation?
-    end.first.try(:becomes, Corporation)
+    cached do
+      ([ self ] + ancestor_groups).select do |group|
+        group.corporation?
+      end.first.try(:becomes, Corporation)
+    end
   end
 
   def corporation?
     self.becomes(Corporation).in? Corporation.all
   end
   
+  # This returns all sub-groups of the corporation that have no
+  # sub-groups of their ownes except for officer groups. 
+  # This is needed for the selection of status groups.
+  #
+  def leaf_groups
+    cached do
+      self.descendant_groups.includes(:flags).select do |group|
+        group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+      end
+    end
+  end
   
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
@@ -125,21 +214,8 @@ class Group < ActiveRecord::Base
   def deceased
     find_deceased_members_parent_group
   end
-
-
-  # Adding objects
-  # --------------
   
-  def <<(object)
-    if object.kind_of? User
-      self.child_users << object unless self.child_users.include? object
-    end
-    if object.kind_of? Group
-      self.child_groups << object unless self.child_groups.include? object
-    end
-  end
-  
-  
+ 
   # Finder Methods
   # ==========================================================================================
 

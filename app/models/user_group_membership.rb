@@ -6,12 +6,11 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user_group_member
 # This class represents a UserGroupMembership of the platform.
 #
 class UserGroupMembership
-  # Override the flush_cache_ugm method in order to delete specific cache
+
+  # This method is called by a nightly rake task to renew the cache of this object.
   #
-  alias_method :orig_flush_cache_ugm, :flush_cache_ugm
-  def flush_cache_ugm
-    Rails.cache.delete([self.user, "aktivitaetszahl"])
-    orig_flush_cache_ugm
+  def fill_cache
+    valid_from
   end
 
 end

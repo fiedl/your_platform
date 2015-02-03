@@ -8,7 +8,11 @@ describe StatusGroup do
   #      |            |---------------- @status_a_2
   #      |
   #      |--- @officers_parent
-  #                   |---------------- @admins_parent - @user
+  #      |            |---------------- @admins_parent - @user
+  #      |
+  #      |---- @event ----------------- @attendees ----- @user
+  #               |------------------- @contact_people - @user 
+  #
   #
   # @corporation_b
   #      |----------------------------- @status_b_1
@@ -21,6 +25,9 @@ describe StatusGroup do
     @status_a_2 = @intermediate_group.child_groups.create(name: "Status a 2")
     @officers_parent = @corporation_a.create_officers_parent_group
     @admins_parent = @corporation_a.find_or_create_admins_parent_group
+    @event = @corporation_a.child_events.create(name: 'Event')
+    @attendees = @event.attendees_group
+    @contact_people = @event.contact_people_group
     
     @corporation_b = create(:corporation)
     @status_b_1 = @corporation_b.child_groups.create(name: "Status b 1")
@@ -30,6 +37,8 @@ describe StatusGroup do
     @status_a_1.assign_user @user, at: 1.day.ago
     @admins_parent.assign_user @user, at: 1.day.ago
     @status_b_2.assign_user @user, at: 1.day.ago
+    @attendees.assign_user @user, at: 1.day.ago
+    @contact_people.assign_user @user, at: 1.day.ago
   end
   
   describe ".find_all_by_corporation" do
@@ -37,6 +46,8 @@ describe StatusGroup do
     it { should include @status_a_1, @status_a_2 }
     it { should_not include @intermediate_group }
     it { should_not include @admins_parent }
+    it { should_not include @attendees }
+    it { should_not include @contact_people }
     it "should be equivalent to Corporation#status_groups" do
       subject.should == @corporation_a.status_groups
     end

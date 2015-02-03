@@ -95,7 +95,7 @@ describe Group do
       @subgroup = @group.child_groups.create
       @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ), 
                            @subgroup.events.create( start_at: 5.hours.from_now ) ]
-      @recent_events = [ @group.events.create( start_at: 5.hours.ago ) ]
+      @recent_events = [ @group.events.create( start_at: 2.days.ago ) ]
       @unrelated_events = [ create( :event ) ]
     end
 
@@ -177,7 +177,7 @@ describe Group do
         @group = create(:group)
         @corporation = create(:corporation)
       end
-      subject { @group.corporation }
+      subject { @group.reload.corporation }
       describe "for the group being a corporation" do
         before { @group = @corporation }
         it "should return self" do
@@ -224,6 +224,81 @@ describe Group do
         it { should == false }
       end
     end
+    
+    describe '#leaf_groups' do
+      subject { @group.leaf_groups }
+      describe 'for the group being a corporation' do
+        before { @group = create(:corporation) }
+        it { should == [] }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @status_groups = @group.status_groups
+        end
+        it { should == @status_groups }
+      end
+      describe 'for the group being a corporation with admin, normal and status groups' do
+        before do
+        @group = create(:corporation)
+        @group.find_or_create_admins_parent_group
+        @status_1 = @group.child_groups.create
+        @group_a = @group.child_groups.create
+        @status_2 = @group_a.child_groups.create
+        @group_b = @group.child_groups.create
+        @status_3 = @group_b.child_groups.create
+        end
+        it 'should contain all status groups' do 
+          should include(@status_1)
+          should include(@status_2)
+          should include(@status_3)
+          should_not include(@group_a)
+          should_not include(@group_b)
+          should_not include(@group.admins_parent)
+        end
+      end
+    end
+
+    describe '#cached(:leaf_groups)' do
+      subject { @group.reload.cached(:leaf_groups) }
+      describe 'for the group being a corporation' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @group.cached(:leaf_groups)
+        end
+        it { should == @group.cached(:leaf_groups) }
+      end
+      describe 'for the group being a corporation with admin groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+          @group.find_or_create_admins_parent_group
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with normal and status groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+          wait_for_cache
+          
+          # The creation of this group structure should reset the cache.
+          @status_1 = @group.child_groups.create
+          @group_a = @group.child_groups.create
+          @status_2 = @group_a.child_groups.create
+          @group_b = @group.child_groups.create
+          @status_3 = @group_b.child_groups.create
+        end
+        it { should == @group.leaf_groups }
+      end
+    end
   end
 
 
@@ -242,7 +317,11 @@ describe Group do
       it "should add the user as a child user" do
         @group.child_users.should_not include @user
         subject
-        @group.child_users.should include @user
+        @group.reload.child_users.should include @user
+      end
+      it "should set the valid_from attribute on the membership" do
+        subject
+        UserGroupMembership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
       end
     end
     

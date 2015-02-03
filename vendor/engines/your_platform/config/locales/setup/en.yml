@@ -1,0 +1,26 @@
+en:
+  welcome_to_your_platform: Welcome to Your New Platform!
+  this_setup_will_get_you_up_and_running: 'This setup will help you to get your platform up and running.'
+  
+  choose_setup_language: Choose Your Setup Language
+  this_sets_only_the_setup_language: This setting is only applied to this setup process. Each user may choose his or her own language. The default language may be set in the configuration file `config/application.rb`.
+  
+  setup_admin_user: Create Admin User
+  enter_your_own_name_here_not_admin: 'Please enter your own name here, not "Admin" or "Secretary". The admin rights may be changed later.'
+  
+  enter_your_unique_password_here: 'Enter an a new password here for this admin account. This password is for your eyes only. Do not pass it on to other people. Furthermore, do not use a password you are already using for another service. The password is saved in a degernated form in the database, i.e. nobody can read it out.'
+  find_a_guide_how_to_create_good_passwords_in_this_comic: 'Find a guide how to choose a good password in this short and humorous comic:'
+  
+  application_name: Application Name
+  enter_application_name_here: 'Enter the name of this application here. If you leave the field blank, the generic name "MyPlatform" is used. You can change the application name later by changing the value of `Setting.app_name` in the rails console.'
+  application_name_hint: 'Pro tip: Use a name other than the name of your organization. If your organization is the fire department, do not call the application "Fire Department" but "Fire Department Platform" or "Fire Department Intranet".'
+  
+  logo: Logo
+  you_may_upload_a_logo: 'You may replace the Rails logo by your own logo. Just replace the file `app/assets/images/logo.png`. But of course you can safely ignore this step and do this later.'
+  
+  initial_sub_organizations: Initial Sub Organizations
+  assuming_sub_structure_enter_sub_organization_names_here: 'We assume that your organization is composed of several sub organizations having their own administrators, officers and members. To have a first glance how this is represented in this system, you may enter a couple of sub organization names here, for example "Group London", "Group Berlin", "Group Paris.".'
+  separate_through_newlines: 'Separate the organizations by line breaks. You are going to be assigned to the first organization as a member, just for demonstration perposes.'
+  sub_organizations: Sub Organizations
+  
+  continue: Continue

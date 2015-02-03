@@ -32,20 +32,31 @@ Gem::Specification.new do |s|
 
   # JavaScript 
   s.add_dependency "jquery-rails"
+  s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
 
   # Data Structures
   # DAG Structure, https://github.com/resgraph/acts-as-dag
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
+  
+  # Caching
+  s.add_dependency 'redis-rails'
+  
+  # Workers
+  s.add_dependency 'foreman'
+  s.add_dependency 'sidekiq'
 
   # Authentification
-  s.add_dependency 'devise', '2.2.3'   # TODO: try to update                           # MIT License
+  s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
+
+  # Settings
+  s.add_dependency 'rails-settings-cached', '0.2.4'
 
   # Template Engines
   # haml template language, http://haml.info
@@ -61,10 +72,11 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '~> 2.1.0'                                         # MIT License
+  s.add_dependency 'delocalize'
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '>= 2.0.0.pre'                                       # MIT License
+  s.add_dependency 'gmaps4rails', '2.0.1'                                       # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,
@@ -73,14 +85,14 @@ Gem::Specification.new do |s|
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
-  s.add_dependency 'rmagick', '>=2.13.2'
+  s.add_dependency 'mini_magick'
   s.add_dependency 'jquery-fileupload-rails'
 
   # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
 
   # Edit Mode
-  s.add_dependency 'edit_mode', '>= 1.0.0'                                             # MIT License
+  s.add_dependency 'edit_mode', '>= 1.0.1'                                             # MIT License
 
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
@@ -92,10 +104,26 @@ Gem::Specification.new do |s|
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
   s.add_dependency 'rails-gallery', '>= 0.3.3'                                         # MIT License
+  s.add_dependency 'jquery-datatables-rails', '1.12.2'
+  
+  # JavaScript
+  s.add_dependency 'jquery-turbolinks'
   
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
+  
+  # Activity Feed
+  s.add_dependency 'public_activity', '~> 1.4.1'                                       # MIT License
+  
+  # XLS Export
+  s.add_dependency 'to_xls'
+  
+  # PDF Export
+  s.add_dependency 'prawn'
+  
+  # ICS Export (iCal)
+  s.add_dependency 'icalendar'
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

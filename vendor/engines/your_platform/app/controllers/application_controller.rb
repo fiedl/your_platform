@@ -11,6 +11,9 @@ class ApplicationController < ActionController::Base
   before_filter :log_generic_metric_event
   helper_method :metric_logger
   before_filter :authorize_miniprofiler
+  before_filter :accept_terms_of_use
+  
+  after_filter  :log_activity
   
   # This method returns the currently signed in user.
   #
@@ -105,12 +108,35 @@ class ApplicationController < ActionController::Base
   #   bundle exec foreman start fnordmetric
   #
   def log_generic_metric_event
-    type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
-    metric_logger.log_event( { id: params[:id] }, type: type)
-    metric_logger.log_event( { request_type: type }, type: :generic_request)
+    unless read_only_mode?
+      type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
+      metric_logger.log_event( { id: params[:id] }, type: type)
+      metric_logger.log_event( { request_type: type }, type: :generic_request)
+    end
   end
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
+  end
+  
+  # Generic Activity Logger
+  #
+  def log_activity
+    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title"]) and not params['controller'].in?(['sessions', 'devise/sessions'])
+      begin
+        type = self.class.name.gsub("Controller", "").singularize
+        id = params[:id]
+        object = type.constantize.find(id)
+      rescue
+        # there is no object associated, e.g. for the RootController
+      end
+      
+      PublicActivity::Activity.create!(
+        trackable: object,
+        key: action_name,
+        owner: current_user,
+        parameters: params.except('authenticity_token').except('attachment')
+      )
+    end
   end
   
   # MiniProfiler is a tool that shows the page load time in the top left corner of
@@ -121,5 +147,75 @@ class ApplicationController < ActionController::Base
   def authorize_miniprofiler
     Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
   end
+  
+  
+  def accept_terms_of_use
+    if current_user && (not read_only_mode?) && (not controller_name.in?(['terms_of_use', 'sessions', 'passwords', 'user_accounts', 'attachments', 'errors'])) && (not TermsOfUseController.accepted?(current_user))
+      if request.url.include?('redirect_after')
+        redirect_after = root_path
+      else
+        redirect_after = request.url
+      end
+      redirect_to controller: 'terms_of_use', action: 'index', redirect_after: redirect_after
+    end
+  end
+  
+  
+  # This overrides the `current_ability` method of `cancan`
+  # in order to allow additional options that are needed for a preview mechanism.
+  # 
+  # Warning! Make sure to handle these options very carefully to not allow
+  # malicious injections.
+  #
+  # The original method can be found here:
+  # https://github.com/ryanb/cancan/blob/master/lib/cancan/controller_additions.rb#L356
+  #
+  def current_ability(reload = false)
+    options = {}
+    @current_ability = nil if reload
+    
+    # Read-only mode
+    options[:read_only_mode] = true if read_only_mode?
+    
+    # Preview role mechanism
+    #
+    if @current_ability.nil? and current_user
+      currently_displayed_object = @navable
+      currently_displayed_object ||= Group.everyone  # this causes to determine the role for searches and indices based on the role for the everyone group.
+      
+      params[:preview_as] ||= load_preview_as_from_cookie
+      save_preview_as_cookie(params[:preview_as])
+      if params[:preview_as].present? && current_user && currently_displayed_object
+        if params[:preview_as].in?(Role.of(current_user).for(currently_displayed_object).allowed_preview_roles)
+          options[:preview_as] = params[:preview_as]
+        else
+          cookies.delete :preview_as
+          options[:preview_as] = nil
+          params[:preview_as] = nil
+        end
+      end
+    end
+
+    @current_ability ||= ::Ability.new(current_user, params, options)
+  end
+  
+  def reload_ability
+    current_ability(true)
+  end
+  
+  def load_preview_as_from_cookie
+    cookies[:preview_as]
+  end
+  def save_preview_as_cookie(preview_as)
+    cookies[:preview_as] = preview_as
+  end
+  
+  # Read-only mode for maintenance purposes.
+  #
+  def read_only_mode?
+    @read_only_mode ||= ActiveRecord::Base.read_only_mode?
+  end
+  helper_method :read_only_mode?
+  
 
 end

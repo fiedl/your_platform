@@ -17,7 +17,7 @@ end
 #guard( #'focus', # see https://github.com/supaspoida/guard-focus
        #on: :rspec, :version => 2, 
 guard( 'rspec', :version => 2,
-       :cli => '--drb --tag focus',
+       :cli => '--drb --tag focus --format Fuubar',
        :all_after_pass => false,
        :all_on_start => false,
        spec_paths: %w(spec vendor/engines/your_platform/spec)) do

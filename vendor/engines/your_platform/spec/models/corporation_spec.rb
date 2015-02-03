@@ -67,6 +67,12 @@ describe Corporation do
         subject.should_not include @admins_parent
       end
     end
+    
+    specify "the cache should be updated after a status group is renamed" do
+      @corporation.status_groups # This created the cached version.
+      @status_group.update_attributes name: 'New Status Name'
+      subject.map(&:name).should include 'New Status Name'
+    end
   end
 
 

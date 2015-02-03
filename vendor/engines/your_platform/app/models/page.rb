@@ -1,13 +1,62 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to
+  attr_accessible        :content, :title, :redirect_to, :author
 
-  is_structureable       ancestor_class_names: %w(Page User Group), descendant_class_names: %w(Page User Group)
+  is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group)
   is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+  
+
+  def fill_cache
+    group
+  end
+  
+  
+  # This is the page title. If the title is not given in the
+  # database, try to translate the flag of the page, e.g. 
+  # for the 'imprint' page.
+  #
+  def title
+    super.present? ? super : I18n.translate(self.flags.first, default: '')
+  end
+  
+  # This is the group the page belongs to, for example:
+  #
+  #     group_1
+  #       |----- group_2
+  #       |        |------ page_2 : belongs to group_2
+  #       |
+  #       |--------------- page_1 : belongs to group_1
+  #
+  def group
+    # Do not use `ancestor_groups.last` here. Where this would work somethimes, it depends on the
+    # order of creation of the links.
+    cached do
+      next_parent = parent_groups.first || parent_pages.first
+      until next_parent.nil? or next_parent.kind_of? Group
+        next_parent = next_parent.parent_groups.first || next_parent.parent_pages.first
+      end
+      next_parent
+    end
+  end
+
+  # Url
+  # ----------------------------------------------------------------------------------------------------
+
+  # This sets the format of the Page urls to be
+  # 
+  #     example.com/pages/24-products
+  #
+  # rather than just
+  #
+  #     example.com/pages/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
   
   
   # Quick Assignment of Children
@@ -99,8 +148,9 @@ class Page < ActiveRecord::Base
     self.find_root || self.create_root
   end
 
-  def self.create_root
+  def self.create_root(attrs = {})
     root_page = Page.create(title: "Root")
+    root_page.update_attributes attrs
     root_page.add_flag :root
     n = root_page.nav_node; n.slim_menu = true; n.save; n = nil
     return root_page
@@ -117,10 +167,11 @@ class Page < ActiveRecord::Base
     self.find_intranet_root || self.create_intranet_root
   end
 
-  def self.create_intranet_root
+  def self.create_intranet_root(attrs = {})
     root_page = Page.find_by_flag :root
     root_page = self.create_root unless root_page
     intranet_root = root_page.child_pages.create(title: "Intranet")
+    intranet_root.update_attributes attrs
     intranet_root.add_flag :intranet_root
     return intranet_root
   end
@@ -141,10 +192,21 @@ class Page < ActiveRecord::Base
   end
 
   def self.create_help_page
-    help_page = Page.create(title: "Help")
+    help_page = Page.create
     help_page.add_flag :help
     n = help_page.nav_node; n.hidden_menu = true; n.save;
     return help_page
   end
-
+  
+  # imprint
+  
+  def self.create_imprint
+    imprint_page = Page.create
+    imprint_page.add_flag :imprint
+    return imprint_page
+  end
+  def self.find_imprint
+    Page.find_by_flag :imprint
+  end
+  
 end

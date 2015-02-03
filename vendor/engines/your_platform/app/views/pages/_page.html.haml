@@ -1,10 +1,9 @@
 %h1
-  - display_blank_character = page.title.blank? ? "–" : "…"
-  - if page.try(:becomes, Page) == @navable.try(:becomes, Page)
-    = best_in_place_if can?(:update, page), page, :title, display_as: :title, nil: display_blank_character
+  - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
+    = best_in_place_if can?(:update, page), page, :title
   - else  # Blog Entries:
     = link_to(page) do
-      = best_in_place_if can?(:update, page), page, :title, display_as: :title, nil: display_blank_character
+      = best_in_place_if can?(:update, page), page, :title, classes: 'click_does_not_trigger_edit', activator: 'only_manual'
 %div.page
   %div.page_header
     - if page.author
@@ -19,17 +18,8 @@
         = localize(page.updated_at)
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
-      - if can? :update, page
-        - if page.content.blank?
-          = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "—"
-        - else
-          = best_in_place page, :content, type: 'textarea', sanitize: false, display_with: :markup, nil: "…"
-      - else
-        = markup(page.content)
+      = best_in_place_if can?(:update, page), page, :content, type: 'textarea', sanitize: false
 
 = render(partial: 'pages/pictures', locals: {page: page}) 
 = render(partial: 'pages/videos', locals: {page: page}) 
 = render(partial: 'pages/attachments', locals: {page: page})
-
-
-

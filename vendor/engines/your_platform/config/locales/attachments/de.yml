@@ -4,7 +4,7 @@ de:
   add_attachment: 'Anhang hinzufügen'
   add_attachments: 'Anhänge hinzufügen'
   
-  processing_attachment: 'Anhang wird auf dem Server verarbeitet. Das keinige Momente dauern. Bitte warten.'
+  processing_attachment: 'Anhang wird auf dem Server verarbeitet. Das einige Momente dauern. Bitte warten.'
   drop_attachments_here: 'Um Anhänge hinzuzufügen, können Sie entweder auf den Knopf "Dateien auswählen" unterhalb drücken oder die Dateien einfach von außen in diesen Kasten ziehen.'
   drop_files_here: 'Dateien hierhin schieben, um sie hochzuladen.'
 

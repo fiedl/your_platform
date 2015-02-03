@@ -6,8 +6,16 @@ ready = ->
     split(term).pop()
 
   # Auto-Completion for Users-Select-Box
+  selector_string = "input[name='direct_member_titles_string'], .multiple-users-select-input, .user-select-input"
+  
+  $( document ).on 'focus', selector_string, ->
+    $(this).tooltip {
+      title: 'Nachnamen eingeben, warten und dann Person aus Liste auswählen.',
+      placement: 'left'
+    }
+      
   auto_complete_input_element = null
-  $( document ).on( 'keydown', "input[name='direct_member_titles_string'], .multiple-users-select-input, .user-select-input", ->
+  $( document ).on( 'keydown', selector_string, ->
 
     unless autocomplete_input_element
       autocomplete_input_element = $( this )
@@ -73,4 +81,3 @@ ready = ->
   )
 
 $(document).ready(ready)
-$(document).on('page:load', ready)

@@ -11,7 +11,24 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131115130631) do
+ActiveRecord::Schema.define(:version => 20141110193937) do
+
+  create_table "activities", :force => true do |t|
+    t.integer  "trackable_id"
+    t.string   "trackable_type"
+    t.integer  "owner_id"
+    t.string   "owner_type"
+    t.string   "key"
+    t.text     "parameters"
+    t.integer  "recipient_id"
+    t.string   "recipient_type"
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
+  end
+
+  add_index "activities", ["owner_id", "owner_type"], :name => "index_activities_on_owner_id_and_owner_type"
+  add_index "activities", ["recipient_id", "recipient_type"], :name => "index_activities_on_recipient_id_and_recipient_type"
+  add_index "activities", ["trackable_id", "trackable_type"], :name => "index_activities_on_trackable_id_and_trackable_type"
 
   create_table "attachments", :force => true do |t|
     t.string   "file"
@@ -19,10 +36,11 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.text     "description"
     t.integer  "parent_id"
     t.string   "parent_type"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
+    t.datetime "created_at",     :null => false
+    t.datetime "updated_at",     :null => false
     t.string   "content_type"
     t.integer  "file_size"
+    t.integer  "author_user_id"
   end
 
   create_table "bookmarks", :force => true do |t|
@@ -58,8 +76,11 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.text     "description"
     t.datetime "start_at"
     t.datetime "end_at"
-    t.datetime "created_at",  :null => false
-    t.datetime "updated_at",  :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
+    t.string   "location"
+    t.boolean  "publish_on_global_website"
+    t.boolean  "publish_on_local_website"
   end
 
   create_table "flags", :force => true do |t|
@@ -92,6 +113,16 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.string   "token"
     t.string   "extensive_name"
     t.string   "internal_token"
+    t.text     "body"
+  end
+
+  create_table "last_seen_activities", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "description"
+    t.integer  "link_to_object_id"
+    t.string   "link_to_object_type"
+    t.datetime "created_at",          :null => false
+    t.datetime "updated_at",          :null => false
   end
 
   create_table "nav_nodes", :force => true do |t|
@@ -150,6 +181,17 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.datetime "updated_at", :null => false
   end
 
+  create_table "settings", :force => true do |t|
+    t.string   "var",        :null => false
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
+  add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
+
   create_table "status_group_membership_infos", :force => true do |t|
     t.integer  "membership_id"
     t.integer  "promoted_by_workflow_id"
@@ -171,6 +213,7 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "auth_token"
   end
 
   add_index "user_accounts", ["reset_password_token"], :name => "index_user_accounts_on_reset_password_token", :unique => true
@@ -179,9 +222,11 @@ ActiveRecord::Schema.define(:version => 20131115130631) do
     t.string   "alias"
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
     t.boolean  "female"
+    t.string   "accepted_terms"
+    t.datetime "accepted_terms_at"
   end
 
   create_table "workflow_kit_parameters", :force => true do |t|

@@ -98,7 +98,7 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
       @direct_membership_b.update_attribute(:valid_from, @t2)
       @direct_membership_b.update_attribute(:valid_to, @t3)
     end
-    subject { @indirect_membership.recalculate_validity_range_from_direct_memberships }
+    subject { @indirect_membership.recalculate_validity_range_from_direct_memberships; @indirect_membership.reload }
     it "should make the indirect validity range match the direct memberships' combined range" do
       subject
       @indirect_membership.valid_from.to_i.should == @t1.to_i
@@ -150,10 +150,10 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
       end
       specify "prelims" do
         @user.should be_kind_of User
-        @corporation.should be_kind_of Corporation
+        @corporation.reload.should be_kind_of Corporation
         @corporation.descendants.should include @intermediate_group, @status_group, @second_status_group, @user
-        @intermediate_group.descendants.should include @status_group, @second_status_group, @user
-        @status_group.descendants.should include @user
+        @intermediate_group.reload.descendants.should include @status_group, @second_status_group, @user
+        @status_group.reload.descendants.should include @user
       end
       describe "promoting the membership" do
         subject { @second_membership = @membership.move_to(@second_status_group, at: 20.day.ago) }
@@ -178,8 +178,8 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
           @link.valid_to.should == nil
         end
         it "should update the graph structure" do
-          @second_status_group.descendants.should include @user
-          @corporation.descendants.should include @user
+          @second_status_group.reload.descendants.should include @user
+          @corporation.reload.descendants.should include @user
         end
         it "should update the corporation members correctly" do
           @corporation.members.should include @user

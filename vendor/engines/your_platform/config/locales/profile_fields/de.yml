@@ -1,4 +1,9 @@
 de:
+  profile_field:
+    label: Beschriftung
+    phone:
+      number: Nummer
+  
   former_name: Geburtsname
   date_of_death: Verstorben am
   
@@ -18,7 +23,17 @@ de:
   mobile: Mobil
   work_mobile: Mobiltelefon geschäftlich
   custom: Benutzerdefiniert
+
+  postal_code: Postleitzahl (PLZ)
+  town: Stadt
+  country: Land
+  country_code: Länder-Kennzeichen
   
+  email_address: E-Mail-Adresse
+  
+  phone: Telefon
+  phone_number: Telefonnummer
+
   account: Konto
   account_holder: Kontoinhaber
   account_number: Kontonummer

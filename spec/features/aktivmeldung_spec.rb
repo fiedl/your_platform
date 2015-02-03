@@ -4,9 +4,10 @@ feature "Aktivmeldung" do
   include SessionSteps
 
   before do
-    @corporation = create(:corporation)
-    @aktivitas_group = @corporation.child_groups.create(name: "Aktivitas")
+    @corporation = create :wingolf_corporation
+    @aktivitas_group = @corporation.aktivitas
     @intranet_root = Page.create(title: "Intranet Root").add_flag(:intranet_root)
+    @corporation.reload
 
     login(:admin)
   end
@@ -18,7 +19,9 @@ feature "Aktivmeldung" do
   specify "click 'Aktivmeldung' and add a new user" do
     
     visit root_path
-    click_on "Aktivmeldung eintragen"
+    within('.aktivmeldung_eintragen') do
+      click_on first("Aktivmeldung eintragen")
+    end
 
     page.should have_content "Aktivmeldung eintragen"
     fill_in I18n.t(:first_name), with: "Bundesbruder"
@@ -28,6 +31,11 @@ feature "Aktivmeldung" do
     check I18n.t(:create_account)
 
     page.find("input[name='commit']").click
+    
+    # Jetzt ist man wieder auf der Startseite.
+    # Dort gibt es den Benutzer in der Box der Aktivmeldungen.
+    page.should have_text 'Aktivmeldungen'
+    click_on User.last.uncached(:title)
 
     page.should have_content "Bundesbruder Kanne"
     page.should have_content I18n.t(:date_of_birth)

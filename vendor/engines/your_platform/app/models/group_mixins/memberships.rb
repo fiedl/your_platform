@@ -46,8 +46,16 @@ module GroupMixins::Memberships
     # This returns the UserGroupMembership object that represents the membership of the 
     # given user in this group.
     # 
-    def membership_of( user )
-      memberships.where(descendant_id: user.id).first
+    # options:
+    #   - also_in_the_past 
+    #
+    def membership_of(user, options = {})
+      if options[:also_in_the_past]
+        base = UserGroupMembership.with_invalid
+      else
+        base = UserGroupMembership
+      end
+      base.find_by_user_and_group(user, self)
     end
     
     # This returns a string of the titles of the direct members of this group. This is used
@@ -85,7 +93,51 @@ module GroupMixins::Memberships
         assign_user new_member if new_member
       end
     end
-
+    
+    def memberships_including_members
+      memberships.includes(:descendant).order(valid_from: :desc)
+    end
+    
+    # This returns the memberships that appear in the member list
+    # of the group.
+    #
+    # For a regular group, these are just the usual memberships.
+    # For a corporation, the members of the 'former members' subgroup
+    # of the corporation are excluded, even though they still have 
+    # memberships.
+    #
+    def memberships_for_member_list
+      cached do
+        if corporation?
+          (
+            memberships_including_members - 
+              becomes(Corporation).former_members_memberships -
+              becomes(Corporation).deceased_members_memberships
+          )
+        else
+          memberships_including_members
+        end
+      end
+    end
+    def memberships_for_member_list_count
+      cached { memberships_for_member_list.count }
+    end
+    
+    def latest_memberships
+      cached do
+        # TODO: Fix this syntax when migrating to Rails 4.
+        # self.memberships.with_invalid...
+        UserGroupMembership.with_invalid.find_all_by_group(self).reorder('valid_from DESC').limit(10).includes(:descendant)
+      end
+    end
+    
+    def memberships_this_year
+      cached do
+        # TODO: Fix this syntax when migrating to Rails 4.
+        # self.memberships.this_year...
+        UserGroupMembership.this_year.find_all_by_group(self)
+      end
+    end
 
     # User Assignment
     # ==========================================================================================
@@ -109,6 +161,14 @@ module GroupMixins::Memberships
       if user and user.in?(self.members)
         time_of_unassignment = options[:at] || options[:time] || Time.zone.now
         UserGroupMembership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
+      end
+    end
+    
+    
+    def calculate_validity_range_of_indirect_memberships
+      self.indirect_memberships.where(valid_from: nil).each do |membership| 
+        membership.recalculate_validity_range_from_direct_memberships
+        membership.save
       end
     end
     

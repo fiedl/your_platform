@@ -1,0 +1,4 @@
+- if can? :create_post_for, group
+  %a.btn.has_tooltip#new_post{href: new_group_post_path(group), title: "Sammel-Nachricht per E-Mail an alle Mitglieder der Gruppe '#{group.name}' schicken …"}
+    %i.icon-envelope
+    = "Sammel-Nachricht an '#{group.name}' senden …"

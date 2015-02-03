@@ -95,6 +95,17 @@ module GroupMixins::Erstbandphilister
     end
   end
   
+  def memberships
+    if is_erstbandphilister_parent_group?
+      membership_ids = self.corporation.philisterschaft.memberships_including_members.select do |membership|
+        membership.user.first_corporation == corporation
+      end.collect { |membership| membership.id }
+      UserGroupMembership.where(id: membership_ids)
+    else
+      super
+    end
+  end
+  
   def direct_members
     if is_erstbandphilister_parent_group?
       return members

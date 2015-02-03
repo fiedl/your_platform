@@ -17,13 +17,19 @@ ready = ->
       this.bind('loadstart', (e)->
         title = e.galleriaData.title
         description = e.galleriaData.description
-        $('.picture-title').hide().html(title).fadeIn(500)
-        $('.picture-description').hide().html(description).fadeIn(500)
+        
+        parent = $(e.target).first().parent().parent()
+        $(parent).find('.picture-title').hide().html(title).fadeIn(500)
+        $(parent).find('.picture-description').hide().html(description).fadeIn(500)
       )
     )
     
     Galleria.loadTheme '/js/vendor/galleria/themes/classic.js'
-    Galleria.run '.galleria'
+    Galleria.run '.galleria', {
+      # height: $(this).find('img').attr('height')
+    }
+    
+  $('.galleria-errors').hide()
   
 $(document).ready(ready)
-$(document).on('page:load', ready)
+

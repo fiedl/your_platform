@@ -1,5 +1,8 @@
 Wingolfsplattform::Application.routes.draw do 
 
+  resources :activities
+
+
   get "errors/unauthorized"
 
   # mount Mercury::Engine => '/'
@@ -8,11 +11,11 @@ Wingolfsplattform::Application.routes.draw do
 
   # get "angular_test", controller: "angular_test", action: "index"
 
-  resources :posts
-  resources :events  
+  # resources :posts
 
   match "users/new/:alias" => "users#new"
 
+  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
 
   match 'profile/:alias' => 'users#show', :as => :profile

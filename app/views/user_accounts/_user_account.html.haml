@@ -3,27 +3,36 @@
     Identifikation möglich mit folgenden Daten:
   %dd
     %dl
-      - for attribute in User.attributes_used_for_identification
-        %span
-          %dt
-            = t attribute.to_s
-          %dd
-            - if attribute.to_s == 'name'
-              %span.first_and_last_name
-                = best_in_place @user, :first_name
-                = best_in_place @user, :last_name
-            - else
-              = best_in_place @user, attribute.to_sym
+      - # User.attributes_used_for_identification
+      %span
+        %dt= t :alias
+        %dd= best_in_place_if can?(:change_alias, @user), @user, :alias
+      %span
+        %dt= t :name
+        %dd 
+          %span.first_and_last_name
+            = editable_first_and_last_name(@user)
+      %span
+        %dt= t :email
+        %dd= best_in_place_if can?(:update, @user), @user, :email
+    
 .show_only_in_edit_mode
   %dl
-    - if can? :edit, @user
+    - if can? :update, @user
+      %dt
+        Zugang zur Plattform
+      %dd
+        = "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am #{localize(@user.account.created_at)}. Zuletzt wurde am #{localize(@user.account.updated_at)} ein neues Passwort per E-Mail übersandt."
       %dt
         = t('password') + ':'
       - if @user == current_user
         %dd
           = link_to t(:change_password), edit_registration_path, :class => 'btn btn-success'
       - if can? :manage, @user
-        %dd
+        %dd.request_new_password
           = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
-        %dd
+        %dt
+          Zugang zur Plattform sperren:
+        %dd.lock_account
           = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
+          (Dies sperrt nur den Zugang zur Plattform. Alle Daten bleiben erhalten.)

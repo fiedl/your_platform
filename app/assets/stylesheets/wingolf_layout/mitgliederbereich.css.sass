@@ -7,8 +7,6 @@
     position: relative
     a
       color: #fff
-      font-weight: bold
-      font-size: 13px
     ul.backendBarItems
       margin: 0px
       padding: 0px
@@ -27,21 +25,18 @@
         a
           display: inline-block
           height: 45px
-          text-decoration: none
           padding: 13px 11px 13px 11px
         &.first
           margin-right: 100px
           span.avatar
             height: 36px
-            a
-              height: 36px
-              border: 0px solid
-              position: relative
-              top: -3px
-              margin: 2px
-              padding: 0px
-              img
-                vertical-align: middle
+            border: 0px solid
+            position: relative
+            top: -3px
+            margin: 2px
+            padding: 0px
+            img
+              vertical-align: middle
         &.last
           position: absolute
           right: 0
@@ -54,7 +49,7 @@
             color: #7e0f0d
       li.backendBarItem.dropdown
         ul.dropdown-menu
-          padding: 0px
+          padding: 8px
           margin: 0px    
           li
             height: auto
@@ -62,11 +57,26 @@
             margin: 0px
             a
               height: auto 
-              min-width: 70%
-              padding: 8px	      
+              width: 90%
+              padding: 8px
+            a:hover
+              background: repeat #e8e5de
+          li.active
+            a
+              background: #f8f5ee
+            a:hover
+              background: repeat #e8e5de
+      li.backendBarItem.dropdown.active
+        background: repeat #f8f5ee
+        a
+          color: #7e0f0d
+              
       li.backendBarItem.dropdown:hover
         ul.dropdown-menu
           display: block        
-
-
-
+  b.caret
+    border-top-color: white
+  a:hover
+    b.caret
+      border-top-color: #7e0f0d
+      

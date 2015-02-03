@@ -15,6 +15,7 @@ gem 'rails', '~> 3.2'						# MIT License,
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'mysql2'								# MIT License
+gem 'transaction_retry' # rescue from deadlocks
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -50,14 +51,6 @@ gem 'unicorn'
 # HTML-Nodes
 gem 'nokogiri'								# MIT License
 
-# GoogleMaps
-# moved dependency to your_platform.
-# for turbolinks experiments, use this:
-#   gem 'gmaps4rails', '>= 2.0.0.pre', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
-
-# jQuery UI
-gem 'jquery-ui-rails'							# dual: MIT License, GPL2 License
-
 # DAG für Nodes Model, see: https://github.com/resgraph/acts-as-dag
 #gem 'acts-as-dag', path: '../acts-as-dag'
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
@@ -89,6 +82,8 @@ group :development do
   gem 'better_errors'              # see Railscasts #402
   gem 'binding_of_caller'
   gem 'meta_request'
+  
+  gem 'letter_opener'
 end
 
 # Security Tools
@@ -109,6 +104,7 @@ group :test, :development do
   gem 'guard-focus'
   gem 'rspec-rails'
   gem 'guard-rspec'
+  gem 'rspec-rerun', github: 'dblock/rspec-rerun'
 #  gem 'rspec-mocks'
 #  gem 'listen'
 #  gem 'rb-inotify', '0.8.8' if RUBY_PLATFORM.downcase.include?("linux")
@@ -122,6 +118,8 @@ group :test do
   gem 'spork'
   gem 'simplecov', require: false
   gem 'email_spec'
+  gem 'timecop'  # time_travel
+  gem 'fuubar' # better progress bar for specs
 end
 
 group :test do
@@ -175,9 +173,6 @@ gem 'rb-inotify', '~> 0.9', group: :production
 # Encoding Detection
 gem 'charlock_holmes'
 
-# Manage Workers
-gem 'foreman', group: [:development, :production]
-
 # CMS: Mercury Editor
 gem 'mercury-rails', git: 'git://github.com/jejacks0n/mercury'
 
@@ -193,6 +188,10 @@ gem 'rack-timeout'
 # Metrics
 gem 'fnordmetric'
 
+# Profiling
+gem 'rack-mini-profiler'
+gem 'flamegraph'
+
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
@@ -202,3 +201,13 @@ gem 'tilt', '~> 1.4.1'
 
 # Maintenance Mode
 gem 'turnout'
+
+
+# fix workflow kit until the update to rails 4.
+# workflow_kit 0.0.8 only supports rails 4.
+# TODO: remove this line when migrating to rails 4:
+gem 'workflow_kit', github: 'fiedl/workflow_kit'
+
+gem 'newrelic_rpm'
+gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
+gem 'prawn', github: 'prawnpdf/prawn'

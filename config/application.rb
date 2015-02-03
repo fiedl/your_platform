@@ -42,6 +42,14 @@ else
   ::SECRETS = {}
 end
 
+# Determine a possible staging environment.
+#
+if __FILE__.start_with?('/var/')
+  ::STAGE = __FILE__.split('/')[2] # ['wingolfsplattform', 'wingolfsplattform-master', 'wingolfsplattform-sandbox']
+else
+  ::STAGE = Rails.env.to_s
+end
+
 module Wingolfsplattform
   class Application < Rails::Application
     

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe User do
@@ -9,8 +8,8 @@ describe User do
 
   describe "#title" do
     before do
-      @corporation = create(:wah_group)
-      @corporation.aktivitas.assign_user @user, at: 1.hour.ago
+      @corporation = create(:wingolf_corporation)
+      @corporation.status_group('Hospitanten').assign_user @user, at: 1.hour.ago
     end
     subject { @user.title }
     it "should return the user's name and his aktivitaetszahl" do
@@ -24,8 +23,8 @@ describe User do
   describe ".find_by_title" do
     before do
       @user = create :user
-      @corporation = create :corporation
-      @corporation.assign_user @user
+      @corporation = create :wingolf_corporation
+      @corporation.status_groups.first.assign_user @user
       create :user
       create :user
     end
@@ -84,16 +83,17 @@ describe User do
 
   describe "#aktivitaetszahl" do
     before do
-      @corporationE = create( :corporation_with_status_groups, :token => "E" )
-      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @corporationE = create( :wingolf_corporation, :token => "E" )
+      @corporationH = create( :wingolf_corporation, :token => "H" )
 
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Hospitanten') )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
-      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_group('Hospitanten') )
       @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
       @first_membership_E.invalidate
-      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Philister') )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
+      @user.reload
     end
     subject { @user.aktivitaetszahl }
     it "should return the composed aktivitaetszahl" do
@@ -105,22 +105,61 @@ describe User do
     it "should not use the wrong order (bug fix)" do
       subject.should_not == "H08 E06"
     end
+    context "when joining an event of a corporation" do
+      before do
+        @corporationZ = create :wingolf_corporation, token: 'Z'
+        @event = @corporationZ.child_events.create
+        @user.join @event; time_travel 2.seconds
+        @user.reload
+      end
+      it { should_not include @corporationZ.token }
+      specify { @user.current_corporations.should_not include @corporationZ }
+    end
+    context "when a status membership has no valid_from (issue circumvention)" do
+      # Some users have deleted validity ranges in their vita, because they didn't know the date.
+      #
+      before { @second_membership_E.update_attributes valid_from: nil }
+      it { should == "E06 H08"}
+    end
+    context "when the validity range order does not match the created_at order (issue circumvention)" do
+      before { @first_membership_H.update_attributes valid_from: "2004-12-01".to_datetime }
+      it { should == "H04 E06"}
+      it { should_not == "E06 H04"}
+    end
+    context "for deceased members (bug fix)" do
+      before do
+        time_travel 5.seconds
+        @user.mark_as_deceased at: 1.day.ago
+        @user.reload
+        @user.delete_cache
+      end
+      specify "Verstorbene behalten ihre Aktivitätszahl" do
+        subject.should == "E06 H08"
+      end
+    end
+    context "for global admins" do
+      before { @user.global_admin = true; time_travel 5.seconds }
+      it "should not suppress the aktivitaetszahl (bug fix)" do
+        subject.should == "E06 H08"
+      end
+    end
   end
 
-  describe "#cached_aktivitaetszahl" do
+  describe "#cached(:aktivitaetszahl)" do
     before do
-      @corporationE = create( :corporation_with_status_groups, :token => "E" )
-      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @corporationE = create( :wingolf_corporation, :token => "E" )
+      @corporationH = create( :wingolf_corporation, :token => "H" )
+      @corporationS = create( :wingolf_corporation, :token => "S" )
 
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Hospitanten') )
       @first_membership_E.update_attributes(valid_from: "2006-12-01".to_datetime)
-      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_groups.first )
+      @first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.status_group('Hospitanten') )
       @first_membership_H.update_attributes(valid_from: "2008-12-01".to_datetime)
       @first_membership_E.invalidate
-      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.last )
+      @second_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_group('Philister') )
       @second_membership_E.update_attributes(valid_from: "2013-12-01".to_datetime)
     end
-    subject { @user.cached_aktivitaetszahl }
+    subject { @user.cached(:aktivitaetszahl) }
     it "should return the composed cached aktivitaetszahl" do
       subject.should == "E06 H08"
     end
@@ -129,6 +168,25 @@ describe User do
     end
     it "should not use the wrong order (bug fix)" do
       subject.should_not == "H08 E06"
+    end
+    describe "if currently 'E06 H08' and after adding S in 2014 it" do
+      before do
+        @user.cached(:aktivitaetszahl)
+        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S.update_attributes(valid_from: "2014-05-01".to_datetime)
+        time_travel 2.seconds
+        @user.reload
+      end
+      it { should == "E06 H08 S14" }
+    end
+    describe "if currently 'E06 H08' and after leaving H it" do
+      before do
+        @user.cached(:aktivitaetszahl)
+        @first_membership_H.invalidate( "2014-05-01".to_datetime )
+        time_travel 2.seconds
+        @user.reload
+      end
+      it { should == "E06" }
     end
   end
   
@@ -144,7 +202,7 @@ describe User do
     end
     describe "for a member of a Corporation status group (except guests)" do
       before do
-        @corporation = create(:corporation_with_status_groups)
+        @corporation = create(:wingolf_corporation)
         @membership = @corporation.status_groups.first.assign_user @user
       end
       it { should == true}
@@ -163,7 +221,7 @@ describe User do
     end
     describe "for a guest of a corporation" do
       before do
-        @corporation = create(:corporation_with_status_groups)
+        @corporation = create(:wingolf_corporation)
         @corporation.find_or_create_guests_parent_group.assign_user @user
       end
       it { should == false }
@@ -240,7 +298,7 @@ describe User do
       subject { @user.reload.wingolfsblaetter_abo = false }
       it "should un-assign the user to the @abonnenten_group" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         Group.find(@abonnenten_group.id).direct_members.should_not include @user
       end
     end
@@ -262,8 +320,8 @@ describe User do
     
     describe "the user being philister" do
       before do
-        @wah = create(:wah_group)
-        @wah.philisterschaft.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.philisterschaft.assign_user @user
       end
       specify "prelims" do
         @user.philister?.should == true
@@ -290,8 +348,8 @@ describe User do
     end
     describe "the user being aktiver" do
       before do
-        @wah = create(:wah_group)
-        @wah.aktivitas.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.aktivitas.assign_user @user
       end
       specify "prelims" do
         @user.aktiver?.should == true
@@ -319,8 +377,8 @@ describe User do
     end
     describe "for the user being philister" do
       before do
-        @wah = create(:wah_group)
-        @wah.philisterschaft.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.philisterschaft.assign_user @user
       end
       specify "prelims" do
         @user.philister?.should == true
@@ -365,7 +423,7 @@ describe User do
         end
         it "should assign the user to the new BV" do
           subject
-          sleep 1.1  # because of the validity range time comparison
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should end the current BV membership" do
@@ -427,18 +485,18 @@ describe User do
         end
         it "should remove all old memberships" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           UserGroupMembership.find_by_user_and_group(@user, @bv0).should == nil
           UserGroupMembership.find_by_user_and_group(@user, @bv1).should == nil
         end
         specify "the user should only have ONE bv membership, now" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           (@user.groups(true) & Bv.all).count.should == 1
         end
         it "should assign the user to the correct bv" do
           subject
-          sleep 1.1  # because of the time comparison of valid_from/valid_to.
+          time_travel 2.seconds
           @user.reload.bv.should == @bv2
         end
         it "should return the new membership" do
@@ -448,15 +506,15 @@ describe User do
     end
     describe "for the user being aktiver" do
       before do
-        @wah = create(:wah_group)
-        @wah.aktivitas.assign_user @user
+        @corporation = create(:wingolf_corporation)
+        @corporation.aktivitas.assign_user @user
       end
       specify "prelims" do
         @user.aktiver?.should == true
       end
       it "should not assign a bv" do
         subject
-        sleep 1.1
+        time_travel 2.seconds
         @user.reload.bv.should == nil
       end
       it { should == nil }      
@@ -481,8 +539,8 @@ describe User do
     end
     describe "the user being member of corporations" do
       before do
-        @corporation_a = create(:wah_group)
-        @corporation_b = create(:wah_group)
+        @corporation_a = create(:wingolf_corporation)
+        @corporation_b = create(:wingolf_corporation)
         @corporation_a.status_group("Philister").assign_user @user, at: 1.year.ago
         @corporation_b.status_group("Philister").assign_user @user, at: 1.year.ago
       end
@@ -494,7 +552,7 @@ describe User do
     end
     describe "the user being a former member of a corporation" do
       before do
-        @corporation_a = create(:wah_group)
+        @corporation_a = create(:wingolf_corporation)
         @membership = @corporation_a.assign_user @user, at: 2.years.ago
         @membership.promote_to @corporation_a.status_group("Schlicht Ausgetretene"), at: 1.year.ago
       end
@@ -516,7 +574,43 @@ describe User do
         @user.reload.wingolfsblaetter_abo.should == false
       end
     end
+    describe "the user having an account" do
+      before { @account = @user.activate_account }
+      it "should destroy the account" do
+        @user.account.should be_kind_of UserAccount
+        subject
+        @user.reload.account.should == nil
+      end
+    end
     
   end
   
+  # User Creation
+  # ==========================================================================================
+  
+  describe ".create" do
+    before { @params = {first_name: "Jochen", last_name: "Kanne"} }
+    subject { @user = User.create(@params) }
+    describe "when #add_to_corporation is set to a wah id" do
+      before do
+        @corporation = create(:wingolf_corporation)
+        @params.merge!({:add_to_corporation => @corporation.id})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+      it "should add the user to the Hospitanten status group for this standard-structured case" do
+        subject
+        @corporation.status_group("Hospitanten").members.should include @user
+      end
+      it "should add the user to the Nicht-Recipierte-Fuxen group if the first status group is named like that" do
+        @corporation.status_group("Hospitanten").update_attributes(name: "Nicht-Recipierte Fuxen")
+        subject
+        time_travel 2.seconds
+        @corporation.reload.status_group("Nicht-Recipierte Fuxen").members.should include @user
+      end
+    end
+  end
+    
 end

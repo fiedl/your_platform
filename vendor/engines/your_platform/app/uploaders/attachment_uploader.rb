@@ -5,7 +5,7 @@ require 'carrierwave/processing/mime_types'
 class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
-  include CarrierWave::RMagick
+  include CarrierWave::MiniMagick
   # include CarrierWave::MiniMagick
   include CarrierWave::MimeTypes
 
@@ -73,6 +73,10 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   #   end
   # end
   # 
+  # def video?( new_file )
+  #   new_file.content_type.include?('video')
+  # end
+
   def image_or_pdf?( new_file )
     new_file && new_file.content_type.present? && 
       (new_file.content_type.include?('image') || new_file.content_type.include?('pdf'))
@@ -82,15 +86,13 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     new_file && new_file.content_type.present? && new_file.content_type.include?('image')
   end
   
-  
-  # 
-  # def video?( new_file )
-  #   new_file.content_type.include?('video')
-  # end
-  # 
+  # This method filteres out all pages except for the cover page.
+  # This is used when making a thumbnail for pdf files. pdf files can have several pages,
+  # but only the first page should be used for the thumbnail, not one thumbnail for each page.
+  #
   def cover 
     manipulate! do |frame, index|
-      frame if index.zero?
+      frame if (not index) || index.zero?
     end
   end
   

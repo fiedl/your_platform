@@ -10,6 +10,24 @@ div.navbar.navbar-fixed-top
     li.dropdown
       ul.dropdown-menu
         margin-top: 0px
+        li
+          list-style: none  
+          a
+            padding: 5px
+            color: black
+            text-decoration: none
+          a:hover
+            color: #4A5C80
+            background-color: #EEEEEE
+            text-decoration: none
+        li.active
+          a, a:focus
+            color: black
+            text-decoration: none
+          a:hover
+            color: #4A5C80
+            background: #EEEEEE 
+            text-decoration: none
     li.last
       float: left
       position: absolute
@@ -34,3 +52,9 @@ div.navbar.navbar-fixed-top
           width: 100%
           a 
             width: 75%
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > li > a:hover
+  background: #EEEEEE

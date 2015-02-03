@@ -21,28 +21,39 @@ class Corporation < Group
     return true
   end
   
-  # This returns all sub-groups of the corporation that have no
-  # sub-groups of their ownes except for officer groups. 
-  # This is needed for the selection of status groups.
-  #
-  def leaf_groups
-    self.descendant_groups.select do |group|
-      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-    end
-  end
-
   # This method returns all status groups of the corporation.
   # In this general context, each leaf group of the corporation is a status group.
   # But this is likely to be overridden by the main application.
   #
   def status_groups
-    StatusGroup.find_all_by_corporation(self)
+    cached { StatusGroup.find_all_by_corporation(self) }
   end
   
   # This method returns the status group with the given name.
   # 
   def status_group(group_name)
     status_groups.select { |g| g.name == group_name }.first
+  end
+  
+  # This method lists all former members of the corporation. This is not determined
+  # by the user group membership validity range but by the membership in the 
+  # former_members sub group, since all members of subgroups are considered also 
+  # members of the group.
+  #
+  def former_members
+    child_groups.find_by_flag(:former_members_parent).try(:members) || []
+  end
+  def former_members_memberships
+    child_groups.find_by_flag(:former_members_parent).try(:memberships) || []
+  end
+  
+  # This method lists all deceased members of the corporation.
+  #
+  def deceased_members
+    child_groups.find_by_flag(:deceased_parent).try(:members) || []
+  end
+  def deceased_members_memberships
+    child_groups.find_by_flag(:deceased_parent).try(:memberships) || []
   end
 
   # This method returns all corporations in the database.

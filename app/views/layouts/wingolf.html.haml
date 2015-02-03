@@ -9,7 +9,6 @@
     = favicon_link_tag 'favicon.ico'
     = favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png'
     = javascript_include_tag 'application'
-    = sublime_script_tag
     = gmaps4rails_api_script_tags
     = csrf_meta_tags
     = yield :head
@@ -20,25 +19,24 @@
           .content
             %ul.backendBarItems
               %li.first.backendBarItem
-                = render 'layouts/session_bar_avatar'
-                = link_to current_user.title, main_app.user_path( current_user )
+                %span.user_avatar
+                  = render 'layouts/session_bar_avatar'
+                %span.user_name#user_name{data: {email: current_user.email, id: current_user.id, title: current_user.title}}
+                  = link_to current_user.title, main_app.user_path( current_user )
               %li.backendBarItem
                 = link_to t(:my_profile), current_user, :class => 'my_profile'
               %li.backendBarItem.dropdown
                 -# link_to t( :my_groups ), main_app.my_groups_path, class: 'dropdown-toggle', data: { toggle: 'dropdown' }
-                = link_to t(:my_groups), my_groups_path, class: 'dropdown-toggle'
+                = link_to my_groups_path, class: 'dropdown-toggle' do
+                  = t :my_groups
+                  %b.caret
                 %ul.dropdown-menu
-                  = cached_my_groups_table
-              - # /
-              - #   \//
-              - #   <haml:silent>             if current_user.role_for( @navable )
-              - #   </haml:silent><haml:block>              <li class="backendBarItem"><a>
-              - #   Role: <haml:loud> current_user.role_for( @navable ) </haml:loud>
-              - #   </a></li>
-              - #   </haml:block>            //
-              - if can? :manage, @navable
-                %li.backendBarItem
-                  = link_to t(:you_are_admin), {preview_as: 'user', query: params[:query], page: params[:page]}, {title: 'Click here for a preview as a regular user.'}
+                  = cached_groups_of_user_table current_user
+              
+              - # role indicator and preview menu
+              = render partial: 'layouts/role_preview_switcher'
+              
+              
               - # %li.backendBarItem.dropdown
               - #   = link_to t(:bookmarks), my_bookmarks_path
               - #   %ul.dropdown-menu.my-favorites
@@ -53,7 +51,7 @@
         #header_logo
           = link_to( image_tag( 'logo.png' ), root_path )
         #header_help
-          = link_to_special_page(t(:help), :help, :class => 'btn btn-mini btn-info'  )
+          = render partial: 'layouts/help_button'
         #header_search
           = render partial: 'shared/search_box'
         #horizontal_nav= horizontal_nav
@@ -65,36 +63,70 @@
               - # %span#star_tool
               - #   = star_tool( current_user, @navable )
               %span#breadcrumb
-                = breadcrumb_ul
-              %span#site_tools
-                = edit_button
+                = cached_breadcrumb_ul
             %span#content_area
             #content
-              .content_twoCols.content_twoCols-20-80
-                .content_twoCols_left
-                  = vertical_nav
-                .content_twoCols_right
-                  = flash_area
-                  = replace_unicode_special_chars_by_html_escape_strings( |
-                      convert_to_content_box { yield }                    |
-                    )                                                     |
-                \ 
-                .clear
+              - if show_vertical_nav?
+                .content_twoCols.content_twoCols-20-80
+                  .content_twoCols_left
+                    = vertical_nav
+                    = render partial: 'last_seen_activities/index'
+                  .content_twoCols_right
+                    = flash_area
+                    = render partial: 'shared/read_only_mode_notice' if read_only_mode?
+                    = replace_unicode_special_chars_by_html_escape_strings( |
+                        convert_to_content_box { yield }                    |
+                      )                                                     |
+                  \ 
+                  .clear
+              - else
+                = flash_area
+                = replace_unicode_special_chars_by_html_escape_strings( |
+                    convert_to_content_box { yield }                    |
+                  )                                                     |
     #footer
       #footer_bg
       #footer_navi
         %ul
           %li
             %a(href="https://github.com/fiedl/wingolfsplattform") Github
+          - if current_user
+            %li
+              %a.has_popover{href: 'irc://kornbluth.freenode.net/wingolfsplattform', data: {placement: 'top', title: 'IRC-Chat'}} IRC
+              -# kornbluth.freenode.net, Frankfurt
+              .popover_content
+                %ul
+                  %li Server: kornbluth.freenode.net, Frankfurt, DE
+                  %li Kanal: wingolfsplattform
+                  %li
+                    %a(href="http://de.wikipedia.org/wiki/IRC-Client#G.C3.A4ngige_IRC-Clients") Client herunterladen
+                  %li
+                    %a.btn(href="irc://kornbluth.freenode.net/wingolfsplattform") Mit Chat verbinden
+            %li
+              %a.has_popover{href: 'mumble://wingolfsplattform.org', data: {placement: 'top', title: 'Mumble-Konferenz'}} Mumble
+              -# kornbluth.freenode.net, Frankfurt
+              .popover_content
+                %ul
+                  %li Server: wingolfsplattform.org
+                  %li
+                    %a(href="http://www.mumble.com/mumble-download.php") Client herunterladen
+                  %li
+                    %a.btn(href="mumble://wingolfsplattform.org") Mit Konferenz verbinden
           %li
-            %a= link_to t(:imprint), Page.find_by_flag(:imprint)
+            = link_to t(:imprint), Page.find_by_flag(:imprint)
+          - if current_user
+            %li
+              = link_to t(:terms_of_use), terms_path
           %li
             = language_switcher_html
-          %li
-            %a.btn.btn-success.btn-small#btn-feedback(href="http://wingolf.uservoice.com")
-              =t(:feedback)
+          - if current_user
+            %li
+              %a.btn.btn-success.btn-small#btn-feedback(href="http://wingolf.uservoice.com")
+                =t(:feedback)
         .clear
       #footer_line
+      .clear
+      #version_footer= app_version_footer
               
     = debug(params) if Rails.env.development?
     = yield :scripts

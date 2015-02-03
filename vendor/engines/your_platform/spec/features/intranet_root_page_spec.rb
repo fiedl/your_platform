@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 feature "Viewing the intranet root page" do
+  before { create :user }
+  
   scenario "Visiting the page" do
     
     # The user is *not* logged in. 

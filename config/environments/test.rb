@@ -14,9 +14,10 @@ Wingolfsplattform::Application.configure do
   # Log error messages when you accidentally call methods on nil
   config.whiny_nils = true
 
-  # Show full error reports and disable caching
+  # Show full error reports
   config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  config.action_controller.perform_caching = true  # default: false
+  config.cache_store = :redis_store, 'redis://localhost:6379/0/', { expires_in: 90.minutes, namespace: 'test_cache' }
 
   # Raise exceptions instead of rendering exception templates
   config.action_dispatch.show_exceptions = false

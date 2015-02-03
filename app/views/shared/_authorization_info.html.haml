@@ -1,0 +1,64 @@
+- # locals:
+- #   - subject: officers
+- #   - icon: icon-lock, icon-ok-sign
+- #   - navable - the currently viewed object
+
+- subject ||= ''
+- icon ||= 'icon-lock'
+- navable ||= nil
+
+- if subject.present?
+
+  .alert.alert-info.authorization_info
+    %i{class: icon}
+        
+    - if subject == 'officers'
+      %span.alert_title Zugriffshinweis
+      %ul.authorization_info
+        %li Alle Amtsträger haben das Recht, <b>Mitgliederlisten</b> zu exportieren.
+        - if navable.kind_of? Group
+          %li Alle Amtsträger können <b>Veranstaltungen</b> für diese Gruppe und ihre Untergruppen einzutragen.
+        %li Alle Amtsträger dürfen <b>Inhalte und Anhänge</b> (Dokumente, Bilder, etc.) erstellen bzw. hochladen und ihre eigenen bearbeiten.
+        - if navable.kind_of? Group
+          %li <b>Administratoren</b> dürfen die <b>Mitglieder-Profile</b> der Gruppen-Mitglieder pflegen.
+        %li 
+          Nur die <b>Geschäftsstelle</b> kann <b>Administratoren eintragen</b>. 
+          Änderungswünsche bitte per E-Mail an
+          = surround '', '.' do
+            %a{href: 'mailto:support@wingolf.org'} support@wingolf.org
+            
+    - if subject == 'page'  # locals: page
+      %span.alert_title Zugriff eingeschränkt.
+      Dieser Inhalt ist unterhalb der Gruppe
+      = surround "'", "'" do
+        %b
+          = link_to page.group.name, page.group
+      abgelegt.
+      Zugriff auf diesen Inhalt
+      - if @page.attachments.present?
+        und beigefügte Anhänge 
+      haben daher die Mitglieder der Gruppe
+      = surround "'", "'." do
+        = link_to page.group.name, page.group
+    
+    - if subject == 'event'
+      %span.alert_title Sichtbare Veranstaltung!
+      Diese Veranstaltungsseite kann <b>von jedem Wingolfiten eingesehen</b> werden. Sie dient <i>nicht</i> dem Austausch vertraulicher Informationen. Tagesordnugnen, Protokolle und Sitzungsunterlagen sollten hier nicht hochgeladen werden, sondern unter entsprechend zugangsgeschützten Inhaltsseiten.
+      
+    - if subject == 'new_post'
+      %span.alert_title Hinweise
+      %ul
+        %li 
+          Der Versand von Sammelnachrichten an die Mitglieder der Gruppe
+          = surround "'", "'" do
+            %strong= link_to navable.title, navable
+          ist deren und übergeordneten 
+          %strong Amtsträgern 
+          möglich.
+        %li
+          Die Nachrichten werden den Empfängern 
+          %strong per E-Mail zugestellt.
+        %li
+          Es ist im Moment noch 
+          %strong nicht möglich, Anhänge 
+          beizufügen. Bitte verweise stattdessen auf eine Inhaltsseite der Plattform, indem Du die entsprechende Internet-Adresse in die Nachricht kopierst.

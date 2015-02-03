@@ -1,8 +1,9 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :description, :file, :parent_id, :parent_type, :title
+  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author
 
   belongs_to :parent, polymorphic: true
-
+  belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+  
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes
@@ -37,7 +38,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def self.find_without_types( *types )
-    where( true ).all.collect do |attachment|
+    self.where(true).to_a.collect do |attachment|
       re = attachment
       for type in types
         if not attachment.content_type

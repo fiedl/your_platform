@@ -2,6 +2,8 @@ en:
   group: Group
   groups: Groups
   
+  corporation: Corporation
+  
   everyone: Everyone
   officers_parent: Officers
   officers: Officers
@@ -19,6 +21,7 @@ en:
   my_groups:                      My Groups
   sub_groups:                     Sub Groups
   members:                        Members
+  full_members:                   Full Members
   groups_of:                      Groups of
 
   details:                        Detail Information
@@ -35,5 +38,10 @@ en:
   address_list:                   Address list
   phone_list:                     Phone list
   email_list:                     Email list
+  member_development:             Member Development
   current_age:                    Current age
+  pdf_files:                      PDF Files
+  address_labels:                 Address Labels
+  sender:                         Sender
+  create_address_labels_pdf:      Create PDF with Address Labels
   

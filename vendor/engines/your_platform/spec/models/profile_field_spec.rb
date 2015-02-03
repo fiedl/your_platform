@@ -16,12 +16,32 @@ describe ProfileField do
 
   it { should respond_to( :profileable ) }
 
+  describe "#profileable" do
+    describe "for un-structured or parent profile fields" do
+      it "should return just the assigned profileable" do
+        @user = create(:user)
+        @profile_field = @user.profile_fields.create(label: "Address", type: "ProfileFieldTypes::Address")
+        @profile_field.profileable.should == @user
+      end
+    end
+    describe "for child profile fields" do
+      it "should return the parent's profileable" do
+        @user = create(:user)
+        @profile_field = @user.profile_fields.create(label: "Bank Account", type: 'ProfileFieldTypes::BankAccount').becomes(ProfileFieldTypes::BankAccount)
+        @profile_field.account_holder = "John Doe"
+        @child_profile_field = @profile_field.children.first
+        @child_profile_field.profileable.should == @user
+      end
+    end
+  end
+
   describe "acts_as_tree" do
     it { should respond_to( :parent ) }
     it { should respond_to( :children ) }
   end
 
   it { should respond_to( :display_html ) }
+  
 
 end
 
@@ -41,7 +61,11 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Organization do
-  subject { ProfileFieldTypes::Organization.create() }
+  before do
+    @organization = ProfileFieldTypes::Organization.create()
+  end
+
+  subject { @organization }
   
   # Here it is only tested whether the methods exist. The functionality is
   # provided by the same mechanism as tested unter the BankAccount section.
@@ -52,6 +76,11 @@ describe ProfileFieldTypes::Organization do
   it { should respond_to( :from= ) }
   it { should respond_to( :role ) }
   it { should respond_to( :role= ) }
+
+  describe "#cached(:children_count)" do
+    subject { @organization.cached(:children_count) }
+    it { should == 3 }
+  end
 end
 
 
@@ -59,10 +88,20 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Email do
-  describe ".create" do
-    subject { ProfileFieldTypes::Email.create( label: "Email" ) }
-    its( 'children.count' ) { should == 0 }
+  before do
+    @email = ProfileFieldTypes::Email.create( label: "Email" )
   end
+
+  describe "#children.count" do
+    subject { @email.children.count }
+    it { should == 0 }
+  end
+
+  describe "#cached(:children_count)" do
+    subject { @email.cached(:children_count) }
+    it { should == 0 }
+  end
+
 end
 
 
@@ -154,7 +193,7 @@ describe ProfileFieldTypes::Address do
       before { @address_field.geocode }
       it "should not query again" do
         @queried_at = @address_field.geo_location.queried_at
-        sleep 1.3
+        time_travel 2.seconds
         subject
         @address_field.geo_location.queried_at.should_not > @queried_at
       end
@@ -358,6 +397,11 @@ describe ProfileFieldTypes::BankAccount do
         end
       end
     end
+  end
+
+  describe "#cached(:children_count)" do
+    subject { @bank_account.cached(:children_count) }
+    it { should == 6 }
   end
 
 end  

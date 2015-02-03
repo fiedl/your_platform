@@ -9,7 +9,42 @@ require_dependency YourPlatform::Engine.root.join( 'app/models/user' ).to_s
 #
 class User
   attr_accessible :wingolfsblaetter_abo, :hidden
-
+  
+  # This method is called by a nightly rake task to renew the cache of this object.
+  #
+  def fill_cache
+    aktivitaetszahl
+    name_affix
+    title
+    
+    bv
+    bv_membership
+    w_nummer
+    aktiver?
+    philister?
+    
+    date_of_birth
+    date_of_death  
+    birthday_this_year
+    age
+    
+    postal_address
+    address_label
+    postal_address_updated_at
+    
+    corporations
+    current_corporations
+    sorted_current_corporations
+    my_groups_in_first_corporation
+    
+    for corporation in corporations
+      corporate_vita_memberships_in corporation
+    end
+    
+    hidden
+    personal_title
+    academic_degree
+  end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
@@ -19,7 +54,11 @@ class User
   # Here, title returns the name and the aktivitaetszahl, e.g. "Max Mustermann E10 H12".
   # 
   def title
-    "#{name} #{cached_aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip
+    cached { "#{name} #{name_affix}".gsub("  ", " ").strip }
+  end
+  
+  def name_affix
+    cached { "#{aktivitaetszahl} #{string_for_death_symbol}".gsub("  ", " ").strip }
   end
   
   # For dead users, there is a cross symbol in the title.
@@ -35,11 +74,11 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    (Bv.all & self.groups).try(:first).try(:becomes, Bv)
+    cached { (Bv.all & self.groups).try(:first).try(:becomes, Bv) }
   end
   
   def bv_membership
-    UserGroupMembership.find_by_user_and_group(self, bv) if bv
+    cached { UserGroupMembership.find_by_user_and_group(self, bv) if bv }
   end
   
   # Diese Methode gibt die BVs zurück, denen der Benutzer zugewiesen ist. In der Regel
@@ -126,6 +165,10 @@ class User
     for membership in self.bv_memberships
       membership.invalidate at: 1.minute.ago if membership != new_membership
     end
+    
+    # Cache zurücksetzen
+    self.delay.delete_cached :bv
+    self.delay.delete_cached :bv_membership
 
     self.groups(true) # reload groups
     return new_membership
@@ -133,42 +176,42 @@ class User
 
   # This method returns the aktivitaetszahl of the user, e.g. "E10 H12".
   #
-  def aktivitätszahl
-    if self.corporations
+  def aktivitaetszahl
+    cached do 
       self.corporations
-      .select do |corporation|
-        not (self.guest_of?(corporation)) and
-        not (self.former_member_of_corporation?(corporation)) and
-        corporation.membership_of(self).valid_from
-      end.sort_by { |corporation| corporation.membership_of(self).valid_from } # order by date of joining
-      .collect do |corporation|
-        year_of_joining = ""
-        year_of_joining = corporation.membership_of( self ).valid_from.to_s[2, 2] if corporation.membership_of( self ).valid_from
-        #corporation.token + "\u2009" + year_of_joining
-        token = corporation.token; token ||= ""
-        token + aktivitaetszahl_addition_for(corporation) + year_of_joining
-      end.join(" ")
+        .select { |corporation| role = Role.of(self).in(corporation); role.full_member? or role.deceased_member? }
+        .collect { |corporation| {string: aktivitaetszahl_for(corporation), year: aktivitaetszahl_year_for(corporation)} }
+        .sort_by { |hash| hash[:year] }  # Sort by the year of joining the corporation.
+        .collect { |hash| hash[:string] }.join(" ")
     end
   end
-  def aktivitaetszahl
-    aktivitätszahl
+
+  def aktivitätszahl
+    aktivitaetszahl
+  end
+  
+  def aktivitaetszahl_for(corporation)
+    "#{corporation.token} #{aktivitaetszahl_addition_for(corporation)} #{aktivitaetszahl_short_year_for(corporation)}".gsub('  ', '').strip
   end
 
-  def cached_aktivitaetszahl
-    Rails.cache.fetch([self, "aktivitaetszahl"]) { aktivitaetszahl }
+  def aktivitaetszahl_year_for(corporation)
+    (corporation.status_groups.collect { |status_group| status_group.membership_of(self, also_in_the_past: true).try(:valid_from) } - [nil]).min.to_s[0, 4]
   end
-  
-  def delete_cached_aktivitaetszahl
-    Rails.cache.delete [self, "aktivitaetszahl"]
+  def aktivitaetszahl_short_year_for(corporation)
+    aktivitaetszahl_year_for(corporation)[2, 2]
   end
-  
-  def aktivitaetszahl_addition_for( corporation )
+
+  def aktivitaetszahl_addition_for(corporation)
     addition = ""
     addition += " Stft" if self.member_of? corporation.descendant_groups.find_by_name("Stifter"), also_in_the_past: true
     addition += " Nstft" if self.member_of? corporation.descendant_groups.find_by_name("Neustifter"), also_in_the_past: true
     addition += " Eph" if self.member_of? corporation.descendant_groups.find_by_name("Ehrenphilister"), also_in_the_past: true
     addition += " " if addition != ""
-    return addition
+    return addition.strip
+  end
+  
+  def klammerung
+    self.profile_fields.where(label: :klammerung).first.try(:value)
   end
 
   # Fill-in default profile.
@@ -210,7 +253,7 @@ class User
   # ==========================================================================================
   
   def w_nummer
-    self.profile_fields.where(label: "W-Nummer").first.try(:value)
+    cached { self.profile_fields.where(label: "W-Nummer").first.try(:value) }
   end
   def w_nummer=(str)
     field = profile_fields.where(label: "W-Nummer").first || profile_fields.create(type: 'ProfileFieldTypes::General', label: 'W-Nummer')
@@ -236,15 +279,15 @@ class User
   # A user is a wingolfit if he has an aktivitätszahl.
   #
   def wingolfit?
-    self.aktivitätszahl.present?
+    philister? || aktiver?
   end
   
   def aktiver?
-    (group_names & ["Aktivitas", "Activitas"]).count > 0
+    cached { Group.alle_aktiven.members.include? self }
   end
   
   def philister?
-    group_names.include? "Philisterschaft"
+    cached { Group.alle_philister.members.include? self }
   end
   
   def group_names
@@ -271,24 +314,6 @@ class User
     end
   end
 
-
-  # Global Admin Switch
-  # ==========================================================================================
-
-  def global_admin
-    self.in? Group.everyone.admins
-  end
-  def global_admin?
-    self.global_admin
-  end
-  def global_admin=(new_setting)
-    if new_setting == true
-      Group.everyone.admins << self
-    else
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
-    end
-  end
 
 end
 

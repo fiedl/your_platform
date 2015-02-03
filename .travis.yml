@@ -1,14 +1,32 @@
 rvm:
-  - "2.1.0"
+  - "2.1.2"
 env: 
-  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true"
+  - "CI_CATEGORY=w_features RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./spec/features/*_spec.rb"
+  - "CI_CATEGORY=w_models RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./spec/models{/**,}/*_spec.rb"
+  - "CI_CATEGORY=y_features RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/features/*_spec.rb"
+  - "CI_CATEGORY=y_models RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/models/**/*_spec.rb"
+  - "CI_CATEGORY=y_controllers RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/controllers/*_spec.rb"
+  - "CI_CATEGORY=y_helpers RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/helpers/*_spec.rb"
+  - "CI_CATEGORY=y_uploaders RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3 RSPEC_RERUN_PATTERN=./vendor/engines/your_platform/spec/uploaders/*_spec.rb"
+services:
+  - redis-server
+before_install:
+  - travis_retry gem update --system
+  - travis_retry gem install bundler
 install:
   - sudo apt-get -y install pwgen libicu-dev
-  - bundle install
+  - travis_retry bundle install
 before_script:
   - cp config/database.travis.yml config/database.yml
   - mkdir -p public/uploads
+  - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate db:test:prepare
 script:
-  - bundle exec rake
-
+  - bundle exec rake rspec-rerun:spec
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/53f5cd27c87a47426f47
+    on_success: always  # options: [always|never|change] default: always
+    on_failure: always  # options: [always|never|change] default: always
+    on_start: false     # default: false

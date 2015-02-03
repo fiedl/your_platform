@@ -136,7 +136,7 @@ describe User do
 
   describe "#date_of_birth=" do
     before { @date_of_birth = 24.years.ago.to_date }
-    subject { @user.date_of_birth = @date_of_birth }
+    subject { @user.date_of_birth = @date_of_birth; @user.save }
     it "should set the date of birth" do
       @user.date_of_birth.should == nil
       subject
@@ -165,7 +165,7 @@ describe User do
     end
   end
   describe "#localized_date_of_birth=" do
-    subject { @user.localized_date_of_birth = @given_string }
+    subject { @user.localized_date_of_birth = @given_string; @user.save }
     describe "for setting a valid date of birth" do
       before { @given_string = "11.01.1987" }
       it "should set the date correctly" do
@@ -258,6 +258,32 @@ describe User do
        its(:new_record?) { should == false }
      end
   end
+  
+  describe "#age" do
+    subject { @user.age }
+    describe "without date of birth" do
+      it { should == nil }
+    end
+    describe "with date of birth" do
+      before { @user.date_of_birth = 24.years.ago }
+      it "should return the correct age as number" do
+        subject.should == 24
+      end
+    end
+  end
+  
+  describe "#birthday_this_year" do
+    subject { @user.birthday_this_year }
+    describe "without date of birth" do
+      it { should == nil }
+    end
+    describe "with date of birth" do
+      before { @user.date_of_birth = 24.years.ago }
+      it "should return the correct date" do
+        subject.should == Time.zone.now.to_date
+      end
+    end
+  end
 
   describe "postal address: " do
     before do
@@ -294,6 +320,97 @@ describe User do
         end
       end
     end
+    describe "#postal_address_with_name_surrounding" do
+      subject { @user.postal_address_with_name_surrounding }
+      before do
+        @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+        @name_surrounding.name_prefix = "Dr."
+        @name_surrounding.name_suffix = "M.Sc."
+        @name_surrounding.text_above_name = "Herrn"
+        @name_surrounding.text_below_name = "Bankdirektor"
+        @name_surrounding.save
+        @user.save
+      end
+      specify "prelims" do
+        @user.name_surrounding_profile_field.should == @name_surrounding
+        @user.name_surrounding_profile_field.text_above_name.should == "Herrn"
+        @user.text_above_name.should == "Herrn"
+      end
+      it { should == 
+        "Herrn\n" +
+        "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+        "Bankdirektor\n" +
+        @user.postal_address
+      }
+      describe "when no name surroundings are given" do
+        before { @name_surrounding.destroy }
+        it { should == "#{@user.name}\n#{@user.postal_address}" }
+      end
+      describe "when the user has the same personal title as given in the name prefix" do
+        before do
+          @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+          @user.save
+        end
+        it "should not print it twice" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is no text below the name" do
+        before { @name_surrounding.update_attributes(text_below_name: nil) }
+        it "should leave no blank line" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          @user.postal_address
+        end
+      end
+      describe "when there is no text above the name" do
+        before { @name_surrounding.update_attributes(text_above_name: nil) }
+        it "should not begin with a blnak line" do
+          subject.should == 
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is neither prefix nor personal title" do
+        before { @name_surrounding.update_attributes(name_prefix: nil) }
+        it "should set no spaces before the name" do
+          subject.should == 
+          "Herrn\n" +
+          "#{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+      describe "when there is no name suffix" do
+        before { @name_surrounding.update_attributes(name_suffix: nil) }
+        it "should set no spaces after the name" do
+          subject.should == 
+          "Herrn\n" +
+          "Dr. #{@user.first_name} #{@user.last_name}\n" + 
+          "Bankdirektor\n" +
+          @user.postal_address
+        end
+      end
+    end
+  end
+  
+  describe "#phone_profile_fields" do
+    subject { @user.phone_profile_fields }
+    before do
+      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '123456').becomes(ProfileFieldTypes::Phone)
+      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFieldTypes::Phone', value: '123457').becomes(ProfileFieldTypes::Phone)
+      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '01234').becomes(ProfileFieldTypes::Phone)
+      @user.reload
+    end
+    it { should include @phone_field }
+    it { should_not include @fax_field }
+    it { should include @mobile_field }
   end
 
   
@@ -530,17 +647,171 @@ describe User do
     end
   end
 
+  describe "#cached(:corporations)" do
+    before do
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationS = create( :corporation_with_status_groups, :token => "S" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @subgroup = create( :group );
+      @subgroup.parent_groups << @corporationE
+      @user.save
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @user.parent_groups << @subgroup
+      @user.reload
+    end
+    subject { @user.cached(:corporations) }
+    it "should return an array of the user's corporations" do
+      should == @user.corporations
+    end
+    context "when user entered corporation S" do
+      before do
+        @user.cached(:corporations)
+        wait_for_cache
+        
+        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+    context "when user entered corporation H as guest" do
+      before do
+        @user.cached(:corporations)
+        wait_for_cache
+
+        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+    context "when user left corporation E" do
+      before do
+        @user.cached(:corporations)
+        former_group = @corporationE.child_groups.create
+        former_group.add_flag :former_members_parent
+        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
+        @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == @user.corporations }
+    end
+  end
+
+  describe "#current_corporations" do
+    before do
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationS = create( :corporation_with_status_groups, :token => "S" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @subgroup = create( :group );
+      @subgroup.parent_groups << @corporationE
+      @user.save
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @user.parent_groups << @subgroup
+      @user.reload
+    end
+    subject { @user.current_corporations }
+    it "should return an array of the user's corporations" do
+      should == @user.corporations
+      should include @corporationE
+      should_not include @corporationS, @corporationH
+    end
+    context "when user entered corporation S" do
+      before do
+        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == [ @corporationE, @corporationS ] }
+    end
+    context "when user entered corporation H as guest" do
+      before do
+        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == [ @corporationE ] }
+    end
+    context "when user left corporation E" do
+      before do
+        former_group = @corporationE.child_groups.create
+        former_group.add_flag :former_members_parent
+        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
+        @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        @user.reload
+      end
+      it { should be_empty }
+    end
+    context "when joining an event of a corporation" do
+      before do
+        @event = @corporationH.child_events.create
+        @user.join @event
+        time_travel 2.seconds; @user.reload
+      end
+      it { should_not include @corporationH }
+    end
+  end
+
+  describe "#cached(:current_corporations)" do
+    before do
+      @corporationE = create( :corporation_with_status_groups, :token => "E" )
+      @corporationS = create( :corporation_with_status_groups, :token => "S" )
+      @corporationH = create( :corporation_with_status_groups, :token => "H" )
+      @subgroup = create( :group );
+      @subgroup.parent_groups << @corporationE
+      @user.save
+      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @user.parent_groups << @subgroup
+      @user.reload
+    end
+    subject { @user.cached(:current_corporations) }
+    it "should return an array of the user's corporations" do
+      should == @user.corporations
+    end
+    context "when user entered corporation S" do
+      before do
+        @user.cached(:current_corporations)
+        wait_for_cache
+
+        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == [ @corporationE, @corporationS ] }
+    end
+    context "when user entered corporation H as guest" do
+      before do
+        @user.cached(:current_corporations)
+        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
+        @user.reload
+      end
+      it { should == [ @corporationE ] }
+    end
+    context "when user left corporation E" do
+      before do
+        @user.cached(:current_corporations)
+        wait_for_cache
+
+        former_group = @corporationE.child_groups.create
+        former_group.add_flag :former_members_parent
+        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
+        @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        @user.reload
+      end
+      it { should be_empty }
+   end
+  end
+
   describe "#first_corporation" do
     before do
-      @corporation1 = create( :corporation )
-      @corporation2 = create( :corporation )
-      @subgroup1 = create( :group )
-      @subgroup1.parent_groups << @corporation1
-      @subgroup2 = create( :group )
-      @subgroup2.parent_groups << @corporation2
-      @user.save
-      @user.parent_groups << @subgroup1
-      @user.parent_groups << @subgroup2
+      @corporation1 = create( :corporation_with_status_groups )
+      @corporation2 = create( :corporation_with_status_groups )
+      @corporation1.status_groups.first.assign_user @user, at: 1.year.ago
+      @corporation2.status_groups.first.assign_user @user, at: 3.months.ago
       @user.reload
     end
     subject { @user.first_corporation }
@@ -551,63 +822,34 @@ describe User do
 
   describe "#my_groups_in_first_corporation" do
     before do
-      @corporation1 = create( :corporation )
-      @corporation1.name = "corporation1"
-      @corporation2 = create( :corporation )
-      @corporation2.name = "corporation2"
-      @subgroup1 = create( :group )
-      @subgroup1.name = "subgroup1"
-      @subgroup1.parent_groups << @corporation1
-      @subgroup2 = create( :group )
-      @subgroup2.name = "subgroup2"
-      @subgroup2.parent_groups << @corporation2
-      @subgroup3 = create( :group )
-      @subgroup3.name = "subgroup3"
-      @subgroup3.parent_groups << @corporation1.admins_parent
-      @user.save
-      @user.parent_groups << @subgroup1
-      @user.parent_groups << @subgroup1.admins_parent
-      @user.parent_groups << @corporation1.admins_parent
-      @user.parent_groups << @subgroup2
-      @user.parent_groups << @subgroup2.admins_parent
-      @user.parent_groups << @corporation2.admins_parent
-      @user.parent_groups << @subgroup3.admins_parent
+      @corporation1 = create :corporation_with_status_groups
+      @corporation2 = create :corporation_with_status_groups
+      @corporation1.status_groups.first.assign_user @user
+      @corporation1.status_groups.last.assign_user @user
+      @corporation2.status_groups.first.assign_user @user
+      @corporation1.admins << @user
       @user.reload
     end
     subject { @user.my_groups_in_first_corporation }
     it "should return the non special groups of user's first corporation" do
-      subject.should == [ @subgroup1 ]
+      subject.should == [ @corporation1.status_groups.first, @corporation1.status_groups.last ]
     end
   end
 
-  describe "#cached_last_group_in_first_corporation" do
+  describe "#last_group_in_first_corporation" do
     before do
-      @corporation1 = create( :corporation )
-      @corporation1.name = "corporation1"
-      @corporation2 = create( :corporation )
-      @corporation2.name = "corporation2"
-      @subgroup1 = create( :group )
-      @subgroup1.name = "subgroup1"
-      @subgroup1.parent_groups << @corporation1
-      @subgroup2 = create( :group )
-      @subgroup2.name = "subgroup2"
-      @subgroup2.parent_groups << @corporation2
-      @subgroup3 = create( :group )
-      @subgroup3.name = "subgroup3"
-      @subgroup3.parent_groups << @corporation1
-      @user.save
-      @user.parent_groups << @subgroup1
-      @user.parent_groups << @subgroup3
-      @user.parent_groups << @subgroup1.admins_parent
-      @user.parent_groups << @corporation1.admins_parent
-      @user.parent_groups << @subgroup2
-      @user.parent_groups << @subgroup2.admins_parent
-      @user.parent_groups << @corporation2.admins_parent
+      @corporation1 = create :corporation_with_status_groups
+      @corporation2 = create :corporation_with_status_groups
+      @corporation1.status_groups.first.assign_user @user, at: 10.months.ago
+      @corporation1.status_groups.last.assign_user @user, at: 2.months.ago
+      @corporation2.status_groups.first.assign_user @user, at: 1.month.ago
+      @corporation1.admins << @user
       @user.reload
     end
-    subject { @user.cached_last_group_in_first_corporation }
+    subject { @user.cached(:last_group_in_first_corporation) }
     it "should return the last non special group of user's first corporation" do
-      subject.should == @subgroup3
+      subject.should == @corporation1.status_groups.last
+      subject.should_not == @corporation1.admins_parent
     end
   end
   
@@ -711,9 +953,9 @@ describe User do
       before do
         @group1 = @user.parent_groups.create
         @group2 = @group1.parent_groups.create
-        @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
-                             @group2.events.create( start_at: 6.hours.from_now ) ]
-        @recent_events = [ @group1.events.create( start_at: 5.hours.ago ) ]
+        @upcoming_events = [ @group1.child_events.create( start_at: 5.hours.from_now ),
+                             @group2.child_events.create( start_at: 6.hours.from_now ) ]
+        @recent_events = [ @group1.child_events.create( start_at: 2.days.ago ) ]
         @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
       end
       it { should include *@upcoming_events }
@@ -752,27 +994,109 @@ describe User do
       end
     end 
   end
-
-
-  # User Identification
-  # ==========================================================================================
-
-  describe ".identify" do
-    before { @user.save; @user.reload }
-    describe "with a valid and matching login_string" do
-      subject { User.identify( @user.alias ) }
-      it { should == @user }
+  
+  describe "#join" do
+    subject { @user.join(@event_or_group); time_travel(2.seconds) }
+    describe "(joining an event)" do
+      before { @event_or_group = @event = create(:event); subject }
+      specify { @event.attendees.should include @user}
+      specify { @event.attendees_group.members.should include @user }
+      specify "the user should be able to join and leave and re-join without error" do
+        @user.join @event; time_travel 2.seconds
+        @user.leave @event; time_travel 2.seconds
+        @user.join @event; time_travel 2.seconds
+        @event.attendees.should include @user
+      end
     end
-    describe "with an empty login string" do
-      subject { User.identify( "" ) }
-      it { should == nil }
+    describe "(joining a group)" do
+      before { @event_or_group = @group = create(:group); subject }
+      specify { @group.members.should include @user }
     end
-    describe "with a nonsense login string" do
-      subject { User.identify( "schnidddlprmpf!" ) }
-      it { should == nil }
+  end
+  describe "#leave" do
+    subject { @user.leave(@event_or_group); time_travel(2.seconds) }
+    before do
+      @event = create :event; @user.join @event
+      @group = create :group; @user.join @group
+      time_travel 2.seconds
+    end
+    describe "(leaving an event)" do
+      # TODO: We need multiple dag links between two nodes!
+      before { @event_or_group = @event; subject }
+      specify { @event.attendees.should_not include @user}
+      specify { @event.attendees_group.members.should_not include @user }
+      specify { @event.attendees_group.child_users.should_not include @user }
+    end
+    describe "(leaving a group)" do
+      before { @event_or_group = @group; subject }
+      # TODO: We need multiple dag links between two nodes!
+      # specify { @group.members.should_not include @user }
+      # specify { @group.members.former.should include @user }
+      # specify { @group.child_users.should include @user }
     end
   end
 
+
+
+  # News Pages
+  # ------------------------------------------------------------------------------------------
+
+  # List news (Pages) that concern the user.
+  #
+  #                   independent_page        <--- show
+  #
+  #     root_page --- page_0                  <--- show
+  #         |
+  #     everyone ---- page_1 ---- page_2      <--- show
+  #         |
+  #         |----- group_1 ---- page_3        <--- DO NOT show
+  #         |
+  #         |----- group_2 ---- user
+  #         |        |-- page_4               <--- show
+  #         |
+  #         |--- user
+  #
+  describe "#news_pages" do
+    subject { @user.news_pages }
+    before do
+      @independent_page = create :page, title: 'independent_page'
+      @root_page = Page.find_root
+      @page_0 = @root_page.child_pages.create title: 'page_0'
+      @everyone = Group.everyone
+      @page_1 = @everyone.child_pages.create title: 'page_1'
+      @page_2 = @page_1.child_pages.create title: 'page_2'
+      @group_1 = @everyone.child_groups.create name: 'group_1'
+      @page_3 = @group_1.child_pages.create title: 'page_3'
+      @group_2 = @everyone.child_groups.create name: 'group_2'
+      @group_2.assign_user @user
+      @page_4 = @group_2.child_pages.create title: 'page_4'
+      time_travel 2.seconds
+      @user.reload
+    end
+    specify 'requirements' do
+      @group_1.members.should_not include @user
+    end
+    it "should list pages that are without group" do
+      subject.should include @independent_page
+    end
+    it "should list pages under the root page" do
+      subject.should include @page_0
+    end
+    it "should list pages directly under the everyone group" do
+      subject.should include @page_1, @page_2
+    end
+    it "should NOT list pages of groups the user is not member of" do
+      subject.should_not include @page_3
+    end
+    specify "(but users that are in @group_1 should have @page_3 listed)" do
+      @user_of_group_1 = create :user
+      @group_1.assign_user @user_of_group_1, at: 1.hour.ago
+      @user_of_group_1.reload.news_pages.should include @page_3
+    end
+    it "should list pages of other groups the user is member of" do
+      subject.should include @page_4
+    end
+  end
 
   # Roles
   # ==========================================================================================
@@ -963,34 +1287,6 @@ describe User do
     end
   end
 
-  describe "#user_admins" do
-    before do
-      @admin = create( :user )
-      @admin.save
-      @group = create( :group, name: "Group with user" )
-      @group << @user
-    end
-    subject { @user.user_admins }
-    it { should be_empty }
-    context "for an admin in the group" do
-      before do
-        @group.admins_parent << @admin
-      end
-      it "the admin of user's group is the admin of the user" do
-        subject.should include( @admin )
-        subject.should have(1).item
-      end
-    end
-    context "for no admin in the group" do
-      before do
-        @admin.destroy
-      end
-      it "after destroy" do
-        should be_empty
-      end
-    end
-  end
-
   # Main Admins
   # ------------------------------------------------------------------------------------------
 
@@ -1071,7 +1367,7 @@ describe User do
     end
     describe "false" do
       before { @user.developer = true }
-      subject { @user.developer = false; sleep 1.1 }
+      subject { @user.developer = false; time_travel 2.seconds }
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
@@ -1084,31 +1380,63 @@ describe User do
   # Hidden Users
   # ==========================================================================================
 
-  describe "#hidden?" do
+  describe '#hidden?' do
     subject { @user.hidden? }
   end
 
-  describe "#hidden=" do
-    describe "true" do
+  describe '#cached(:hidden)' do
+    subject { @user.cached(:hidden) }
+    describe 'for the user not being hidden' do
+      before do
+        @user.cached(:hidden)
+        wait_for_cache
+
+        @user.hidden = true
+        @user.reload
+      end
+      it { should == @user.hidden }
+    end
+    describe 'for the user being hidden' do
+      before do
+        @user.hidden = true
+        @user.cached(:hidden)
+        @user.hidden = false
+      end
+      it { should == @user.hidden }
+    end
+  end
+
+  describe '#hidden=' do
+    describe 'true' do
       subject { @user.hidden = true }
-      it "shoud assign the user to the hidden_users group" do
-        @user.should_not be_member_of Group.hidden_users
-        subject
-        @user.should be_member_of Group.hidden_users
+      describe 'for the user being hidden' do
+        before { @user.hidden = true }
+        it 'should make sure user is in the hidden_users group' do
+          @user.should be_member_of Group.hidden_users
+          subject
+          @user.should be_member_of Group.hidden_users
+        end
+      end
+      describe 'for the user not being hidden' do
+        it 'should assign the user to the hidden_users group' do
+          @user.should_not be_member_of Group.hidden_users
+          subject
+          @user.should be_member_of Group.hidden_users
+        end
       end
     end
-    describe "false" do
-      subject { @user.hidden = false; sleep 1.1 }
-      describe "for the user being hidden" do
+    describe 'false' do
+      subject { @user.hidden = false; time_travel 2.seconds }
+      describe 'for the user being hidden' do
         before { @user.hidden = true }
-        it "should remove the user from the hidden_users group" do
+        it 'should remove the user from the hidden_users group' do
           @user.should be_member_of Group.hidden_users
           subject
           @user.should_not be_member_of Group.hidden_users
         end
       end
-      describe "for the user not being hidden" do
-        it "should make sure the user is not in the hidden_users group" do
+      describe 'for the user not being hidden' do
+        it 'should make sure the user is not in the hidden_users group' do
           @user.should_not be_member_of Group.hidden_users
           subject
           @user.should_not be_member_of Group.hidden_users
@@ -1132,6 +1460,46 @@ describe User do
       it { should_not include 'hidden_users' }
     end
   end
+
+
+  # User Creation
+  # ==========================================================================================
+  
+  describe ".create" do
+    before { @params = {first_name: "Johnny", last_name: "Doe"} }
+    subject { @user = User.create(@params) }
+    describe "when #add_to_corporation is set to a corporation" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+    describe "when #add_to_corporation is set to a corporation id" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation.id})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+    describe "when #add_to_corporation is set to a corporation id which is a String (via html form)" do
+      before do
+        @corporation = create(:corporation_with_status_groups)
+        @params.merge!({:add_to_corporation => @corporation.id.to_s})
+      end
+      it "should add the user to the first status group of this corporation" do
+        subject
+        @corporation.status_groups.first.members.should include @user
+      end
+    end
+  end
+
 
   # Finder Methods
   # ==========================================================================================
@@ -1279,11 +1647,11 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')  # to circumvent validation
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => nil)  # to circumvent validation
     end
     subject { User.with_email }
     specify "prelims" do
-      @user_with_empty_email.email.should == ""
+      @user_with_empty_email.email.should == nil
     end
     it { should be_kind_of ActiveRecord::Relation }
     it { should include @user_with_email }
@@ -1306,7 +1674,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => '')
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attribute(:value, '')
     end
     subject { User.applicable_for_new_account }
     it { should be_kind_of ActiveRecord::Relation }

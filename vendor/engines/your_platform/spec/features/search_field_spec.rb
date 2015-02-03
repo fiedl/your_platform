@@ -65,12 +65,35 @@ feature "Search Field", js: true do
 
   describe "finding pages" do
     before do
-      @page = create( :page, title: "foo" )
+      @page = create(:page, title: "foo", content: "some page content")
+    end
+    specify "searching for page titles should list the pages" do
       fill_in 'query', with: "foo"
       press_enter in: 'query'
+      page.should have_content @page.title
     end
-    subject { page }
-    it { should have_content( @page.title ) }
+    specify "searching for page contents (bodies) should list the pages" do
+      fill_in 'query', with: "some page content"
+      press_enter in: 'query'
+      page.should have_content @page.title
+    end
+  end
+  
+  describe "finding attachments" do
+    before do
+      @page = create(:page, title: "foo page")
+      @attachment = @page.attachments.create(title: "bar attachment", description: "some attachment description")
+    end
+    specify "searching for attachment titles should list their parent pages" do
+      fill_in 'query', with: 'bar attachment'
+      press_enter in: 'query'
+      page.should have_content @page.title
+    end
+    specify "searching for attachment descriptions should list their parent pages" do
+      fill_in 'query', with: 'some attachment description'
+      press_enter in: 'query'
+      page.should have_content @page.title
+    end
   end
 
   describe "finding groups" do

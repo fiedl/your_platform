@@ -28,7 +28,7 @@
   spinner: null
   add_spinner: ->
     $('body').append(@spinner_html(@icon(), @title()))
-    $('body div#page-spinner').modal({keyboard: false})
+    $('body div#page-spinner').modal({keyboard: false, backdrop: 'static'})
     $('body div#page-spinner').css('z-index', '-1')
     setTimeout( ->
       $('body div#page-spinner').hide().css('z-index', 1500).show('fade')
