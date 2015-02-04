@@ -73,7 +73,7 @@ module GroupMixins::Erstbandphilister
   # Redefined User Association Methods
   # ------------------------------------------------------------------------------------------
 
-  def members
+  def members(reload = nil)
     if is_erstbandphilister_parent_group?
       
       philisterschaft = self.parent_groups.first
@@ -91,26 +91,26 @@ module GroupMixins::Erstbandphilister
                   
       return User.where(id: erstbandphilister_user_ids)   # => <ActiveRecord::Relation ...>
     else
-      return super
+      return super(reload)
     end
   end
   
-  def memberships
+  def memberships(reload = nil)
     if is_erstbandphilister_parent_group?
       membership_ids = self.corporation.philisterschaft.memberships_including_members.select do |membership|
         membership.user.first_corporation == corporation
       end.collect { |membership| membership.id }
       UserGroupMembership.where(id: membership_ids)
     else
-      super
+      super(reload)
     end
   end
   
   def direct_members
     if is_erstbandphilister_parent_group?
-      return members
+      return members(reload)
     else
-      return super
+      return super(reload)
     end
   end
 
