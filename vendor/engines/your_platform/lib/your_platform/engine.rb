@@ -67,7 +67,6 @@ require 'workflow_kit'
 # View Helpers
 require 'phony' 
 require 'will_paginate'
-require 'rails-gallery'
 require 'jquery-datatables-rails'
 
 # JavaScript

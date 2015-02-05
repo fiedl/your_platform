@@ -3,9 +3,11 @@
   %head
     %meta{:content => 'text/html; charset=utf-8', 'http-equiv' => 'Content-type'}/
     %title= website_title_with_app_name
+
     = stylesheet_link_tag    'wingolf_layout', :media => 'all'
     = stylesheet_link_tag    'application', :media => 'all'
-    = stylesheet_link_tag    '/stylesheets/vendor/galleria/themes/classic'
+    = stylesheet_link_tag    'galleria-classic'
+
     = favicon_link_tag 'favicon.ico'
     = favicon_link_tag 'fahne-144x144.png', rel: 'apple-touch-icon', type: 'image/png'
     = javascript_include_tag 'application'

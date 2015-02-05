@@ -10,8 +10,7 @@
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
-//= require gallery/galleria
-//= require gallery/galleria/classic
+//= require galleria
 //= require dataTables/jquery.dataTables
 //= require dataTables/jquery.dataTables.bootstrap
 // TODO     require app-ng
