@@ -7,7 +7,7 @@
   %p.explanation=t "#{@list_preset}_explanation"
   
   = link_to statistics_path(list: @list_preset, format: 'csv'), class: 'btn right' do
-    %i.icon-list-alt
+    = icon 'list-alt'
     Als CSV-Tabelle herunterladen
   
   = @list_export.to_html

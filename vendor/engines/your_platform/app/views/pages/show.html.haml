@@ -22,9 +22,9 @@
   - if @blog_entries.count == 0
     %div.attachment_global_drop_zone
       %div.center.large
-        %i.icon-file
-        %i.icon-picture= # icon-camera
-        %i.icon-facetime-video
+        = icon 'file'
+        = icon 'picture'
+        = icon 'facetime-video'
       = t :drop_files_here
 
 
@@ -36,7 +36,7 @@
     - if (Page.find(@page.id).type != 'BlogPost')  
       %div.blog_tools.box
         = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
-          %i.icon-plus
+          = icon :plus
           = I18n.t(:add_blog_entry)
   
   - if @blog_entries.count > 0

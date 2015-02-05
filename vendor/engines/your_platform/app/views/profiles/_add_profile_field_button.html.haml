@@ -6,8 +6,8 @@
                          :section => section.title), :method => 'post')
 - if section.profile_field_types.count > 1
   %span.dropdown
-    %a.btn.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
-      = tool_icon( 'icon-plus icon-black' ) + " " + t(:add)
+    %a.btn.btn-default.dropdown-toggle.add_button.tool.show_only_in_edit_mode{data: {toggle: 'dropdown'}, href: '#'}
+      = tool_icon('plus') + " " + t(:add)
       %span.caret
     %ul.dropdown-menu
       - section.profile_field_types.each do |type|

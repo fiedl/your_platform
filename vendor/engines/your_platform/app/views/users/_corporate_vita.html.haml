@@ -12,7 +12,7 @@
               %td
                 - if needs_review
                   = link_to(user_group_membership_path(membership, 'user_group_membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
-                    %i.icon-ok.icon-white 
+                    = icon 'ok'
               %td.membership_valid_from
                 - if can? :update, membership
                   = status_group_membership_valid_from_best_in_place( membership )

@@ -1,11 +1,11 @@
 - if can? :update, @event
-  = render partial: 'shared/authorization_info', locals: {subject: 'event', icon: 'icon-eye-open'}
+  = render partial: 'shared/authorization_info', locals: {subject: 'event', icon: 'eye-open'}
 
 %h1= best_in_place_if can?(:update, @event), @event, :name
 %div
   %span.ics_export_buttons
-    %a.btn#ics_export.has_tooltip{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
-      %i.icon-calendar
+    %a.btn.btn-default#ics_export.has_tooltip{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+      = icon :calendar
       Kalender-Export
   = render partial: 'events/event_details'
         
@@ -21,24 +21,24 @@
       - else
         - leave_button_hidden_class = 'hidden'
       %a.btn.btn-success#join_event{href: event_join_path(@event, format: 'json'), class: join_button_hidden_class}
-        %i.icon-user
+        = icon :user
         An dieser Veranstaltung teilnehmen
       - if can? :leave, @event
         %a.btn.btn-danger#leave_event{href: event_leave_path(@event, format: 'json'), class: leave_button_hidden_class}
-          %i.icon-user
+          = icon :user
           Doch nicht teilnehmen
   
   - if can? :update, @event
     %p.center.invitation
-      %a.btn.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'right'}}
-        %i.icon-envelope
+      %a.btn.btn-default.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'right'}}
+        = icon :envelope
         = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"
       %form.hidden#invite
         %textarea#invitation_text= render partial: 'events/invitation_text'
         %div.right
-          %a.btn#test_invite{href: event_invite_path(event_id: @event.id, recipient: 'me', format: 'json')}
-            %i.icon-envelope
+          %a.btn.btn-default#test_invite{href: event_invite_path(event_id: @event.id, recipient: 'me', format: 'json')}
+            = icon :envelope
             = "Zum Testen an meine eigene Adresse senden."
           %a.btn.btn-primary#confirm_invite{href: event_invite_path(event_id: @event.id, recipient: @event.group.id, format: 'json')}
-            %i.icon-envelope
+            = icon :envelope
             = "An '#{@event.group.name}' senden."

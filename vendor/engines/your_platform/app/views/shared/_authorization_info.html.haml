@@ -1,16 +1,16 @@
 - # locals:
 - #   - subject: officers
-- #   - icon: icon-lock, icon-ok-sign
+- #   - icon: lock, ok-sign
 - #   - navable - the currently viewed object
 
 - subject ||= ''
-- icon ||= 'icon-lock'
+- icon ||= 'lock'
 - navable ||= nil
 
 - if subject.present?
 
   .alert.alert-info.authorization_info
-    %i{class: icon}
+    = icon(icon)
     
     - if subject == 'foo'
       %ul.authorization_info

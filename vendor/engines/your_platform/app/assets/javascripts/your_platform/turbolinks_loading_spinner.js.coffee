@@ -8,9 +8,9 @@
       @remove_spinner()
   icon: ->
     if ((new Date).getHours() > 18)
-      "icon-beer"
+      "beer"
     else
-      "icon-coffee"
+      "coffee"
   title: ->
     str = $('title').text()  # "My Page - Your Platform"
     second_str = str.split(" - ")[1]
@@ -19,8 +19,7 @@
     <div class="modal hide fade" id="page-spinner">
       <div class="modal-header card-title"><h3>' + title + '</h3></div>
       <div class="modal-body card-body">
-        <!--i class="icon-spinner icon-spin icon-2x"></i-->
-        <i class="' + icon + ' icon-2x"></i>
+        <span class="glyphicon glyphicon-' + icon + '" aria-hidden="true"></span>
         &emsp;Inhalt wird geladen. Bitte warten ...
       </div>
     </div>

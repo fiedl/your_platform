@@ -3,7 +3,7 @@ module ToolButtonsHelper
   def remove_button( object )
     title = t(:remove)
     title += ": " + object.title if object.respond_to?(:title) && object.title.present?
-    link_to( tool_icon( "icon-trash icon-white" ),
+    link_to( tool_icon( "trash white" ),
              object,
              method: 'delete',
              :class => 'remove_button tool show_only_in_edit_mode btn btn-danger btn-small',
@@ -15,7 +15,7 @@ module ToolButtonsHelper
   def add_button( url, options = {} )
 
     # label for the button = icon + "add"
-    label = tool_icon( "icon-plus icon-black" ) + " " + t( :add )
+    label = tool_icon( "plus black" ) + " " + t( :add )
 
     # default options
     options = { 
@@ -29,16 +29,16 @@ module ToolButtonsHelper
   end
 
   def edit_button( options = {} )
-    tool_button :edit, "icon-edit icon-black", t(:edit), options
+    tool_button :edit, "edit black", t(:edit), options
   end
 
   def save_button( options = {} )
-    tool_button( :save, "icon-ok icon-white", "", 
+    tool_button( :save, "ok white", "", 
                  :class => "save_button button btn btn-primary", :title => t(:save) )
   end    
 
   def cancel_button( options = {} )
-    tool_button( :cancel, "icon-remove icon-black", "", 
+    tool_button( :cancel, "remove black", "", 
                  :title => t(:cancel) )
   end
   
@@ -56,7 +56,7 @@ module ToolButtonsHelper
   end  
 
   def tool_icon( type )
-    content_tag( :i, "", :class => "#{type}" )
+    icon(type)
   end
 
 end
