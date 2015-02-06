@@ -101,7 +101,7 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
-  s.add_dependency 'jquery-datatables-rails', '1.12.2'
+  s.add_dependency 'jquery-datatables-rails', '~> 3.1.1'
   
   # JavaScript
   s.add_dependency 'jquery-turbolinks'

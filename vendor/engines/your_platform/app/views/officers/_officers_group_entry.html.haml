@@ -2,12 +2,14 @@
 - #   - officer_group
 - #   - structureable
 
-%span.officer_entry
-  %dt
+%li.officer_entry
+
+  %span.button-wrapper
     - if can?(:destroy, officer_group) and can?(:create_officers_group_for, structureable) and officer_group.descendant_users.count == 0
-      %a.btn.btn-danger#destroy_office.show_only_in_edit_mode{href: group_path(officer_group, format: 'json')}
+      %a.btn.btn-danger.remove_button#destroy_office.show_only_in_edit_mode{href: group_path(officer_group, format: 'json')}
         = icon :trash
-        
+    
+  %span.label-wrapper
     - if can? :rename, officer_group
       - if current_user.developer?
         .icon-small.copy-to-clipboard{title: "Group.find(#{officer_group.id})"}
@@ -22,8 +24,8 @@
           %span.label.label-info
             = icon :tag
             =t flag
-  
-  %dd
+
+  %span.value-wrapper
     %ul.officers
       - if officer_group.child_groups.count == 0
         %li.direct_officers

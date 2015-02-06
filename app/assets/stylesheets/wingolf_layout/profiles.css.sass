@@ -1,4 +1,4 @@
-ul.attributes, ul.profile_fields
+ul.attributes, ul.profile_fields, ul.officer_groups
   display: table
   li
     display: table-row
@@ -19,7 +19,7 @@ ul.attributes, ul.profile_fields
     margin-right: 12px
     margin-bottom: 6px
 
-ul.attributes
+ul.attributes, ul.officer_groups
   padding-left: 18px
 
 ul.section_container
@@ -42,6 +42,12 @@ ul.section_container
     display: table-cell
   span.label-wrapper
     width: 130px
+  span.value-wrapper
+    ul
+      width: 100%
+      padding-left: 0
+      li
+        width: 100%
   .currently_in_edit_mode 
     .value-wrapper
       width: 100%
@@ -59,6 +65,9 @@ ul.section_container
 
 .box.first
   @include box-table-layout
+  textarea
+    width: 100%
+    min-height: 4cm !important
   
 .box.contact_information
   @include box-table-layout
@@ -90,10 +99,22 @@ ul.section_container
 .box.organizations
   @include box-table-layout
   @include child-stack-layout
+
+.box.officers
+  @include box-table-layout  
+  .copy-to-clipboard
+    display: inline-block
+  .label-wrapper
+    font-weight: bold
+  .value-wrapper input
+    width: 390px !important
   
 .box.bank_account_information
   @include box-table-layout
   @include child-stack-layout
+  
+.box.description
+  @include box-table-layout
   
 .box.corporate_vita
   table#corporate_vita
@@ -113,3 +134,8 @@ ul.section_container
   @include box-table-layout
   @include child-stack-layout
 
+.box.further_information
+  dl
+    margin-left: 16px
+  input
+    width: 90%

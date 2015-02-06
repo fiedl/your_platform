@@ -42,14 +42,6 @@ GIT
       pdf-core (~> 0.2.5)
       ttfunk (~> 1.2.0)
 
-GIT
-  remote: git://github.com/rweng/jquery-datatables-rails.git
-  revision: d637e0967dc66e9824345009ad74fbfdb1e4349f
-  specs:
-    jquery-datatables-rails (1.12.2)
-      jquery-rails
-      sass-rails
-
 PATH
   remote: vendor/engines/your_platform
   specs:
@@ -73,7 +65,7 @@ PATH
       gravatar_image_tag
       haml
       icalendar
-      jquery-datatables-rails (= 1.12.2)
+      jquery-datatables-rails (~> 3.1.1)
       jquery-fileupload-rails
       jquery-rails
       jquery-turbolinks
@@ -284,6 +276,11 @@ GEM
     i18n (0.7.0)
     icalendar (2.2.2)
     journey (1.0.4)
+    jquery-datatables-rails (3.1.1)
+      actionpack (>= 3.1)
+      jquery-rails
+      railties (>= 3.1)
+      sass-rails
     jquery-fileupload-rails (0.4.4)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -561,7 +558,6 @@ DEPENDENCIES
   guard-focus
   guard-rspec
   guard-spork
-  jquery-datatables-rails!
   jquery-rails
   json
   judge-formtastic

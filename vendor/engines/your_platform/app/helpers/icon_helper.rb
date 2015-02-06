@@ -1,7 +1,7 @@
 module IconHelper
   
   def icon(icon_key)
-    if icon_key.to_s.in? ['beer', 'coffee']
+    if icon_key.to_s.in? ['beer', 'coffee', 'key', 'unlock-alt']
       awesome_icon(icon_key)
     else
       glyphicon(icon_key)
