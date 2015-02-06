@@ -21,7 +21,7 @@
     # Available icons:
     # http://fortawesome.github.io/Font-Awesome/icons/
     #
-    '<i class="fa fa-' + @icon() + ' fa-2x"'
+    '<i class="page-spinner-icon fa fa-' + @icon() + ' fa-2x"></i>'
 
   title: ->
     str = $('title').text()  # "My Page - Your Platform"
@@ -31,13 +31,17 @@
   spinner_html: -> 
     # http://getbootstrap.com/javascript/#modals
     '
-    <div class="modal hide fade" id="page-spinner">
+    <div class="modal fade" id="page-spinner">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header card-title"><h3>' + @title() + '</h3></div>
-          <div class="modal-body card-body">
+          <div class="modal-header"><h3 class="modal-title">
+            ' + @title() + '
+          </h3></div>
+          <div class="modal-body">
             ' + @icon_html() + '
-            &emsp;Inhalt wird geladen. Bitte warten ...
+            <span class="page-spinner-message">
+              Inhalt wird geladen. Bitte warten ...
+            </span>
           </div>
         </div>
       </div>
@@ -47,11 +51,21 @@
   spinner: null
 
   add_spinner: ->
+    @append_spinner()
+    @show_modal_delayed()
+    
+  append_spinner: ->
     $('body').append(@spinner_html())
+    
+  show_modal: ->
     $('body div#page-spinner').modal({keyboard: false, backdrop: 'static'})
-    $('body div#page-spinner').css('z-index', '-1')
+    
+  show_modal_delayed: ->
+    @show_modal()
+    dialog_selector = 'body div#page-spinner .modal-dialog' 
+    $(dialog_selector).hide()
     setTimeout( ->
-      $('body div#page-spinner').hide().css('z-index', 1500).show('fade')
+      $(dialog_selector).show('fade')
     , 2000)
 
   remove_spinner: ->
