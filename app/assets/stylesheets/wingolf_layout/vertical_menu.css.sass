@@ -7,16 +7,15 @@ $border: #cccccc
 $border_shade: #d6d3cd
 
 .vertical_menu 
-  ul
+  ul.nav
     width: 197px
     margin: 0
     margin-bottom: 15px
     padding: 0
     list-style: none
-    border-top: 1px solid $border
-    border-bottom: 1px solid $border
-    background: $border
-
+    // border-top: 1px solid $border
+    // border-bottom: 1px solid $border
+    
     * a
       color: #000
       //width: 182px
@@ -34,7 +33,7 @@ $border_shade: #d6d3cd
     li.ancestor a
       background: $dark
 
-    li.active a
+    li.active a, li.active a:hover
       background: $black
       color: #fff
 
