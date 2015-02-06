@@ -13,12 +13,9 @@ $border_shade: #d6d3cd
     margin-bottom: 15px
     padding: 0
     list-style: none
-    // border-top: 1px solid $border
-    // border-bottom: 1px solid $border
     
     * a
       color: #000
-      //width: 182px
       padding: 8px 4px 8px 10px
       display: block
       border: none
@@ -32,6 +29,8 @@ $border_shade: #d6d3cd
     li.root a,
     li.ancestor a
       background: $dark
+    li.ancestor a:hover
+      background: $light
 
     li.active a, li.active a:hover
       background: $black

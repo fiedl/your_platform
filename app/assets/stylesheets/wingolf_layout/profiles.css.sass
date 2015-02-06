@@ -1,11 +1,8 @@
-.label
-  white-space: normal
-
 ul.attributes, ul.profile_fields
   display: table
   li
     display: table-row
-    span.label-wrapper, span.value-wrapper, span.button-wrapper
+    span.label-wrapper, span.value-wrapper
       padding-right: 12px
       vertical-align: top
       padding-bottom: 12px  
@@ -18,6 +15,9 @@ ul.attributes, ul.profile_fields
       padding-bottom: 3px
     .label
       color: #777
+  .remove_button
+    margin-right: 12px
+    margin-bottom: 6px
 
 ul.attributes
   padding-left: 18px
@@ -25,84 +25,91 @@ ul.attributes
 ul.section_container
   padding-left: 0px
 
+.box .label
+  white-space: normal
+  padding: 5px
+  input
+    top: -4px
+  label
+    display: inline-block
 
-.box.first, .box.section.contact_information, .box.section.career_information, .box.section.communication
+.currently_in_edit_mode .label
+  padding-left: 30px
+  
+
+@mixin box-table-layout
   span.label-wrapper, span.value-wrapper, span.button-wrapper
     display: table-cell
   span.label-wrapper
-    min-width: 100px
+    width: 130px
+  .currently_in_edit_mode 
+    .value-wrapper
+      width: 100%
+      input, textarea
+        width: 100%
 
+@mixin child-stack-layout
+  li.profile_field_child
+    display: block
+    width: 100%
+  li.profile_field_parent ul
+    margin-left: 0
+    padding-left: 0
+
+
+.box.first
+  @include box-table-layout
+  
+.box.contact_information
+  @include box-table-layout
+  .address_is_in_bv
+    margin-top: -3em
+  .wingolfspost.unflagged
+    visibility: hidden
 .box.section.contact_information.with_small_map
+  .map.contact_section
+    width: 40%
+    height: 340px
+    float: right
   ul.profile_fields.attributes
-    max-width: 293px
+    max-width: 58%
     word-break: break-word
-    
-.box.section.about_myself
-  .value-wrapper
-    textarea
-      width: 380px
-      min-height: 80px !important
-    display: inline-block
+  
+.box.about_myself
+  @include box-table-layout
+  textarea
+    min-height: 200px !important
 
-.box.section.study_information, .box.section.organizations
-  ul.section_container
-    display: table
-    li.profile_field_parent
-      display: table-row
-      > span.label-wrapper
-        width: auto
-        display: inline
-        padding-bottom: 0px
-        padding-right: 0px
-        
-.box.section.study_information, .box.section.organizations, .box.section.career_information
-  li.profile_field_child
-    display: inline
-    float: left
-    padding: 10px
-    span.label-wrapper
-      display: block
-      width: auto
-    span.label
-      display: block
-      float: none
-      color: #777
-
-.box.section.career_information
-  .profile_field_parent 
-    > .label-wrapper
+.box.study_information
+  @include box-table-layout
+  @include child-stack-layout
+  
+.box.career_information
+  @include box-table-layout
+  
+.box.organizations
+  @include box-table-layout
+  @include child-stack-layout
+  
+.box.bank_account_information
+  @include box-table-layout
+  @include child-stack-layout
+  
+.box.corporate_vita
+  table#corporate_vita
+    margin-left: 18px
+    width: 100%
+    td
+      text-align: right
+    td.membership_valid_from
+      text-align: left
       width: 120px
-      display: inline-block !important
-  li.profile_field_child
-    padding: 0px !important
-    .label-wrapper 
-      width: auto
-      min-width: 0px
-  ul.profile_fields
-    ul
-      padding-left: 0px
+    td.membership_group
+      text-align: left
+    .btn
+      margin-right: 12px
+  
+.box.communication
+  @include box-table-layout
+  @include child-stack-layout
 
-.box.section.bank_account_information
-  ul.section_container
-    li.profile_field_parent
-      display: block
-      ul
-        display: table
-        li.profile_field_child
-          display: table-row
-  span.label-wrapper, span.value-wrapper, span.button-wrapper
-    display: table-cell
-    padding-right: 12px  
-
-.box.section.relationships
-  ul
-    list-style: none
-
-.box.section.communication
-  ul.attributes
-    padding-left: 12px
-    .label-wrapper
-      padding-right: 29px
-  span.value-wrapper
-    ul
-      padding-left: 0px
