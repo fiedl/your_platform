@@ -103,7 +103,21 @@ module Wingolfsplattform
     config.assets.enabled = true
 
     # http://stackoverflow.com/questions/7577236/actionviewtemplateerror-960-css-isnt-precompiled
-    config.assets.precompile += [ 'wingolf_layout.css', 'bootstrap_layout.css' ]
+    config.assets.precompile += ['wingolf_layout.css', 'bootstrap_layout.css', 'bootstrap_setup.css', 'galleria-classic.css']
+    
+    # # If assets do not refresh properly using sass in development, use this.
+    # # http://www.tkalin.com/blog_posts/rails-4-disable-assets-caching-for-development-test-environments/
+    # #
+    # # Use memory store for assets cache in development/test to avoid caching
+    # # to tmp/assets, because it causes hiding of deprecation messages in
+    # # stylesheets, sometimes break parallel_tests and doesn't always refresh
+    # # gem stylesheets in development
+    # #
+    # config.assets.configure do |env|
+    #   if Rails.env.development? || Rails.env.test?
+    #     env.cache = ActiveSupport::Cache.lookup_store(:memory_store)
+    #   end
+    # end
 
     # Version of your assets, change this if you want to expire all your assets
     config.assets.version = '1.0'

@@ -33,10 +33,10 @@
       Betreff:
       %input.subject{value: "[#{@group.name}] Neues von der Wingolfsplattform"}
     %p.buttons.right
-      %a.btn#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
-        %i.icon-envelope
+      %a.btn.btn-default#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
+        = icon :envelope
         = "Zum Testen an meine eigene Adresse senden."
       %a.btn.btn-primary#confirm_message{href: group_posts_path(group_id: @group.id, recipient: @group.id, format: 'json')}
-        %i.icon-envelope
+        = icon :envelope
         = "An '#{@group.name}' senden."
         

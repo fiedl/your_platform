@@ -64,11 +64,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet'  # for Markdown                                         # MIT License
   
   # Layout: Twitter Bootstrap
-  s.add_dependency 'twitter-bootstrap-rails', '2.2.4'                                  # MIT License
-  s.add_dependency 'less', '2.2.0'
-  s.add_dependency 'less-rails', '2.2.6'
-  # s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
-  s.add_dependency 'font-awesome-rails', '3.2.1.1'
+  s.add_dependency 'font-awesome-rails', '~> 4.3.0'
+  s.add_dependency 'bootstrap-sass', '~> 3.3.3'                                                  # Apache License 2.0
+  s.add_dependency 'sass-rails', '>= 3.2'
 
   # In Place Editing
   s.add_dependency 'best_in_place', '~> 2.1.0'                                         # MIT License
@@ -103,8 +101,7 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
-  s.add_dependency 'rails-gallery', '>= 0.3.3'                                         # MIT License
-  s.add_dependency 'jquery-datatables-rails', '1.12.2'
+  s.add_dependency 'jquery-datatables-rails', '~> 3.1.1'
   
   # JavaScript
   s.add_dependency 'jquery-turbolinks'

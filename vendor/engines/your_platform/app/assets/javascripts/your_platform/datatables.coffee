@@ -1,5 +1,5 @@
-ready = ->
-  
+$(document).ready ->
+
   # Sorting by date in German:
   # http://datatables.net/plug-ins/sorting/date-de
   #
@@ -68,10 +68,10 @@ ready = ->
       }
     else
       {}
-  
+ 
   common_configuration = {
     "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-    "sPaginationType": "bootstrap",
+    "sPaginationType": "full_numbers",
     "bJQueryUI": true,
     "lengthMenu": [ 10, 20, 50, 100, 1000 ],
     "language": language_options()
@@ -103,6 +103,3 @@ ready = ->
     "pageLength": 100,
     "order": [[0, "asc"]]
   }, common_configuration))
-  
-  
-$(document).ready(ready)

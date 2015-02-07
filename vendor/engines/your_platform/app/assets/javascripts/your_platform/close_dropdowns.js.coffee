@@ -10,7 +10,7 @@ ready = ->
       # need to deactivate the button.
     else
       btn = $(this).closest('.btn-group').find('.btn.dropdown-toggle')
-      btn.attr('data-loading-text', "<i class='icon-spinner icon-spin'></i> " + btn.text().trim() + " ...")
+      btn.attr('data-loading-text', '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>' + " " + btn.text().trim() + " ...")
       btn.button("loading") # http://stackoverflow.com/questions/14793367/
   )
 

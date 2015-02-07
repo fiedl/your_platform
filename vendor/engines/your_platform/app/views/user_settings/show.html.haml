@@ -4,7 +4,9 @@
 %div
   
   %h2=t :profile
-  = link_to t(:show_user_profile), @user, class: 'btn'
+  = link_to @user, class: 'btn btn-default' do
+    = icon :user
+    = t(:show_user_profile)
   
   %h2=t :language
   %p

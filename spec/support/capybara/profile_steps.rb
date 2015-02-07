@@ -28,7 +28,7 @@ module ProfileSteps
       end
 
       page.should have_selector('a.save_button', visible: true)
-      click_on I18n.t(:save)
+      page.find('.save_button').trigger :click
     end
   end
 
@@ -36,7 +36,8 @@ module ProfileSteps
     #puts type.to_s + ' with ' + @user.profile_fields.count.to_s
     field_name = type.name.demodulize.underscore
     #page.save_screenshot('tmp/screenshot1.png')
-    click_on I18n.t(:add)
+    page.should have_selector('.add_button', visible: true)
+    page.find('.add_button').trigger :click   # click_on I18n.t(:add)
     wait_for_ajax; wait_for_ajax
     #page.save_screenshot('tmp/screenshot2.png')
 
@@ -56,7 +57,7 @@ module ProfileSteps
     expect {
       within (all('.profile_field_parent').last) do
         page.should have_selector('.remove_button', visible: true)
-        click_on I18n.t(:remove)
+        page.find('.remove_button').trigger :click  # the button has no size in the spec
       end
     
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)

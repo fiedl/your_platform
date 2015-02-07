@@ -24,3 +24,8 @@ en:
   is_looking_at_events: 'is looking at events'
   is_looking_at_the_event: "is looking at the event '%{event_name}'"
   is_looking_at_the_calendar_of: "is looking at the calendar of '%{group_name}'"
+  
+  good_day: 'Good day to you!'
+  i_would_like_to_announce_the_following_event: 'I would like to announce the following event.'
+  event_information_will_be_inserted_here: '[ Event information will be inserted here by the system. ]'
+  kind_regards: 'Kind regards,'
