@@ -47,17 +47,19 @@
               %li.last.backendBarItem
                 = link_to t( :logout ), main_app.destroy_user_account_session_path, method: :delete
           .clear
-    #headerBg
-      #header
-        #header_claim
-          = image_tag( 'claim.png' )
-        #header_logo
-          = link_to( image_tag( 'logo.png' ), root_path )
-        #header_help
-          = render partial: 'layouts/help_button'
-        #header_search
-          = render partial: 'shared/search_box'
-        #horizontal_nav= horizontal_nav
+    #header-bar
+      #headerBg
+        #header
+          #header_claim
+            = image_tag( 'claim.png' )
+          #header_logo
+            = link_to( image_tag( 'logo.png' ), root_path )
+          #header_help
+            = render partial: 'layouts/help_button'
+          #header_search
+            = render partial: 'shared/search_box'
+          %span#category_indicator
+            #horizontal_nav= horizontal_nav
     #contentBgLayer1
       #contentBgLayer2
         #contentBgLayer3
