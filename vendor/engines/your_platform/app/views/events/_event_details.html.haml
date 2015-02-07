@@ -40,7 +40,7 @@
         = link_to group_events_public_url(group_id: @event.group) do
           = icon 'list-alt'
         = link_to group_events_public_url(group_id: @event.group, format: 'ics') do
-          = icon 'list-calendar'
+          = icon 'calendar'
         
     %tr.publish_on_global_website
       %th
@@ -50,5 +50,5 @@
         = link_to public_events_url do
           = icon 'list-alt'
         = link_to public_events_url(format: 'ics') do
-          = icon 'list-calendar'
+          = icon 'calendar'
         

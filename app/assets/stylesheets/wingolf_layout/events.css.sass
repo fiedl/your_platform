@@ -1,8 +1,13 @@
+.events .box .box_heading
+  width: 80%
+
 table.event_details
+  margin-left: 16px
   th
     text-align: left
   td
     width: 75%
+    padding-bottom: 6px
   tr
     vertical-align: top
   tr.description
@@ -34,10 +39,13 @@ li.upcoming_event
 .ics_export_buttons, .ics_abo_buttons
   float: right
   position: relative
-  top: -44px
+  top: -43px
   left: -3px
   height: 0
   width: 600px
+  
+body.events .ics_export_buttons
+  top: -53px
 
 #ics_export, #ics_abo
   float: right
@@ -55,3 +63,6 @@ table.events_footer
     vertical-align: bottom
   td.create_event
     text-align: right
+    
+a#create_event
+  font-size: 80%
