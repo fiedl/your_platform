@@ -13,7 +13,11 @@
     = render @page
 
 - # officers
-= render partial: 'officers/officers_box', locals: {structureable: @page}
+- # We show the officers box only if there are any officers groups, since this is used only for special pages
+- # at the moment. Most global admins won't assign officers to pages.
+- #
+- if @page.find_officers_groups.any?
+  = render partial: 'officers/officers_box', locals: {structureable: @page}
 
 %div.col3
   - # Use the drop zone only if there are no blog entries.
