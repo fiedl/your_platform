@@ -151,7 +151,7 @@ feature 'User page', js: false do
             subject.should have_selector('input[type=text]', count: 6)
           end
 
-          find('.remove_button').click
+          find('.remove_button').trigger :click # the button has no size in the spec.
           page.should have_no_selector('.profile_field')
         end
       end

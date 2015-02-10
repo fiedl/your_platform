@@ -7,7 +7,7 @@
 - if structureable.find_officers_groups.any? or can?(:create_officers_group_for, structureable)
   %h1.officers.section= t :officers
   %span#officers
-    %dl
+    %ul.officer_groups
       - sorted_officers_groups_for(structureable).each do |officer_group|
 
         - # do not display the parent group itself (bug circumvention)
@@ -17,17 +17,17 @@
         - if not officer_group.has_flag? :officers_parent
           = render partial: 'officers/officers_group_entry', locals: {officer_group: officer_group, structureable: structureable}
       
-      - if can? :create_officers_group_for, structureable
-        %dt.add_officers_group.show_only_in_edit_mode
-          %p
-            - id_attrs ||= structureable.kind_of?(Group) ? {group_id: structureable.id} : nil
-            - id_attrs ||= structureable.kind_of?(Page) ? {page_id: structureable.id} : nil
-            %a.btn#add_office{href: create_officers_group_path(id_attrs.merge({format: 'json'}))}
-              %i.icon-plus
-              = t :add_office
-          %p
-            = render partial: 'officers/history_notice'
-              
-      .show_only_in_edit_mode
-        = render partial: 'shared/authorization_info', locals: {subject: 'officers', navable: structureable}
+    - if can? :create_officers_group_for, structureable
+      .add_officers_group.show_only_in_edit_mode
+        %p
+          - id_attrs ||= structureable.kind_of?(Group) ? {group_id: structureable.id} : nil
+          - id_attrs ||= structureable.kind_of?(Page) ? {page_id: structureable.id} : nil
+          %a.btn.btn-default#add_office{href: create_officers_group_path(id_attrs.merge({format: 'json'}))}
+            = icon :plus
+            = t :add_office
+        %p
+          = render partial: 'officers/history_notice'
+            
+    .show_only_in_edit_mode
+      = render partial: 'shared/authorization_info', locals: {subject: 'officers', navable: structureable}
               

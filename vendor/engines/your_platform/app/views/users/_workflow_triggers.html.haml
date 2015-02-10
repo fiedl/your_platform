@@ -1,0 +1,23 @@
+- if can? :manage, @user
+  - executable_workflows_by_corporation = {}
+  - @user.workflows_by_corporation.each do |corporation_title, workflows|
+    - executable_workflows = workflows.select { |workflow| can? :execute, workflow }
+    - executable_workflows_by_corporation[corporation_title] = executable_workflows if executable_workflows.any?
+  - if executable_workflows_by_corporation.any? or (@user.markable_as_deceased?)
+    %div.btn-group.workflow_triggers.pull-right
+      %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
+        = icon 'chevron-up'
+        = I18n.t(:change_status)
+        .caret
+      %ul.dropdown-menu
+        - executable_workflows_by_corporation.each do |corporation_title, workflows|
+          - if workflows.count > 0
+            %li.nav-header= corporation_title
+            - for workflow in workflows
+              %li= link_to_workflow workflow, user: @user
+        - if can? :execute, Workflow.find_mark_as_deceased_workflow
+          -# TODO: Replace this hard-coded stuff by a workflow with parameter modal:
+          %li.nav-header= I18n.t(:event_of_death)
+          %li
+            %a.deceased_trigger{href: '#', data: {modal_body: render(partial: 'users/deceased_modal')}}
+              = "✟ #{I18n.t(:deceased)}"

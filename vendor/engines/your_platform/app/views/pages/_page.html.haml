@@ -19,6 +19,8 @@
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
       = best_in_place_if can?(:update, page), page, :content, type: 'textarea', sanitize: false
+    .show_only_in_edit_mode
+      = render partial: 'shared/markdown_help'
 
 = render(partial: 'pages/pictures', locals: {page: page}) 
 = render(partial: 'pages/videos', locals: {page: page}) 

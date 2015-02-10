@@ -15,9 +15,6 @@ Wingolfsplattform::Application.routes.draw do
 
   match "users/new/:alias" => "users#new"
 
-  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
-  mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
-
   match 'profile/:alias' => 'users#show', :as => :profile
   
   # http://railscasts.com/episodes/53-handling-exceptions-revised

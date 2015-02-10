@@ -1,0 +1,8 @@
+de:
+  user_settings: Benutzereinstellungen
+  
+  this_sets_the_ui_locale: 'Dies legt die Sprache der Benutzerberfläche fest:'
+  visibility: Sichtbarkeit
+  incognito: Incognito
+  incognito_explanation: 'Wenn dieses Feld markiert ist, wirst Du in der Seitenleiste nicht als online angezeigt.'
+  incognito_warning: 'Achtung: Auch Wartungsskripte können dann nicht feststellen, dass Du online bist, wodurch es dann vorkommen kann, dass der Plattform-Server ohne Vorwarnung aufgrund von Wartungsarbeiten neugestartet wird.'

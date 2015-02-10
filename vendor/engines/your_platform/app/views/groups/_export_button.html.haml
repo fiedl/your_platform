@@ -1,7 +1,7 @@
 - if can? :export_member_list, @group
   %div.btn-group.group_export.pull-right
-    %a.btn.dropdown-toggle(data-toggle="dropdown" href="#")
-      %i.icon-list-alt
+    %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
+      = icon 'list-alt'
       = t :download_list
       .caret
     %ul.dropdown-menu.list_export
@@ -9,7 +9,7 @@
       %li.nav-header=t :pdf_files
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
         = link_to group_path(@group, :format => :pdf), :class => 'address_labels_export_button' do
-          %i.icon-th
+          = icon :th
           =t :address_labels
 
       %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"
@@ -41,25 +41,25 @@
       %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"
       %li
         = link_to group_path(@group, :format => :csv) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :name_list
       %li
         = link_to group_path(@group, :format => :csv, :list => :birthday_list) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :birthday_list
       %li
         = link_to group_path(@group, :format => :csv, :list => :address_list) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :address_list
       %li
         = link_to group_path(@group, :format => :csv, :list => :phone_list) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :phone_list
       %li
         = link_to group_path(@group, :format => :csv, :list => :email_list) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :email_list
       %li
         = link_to group_path(@group, :format => :csv, :list => :member_development) do
-          %i.icon-list-alt
+          = icon 'list-alt'
           = t :member_development

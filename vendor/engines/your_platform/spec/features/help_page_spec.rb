@@ -10,7 +10,7 @@ feature "Help Page" do
 
   scenario "clicking on the help button and viewing the help page" do
     visit root_path
-    within('#header_help') do
+    within('#header-bar') do
       click_on I18n.t(:help)
     end
 

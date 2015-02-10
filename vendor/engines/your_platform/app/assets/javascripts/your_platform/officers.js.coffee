@@ -10,7 +10,7 @@ ready = ->
       success: (r)->
         btn.button('reset')
         new_element = r.officers_group_entry_html
-        $('dt.add_officers_group').before(new_element)
+        $('ul.officer_groups').append(new_element)
 
         $('.box.officers .content').apply_edit_mode()
         officer_entry = $('.officer_entry').last()

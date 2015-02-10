@@ -2,14 +2,15 @@
 class User < ActiveRecord::Base
 
   attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
-                            :add_to_corporation, :date_of_birth, :localized_date_of_birth
+                            :add_to_corporation, :date_of_birth, :localized_date_of_birth,
+                            :aktivmeldungsdatum, :study_address, :home_address, :phone, :mobile
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
-  validates_format_of       :email, :with => /\A[a-z0-9_.-]+@[a-z0-9.-]+\.[a-z.]+\z/i, :if => Proc.new { |user| user.email.present? }
+  validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
   has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
      :organizations, :bank_account_information]
@@ -59,6 +60,7 @@ class User < ActiveRecord::Base
   
   include UserMixins::Memberships
   include UserMixins::Identification
+  include ProfileableMixins::Address
 
   # General Properties
   # ==========================================================================================
@@ -240,52 +242,29 @@ class User < ActiveRecord::Base
     account.try(:destroy)
   end
   
+  # Defines whether the user can be marked as deceased (by a workflow).
+  #
+  def markable_as_deceased?
+    alive?
+  end
+  
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
       UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
-
-  # Primary Postal Address
-  #
-  def postal_address_field
-    self.address_profile_fields.select do |address_field|
-      address_field.postal_address? == true
-    end.first
-  end
   
-  # Primary Postal Address or, if not existent, the first address field.
-  #
-  def postal_address_field_or_first_address_field
-    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first
+  def postal_address_with_name_surrounding
+    address_label.to_s
   end
 
-  # This method returns the postal address of the user.
-  # If one address of the user has got a :postal_address flag, this address is used.
-  # Otherwise, the first address of the user is used.
-  #
-  def postal_address
-    cached { postal_address_field_or_first_address_field.try(:value) }
-  end
-  
-  def postal_address_in_one_line
-    postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
-  end
-
-  # Returns when the postal address has been updated last.
-  #
-  def postal_address_updated_at
+  def address_label
     cached do
-      # if the date is earlier, the date is actually the date
-      # of the data migration and should not be shown.
-      #
-      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
-        postal_address_field_or_first_address_field.updated_at.to_date 
-      end
+      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
+        self.name_surrounding_profile_field, self.personal_title)
     end
   end
-
   
   # Phone Profile Fields
   # 
@@ -293,6 +272,29 @@ class User < ActiveRecord::Base
     profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
       not field.label.downcase.include? 'fax'
     end
+  end
+  
+  def landline_profile_fields
+    phone_profile_fields - mobile_phone_profile_fields
+  end
+  def mobile_phone_profile_fields
+    phone_profile_fields.select do |field|
+      field.label.downcase.include?('mobil') or field.label.downcase.include?('handy')
+    end
+  end
+  
+  def phone
+    (landline_profile_fields + phone_profile_fields).first.try(:value)
+  end
+  def phone=(new_number)
+    (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
+  end
+  
+  def mobile
+    (mobile_phone_profile_fields + phone_profile_fields).first.try(:value)
+  end
+  def mobile=(new_number)
+    (mobile_phone_profile_fields.first || profile_fields.create(label: I18n.t(:mobile), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
   end
   
   
@@ -325,18 +327,6 @@ class User < ActiveRecord::Base
   def text_after_name
     name_surrounding_profile_field.try(:name_suffix).try(:strip)
   end
-
-  def postal_address_with_name_surrounding
-    address_label.to_s
-  end
-
-  def address_label
-    cached do
-      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
-        self.name_surrounding_profile_field, self.personal_title)
-    end
-  end
-
 
   # Associated Objects
   # ==========================================================================================
@@ -435,7 +425,7 @@ class User < ActiveRecord::Base
   
   def update_last_seen_activity(description = nil, object = nil)
     unless readonly?
-      if description
+      if description and not self.incognito?
         activity = find_or_build_last_seen_activity
         activity.touch # even if the attributes didn't change. The user probably hit 'reload' then.
         activity.description = description
@@ -514,7 +504,7 @@ class User < ActiveRecord::Base
   def sorted_current_corporations
     cached do
       current_corporations.sort_by do |corporation|
-        corporation.membership_of(self).valid_from || Time.zone.now
+        corporation.membership_of(self).valid_from || corporation.membership_of(self).created_at
       end
     end
   end
@@ -997,23 +987,9 @@ class User < ActiveRecord::Base
     self.without_account.alive.with_email
   end
   
-  def self.with_postal_address
-    self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
-  end
-  
-  def self.with_postal_address_ids
-    self.with_postal_address.collect { |user| user.id }
-  end
-  
-  def self.without_postal_address
-    self.where('NOT users.id IN (?)', self.with_postal_address_ids)
-  end
-  
   def self.joins_groups
     self.joins(:groups).where('dag_links.valid_to IS NULL')
   end
-  
-  
   
   def accept_terms(terms_stamp)
     self.accepted_terms = terms_stamp
@@ -1023,8 +999,8 @@ class User < ActiveRecord::Base
   def accepted_terms?(terms_stamp)
     self.accepted_terms == terms_stamp
   end
-
-  # Helpers
+  
+    # Helpers
   # ==========================================================================================
 
   # The string returned by this method represents the user in the rails console.

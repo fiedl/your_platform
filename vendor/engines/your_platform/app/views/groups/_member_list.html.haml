@@ -4,7 +4,7 @@
       %th=t :last_name
       %th=t :first_name
       %th Aktivitätszahl
-      %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{@group.name}' geführt wird."} Seit
+      %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{@group.name}' geführt wird.", data: {placement: 'left'}} Seit
   %tbody
     - for membership in memberships do
       %tr

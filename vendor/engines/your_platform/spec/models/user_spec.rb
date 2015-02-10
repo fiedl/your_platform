@@ -412,6 +412,81 @@ describe User do
     it { should_not include @fax_field }
     it { should include @mobile_field }
   end
+  
+  describe "#phone" do
+    subject { @user.phone }
+    describe "for a phone number given" do
+      before { @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      it { should == @phone_field.value }
+    end
+    describe "for a phone and a mobile number given" do
+      before do
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
+      end
+      it { should == @phone_field.value }
+    end
+    describe "for no phone number given" do
+      it { should == nil }
+    end
+  end
+
+  describe "#phone=" do
+    before { @new_phone_number = "+49 9131 123 45" }
+    subject { @user.phone = @new_phone_number }
+    describe "if no phone field is present" do
+      it "should create a new one" do
+        @user.phone_profile_fields.count.should == 0
+        subject
+        @user.phone_profile_fields.first.value.should == @new_phone_number
+        @user.phone_profile_fields.first.label.should == "Telefon"
+      end
+    end
+    describe "if a phone field is present" do
+      before { @phone_field = @user.profile_fields.create(label: 'Telefon', value: '09131 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      it "should modify the existing one" do
+        subject
+        @phone_field.reload.value.should == @new_phone_number
+      end
+    end
+  end
+  
+  describe "#mobile" do
+    subject { @user.mobile }
+    describe "for a mobile phone number given" do
+      before { @phone_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '0161 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      it { should == @phone_field.value }
+    end
+    describe "for a phone and a mobile number given" do
+      before do
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
+      end
+      it { should == @mobile_field.value }
+    end
+    describe "for no phone number given" do
+      it { should == nil }
+    end
+  end
+  describe "#mobile=" do
+    before { @new_phone_number = "+49 9131 123 45" }
+    subject { @user.mobile = @new_phone_number }
+    describe "if no phone field is present" do
+      it "should create a new one" do
+        @user.phone_profile_fields.count.should == 0
+        subject
+        @user.phone_profile_fields.first.value.should == @new_phone_number
+        @user.phone_profile_fields.first.label.should == "Mobil"
+      end
+    end
+    describe "if a phone field is present" do
+      before { @phone_field = @user.profile_fields.create(label: 'Mobil', value: '0161 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      it "should modify the existing one" do
+        subject
+        @phone_field.reload.value.should == @new_phone_number
+      end
+    end
+  end
 
   
   # Associated Objects
@@ -828,6 +903,7 @@ describe User do
       @corporation1.status_groups.last.assign_user @user
       @corporation2.status_groups.first.assign_user @user
       @corporation1.admins << @user
+      time_travel 5.seconds
       @user.reload
     end
     subject { @user.my_groups_in_first_corporation }

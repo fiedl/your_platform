@@ -20,7 +20,6 @@ gem 'transaction_retry' # rescue from deadlocks
 # Gems used only for assets and not required
 # in production environments by default.
 group :assets, :production, 'testing-aki' do
-  gem 'sass-rails',   '>= 3.2.3'					# MIT License
   gem 'coffee-rails', '>= 3.2.1'					# MIT License
 #  gem 'coffee-script', '1.4.0' # need this at 1.4.0 for mercury, at the moment
     # see https://github.com/jejacks0n/mercury/issues/349
@@ -60,6 +59,7 @@ gem 'nokogiri'								# MIT License
 # see: https://github.com/justinfrench/formtastic,
 # http://rubydoc.info/gems/formtastic/frames
 gem 'formtastic'							# MIT License
+gem 'judge-formtastic'
 
 # JSON
 gem 'json'								# Ruby License
@@ -192,6 +192,9 @@ gem 'fnordmetric'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 
+# Database Optimization: Foreign Keys
+gem 'immigrant'
+
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
@@ -202,6 +205,9 @@ gem 'tilt', '~> 1.4.1'
 # Maintenance Mode
 gem 'turnout'
 
+# Sidekiq Error Web UI
+gem 'sidekiq-failures'
+
 
 # fix workflow kit until the update to rails 4.
 # workflow_kit 0.0.8 only supports rails 4.
@@ -209,5 +215,5 @@ gem 'turnout'
 gem 'workflow_kit', github: 'fiedl/workflow_kit'
 
 gem 'newrelic_rpm'
-gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
+#gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 gem 'prawn', github: 'prawnpdf/prawn'

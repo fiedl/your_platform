@@ -1,5 +1,5 @@
 <% if page.attachments_by_type( "video" ).count > 0 %>
-  <h1><%=t :videos %></h1>
+  <h1 class="videos"><%=t :videos %></h1>
   <div class="videos">
     <% for attachment in page.attachments_by_type( "video" ) %>
       <%= render partial: 'attachments/video', locals: { attachment: attachment } %>

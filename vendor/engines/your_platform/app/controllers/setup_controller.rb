@@ -73,6 +73,7 @@ private
       
       Page.intranet_root << Group.corporations_parent
       
+      Workflow.find_or_create_mark_as_deceased_workflow
     end
   end
   

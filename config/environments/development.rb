@@ -46,7 +46,16 @@ Wingolfsplattform::Application.configure do
 
 
   # Mailer Settings
-  config.action_mailer.delivery_method = :letter_opener # :sendmail
+  config.action_mailer.delivery_method = :letter_opener
+  # config.action_mailer.delivery_method = :sendmail
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #   address: 'smtp.1und1.de',
+  #   user_name: 'wingolfsplattform@wingolf.org',
+  #   password: '',
+  #   domain: 'wingolfsplattform.org',
+  #   enable_starttls_auto: true
+  # }
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000, protocol: 'https' }
 
 end

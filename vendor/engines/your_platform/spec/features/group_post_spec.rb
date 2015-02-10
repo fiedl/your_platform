@@ -66,8 +66,10 @@ feature "Group Posts" do
       email_text = ''
       Timeout::timeout(15) do
         loop do
-          email_text = ActionMailer::Base.deliveries.last.to_s
-          break if email_text.include?('This is a real message.')
+          # Take the last two emails, since we don't know to which user
+          # the mail is sent first.
+          email_text = ActionMailer::Base.deliveries.last.to_s + ActionMailer::Base.deliveries[-1].to_s
+          break if email_text.include?('This is a real message.') and email_text.include?(@other_user.email)
         end
       end
       email_text.should include 'This is a real message.'

@@ -1,0 +1,36 @@
+- set_title t :user_settings
+
+%h1=t :user_settings
+%div
+  
+  %h2=t :profile
+  = link_to @user, class: 'btn btn-default' do
+    = icon :user
+    = t(:show_user_profile)
+  
+  %h2=t :language
+  %p
+    =t :this_sets_the_ui_locale
+    = language_switcher_html
+  %p
+    Leider wurde die Benutzeroberfläche noch nicht vollständig ins Englische übersetzt. Freiwillige, meldet euch bitte beim AK Internet!
+  
+  %h2=t :terms_of_use
+  Du hast die
+  = link_to t(:terms_of_use), terms_path
+  am
+  =l @user.accepted_terms_at
+  akzeptiert.
+  
+  %h2=t :visibility
+  = form_for @user do |f|
+    %label
+      = f.check_box :incognito, data: {url: user_settings_path(user_id: @user.id)}
+      %strong=t :incognito
+      = t :incognito_explanation
+    %p= t :incognito_warning
+    
+- if @user.has_account?  
+  %h1=t :access_information
+  %div
+    = render @user.account
