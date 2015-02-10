@@ -504,7 +504,7 @@ class User < ActiveRecord::Base
   def sorted_current_corporations
     cached do
       current_corporations.sort_by do |corporation|
-        corporation.membership_of(self).valid_from || Time.zone.now
+        corporation.membership_of(self).valid_from || corporation.membership_of(self).created_at
       end
     end
   end

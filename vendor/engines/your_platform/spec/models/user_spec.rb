@@ -903,6 +903,7 @@ describe User do
       @corporation1.status_groups.last.assign_user @user
       @corporation2.status_groups.first.assign_user @user
       @corporation1.admins << @user
+      time_travel 5.seconds
       @user.reload
     end
     subject { @user.my_groups_in_first_corporation }
