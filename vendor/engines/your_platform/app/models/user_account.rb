@@ -101,7 +101,7 @@ class UserAccount < ActiveRecord::Base
     
     # What can go wrong?
     # 1. No user could match the login string.
-    users_that_match_the_login_string = User.find_all_by_identification_string( login_string )
+    users_that_match_the_login_string ||= User.find_all_by_identification_string( login_string )
     #raise 'no_user_found' unless users_that_match_the_login_string.count > 0
     return nil unless users_that_match_the_login_string.count > 0
 

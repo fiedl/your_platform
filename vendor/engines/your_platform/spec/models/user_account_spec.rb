@@ -56,25 +56,25 @@ describe UserAccount do
   describe '#identify_user_account' do
     describe 'with invalid login name' do
       it 'should return nil' do
-        UserAccount.identify_user_account('invalid').should be_nil
+        UserAccount.identify('invalid').should be_nil
       end
     end
 
     describe 'with valid email' do
       it 'should return the user account' do
-        expect(UserAccount.identify_user_account(@user.email)).to eq(@account)
+        expect(UserAccount.identify(@user.email)).to eq(@account)
       end
     end
 
     describe 'with valid alias' do
       it 'should return the user account' do
-        expect(UserAccount.identify_user_account(@user.alias)).to eq(@account)
+        expect(UserAccount.identify(@user.alias)).to eq(@account)
       end
     end
 
     describe 'with valid name' do
       it 'should return the user account' do
-        expect(UserAccount.identify_user_account(@user.name)).to eq(@account)
+        expect(UserAccount.identify(@user.name)).to eq(@account)
       end
     end
   end
@@ -100,8 +100,8 @@ describe UserAccount do
     end
     
     context "for an empty login string" do
-      it "should raise an error" do
-        expect { UserAccount.identify('') }.to raise_error
+      it "should return nil" do
+        expect { UserAccount.identify('') == nil }.to be_true
       end
     end
     context "if only one user is matching" do
@@ -130,7 +130,7 @@ describe UserAccount do
       end
     end
     context "for several users having the same last name and one of them having the last name as alias (bug fix)" do
-      specify "prerequisistes" do
+      specify "prerequisites" do
         @user1.last_name.downcase.should == @user1.alias.downcase
         @user2.last_name.downcase.should == @user1.last_name.downcase
       end
