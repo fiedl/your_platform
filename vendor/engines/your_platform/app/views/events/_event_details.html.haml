@@ -38,9 +38,9 @@
         = best_in_place @event, :publish_on_local_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf lokaler Homepage veröffentlichen"], ['true', "Auf lokaler Homepage veröffentlichen"]]
         –
         = link_to group_events_public_url(group_id: @event.group) do
-          %i.icon-list-alt
+          = icon 'list-alt'
         = link_to group_events_public_url(group_id: @event.group, format: 'ics') do
-          %i.icon-calendar
+          = icon 'calendar'
         
     %tr.publish_on_global_website
       %th
@@ -48,7 +48,7 @@
         = best_in_place @event, :publish_on_global_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (wingolf.org)"], ['true', "Auf öffentlicher Homepage veröffentlichen (wingolf.org)"]]
         –
         = link_to public_events_url do
-          %i.icon-list-alt
+          = icon 'list-alt'
         = link_to public_events_url(format: 'ics') do
-          %i.icon-calendar
+          = icon 'calendar'
         

@@ -344,5 +344,63 @@ class User
     cached { Role.of(self).administrated_aktivitates }
   end
   
+  # Damit können wir einen Benutzer in der Konsole schnell finden:
+  # 
+  #   User.find("Max Schmidt")
+  #   User.find(12)
+  #
+  def self.find(*args)
+    if args.first.kind_of?(String) and args.first.include?(" ")
+      User.find_all_by_identification_string(args.first).first
+    else
+      super(*args)
+    end
+  end
+  
+  # Damit können wir in der Konsole besondere Statusänderungen
+  # schnell eintragen.
+  # 
+  # Als Parameter wird der Name der Statusgruppe angegeben.
+  # Gegebenenfalls muss man auch das Band noch mit angeben.
+  # 
+  #   user.change_status "Konkneipanten"
+  #   user.change_status "Konkneipanten", in: "Be"
+  #   user.change_status "Konkneipanten", in: "Be", at: "13.02.2015"
+  #
+  def change_status(new_status, options = {})
+    corporation_token = options[:in]
+    corp = if self.current_corporations.count == 1
+      print "Ignoriere :in-Option, da nur ein Band vorliegt.\n" if corporation_token
+      self.current_corporations.first
+    else
+      Corporation.find_by_token(corporation_token || raise('Der Benutzer ist Mehrbandträger. Bitte Band mit "in: \'Be\'" angeben.')) || raise('Keine passende Verbindung gefunden.')
+    end
+    current_status_membership = self.current_status_membership_in(corp) || raise('Aktuelle Status-Gruppe nicht gefunden.')
+    new_status_group = corp.status_group(new_status) || raise('Neue Status-Gruppe nicht gefunden.')
+    
+    if options[:at]
+      date = options[:at].to_datetime || raise('Datum nicht gültig.')
+      current_status_membership.move_to new_status_group, at: date
+    else
+      current_status_membership.move_to new_status_group
+    end
+    
+    self.uncached(:status)
+  end
+  
+  # So können wir schnell den aktuellen Status in der Konsole abfragen.
+  #
+  #   user.status
+  #
+  def status
+    status_memberships = []
+    self.corporations.each do |c|
+      print "#{c.name}\n".blue
+      print " -> #{self.current_status_group_in(c).name}\n".green
+      status_memberships << self.current_status_membership_in(c)
+    end
+    return status_memberships
+  end
+  
 end
 

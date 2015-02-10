@@ -25,8 +25,9 @@ feature "Groups Page" do
       within('.box.section.members') do
         click_on I18n.t(:add)
 
-        page.should have_selector '#group_members .new_child_users li', count: 1
-        page.should have_text @user.title
+        page.should have_selector 'ul.new_memberships li', count: 2  # one for the add button, one for the new entry.
+        page.should have_text @user.first_name
+        page.should have_text @user.last_name
         find('.user-select-input').value.should == ""
       end
 

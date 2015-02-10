@@ -32,7 +32,7 @@ module FlashHelper
     if File.exist?(announcement_file)
       file_content = File.read(announcement_file)
       if file_content.present?
-        content_tag :div, :class => 'alert' do
+        content_tag :div, :class => 'alert alert-warning' do
           markup(file_content) 
         end
       end

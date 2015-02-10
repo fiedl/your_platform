@@ -1,8 +1,8 @@
-%div.box.right
-  %div.head
+%div.box.panel.panel-default.right
+  %div.head.pandel-heading
     %h2= box_heading
   %div.divider
-  %div.content
+  %div.content.panel-body
     %ul
       - if group
         - for membership in group.latest_memberships.first(3)

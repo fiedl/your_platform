@@ -22,7 +22,7 @@
 = profile_section @user.profile.section :contact_information
 
 - # About Box
-= optional_profile_section @user.profile.section :about_myself
+= optional_profile_section @user.profile.section(:about_myself), {formatting_help: true}
 
 - # Study Info Box
 = optional_profile_section @user.profile.section :study_information

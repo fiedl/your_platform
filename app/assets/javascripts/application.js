@@ -14,8 +14,8 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //
-//= require angular
-//= require angular-resource
+// require angular
+// require angular-resource
 // require jquery.ui.effect.all
 //= require jquery.purr
 // TODO    require jquery.ui.datepicker-de

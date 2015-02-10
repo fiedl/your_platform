@@ -10,7 +10,7 @@ ready = ->
       _toggleInfo: true,
       preload: 4,
       # autoplay: 9000,
-      popupLinks: true
+      popupLinks: true,
     })
     
     Galleria.ready( ->
@@ -24,8 +24,11 @@ ready = ->
       )
     )
     
-    Galleria.loadTheme '/js/vendor/galleria/themes/classic.js'
+    Galleria.loadTheme $('.galleria').data('theme-js-path')
     Galleria.run '.galleria', {
+      responsive: true,
+      height: 0.625, # 16:10
+      debug: false
       # height: $(this).find('img').attr('height')
     }
     

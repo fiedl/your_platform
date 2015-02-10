@@ -8,7 +8,7 @@
 - if can? :manage, user
   %span{ :class => "user_hidden_flag show_only_in_edit_mode #{css_class} user_#{user.id}",
          :data => { user_id: user.id, update_json_url: user_path(user, format: :json) } }
-    %span.label.label-important
+    %span.label.label-danger
       %label.checkbox
         - if flagged
           %input(type="checkbox" name="user_hidden" checked)
@@ -16,5 +16,5 @@
           %input(type="checkbox" name="user_hidden")
         = render partial: 'hidden_badge'
 %span{ :class => "user_hidden_flag do_not_show_in_edit_mode #{css_class} user_#{user.id}" }
-  %span.label.label-important
+  %span.label.label-danger
     = render partial: 'hidden_badge'

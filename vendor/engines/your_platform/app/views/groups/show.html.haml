@@ -26,13 +26,14 @@
     %span.members_count
       (#{@members.count})
   %div
-    = render partial: 'export_button'
     - if @group and @new_user_group_membership
+      = render partial: 'export_button'
       - if can? :manage, @group
         %span.show_only_in_edit_mode.add_membership
           = render partial: 'user_group_memberships/new'
+          %hr
       %span#group_members
-        %ul.new_child_users
+        .alert.alert-warning.new_users_please_reload.hidden Diese Gruppe enthält neue Mitglieder. Bitte Seite neu laden, um die Tabellen-Ansicht zu aktualisieren.
         .child_users
           - if @members.count > 0
             = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
@@ -62,11 +63,13 @@
 - unless @child_groups
   -# further info: token, extensive name, internal token
   - if @group.token or @group.extensive_name or @group.internal_token
-    %h1= t :further_information
+    %h1.section.further_information= t :further_information
     %div
       %dl
         - if @group.token.present? or can?(:change_token, @group)
-          %dt= t :token
+          %dt
+            = t :token
+            %span.show_only_in_edit_mode (in Aktivitätszahl)
           %dd= best_in_place_if can?(:change_token, @group), @group, :token
         - if @group.internal_token.present? or can?(:change_internal_token, @group)
           %dt= t :internal_token

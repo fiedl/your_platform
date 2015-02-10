@@ -1,8 +1,8 @@
 - if page.attachments_by_type( "image" ).count > 0
-  %h1= t :pictures
+  %h1.pictures= t :pictures
   .pictures
     - attachments = page.attachments_by_type( "image" )
-    .galleria
+    .galleria{data: {theme_js_path: '/js/vendor/galleria-classic.js'}}
       - for attachment in attachments
         = render partial: 'attachments/picture', locals: { attachment: attachment }
     .picture-info

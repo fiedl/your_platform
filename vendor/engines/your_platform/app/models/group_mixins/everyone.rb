@@ -50,22 +50,22 @@ module GroupMixins::Everyone
   # This method overrides the default association to emulate the bahaviour that really every
   # user is member of the :everyone group.
   #
-  def members
+  def members(reload = nil)
     if self.has_flag? :everyone
       User.where(true)
     else
-      super
+      super(reload)
     end
   end
   
   # This method overrides the default association to emulate the bahaviour that really every
   # user is direct member of the :everyone group.
   #
-  def direct_members
+  def direct_members(reload = nil)
     if self.has_flag? :everyone
       User.where(true)
     else
-      super
+      super(reload)
     end
   end
   

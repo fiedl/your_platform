@@ -1,4 +1,9 @@
-div#logged-in-bar
+// Bootstrap Fix for fixed navbar
+// see: http://getbootstrap.com/components/#navbar-fixed-top
+body
+  padding-top: 70px
+
+#logged-in-bar
   li.dropdown
     ul.dropdown-menu
       a
@@ -6,3 +11,7 @@ div#logged-in-bar
   li.dropdown:hover
     ul.dropdown-menu
       display: block
+
+  li.last.dropdown a
+    padding-top: 8px
+    padding-bottom: 0px
