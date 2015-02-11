@@ -37,5 +37,5 @@
         - profile_field.children.each do |child_field|
           = render partial: 'profile_fields/profile_field', object: child_field
     - if profile_field.type == ProfileFieldTypes::Address.name
-      = render partial: 'profile_fields/wingolfspost_flag_switch', locals: { profile_field: profile_field }
+      = render partial: 'profile_fields/postal_address_flag_switch', locals: { profile_field: profile_field }
     - # render partial: 'shared/flags', locals: { flagable: profile_field }

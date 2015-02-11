@@ -49,12 +49,12 @@ feature 'User page', js: false do
 
       scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
         within('.box.section.contact_information') do
-          page.should have_selector('.wingolfspost', :visible => true)
+          page.should have_selector('.postal_address', :visible => true)
           page.should have_no_selector('.radio', :visible => true )
 
           click_on I18n.t(:edit)
 
-          page.should have_selector('.wingolfspost', :visible => true)
+          page.should have_selector('.postal_address', :visible => true)
           page.should have_selector('.radio', :visible => true)
 
           page.should have_selector('a.add_button', visible: true)
@@ -186,7 +186,7 @@ feature 'User page', js: false do
 
         scenario 'the profile sections should not be editable', js: true do
           within('.box.section.contact_information') do
-            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_selector('.postal_address', :visible => true)
             page.should have_no_selector('.radio', :visible => true)
             subject.should have_no_selector('a.edit_button', visible: true)
             subject.should have_no_selector('a.add_button', visible: true)
@@ -250,12 +250,12 @@ feature 'User page', js: false do
 
         scenario "the section #{I18n.t(:contact_information)} should be editable", js: true do
           within('.box.section.contact_information') do
-            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_selector('.postal_address', :visible => true)
             page.should have_no_selector('.radio', :visible => true)
 
             click_on I18n.t(:edit)
 
-            page.should have_selector('.wingolfspost', :visible => true)
+            page.should have_selector('.postal_address', :visible => true)
 
             page.should have_selector('.radio', :visible => true)
 
