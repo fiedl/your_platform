@@ -337,5 +337,12 @@ class Ability
     end
     can :index_public_events, :all
     
+    # Nobody, not even global admins, can send posts to deceased-groups.
+    # Also creating events for those groups is not good.
+    # 
+    cannot [:create_post_for, :create_event], Group do |group|
+      group.name.include? "Verstorbene"
+    end
+    
   end
 end
