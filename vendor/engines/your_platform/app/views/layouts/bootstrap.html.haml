@@ -34,6 +34,7 @@
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
     = yield :scripts
+    = yield :head
     
   %body{:class => controller.controller_name, data: { locale: I18n.locale }}
     - if user_account_signed_in?
