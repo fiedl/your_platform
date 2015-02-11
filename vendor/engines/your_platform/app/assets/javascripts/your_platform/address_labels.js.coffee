@@ -9,8 +9,22 @@ ready = ->
     $('.confirm_address_labels_pdf_export').click( ->
       btn = $(this)
       
-      btn.attr('data-loading-text', btn.text() + " ...")
-      btn.button("loading")
+      # # This won't download the file :(
+      # 
+      # $.ajax {
+      #    url: btn.closest('form').attr('action'),
+      #    success: ->
+      #      $('.export_modal').modal('hide')
+      # }
+      # 
+      # # Therefore:
+      #
+      setTimeout ->
+        $('.export_modal').modal('hide')
+      , 5000
+            
+      btn.hide()
+      btn.after('<div class="alert alert-success" role="alert">Das PDF wird nun heruntergeladen.</div>')
     )
 
     event.preventDefault()
