@@ -20,7 +20,7 @@ class StatusGroup < Group
   end
   
   def self.find_by_user_and_corporation(user, corporation)
-    status_groups = (StatusGroup.find_all_by_corporation(corporation) & user.groups)
+    status_groups = (StatusGroup.find_all_by_corporation(corporation) & StatusGroup.find_all_by_user(user))
     raise "Slection algorithm not unique, yet. Please correct this. Found possible status groups: #{status_groups.map(&:name).join(', ')}." if status_groups.count > 1
     status_groups.last
   end
