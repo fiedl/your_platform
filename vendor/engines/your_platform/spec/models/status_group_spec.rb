@@ -17,6 +17,8 @@ describe StatusGroup do
   # @corporation_b
   #      |----------------------------- @status_b_1
   #      |----------------------------- @status_b_2 ---- @user
+  #      |----------------------------- @status_b_3
+  #                                          |------ officers ---- @user
   #
   before do
     @corporation_a = create(:corporation)
@@ -32,6 +34,8 @@ describe StatusGroup do
     @corporation_b = create(:corporation)
     @status_b_1 = @corporation_b.child_groups.create(name: "Status b 1")
     @status_b_2 = @corporation_b.child_groups.create(name: "Status b 2")
+    @status_b_3 = @corporation_b.child_groups.create(name: "Status b 3")
+    @status_b_3_officers = @status_b_3.officers_parent.child_groups.create name: "Status b 3 officers"
     
     @user = create(:user)
     @status_a_1.assign_user @user, at: 1.day.ago
@@ -39,6 +43,7 @@ describe StatusGroup do
     @status_b_2.assign_user @user, at: 1.day.ago
     @attendees.assign_user @user, at: 1.day.ago
     @contact_people.assign_user @user, at: 1.day.ago
+    @status_b_3_officers.assign_user @user, at: 1.day.ago
   end
   
   describe ".find_all_by_corporation" do
@@ -76,7 +81,13 @@ describe StatusGroup do
           subject.should == @user.status_groups(with_invalid: true)
         end
       end
-
+    end
+    
+    it "should not include groups the user is only officer of -- i.e. no direct member" do
+      subject.should_not include @status_b_3
+    end
+    it "should not include the officer groups" do
+      subject.should_not include @status_b_3_officers
     end
   end
   
