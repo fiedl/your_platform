@@ -48,6 +48,10 @@ require 'delocalize'
 require 'geocoder'
 require 'gmaps4rails'
 
+# Form Helpers
+require 'formtastic'
+require 'judge/formtastic'
+
 # File Uploads
 require 'carrierwave'
 require 'jquery-fileupload-rails'

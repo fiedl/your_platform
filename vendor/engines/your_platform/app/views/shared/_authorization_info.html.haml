@@ -16,3 +16,7 @@
       %ul.authorization_info
         %li Collect authorization info here.
         %li Or override the file in the application code.
+
+    - if subject == 'event'
+      %strong Öffentliche Veranstaltung
+      Jede Person mit Benutzerkonto kann diese Veranstaltung sehen und ihr als Teilnehmer beitreten.

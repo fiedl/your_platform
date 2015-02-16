@@ -80,6 +80,7 @@ Gem::Specification.new do |s|
   # see: https://github.com/justinfrench/formtastic,
   # http://rubydoc.info/gems/formtastic/frames
   s.add_dependency 'formtastic'                                                        # MIT License
+  s.add_dependency 'judge-formtastic'
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License

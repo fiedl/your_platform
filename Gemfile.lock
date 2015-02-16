@@ -72,6 +72,7 @@ PATH
       jquery-turbolinks
       jquery-ui-rails (~> 4.2.0)
       judge
+      judge-formtastic
       mini_magick
       phony
       prawn
@@ -556,7 +557,6 @@ DEPENDENCIES
   factory_girl_rails (>= 4.0.0)
   flamegraph
   fnordmetric
-  formtastic
   fuubar
   gmaps4rails (~> 2.0.1)!
   guard (~> 2.2.5)
@@ -567,7 +567,6 @@ DEPENDENCIES
   immigrant
   jquery-rails
   json
-  judge-formtastic
   launchy
   letter_opener
   mail!

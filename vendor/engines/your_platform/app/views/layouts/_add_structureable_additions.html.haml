@@ -9,3 +9,7 @@
 - #   %li
 - #     link_to 'Add Product', new_product_path(parent_id: parent.id, parent_type: parent.class.name)
 - #
+
+- if can?(:create_user_for, parent) and parent.kind_of?(Group)
+  %li
+    = link_to I18n.t(:person), new_user_path(parent_id: parent.id, parent_type: parent.class.name)
