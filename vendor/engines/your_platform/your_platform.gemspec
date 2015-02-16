@@ -39,6 +39,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   
+  # Database Optimization: Foreign Keys
+  s.add_dependency 'immigrant'
+  
   # Caching
   s.add_dependency 'redis-rails'
   
