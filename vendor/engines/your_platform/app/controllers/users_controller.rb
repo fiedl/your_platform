@@ -38,13 +38,17 @@ class UsersController < ApplicationController
   end
 
   def create
+    p "CREATE"
+    p user_params
+    
     @user_params = user_params
-    @basic_user_params = @user_params.select { |key, value| key.in? ['first_name', 'last_name', 'email', 'add_to_corporation', 'create_account'] }
+    @basic_user_params = @user_params.select { |key, value| key.to_s.in? ['first_name', 'last_name', 'email', 'female', 'create_account'] }
     @user = User.create(@basic_user_params)
-    if @user_params[:add_to_group].kind_of? Integer
+    if @user_params[:add_to_group]
       Group.find(@user_params[:add_to_group]).assign_user @user
     end
     @user.update_attributes(@user_params)
+    @user.send_welcome_email if @user.account
     redirect_to @user
   end
 
@@ -93,7 +97,7 @@ class UsersController < ApplicationController
       permitted_keys += [:last_name, :name] if can? :change_last_name, @user
       permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation, :hidden, :wingolfsblaetter_abo] if can? :manage, @user
     else  # user creation
-      permitted_keys += [:first_name, :last_name, :date_of_birth, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :work_address, :email, :phone, :mobile, :create_account] if can? :create, :aktivmeldung
+      permitted_keys += [:first_name, :last_name, :female, :date_of_birth, :add_to_group, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :work_address, :email, :phone, :mobile, :create_account] if can? :create, :aktivmeldung
     end
     params.require(:user).permit(*permitted_keys)
   end
