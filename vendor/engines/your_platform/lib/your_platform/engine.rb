@@ -24,6 +24,7 @@ require 'sidekiq'
 
 # Authentification
 require 'devise'
+require 'passgen'
 
 # Authorization
 require 'cancan'

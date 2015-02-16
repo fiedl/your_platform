@@ -139,11 +139,6 @@ end
 #  end
 #end
 
-
-# password generator. it's not pwgen, but it's a gem.
-# TODO: if we ever find a way to properly include pwgen, let's do it.
-gem 'passgen'                                                           # MIT License
-
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'
 

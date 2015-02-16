@@ -74,6 +74,7 @@ PATH
       judge
       judge-formtastic
       mini_magick
+      passgen
       phony
       prawn
       public_activity (~> 1.4.1)
@@ -576,7 +577,6 @@ DEPENDENCIES
   mysql2
   newrelic_rpm
   nokogiri
-  passgen
   poltergeist (= 1.5.0)
   prawn!
   pry

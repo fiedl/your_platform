@@ -48,6 +48,7 @@ Gem::Specification.new do |s|
 
   # Authentification
   s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
+  s.add_dependency 'passgen'
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
