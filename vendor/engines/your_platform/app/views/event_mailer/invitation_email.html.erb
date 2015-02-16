@@ -5,9 +5,9 @@
   </head>
   <body style="font-family: Helvetica; line-height: 150%">
     
-    <a href="https://wingolfsplattform.org">
-      <img src="https://wingolfsplattform.org/images/logo-wingolfsplattform.png" width="300px" align="right">
-    </a><br />
+    <%= link_to root_url do %>
+      <%= image_tag asset_url('logo.png'), align: 'right' %>
+    <% end %><br />
     
     <%= simple_format @text_before_event_table %>
     
