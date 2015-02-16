@@ -8,25 +8,7 @@ class ApplicationController
   layout             :find_layout
 
 
-  # Authorization: CanCan
-  # ==========================================================================================
-  #
-  # https://github.com/ryanb/cancan
-  #
-  check_authorization(
-                      :unless => :devise_controller? # in order to allow login
-                      )
-
-  rescue_from CanCan::AccessDenied do |exception|
-    session['return_to_after_login'] = request.fullpath 
-    redirect_to errors_unauthorized_url
-  end
-  
   protected
-  
-  def after_sign_in_path_for(resource)
-    session['return_to_after_login'] || root_path
-  end
   
   def find_layout
     

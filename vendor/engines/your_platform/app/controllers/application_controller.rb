@@ -15,6 +15,14 @@ class ApplicationController < ActionController::Base
   
   after_filter  :log_activity
   
+  # https://github.com/ryanb/cancan
+  # 
+  check_authorization(:unless => :devise_controller?)
+  rescue_from CanCan::AccessDenied do |exception|
+    session['return_to_after_login'] = request.fullpath 
+    redirect_to errors_unauthorized_url
+  end
+  
   # This method returns the currently signed in user.
   #
   def current_user
@@ -217,5 +225,8 @@ class ApplicationController < ActionController::Base
   end
   helper_method :read_only_mode?
   
+  def after_sign_in_path_for(resource)
+    session['return_to_after_login'] || root_path
+  end
 
 end
