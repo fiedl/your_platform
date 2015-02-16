@@ -1,3 +1,13 @@
 en:
   password: Password
   password_confirmation: Password Confirmation
+  
+  mr: 'Mr.'
+  mrs: 'Mrs.'
+  
+  welcome_to_the_new_intranet_platform: 'Welcome to the new intranet platform'
+  with_this_email_you_get_your_account_data: 'Please find your user account information below.'
+  
+  send_new_password:             Send new password via email
+  new_password_has_been_sent_to: "A new password has been sent to %{user_name} via email."
+  

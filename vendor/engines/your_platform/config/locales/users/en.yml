@@ -12,3 +12,38 @@ en:
   hidden_users_can_only_be_seen_by_admins:   'Hidden users can only be seen by competent administrators. For all other users, hidden users are invisible.'
   deceased:                   Deceased
   event_of_death:             Event of Death
+  
+  create_user:                   Create User
+  enter_details_for_new_user:    Please enter details for the new user.
+
+  email:                         Email
+  name:                          Name
+  first_name:                    First Name
+  last_name:                     Last Name
+  alias:                         Alias
+  create_account:                Create User Account
+  user_account_created:          'User account was successfully created.'
+  delete_account:                Delete User Account
+  user_account_deleted:          'User account was successfully deleted.'
+  
+  formtastic:
+
+    hints:
+      alias:                     "Arbitrary, short login name, e.g. 'j.doe'."
+      create_account:            "If you create an user account, the new user will receive a password via email."
+
+    actions:
+      create:                    "Create %{model}"
+
+  activerecord:
+    models:
+      user:                      User
+    attributes:
+      user:
+        first_name:              First Name
+        last_name:               Last Name
+        alias:        		 Alias
+        email:        		 Email
+        create_account:          Create User Account
+
+  

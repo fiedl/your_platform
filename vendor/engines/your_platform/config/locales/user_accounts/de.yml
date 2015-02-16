@@ -1,3 +1,16 @@
 de:
   password: Passwort
   password_confirmation: Passwort-Bestätigung
+  
+  mr: Herr
+  mrs: Frau
+  
+  welcome_to_the_new_intranet_platform: 'Willkommen zur neuen Intranet-Plattform'
+  with_this_email_you_get_your_account_data: 'mit dieser E-Mail-Nachricht erhalten Sie Ihre Zugangsdaten zur neuen Intranet-Plattform.'
+  this_message_has_been_generated_automatically: 'Dies ist eine automatisch generierte E-Mail-Nachricht.'
+  
+  password:                      Passwort
+  send_new_password:             Neues Passwort per E-Mail zusenden
+  new_password_has_been_sent_to: "%{user_name} wurde ein neues Passwort per E-Mail übersandt."
+  
+  
