@@ -38,14 +38,12 @@ class UsersController < ApplicationController
   end
 
   def create
-    p "CREATE"
-    p user_params
-    
     @user_params = user_params
     @basic_user_params = @user_params.select { |key, value| key.to_s.in? ['first_name', 'last_name', 'email', 'female', 'create_account'] }
     @user = User.create(@basic_user_params)
     if @user_params[:add_to_group]
       Group.find(@user_params[:add_to_group]).assign_user @user
+      @user_params.except! :add_to_group
     end
     @user.update_attributes(@user_params)
     @user.send_welcome_email if @user.account
