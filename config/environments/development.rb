@@ -15,7 +15,7 @@ Wingolfsplattform::Application.configure do
   #config.cache_store = :file_store, Rails.root.join("tmp/app_cache")
   config.cache_store = :redis_store, 'redis://localhost:6379/0/', { expires_in: 1.day, namespace: 'development_cache' }
   
-  # Don't care if the mailer can't send
+  # Care if the mailer can't send
   config.action_mailer.raise_delivery_errors = true
 
   # Print deprecation notices to the Rails logger
