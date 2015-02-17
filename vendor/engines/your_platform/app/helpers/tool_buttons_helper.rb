@@ -8,7 +8,8 @@ module ToolButtonsHelper
              method: 'delete',
              :class => 'remove_button tool show_only_in_edit_mode btn btn-danger btn-small',
              :title => title,
-             :remote => true
+             :remote => true,
+             'aria-label' => I18n.t(:remove)
            )
   end
 
@@ -46,7 +47,10 @@ module ToolButtonsHelper
   
   def tool_button( type, icon, text, options = {} )
     css_class = "button #{type}_button btn btn-default #{options[ :class ]}"; options.delete( :class )
-    options = { :class => css_class }.merge( options )
+    options = { 
+      :class => css_class, 
+      'aria-label' => I18n.t(type)  # for accessibility and screen readers
+    }.merge( options )
     href = options[ :href ]
     href = "#" unless href
     options.delete( :href )
