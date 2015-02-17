@@ -66,6 +66,7 @@ PATH
       gravatar_image_tag
       haml
       icalendar
+      immigrant
       jquery-datatables-rails (~> 3.1.1)
       jquery-fileupload-rails
       jquery-rails
@@ -565,7 +566,6 @@ DEPENDENCIES
   guard-focus
   guard-rspec
   guard-spork
-  immigrant
   jquery-rails
   json
   launchy
