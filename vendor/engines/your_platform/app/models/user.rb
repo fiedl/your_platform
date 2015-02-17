@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
+  validates_format_of       :first_name, with: /^[^\,]*$/  # The name must not contain a comma.
+  validates_format_of       :last_name, with: /^[^\,]*$/
+  
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
