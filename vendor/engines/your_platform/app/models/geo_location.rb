@@ -85,7 +85,7 @@ class GeoLocation < ActiveRecord::Base
   #
   def plz
     if country_code == "DE"
-      postal_code || address.match(/(\d{5})/)[1]
+      postal_code || address.match(/(\d{5})/).try(:[], 1)
     end
   end
 
