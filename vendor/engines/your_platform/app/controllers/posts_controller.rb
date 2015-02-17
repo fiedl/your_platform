@@ -48,20 +48,18 @@ class PostsController < ApplicationController
         begin
           PostMailer.post_email(@text, [recipient], @subject, current_user).deliver 
           @send_counter += 1
-        rescue Net::SMTPFatalError => error
+        rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
           logger.debug error
-          if error.message.include? "550" # Something is wrong with the recipient's mail.
-            # If the recipient's mails does not work, we'll delete it for the moment.
-            #
-            # TODO: Fancy mechanism that marks the mail as invalid.
-            # But the new mechanism has to ensure that we don't send emails to invalid addresses.
-            # Otherwise, the server could suffer from penalties.
-            #
-            logger.warn "SMTP Error 550 on #{recipient.email}. Removing this email permanently."
-            recipient.profile_fields_by_type("ProfileFieldTypes::Email").first.destroy
-          else
-            raise error
-          end
+          # Something is wrong with the recipient's mail.
+          # If the recipient's mails does not work, we'll delete it for the moment.
+          #
+          # TODO: Fancy mechanism that marks the mail as invalid.
+          # But the new mechanism has to ensure that we don't send emails to invalid addresses.
+          # Otherwise, the server could suffer from penalties.
+          #
+          logger.warn "SMTP Error on #{recipient.email}. Removing this email permanently."
+          logger.warn error.message
+          recipient.profile_fields_by_type("ProfileFieldTypes::Email").first.destroy
         end
       end
     end
