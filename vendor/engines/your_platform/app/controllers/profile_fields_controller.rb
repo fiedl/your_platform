@@ -9,7 +9,6 @@ class ProfileFieldsController < ApplicationController
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
-    @profile_field.value = "—"
     @profile_field.save if @profile_field.changed?
     respond_to do |format|
       format.js
