@@ -120,22 +120,33 @@ class Group
   end
   
   
-  # In member lists of corporations do not show
-  # former and deceased members as well as members
-  # of special groups associated with this corporation
-  # as subgroups---such as certain mailing lists.
+  # Verstorbene und Ausgetretene dürfen nicht als Mitglieder
+  # der Verbindungen gezählt werden, damit sie 
   #
-  def memberships_for_member_list
-    cached do
-      if corporation?
-        aktivitas_and_philisterschaft_member_ids = 
-          (becomes(Corporation).aktivitas.try(:member_ids) || []) + 
-          (becomes(Corporation).philisterschaft.try(:member_ids) || [])
-        memberships.where(descendant_id: aktivitas_and_philisterschaft_member_ids)
-      else
-        memberships_including_members
-      end
+  #   (a) nicht in der Mitgliederliste auftauchen,
+  #   (b) keine Sammelnachrichten erhalten,
+  #   (c) nicht in Export-Listen und Etiketten enthalten sind.
+  #
+  def memberships(reload = nil)
+    if corporation? and self.becomes(Corporation).aktivitas
+      aktivitas_and_philisterschaft_member_ids = 
+        (becomes(Corporation).aktivitas.try(:member_ids) || []) + 
+        (becomes(Corporation).philisterschaft.try(:member_ids) || [])
+      super(reload).where(descendant_id: aktivitas_and_philisterschaft_member_ids)
+    else
+      super(reload)
     end
+  end
+  def members(reload = nil)
+    if corporation? and self.becomes(Corporation).aktivitas
+      descendant_users(reload).includes(:links_as_descendant).where(dag_links: {id: memberships.pluck(:id)})
+    else
+      super(reload)
+    end
+  end
+  
+  def memberships_for_member_list
+    cached { memberships_including_members }
   end
   
   
