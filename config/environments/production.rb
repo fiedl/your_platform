@@ -74,7 +74,9 @@ Wingolfsplattform::Application.configure do
 
   # Load Secret Settings
   # -> moved to config/application.rb
-
+  
+  config.asset_host = 'https://wingolfsplattform.org'
+  
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
 
