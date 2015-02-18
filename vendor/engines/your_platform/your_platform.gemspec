@@ -40,7 +40,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   
   # Database Optimization: Foreign Keys
-  s.add_dependency 'immigrant'
+  s.add_dependency 'immigrant', '~> 0.1.8'
   
   # Caching
   s.add_dependency 'redis-rails'
@@ -78,7 +78,7 @@ Gem::Specification.new do |s|
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '2.0.1'                                       # MIT License
+  s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,
