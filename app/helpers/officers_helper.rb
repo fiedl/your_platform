@@ -25,7 +25,7 @@ module OfficersHelper
     # Ganz unten stehen die Administratoren und die Chargen-Definition.
     # (Letztere ist die Chargen-Gruppe, die die Einzel-Chargen enthält.)
     #
-    [:main_admins, :main_admins_parent, :admins, :admins_parent, :chargen]
+    [:chargen, :main_admins, :main_admins_parent, :admins, :admins_parent]
     .index(flag).try(:+, 2e6) ||
     #
     # Dazwischen kommen alle übrigen Ämter.
