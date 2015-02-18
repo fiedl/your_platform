@@ -203,3 +203,5 @@ gem 'workflow_kit', github: 'fiedl/workflow_kit'
 gem 'newrelic_rpm'
 #gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 gem 'prawn', github: 'prawnpdf/prawn'
+
+gem 'formtastic', '~> 2.2.1'
