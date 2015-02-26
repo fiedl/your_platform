@@ -46,7 +46,7 @@ module Flagable
     end
 
     def flags_to_syms
-      self.flags.collect { |flag| flag.key.to_sym }
+      self.flags.pluck(:key).map(&:to_sym)
     end
 
     def has_flag?( flag )

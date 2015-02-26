@@ -185,7 +185,7 @@ namespace :activate do
   end
   
   def alle_wingolfiten_ids
-    $alle_wingolfiten_ids ||= alle_wingolfiten.collect { |user| user.id }
+    $alle_wingolfiten_ids ||= alle_wingolfiten.pluck(:id)
   end
   
   def user_is_appropriate?(user)

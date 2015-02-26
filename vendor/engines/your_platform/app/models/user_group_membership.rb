@@ -215,7 +215,7 @@ class UserGroupMembership < DagLink
   #
   def direct_memberships(options = {})
     descendant_groups_of_self_group = self.group.descendant_groups
-    descendant_group_ids_of_self_group = descendant_groups_of_self_group.collect { |group| group.id }
+    descendant_group_ids_of_self_group = descendant_groups_of_self_group.pluck(:id)
     group_ids = descendant_group_ids_of_self_group + [ self.group.id ]
     
     memberships = UserGroupMembership

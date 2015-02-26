@@ -107,7 +107,7 @@ module ProfileableMixins::Address
     end
   
     def with_postal_address_ids
-      self.with_postal_address.collect { |user| user.id }
+      self.with_postal_address.pluck(:id)
     end
   
     def without_postal_address

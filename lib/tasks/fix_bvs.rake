@@ -145,7 +145,7 @@ namespace :fix do
   end
   
   def alle_philister_mit_mehreren_bvs
-    bv_ids = Bv.all.collect { |bv| bv.id }
+    bv_ids = Bv.pluck(:id)
     bv_users = User.joins_groups.where(:groups => {id: bv_ids})
     users_in_multiple_bvs = bv_users - bv_users.uniq
     return users_in_multiple_bvs
