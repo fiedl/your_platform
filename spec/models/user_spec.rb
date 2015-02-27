@@ -551,7 +551,7 @@ describe User do
         specify "the user should only have ONE bv membership, now" do
           subject
           time_travel 2.seconds
-          (@user.groups(true) & Bv.all).count.should == 1
+          (@user.group_ids & Bv.pluck(:id)).count.should == 1
         end
         it "should assign the user to the correct bv" do
           subject

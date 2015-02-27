@@ -76,7 +76,13 @@ class User
   # This method returns the bv (Bezirksverband) the user is associated with.
   #
   def bv
-    cached { (Bv.all & self.groups).try(:first).try(:becomes, Bv) }
+    cached { Bv.find(bv_id) if bv_id }
+  end
+  def bv_ids
+    Bv.pluck(:id) & self.group_ids
+  end
+  def bv_id
+    bv_ids.first
   end
   
   def bv_membership
@@ -88,8 +94,8 @@ class User
   # dass er mehreren BVs zugeordnet ist.
   #
   def bv_memberships
-    (Bv.all & self.groups).collect do |bv|
-      UserGroupMembership.find_by_user_and_group(self, bv)
+    bv_ids.collect do |id|
+      UserGroupMembership.find_by_user_and_group(self, Group.find(id))
     end - [nil]
   end
   
