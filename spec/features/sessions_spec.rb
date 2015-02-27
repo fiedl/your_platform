@@ -121,7 +121,7 @@ feature 'Sessions' do
 
       it 'the email should contain a link to the password change page' do
         email_text = ActionMailer::Base.deliveries.last.to_s
-        email_text.should include(edit_user_account_password_path)
+        email_text.should include(reset_password_path)
       end
 
       it 'the email should contain the users name' do
