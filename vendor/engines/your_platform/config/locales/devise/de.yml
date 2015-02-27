@@ -41,7 +41,7 @@ de:
       signed_up_but_unconfirmed: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account noch nicht bestätigt ist. Sie erhalten in Kürze eine E-Mail mit der Anleitung, wie Sie Ihren Account freischalten können.'
       signed_up_but_inactive: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account inaktiv ist.'
       signed_up_but_locked: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account gesperrt ist.'
-      updated: 'Ihre Daten wurden aktualisiert.'
+      updated: 'Die Zugangsdaten wurden erfolgreich geändert.'
       update_needs_confirmation: "Ihre Daten wurden aktualisiert, aber Sie müssen Ihre neue E-Mail-Adresse bestätigen. Sie erhalten in wenigen Minuten eine E-Mail, mit der Sie die Änderung Ihrer E-Mail-Adresse abschließen können."
       destroyed: 'Ihr Account wurde gelöscht.'
     unlocks:
