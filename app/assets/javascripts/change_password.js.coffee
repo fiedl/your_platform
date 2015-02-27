@@ -5,3 +5,7 @@ $(document).ready ->
       $('.thanks').removeClass('hidden').show()
     else
       $('.thanks').addClass('hidden')
+      
+  $(document).on 'mouseover', '.pro_tipp_trigger', ->
+    $('.pro_tipp_trigger').css('opacity', '1.0')
+    $('.pro_tipp_body').show('fade')

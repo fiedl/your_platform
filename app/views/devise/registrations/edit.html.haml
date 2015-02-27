@@ -11,22 +11,32 @@
   .col2
     %h1 Welches Passwort soll ich wählen?
     %div
-      %p Denke an eine Situation, an die du dich erinnern oder die du dir merken kannst, entnehme vier Schlagwörter und verbinde sie mit Leerzeichen.
+      %p Denke an eine Situation, an die du dich erinnern oder die du dir merken kannst, entnehme vier Schlagwörter und verbinde sie zu einem Passwort.
       %p
         %strong Gutes Passwort:
-        %code.has_tooltip{title: 'Die vier Begriffe zusammen ergeben das gute Passwort!'} kneipe lustig knödel gelungen
-        (man braucht mehrere Jahre zum Knacken)
+        %code.has_tooltip{title: 'Die vier Begriffe zusammen ergeben das gute Passwort!'}
+          %span.password_component kneipe 
+          %span.password_component lustig 
+          %span.password_component knödel 
+          %span.password_component gelungen
+        (Man braucht mehrere Jahre zum Knacken. Die Leerzeichen kannst du weglassen.)
       %p
         %strong Schlechtes Passwort:
         %code
           %strike.has_tooltip{title: 'Für diejenigen, die diese Seite nur überfliegen, haben wir das schlechte Passwort vorsorglich durchgestrichen.', data: {placement: 'bottom'}} k4nn3!
-        (man braucht 27 Sekunden zum Knacken)
+        (Man braucht 27 Sekunden zum Knacken.)
       %p
         Achte bitte darauf, dass du 
         %strong für jeden Dienst ein eigenes Passwort
         verwendest. 
         Wenn der Zugang zu einem System geknackt wird, sind dann die übrigen Dienste nach wie vor sicher.
         Du kannst entweder händisch ein Passwort-Buch führen oder ein Schlüsselbund-Programm verwenden.
+      %p
+        %span.pro_tipp_trigger
+          %strong Pro-Tipp:
+          Moderne Browser haben eine Schlüsselbund-Verwaltung, 
+        %span.pro_tipp_body
+          die deine Passwörter auch verschlüsselt zwischen deinen Geräten synchronisieren. Die darfst du ruhig benutzen und dir vom Browser ein Passwort vorschlagen lassen. Dann musst du dir für die Plattform kein Passwort merken. Achte nur darauf, dass die "Master-Passwörter" für deinen Schlüsselbund und deinen Computer gut genug sind.
 
   .col1
     %h1.right Weitere Informationen
@@ -52,7 +62,7 @@
       %span.input-group-addon= icon :key
       = f.password_field :current_password, class: 'form-control', placeholder: 'Bisheriges Passwort', autofocus: true
     %p.right
-      = link_to 'Ich habe mein bisheriges Passwort vergessen. Ich benötige ein neues Passwort per E-Mail.', forgot_password_user_path(resource.user), method: :put
+      = link_to 'Ich habe mein bisheriges Passwort vergessen. Ich benötige ein neues Passwort per E-Mail.', forgot_password_user_path(resource.user), method: :put, class: 'send_me_a_new_password_via_email'
     
   %h1.change_password Neues Passwort
   %div
