@@ -590,7 +590,6 @@ DEPENDENCIES
   rack-mini-profiler
   rack-timeout
   rails (~> 3.2)
-  rb-inotify (~> 0.9)
   redcarpet
   rspec-rails
   rspec-rerun!
