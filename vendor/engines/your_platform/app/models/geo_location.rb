@@ -79,8 +79,14 @@ class GeoLocation < ActiveRecord::Base
   # Postleitzahl (PLZ). If returns the German postal code if the
   # address is in Germany. Otherwise, it returns nil.
   #
+  # There are cases when the maps api can't isolate the postal code. 
+  # In this case, the `postal_code` returns `nil`.
+  # Try to get it from the regex then.
+  #
   def plz
-    postal_code if country_code == "DE"
+    if country_code == "DE"
+      postal_code || address.match(/(\d{5})/).try(:[], 1)
+    end
   end
 
 end

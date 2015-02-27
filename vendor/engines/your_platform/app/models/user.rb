@@ -3,12 +3,15 @@ class User < ActiveRecord::Base
 
   attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
                             :add_to_corporation, :date_of_birth, :localized_date_of_birth,
-                            :aktivmeldungsdatum, :study_address, :home_address, :phone, :mobile
+                            :aktivmeldungsdatum, :study_address, :home_address, :work_address, :phone, :mobile
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
+  validates_format_of       :first_name, with: /^[^\,]*$/  # The name must not contain a comma.
+  validates_format_of       :last_name, with: /^[^\,]*$/
+  
   validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
@@ -694,7 +697,7 @@ class User < ActiveRecord::Base
       .includes(:ancestor_groups)
       .where(groups: {id: group_ids_the_user_is_no_member_of})
     Page
-      .where('NOT id IN (?)', pages_that_belong_to_groups_the_user_is_no_member_of)
+      .where('NOT id IN (?)', (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
       .order('pages.updated_at DESC')
   end
 

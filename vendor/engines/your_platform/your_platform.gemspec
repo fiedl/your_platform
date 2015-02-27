@@ -39,6 +39,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   
+  # Database Optimization: Foreign Keys
+  s.add_dependency 'immigrant', '~> 0.1.8'
+  
   # Caching
   s.add_dependency 'redis-rails'
   
@@ -48,6 +51,7 @@ Gem::Specification.new do |s|
 
   # Authentification
   s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
+  s.add_dependency 'passgen'
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
@@ -74,12 +78,13 @@ Gem::Specification.new do |s|
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '2.0.1'                                       # MIT License
+  s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
 
   # Formtastic Form Helper,
   # see: https://github.com/justinfrench/formtastic,
   # http://rubydoc.info/gems/formtastic/frames
   s.add_dependency 'formtastic'                                                        # MIT License
+  s.add_dependency 'judge-formtastic'
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
@@ -124,6 +129,10 @@ Gem::Specification.new do |s|
   
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
+  
+  # Fixes
+  # https://github.com/eventmachine/eventmachine/issues/509
+  s.add_dependency 'eventmachine', '>= 1.0.7' 
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------

@@ -55,11 +55,6 @@ gem 'nokogiri'								# MIT License
 #gem 'acts-as-dag', git: "git://github.com/resgraph/acts-as-dag.git"	# MIT License
 #gem 'acts-as-dag', '>= 2.5.7'  # now in your_platform
 
-# Formtastic Form Helper,
-# see: https://github.com/justinfrench/formtastic,
-# http://rubydoc.info/gems/formtastic/frames
-gem 'formtastic'							# MIT License
-gem 'judge-formtastic'
 
 # JSON
 gem 'json'								# Ruby License
@@ -145,11 +140,6 @@ end
 #  end
 #end
 
-
-# password generator. it's not pwgen, but it's a gem.
-# TODO: if we ever find a way to properly include pwgen, let's do it.
-gem 'passgen'                                                           # MIT License
-
 # YourPlatform
 gem 'your_platform', path: 'vendor/engines/your_platform'
 
@@ -192,9 +182,6 @@ gem 'fnordmetric'
 gem 'rack-mini-profiler'
 gem 'flamegraph'
 
-# Database Optimization: Foreign Keys
-gem 'immigrant'
-
 # Code Coverage Badge, coveralls.io
 gem 'coveralls', require: false
 
@@ -217,3 +204,5 @@ gem 'workflow_kit', github: 'fiedl/workflow_kit'
 gem 'newrelic_rpm'
 #gem 'jquery-datatables-rails', git: 'git://github.com/rweng/jquery-datatables-rails.git'
 gem 'prawn', github: 'prawnpdf/prawn'
+
+gem 'formtastic', '~> 2.2.1'

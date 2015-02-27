@@ -34,6 +34,7 @@
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
     = yield :scripts
+    = yield :head
 
   %body{:class => controller.controller_name, data: { locale: I18n.locale }}
     - if user_account_signed_in?
@@ -93,13 +94,11 @@
             = link_to image_tag('logo.png'), root_path, class: 'navbar-brand'
         
         .collapse.navbar-collapse#header-bar-collapse
-          - # From right to left due to 'navbar-right' classes within:
-          
-          -#%span#search_box
-          = render partial: 'shared/search_box'
-          = render partial: 'layouts/help_button'
-          %span#category_indicator
-            %ul.nav.navbar-nav.nav-pills.navbar-right#horizontal_nav= horizontal_nav_lis
+          %span.navbar-right
+            %span#category_indicator
+              %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
+            = render partial: 'layouts/help_button'
+            %span#search_box= render partial: 'shared/search_box'
 
           -# %span#category_indicator= horizontal_nav
           -# - # %ul

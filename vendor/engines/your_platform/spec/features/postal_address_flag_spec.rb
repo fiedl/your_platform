@@ -19,7 +19,7 @@ feature "Postal Address Flag" do
 
     within ".box.section.contact_information" do
 
-      page.should have_no_selector('.wingolfspost .label.radio', visible: true)
+      page.should have_no_selector('.postal_address .label.radio', visible: true)
       @user.postal_address_field.should == nil
 
       click_on I18n.t(:edit)
@@ -27,17 +27,17 @@ feature "Postal Address Flag" do
       wait_for_ajax
 
       visit user_path @user
-      page.should have_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
-      page.should have_no_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
+      page.should have_content "Home Address #{@home_address.value} Postanschrift".gsub("\n", "")
+      page.should have_no_content "Study Address #{@study_address.value} Postanschrift".gsub("\n", "")
       @user.reload.postal_address_field.should == @home_address
 
       click_on I18n.t(:edit)
-      find(".wingolfspost.profile_field_#{@study_address.id} input[type='radio']").click()
+      find(".postal_address.profile_field_#{@study_address.id} input[type='radio']").click()
       wait_for_ajax
 
       visit user_path @user
-      page.should have_no_content "Home Address #{@home_address.value} Wingolfspost".gsub("\n", "")
-      page.should have_content "Study Address #{@study_address.value} Wingolfspost".gsub("\n", "")
+      page.should have_no_content "Home Address #{@home_address.value} Postanschrift".gsub("\n", "")
+      page.should have_content "Study Address #{@study_address.value} Postanschrift".gsub("\n", "")
       @user.reload.postal_address_field.should == @study_address
 
     end

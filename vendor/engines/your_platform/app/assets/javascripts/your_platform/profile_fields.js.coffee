@@ -24,17 +24,17 @@ ready = ->
  #
  # )
 
-  # Wingolfspost-Flag
+  # Postal Address
   # ------------------------------------------------------------------------------------------
-  $(document).on('change', ".wingolfspost * input", (event) ->
+  $(document).on('change', ".postal_address * input", (event) ->
     if $(this).prop('checked')
-      profile_field_id = $(this).closest('.wingolfspost').data('profileFieldId')
-      $(".wingolfspost").removeClass('flagged').addClass('unflagged')
-      $(".wingolfspost.profile_field_" + profile_field_id).addClass('flagged').removeClass('unflagged')
+      profile_field_id = $(this).closest('.postal_address').data('profileFieldId')
+      $(".postal_address").removeClass('flagged').addClass('unflagged')
+      $(".postal_address.profile_field_" + profile_field_id).addClass('flagged').removeClass('unflagged')
       $.ajax(
-        url: $(this).closest('.wingolfspost').data('updateJsonUrl'),
+        url: $(this).closest('.postal_address').data('updateJsonUrl'),
         type: 'POST',
-        data: { _method: 'PUT', profile_field: { wingolfspost: true  } },
+        data: { _method: 'PUT', profile_field: { postal_address: true  } },
         dataType: 'json'
       )
     )

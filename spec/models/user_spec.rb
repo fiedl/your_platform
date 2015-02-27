@@ -612,7 +612,7 @@ describe User do
     describe "the user being a former member of a corporation" do
       before do
         @corporation_a = create(:wingolf_corporation)
-        @membership = @corporation_a.assign_user @user, at: 2.years.ago
+        @membership = @corporation_a.status_groups.first.assign_user @user, at: 2.years.ago
         @membership.promote_to @corporation_a.status_group("Schlicht Ausgetretene"), at: 1.year.ago
       end
       it "should not set the status to deceased in this corporation" do

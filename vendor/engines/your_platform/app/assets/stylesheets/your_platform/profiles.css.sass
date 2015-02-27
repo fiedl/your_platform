@@ -8,5 +8,146 @@
 .user_hidden_flag.unflagged.do_not_show_in_edit_mode
   visibility: hidden
 
-.wingolfspost.unflagged
+.postal_address.unflagged
   visibility: hidden
+
+// Fix for bootstrap badges that include a radio button:
+.box .label
+  white-space: normal
+  padding: 5px
+  input
+    top: -4px
+  label, label.radio
+    display: inline-block
+    
+ul.attributes, ul.profile_fields, ul.officer_groups
+  display: table
+  li
+    display: table-row
+    span.label-wrapper, span.value-wrapper
+      padding-right: 12px
+      vertical-align: top
+      padding-bottom: 12px  
+    .profile_field_label
+      background-color: transparent
+      color: black
+      padding: 0px
+  li.profile_field_child
+    .label-wrapper
+      padding-bottom: 3px
+    .label
+      color: #777
+  .remove_button
+    margin-right: 12px
+    margin-bottom: 6px
+
+ul.attributes, ul.officer_groups
+  padding-left: 18px
+
+ul.section_container
+  padding-left: 0px
+
+.currently_in_edit_mode .label
+  padding-left: 30px
+
+
+@mixin box-table-layout
+  span.label-wrapper, span.value-wrapper, span.button-wrapper
+    display: table-cell
+  span.label-wrapper
+    width: 130px
+  span.value-wrapper
+    ul
+      width: 100%
+      padding-left: 0
+      li
+        width: 100%
+  .currently_in_edit_mode 
+    .value-wrapper
+      width: 100%
+      input, textarea
+        width: 100%
+
+@mixin child-stack-layout
+  li.profile_field_child
+    display: block
+    width: 100%
+  li.profile_field_parent ul
+    margin-left: 0
+    padding-left: 0
+
+
+.box.first
+  @include box-table-layout
+  textarea
+    width: 100%
+    min-height: 4cm !important
+
+.box.contact_information
+  @include box-table-layout
+  .address_is_in_bv
+    margin-top: -3em
+.box.section.contact_information.with_small_map
+  .map.contact_section
+    width: 40%
+    height: 340px
+    float: right
+  ul.profile_fields.attributes
+    max-width: 58%
+    word-break: break-word
+
+.box.about_myself
+  @include box-table-layout
+  textarea
+    min-height: 200px !important
+
+.box.study_information
+  @include box-table-layout
+  @include child-stack-layout
+
+.box.career_information
+  @include box-table-layout
+
+.box.organizations
+  @include box-table-layout
+  @include child-stack-layout
+
+.box.officers
+  @include box-table-layout  
+  .copy-to-clipboard
+    display: inline-block
+  .label-wrapper
+    font-weight: bold
+  .value-wrapper input
+    width: 390px !important
+
+.box.bank_account_information
+  @include box-table-layout
+  @include child-stack-layout
+
+.box.description
+  @include box-table-layout
+
+.box.corporate_vita
+  table#corporate_vita
+    margin-left: 18px
+    width: 100%
+    td
+      text-align: right
+    td.membership_valid_from
+      text-align: left
+      width: 120px
+    td.membership_group
+      text-align: left
+    .btn
+      margin-right: 12px
+
+.box.communication
+  @include box-table-layout
+  @include child-stack-layout
+
+.box.further_information
+  dl
+    margin-left: 16px
+  input
+    width: 90%

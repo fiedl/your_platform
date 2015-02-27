@@ -1,6 +1,22 @@
 require 'spec_helper'
 
 describe Group do
+  
+  describe "#members" do
+    before do
+      @corporation = create :wingolf_corporation
+      @aktiver = create :user; @corporation.status_group("Hospitanten").assign_user @aktiver
+      @philister = create :user; @corporation.status_group("Philister").assign_user @philister
+      @verstorbener = create :user; @corporation.status_group("Verstorbene").assign_user @verstorbener
+      @ausgetretener = create :user; @corporation.status_group("Schlicht Ausgetretene").assign_user @ausgetretener
+    end
+    subject { @corporation.members }
+    it { should include @aktiver }
+    it { should include @philister }
+    it { should_not include @verstorbener }
+    it { should_not include @ausgetretener }
+  end
+  
 
   # Special Groups
   # ==========================================================================================

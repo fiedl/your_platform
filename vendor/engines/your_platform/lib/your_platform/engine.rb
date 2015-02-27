@@ -16,6 +16,9 @@ require 'jquery-ui-rails'
 require 'acts-as-dag'
 require 'acts_as_tree'
 
+# Database Optimization: Foreign Keys
+require 'immigrant'
+
 # Caching
 require 'redis-rails'
 
@@ -24,6 +27,7 @@ require 'sidekiq'
 
 # Authentification
 require 'devise'
+require 'passgen'
 
 # Authorization
 require 'cancan'
@@ -47,6 +51,10 @@ require 'delocalize'
 # Geo Coding
 require 'geocoder'
 require 'gmaps4rails'
+
+# Form Helpers
+require 'formtastic'
+require 'judge/formtastic'
 
 # File Uploads
 require 'carrierwave'

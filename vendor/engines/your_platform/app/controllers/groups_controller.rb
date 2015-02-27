@@ -116,7 +116,13 @@ class GroupsController < ApplicationController
         end
         options = {sender: params[:sender]}
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
-        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
+        
+        # Possible dispositions: attachment, inline.
+        # Windows users with the Adobe Reader browser plugin can't print with 100% scale from the browser plugin.
+        # They would need to download and open the file in Adobe Reader standalone to print at 100% scale.
+        # Therefore, we use 'attachment' here in order to prevent the use of the browser plugin.
+        #
+        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'attachment')
       end
     end
     

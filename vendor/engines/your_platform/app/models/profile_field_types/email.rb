@@ -3,6 +3,8 @@ module ProfileFieldTypes
   # Email Contact Information
   #
   class Email < ProfileField
+    validates_format_of :value, :with => Devise::email_regexp, :if => Proc.new { |pf| pf.value.present? }
+    
     def self.model_name; ProfileField.model_name; end
 
     def display_html

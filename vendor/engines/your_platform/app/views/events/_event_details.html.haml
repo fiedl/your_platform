@@ -31,7 +31,7 @@
         = "annonciert."
     %tr
       %th
-      %td= "Jeder Wingolfit kann sich selbst als Teilnehmer eintragen."
+      %td= "Jeder kann sich selbst als Teilnehmer eintragen."
     %tr.publish_on_local_website
       %th
       %td
@@ -45,7 +45,7 @@
     %tr.publish_on_global_website
       %th
       %td
-        = best_in_place @event, :publish_on_global_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (wingolf.org)"], ['true', "Auf öffentlicher Homepage veröffentlichen (wingolf.org)"]]
+        = best_in_place @event, :publish_on_global_website, classes: "show_always", :type => :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"], ['true', "Auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"]]
         –
         = link_to public_events_url do
           = icon 'list-alt'
