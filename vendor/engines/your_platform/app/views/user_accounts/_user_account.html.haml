@@ -9,12 +9,10 @@
         %dd= best_in_place_if can?(:change_alias, @user), @user, :alias
       %span
         %dt= t :name
-        %dd 
-          %span.first_and_last_name
-            = editable_first_and_last_name(@user)
+        %dd= @user.name 
       %span
         %dt= t :email
-        %dd= best_in_place_if can?(:update, @user), @user, :email
+        %dd= @user.email
     
 .show_only_in_edit_mode
   %dl
@@ -22,17 +20,20 @@
       %dt
         Zugang zur Plattform
       %dd
-        = "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am #{localize(@user.account.created_at)}. Zuletzt wurde am #{localize(@user.account.updated_at)} ein neues Passwort per E-Mail übersandt."
+        = "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am #{localize(@user.account.created_at)}. Die Zugangsdaten wurden zuletzt am #{localize(@user.account.updated_at)} geändert."
       %dt
         = t('password') + ':'
       - if @user == current_user
-        %dd
-          = link_to t(:change_password), edit_registration_path, :class => 'btn btn-success'
+        %dd.change_password
+          %p= link_to t(:change_password), edit_registration_path, :class => 'btn btn-success'
       - if can? :manage, @user
         %dd.request_new_password
-          = button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
+          %p= button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
         %dt
           Zugang zur Plattform sperren:
         %dd.lock_account
-          = button_to t(:delete_account), user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
-          (Dies sperrt nur den Zugang zur Plattform. Alle Daten bleiben erhalten.)
+          = button_to "Benutzerkonto sperren", user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
+          %p
+            Dies sperrt den Zugang zur Plattform für 
+            = "#{link_to @user.title, @user}.".html_safe
+            Alle Daten bleiben erhalten.
