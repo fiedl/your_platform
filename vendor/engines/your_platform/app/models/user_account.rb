@@ -32,7 +32,7 @@ class UserAccount < ActiveRecord::Base
   #   Lockable: locks an account after a specified number of failed sign-in attempts. 
   #     Can unlock via email or after a specified time period.
   # 
-  devise :database_authenticatable, :recoverable, :rememberable, :validatable
+  devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable
   attr_accessible :password, :password_confirmation, :remember_me
 
   # Virtual attribute for authenticating by either username, alias or email
@@ -58,10 +58,12 @@ class UserAccount < ActiveRecord::Base
   end
   
   # HACK: This method seems to be required by the PasswordController and is missing, 
-  # since we have a virtual email field. 
+  # since we have a virtual email field.
   # TODO: If we ever change the Password authentication 
-  # field to login, remove this method.
-  #
+  def email= value
+    #dummy required by devise to create an 'error' user account
+  end
+
   def email_changed?
     false
   end
@@ -99,9 +101,10 @@ class UserAccount < ActiveRecord::Base
     
     # What can go wrong?
     # 1. No user could match the login string.
-    users_that_match_the_login_string ||= User.find_all_by_identification_string(login_string)
-    raise 'no_user_found' unless users_that_match_the_login_string.count > 0
-    
+    users_that_match_the_login_string ||= User.find_all_by_identification_string( login_string )
+    #raise 'no_user_found' unless users_that_match_the_login_string.count > 0
+    return nil unless users_that_match_the_login_string.count > 0
+
     # 2. The user may not have an active user account.
     users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.select do |user|
       user.has_account? 
@@ -156,33 +159,4 @@ class UserAccount < ActiveRecord::Base
     raise 'attempt to send welcome email with empty password' unless self.password
     UserAccountMailer.welcome_email( self.user, self.password ).deliver
   end
-    
-  
-  # This overrides the devise method that would assign a newly entered password.
-  # But: We do not support custom passwords, currently. Thus, this method actually
-  # sends a password via email.
-  # 
-  # FIXME: This should not happen here in the model. The method name does not suggest
-  # that an email is sent by it. 
-  #
-  # For now, this dirty hack is used, because it's quite hard to override the devise
-  # controller in this manner.
-  #
-  # This `update` action will trigger the reset:
-  # https://github.com/plataformatec/devise/blob/master/app/controllers/devise/passwords_controller.rb#L30
-  #
-  # This is how one would override a devise controller:
-  # http://stackoverflow.com/questions/3546289/override-devise-registrations-controller
-  #
-  # Make sure the views are moved from views/devise/passwords/... to views/passwords/... .
-  #
-  # The `reset_password_by_token` method shows how to find the matching user account, here
-  # named as `recoverable`:
-  # https://github.com/plataformatec/devise/blob/d75fd56f150f006aee51dcafc7157454190de570/lib/devise/models/recoverable.rb#L109
-  #
-  def reset_password!(new_password, new_password_confirmed)
-    send_new_password
-  end
-  
-
 end

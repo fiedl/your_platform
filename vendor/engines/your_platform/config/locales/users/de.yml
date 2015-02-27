@@ -42,8 +42,8 @@ de:
   alias:                         Alias
   create_account:                Benutzerkonto anlegen
   user_account_created:          'Benutzerkonto wurde erfolgreich angelegt.'
-  delete_account:                Benutzerkonto löschen
-  user_account_deleted:          'Benutzerkonto wurde erfolgreich gelöscht.'
+  delete_account:                Benutzerkonto sperren
+  user_account_deleted:          'Benutzerkonto wurde erfolgreich gesperrt.'
   register_in:                   Eintragen in
 
   gender:                        Geschlecht

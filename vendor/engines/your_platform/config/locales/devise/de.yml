@@ -19,11 +19,15 @@ de:
       invalid_token: 'Der Anmelde-Token ist ungültig.'
       timeout: 'Ihre Sitzung ist abgelaufen, bitte melden Sie sich erneut an.'
       inactive: 'Ihr Account ist nicht aktiv.'
+      user_account:
+        not_found_in_database: 'Es wurde kein übereinstimmender Benutzer gefunden.'
       not_found_in_database: 'Ungültige Anmeldedaten.'
     sessions:
       signed_in: 'Sie sind nun am System angemeldet. Falls Sie an einem fremden Rechner (Internetcafé etc.) arbeiten, vergessen Sie bitte nicht, sich später wieder abzumelden (rechts oben).'
       signed_out: 'Erfolgreich abgemeldet.'
     passwords:
+      user_account:
+       no_token: 'Sie können diese Seite nur von einer Passwortänderungsmail heraus besuchen. Wenn Sie von einer Passwortänderungsmail kommen, stellen Sie bitte sicher, dass sie die Vollständige Adresse (URL) verwendet haben.'
       send_instructions: 'Sie erhalten in wenigen Minuten eine E-Mail mit der Anleitung, wie Sie ihr Passwort zurücksetzen können.'
       updated: 'Ein neues Passwort wurde generiert und an Ihre E-Mail-Adresse versandt. Sie sind jetzt angemeldet.'
       updated_not_active: 'Ihr Passwort wurde geändert.'
@@ -37,7 +41,7 @@ de:
       signed_up_but_unconfirmed: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account noch nicht bestätigt ist. Sie erhalten in Kürze eine E-Mail mit der Anleitung, wie Sie Ihren Account freischalten können.'
       signed_up_but_inactive: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account inaktiv ist.'
       signed_up_but_locked: 'Sie haben sich erfolgreich registriert. Wir konnten Sie noch nicht anmelden, da Ihr Account gesperrt ist.'
-      updated: 'Ihre Daten wurden aktualisiert.'
+      updated: 'Die Zugangsdaten wurden erfolgreich geändert.'
       update_needs_confirmation: "Ihre Daten wurden aktualisiert, aber Sie müssen Ihre neue E-Mail-Adresse bestätigen. Sie erhalten in wenigen Minuten eine E-Mail, mit der Sie die Änderung Ihrer E-Mail-Adresse abschließen können."
       destroyed: 'Ihr Account wurde gelöscht.'
     unlocks:

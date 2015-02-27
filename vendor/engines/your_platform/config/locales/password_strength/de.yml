@@ -1,0 +1,9 @@
+de:
+  password_strength:
+    advice: 'Ein gutes Passwort lässt sich leicht merken, ist aber für fremde schwer zu erraten. Seltene Worte funktionieren gut, aber nur, wenn man mehrere davon verwendet. Auch hilfreich: irreguläre großsCHreibung, kreative Rechtschreibung, nicht-offensichtliche Zahlen und Symbole ($ für s, 0 für o sind allerdings zu offensichtlich!)'
+    score_descriptions:
+      s0: 'Sehr schwach'
+      s1: 'Schwach'
+      s2: 'Mittel'
+      s3: 'Gut'
+      s4: 'Stark'

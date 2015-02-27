@@ -171,7 +171,9 @@ Spork.prefork do
     config.include RSpec::Matchers
     config.include Rails.application.routes.url_helpers
     config.include FactoryGirl::Syntax::Methods
-    
+    config.include EmailSpec::Helpers
+    config.include EmailSpec::Matchers
+
     # TimeTravel abilities: time_travel 2.seconds
     # This can be used for caching, validity range, etc.
     #

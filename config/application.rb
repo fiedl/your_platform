@@ -103,7 +103,7 @@ module Wingolfsplattform
     config.assets.enabled = true
 
     # http://stackoverflow.com/questions/7577236/actionviewtemplateerror-960-css-isnt-precompiled
-    config.assets.precompile += ['wingolf_layout.css', 'bootstrap_layout.css', 'bootstrap_setup.css', 'galleria-classic.css', 'galleria-classic.js']
+    config.assets.precompile += ['wingolf_layout.css', 'bootstrap_layout.css', 'bootstrap_setup.css', 'galleria-classic.css', 'galleria-classic.js', 'password_strength.js', 'zxcvbn.js']
     
     # # If assets do not refresh properly using sass in development, use this.
     # # http://www.tkalin.com/blog_posts/rails-4-disable-assets-caching-for-development-test-environments/

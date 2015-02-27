@@ -7,53 +7,7 @@ feature "UserForgotPassword" do
     @user = User.create( first_name: "John", last_name: "Doe", email: "j.doe@example.com", :alias => "j.doe",
                          create_account: true )
   end
-  
-  context "for normal users" do
-    scenario 'clicking forgot-password link on the login page' do
-      visit root_path
-      page.should have_text "Passwort vergessen?"
-      click_on "Passwort vergessen?"
-      
-      fill_in :user_account_email, with: @user.email
-      click_on 'Passwort zurücksetzen'
-      
-      email_text = ActionMailer::Base.deliveries.last.to_s
-      email_text.should include "auf folgender Seite ein neues Passwort generieren lassen"
-      token = email_text.scan(/token=3D(.*)\"/).first.first  # "3D" gehört zum Encoding, nicht zum Token
-      
-      visit edit_user_account_password_path(reset_password_token: token)
-      page.should have_text 'Passwort ändern'
-      click_on 'Neues Passwort per E-Mail zusenden'
 
-      page.should have_no_text 'ist nicht gültig'
-      Timeout::timeout(5) do
-        loop do
-          email_text = ActionMailer::Base.deliveries.last.to_s
-          break if email_text.include?('Willkommen auf der Wingolfsplattform')
-        end
-      end
-      
-      email_text.should include @user.alias
-      password_line = email_text.lines.find { |s| s.starts_with? "Passwort:" }
-      password = password_line.split( ' ' ).last
-      password.should be_kind_of String
-      password.should be_present
-      
-      visit sign_out_path
-      page.should have_text I18n.t(:login)
-      
-      visit sign_in_path
-      fill_in 'user_account_login', with: @user.alias
-      fill_in 'user_account_password', with: password
-      click_button I18n.t :login
-      page.should have_no_text I18n.t :login
-      
-      accept_terms_of_use
-
-      page.should have_selector '.box.what_is_new'
-    end
-  end
-  
   context "for admins" do
     before { login(:admin) }
 

@@ -3,18 +3,22 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
 
   root :to => 'root#index'
+
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'
-  
+
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'
-  
-  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}
+
+  # Users should be allowed to change their password(update registration), but not to sign up(create registration)
+  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]
   devise_scope :user_account do
-    match 'sign_in' => 'sessions#new', as: :sign_in
-    match 'sign_out' => 'sessions#destroy', as: :sign_out
+    match 'sign_in' => 'devise/sessions#new', as: :sign_in
+    match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
+    get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
+    put 'change_password/:id' => 'devise/registrations#update', :as => 'registration' #todo: change to patch in rails 4.0
   end
-  
+
   get 'search/guess', to: "search#lucky_guess"
   get :search, to: "search#index"
 

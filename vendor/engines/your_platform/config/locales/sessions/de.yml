@@ -5,7 +5,6 @@ de:
   login_name_explanation:   'Vor- und Zuname, E-Mail-Adresse oder Alias'
 
   login_failed:             Anmeldung fehlgeschlagen.
-  no_user_found:            Es wurde kein übereinstimmender Benutzer gefunden.
   wrong_password:           Das angegebene Passwort war falsch.
   user_has_no_account:      Der Benutzer hat kein aktives Benutzerkonto.
   
@@ -23,8 +22,12 @@ de:
   change_password:          Passwort ändern
   new_password:             Neues Passwort
   confirm_new_password:     Passwort bestätigen
-  submit_changed_password:  Passwort ändern
+  submit_changed_password:  "Passwort-Änderung bestätigen"
   remember_me:              Anmeldestatus merken
+  current_password:         Aktuelles Passwort
+  change_password_blank_notice: (Feld leer lassen, wenn das Passwort nicht geändert werden soll)
+  change_password_current_password_notice: (Das aktuelle Passwort wird benötigt, um die Änderung zu bestätigen)
+  i_agree_i_do_not_use_the_same_password_on_other_services: "Ich versichere, dass ich das Passwort für keinen anderen Dienst verwende und es niemals weitergebe."
 
   reset_password_instructions:
     hello:                  'Guten Tag, '

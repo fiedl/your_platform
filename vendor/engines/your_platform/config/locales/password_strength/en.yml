@@ -1,0 +1,9 @@
+en:
+  password_strength:
+    advice: 'A good password is easy to remember but hard for a stranger to guess. Uncommon words work well, but only if you use several. Also helpful: non-standard uPPercasing, creative spelllling, personal neologisms, and non-obvious numbers and symbols (using $ for s or 0 for o is too obvious!)'
+    score_descriptions:
+      s0: 'very weak'
+      s1: 'weak'
+      s2: 'medium'
+      s3: 'good'
+      s4: 'strong'
