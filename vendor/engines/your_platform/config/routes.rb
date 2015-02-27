@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     match 'sign_in' => 'devise/sessions#new', as: :sign_in
     match 'sign_out' => 'devise/sessions#destroy', as: :sign_out
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
+    get 'change_password' => 'devise/registrations#edit', :as => 'edit_password'
+    get 'change_password' => 'devise/registrations#edit', :as => 'change_password'
     put 'change_password/:id' => 'devise/registrations#update', :as => 'registration' #todo: change to patch in rails 4.0
   end
 

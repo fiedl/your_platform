@@ -23,11 +23,16 @@
         #backendBar
           .content
             %ul.backendBarItems
-              %li.first.backendBarItem
+              %li.first.backendBarItem.dropdown
                 %span.user_avatar
                   = render 'layouts/session_bar_avatar'
                 %span.user_name#user_name{data: {email: current_user.email, id: current_user.id, title: current_user.title}}
                   = link_to current_user.title, main_app.user_path( current_user )
+                %b.caret
+                %ul.dropdown-menu
+                  %li= link_to t(:my_profile), current_user
+                  %li= link_to t(:change_password), change_password_path
+                  %li= link_to t(:sign_out), sign_out_path
               %li.backendBarItem
                 = link_to t(:my_profile), current_user, :class => 'my_profile'
               %li.backendBarItem.dropdown
