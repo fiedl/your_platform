@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
 class Bv < Group
+  
+  default_scope -> { joins(:links_as_child).where(dag_links: {ancestor_type: 'Group', ancestor_id: Group.find_bvs_parent_group.id}) }
   
   # Override the model name. This is used for the generation of paths, i.e.
   # group_path rather than bv_path.
   # 
   def self.model_name
     Group.model_name
-  end
-
-  def self.all
-    Group.find_bv_groups
   end
 
   def self.by_plz( plz )
