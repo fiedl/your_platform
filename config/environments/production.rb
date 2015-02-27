@@ -75,7 +75,13 @@ Wingolfsplattform::Application.configure do
   # Load Secret Settings
   # -> moved to config/application.rb
   
-  config.asset_host = 'https://wingolfsplattform.org'
+  if ::STAGE.to_s.include? 'master'
+    config.asset_host = 'http://master.wingolfsplattform.org'
+  elsif ::STAGE.to_s.include? 'sandbox'
+    config.asset_host = 'http://sandbox.wingolfsplattform.org'
+  else
+    config.asset_host = 'https://wingolfsplattform.org'
+  end
   
   # SMTP Settings
   config.action_mailer.delivery_method = :smtp
