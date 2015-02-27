@@ -301,7 +301,7 @@ class User
   end
   
   def group_names
-    self.groups.collect { |group| group.name }
+    self.groups.pluck(:name)
   end
   
   # Defines whether the user can be marked as deceased (by a workflow).

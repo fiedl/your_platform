@@ -485,7 +485,7 @@ class User < ActiveRecord::Base
   #
   def corporations
     cached do
-      my_corporation_ids = (self.group_ids & Group.corporations.map(&:id) ) if Group.corporations_parent
+      my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
       my_corporation_ids ||= []
       Corporation.find my_corporation_ids
     end
@@ -556,7 +556,7 @@ class User < ActiveRecord::Base
 
   def corporate_vita_memberships_in(corporation)
     Rails.cache.fetch([self, 'corporate_vita_memberships_in', corporation], expires_in: 1.week) do
-      group_ids = (corporation.status_groups & self.parent_groups).map(&:id)
+      group_ids = corporation.status_groups.map(&:id) & self.parent_groups.map(&:id)
       UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where(ancestor_id: group_ids, ancestor_type: 'Group')
     end
   end
@@ -867,7 +867,7 @@ class User < ActiveRecord::Base
   end
   
   def self.find_all_non_hidden
-    non_hidden_user_ids = User.all.map(&:id) - Group.hidden_users.member_ids
+    non_hidden_user_ids = User.pluck(:id) - Group.hidden_users.member_ids
     self.where(id: non_hidden_user_ids)  # in order to make it work with cancan.
   end
 
@@ -889,7 +889,7 @@ class User < ActiveRecord::Base
   #     user.group_flags.include? 'hidden_users'
   # 
   def group_flags
-    groups.joins(:flags).select('flags.key as flag').collect { |g| g.flag }
+    groups.joins(:flags).pluck('flags.key')
   end
   
   
@@ -967,7 +967,7 @@ class User < ActiveRecord::Base
   end
   
   def self.deceased_ids
-    self.deceased.select('users.id').collect { |user| user.id }
+    self.deceased.pluck(:id)
   end
   
   def self.alive
@@ -987,7 +987,7 @@ class User < ActiveRecord::Base
   end
   
   def self.applicable_for_new_account
-    self.without_account.alive.with_email
+    self.alive.without_account.with_email
   end
   
   def self.joins_groups

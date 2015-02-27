@@ -124,9 +124,11 @@ class ListExport
       @leaf_groups = @group.leaf_groups
       # FIXME: The leaf groups should not return any officer group. Make this fix unneccessary:
       @leaf_groups -= @group.descendant_groups.where(name: ['officers', 'Amtsträger'])
-      # /FIXME
       @leaf_group_names = @leaf_groups.collect { |group| group.name }
       @leaf_group_ids = @leaf_groups.collect { |group| group.id }
+      # /FIXME - please uncomment:
+      #@leaf_group_names = @leaf_groups.pluck(:name)
+      #@leaf_group_ids = @leaf_groups.pluck(:id }
       
       @group.members.collect do |user|
         user = user.becomes(ListExportUser)

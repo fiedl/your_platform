@@ -50,7 +50,7 @@ namespace :import do
             add_to_group_name = row[ 'add_to_group_name' ].strip
             workflow_description = row[ 'description' ].strip
             
-            unless corporation.descendant_workflows.collect { |workflow| workflow.name }.include?(workflow_name)
+            unless corporation.descendant_workflows.where(:name => workflow_name).exists?
     
               workflow_belongs_to_groups = workflow_belongs_to_group_names.collect do |group_name|
                 group = corporation.descendant_groups.where(name: group_name).first
