@@ -1,3 +1,6 @@
+require 'best_in_place'
+require_dependency(Gem::Specification.find_by_name('best_in_place').gem_dir + '/' + 'lib/best_in_place/controller_extensions')
+
 module BestInPlace
   module ControllerExtensions
 
