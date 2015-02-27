@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
-  s.add_dependency "rails", "~> 3.2.11"
+  s.add_dependency "rails", "~> 3.2.21"
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
