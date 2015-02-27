@@ -76,14 +76,14 @@
       %span.input-group-addon
         %input(id="user_account_agreement" type="checkbox")
       %span.input-group-addon
-        = f.label(:agreement, "Ich versichere, dass ich das Passwort für keinen anderen Dienst verwende und es niemals weitergebe.")
+        = f.label(:agreement, t(:i_agree_i_do_not_use_the_same_password_on_other_services))
         
         %p Bitte ignoriere diese Pflicht nicht. Du schützt damit die Daten Deiner Bundesbrüder!
       %span.input-group-addon
         .thanks.hidden Danke!
         
     %p Bitte klicke nun auf den folgenden blauen Bestätigen-Knopf, um die Änderung deines Passwortes einzuleiten.
-    %p= f.submit 'Passwort-Änderung bestätigen', class: 'btn btn-primary btn-large confirm right'
+    %p= f.submit t(:submit_changed_password), class: 'btn btn-primary btn-large confirm right'
     
   %h1 Karikatur
   %div
