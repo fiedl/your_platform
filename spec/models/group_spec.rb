@@ -1,79 +1,341 @@
 require 'spec_helper'
 
 describe Group do
-  
-  describe "#members" do
-    before do
-      @corporation = create :wingolf_corporation
-      @aktiver = create :user; @corporation.status_group("Hospitanten").assign_user @aktiver
-      @philister = create :user; @corporation.status_group("Philister").assign_user @philister
-      @verstorbener = create :user; @corporation.status_group("Verstorbene").assign_user @verstorbener
-      @ausgetretener = create :user; @corporation.status_group("Schlicht Ausgetretene").assign_user @ausgetretener
-    end
-    subject { @corporation.members }
-    it { should include @aktiver }
-    it { should include @philister }
-    it { should_not include @verstorbener }
-    it { should_not include @ausgetretener }
-  end
-  
 
-  # Special Groups
+  # General Properties
   # ==========================================================================================
 
-  # BVs
-  # ------------------------------------------------------------------------------------------
+  describe "(Basic Properties)" do
 
-  describe "(BVs) " do
-    before do
-      # in this context, this should be a group, but FactoryGirl returns a Bv-type object.
-      @bv_group = create( :bv_group ).becomes Group 
-      @bvs_parent_group = @bv_group.parent_groups.first
-      @group = create( :group )
-    end
+    before { @group = create( :group ) }
+    subject { @group }
 
-    describe ".find_bvs_parent_group" do
-      subject { Group.find_bvs_parent_group }
-      it { should_not == nil }
-      it { should == @bvs_parent_group }
-    end
+    it { should respond_to( :name ) }
+    it { should respond_to( :name= ) }
+    it { should respond_to( :token ) }
+    it { should respond_to( :token= ) }
+    it { should respond_to( :internal_token ) }
+    it { should respond_to( :internal_token= ) }
+    it { should respond_to( :extensive_name ) }
+    it { should respond_to( :extensive_name= ) }
 
-    describe ".find_bv_groups" do
-      subject { Group.find_bv_groups }
-      it { should == [ @bv_group ] }
-    end
-
-    describe ".create_bvs_parent_group" do
-      it "should create the parent group for the bvs" do
-        Group.find_bvs_parent_group.should_not == nil
-        @bvs_parent_group.destroy
-        Group.find_bvs_parent_group.should == nil
-
-        Group.create_bvs_parent_group
-        Group.find_bvs_parent_group.should_not == nil
+    describe "#title" do
+      it "should be the same as the group's name" do
+        @group.name = "Group Name"
+        @group.title.should == "Group Name"
       end
     end
 
-    describe "#is_special_group?" do
-      subject { @group.is_special_group? }
-      describe "for a normal group" do
+    describe "#name" do
+      subject { @group.name }
+      describe "for a translation of the name exists" do
+        before { @group.name = "admins" }
+        it "should return the translated name" do
+          I18n.t(:admins).should_not == "admins"
+          subject.should == I18n.t(:admins)
+        end
+      end
+      describe "for no translation of the name exists" do
+        before { @group.name = "asdjkl" }
+        it "should return the name itself" do
+          subject.should == "asdjkl"
+        end
+      end
+    end
+
+  end
+
+
+  # Associated Objects
+  # ==========================================================================================
+  
+  # Workflows
+  # ------------------------------------------------------------------------------------------
+
+  describe "(Workflows)" do
+    before do
+      @group = create( :group )
+      @subgroup = create( :group )
+      @subgroup.parent_groups << @group
+      
+      @workflow = create( :workflow )
+      @workflow.parent_groups << @group
+      @subworkflow = create( :workflow )
+      @subworkflow.parent_groups << @subgroup
+
+      @group.reload
+      @workflow.reload
+    end
+    subject { @group }
+
+    describe "#descendant_workflows" do
+      it "should return the workflows of the group and its subgroups" do
+        @group.descendant_workflows.should include( @workflow, @subworkflow )
+        @workflow.ancestor_groups.should include( @group )
+      end
+    end
+
+    describe "#child_workflows" do
+      it "should return only the workflows of the groups, not of the subgroups" do
+        @group.child_workflows.should include( @workflow )
+        @group.child_workflows.should_not include( @subworkflow )
+        @workflow.ancestor_groups.should include( @group )
+        @subworkflow.ancestor_groups.should include( @group, @subgroup )
+      end
+    end
+  end
+
+
+  # Events
+  # ------------------------------------------------------------------------------------------
+
+  describe "(Events)" do
+    before do 
+      @group = create( :group )
+      @subgroup = @group.child_groups.create
+      @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ), 
+                           @subgroup.events.create( start_at: 5.hours.from_now ) ]
+      @recent_events = [ @group.events.create( start_at: 2.days.ago ) ]
+      @unrelated_events = [ create( :event ) ]
+    end
+
+    describe "#upcoming_events" do
+      subject { @group.upcoming_events }
+      it { should include *@upcoming_events }
+      it { should_not include *@recent_events }
+      it { should_not include *@unrelated_events }
+    end
+
+    describe "#events" do
+      subject { @group.events }
+      it { should include *@upcoming_events }
+      it { should include *@recent_events }
+      it { should_not include *@unrelated_events }
+    end
+  end
+
+
+  # Users
+  # ------------------------------------------------------------------------------------------
+
+  describe "(Users)" do
+
+    before do
+      @user = create( :user )
+      @group = create( :group )
+      @subgroup = create( :group ); @group.child_groups << @subgroup
+    end
+
+    describe "#descendant_users" do
+      describe "for usual groups" do
+        before { @user.parent_groups << @subgroup }
+        subject { @group.descendant_users }
+
+        it "should return all descendant users, including the users of the subgroups" do
+          subject.should include( @user )
+        end
+      end
+    end
+
+    describe "#child_users" do
+      describe "for usual groups" do
+        before { @user.parent_groups << @group }
+        subject { @group.child_users }
+
+        it "should return all child users" do
+          subject.should include( @user )
+        end
+      end
+    end
+
+  end
+
+
+  # Groups
+  # ------------------------------------------------------------------------------------------
+
+  describe "(Groups)" do
+    describe "#descendant_groups_by_name" do
+      before do
+        @name_match = "Group Name"
+        @group = create( :group )
+        @group1 = create( :group, :name => @name_match ); @group1.parent_groups << @group
+        @group2 = create( :group, :name => "Other #{@name_match}" ); @group2.parent_groups << @group1        
+        @group3 = create( :group, :name => @name_match ); @group3.parent_groups << @group2
+        @matching_groups = [ @group1, @group3 ]
+        @not_matching_groups = [ @group2 ]
+      end
+      subject { @group.descendant_groups_by_name( @name_match ) }
+      it "should return all descendant groups matching the name" do
+        @matching_groups.each { |g| subject.should include( g ) }
+        @not_matching_groups.each { |g| subject.should_not include( g ) }
+      end
+    end
+
+    describe "#corporation" do
+      before do
+        @group = create(:group)
+        @corporation = create(:corporation)
+      end
+      subject { @group.reload.corporation }
+      describe "for the group being a corporation" do
+        before { @group = @corporation }
+        it "should return self" do
+          subject.should == @group
+        end
+      end
+      describe "for the group being a child of a corporation" do
+        before { @group.parent_groups << @corporation }
+        it "should return the parent" do
+          subject.should == @corporation 
+        end
+      end
+      describe "for the group being a descendant of a corporation" do
+        before do
+          @middle_group = @group.parent_groups.create
+          @middle_group.parent_groups << @corporation
+        end
+        it "should return the ancestor" do
+          subject.should == @corporation
+        end
+      end
+      describe "for the group being not related to a corporation" do
+        it "should return nil" do
+          subject.should == nil
+        end
+      end
+    end
+    
+    describe "#corporation?" do
+      subject { @group.corporation? }
+      describe "for the group being a corporation" do
+        before { @group = create(:corporation) }
+        it { should == true }
+      end
+      describe "for the group not being a corporation" do
+        before { @group = create(:group) }
+        it { should == false }
+      end
+      describe "for the group being a child of a corporation" do
+        before do
+          @group = create(:group)
+          @group.parent_groups << create(:corporation)
+        end
         it { should == false }
       end
     end
-
-    describe "#is_special_group?" do
-      subject { @bvs_parent_group.is_special_group? }
-      describe "for the bvs parent group" do
-        it { should == true }
+    
+    describe '#leaf_groups' do
+      subject { @group.leaf_groups }
+      describe 'for the group being a corporation' do
+        before { @group = create(:corporation) }
+        it { should == [] }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @status_groups = @group.status_groups
+        end
+        it { should == @status_groups }
+      end
+      describe 'for the group being a corporation with admin, normal and status groups' do
+        before do
+        @group = create(:corporation)
+        @group.find_or_create_admins_parent_group
+        @status_1 = @group.child_groups.create
+        @group_a = @group.child_groups.create
+        @status_2 = @group_a.child_groups.create
+        @group_b = @group.child_groups.create
+        @status_3 = @group_b.child_groups.create
+        end
+        it 'should contain all status groups' do 
+          should include(@status_1)
+          should include(@status_2)
+          should include(@status_3)
+          should_not include(@group_a)
+          should_not include(@group_b)
+          should_not include(@group.admins_parent)
+        end
       end
     end
 
-    describe "#is_special_group?" do
-      subject { @bv_group.is_special_group? }
-      describe "for the bv group" do
-        it { should == true }
+    describe '#cached(:leaf_groups)' do
+      subject { @group.reload.cached(:leaf_groups) }
+      describe 'for the group being a corporation' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with status groups' do
+        before do
+          @group = create(:corporation_with_status_groups)
+          @group.cached(:leaf_groups)
+        end
+        it { should == @group.cached(:leaf_groups) }
+      end
+      describe 'for the group being a corporation with admin groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+          @group.find_or_create_admins_parent_group
+        end
+        it { should == @group.leaf_groups }
+      end
+      describe 'for the group being a corporation with normal and status groups' do
+        before do
+          @group = create(:corporation)
+          @group.cached(:leaf_groups)
+          wait_for_cache
+          
+          # The creation of this group structure should reset the cache.
+          @status_1 = @group.child_groups.create
+          @group_a = @group.child_groups.create
+          @status_2 = @group_a.child_groups.create
+          @group_b = @group.child_groups.create
+          @status_3 = @group_b.child_groups.create
+        end
+        it { should == @group.leaf_groups }
       end
     end
-
   end
+
+
+  # Adding objects
+  # --------------
+
+  describe "#<<" do
+    before { @group = create(:group) }
+    subject { @group << @object_to_add }
+    
+    describe "(user)" do
+      before do
+        @user = create(:user)
+        @object_to_add = @user
+      end
+      it "should add the user as a child user" do
+        @group.child_users.should_not include @user
+        subject
+        @group.reload.child_users.should include @user
+      end
+      it "should set the valid_from attribute on the membership" do
+        subject
+        UserGroupMembership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
+      end
+    end
+    
+    describe "(group)" do
+      before do
+        @subgroup = create(:group)
+        @object_to_add = @subgroup
+      end
+      it "should add the group as a subgroup" do
+        @group.child_groups.should_not include @subgroup
+        subject
+        @group.child_groups.should include @subgroup
+      end
+    end
+  end
+
 end

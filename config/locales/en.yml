@@ -1,6 +1,25 @@
-# Sample localization file for English. Add more files in this directory for other locales.
-# See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  sourcecode_on_github: Source Code on Github
-  wbl_abo: Wingolfsblätter Subscription
+  time:
+    formats:
+      time: ! '%H:%M h'
+
+  map: Map
+  page: Page
+  group: Group
+
+  new_page: New Page
+  new_group: New Group
+
+  untitled: Untitled
+  edited_at: Edited at
+  
+  imprint: Imprint
+  
+  you_may_leave_out_www: 'Tip: You may leave out the "www." when you enter the web address into the browser.'
+  
+  others: Others
+
+  you_are_admin: You are administrator.
+  feedback: Feedback
+
+  confirm: Confirm

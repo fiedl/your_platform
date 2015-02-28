@@ -1,2 +1,10 @@
-- if @user.bv
-  %li.bv.attribute= render partial: 'user_bv_attribute'
+-# This partial does not contain anything itself.
+-# Any special user profile information you want to display in the top user box
+-# without overriding the whole users#show template, goes here.
+-#
+-# Example:
+-# 
+-# - if @user.favorite_colour
+-#   %li.colour.attribute
+-#     My colour is: 
+-#     = @user.favorite_colour

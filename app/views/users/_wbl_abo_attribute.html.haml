@@ -1,8 +1,0 @@
-%span.label-wrapper
-  %span.attribute-label= t(:wbl_abo)
-%span.value-wrapper
-  %span.attribute-value
-    - if can? :update, @user
-      = best_in_place @user, :wingolfsblaetter_abo, :type => :select, collection: [['false', I18n.t("no")], ['true', I18n.t("yes")]]
-    - else
-      = @user.wingolfsblaetter_abo ? t(:yes) : t(:no)

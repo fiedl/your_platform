@@ -1,8 +1,8 @@
 - # Communication Box
+- # This is extracted out into a partial because we needed to override the box in an app.
 - #
 - if can? :update, @user
   %h1.section.communication= t(:communication)
   %div
     %ul.attributes
-      %li.wbl_abo.attribute= render partial: 'wbl_abo_attribute'
       = profile_field_lis @user.profile.section(:communication).fields, no_remove: true, lock_label: true

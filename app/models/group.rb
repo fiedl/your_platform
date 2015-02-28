@@ -1,259 +1,235 @@
 # -*- coding: utf-8 -*-
-
-# This extends the your_platform Group model.
-require_dependency YourPlatform::Engine.root.join( 'app/models/group' ).to_s
-
-# This class represents a group of the platform.
-# While the most part of the group class is contained in the your_platform engine,
-# this re-opened class contains all wingolf-specific additions to the group model.
-
-class Group
+#
+# This class represents a user group. Besides users, groups may have sub-groups as children.
+# One group may have several parent-groups. Therefore, the relations between groups, users,
+# etc. is stored using the DAG model, which is implemented by the `is_structureable` method.
+# 
+class Group < ActiveRecord::Base
   
-  # This method is called by a nightly rake task to renew the cache of this object.
-  #
-  def fill_cache
+  attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                    :body, # a description text displayed on the groups pages top
+                    :token, # (optional) a short-name, abbreviation of the group's name, in 
+                            # a global context; example: 'A'
+                    :internal_token, # (optional) an internal abbreviation, i.e. used by the 
+                                     # members of the group; example: 'AC'
+                    :extensive_name, # (optional) a long version of the group's name;
+                                     # example: 'The Corporation of A'
+                    :direct_members_titles_string # Used for inline-editing: The comma-separated
+                                                  # titles of the child users of the group.
+                    )
+  
+  include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
-    # Memberships
-    memberships_for_member_list
-    memberships_this_year
-    latest_memberships
-        
-    # Other Groups
-    leaf_groups
-    corporation
-    
-    # Address Labels
-    members_postal_addresses
-    cached_members_postal_addresses_created_at
+  is_structureable( ancestor_class_names: %w(Group Page Event), 
+                    descendant_class_names: %w(Group User Page Workflow Event) )
+  is_navable
+  has_profile_fields
 
+  has_many :posts
+
+  include GroupMixins::Memberships
+  include GroupMixins::Everyone  
+  include GroupMixins::Corporations
+  include GroupMixins::Roles
+  include GroupMixins::Guests
+  include GroupMixins::HiddenUsers
+  include GroupMixins::Developers
+  include GroupMixins::Officers
+
+  include GroupMixins::Import
+
+  after_create     :import_default_group_structure  # from GroupMixins::Import
+  after_save       { self.delay.delete_cache }
+
+  def delete_cache
+    super
+    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
   end
-  
-
-  # Special Groups
+    
+  # General Properties
   # ==========================================================================================
 
-  # Erstbandphilister
-  # ------------------------------------------------------------------------------------------
+  # The title of the group, i.e. a kind of caption, e.g. used in the <title> tag of the
+  # webpage. By default, this returns just the name of the group. But this may be changed
+  # in the main application.
+  # 
+  def title
+    self.name
+  end
 
-  include GroupMixins::Erstbandphilister
-
-
-  # BVs
-  # ------------------------------------------------------------------------------------------
-
-  def self.find_bvs_parent_group
-    find_special_group(:bvs_parent)
+  # The name of the group.
+  # If there is a translation for that group name, e.g. for a generic group name like
+  # 'admins', use the translation.
+  #
+  def name
+    I18n.t( super.to_sym, default: super ) if super.present?
   end
   
-  def self.create_bvs_parent_group
-    bvs_parent_group = create_special_group(:bvs_parent)
-    bvs_parent_group.parent_pages << Page.intranet_root
-    return bvs_parent_group
-  end
-
-  def self.find_or_create_bvs_parent_group
-    find_or_create_special_group(:bvs_parent)
-  end
-  
-  def self.bvs_parent
-    find_or_create_bvs_parent_group
-  end
-  
-  def self.bvs_parent!
-    find_bvs_parent_group || raise('special group :bvs_parent does not exist.')
-  end
-
-  def self.bvs
-    self.find_bv_groups
-  end
-
-  def self.find_bv_groups
-    (self.find_bvs_parent_group.try(:child_groups) || [])
-  end
-  
-  def bv?
-    Bv.find_bv_groups.include?(self)
-  end
-
-  # Wingolfsblätter-Abonnenten
-  # ------------------------------------------------------------------------------------------
-
-  def self.wbl_abo_group
-    Group.find_by_flag(:wbl_abo)
-  end
-
-  def self.find_or_create_wbl_abo_group
-    if self.wbl_abo_group
-      return self.wbl_abo_group 
+  def extensive_name
+    if has_flag? :attendees
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :contact_people
+      name + (parent_events.first ? ": " + parent_events.first.name : '')
+    elsif has_flag? :admins_parent
+      name + ": " + parent_groups.first.parent_groups.first.name
+    elsif super.present?
+      super
     else
-      wbl_page = Page.find_by_title("Wingolfsblätter")
-      wbl_page ||= Page.find_or_create_intranet_root.child_pages.create(title: "Wingolfsblätter")
-      group = wbl_page.child_groups.where(name: "Abonnenten").first
-      group ||= wbl_page.child_groups.create(name: "Abonnenten")
-      group.add_flag :wbl_abo
-      return group
+      name
     end
   end
+  
+  def name_with_corporation
+    if self.corporation && self.corporation.id != self.id
+      "#{self.name} (#{self.corporation.name})"
+    else
+      self.name
+    end
+  end
+  
+  # This sets the format of the Group urls to be
+  # 
+  #     example.com/groups/24-planeswalkers
+  #
+  # rather than just
+  #
+  #     example.com/groups/24
+  #
+  def to_param
+    "#{id} #{title}".parameterize
+  end
+  
+  
+  # Mark this group of groups, i.e. the primary members of the group are groups,
+  # not users. This does not effect the DAG structure, but may affect the way
+  # the group is displayed.
+  #
+  def group_of_groups?
+    has_flag? :group_of_groups
+  end
+  def group_of_groups=(add_the_flag)
+    add_the_flag ? add_flag(:group_of_groups) : remove_flag(:group_of_groups)
+  end
+  
+  
+  # Associated Objects
+  # ==========================================================================================
+
+  # Workflows
+  # ------------------------------------------------------------------------------------------
+
+  # These methods override the standard methods, which are usual ActiveRecord associations
+  # methods created by the acts-as-dag gem 
+  # (https://github.com/resgraph/acts-as-dag/blob/master/lib/dag/dag.rb).
+  # But since the Workflow in the main application
+  # inherits from WorkflowKit::Workflow and single table inheritance and polymorphic 
+  # associations do not always work together as expected in rails, as can be seen here
+  # http://stackoverflow.com/questions/9628610/why-polymorphic-association-doesnt-work-for-sti-if-type-column-of-the-polymorph,
+  # we have to override these methods. 
+  #
+  # ActiveRecord associations require 'WorkflowKit::Workflow' to be stored in the database's
+  # type column, but by asking for the `child_workflows` we want to get òbjects of the
+  # `Workflow` type, not `WorkflowKit::Workflow`, since Workflow objects may have
+  # additional methods, added by the main application. 
+  #
+  def descendant_workflows
+    Workflow
+      .joins( :links_as_descendant )
+      .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => self.id } )
+      .uniq
+  end
+
+  def child_workflows
+   self.descendant_workflows.where( :dag_links => { direct: true } )
+  end
+
+
+  # Events
+  # ------------------------------------------------------------------------------------------
+  
+  def events
+    self.descendant_events
+  end
+
+  def upcoming_events
+    self.events.upcoming.order(:start_at)
+  end
+  
+  
+  # Adress Labels (PDF)
+  #
+  def members_to_pdf(options = {sender: ''})
+    timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
+  end
+  def members_postal_addresses
+    cached do
+      members
+        .collect { |user| user.address_label }
+        .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
+        .collect { |address_label| address_label.to_s }
+    end
+  end
+  def cached_members_postal_addresses_created_at
+    cached do
+      members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+    end
+  end
+
+
+  # Groups
+  # ------------------------------------------------------------------------------------------
+
+  def descendant_groups_by_name( descendant_group_name )
+    self.descendant_groups.where( :name => descendant_group_name )
+  end
+
+  def corporation
+    cached do
+      ([ self ] + ancestor_groups).select do |group|
+        group.corporation?
+      end.first.try(:becomes, Corporation)
+    end
+  end
+
+  def corporation?
+    self.becomes(Corporation).in? Corporation.all
+  end
+  
+  # This returns all sub-groups of the corporation that have no
+  # sub-groups of their ownes except for officer groups. 
+  # This is needed for the selection of status groups.
+  #
+  def leaf_groups
+    cached do
+      self.descendant_groups.order(:id).includes(:flags).select do |group|
+        group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+      end
+    end
+  end
+  
+  def find_deceased_members_parent_group
+    self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
+  end
+  def deceased
+    find_deceased_members_parent_group
+  end
+  
  
-  def self.wbl_abo
-    self.find_or_create_wbl_abo_group
-  end
+  # Finder Methods
+  # ==========================================================================================
 
-  def self.wbl_abo!
-    self.wbl_abo_group
-  end
+  # I'm not so sure anymore, what this was supposed to do. I guess, it had something to do
+  # with inheriting group classes. 
+  # TODO: Delete those methods, if there is no error after the migration to your_platform.
 
-  # This returns whether the group is special.
-  # This means that the group is special, e.g.
-  # an officers group or a Wingolfsblätter-Abonnenten or
-  # BV
-  def is_special_group?
-    self.has_flag?( :wbl_abo ) or
-    self.has_flag?( :bvs_parent ) or
-    self.has_flag?( :officers_parent ) or
-    self.ancestor_groups.select do |ancestor|
-      ancestor.has_flag?(:officers_parent)
-    end.any? or
-    self.ancestor_groups.select do |ancestor|
-      ancestor.has_flag?(:bvs_parent)
-    end.any?
-  end
+  #  def self.first
+  #    self.all.first.becomes self
+  #  end
   
-  
-  # Verstorbene und Ausgetretene dürfen nicht als Mitglieder
-  # der Verbindungen gezählt werden, damit sie 
-  #
-  #   (a) nicht in der Mitgliederliste auftauchen,
-  #   (b) keine Sammelnachrichten erhalten,
-  #   (c) nicht in Export-Listen und Etiketten enthalten sind.
-  #
-  def memberships(reload = nil)
-    if corporation? and self.becomes(Corporation).aktivitas
-      aktivitas_and_philisterschaft_member_ids = 
-        (becomes(Corporation).aktivitas.try(:member_ids) || []) + 
-        (becomes(Corporation).philisterschaft.try(:member_ids) || [])
-      super(reload).where(descendant_id: aktivitas_and_philisterschaft_member_ids)
-    else
-      super(reload)
-    end
-  end
-  def members(reload = nil)
-    if corporation? and self.becomes(Corporation).aktivitas
-      descendant_users(reload).includes(:links_as_descendant).where(dag_links: {id: memberships.pluck(:id)})
-    else
-      super(reload)
-    end
-  end
-  
-  def memberships_for_member_list
-    cached { memberships_including_members }
-  end
-  
-  
-  # Jeder
-  #   | 
-  # Alle Wingolfiten
-  #   |
-  #   |---- Alle Aktiven
-  #   |---- Alle Philister
-  #   |
-  #   |---- Alle Amtsträger
-  #               |----------- Alle Verbindungsamtsträger
-  #               |                          |----------- Alle Chargierten
-  #               |                          |                   |---------- Alle Seniores
-  #               |                          |                   |---------- Alle Fuxmajores
-  #               |                          |                   |---------- Alle Kneipwarte
-  #               |                          |                   |---------- + Bundeschargierte
-  #               |                          |
-  #               |                          |------- Alle Aktiven-Schriftwarte
-  #               |                          |------- Alle Aktiven-Kassenwarte
-  #               |                          |------- Alle Fuxen-Seniores
-  #               |                          |------- + alle übrigen WV-Amtsträger
-  #               |
-  #               |----------- Alle PhV-Amtsträger
-  #               |                      |------------- Alle Phil-x
-  #               |                      |------------- Alle Phil-Schriftwarte
-  #               |                      |------------- Alle Phil-Kassenwarte 
-  #               |
-  #               |----------- Alle BV-Amtsträger
-  #               |                      |------------- Alle BV-Leiter
-  #               |                      |------------- Alle BV-Schriftwarte
-  #               |                      |------------- Alle BV-Kassenwarte 
-  #               |
-  #               |----------- Alle Vorsitzenden (Seniores, Phil-x, BV-Leiter, Bundes-x, VAW-x)
-  #               |----------- Alle Schriftwarte (Schriftwarte + Bundes-xx + GfdW)
-  #               |----------- Alle Kassenwarte  (Kassenwarte + Bundes-xxx + GfdW)
-  #
-  #
-  def self.alle_wingolfiten
-    self.find_or_create_special_group :alle_wingolfiten
-  end
-  def self.alle_aktiven
-    self.find_or_create_special_group :alle_aktiven
-  end
-  def self.alle_philister
-    self.find_or_create_special_group :alle_philister
-  end
-  def self.alle_amtstraeger
-    alle_wingolfiten.find_or_create_special_group :alle_amtstraeger
-  end
-  def self.alle_wv_amtstraeger
-    alle_amtstraeger.find_or_create_special_group :alle_wv_amtstraeger
-  end
-  def self.alle_phv_amtstraeger
-    alle_amtstraeger.find_or_create_special_group :alle_phv_amtstraeger
-  end
-  def self.alle_bv_amtstraeger
-    alle_amtstraeger.find_or_create_special_group :alle_bv_amtstraeger
-  end
-  def self.alle_vorsitzenden
-    alle_amtstraeger.find_or_create_special_group :alle_vorsitzenden
-  end
-  def self.alle_schriftwarte
-    alle_amtstraeger.find_or_create_special_group :alle_schriftwarte
-  end
-  def self.alle_kassenwarte
-    alle_amtstraeger.find_or_create_special_group :alle_kassenwarte
-  end
-  def self.alle_chargierten
-    alle_wv_amtstraeger.find_or_create_special_group :alle_chargierten
-  end
-  def self.alle_seniores
-    alle_chargierten.find_or_create_special_group :alle_seniores
-  end
-  def self.alle_fuxmajores
-    alle_chargierten.find_or_create_special_group :alle_fuxmajores
-  end
-  def self.alle_kneipwarte
-    alle_chargierten.find_or_create_special_group :alle_kneipwarte
-  end
-  def self.alle_wv_schriftwarte
-    alle_wv_amtstraeger.find_or_create_special_group :alle_wv_schriftwarte
-  end
-  def self.alle_wv_kassenwarte
-    alle_wv_amtstraeger.find_or_create_special_group :alle_wv_kassenwarte
-  end
-  def self.alle_fuxen_seniores
-    alle_wv_amtstraeger.find_or_create_special_group :alle_fuxen_seniores
-  end
-  def self.alle_phv_vorsitzende
-    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_vorsitzende
-  end
-  def self.alle_phv_schriftwarte
-    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_schriftwarte
-  end
-  def self.alle_phv_kassenwarte
-    alle_phv_amtstraeger.find_or_create_special_group :alle_phv_kassenwarte
-  end
-  def self.alle_bv_leiter
-    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_leiter
-  end
-  def self.alle_bv_schriftwarte
-    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_schriftwarte
-  end
-  def self.alle_bv_kassenwarte
-    alle_bv_amtstraeger.find_or_create_special_group :alle_bv_kassenwarte
-  end
+  #  def self.last
+  #    self.all.last.becomes self
+  #  end
 
 end
 

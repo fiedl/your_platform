@@ -1,28 +1,56 @@
 de:
-  corporations_parent:            Wingolf am Hochschulort
-  bvs_parent:                     Bezirksverbände
-  bv_name:                        Bezirksverband
+  group: Gruppe
+  groups: Gruppen
+  
+  corporation: Korporation
+  corporations: Korporationen
+  
+  everyone: Jeder
+  officers_parent: Amtsträger
+  officers: Amtsträger
+  corporations_parent: Korporationen
+  corporations: Korporationen
+  guests_parent: Gäste
+  guests: Gäste
+  admins_parent: Administratoren
+  admins: Administratoren
+  main_admins_parent: Haupt-Administratoren
+  main_admins: Haupt-Administratoren
+  deceased_parent: Verstorbene
+  former_members_parent: Ehemalige
+  hidden_users: Versteckte Benutzer
+  
+  my_groups:                      Meine Gruppen
+  sub_groups:                     Untergruppen
+  members:                        Mitglieder
+  full_members:                   Ordentliche Mitglieder
+  groups_of:                      Gruppen von
 
-  alle_wingolfiten:               Alle Wingolfiten
-  alle_aktiven:                   Alle Aktiven
-  alle_philister:                 Alle Philister
-  alle_amtstraeger:               Alle Amtsträger
-  alle_wv_amtstraeger:            Alle Aktiven-Amtsträger
-  alle_phv_amtstraeger:           Alle PhV-Amtsträger
-  alle_bv_amtstraeger:            Alle BV-Amtsträger
-  alle_vorsitzenden:              Alle Vorsitzenden
-  alle_schriftwarte:              Alle Schriftwarte
-  alle_kassenwarte:               Alle Kassenwarte
-  alle_chargierten:               Alle Chargierten
-  alle_seniores:                  Alle Seniores
-  alle_fuxmajores:                Alle Fuxmajores
-  alle_kneipwarte:                Alle Kneipwarte
-  alle_wv_schriftwarte:           Alle Aktiven-Schriftwarte
-  alle_wv_kassenwarte:            Alle Aktiven-Kassenwarte
-  alle_fuxen_seniores:            Alle Fuxen-Seniores
-  alle_phv_vorsitzende:           Alle PhV-Vorsitzenden
-  alle_phv_schriftwarte:          Alle PhV-Schriftwarte
-  alle_phv_kassenwarte:           Alle PhV-Kassenwarte
-  alle_bv_leiter:                 Alle BV-Leiter
-  alle_bv_schriftwarte:           Alle BV-Schriftwarte
-  alle_bv_kassenwarte:            Alle BV-Kassenwarte
+  details:                        Detail-Informationen
+  token:                          Kürzel
+  internal_token:                 Internes Kürzel
+  extensive_name:                 Ausführliche Bezeichnung
+
+  add_member:                     Mitglied hinzufügen
+  number_of_members:              Anzahl der Mitglieder
+  
+  download_list:                  Liste herunterladen
+  tables:                         Tabellen
+  excel_tables:                   Excel-Tabellen
+  
+  name_list:                      Namensliste
+  birthday_list:                  Geburtstagsliste
+  address_list:                   Adressliste
+  phone_list:                     Telefonliste
+  email_list:                     E-Mail-Liste
+  member_development:             Mitglieder-Entwicklung
+  
+  current_age:                    Aktuelles Alter
+  last_updated_at:                Zuletzt aktualisiert am
+  pdf_files:                      PDF-Dateien
+  address_labels:                 Adress-Etiketten
+  sender:                         Absender
+  create_address_labels_pdf:      PDF mit Adress-Etiketten erstellen
+  
+  
+  

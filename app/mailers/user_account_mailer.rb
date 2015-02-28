@@ -2,22 +2,15 @@ class UserAccountMailer < ActionMailer::Base
   def welcome_email( user, password ) 
     @user = user
     @password = password
-    @bundesbruder_or_philister = @user.philister? ? "Philister" : "Bundesbruder"
+    @mr_or_mrs = @user.female? ? t(:mrs) : t(:mr)
     
-    # Bundesbrüder, die nur in Estland aktiv sind, bekommen diese E-Mail auf englisch,
-    # alle anderen auf deutsch.
-    #
-    if @user.corporations.collect { |corporation| corporation.token } == ["Dp"]
-      locale = :en
-    else
-      locale = :de
-    end
-    
+    # TODO: Somehow determine locale by email address or address or something else.
+    locale = :de
     
     to = "#{@user.name} <#{@user.email}>"
     
     I18n.with_locale(locale) do
-      mail to: to, subject: t( :welcome_to_wingolfsplattform )
+      mail to: to, subject: t(:welcome_to_the_new_intranet_platform)
     end
     
   end

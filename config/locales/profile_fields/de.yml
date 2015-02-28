@@ -1,4 +1,77 @@
 de:
-  w_nummer: 'W-Nummer'
-  klammerung: 'Klammerung'
+  profile_field:
+    label: Beschriftung
+    phone:
+      number: Nummer
   
+  former_name: Geburtsname
+  date_of_death: Verstorben am
+  
+  address: Adresse
+  study_address: Semesteranschrift
+  parental_address: Heimatanschrift
+  home_address: Heimatanschrift
+  work_address: Geschäftliche Anschrift
+  home_email: E-Mail privat
+  work_email: E-Mail geschäftlich
+  home_phone: Telefon privat
+  work_phone: Telefon geschäftlich
+  home_fax: Fax privat
+  work_fax: Fax geschäftlich
+  homepage: Internetauftritt
+  work_homepage: Internetauftritt geschäftlich
+  mobile: Mobil
+  work_mobile: Mobiltelefon geschäftlich
+  custom: Benutzerdefiniert
+
+  postal_code: Postleitzahl (PLZ)
+  town: Stadt
+  country: Land
+  country_code: Länder-Kennzeichen
+  
+  email_address: E-Mail-Adresse
+  
+  phone: Telefon
+  phone_number: Telefonnummer
+
+  account: Konto
+  account_holder: Kontoinhaber
+  account_number: Kontonummer
+  bank_code: BLZ
+  credit_institution: Kreditinstitut
+  iban: IBAN
+  bic: BIC
+  
+  employment: Beschäftigung
+  from: Von
+  to: Bis
+  organization: Organisation
+  role: Rolle
+  position: Position
+  task: Aufgabenfeld
+  employment_title: Amtsbezeichnung
+  activity: Tätigkeit
+  native_language: Muttersprache
+  language: Sprache
+  i_offer: Ich biete
+  i_offer_talk_about: Ich biete Vorträge zum Thema
+  i_offer_training: Ich biete Praktika
+  request: Gesuch
+  skill: Fertigkeit
+  experience_as: Erfahrungen als
+  professional_categories: Berufsgruppen
+  occupational_areas: Tätigkeitsbereiche
+  
+  study: Studium
+  university: Universität
+  subject: Fach
+  specialization: Spezialisierung
+  further_study: Weiteres Studium
+  
+  text_above_name: Zeile über dem Namen
+  text_below_name: Zeile unter dem Namen
+  name_prefix: Text vor dem Namen
+  name_suffix: Text hinter dem Namen
+  name_postfix: Text hinter dem Namen
+
+  further_information: Weitere Informationen

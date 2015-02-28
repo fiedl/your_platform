@@ -1,3 +1,30 @@
 de:
-  sourcecode_on_github: Quellcode auf Github
-  wbl_abo: Wingolfsblätter abonniert
+  time:
+    formats:
+      time: ! '%H:%M Uhr'
+
+  map: Karte
+  page: Seite
+  group: Gruppe
+
+  new_page: Neue Seite
+  new_group: Neue Gruppe
+
+  untitled: Unbenannt
+  edited_at: Bearbeitet am
+  since: Seit
+  
+  imprint: Impressum
+  help: Hilfe
+  
+  you_may_leave_out_www: 'Tipp: Sie dürfen das "www." gerne weglassen, wenn Sie die Internetadresse in den Browser eingeben.'
+  
+  others: Andere
+
+  you_are_admin: Sie sind Administrator.
+  feedback: Verbesserungsvorschläge
+
+  confirm: Bestätigen
+  optional: optional
+  
+  show_all: Alle anzeigen

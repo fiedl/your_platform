@@ -1,16 +1,49 @@
+class ProfileSection < Struct.new(:title, :profileable)
 
-# This extends the your_platform ProfileSection model.
-require_dependency YourPlatform::Engine.root.join( 'app/models/profile_section' ).to_s
-
-class ProfileSection
+  def initialize( options = {} )
+    self.title = options[:title] || raise('missing option "title"')
+    self.profileable = options[:profileable] || raise('missing option "profileable"')
+  end
   
-  alias_method :orig_profile_field_types, :profile_field_types
+  def profile_fields
+    profileable.profile_fields.where( type: self.profile_field_types )
+  end
+  def fields
+    profile_fields
+  end
+  
   def profile_field_types
     case(self.title.to_sym)
       when :general
-        orig_profile_field_types + [ "ProfileFieldTypes::Klammerung" ]
+        [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::General" ]
+      when :contact_information
+        [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
+          "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
+      when :about_myself
+        [ "ProfileFieldTypes::About" ]
+      when :study_information
+        [ "ProfileFieldTypes::Study" ]
+      when :career_information
+        [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Competence" ]
+      when :organizations
+        [ "ProfileFieldTypes::Organization" ]
+      when :bank_account_information
+        [ "ProfileFieldTypes::BankAccount" ]
+      when :description
+        [ "ProfileFieldTypes::Description" ]
+      when :communication
+        [ "ProfileFieldTypes::NameSurrounding" ]
       else
-        orig_profile_field_types
+        []
     end
+    
   end
-end  
+  def field_types
+    profile_field_types
+  end
+  
+  def to_s
+    self.title.to_s
+  end
+  
+end

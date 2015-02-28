@@ -1,2 +1,9 @@
 de:
-  global_officer: Bundesamtsträger
+  global_admin: Globaler Administrator
+  main_admin: Haupt-Administrator
+  admin: Administrator
+  officer: Amtsträger
+  global_officer: Globaler Amtsträger
+  user: Benutzer
+    
+  preview_as: Vorschau als

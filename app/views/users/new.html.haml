@@ -1,17 +1,6 @@
-%h1.users_new.aktivmeldung= @title
+- set_title "Person eintragen"
+%h1.users_new= "Person eintragen"
 %div.form
-  %legend
-    %p 
-      Bitte fülle das folgende 
-      %strong Formular vollständig 
-      mit den Details des
-      %strong neu anzulegenden Benutzers.
-    %p 
-      Dieses Formular bitte
-      %strong nicht für Bandaufnahmen bzw. Bandverleihungen
-      verwenden, da hierdurch sonst doppelte Mitglieder-Einträge entstehen!
-      Wende Dich im Zweifel bitte an:
-      %a{href: "mailto:support@wingolf.org"} support@wingolf.org
 
   = semantic_form_for @user, action: :create do |f|
 
@@ -23,53 +12,41 @@
       
       = f.input :first_name, required: true, validate: true, input_html: { class: 'required' }
       = f.input :last_name, required: true, validate: true, input_html: { class: 'required' }
-      = f.input :date_of_birth, as: 'date_select', required: true, input_html: { class: 'required' }, validate: true, start_year: 1900, end_year: Time.now.year - 15
       
-      %h2 Verbindung
+      .gender
+        = f.input :female, as: :select, label: t(:gender), collection: [[t(:male), false], [t(:female), :true]], default: :male 
       
-      - corporations_collection = current_user.administrated_aktivitates.collect(&:corporation)
-      - # Pre-select corporation if only one:
-      - @user.add_to_corporation = corporations_collection.first.id if corporations_collection.count == 1
       
-      - if current_user.global_admin?
-        = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection
-        = f.input :aktivmeldungsdatum, as: 'date_select'
-      - else
-        = f.input :add_to_corporation, as: :select, label: t(:register_in), collection: corporations_collection, required: true, validate: true, input_html: { class: 'required' }
-        = f.input :aktivmeldungsdatum, as: 'date_select', required: true, validate: true, input_html: { class: 'required' }
+      %h2 Gruppe
+      
+      - if @parent_group
+        Zu Gruppe hinzufügen:
+        = link_to @parent_group.name, @parent_group
+        
+        = f.input :add_to_group, as: :hidden
+
 
       %h2 Kontaktdaten
       
-      = f.input :study_address, as: 'text', required: true, validate: true, input_html: { rows: 4, class: 'required' }
-      = f.input :home_address, as: 'text', required: true, validate: true, input_html: { rows: 4, class: 'required' }
+      = f.input :work_address, as: 'text', required: true, validate: true, input_html: { rows: 4, class: 'required' }
       = f.input :email, as: 'email', required: true, validate: true, input_html: { class: 'required' }
       = f.input :phone, as: 'phone'
       = f.input :mobile, as: 'phone', required: true, validate: true, input_html: { class: 'required' }
       
       %h2 Benutzerkonto
       
-    
       = f.input :create_account, as: :boolean
-      //- if @group
-      //  - sub_groups = @group.descendant_groups
-      //  = f.input( :add_to_group, as: :select, label: t( :register_in ), collection: sub_groups, hint: ( "(" + link_to( @group.name, @group ).html_safe + ")" ).html_safe )
-      - if false
-        // <span id="gender">
-        // <%= f.input :female, as: :select, label: t( :gender ), 
-        // collection: [[ t( :male ), false ], [ t( :female ), :true ]], 
-        //default: :male 
 
     = f.actions do
+
+      #why_fields_are_required.alert.alert-warning.hidden
+        %strong Bitte füllen Sie das Formular vor dem Bestätigen vollständig aus, 
+        damit die Kontaktdaten später nicht mühsam nachgereicht werden müssen.
     
-      #why_fields_are_required.alert.hidden
-        %strong Bitte fülle zunächst das Formular vollständig aus, bevor Du die Aktivmeldung bestätigtst.
-        Wir hatten leider vermehrt Probleme, da Informationen nicht zuverlässig nachgereicht wurden. Daher müssen wir nun leider darauf bestehen, dass die Informationen bereits beim Eintragen der Aktivmeldungen vollständig vorliegen. Viele Dank!
-      
-      = f.action :submit, label: 'Aktivmeldung bestätigen', button_html: {class: 'btn btn-large btn-primary'}
-  
+      = f.action :submit, label: 'Eintragung Bestätigen', button_html: {class: 'btn btn-large btn-primary'}
+
   .progress.alert.alert-info.hidden
-    %strong Aktivmeldung wird eingetragen. Bitte warten.
-    Danach wirst Du zur Startseite der Plattform weitergeleitet.
+    %strong Neue Person wird eingetragen. Bitte warten.
 
   %div.footnotes
     * 
