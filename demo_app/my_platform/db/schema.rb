@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.integer  "author_user_id"
   end
 
+  add_index "attachments", ["author_user_id"], :name => "attachments_author_user_id_fk"
+
   create_table "bookmarks", :force => true do |t|
     t.integer  "bookmarkable_id"
     t.string   "bookmarkable_type"
@@ -50,6 +52,8 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.datetime "created_at",        :null => false
     t.datetime "updated_at",        :null => false
   end
+
+  add_index "bookmarks", ["user_id"], :name => "bookmarks_user_id_fk"
 
   create_table "dag_links", :force => true do |t|
     t.integer  "ancestor_id"
@@ -125,6 +129,8 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.datetime "updated_at",          :null => false
   end
 
+  add_index "last_seen_activities", ["user_id"], :name => "last_seen_activities_user_id_fk"
+
   create_table "nav_nodes", :force => true do |t|
     t.string   "url_component"
     t.string   "breadcrumb_item"
@@ -151,6 +157,8 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.string   "type"
   end
 
+  add_index "pages", ["author_user_id"], :name => "pages_author_user_id_fk"
+
   create_table "posts", :force => true do |t|
     t.string   "subject"
     t.text     "text"
@@ -164,6 +172,9 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.text     "entire_message"
   end
 
+  add_index "posts", ["author_user_id"], :name => "posts_author_user_id_fk"
+  add_index "posts", ["group_id"], :name => "posts_group_id_fk"
+
   create_table "profile_fields", :force => true do |t|
     t.integer  "profileable_id"
     t.string   "label"
@@ -175,6 +186,7 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.integer  "parent_id"
   end
 
+  add_index "profile_fields", ["parent_id"], :name => "profile_fields_parent_id_fk"
   add_index "profile_fields", ["profileable_id", "profileable_type", "type"], :name => "profileable_type"
   add_index "profile_fields", ["profileable_id", "profileable_type"], :name => "profileable"
   add_index "profile_fields", ["type"], :name => "type"
@@ -186,6 +198,9 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
+
+  add_index "relationships", ["user1_id"], :name => "relationships_user1_id_fk"
+  add_index "relationships", ["user2_id"], :name => "relationships_user2_id_fk"
 
   create_table "settings", :force => true do |t|
     t.string   "var",        :null => false
@@ -223,6 +238,7 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
   end
 
   add_index "user_accounts", ["reset_password_token"], :name => "index_user_accounts_on_reset_password_token", :unique => true
+  add_index "user_accounts", ["user_id"], :name => "user_accounts_user_id_fk"
 
   create_table "users", :force => true do |t|
     t.string   "alias"
@@ -252,6 +268,8 @@ ActiveRecord::Schema.define(:version => 20150216212402) do
     t.datetime "created_at",     :null => false
     t.datetime "updated_at",     :null => false
   end
+
+  add_index "workflow_kit_steps", ["workflow_id"], :name => "workflow_kit_steps_workflow_id_fk"
 
   create_table "workflow_kit_workflows", :force => true do |t|
     t.string   "name"
