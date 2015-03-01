@@ -119,7 +119,7 @@ class Event < ActiveRecord::Base
       .where( :dag_links => { 
                 :ancestor_type => "Group", :ancestor_id => ancestor_id
               } )
-      .order( :start_at )
+      .order('start_at')
   end
 
   def self.find_all_by_groups( groups )
@@ -128,7 +128,7 @@ class Event < ActiveRecord::Base
       .where( :dag_links => { 
                 :ancestor_type => "Group", :ancestor_id => group_ids
               } )
-      .order( :start_at )
+      .order('start_at')
   end
   
   def self.find_all_by_user(user)

@@ -98,7 +98,7 @@ class UserGroupMembership < DagLink
       .where( :ancestor_type => "Group" )
     links = links.where( :descendant_id => user.id ) if user
     links = links.where( :ancestor_id => group.id ) if group
-    links = links.order( :valid_from )
+    links = links.order('valid_from')
     return links
   end
 
@@ -231,7 +231,7 @@ class UserGroupMembership < DagLink
       .where( :direct => true )
       .where( :ancestor_id => group_ids, :ancestor_type => 'Group' )
       
-    memberships = memberships.order( :valid_from )
+    memberships = memberships.order('valid_from')
     memberships
   end
   

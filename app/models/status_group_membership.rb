@@ -79,10 +79,10 @@ class StatusGroupMembership < UserGroupMembership
     status_groups = corporation.status_groups
     status_group_ids = status_groups.collect { |group| group.id }
     links = self
-      .where( :descendant_type => "User" )
-      .where( :ancestor_type => "Group" )
-      .where( :ancestor_id => status_group_ids )
-      .order( :valid_from )
+      .where(:descendant_type => "User")
+      .where(:ancestor_type => "Group")
+      .where(:ancestor_id => status_group_ids)
+      .order('valid_from')
     return links
   end
 
@@ -93,11 +93,11 @@ class StatusGroupMembership < UserGroupMembership
     status_groups = user.status_groups(with_invalid: true)
     status_group_ids = status_groups.collect { |group| group.id }
     links = self
-      .where( :descendant_type => "User" )
-      .where( :descendant_id => user.id )
-      .where( :ancestor_type => "Group" )
-      .where( :ancestor_id => status_group_ids )
-      .order( :valid_from )
+      .where(:descendant_type => "User")
+      .where(:descendant_id => user.id)
+      .where(:ancestor_type => "Group")
+      .where(:ancestor_id => status_group_ids)
+      .order('valid_from')
     return links
   end
 
@@ -109,11 +109,11 @@ class StatusGroupMembership < UserGroupMembership
     status_groups &= corporation.status_groups
     status_group_ids = status_groups.collect { |group| group.id }
     links = self
-      .where( :descendant_type => "User" )
-      .where( :descendant_id => user.id )
-      .where( :ancestor_type => "Group" )
-      .where( :ancestor_id => status_group_ids )
-      .order( :valid_from )
+      .where(:descendant_type => "User")
+      .where(:descendant_id => user.id)
+      .where(:ancestor_type => "Group")
+      .where(:ancestor_id => status_group_ids)
+      .order('valid_from')
     return links
   end
 

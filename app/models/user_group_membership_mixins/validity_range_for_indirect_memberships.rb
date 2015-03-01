@@ -53,12 +53,12 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   # latest direct membership.
   #
   def earliest_direct_membership
-    @earliest_direct_membership ||= direct_memberships(with_invalid: true).reorder(:valid_from).first
+    @earliest_direct_membership ||= direct_memberships(with_invalid: true).reorder('valid_from').first
   end
   
   def latest_direct_membership
     @latest_direct_membership ||= direct_memberships.only_valid.last
-    @latest_direct_membership ||= direct_memberships(with_invalid: true).reorder(:valid_to).last
+    @latest_direct_membership ||= direct_memberships(with_invalid: true).reorder('valid_to').last
   end
   
   def valid_from

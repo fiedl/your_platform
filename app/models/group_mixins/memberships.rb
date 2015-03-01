@@ -95,7 +95,7 @@ module GroupMixins::Memberships
     end
     
     def memberships_including_members
-      memberships.includes(:descendant).order(valid_from: :desc)
+      memberships.includes(:descendant).order('valid_from' => 'desc')
     end
     
     # This returns the memberships that appear in the member list

@@ -11,7 +11,7 @@ module WorkflowKit
       raise 'no user_id given' unless params[ :user_id ] 
 
       user = User.find( params[ :user_id ] )  
-      membership = user.memberships.order(:created_at).last
+      membership = user.memberships.order('created_at').last
 
       membership.needs_review!
     end
