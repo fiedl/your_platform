@@ -1,0 +1,89 @@
+source 'https://rubygems.org'
+
+gem 'rails', '~> 3.2.21'
+
+# Bundle edge Rails instead:
+# gem 'rails', :git => 'git://github.com/rails/rails.git'
+
+gem 'pg'
+
+# Gems used only for assets and not required
+# in production environments by default.
+group :assets do
+  gem 'sass-rails',   '~> 3.2.3'
+  gem 'coffee-rails', '~> 3.2.1'
+
+  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
+  # gem 'therubyracer', :platforms => :ruby
+
+  gem 'uglifier', '>= 1.0.3'
+end
+
+gem 'jquery-rails'
+
+# To use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~> 3.0.0'
+
+# To use Jbuilder templates for JSON
+# gem 'jbuilder'
+
+# Use unicorn as the app server
+gem 'unicorn'
+
+# Deploy with Capistrano
+# gem 'capistrano'
+
+# To use debugger
+# gem 'debugger'
+
+group :development do
+  gem 'pry'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'letter_opener'
+end
+
+# Testing Environment
+group :test, :development do
+  gem 'guard'
+  gem 'rspec-rails'
+  gem 'guard-rspec'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
+  gem 'guard-spork'
+  gem 'spork'
+  gem 'simplecov', require: false
+  gem 'fuubar'
+  gem 'rspec-rerun'
+end
+
+# JavaScript Runtime
+gem 'execjs'
+gem 'therubyracer', :platform => :ruby
+
+# Loading via ajax
+gem 'turbolinks', '2.2.1'
+
+# Temporary Forks and Overrides
+gem 'gmaps4rails', '~> 2.0.2', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
+  # see: http://stackoverflow.com/questions/13807686
+gem 'edit_mode', github: 'fiedl/edit_mode'
+gem 'workflow_kit', github: 'fiedl/workflow_kit'
+gem 'nokogiri'
+gem 'json'
+gem 'colored'
+gem 'redcarpet'
+gem 'prawn', github: 'prawnpdf/prawn'
+
+# YourPlatform
+# We have symlinked the Gemfile into the root directory of the your_platform
+# repository. Therefore the following switch:
+#
+case File.basename File.dirname __FILE__
+when "my_platform"
+  gem 'your_platform', path: '../..'
+when "your_platform"
+  gem 'your_platform', path: '.'
+end
