@@ -77,7 +77,7 @@ Spork.prefork do
   # Required Application Environment
   # ----------------------------------------------------------------------------------------
   ENV['RAILS_ENV'] ||= 'test'
-  require File.expand_path('../../config/environment', __FILE__)
+  require File.expand_path('../../demo_app/my_platform/config/environment', __FILE__)
 
 
   # Required Libraries
@@ -96,8 +96,7 @@ Spork.prefork do
 
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
-  #Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
-  Dir[Rails.root.join('vendor/engines/your_platform/spec/support/**/*.rb')].each {|f| require f}
+  Dir[Rails.root.join('../../spec/support/**/*.rb')].each {|f| require f}
 
 
   # SimpleCov: Code Coverage
@@ -119,7 +118,7 @@ Spork.prefork do
   # 
   # Rather than `rspec-mocks` fixtures, we use FactoryGirl instead.
   #
-  FactoryGirl.definition_file_paths = %w(spec/factories vendor/engines/your_platform/spec/factories)
+  FactoryGirl.definition_file_paths = %w(spec/factories)
 
   # In order to not hit the geocoding API, we use stub data for geocoding.
   #
@@ -208,6 +207,9 @@ Spork.prefork do
     # Devise test helper for controller tests
     config.include Devise::TestHelpers, :type => :controller
     config.extend ControllerMacros, :type => :controller
+    #
+    # TODO: When upgrading rspec, use this instead:
+    # config.include ControllerMacros
 
 
     # Database Wiping Policy
@@ -253,7 +255,6 @@ Spork.prefork do
       # create the basic objects that are needed for all specs
       Group.find_or_create_everyone_group
       Group.find_or_create_corporations_parent_group
-      Group.find_or_create_bvs_parent_group
       Page.create_root
       Page.create_intranet_root
       Workflow.find_or_create_mark_as_deceased_workflow
@@ -341,7 +342,7 @@ Spork.each_run do
   # There are some actions FactoryGirl needs to perform on every run.
   #
   FactoryGirl.reload
-  Dir[Rails.root.join('spec/support/**/*.rb')].each {|f| require f}
+  Dir[Rails.root.join('../../spec/support/**/*.rb')].each {|f| require f}
 
   # Resource on using SimpleCov together with Spork:
   # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284

@@ -46,7 +46,7 @@ end
 # Testing Environment
 group :test, :development do
   gem 'guard'
-  gem 'rspec-rails'
+  gem 'rspec-rails', '2.14.1'
   gem 'guard-rspec'
   gem 'capybara'
   gem 'poltergeist'
@@ -55,6 +55,9 @@ group :test, :development do
   gem 'guard-spork'
   gem 'spork'
   gem 'simplecov', require: false
+  gem 'coveralls'
+  gem 'email_spec'
+  gem 'timecop'  # time_travel
   gem 'fuubar'
   gem 'rspec-rerun'
 end
