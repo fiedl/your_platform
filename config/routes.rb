@@ -46,6 +46,8 @@ Rails.application.routes.draw do
   
   resources :pages
   
+  resources :activities
+    
   post :create_officers_group, to: 'officers#create_officers_group'
 
   resources :user_accounts
@@ -73,7 +75,9 @@ Rails.application.routes.draw do
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
-
+  
+  get "errors/unauthorized"
+  
   # Sidekiq Web UI
   sidekiq_constraint = lambda do |request|
     request.env['warden'].authenticate? && request.env['warden'].user.user.global_admin?
