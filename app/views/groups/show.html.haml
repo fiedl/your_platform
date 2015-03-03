@@ -28,7 +28,7 @@
   %div
     - if @group and @new_user_group_membership
       = render partial: 'export_button'
-      - if can? :manage, @group
+      - if can? :create_memberships, @group
         %span.show_only_in_edit_mode.add_membership
           = render partial: 'user_group_memberships/new'
           %hr

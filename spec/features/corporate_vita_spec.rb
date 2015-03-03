@@ -10,7 +10,9 @@ feature 'Corporate Vita', js: true do
     @status_groups = @corporation.status_groups
   end
 
-  describe 'as local admin:' do
+  pending "as local admin"
+
+  describe 'as global admin:' do
 
     background do
       @status_groups.first.assign_user @user
@@ -25,7 +27,9 @@ feature 'Corporate Vita', js: true do
                                            :add_to_group_id => @status_groups.last.id )
       @second_promotion_workflow.parent_groups << @status_groups.second
 
-      login(:local_admin, of: @corporation)
+      #login(:local_admin, of: @corporation)
+      login :global_admin
+      
       visit user_path( @user )
     end
 
