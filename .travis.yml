@@ -11,10 +11,12 @@ install:
   - sudo apt-get -y install pwgen libicu-dev
   - travis_retry bundle install
 before_script:
-  - "cd demo_app/my_platform && cp config/database.travis.yml config/database.yml"
-  - "cd demo_app/my_platform && mkdir -p public/uploads"
-  - "cd demo_app/my_platform && mkdir -p tmp/cache"
-  - "cd demo_app/my_platform && bundle exec rake db:create db:migrate db:test:prepare"
+  - cd demo_app/my_platform
+  - cp config/database.travis.yml config/database.yml
+  - mkdir -p public/uploads
+  - mkdir -p tmp/cache
+  - bundle exec rake db:create db:migrate db:test:prepare
+  - cd ../..
 script:
   - bundle exec rake rspec-rerun:spec
 notifications:
