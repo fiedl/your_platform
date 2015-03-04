@@ -7,6 +7,7 @@ guard 'spork', :cucumber_env => { 'RAILS_ENV' => 'test' }, :rspec_env => { 'RAIL
 end
 
 guard( 'rspec', :version => 2,
+       :cmd => "bundle exec rspec",
        :cli => '--drb --tag focus --format Fuubar',
        :all_after_pass => false,
        :all_on_start => false,

@@ -50,7 +50,7 @@ end
 # Security Tools
 group :development, :test do
   gem 'brakeman', '>= 2.3.1'
-  gem 'guard-brakeman', '>= 0.8.1'
+  #gem 'guard-brakeman', '>= 0.8.1'
 end
 
 # Documentation Tools
