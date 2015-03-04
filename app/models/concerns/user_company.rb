@@ -1,5 +1,9 @@
 module UserCompany
   extend ActiveSupport::Concern
+  
+  included do
+    attr_accessible :company_name
+  end
     
   def company_id
     (Company.pluck(:id) & self.ancestor_group_ids).first

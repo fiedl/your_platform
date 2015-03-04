@@ -93,6 +93,7 @@ class UsersController < ApplicationController
       permitted_keys += [:alias] if can? :change_alias, @user
       permitted_keys += [:email, :date_of_birth, :localized_date_of_birth] if can? :update, @user
       permitted_keys += [:last_name, :name] if can? :change_last_name, @user
+      permitted_keys += [:company_name] if can? :manage, @user
       permitted_keys += [:create_account, :female, :add_to_group, :add_to_corporation, :hidden, :wingolfsblaetter_abo] if can? :manage, @user
     else  # user creation
       permitted_keys += [:first_name, :last_name, :female, :date_of_birth, :add_to_group, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :work_address, :email, :phone, :mobile, :create_account] if can? :create, :aktivmeldung

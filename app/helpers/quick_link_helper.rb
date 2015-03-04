@@ -34,6 +34,13 @@ module QuickLinkHelper
     end.join(", ").html_safe
   end
   
+  # "foo"
+  # ->  "<a href=/search/foo>foo</a>"
+  #
+  def add_quick_link(str)
+    link_tag_from_search_query(str.strip).html_safe
+  end
+  
 end
 
 # In order to use the helper method with best_in_place's :display_with argument, 

@@ -4,6 +4,13 @@ ready = ->
     val.split /,\s*/
   extractLast = (term) ->
     split(term).pop()
+    
+  # Company Name Auto-Completion in users#show
+  #
+  $(document).on 'keydown', 'input.autocomplete.user-select-company', ->
+    $(this).autocomplete
+      source: $(this).data('autocomplete-url')
+    
 
   # Auto-Completion for Users-Select-Box
   selector_string = "input[name='direct_member_titles_string'], .multiple-users-select-input, .user-select-input"
