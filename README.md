@@ -1,6 +1,9 @@
 # YourPlatform
 
 [![Join the chat at https://gitter.im/fiedl/your_platform](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fiedl/your_platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Code Climate](https://codeclimate.com/github/fiedl/your_platform/badges/gpa.svg)](https://codeclimate.com/github/fiedl/your_platform)
+[![Dependency Status](https://gemnasium.com/fiedl/your_platform.svg)](https://gemnasium.com/fiedl/your_platform)
+
 
 **TEMPORARY STATE –– DO NOT USE THIS RIGHT NOW**
 
