@@ -50,6 +50,8 @@ de:
   male:                          Männlich
   female:                        Weiblich
   
+  personal_title:                Persönlicher Titel
+  
   formtastic:
     hints:
       alias:                     Beliebige, kurze Anmelde-Kennung, z.B. 'm.mustermann'.
