@@ -1,5 +1,7 @@
 # YourPlatform
 
+[![Join the chat at https://gitter.im/fiedl/your_platform](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fiedl/your_platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 **TEMPORARY STATE –– DO NOT USE THIS RIGHT NOW**
 
 We are currently extracting [the your_platform engine](https://github.com/fiedl/wingolfsplattform/tree/master/vendor/engines/your_platform) into this repository. 
