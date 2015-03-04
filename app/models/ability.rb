@@ -164,14 +164,22 @@ class Ability
   end
       
   def rights_for_signed_in_users
-    can :read, :all
+    can :read, :terms_of_use
     can :accept, :terms_of_use if not read_only_mode?
     
+    # Regular users can read users that are not hidden.
+    # And they can read themselves.
+    #
+    can :read, User, id: User.find_all_non_hidden.map(&:id)
+    can :read, user
+        
     if not read_only_mode?
-      # Regular users can create, update or destroy own profile fields.
+      # Regular users can create, update or destroy own profile fields
+      # that do not belong to the General section.
       #
       can [:create, :read, :update, :destroy], ProfileField do |field|
-        field.profileable.nil? || (field.profileable == user)
+        field.profileable.nil? or # to allow creating fields
+        ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General'))
       end
       
       # Regular users can update their own validity ranges of memberships
@@ -182,6 +190,20 @@ class Ability
       end
     end
     
+    can :read, Group do |group|
+      # Regular users cannot see the former_members_parent groups
+      # and their descendant groups.
+      #
+      not (group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0)
+    end
+    
+    can :read, Page do |page|
+      page.group.nil? || page.group.members.include?(user)
+    end
+    can :download, Attachment do |attachment|
+      attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
+    end
+        
     # All users can join events.
     #
     can :read, Event
