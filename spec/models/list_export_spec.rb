@@ -9,6 +9,7 @@ describe ListExport do
     @group.assign_user @user
     @corporation.status_groups.first.assign_user @user  # in order to give the @user a #title other than his #name.
     @user_title_without_name = @user.title.gsub(@user.name, '').strip
+    @user_title_without_name = '""' if @user_title_without_name.blank? # to match the csv format
   end
   
   describe "birthday_list: " do
@@ -117,6 +118,7 @@ describe ListExport do
       @membership3 = @membership2.move_to @corporation.status_groups[2], at: @date3
       @user.reload
       @user_title_without_name = @user.title.gsub(@user.name, '').strip
+      @user_title_without_name = '""' if @user_title_without_name.blank? # to match the csv format
       
       @list_export = ListExport.new(@corporation, :member_development)
     end
