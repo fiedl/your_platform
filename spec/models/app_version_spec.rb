@@ -23,22 +23,16 @@ describe AppVersion do
       it { should_not start_with "v" }
     end
     describe ".github_commit_url" do
-      # TODO: Chancge this when extracting your_platform.
-      # Then, we'll need another test, since we don't know the main_app repo then.
       subject { AppVersion.github_commit_url }
-      it { should == "https://github.com/fiedl/wingolfsplattform/commit/#{AppVersion.commit_id}" }
+      it { should == "https://github.com/fiedl/your_platform/commit/#{AppVersion.commit_id}" }
     end
     describe ".changelog_url" do
-      # TODO: Chancge this when extracting your_platform.
-      # Then, we'll need another test, since we don't know the main_app repo then.
       subject { AppVersion.changelog_url }
-      it { should = "https://github.com/fiedl/wingolfsplattform/commits/#{AppVersion.branch}" }
+      it { should = "https://github.com/fiedl/your_platform/commits/#{AppVersion.branch}" }
     end
     describe ".app_name" do
-      # TODO: Chancge this when extracting your_platform.
-      # Then, we'll need another test, since we don't know the main_app repo then.
       subject { AppVersion.app_name }
-      it { should == "Wingolfsplattform" }
+      it { should == "MyPlatform" }
     end
   end
 end
