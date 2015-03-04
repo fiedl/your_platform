@@ -4,10 +4,31 @@
 [![Code Climate](https://codeclimate.com/github/fiedl/your_platform/badges/gpa.svg)](https://codeclimate.com/github/fiedl/your_platform)
 [![Dependency Status](https://gemnasium.com/fiedl/your_platform.svg)](https://gemnasium.com/fiedl/your_platform)
 
+YourPlatform is a [ruby on rails](http://rubyonrails.org) engine that provides the basis for administrtive and social network platforms for closed user groups such as alumni organizations.
 
-## Getting Started
+The application serves four main purposes: Centralized or decentralized member management, networking features for members, exchange of information and documents and communication.
 
-[GETTING STARTED](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
+## Getting Started Developing
+
+1. Have a look at our demo application: *We are currently moving to another server. After that, the demo link will be provided here.*
+2. Check out the demo application locally:
+  
+  ```bash
+  git clone git@github.com:fiedl/your_platform.git
+  cd your_platform/demo_app/my_platform
+  
+  # provide a config/database.yml according to your local mysql credentials
+  
+  bundle install
+  bundle exec rake db:create db:migrate
+  bundle exec foreman start
+  bundle exec rails server
+  ```
+  
+  View the application at [http://localhost:3000](http://localhost:3000).
+3. If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
+
+If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
 
 
 ## Contributing
