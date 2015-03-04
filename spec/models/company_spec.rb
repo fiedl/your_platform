@@ -25,6 +25,13 @@ describe Company do
     it { should_not include @group }
   end
   
+  describe "pluck(:id)" do
+    subject { Company.pluck(:id) }
+    
+    it { should include @company.id }
+    it { should_not include @group.id }
+  end 
+  
   describe ".companies_parent" do
     subject { Company.companies_parent }
     

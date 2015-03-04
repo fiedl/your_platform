@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   include UserMixins::Memberships
   include UserMixins::Identification
   include ProfileableMixins::Address
+  include UserCompany
 
   # General Properties
   # ==========================================================================================

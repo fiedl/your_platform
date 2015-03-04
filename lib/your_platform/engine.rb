@@ -103,6 +103,8 @@ module YourPlatform
   class Engine < ::Rails::Engine
 
     engine_name "your_platform"
+    
+    config.autoload_paths += %W(#{config.root}/app/models/concerns)
 
     config.i18n.load_path += Dir[ Engine.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
     config.i18n.load_path += Dir[ Engine.root.join('app', 'locales', '**', '*.{rb,yml}').to_s]
