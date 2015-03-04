@@ -44,6 +44,9 @@ Rails.application.routes.draw do
   end
   get :my_groups, to: 'groups#index_mine'
   
+  get :companies, to: 'companies#index'
+  get 'companies/:id(.:format)', to: 'groups#show', as: 'company'
+  
   resources :pages
   
   resources :activities

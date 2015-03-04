@@ -13,8 +13,9 @@ class Company < Group
   end
   
   def self.create_companies_parent_group
-    group = Group.create name: I18n.t(:all_companies)
+    group = Group.create name: 'all_companies'
     group.add_flag :all_companies
+    group.add_flag :group_of_groups
     return group
   end
 end
