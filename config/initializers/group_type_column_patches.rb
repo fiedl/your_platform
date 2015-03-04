@@ -5,4 +5,7 @@
 #
 # These records need to be updates. Otherwise the records can't be found anymore.
 #
-Group.corporations_parent.child_groups.update_all("type = 'Corporation'")
+
+
+# # TODO: Remove this. This does not work with specs and sidekiq.
+# Group.corporations_parent.child_groups.update_all("type = 'Corporation'")

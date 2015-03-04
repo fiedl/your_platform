@@ -78,7 +78,7 @@ module VerticalNavHelper
   def append_corporation_to_menu_element_title?(object)
     object.kind_of?(Group) &&
       object.corporation &&
-      (not object.corporation.becomes(Group).in?(@ancestor_navables + @active_navables)) &&
-      (not object.corporation.becomes(Group) == object)
+      (not object.corporation.in?(@ancestor_navables + @active_navables)) &&
+      (not object.corporation == object)
   end
 end

@@ -41,7 +41,6 @@ gem 'unicorn'
 # gem 'debugger'
 
 group :development do
-  gem 'pry'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'letter_opener'
@@ -77,6 +76,7 @@ group :test, :development do
   gem 'fuubar'
   gem 'rspec-rerun'
   gem "codeclimate-test-reporter", require: nil
+  gem 'pry'
 end
 
 # JavaScript Runtime

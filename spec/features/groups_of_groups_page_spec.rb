@@ -17,7 +17,7 @@ feature "Group of Groups Page" do
   end
   
   specify 'requirements' do
-    @corporations_parent.child_groups.should include @corporation.becomes(Group)
+    @corporations_parent.child_groups.should include @corporation
   end
   
   scenario 'viewing the corporations list and looking up the officers' do
