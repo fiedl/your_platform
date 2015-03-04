@@ -47,6 +47,18 @@ group :development do
   gem 'letter_opener'
 end
 
+# Security Tools
+group :development, :test do
+  gem 'brakeman', '>= 2.3.1'
+  gem 'guard-brakeman', '>= 0.8.1'
+end
+
+# Documentation Tools
+group :development, :test do
+  gem 'yard'
+  gem 'redcarpet'
+end
+
 # Testing Environment
 group :test, :development do
   gem 'guard'
@@ -82,7 +94,6 @@ gem 'workflow_kit', github: 'fiedl/workflow_kit'
 gem 'nokogiri'
 gem 'json'
 gem 'colored'
-gem 'redcarpet'
 gem 'prawn', github: 'prawnpdf/prawn'
 
 # YourPlatform
