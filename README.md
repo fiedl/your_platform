@@ -5,39 +5,10 @@
 [![Dependency Status](https://gemnasium.com/fiedl/your_platform.svg)](https://gemnasium.com/fiedl/your_platform)
 
 
-**TEMPORARY STATE –– DO NOT USE THIS RIGHT NOW**
-
-We are currently extracting [the your_platform engine](https://github.com/fiedl/wingolfsplattform/tree/master/vendor/engines/your_platform) into this repository. 
-
-Until the the export process is completed, the commit history might change in a non-linear way.
-
 ## Getting Started
 
 [GETTING STARTED](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-# Gemfile
-# ...
-gem 'your_platform'
-```
-
-And then execute:
-
-```bash
-# bash 
-bundle install
-```
-
-### Database
-
-```bash
-bundle exec rake your_platform:install:migrations
-bundle exec rake db:migrate
-```
 
 ## Contributing
 
