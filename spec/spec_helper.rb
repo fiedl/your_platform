@@ -39,6 +39,26 @@
 #                   https://coveralls.io/docs/ruby
 #
 
+# Test Coverage
+# ===========================================================================
+#
+# This uses simplecov, coveralls and codeclimate.
+# See https://gist.github.com/jaryl/6554599
+#
+# Resource on using SimpleCov together with Spork:
+# https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
+#
+require "codeclimate-test-reporter"
+require 'simplecov' unless ENV['DRB']
+require 'coveralls'
+formatters = [SimpleCov::Formatter::HTMLFormatter]
+formatters << Coveralls::SimpleCov::Formatter if ENV['COVERALLS_REPO_TOKEN']
+formatters << CodeClimate::TestReporter::Formatter if ENV['CODECLIMATE_REPO_TOKEN']
+SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[*formatters]
+SimpleCov.start 'rails'
+CodeClimate::TestReporter.start 
+
+
 # Required Basic Libraries
 # ==========================================================================================
 
@@ -53,12 +73,6 @@ require 'rubygems'
 require 'spork'
 # uncomment the following line to use spork with the debugger
 # require 'spork/ext/ruby-debug'
-
-# To create an online coverage report on coveralls.io, 
-# init their gem here.
-#
-require 'coveralls'
-Coveralls.wear! 'rails'
 
 
 # Requirements and Configurations Cached by Spork
@@ -97,17 +111,6 @@ Spork.prefork do
   # Requires supporting ruby files with custom matchers and macros, etc,
   # in spec/support/ and its subdirectories.
   Dir[Rails.root.join('../../spec/support/**/*.rb')].each {|f| require f}
-
-
-  # SimpleCov: Code Coverage
-  # ----------------------------------------------------------------------------------------
-
-  # Resource on using SimpleCov together with Spork:
-  # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
-  #
-  unless ENV['DRB']
-    require 'simplecov'
-  end
 
 
   # Factories, Stubs and Mocks
@@ -344,11 +347,4 @@ Spork.each_run do
   FactoryGirl.reload
   Dir[Rails.root.join('../../spec/support/**/*.rb')].each {|f| require f}
 
-  # Resource on using SimpleCov together with Spork:
-  # https://github.com/colszowka/simplecov/issues/42#issuecomment-4440284
-  #
-  if ENV['DRB']
-    require 'simplecov'
-  end
-  
 end

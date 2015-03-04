@@ -64,6 +64,7 @@ group :test, :development do
   gem 'timecop'  # time_travel
   gem 'fuubar'
   gem 'rspec-rerun'
+  gem "codeclimate-test-reporter", require: nil
 end
 
 # JavaScript Runtime
