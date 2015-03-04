@@ -30,6 +30,10 @@ The application serves four main purposes: Centralized or decentralized member m
 
 If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
 
+## Documentation
+
+Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/github/fiedl/your_platform).
+
 
 ## Contributing
 
