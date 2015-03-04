@@ -136,6 +136,26 @@ class Ability
     can :export_member_list, Group do |group|
       user.in? group.officers_of_self_and_ancestor_groups
     end
+    
+    if not read_only_mode?
+      # Group emails
+      #
+      can :create_post_for, Group do |group|
+        user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
+      end
+    
+      # Local officers can create events in their groups.
+      #
+      can :create_event, Group do |group|
+        user.in? group.officers_of_self_and_ancestor_groups
+      end
+      can :update, Event do |event|
+        event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
+      end
+      can :update, Group do |group|
+        group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+      end
+    end
   end
   
   def rights_for_global_officers
@@ -146,9 +166,65 @@ class Ability
   def rights_for_signed_in_users
     can :read, :all
     can :accept, :terms_of_use if not read_only_mode?
+    
+    if not read_only_mode?
+      # Regular users can create, update or destroy own profile fields.
+      #
+      can [:create, :read, :update, :destroy], ProfileField do |field|
+        field.profileable.nil? || (field.profileable == user)
+      end
+      
+      # Regular users can update their own validity ranges of memberships
+      # in order to update their corporate vita.
+      #
+      can :update, UserGroupMembership do |user_group_membership|
+        user_group_membership.user == user
+      end
+    end
+    
+    # All users can join events.
+    #
+    can :read, Event
+    if not read_only_mode?
+      can :join, Event
+      can :leave, Event
+    end
+    can :index, Event
+    can :index_events, Group
+    can :index_events, User do |other_user|
+      other_user == user
+    end
+    
+    # Name auto completion
+    #
+    can :autocomplete_title, User
   end
   
   def rights_for_everyone
+    # Imprint
+    # Make sure all users (even if not logged in) can read the imprint.
+    #
     can :read, Page.find_imprint
+    
+    # Listing Events and iCalendar (ICS) Export:
+    #
+    # There are event lists on public websites and webcal feeds.
+    # Therefore the user might not be logged in through a regular
+    # session. Some public feeds can be seen by anyone. Other
+    # feeds require an auth token.
+    # 
+    can :index_events, Group do |group|
+      # Any registered user (identified by an auth token)
+      # can index the events of any group.
+      params[:token].present? && UserAccount.find_by_auth_token(params[:token])
+    end
+    can :index_events, User do |other_user|
+      # To index the events relevant to a certain user,
+      # one has to provide the correct auth token that corresponds
+      # to that user.
+      params[:token].present? && (UserAccount.find_by_auth_token(params[:token]) == other_user.account)
+    end
+    can :index_public_events, :all
+    
   end
 end
