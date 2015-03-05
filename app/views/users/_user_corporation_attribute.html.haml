@@ -1,0 +1,6 @@
+%li.corporation.attribute
+  %span.label-wrapper
+    %span.attribute-label= t :corporation
+  %span.value-wrapper
+    %span.attribute-value
+      = best_in_place_if can?(:manage, @user), @user, :corporation_name, html_attrs: {'data-autocomplete-url' => corporations_path(format: 'json'), class: 'autocomplete user-select-corporation'}

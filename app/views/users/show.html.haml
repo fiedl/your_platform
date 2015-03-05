@@ -10,17 +10,7 @@
   %span.avatar.thumbnail.pull-left= user_avatar(@user, size: 128)
   = render partial: 'workflow_triggers'
   %ul.attributes
-    
-    - # Company: show only if there are any companies.
-    - # Otherwise, this feature is probably not in use.
-    - if Company.any?
-      %li.company.attribute
-        %span.label-wrapper
-          %span.attribute-label= t :company
-        %span.value-wrapper
-          %span.attribute-value
-            = best_in_place_if can?(:manage, @user), @user, :company_name, html_attrs: {'data-autocomplete-url' => companies_path(format: 'json'), class: 'autocomplete user-select-company'}
-    
+    = render partial: 'user_corporation_attribute'
     %li.name.attribute= render partial: 'user_name_attribute'
     = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
     - general_fields = @user.profile.section(:general).fields

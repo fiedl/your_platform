@@ -7,7 +7,7 @@ ready = ->
     
   # Company Name Auto-Completion in users#show
   #
-  $(document).on 'keydown', 'input.autocomplete.user-select-company', ->
+  $(document).on 'keydown', 'input.autocomplete.user-select-corporation', ->
     $(this).autocomplete
       source: $(this).data('autocomplete-url')
     

@@ -39,14 +39,14 @@ class SetupController < ApplicationController
     if params[:sub_organizations].present?
       params[:sub_organizations].split("\n").each do |organization_name|
         if organization_name.present?
-          corporation = Group.corporations_parent.child_groups.create name: organization_name 
+          corporation = Corporation.create name: organization_name
           full_members = corporation.child_groups.create name: 'full_members'
           full_members.add_flag :full_members
         end
       end
       Corporation.all.first.status_groups.first.assign_user user
     end
-
+    
     sign_in :user_account, account
     
     flash[:notice] = I18n.t(:setup_complete)

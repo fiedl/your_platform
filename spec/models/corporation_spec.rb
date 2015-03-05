@@ -1,6 +1,56 @@
 require 'spec_helper'
 
 describe Corporation do
+  before do
+    @group = create :group
+    @corporation = create :corporation
+  end
+
+  describe ".create" do
+    subject { Corporation.create name: 'My Great Corporation' }
+    
+    it { should be_kind_of Corporation }
+    it { should be_kind_of Group }
+    its(:type) { should == 'Corporation' }
+
+    it "should be child of the corporations_parent group" do
+      subject.reload.parent_group_ids.should include Corporation.corporations_parent.id
+    end
+  end
+  
+  describe ".all" do
+    subject { Corporation.all }
+    
+    it { should include @corporation }
+    it { should_not include @group }
+
+    it "should return an array of Corporation-type objects" do
+      subject.should be_kind_of Array
+      subject.first.should be_kind_of Corporation
+    end
+    it "should not find the officers_parent group of the corporations_parent" do
+      @corporations_parent = Group.find_corporations_parent_group
+      @officers_parent = @corporations_parent.create_officers_parent_group
+      subject.should_not include @officers_parent
+      subject.should_not include @officers_parent.becomes(Corporation)
+    end
+  end
+
+  describe "pluck(:id)" do
+    subject { Corporation.pluck(:id) }
+    
+    it { should include @corporation.id }
+    it { should_not include @group.id }
+  end 
+  
+  describe ".corporations_parent" do
+    subject { Corporation.corporations_parent }
+    
+    it { should be_kind_of Group }
+    it { should_not be_kind_of Corporation }
+    its(:children) { should include @corporation }
+    its(:children) { should_not include @group }
+  end
 
   describe "#is_first_corporation_this_user_has_joined?" do
     before do 
@@ -72,32 +122,6 @@ describe Corporation do
       @corporation.status_groups # This created the cached version.
       @status_group.update_attributes name: 'New Status Name'
       subject.map(&:name).should include 'New Status Name'
-    end
-  end
-
-
-  describe ".all" do
-    before do
-      @corporation_group = create( :corporation )
-      @non_corporation_group = create( :group )
-    end
-    subject { Corporation.all }
-
-    it "should return an array of Corporation-type objects" do
-      subject.should be_kind_of Array
-      subject.first.should be_kind_of Corporation
-    end
-    it "should find the corporation groups" do
-      subject.should include @corporation_group
-    end
-    it "should not find the non-corporation groups" do
-      subject.should_not include @non_corporation_group
-    end
-    it "should not find the officers_parent group of the corporations_parent" do
-      @corporations_parent = Group.find_corporations_parent_group
-      @officers_parent = @corporations_parent.create_officers_parent_group
-      subject.should_not include @officers_parent
-      subject.should_not include @officers_parent.becomes(Corporation)
     end
   end
 

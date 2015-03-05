@@ -29,7 +29,7 @@ feature 'Setup' do
       
       accept_terms_of_use
       @user = User.first
-      
+
       within '#logged-in-bar' do
         page.should have_text 'My New Network Application'
       end

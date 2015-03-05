@@ -1,10 +1,31 @@
+# A Corporation is one of the central organizational units in your_platform.
+# Being a Group, the Corporation adds certain features:
+# 
+# * The corporations of the current_user are listed as primary entry points 
+#   of navigation in the ui.
+# * The memebrships in corporations and their subgroups are listed in the
+#   users' "corporate vitae".
+#
 class Corporation < Group
-  
-  # Override the model name. This is used for the generation of paths, i.e.
-  # group_path rather than corporation_path.
+  after_save { Corporation.corporations_parent << self }
+
+  # This returns the group that has all Corporations as children.
+  # The corporations_parent itself is a Group, no Corporation.
   # 
-  def self.model_name
-    Group.model_name
+  def self.corporations_parent
+    self.find_corporations_parent_group || self.create_corporations_parent_group
+  end
+  
+  def self.find_corporations_parent_group
+    Group.find_by_flag :corporations_parent
+  end
+  
+  def self.create_corporations_parent_group
+    new_group = Group.create name: 'all_corporations'
+    new_group.add_flag :corporations_parent
+    new_group.add_flag :group_of_groups
+    Group.everyone << new_group
+    return new_group
   end
 
   # This method returns true if this (self) is the one corporation
@@ -54,18 +75,6 @@ class Corporation < Group
   end
   def deceased_members_memberships
     child_groups.find_by_flag(:deceased_parent).try(:memberships) || []
-  end
-
-  # This method returns all corporations in the database.
-  # Usage: corporations = Corporation.all
-  #
-  # The Group.corporations_parent special group is defined in
-  # GroupMixins::Corporations.
-  # 
-  def self.all
-    (Group.find_corporations_parent_group.try(:child_groups) || [])
-      .collect { |group| group.becomes Corporation }
-      .select { |group| not group.has_flag? :officers_parent }
   end
 
 end

@@ -64,7 +64,7 @@ class User < ActiveRecord::Base
   include UserMixins::Memberships
   include UserMixins::Identification
   include ProfileableMixins::Address
-  include UserCompany
+  include UserCorporations
 
   # General Properties
   # ==========================================================================================
@@ -744,9 +744,9 @@ class User < ActiveRecord::Base
   def member_of?( object, options = {} )
     if object.kind_of? Group
       if options[:with_invalid] or options[:also_in_the_past]
-        self.ancestor_groups.include? object.try(:becomes, Group)
+        self.ancestor_group_ids.include? object.id
       else  # only current memberships:
-        self.groups.include? object.try(:becomes, Group)  # This uses the validity range mechanism
+        self.group_ids.include? object.id  # This uses the validity range mechanism
       end
     else
       self.ancestors.include? object
