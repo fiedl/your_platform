@@ -186,14 +186,15 @@ class Group < ActiveRecord::Base
 
   def corporation
     cached do
-      ([ self ] + ancestor_groups).select do |group|
-        group.corporation?
-      end.first.try(:becomes, Corporation)
+      Corporation.find corporation_id if corporation_id
     end
+  end
+  def corporation_id
+    (([self.id] + ancestor_group_ids) & Corporation.pluck(:id)).first
   end
 
   def corporation?
-    self.becomes(Corporation).in? Corporation.all
+    kind_of? Corporation
   end
   
   # This returns all sub-groups of the corporation that have no
@@ -214,22 +215,6 @@ class Group < ActiveRecord::Base
   def deceased
     find_deceased_members_parent_group
   end
-  
- 
-  # Finder Methods
-  # ==========================================================================================
-
-  # I'm not so sure anymore, what this was supposed to do. I guess, it had something to do
-  # with inheriting group classes. 
-  # TODO: Delete those methods, if there is no error after the migration to your_platform.
-
-  #  def self.first
-  #    self.all.first.becomes self
-  #  end
-  
-  #  def self.last
-  #    self.all.last.becomes self
-  #  end
 
 end
 
