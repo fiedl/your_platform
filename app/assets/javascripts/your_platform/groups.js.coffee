@@ -5,6 +5,11 @@
 # app/views/user_group_memberships/create.js.erb
 # 
 $(document).ready ->
+
+  if $('.address_labels_export_button.auto_trigger').size() > 0
+    setTimeout ->
+      $('.address_labels_export_button.auto_trigger').click()
+    , 200
   
   $(document).on 'submit', 'form.new_user_group_membership', (event)->
     
@@ -31,5 +36,6 @@ $(document).ready ->
     if event.keyCode == 27  # escape
       $('.box.section.members').trigger('cancel')
   )
+
 
 
