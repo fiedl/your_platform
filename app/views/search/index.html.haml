@@ -1,7 +1,5 @@
 %h1= @title
 %div
-  = render partial: 'shared/search_box'
-  %p Die Suche wird verbessert, sobald mehr Zeit und Geld zur Verfügung gestellt wird.
   - if not @results
     %p= t :no_results_found
 - if @users
