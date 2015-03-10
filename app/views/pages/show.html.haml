@@ -1,16 +1,17 @@
 - if @page.group.present? && @page.group != Group.everyone
   = render partial: 'shared/authorization_info', locals: {subject: 'page', page: @page}
 
-- if @page.has_flag? :intranet_root
-  %div.col2
-    = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
-    = render partial: 'root/what_is_new', locals: {pages: @news_pages}
-    = render @page
-  %div.col1
-    = render partial: 'root/start_page_elements'
-- else
-  %div.col3
-    = render @page
+.row
+  - if @page.has_flag? :intranet_root
+    %div.col2.col-md-8
+      = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+      = render partial: 'root/what_is_new', locals: {pages: @news_pages}
+      = render @page
+    %div.col1.col-md-4
+      = render partial: 'root/start_page_elements'
+  - else
+    %div.col3
+      = render @page
 
 - # officers
 - # We show the officers box only if there are any officers groups, since this is used only for special pages
