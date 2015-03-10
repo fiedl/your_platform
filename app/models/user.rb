@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   validates_format_of       :first_name, with: /^[^\,]*$/  # The name must not contain a comma.
   validates_format_of       :last_name, with: /^[^\,]*$/
   
-  validates_uniqueness_of   :alias, :if => Proc.new { |user| ! user.alias.blank? }
+  validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
   has_profile_fields        profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
@@ -355,7 +355,7 @@ class User < ActiveRecord::Base
   end
 
   def generate_alias_if_necessary
-    self.generate_alias! if self.alias.blank?
+    self.generate_alias! if self.account and self.alias.blank?
   end
   private :generate_alias_if_necessary
 
