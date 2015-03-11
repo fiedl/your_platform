@@ -184,7 +184,7 @@ class User < ActiveRecord::Base
   def address_label
     cached do
       AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
-        self.name_surrounding_profile_field, self.personal_title)
+        self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
     end
   end
   

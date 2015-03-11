@@ -1,11 +1,13 @@
 class AddressLabel
   attr_accessor :name
+  attr_accessor :company
   attr_accessor :postal_address, :postal_code, :country_code, :country, :city
   attr_accessor :text_above_name, :text_below_name, :name_prefix, :name_suffix
   attr_accessor :personal_title
   
-  def initialize(name, address_field, name_surrounding_field, personal_title = '')
+  def initialize(name, address_field, name_surrounding_field, personal_title = '', company = '')
     self.name = name
+    self.company = company
     self.postal_address = address_field.try(:value)
     self.postal_code = address_field.try(:postal_code)
     self.country_code = address_field.try(:country_code)
@@ -34,9 +36,11 @@ class AddressLabel
       "#{text_above_name}\n" +
       "#{name_prefix} #{name} #{name_suffix}\n" +
       "#{text_below_name}\n" +
+      "#{company}\n" + 
       (postal_address || "")
     )
     .gsub('  ', ' ')
+    .gsub("\n\n\n", "\n")
     .gsub("\n\n", "\n")
     .gsub(" \n", "\n")
     .gsub("\n ", "\n")
