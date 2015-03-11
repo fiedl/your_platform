@@ -15,7 +15,7 @@
           %input(type="radio" name="postal_address" checked)
         - else
           %input(type="radio" name="postal_address")
-        Wingolfspost
+        = t :postal_address
 %span{ :class => "postal_address #{css_class} profile_field_#{profile_field.id}" }
   %span.label.label-info
     =t :postal_address

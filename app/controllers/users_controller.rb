@@ -48,6 +48,7 @@ class UsersController < ApplicationController
       @user_params.except! :add_to_group
     end
     @user.update_attributes(@user_params)
+    @user.fill_in_template_profile_information
     @user.send_welcome_email if @user.account
     redirect_to @user
   end
