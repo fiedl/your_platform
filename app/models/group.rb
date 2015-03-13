@@ -157,8 +157,12 @@ class Group < ActiveRecord::Base
   
   
   # Adress Labels (PDF)
+  # options: 
+  #   - sender:      Sender line including sender address.
+  #   - book_rate:   Whether the "Büchersendung"/"Envois à taxe réduite" badge
+  #                  is to be printed.
   #
-  def members_to_pdf(options = {sender: ''})
+  def members_to_pdf(options = {sender: '', book_rate: false})
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
     AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
@@ -167,7 +171,7 @@ class Group < ActiveRecord::Base
       members
         .collect { |user| user.address_label }
         .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
-        .collect { |address_label| address_label.to_s }
+        # .collect { |address_label| address_label.to_s }
     end
   end
   def cached_members_postal_addresses_created_at

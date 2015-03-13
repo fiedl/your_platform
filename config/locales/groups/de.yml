@@ -51,6 +51,6 @@ de:
   address_labels:                 Adress-Etiketten
   sender:                         Absender
   create_address_labels_pdf:      PDF mit Adress-Etiketten erstellen
-  
-  
+  book_rate:                      Büchersendung
+  send_with_book_rate:            Als Büchersendung kennzeichnen
   

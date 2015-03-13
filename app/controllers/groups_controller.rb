@@ -114,7 +114,7 @@ class GroupsController < ApplicationController
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]
         end
-        options = {sender: params[:sender]}
+        options = {sender: params[:sender], book_rate: params[:book_rate]}
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
         
         # Possible dispositions: attachment, inline.

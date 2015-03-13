@@ -10,6 +10,14 @@
         %div.modal-body
           %table
             %tr
+              %th
+                =t :book_rate
+              %td
+                .checkbox
+                  %label
+                    = check_box_tag :book_rate
+                    =t :send_with_book_rate
+            %tr
               %th=t :sender
               %td
                 - sender_text = session[:address_labels_pdf_sender] || "#{current_user.name}, #{current_user.postal_address_in_one_line}"
