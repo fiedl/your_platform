@@ -7,7 +7,7 @@
   - active_or_not = (params[:preview_as].present? && (params[:preview_as] != role.to_s)) ? 'active' : ''
   %li{class: "backendBarItem dropdown #{active_or_not}"}
     - current_view = params[:preview_as] || role.to_s
-    = link_to(params.merge({preview_as: role.to_s}), class: 'dropdown-toggle') do
+    = link_to(params.merge({preview_as: role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
       = t current_view
       %b.caret
     - unless params[:preview_not_possible]

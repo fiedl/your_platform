@@ -1,4 +1,5 @@
 de:
+  settings: Einstellungen
   user_settings: Benutzereinstellungen
   
   this_sets_the_ui_locale: 'Dies legt die Sprache der Benutzerberfläche fest:'

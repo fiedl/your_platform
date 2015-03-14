@@ -3,14 +3,14 @@
 
 .row
   - if @page.has_flag? :intranet_root
-    %div.col2.col-md-8
+    %div.col-xs-12.col-md-4.col-md-push-8
+      = render partial: 'root/start_page_elements'
+    %div.col-xs-12.col-md-8.col-md-pull-4
       = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
       = render partial: 'root/what_is_new', locals: {pages: @news_pages}
       = render @page
-    %div.col1.col-md-4
-      = render partial: 'root/start_page_elements'
   - else
-    %div.col3
+    %div.col-md-12
       = render @page
 
 - # officers
