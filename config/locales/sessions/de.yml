@@ -31,7 +31,7 @@ de:
 
   reset_password_instructions:
     hello:                  'Guten Tag, '
-    introduction:           'Jemand hat die Änderung Ihres Passworts beantragt. Sie können auf folgender Seite ein neues Passwort generieren lassen:'
-    change_password:        'Neues Passwort anfordern'
-    ignore_notice:          'Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese E-Mail.'
-    change_notice:          'Ihr Passwort wird sich nicht ändern, wenn sie obigem Link nicht folgen.'
+    introduction:           'die Änderung Ihres Passwortes wurde beantragt. Sie können auf folgender Seite ein neues Passwort wählen:'
+    change_password:        'Neues Passwort wählen'
+    ignore_notice:          'Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese E-Mail-Nachricht.'
+    change_notice:          'Ihr Passwort wird sich nicht ändern, wenn Sie obigem Link nicht folgen.'
