@@ -9,7 +9,8 @@ $(document).ready ->
   # such that the user can see the upload button.
   #
   $(document).on 'click', '.avatar.thumbnail.pull-left', ->
-    $(this).closest('.box').trigger('edit')
+    if $(this).closest('.box').find('.show_only_in_edit_mode').size() > 0
+      $(this).closest('.box').trigger('edit')
     
   # Open upload mechanism automatically when the trigger is
   # pressed. This is done by the "change avatar" button in the
