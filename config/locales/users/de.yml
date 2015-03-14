@@ -53,6 +53,7 @@ de:
   personal_title:                Persönlicher Titel
   
   avatar:                        Profilbild
+  change_avatar:                 Profilbild ändern
   remove_avatar:                 Hochgeladenes Profilbild entfernen
   
   formtastic:

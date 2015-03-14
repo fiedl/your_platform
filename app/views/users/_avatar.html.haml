@@ -2,7 +2,8 @@
   = user_avatar(@user, size: 128)
   .show_only_in_edit_mode
     = form_for @user do |form|
-      = form.attachment_field :avatar, direct: true
+      - auto_trigger_class = params[:trigger_change_avatar] ? 'auto_trigger' : ''
+      = form.attachment_field :avatar, direct: true, class: auto_trigger_class
     
     - if @user.avatar_id?
       - # # TODO: Rails 4:

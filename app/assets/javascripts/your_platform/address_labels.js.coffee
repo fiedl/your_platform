@@ -1,4 +1,10 @@
 ready = ->
+  
+  if $('.address_labels_export_button.auto_trigger').size() > 0
+    setTimeout ->
+      $('.address_labels_export_button.auto_trigger').click()
+    , 200
+    
   $('.address_labels_export_button').click( (event)->
     $('ul.dropdown-menu.list_export').dropdown('toggle')
     

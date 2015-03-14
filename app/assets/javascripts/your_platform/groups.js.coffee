@@ -6,11 +6,6 @@
 # 
 $(document).ready ->
 
-  if $('.address_labels_export_button.auto_trigger').size() > 0
-    setTimeout ->
-      $('.address_labels_export_button.auto_trigger').click()
-    , 200
-  
   $(document).on 'submit', 'form.new_user_group_membership', (event)->
     
     # close the box if no text is entered
