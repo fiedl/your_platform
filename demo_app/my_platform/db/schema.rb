@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150304200928) do
+ActiveRecord::Schema.define(:version => 20150313221028) do
 
   create_table "activities", :force => true do |t|
     t.integer  "trackable_id"
@@ -251,6 +251,7 @@ ActiveRecord::Schema.define(:version => 20150304200928) do
     t.string   "accepted_terms"
     t.datetime "accepted_terms_at"
     t.boolean  "incognito"
+    t.string   "avatar_id"
   end
 
   create_table "workflow_kit_parameters", :force => true do |t|

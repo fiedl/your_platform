@@ -59,6 +59,8 @@ require 'judge/formtastic'
 # File Uploads
 require 'carrierwave'
 require 'jquery-fileupload-rails'
+require 'refile/rails'
+require 'refile/image_processing'
 
 # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
 require 'gravatar_image_tag'

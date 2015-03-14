@@ -49,6 +49,7 @@ class User < ActiveRecord::Base
   include UserCorporations
   include UserProfile
   include UserDateOfBirth
+  include UserAvatar
 
   # General Properties
   # ==========================================================================================

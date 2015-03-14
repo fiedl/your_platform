@@ -7,7 +7,7 @@
   %span.regular_case
     = @user.name_affix
 %div
-  %span.avatar.thumbnail.pull-left= user_avatar(@user, size: 128)
+  = render partial: 'avatar'
   = render partial: 'workflow_triggers'
   %ul.attributes
     = render partial: 'user_corporation_attribute'

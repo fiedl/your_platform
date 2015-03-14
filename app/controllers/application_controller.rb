@@ -142,7 +142,10 @@ class ApplicationController < ActionController::Base
         trackable: object,
         key: action_name,
         owner: current_user,
-        parameters: params.except('authenticity_token').except('attachment')
+        parameters: params.except('authenticity_token', 'attachment').deep_merge({
+          "user" => {avatar: nil},
+          "user_account" => {password: nil, password_confirmation: nil}
+        })
       )
     end
   end

@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   resources :user_group_memberships
   resources :status_group_memberships
   resources :relationships
-
+  
   get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'
   resources :events do
     post :join, to: 'events#join'
@@ -88,6 +88,9 @@ Rails.application.routes.draw do
   constraints sidekiq_constraint do
     mount Sidekiq::Web => '/sidekiq'
   end
+  
+  # Refile File Attachments
+  mount Refile.app, at: '/refile', as: :refile_app
   
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
     

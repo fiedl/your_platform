@@ -52,6 +52,9 @@ de:
   
   personal_title:                Persönlicher Titel
   
+  avatar:                        Profilbild
+  remove_avatar:                 Hochgeladenes Profilbild entfernen
+  
   formtastic:
     hints:
       alias:                     Beliebige, kurze Anmelde-Kennung, z.B. 'm.mustermann'.
