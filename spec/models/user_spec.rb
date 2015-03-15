@@ -547,10 +547,9 @@ describe User do
     end
   end
   
-  specify "an alias should be generated on user creation" do
+  specify "changed behaviour: on creating the default alias should be nil" do
     @user = User.create(first_name: "James", last_name: "Doe", email: "doe@example.com")
-    @user.alias.should be_kind_of UserAlias
-    @user.alias.should == "doe"
+    @user.alias.should == nil
   end
   
   
