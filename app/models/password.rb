@@ -22,7 +22,7 @@ class Password < String
   def self.pwgen_password
     Password.new( `pwgen #{PASSWORD_LENGTH} -N 1 -n -c -B`.to_s[0..-2] )
   end
-
+  
 end
 
 
