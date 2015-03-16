@@ -9,6 +9,8 @@
       - if @user.avatar_id?
         - # # TODO: Rails 4:
         - # = button_to t(:remove_avatar), user_path(@user), params: {user: {remove_avatar: true}}, method: 'put', class: 'btn btn-default btn-sm remove_avatar'
-        = form_for @user, html: {class: 'button_to'} do |form|
+        = form_for @user, html: {class: 'button_to edit_user'} do |form|
           = form.hidden_field :remove_avatar, value: true
           = form.submit t(:remove_avatar), class: 'btn btn-default btn-sm remove_avatar'
+      
+      .uploading_avatar.alert.alert-success.hidden=t :uploading_avatar

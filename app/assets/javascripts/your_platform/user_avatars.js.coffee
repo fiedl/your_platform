@@ -4,6 +4,11 @@ $(document).ready ->
   #
   $(document).on 'upload:complete', 'form.edit_user', ->
     $(this).submit()
+    
+  # Show notice when upload begins.
+  $(document).on 'upload:start', 'form.edit_user', ->
+    $('form.edit_user').hide()
+    $('.uploading_avatar').removeClass('hidden').show()
 
   # When the user clicks on the image, switch to edit_mode
   # such that the user can see the upload button.

@@ -55,6 +55,7 @@ de:
   avatar:                        Profilbild
   change_avatar:                 Profilbild ändern
   remove_avatar:                 Hochgeladenes Profilbild entfernen
+  uploading_avatar:              Profilbild wird hochgeladen. Bitte warten.
   
   formtastic:
     hints:
