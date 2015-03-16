@@ -84,7 +84,7 @@ gem 'execjs'
 gem 'therubyracer', :platform => :ruby
 
 # Loading via ajax
-gem 'turbolinks', '2.2.1'
+#gem 'turbolinks', '2.2.1'
 
 # Temporary Forks and Overrides
 gem 'gmaps4rails', '~> 2.0.2', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'

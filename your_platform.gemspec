@@ -110,6 +110,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-datatables-rails', '~> 3.1.1'
   
   # JavaScript
+  s.add_dependency 'turbolinks', '~> 2.5.3'
   s.add_dependency 'jquery-turbolinks'
   
   # Client-Side Validations

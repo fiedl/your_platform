@@ -80,6 +80,7 @@ require 'will_paginate'
 require 'jquery-datatables-rails'
 
 # JavaScript
+require 'turbolinks'
 require 'jquery-turbolinks'
 
 # Client-Side Validations
