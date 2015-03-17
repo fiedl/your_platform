@@ -69,25 +69,30 @@ var PasswordStrength = {
             last_validated = validated;
 
             var score, word, tooltip;
-            var found_triggerword = false;
+            var needs_evaluation = true;
 
             var triggerwords = container.data('triggerwords');
             // triggerword[0]: the actual triggerword
             // triggerword[1]: the description response
             // triggerword[2]: the tooltip
-
-            if (triggerwords != null) {
+            
+            if (pwd.length < 12) {
+                score = 0;
+                word = "Zu kurz";
+                tooltip = "Das Passwort muss mindestens 12 Zeichen enthalten";
+                needs_evaluation = false;
+            } else if (triggerwords != null) {
                 for (var i = 0; i< triggerwords.length; ++i){
                     var triggerword = triggerwords[i];
                     if (pwd.match(new RegExp(triggerword[0]))){
                         score = 0;
                         word = triggerword[1];
                         tooltip = triggerword[2];
-                        found_triggerword = true;
+                        needs_evaluation = false;
                     }
                 }
             }
-            if (!found_triggerword) {
+            if (needs_evaluation) {
                 score = PasswordStrength.score(pwd, user_inputs);
                 tooltip = advice;
                 word = score_description_map[score]
