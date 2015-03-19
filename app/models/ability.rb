@@ -140,13 +140,13 @@ class Ability
     if not read_only_mode?
       # Group emails
       #
-      can :create_post_for, Group do |group|
+      can [:create_post, :create_post_for], Group do |group|
         user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
       end
     
       # Local officers can create events in their groups.
       #
-      can :create_event, Group do |group|
+      can [:create_event, :create_event_for], Group do |group|
         user.in? group.officers_of_self_and_ancestor_groups
       end
       can [:update, :destroy], Event do |event|
@@ -160,7 +160,13 @@ class Ability
   
   def rights_for_global_officers
     can :export_member_list, Group
-    can :create_post_for, Group if not read_only_mode?
+    if not read_only_mode?
+      can [:create_post, :create_post_for], Group
+      can [:create_event, :create_event_for], Group
+      can [:update, :destroy], Event do |event|
+        event.contact_people.include? user
+      end
+    end
   end
       
   def rights_for_signed_in_users
