@@ -12,7 +12,7 @@ class SearchController < ApplicationController
       metric_logger.log_event({query: query_string}, type: :search)
       current_user.try(:update_last_seen_activity, "sucht gerade etwas", nil)
 
-      # browse users, pages and groups
+      # browse users, pages, groups and events
       #
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
@@ -20,6 +20,7 @@ class SearchController < ApplicationController
       @pages = Page.where("title like ? OR content like ?", q, q)
         .order('title')
       @groups = Group.where( "name like ?", q )
+      @events = Event.where("name like ?", q).order('start_at DESC')
 
       # browse profile fields
       #
@@ -44,14 +45,16 @@ class SearchController < ApplicationController
       @users.uniq!
       @pages.uniq!
       @groups.uniq!
+      @events.uniq!
 
       # AUTHORIZATION
       #
       @users = filter_by_authorization(@users)
       @pages = filter_by_authorization(@pages)
       @groups = filter_by_authorization(@groups)
+      @events = filter_by_authorization(@events)
 
-      @results = @users + @pages + @groups
+      @results = @users + @pages + @groups + @events
       if @results.count == 1
         redirect_to @results.first
       end
@@ -65,6 +68,7 @@ class SearchController < ApplicationController
       @pages = nil if @pages.count == 0
       @users = nil if @users.count == 0
       @groups = nil if @groups.count == 0
+      @events = nil if @events.count == 0
       @results = nil if @results.count == 0
 
     end
@@ -82,7 +86,8 @@ class SearchController < ApplicationController
   def lucky_guess
     query_string = params[:query]
     if query_string.present?
-      @result = Page.where(title: query_string).limit(1).first
+      @result = Event.where(name: query_string).limit(1).first
+      @result ||= Page.where(title: query_string).limit(1).first
       @result ||= Group.where(name: query_string).limit(1).first
       @result ||= User.find_by_name(query_string)
       @result ||= User.find_by_title(query_string)

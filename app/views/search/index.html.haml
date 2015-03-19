@@ -2,6 +2,7 @@
 %div
   - if not @results
     %p= t :no_results_found
+
 - if @users
   %h1= t :found_users
   %div
@@ -11,12 +12,20 @@
           %li
             = link_to user do
               = render partial: 'users/user_title', locals: {user: user}
+- if @events
+  %h1= t :events
+  %div
+    %ul
+      - @events.each do |event|
+        %li= link_to event.title, event
+        
 - if @groups
   %h1= t :found_groups
   %div
     %ul
       - for object in @groups
         %li= link_to object.title, object
+        
 - if @pages
   %h1= t :found_pages
   %div
