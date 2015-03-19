@@ -25,15 +25,29 @@ ready = ->
       type: 'POST',
       url: $(this).attr('href'),
       success: (created_event) ->
-        window.location = created_event.path
+        Turbolinks.visit created_event.path
     })
     $(this).replaceWith("<div class='alert alert-success'>Erstelle neue Veranstaltung. Bitte warten.</div>")
     e.preventDefault()
     
-  $('.destroy_event').click (event)->
-    $('.box').hide('explode')
-    $('.alert').hide('blind')
-    $(this).replaceWith("<div class='alert alert-danger'><strong>Veranstaltung wird wieder gelöscht.</strong> Bitte warten.</div>")
+  $('.destroy_event').click (e)->
+    destroy_button = $(this)
+    href = destroy_button.attr('href')
+    redirect_path = destroy_button.data('redirect')
+    $('.alert').hide('blind', 300)
+    $('.box').hide 'explode', 300, ->
+      destroy_button.replaceWith("<div class='alert alert-danger'><strong>Veranstaltung wird wieder gelöscht.</strong> Bitte warten.</div>")
+      $.ajax({
+        type: 'DELETE',
+        url: href,
+        success: (result) ->
+          $('.alert-danger').replaceWith("<div class='alert alert-success'><strong>Veranstaltung wurde gelöscht.</strong> Weiterleitung zur Startseite ...</div>")
+          Turbolinks.visit redirect_path
+        failure: (result) ->
+          alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
+      })
+    e.stopPropagation()
+    e.preventDefault()
     
   $('#join_event').click (event)->
     btn = $(this)
