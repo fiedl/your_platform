@@ -1,0 +1,14 @@
+- # Locals: obj, query
+- #
+%table.user_preview
+  %td= user_avatar(obj)
+  %td
+    %h4= link_to obj.title, obj
+    - if obj.mobile.present?
+      %p
+        = t(:mobile) + ":"
+        = obj.mobile
+    - if obj.email.present?
+      %p
+        = t(:email) + ":"
+        = link_to obj.email, "mailto:#{obj.email}"

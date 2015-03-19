@@ -1,0 +1,5 @@
+%h4= link_to obj.name, obj
+- obj.officers_parent.child_groups.each do |office|
+  %p
+    = office.name + ":"
+    = link_to office.child_users.first.name, office.child_users.first

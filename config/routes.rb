@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   end
 
   get 'search/guess', to: "search#lucky_guess"
+  get 'search/preview', to: "search#preview"
   get :search, to: "search#index"
 
   mount Judge::Engine => '/judge'

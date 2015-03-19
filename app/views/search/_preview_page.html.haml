@@ -1,0 +1,11 @@
+%h4= link_to obj.title, obj
+%p 
+  = markup obj.content
+%small
+  - if obj.author
+    %p
+      Autor:
+      = link_to obj.author.title, obj.author
+  %p
+    Letzte Änderung:
+    = localize obj.updated_at
