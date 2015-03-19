@@ -149,7 +149,7 @@ class Ability
       can :create_event, Group do |group|
         user.in? group.officers_of_self_and_ancestor_groups
       end
-      can :update, Event do |event|
+      can [:update, :destroy], Event do |event|
         event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
       end
       can :update, Group do |group|
@@ -247,6 +247,11 @@ class Ability
       params[:token].present? && (UserAccount.find_by_auth_token(params[:token]) == other_user.account)
     end
     can :index_public_events, :all
+    
+    # Nobody can destroy events that are older than 10 minutes.
+    cannot :destroy, Event do |event|
+      event.created_at < 10.minutes.ago
+    end
     
   end
 end

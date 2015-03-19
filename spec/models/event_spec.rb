@@ -250,4 +250,18 @@ describe Event do
     @event.contact_people_group.assign_user @user
   end
   
+  
+  describe "#destroy" do
+    subject { @event.destroy }
+    
+    it "should destroy the contact people and attendees groups as well" do
+      @contact_people_group = @event.contact_people_group
+      @attendees_group = @event.attendees_group
+      
+      subject
+      Group.exists?(id: @contact_people_group.id).should == false
+      Group.exists?(id: @attendees_group.id).should == false
+    end
+  end
+  
 end

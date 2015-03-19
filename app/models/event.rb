@@ -89,6 +89,12 @@ class Event < ActiveRecord::Base
     attendees_group.members
   end
   
+  def destroy
+    find_attendees_group.try(:destroy)
+    find_contact_people_group.try(:destroy)
+    super
+  end
+  
 
   # Scopes
   # ==========================================================================================

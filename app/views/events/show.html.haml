@@ -1,3 +1,7 @@
+- if can? :destroy, @event
+  %p
+    = link_to "Veranstaltung wieder löschen", event_path(@event), method: 'delete', class: 'btn btn-danger has_tooltip destroy_event', title: 'Die neue Veranstaltung kann bis zehn Minuten nach der Erstellung gelöscht werden, falls sie versehentlich erstellt wurde.'
+
 - if can? :update, @event
   = render partial: 'shared/authorization_info', locals: {subject: 'event', icon: 'eye-open'}
 

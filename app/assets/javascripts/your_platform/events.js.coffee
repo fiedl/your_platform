@@ -25,14 +25,15 @@ ready = ->
       type: 'POST',
       url: $(this).attr('href'),
       success: (created_event) ->
-        $(this).button('reset')
-        $(this).data('loading-text', 'Veranstaltung wurde erstellt. Einen Moment noch, bitte.')
-        $(this).button('loading')
         window.location = created_event.path
     })
-    $(this).data('loading-text', $(this).text() + " ...")
-    $(this).button('loading')
+    $(this).replaceWith("<div class='alert alert-success'>Erstelle neue Veranstaltung. Bitte warten.</div>")
     e.preventDefault()
+    
+  $('.destroy_event').click (event)->
+    $('.box').hide('explode')
+    $('.alert').hide('blind')
+    $(this).replaceWith("<div class='alert alert-danger'><strong>Veranstaltung wird wieder gelöscht.</strong> Bitte warten.</div>")
     
   $('#join_event').click (event)->
     btn = $(this)
