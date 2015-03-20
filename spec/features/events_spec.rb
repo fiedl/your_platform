@@ -117,6 +117,25 @@ feature "Events" do
           page.should have_text I18n.t(:show_all)
           page.should have_selector '#ics_abo'
           page.should have_no_selector '#create_event'
+          page.should have_no_text I18n.t('date.to')
+        end
+      end
+      
+      scenario "visiting the start page with several-day events" do
+        @event.start_at = 1.day.ago
+        @event.end_at = @event.start_at + 3.days
+        @event.save
+        
+        visit root_path
+        page.should have_text I18n.t(:events)
+        page.should have_selector '.upcoming_events'
+        within '.box.upcoming_events' do
+          page.should have_text @event.name
+          page.should have_text I18n.t('date.to')
+          page.should have_text @event.start_at.day.to_s
+          page.should have_text I18n.localize(@event.end_at.to_date, format: :long)
+          page.should have_text @event.group.name
+          page.should have_no_text @other_event.name
         end
       end
       

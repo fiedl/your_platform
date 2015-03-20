@@ -29,3 +29,6 @@ en:
   i_would_like_to_announce_the_following_event: 'I would like to announce the following event.'
   event_information_will_be_inserted_here: '[ Event information will be inserted here by the system. ]'
   kind_regards: 'Kind regards,'
+  
+  date:
+    to: 'to'

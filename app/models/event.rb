@@ -107,12 +107,21 @@ class Event < ActiveRecord::Base
   #                              |= event, today, 20h
   #                         |--------------------------------------->  (upcoming)
   #
+  # For events that are ongoing, e.g. started yesterday, but end tomorrow, we'll include
+  # these events this scope in order to show them as long as they might be interesting.
+  #
+  #        yesterday  -----  today  ----  tomorrow
+  #            |= event, yesterday to tomorrow =|
+  #                         |--------------------------------------->  (upcoming)
+  #
+  # Date.today.to_datetime is 0h.
+  #
+  scope :upcoming, lambda { where("(start_at > ? AND end_at IS NULL) OR (end_at IS NOT NULL AND end_at > ?)", Date.today.to_datetime, Date.today.to_datetime) }
+  
   def upcoming?
-    ( self.start_at > Date.today.to_datetime )   # Date.today.to_datetime is 0h.
+    Event.upcoming.pluck(:id).include? self.id
   end
-
-  scope :upcoming, lambda { where( "start_at > ?", Date.today.to_datetime ) }
-
+  
   scope :direct, lambda { includes( :links_as_descendant ).where( :dag_links => { :direct => true } ) }
 
 

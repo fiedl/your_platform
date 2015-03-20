@@ -6,11 +6,18 @@
   - corporation = group.try(:corporation)
   %li.upcoming_event
     %span.event.info
-      = succeed ',' do
-        %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
-      -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
-      = succeed ',' do 
-        %span{class: "event start_at_time"}= localize event.start_at, :format => :time
+      - if event.end_at and event.end_at.to_date != event.start_at.to_date
+        %span{class: 'event from_date_to_end_date'}
+          = localize(event.start_at.to_date, format: :long).gsub(event.end_at.year.to_s, '')
+          = translate 'date.to'
+          = succeed ',' do
+            = localize(event.end_at.to_date, format: :long)
+      - else
+        = succeed ',' do
+          %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
+        -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
+        = succeed ',' do 
+          %span{class: "event start_at_time"}= localize event.start_at, :format => :time
       - if group
         %span{class: "event group"}
         = link_to group.name, group

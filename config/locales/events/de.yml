@@ -29,3 +29,6 @@ de:
   i_would_like_to_announce_the_following_event: 'ich möchte Sie gerne auf folgende Veranstaltung aufmerksam machen.'
   event_information_will_be_inserted_here: '[ Informationen zur Veranstaltung werden vom System hier eingefügt. ]'
   kind_regards: 'Mit freundlichen Grüßen'
+  
+  date:
+    to: 'bis'
