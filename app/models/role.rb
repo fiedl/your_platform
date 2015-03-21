@@ -119,8 +119,9 @@ class Role
   def allowed_preview_roles
     return ['global_admin', 'admin', 'officer', 'global_officer', 'user'] if global_admin?
     return ['admin', 'officer', 'user'] if admin?
+    return ['officer', 'global_officer', 'user'] if global_officer? and officer?
     return ['officer', 'user'] if officer?
-    return ['user'] if global_officer?
+    return ['global_officer', 'user'] if global_officer?
     return []
   end
   def allow_preview?

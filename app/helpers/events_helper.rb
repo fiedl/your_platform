@@ -1,7 +1,7 @@
 module EventsHelper
   
   def group_to_create_the_event_for
-    @group || first_group_the_current_user_can_create_events_for
+    @group || everyone_group_if_the_user_can_create_events_there || first_group_the_current_user_can_create_events_for
   end
   
   def groups_the_current_user_can_create_events_for
@@ -10,6 +10,10 @@ module EventsHelper
 
   def first_group_the_current_user_can_create_events_for
     current_user.groups.find_all_by_flag(:officers_parent).first.try(:parent_groups).try(:first)
+  end
+  
+  def everyone_group_if_the_user_can_create_events_there
+    can?(:create_event, Group.everyone) ? Group.everyone : nil
   end
   
   def title_for_events_index
