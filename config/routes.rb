@@ -56,7 +56,9 @@ Rails.application.routes.draw do
 
   resources :user_accounts
   resources :blog_posts
-  resources :attachments
+  resources :attachments do
+    get 'description(.:format)', to: 'attachments#description'
+  end
   resources :profile_fields  
   resources :workflows
   resources :user_group_memberships

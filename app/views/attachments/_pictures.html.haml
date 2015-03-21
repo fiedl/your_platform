@@ -1,0 +1,10 @@
+%h1.pictures= t :pictures
+.pictures
+  .galleria{data: {theme_js_path: '/js/vendor/galleria-classic.js'}}
+    - for attachment in attachments
+      = render partial: 'attachments/picture', locals: { attachment: attachment }
+  .picture-info
+    .picture-title
+      = attachments.first.title
+    .picture-description
+      = attachments.first.description

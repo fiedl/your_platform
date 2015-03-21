@@ -2,34 +2,74 @@ ready = ->
   
   if $('.galleria').length
 
+    
+
     Galleria.configure({
-      imageCrop: true,
+      #imageCrop: true,
       transition: 'slide',
       initialTransition: 'fade',
       assets: false,  # The images are not serverd as assets but by the attachments controller.
       _toggleInfo: true,
-      preload: 4,
-      # autoplay: 9000,
-      popupLinks: true,
+      preload: 10,
+      #autoplay: 9000,
+      popupLinks: false,
+      trueFullscreen: false,
+      #carousel: false,
+      swipe: true,
     })
     
     Galleria.ready( ->
-      this.bind('loadstart', (e)->
-        title = e.galleriaData.title
-        description = e.galleriaData.description
+      gallery = this
+      
+      $(document).on 'click', '.galleria-stage img', (e)->
+        gallery.toggleFullscreen()
+        e.stopPropagation()
+        e.preventDefault()
+        false
         
-        parent = $(e.target).first().parent().parent()
-        $(parent).find('.picture-title').hide().html(title).fadeIn(500)
-        $(parent).find('.picture-description').hide().html(description).fadeIn(500)
-      )
+      
+      this.bind 'loadfinish', (e)->
+        # Transform the image path into the description json url.
+        # /attachments/123/filename.png
+        description_path = e.galleriaData.big.split("/").slice(0,3).join("/") + "/description.json"
+        
+        $.ajax({
+          type: 'GET',
+          url: description_path,
+          success: (result) ->
+            parent = $(e.target).first().parent().parent()
+            $(parent).find('.picture-info')
+              .hide()
+              .replaceWith(result.html).show()
+            $(parent).find('.picture-info')
+              .find('.best_in_place').best_in_place()
+            $(parent).find('.remove_button')
+              .removeClass('show_only_in_edit_mode')  
+              .hide()
+        })
+      
+      # Hide thumbnail collections with less than 2 elements,
+      # since they only confuse people there.
+      #
+      $('.galleria-thumbnails').each ->
+        if $(this).find('.galleria-image').size() < 2
+          $(this).hide()
+      
     )
     
-    Galleria.loadTheme $('.galleria').data('theme-js-path')
+    $(document).on 'mouseenter', '.picture-title', ->
+      $(this).find('.remove_button').show()
+    $(document).on 'mouseleave', '.picture-title', ->
+      $(this).find('.remove_button').hide()
+      
+    
+    #Galleria.loadTheme $('.galleria').data('theme-js-path')
+    Galleria.loadTheme '/js/vendor/galleria-classic.js'
     Galleria.run '.galleria', {
       responsive: true,
-      height: 0.625, # 16:10
+      #height: 0.625, # 16:10
       debug: false
-      # height: $(this).find('img').attr('height')
+      ## height: $(this).find('img').attr('height')
     }
     
   $('.galleria-errors').hide()

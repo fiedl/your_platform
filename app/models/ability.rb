@@ -206,8 +206,11 @@ class Ability
     can :read, Page do |page|
       page.group.nil? || page.group.members.include?(user)
     end
-    can :download, Attachment do |attachment|
+    can [:read, :download], Attachment do |attachment|
       attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
+    end
+    can :update, Attachment do |attachment|
+      attachment.author == user
     end
         
     # All users can join events.
@@ -221,6 +224,9 @@ class Ability
     can :index_events, Group
     can :index_events, User do |other_user|
       other_user == user
+    end
+    can :upload_image, Event do |event|
+      event.attendees.include?(user)
     end
     
     # Name auto completion

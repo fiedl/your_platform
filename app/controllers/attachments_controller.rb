@@ -1,7 +1,7 @@
 class AttachmentsController < ApplicationController
   
   load_and_authorize_resource
-  skip_authorize_resource only: [:create]
+  skip_authorize_resource only: [:create, :description]
   
   def index
   end
@@ -55,6 +55,25 @@ class AttachmentsController < ApplicationController
       path = @attachment.file.current_path
     end
     send_file path, x_sendfile: true, disposition: :inline
+  end
+  
+  # This returns a json object with description information of the
+  # requested file.
+  #
+  def description
+    @attachment = Attachment.find(params[:attachment_id])
+    authorize! :read, @attachment
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          title: @attachment.title,
+          description: @attachment.description,
+          author: @attachment.author.title,
+          html: render_to_string(partial: 'attachments/description', formats: [:html], locals: {attachment: @attachment})
+        }
+      end
+    end
   end
   
 private

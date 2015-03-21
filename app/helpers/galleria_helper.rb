@@ -6,7 +6,7 @@ module GalleriaHelper
       big: attachment.file_url,
       title: attachment.title,
       description: attachment.description,
-      link: attachment.file_url
+      #link: attachment.file_url,
     }
   end
   

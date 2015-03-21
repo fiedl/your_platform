@@ -60,6 +60,7 @@ ready = ->
         $('#leave_event').removeClass 'hidden'
         $('#leave_event').show()
         $('#attendees_avatars').html(r.attendees_avatars)
+        $('.box.upload_image').removeClass('hidden').show()
       }
     )
     btn.data('loading-text', btn.text() + " ...")
@@ -77,6 +78,7 @@ ready = ->
         $('#join_event').removeClass 'hidden'
         $('#join_event').show()
         $('#attendees_avatars').html(r.attendees_avatars)
+        $('.box.upload_image').hide()
       }
     )
     btn.data('loading-text', btn.text() + " ...")

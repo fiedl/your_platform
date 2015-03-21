@@ -12,6 +12,12 @@
       = icon :calendar
       Kalender-Export
   = render partial: 'events/event_details'
+
+- if current_user.developer?
+  .alert.alert-warning
+    %strong Beta-Feature: Bilder für Ereignisse.
+    Du siehst diese Funktion nur, weil Du als Entwickler eingetragen bist. Die anderen müssen leider noch warten :)
+  = render partial: 'events/pictures'
         
 %h1=t :attendees
 %div

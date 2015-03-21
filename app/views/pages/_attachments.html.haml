@@ -1,6 +1,5 @@
 - attachments = page.attachments.find_without_types("video", "image")
 - if current_user
-  - attachments += page.attachments.find_by_type("image").select { |attachment| can? :update, attachment }
   - attachments += page.attachments.find_by_type("video").select { |attachment| can? :update, attachment }
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
 
