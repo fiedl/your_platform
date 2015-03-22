@@ -134,7 +134,7 @@ class Ability
   
   def rights_for_local_officers
     can :export_member_list, Group do |group|
-      user.in? group.officers_of_self_and_ancestor_groups
+      user.in? group.officers_of_self_and_ancestors
     end
     
     if not read_only_mode?
@@ -154,6 +154,34 @@ class Ability
       end
       can :update, Group do |group|
         group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
+      end
+      
+      # Local officers of pages can edit their pages and sub-pages
+      # as long as they are the authors or the pages have *no* author.
+      #
+      can :update, Page do |page|
+        can?(:read, page) and page.officers_of_self_and_ancestors.include?(user) and (page.author == user or page.author.nil?)
+      end
+      
+      # Local officers of pages can add attachments to the page and subpages
+      # and modify their own attachments.
+      #
+      can :create_attachment_for, Page do |page|
+        can?(:read, page) and page.officers_of_self_and_ancestors.include?(user)
+      end
+      can [:update, :destroy], Attachment do |attachment|
+        can?(:read, attachment.parent) and 
+        can?(:read, attachment) and 
+        attachment.author == user
+      end
+      
+      # Local officers can also modify any attachment of their own pages 
+      # in order to review their own pages.
+      #
+      can [:update, :destroy], Attachment do |attachment|
+        can?(:read, attachment.parent) and 
+        can?(:read, attachment) and 
+        (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
       end
     end
   end
@@ -208,9 +236,6 @@ class Ability
     end
     can [:read, :download], Attachment do |attachment|
       attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
-    end
-    can :update, Attachment do |attachment|
-      attachment.author == user
     end
         
     # All users can join events.
