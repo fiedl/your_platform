@@ -251,7 +251,17 @@ class Ability
       other_user == user
     end
     can :upload_image, Event do |event|
-      event.attendees.include?(user)
+      event.attendees.include?(user) or event.contact_people.include?(user)
+    end
+    
+    # If a user is contact person of an event, he can provide pages and
+    # attachment for this event.
+    # 
+    can [:update, :create_page_for], Event do |event|
+      event.contact_people.include? user
+    end
+    can [:update, :create_attachment_for], Page do |page|
+      page.ancestor_events.map(&:contact_people).flatten.include? user
     end
     
     # Name auto completion
