@@ -107,7 +107,7 @@ describe Event do
   describe ".upcoming" do
     before do 
       @upcoming_event = create( :event, start_at: 5.hours.from_now )
-      @recent_event = create( :event, start_at: 2.days.ago )
+      @recent_event = create(:event, start_at: 2.days.ago, end_at: 2.days.ago + 2.hours)
       @recent_event_today = create(:event, start_at: Date.today.to_datetime.change(hour: 0, min: 5))
       @group.child_events << @upcoming_event << @recent_event
       @unrelated_event = create( :event, start_at: 5.hours.from_now )

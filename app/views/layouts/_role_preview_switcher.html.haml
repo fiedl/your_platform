@@ -3,7 +3,7 @@
 - # roles.
 
 - role = Role.of(current_user).for(@navable)
-- if role.officer? or role.global_officer?
+- if (@navable && role.officer?) or role.global_officer?
   - active_or_not = (params[:preview_as].present? && (params[:preview_as] != role.to_s)) ? 'active' : ''
   %li{class: "backendBarItem dropdown #{active_or_not}"}
     - current_view = params[:preview_as] || role.to_s
