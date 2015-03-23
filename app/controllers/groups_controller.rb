@@ -168,6 +168,9 @@ class GroupsController < ApplicationController
   #   http://railscasts.com/episodes/371-strong-parameters
   # 
   def group_params
+    # STI override:
+    params[:group] ||= params[:corporation] # for Corporation objects
+    
     permitted_keys = []
     permitted_keys += [:name, :extensive_name] if can? :rename, @group
     permitted_keys += [:token] if can? :change_token, @group
