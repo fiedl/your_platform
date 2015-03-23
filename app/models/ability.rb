@@ -216,6 +216,14 @@ class Ability
         ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General'))
       end
       
+      # They can change their first name, but not their surname.
+      # 
+      can [:update, :change_first_name, :change_alias], User, :id => user.id
+      
+      # They can change their password, i.e. modify their user account.
+      #
+      can :update, UserAccount, :user_id => user.id
+      
       # Regular users can update their own validity ranges of memberships
       # in order to update their corporate vita.
       #
