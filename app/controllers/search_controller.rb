@@ -104,23 +104,7 @@ class SearchController < ApplicationController
   # This returns title and body of a preview field (quick search).
   #
   def preview
-    @object = nil
-    query_string = params[:query]
-    if query_string.present?
-      like_query_string = "%" + query_string.gsub( ' ', '%' ) + "%"
-    
-      # The order of these assignments determines the priority.
-      #
-      @object = Corporation.where(token: query_string).limit(1).first
-      @object ||= Bv.where(token: [query_string, query_string.gsub('BV', 'BV ').gsub('bv', 'BV ')]).limit(1).first
-      @object ||= User.where(last_name: query_string).limit(1).first
-      @object ||= Page.where("title like ?", like_query_string).limit(1).first
-      @object ||= Group.where("name like ?", like_query_string).limit(1).first
-      @object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
-
-      @object = nil unless can? :read, @object
-    end
-
+    @object = find_preview_object(params[:query])
     respond_to do |format|
       format.json do
         if @object
@@ -142,6 +126,24 @@ class SearchController < ApplicationController
     resources.select do |resource|
       can? :read, resource
     end
+  end
+  
+  def find_preview_object(query_string)
+    object = nil
+    if query_string.present?
+      like_query_string = "%" + query_string.gsub( ' ', '%' ) + "%"
+    
+      # The order of these assignments determines the priority.
+      #
+      object = Corporation.where(token: query_string).limit(1).first
+      object ||= User.where(last_name: query_string).limit(1).first
+      object ||= Page.where("title like ?", like_query_string).limit(1).first
+      object ||= Group.where("name like ?", like_query_string).limit(1).first
+      object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
+
+      object = nil unless can? :read, object
+    end
+    return object
   end
 
 end
