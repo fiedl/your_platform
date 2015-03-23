@@ -2,6 +2,7 @@ class AttachmentsController < ApplicationController
   
   load_and_authorize_resource
   skip_authorize_resource only: [:create, :description]
+  respond_to :html, :json
   
   def index
   end
@@ -66,6 +67,7 @@ class AttachmentsController < ApplicationController
 
     respond_to do |format|
       format.json do
+        self.formats = [:html, :json]
         render json: {
           title: @attachment.title,
           description: @attachment.description,
@@ -89,6 +91,7 @@ private
   
   def secure_parent
     Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
+    Event.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Event'
   end
 
 end

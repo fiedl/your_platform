@@ -39,10 +39,10 @@ class Role
   end
   
   def object
-    @object || raise('Object not given, when trying to determine Role.')
+    @object
   end
   def group
-    @object || raise('Group not given, when trying to determine Role.')
+    @object
   end
   
   #
@@ -59,19 +59,19 @@ class Role
   end
     
   def member?
-    object.kind_of?(Group) && user.member_of?(object)
+    object && object.kind_of?(Group) && user.member_of?(object)
   end
   
   def guest?
-    object.kind_of?(Group) && user.guest_of?(object)
+    object && object.kind_of?(Group) && user.guest_of?(object)
   end
   
   def former_member?
-    object.kind_of?(Group) && object.corporation? && user.former_member_of_corporation?(object)
+    object && object.kind_of?(Group) && object.corporation? && user.former_member_of_corporation?(object)
   end
   
   def deceased_member?
-    object.kind_of?(Group) && object.corporation? && user.id.in?(object.deceased_members.map(&:id)) && (not former_member?)
+    object && object.kind_of?(Group) && object.corporation? && user.id.in?(object.deceased_members.map(&:id)) && (not former_member?)
   end
   
   #
@@ -83,11 +83,11 @@ class Role
   end
 
   def admin?
-    global_admin? || object.admins_of_self_and_ancestors.include?(user)
+    global_admin? || (object && object.admins_of_self_and_ancestors.include?(user))
   end
   
   def officer?
-    global_admin? || object.officers_of_self_and_ancestors.include?(user)
+    global_admin? || (object && object.officers_of_self_and_ancestors.include?(user))
   end
   
   

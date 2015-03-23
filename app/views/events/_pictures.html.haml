@@ -1,24 +1,24 @@
 - if @event.attachments.find_by_type("image").count > 0
   = render partial: 'attachments/pictures', locals: {attachments: @event.attachments.find_by_type("image")}
 
-  .box.panel.panel-default.upload_image{class: can?(:upload_image, @event) ? '' : 'hidden' }
-    .image_attachment_drop_field
-      %p.drop_images_here Bilder hierher schieben!
-      %p.uploading.hidden
-        Bilder werden hochgeladen.
-        %br
-        %small Bitte warten, bis dieses Feld wieder grün wird.
-        %br
-        %small.upload_counter
-      %p.success.hidden
-        Bilder sind hochgeladen!
-        %br
-        %small Nach einem Neuladen (<kbd>Strg + R</kbd> bzw. <kbd>⌘ + R</kbd>) werden die Bilder als Gallerie angezeigt. Danke für's Hochladen!
-      = form_for @event.attachments.build do |f|
-        = f.hidden_field :parent_id
-        = f.hidden_field :parent_type
-      
-        - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
-        - # f.file_field :file, multiple: true, name: "attachment[file]"
-        = f.file_field :file, name: "attachment[file]"
+.box.panel.panel-default.upload_image{class: can?(:create_attachment_for, @event) ? '' : 'hidden' }
+  .image_attachment_drop_field
+    %p.drop_images_here Bilder hierher schieben!
+    %p.uploading.hidden
+      Bilder werden hochgeladen.
+      %br
+      %small Bitte warten, bis dieses Feld wieder grün wird.
+      %br
+      %small.upload_counter
+    %p.success.hidden
+      Bilder sind hochgeladen!
+      %br
+      %small Nach einem Neuladen (<kbd>Strg + R</kbd> bzw. <kbd>⌘ + R</kbd>) werden die Bilder als Gallerie angezeigt. Danke für's Hochladen!
+    = form_for @event.attachments.build do |f|
+      = f.hidden_field :parent_id
+      = f.hidden_field :parent_type
+    
+      - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
+      - # f.file_field :file, multiple: true, name: "attachment[file]"
+      = f.file_field :file, name: "attachment[file]"
   

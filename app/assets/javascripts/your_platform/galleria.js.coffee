@@ -29,24 +29,25 @@ ready = ->
         
       
       this.bind 'loadfinish', (e)->
-        # Transform the image path into the description json url.
-        # /attachments/123/filename.png
-        description_path = e.galleriaData.big.split("/").slice(0,3).join("/") + "/description.json"
-        
-        $.ajax({
-          type: 'GET',
-          url: description_path,
-          success: (result) ->
-            parent = $(e.target).first().parent().parent()
-            $(parent).find('.picture-info')
-              .hide()
-              .replaceWith(result.html).show()
-            $(parent).find('.picture-info')
-              .find('.best_in_place').best_in_place()
-            $(parent).find('.remove_button')
-              .removeClass('show_only_in_edit_mode')  
-              .hide()
-        })
+        if typeof(e.galleriaData) != 'undefined'
+          # Transform the image path into the description json url.
+          # /attachments/123/filename.png
+          description_path = e.galleriaData.big.split("/").slice(0,3).join("/") + "/description.json"
+          
+          $.ajax({
+            type: 'GET',
+            url: description_path,
+            success: (result) ->
+              parent = $(e.target).first().parent().parent()
+              $(parent).find('.picture-info')
+                .hide()
+                .replaceWith(result.html).show()
+              $(parent).find('.picture-info')
+                .find('.best_in_place').best_in_place()
+              $(parent).find('.remove_button')
+                .removeClass('show_only_in_edit_mode')  
+                .hide()
+          })
       
       # Hide thumbnail collections with less than 2 elements,
       # since they only confuse people there.
