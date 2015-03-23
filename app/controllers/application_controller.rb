@@ -129,7 +129,7 @@ class ApplicationController < ActionController::Base
   # Generic Activity Logger
   #
   def log_activity
-    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title", "preview"]) and not params['controller'].in?(['sessions', 'devise/sessions'])
+    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title", "preview", "description"]) and not params['controller'].in?(['sessions', 'devise/sessions'])
       begin
         type = self.class.name.gsub("Controller", "").singularize
         id = params[:id]
