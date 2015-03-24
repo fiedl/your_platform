@@ -132,6 +132,10 @@ ActiveRecord::Schema.define(:version => 20150313221028) do
 
   add_index "last_seen_activities", ["user_id"], :name => "last_seen_activities_user_id_fk"
 
+  create_table "my_structureables", :force => true do |t|
+    t.string "name"
+  end
+
   create_table "nav_nodes", :force => true do |t|
     t.string   "url_component"
     t.string   "breadcrumb_item"
