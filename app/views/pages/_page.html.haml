@@ -22,6 +22,7 @@
     .show_only_in_edit_mode
       = render partial: 'shared/markdown_help'
 
-= render(partial: 'pages/pictures', locals: {page: page}) 
-= render(partial: 'pages/videos', locals: {page: page}) 
-= render(partial: 'pages/attachments', locals: {page: page})
+#attachments
+  = render(partial: 'pages/pictures', locals: {page: page}) 
+  = render(partial: 'pages/videos', locals: {page: page}) 
+  = render(partial: 'pages/attachments', locals: {page: page})

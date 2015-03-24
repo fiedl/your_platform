@@ -1,0 +1,17 @@
+-# locals:
+-#  - attachments
+-#  - parent
+
+- attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
+
+%h1.attachments.documents= t :documents
+%div
+  %table.attachments.documents
+    - attachments.each do |attachment|
+      = render attachment
+
+  - if @blog_entries.present? and parent.kind_of?(Page) and can?(:create_attachment_for, parent)
+    %p.show_only_in_edit_mode
+      Um eine Datei hochzuladen, bitte zur Seite
+      = link_to parent.title, parent
+      wechseln.

@@ -1,0 +1,46 @@
+- # This is an attachment drop field.
+- # Locals:
+- #   - parent        Object the attachments are added to, e.g. a Page or an Event.
+- #   - type          The kind of attachment that is allowed here, e.g.
+- #                   :image, :attachment.
+- #                   Default: :attachment (which is all attachments).
+
+- type ||= :attachment
+
+.box.panel.panel-default.upload_attachment{class: can?(:create_attachment_for, parent) ? '' : 'hidden' }
+  .attachment_drop_field
+    %p.drop_attachments_here
+      - if type == :image
+        Bilder hierher schieben!
+      - else
+        Dokumente oder Bilder hierher schieben!
+    %p.uploading.hidden
+      - if type == :image
+        Bilder werden hochgeladen.
+      - else
+        Dateien werden hochgeladen.
+      %br
+      %small Bitte warten, bis dieses Feld wieder grün wird.
+      %br
+      %small.upload_counter
+    %p.success.hidden
+      - if type == :image
+        Bilder sind hochgeladen!
+      - else
+        Dateien sind hochgeladen!
+      %br
+      %small 
+        - if type == :image
+          Die Bilder werden gleich als Gallerie angezeigt. Danke für's Hochladen!
+        - else
+          - #Nach einem Neuladen (<kbd>Strg + R</kbd> bzw. <kbd>⌘ + R</kbd>) 
+          Gleich werden die Dateien angezeigt. Danke für's Hochladen!
+          
+    = form_for parent.attachments.build do |f|
+      = f.hidden_field :parent_id
+      = f.hidden_field :parent_type
+    
+      - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
+      - # f.file_field :file, multiple: true, name: "attachment[file]"
+      = f.file_field :file, name: "attachment[file]"
+  

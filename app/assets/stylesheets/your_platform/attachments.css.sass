@@ -1,6 +1,31 @@
+.attachment_drop_field
+  text-align: center
+  padding: 20px
+  font-size: 150%
+  border: solid 10px #31708f
+  border-radius: 4px
+  color: #31708f
+  background: #d9edf7
+  
+.attachment_drop_field.over
+  background-color: #dff0d8
+  border-color: #d6e9c6
+  color: #3c763d
+
+.attachment_drop_field.uploading
+  background-color: #fcf8e3
+  border-color: #faebcc
+  color: #8a6d3b
+
+.attachment_drop_field.success
+  background-color: #dff0d8
+  border-color: #3c763d 
+  color: #3c763d
+
 div.attachments
   table.attachments
     border-spacing: 18px !important
+    border-collapse: separate
     margin-left: 20px
     width: auto !important
   span.attachment-description
@@ -12,6 +37,8 @@ div.attachments
       margin-bottom: 2px
     p.attachment.title
       font-weight: bold
+  input
+    min-width: 300px
 div.videos
   vertical-align: top
   span.video-element
@@ -38,41 +65,6 @@ div.videos
   width: 400px
   padding-top: 10px
   margin-top: 10px
-  .progress
-    margin-top: 8px
-    border: solid 1px #555
-    border-radius: 3px
-    -moz-border-radius: 3px
-    .bar
-      height: 10px
-      background: #3EC144
-
-.attachment_drop_field
-  background-color: rgba(222, 237, 255, 0.5)
-  border-style: solid
-  border-color: #4a6b82
-  border-width: 1px
-  padding: 5px
-
-.attachment_global_drop_zone
-  z-index: 5000
-  position: absolute
-  left: 10px
-  right: 10px
-  bottom: 10px
-  top: 10px
-  background-color: rgba(222, 237, 255, 0.8)
-  border-style: solid
-  border-color: #4a6b82
-  border-width: 1px
-  text-align: center
-  vertical-align: middle
-  padding-top: 27%
-  font-size: 35pt
-  display: none
-  font-weight: bold
-  font-family: Helvetica
-  line-height: 120%
 
 .picture-attachment
   .remove_button.btn-small

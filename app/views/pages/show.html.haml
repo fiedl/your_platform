@@ -21,17 +21,6 @@
   = render partial: 'officers/officers_box', locals: {structureable: @page}
 
 %div.col3
-  - # Use the drop zone only if there are no blog entries.
-  - # Otherwise, the system won't know where to put the attachment.
-  - #
-  - if @blog_entries.count == 0
-    %div.attachment_global_drop_zone
-      %div.center.large
-        = icon 'file'
-        = icon 'picture'
-        = icon 'facetime-video'
-      = t :drop_files_here
-
 
   - if can?(:create_page_for, @page)
     - # No nested blog posts!

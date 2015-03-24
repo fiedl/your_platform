@@ -1,4 +1,4 @@
-ready = ->
+$(document).ready ->
   
   upload_counter = 0
   upload_done_counter = 0
@@ -9,54 +9,42 @@ ready = ->
     add: (e, data) ->
       upload_counter += 1
       file = data.files[0]
-      if $('table.attachments').size() > 0
-        data.context = $($.parseHTML(tmpl("template-upload", file)))
-        # see https://github.com/blueimp/JavaScript-Templates/issues/19
-        #$('table.attachments').append(data.context)
-        $('table.attachments').first().prepend(data.context)
-        data.context.find('.processing').hide()
       data.submit()
     progress: (e, data) ->
-      show_image_upload_uploading()
-      if data.context
-        progress = parseInt(data.loaded / data.total * 100, 10)
-        data.context.find('.bar').css('width', progress + '%')
-        if progress > 99
-          data.context.find('.processing').show()
-          data.context.find('.bar').hide()
+      show_uploading()
     done: (e, data) ->
       upload_done_counter += 1
       if upload_done_counter >= upload_counter
-        show_image_upload_success()
-      data.context.remove()
+        show_success()
 
-  $('.image_attachment_drop_field').on 'dragover', ->
+  $('.attachment_drop_field').on 'dragover', ->
     $(this).addClass('over')
     $(this).removeClass('success')
     $('p.success').hide()
-    $('p.drop_images_here').show()
-  $('.image_attachment_drop_field').on 'dragleave', ->
+    $('p.drop_attachments_here').show()
+  $('.attachment_drop_field').on 'dragleave', ->
     $(this).removeClass('over')
-  $('.image_attachment_drop_field').on 'drop', ->
+  $('.attachment_drop_field').on 'drop', ->
     $(this).removeClass('over')
-    show_image_upload_uploading()
+    show_uploading()
 
-  show_image_upload_uploading = ->
-    $('.image_attachment_drop_field').addClass('uploading')
-    $('.image_attachment_drop_field').removeClass('success')
-    $('p.drop_images_here').hide()
+  show_uploading = ->
+    $('.attachment_drop_field').addClass('uploading')
+    $('.attachment_drop_field').removeClass('success')
+    $('p.drop_attachments_here').hide()
     $('p.success').hide()
     $('p.uploading').removeClass('hidden').show()
-    $('.image_attachment_drop_field').find('form').hide()
+    $('.attachment_drop_field').find('form').hide()
     $('.upload_counter').html("" + upload_done_counter + " / " + upload_counter)
     
-  show_image_upload_success = ->
-    if $('.image_attachment_drop_field').size() > 0
-      $('.image_attachment_drop_field')
+  show_success = ->
+    if $('.attachment_drop_field').size() > 0
+      $('.attachment_drop_field')
         .removeClass('uploading')
         .addClass('success')
       $('p.uploading').hide()
       $('p.success').removeClass('hidden').show()
+      Turbolinks.visit location.toString(), change: 'attachments'
       
   
   $(document).on 'click', '.pictures .remove_button', ->
@@ -64,14 +52,10 @@ ready = ->
     pictures_box.find('.galleria-image.active').hide('explode')
     pictures_box.find('.picture-info').hide('explode')
 
-  $(document).bind('dragover', (e) ->
-    $('.attachment_global_drop_zone').fadeIn()
-  )
-  $('.attachment_global_drop_zone').bind('drop dragleave', (e) ->
-    $('.attachment_global_drop_zone').fadeOut()
-  )
-  $(document).bind('mouseout', (e) ->
-    $('.attachment_global_drop_zone').fadeOut()
-  )
-
-$(document).ready(ready)
+# When turbolinks is starting to fetch a page, remove the 
+# attachment form in order to avoid double binding of the
+# jquery-file-upload mechanism.
+#
+$(document).on "page:fetch", ->
+  $('#new_attachment').remove()
+  

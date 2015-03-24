@@ -14,12 +14,8 @@
 - #          the attachment.)
 - #
 
-- if (attachments.count > 0) or (can?(:create_attachment_for, page) and not @blog_entries.present?)
-  %h1.attachments= t :attachments
-  %div.attachments
-    %table.attachments
-      - for attachment in attachments
-        = render attachment
-    - if can? :create_attachment_for, page
-      %span.add_attachment
-        = render partial: 'pages/add_attachment', locals: {page: page}
+- if attachments.count > 0
+  = render partial: 'attachments/documents', locals: {attachments: attachments, parent: page}
+
+- if not @blog_entries.present? and can?(:create_attachment_for, page)
+  = render partial: 'attachments/drop_field', locals: {parent: page}

@@ -5,10 +5,8 @@
     %span.attachment-description
       %p.attachment.title
 
-        - if can? :update, attachment
-          = link_to best_in_place( attachment, :title, activator: 'only_manual' ), attachment.file.url
-        - else
-          = link_to attachment.title, attachment.file.url
+        -# default_title = attachment.file.filetitle.humanize
+        = link_to best_in_place_if(can?(:update, attachment), attachment, :title, activator: 'only_manual'), attachment.file.url
 
         - if can? :destroy, attachment
           = remove_button attachment

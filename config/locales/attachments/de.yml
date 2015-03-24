@@ -8,6 +8,7 @@ de:
   drop_attachments_here: 'Um Anhänge hinzuzufügen, können Sie entweder auf den Knopf "Dateien auswählen" unterhalb drücken oder die Dateien einfach von außen in diesen Kasten ziehen.'
   drop_files_here: 'Dateien hierhin schieben, um sie hochzuladen.'
 
+  documents: Dokumente
   pictures: 'Bilder'
   videos: 'Video-Dateien'
   audios: 'Audio-Dateien'
