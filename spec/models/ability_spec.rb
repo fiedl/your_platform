@@ -89,5 +89,12 @@ describe Ability do
       end
     end
   end
-  
+
+  he "should be able to access the imprint page" do
+    @page = create :page, title: "Imprint"
+    @page.add_flag :imprint
+
+    the_user.should be_able_to :read, @page
+  end
+
 end

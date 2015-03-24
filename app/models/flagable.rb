@@ -13,6 +13,8 @@ module Flagable
       find_all_by_flag( flag ).limit( 1 ).readonly( false ).first
     end
 
+    scope :flagged, lambda { |flag| includes(:flags).where(:flags => {:key => flag}) }
+
   end
 
   module FlagableInstanceMethods
