@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
-  s.add_dependency "rails", "~> 3.2.21"
+  s.add_dependency "rails", ">= 3.2.21"
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
@@ -50,7 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq'
 
   # Authentification
-  s.add_dependency 'devise', '~> 2.2.5'                           # MIT License
+  s.add_dependency 'devise', '>= 2.2.5'                           # MIT License
   s.add_dependency 'passgen'
 
   # Authorization
@@ -60,7 +60,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
 
   # Settings
-  s.add_dependency 'rails-settings-cached', '0.2.4'
+  s.add_dependency 'rails-settings-cached'
 
   # Template Engines
   # haml template language, http://haml.info
@@ -73,7 +73,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails', '>= 3.2'
 
   # In Place Editing
-  s.add_dependency 'best_in_place', '~> 2.1.0'                                         # MIT License
+  s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
   s.add_dependency 'delocalize'
   
   # Geo Coding

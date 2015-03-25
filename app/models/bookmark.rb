@@ -6,7 +6,7 @@
 # Such bookmarkable objects may be other users, or pages, groups, et cetera.
 #
 class Bookmark < ActiveRecord::Base
-  attr_accessible :bookmarkable_id, :bookmarkable_type, :user_id, :user, :bookmarkable
+  attr_accessible :bookmarkable_id, :bookmarkable_type, :user_id, :user, :bookmarkable if defined? attr_accessible
 
   belongs_to :bookmarkable, polymorphic: true
   belongs_to :user

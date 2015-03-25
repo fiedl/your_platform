@@ -1,5 +1,5 @@
 class LastSeenActivity < ActiveRecord::Base
-  attr_accessible :description, :link_to_object_id, :link_to_object_type, :user_id
+  attr_accessible :description, :link_to_object_id, :link_to_object_type, :user_id if defined? attr_accessible
   
   belongs_to :user
   belongs_to :link_to_object, polymorphic: true

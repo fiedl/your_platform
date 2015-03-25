@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  attr_accessible :author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text
+  attr_accessible :author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text if defined? attr_accessible
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 

@@ -5,7 +5,7 @@ module ProfileFieldTypes
   class Address < ProfileField
     def self.model_name; ProfileField.model_name; end
 
-    attr_accessible :postal_address
+    attr_accessible :postal_address if defined? attr_accessible
 
     # Google Maps integration
     # see: http://rubydoc.info/gems/gmaps4rails/

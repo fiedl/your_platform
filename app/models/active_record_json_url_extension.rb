@@ -29,7 +29,7 @@ module ActiveRecordJsonUrlExtension
   #
   class UrlHelper
 
-    include Rails.application.routes.url_helpers
+    include Rails.application.routes.url_helpers if Rails.version.starts_with?("3")
     include ActionDispatch::Routing::UrlFor
 
     def initialize( obj )

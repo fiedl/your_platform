@@ -1,5 +1,5 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author
+  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author if defined? attr_accessible
 
   belongs_to :parent, polymorphic: true
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'

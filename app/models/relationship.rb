@@ -10,7 +10,7 @@
 #
 class Relationship < ActiveRecord::Base
 
-  attr_accessible :user1, :user2, :name, :who, :is, :of, :who_by_title, :of_by_title
+  attr_accessible :user1, :user2, :name, :who, :is, :of, :who_by_title, :of_by_title if defined? attr_accessible
 
   belongs_to :user1, class_name: "User", inverse_of: :relationships_as_first_user
   belongs_to :user2, class_name: "User", inverse_of: :relationships_as_second_user

@@ -10,7 +10,7 @@ module UserAvatar
   
   included do
     attachment :avatar, type: :image
-    attr_accessible :avatar, :remove_avatar
+    attr_accessible :avatar, :remove_avatar if defined? attr_accessible
   end
 
 end

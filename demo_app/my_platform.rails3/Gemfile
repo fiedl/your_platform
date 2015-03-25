@@ -101,8 +101,8 @@ gem 'prawn', github: 'prawnpdf/prawn'
 # repository. Therefore the following switch:
 #
 case File.basename File.dirname __FILE__
-when "my_platform"
-  gem 'your_platform', path: '../..'
 when "your_platform"
   gem 'your_platform', path: '.'
+else
+  gem 'your_platform', path: '../..'
 end

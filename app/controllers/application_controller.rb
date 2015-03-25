@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   layout "bootstrap"
 
+  
   # TODO: Change before_filter to before_action  (http://stackoverflow.com/questions/16519828)
   #
   before_filter :redirect_www_subdomain, :set_locale
@@ -17,6 +18,7 @@ class ApplicationController < ActionController::Base
   
   # https://github.com/ryanb/cancan
   # 
+  before_action :configure_permitted_devise_parameters, if: :devise_controller?
   check_authorization(:unless => :devise_controller?)
   rescue_from CanCan::AccessDenied do |exception|
     session['return_to_after_login'] = request.fullpath 
@@ -156,7 +158,7 @@ class ApplicationController < ActionController::Base
   # If the current_user can? :read the :mini_profiler, is defined in the Ability class.
   #
   def authorize_miniprofiler
-    Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
+    #Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
   end
   
   
@@ -231,6 +233,12 @@ class ApplicationController < ActionController::Base
   
   def after_sign_in_path_for(resource)
     session['return_to_after_login'] || root_path
+  end
+  
+  protected
+  
+  def configure_permitted_devise_parameters
+    devise_parameter_sanitizer.for(:sign_in) { |u| u.permit(:login, :password) }
   end
 
 end

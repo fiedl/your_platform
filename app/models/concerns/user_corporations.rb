@@ -12,7 +12,7 @@ module UserCorporations
   extend ActiveSupport::Concern
   
   included do
-    attr_accessible :corporation_name
+    attr_accessible :corporation_name if defined? attr_accessible
   end
     
   def corporation_id

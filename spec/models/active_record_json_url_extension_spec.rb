@@ -15,7 +15,7 @@ describe ActiveRecordJsonUrlExtension do
     @user = create( :user )
   end
 
-  include Rails.application.routes.url_helpers
+  include Rails.application.routes.url_helpers if Rails.version.starts_with?("3")
   include ActionDispatch::Routing::UrlFor
 
   def url_options
