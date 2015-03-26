@@ -1,15 +1,23 @@
 module ToolButtonsHelper
   
-  def remove_button( object )
+  # options:
+  #   - show_only_in_edit_mode, default: true
+  #   - confirm, confirm message, e.g. "are you sure?", default: nil
+  # 
+  def remove_button(object, options = {})
+    options[:show_only_in_edit_mode] = true if options[:show_only_in_edit_mode].nil?
+    
+    show_only_in_edit_mode_class = options[:show_only_in_edit_mode] ? "show_only_in_edit_mode" : ""
     title = t(:remove)
     title += ": " + object.title if object.respond_to?(:title) && object.title.present?
     link_to( tool_icon( "trash white" ),
              object,
              method: 'delete',
-             :class => 'remove_button tool show_only_in_edit_mode btn btn-danger btn-sm',
+             :class => "remove_button tool #{show_only_in_edit_mode_class} btn btn-danger btn-sm",
              :title => title,
              :remote => true,
-             'aria-label' => I18n.t(:remove)
+             'aria-label' => I18n.t(:remove),
+             :confirm => options[:confirm]
            )
   end
 

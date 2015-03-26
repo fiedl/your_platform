@@ -17,6 +17,7 @@
       %th Mitglied seit
       %th Mitglied bis
       %th Direkte Mitgliedschaft
+      %th Löschen
   %tbody
     - memberships.each do |membership|
       %tr{class: ((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid")}
@@ -50,4 +51,6 @@
           - else
             = localize(membership.read_attribute(:valid_to).to_date) if membership.read_attribute(:valid_to)
         %td= membership.direct? ? "<strong>direkt</strong>".html_safe : "count: #{membership.count}"
-        
+        %td
+          - if membership.destroyable? and can?(:destroy, membership)
+            = remove_button membership, show_only_in_edit_mode: false, confirm: "Dies löscht den Eintrag unwiderbringlich! Dies soll nicht dazu verwendet werden, um eine Mitgliedschaft zu beenden, sondern NUR, WENN es sich um einen FEHLERHAFTEN EINTRAG handelt. Soll der Eintrag wirklich gelöscht werden?"

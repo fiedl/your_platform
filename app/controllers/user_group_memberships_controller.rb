@@ -41,7 +41,7 @@ class UserGroupMembershipsController < ApplicationController
   def destroy
     if @user_group_membership
       @user_group_membership.destroy
-      redirect_to :back
+      head :no_content
     end
   end
 
