@@ -63,9 +63,6 @@ ready = ->
     $(document).on 'mouseleave', '.picture-title', ->
       $(this).find('.remove_button').hide()
       
-    
-    #Galleria.loadTheme $('.galleria').data('theme-js-path')
-    Galleria.loadTheme '/js/vendor/galleria-classic.js'
     Galleria.run '.galleria', {
       responsive: true,
       #height: 0.625, # 16:10
