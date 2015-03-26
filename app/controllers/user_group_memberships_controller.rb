@@ -49,7 +49,7 @@ class UserGroupMembershipsController < ApplicationController
 
   def membership_params
     unrestricted_params = [:valid_to, :valid_from, :user_title, :user_id, :group_id, :id,
-                    :valid_from_localized_date]
+                    :valid_from_localized_date, :valid_to_localized_date]
     unfiltered_params = params.require(:user_group_membership) || params.require(:status_group_membership)
     if can? :manage, @user_group_membership
       restricted_params = unrestricted_params + [:needs_review, :ancestor_id, :ancestor_type, :descendant_id,
