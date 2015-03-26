@@ -1,0 +1,27 @@
+- set_title("Gruppen-Mitgliedschaften - #{@user.title}")
+
+%h1.memberships= "Gruppen-Mitgliedschaften von #{@user.title}"
+%div
+  %table.datatable.memberships
+    %thead
+      %tr
+        %th Id
+        %th Gruppe
+        %th Pfad
+        %th Mitglied seit
+        %th Mitglied bis
+        %th Direkte Mitgliedschaft
+    %tbody
+      - @memberships.each do |membership|
+        %tr
+          %td.copy-to-clipboard{title: "UserGroupMembership.now_and_in_the_past.find(#{membership.id})"}= membership.id
+          %td= link_to membership.group.name, membership.group
+          %td
+            - #link_to membership.group.corporation.name, membership.group.corporation if membership.group.corporation
+            %ul
+              - membership.group.nav_node.ancestor_navables.each do |ancestor|
+                %li= link_to ancestor.title, ancestor
+          %td= localize(membership.valid_from.to_date) if membership.valid_from
+          %td= localize(membership.valid_to.to_date) if membership.valid_to
+          %td= membership.direct? ? "direkt" : ""
+        

@@ -103,3 +103,10 @@ $(document).ready ->
     "pageLength": 100,
     "order": [[0, "asc"]]
   }, common_configuration))
+  $('.datatable.memberships').dataTable(jQuery.extend({
+    "pageLength": 100,
+    columnDefs: [
+      { type: 'de_date', targets: 3 },
+      { type: 'de_date', targets: 4 }
+    ]
+  }, common_configuration))

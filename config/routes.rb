@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     get :events, to: 'events#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
+    get :memberships, to: 'user_group_memberships#index'
   end
   get :settings, to: 'user_settings#index'
 

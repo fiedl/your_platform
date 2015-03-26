@@ -3,7 +3,15 @@ class UserGroupMembershipsController < ApplicationController
   before_filter :find_membership
   authorize_resource
 
-  respond_to :json
+  respond_to :json, :html
+  
+  def index
+    authorize! :manage, @user
+    
+    @user = User.find(params[:user_id])
+    @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_user(@user)
+    @navable = @user
+  end
   
   def create
     if membership_params[:user_title].present?
