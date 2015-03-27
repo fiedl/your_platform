@@ -1,10 +1,15 @@
-ready = ->
+# This variable will refer to the galleria instance.
+# It is used to destroy the instance with turbolinks.
+# 
+galleriaInstance = {}
+
+$(document).ready ->
   
   if $('.galleria').length
-
     
-
-    Galleria.configure({
+    # Basic galleria configuration.
+    #
+    Galleria.configure {
       #imageCrop: true,
       transition: 'slide',
       initialTransition: 'fade',
@@ -16,18 +21,34 @@ ready = ->
       trueFullscreen: false,
       #carousel: false,
       swipe: true,
-    })
+      responsive: true,
+      #height: 0.625, # 16:10
+      debug: false
+      ## height: $(this).find('img').attr('height')
+    }
     
-    Galleria.ready( ->
-      gallery = this
-      
+    # Initialize galleria. One has to load a theme here, 
+    # even if the theme files have already been loaded through
+    # the asset pipeline.
+    #
+    Galleria.loadTheme $('.galleria').data('theme-js-path')
+    Galleria.run '.galleria'
+    
+    Galleria.ready ->
+      galleriaInstance = this
+
+      # Clicking on an gallery image switches to fullscreen mode,
+      # i.e. covers the full browser window.
+      #
       $(document).on 'click', '.galleria-stage img', (e)->
-        gallery.toggleFullscreen()
+        galleriaInstance.toggleFullscreen()
         e.stopPropagation()
         e.preventDefault()
         false
-        
-      
+       
+      # When loading a gallery image, also update the description
+      # shown below the image.
+      # 
       this.bind 'loadfinish', (e)->
         if typeof(e.galleriaData) != 'undefined'
           # Transform the image path into the description json url.
@@ -56,21 +77,22 @@ ready = ->
         if $(this).find('.galleria-image').size() < 2
           $(this).hide()
       
-    )
-    
+    # The button to remove an image is only to be shown when 
+    # hovering the image description.
+    # 
     $(document).on 'mouseenter', '.picture-title', ->
       $(this).find('.remove_button').show()
     $(document).on 'mouseleave', '.picture-title', ->
       $(this).find('.remove_button').hide()
       
-    Galleria.run '.galleria', {
-      responsive: true,
-      #height: 0.625, # 16:10
-      debug: false
-      ## height: $(this).find('img').attr('height')
-    }
-    
+  # Do not show galleria errors. These are not useful
+  # in production.
+  #  
   $('.galleria-errors').hide()
   
-$(document).ready(ready)
-
+# When turbolinks is starting to fetch a page, remove all
+# galleria objects to avoid binding issues.
+#
+$(document).on "page:fetch", ->
+  $('.galleria').remove()
+  galleriaInstance.destroy()
