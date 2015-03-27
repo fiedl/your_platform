@@ -1,7 +1,7 @@
-# This variable will refer to the galleria instance.
-# It is used to destroy the instance with turbolinks.
+# This array will contain the galleria instances.
+# It is used to destroy the instances with turbolinks.
 # 
-galleriaInstance = {}
+galleriaInstances = []
 
 $(document).ready ->
   
@@ -31,20 +31,31 @@ $(document).ready ->
     # even if the theme files have already been loaded through
     # the asset pipeline.
     #
+    # Each instance of .galleria in the dom will generate
+    # one instance of the Galleria object in javascript.
+    # For each such instance, Galleria.ready is being called
+    # below.
+    #
     Galleria.loadTheme $('.galleria').data('theme-js-path')
     Galleria.run '.galleria'
     
     Galleria.ready ->
-      galleriaInstance = this
+      newGalleriaInstance = this
+      galleriaInstances.push(newGalleriaInstance)
 
       # Clicking on an gallery image switches to fullscreen mode,
       # i.e. covers the full browser window.
       #
-      $(document).on 'click', '.galleria-stage img', (e)->
-        galleriaInstance.toggleFullscreen()
+      $(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', (e)->
+        currentGalleriaInstance = $(this).closest('.galleria').data('galleria')
+        if typeof(currentGalleriaInstance) != 'undefined'
+          currentGalleriaInstance.enterFullscreen()
         e.stopPropagation()
         e.preventDefault()
         false
+      $(document).on 'click', '.galleria-container.fullscreen .galleria-stage img', (e)->
+        galleriaInstances.forEach (galleriaInstance)->
+          galleriaInstance.exitFullscreen()
        
       # When loading a gallery image, also update the description
       # shown below the image.
@@ -76,6 +87,8 @@ $(document).ready ->
       $('.galleria-thumbnails').each ->
         if $(this).find('.galleria-image').size() < 2
           $(this).hide()
+        else
+          $(this).show()            
       
     # The button to remove an image is only to be shown when 
     # hovering the image description.
@@ -95,4 +108,5 @@ $(document).ready ->
 #
 $(document).on "page:fetch", ->
   $('.galleria').remove()
-  galleriaInstance.destroy()
+  galleriaInstances.forEach (galleriaInstance)->
+    galleriaInstance.destroy()
