@@ -291,7 +291,7 @@ class User < ActiveRecord::Base
     unless readonly?
       if description and not self.incognito?
         activity = find_or_build_last_seen_activity
-        activity.touch # even if the attributes didn't change. The user probably hit 'reload' then.
+        activity.touch unless activity.new_record? # even if the attributes didn't change. The user probably hit 'reload' then.
         activity.description = description
         activity.link_to_object = object
         activity.save
