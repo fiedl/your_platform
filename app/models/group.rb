@@ -72,7 +72,7 @@ class Group < ActiveRecord::Base
       name + (parent_events.first ? ": " + parent_events.first.name : '')
     elsif has_flag? :contact_people
       name + (parent_events.first ? ": " + parent_events.first.name : '')
-    elsif has_flag? :admins_parent
+    elsif has_flag?(:admins_parent) && parent_groups.first.parent_groups.first
       name + ": " + parent_groups.first.parent_groups.first.name
     elsif super.present?
       super

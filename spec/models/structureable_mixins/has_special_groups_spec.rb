@@ -390,7 +390,7 @@ describe StructureableMixins::HasSpecialGroups do
         it { should == @my_structureable.testers }
       end
       context "for an absent special group" do
-        it { should be_kind_of Array }
+        its(:to_a) { should be_kind_of Array }
         it { should_not == nil }
       end
     end

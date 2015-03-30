@@ -1665,7 +1665,7 @@ describe User do
     it { should include @hidden_user }
     it { should_not include @visible_user }
     it "should be chainable" do
-      subject.where(id: @hidden_user.id).should == User.where(id: @hidden_user.id).hidden
+      subject.where(id: @hidden_user.id).to_a.should == User.where(id: @hidden_user.id).hidden.to_a
       subject.count.should > 0
     end
   end
