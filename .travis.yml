@@ -1,5 +1,6 @@
 rvm:
   - "2.1.2"
+  - "2.2.0"
 env: 
   - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3"
 services:
@@ -15,7 +16,7 @@ before_script:
   - cp config/database.travis.yml config/database.yml
   - mkdir -p public/uploads
   - mkdir -p tmp/cache
-  - bundle exec rake db:create db:migrate db:test:prepare
+  - bundle exec rake db:create db:migrate
   - cd ../..
 script:
   - bundle exec rake rspec-rerun:spec
