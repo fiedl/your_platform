@@ -42,10 +42,10 @@ class SearchController < ApplicationController
       
       # eleminiate duplicate results
       #
-      @users.uniq!
-      @pages.uniq!
-      @groups.uniq!
-      @events.uniq!
+      @users = @users.uniq
+      @pages = @pages.uniq
+      @groups = @groups.uniq
+      @events = @events.uniq
 
       # AUTHORIZATION
       #
