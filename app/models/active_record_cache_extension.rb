@@ -116,7 +116,6 @@ module ActiveRecordCacheExtension
   
   def renew_cache
     # p "DEBUG RENEW CACHE #{self}"
-    delete_cache
     delay.fill_cache if defined? fill_cache
   end
   

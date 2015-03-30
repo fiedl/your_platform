@@ -33,7 +33,7 @@ class User < ActiveRecord::Base
 
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
-  after_save                :add_to_group_if_requested
+  after_save                :add_to_group_if_requested, :delete_cache
   after_commit              :renew_cache, prepend: true
   
   # after_commit     					:delete_cache, prepend: true

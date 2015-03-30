@@ -14,6 +14,7 @@ class DagLink < ActiveRecord::Base
   # 
   # See: app/models/active_record_associations_patches.rb
   #
+  after_save             :delete_cache
   after_commit           :renew_cache, prepend: true
   before_destroy         :delete_cache
   
