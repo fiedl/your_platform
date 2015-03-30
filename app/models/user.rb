@@ -395,7 +395,7 @@ class User < ActiveRecord::Base
     cached do
       if first_corporation
         my_memberships = UserGroupMembership.find_all_by_user( self )
-        my_memberships = my_memberships.now.reorder{ |membership| membership.valid_from }
+        my_memberships = my_memberships.now.reorder(:valid_from)
         my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
         my_groups ||= []
         my_groups.select do |group|
