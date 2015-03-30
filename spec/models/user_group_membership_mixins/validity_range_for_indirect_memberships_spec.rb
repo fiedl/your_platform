@@ -36,6 +36,11 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
     @direct_membership_a.update_attribute(:valid_to, @t2)
     @direct_membership_b.update_attribute(:valid_from, @t2)
     @direct_membership_b.update_attribute(:valid_to, @t3)
+    @indirect_membership.delete_cache
+    
+    @direct_membership_a.reload
+    @direct_membership_b.reload
+    @indirect_membership.reload
   end
   
   specify "preliminaries" do
@@ -98,7 +103,7 @@ describe UserGroupMembershipMixins::ValidityRangeForIndirectMemberships do
       @direct_membership_b.update_attribute(:valid_from, @t2)
       @direct_membership_b.update_attribute(:valid_to, @t3)
     end
-    subject { @indirect_membership.recalculate_validity_range_from_direct_memberships; @indirect_membership.reload }
+    subject { @indirect_membership.reload.recalculate_validity_range_from_direct_memberships; @indirect_membership.reload }
     it "should make the indirect validity range match the direct memberships' combined range" do
       subject
       @indirect_membership.valid_from.to_i.should == @t1.to_i
