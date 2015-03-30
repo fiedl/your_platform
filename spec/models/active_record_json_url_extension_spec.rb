@@ -15,7 +15,7 @@ describe ActiveRecordJsonUrlExtension do
     @user = create( :user )
   end
 
-  include Rails.application.routes.url_helpers if Rails.version.starts_with?("3")
+  include Rails.application.routes.url_helpers
   include ActionDispatch::Routing::UrlFor
 
   def url_options
@@ -42,7 +42,7 @@ describe ActiveRecordJsonUrlExtension do
     subject { @user.serializable_hash }
     it { should be_kind_of Hash }
     it "should include the url" do
-      subject[ :url ].should == @user.url
+      subject['url'].should == @user.url
     end
 
     describe "for associated objects" do
@@ -52,16 +52,16 @@ describe ActiveRecordJsonUrlExtension do
       end
       subject { @user.serializable_hash( :include => :parent_groups ) }
       it "should include the urls of the associated objects" do
-        subject[ :parent_groups ][ 0 ][ :url ].should == @group.url
+        subject['parent_groups'][0]['url'].should == @group.url
       end
       
       describe "with other methods being included as well" do
         subject { @user.serializable_hash( :include => { :parent_groups => { :methods => :title } } ) }
         it "should include the other methods" do
-          subject[ :parent_groups ][ 0 ][ :title ].should == @group.title
+          subject['parent_groups'][0]['title'].should == @group.title
         end
         it "should include the url" do
-          subject[ :parent_groups ][ 0 ][ :url ].should == @group.url
+          subject['parent_groups'][0]['url'].should == @group.url
         end
       end
     end
