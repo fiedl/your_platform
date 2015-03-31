@@ -54,7 +54,6 @@ require 'gmaps4rails'
 
 # Form Helpers
 require 'formtastic'
-require 'judge/formtastic'
 
 # File Uploads
 require 'carrierwave'

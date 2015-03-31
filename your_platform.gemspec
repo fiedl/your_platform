@@ -80,11 +80,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'geocoder'                                                          # MIT License
   s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
 
-  # Formtastic Form Helper,
-  # see: https://github.com/justinfrench/formtastic,
-  # http://rubydoc.info/gems/formtastic/frames
-  s.add_dependency 'formtastic'                                                        # MIT License
-  s.add_dependency 'judge-formtastic'
+  # Formtastic Form Helper
+  s.add_dependency 'formtastic'  # MIT License
 
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
