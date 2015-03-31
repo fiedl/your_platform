@@ -18,7 +18,7 @@
         = localize(page.updated_at)
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
-      = best_in_place_if can?(:update, page), page, :content, type: 'textarea', sanitize: false
+      = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false
     .show_only_in_edit_mode
       = render partial: 'shared/markdown_help'
 

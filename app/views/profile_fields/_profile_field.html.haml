@@ -4,8 +4,8 @@
 -#
 - profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
 - profile_field_css_class += " #{profile_field.key}" if profile_field.parent_id
-- input_type = 'input'
-- input_type = 'textarea' if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
+- input_type = :input
+- input_type = :textarea if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
 -# # For the moment, no 'date' type. The date selector does not work properly with edit_mode.
 -# input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
 - no_remove ||= false
@@ -30,7 +30,7 @@
   - # value
   %span.value-wrapper
     - if profile_field.children_count == 0
-      = best_in_place_if can?(:update, profile_field), profile_field, :value, {type: input_type, classes: 'value'}
+      = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, classes: 'value'}
           
     - if profile_field.children_count > 0
       %ul
