@@ -83,7 +83,7 @@ FactoryGirl.define do
     end
     
     factory :local_admin do
-      ignore do
+      transient do
         of nil  # syntax: create(:local_admin, of: @group)
       end
       create_account true

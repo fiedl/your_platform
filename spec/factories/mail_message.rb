@@ -6,7 +6,7 @@ FactoryGirl.define do
   #
   factory :mail_message_to_group, :class => Mail do
   
-    ignore do
+    transient do
       message "Date: Fri, 29 Mar 2013 23:55:00 +0100\n" +
         "From: foo@exampe.org\n" +
         "Subject: Testing Group Email Lists\n" +
@@ -19,7 +19,7 @@ FactoryGirl.define do
 
   factory :html_mail_message, :class => Mail do
     
-    ignore do
+    transient do
       email_file_name = File.join(File.dirname(__FILE__), './html_email.eml')
       message File.open(email_file_name, "r").read
     end

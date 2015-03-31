@@ -26,7 +26,7 @@ FactoryGirl.define do
   #
   factory :promotion_workflow, :class => Workflow do 
     
-    ignore do
+    transient do
       remove_from_group_id 0
       add_to_group_id 0
     end
