@@ -6,9 +6,6 @@ module GroupMixins::Memberships
   
   extend ActiveSupport::Concern
   
-  # TODO: Refactor conditions to rails 4 standard when migrating to rails 4.
-  # See, for example, https://github.com/fiedl/neo4j_ancestry/blob/master/lib/models/neo4j_ancestry/active_record_additions.rb#L117.
-  
   included do
 
     # User Group Memberships
@@ -18,23 +15,26 @@ module GroupMixins::Memberships
     # memberships.
     #
     has_many( :memberships, 
+              -> { where ancestor_type: 'Group', descendant_type: 'User' },
               class_name: 'UserGroupMembership',
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User' } )
+              foreign_key: :ancestor_id )
     
     # This associates all memberships of the group that are direct, i.e. direct 
     # parent_group-child_user memberships.
     #
     has_many( :direct_memberships,
+              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
               class_name: 'UserGroupMembership', 
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User', direct: true } )
+              foreign_key: :ancestor_id )
               
     # This associates all memberships of the group that are indirect, i.e. 
     # ancestor_group-descendant_user memberships, where groups are between the
     # ancestor_group and the descendant_user.
     #
     has_many( :indirect_memberships,
+              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
               class_name: 'UserGroupMembership', 
-              foreign_key: :ancestor_id, conditions: { ancestor_type: 'Group', descendant_type: 'User', direct: false } )
+              foreign_key: :ancestor_id )
      
     
     #  This method builds a new membership having this group (self) as group associated.
@@ -182,25 +182,25 @@ module GroupMixins::Memberships
     # when generating the SQL query. This is why the conditions have to be repeated here.
     #
     has_many(:members, 
+      -> { where('dag_links.ancestor_type' => 'Group').uniq },
       through: :memberships, 
-      source: :descendant, source_type: 'User', :uniq => true,
-      conditions: { 'dag_links.ancestor_type' => 'Group' }
+      source: :descendant, source_type: 'User'
       )
 
     # This associates only the direct group members (users).
     #
     has_many(:direct_members, 
+      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true).uniq },
       through: :direct_memberships, 
-      source: :descendant, source_type: 'User', :uniq => true,
-      conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true }
+      source: :descendant, source_type: 'User'
       )
     
     # This associates only the indirect group members (users).
     #
     has_many(:indirect_members, 
+      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false).uniq },
       through: :indirect_memberships, 
-      source: :descendant, source_type: 'User', :uniq => true,
-      conditions: { 'dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false }
+      source: :descendant, source_type: 'User'
       )
     
   end
