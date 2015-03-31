@@ -39,7 +39,8 @@ class Group < ActiveRecord::Base
   include GroupMixins::Import
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
-  after_save       { self.delay.delete_cache }
+  after_save       :delete_cache
+  after_commit     :renew_cache, prepend: true
 
   def delete_cache
     super

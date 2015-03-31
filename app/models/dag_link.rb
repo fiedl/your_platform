@@ -14,8 +14,9 @@ class DagLink < ActiveRecord::Base
   # 
   # See: app/models/active_record_associations_patches.rb
   #
-  after_save { self.delay.delete_cache }
-  before_destroy :delete_cache
+  after_save             :delete_cache
+  after_commit           :renew_cache, prepend: true
+  before_destroy         :delete_cache
   
   def fill_cache
     valid_from
