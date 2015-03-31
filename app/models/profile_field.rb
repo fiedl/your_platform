@@ -5,6 +5,8 @@ class ProfileField < ActiveRecord::Base
 
   belongs_to             :profileable, polymorphic: true
   
+  after_commit           :delete_cache
+  
   include ProfileFieldMixins::HasChildProfileFields
   
   # Only allow the type column to be an existing class name.
@@ -88,13 +90,6 @@ class ProfileField < ActiveRecord::Base
     end
   end
   
-  # Overwrite save to ensure that the cache is deleted in case of changes.
-  #
-  def save( *args )
-    delete_cache
-    super( *args )
-  end
-
   def delete_cache
     super
     parent.try(:delete_cache)
