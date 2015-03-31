@@ -32,7 +32,7 @@ GIT
 PATH
   remote: .
   specs:
-    your_platform (0.0.2)
+    your_platform (1.0.0)
       acts-as-dag (>= 2.5.7)
       acts_as_tree
       bcrypt (>= 3.0.1)
