@@ -17,18 +17,15 @@
 # https://github.com/bernat/best_in_place/blob/master/lib/best_in_place/display_methods.rb
 #
 
-# TODO Re-Integrate in rails 4 migration.
-# /Users/fiedl/.rbenv/versions/2.1.2/lib/ruby/gems/2.1.0/gems/best_in_place-3.0.3/lib/best_in_place/utils.rb:25:in `model_name_from_record_or_class': undefined method `model_name' for String:Class (NoMethodError)
+# This calls the instance method on the model: ProfileField#display_html
+#
+BestInPlace::DisplayMethods.add_model_method(ProfileField, :value, :display_html)
 
-# # This calls the instance method on the model: ProfileField#display_html
-# #
-# BestInPlace::DisplayMethods.add_model_method('ProfileField', :value, :display_html)
-# 
-# # This calls a helper method `markup(str)`.
-# #
-# BestInPlace::DisplayMethods.add_helper_method('Page', :content, :markup)
-# BestInPlace::DisplayMethods.add_helper_method('Group', :body, :markup)
-# BestInPlace::DisplayMethods.add_helper_method('Event', :description, :markup)
-# 
-# BestInPlace::DisplayMethods.add_helper_method('Group', :direct_members_titles_string, :add_quick_links_to_comma_separated_list)
-# BestInPlace::DisplayMethods.add_helper_method('User', :corporation_name, :add_quick_link)
+# This calls a helper method `markup(str)`.
+#
+BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup)
+BestInPlace::DisplayMethods.add_helper_method(Group, :body, :markup)
+BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)
+
+BestInPlace::DisplayMethods.add_helper_method(Group, :direct_members_titles_string, :add_quick_links_to_comma_separated_list)
+BestInPlace::DisplayMethods.add_helper_method(User, :corporation_name, :add_quick_link)
