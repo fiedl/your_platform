@@ -35,7 +35,7 @@
     %tr.publish_on_local_website
       %th
       %td
-        = best_in_place @event, :publish_on_local_website, classes: "show_always", as: :select, collection: [['false', "Nicht auf lokaler Homepage veröffentlichen"], ['true', "Auf lokaler Homepage veröffentlichen"]]
+        = best_in_place @event, :publish_on_local_website, class: "show_always", as: :select, collection: [['false', "Nicht auf lokaler Homepage veröffentlichen"], ['true', "Auf lokaler Homepage veröffentlichen"]]
         –
         = link_to group_events_public_url(group_id: @event.group) do
           = icon 'list-alt'
@@ -45,7 +45,7 @@
     %tr.publish_on_global_website
       %th
       %td
-        = best_in_place @event, :publish_on_global_website, classes: "show_always", as: :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"], ['true', "Auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"]]
+        = best_in_place @event, :publish_on_global_website, class: "show_always", as: :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"], ['true', "Auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"]]
         –
         = link_to public_events_url do
           = icon 'list-alt'

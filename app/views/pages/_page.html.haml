@@ -3,7 +3,7 @@
     = best_in_place_if can?(:update, page), page, :title
   - else  # Blog Entries:
     = link_to(page) do
-      = best_in_place_if can?(:update, page), page, :title, classes: 'click_does_not_trigger_edit', activator: 'only_manual'
+      = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
 %div.page
   %div.page_header
     - if page.author

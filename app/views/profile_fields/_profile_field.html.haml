@@ -25,12 +25,12 @@
     - if profile_field.parent || lock_label || cannot?(:update, profile_field)
       %span.label.profile_field_label= profile_field.label
     - else
-      = best_in_place profile_field, :label, classes: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
+      = best_in_place profile_field, :label, class: 'profile_field_label label', html_attrs: { placeholder: I18n.t(profile_field.underscored_type) }
 
   - # value
   %span.value-wrapper
     - if profile_field.children_count == 0
-      = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, classes: 'value'}
+      = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value'}
           
     - if profile_field.children_count > 0
       %ul

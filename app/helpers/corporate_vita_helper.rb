@@ -13,7 +13,7 @@ module CorporateVitaHelper
                                                      action: :update,
                                                      format: :json
                                                      ),
-                   :classes => "status_group_date_of_joining"
+                   :class => "status_group_date_of_joining"
                    )
   end
   
@@ -22,7 +22,7 @@ module CorporateVitaHelper
     best_in_place( membership,
                    :event_by_name,
                    path: status_group_membership_path( membership ),
-                   classes: 'status_event_by_name',
+                   class: 'status_event_by_name',
                    # display_with does more harm than it's good for. We wait for angular!
 #                   display_with: lambda do |v|
 #                     link_to membership.event.name, membership.event, :class => 'status_event_label'
