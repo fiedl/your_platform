@@ -1,5 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
+require 'colored'
+
 # Pick the frameworks you want:
 require "active_model/railtie"
 require "active_record/railtie"
@@ -13,12 +15,23 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-require 'yaml'
-secrets_file = File.expand_path('../secrets.yml', __FILE__)
-if File.exists?(secrets_file)
-  ::SECRETS = YAML.load(File.read(secrets_file)) 
-else
-  ::SECRETS = {}
+# Raise an error if the config/secrets.yml file does not exist.
+# In production, this file is provided by our ops scripts.
+# In development, the developer may copy the file
+# config/secrets.example.yml.
+if not File.exist?(File.expand_path('../secrets.yml', __FILE__))
+  print "Please create the file config/secrets.yml.\n\n".blue
+  print "If you are in development, copy the config/secrets.example.yml\n".bold
+  print "to config/secrets.yml and set a secret_key_base there.\n\n".bold
+  print "Suggestions:\n"
+  print "  cp config/secrets.example.yml config/secrets.yml\n".green
+  print "  pwgen 100".green
+  print "  # to generate the secret_key_base. Put it into the config/secrets.yml.\n\n"
+  print "More Info:\n"
+  print "  * http://guides.rubyonrails.org/upgrading_ruby_on_rails.html#action-pack\n"
+  print "  * http://guides.rubyonrails.org/4_1_release_notes.html#config-secrets-yml\n"
+  print "  * https://trello.com/c/Dlio0wG9/281-rails-4\n\n"
+  raise 'The file config/secrets.yml does not exist.'
 end
 
 # Determine a possible staging environment.
