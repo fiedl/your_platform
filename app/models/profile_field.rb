@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
 
-  attr_accessible        :label, :type, :value, :key, :profileable_id, :profileable_type
+  attr_accessible        :label, :type, :value, :key, :profileable_id, :profileable_type if defined? attr_accessible
 
   belongs_to             :profileable, polymorphic: true
+  
+  after_commit           :delete_cache
   
   include ProfileFieldMixins::HasChildProfileFields
   
@@ -88,13 +90,6 @@ class ProfileField < ActiveRecord::Base
     end
   end
   
-  # Overwrite save to ensure that the cache is deleted in case of changes.
-  #
-  def save( *args )
-    delete_cache
-    super( *args )
-  end
-
   def delete_cache
     super
     parent.try(:delete_cache)

@@ -3,7 +3,13 @@ class AddDeviseToUserAccounts < ActiveRecord::Migration
     change_table(:user_accounts) do |t|
       ## Database authenticatable
       #t.string :email,              :null => false, :default => ""
-      t.string :encrypted_password, :null => false, :default => ""
+      if Rails.version.starts_with?("3")
+        t.string :encrypted_password, :null => false, :default => ""
+      else
+        # https://github.com/fiedl/wingolfsplattform/commit/01f7d3182387aaca99564216661bb7b222fee084#diff-e7267e28ca9cf34b8ba67e6b088344caR5
+        # http://stackoverflow.com/a/12990129/2066546
+        t.change :encrypted_password, :string, null: false, default: ""
+      end
 
       ## Recoverable
       t.string   :reset_password_token

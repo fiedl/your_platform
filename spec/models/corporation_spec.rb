@@ -25,7 +25,8 @@ describe Corporation do
     it { should_not include @group }
 
     it "should return an array of Corporation-type objects" do
-      subject.should be_kind_of Array
+      subject.should be_kind_of ActiveRecord::Relation
+      subject.to_a.should be_kind_of Array
       subject.first.should be_kind_of Corporation
     end
     it "should not find the officers_parent group of the corporations_parent" do
@@ -121,7 +122,7 @@ describe Corporation do
     specify "the cache should be updated after a status group is renamed" do
       @corporation.status_groups # This created the cached version.
       @status_group.update_attributes name: 'New Status Name'
-      subject.map(&:name).should include 'New Status Name'
+      subject.reload.map(&:name).should include 'New Status Name'
     end
   end
 

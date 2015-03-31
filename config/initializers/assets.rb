@@ -1,0 +1,1 @@
+Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_layout.css galleria-classic.css )

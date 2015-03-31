@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 class User < ActiveRecord::Base
 
-  attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
-                            :add_to_corporation, :date_of_birth, :localized_date_of_birth,
-                            :aktivmeldungsdatum, :study_address, :home_address, :work_address, :phone, :mobile
+  if defined? attr_accessible
+    attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
+                              :add_to_corporation, :date_of_birth, :localized_date_of_birth,
+                              :aktivmeldungsdatum, :study_address, :home_address, :work_address, :phone, :mobile
+  end
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :first_name, :last_name
-  validates_format_of       :first_name, with: /^[^\,]*$/  # The name must not contain a comma.
-  validates_format_of       :last_name, with: /^[^\,]*$/
+  validates_format_of       :first_name, with: /\A[^\,]*\z/  # The name must not contain a comma.
+  validates_format_of       :last_name, with: /\A[^\,]*\z/
   
   validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
@@ -289,7 +291,7 @@ class User < ActiveRecord::Base
     unless readonly?
       if description and not self.incognito?
         activity = find_or_build_last_seen_activity
-        activity.touch # even if the attributes didn't change. The user probably hit 'reload' then.
+        activity.touch unless activity.new_record? # even if the attributes didn't change. The user probably hit 'reload' then.
         activity.description = description
         activity.link_to_object = object
         activity.save
@@ -393,7 +395,7 @@ class User < ActiveRecord::Base
     cached do
       if first_corporation
         my_memberships = UserGroupMembership.find_all_by_user( self )
-        my_memberships = my_memberships.now.reorder{ |membership| membership.valid_from }
+        my_memberships = my_memberships.now.reorder(:valid_from)
         my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
         my_groups ||= []
         my_groups.select do |group|

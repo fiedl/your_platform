@@ -43,7 +43,7 @@ describe Event do
       subject.should == @event.parent_groups
     end
     it "should return an array of the associated groups" do
-      subject.should be_kind_of Array
+      subject.to_a.should be_kind_of Array
       subject.should include @group
     end
   end
@@ -125,8 +125,8 @@ describe Event do
     describe "chained with .find_all_by_group" do
       subject { Event.find_all_by_group( @group ).upcoming }
       it "should commute with find_all_by_group" do
-        Event.find_all_by_group( @group ).upcoming.should ==
-          Event.upcoming.find_all_by_group( @group )
+        Event.find_all_by_group(@group).upcoming.to_a.should ==
+          Event.upcoming.find_all_by_group(@group).to_a
       end
       it "should return associated events starting in the future" do
         subject.should include @upcoming_event

@@ -6,7 +6,7 @@ module SublimeHelper
   #
   
   # def sublime_token
-  #   ::SECRETS["sublime_token"] || ""
+  #   Rails.application.secrets.sublime_token || ""
   # end
   # 
   # def sublime_script_tag

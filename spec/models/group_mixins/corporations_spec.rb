@@ -57,7 +57,7 @@ describe GroupMixins::Corporations do
         subject.should == Group.find_corporation_groups
       end
       it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly? 
-        subject.should be_kind_of Array
+        subject.to_a.should be_kind_of Array
         subject.first.should_not be_kind_of User
         subject.first.should be_kind_of Group
       end

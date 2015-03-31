@@ -10,13 +10,13 @@ module CacheStoreExtension
     return result
   end
   
-  def fetch(key, options = {}, &block)
-    rescue_from_undefined_class_or_module do
-      rescue_from_other_errors(block) do
-        super(key, {force: @ignore_cache}.merge(options), &block)
-      end
-    end
-  end
+  #def fetch(key, options = {}, &block)
+  #  rescue_from_undefined_class_or_module do
+  #    rescue_from_other_errors(block) do
+  #      super(key, {force: @ignore_cache}.merge(options), &block)
+  #    end
+  #  end
+  #end
   
   def delete_regex(regex)
     if @data

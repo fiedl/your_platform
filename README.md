@@ -35,6 +35,16 @@ If you have any troubles, **feel free to contact us on our [gitter channel](http
 
 Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/github/fiedl/your_platform).
 
+## Versioning
+
+* Have a quick look at [rubygem's short explanation of semantic versioning](http://guides.rubygems.org/patterns/#semantic-versioning).
+* The version can be bumped using one of these:
+  
+  ```
+  rake version:bump:major
+  rake version:bump:minor
+  rake version:bump:patch
+  ```
 
 ## Contributing
 
@@ -43,6 +53,7 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create new Pull Request
+
 
 ## Authors and License
 

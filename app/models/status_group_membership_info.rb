@@ -1,7 +1,5 @@
 class StatusGroupMembershipInfo < ActiveRecord::Base
   
-  attr_accessible
-
   belongs_to :membership, touch: true, class_name: "StatusGroupMembership", inverse_of: :status_group_membership_info 
 
   belongs_to :promoted_by_workflow, foreign_key: 'promoted_by_workflow_id', class_name: "Workflow"

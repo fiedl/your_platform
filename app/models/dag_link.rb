@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 class DagLink < ActiveRecord::Base
 
-  attr_accessible :ancestor_id, :ancestor_type, :count, :descendant_id, :descendant_type, :direct
+  attr_accessible :ancestor_id, :ancestor_type, :count, :descendant_id, :descendant_type, :direct if defined? attr_accessible
   acts_as_dag_links polymorphic: true
 
   # We have to workaround a bug in Rails 3 here. But, since Rails 3 is no longer fully supported,

@@ -7,7 +7,7 @@ require 'rubygems'
 
 # Rails and Additions
 require 'rails-i18n'
-require 'strong_parameters'
+require 'strong_parameters' unless defined? ActionController::Parameters
 
 # JavaScript
 require 'jquery-ui-rails'
@@ -54,7 +54,6 @@ require 'gmaps4rails'
 
 # Form Helpers
 require 'formtastic'
-require 'judge/formtastic'
 
 # File Uploads
 require 'carrierwave'

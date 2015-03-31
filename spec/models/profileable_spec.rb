@@ -120,7 +120,7 @@ describe Profileable do
       end
       subject { @profileable.profile_fields }
       it "should be an Array of ProfileFields" do
-        subject.should be_kind_of Array
+        subject.to_a.should be_kind_of Array
         subject.first.should be_kind_of ProfileField
       end
       describe "#to_json" do

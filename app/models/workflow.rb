@@ -1,5 +1,5 @@
 class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
-  attr_accessible    :name
+  attr_accessible    :name if defined? attr_accessible
 
   is_structureable   ancestor_class_names: %w(Group)
 

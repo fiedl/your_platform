@@ -171,7 +171,7 @@ Spork.prefork do
     # in the specs.
     #
     config.include RSpec::Matchers
-    config.include Rails.application.routes.url_helpers
+    config.include Rails.application.routes.url_helpers  if Rails.version.starts_with?("3")
     config.include FactoryGirl::Syntax::Methods
     config.include EmailSpec::Helpers
     config.include EmailSpec::Matchers

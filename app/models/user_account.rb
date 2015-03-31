@@ -33,7 +33,7 @@ class UserAccount < ActiveRecord::Base
   #     Can unlock via email or after a specified time period.
   # 
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable
-  attr_accessible :password, :password_confirmation, :remember_me
+  attr_accessible :login, :password, :password_confirmation, :remember_me if defined? attr_accessible
 
   # Virtual attribute for authenticating by either username, alias or email
   attr_accessor :login

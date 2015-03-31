@@ -57,12 +57,12 @@ describe Bookmark do
   describe "#serializable_hash" do
     it "should include the bookmarkable object's title" do
       @bookmarks.each do |bookmark| # check it for several types of bookmarks
-        bookmark.serializable_hash[ :bookmarkable ][ :title ].should == bookmark.bookmarkable.title
+        bookmark.serializable_hash['bookmarkable']['title'].should == bookmark.bookmarkable.title
       end
     end
     it "should include the bookmarkable object's url" do
       @bookmarks.each do |bookmark|
-        bookmark.serializable_hash[ :bookmarkable ][ :url ].should == bookmark.bookmarkable.url
+        bookmark.serializable_hash['bookmarkable']['url'].should == bookmark.bookmarkable.url
       end
     end
   end

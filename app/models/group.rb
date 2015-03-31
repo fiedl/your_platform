@@ -6,17 +6,19 @@
 # 
 class Group < ActiveRecord::Base
   
-  attr_accessible( :name, # just the name of the group; example: 'Corporation A'
-                    :body, # a description text displayed on the groups pages top
-                    :token, # (optional) a short-name, abbreviation of the group's name, in 
-                            # a global context; example: 'A'
-                    :internal_token, # (optional) an internal abbreviation, i.e. used by the 
-                                     # members of the group; example: 'AC'
-                    :extensive_name, # (optional) a long version of the group's name;
-                                     # example: 'The Corporation of A'
-                    :direct_members_titles_string # Used for inline-editing: The comma-separated
-                                                  # titles of the child users of the group.
-                    )
+  if defined? attr_accessible
+    attr_accessible( :name, # just the name of the group; example: 'Corporation A'
+                      :body, # a description text displayed on the groups pages top
+                      :token, # (optional) a short-name, abbreviation of the group's name, in 
+                              # a global context; example: 'A'
+                      :internal_token, # (optional) an internal abbreviation, i.e. used by the 
+                                       # members of the group; example: 'AC'
+                      :extensive_name, # (optional) a long version of the group's name;
+                                       # example: 'The Corporation of A'
+                      :direct_members_titles_string # Used for inline-editing: The comma-separated
+                                                    # titles of the child users of the group.
+                      )
+  end
   
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
@@ -70,7 +72,7 @@ class Group < ActiveRecord::Base
       name + (parent_events.first ? ": " + parent_events.first.name : '')
     elsif has_flag? :contact_people
       name + (parent_events.first ? ": " + parent_events.first.name : '')
-    elsif has_flag? :admins_parent
+    elsif has_flag?(:admins_parent) && parent_groups.first.parent_groups.first
       name + ": " + parent_groups.first.parent_groups.first.name
     elsif super.present?
       super

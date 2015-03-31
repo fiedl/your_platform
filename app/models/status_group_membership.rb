@@ -18,7 +18,7 @@ class StatusGroupMembership < UserGroupMembership
             :event, :event=,   # alias methods
             to: :find_or_create_status_group_membership_info )
 
-  attr_accessible :event_by_name
+  attr_accessible :event_by_name if defined? attr_accessible
 
   # Alias Methods For Delegated Methods
   # ==========================================================================================
