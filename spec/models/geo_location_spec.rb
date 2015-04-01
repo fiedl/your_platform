@@ -73,7 +73,7 @@ describe GeoLocation do
   # ==========================================================================================
 
   describe ".find_or_create_by_address" do
-    subject { GeoLocation.find_or_create_by_address(@address_string) }
+    subject { GeoLocation.find_or_create_by address: @address_string }
     describe "for an existing record" do
       before { @geo_location = GeoLocation.create( address: @address_string ) }
       it "should find the existing one" do

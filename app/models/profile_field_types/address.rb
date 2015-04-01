@@ -20,7 +20,7 @@ module ProfileFieldTypes
     end
 
     def find_or_create_geo_location
-      @geo_location ||= GeoLocation.find_or_create_by_address(value) if self.value && self.value != "—"
+      @geo_location ||= GeoLocation.find_or_create_by address: value if self.value && self.value != "—"
     end
 
     def display_html

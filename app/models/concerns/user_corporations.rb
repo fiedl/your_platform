@@ -38,7 +38,7 @@ module UserCorporations
   # The user is added as member to this corporation.
   #
   def corporation_name=(new_corporation_name)
-    Corporation.find_or_create_by_name(new_corporation_name).assign_user self
+    Corporation.find_or_create_by(name: new_corporation_name).assign_user self
   end
   
 end

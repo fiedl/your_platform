@@ -33,12 +33,8 @@ module Flagable
       self.add_flags new_flag
     end
 
-    def remove_flags( *flags_to_remove )
-      for flag_to_remove in flags_to_remove
-        self.flags.find_all_by_key( flag_to_remove ).each do |flag|
-          flag.destroy
-        end
-      end
+    def remove_flags(*flags_to_remove)
+      self.flags.where(key: flags_to_remove).destroy_all
     end
 
     def remove_flag( flag_to_remove )
