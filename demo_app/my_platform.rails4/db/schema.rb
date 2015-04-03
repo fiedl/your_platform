@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325105893) do
+ActiveRecord::Schema.define(version: 20150403203339) do
 
   create_table "activities", force: true do |t|
     t.integer  "trackable_id"
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "descendant_type"
     t.boolean  "direct"
     t.integer  "count"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",      limit: 6
+    t.datetime "updated_at",      limit: 6
     t.datetime "valid_to"
     t.datetime "valid_from"
   end
@@ -112,8 +112,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
 
   create_table "groups", force: true do |t|
     t.string   "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     limit: 6
+    t.datetime "updated_at",     limit: 6
     t.string   "token"
     t.string   "extensive_name"
     t.string   "internal_token"
@@ -131,6 +131,10 @@ ActiveRecord::Schema.define(version: 20150325105893) do
   end
 
   add_index "last_seen_activities", ["user_id"], name: "last_seen_activities_user_id_fk", using: :btree
+
+  create_table "my_structureables", force: true do |t|
+    t.string "name"
+  end
 
   create_table "nav_nodes", force: true do |t|
     t.string   "url_component"
@@ -151,8 +155,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
   create_table "pages", force: true do |t|
     t.string   "title"
     t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",     limit: 6
+    t.datetime "updated_at",     limit: 6
     t.string   "redirect_to"
     t.integer  "author_user_id"
     t.string   "type"
@@ -181,8 +185,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "label"
     t.string   "type"
     t.text     "value"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",       limit: 6
+    t.datetime "updated_at",       limit: 6
     t.string   "profileable_type"
     t.integer  "parent_id"
   end
@@ -245,8 +249,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "alias"
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",        limit: 6
+    t.datetime "updated_at",        limit: 6
     t.boolean  "female"
     t.string   "accepted_terms"
     t.datetime "accepted_terms_at"
@@ -286,6 +290,7 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.datetime "updated_at"
   end
 
+  Foreigner.load
   add_foreign_key "attachments", "users", name: "attachments_author_user_id_fk", column: "author_user_id"
 
   add_foreign_key "bookmarks", "users", name: "bookmarks_user_id_fk"

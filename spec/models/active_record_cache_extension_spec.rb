@@ -9,6 +9,20 @@ describe ActiveRecordCacheExtension do
     @user = create(:user)
   end
   
+  describe "#cache_key" do
+    subject { @user.cache_key }
+    it "should be the same before and after a reload from the database" do
+      cache_key_before_reload = @user.cache_key
+      @user.reload
+      subject.should == cache_key_before_reload
+    end
+    it "should allow to retrieve the cached value after reload from database" do
+      Rails.cache.write [@user, :foobar], "Value written before reload"
+      @user.reload
+      Rails.cache.read([@user, :foobar]).should == "Value written before reload"
+    end
+  end
+  
   describe "#cached" do
     subject { @user.cached(:title) }
 
