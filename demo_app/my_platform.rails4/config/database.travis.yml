@@ -6,3 +6,4 @@ test:
   pool: 5
   username: root
   password:
+  sock: /var/run/mysqld/mysql.sock
