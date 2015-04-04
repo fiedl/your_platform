@@ -6,4 +6,3 @@ test:
   pool: 5
   username: root
   password:
-  host: localhost
