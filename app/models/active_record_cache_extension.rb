@@ -110,7 +110,7 @@ module ActiveRecordCacheExtension
   end
   
   def delete_cache
-    # p "DEBUG DELETE CACHE #{self}"
+    # p "DEBUG DELETE CACHE #{self.cache_key}/*"
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
   

@@ -14,6 +14,7 @@ module ActiveRecordAssociationsPatches
       through_association.load_target
       records.each do |record|
         through_records_for(record).each do |through_record|
+          p "DELETE CACHE THROUGH HAS THROUGH ASSOCIATION."
           through_record.delete_cache if through_record.respond_to? :delete_cache
         end
       end

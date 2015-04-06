@@ -1,5 +1,59 @@
 require 'spec_helper'
 
+describe DagLink do
+  # Changes on dag links are reflected on attributes of dag nodes (e.g. Users, Groups, etc.).
+  # Therefore, it is important to invalidate or renew the cache of these objects.
+  #
+  describe "(Cache Callbacks)" do
+    before do
+      
+      class User
+        def cached_group_names
+          cached { self.groups.pluck(:name) }
+        end
+      end
+      class Group
+        def cached_member_names
+          cached { self.members.collect(&:name) }
+        end
+      end
+      
+      @user = create :user
+      @group = create :group
+      @membership = @group.assign_user @user
+      
+      @user.cached_group_names
+      @group.cached_member_names
+    end
+    
+    describe "after_destroy" do
+      describe "through the parent object" do
+        subject { @group.members.destroy(@user); time_travel(2.seconds); @user.reload; @group.reload }
+        it "should delete the cache of the associated child object" do
+          subject
+          Rails.cache.read([@user, 'cached_group_names']).present?.should be_false
+        end
+        it "should delete the cache of the associated parent object" do
+          subject
+          Rails.cache.read([@group, 'cached_member_names']).present?.should be_false
+        end
+      end
+      describe "through the child object" do
+        subject { @user.groups.destroy(@group); time_travel(2.seconds); @user.reload; @group.reload }
+        it "should delete the cache of the associated child object" do
+          subject
+          Rails.cache.read([@user, 'cached_group_names']).present?.should be_false
+        end
+        it "should delete the cache of the associated parent object" do
+          subject
+          Rails.cache.read([@group, 'cached_member_names']).present?.should be_false
+        end
+      end
+            
+    end
+  end
+end
+
 # The dag link functionality is tested extensively in the corresponding `acts-as-dag` gem.
 # This test is just to make sure that the integration is propery done. Therefore, some basic scenarios are tested here.
 #
