@@ -14,7 +14,8 @@ feature "Events" do
     # Apparently, the callbacks need time. If we don't sleep here, `ActiveRecord::RecordNotFound`
     # is raised. In practice, we use an error handler in the EventsController due to this inconvenience.
     # 
-    # TODO: Check if this problem still exists when migrating to Rails 4.
+    # This does still exist in Rails 4.
+    # TODO: Check if this problem still exists when migrating to Rails 5.
     #
     @event.wait_for_me_to_exist
   end
