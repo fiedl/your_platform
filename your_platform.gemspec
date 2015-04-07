@@ -29,12 +29,14 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
-
+  
   # JavaScript 
   s.add_dependency "jquery-rails"
   s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
 
   # Data Structures
+  # Retry transactions: Rescue from deadlocks.
+  s.add_dependency 'transaction_retry'
   # DAG Structure, https://github.com/resgraph/acts-as-dag
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License

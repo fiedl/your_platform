@@ -210,7 +210,7 @@ class Event < ActiveRecord::Base
   end
   
 
-  # Existane
+  # Existance
   # ==========================================================================================
   
   # For some strange reason, the callbacks of the creation of an event appear to
@@ -220,7 +220,8 @@ class Event < ActiveRecord::Base
   # before continuing. Otherwise `ActiveRecord::RecordNotFound` is raised in the controller
   # or when redirecting to the event.
   #
-  # TODO: Check if this is still necessary when migrating to Rails 4.
+  # This still exists in Rails 4.
+  # TODO: Check if this is still necessary when migrating to Rails 5.
   #
   def wait_for_me_to_exist
     raise 'The event has no id, yet!' unless id

@@ -113,10 +113,10 @@ class EventsController < ApplicationController
         # ActiveRecord of Rails 3 does not resolve these issues.
         # Therefore, we use the transaction_retry gem, which retries the
         # call after running into locked records.
-        # 
-        # TODO: This needs to be carefully checked when we migrate to Rails 4,
-        # since the locking behaviour might have changed. The transaction_retry
-        # gem has been updated last in 2012!
+        #
+        # The locking issues still exist in Rails 4.
+        # TODO: Check again, when migrating to Rails 5.
+        # The transaction_retry gem has been updated last in 2012!
         #
         @event.reload
         @event.parent_groups << @group if @group
@@ -127,7 +127,8 @@ class EventsController < ApplicationController
         # To avoid `ActiveRecord::RecordNotFound` after the redirect, we have to
         # make sure the record can be found.
         #
-        # TODO: Check if this is really necessary in Rails 4 anymore.
+        # This still exists in Rails 4.
+        # TODO: Check again, when migrating to Rails 5.
         #
         @event.wait_for_me_to_exist
         current_user.try(:update_last_seen_activity, I18n.t(:is_adding_an_event), @event)
