@@ -5,6 +5,8 @@ module UserDateOfBirth
   extend ActiveSupport::Concern
   
   included do
+    has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true
+    after_save :save_date_of_birth_profile_field
   end
   
   def date_of_birth
@@ -12,14 +14,6 @@ module UserDateOfBirth
   end
   def date_of_birth=( date_of_birth )
     find_or_build_date_of_birth_profile_field.value = date_of_birth
-  end
-
-  def date_of_birth_profile_field
-    @date_of_birth_profile_field ||= profile_fields.where( type: "ProfileFieldTypes::Date", label: 'date_of_birth' ).limit(1).first
-  end
-  def build_date_of_birth_profile_field
-    raise 'profile field already exists' if date_of_birth_profile_field
-    @date_of_birth_profile_field = profile_fields.build( type: "ProfileFieldTypes::Date", label: 'date_of_birth' )
   end
 
   def find_or_build_date_of_birth_profile_field

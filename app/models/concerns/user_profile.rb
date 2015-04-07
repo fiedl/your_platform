@@ -6,21 +6,6 @@ module UserProfile
   included do
     has_profile_fields profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
        :organizations, :bank_account_information]
-    
-    # TODO: This is already Rails 4 syntax. Use this when we switch to Rails 4.
-    # http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#method-i-has_one
-    #
-    # has_one                   :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true
-    #
-    # The old Rails 3.2 syntax would be:
-    #
-    # has_one                   :date_of_birth_profile_field, class_name: "ProfileFieldTypes::Date", conditions: "label = 'date_of_birth'", as: :profileable, autosave: true
-    #
-    # But on build_date_of_birth_profile_field the condition is not set automatically. There are some other issues with this behaviour.
-    # We would still have to use an instance variable. Therefore, we just build the association from scratch.
-    # See code down at #date_of_birth_profile_field.
-    #
-    after_save                :save_date_of_birth_profile_field
   end
 
   def phone_profile_fields
