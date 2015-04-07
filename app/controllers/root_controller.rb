@@ -1,7 +1,7 @@
 class RootController < ApplicationController
   
-  before_filter :redirect_to_setup_if_needed
-  before_filter :redirect_to_sign_in_if_signed_out, :find_and_authorize_page
+  before_action :redirect_to_setup_if_needed
+  before_action :redirect_to_sign_in_if_signed_out, :find_and_authorize_page
 
   def index
     current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)

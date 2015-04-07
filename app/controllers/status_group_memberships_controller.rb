@@ -1,7 +1,7 @@
 
 class StatusGroupMembershipsController < ApplicationController
 
-  before_filter :find_membership
+  before_action :find_membership
   load_and_authorize_resource
 
   respond_to :json

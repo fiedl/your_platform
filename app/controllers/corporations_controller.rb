@@ -1,7 +1,7 @@
 class CorporationsController < ApplicationController
   respond_to :html, :json
   
-  before_filter :find_corporations
+  before_action :find_corporations
   authorize_resource
 
   def index

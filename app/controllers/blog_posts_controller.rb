@@ -2,7 +2,7 @@
 # This controller is just for adding a blog post via AJAX.
 #
 class BlogPostsController < PagesController
-  prepend_before_filter :set_inheritance_instance_variable
+  prepend_before_action :set_inheritance_instance_variable
   
   load_and_authorize_resource
   skip_authorize_resource only: [:create]

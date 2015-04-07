@@ -3,18 +3,15 @@ class ApplicationController < ActionController::Base
 
   layout "bootstrap"
 
-  
-  # TODO: Change before_filter to before_action  (http://stackoverflow.com/questions/16519828)
-  #
-  before_filter :redirect_www_subdomain, :set_locale
+  before_action :redirect_www_subdomain, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
-  before_filter :log_generic_metric_event
+  before_action :log_generic_metric_event
   helper_method :metric_logger
-  before_filter :authorize_miniprofiler
-  before_filter :accept_terms_of_use
+  before_action :authorize_miniprofiler
+  before_action :accept_terms_of_use
   
-  after_filter  :log_activity
+  after_action  :log_activity
   
   # https://github.com/ryanb/cancan
   # 

@@ -4,11 +4,11 @@ class SetupController < ApplicationController
   # not be shown later on.
   #
   skip_authorization_check  # suppress the regular handling by cancan
-  before_filter :handle_authorization
+  before_action :handle_authorization
   
   # Initialize basic database entities such as a start page.
   #
-  before_filter :bootstrap
+  before_action :bootstrap
   
   def index
   end

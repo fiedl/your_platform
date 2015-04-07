@@ -1,6 +1,6 @@
 class UserGroupMembershipsController < ApplicationController
 
-  before_filter :find_membership
+  before_action :find_membership
   authorize_resource
 
   respond_to :json, :html
