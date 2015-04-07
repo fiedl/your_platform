@@ -56,11 +56,7 @@ class UserAlias < String
   # as alias.
   #
   def self.try_to_generate_from_last_name(user)
-
-    # TODO: Rails 4 way: User.where(...).where.not(...)
-    # http://stackoverflow.com/questions/5426421/rails-model-find-where-not-equal
-    
-    if User.where("last_name=? AND id!=?", user.last_name, user.id).count == 0
+    if User.where(last_name: user.last_name).where.not(id: user.id).count == 0
       user.last_name.downcase
     end
   end
