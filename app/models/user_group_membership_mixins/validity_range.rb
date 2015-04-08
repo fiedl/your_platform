@@ -15,11 +15,25 @@
 #     UserGroupMembership.only_valid
 #     UserGroupMembership.only_invalid
 #     UserGroupMembership.at_time(time)
+# 
+# Default Scope: 
 #
 # By default, the `only_valid` scope is applied, i.e. only memberships are 
 # found that are valid at present time. To override this scope, use either
 # `with_invalid` or `unscoped`.
 #
+# Caveats:
+# * There is only one valid_from and one valid_to time per object. 
+#   Therefore, you can't keep track of first archiving an object and later 
+#   un-archiving it. Un-archiving an object loses the information of first archiving it.
+# * Currently, the future is not handled (Article.future and article.archive at: 1.hour.from.now 
+#   do not work.) But this is planned to be implemented in the future.
+# 
+# Some functionality has been extracted out into the temporal_scopes gem in order to 
+# test the scopes easily. But, this code has been abandoned since the Rails-4 migration
+# took more time.
+#   => https://github.com/fiedl/temporal_scopes/blob/master/lib/temporal_scopes/has_temporal_scopes.rb
+# 
 module UserGroupMembershipMixins::ValidityRange
   
   extend ActiveSupport::Concern
@@ -142,6 +156,9 @@ module UserGroupMembershipMixins::ValidityRange
     # This scope limits the query to memberships that are valid at the present time.
     # This is the default bahaviour. 
     #
+    # Rails 5 will support `.or(...)`: https://github.com/rails/rails/pull/16052
+    # TODO: Refactor when migrating to Rails 5.
+    #
     def only_valid
       where("valid_from IS NULL OR valid_from <= ?", Time.zone.now)
       .where("valid_to IS NULL OR valid_to >= ?", Time.zone.now)
@@ -150,15 +167,18 @@ module UserGroupMembershipMixins::ValidityRange
     # This scope widens the query such that also memberships that are not valid at the
     # present time are returned.
     # 
+    # Have a look at `rewhere`.
+    # https://github.com/rails/rails/commit/f950b2699f97749ef706c6939a84dfc85f0b05f2#diff-bf6dd6226db3aab589916f09236881c7R562
+    #
+    # But `rewhere` is not enough. We need more filtering:
+    # https://github.com/fiedl/temporal_scopes/blob/master/lib/temporal_scopes/has_temporal_scopes.rb
+    # 
+    # TODO: Check if this still needs the extra filter when migrating to Rails 5.
+    # 
     def with_invalid
-
-      # TODO: Replace the brute-force `unscoped` by a more specific term like
-      # `except(:valid_from).except(:valid_to)`. 
-      # But so far, this has caused several tests to fail, which would have to be 
-      # fixed.
-      #
-      unscoped
-
+      relation = unscope(where: [:valid_from, :valid_to])
+      relation.where_values.delete_if { |query| query.to_s.include?("valid_from") || query.to_s.include?("valid_to") } 
+      relation
     end
     
     # This scope limits the query to memberships that are invalid at the present time.
@@ -179,12 +199,18 @@ module UserGroupMembershipMixins::ValidityRange
     def in_the_past
       only_invalid
     end
+    def past
+      in_the_past
+    end
 
     # This scope widens the query such that also memberships that are not valid at the
     # present time are returned.
     # 
     def now_and_in_the_past
       with_invalid
+    end
+    def with_past
+      now_and_in_the_past
     end
     
     def this_year
