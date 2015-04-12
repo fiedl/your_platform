@@ -7,7 +7,8 @@ var PasswordStrength = {
         var input = $(password_input_id);
         var confirmation_input = $(password_confirmation_input_id);
         var submit = $(":submit");
-        submit.prop("disabled", true);
+        
+        PasswordStrength.disableSubmit();
 
         var container = $('.password_strength_container');
 
@@ -120,9 +121,9 @@ var PasswordStrength = {
 
 
             if (score >= min_score && !password_mismatch && validated) {
-                submit.removeProp("disabled");
+                PasswordStrength.enableSubmit();
             } else {
-                submit.prop("disabled", true);
+                PasswordStrength.disableSubmit();
             }
 
             elm.cur_score = score;
@@ -136,12 +137,23 @@ var PasswordStrength = {
 
         setInterval(animator, 350);
     },
+    
     score: function (str, user_inputs) {
         if (!window.zxcvbn) {
             return 0;
         }
         var result = zxcvbn(str, user_inputs);
         return result.score;
+    },
+    
+    disableSubmit: function () {
+      $('.requirements_not_met_yet').show();
+      $('.submit_confirmation').hide();
+    },
+    
+    enableSubmit: function() {
+      $('.requirements_not_met_yet').hide();
+      $('.submit_confirmation').show();
     }
 };
 

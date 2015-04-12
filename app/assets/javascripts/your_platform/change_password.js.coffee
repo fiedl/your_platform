@@ -20,3 +20,4 @@ $(document).ready ->
   $(document).on 'mouseover', '.pro_tipp_trigger', ->
     $('.pro_tipp_trigger').css('opacity', '1.0')
     $('.pro_tipp_body').show('fade')
+    
