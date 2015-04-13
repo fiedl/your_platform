@@ -47,8 +47,17 @@ class Event < ActiveRecord::Base
   end
   def localized_start_at=(string)
     attribute_will_change! :start_at
-    #self.start_at = string.present? ? Time.parse(string) : nil
-    self.start_at = string  # conversion handled by the delocalize gem
+    
+    # Apparently, there is an issue with delocalize in Rails 4.
+    # Therefore, we have to trigger the conversion manually here.
+    # 2015-04-13
+    #
+    # Issue: https://github.com/clemens/delocalize/issues/74
+    # Trello: https://trello.com/c/5hvIZRfj/817-fix-delocalize
+    #
+    # TODO: Check if this is still necessary.
+    # 
+    self.start_at = string.present? ? Delocalize::LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
   
   def localized_end_at
@@ -56,8 +65,17 @@ class Event < ActiveRecord::Base
   end
   def localized_end_at=(string)
     attribute_will_change! :end_at
-    #self.end_at = string.present? ? Time.parse(string) : nil
-    self.end_at = string  # conversion handled by the delocalize gem
+
+    # Apparently, there is an issue with delocalize in Rails 4.
+    # Therefore, we have to trigger the conversion manually here.
+    # 2015-04-13
+    #
+    # Issue: https://github.com/clemens/delocalize/issues/74
+    # Trello: https://trello.com/c/5hvIZRfj/817-fix-delocalize
+    #
+    # TODO: Check if this is still necessary.
+    # 
+    self.end_at = string.present? ? Delocalize::LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
   
 

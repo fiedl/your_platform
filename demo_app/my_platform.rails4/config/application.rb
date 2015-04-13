@@ -58,11 +58,6 @@ module MyPlatform
     
     config.active_record.whitelist_attributes = false
     #config.active_record.mass_assignment_sanitizer = :strict
-    
-    config.i18n.enforce_available_locales = true
-    I18n.config.enforce_available_locales = true
-    config.i18n.available_locales = [:de, :en]
-    config.i18n.default_locale = :de
   end
 end
 

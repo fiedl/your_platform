@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   layout "bootstrap"
 
+  around_action :use_user_time_zone
   before_action :redirect_www_subdomain, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
@@ -231,6 +232,26 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     session['return_to_after_login'] || root_path
   end
+  
+  
+  # All times are stored in UTC in the database.
+  # In order to have the application present times in the use
+  # time zone used by the user, switch to the correct time zone
+  # here.
+  #
+  # This method is called by an around_action callback above.
+  #
+  # See: http://railscasts.com/episodes/106-time-zones-revised
+  #
+  def use_user_time_zone(&block)
+    Time.use_zone(user_time_zone, &block)
+  end
+  def user_time_zone
+    # TODO: Implement a setting where the user can choose his own time zone.
+    # See: http://railscasts.com/episodes/106-time-zones-revised
+    "Berlin"
+  end
+  
   
   protected
   

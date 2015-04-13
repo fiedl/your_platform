@@ -121,6 +121,8 @@ ready = ->
     
   if $('.box.first * h1 .best_in_place').text() == "Bezeichnung der Veranstaltung hier eingeben"
     $('.box.first * h1 .best_in_place').trigger('click') # to edit it
+  else
+    $(':focus').blur() # in order to unfocus and prevent the select menu to open
     
 $(document).ready(ready)
 
