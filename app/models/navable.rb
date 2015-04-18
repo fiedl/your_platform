@@ -35,9 +35,13 @@ module Navable
     def nav
       nav_node
     end
-
+    
+    # We do not show all kinds of objects in the menu.
+    # Therefore select the appropriate items.
+    #
     def navable_children
-      children.select { |child| child.respond_to? :nav_node }
+      (respond_to?(:child_groups) ? child_groups : []) +
+      (respond_to?(:child_pages) ? child_pages : [])
     end
 
     private

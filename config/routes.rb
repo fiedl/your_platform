@@ -9,6 +9,8 @@ Rails.application.routes.draw do
 
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'
+  
+  get "vertical_navs/:navable_type/:navable_id", to: 'vertical_navs#show', as: :vertical_nav
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
   devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]

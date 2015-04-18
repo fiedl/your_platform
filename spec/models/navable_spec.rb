@@ -40,8 +40,8 @@ describe Navable do
         child.should respond_to :nav_node
       end
     end
-    it "should include pages, users and groups" do
-      subject.should include @page, @user, @group
+    it "should include pages and groups" do
+      subject.should include @page, @group
     end
 
     # TODO: Maybe, later, Workflow objects become navables.
