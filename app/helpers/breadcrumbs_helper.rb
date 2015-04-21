@@ -49,6 +49,12 @@ module BreadcrumbsHelper
         else
           link_options = {}
         end
+        
+        if breadcrumb[:navable].try(:id)
+          link_options = link_options.merge({
+            'data-vertical-nav-path': vertical_nav_path(navable_type: breadcrumb[:navable].class.base_class.name, navable_id: breadcrumb[:navable].id)
+          })
+        end
 
         link_to breadcrumb[ :title ], breadcrumb[ :navable ], link_options
       end

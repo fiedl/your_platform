@@ -33,11 +33,11 @@ class HorizontalNavPresenter < BasePresenter
   
   def li_tag(nav_link_object)
     unless nav_link_object.kind_of? Hash
-      navable = nav_link_object 
+      navable = nav_link_object
       css_class = "active" if navable_is_currently_shown?(navable)
       css_class ||= "under_this_category" if navable_is_most_special_category?(navable)
     end
-    content_tag :li, :class => css_class do
+    content_tag :li, :class => "horizontal-nav-link #{css_class}" do
       yield
     end
   end
@@ -46,7 +46,15 @@ class HorizontalNavPresenter < BasePresenter
     title = possibly_shortened_title_for(link_object)
     object = link_object
     object = link_object.except(:title) if link_object.kind_of? Hash
-    link_to title, object
+    
+    options = {}
+    if link_object.try(:id)
+      options = options.merge({data: {
+        vertical_nav_path: vertical_nav_path(navable_type: object.class.base_class.name, navable_id: object.id)
+      }})
+    end
+    
+    link_to title, object, options
   end
   
   def current_navable
