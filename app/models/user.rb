@@ -701,7 +701,24 @@ class User < ActiveRecord::Base
     else
       Group.developers.unassign_user self
     end
-  end  
+  end
+  
+  # Beta Tester Status
+  # ==========================================================================================
+  
+  def beta_tester?
+    @beta_tester ||= self.beta_tester
+  end
+  def beta_tester
+    self.member_of? Group.find_or_create_by_flag :beta_testers
+  end
+  def beta_tester=(mark_as_beta_tester)
+    if mark_as_beta_tester
+      Group.find_or_create_by_flag(:beta_testers).assign_user self
+    else
+      Group.find_or_create_by_flag(:beta_testers).child_users.destroy(self)
+    end
+  end
   
   # Hidden
   # ==========================================================================================

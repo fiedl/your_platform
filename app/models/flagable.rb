@@ -12,6 +12,16 @@ module Flagable
     def find_by_flag( flag )
       find_all_by_flag( flag ).limit( 1 ).readonly( false ).first
     end
+    
+    def find_or_create_by_flag(flag)
+      find_by_flag(flag) || create_by_flag(flag)
+    end
+    
+    def create_by_flag(flag)
+      obj = self.create
+      obj.add_flag flag
+      return obj
+    end
 
     scope :flagged, lambda { |flag| includes(:flags).where(flags: {key: flag}) }
 

@@ -79,6 +79,9 @@ class Ability
       if user.developer?
         rights_for_developers
       end
+      if user.beta_tester?
+        rights_for_beta_testers
+      end
       rights_for_signed_in_users
     end
     rights_for_everyone
@@ -111,6 +114,10 @@ class Ability
     @role.try(:to_s)
   end
   
+  def rights_for_beta_testers
+    can :use, :new_menu_feature
+  end
+  
   def rights_for_developers
     can :use, Rack::MiniProfiler
   end
@@ -121,6 +128,9 @@ class Ability
       can :index, :all
     else
       can :manage, :all
+      
+      # There are features for developers and beta testers.
+      cannot :use, :all
     end
   end
   
