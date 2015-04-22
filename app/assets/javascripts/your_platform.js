@@ -1,4 +1,5 @@
 //
+//= require sugar
 //= require jquery.appear-1.1.1
 //= require slim_breadcrumb
 //= require jquery.ui.all

@@ -11,6 +11,7 @@ require 'strong_parameters' unless defined? ActionController::Parameters
 
 # JavaScript
 require 'jquery-ui-rails'
+require 'sugar-rails'
 
 # Data Structures
 require 'acts-as-dag'
