@@ -252,6 +252,11 @@ class ApplicationController < ActionController::Base
     "Berlin"
   end
   
+  # We use this custom method to render a partial to a json string.
+  #
+  def render_partial(partial, locals = {})
+    render_to_string(partial: partial, locals: locals, layout: false, formats: [:html])
+  end
   
   protected
   

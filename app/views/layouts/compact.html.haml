@@ -1,5 +1,5 @@
 !!!
-%html
+%html.compact-layout
   %head
     %meta{:content => 'text/html; charset=utf-8', 'http-equiv' => 'Content-type'}/
     %title= website_title_with_app_name
@@ -16,12 +16,12 @@
     = gmaps4rails_api_script_tags
     = csrf_meta_tags
     = yield :head
-  %body{:class => controller.controller_name, data: { locale: I18n.locale }}
+  %body{:class => "compact-layout " + controller.controller_name, data: { locale: I18n.locale }}
     = render partial: 'layouts/compact_nav'
     #contentBgLayer1
       #contentBgLayer2
         #contentBgLayer3
-          #content_wrapper
+          #content_wrapper{data: {turbolinks: {temporary: true}}}
             = flash_area
             = convert_to_content_box yield
     = render partial: 'layouts/footer'

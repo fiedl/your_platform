@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   get 'search/guess', to: "search#lucky_guess"
   get 'search/preview', to: "search#preview"
   get :search, to: "search#index"
+  
+  get "compact-nav-search(.:format)/(:query)", to: "compact_nav_search#show", as: 'compact_nav_search'
 
   mount Judge::Engine => '/judge'
 

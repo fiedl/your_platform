@@ -64,5 +64,12 @@ module BreadcrumbsHelper
       c
     end.join.html_safe
   end
+  
+  # These are the non-hidded objects after under intranet root,
+  # which are to be shown in the new compact layout navigation.
+  #
+  def essential_breadcrumb_objects
+    @navable.nav_node.breadcrumbs.select { |n| ! n[:slim] }.collect { |n| n[:navable] } - [Page.find_root, Page.find_intranet_root]
+  end
 
 end

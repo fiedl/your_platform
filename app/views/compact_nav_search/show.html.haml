@@ -1,0 +1,9 @@
+%h1.search
+  = "Suche: \"#{@query}\" in"
+  = link_to @base_object.title, @base_object
+%div
+  %ul.search
+    - @results.each do |obj|
+      %li{class: "result #{obj.class.name} #{obj.class.base_class.name}"}
+        = link_to obj.title, obj
+      
