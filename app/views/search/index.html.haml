@@ -33,7 +33,7 @@
       - for object in @pages
         %li= link_to object.title, object
 
-- if @large_map_address_fields.any?
+- if @large_map_address_fields.try(:any?)
   %h1.large_map.section= t :map
   .group_map
     .large_map_section
