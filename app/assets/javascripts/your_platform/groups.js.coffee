@@ -4,33 +4,31 @@
 # The things that happen *after* creation by javascript are handled by
 # app/views/user_group_memberships/create.js.erb
 # 
-$(document).ready ->
+$(document).on 'submit', 'form.new_user_group_membership', (event)->
+  
+  # close the box if no text is entered
+  if $('#user_group_membership_user_title').val() == ""
+    event.preventDefault()
+    $('.box.section.members').trigger('save')
 
-  $(document).on 'submit', 'form.new_user_group_membership', (event)->
+  # if text is entered, send the form and switch to 'loading'.
+  else
+    text_field = $('.user-select-input.new-membership')
+    button = $('.add-user-button')
     
-    # close the box if no text is entered
-    if $('#user_group_membership_user_title').val() == ""
-      event.preventDefault()
-      $('.box.section.members').trigger('save')
+    text_field.val('')
+    text_field.focus()
+    
+    $('.new_users_waiting').append('<i class="fa fa-user-plus"></i>')
 
-    # if text is entered, send the form and switch to 'loading'.
-    else
-      text_field = $('.user-select-input.new-membership')
-      button = $('.add-user-button')
-      
-      text_field.val('')
-      text_field.focus()
-      
-      $('.new_users_waiting').append('<i class="fa fa-user-plus"></i>')
-  
-  $(document).on('edit', '.box.section.members', (event) ->
-    $('input#user_group_membership_user_title').focus()
-  )
-  
-  $(document).on('keydown', 'input#user_group_membership_user_title', (event) ->
-    if event.keyCode == 27  # escape
-      $('.box.section.members').trigger('cancel')
-  )
+$(document).on('edit', '.box.section.members', (event) ->
+  $('input#user_group_membership_user_title').focus()
+)
+
+$(document).on('keydown', 'input#user_group_membership_user_title', (event) ->
+  if event.keyCode == 27  # escape
+    $('.box.section.members').trigger('cancel')
+)
 
 
 
