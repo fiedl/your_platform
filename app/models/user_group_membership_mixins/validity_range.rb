@@ -114,93 +114,87 @@ module UserGroupMembershipMixins::ValidityRange
     end
   end
   
-  
-  # Invalidation
-  # ====================================================================================================
-  
-  # This method ends the membership, i.e. sets the end of the validity range
-  # to the given time.
-  # 
-  # The following examples are equivalent (despite the return value):
-  # 
-  #     membership.make_invalid
-  #     membership.make_invalid at: Time.zone.now
-  #     membership.make_invalid Time.zone.now
-  #     membership.invalidate                                    #  => membership
-  #     membership.update_attribute :valid_to, Time.zone.now     #  => true
-  #     
-  def make_invalid(time = Time.zone.now)
-    time = time[:at] if time.kind_of?(Hash) && time[:at]
-    self.update_attribute(:valid_to, time)
-    return self
-  end
-  
-  # This is just an alias for `make_invalid`.
-  #
-  def invalidate(time = Time.zone.now)
-    self.make_invalid(time)
-  end
-  
-  # This method determines whether the membership can be invalidated.
-  # Direct memberships can be invalidated, whereas indirect memberships cannot.
-  # The validity of indirect memberships is derived from the validity of the direct ones.
-  #
-  def can_be_invalidated?
-    self.direct?
-  end
-
-
-  # Validity Check
-  # ====================================================================================================
-  
-  # This method checks whether the membership is valid at the given time.
-  #
-  # This is not to be confused with ActiveRecord's `valid` method, which checks whether the
-  # record matches the requirements to store it in the database.
-  #
-  # The following examples are equivalent:
-  #
-  #     membership.currently_valid?
-  #     membership.valid_at? Time.zone.now
-  # 
-  def valid_at?(time)
-    (self.valid_from == nil || self.valid_from <= time) && (self.valid_to == nil || self.valid_to >= time)
-  end
-  
-  # This method checks whether the present time lies within the validity range
-  # of the membership.
-  #
-  def currently_valid?
-    valid_at?(Time.zone.now)
-  end
-  
-  
-  # Attributes in the database
-  # ====================================================================================================
-  
-  def valid_from_localized_date
-    self.valid_from ? I18n.localize(self.valid_from.try(:to_date)) : ""
-  end
-  def valid_from_localized_date=(new_date)
-    self.valid_from = new_date.to_datetime
-    valid_from_will_change!
-  end
-
-  def set_valid_from_to_now(force = false)
-    self.valid_from ||= Time.zone.now if self.new_record? or force
-    return self
-  end
-  
-  def valid_to_localized_date
-    self.valid_to ? I18n.localize(self.valid_to.try(:to_date)) : ""
-  end
-  def valid_to_localized_date=(new_date)
-    if new_date == "-"
-      self.valid_to = nil
-    else
-      self.valid_to = new_date.to_datetime
+  concerning :Invalidation do
+    # This method ends the membership, i.e. sets the end of the validity range
+    # to the given time.
+    # 
+    # The following examples are equivalent (despite the return value):
+    # 
+    #     membership.make_invalid
+    #     membership.make_invalid at: Time.zone.now
+    #     membership.make_invalid Time.zone.now
+    #     membership.invalidate                                    #  => membership
+    #     membership.update_attribute :valid_to, Time.zone.now     #  => true
+    #     
+    def make_invalid(time = Time.zone.now)
+      time = time[:at] if time.kind_of?(Hash) && time[:at]
+      self.update_attribute(:valid_to, time)
+      return self
     end
-    valid_to_will_change!
+    
+    # This is just an alias for `make_invalid`.
+    #
+    def invalidate(time = Time.zone.now)
+      self.make_invalid(time)
+    end
+    
+    # This method determines whether the membership can be invalidated.
+    # Direct memberships can be invalidated, whereas indirect memberships cannot.
+    # The validity of indirect memberships is derived from the validity of the direct ones.
+    #
+    def can_be_invalidated?
+      self.direct?
+    end
+  end
+
+  concerning :ValidityCheck do
+    # This method checks whether the membership is valid at the given time.
+    #
+    # This is not to be confused with ActiveRecord's `valid` method, which checks whether the
+    # record matches the requirements to store it in the database.
+    #
+    # The following examples are equivalent:
+    #
+    #     membership.currently_valid?
+    #     membership.valid_at? Time.zone.now
+    # 
+    def valid_at?(time)
+      (self.valid_from == nil || self.valid_from <= time) && (self.valid_to == nil || self.valid_to >= time)
+    end
+    
+    # This method checks whether the present time lies within the validity range
+    # of the membership.
+    #
+    def currently_valid?
+      valid_at?(Time.zone.now)
+    end
+  end
+  
+  concerning :Localization do
+    def valid_from_localized_date
+      self.valid_from ? I18n.localize(self.valid_from.try(:to_date)) : ""
+    end
+    def valid_from_localized_date=(new_date)
+      self.valid_from = new_date.to_datetime
+      valid_from_will_change!
+    end
+    
+    def set_valid_from_to_now(force = false)
+      self.valid_from ||= Time.zone.now if self.new_record? or force
+      return self
+    end
+    
+    def valid_to_localized_date
+      self.valid_to ? I18n.localize(self.valid_to.try(:to_date)) : ""
+    end
+    def valid_to_localized_date=(new_date)
+      if new_date == "-"
+        self.valid_to = nil
+      else
+        self.valid_to = new_date.to_datetime
+      end
+      valid_to_will_change!
+    end
   end
 end
 
