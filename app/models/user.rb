@@ -357,7 +357,8 @@ class User < ActiveRecord::Base
   def current_corporations
     cached do
       self.corporations.select do |corporation|
-        Role.of(self).in(corporation).current_member?
+        groups.flagged(:full_members).exists?(id: corporation.id) ||
+          groups.flagged(:full_members).where(id: corporation.descendant_groups).exists?
       end || []
     end
   end
@@ -771,9 +772,28 @@ class User < ActiveRecord::Base
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
-  
-  
-  
+
+
+  # Methods transferred from former Role class
+  # ==========================================================================================
+
+  def is_global_officer?
+    global_admin? || ancestor_groups.flagged(:global_officer).exists?
+  end
+
+  def administrated_user_ids
+    groups.flagged(:admins_parent).collect{ |g| g.parent_groups.first.parent_groups.first }.compact.collect{ |g| g.descendant_users.pluck(:id) }.flatten
+  end
+
+  def administrates_user?(id)
+    groups.flagged(:admins_parent).each do |g|
+      user_group = g.parent_groups.first.parent_groups.first
+      return true if user_group && user_group.descendant_users.exists?(id)
+    end
+    return false
+  end
+
+
   # Finder Methods
   # ==========================================================================================
 

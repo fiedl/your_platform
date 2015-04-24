@@ -24,7 +24,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user, params = {}, options = {})
+  def initialize(user, options = {})
     # Define abilities for the passed in user here. For example:
     #
     #   user ||= User.new # guest user (not logged in)
@@ -57,10 +57,9 @@ class Ability
     #
     @preview_as = options[:preview_as] 
     @preview_as = nil if @preview_as.blank?
-    @role = options[:role].try(:to_s)
+    @token = options[:token]
   
     @read_only_mode = options[:read_only_mode]
-    @params = params
     @user = user
         
     if user
@@ -73,7 +72,7 @@ class Ability
       if view_as?([:officer, :admin])
         rights_for_local_officers
       end
-      if Role.of(user).global_officer? and view_as?([:global_officer, :officer, :admin])
+      if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
         rights_for_global_officers
       end
       if user.developer?
@@ -98,17 +97,12 @@ class Ability
   def preview_as
     @preview_as
   end
+  attr_reader :token
   def read_only_mode?
     @read_only_mode
   end
-  def params
-    @params
-  end
   def user
     @user
-  end
-  def role
-    @role.try(:to_s)
   end
   
   def rights_for_developers
@@ -299,8 +293,8 @@ class Ability
     # session. Some public feeds can be seen by anyone. Other
     # feeds require an auth token.
     # 
-    if params[:token].present?
-      tokened_user = UserAccount.find_by_auth_token(params[:token])
+    if token.present?
+      tokened_user = UserAccount.find_by_auth_token(token)
       if tokened_user
         can :index_events, Group
         can :index_events, User do |other_user|

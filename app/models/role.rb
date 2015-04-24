@@ -54,8 +54,9 @@ class Role
   end
   
   def full_member?
-    object.kind_of?(Group) && 
-      (( ([group] + group.descendant_groups) & user.groups.find_all_by_flag(:full_members) ).count > 0)
+    object.kind_of?(Group) &&
+      ( user.groups.flagged(:full_members).where(id: group.descendant_group_ids).exists? ||
+        user.groups.flagged(:full_members).exists?(group.id) )
   end
     
   def member?
