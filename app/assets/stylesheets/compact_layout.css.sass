@@ -1,16 +1,31 @@
+html.compact-layout.turbolinks-progress-bar::before
+  background-color: black
+  height: 1px !important
+
 body.compact-layout
   padding-top: 65px
+  
+  #logo
+    margin-top: 6px
 
-#logo
-  margin-top: 6px
+  #compact-nav-search
+    a, input
+      margin-top: 8px
+  
+    .compact-nav-search-input
+      margin-right: -5px
 
-#compact-nav-search
-  a, input
-    margin-top: 8px
-
-  .compact-nav-search-input
-    margin-right: -5px
-
-html.compact-layout.turbolinks-progress-bar::before
-  background-color: lightgreen
-  height: 1px !important
+  #horizontal-nav
+    margin-bottom: 5px
+    .nav-pills
+      display: flex
+      justify-content: center
+      flex-wrap: wrap
+      a
+        color: #333
+        background-color: #fff
+        border-color: #ccc
+        padding: 4px 15px
+        margin-bottom: 5px
+    li.Page > a
+      background-color: honeydew

@@ -1,0 +1,9 @@
+- # This is the horizontal navigation for the experimental compact layout.
+- # The horizontal nav of the main layout is handled by the
+- # horizontal nav presenter.
+
+#horizontal-nav
+  %ul.nav.nav-pills.center
+    - child_navables(@navable).each do |child|
+      %li{class: "#{child.class.name} #{child.class.base_class.name}"}
+        = link_to child.title, child

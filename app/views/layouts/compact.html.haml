@@ -22,6 +22,7 @@
       #contentBgLayer2
         #contentBgLayer3
           #content_wrapper{data: {turbolinks: {temporary: true}}}
+            = render partial: 'shared/horizontal_nav'
             = flash_area
             = convert_to_content_box yield
     = render partial: 'layouts/footer'

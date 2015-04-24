@@ -26,6 +26,13 @@ module VerticalNavHelper
     @navable.present?
   end
 
+  def child_navables(navable)
+    non_hidden_navables(navable.navable_children, :child).sort_by do |object| 
+      [ ['Page', 'Group'].index(object.class.base_class.name),  # pages above groups
+      object.created_at]
+    end
+  end
+
   private
   
   def cached_ancestor_navables(navable)
@@ -40,12 +47,6 @@ module VerticalNavHelper
     #NavNode
     #Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key], expires_in: 1.week) { child_navables(navable) }
     child_navables(navable)
-  end
-  def child_navables(navable)
-    non_hidden_navables(navable.navable_children, :child).sort_by do |object| 
-      [ ['Page', 'Group'].index(object.class.base_class.name),  # pages above groups
-      object.created_at]
-    end
   end
   
   def non_hidden_navables(navables, element_class)
