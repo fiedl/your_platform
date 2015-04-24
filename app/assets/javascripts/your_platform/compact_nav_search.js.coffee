@@ -59,6 +59,7 @@ class App.CompactNav
     self = this  # since "this" is overridden by the event handler
     query = @query_string()
     @remove_query_from_input(query)
+    @mark_as_turbolinks_permanent()
     $.ajax {
       url: @search_url() + ".json",
       data: {
@@ -92,7 +93,12 @@ class App.CompactNav
     
   focus_search_box: ->
     @search_box().focus() if @search_box().size() > 0
-  
+    
+  mark_as_turbolinks_permanent: ->
+    # In order to keep the compact navigation untouched by
+    # turbolinks when the user actually uses it, mark the
+    # navigation bar as permanent.
+    $('#compact-nav-bar').attr('data-turbolinks-permanent', true)
 
 App.compact_nav = new App.CompactNav()
 
