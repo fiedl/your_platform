@@ -172,9 +172,9 @@ class ListExport
             year = column 
             memberships = []
             if preset.to_s == 'join_statistics'
-              memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(group)
+              memberships = group.memberships.with_past
             elsif preset.to_s == 'join_and_persist_statistics'
-              memberships = UserGroupMembership.find_all_by_group(group)
+              memberships = group.memberships
             else
               raise 'attention, case not handled, yet!'
             end

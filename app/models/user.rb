@@ -394,15 +394,13 @@ class User < ActiveRecord::Base
   def my_groups_in_first_corporation
     cached do
       if first_corporation
-        my_memberships = UserGroupMembership.find_all_by_user( self )
-        my_memberships = my_memberships.now.reorder(:valid_from)
-        my_groups = my_memberships.collect { |membership| membership.try( :group ) } if my_memberships
-        my_groups ||= []
-        my_groups.select do |group|
-          first_corporation.in?( group.ancestor_groups )
-        end.reject { |group| group.is_special_group? or self.guest_of?( group ) }
+        self.groups.select do |group|
+          group.ancestor_groups.include?(self.first_corporation) and
+          not group.is_special_group? and
+          not self.guest_of?(group)
+        end
       else
-        []
+        Group.none
       end
     end
   end
@@ -417,8 +415,8 @@ class User < ActiveRecord::Base
 
   def corporate_vita_memberships_in(corporation)
     Rails.cache.fetch([self, 'corporate_vita_memberships_in', corporation], expires_in: 1.week) do
-      group_ids = corporation.status_groups.map(&:id) & self.parent_groups.map(&:id)
-      UserGroupMembership.now_and_in_the_past.find_all_by_user(self).where(ancestor_id: group_ids, ancestor_type: 'Group')
+      group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
+      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group')
     end
   end
 
