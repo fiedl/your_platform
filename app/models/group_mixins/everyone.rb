@@ -52,7 +52,7 @@ module GroupMixins::Everyone
   #
   def members(reload = nil)
     if self.has_flag? :everyone
-      User.where(true)
+      User.all
     else
       super(reload)
     end
@@ -63,7 +63,7 @@ module GroupMixins::Everyone
   #
   def direct_members(reload = nil)
     if self.has_flag? :everyone
-      User.where(true)
+      User.all
     else
       super(reload)
     end

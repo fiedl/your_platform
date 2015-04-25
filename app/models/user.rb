@@ -850,7 +850,7 @@ class User < ActiveRecord::Base
     if self.deceased_ids.count > 0
       self.where('NOT users.id IN (?)', self.deceased_ids)
     else
-      self.where(true)
+      self.all
     end
   end
   

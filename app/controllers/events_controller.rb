@@ -36,7 +36,7 @@ class EventsController < ApplicationController
     
     # Collect the events to list.
     if @all
-      @events = Event.where(true)
+      @events = Event.all
     elsif @group
       @events = Event.find_all_by_group(@group)
       @navable = @group

@@ -25,10 +25,11 @@ Gem::Specification.new do |s|
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
-  s.add_dependency "rails", ">= 3.2.21"
+  s.add_dependency "rails", ">= 4.2.1"
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
+  s.add_dependency "responders", "~> 2.0"
   
   # JavaScript 
   s.add_dependency "jquery-rails"
@@ -77,7 +78,6 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-  s.add_dependency 'delocalize'
   
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License

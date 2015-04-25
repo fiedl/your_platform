@@ -47,7 +47,6 @@ require 'sass-rails'
 
 # In Place Editing
 require 'best_in_place'
-require 'delocalize'
 
 # Geo Coding
 require 'geocoder'

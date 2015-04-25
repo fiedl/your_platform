@@ -9,6 +9,8 @@ class Page < ActiveRecord::Base
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
   
+  serialize :redirect_to
+  
 
   def fill_cache
     group
@@ -87,25 +89,20 @@ class Page < ActiveRecord::Base
   # Redirection
   # ----------------------------------------------------------------------------------------------------
 
+  # The `redirect_to` attribute can have the following forms:
+  # 
+  #   * "http://example.com"
+  #   * {controller: 'users', action: 'index'}
+  #   * "users#index"  as short form of the previous one.
+  #
   def redirect_to
-
-    # http://example.com
-    return super if super.kind_of?(String) && super.include?("://")
-
-    # users#index
     if super.kind_of?(String) && super.include?("#")
       controller, action = super.split("#")
-      return { controller: controller, action: action } if controller && action
+      { controller: controller, action: action } if controller && action
+    else
+      super
     end
-
-    # { controller: "users", action: "index" }
-    return super if super.kind_of? Hash
-
-    # else
-    return nil
   end
-
-
 
   # Association Related Methods
   # ----------------------------------------------------------------------------------------------------

@@ -47,17 +47,7 @@ class Event < ActiveRecord::Base
   end
   def localized_start_at=(string)
     attribute_will_change! :start_at
-    
-    # Apparently, there is an issue with delocalize in Rails 4.
-    # Therefore, we have to trigger the conversion manually here.
-    # 2015-04-13
-    #
-    # Issue: https://github.com/clemens/delocalize/issues/74
-    # Trello: https://trello.com/c/5hvIZRfj/817-fix-delocalize
-    #
-    # TODO: Check if this is still necessary.
-    # 
-    self.start_at = string.present? ? Delocalize::LocalizedDateTimeParser.parse(string, Time).to_time : nil
+    self.start_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
   
   def localized_end_at
@@ -65,17 +55,7 @@ class Event < ActiveRecord::Base
   end
   def localized_end_at=(string)
     attribute_will_change! :end_at
-
-    # Apparently, there is an issue with delocalize in Rails 4.
-    # Therefore, we have to trigger the conversion manually here.
-    # 2015-04-13
-    #
-    # Issue: https://github.com/clemens/delocalize/issues/74
-    # Trello: https://trello.com/c/5hvIZRfj/817-fix-delocalize
-    #
-    # TODO: Check if this is still necessary.
-    # 
-    self.end_at = string.present? ? Delocalize::LocalizedDateTimeParser.parse(string, Time).to_time : nil
+    self.end_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
   
 
@@ -216,7 +196,7 @@ class Event < ActiveRecord::Base
   
   def self.to_icalendar
     cal = Icalendar::Calendar.new
-    where(true).each do |event|
+    self.all.each do |event|
       cal.add_event event.to_icalendar_event
     end
     cal.publish
