@@ -1,8 +1,7 @@
 # This module contains all the methods of a user related to his
 # date of birth.
 # 
-module UserDateOfBirth
-  extend ActiveSupport::Concern
+concern :UserDateOfBirth do
   
   included do
     has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true

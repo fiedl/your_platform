@@ -5,8 +5,7 @@
 # * https://www.gorails.com/episodes/file-uploads-with-refile
 # * https://github.com/refile/refile
 #
-module UserAvatar
-  extend ActiveSupport::Concern
+concern :UserAvatar do
   
   included do
     attachment :avatar, type: :image

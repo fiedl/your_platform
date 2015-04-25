@@ -1,7 +1,6 @@
 # This module contains all the profile-related methods of a User.
 # 
-module UserProfile
-  extend ActiveSupport::Concern
+concern :UserProfile do
   
   included do
     has_profile_fields profile_sections: [:contact_information, :about_myself, :study_information, :career_information,

@@ -8,8 +8,7 @@
 # the `User#corporation` method---and the `User#corporation_name` method,
 # which is more convenient for the view layer.
 #
-module UserCorporations
-  extend ActiveSupport::Concern
+concern :UserCorporations do
   
   included do
     attr_accessible :corporation_name if defined? attr_accessible
