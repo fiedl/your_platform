@@ -1,13 +1,13 @@
 module ActiveRecordJsonUrlExtension
   extend ActiveSupport::Concern
 
-  def serializable_hash(options = {})
-    options[:methods] = [:url] if not options[:methods]
-    options[:methods] = [options[:methods]] if options[:methods].kind_of? Symbol
-    options[:methods] << :url if options[:methods]
-    raise 'options[:methods] should be an array' unless options[:methods].kind_of? Array
-    super options
-  end
+  # def serializable_hash(options = {})
+  #   options[:methods] = [:url] if not options[:methods]
+  #   options[:methods] = [options[:methods]] if options[:methods].kind_of? Symbol
+  #   options[:methods] << :url if options[:methods]
+  #   raise 'options[:methods] should be an array' unless options[:methods].kind_of? Array
+  #   super options
+  # end
 
   def url
     UrlHelper.new(self).url
