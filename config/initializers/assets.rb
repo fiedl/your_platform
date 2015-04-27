@@ -5,3 +5,6 @@ Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_
 
 # Galleria
 Rails.application.config.assets.precompile += %w( galleria-classic.js galleria/classic-loader.gif galleria/classic-map.png )
+
+# Password Strength
+Rails.application.config.assets.precompile += %w( password_strength.js zxcvbn.js )
