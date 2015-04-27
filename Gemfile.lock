@@ -51,6 +51,7 @@ PATH
       gmaps4rails (= 2.0.2)
       gravatar_image_tag
       haml
+      i18n-js (>= 3.0.0.rc8)
       icalendar
       jquery-datatables-rails (~> 3.1.1)
       jquery-fileupload-rails
@@ -274,7 +275,9 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    icalendar (2.2.2)
+    i18n-js (3.0.0.rc9)
+      i18n (~> 0.6)
+    icalendar (2.3.0)
     jbuilder (2.2.12)
       activesupport (>= 3.0.0, < 5)
       multi_json (~> 1.2)
@@ -330,7 +333,7 @@ GEM
     orm_adapter (0.5.0)
     passgen (1.0.2)
     pdf-core (0.5.1)
-    phony (2.12.11)
+    phony (2.12.12)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)

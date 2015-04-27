@@ -25,4 +25,6 @@
 //= require underscore
 //= require json2
 //= require judge
+//= require i18n
+//= require i18n/translations
 //= require_tree ./your_platform

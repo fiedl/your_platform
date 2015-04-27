@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
   s.add_dependency "jquery-rails"
   s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
   s.add_dependency "sugar-rails"
+  s.add_dependency "i18n-js", '>= 3.0.0.rc8'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.
