@@ -29,11 +29,11 @@ ready = ->
     btn = $(this)
     real_message = ($(this).attr('id') == 'confirm_message')
     if real_message
-      $('p.buttons.right').text("Nachricht wird gesendet …")
+      $('p.buttons.right').text I18n.t 'sending_message'
     else
-      btn.text('Test-Nachricht wurde versandt.')
+      btn.text I18n.t 'test_message_sent'
       setTimeout ->
-        btn.text('Erneut zum Testen an meine eigene Adresse senden.')
+        btn.text I18n.t 'resend_test_message_to_my_own_address'
       , 2000
     if $('label.constrain_validity_range input').prop('checked')
       recipients_count = $('span.member_count').text()
@@ -49,7 +49,7 @@ ready = ->
       },
       success: (r)->
         if real_message
-          $('p.buttons.right').text("Nachricht wurde an " + r.recipients_count + " Empfänger versandt.")
+          $('p.buttons.right').text(I18n.t( 'message_has_been_sent_to_n_recipients', {n: r.recipients_count}))
     )
     click_event.preventDefault()
 

@@ -7,3 +7,8 @@ de:
 
   read_on: Weiterlesen
   this_message_has_been_deliverd_through_mailing_list: "Diese Nachricht wurde über den E-Mail-Verteiler der Gruppe '%{group_name}' übermittelt."
+
+  sending_message: Nachricht wird gesendet …
+  test_message_sent: Test-Nachricht wurde versandt.
+  resend_test_message_to_my_own_address: Erneut zum Testen an meine eigene Adresse senden.
+  message_has_been_sent_to_n_recipients: "Nachricht wurde an %{n} Empfänger versandt."
