@@ -61,7 +61,7 @@ private
   end
   
   def secure_parent_type
-    params[:parent_type] if params[:parent_type].in? ['Page', 'Group']
+    params[:parent_type] if params[:parent_type].in? ['Page', 'Group', 'Event']
   end
 
 end
