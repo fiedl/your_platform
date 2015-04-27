@@ -49,7 +49,7 @@ ready = ->
       },
       success: (r)->
         if real_message
-          $('p.buttons.right').text("Nachricht wurde an " + r.recipients_count + " Emptfänger versandt.")
+          $('p.buttons.right').text("Nachricht wurde an " + r.recipients_count + " Empfänger versandt.")
     )
     click_event.preventDefault()
 
