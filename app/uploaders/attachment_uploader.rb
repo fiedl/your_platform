@@ -52,8 +52,6 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Create different versions of your uploaded files:
   version :thumb, :if => :image_or_pdf? do
     process :cover
-    process :resize_to_limit => [ 100, 100 ]
-    process :convert => :png
     process :modify_content_type
     def full_filename( for_file = model.attachment.file )
       "thumb.png"
@@ -90,9 +88,14 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # This is used when making a thumbnail for pdf files. pdf files can have several pages,
   # but only the first page should be used for the thumbnail, not one thumbnail for each page.
   #
+  # Taken from: http://afreshcup.com/home/2012/9/27/thumbnailing-pdfs-with-minimagick.html
+  #
   def cover 
-    manipulate! do |frame, index|
-      frame if (not index) || index.zero?
+    manipulate! do |img|
+      img.format("png", 0)
+      img.resize("100x100")
+      img = yield(img) if block_given?
+      img
     end
   end
   
