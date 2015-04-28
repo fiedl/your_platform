@@ -51,8 +51,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Create different versions of your uploaded files:
   version :thumb, :if => :image_or_pdf? do
-    process :resize_to_limit => [ 100, 100 ]
     process :cover
+    process :resize_to_limit => [ 100, 100 ]
     process :convert => :png
     process :modify_content_type
     def full_filename( for_file = model.attachment.file )
