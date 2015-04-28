@@ -4,5 +4,5 @@
 # http://www.rubydoc.info/github/minimagick/minimagick/MiniMagick/Configuration
 #
 MiniMagick.configure do |config|
-  config.timeout = 120  # seconds
+  config.timeout = 600  # seconds
 end
