@@ -4,6 +4,9 @@ de:
   add_attachment: 'Anhang hinzufügen'
   add_attachments: 'Anhänge hinzufügen'
   
+  upload_failed: Hochladen fehlgeschlagen.
+  upload_failed_please_contact_support: "Mindestens eine Datei konnte nicht hochgeladen werden. Sollte dieses Problem wiederholt auftreten, wenden Sie sich bitte an die Administration."
+  
   processing_attachment: 'Anhang wird auf dem Server verarbeitet. Das einige Momente dauern. Bitte warten.'
   drop_attachments_here: 'Um Anhänge hinzuzufügen, können Sie entweder auf den Knopf "Dateien auswählen" unterhalb drücken oder die Dateien einfach von außen in diesen Kasten ziehen.'
   drop_files_here: 'Dateien hierhin schieben, um sie hochzuladen.'

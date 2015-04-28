@@ -16,6 +16,13 @@ $(document).ready ->
       upload_done_counter += 1
       if upload_done_counter >= upload_counter
         show_success()
+    fail: (e, data)->
+      upload_done_counter += 1
+      show_uploading()
+      if upload_done_counter >= upload_counter
+        $('p.uploading').text I18n.t 'upload_failed_please_contact_support'
+      else
+        $('p.uploading small:first').text I18n.t 'upload_failed_please_contact_support'
 
   $('.attachment_drop_field').on 'dragover', ->
     $(this).addClass('over')
