@@ -1,2 +1,2 @@
 $(document).ready ->
-  Turbolinks.enableTransitionCache()
+  Turbolinks.enableTransitionCache() if $('body').data('env') != 'test'
