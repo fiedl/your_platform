@@ -170,9 +170,30 @@ class Ability
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
       #
-      can :update, Page do |page|
+      can [:update, :destroy], Page do |page|
         can?(:read, page) and page.officers_of_self_and_ancestors.include?(user) and (page.author == user or page.author.nil?)
       end
+      
+      # Create, update and destroy Pages
+      #
+      can :create_page_for, [Group, Page] do |parent|
+        parent.officers_of_self_and_ancestors.include?(user)
+      end
+      can [:update, :destroy], Page do |page|
+        (page.author == user) && (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+      end
+      
+      # Create, update and destroy Attachments
+      #
+      can :create_attachment_for, Page do |page|
+        (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
+      end
+      can :update, Attachment do |attachment|
+        can?(:read, attachment) &&
+        (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
+        ((attachment.author == user) || (attachment.parent.author == user))
+      end
+            
       
       # Local officers of pages can add attachments to the page and subpages
       # and modify their own attachments.
@@ -258,7 +279,7 @@ class Ability
       can [:update, :create_page_for], Event do |event|
         event.contact_people.include? user
       end
-      can [:update, :create_attachment_for], Page do |page|
+      can [:update, :create_attachment_for, :destroy], Page do |page|
         page.ancestor_events.map(&:contact_people).flatten.include? user
       end
     end

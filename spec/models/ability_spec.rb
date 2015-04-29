@@ -101,7 +101,44 @@ describe Ability do
       end
     end
   end
-
+  
+  describe "when the user is a page admin" do
+    before do
+      @page = create :page
+      @page.admins << user
+    end
+    
+    he { should be_able_to :create_page_for, @page }
+    he "should be able to destroy the sub-page" do
+      @sub_page = @page.child_pages.create
+      the_user.should be_able_to :destroy, @sub_page
+    end
+    he "should not be able to destroy the sub-page after 10 minutes" do
+      @sub_page = @page.child_pages.create
+      @sub_page.update_attribute :created_at, 11.minutes.ago
+      the_user.should_not be_able_to :destroy, @sub_page
+    end
+  end
+  
+  describe "when the user is a page officer" do
+    before do
+      @page = create :page
+      @secretary = @page.officers_parent.child_groups.create name: 'Secretary'
+      @secretary << user
+    end
+    
+    he { should be_able_to :create_page_for, @page }
+    he "should be able to destroy the sub-page" do
+      @sub_page = @page.child_pages.create
+      the_user.should be_able_to :destroy, @sub_page
+    end
+    he "should not be able to destroy the sub-page after 10 minutes" do
+      @sub_page = @page.child_pages.create
+      @sub_page.update_attribute :created_at, 11.minutes.ago
+      the_user.should_not be_able_to :destroy, @sub_page
+    end
+  end
+ 
   he "should be able to access the imprint page" do
     @page = create :page, title: "Imprint"
     @page.add_flag :imprint
