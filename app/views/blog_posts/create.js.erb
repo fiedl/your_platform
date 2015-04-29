@@ -1,17 +1,20 @@
 <% # Create new blog post box. %>
 var created_blog_post = $("<%= j(html_convert_h1_to_boxes(render partial: 'pages/page', object: @blog_post))  %>");
 
-<% # Add the new blog post below the tool button's section. %>
-blog_tools_section = $("div.blog_tools");
+created_blog_post.find('.box.first').removeClass('first');
 
-created_blog_post.hide().insertAfter(blog_tools_section).slideDown( 500, function() {
+<% # Add the new blog post below the tool button's section. %>
+var blog_entries_section = $("#blog_entries");
+
+created_blog_post.hide().prependTo(blog_entries_section).slideDown( 500, function() {
   <% # Trigger all callbacks that are needed on page load, e.g. initialize edit mode elements. %>
   if ($.find(".currently_in_edit_mode").length == 0){
     created_blog_post.trigger("ready");
     created_blog_post.trigger("page:load");
   }
   <% # Trigger the edit_mode in order to make the new entry be shown as text fields. %>
-  $( ":root" ).find(".blog_tools + .edit_mode_group a.edit_button").click();
+  $("#blog_entries .edit_mode_group:first a.edit_button").click();
+  
+  $('.add_blog_post').show();
 } );
-
 

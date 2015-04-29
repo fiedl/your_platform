@@ -6,6 +6,9 @@ de:
   attachment: 'Anhang'
   attachments: 'Anhänge'
   add_attachment: 'Anhang hinzufügen'
+  
+  destroying_page: Inhalt wird gelöscht.
+  please_wait: Bitte warten.
 
   file: 'Datei'
   helpers:

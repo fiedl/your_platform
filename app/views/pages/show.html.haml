@@ -29,7 +29,7 @@
     - #
     - if (Page.find(@page.id).type != 'BlogPost')  
       %div.blog_tools.box
-        = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success", :method => :post, :remote => :true do
+        = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success add_blog_post", :method => :post, :remote => :true do
           = icon :plus
           = I18n.t(:add_blog_entry)
   

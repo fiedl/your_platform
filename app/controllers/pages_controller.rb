@@ -51,6 +51,17 @@ class PagesController < ApplicationController
     redirect_to @new_page
   end
   
+  def destroy
+    @parent = @page.parents.first
+    @page.destroy
+
+    respond_to do |format|
+      format.html { redirect_to @parent }
+      format.json { render json: {redirect_to: url_for(@parent)} }
+    end
+  end
+  
+  
 private
 
   def secure_parent

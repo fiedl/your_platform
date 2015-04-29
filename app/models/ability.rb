@@ -324,16 +324,16 @@ class Ability
     end
     can :index_public_events, :all
     
-    # Nobody can destroy events that are older than 10 minutes.
+    # Nobody can destroy events and pages that are older than 10 minutes.
     timestamp = 10.minutes.ago
-    cannot :destroy, Event, ["created_at >= ?", timestamp] do |event|
+    cannot :destroy, [Event, Page], ["created_at >= ?", timestamp] do |obj|
       # Please note: The ">=" above is the wrong way by intention. 
       # Apparently, cancan does not distinguish between `can` and `cannot` there.
       # TODO: Fix this! Does upgrade to the cancancan project solve this?
       #
       # This block is to make sure, the above scope did work correctly.
       # FIXME: Make this block unnecessary.
-      event.created_at < timestamp
+      obj.created_at < timestamp
     end
     
   end

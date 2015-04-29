@@ -6,6 +6,9 @@
       = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
 %div.page
   %div.page_header
+    - if can? :destroy, page
+      = link_to "Eintrag wieder löschen", page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger has_tooltip destroy_page right', title: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde.', remote: true
+  
     - if page.author
       %span.page_author
         = link_to(page.author.title, page.author) + ", "

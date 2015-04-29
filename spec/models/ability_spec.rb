@@ -39,6 +39,18 @@ describe Ability do
       
       the_user.should_not be_able_to :destroy, @event
     end
+    
+    he "should be able to destroy recently created pages" do
+      @page = create :page, title: "New Page"
+      
+      the_user.should be_able_to :destroy, @page
+    end
+    he "should not be able to destroy pages that are older than 10 minutes" do
+      @page = create :page, title: "Old Page"
+      @page.update_attribute :created_at, 11.minutes.ago
+      
+      the_user.should_not be_able_to :destroy, @page
+    end
   end
   
   context "when the user is officer of a group" do
