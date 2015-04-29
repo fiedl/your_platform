@@ -1,4 +1,21 @@
 - set_title @group.title
+
+- tab_pane_class = "" 
+- if can? :use, :tab_view
+  - tab_pane_class = "tab-pane fade"
+  %ul.nav.nav-tabs
+    %li.active
+      %a{href: '#events', data: {toggle: 'tab'}} Veranstaltungen
+    %li
+      %a{href: '#contact', data: {toggle: 'tab'}} Kontakt
+    %li
+      %a{href: '#members', data: {toggle: 'tab'}} Mitglieder
+    %li
+      %a{href: '#officers', data: {toggle: 'tab'}} Amtsträger
+    %li
+      %a{href: '#more', data: {toggle: 'tab'}} Weitere Informationen
+
+
 %h1= best_in_place_if can?(:rename, @group), @group, :name
 %div
   = best_in_place_if can?(:update, @group), @group, :body, as: :textarea
@@ -8,72 +25,81 @@
   - if @child_groups
     = render partial: 'groups/group_list', locals: {groups: @child_groups}
 
--# / current posts
--# - if @posts && @posts.count > 0
--#   = render partial: 'posts/posts', locals: { posts: @posts }
+.tab-content.group
 
--# umcoming events
-= render partial: 'shared/upcoming_events', locals: {events: @group.upcoming_events.limit(5), force_show: can?(:create_event, @group), parent_group: @group}
+  #posts{class: tab_pane_class}
+    -# / current posts
+    -# - if @posts && @posts.count > 0
+    -#   = render partial: 'posts/posts', locals: { posts: @posts }
 
-- unless @child_groups
-  -# contact info
-  = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]), force_show: can?(:create_post_for, @group))
-
--# listing members
-- if @memberships.try(:any?) || can?(:update_memberships, @group)
-  %h1.section.members
-    = t :members
-    %span.members_count
-      (#{@members.count})
-  %div
-    - if @group and @new_user_group_membership
-      = render partial: 'export_button'
-      - if can? :create_memberships, @group
-        %span.show_only_in_edit_mode.add_membership
-          = render partial: 'user_group_memberships/new'
-          %hr
-      %span#group_members
-        .alert.alert-warning.new_users_please_reload.hidden Diese Gruppe enthält neue Mitglieder. Bitte Seite neu laden, um die Tabellen-Ansicht zu aktualisieren.
-        .child_users
-          - if @members.count > 0
-            = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
-
-- # officers
-= render partial: 'officers/officers_box', locals: {structureable: @group}
-
--# large map
-- if @large_map_address_fields.any?
-  %h1.large_map.section= t :map
-  .group_map
-    .large_map_section
-      = address_fields_map( @large_map_address_fields )
-
--# -# sub groups
--# - if @child_groups
--#   %h1.section.child_groups= t :groups
--#   %div
--#     %ul
--#       - @child_groups.each do |child_group|
--#         %li= link_to (child_group.extensive_name || child_group.name), child_group
-
-- unless @child_groups
-  -# bank and description info
-  = profile_sections_to_html(@group.profile.sections_by_title([ :bank_account_information, :description ]))
-
-- unless @child_groups
-  -# further info: token, extensive name, internal token
-  - if @group.token or @group.extensive_name or @group.internal_token
-    %h1.section.further_information= t :further_information
-    %div
-      %dl
-        - if @group.token.present? or can?(:change_token, @group)
-          %dt
-            = t :token
-            %span.show_only_in_edit_mode (in Aktivitätszahl)
-          %dd= best_in_place_if can?(:change_token, @group), @group, :token
-        - if @group.internal_token.present? or can?(:change_internal_token, @group)
-          %dt= t :internal_token
-          %dd= best_in_place_if can?(:change_internal_token, @group), @group, :internal_token
-        - if @group.extensive_name.present? or can?(:rename, @group)
-          %dt= t :extensive_name
-          %dd= best_in_place_if can?(:rename, @group), @group, :extensive_name
+  #events{class: tab_pane_class + " in active"}
+    -# umcoming events
+    = render partial: 'shared/upcoming_events', locals: {events: @group.upcoming_events.limit(5), force_show: can?(:create_event, @group), parent_group: @group}
+  
+  - unless @child_groups
+    #contact{class: tab_pane_class}
+      -# contact info
+      = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]), force_show: can?(:create_post_for, @group))
+  
+  -# listing members
+  - if @memberships.try(:any?) || can?(:update_memberships, @group)
+    #members{class: tab_pane_class}
+      %h1.section.members
+        = t :members
+        %span.members_count
+          (#{@members.count})
+      %div
+        - if @group and @new_user_group_membership
+          = render partial: 'export_button'
+          - if can? :create_memberships, @group
+            %span.show_only_in_edit_mode.add_membership
+              = render partial: 'user_group_memberships/new'
+              %hr
+          %span#group_members
+            .alert.alert-warning.new_users_please_reload.hidden Diese Gruppe enthält neue Mitglieder. Bitte Seite neu laden, um die Tabellen-Ansicht zu aktualisieren.
+            .child_users
+              - if @members.count > 0
+                = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
+  
+  #officers{class: tab_pane_class}
+    - # officers
+    = render partial: 'officers/officers_box', locals: {structureable: @group}
+  
+  -# large map
+  - if @large_map_address_fields.any?
+    %h1.large_map.section= t :map
+    .group_map
+      .large_map_section
+        = address_fields_map( @large_map_address_fields )
+  
+  -# -# sub groups
+  -# - if @child_groups
+  -#   %h1.section.child_groups= t :groups
+  -#   %div
+  -#     %ul
+  -#       - @child_groups.each do |child_group|
+  -#         %li= link_to (child_group.extensive_name || child_group.name), child_group
+  
+  #more{class: tab_pane_class}
+    - unless @child_groups
+      -# bank and description info
+      = profile_sections_to_html(@group.profile.sections_by_title([ :bank_account_information, :description ]))
+    
+    - unless @child_groups
+      -# further info: token, extensive name, internal token
+      - if @group.token or @group.extensive_name or @group.internal_token
+        %h1.section.further_information= t :further_information
+        %div
+          %dl
+            - if @group.token.present? or can?(:change_token, @group)
+              %dt
+                = t :token
+                %span.show_only_in_edit_mode (in Aktivitätszahl)
+              %dd= best_in_place_if can?(:change_token, @group), @group, :token
+            - if @group.internal_token.present? or can?(:change_internal_token, @group)
+              %dt= t :internal_token
+              %dd= best_in_place_if can?(:change_internal_token, @group), @group, :internal_token
+            - if @group.extensive_name.present? or can?(:rename, @group)
+              %dt= t :extensive_name
+              %dd= best_in_place_if can?(:rename, @group), @group, :extensive_name
+  
