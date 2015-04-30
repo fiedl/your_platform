@@ -1,4 +1,16 @@
+@import '_colors'
+
+#breadcrumb-bar
+  background-color: $headerbar-color
+  color: $headerbar-contrast-color
+  margin-bottom: 20px
+
+#breadcrumb-bar a
+  color: $headerbar-contrast-color
+  
 #breadcrumb
+  margin-bottom: -20px
+  
   font-size: 90%
   vertical-align: middle
   display: inline-block
@@ -20,6 +32,4 @@
       width: 3px
       background: no-repeat center center
       background-image: image-url("your_platform/breadcrumb-sep.png")
-    li.last
-      a
-        color: black
+    li.last a

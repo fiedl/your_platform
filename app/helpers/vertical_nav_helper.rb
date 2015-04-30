@@ -23,7 +23,7 @@ module VerticalNavHelper
   end
   
   def show_vertical_nav?
-    @navable.present?
+    @navable.present? && (@navable != Page.find_root) && (@navable.children.count + @navable.ancestors.count > 1)
   end
 
   def child_navables(navable)

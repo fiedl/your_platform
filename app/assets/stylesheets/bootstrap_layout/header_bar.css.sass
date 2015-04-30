@@ -1,3 +1,10 @@
+@import '_colors'
+
+#header-bar
+  background-color: $headerbar-color
+  margin-top: -20px
+  padding-top: 20px
+
 #header-bar #logo
   min-height: 85px
 
@@ -6,6 +13,16 @@
 
 #header_help
   margin-left: 25px
+  background-color: lighten($headerbar-color, 10%)
+  color: $headerbar-contrast-color
+  border-color: $headerbar-color
   
 .navbar-form
   display: inline-block
+  
+#header_search input
+  background-color: lighten($headerbar-color, 10%)
+  color: $headerbar-contrast-color
+  border-color: $headerbar-color
+  +placeholder
+    color: darken($headerbar-contrast-color, 10%)

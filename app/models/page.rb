@@ -11,6 +11,8 @@ class Page < ActiveRecord::Base
   
   serialize :redirect_to
   
+  include PagePublicWebsite
+  
 
   def fill_cache
     group

@@ -63,7 +63,7 @@ class Ability
     @params = params
     @user = user
         
-    if user
+    if user.try(:account) # has to be able to sign in
       if user.global_admin? and view_as?(:global_admin)
         rights_for_global_admins
       end
@@ -323,6 +323,10 @@ class Ability
       # FIXME: Make this block unnecessary.
       page.has_flag?(:imprint)
     end
+    
+    # All users can read the public website.
+    #
+    can :read, Page, id: Page.public_website_page_ids
     
     # Listing Events and iCalendar (ICS) Export:
     #

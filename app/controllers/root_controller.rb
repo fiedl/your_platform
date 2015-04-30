@@ -1,7 +1,7 @@
 class RootController < ApplicationController
   
   before_action :redirect_to_setup_if_needed
-  before_action :redirect_to_sign_in_if_signed_out, :find_and_authorize_page
+  before_action :redirect_to_sign_in_if_needed, :find_and_authorize_page
 
   def index
     current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)
@@ -21,8 +21,19 @@ private
     end
   end
   
-  def redirect_to_sign_in_if_signed_out
-    redirect_to sign_in_path unless current_user or @need_setup
+  # If a public website exists, which is not just a redirection, then signed-out
+  # users are shown the public website.
+  #
+  # If no public website exists, the users are shown sign-in form.
+  # 
+  def redirect_to_sign_in_if_needed
+    unless current_user or @need_setup
+      if Page.public_website_present?
+        redirect_to Page.public_root
+      else
+        redirect_to sign_in_path
+      end
+    end
   end
 
   def find_and_authorize_page

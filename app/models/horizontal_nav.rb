@@ -9,17 +9,29 @@ class HorizontalNav
   end
   
   def link_objects 
-    objects = navables
+    objects = navables.to_a
     objects << { title: I18n.t(:sign_in), :controller => '/sessions', :action => :new } if not logged_in?
     objects
   end
   
   def navables
+    if currently_in_intranet?
+      intranet_navables
+    else
+      public_navables
+    end
+  end
+  
+  def intranet_navables
     [ Page.find_intranet_root ] + (@user.try(:current_corporations) || [])
   end
   
+  def public_navables
+    [ Page.find_root ] + Page.find_root.child_pages - [ Page.find_intranet_root ]
+  end
+  
   def currently_in_intranet?
-    current_navable.ancestor_pages.include? Page.find_intranet_root
+    current_navable && ([current_navable] + current_navable.ancestor_pages).include?(Page.find_intranet_root)
   end
   
   def current_navable
