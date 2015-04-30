@@ -6,6 +6,11 @@ en:
   attachments: 'Attachments'
   add_attachment: 'Add attachment'
 
+  destroy_page_again: Remove this entry
+  a_new_page_can_be_destroyed_within_ten_minutes: 'The new contant can be removed within ten minutes after creation in case it has been created mistakenly.'
+  destroying_page: Destroying entry.
+  please_wait: Please wait.
+
   file: 'File'
   helpers:
     submit:

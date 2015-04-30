@@ -1,0 +1,31 @@
+en:
+  attachment: 'Attachment'
+  attachments: 'Attachments'
+  add_attachment: 'Add Attachment'
+  add_attachments: 'Add Attachments'
+  
+  drop_images_here: Drop images here!
+  drop_documents_or_images_here: Drop documents or images here!
+  
+  uploading_images: Uploading images.
+  uploading_files: Uploading files.
+  please_wait_until_this_field_is_green_again: 'Please wait until this box is green again.'
+  
+  images_have_been_uploaded: Images have been uploaded!
+  files_have_been_uploaded: Files have been uploaded!
+  
+  upload_failed: Upload has failed.
+  upload_failed_please_contact_support: "At least one file could not be uploaded. Please contact our support team!"
+  
+  images_are_about_to_be_shown_as_gallery_thanks_for_uploading: The images are about to be shown as gallery. Thanks for uploading!
+  files_are_about_to_be_shown_thanks_for_uploading: The files are about to be shown as attachments. Thanks for uploading!
+  
+  click_here_to_set_an_image_title: 'Click here to enter an image title.'
+  click_here_to_set_an_image_description: 'Click here enter set an image description.'
+  
+
+  documents: Documents
+  pictures: Images
+  videos: Videos
+  audios: Audios
+  file: File

@@ -4,21 +4,31 @@ de:
   add_attachment: 'Anhang hinzufügen'
   add_attachments: 'Anhänge hinzufügen'
   
+  drop_images_here: Bilder hierher schieben!
+  drop_documents_or_images_here: Dokumente oder Bilder hierher schieben!
+  
+  uploading_images: Bilder werden hochgeladen.
+  uploading_files: Dateien werden hochgeladen.
+  please_wait_until_this_field_is_green_again: 'Bitte warten, bis dieses Feld wieder grün wird.'
+  
+  images_have_been_uploaded: Bilder sind hochgeladen!
+  files_have_been_uploaded: Dateien sind hochgeladen!
+  
   upload_failed: Hochladen fehlgeschlagen.
   upload_failed_please_contact_support: "Mindestens eine Datei konnte nicht hochgeladen werden. Sollte dieses Problem wiederholt auftreten, wenden Sie sich bitte an die Administration."
   
-  processing_attachment: 'Anhang wird auf dem Server verarbeitet. Das einige Momente dauern. Bitte warten.'
-  drop_attachments_here: 'Um Anhänge hinzuzufügen, können Sie entweder auf den Knopf "Dateien auswählen" unterhalb drücken oder die Dateien einfach von außen in diesen Kasten ziehen.'
-  drop_files_here: 'Dateien hierhin schieben, um sie hochzuladen.'
+  images_are_about_to_be_shown_as_gallery_thanks_for_uploading: Die Bilder werden gleich als Gallerie angezeigt. Danke für's Hochladen!
+  files_are_about_to_be_shown_thanks_for_uploading: Gleich werden die Dateien angezeigt. Danke für's Hochladen!
+  
+  click_here_to_set_an_image_title: 'Hier klicken, um einen Bild-Titel zu vergeben.'
+  click_here_to_set_an_image_description: 'Hier klicken, um eine Bild-Beschreibung einzugeben.'
 
   documents: Dokumente
   pictures: 'Bilder'
   videos: 'Video-Dateien'
   audios: 'Audio-Dateien'
-
-  to_edit_title_click_on_image_and_then_on_title: 'Das Bearbeiten eines Bild-Titels ist in der Dia-Show-Ansicht möglich. Dazu klicken Sie bitte auf ein Bild. Dann sehen Sie unterhalb den Titel und die Beschreibung des Bildes, die Sie jeweils bearbeiten können, indem Sie darauf klicken.'
-
   file: 'Datei'
+
   helpers:
     submit:
       create: '%{model} erzeugen'

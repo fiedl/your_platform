@@ -11,30 +11,29 @@
   .attachment_drop_field
     %p.drop_attachments_here
       - if type == :image
-        Bilder hierher schieben!
+        = t :drop_images_here
       - else
-        Dokumente oder Bilder hierher schieben!
+        = t :drop_documents_or_images_here
     %p.uploading.hidden
       - if type == :image
-        Bilder werden hochgeladen.
+        = t :uploading_images
       - else
-        Dateien werden hochgeladen.
+        = t :uploading_files
       %br
-      %small Bitte warten, bis dieses Feld wieder grün wird.
+      %small= t :please_wait_until_this_field_is_green_again
       %br
       %small.upload_counter
     %p.success.hidden
       - if type == :image
-        Bilder sind hochgeladen!
+        = t :images_have_been_uploaded
       - else
-        Dateien sind hochgeladen!
+        = t :files_have_been_uploaded
       %br
       %small 
         - if type == :image
-          Die Bilder werden gleich als Gallerie angezeigt. Danke für's Hochladen!
+          = t :images_are_about_to_be_shown_as_gallery_thanks_for_uploading
         - else
-          - #Nach einem Neuladen (<kbd>Strg + R</kbd> bzw. <kbd>⌘ + R</kbd>) 
-          Gleich werden die Dateien angezeigt. Danke für's Hochladen!
+          = t :files_are_about_to_be_shown_thanks_for_uploading
           
     = form_for parent.attachments.build do |f|
       = f.hidden_field :parent_id

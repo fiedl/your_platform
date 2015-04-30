@@ -33,7 +33,7 @@
           = icon :plus
           = I18n.t(:add_blog_entry)
   
-  - if @blog_entries.count > 0
-    #blog_entries
+  #blog_entries
+    - if @blog_entries.count > 0
       - for blog_entry_page in @blog_entries
         = render partial: 'pages/page', object: blog_entry_page
