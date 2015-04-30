@@ -4,7 +4,8 @@ class ApplicationController < ActionController::Base
   layout "bootstrap"
 
   around_action :use_user_time_zone
-  before_action :redirect_www_subdomain, :set_locale
+  before_action :redirect_www_subdomain
+  before_action :update_locale_cookie, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
   before_action :log_generic_metric_event
@@ -72,11 +73,13 @@ class ApplicationController < ActionController::Base
   #   3. Use the default locale if no other could be determined.
   #
   def set_locale
+    I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
+  end
+  def update_locale_cookie
     cookies[:locale] = secure_locale_param if params[:locale].present?
     cookies[:locale] = nil if params[:locale] and params[:locale] == ""
     cookies[:locale] = nil if cookies[:locale] == ""
-    I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
-  end
+  end    
   
   private
   
