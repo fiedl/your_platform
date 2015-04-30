@@ -27,7 +27,7 @@ class HorizontalNav
   end
   
   def public_navables
-    [ Page.find_root ] + Page.find_root.child_pages - [ Page.find_intranet_root ]
+    [ Page.find_root ] + Page.find_root.child_pages.where(type: [nil, 'Page']) - [ Page.find_intranet_root ]
   end
   
   def currently_in_intranet?
