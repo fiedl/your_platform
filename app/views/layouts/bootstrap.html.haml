@@ -35,7 +35,7 @@
     = yield :scripts
     = yield :head
 
-  %body{:class => controller.controller_name, data: { locale: I18n.locale, env: Rails.env.to_s }}
+  %body{:class => controller.controller_name, data: { locale: I18n.locale, env: Rails.env.to_s, layout: 'bootstrap' }}
     - if user_account_signed_in?
       %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
         .container-fluid
