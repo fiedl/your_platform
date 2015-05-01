@@ -1,0 +1,9 @@
+en:
+  settings: Settings
+  user_settings: User settings
+  
+  this_sets_the_ui_locale: 'This sets the language of the user interface:'
+  visibility: Visibility
+  incognito: Incognito
+  incognito_explanation: 'When active, you will not be shown in the activity indicator on this page.'
+  incognito_warning: 'Attention: Maintenance scripts will not be able to see you online. The server could restart for maintenance reasons while you are online.'
