@@ -13,6 +13,7 @@ install:
 before_script:
   - cd demo_app/my_platform
   - cp config/database.travis.yml config/database.yml
+  - cp config/secrets.example.yml config/secrets.yml
   - mkdir -p public/uploads
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate
