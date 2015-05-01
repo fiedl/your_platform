@@ -27,6 +27,12 @@ en:
   user_account_deleted:          'User account was successfully deleted.'
   
   personal_title:                Personal Title
+  
+  avatar:                        Avatar
+  change_avatar:                 Change avatar
+  remove_avatar:                 Remove uploaded avatar
+  uploading_avatar:              Uploading avatar. Please wait.
+  
     
   formtastic:
 
