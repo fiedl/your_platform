@@ -110,3 +110,6 @@ $(document).ready ->
       { type: 'de_date', targets: 4 }
     ]
   }, common_configuration))
+  $('.datatable.officers').dataTable(jQuery.extend({
+    "pageLength": 100,
+  }, common_configuration))
