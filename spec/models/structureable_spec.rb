@@ -124,5 +124,55 @@ describe Structureable do
       end
     end
     
+    describe "#<<" do
+      subject { @parent << @child }
+      describe "adding a group to a group" do
+        before do
+          @parent = create :group
+          @child = create :group
+        end
+        
+        it "should add the group as child group of the parent group" do
+          subject
+          @parent.child_groups.should include @child
+        end
+        
+        describe "if they have a common user" do
+          before do
+            @user = create :user
+            @parent << @user
+            @child << @user
+          end
+          it "should add the group as child group of the parent group" do
+            subject
+            @parent.child_groups.should include @child
+          end
+        end
+        
+        # Example: 
+        #
+        #   Alle Amtsträger
+        #         |-------- Alle Seniores -------.
+        #         |                              |
+        #         |                              |
+        #         |-- << -- Alle Admins ------- User 
+        # 
+        describe "when it creates a second connection to a user" do
+          before do
+            @parent.update_attributes name: 'Alle Amtsträger'
+            @alle_seniores = @parent.child_groups.create name: 'Alle Seniores'
+            @user = create(:user)
+            @alle_seniores.assign_user @user
+            @child.update_attributes name: 'Alle Admins'
+            @child.assign_user @user
+          end
+          it "should add the group as child group of the parent group" do
+            subject
+            @parent.child_groups.should include @child
+          end
+        end
+        
+      end
+    end
   end
 end

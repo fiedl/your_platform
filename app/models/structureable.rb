@@ -136,26 +136,40 @@ module Structureable
     # Adding child objects.
     #
     def <<(object)
-      if object.kind_of? User
-        raise 'Users can only be assigned to groups.' unless self.kind_of? Group
-        self.assign_user(object) unless self.child_users.include? object
-      elsif object.kind_of? Group
-        if self.kind_of?(Group) &&
-          (existing_link = DagLink.where(ancestor_type: 'Group', descendant_type: 'Group',
-            ancestor_id: self.id, descendant_id: object.id,
-            direct: false).first)
-          existing_link.make_direct
+      begin
+        if object.kind_of? User
+          raise 'Users can only be assigned to groups.' unless self.kind_of? Group
+          self.assign_user(object) unless self.child_users.include? object
+        elsif object.kind_of? Group
+          if self.kind_of?(Group) &&
+            (existing_link = DagLink.where(ancestor_type: 'Group', descendant_type: 'Group',
+              ancestor_id: self.id, descendant_id: object.id,
+              direct: false).first)
+            existing_link.make_direct
+          else
+            self.child_groups << object unless self.child_groups.include? object
+          end
+        elsif object.kind_of? Page
+          self.child_pages << object unless self.child_pages.include? object
+        elsif object.kind_of? Event
+          self.child_events << object unless self.child_events.include? object
+        elsif object.nil?
+          raise "Something is wrong! You've tried to add nil."
         else
-          self.child_groups << object unless self.child_groups.include? object
+          raise "Case not handled yet. Please implement this. It's easy :)"
         end
-      elsif object.kind_of? Page
-        self.child_pages << object unless self.child_pages.include? object
-      elsif object.kind_of? Event
-        self.child_events << object unless self.child_events.include? object
-      elsif object.nil?
-        raise "Something is wrong! You've tried to add nil."
-      else
-        raise "Case not handled yet. Please implement this. It's easy :)"
+      rescue ActiveRecord::RecordInvalid => e
+        logger.warn(e.message)
+        logger.warn("ancestor: " + self.inspect)
+        logger.warn("descendant: " + object.inspect)
+        logger.warn("record: " + e.record.errors.inspect)
+        logger.warn(e.record)
+        print "WARN #{e.message}\n".red
+        print "ancestor: #{self.inspect}\n".red
+        print "descendant: #{object.inspect}\n".red
+        print "record: #{e.record.errors.inspect}\n".red
+        print "#{e.record.inspect}\n".red
+        raise e if not File.basename($0) == 'rake'
       end
     end
     

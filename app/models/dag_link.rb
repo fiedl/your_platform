@@ -17,6 +17,8 @@ class DagLink < ActiveRecord::Base
   after_save { self.delay.delete_cache }
   before_destroy :delete_cache
   
+  include DagLinkRepair
+  
   def fill_cache
     valid_from
   end
@@ -26,4 +28,5 @@ class DagLink < ActiveRecord::Base
     ancestor.try(:delete_cache)
     descendant.try(:delete_cache)
   end
+  
 end
