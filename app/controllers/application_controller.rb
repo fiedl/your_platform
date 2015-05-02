@@ -69,11 +69,12 @@ class ApplicationController < ActionController::Base
   
   # The locale of the application s set as follows:
   #   1. Use the url parameter 'locale' if given.
-  #   2. Use the language of the web browser if supported by the app.
-  #   3. Use the default locale if no other could be determined.
+  #   2. Use the `Setting.preferred_locale`, which is a global application setting, if set.
+  #   3. Use the language of the web browser if supported by the app.
+  #   4. Use the default locale if no other could be determined.
   #
   def set_locale
-    I18n.locale = cookies[:locale] || browser_language_if_supported_by_app || I18n.default_locale
+    I18n.locale = cookies[:locale] || Setting.preferred_locale || browser_language_if_supported_by_app || I18n.default_locale
   end
   def update_locale_cookie
     cookies[:locale] = secure_locale_param if params[:locale].present?

@@ -1,3 +1,8 @@
+# global application settings:
+#
+#   * Setting.app_name
+#   * Setting.preferred_locale
+#
 class Setting < RailsSettings::CachedSettings
 	attr_accessible :var if defined? attr_accessible
 
@@ -5,5 +10,4 @@ class Setting < RailsSettings::CachedSettings
     super(name)
     Rails.cache.delete_matched 'app_version_footer*'
   end
-  
 end
