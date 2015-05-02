@@ -16,7 +16,7 @@ module AutoCompletionHelper
                    activator: (activator_id.present? ? ('#' + activator_id) : '')
                    )
     if options[:activator]
-      html += link_to(icon(:edit), '#', id: activator_id, class: 'multi_user_select_activator', title: I18n.t(:edit)).html_safe
+      html += (" " + link_to(icon(:edit), '#', id: activator_id, class: 'multi_user_select_activator', title: I18n.t(:edit))).html_safe
     end
     return html.html_safe
   end
