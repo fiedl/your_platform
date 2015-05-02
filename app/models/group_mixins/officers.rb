@@ -44,4 +44,15 @@ module GroupMixins::Officers
     end.any?
   end
   
+  class_methods do
+    
+    # `Group.global_admins` refers to the group
+    # of the global administrators.
+    #
+    def global_admins
+      Group.everyone.admins_parent
+    end
+    
+  end
+  
 end
