@@ -48,7 +48,7 @@ feature "Officers Management" do
       page.should have_text "President"
       page.should have_text @user.title
       
-      click_on I18n.t(:edit)
+      within(".panel-heading") { click_on I18n.t(:edit) }
       fill_in "direct_members_titles_string", with: @new_user.title
       find(".save_button").click
     end
