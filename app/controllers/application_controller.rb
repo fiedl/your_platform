@@ -187,15 +187,15 @@ class ApplicationController < ActionController::Base
   def current_ability
     options = {}
     options[:token] = params[:token]
-    @current_ability = nil
-    @current_role = nil
+    @current_ability ||= nil
+    @current_role ||= nil
     
     # Read-only mode
     options[:read_only_mode] = true if read_only_mode?
     
     # Preview role mechanism
     #
-    if current_user
+    if @current_ability.nil? and current_user
       params[:preview_as] ||= load_preview_as_from_cookie
       if params[:preview_as].present? || current_user.is_global_officer?
         currently_displayed_object = @navable || Group.everyone
