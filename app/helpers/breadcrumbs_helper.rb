@@ -18,7 +18,7 @@ module BreadcrumbsHelper
   end
   
   def breadcrumb_ul_for_navable( navable )
-    content_tag :ul do
+    content_tag :ul, class: 'breadcrumbs' do
       breadcrumbs = navable.nav_node.breadcrumbs   # => [ { title: 'foo', navable: ... }, ... ]
       breadcrumb_lis_for_breadcrumb_hashes( breadcrumbs )
     end
@@ -55,6 +55,8 @@ module BreadcrumbsHelper
             'data-vertical-nav-path': vertical_nav_path(navable_type: breadcrumb[:navable].class.base_class.name, navable_id: breadcrumb[:navable].id)
           })
         end
+        
+        link_options = link_options.merge({class: 'breadcrumb_link'})
 
         link_to breadcrumb[ :title ], breadcrumb[ :navable ], link_options
       end
