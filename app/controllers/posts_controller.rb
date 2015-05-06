@@ -100,7 +100,7 @@ class PostsController < ApplicationController
     authorize! :create, :post_via_email
     if params[:message]
       @posts = ReceivedPostMail.new(params[:message]).store_as_posts
-      # @posts.each { |post| post.notify ... } # TODO
+      @posts.each { |post| post.send_as_email_to_recipients }
     end
     render json: (@posts || [])
   end

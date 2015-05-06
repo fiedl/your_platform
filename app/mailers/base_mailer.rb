@@ -1,5 +1,6 @@
 class BaseMailer < ActionMailer::Base
   helper MailerHelper
+  helper ApplicationHelper
   default from: 'wingolfsplattform@wingolf.org'
   
   # This method overrides the original delivery method in order to

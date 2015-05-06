@@ -58,7 +58,7 @@ class Post < ActiveRecord::Base
     #
     successfully_delivered_to = recipients.select do |recipient|
       unless recipient.email_does_not_work?
-        PostMailer.post_email(text, [recipient], email_subject, author).deliver
+        PostMailer.post_email(text, [recipient], email_subject, author, group, self).deliver
       end
     end
     

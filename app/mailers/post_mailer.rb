@@ -1,10 +1,12 @@
 class PostMailer < BaseMailer
 
-  def post_email(text, recipients, subject, current_user)
+  def post_email(text, recipients, subject, sender, group, post)
     to_emails = recipients.collect { |user| "#{user.title} <#{user.email}>" }
     @text = text
     @subject = subject.gsub(/\[.*\]/, '')
-    mail to: to_emails, from: current_user.email, subject: subject
+    @group = group
+    @post = post
+    mail to: to_emails, from: sender.email, subject: subject
   end
   
 end
