@@ -6,7 +6,12 @@ class PostsController < ApplicationController
   def index
     @group = Group.find(params[:group_id]) if params[:group_id].present?
     @posts = @group.posts.order('sent_at DESC') if @group
-    @title = t :current_posts
+
+    @new_post = Post.new
+    @new_post.group = @group
+    @new_post.author = current_user
+    
+    @title = "#{t(:posts)} - #{@group.name}"
     @navable = @group
   end
 
@@ -24,13 +29,12 @@ class PostsController < ApplicationController
   
   def create
     return create_via_email if params[:message].present?
-
-    raise 'no group given' unless params[:group_id].present?
-    @group = Group.find params[:group_id]
+    
+    @group = Group.find(params[:group_id] || params[:post][:group_id] || raise('no group given'))
     authorize! :create_post_for, @group
 
-    @text = params[:text]
-    @subject = params[:subject]
+    @text = params[:text] || params[:post][:text]
+    @subject = params[:subject] || params[:post][:text].split("\n").first
     
     if params[:recipient] == 'me'
       @recipients = [current_user]
@@ -44,6 +48,12 @@ class PostsController < ApplicationController
       end
     end
     
+    if params[:recipient] != 'me'
+      Post.create! subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
+    end
+    
+    @subject = "[#{@group.name}] #{@subject}" unless @subject.include?("[")
+        
     @send_counter = 0
     @recipients.each do |recipient|
       if recipient.email.present?
@@ -67,18 +77,33 @@ class PostsController < ApplicationController
     end
     logger.info "Sent group email to #{@send_counter} recipients."
     
-    if params[:recipient] != 'me'
-      Post.create! subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
-    end
-    
     respond_to do |format|
       format.html do
         flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
-        redirect_to group_url(@group)
+        
+        if can? :use, :post_tab
+          redirect_to group_posts_path(@group), change: 'posts'
+        else
+          redirect_to group_url(@group)
+        end
       end
       format.json { render json: {recipients_count: @send_counter} }
     end
     
+  end
+  
+  def preview
+    respond_to do |format|
+      format.json do
+        render json: {
+          text: params[:text],
+          preview: view_context.markup(params[:text])
+        }
+      end
+      format.html do
+        render html: view_context.markup(params[:text])
+      end
+    end
   end
   
   private
@@ -103,5 +128,5 @@ class PostsController < ApplicationController
     end
     render json: (@posts || [])
   end
-
+  
 end

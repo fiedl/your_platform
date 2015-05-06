@@ -1,5 +1,7 @@
 ready = ->
   
+  $('.new.post #message_text').autosize()
+  
   refresh_number_of_recipients_display = ->
     $('span.member_count').text("…")
     valid_from = ""

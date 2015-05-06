@@ -79,6 +79,7 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
   
+  get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts
   
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
