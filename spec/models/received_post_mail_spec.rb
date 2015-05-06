@@ -33,6 +33,20 @@ describe ReceivedPostMail do
       its(:text) { should == "This is a simple text message." }
       its(:content_type) { should == "text" }
       its(:message_id) { should be_present }
+      
+      describe "for an unknown sender" do
+        let(:message) { 
+          "From: Unknown Sender <unknown@example.com>\n" +
+          "To: #{recipient_group.email}\n" +
+          "Subject: Test Mail\n\n" +
+          "This is a simple text message."
+        }
+        let(:mail) { ReceivedPostMail.new(message) }
+    
+        it "should store the author as string" do
+          subject.author.should == "Unknown Sender <unknown@example.com>"
+        end
+      end
     end
     
     it "should not import the same email twice" do
@@ -43,5 +57,5 @@ describe ReceivedPostMail do
       Post.count.should == 1
     end
   end
-  
+
 end

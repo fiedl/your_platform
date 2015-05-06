@@ -9,7 +9,7 @@ module AvatarHelper
   def user_avatar(user, options = {})
     options[:size] ||= 36
     content_tag(:span, class: 'avatar') do
-      if user.avatar_id?
+      if user.try(:avatar_id?)
         image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: 'img-rounded'
       else
         user_gravatar(user, options)
@@ -21,8 +21,7 @@ module AvatarHelper
   # This image is just provided by gravatar.
   #
   def user_gravatar(user, options = {})
-
-    email = user.email
+    email = user.try(:email)
     options[:size] ||= 36
     options[:gravatar] ||= {}
     options[:gravatar][:size] ||= options[:size]

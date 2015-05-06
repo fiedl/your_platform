@@ -36,6 +36,9 @@ module Profileable
       @email_profile_field = profile_fields.build( type: "ProfileFieldTypes::Email", label: "email" ) unless @email_profile_field
       @email_profile_field.value = email
     end
+    def email_does_not_work?
+      profile_fields_by_type("ProfileFieldTypes::Email").review_needed.count > 0
+    end
     
     def profile
       @profile ||= Profile.new(self)

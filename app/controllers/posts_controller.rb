@@ -48,34 +48,10 @@ class PostsController < ApplicationController
       end
     end
     
-    if params[:recipient] != 'me'
-      Post.create! subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
-    end
+    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
+    @post.save! unless params[:recipient] == 'me'
     
-    @subject = "[#{@group.name}] #{@subject}" unless @subject.include?("[")
-        
-    @send_counter = 0
-    @recipients.each do |recipient|
-      if recipient.email.present?
-        begin
-          PostMailer.post_email(@text, [recipient], @subject, current_user).deliver 
-          @send_counter += 1
-        rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
-          logger.debug error
-          # Something is wrong with the recipient's mail.
-          # If the recipient's mails does not work, we'll delete it for the moment.
-          #
-          # TODO: Fancy mechanism that marks the mail as invalid.
-          # But the new mechanism has to ensure that we don't send emails to invalid addresses.
-          # Otherwise, the server could suffer from penalties.
-          #
-          logger.warn "SMTP Error on #{recipient.email}. Removing this email permanently."
-          logger.warn error.message
-          recipient.profile_fields_by_type("ProfileFieldTypes::Email").first.destroy
-        end
-      end
-    end
-    logger.info "Sent group email to #{@send_counter} recipients."
+    @send_counter = @post.send_as_email_to_recipients @recipients
     
     respond_to do |format|
       format.html do

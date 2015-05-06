@@ -3,31 +3,6 @@ class Post < ActiveRecord::Base
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
-  # This creates a new post from the information given in the `message`.
-  # `message` is a `Mail::Message` object (from `ActionMailer::Base`.
-  # See spec/factories/mail_message.rb.
-  #
-  def self.create_from_message(message)
-
-    # http://stackoverflow.com/questions/4868205
-    body = (message.html_part || message.text_part || message).body_in_utf8
-
-    # extract the content of the body tag if necessary
-    if body.include?('<body')
-      doc = Nokogiri::HTML( body )
-      body = doc.xpath( '//body' ).first.inner_html
-    end
-
-    new_post = self.create(subject: message.subject, text: body, sent_at: message.date)
-    new_post.author = message.from.first
-    new_post.set_group_by_email_address(message.to.first)
-    new_post.entire_message = message
-    new_post.save
-    return new_post
-  end
-
-  # TODO: create_multiple_from_message
-
   # This allows to set the author either as email or as email string.
   #
   def author=(author)
@@ -45,15 +20,6 @@ class Post < ActiveRecord::Base
   end
   def author
     super || external_author
-  end
-
-  # This sets the group this message belongs to, identifying the group by its email token.
-  #
-  def set_group_by_email_address(email_address)
-    token = email_address.split("@").first
-    groups = Group.select { |group| group.name && group.name.parameterize == token } 
-    # TODO Make this efficient, e.g. by email_token attribute
-    self.group = groups.first if groups.count == 1
   end
 
   # In order to do the encoding conversion properly,
@@ -80,6 +46,30 @@ class Post < ActiveRecord::Base
 
   # Delivering Post as Email to All Group Members
   # ==========================================================================================
+  
+  def notify_recipients
+    send_as_email_to_recipients
+  end
+  def send_as_email_to_recipients(recipients = nil)
+    recipients ||= group.members
+
+    # We want only one recipient in the 'to' field of each email.
+    # Thus, deliver separately.
+    #
+    successfully_delivered_to = recipients.select do |recipient|
+      unless recipient.email_does_not_work?
+        PostMailer.post_email(text, [recipient], email_subject, author).deliver
+      end
+    end
+    
+    logger.info "Sent Post email to #{successfully_delivered_to.count} recipients."
+    return successfully_delivered_to.count
+  end
+  
+  def email_subject
+    subject.include?("[") ? subject : "[#{group.name}] #{subject}"
+  end
+  
 
   # Each post may be delivered to all group members via email. ("Group Mail Feature").
   # This method returns the message to deliver to the group members.
@@ -143,57 +133,3 @@ class Post < ActiveRecord::Base
   end
 
 end
-
-
-
-module Mail
-  class Message
-
-    # This returns the message body in utf8 encoding.
-    # 
-    def body_in_utf8
-      CharlockHolmes
-      require 'charlock_holmes/string'
-
-      body = self.body.decoded
-      if body.present?
-        encoding = body.detect_encoding[:encoding]
-        body = body.force_encoding(encoding).encode('UTF-8')
-      end
-      return body
-    end
-
-    # This method adds the given string to all plain text parts of the message.
-    # For multipart messages, this simply adds a part containing the text_to_add.
-    # This is used for email footers.
-    # 
-    # Attention: Multipart emails may have a tree structure, i.e. a part
-    # may contain several other parts. Therefore, this method calls itself
-    # recursively. 
-    # 
-    def add_to_body( text_to_add )
-      CharlockHolmes
-      require 'charlock_holmes/string'
-
-      if self.multipart?
-
-        # Simply add another part.
-        # According to the documentation, this call will add another part 
-        # rather than wiping all.
-        self.body = text_to_add
-
-      else
-        
-        # plain text parts
-        if self.content_type == nil || self.content_type.include?('text/plain')
-          self.body = self.body_in_utf8 + text_to_add.encode('UTF-8')
-        end
-
-      end
-
-      return self
-    end
-
-  end
-end
-

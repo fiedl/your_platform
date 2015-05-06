@@ -70,8 +70,20 @@ class ReceivedMail
   def sender_email
     @email.from.first
   end
+  def sender_string
+    @email.header[:from].value
+  end
+  def sender_name
+    sender_string.gsub(" <#{sender_email}>", "")
+  end
   def sender
+    sender_by_email || sender_by_name
+  end
+  def sender_by_email
     ProfileFieldTypes::Email.where(value: sender_email).first.try(:profileable)
+  end
+  def sender_by_name
+    User.find_by_name sender_name
   end
   
   def recipient_emails
