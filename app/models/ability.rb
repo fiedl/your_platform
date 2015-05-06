@@ -361,5 +361,12 @@ class Ability
       obj.created_at < timestamp
     end
     
+    # Everyone can create posts via email, i.e. send email messages to our
+    # json api.
+    #
+    # TODO: Add a kind of auth token sent by our postfix script.
+    #
+    can :create, :post_via_email
+    
   end
 end

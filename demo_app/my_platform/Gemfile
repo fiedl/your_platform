@@ -106,3 +106,4 @@ gem 'colored'
 gem 'prawn', github: 'prawnpdf/prawn'
 gem "rails-settings-cached", "~> 0.4.1"
 
+gem 'mail', git: 'git://github.com/jeremy/mail.git'

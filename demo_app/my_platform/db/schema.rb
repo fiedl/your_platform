@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325105893) do
+ActiveRecord::Schema.define(version: 20150505221640) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -62,8 +62,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "descendant_type", limit: 255
     t.boolean  "direct",          limit: 1
     t.integer  "count",           limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  precision: 6
+    t.datetime "updated_at",                  precision: 6
     t.datetime "valid_to"
     t.datetime "valid_from"
   end
@@ -112,8 +112,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
 
   create_table "groups", force: :cascade do |t|
     t.string   "name",           limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   precision: 6
+    t.datetime "updated_at",                   precision: 6
     t.string   "token",          limit: 255
     t.string   "extensive_name", limit: 255
     t.string   "internal_token", limit: 255
@@ -151,8 +151,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
   create_table "pages", force: :cascade do |t|
     t.string   "title",          limit: 255
     t.text     "content",        limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   precision: 6
+    t.datetime "updated_at",                   precision: 6
     t.string   "redirect_to",    limit: 255
     t.integer  "author_user_id", limit: 4
     t.string   "type",           limit: 255
@@ -171,6 +171,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "entire_message",  limit: 65535
+    t.string   "message_id",      limit: 255
+    t.string   "content_type",    limit: 255
   end
 
   add_index "posts", ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
@@ -181,8 +183,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "label",            limit: 255
     t.string   "type",             limit: 255
     t.text     "value",            limit: 65535
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                     precision: 6
+    t.datetime "updated_at",                     precision: 6
     t.string   "profileable_type", limit: 255
     t.integer  "parent_id",        limit: 4
   end
@@ -245,8 +247,8 @@ ActiveRecord::Schema.define(version: 20150325105893) do
     t.string   "alias",             limit: 255
     t.string   "first_name",        limit: 255
     t.string   "last_name",         limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    precision: 6
+    t.datetime "updated_at",                    precision: 6
     t.boolean  "female",            limit: 1
     t.string   "accepted_terms",    limit: 255
     t.datetime "accepted_terms_at"

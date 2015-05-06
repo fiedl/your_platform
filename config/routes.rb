@@ -79,6 +79,8 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
   
+  resources :posts
+  
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
   

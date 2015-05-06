@@ -23,6 +23,8 @@ class PostsController < ApplicationController
   end
   
   def create
+    return create_via_email if params[:message].present?
+
     raise 'no group given' unless params[:group_id].present?
     @group = Group.find params[:group_id]
     authorize! :create_post_for, @group
@@ -78,4 +80,28 @@ class PostsController < ApplicationController
     end
     
   end
+  
+  private
+  
+  # This methods processes incoming email messages that can be sent through
+  #
+  #     POST /posts.json
+  #
+  # with the message sent as the `message` parameter.
+  # This can be tested like this:
+  #
+  #     cat testmessage.txt | curl -s -o /dev/null --data-urlencode message@- http://127.0.0.1:3000/posts.json
+  #
+  # We've adopted this idea from:
+  # https://github.com/ivaldi/brimir
+  #
+  def create_via_email
+    authorize! :create, :post_via_email
+    if params[:message]
+      @posts = ReceivedPostMail.new(params[:message]).store_as_posts
+      # @posts.each { |post| post.notify ... } # TODO
+    end
+    render json: (@posts || [])
+  end
+
 end
