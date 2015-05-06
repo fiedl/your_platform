@@ -1,0 +1,17 @@
+- #locals:
+- active ||= 'news'
+
+%ul.nav.nav-tabs.group
+  - if can? :use, :post_tab
+    %li{class: active == 'posts' ? 'active' : ''}
+      %a{href: group_posts_path(@group) + "#posts"} Nachrichten
+  %li{class: active == 'events' ? 'active' : ''}
+    %a{href: group_path(@group) + '#events'} Veranstaltungen
+  %li{class: active == 'contact' ? 'active' : ''}
+    %a{href: group_path(@group) + '#contact'} Kontakt
+  %li{class: active == 'members' ? 'active' : ''}
+    %a{href: group_path(@group) + '#members'} Mitglieder
+  %li{class: active == 'officers' ? 'active' : ''}
+    %a{href: group_path(@group) + '#officers'} Amtsträger
+  %li{class: active == 'more' ? 'active' : ''}
+    %a{href: group_path(@group) + '#more'} Weitere Informationen

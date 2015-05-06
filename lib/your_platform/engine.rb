@@ -11,6 +11,7 @@ require 'strong_parameters' unless defined? ActionController::Parameters
 
 # JavaScript
 require 'jquery-ui-rails'
+require 'autosize/rails'
 require 'sugar-rails'
 require 'i18n-js'
 

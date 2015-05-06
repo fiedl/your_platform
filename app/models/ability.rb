@@ -117,6 +117,7 @@ class Ability
   def rights_for_beta_testers
     can :use, :new_menu_feature
     can :use, :tab_view
+    can :use, :post_tab
   end
   
   def rights_for_developers

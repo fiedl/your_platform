@@ -1,9 +1,8 @@
 de:
-  posts: E-Mail-Nachrichten
-  current_posts: Aktuelle E-Mail-Nachrichten
+  posts: Nachrichten
+  current_posts: Aktuelle Nachrichten
 
   all_posts: Alle Nachrichten
-  back_to_group: Zurück zur Gruppe
 
   read_on: Weiterlesen
   this_message_has_been_deliverd_through_mailing_list: "Diese Nachricht wurde über den E-Mail-Verteiler der Gruppe '%{group_name}' übermittelt."
@@ -12,3 +11,11 @@ de:
   test_message_sent: Test-Nachricht wurde versandt.
   resend_test_message_to_my_own_address: Erneut zum Testen an meine eigene Adresse senden.
   message_has_been_sent_to_n_recipients: "Nachricht wurde an %{n} Empfänger versandt."
+  
+  new_post_to: Neue Nachricht an
+  enter_new_post_here: "Neue Nachricht eingeben ..."
+  
+  notify_according_to_notification_settings: Gemäß Benachrichtigungs-Einstellungen benachrichtigen
+  notify_all_immideately: Alle sofort benachrichtigen
+  
+  submit_post: Abschicken

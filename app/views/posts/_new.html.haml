@@ -1,0 +1,12 @@
+%h1= "#{t(:new_post_to)} #{@group.name}"
+%div.new_post
+  .media
+    .media-left.new_post_avatar= user_avatar(current_user)
+    .media-body
+      %textarea{placeholder: I18n.t(:enter_new_post_here)}
+      .post_tools
+        %select
+          %option= t(:notify_according_to_notification_settings)
+          %option= t(:notify_all_immideately)
+        %a.btn.btn-primary.right= t(:submit_post)
+        %p Beta-Funktion! Der Nachrichten-Versand ist noch außer Betrieb!

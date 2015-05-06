@@ -1,13 +1,15 @@
+%h1.post.post-subject= post.subject
 %div.post
-  %div.post-header
-    %div.post-author
-      - if post.author.kind_of? User
-        = link_to post.author.title, post.author
-      - if post.author.kind_of? String
-        = post.author
-    %div.post-date
-      = localize(post.sent_at)
-    %div.post-subject
-      = post.subject
-  %div.post-body
-    = post.text.html_safe
+  .media
+    .media-left= user_avatar(post.author) if post.author.kind_of? User
+    .media-body
+      %div.post-header
+        %div.post-author
+          - if post.author.kind_of? User
+            = link_to post.author.title, post.author
+          - if post.author.kind_of? String
+            = post.author
+        %div.post-date
+          = localize(post.sent_at)
+      %div.post-body
+        = markup post.text.html_safe

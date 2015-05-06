@@ -16,6 +16,14 @@ GIT
       rails (>= 3.2)
 
 GIT
+  remote: git://github.com/jeremy/mail.git
+  revision: 4875bc2ba1670289a34a155569af2f51abddc316
+  specs:
+    mail (2.5.4)
+      mime-types (~> 1.16)
+      treetop (~> 1.4.8)
+
+GIT
   remote: git://github.com/prawnpdf/prawn.git
   revision: af1f659bf8cbb8672088ece43adb7f3e42a3e7a4
   specs:
@@ -35,6 +43,7 @@ PATH
     your_platform (1.0.1)
       acts-as-dag (>= 2.5.7)
       acts_as_tree
+      autosize-rails
       bcrypt (>= 3.0.1)
       best_in_place (>= 2.1.0)
       bootstrap-sass (= 3.3.3)
@@ -132,6 +141,8 @@ GEM
     autoprefixer-rails (5.1.11)
       execjs
       json
+    autosize-rails (1.18.17)
+      rails (>= 3.1)
     bcrypt (3.1.10)
     best_in_place (3.0.3)
       actionpack (>= 3.2)
@@ -314,10 +325,8 @@ GEM
     loofah (2.0.1)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.9)
-    mail (2.6.3)
-      mime-types (>= 1.16, < 3)
     method_source (0.8.2)
-    mime-types (2.5)
+    mime-types (1.25.1)
     mini_magick (4.2.3)
     mini_portile (0.6.2)
     minitest (5.6.0)
@@ -333,12 +342,13 @@ GEM
     orm_adapter (0.5.0)
     passgen (1.0.2)
     pdf-core (0.5.1)
-    phony (2.12.12)
+    phony (2.12.13)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
       multi_json (~> 1.0)
       websocket-driver (>= 0.2.0)
+    polyglot (0.3.5)
     protected_attributes (1.0.9)
       activemodel (>= 4.0.1, < 5.0)
     pry (0.10.1)
@@ -525,6 +535,9 @@ GEM
     transaction_retry (1.0.2)
       activerecord (>= 3.0.11)
       transaction_isolation (>= 1.0.2)
+    treetop (1.4.15)
+      polyglot
+      polyglot (>= 0.3.1)
     ttfunk (1.4.0)
     turbolinks (2.5.3)
       coffee-rails
@@ -581,6 +594,7 @@ DEPENDENCIES
   jquery-rails
   json
   letter_opener
+  mail!
   mysql2
   nokogiri
   poltergeist

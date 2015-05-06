@@ -3,18 +3,7 @@
 - tab_pane_class = "" 
 - if can? :use, :tab_view
   - tab_pane_class = "tab-pane fade"
-  %ul.nav.nav-tabs.group
-    %li.active
-      %a{href: '#events', data: {toggle: 'tab'}} Veranstaltungen
-    %li
-      %a{href: '#contact', data: {toggle: 'tab'}} Kontakt
-    %li
-      %a{href: '#members', data: {toggle: 'tab'}} Mitglieder
-    %li
-      %a{href: '#officers', data: {toggle: 'tab'}} Amtsträger
-    %li
-      %a{href: '#more', data: {toggle: 'tab'}} Weitere Informationen
-
+  = render partial: 'tabs', locals: {active: 'events'}
 
 %h1= best_in_place_if can?(:rename, @group), @group, :name
 %div
