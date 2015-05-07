@@ -1,0 +1,41 @@
+= render partial: 'groups/tabs', active: 'settings'
+
+%h1= @title
+%div
+  %ul.attributes
+    %li
+      %span.label-wrapper=t :name
+      %span.value-wrapper= best_in_place_if can?(:rename, @group), @group, :name
+    %li
+      %span.label-wrapper=t :extensive_name
+      %span.value-wrapper= best_in_place_if can?(:rename, @group), @group, :extensive_name
+    %li 
+      %span.label-wrapper=t :token
+      %span.value-wrapper
+        = best_in_place_if can?(:change_token, @group), @group, :token
+        - if @group.kind_of?(Corporation)
+          %p (Wird in Aktivitätszahl verwendet.)
+    %li 
+      %span.label-wrapper=t :internal_token
+      %span.value-wrapper
+        = best_in_place_if can?(:change_internal_token, @group), @group, :internal_token
+        %p (Wird in horizontaler Schnellzugriff-Leiste verwendet, wenn die Gruppen-Namen sonst zu lang werden.)
+    %li 
+      %span.label-wrapper=t :group_type
+      %span.value-wrapper= I18n.t(@group.type.try(:underscore) || :group, default: @group.type)
+
+-# %h1 Gruppen-Beitritt
+-# %div
+-#   %p Das funktioniert noch nicht:
+-#   %p
+-#     %select
+-#       %option Jeder darf selbstständig beitreten
+-#       %option Nur Administratoren dürfen Mitglieder hinzufügen
+-#       %option Niemand darf Mitglieder hinzufügen (vom System verwaltetete Gruppe)
+-#   %p
+-#     = link_to t(:manage_members), group_path(@group) + "#members", class: 'btn btn-default'
+
+%h1=t :mailing_lists
+%div
+  %a.btn.btn-default=t :manage_mailing_lists
+  

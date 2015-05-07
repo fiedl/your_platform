@@ -15,3 +15,7 @@
     %a{href: group_path(@group) + '#officers'} Amtsträger
   %li{class: active == 'more' ? 'active' : ''}
     %a{href: group_path(@group) + '#more'} Weitere Informationen
+  - if can? :manage, @group # && current_user.beta_tester?
+    %li{class: active == 'settings' ? 'active' : ''}
+      %a{href: group_settings_path(@group) + "#settings"}=t :settings
+    
