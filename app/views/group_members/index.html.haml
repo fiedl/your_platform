@@ -1,0 +1,35 @@
+= render partial: 'groups/tabs', active: 'members'
+
+%h1 Mitglied werden
+%div
+  - if @own_memberships.now.count == 0
+    %a.btn.btn-success Beitreten
+  - elsif @own_memberships.now.direct.count > 0 
+    %a.btn.btn-danger Gruppe verlassen
+  - @own_memberships.each do |membership|
+    %p
+      Mitglied seit
+      = localize membership.valid_from.to_date if membership.valid_from
+      = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
+    
+- if can? :manage, @group
+  %h1 Mitglieder eintragen
+  %div
+    %input
+    %input{value: localize(Date.today)}
+    %a.btn.btn-primary Hinzufügen
+
+%h1.section.members
+  = @title
+  %span.members_count (#{@members.count})
+%div
+  = render partial: 'groups/export_button'
+  - if can? :create_memberships, @group
+    %span.show_only_in_edit_mode.add_membership
+      = render partial: 'user_group_memberships/new'
+      %hr
+  %span#group_members
+    .alert.alert-warning.new_users_please_reload.hidden Diese Gruppe enthält neue Mitglieder. Bitte Seite neu laden, um die Tabellen-Ansicht zu aktualisieren.
+    .child_users
+      - if @members.count > 0
+        = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}

@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :posts
+    get :members, to: 'group_members#index'
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
   end
