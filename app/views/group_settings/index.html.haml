@@ -37,5 +37,4 @@
 
 %h1=t :mailing_lists
 %div
-  %a.btn.btn-default=t :manage_mailing_lists
-  
+  = link_to t(:manage_mailing_lists), group_mailing_lists_path(@group), class: 'btn btn-default'

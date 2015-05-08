@@ -48,6 +48,7 @@ Rails.application.routes.draw do
     get :events, to: 'events#index'
     resources :posts
     get :settings, to: 'group_settings#index'
+    get :mailing_lists, to: 'mailing_lists#index'
   end
   get :my_groups, to: 'groups#index_mine'
   

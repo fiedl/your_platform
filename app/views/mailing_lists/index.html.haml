@@ -1,0 +1,73 @@
+= render partial: 'groups/tabs', active: 'settings'
+
+%h1= @title
+%div
+  %h2= t :what_are_mailing_lists
+  %p= markup t :mailing_lists_forward_emails_to_all_group_members
+  %p= t :no_need_to_manage_list_members_separately
+  
+%h1= t :mailing_list_adresses
+%div.section.mailing_list_adresses
+
+  %ul.attributes.profile_fields
+    - @email_address_fields.each do |profile_field|
+      = profile_field_li(profile_field)
+
+  = add_button(url_for(:controller => :profile_fields,
+                       :profileable_id => @group.id,
+                       :profileable_type => 'Group',
+                       :profile_field => {:type => 'ProfileFieldTypes::Email', :label => t(:mailing_list)},
+                       :section => 'mailing_list_adresses'), :method => 'post')
+
+%h1 E-Mail-Verteiler einrichten
+%div
+  %p 
+    %strong Das Einrichten eines neuen E-Mail-Verteilers ist ganz einfach und dauert nur ein paar Minuten, erfordert aber ein paar konzentriert durchgeführte Schritte:
+  
+  %p
+    %ol
+      %li
+        %p
+          %strong Verteiler-Adressen überlegen:
+          Eine Verteiler-Adresse muss so gewählt sein, dass auf den ersten Blick klar ist, wen man damit erreicht. Es ist auch möglich, der gleichen Gruppe mehrere Verteiler-Adressen zuzuweisen. Einige Beispiele:
+        %p
+          %ul
+            %li= markup "**Gut**: chargen.berlin@wingolf.org, berliner-chargen@wingolf.org, chargen@berliner-wingolf.de"
+            %li= markup "**Gut**: burschen.berlin@wingolf.org, berliner-burschen@wingolf.org, burschen@berliner-wingolf.de"
+            %li= markup "**Gut**: aktivitas.berlin@wingolf.org, berliner-aktivitas@wingolf.org, aktivitas@berliner-wingolf.de"
+            %li= markup "**Schlecht**: berlin@wingolf.org, berlin@berliner-wingolf.de (Schlecht, da man als Absender nicht erkennen kann, wen man mit dieser Adresse erreicht.)"
+      %li
+        %p
+          %strong Verteiler-Adressen eintragen:
+          Trage die gewünschten Verteiler-Adressen in den obigen Abschnitt "Verteiler-Adressen" ein.
+        %p
+          Sollte eine Adresse vom System nicht akzeptiert werden (in diesem Fall verschwindet sie direkt nach Eingabe einfach wieder), ist sie möglicherweise schon vergeben.
+          Wende Dich im Zweifel bitte an unsere Hilfe-Zentrale über den blauen Hilfe-Knopf ganz oben, um Hilfe bei der Lösung dieses Problems zu erhalten.
+      %li
+        %p
+          %strong E-Mail zur Verarbeitung an die Plattform weiterleiten:
+          Damit die Plattform eingehende Nachrichten korrekt verarbeiten kann, müssen die Nachrichten in das System eingespeist werden.
+        %p 
+          %strong (a) wingolf.org: 
+          Für wingolf.org-Adressen geschieht das automatisch. Für wingolf.org-Adressen ist also kein weiterer Schritt notwendig.
+        %p
+          Beachte aber, dass früher bereits händisch eingerichtete wingolf.org-Adressen Bestandsschutz genießen und somit bei der Zustellung von E-Mails vorrangig behandelt werden. Ob eine solche händisch eingerichtete Adresse auf dem Wingolf-E-Mail-Server existiert, kannst Du ebenfalls über unsere Hilfe-Zentrale abfragen.
+        %p 
+          %strong (b) Andere Adressen (z.B. berliner-wingolf.de):
+          Wenn zusätzlich zur wingolf.org-Verteiler-Adresse (z.B. aktivitas.berlin@wingolf.org) eine Adresse einer eigenen Domain gewünscht ist (z.B. aktivitas@berliner-wingolf.de), muss die Zusatz-Adresse (aktivitas@berliner-wingolf.de) an die wingolf.org-Verteiler-Adresse (aktivitas.berlin@wingolf.org) weitergeleitet werden.
+        %p
+          Dies kann nur durch den Domain-Administrator erfolgen, der für die lokale Domain (berliner-wingolf.de) zuständig ist.
+          Wer Administrator der lokalen Domain ist, kann beispielsweise in zwei Klicks über die Who-Is-Abfrage der DENIC-Behörde abgefragt werden:
+          %a{href: "http://www.denic.de/domains/whois-service.html"} http://www.denic.de/domains/whois-service.html
+        %p
+          Und was ist mit "info@berliner-wingolf.de"?
+          Kein Problem: Einfach diese Adresse oben eintragen, aber keine Weiterleitung erstellen. Dann wird die Adresse ganz normal in der Kontakt-Liste der Verbindung aufgeführt, aber nicht in das Plattform-Mail-Verteiler-System eingespeist.
+          
+      %li
+        %p
+          %strong Adresse testen:
+          Der E-Mail-Verteiler ist sofort einsatzbereit.
+          Sende eine Test-E-Mail über Dein E-Mail-Programm an die neu eingerichtete Adresse, um zu überprüfen, ob sie korrekt verarbeitet wird.
+        %p
+          = markup "Wenn Du **Hilfe** benötigst, wende Dich bitte an unsere Hilfe-Zentrale über den **blauen Hilfe-Knopf** oben auf der Plattform oder per E-Mail an support@wingolf.org."
+        
