@@ -9,7 +9,12 @@ class BaseMailer < ActionMailer::Base
   #
   def deliver
     begin
-      super
+      if headers[:to].include?('@')
+        super
+      else
+        logger.warn "#{headers[:to]} is no valid email address."
+        return false
+      end
     rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
       logger.debug error
       logger.warn error.message

@@ -37,7 +37,13 @@ module Profileable
       @email_profile_field.value = email
     end
     def email_does_not_work?
+      email_needs_review? or email_empty?
+    end
+    def email_needs_review?
       profile_fields_by_type("ProfileFieldTypes::Email").review_needed.count > 0
+    end
+    def email_empty?
+      not email.present?
     end
     
     def profile
