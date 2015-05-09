@@ -1,2 +1,2 @@
 = form_tag search_path, :method => 'get', :class => "navbar-form navbar-search", role: 'search' do
-  = search_field_tag :query, params[ :query ], :class => "search-query form-control", :placeholder => I18n.t(:find), :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
+  = search_field_tag :query, params[ :query ], :class => "search-query form-control", :placeholder => I18n.t(:find), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
