@@ -10,7 +10,7 @@
   %li{class: active == 'contact' ? 'active' : ''}
     %a{href: group_path(@group) + '#contact'} Kontakt
   %li{class: active == 'members' ? 'active' : ''}
-    %a{href: group_path(@group) + '#members'} Mitglieder
+    %a{href: group_members_path(@group) + '#members'} Mitglieder
   %li{class: active == 'officers' ? 'active' : ''}
     %a{href: group_path(@group) + '#officers'} Amtsträger
   %li{class: active == 'more' ? 'active' : ''}

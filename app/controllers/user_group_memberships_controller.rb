@@ -16,7 +16,17 @@ class UserGroupMembershipsController < ApplicationController
   def create
     if membership_params[:user_title].present?
       @user_id = User.find_by_title(membership_params[:user_title]).id
-      @user_group_membership = UserGroupMembership.create(membership_params.merge({user_id: @user_id}))
+      @group = Group.find membership_params[:group_id]
+      @user_group_membership = true
+      begin 
+        @user_group_membership = UserGroupMembership.create(membership_params.merge({user_id: @user_id}))
+        @user_group_membership.valid_from = membership_params[:valid_from].to_datetime
+        @user_group_membership.valid_from_will_change!
+        @user_group_membership.save!
+        redirect_to group_members_path(@user_group_membership.group), change: 'members'
+      rescue => error
+        redirect_to group_members_path(@group), change: 'members', alert: "#{t(:adding_member_did_not_work)} #{error.message}"
+      end
     else
       head :no_content
     end
