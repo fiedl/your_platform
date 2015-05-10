@@ -1,4 +1,18 @@
 class OfficersController < ApplicationController
+  skip_authorization_check only: :index
+    
+  def index
+    @group = Group.find(params[:group_id]) || raise('no group found')
+    @structureable = @group
+    authorize! :read, @structureable
+    
+    @officer_groups = @structureable.descendant_groups.where(type: 'OfficerGroup')
+    @officer_groups_by_scope = @officer_groups.group_by { |officer_group| officer_group.scope }
+    @officer_groups_by_scope = @officer_groups_by_scope.sort_by { |scope, officer_groups| scope.id }
+    
+    @navable = @structureable
+    @title = "#{@structureable.title}: #{t(:officers)}"
+  end
   
   # Required params:
   #   - group_id or page_id
