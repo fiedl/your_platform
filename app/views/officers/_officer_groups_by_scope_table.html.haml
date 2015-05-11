@@ -12,7 +12,7 @@
         %td
           %p
             - if can?(:destroy, officer_group) and can?(:create_officers_group_for, officer_group.scope) and officer_group.descendant_users.count == 0
-              %a.btn.btn-sm.btn-danger.remove_button#destroy_office{href: group_path(officer_group, format: 'json')}
+              %a.btn.btn-sm.btn-danger.remove_button.show_only_in_edit_mode#destroy_office{href: group_path(officer_group, format: 'json')}
                 = icon :trash
             = best_in_place_if can?(:rename, officer_group), officer_group, :name
         %td

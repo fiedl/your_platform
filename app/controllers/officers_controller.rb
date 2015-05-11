@@ -11,7 +11,7 @@ class OfficersController < ApplicationController
     @officer_groups_by_scope = @officer_groups_by_scope.sort_by { |scope, officer_groups| scope.id }
     
     @navable = @structureable
-    @title = "#{@structureable.title}: #{t(:officers)}"
+    @title = "#{@structureable.title}: #{t(:all_officers)}"
   end
   
   # Required params:

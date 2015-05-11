@@ -1,10 +1,10 @@
 = render partial: 'groups/tabs', active: 'officers' if @group
 
-%h1= @title
-%div
+= render partial: 'officers_overview'
 
-%h1.officers= t(:all_officers)
-%div.officers= render partial: 'officer_groups_by_scope_table.html'
+%h1.officers= @title
+%div.officers
+  = render partial: 'officer_groups_by_scope_table.html'
 
 - if can? :create_officers_group_for, @group
   = render partial: 'history_notice'
