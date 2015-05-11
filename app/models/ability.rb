@@ -137,6 +137,7 @@ class Ability
   end
   
   def rights_for_local_admins
+    can :index, PublicActivity::Activity
     if not read_only_mode?
       can :manage, Group do |group|
         group.admins_of_self_and_ancestors.include? user

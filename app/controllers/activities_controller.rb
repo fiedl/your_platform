@@ -1,6 +1,13 @@
 class ActivitiesController < ApplicationController
+  skip_authorization_check only: :index
+  
   def index
-    authorize! :read, PublicActivity::Activity
-    @activities = PublicActivity::Activity.order('created_at desc').limit(100)
+    authorize! :index, PublicActivity::Activity
+    
+    @activities = PublicActivity::Activity
+    @activities = @activities.where(owner: current_user.administrated_objects.select { |o| o.kind_of?(User) }) unless Role.of(current_user).global_admin?
+    @activities = @activities.order('created_at desc').limit(1000)
+    
+    @title = t(:activity_log)
   end
 end
