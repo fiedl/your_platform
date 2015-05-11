@@ -1,5 +1,5 @@
 $(document).ready ->
-
+  
   # Sorting by date in German:
   # http://datatables.net/plug-ins/sorting/date-de
   #
@@ -53,7 +53,7 @@ $(document).ready ->
         "sLengthMenu":     "_MENU_ Einträge anzeigen",
         "sLoadingRecords":   "Wird geladen ...",
         "sProcessing":     "Bitte warten ...",
-        "sSearch":         "Suchen",
+        "sSearch":         "",
         "sZeroRecords":    "Keine Einträge vorhanden.",
         "oPaginate": {
           "sFirst":      "Erste",
@@ -74,7 +74,13 @@ $(document).ready ->
     "sPaginationType": "full_numbers",
     "bJQueryUI": true,
     "lengthMenu": [ 10, 20, 50, 100, 1000 ],
-    "language": language_options()
+    "language": language_options(),
+    "drawCallback": (settings)->
+      # Hide the pagination elements if there is only one page.
+      if (settings._iDisplayLength > settings.fnRecordsDisplay())
+        $(settings.nTableWrapper).find('.dataTables_paginate').hide()
+      else
+        $(settings.nTableWrapper).find('.dataTables_paginate').show()
   }
   
   $('.datatable.activities').dataTable(jQuery.extend({
@@ -113,12 +119,18 @@ $(document).ready ->
   $('.datatable.officers').dataTable(jQuery.extend({
     "pageLength": 100,
   }, common_configuration))
-  $('.datatable.officers_by_scope').dataTable(jQuery.extend({
+  $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
     "pageLength": 100,
     "columnDefs": [
       {"visible": false, "targets": 0}
     ],
     "drawCallback": (settings)->
+      # Hide the pagination elements if there is only one page.
+      if (settings._iDisplayLength > settings.fnRecordsDisplay())
+        $(settings.nTableWrapper).find('.dataTables_paginate').hide()
+      else
+        $(settings.nTableWrapper).find('.dataTables_paginate').show()
+      
       # This callback draws group headers.
       api = @api()
       rows = api.rows(page: 'current').nodes()
@@ -128,4 +140,12 @@ $(document).ready ->
           $(rows).eq(i).before '<tr class="group scope"><td colspan="3"><div class="group-wrapper">' + group + '</div></td></tr>'
           last = group
         return
-  }, common_configuration))
+  }))
+  
+  
+  
+  # Modify the datatable filter bar.
+  $('.dataTables_filter label input')
+    .attr('placeholder', I18n.t('type_to_filter_table'))
+    .addClass('form-control')
+  

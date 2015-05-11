@@ -1,7 +1,4 @@
 class OfficerGroup < Group
-  #attr_accessor :scope_id, :scope_type
-  #attr_accessible :scope_id, :scope_type
-  #after_save :apply_scope_id_and_type
   
   def scope
     # The scope of responsibility of the officers is defined by
@@ -16,13 +13,6 @@ class OfficerGroup < Group
   def parent
     ancestor_groups.flagged(:officers_parent).first || raise('officers group has no officers_parent!')
   end
-  
-  #def apply_scope_id_and_type
-  #  if scope_id && scope_type
-  #    scope_type = (['Group', 'Page'] & [params[:scope_type]]).first
-  #    self.move_to scope_type.constantize.find(scope_id).officers_parent
-  #  end
-  #end
   
   
   def self.patch_officer_groups
