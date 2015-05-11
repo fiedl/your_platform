@@ -8,3 +8,14 @@ de:
   add_officer:               Amtsträger hinzufügen
   remove_officer:            Amtsträger entfernen
   change_officer:            Amtsträger wechseln
+  
+  all_officers: Alle Amtsträger
+  officer_group_scope: Zuständigkeit
+  officer_group_office: Amt
+  officer_group_officers: Amtsträger
+  officer_group_officers_since: Amtsträger seit
+  officer_group_updated_at: Letzte Änderung
+  create_new_office_for: "Neues Amt für %{scope_title} erstellen ..."
+  submit_create_new_office_for: "Neues Amt für %{scope_title} erstellen"
+  creating_new_office: "Erstelle neues Amt. Bitte warten ..."
+  

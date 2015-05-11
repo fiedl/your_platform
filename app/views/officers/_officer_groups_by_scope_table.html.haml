@@ -1,0 +1,34 @@
+%table.officers_by_scope.datatable#officers_table
+  %thead
+    %tr
+      %th= t(:officer_group_scope)
+      %th= t(:officer_group_office)
+      %th= t(:officer_group_officers)
+      %th= t(:officer_group_updated_at)
+  %tbody
+    - @officer_groups.each do |officer_group|
+      %tr
+        %td= link_to officer_group.scope.title, officer_group.scope
+        %td
+          %p
+            - if can?(:destroy, officer_group) and can?(:create_officers_group_for, officer_group.scope) and officer_group.descendant_users.count == 0
+              %a.btn.btn-sm.btn-danger.remove_button#destroy_office{href: group_path(officer_group, format: 'json')}
+                = icon :trash
+            = best_in_place_if can?(:rename, officer_group), officer_group, :name
+        %td
+          %p= render partial: 'officer_group_members', locals: {officer_group: officer_group}
+        %td
+          %p= localize officer_group.updated_at.to_date
+    - @officer_groups_by_scope.each do |scope, officer_groups|
+      - if can?(:create_officers_group_for, scope)
+        %tr
+          %td= link_to scope.title, scope
+          %td{colspan: 3}
+            %p
+              = form_for OfficerGroup.new do |form|
+                %input{type: 'hidden', name: 'parent_type', value: 'Group'}
+                %input{type: 'hidden', name: 'parent_id', value: scope.officers_parent.id}
+                = form.text_field :name, placeholder: t(:create_new_office_for, scope_title: scope.title)
+                = form.submit t(:submit_create_new_office_for, scope_title: scope.title), class: 'btn btn-primary btn-sm hidden'
+          %td
+          %td

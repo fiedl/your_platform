@@ -1,9 +1,10 @@
 = render partial: 'groups/tabs', active: 'officers' if @group
 
-%h1.officers= @title
-%div.officers
-  - @officer_groups_by_scope.each do |scope, officer_groups|
-    %h2= link_to scope.title, scope
-    %ul.officer_groups
-      - officer_groups.each do |officer_group|
-        = render partial: 'officers_group_entry', locals: {officer_group: officer_group, structureable: scope}
+%h1= @title
+%div
+
+%h1.officers= t(:all_officers)
+%div.officers= render partial: 'officer_groups_by_scope_table.html'
+
+- if can? :create_officers_group_for, @group
+  = render partial: 'history_notice'

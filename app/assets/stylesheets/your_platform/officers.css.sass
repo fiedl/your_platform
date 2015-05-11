@@ -12,11 +12,21 @@ table.officers
     a
       color: #a94442
       
-.box.officers ul.officer_groups li.officer_entry
-  list-style: none
-  > .label-wrapper
-    width: 250px
-    font-weight: normal
-    .copy-to-clipboard
-      display: inline
-  
+.box.officers table.officers_by_scope
+  tr.scope
+    div.group-wrapper
+      padding: 5px
+      background-color: #7e0f0d
+      color: white
+      font-size: 160%
+      font-weight: bold
+    > td
+      padding-top: 10px
+      padding-bottom: 10px
+    a
+      color: white
+  li
+    list-style: none
+
+table.officers_by_scope tr > td > form > input[type='text']
+  width: 40%

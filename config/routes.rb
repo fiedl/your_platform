@@ -57,7 +57,7 @@ Rails.application.routes.draw do
   
   get :corporations, to: 'corporations#index'
   resources :corporations, controller: 'groups'
-  resources :officer_groups, controller: 'groups'
+  resources :officer_groups
   
   resources :pages
   

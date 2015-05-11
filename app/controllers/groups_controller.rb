@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:create]
   
   def index
     point_navigation_to Page.intranet_root
@@ -170,6 +170,7 @@ class GroupsController < ApplicationController
   def group_params
     # STI override:
     params[:group] ||= params[:corporation] # for Corporation objects
+    params[:group] ||= params[:officer_group] # for OfficerGroup objects
     
     permitted_keys = []
     permitted_keys += [:name, :extensive_name] if can? :rename, @group

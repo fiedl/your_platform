@@ -113,3 +113,19 @@ $(document).ready ->
   $('.datatable.officers').dataTable(jQuery.extend({
     "pageLength": 100,
   }, common_configuration))
+  $('.datatable.officers_by_scope').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "columnDefs": [
+      {"visible": false, "targets": 0}
+    ],
+    "drawCallback": (settings)->
+      # This callback draws group headers.
+      api = @api()
+      rows = api.rows(page: 'current').nodes()
+      last = null
+      api.column(0, page: 'current').data().each (group, i) ->
+        if last != group
+          $(rows).eq(i).before '<tr class="group scope"><td colspan="3"><div class="group-wrapper">' + group + '</div></td></tr>'
+          last = group
+        return
+  }, common_configuration))
