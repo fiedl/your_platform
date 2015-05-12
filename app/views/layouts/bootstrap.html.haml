@@ -35,7 +35,7 @@
     = yield :scripts
     = yield :head
 
-  %body{:class => controller.controller_name, data: { locale: I18n.locale, env: Rails.env.to_s, layout: 'bootstrap' }}
+  %body{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'bootstrap', navable: @navable.try(:to_global_id)}}
     - if user_account_signed_in?
       %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
         .container-fluid
@@ -92,7 +92,7 @@
           %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
         
       .col-md-4.col-sm-5.col-xs-12
-        = render partial: 'layouts/help_button'
+        = render partial: 'support_requests/help_button'
         %span#header_search
           %span#search_box= render partial: 'shared/search_box'
     

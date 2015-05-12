@@ -2,6 +2,7 @@
 #
 #   * Setting.app_name
 #   * Setting.preferred_locale
+#   * Setting.support_email
 #
 class Setting < RailsSettings::CachedSettings
 	attr_accessible :var if defined? attr_accessible

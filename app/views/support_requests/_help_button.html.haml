@@ -1,0 +1,17 @@
+- if can? :create, :support_request
+
+  = link_to_special_page(t(:help), :help, :class => 'btn btn-info navbar-btn help-button', id: 'header_help')
+
+  #help_button_popover_container
+  
+  #help_button_title.hidden
+    = t(:help)
+    %a.close.close_help_popover.right &times;
+  
+  #help_button_popover_body.hidden
+    = form_tag support_requests_path, id: 'help_form' do
+      %textarea.form-control{name: 'text'}= render partial: 'support_requests/text_template'
+      = submit_tag t(:request_help), class: 'btn btn-primary right'
+    .success.hidden
+      = t(:support_request_has_been_sent_to)
+      = SupportRequestsController.support_email

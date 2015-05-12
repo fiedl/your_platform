@@ -87,6 +87,8 @@ Rails.application.routes.draw do
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts
   
+  post :support_requests, to: 'support_requests#create'
+  
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
   

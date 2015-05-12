@@ -1,0 +1,25 @@
+%div{style: "font-family: Helvetica"}
+  %table
+    %tr
+      %td{valign: 'top'}= user_avatar(@sender_user)
+      %td{valign: 'top'}= markup @text
+  
+  %hr
+  
+  %h2 Profile info
+  %ul
+    %li= link_to "User Profile", @sender_user
+    %li
+      Mobile:
+      = @sender_user.mobile
+      
+  %h2 Object info
+  %ul
+    %li= link_to @navable.title, polymorphic_url(@navable, preview_as: @role)
+  
+  %h2 Meta data
+  %table
+    - @meta_data.each do |key, value|
+      %tr
+        %td= key
+        %td= value

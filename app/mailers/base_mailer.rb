@@ -1,5 +1,6 @@
 class BaseMailer < ActionMailer::Base
   helper MailerHelper
+  helper MarkupHelper
   helper ApplicationHelper
   default from: 'wingolfsplattform@wingolf.org'
   

@@ -370,5 +370,9 @@ class Ability
     #
     can :create, :post_via_email
     
+    # All users can use the blue help button.
+    #
+    can :create, :support_request
+    
   end
 end
