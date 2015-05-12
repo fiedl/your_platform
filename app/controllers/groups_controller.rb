@@ -142,9 +142,10 @@ class GroupsController < ApplicationController
     else
       @parent = Group
     end
-    if can? :manage, @parent
-      @new_group = @parent.create(name: I18n.t(:new_group))
-    end
+
+    authorize! :create_group_for, @parent
+    @new_group = @parent.create(name: I18n.t(:new_group))
+
     respond_with @new_group
   end
   
