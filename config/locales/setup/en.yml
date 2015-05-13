@@ -27,9 +27,14 @@ en:
   logo: Logo
   you_may_upload_a_logo: 'You may replace the Rails logo by your own logo. Just replace the file `app/assets/images/logo.png`. But of course you can safely ignore this step and do this later.'
   
+  support_email_address: Support Email Address
+  choose_support_email_address_the_help_button_will_send_to: "Please enter the email address your users may send support requests to, for example `support@example.com`. Support requests using the *Help* button in the top area of this application will be sent to this address.\n\nYou may change this setting later using `Setting.support_email`."
+  
   initial_sub_organizations: Initial Sub Organizations
   assuming_sub_structure_enter_sub_organization_names_here: 'We assume that your organization is composed of several sub organizations having their own administrators, officers and members. To have a first glance how this is represented in this system, you may enter a couple of sub organization names here, for example "Group London", "Group Berlin", "Group Paris.".'
   separate_through_newlines: 'Separate the organizations by line breaks. You are going to be assigned to the first organization as a member, just for demonstration perposes.'
   sub_organizations: Sub Organizations
   
   continue: Continue
+  
+  setup_complete: Setup Complete.

@@ -42,9 +42,15 @@
     %p= markdown t :application_name_hint
     %p
       = label_tag :application_name, t(:application_name)
-      = text_field_tag :application_name
+      = text_field_tag :application_name, "", placeholder: 'MyPlatform'
     %h2= t :logo
     %p= markdown t :you_may_upload_a_logo
+    %h2= t :support_email_address
+    %p= markdown t :choose_support_email_address_the_help_button_will_send_to
+    %p
+      = label_tag :support_email, t(:support_email_address)
+      = text_field_tag :support_email, "", placeholder: 'support@example.com'
+      
       
   %h1.sub_organizations= t :initial_sub_organizations
   %div
@@ -52,7 +58,8 @@
     %p= markdown t :separate_through_newlines
     %p
       = label_tag :sub_organizations, t(:sub_organizations)
-      = text_area_tag :sub_organizations
+      %br
+      = text_area_tag :sub_organizations, "", rows: 10, cols: 30
   
   %h1.continue= t :continue
   %div

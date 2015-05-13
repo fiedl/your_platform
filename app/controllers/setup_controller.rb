@@ -31,12 +31,11 @@ class SetupController < ApplicationController
     
     user.global_admin = true
     
-    if params[:application_name].present?
-      Setting.app_name = params[:application_name]
-    end
+    Setting.app_name = params[:application_name] if params[:application_name].present?   
+    Setting.support_email = params[:support_email] if params[:support_email].present?
     
     if params[:sub_organizations].present?
-      params[:sub_organizations].split("\n").each do |organization_name|
+      params[:sub_organizations].split("\n").map(&:strip).each do |organization_name|
         if organization_name.present?
           corporation = Corporation.create name: organization_name
           full_members = corporation.child_groups.create name: 'full_members'

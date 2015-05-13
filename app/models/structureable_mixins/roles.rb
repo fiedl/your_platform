@@ -34,7 +34,7 @@ module StructureableMixins::Roles
   end
   
   def delete_caches_concerning_roles
-    if is_a? Group
+    if kind_of? Group
       # For an admins_parent, this is called recursively until the original group
       # is reached.
       #
