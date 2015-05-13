@@ -5,6 +5,15 @@ en:
   choose_setup_language: Choose Your Setup Language
   this_sets_only_the_setup_language: This setting is only applied to this setup process. Each user may choose his or her own language. The default language may be set in the configuration file `config/application.rb`.
   
+  choose_default_language: Choose the Default Language
+  each_user_may_choose_his_own_language_but_this_is_the_default: "Each user may choose his or her own language. But this setting chooses the default language. If your user base is located in a certain region, you might want to choose the default langage accordingly."
+  if_you_choose_none_the_browser_language_is_used: "If you don't choose a default language here, the language of the user's web browser is used if supported."
+  
+  option_locale_browser: Use browser language
+  option_locale_en: Use English as default language (en)
+  option_locale_de: Use German as default language (de)
+  
+  
   setup_admin_user: Create Admin User
   enter_your_own_name_here_not_admin: 'Please enter your own name here, not "Admin" or "Secretary". The admin rights may be changed later.'
   

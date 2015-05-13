@@ -1,13 +1,16 @@
-= form_tag setup_path, method: 'post' do
-  %h1.setup= t :welcome_to_your_platform
+%h1.setup= t :welcome_to_your_platform
+%div
+  %p= markdown t :this_setup_will_get_you_up_and_running
+
+= form_tag setup_path, method: 'put', id: 'locale_form' do
+  %h1.language_setup= t :choose_default_language
   %div
-    %p= markdown t :this_setup_will_get_you_up_and_running
-  
-  %h1.language_setup= t :choose_setup_language
-  %div
-    %p= markdown t :this_sets_only_the_setup_language
-    %p= language_switcher_html
-    
+    %p= t :each_user_may_choose_his_own_language_but_this_is_the_default
+    %p= t :if_you_choose_none_the_browser_language_is_used
+    %p
+      = select_tag :preferred_locale, options_for_select([[t(:option_locale_browser), nil], [t(:option_locale_en), :en], [t(:option_locale_de), :de]], selected: Setting.preferred_locale)
+
+= form_tag setup_path, method: 'post' do    
   %h1.user_setup= t :setup_admin_user
   %div
     %h2= t :name

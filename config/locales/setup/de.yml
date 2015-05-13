@@ -5,6 +5,14 @@ de:
   choose_setup_language: Sprache für diesen Installationsbildschirm auswählen
   this_sets_only_the_setup_language: Diese Spracheinstellung betrifft nur diesen Installationsbildschirm. Jeder Benutzer kann seine Sprache selbst wählen. Die Standard-Sprache der Anwendung wird in der Datei `config/application.rb` eingestellt.
   
+  choose_default_language: Standard-Sprache der Anwendung auswählen
+  each_user_may_choose_his_own_language_but_this_is_the_default: "Jeder Benutzer kann seine Sprache selbst wählen. Diese Einstellung legt aber die Standard-Einstellung der Anwendung fest. Wenn Ihre Benutzer mehrheitlich aus einem bestimmten Sprachraum kommen, sollten Sie diese Sprache wählen."
+  if_you_choose_none_the_browser_language_is_used: "Wenn Sie hier keine Auswahl treffen, wird die Sprache anhand des Browsers des jeweiligen Benutzers bestimmt."
+  
+  option_locale_browser: Sprache des Browsers verwenden
+  option_locale_en: Englisch als Standard-Sprache verwenden (en)
+  option_locale_de: Deutsch als Standard-Sprache verwenden (de)
+  
   setup_admin_user: Administrator-Benutzer einrichten
   enter_your_own_name_here_not_admin: 'Geben Sie hier Ihren richtigen Namen an, nicht etwa "Admin" oder "Geschäftsstelle". Die Administrator-Rechte können später geändert werden.'
   

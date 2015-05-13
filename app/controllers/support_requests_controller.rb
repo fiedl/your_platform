@@ -25,7 +25,12 @@ class SupportRequestsController < ApplicationController
   end
   
   def self.support_email
-    Setting.support_email || raise('No support email address (support@example.com) set. Please set it using the Setting.support_email accessor.')
+    if Setting.support_email
+      Setting.support_email
+    else
+      logger.warn('No support email address (support@example.com) set. Please set it using the Setting.support_email accessor.')
+      return "support@example.com"
+    end
   end
   
 end

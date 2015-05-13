@@ -14,7 +14,6 @@ class SetupController < ApplicationController
   end
   
   def create
-    
     raise 'name not given' if params[:first_name].blank? or params[:last_name].blank?
     raise 'email not given' if params[:email].blank?
     raise 'no password' if params[:password].blank?
@@ -51,7 +50,15 @@ class SetupController < ApplicationController
     
     flash[:notice] = I18n.t(:setup_complete)
     redirect_to root_path
+  end
+  
+  # This method is to update settings during setup:
+  # - default locale
+  #
+  def update
+    Setting.preferred_locale = params[:preferred_locale]
     
+    redirect_to setup_path
   end
   
 private

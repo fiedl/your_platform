@@ -11,4 +11,9 @@ class Setting < RailsSettings::CachedSettings
     super(name)
     Rails.cache.delete_matched 'app_version_footer*'
   end
+  
+  def self.preferred_locale
+    return nil if super == ""
+    super
+  end
 end

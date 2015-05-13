@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'
+  put :setup, to: 'setup#update'
 
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'
