@@ -261,6 +261,9 @@ Spork.prefork do
       Page.create_root
       Page.create_intranet_root
       Workflow.find_or_create_mark_as_deceased_workflow
+      
+      # Emulate Application Settings
+      Setting.support_email = "support@example.com"
 
     end
 

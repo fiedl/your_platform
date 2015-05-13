@@ -11,6 +11,7 @@ feature "Groups Page" do
 
       login(:admin)
     end
+  end
 
   describe 'when logged in as regular user' do
     background do
