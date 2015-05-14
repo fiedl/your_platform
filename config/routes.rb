@@ -90,6 +90,8 @@ Rails.application.routes.draw do
   
   post :support_requests, to: 'support_requests#create'
   
+  get 'avatars', to: 'avatars#show'
+  
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
   

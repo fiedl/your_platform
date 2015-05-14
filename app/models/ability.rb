@@ -374,5 +374,10 @@ class Ability
     #
     can :create, :support_request
     
+    # All users can load avatar images, since this is an api.
+    # See AvatarsController.
+    # 
+    can :read, :avatars
+    
   end
 end
