@@ -41,8 +41,8 @@ class GroupsController < ApplicationController
         Rack::MiniProfiler.step('groups#show controller: cancan') do
           # Make sure only members that are allowed to be seen are in this array!
           #
-          allowed_members = @group.members.accessible_by(current_ability)
-          allowed_memberships = @group.memberships.where(descendant_id: allowed_members.map(&:id))
+          allowed_member_ids = @group.members.accessible_by(current_ability).pluck(:id)
+          allowed_memberships = @group.memberships.where(descendant_id: allowed_member_ids)
           @memberships = @memberships & allowed_memberships
         end
         

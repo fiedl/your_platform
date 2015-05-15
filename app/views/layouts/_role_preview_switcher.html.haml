@@ -2,19 +2,18 @@
 - # how the page would look like for regular users and lesser
 - # roles.
 
-- role = Role.of(current_user).for(@navable)
-- if (@navable && role.officer?) or role.global_officer?
-  - active_or_not = (params[:preview_as].present? && (params[:preview_as] != role.to_s)) ? 'active' : ''
+- if current_role && ((@navable && current_role.officer?) or current_role.global_officer?)
+  - active_or_not = (params[:preview_as].present? && (params[:preview_as] != current_role.to_s)) ? 'active' : ''
   %li{class: "backendBarItem dropdown #{active_or_not}"}
-    - current_view = params[:preview_as] || role.to_s
-    = link_to(params.merge({preview_as: role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
+    - current_view = params[:preview_as] || current_role.to_s
+    = link_to(params.merge({preview_as: current_role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
       = t current_view
       %b.caret
     - unless params[:preview_not_possible]
       %ul.dropdown-menu
         %li.nav-header
           = t :preview_as
-        - for preview_role in role.allowed_preview_roles
+        - for preview_role in current_role.allowed_preview_roles
           - active_or_not = (preview_role == current_view) ? 'active' : ''
           %li{class: active_or_not}
             = link_to t(preview_role), params.merge({preview_as: preview_role})

@@ -52,6 +52,9 @@ class ApplicationController < ActionController::Base
   def point_navigation_to( navable )
     self.current_navable = navable
   end
+
+  attr_reader :current_role
+  helper_method :current_role
   
   # Redirect the www subdomain to non-www, e.g.
   # http://www.example.com to http://example.com.
@@ -185,24 +188,25 @@ class ApplicationController < ActionController::Base
   # The original method can be found here:
   # https://github.com/ryanb/cancan/blob/master/lib/cancan/controller_additions.rb#L356
   #
-  def current_ability(reload = false)
-    options = {}
+  def current_ability(reload = false, options = {})
     @current_ability = nil if reload
+    @current_ability ||= nil
+    @current_role ||= nil
+    
+    # Auth token, for example for calender feeds
+    options[:token] = params[:token]
     
     # Read-only mode
     options[:read_only_mode] = true if read_only_mode?
     
     # Preview role mechanism
-    #
     if @current_ability.nil? and current_user
-      currently_displayed_object = @navable
-      currently_displayed_object ||= Group.everyone  # this causes to determine the role for searches and indices based on the role for the everyone group.
-      role = Role.of(current_user).for(currently_displayed_object)
-      options[:role] = role
       params[:preview_as] ||= load_preview_as_from_cookie
-      save_preview_as_cookie(params[:preview_as])
-      if params[:preview_as].present? && current_user && currently_displayed_object
-        if params[:preview_as].in?(role.allowed_preview_roles)
+      if params[:preview_as].present? || current_user.is_global_officer?
+        currently_displayed_object = @navable || Group.everyone
+        @current_role = Role.of(current_user).for(currently_displayed_object)
+        if params[:preview_as].in?(@current_role.allowed_preview_roles)
+          save_preview_as_cookie(params[:preview_as])
           options[:preview_as] = params[:preview_as]
         else
           cookies.delete :preview_as
@@ -212,11 +216,7 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    @current_ability ||= ::Ability.new(current_user, params, options)
-  end
-  
-  def reload_ability
-    current_ability(true)
+    @current_ability ||= ::Ability.new(current_user, options)
   end
   
   def load_preview_as_from_cookie
