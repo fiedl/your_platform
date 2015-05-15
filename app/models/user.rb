@@ -357,8 +357,7 @@ class User < ActiveRecord::Base
   def current_corporations
     cached do
       self.corporations.select do |corporation|
-        groups.flagged(:full_members).exists?(id: corporation.id) ||
-          groups.flagged(:full_members).where(id: corporation.descendant_groups).exists?
+        Role.of(self).in(corporation).current_member?
       end || []
     end
   end

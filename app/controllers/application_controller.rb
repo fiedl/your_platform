@@ -184,17 +184,18 @@ class ApplicationController < ActionController::Base
   # The original method can be found here:
   # https://github.com/ryanb/cancan/blob/master/lib/cancan/controller_additions.rb#L356
   #
-  def current_ability
-    options = {}
-    options[:token] = params[:token]
+  def current_ability(reload = false, options = {})
+    @current_ability = nil if reload
     @current_ability ||= nil
     @current_role ||= nil
+    
+    # Auth token, for example for calender feeds
+    options[:token] = params[:token]
     
     # Read-only mode
     options[:read_only_mode] = true if read_only_mode?
     
     # Preview role mechanism
-    #
     if @current_ability.nil? and current_user
       params[:preview_as] ||= load_preview_as_from_cookie
       if params[:preview_as].present? || current_user.is_global_officer?
@@ -213,7 +214,7 @@ class ApplicationController < ActionController::Base
 
     @current_ability ||= ::Ability.new(current_user, options)
   end
-
+  
   def load_preview_as_from_cookie
     cookies[:preview_as]
   end
