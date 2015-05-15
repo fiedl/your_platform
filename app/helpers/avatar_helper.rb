@@ -55,10 +55,9 @@ module AvatarHelper
   end
   
   def user_gravatar_url(user, options = {})
-    options[:gravatar] ||= {}
-    options[:gravatar][:default] ||= user_avatar_default_url
-    options[:gravatar][:size] ||= 36
-    options[:gravatar][:secure] = true
+    options[:default] ||= user_avatar_default_url
+    options[:size] ||= 36
+    options[:secure] = true
     gravatar_image_url(user.email, options)
   end
   
