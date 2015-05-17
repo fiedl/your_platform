@@ -21,7 +21,7 @@
     %table.events_footer
       %td.show_all
         - if @group
-          = link_to t(:show_all), group_events_path(group_id: @group.id)
+          = link_to t(:show_all), group_events_path(group_id: @group.id, all: true)
         - else
           = link_to t(:show_all), events_path
       %td.create_event

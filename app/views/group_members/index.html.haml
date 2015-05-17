@@ -1,4 +1,4 @@
-= render partial: 'groups/tabs', active: 'members'
+= render partial: 'groups/tabs', locals: {active: 'members'}
 
 -# %h1 Mitglied werden
 -# %div
@@ -12,16 +12,16 @@
 -#       = localize membership.valid_from.to_date if membership.valid_from
 -#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
     
-- if can? :create_memberships, @group
-  %h1 Mitglieder eintragen
-  %div.add_group_members
-    = form_for @new_user_group_membership, remote: true do |form|
-      = form.hidden_field :group_id
-      %span.add_group_member_name_field.left
-        = form.text_field :user_title, 'data-autocomplete-url' => autocomplete_title_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
-      %span.add_group_member_tools.right
-        = form.date_field :valid_from, value: Date.today, class: 'valid-from-field'
-        = form.submit t(:add), class: 'btn btn-primary add-user-button'
+-# - if can? :create_memberships, @group
+-#   %h1 Mitglieder eintragen
+-#   %div.add_group_members
+-#     = form_for @new_user_group_membership, remote: true do |form|
+-#       = form.hidden_field :group_id
+-#       %span.add_group_member_name_field.left
+-#         = form.text_field :user_title, 'data-autocomplete-url' => autocomplete_title_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
+-#       %span.add_group_member_tools.right
+-#         = form.date_field :valid_from, value: Date.today, class: 'valid-from-field'
+-#         = form.submit t(:add), class: 'btn btn-primary add-user-button'
 
 #members
   %h1.section.members

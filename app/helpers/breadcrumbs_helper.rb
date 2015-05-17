@@ -5,11 +5,17 @@ module BreadcrumbsHelper
   # bread crumb elements.
   #
   def breadcrumb_ul
-    cached_breadcrumb_ul
+    # use this due to tab navigation issues when using turbolinks cache.
+    uncached_breadcrumb_ul
   end
   
   def cached_breadcrumb_ul
     return cached_breadcrumb_ul_for_navable @navable if @navable
+    return breadcrumb_ul_for_navables @navables if @navables
+  end
+  
+  def uncached_breadcrumb_ul
+    return breadcrumb_ul_for_navable @navable if @navable
     return breadcrumb_ul_for_navables @navables if @navables
   end
   
@@ -58,7 +64,7 @@ module BreadcrumbsHelper
         
         link_options = link_options.merge({class: 'breadcrumb_link'})
 
-        link_to breadcrumb[ :title ], breadcrumb[ :navable ], link_options
+        link_to breadcrumb[:title], current_tab_path(breadcrumb[:navable]), link_options
       end
       unless breadcrumb == breadcrumbs.last
         c+= content_tag :li, "&nbsp;".html_safe, :class => "crumb sep"

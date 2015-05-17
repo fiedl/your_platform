@@ -2,7 +2,20 @@ class ProfileFieldsController < ApplicationController
 
   prepend_before_action :load_profileable, :only => :create
   load_and_authorize_resource
+  skip_authorization_check only: 'index'
   respond_to :json, :js
+  
+  def index
+    @profileable = @group = Group.find params[:group_id] if params[:group_id]
+    @profileable = @user = User.find params[:user_id] if params[:user_id]
+    authorize! :read, @profileable
+
+    @navable = @profileable
+    @title = "#{@profileable.title}: #{t(:profile)}"
+    
+    cookies[:group_tab] = "profile"
+    current_user.try(:update_last_seen_activity, "#{t(:looks_at_group_profile)}: #{@group.title}", @group)
+  end
 
   def create
     type = secure_profile_field_type || 'ProfileFieldTypes::Custom'

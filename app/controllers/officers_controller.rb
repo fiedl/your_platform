@@ -12,6 +12,9 @@ class OfficersController < ApplicationController
     
     @navable = @structureable
     @title = "#{@structureable.title}: #{t(:all_officers)}"
+    
+    cookies[:group_tab] = "officers"
+    current_user.try(:update_last_seen_activity, "#{t(:looks_at_officers)}: #{@group.title}", @group)
   end
   
   # Required params:

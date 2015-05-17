@@ -6,7 +6,8 @@ class GroupMembersController < ApplicationController
     point_navigation_to @group
     @title = "#{@group.name}: #{t(:members)}"
     
-    current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
+    cookies[:group_tab] = "members"
+    current_user.try(:update_last_seen_activity, "#{t(:looks_at_member_lists)}: #{@group.title}", @group)
   end
   
   

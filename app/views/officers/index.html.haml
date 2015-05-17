@@ -1,4 +1,4 @@
-= render partial: 'groups/tabs', active: 'officers' if @group
+= render partial: 'groups/tabs', locals: {active: 'officers'} if @group
 
 = render partial: 'officers_overview'
 

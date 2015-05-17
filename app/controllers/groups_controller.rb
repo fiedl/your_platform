@@ -15,6 +15,7 @@ class GroupsController < ApplicationController
 
   def show
     if @group
+      redirect_to_group_tab if request.format.html? and can? :use, :tab_view
 
       if request.format.html? || request.format.xls? || request.format.csv? || request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do 
@@ -254,6 +255,11 @@ class GroupsController < ApplicationController
   
   def secure_parent_type
     params[:parent_type] if params[:parent_type].in? ['Group', 'Page']
+  end
+
+  
+  def redirect_to_group_tab
+    redirect_to current_tab_path(@group)
   end
 
 end

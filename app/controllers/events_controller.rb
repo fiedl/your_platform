@@ -24,25 +24,25 @@ class EventsController < ApplicationController
     @limit = params[:limit].to_i
     
     # Check the permissions.
-    if @all and not @public
-      authorize! :index_events, :all
-    elsif @all and @public
-      authorize! :index_public_events, :all
-    elsif @group
+    if @group
       @public ? authorize!(:index_public_events, :all) : authorize!(:index_events, @group)
     elsif @user
       authorize! :index_events, @user
+    elsif @all and not @public
+      authorize! :index_events, :all
+    elsif @all and @public
+      authorize! :index_public_events, :all
     end  
     
     # Collect the events to list.
-    if @all
-      @events = Event.all
-    elsif @group
+    if @group
       @events = Event.find_all_by_group(@group)
       @navable = @group
     elsif @user
       @events = Event.find_all_by_user(@user)
       @navable = @user
+    elsif @all
+      @events = Event.all
     end
     
     # Filter if only published events are requested.
@@ -65,6 +65,7 @@ class EventsController < ApplicationController
           render partial: 'events/public_index', locals: {events: @events}
         else
           if @group
+            cookies[:group_tab] = "events"
             current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_the_calendar_of, group_name: @group.name), @group)
           else
             current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_events))

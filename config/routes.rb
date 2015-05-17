@@ -37,6 +37,7 @@ Rails.application.routes.draw do
     get :autocomplete_title, on: :collection
     put :forgot_password, on: :member
     get :events, to: 'events#index'
+    get :profile, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
     get :memberships, to: 'user_group_memberships#index'
@@ -48,6 +49,7 @@ Rails.application.routes.draw do
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :posts
+    get :profile, to: 'profile_fields#index'
     get :members, to: 'group_members#index'
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'

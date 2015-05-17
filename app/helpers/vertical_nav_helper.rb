@@ -64,7 +64,7 @@ module VerticalNavHelper
 
   def menu_element( object, element_class )
     content_tag( :li, :class => "#{element_class} #{object.class.name.downcase}" ) do 
-      link_to(menu_element_title(object), object, data: {
+      link_to(menu_element_title(object), current_tab_path(object), data: {
         vertical_nav_path: vertical_nav_path(navable_type: object.class.base_class.name, navable_id: object.id)
       })
     end

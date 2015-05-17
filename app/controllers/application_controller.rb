@@ -262,6 +262,30 @@ class ApplicationController < ActionController::Base
     render_to_string(partial: partial, locals: locals, layout: false, formats: [:html])
   end
   
+  concerning :TabNavigation do
+
+    # This method returns the correct path for the given object
+    # considering the current tab the user has used last.
+    #
+    def current_tab_path(object)
+      if object.kind_of?(Group)
+        case cookies[:group_tab]
+        when "posts"; group_posts_path(object)
+        when "profile"; group_profile_path(object)
+        when "events"; group_events_path(object)
+        when "members"; group_members_path(object)
+        when "officers"; group_officers_path(object)
+        when "settings"; group_settings_path(object)
+        else group_profile_path(object)
+        end
+      else
+        object
+      end
+    end
+    included { helper_method(:current_tab_path) }
+
+  end
+  
   protected
   
   def configure_permitted_devise_parameters

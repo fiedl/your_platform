@@ -13,6 +13,9 @@ class PostsController < ApplicationController
     
     @title = "#{t(:posts)} - #{@group.name}"
     @navable = @group
+    
+    cookies[:group_tab] = "posts"
+    current_user.try(:update_last_seen_activity, "#{t(:looks_at_posts)}: #{@group.title}", @group)
   end
 
   def show

@@ -1,0 +1,17 @@
+= render partial: 'groups/tabs', locals: {active: 'profile'}
+
+%h1= best_in_place_if can?(:rename, @group), @group, :name
+%div
+  = best_in_place_if can?(:update, @group), @group, :body, as: :textarea
+  .show_only_in_edit_mode
+    = render partial: 'shared/markdown_help'
+
+#contact
+  = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]), force_show: can?(:create_post_for, @group))
+
+#bank_account
+  = profile_sections_to_html(@group.profile.sections_by_title([:bank_account_information]))
+
+#description
+  = profile_sections_to_html(@group.profile.sections_by_title([:description]))
+      

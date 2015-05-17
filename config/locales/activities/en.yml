@@ -1,0 +1,9 @@
+en:
+  activities: Activities
+  activity_log: Activity Log
+  
+  looks_at_member_lists: "is looking at member lists"
+  looks_at_posts: "is looking at posts"
+  looks_at_group_profile: "is looking at group profile"
+  looks_at_officers: "is looking up officers"
+  manages_group_settings: "is managing group settings"
