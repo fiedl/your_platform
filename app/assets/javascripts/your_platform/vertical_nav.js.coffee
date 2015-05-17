@@ -23,13 +23,25 @@ $(document).on 'click', '.vertical_menu a', (event)->
       # Fade out the content area.
       $('.content_twoCols_right').fadeTo('fast', 0.2)
       
+      # We will save a clone of the vertical menu before 
+      # starting the animation. The clone will be shown
+      # after fetching a page from the turbolinks cache,
+      # since we need the fetched menu to be in the state
+      # before the animation.
+      menu_before_animation = $('.vertical_menu').clone()
+        .addClass('before-animation')
+        .hide()
+      $('.vertical_menu:not(.before-animation)')
+        .addClass('animating')
+        .after(menu_before_animation)
+      
       # Menu animation: Take away un-needed elements and move
       # the new_active element to its new position.
-      $('.vertical_menu li').removeClass('active')
+      $('.vertical_menu.animating li').removeClass('active')
       $(this).closest('li').addClass('new_active active')
       if $(this).closest('li').hasClass('child')
         $(this).closest('li').removeClass('child')
-        $('.vertical_menu li.child:not(.new_active)').hide('blind')
+        $('.vertical_menu.animating li.child:not(.new_active)').hide('blind')
       if $(this).closest('li').hasClass('ancestor')
         $(this).closest('li').removeClass('ancestor')
         $(this).closest('li').nextAll().fadeOut()
@@ -38,27 +50,30 @@ $(document).on 'click', '.vertical_menu a', (event)->
       $.get vertical_nav_path, (result)->
         
         # Animate the new menu.
-        $('.vertical_menu ul.nav').html(result)
-        $('.vertical_menu ul.nav li.child').hide()
-        $('.vertical_menu ul.nav li.child').each (index)->
+        $('.vertical_menu.animating ul.nav').html(result)
+        $('.vertical_menu.animating ul.nav li.child').hide()
+        $('.vertical_menu.animating ul.nav li.child').each (index)->
           $(this).delay(20 * index).fadeIn()
         
         # Load the new page content.
-        # But give the user some time to click another element
-        # before starting the request in order to reduce
-        # server load.
+        # But wait just a little bit in order to give the menu ajax
+        # time to be handled first. Otherwise, the menu animation
+        # could be disrupted.
         setTimeout ->
           perform_redirect()
-        , 5000
+        , 100
       
       # Prevent the original turbolinks behaviour.
       event.preventDefault()
       event.stopPropagation()
       false
-    
-# If the user moves the mouse to the main area, i.e. leaves the menu,
-# then perform the redirect immediately.
-#
-$(document).on 'mouseenter', '.content_twoCols_right', ->
-  if $('.vertical_menu').data('new-menu-feature') # can? :use, :new_menu_feature
-    perform_redirect()
+
+$(document).on 'page:change', ->
+  # Fade the main content back in when restoring from cache.
+  # Otherwise, the user will see a dimmed content when restoring the
+  # turbolinks-cached content.
+  $('.content_twoCols_right').fadeTo('fast', 1.0)
+  
+  # Also, restore the menu state before the animation.
+  $('.vertical_menu.animating').remove()
+  $('.vertical_menu.before-animation').show().removeClass('before-animation')
