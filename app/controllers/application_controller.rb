@@ -268,7 +268,7 @@ class ApplicationController < ActionController::Base
     # considering the current tab the user has used last.
     #
     def current_tab_path(object)
-      if object.kind_of?(Group)
+      if object.kind_of?(Group) and can?(:use, :tab_view)
         case cookies[:group_tab]
         when "posts"; group_posts_path(object)
         when "profile"; group_profile_path(object)
