@@ -53,6 +53,7 @@ class User < ActiveRecord::Base
   include UserDateOfBirth
   include UserAvatar
   include UserRoles
+  include UserNotifications
 
   # General Properties
   # ==========================================================================================
@@ -707,7 +708,8 @@ class User < ActiveRecord::Base
     self.accepted_terms == terms_stamp
   end
   
-    # Helpers
+
+  # Helpers
   # ==========================================================================================
 
   # The string returned by this method represents the user in the rails console.

@@ -2,6 +2,7 @@ en:
   settings: Settings
   user_settings: User settings
   
+  language: Language
   this_sets_the_ui_locale: 'This sets the language of the user interface:'
   visibility: Visibility
   incognito: Incognito
