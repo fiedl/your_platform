@@ -299,8 +299,14 @@ feature "Events" do
     
     scenario "editing an event, pt. 3" do
       visit event_path(@event)
-      within('tr.publish_on_local_website') { find('select').click }
-      within('tr.publish_on_global_website') { find('select').click }
+      within('tr.publish_on_local_website') do
+        find('.best_in_place').click
+        find('select').click
+      end
+      within('tr.publish_on_global_website') do
+        find('.best_in_place').click
+        find('select').click
+      end
     end
 
     scenario "inviting group members" do
