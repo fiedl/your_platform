@@ -1,5 +1,17 @@
 concern :UserNotifications do
   
+  # Notification Policy of the user:
+  # 
+  #    * :daily           (default)     Deliver the notifications once a day.
+  #    * :letter_bundle                 Deliver as letter bundle, i.e. when some
+  #                                       notifications are collected and nobody
+  #                                       contributed for 15 minutes.
+  #    * :instantly                     Deliver all notifications without delay.
+  #
+  def notification_policy
+    super || :daily
+  end
+  
   # The preferred locale of the user, which can be set through
   # the user settings or the page footer.
   #

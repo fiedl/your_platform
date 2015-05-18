@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150505221640) do
+ActiveRecord::Schema.define(version: 20150518222821) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -148,6 +148,20 @@ ActiveRecord::Schema.define(version: 20150505221640) do
 
   add_index "nav_nodes", ["navable_id", "navable_type"], name: "navable_type", using: :btree
 
+  create_table "notifications", force: :cascade do |t|
+    t.integer  "recipient_id",   limit: 4
+    t.integer  "author_id",      limit: 4
+    t.string   "reference_url",  limit: 255
+    t.string   "reference_type", limit: 255
+    t.integer  "reference_id",   limit: 4
+    t.string   "message",        limit: 255
+    t.text     "text",           limit: 65535
+    t.datetime "sent_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.datetime "read_at"
+  end
+
   create_table "pages", force: :cascade do |t|
     t.string   "title",          limit: 255
     t.text     "content",        limit: 65535
@@ -244,16 +258,18 @@ ActiveRecord::Schema.define(version: 20150505221640) do
   add_index "user_accounts", ["user_id"], name: "user_accounts_user_id_fk", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "alias",             limit: 255
-    t.string   "first_name",        limit: 255
-    t.string   "last_name",         limit: 255
+    t.string   "alias",               limit: 255
+    t.string   "first_name",          limit: 255
+    t.string   "last_name",           limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "female",            limit: 1
-    t.string   "accepted_terms",    limit: 255
+    t.boolean  "female",              limit: 1
+    t.string   "accepted_terms",      limit: 255
     t.datetime "accepted_terms_at"
-    t.boolean  "incognito",         limit: 1
-    t.string   "avatar_id",         limit: 255
+    t.boolean  "incognito",           limit: 1
+    t.string   "avatar_id",           limit: 255
+    t.string   "notification_policy", limit: 255
+    t.string   "locale",              limit: 255
   end
 
   create_table "workflow_kit_parameters", force: :cascade do |t|
