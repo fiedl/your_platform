@@ -15,8 +15,9 @@
 
 = render partial: 'events/pictures'
         
+
 %h1=t :attendees
-%div
+%div#attendees
   %div#attendees_avatars
     = render partial: 'groups/member_avatars', locals: {group: @event.attendees_group}
   

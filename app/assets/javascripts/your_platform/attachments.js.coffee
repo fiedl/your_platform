@@ -51,7 +51,7 @@ $(document).ready ->
         .addClass('success')
       $('p.uploading').hide()
       $('p.success').removeClass('hidden').show()
-      Turbolinks.visit location.toString(), change: 'attachments'
+      Turbolinks.visit location.toString(), change: ['attachments', 'attendees']
       
   
   $(document).on 'click', '.pictures .remove_button', ->

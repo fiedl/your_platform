@@ -35,7 +35,7 @@
         - else
           = t :files_are_about_to_be_shown_thanks_for_uploading
           
-    = form_for parent.attachments.build do |f|
+    = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm'} do |f|
       = f.hidden_field :parent_id
       = f.hidden_field :parent_type
     

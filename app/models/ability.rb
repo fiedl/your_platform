@@ -257,11 +257,12 @@ class Ability
       #
       can :update, UserGroupMembership, :descendant_id => user.id
       
-      # All attendees or contact poeple of events can upload
-      # images for these events.
+      # Everyone who can join an event, can add images to this event.
+      # Then, he will automatically join the event.
+      # Also, all contact people can add images.
       #
       can :create_attachment_for, Event do |event|
-        event.attendees.include?(user) or event.contact_people.include?(user)
+        can?(:join, event) or event.attendees.include?(user) or event.contact_people.include?(user)
       end
       can [:update, :destroy], Attachment do |attachment|
         attachment.author == user and

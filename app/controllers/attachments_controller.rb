@@ -11,11 +11,16 @@ class AttachmentsController < ApplicationController
     if secure_parent
       authorize! :create_attachment_for, secure_parent
       secure_parent.touch
+      if secure_parent.kind_of?(Event) and can?(:join, secure_parent) and not secure_parent.attendees.include?(current_user)
+        # Auto-join the event on upload.
+        current_user.join(secure_parent)
+      end
     else
       authorize! :create, Attachment
     end
     @attachment = Attachment.create! author: current_user
     @attachment.update_attributes(params[:attachment])
+    head :no_content
   end
 
 
