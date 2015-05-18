@@ -11,6 +11,9 @@ concern :UserNotifications do
   def notification_policy
     super || :daily
   end
+  def notification_policy_possible_settings
+    [:daily, :letter_bundle, :instantly]
+  end
   
   # The preferred locale of the user, which can be set through
   # the user settings or the page footer.
