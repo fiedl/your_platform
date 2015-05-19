@@ -69,9 +69,14 @@ class Notification < ActiveRecord::Base
   
   # Deliver all upcoming notifications for a certain user.
   #
+  # The notification mail is *not* sent:
+  #   * if the user has no upcoming notifications
+  #   * if the user has no account
+  #   * if the user is no beta tester (TODO: notifications for all)
+  #
   def self.deliver_for_user(user)
     notifications = self.upcoming_by_user(user)
-    if notifications.count > 0
+    if notifications.count > 0 and user.account and user.beta_tester?
       NotificationMailer.notification_email(user, notifications).deliver_now
       notifications.each { |n| n.update_attribute(:sent_at, Time.zone.now) }
     end
