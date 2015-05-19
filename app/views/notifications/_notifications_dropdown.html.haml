@@ -1,0 +1,8 @@
+%li{class: "backendBarItem dropdown notifications"}
+  - if current_user.notifications.upcoming.count > 0
+    %a{href: "#", data: {toggle: 'dropdown'}}
+      = t(:notifications)
+      %span.badge= current_user.notifications.upcoming.count
+    %ul.dropdown-menu
+      - current_user.notifications.upcoming.each do |notification|
+        %li= render notification

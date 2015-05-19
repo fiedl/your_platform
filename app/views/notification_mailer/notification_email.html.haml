@@ -5,16 +5,8 @@
   %ul
     - @notifications.each do |notification|
       %li{style: 'list-style: none; margin-bottom: 20px; margin-top: 20px'}
-        %div{style: 'float: left; margin-right: 10px'}
-          = user_avatar(notification.author)
-        %div{style: 'overflow: hidden'}
-          %small
-            = link_to notification.author.title, notification.author
-            = localize(notification.created_at)
-          %p
-            %strong= link_to notification.message, notification.reference_url
-          %p= markdown notification.text
+        = render notification
 
-%hr
-
-%small= "#{t(:notification_service)}, #{app_name}, #{localize(Time.zone.now)}"
+  %hr
+  %small= "#{t(:notification_service)}, #{app_name}, #{localize(Time.zone.now)}"
+  %small= link_to t(:notification_settings), user_settings_url(@user)

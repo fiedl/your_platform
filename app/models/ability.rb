@@ -309,6 +309,12 @@ class Ability
     # Name auto completion
     #
     can :autocomplete_title, User
+    
+    # All users can read their notifications.
+    can :read, Notification, recipient: {id: user.id}
+    
+    # Users can read post of their groups.
+    can :read, Post, group: {id: user.group_ids}
   end
   
   def rights_for_everyone

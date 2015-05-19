@@ -21,7 +21,8 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     @title = @post.subject
-    @navable = @post.group
+    @group = @post.group
+    @navable = @group
   end
   
   def new

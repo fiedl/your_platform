@@ -90,6 +90,8 @@ Rails.application.routes.draw do
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts
   
+  resources :notifications
+  
   post :support_requests, to: 'support_requests#create'
   
   get 'avatars', to: 'avatars#show'

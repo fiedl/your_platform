@@ -1,5 +1,9 @@
 concern :UserNotifications do
   
+  included do
+    has_many :notifications, foreign_key: 'recipient_id'
+  end
+  
   # Notification Policy of the user:
   # 
   #    * :daily           (default)     Deliver the notifications once a day.
