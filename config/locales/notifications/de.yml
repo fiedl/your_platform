@@ -9,6 +9,7 @@ de:
   a_new_message_has_been_posted: "Eine neue Nachricht ist eingegangen."
   has_posted_a_new_message: "%{user_title} hat eine neue Nachricht geschrieben."
   you_have_n_unread_notifications: "Sie haben %{n} neue Nachrichten."
+  mark_all_notifications_as_read: Alle als gelesen markieren.
   
   notification_settings: Benachrichtigungs-Einstellungen
   notification_policy: Benachrichtigungs-Richtlinie
