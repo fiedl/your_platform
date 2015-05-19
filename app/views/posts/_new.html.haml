@@ -12,13 +12,15 @@
         = form.text_area :text, placeholder: t(:enter_new_post_here)
         .post_tools
           .what_will_happen
-            Beim Klick auf "Abschicken" wird die Nachricht per E-Mail an die Mitglieder der Gruppe
-            = link_to @group.name, @group
-            versandt.
-
-          -#%select
-          -#  %option= t(:notify_according_to_notification_settings)
-          -#  %option= t(:notify_all_immideately)
+            - if can? :force_post_notification, @group
+              %select.notification{name: 'notification'}
+                %option{value: ''}= t(:notify_according_to_notification_settings)
+                %option{value: 'instantly'}= t(:notify_all_immideately)
+            - else
+              Beim Klick auf "Abschicken" wird die Nachricht gespeichert. Die Mitglieder der Gruppe
+              = link_to @group.name, @group
+              werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen per E-Mail informiert,
+              spätestens jedoch nach einem Tag.
 
           = form.submit t(:submit_post), class: 'submit_post btn btn-primary right'
           = link_to t(:preview_post), post_preview_path, class: 'preview_post btn btn-default right'

@@ -4,5 +4,5 @@
       = t(:notifications)
       %span.badge= current_user.notifications.upcoming.count
     %ul.dropdown-menu
-      - current_user.notifications.upcoming.each do |notification|
+      - current_user.notifications.upcoming.order('created_at desc').each do |notification|
         %li= render notification

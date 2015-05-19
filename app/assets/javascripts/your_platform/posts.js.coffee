@@ -46,8 +46,9 @@ ready = ->
       data: {
         text: $('#message_text').val(),
         subject: $('input.subject').val(),
-        recipients_count: recipients_count ,
-        valid_from: valid_from
+        recipients_count: recipients_count,
+        valid_from: valid_from,
+        notification: 'instantly'
       },
       success: (r)->
         if real_message

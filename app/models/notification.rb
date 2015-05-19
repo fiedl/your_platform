@@ -18,7 +18,7 @@
 #     end
 #
 class Notification < ActiveRecord::Base
-  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text
+  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at
   
   belongs_to :recipient, class_name: 'User'
   belongs_to :author, class_name: 'User'
@@ -31,7 +31,10 @@ class Notification < ActiveRecord::Base
   # Creates all notifications for users that should
   # be notified about this post.
   #  
-  def self.create_from_post(post)
+  # Options:
+  #   - sent_at    In order to mark a notification as already sent.
+  #
+  def self.create_from_post(post, options = {})
     post.group.members.collect do |group_member|
       locale = group_member.locale
       message = post.subject if not post.text.start_with?(post.subject)
@@ -45,7 +48,8 @@ class Notification < ActiveRecord::Base
         reference_type: post.class.name,
         reference_id:   post.id,
         message:        message,
-        text:           post.text
+        text:           post.text,
+        sent_at:        options[:sent_at]
       )
     end
   end

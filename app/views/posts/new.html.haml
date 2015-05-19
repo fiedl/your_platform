@@ -31,7 +31,7 @@
         = render partial: 'new_post_template_text'
     %p
       Betreff:
-      %input.subject{value: "[#{@group.name}] Neues von der Wingolfsplattform"}
+      %input.subject{value: "[#{@group.name}] Neues von der #{app_name}"}
     %p.buttons.right
       %a.btn.btn-default#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
         = icon :envelope

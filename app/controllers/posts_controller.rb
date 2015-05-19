@@ -1,7 +1,8 @@
 class PostsController < ApplicationController
   
   authorize_resource
-  skip_authorize_resource only: [:new, :create]
+  skip_authorize_resource only: [:new, :create, :preview]
+  skip_authorization_check only: [:preview]
   
   def index
     @group = Group.find(params[:group_id]) if params[:group_id].present?
@@ -54,13 +55,18 @@ class PostsController < ApplicationController
     
     @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
     @post.save! unless params[:recipient] == 'me'
-    
-    @send_counter = @post.send_as_email_to_recipients @recipients
+  
+    if params[:notification] == "instantly"
+      @send_counter = @post.send_as_email_to_recipients @recipients
+      Notification.create_from_post(@post, sent_at: Time.zone.now)
+      flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
+    else
+      Notification.create_from_post(@post)
+      flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
+    end
     
     respond_to do |format|
       format.html do
-        flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
-        
         if can? :use, :post_tab
           redirect_to group_posts_path(@group), change: 'posts'
         else

@@ -147,7 +147,7 @@ class Ability
     if not read_only_mode?
       # Group emails
       #
-      can [:create_post, :create_post_for], Group do |group|
+      can [:create_post, :create_post_for, :force_post_notification], Group do |group|
         user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
       end
     
@@ -217,7 +217,7 @@ class Ability
   def rights_for_global_officers
     can :export_member_list, Group
     if not read_only_mode?
-      can [:create_post, :create_post_for], Group
+      can [:create_post, :create_post_for, :force_post_notification], Group
       can [:create_event, :create_event_for], Group
       can [:update, :destroy], Event do |event|
         event.contact_people.include? user
@@ -279,6 +279,10 @@ class Ability
       can [:update, :create_attachment_for, :destroy], Page do |page|
         page.ancestor_events.map(&:contact_people).flatten.include? user
       end
+      
+      # This allows all users to send posts to their own groups.
+      # TODO: Post policy for groups.
+      can [:create_post, :create_post_for], Group, id: user.group_ids
     end
     
     can :read, Group do |group|
