@@ -2,12 +2,15 @@ $(document).ready ->
   $('.new_post .preview').hide()
   $('.new_post .post_tools').hide()
   $('.new_post textarea').autosize()
+  original_box_title = $('.box.first h1').text()
   
 $(document).on 'change keyup paste', '.new_post textarea', ->
   if $('.new_post textarea').val() != ""
     $('.new_post .post_tools').show()
+    $('.box.first h1').text($('.new_post textarea').val().split("\n").first())
   else
     $('.new_post .post_tools').hide()
+    $('.box.first h1').text(original_box_title)
 
 $(document).on 'focus', '.new_post textarea', ->
   if $('.new_post textarea').val() != ""
