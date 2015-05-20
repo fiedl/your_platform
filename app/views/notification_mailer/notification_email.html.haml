@@ -1,12 +1,17 @@
-%div{style: 'font-family: Helvetica'}
-  %p= @user.greeting
-  %p= t(:you_have_n_unread_notifications, n: @notifications.count)
+%style .notification_body { background-color: white; border: 1px solid #DBDBDB; -webkit-border-radius: 3px; border-radius: 3px; display: block; margin: 6px 0; padding: 10px 12px 0 12px; margin-right: 40px} img.img-rounded { -webkit-border-radius: 3px; border-radius: 3px; }
+
+%div{style: 'font-family: Helvetica; background-color: #F0F0F0'}
+  %div.header{style: 'background-color: #337ab7; color: #ffffff; margin-top: 0; margin-left: 0; margin-right: 0; margin-bottom: 20px; padding: 20px;'}
+    = link_to root_url do
+      = image_tag 'logo.png', align: 'right'
+    %p= @user.greeting
+    %p= t(:you_have_n_unread_notifications, n: @notifications.count)
   
   %ul
     - @notifications.each do |notification|
       %li{style: 'list-style: none; margin-bottom: 20px; margin-top: 20px'}
         = render notification
 
-  %hr
-  %small= "#{t(:notification_service)}, #{app_name}, #{localize(Time.zone.now)}"
-  %small= link_to t(:notification_settings), user_settings_url(@user)
+  .footer{style: 'background-color: white; padding-top: 10px'}
+    %small= "#{t(:notification_service)}, #{app_name}, #{localize(Time.zone.now)}"
+    %small= link_to t(:notification_settings), user_settings_url(@user)

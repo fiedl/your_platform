@@ -6,6 +6,7 @@
   %small
     = link_to notification.author.title, notification.author
     = localize(notification.created_at)
-  %p
-    %strong= link_to notification.message, notification
-  %p= markdown notification.text
+  .notification_body
+    %p
+      %strong= link_to notification.message, notification
+    %p= markdown notification.text
