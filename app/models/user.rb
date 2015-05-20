@@ -4,7 +4,8 @@ class User < ActiveRecord::Base
   if defined? attr_accessible
     attr_accessible           :first_name, :last_name, :name, :alias, :email, :create_account, :female, :add_to_group,
                               :add_to_corporation, :date_of_birth, :localized_date_of_birth,
-                              :aktivmeldungsdatum, :study_address, :home_address, :work_address, :phone, :mobile
+                              :aktivmeldungsdatum, :study_address, :home_address, :work_address, :phone, :mobile,
+                              :notification_policy
   end
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation

@@ -64,6 +64,49 @@ describe Notification do
     end
   end
   
+  describe ".due", :focus do
+    before do
+      @notification = Notification.create_from_post(@post).first
+      @user = @notification.recipient
+    end
+    subject { Notification.due }
+    
+    describe "when the user wants to be notified instantly" do
+      before { @user.update_attribute(:notification_policy, :instantly) }
+      it { should include @notification }
+    end
+    describe "when the user wants to be notified in letter bundles" do
+      before { @user.update_attribute(:notification_policy, :letter_bundle) }
+      it { should_not include @notification }
+      describe "after 11 minutes" do
+        before { time_travel 11.minutes }
+        it { should include @notification }
+      end
+    end
+    describe "when the user wants to be notified on a daily basis" do
+      before { @user.update_attribute(:notification_policy, :daily) }
+      describe "when it is before 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 14) }
+        it { should_not include @notification }
+      end
+      describe "when it is after 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 19) }
+        describe "when the notification has been created before 6 pm" do
+          before { @notification.update_attribute(:created_at, Time.zone.now.change(hour: 15)) }
+          it { should include @notification }
+        end
+        describe "when the notification has been created after 6 pm (send it tomorrow!)" do
+          before { @notification.update_attribute(:created_at, Time.zone.now.change(hour: 18, minute: 30)) }
+          it { should_not include @notification }
+          describe "but when it is tomorrow, then" do
+            before { Timecop.travel Date.tomorrow.to_datetime.change(hour: 19) }
+            it { should include @notification }
+          end
+        end
+      end
+    end
+  end
+  
   describe ".upcoming_by_user" do
     before { Notification.create_from_post(@post) }
     subject { Notification.upcoming_by_user(@member1) }
@@ -91,6 +134,49 @@ describe Notification do
         Notification.first.sent_at.should == @t
       end
     end
-    
   end
+  
+  describe "#send_at" do
+    before { @notification = Notification.create_from_post(@post).first }
+    subject { @notification.send_at }
+
+    specify { @notification.recipient.should == @member1 }
+    it { should be_kind_of Time }
+
+    describe "when the user wants to be notified :instantly" do
+      before { @member1.update_attribute(:notification_policy, :instantly); @notification.reload }
+      it { should < 1.minute.from_now }
+    end
+    
+    describe "when the user wants to be notified in letter bundles" do
+      before { @member1.update_attribute(:notification_policy, :letter_bundle); @notification.reload }
+      it { should > 1.minute.from_now }
+      it { should < 15.minutes.from_now }
+    end
+    
+    describe "when the user wants to be notified on a daily basis" do
+      before { @member1.update_attribute(:notification_policy, :daily); @notification.reload }
+      describe "when it is before 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 14) }
+        it { should == Date.today.to_datetime.change(hour: 18) }
+      end
+      describe "when it is after 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 19) }
+        it { should == Date.tomorrow.to_datetime.change(hour: 18) }
+      end
+    end
+    
+    describe "when the user has not chosen a notification policy" do
+      specify { @member1.read_attribute(:notification_policy).should == nil }
+      describe "when it is before 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 14) }
+        it { should == Date.today.to_datetime.change(hour: 18) }
+      end
+      describe "when it is after 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 19) }
+        it { should == Date.tomorrow.to_datetime.change(hour: 18) }
+      end
+    end
+  end
+
 end

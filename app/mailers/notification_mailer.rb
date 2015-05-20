@@ -8,7 +8,9 @@ class NotificationMailer < BaseMailer
     @user = recipient
     to_email = "#{recipient.title} <#{recipient.email}>"
     subject = I18n.t(:you_have_n_unread_notifications, n: notifications.count, locale: locale)
-    mail to: to_email, subject: subject
+    I18n.with_locale(locale) do
+      mail to: to_email, subject: subject
+    end
   end
 
 end

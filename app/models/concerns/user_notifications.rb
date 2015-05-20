@@ -13,7 +13,7 @@ concern :UserNotifications do
   #    * :instantly                     Deliver all notifications without delay.
   #
   def notification_policy
-    super || :daily
+    super.try(:to_sym) || :daily
   end
   def notification_policy_possible_settings
     [:daily, :letter_bundle, :instantly]
