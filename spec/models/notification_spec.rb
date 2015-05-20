@@ -4,9 +4,13 @@ describe Notification do
   
   before do
     @group = create :group
-    @member1 = create :user
-    @member2 = create :user
+    @member1 = create :user_with_account
+    @member2 = create :user_with_account
     
+    # TODO: REMOVE THE BETA
+    User.all.each { |u| u.beta_tester = true }
+    time_travel 2.seconds
+
     @group << @member1
     @group << @member2
     
@@ -36,7 +40,7 @@ describe Notification do
         end
         describe "for the post subject being derived from the post text" do
           before { @post.update_attribute :subject, "Lorem ipsum dolor" }
-          it { should == I18n.t(:has_posted_a_new_message) }
+          it { should == I18n.t(:has_posted_a_new_message, user_title: @member1.title) }
           describe "for the author being unknown (for example, for external authors)" do
             before { @post.update_attribute :author_user_id, nil }
             it { should == I18n.t(:a_new_message_has_been_posted) }
@@ -117,7 +121,11 @@ describe Notification do
   end
   
   describe ".deliver" do
-    before { Notification.create_from_post(@post) }
+    before do 
+      Notification.destroy_all
+      Notification.create_from_post(@post)
+      User.update_all notification_policy: 'instantly'
+    end
     subject { Notification.deliver }
     
     it "should send all upcoming notifications" do
@@ -129,9 +137,9 @@ describe Notification do
     describe "with already sent notifications" do
       before { @t = 1.hour.ago; Notification.first.update_attribute(:sent_at, @t) }
       it "should not deliver the same notification twice" do
-        Notification.first.sent_at.should == @t
+        Notification.first.sent_at.to_i.should == @t.to_i
         subject
-        Notification.first.sent_at.should == @t
+        Notification.first.sent_at.to_i.should == @t.to_i
       end
     end
   end

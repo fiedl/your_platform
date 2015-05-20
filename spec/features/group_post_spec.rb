@@ -78,12 +78,22 @@ feature "Group Posts" do
     end
   end
   
-  describe "as user:" do
+  describe "as user that is member of the group:" do
     background { login(@other_user) }
+    
+    specify 'There should be a button to send a message.' do
+      visit group_path(@group)
+      page.should have_selector '#new_post'
+    end
+  end
+
+  describe "as unrelated user" do
+    background { login(create(:user_with_account)) }
     
     specify 'There should be no button to send a message.' do
       visit group_path(@group)
       page.should have_no_selector '#new_post'
     end
   end
+
 end
