@@ -1,7 +1,15 @@
 class NotificationsController < ApplicationController
 
-  load_and_authorize_resource except: [:read_all]
+  load_and_authorize_resource except: [:read_all, :index]
   skip_authorization_check only: [:read_all]
+  
+  def index
+    @notifications = current_user.notifications.order('created_at desc')
+    authorize! :read, @notifications
+
+    @navable = Page.intranet_root
+    @title = t(:notifications)
+  end
   
   def show
     @notification.update_attribute :read_at, Time.zone.now

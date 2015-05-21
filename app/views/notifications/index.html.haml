@@ -1,0 +1,4 @@
+%h1.notifications= @title
+%div
+  - @notifications.each do |notification|
+    = render notification

@@ -1,0 +1,15 @@
+.row
+  %div.col-xs-12.col-md-4.col-md-push-8
+    = render partial: 'root/start_page_elements'
+    
+    %h1= link_to t(:notifications), notifications_path
+    %div
+      - @notifications.each do |notification|
+        = render notification
+    
+  %div.col-xs-12.col-md-8.col-md-pull-4
+    = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+
+    = render @page
+    - @news_pages.each do |page|
+      = render page

@@ -6,9 +6,14 @@ class RootController < ApplicationController
   def index
     current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)
     @navable = @page
-    @blog_entries = @page.blog_entries
     
-    render "pages/show"
+    if current_user.beta_tester?
+      @notifications = current_user.notifications.order('created_at desc').limit(15)
+      @blog_entries = @news_pages = current_user.news_pages.limit(10).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page]
+    else
+      @blog_entries = @page.blog_entries
+      render "pages/show"
+    end
   end
   
   
