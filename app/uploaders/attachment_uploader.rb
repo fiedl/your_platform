@@ -53,6 +53,10 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image_or_pdf? do
     process :cover
     process :modify_content_type
+    
+    def full_filename(for_file = model.attachment.file)		
+      "thumb.png"		
+    end
   end
   
   version :medium, :if => :image? do
