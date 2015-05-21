@@ -15,7 +15,7 @@ $(document).ready ->
       initialTransition: 'fade',
       assets: false,  # The images are not serverd as assets but by the attachments controller.
       _toggleInfo: true,
-      preload: 10,
+      preload: 0,
       #autoplay: 9000,
       popupLinks: false,
       trueFullscreen: false,
@@ -43,20 +43,6 @@ $(document).ready ->
       newGalleriaInstance = this
       galleriaInstances.push(newGalleriaInstance)
 
-      # Clicking on an gallery image switches to fullscreen mode,
-      # i.e. covers the full browser window.
-      #
-      $(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', (e)->
-        currentGalleriaInstance = $(this).closest('.galleria').data('galleria')
-        if typeof(currentGalleriaInstance) != 'undefined'
-          currentGalleriaInstance.enterFullscreen()
-        e.stopPropagation()
-        e.preventDefault()
-        false
-      $(document).on 'click', '.galleria-container.fullscreen .galleria-stage img', (e)->
-        galleriaInstances.forEach (galleriaInstance)->
-          galleriaInstance.exitFullscreen()
-       
       # When loading a gallery image, also update the description
       # shown below the image.
       # 
@@ -89,20 +75,35 @@ $(document).ready ->
           $(this).hide()
         else
           $(this).show()            
-      
-    # The button to remove an image is only to be shown when 
-    # hovering the image description.
-    # 
-    $(document).on 'mouseenter', '.picture-title', ->
-      $(this).find('.remove_button').show()
-    $(document).on 'mouseleave', '.picture-title', ->
-      $(this).find('.remove_button').hide()
-      
+
   # Do not show galleria errors. These are not useful
   # in production.
   #  
   $('.galleria-errors').hide()
-  
+
+
+# Clicking on an gallery image switches to fullscreen mode,
+# i.e. covers the full browser window.
+#
+$(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', (e)->
+  currentGalleriaInstance = $(this).closest('.galleria').data('galleria')
+  if typeof(currentGalleriaInstance) != 'undefined'
+    currentGalleriaInstance.enterFullscreen()
+  e.stopPropagation()
+  e.preventDefault()
+  false
+$(document).on 'click', '.galleria-container.fullscreen .galleria-stage img', (e)->
+  galleriaInstances.forEach (galleriaInstance)->
+    galleriaInstance.exitFullscreen()
+      
+# The button to remove an image is only to be shown when 
+# hovering the image description.
+# 
+$(document).on 'mouseenter', '.picture-title', ->
+  $(this).find('.remove_button').show()
+$(document).on 'mouseleave', '.picture-title', ->
+  $(this).find('.remove_button').hide()
+
 # When turbolinks is starting to fetch a page, remove all
 # galleria objects to avoid binding issues.
 #

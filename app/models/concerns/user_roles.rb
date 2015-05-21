@@ -44,7 +44,7 @@ concern :UserRoles do
   # ------------------------------------------------------------------------------------------
 
   def admin_of_anything?
-    groups.find_all_by_flag(:admins_parent).count > 0
+    cached { groups.find_all_by_flag(:admins_parent).count > 0 }
   end
 
   # This method finds all objects the user is an administrator of.
@@ -125,7 +125,7 @@ concern :UserRoles do
   # to determine if some features are presented to the current_user. 
   # 
   def developer?
-    self.developer
+    cached { self.developer }
   end
   def developer
     self.member_of? Group.developers
@@ -145,7 +145,7 @@ concern :UserRoles do
     @beta_tester ||= self.beta_tester
   end
   def beta_tester
-    self.member_of? Group.find_or_create_by_flag :beta_testers
+    cached { self.member_of? Group.find_or_create_by_flag :beta_testers }
   end
   def beta_tester=(mark_as_beta_tester)
     if mark_as_beta_tester
@@ -162,7 +162,7 @@ concern :UserRoles do
     self.in? Group.everyone.admins
   end
   def global_admin?
-    self.global_admin
+    cached { self.global_admin }
   end
   def global_admin=(new_setting)
     if new_setting == true
@@ -178,7 +178,7 @@ concern :UserRoles do
   # ==========================================================================================
 
   def is_global_officer?
-    global_admin? || ancestor_groups.flagged(:global_officer).exists?
+    cached { global_admin? || ancestor_groups.flagged(:global_officer).exists? }
   end
 
   def administrated_user_ids

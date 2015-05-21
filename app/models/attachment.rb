@@ -20,6 +20,9 @@ class Attachment < ActiveRecord::Base
   def medium_url
     file.url(:medium) if has_type? 'image'
   end
+  def big_url
+    file.url(:big) if has_type? 'image'
+  end
 
   def has_type?( type )
     self.content_type.include? type

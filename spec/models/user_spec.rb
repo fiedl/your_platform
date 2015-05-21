@@ -1372,7 +1372,7 @@ describe User do
       it { should == [ @user ] }
     end
     describe "for a given email" do
-      subject { User.find_all_by_identification_string( @user.email ) }
+      subject { User.find_all_by_identification_string("unique@example.com") }
       it { should == [ @user ] }
     end
     describe "for given nonsense" do

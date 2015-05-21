@@ -29,9 +29,10 @@ module Profileable
   module InstanceMethodsForProfileables
     
     def email
-      profile_fields_by_type( "ProfileFieldTypes::Email" ).first.value if profile_fields_by_type( "ProfileFieldTypes::Email" ).first
+      @email ||= profile_fields_by_type("ProfileFieldTypes::Email").first.try(:value)
     end
     def email=( email )
+      @email = nil
       @email_profile_field = profile_fields_by_type( "ProfileFieldTypes::Email" ).first unless @email_profile_field
       @email_profile_field = profile_fields.build( type: "ProfileFieldTypes::Email", label: "email" ) unless @email_profile_field
       @email_profile_field.value = email

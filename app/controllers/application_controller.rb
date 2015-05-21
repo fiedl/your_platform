@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
   before_action :update_locale_cookie, :update_user_locale, :set_locale
   helper_method :current_user
   helper_method :current_navable, :current_navable=, :point_navigation_to
-  before_action :log_generic_metric_event
+  # before_action :log_generic_metric_event
   helper_method :metric_logger
   before_action :authorize_miniprofiler
   before_action :accept_terms_of_use
@@ -197,25 +197,28 @@ class ApplicationController < ActionController::Base
     @current_ability ||= nil
     @current_role ||= nil
     
-    # Auth token, for example for calender feeds
-    options[:token] = params[:token]
+    if @current_ability.nil?
+
+      # Auth token, for example for calender feeds
+      options[:token] = params[:token]
     
-    # Read-only mode
-    options[:read_only_mode] = true if read_only_mode?
+      # Read-only mode
+      options[:read_only_mode] = true if read_only_mode?
     
-    # Preview role mechanism
-    if @current_ability.nil? and current_user
-      params[:preview_as] ||= load_preview_as_from_cookie
-      if params[:preview_as].present? || current_user.is_global_officer?
-        currently_displayed_object = @navable || Group.everyone
-        @current_role = Role.of(current_user).for(currently_displayed_object)
-        if params[:preview_as].in?(@current_role.allowed_preview_roles)
-          save_preview_as_cookie(params[:preview_as])
-          options[:preview_as] = params[:preview_as]
-        else
-          cookies.delete :preview_as
-          options[:preview_as] = nil
-          params[:preview_as] = nil
+      # Preview role mechanism
+      if @current_ability.nil? and current_user
+        params[:preview_as] ||= load_preview_as_from_cookie
+        if params[:preview_as].present? || current_user.is_global_officer?
+          currently_displayed_object = @navable || Group.everyone
+          @current_role = Role.of(current_user).for(currently_displayed_object)
+          if params[:preview_as].in?(@current_role.allowed_preview_roles)
+            save_preview_as_cookie(params[:preview_as])
+            options[:preview_as] = params[:preview_as]
+          else
+            cookies.delete :preview_as
+            options[:preview_as] = nil
+            params[:preview_as] = nil
+          end
         end
       end
     end

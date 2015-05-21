@@ -61,7 +61,7 @@ class Ability
   
     @read_only_mode = options[:read_only_mode]
     @user = user
-        
+    
     if user.try(:account) # has to be able to sign in
       if user.global_admin? and view_as?(:global_admin)
         rights_for_global_admins
@@ -84,7 +84,6 @@ class Ability
       rights_for_signed_in_users
     end
     rights_for_everyone
-
   end
   
   def view_as?(role)
@@ -296,7 +295,11 @@ class Ability
       page.group.nil? || page.group.members.include?(user)
     end
     can [:read, :download], Attachment do |attachment|
-      attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
+      #binding.pry
+      #Rails.cache.fetch([user, attachment.id]) { 
+        # cache this. then, the calculations is only done once for each image version (thumb, big, etc.)
+        attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
+      #}
     end
         
     # All users can join events.

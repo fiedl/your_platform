@@ -53,13 +53,14 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image_or_pdf? do
     process :cover
     process :modify_content_type
-    def full_filename( for_file = model.attachment.file )
-      "thumb.png"
-    end
   end
   
   version :medium, :if => :image? do
-    process :resize_to_limit => [ 800, 600 ]
+    process :resize_to_limit => [580,330]
+  end
+  
+  version :big, if: :image? do
+    process :resize_to_limit => [1024,768]
   end
   
   # 
@@ -82,6 +83,10 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   
   def image?( new_file )
     new_file && new_file.content_type.present? && new_file.content_type.include?('image')
+  end
+  
+  def pdf?(new_file)
+    new_file && new_file.content_type.present? && new_file.content_type.include?('pdf')
   end
   
   # This method filteres out all pages except for the cover page.
@@ -145,7 +150,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   
 
   def self.valid_versions
-    [:thumb, :medium, :video_thumb]
+    [:thumb, :medium, :big, :video_thumb]
   end
 
 end

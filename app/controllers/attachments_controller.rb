@@ -3,6 +3,7 @@ class AttachmentsController < ApplicationController
   load_and_authorize_resource
   skip_authorize_resource only: [:create, :description]
   respond_to :html, :json
+  layout nil
   
   def index
   end
