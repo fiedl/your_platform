@@ -9,9 +9,16 @@
       %li.nav-header=t :pdf_files
       - trigger_class = (params[:trigger_export] == 'pdf') ? 'auto_trigger' : ''
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
-        = link_to group_path(@group, :format => :pdf), :class => "address_labels_export_button #{trigger_class}" do
+        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'zweckform'), :class => "address_labels_export_button #{trigger_class}" do
           = icon :th
           =t :address_labels
+          (Zweckform 3475)
+      %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
+        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'dpag'), :class => "address_labels_export_button" do
+          = icon :th
+          =t :address_labels
+          (DPAG 70x37)
+
 
       %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"
       %li

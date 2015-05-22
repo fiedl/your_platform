@@ -115,7 +115,15 @@ class GroupsController < ApplicationController
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]
         end
-        options = {sender: params[:sender], book_rate: params[:book_rate]}
+        options = {sender: params[:sender], book_rate: params[:book_rate], export_user: current_user}
+        
+        if params[:pdf_type].present?
+          options[:type] = "AddressLabelsDpag7037Pdf" if params[:pdf_type].include?("dpag")
+          options[:type] = "AddressLabelsZweckform3475Pdf" if params[:pdf_type].include?("zweckform")
+        else
+          options[:type] = "AddressLabelsZweckform3475Pdf"
+        end
+        
         file_title = "#{I18n.t(:address_labels)} #{@group.name} #{Time.zone.now}".parameterize
         
         # Possible dispositions: attachment, inline.
@@ -123,7 +131,7 @@ class GroupsController < ApplicationController
         # They would need to download and open the file in Adobe Reader standalone to print at 100% scale.
         # Therefore, we use 'attachment' here in order to prevent the use of the browser plugin.
         #
-        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'attachment')
+        send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
     

@@ -11,6 +11,9 @@ ready = ->
     $('.export_modal').remove()
     $('body').append($('li.export_address_labels').data('modal-body'))
     $('.export_modal').modal('show')
+
+    # Set the correct url in order to adpot the pdf format.
+    $('#address_label_export_form').attr('action', $(this).attr('href'))
     
     $('.confirm_address_labels_pdf_export').click( ->
       btn = $(this)

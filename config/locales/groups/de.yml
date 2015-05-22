@@ -53,4 +53,5 @@ de:
   create_address_labels_pdf:      PDF mit Adress-Etiketten erstellen
   book_rate:                      Büchersendung
   send_with_book_rate:            Als Büchersendung kennzeichnen
-  
+  exported_by:                    Exportiert von
+  compact_address_format:         Kompaktes Adressformat

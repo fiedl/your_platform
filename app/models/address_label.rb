@@ -47,4 +47,58 @@ class AddressLabel
     .strip
   end
   
+  # This reduces the address label to a compact form:
+  # No custom text above name, just title, name and address.
+  #
+  # Usage:
+  # 
+  #      address_label.to_s
+  #      address_label.compact.to_s
+  # 
+  def compact
+    herrn = to_s.include?("Herr") ? "Herrn " : ""
+    title = personal_title.present? ? "#{personal_title} " : ""
+    self.text_above_name = nil
+    self.name_prefix = herrn + title
+    self.name_suffix = nil
+    self.text_below_name = nil
+    convert_one_line_addresses    
+    
+    # remove country code from postal code
+    #self.postal_address.gsub!(/^#{self.country_code}\s?-\s?/, "") 
+    self.postal_address.gsub!(/^[A-Z][A-Z]?\s?-\s?/, "") if self.postal_address
+    
+    return self
+  end
+  
+  # Convert last two lines to capital letters (versal) for
+  # addresses abroad.
+  #
+  # Usage:     address_label.compact.versalize_abroad.to_s
+  #
+  def versalize_abroad
+    if self.postal_address && country_code.downcase != I18n.locale.to_s.downcase
+      address_lines = self.postal_address.split("\n")
+      if address_lines.count > 1
+        self.postal_address = (address_lines[0..-3] + address_lines[-2..-1].collect { |line| 
+          line.upcase.gsub("ß", "SS").gsub("ä", "Ä").gsub("ö", "Ö").gsub("ü", "Ü")
+        }).join("\n")
+      end
+    end
+    return self
+  end
+  
+  # We don't want one-line comma-separated addresses. Extract the last two
+  # lines.
+  #
+  def convert_one_line_addresses
+    if self.postal_address && self.postal_address.split("\n").count == 1
+      address_lines = self.postal_address.split(", ")
+      if address_lines.count > 1
+        self.postal_address = address_lines[0..-3].join(", ") + "\n" + address_lines[-2..-1].join("\n")
+      end
+    end
+    return self
+  end
+  
 end

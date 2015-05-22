@@ -1,8 +1,8 @@
 %div.export_modal.modal.fade
   .modal-dialog
     .modal-content
-      = form_tag(group_path(@group, :format => :pdf), {:method => :get}) do
-        
+      = form_tag(group_path(@group, :format => :pdf), {:method => :get, id: 'address_label_export_form'}) do
+                
         %div.modal-header
           %a.close{data: {dismiss: 'modal'}, 'aria-label' => 'Close'}
             %span{'aria-hidden' => true} &times;

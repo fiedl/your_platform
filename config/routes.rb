@@ -44,6 +44,7 @@ Rails.application.routes.draw do
   end
   get :settings, to: 'user_settings#index'
 
+  get 'groups/:id/address_labels/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   resources :groups do
     get :mine, on: :collection, to: 'groups#index_mine'
     get 'events/public', to: 'events#index', published_on_local_website: true

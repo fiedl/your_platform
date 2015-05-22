@@ -164,9 +164,9 @@ class Group < ActiveRecord::Base
   #   - book_rate:   Whether the "Büchersendung"/"Envois à taxe réduite" badge
   #                  is to be printed.
   #
-  def members_to_pdf(options = {sender: '', book_rate: false})
+  def members_to_pdf(options = {sender: '', book_rate: false, type: "AddressLabelsPdf"})
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
-    AddressLabelsPdf.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
+    options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
     cached do
