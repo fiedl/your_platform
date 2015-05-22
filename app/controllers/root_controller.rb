@@ -9,7 +9,10 @@ class RootController < ApplicationController
     
     if current_user.beta_tester?
       @notifications = current_user.notifications.order('created_at desc').limit(15)
-      @blog_entries = @news_pages = current_user.news_pages.limit(10).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page]
+      @announcement_page = Page.find_or_create_by_flag :site_announcement
+      @blog_entries = @news_pages = current_user.news_pages.limit(10).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page, @announcement_page]
+            
+      @objects = (@notifications.map(&:reference) + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
     else
       @blog_entries = @page.blog_entries
       render "pages/show"
