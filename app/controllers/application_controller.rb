@@ -210,7 +210,7 @@ class ApplicationController < ActionController::Base
         params[:preview_as] ||= load_preview_as_from_cookie
         if params[:preview_as].present? || current_user.is_global_officer?
           currently_displayed_object = @navable || Group.everyone
-          @current_role = Role.of(current_user).for(currently_displayed_object)
+          @current_role = ::Role.of(current_user).for(currently_displayed_object)
           if params[:preview_as].in?(@current_role.allowed_preview_roles)
             save_preview_as_cookie(params[:preview_as])
             options[:preview_as] = params[:preview_as]
