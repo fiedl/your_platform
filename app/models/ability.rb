@@ -186,7 +186,7 @@ class Ability
       can :update, Attachment do |attachment|
         can?(:read, attachment) &&
         (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
-        ((attachment.author == user) || (attachment.parent.author == user))
+        ((attachment.author == user) || (attachment.parent.respond_to?(:author) && attachment.parent.author == user))
       end
             
       
@@ -295,11 +295,7 @@ class Ability
       page.group.nil? || page.group.members.include?(user)
     end
     can [:read, :download], Attachment do |attachment|
-      #binding.pry
-      #Rails.cache.fetch([user, attachment.id]) { 
-        # cache this. then, the calculations is only done once for each image version (thumb, big, etc.)
-        attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
-      #}
+      attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
     end
         
     # All users can join events.
