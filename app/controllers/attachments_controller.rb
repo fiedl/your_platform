@@ -96,8 +96,8 @@ private
   end
   
   def secure_parent
-    Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
-    Event.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Event'
+    return Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
+    return Event.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Event'
   end
 
 end
