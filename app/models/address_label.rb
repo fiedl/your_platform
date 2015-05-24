@@ -77,7 +77,7 @@ class AddressLabel
   # Usage:     address_label.compact.versalize_abroad.to_s
   #
   def versalize_abroad
-    if self.postal_address && country_code.downcase != I18n.locale.to_s.downcase
+    if self.postal_address && country_code && country_code.downcase != I18n.locale.to_s.downcase
       address_lines = self.postal_address.split("\n")
       if address_lines.count > 1
         self.postal_address = (address_lines[0..-3] + address_lines[-2..-1].collect { |line| 

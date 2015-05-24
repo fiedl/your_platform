@@ -10,7 +10,7 @@ module ProfileFieldTypes
     # Google Maps integration
     # see: http://rubydoc.info/gems/gmaps4rails/
     acts_as_gmappable
-
+    
     def geo_location
       find_or_create_geo_location
     end
@@ -80,6 +80,19 @@ module ProfileFieldTypes
     def clear_postal_address
       self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").each do |address_field|
         address_field.remove_flag :postal_address
+      end
+    end
+    def postal_or_first_address?
+      postal_address? or (self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").order(:id).limit(1).pluck(:id).first == self.id)
+    end
+    
+    
+    def self.fix_one_liner_addresses
+      self.all.each do |address_field|
+        if address_field.value && address_field.value.count("\n") == 0 && address_field.value.count(",").in?(1..3)
+          address_field.value = address_field.value.gsub(", ", "\n")
+          address_field.save
+        end
       end
     end
 

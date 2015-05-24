@@ -56,7 +56,11 @@ class AddressLabelsDpag7037Pdf < AddressLabelsPdf
                  
                  address.gsub!("\nDeutschland", "") if I18n.locale == :de # in order to save space for in-country deliveries.
                  
-                 text address.to_s, size: 10.pt, fallback_fonts: fallback_fonts
+                 begin
+                   text address.to_s, size: 10.pt, fallback_fonts: fallback_fonts
+                 rescue Prawn::Errors::IncompatibleStringEncoding
+                   text "ENCODING ISSUE!"
+                 end
                end
              end
            end

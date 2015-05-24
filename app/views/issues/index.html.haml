@@ -1,0 +1,30 @@
+%h1.issues= t(:administrative_issues) + " (#{@issues.count})"
+%div
+  %a#rescan.btn.btn-default.right{href: '?rescan=all'}
+    = icon('refresh')
+    = t(:rescan)
+  %table.issues.datatable
+    %thead
+      %tr
+        %th= t(:issue)
+        %th= t(:context)
+        %th= t(:reference)
+        %th= t(:responsible_admin)
+    %tbody
+      - @issues.each do |issue|
+        %tr
+          %td
+            .description-container
+              %p
+                %strong= t(issue.title)
+              %p= t(issue.description) 
+          %td
+            - if issue.reference.kind_of? ProfileField
+              %div= link_to issue.reference.profileable.title, issue.reference.profileable
+              %strong= best_in_place issue.reference, :label
+          %td
+            - if issue.reference.kind_of? ProfileField
+              %div= best_in_place issue.reference, :value, as: 'textarea'
+          %td= link_to(issue.responsible_admin.title, issue.responsible_admin) if issue.responsible_admin
+
+          

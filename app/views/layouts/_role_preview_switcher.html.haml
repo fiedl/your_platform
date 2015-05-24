@@ -8,9 +8,17 @@
     - current_view = params[:preview_as] || current_role.to_s
     = link_to(params.merge({preview_as: current_role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
       = t current_view
+      - if Issue.by_admin(current_user).count > 0
+        .badge= Issue.by_admin(current_user).count
       %b.caret
     - unless params[:preview_not_possible]
       %ul.dropdown-menu
+        
+        %li.nav-header
+          = t :tasks
+        %li
+          = link_to "#{current_issues.count} #{t(:administrative_issues)}", issues_path
+
         %li.nav-header
           = t :preview_as
         - for preview_role in current_role.allowed_preview_roles

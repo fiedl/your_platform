@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150518222821) do
+ActiveRecord::Schema.define(version: 20150523130534) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -119,6 +119,17 @@ ActiveRecord::Schema.define(version: 20150518222821) do
     t.string   "internal_token", limit: 255
     t.text     "body",           limit: 65535
     t.string   "type",           limit: 255
+  end
+
+  create_table "issues", force: :cascade do |t|
+    t.string   "title",                limit: 255
+    t.string   "description",          limit: 255
+    t.integer  "reference_id",         limit: 4
+    t.string   "reference_type",       limit: 255
+    t.datetime "resolved_at"
+    t.datetime "created_at",                       null: false
+    t.datetime "updated_at",                       null: false
+    t.integer  "responsible_admin_id", limit: 4
   end
 
   create_table "last_seen_activities", force: :cascade do |t|

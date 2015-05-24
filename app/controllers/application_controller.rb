@@ -56,6 +56,15 @@ class ApplicationController < ActionController::Base
   attr_reader :current_role
   helper_method :current_role
   
+  def current_issues
+    if can? :manage, :all_issues
+      Issue.all
+    else
+      Issue.by_admin(current_user)
+    end
+  end
+  helper_method :current_issues
+  
   # Redirect the www subdomain to non-www, e.g.
   # http://www.example.com to http://example.com.
   #

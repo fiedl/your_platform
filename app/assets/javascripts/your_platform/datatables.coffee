@@ -119,6 +119,16 @@ $(document).ready ->
   $('.datatable.officers').dataTable(jQuery.extend({
     "pageLength": 100,
   }, common_configuration))
+  $('.datatable.issues').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "columnDefs": [
+      {"width": "25%", "targets": 1},
+      {"width": "25%", "targets": 2}
+    ]
+  }, common_configuration))
+  
+  # Insert above.
+  # This modified the common_configuration:
   $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
     "pageLength": 100,
     "columnDefs": [

@@ -4,6 +4,7 @@ class ProfileField < ActiveRecord::Base
   attr_accessible        :label, :type, :value, :key, :profileable_id, :profileable_type if defined? attr_accessible
 
   belongs_to             :profileable, polymorphic: true
+  has_many               :issues, as: :reference, dependent: :destroy
   
   after_commit           :delete_cache
   

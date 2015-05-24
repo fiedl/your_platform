@@ -227,6 +227,17 @@ module StructureableMixins::Roles
   def admins_of_self_and_ancestors
     cached { find_admins + admins_of_ancestors }
   end
+  
+  def responsible_admins
+    # responsible are: local admins + last global admin:
+    cached { (admins_of_self_and_ancestors - Group.global_admins.members[0..-2]).uniq }
+  end
+  def responsible_admin
+    responsible_admins.first
+  end
+  def responsible_admin_id
+    responsible_admin.try(:id)
+  end
 
 
   # Main Admins
