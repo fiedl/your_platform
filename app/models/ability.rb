@@ -316,6 +316,7 @@ class Ability
     can :autocomplete_title, User
     
     # All users can read their notifications.
+    can :index, Notification
     can :read, Notification, recipient: {id: user.id}
     
     # Users can read post of their groups.

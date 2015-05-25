@@ -24,9 +24,8 @@
 
 div.attachments
   table.attachments
-    border-spacing: 18px !important
+    border-spacing: 13px !important
     border-collapse: separate
-    margin-left: 20px
     width: auto !important
   span.attachment-description
     display: inline-block
@@ -37,6 +36,9 @@ div.attachments
       margin-bottom: 2px
     p.attachment.title
       font-weight: bold
+    p.attachment.filename
+      word-wrap: break-word
+      width: 75%
   input
     min-width: 300px
 div.videos
@@ -59,6 +61,7 @@ div.videos
     -ms-border-radius: 4px
     -o-border-radius: 4px
     border-radius: 4px
+    background-color: white
 
 .upload
   border-top: solid 1px #CCC

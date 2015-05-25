@@ -4,6 +4,7 @@
       = t(:notifications)
       - if current_user.notifications.upcoming.count > 0
         %span.badge= current_user.notifications.upcoming.count
+        %b.caret
     - if current_user.notifications.upcoming.count > 0    
       %ul.dropdown-menu
         %li.read_all= link_to t(:mark_all_notifications_as_read), read_all_notifications_path, remote: true, method: 'patch'

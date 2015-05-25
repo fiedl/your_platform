@@ -23,6 +23,7 @@ $(document).ready ->
       swipe: true,
       responsive: true,
       #height: 0.625, # 16:10
+      height: 0.5629, # 16:9
       debug: false
       ## height: $(this).find('img').attr('height')
     }
@@ -75,6 +76,7 @@ $(document).ready ->
           $(this).hide()
         else
           $(this).show()            
+
 
   # Do not show galleria errors. These are not useful
   # in production.

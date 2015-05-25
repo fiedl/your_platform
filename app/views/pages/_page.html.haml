@@ -5,6 +5,12 @@
     = link_to(page) do
       = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
 %div.page
+  - if @navable != page and not @navable.in?(page.parents) and page.parents.first
+    .page_header
+      %span.right
+        = icon(:tag)
+        = link_to page.parents.first.title, page.parents.first
+
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
       = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false

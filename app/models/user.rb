@@ -55,6 +55,7 @@ class User < ActiveRecord::Base
   include UserAvatar
   include UserRoles
   include UserNotifications
+  include UserPosts
 
   # General Properties
   # ==========================================================================================

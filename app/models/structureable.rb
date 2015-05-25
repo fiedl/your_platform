@@ -128,8 +128,10 @@ module Structureable
     def move_to(parent_node)
       raise 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
       if parent_node != self.parents.first
+        old_updated_at = self.updated_at
         self.links_as_child.destroy_all
         parent_node << self
+        self.update_attribute :updated_at, old_updated_at
       end
     end
     

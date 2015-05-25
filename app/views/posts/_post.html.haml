@@ -13,7 +13,13 @@
               = link_to post.author.title, post.author
           - if post.author.kind_of? String
             = post.author
+          
+          - if @navable != post.group
+            %span.post-group.right
+              = icon(:tag)
+              = link_to post.group.title, post.group
         %div.post-date
           = localize(post.sent_at)
+          
       %div.post-body
         = markup post.text.html_safe
