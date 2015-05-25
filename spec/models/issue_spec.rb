@@ -16,7 +16,7 @@ describe Issue do
     describe "()" do
       subject { Issue.scan }
       describe "when a bad address is present" do
-        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown") }
+        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown"); @address_field.postal_address = true }
         its(:count) { should == 1 }
         its('first.title') { should == 'issues.address_has_too_few_lines' }
         its('first.reference') { should == @address_field }
@@ -26,17 +26,17 @@ describe Issue do
     describe "(address_field)" do
       subject { Issue.scan(@address_field) }
       describe "for a good address field" do
-        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin") }
+        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin"); @address_field.postal_address = true }
         it { should == [] }
       end
       describe "for a potential address with too few lines" do
-        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown") }
+        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown"); @address_field.postal_address = true }
         its(:count) { should == 1 }
         its('first.title') { should == 'issues.address_has_too_few_lines' }
         its('first.reference') { should == @address_field }
       end
       describe "for a potential address with too many lines" do
-        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "c./o. Jean-Luc Picard\n44 Rue de Stalingrad\nGrenoble\nFrankreich\n(Adresse ist im Auslands-BV)") }
+        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "c./o. Jean-Luc Picard\n44 Rue de Stalingrad\nGrenoble\nFrankreich\n(Adresse ist im Auslands-BV)"); @address_field.postal_address = true }
         its(:count) { should == 1 }
         its('first.title') { should == 'issues.address_has_too_many_lines' }
         its('first.reference') { should == @address_field }
@@ -46,8 +46,8 @@ describe Issue do
     describe "(address_fields)" do
       subject { Issue.scan(ProfileFieldTypes::Address.all) }
       before do
-        @good_address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin")
-        @bad_address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown")
+        @good_address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin"); @good_address_field.postal_address = true
+        @bad_address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown"); @bad_address_field.postal_address = true
       end
       its(:count) { should == 1 }
       its('first.reference') { should == @bad_address_field }

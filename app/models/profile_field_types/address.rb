@@ -78,12 +78,14 @@ module ProfileFieldTypes
       self.postal_address
     end
     def clear_postal_address
-      self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").each do |address_field|
-        address_field.remove_flag :postal_address
+      if self.profileable
+        self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").each do |address_field|
+          address_field.remove_flag :postal_address
+        end
       end
     end
     def postal_or_first_address?
-      postal_address? or (self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").order(:id).limit(1).pluck(:id).first == self.id)
+      postal_address? or (self.profileable && self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").order(:id).limit(1).pluck(:id).first == self.id)
     end
     
     

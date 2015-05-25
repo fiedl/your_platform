@@ -29,7 +29,11 @@ class GeoLocation < ActiveRecord::Base
   #
   def geocode
     self.queried_at = DateTime.now
-    super
+    begin
+      super
+    rescue ArgumentError => e
+      raise e unless Rails.env.test?
+    end
   end
 
   # Perform geocode query and save the record.
