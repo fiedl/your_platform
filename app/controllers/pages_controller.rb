@@ -20,6 +20,11 @@ class PagesController < ApplicationController
         redirect_to target
         return
       end
+      
+      if @page.has_flag?(:intranet_root)
+        redirect_to root_path
+        return
+      end
 
       @blog_entries = @page.blog_entries.limit(10)
 

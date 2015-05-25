@@ -7,18 +7,13 @@ class RootController < ApplicationController
     current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)
     @navable = @page
     
-    if current_user.beta_tester?
-      # @notifications = current_user.notifications.order('created_at desc').limit(15)
-      @announcement_page = Page.find_or_create_by_flag :site_announcement
-      @blog_entries = @news_pages = current_user.news_pages.limit(15).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page, @announcement_page]
-      @posts = current_user.posts_for_me.order('created_at desc').limit(10)
+    # @notifications = current_user.notifications.order('created_at desc').limit(15)
+    @announcement_page = Page.find_or_create_by_flag :site_announcement
+    @blog_entries = @news_pages = current_user.news_pages.limit(15).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page, @announcement_page]
+    @posts = current_user.posts_for_me.order('created_at desc').limit(10)
             
-      #@objects = (@notifications.map(&:reference) + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
-      @objects = (@posts + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
-    else
-      @blog_entries = @page.blog_entries
-      render "pages/show"
-    end
+    #@objects = (@notifications.map(&:reference) + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
+    @objects = (@posts + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
   end
   
   
