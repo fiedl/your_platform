@@ -1,6 +1,8 @@
 class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
-  load_and_authorize_resource except: [:create]
+
+  before_action :load_resource
+  authorize_resource :group, except: [:create]
   
   def index
     point_navigation_to Page.intranet_root
@@ -166,6 +168,10 @@ class GroupsController < ApplicationController
   end
   
   private
+  
+  def load_resource
+    @group = Group.find params[:id]
+  end
   
   # This method returns the request parameters and their values as long as the user
   # is permitted to change them. 

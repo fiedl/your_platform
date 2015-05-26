@@ -12,9 +12,4 @@ class OfficerGroupsController < GroupsController
     redirect_to :back, change: 'officers_table'
   end
   
-  def show
-    @group = @officer_group
-    super
-  end
-  
 end
