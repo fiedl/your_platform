@@ -19,4 +19,5 @@ de:
   create_new_office_for: "Neues Amt für %{scope_title} erstellen ..."
   submit_create_new_office_for: "Neues Amt für %{scope_title} erstellen"
   creating_new_office: "Erstelle neues Amt. Bitte warten ..."
-  
+  destroy_office: Amt entfernen
+  office_flags: Typ

@@ -38,14 +38,15 @@ $(document).on 'change keyup paste', 'table.officers_by_scope input', ->
   else
     button.removeClass('hidden').show()
     
-$(document).on 'submit', 'table.officers_by_scope form', ->
+$(document).on 'submit', 'table.officers_by_scope form.new_officer_group', ->
   form = $(this)
-  success_message = 
-    '<div class="alert alert-success">' +
-    I18n.t('creating_new_office') + 
-    '</div>'
-  $(success_message)
-    .insertAfter(form.hide())
-    .hide().show('blind')
+  if form.find('#officer_group_name').val() != ""
+    success_message = 
+      '<div class="alert alert-success">' +
+      I18n.t('creating_new_office') + 
+      '</div>'
+    $(success_message)
+      .insertAfter(form.hide())
+      .hide().show('blind')
   
     

@@ -132,7 +132,12 @@ $(document).ready ->
   $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
     "pageLength": 100,
     "columnDefs": [
-      {"visible": false, "targets": 0}
+      {visible: false, targets: 0},
+      {width: "5%", targets: 1},
+      {width: "20%", targets: 2},
+      {width: "20%", targets: 3},
+      {width: "45%", targets: 4},
+      {width: "10%", type: 'de_date', targets: 5},
     ],
     "drawCallback": (settings)->
       # Hide the pagination elements if there is only one page.
@@ -147,7 +152,7 @@ $(document).ready ->
       last = null
       api.column(0, page: 'current').data().each (group, i) ->
         if last != group
-          $(rows).eq(i).before '<tr class="group scope"><td colspan="3"><div class="group-wrapper">' + group + '</div></td></tr>'
+          $(rows).eq(i).before '<tr class="group scope"><td colspan="5"><div class="group-wrapper">' + group + '</div></td></tr>'
           last = group
         return
   }))
