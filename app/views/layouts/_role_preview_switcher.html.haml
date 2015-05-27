@@ -2,26 +2,27 @@
 - # how the page would look like for regular users and lesser
 - # roles.
 
-- if current_role && ((@navable && current_role.officer?) or current_role.global_officer?)
-  - active_or_not = (params[:preview_as].present? && (params[:preview_as] != current_role.to_s)) ? 'active' : ''
-  %li{class: "backendBarItem dropdown #{active_or_not}"}
-    - current_view = params[:preview_as] || current_role.to_s
+- if current_role && ((current_navable && current_role.officer?) or current_role.global_officer?)
+  - active_or_not = (current_role_view != current_role.to_s) ? 'active' : ''
+
+  %li{class: "backendBarItem dropdown #{active_or_not} role-preview-switcher"}
     = link_to(params.merge({preview_as: current_role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
-      = t current_view
+      = t current_role_view
       - if Issue.by_admin(current_user).count > 0
         .badge= Issue.by_admin(current_user).count
       %b.caret
+
     - unless params[:preview_not_possible]
       %ul.dropdown-menu
         
         %li.nav-header
           = t :tasks
-        %li.issues_task
+        %li.issues_task{class: current_issues.count == 0 ? 'good' : 'bad'}
           = link_to "#{current_issues.count} #{t(:administrative_issues)}", issues_path
 
         %li.nav-header
           = t :preview_as
-        - for preview_role in current_role.allowed_preview_roles
-          - active_or_not = (preview_role == current_view) ? 'active' : ''
+        - current_role.allowed_preview_roles.each do |preview_role|
+          - active_or_not = (preview_role == current_role_view) ? 'active' : ''
           %li{class: active_or_not}
             = link_to t(preview_role), params.merge({preview_as: preview_role})

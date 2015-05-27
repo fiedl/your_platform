@@ -57,6 +57,10 @@ class Ability
     #
     @preview_as = options[:preview_as] 
     @preview_as = nil if @preview_as.blank?
+    
+    # These roles do not make sense here and may block the `view_as?` method.
+    @preview_as = nil if @preview_as.in? ['full_member']
+    
     @token = options[:token]
   
     @read_only_mode = options[:read_only_mode]

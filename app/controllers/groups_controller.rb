@@ -1,8 +1,7 @@
 class GroupsController < ApplicationController
-  respond_to :html, :json, :csv, :ics
-
-  before_action :load_resource
+  before_action :load_resource, only: [:show, :update, :destroy]
   authorize_resource :group, except: [:create]
+  respond_to :html, :json, :csv, :ics
   
   def index
     point_navigation_to Page.intranet_root
@@ -18,7 +17,7 @@ class GroupsController < ApplicationController
   def show
     if @group
       redirect_to_group_tab if request.format.html? and can? :use, :tab_view
-
+    
       if request.format.html? || request.format.xls? || request.format.csv? || request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do 
           # If this is a collection group, e.g. the corporations_parent group, 
@@ -27,7 +26,7 @@ class GroupsController < ApplicationController
           if @group.group_of_groups?
             @memberships = []
             @child_groups = @group.child_groups - [@group.find_officers_parent_group]
-
+    
           # This is a regular group.
           #
           else
@@ -74,7 +73,7 @@ class GroupsController < ApplicationController
       list_preset = params[:list]
       list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
       @file_title = "#{@group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
-
+    
       if list_preset.in? ['member_development', 'join_statistics']
         @list_export = ListExport.new(@group, list_preset)
       else
@@ -85,7 +84,6 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html do
         authorize! :read, @group
-        point_navigation_to @group
         current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
       end
       format.json do
@@ -106,7 +104,7 @@ class GroupsController < ApplicationController
       format.xls do
         authorize! :read, @group
         authorize! :export_member_list, @group
-
+    
         send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', filename: "#{@file_title}.xls")
       end  
       format.pdf do
@@ -171,6 +169,7 @@ class GroupsController < ApplicationController
   
   def load_resource
     @group = Group.find params[:id]
+    point_navigation_to @group
   end
   
   # This method returns the request parameters and their values as long as the user

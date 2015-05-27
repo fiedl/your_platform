@@ -1,16 +1,13 @@
 class ProfileFieldsController < ApplicationController
 
-  prepend_before_action :load_profileable, :only => :create
-  load_and_authorize_resource
-  skip_authorization_check only: 'index'
+  before_action :load_profileable, :only => [:create, :index]
+  load_and_authorize_resource except: :index
+  skip_authorization_check only: :index
   respond_to :json, :js
   
   def index
-    @profileable = @group = Group.find params[:group_id] if params[:group_id]
-    @profileable = @user = User.find params[:user_id] if params[:user_id]
     authorize! :read, @profileable
 
-    @navable = @profileable
     @title = "#{@profileable.title}: #{t(:profile)}"
     
     cookies[:group_tab] = "profile"
@@ -54,10 +51,12 @@ class ProfileFieldsController < ApplicationController
   private
   
   def load_profileable
-    if params[ :section ].present?
-      @section = params[ :section ]
-    end
-    if params[ :profileable_type ].present? && params[ :profileable_id ].present?
+    @section = params[:section] if params[:section].present?
+    
+    @profileable ||= @group = Group.find(params[:group_id]) if params[:group_id]
+    @profileable ||= @user = (User.find params[:user_id]) if params[:user_id]
+      
+    @profileable ||= if params[ :profileable_type ].present? && params[ :profileable_id ].present?
       @profileable = secure_profileable_type.constantize.find( params[ :profileable_id ] )
     elsif params[ :profileable_type ].blank? and params[ :profileable_id ].blank?
       raise "Profileable type and id are missing!"
@@ -66,6 +65,9 @@ class ProfileFieldsController < ApplicationController
     else
       raise "Profileable id is missing!"
     end
+    
+    point_navigation_to @profileable
+    return @profileable
   end
   
   def secure_profileable_type

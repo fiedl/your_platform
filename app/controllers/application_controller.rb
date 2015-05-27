@@ -6,13 +6,9 @@ class ApplicationController < ActionController::Base
   around_action :use_user_time_zone
   before_action :redirect_www_subdomain
   before_action :update_locale_cookie, :update_user_locale, :set_locale
-  helper_method :current_user
-  helper_method :current_navable, :current_navable=, :point_navigation_to
   # before_action :log_generic_metric_event
-  helper_method :metric_logger
   before_action :authorize_miniprofiler
   before_action :accept_terms_of_use
-  
   after_action  :log_activity
   
   # https://github.com/ryanb/cancan
@@ -29,6 +25,7 @@ class ApplicationController < ActionController::Base
   def current_user
     current_user_account.user if current_user_account
   end
+  helper_method :current_user
   
   # This method returns the navable object the navigational elements on the 
   # currently shown page point to.
@@ -42,20 +39,29 @@ class ApplicationController < ActionController::Base
   def current_navable
     @navable
   end
+  helper_method :current_navable, :current_navable=, :point_navigation_to
   
   # This method sets the currently shown navable object. 
   # Have a look at #current_navable.
   #
-  def current_navable=( navable )
-    @navable = navable
+  def point_navigation_to(navable)
+    set_current_navable(navable)
   end
-  def point_navigation_to( navable )
-    self.current_navable = navable
+  def set_current_navable(navable)
+    # if @current_ability and not @navable
+    #   # The current_ability depends on the current_role, which depends on the current_navable.
+    #   # Therefore it is important to set the navable early, i.e. before using any authorization.
+    #   raise "current_ability alread initialized. Please make sure that you call 'current_navable = ...' before 'current_ability', 'can?', 'authorize' et cetera. current_ability has been initialized here: #{@current_ability_caller}"
+    # end
+    @navable = navable
+    
+    # We have to reload the current_ability at this point, i.e. after executing
+    # authorize_miniprofiler et cetera, because before, the current_navable is not
+    # available and the abilities might change now depending on the user's role
+    # for the current_navable.
+    reload_ability
   end
 
-  attr_reader :current_role
-  helper_method :current_role
-  
   def current_issues
     if can? :manage, :all_issues
       Issue.all
@@ -145,7 +151,8 @@ class ApplicationController < ActionController::Base
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
   end
-  
+  helper_method :metric_logger
+    
   # Generic Activity Logger
   #
   def log_activity
@@ -191,7 +198,15 @@ class ApplicationController < ActionController::Base
     end
   end
   
+  # The current_role returns always the *real* role not the preview role.
+  # For the preview role, use `current_role_view`.
+  #
+  def current_role
+    @current_role ||= ::Role.of(current_user).for(current_navable || Group.everyone) if current_user
+  end
+  helper_method :current_role
   
+    
   # This overrides the `current_ability` method of `cancan`
   # in order to allow additional options that are needed for a preview mechanism.
   # 
@@ -202,12 +217,13 @@ class ApplicationController < ActionController::Base
   # https://github.com/ryanb/cancan/blob/master/lib/cancan/controller_additions.rb#L356
   #
   def current_ability(reload = false, options = {})
-    @current_ability = nil if reload
-    @current_ability ||= nil
-    @current_role ||= nil
+    if reload
+      @current_ability = nil 
+      @current_role = nil
+      @current_role_view = nil
+    end
     
     if @current_ability.nil?
-
       # Auth token, for example for calender feeds
       options[:token] = params[:token]
     
@@ -215,25 +231,42 @@ class ApplicationController < ActionController::Base
       options[:read_only_mode] = true if read_only_mode?
     
       # Preview role mechanism
-      if @current_ability.nil? and current_user
-        params[:preview_as] ||= load_preview_as_from_cookie
-        if params[:preview_as].present? || current_user.is_global_officer?
-          currently_displayed_object = @navable || Group.everyone
-          @current_role = ::Role.of(current_user).for(currently_displayed_object)
-          if params[:preview_as].in?(@current_role.allowed_preview_roles)
-            save_preview_as_cookie(params[:preview_as])
-            options[:preview_as] = params[:preview_as]
-          else
-            cookies.delete :preview_as
-            options[:preview_as] = nil
-            params[:preview_as] = nil
-          end
-        end
-      end
+      options[:preview_as] = current_role_view
     end
 
     @current_ability ||= ::Ability.new(current_user, options)
   end
+  def reload_ability
+    current_ability(true)
+  end
+  helper_method :reload_ability
+  
+  # The current role the user really has can differ from the role preview
+  # he wants to see. While `current_role` returns the real role, this method
+  # returns the one that is to be displayed.
+  #
+  def current_role_view
+    @current_role_view ||= current_role_preview || current_role.to_s
+  end
+  helper_method :current_role_view
+  
+  def current_role_preview
+    preview_as = nil
+    if current_user
+      preview_as = params[:preview_as] || load_preview_as_from_cookie
+      if preview_as.present? || current_user.is_global_officer?
+        if preview_as.in?(current_role.allowed_preview_roles)
+          save_preview_as_cookie(preview_as)
+        else
+          cookies.delete :preview_as
+          preview_as = nil
+        end
+      end
+    end
+    return preview_as
+  end
+  helper_method :current_role_preview
+
   
   def load_preview_as_from_cookie
     cookies[:preview_as]
