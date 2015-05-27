@@ -15,12 +15,16 @@ class GeoLocation < ActiveRecord::Base
   geocoded_by :address do |geo_location, geo_query_results|
     result = geo_query_results.first
     if result
+      # Definition of `result` with available methods can be found here:
+      # https://github.com/alexreisner/geocoder/blob/master/lib/geocoder/results/google.rb
       geo_location.latitude = result.latitude
       geo_location.longitude = result.longitude
       geo_location.city = result.city
       geo_location.country = result.country
       geo_location.country_code = result.country_code
       geo_location.postal_code = result.postal_code
+      geo_location.street = [result.route, result.street_number].join(" ")
+      geo_location.state = result.state
     end
     self
   end

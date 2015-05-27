@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150523130534) do
+ActiveRecord::Schema.define(version: 20150527183430) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -106,6 +106,8 @@ ActiveRecord::Schema.define(version: 20150523130534) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "queried_at"
+    t.string   "street",       limit: 255
+    t.string   "state",        limit: 255
   end
 
   add_index "geo_locations", ["address"], name: "index_geo_locations_on_address", using: :btree
