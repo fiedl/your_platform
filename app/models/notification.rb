@@ -38,8 +38,8 @@ class Notification < ActiveRecord::Base
     post.group.members.collect do |group_member|
       locale = group_member.locale
       message = post.subject if not post.text.start_with?(post.subject)
-      message ||= I18n.t(:has_posted_a_new_message, user_title: post.author.title, locale: locale) if post.author.kind_of?(User)
-      message ||= I18n.t(:a_new_message_has_been_posted, locale: locale)
+      message ||= I18n.t(:has_posted_a_new_message, user_title: post.author.title, group_name: post.group.name, locale: locale) if post.author.kind_of?(User)
+      message ||= I18n.t(:a_new_message_has_been_posted, group_name: post.group.name, locale: locale)
       
       self.create(
         recipient_id:   group_member.id,
@@ -120,8 +120,11 @@ class Notification < ActiveRecord::Base
   #
   def self.user_ids_where_letter_bundle_is_due
     User.where(notification_policy: 'letter_bundle').includes(:notifications).select { |user|
-      (user.notifications.upcoming.order('created_at asc').pluck(:created_at).last < Time.zone.now - self.letter_bundle_wait_time.min) or
-      (user.notifications.upcoming.order('created_at asc').pluck(:created_at).first < Time.zone.now - self.letter_bundle_wait_time.max)
+      user.notifications.upcoming.count > 0 and
+      (
+        (user.notifications.upcoming.order('created_at asc').pluck(:created_at).last < Time.zone.now - self.letter_bundle_wait_time.min) or
+        (user.notifications.upcoming.order('created_at asc').pluck(:created_at).first < Time.zone.now - self.letter_bundle_wait_time.max)
+      )
     }.map(&:id)
   end
   
@@ -133,9 +136,9 @@ class Notification < ActiveRecord::Base
   # Deliver the notifications.
   #
   def self.deliver
-    User.where(id: self.upcoming.pluck(:recipient_id)).collect do |recipient|
+    User.where(id: self.upcoming.pluck(:recipient_id).uniq).collect do |recipient|
       self.deliver_for_user(recipient)
-    end.flatten
+    end.flatten - [nil]
   end
   
   # Deliver all upcoming notifications for a certain user.
