@@ -24,8 +24,6 @@ class Notification < ActiveRecord::Base
   belongs_to :author, class_name: 'User'
   belongs_to :reference, polymorphic: true
   
-  after_create :create_notification_job
-  
   scope :sent, -> { where.not(sent_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :upcoming, -> { where('sent_at IS NULL AND read_at IS NULL') }
@@ -137,7 +135,7 @@ class Notification < ActiveRecord::Base
   def self.deliver
     User.where(id: self.upcoming.pluck(:recipient_id)).collect do |recipient|
       self.deliver_for_user(recipient)
-    end
+    end.flatten
   end
   
   # Deliver all upcoming notifications for a certain user.
@@ -152,6 +150,9 @@ class Notification < ActiveRecord::Base
     if notifications.count > 0 and user.account and user.beta_tester?
       NotificationMailer.notification_email(user, notifications).deliver_now
       notifications.each { |n| n.update_attribute(:sent_at, Time.zone.now) }
+      return notifications
+    else
+      return []
     end
   end
   
