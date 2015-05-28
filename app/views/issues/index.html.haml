@@ -15,9 +15,13 @@
         %tr
           %td
             .description-container
-              %p
-                %strong= t(issue.title)
-              %p= t(issue.description) 
+              - if issue.resolved_at
+                = t(:issue_edited_at)
+                = localize(issue.resolved_at)
+              - else
+                %p
+                  %strong= t(issue.title)
+                %p= t(issue.description) 
           %td
             - if issue.reference.kind_of? ProfileField
               %div= link_to issue.reference.profileable.title, issue.reference.profileable

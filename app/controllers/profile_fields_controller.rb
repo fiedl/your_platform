@@ -41,6 +41,10 @@ class ProfileFieldsController < ApplicationController
     end
     @profile_field = @profile_field.becomes(profile_field_class)
     updated = @profile_field.update_attributes(params[:profile_field])
+    
+    # Mark issues to be resolved. Then, they will be rechecked later.
+    @profile_field.issues.update_all resolved_at: Time.zone.now
+    
     respond_with_bip @profile_field
   end
   

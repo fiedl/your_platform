@@ -4,10 +4,12 @@ de:
   administrative_issues: Verwaltungsprobleme
   reference: Referenz
   rescan: Erneut überprüfen
+  rescanning_issues_please_wait: "Probleme werden im Hintergrund erneut überprüft. Dies kann einige Minuten dauern. Es ist jedoch nicht erforderlich, hierbei auf dieser Seite zu verweilen."
   tasks: Aufgaben
   responsible_admin: Zuständiger Administrator
   context: Kontext
   the_issue_will_be_rechecked_later: "Das Problem wird später routinemäßig neu überprüft. Der Knopf 'Erneut überprüfen' oben führt sofort eine erneute Überprüfung durch, was aber etwas dauert."
+  issue_edited_at: "Bearbeitet am:"
   
   issues:
     address_has_too_few_lines: "Die Adresse hat zu wenige Zeilen."

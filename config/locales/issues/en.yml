@@ -1,0 +1,18 @@
+en:
+  issue: Issue
+  administrative_issue: Administrative issue
+  administrative_issues: Administrative issues
+  reference: Reference
+  rescan: Scan again
+  tasks: Tasks
+  responsible_admin: Responsible administrator
+  context: Context
+  the_issue_will_be_rechecked_later: "The issue will be re-checked later automatically. You may re-scan manually using the button 'Scan again' above, but this will take a while."
+  issue_edited_at: "Worked on issue on:"
+  
+  issues:
+    address_has_too_few_lines: "The address has too few lines."
+    address_has_too_many_lines: "The address has too many lines."
+    address_needs_between_2_and_4_lines: "In order to print the address correctly on address labels, the address needs two to four lines. The name does not belong here; it will be added by the system later."
+    destination_country_is_missing: "The destination country is possibly missing."
+    the_destination_country_has_to_be_the_last_line: "The destination country has to be the last line of the address."
