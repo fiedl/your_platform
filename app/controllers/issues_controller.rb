@@ -11,8 +11,13 @@ class IssuesController < ApplicationController
   
   def load_issues
     @issues = current_issues
-    if @issues.count == 0 or params[:rescan] == 'all'
+    if params[:rescan] == 'all'
       Issue.scan
+      @issues = current_issues
+    end
+    if params[:rescan] == 'mine'
+      objects = Issue.by_admin(current_user).collect { |issue| issue.reference }
+      Issue.scan_objects(objects)
       @issues = current_issues
     end
   end

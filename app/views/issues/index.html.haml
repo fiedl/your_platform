@@ -1,6 +1,6 @@
 %h1.issues= t(:administrative_issues) + " (#{@issues.count})"
 %div
-  %a#rescan.btn.btn-default.right{href: '?rescan=all'}
+  %a#rescan.btn.btn-default.right{href: '?rescan=mine'}
     = icon('refresh')
     = t(:rescan)
   %table.issues.datatable
