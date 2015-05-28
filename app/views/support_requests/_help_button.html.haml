@@ -11,7 +11,9 @@
   #help_button_popover_body.hidden
     = form_tag support_requests_path, id: 'help_form' do
       %textarea.form-control{name: 'text'}= render partial: 'support_requests/text_template'
-      = submit_tag t(:request_help), class: 'btn btn-primary right'
+      = button_tag type: 'submit', class: 'btn btn-primary right' do
+        = icon(:envelope)
+        = t(:send_help_request)
     .success.hidden
       = t(:support_request_has_been_sent_to)
       = SupportRequestsController.support_email
