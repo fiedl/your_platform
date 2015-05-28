@@ -91,6 +91,18 @@ module StructureableMixins::Roles
   def officers_parent!
     find_officers_parent_group || raise('special group :officers_parent does not exist.')
   end
+  
+  
+  def descendant_officer_groups
+    self.descendant_groups.where(type: 'OfficerGroup')
+  end
+  
+  def create_officer_group(attrs = {name: "New Office"})
+    g = officers_parent.child_groups.create(attrs)
+    g.update_attribute :type, "OfficerGroup"
+    return Group.find(g.id)  # in order to have it the OfficerGroup class
+  end
+
 
   # This method returns all officer_parent groups of the structureable object itself
   # and of the descendant groups of the structureable object.
@@ -103,10 +115,10 @@ module StructureableMixins::Roles
   # officers_parent group.
   #
   def find_officers_groups
-    self.find_officers_parent_group.try(:descendant_groups) || []
+    self.find_officers_parent_group.try(:descendant_officer_groups) || []
   end
   def officers_groups
-    self.officers_parent.descendant_groups
+    self.officers_parent.descendant_officer_groups
   end
   
   def direct_officers
@@ -122,7 +134,7 @@ module StructureableMixins::Roles
   def officers_groups_of_self_and_descendant_groups
     cached do
       self.find_officers_parent_groups_of_self_and_of_descendant_groups.collect do |officers_parent|
-        officers_parent.descendant_groups
+        officers_parent.descendant_officer_groups
       end.flatten.uniq
     end
   end
@@ -183,14 +195,14 @@ module StructureableMixins::Roles
 
   def create_admins_parent_group
     delete_cached(:find_admins)
-    create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group )
+    create_special_group :admins_parent, parent_element: find_or_create_officers_parent_group, type: 'OfficerGroup'
   end
 
   def find_or_create_admins_parent_group
       find_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group) or
       begin
         delete_cached(:find_admins)
-        create_special_group(:admins_parent, parent_element: find_or_create_officers_parent_group)
+        create_special_group :admins_parent, parent_element: find_or_create_officers_parent_group, type: 'OfficerGroup'
       rescue
         nil
       end
@@ -264,11 +276,11 @@ module StructureableMixins::Roles
   end
 
   def create_main_admins_parent_group
-    create_special_group(:main_admins_parent, parent_element: find_or_create_admins_parent_group )
+    create_special_group :main_admins_parent, parent_element: find_or_create_admins_parent_group, type: 'OfficerGroup'
   end
 
   def find_or_create_main_admins_parent_group
-    find_or_create_special_group(:main_admins_parent, parent_element: find_or_create_admins_parent_group )
+    find_or_create_special_group :main_admins_parent, parent_element: find_or_create_admins_parent_group, type: 'OfficerGroup'
   end
 
   def main_admins_parent

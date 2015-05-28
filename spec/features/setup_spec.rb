@@ -34,7 +34,7 @@ feature 'Setup' do
         page.should have_text 'My New Network Application'
       end
       
-      page.should have_selector '.box.what_is_new'
+      within('#content_area') { page.should have_text Page.find_intranet_root.title }
       page.should have_text @user.title
       within '#category_indicator' do
         page.should have_text 'London'

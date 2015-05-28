@@ -10,36 +10,36 @@
   %tbody
     - @officer_groups.each do |officer_group|
       %tr
-        %td
+        %td.scope
           = link_to officer_group.scope.title, officer_group.scope
 
-        %td.show_only_in_edit_mode
+        %td.destroy.show_only_in_edit_mode
           %p
-            - if can?(:destroy, officer_group) and can?(:create_officers_group_for, officer_group.scope) and officer_group.descendant_users.count == 0
+            - if can?(:destroy, officer_group) and can?(:create_officer_group_for, officer_group.scope) and officer_group.descendant_users.count == 0
               %a.btn.btn-sm.btn-danger.remove_button.show_only_in_edit_mode#destroy_office{href: group_path(officer_group, format: 'json')}
                 = icon :trash
-        %td
+        %td.name
           %p= best_in_place_if can?(:rename, officer_group), officer_group, :name
 
-        %td.show_only_in_edit_mode            
+        %td.flags.show_only_in_edit_mode            
           = group_handle(officer_group)
           %span.officer_group_flags.group_flags= flags(officer_group)
             
-        %td
+        %td.members
           %p= render partial: 'officer_group_members', locals: {officer_group: officer_group}
 
-        %td
+        %td.updated_at
           %p= localize officer_group.updated_at.to_date
     - @officer_groups_by_scope.each do |scope, officer_groups|
-      - if can?(:create_officers_group_for, scope)
+      - if can?(:create_officer_group_for, scope)
         %tr
           %td= link_to scope.title, scope
           %td.show_only_in_edit_mode
           %td{colspan: 4}
             %p
               = form_for OfficerGroup.new do |form|
-                %input{type: 'hidden', name: 'parent_type', value: 'Group'}
-                %input{type: 'hidden', name: 'parent_id', value: scope.officers_parent.id}
+                %input{type: 'hidden', name: 'parent_type', value: scope.class.base_class.name}
+                %input{type: 'hidden', name: 'parent_id', value: scope.id}
                 = form.text_field :name, placeholder: t(:create_new_office_for, scope_title: scope.title)
                 = form.submit t(:submit_create_new_office_for, scope_title: scope.title), class: 'btn btn-primary btn-sm hidden'
           %td

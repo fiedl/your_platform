@@ -10,7 +10,7 @@ class OfficersController < ApplicationController
     @officer_groups_by_scope = @officer_groups.group_by { |officer_group| officer_group.scope }
     @officer_groups_by_scope = @officer_groups_by_scope.sort_by { |scope, officer_groups| scope.id }
     
-    @navable = @structureable
+    point_navigation_to @structureable
     @title = "#{@structureable.title}: #{t(:all_officers)}"
     
     cookies[:group_tab] = "officers"
@@ -26,6 +26,7 @@ class OfficersController < ApplicationController
     authorize! :create_officers_group_for, @structureable
     
     @officers_group = @structureable.officers_parent.child_groups.create name: params[:name]
+    @officers_group.update_attribute :type, 'OfficerGroup'
     
     respond_to do |format|
       format.html { redirect_to @structureable }

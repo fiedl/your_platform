@@ -84,8 +84,9 @@ module StructureableMixins::HasSpecialGroups
       new_special_group = object_to_create.create
       new_special_group.add_flag( group_flag.to_sym )
       new_special_group.update_attribute( :name, group_flag.to_s.gsub(/_parent$/, "" ) )
-
-      return new_special_group
+      new_special_group.update_attribute :type, options[:type] if options[:type].present?
+      
+      return Group.find(new_special_group.id) # for it to have the correct sti class
     end
 
     def find_or_create_special_group( group_flag, options = {} )

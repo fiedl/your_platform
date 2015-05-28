@@ -57,7 +57,7 @@ describe Ability do
     context "when the user is officer of a group" do
       before do
         @group = create :group
-        @officer_group = @group.officers_groups.create(name: "Secretary")
+        @officer_group = @group.create_officer_group(name: "Secretary")
         @officer_group.assign_user user
         @sub_group = @group.child_groups.create(name: "Sub Group")
         @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")

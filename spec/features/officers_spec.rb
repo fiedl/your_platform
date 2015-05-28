@@ -6,7 +6,7 @@ feature "Officers Management" do
   background do
     @group = create(:group)
     @user = create(:user)
-    @president_group = @group.officers_parent.child_groups.create(name: "President")
+    @president_group = @group.officers_parent.child_groups.create(name: "President"); @president_group.update_attribute(:type, 'OfficerGroup')
     @president_group << @user
   end
 
@@ -24,6 +24,7 @@ feature "Officers Management" do
     background do
       @subgroup = @group.child_groups.create
       @ceo_group = @subgroup.officers_parent.child_groups.create(name: "CEO")
+      @ceo_group.update_attribute(:type, 'OfficerGroup')
       @ceo_group << @user
     end
 

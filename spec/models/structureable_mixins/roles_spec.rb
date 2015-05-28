@@ -458,13 +458,19 @@ describe StructureableMixins::Roles do
 
   describe "officers_parent_group" do
     before do
+      # @container_group
+      #     |------------------ @officers_parent ---- @officer1
+      #     |------------------ @container_subgroup
+      #                              |--------------- @subgroup_officers_parent
+      #                                                  |--- @officer2
+      #
       @container_group = create( :group ) 
       @container_subgroup = create( :group ) # this is to test if subgroup's officers are listed as well
       @container_subgroup.parent_groups << @container_group
       @officers_parent = @container_group.create_officers_parent_group
       @subgroup_officers_parent = @container_subgroup.create_officers_parent_group
-      @officer1 = create( :group ); @officer1.parent_groups << @officers_parent
-      @officer2 = create( :group ); @officer2.parent_groups << @subgroup_officers_parent
+      @officer1 = @container_group.create_officer_group
+      @officer2 = @container_subgroup.create_officer_group
       @officer1_user = create( :user ); @officer1.child_users << @officer1_user
       @officer2_user = create( :user ); @officer2.child_users << @officer2_user
       @container_group.reload

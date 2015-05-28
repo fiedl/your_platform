@@ -7,8 +7,8 @@ feature "Group of Groups Page" do
     @corporation = create(:corporation)
     @corporations_parent = Group.corporations_parent
     @corporations_parent.add_flag :group_of_groups
-    @officer_group = create(:group, name: "Officer of Operations")
-    @another_officers_group = create(:group, name: "Executing Officer")
+    @officer_group = create(:group, name: "Officer of Operations"); @officer_group.update_attribute(:type, 'OfficerGroup')
+    @another_officers_group = create(:group, name: "Executing Officer"); @another_officers_group.update_attribute(:type, 'OfficerGroup')
     @user = create :user
     @officer_group << @user
     @another_officers_group << @user
