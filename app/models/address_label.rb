@@ -1,7 +1,7 @@
 class AddressLabel
   attr_accessor :name
   attr_accessor :company
-  attr_accessor :postal_address, :postal_code, :country_code, :country, :city
+  attr_accessor :postal_address, :street, :postal_code, :state, :country_code, :country, :city
   attr_accessor :text_above_name, :text_below_name, :name_prefix, :name_suffix
   attr_accessor :personal_title
   
@@ -9,7 +9,9 @@ class AddressLabel
     self.name = name
     self.company = company
     self.postal_address = address_field.try(:value)
+    self.street = address_field.try(:geo_location).try(:street)
     self.postal_code = address_field.try(:postal_code)
+    self.state = address_field.try(:geo_location).try(:state)
     self.country_code = address_field.try(:country_code)
     self.country = address_field.try(:geo_location).try(:country)
     self.city = address_field.try(:geo_location).try(:city)

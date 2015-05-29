@@ -20,7 +20,9 @@ de:
   postal_address_with_name_surrounding: Postanschrift mit Name
   postal_address:             Postanschrift
   postal_address_updated_at:  Letzte Änderung der Postanschrift am
+  postal_address_street:      Straße und Hausnummer
   postal_address_postal_code: Postleitzahl (PLZ)
+  postal_address_state:       Bundesland
   postal_address_town:        Stadt
   postal_address_country:     Land
   postal_address_country_code: Länder-Kennzeichen

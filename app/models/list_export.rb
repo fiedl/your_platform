@@ -35,13 +35,11 @@ class ListExport
       [:last_name, :first_name, :name_affix, :localized_birthday_this_year, 
         :localized_date_of_birth, :current_age]
     when 'address_list'
-      #
-      # TODO: Add the street as a separate column.
-      # This was requested at the meeting at Gernsbach, Jun 2014.
-      #
       [:last_name, :first_name, :name_affix, :postal_address_with_name_surrounding,
         :postal_address, :cached_localized_postal_address_updated_at, 
+        :postal_address_street, 
         :postal_address_postal_code, :postal_address_town,
+        :postal_address_state,
         :postal_address_country, :postal_address_country_code,
         :personal_title, :address_label_text_above_name, :address_label_text_below_name,
         :address_label_text_before_name, :address_label_text_after_name]
@@ -324,11 +322,17 @@ class ListExportUser < User
   def cached_localized_postal_address_updated_at
     I18n.localize cached_postal_address_updated_at if cached_postal_address_updated_at
   end
+  def postal_address_street
+    address_label.street
+  end
   def postal_address_postal_code
     address_label.postal_code
   end
   def postal_address_town
     address_label.city
+  end
+  def postal_address_state
+    address_label.state
   end
   def postal_address_country
     address_label.country

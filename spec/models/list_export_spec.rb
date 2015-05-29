@@ -48,14 +48,14 @@ describe ListExport do
     describe "#headers" do
       subject { @list_export.headers }
       it { should include('Nachname', 'Vorname', 'Namenszusatz', 'Postanschrift mit Name', 'Postanschrift', 
-        'Letzte Änderung der Postanschrift am', 'Postleitzahl (PLZ)', 'Stadt', 'Land', 'Länder-Kennzeichen', 'Persönlicher Titel',
+        'Letzte Änderung der Postanschrift am', 'Straße und Hausnummer', 'Postleitzahl (PLZ)', 'Stadt', 'Bundesland', 'Land', 'Länder-Kennzeichen', 'Persönlicher Titel',
         'Zeile über dem Namen', 'Zeile unter dem Namen', 'Text vor dem Namen', 'Text hinter dem Namen')
       }
     end
     describe "#to_csv" do
       subject { @list_export.to_csv }
-      it { should include "Nachname;Vorname;Namenszusatz;Postanschrift mit Name;Postanschrift;Letzte Änderung der Postanschrift am;Postleitzahl (PLZ);Stadt;Land;Länder-Kennzeichen;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen" }
-      it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};\"Herrn\nDr. #{@user.name} M.Sc.\n#{@corporation.name}\nPariser Platz 1\n10117 Berlin\";\"#{@user.postal_address}\";20.06.2014;10117;Berlin;Germany;DE;;Herrn;\"\";Dr.;M.Sc." }
+      it { should include "Nachname;Vorname;Namenszusatz;Postanschrift mit Name;Postanschrift;Letzte Änderung der Postanschrift am;Straße und Hausnummer;Postleitzahl (PLZ);Stadt;Bundesland;Land;Länder-Kennzeichen;Persönlicher Titel;Zeile über dem Namen;Zeile unter dem Namen;Text vor dem Namen;Text hinter dem Namen" }
+      it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};\"Herrn\nDr. #{@user.name} M.Sc.\n#{@corporation.name}\nPariser Platz 1\n10117 Berlin\";\"#{@user.postal_address}\";20.06.2014;Pariser Platz 1;10117;Berlin;Berlin;Germany;DE;;Herrn;\"\";Dr.;M.Sc." }
     end
   end
   

@@ -59,6 +59,7 @@ class AddressLabelsDpag7037Pdf < AddressLabelsPdf
                  begin
                    text address.to_s, size: 10.pt, fallback_fonts: fallback_fonts
                  rescue Prawn::Errors::IncompatibleStringEncoding
+                   logger.warn "PDF ADDRESS LABEL EXPORT ENCODING ISSUE for #{address_label.name}."
                    text "ENCODING ISSUE!"
                  end
                end

@@ -9,7 +9,9 @@ Geocoder::Lookup::Test.add_stub(
         country: 'Germany',
         country_code: 'DE',
         city: 'Berlin',
-        postal_code: '10117'
+        postal_code: '10117',
+        street_number: '1',
+        route: 'Pariser Platz'
     }
 ]
 )
@@ -24,7 +26,9 @@ Geocoder::Lookup::Test.add_stub(
         country: 'France',
         country_code: 'FR',
         city: 'Grenoble',
-        postal_code: '38000'
+        postal_code: '38000',
+        street_number: '44',
+        route: 'Rue de Stalingrad'
     }
 ]
 )
@@ -39,7 +43,9 @@ Geocoder::Lookup::Test.add_stub(
           country: 'Germany',
           country_code: 'DE',
           city: 'Berlin',
-          postal_code: '10117'
+          postal_code: '10117',
+          street_number: '1',
+          route: 'Pariser Platz'
       }
 ]
 )
@@ -54,7 +60,9 @@ Geocoder::Lookup::Test.add_stub(
         country: 'France',
         country_code: 'FR',
         city: 'Grenoble',
-        postal_code: '38000'
+        postal_code: '38000',
+        street_number: '44',
+        route: 'Rue de Stalingrad'
     }
 ]
 )
