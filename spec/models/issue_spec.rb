@@ -37,8 +37,9 @@ describe Issue do
       end
       describe "for a potential address with too many lines" do
         before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "c./o. Jean-Luc Picard\n44 Rue de Stalingrad\nGrenoble\nFrankreich\n(Adresse ist im Auslands-BV)"); @address_field.postal_address = true }
-        its(:count) { should == 1 }
+        its(:count) { should == 2 }
         its('first.title') { should == 'issues.address_has_too_many_lines' }
+        its('second.title') { should == 'issues.could_not_extract_street' }
         its('first.reference') { should == @address_field }
       end
     end

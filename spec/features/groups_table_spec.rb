@@ -18,7 +18,9 @@ feature "Groups Table" do
     login :admin
     visit user_path(@user)
     within all(".user_groups").last do
-      page.should have_selector '.remove_button'
+      # We've removed that interface element, since it was confusing here:
+      # People tried to end memberships through this.
+      page.should have_no_selector '.remove_button' 
     end
   end
   scenario "viewing the own groups table" do
