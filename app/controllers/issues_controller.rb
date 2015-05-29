@@ -6,7 +6,7 @@ class IssuesController < ApplicationController
     authorize! :index, Issue
     redirect_to issues_path if params[:rescan].present?
     
-    set_current_title :administrative_issues
+    set_current_title t(:administrative_issues)
     set_current_activity :solves_administrative_issues
   end
   
