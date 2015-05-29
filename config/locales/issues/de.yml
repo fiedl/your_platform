@@ -17,3 +17,5 @@ de:
     address_needs_between_2_and_4_lines: "Damit die Adresse korrekt auf Adressetiketten gedruckt werden kann, muss sie zwei bis vier Zeilen aufweisen. Name, Amtsbezeichnung etc. gehören nicht in dieses Feld und werden vom System später hinzugefügt."
     destination_country_is_missing: "Das Bestimmungsland fehlt möglicherweise."
     the_destination_country_has_to_be_the_last_line: "Bei Auslandsadressen muss das Bestimmungsland in der letzten Zeile genannt werden."
+    could_not_extract_street: "Straße nicht erkannt."
+    the_geo_system_could_not_extract_the_street_from_this_address: "Das Geo-System konnte aus der vorliegenden Adresse keine Straße extrahieren. Bitte Adresse entsprechend umformatieren. Tipp: Mit Google-Maps kann man gut ausprobieren, ob die Adresse automatisiert von einem Geo-System ausgewertet werden kann."

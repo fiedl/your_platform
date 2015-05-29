@@ -52,6 +52,9 @@ class Issue < ActiveRecord::Base
       if address_field.country_code == "A" and not (address_field.value.include?("Österreich") or address_field.value.include?("Austria"))
         address_field.issues.create title: 'issues.destination_country_is_missing', description: 'issues.the_destination_country_has_to_be_the_last_line', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
+      if address_field.geo_location.street.try(:strip).blank? && address_field.value.try(:strip).present?
+        address_field.issues.create title: 'issues.could_not_extract_street', description: 'issues.the_geo_system_could_not_extract_the_street_from_this_address', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
+      end
     end
     return address_field.issues(true)
   end
