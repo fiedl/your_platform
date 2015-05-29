@@ -6,6 +6,6 @@ $(document).ready ->
   # The deletion itself is handled by rails:
   # remove_button helper.
   #
-  $("table.memberships .remove_button").on 'confirm:complete', (e, answer)->
+  $("table.memberships .remove_button").bind 'confirm:complete', (e, answer)->
     if (answer)
       $(this).closest('tr').remove()

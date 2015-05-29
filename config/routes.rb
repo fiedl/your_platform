@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
+    get :memberships, to: 'user_group_memberships#index'
   end
   get :my_groups, to: 'groups#index_mine'
   

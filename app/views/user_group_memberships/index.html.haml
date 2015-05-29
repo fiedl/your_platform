@@ -1,5 +1,5 @@
-- set_title("Gruppen-Mitgliedschaften - #{@user.title}")
+= render partial: 'groups/tabs', locals: {active: 'members'} if @group
 
-%h1.memberships= "Gruppen-Mitgliedschaften von #{@user.title}"
+%h1.memberships= @title
 %div
   = render partial: 'memberships_table', locals: {memberships: @memberships}

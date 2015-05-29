@@ -6,11 +6,19 @@ class UserGroupMembershipsController < ApplicationController
   respond_to :json, :html
   
   def index
-    authorize! :manage, @user
-    
-    @user = User.find(params[:user_id])
-    @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_user(@user)
-    @navable = @user
+    if params[:user_id]
+      @object = @user = User.find(params[:user_id])
+      authorize! :manage, @user
+      
+      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_user(@user)
+    elsif params[:group_id]
+      @object = @group = Group.find(params[:group_id])
+      authorize! :manage, @group
+      
+      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(@group)
+    end
+    point_navigation_to @object
+    @title = "#{t(:memberships)}: #{@object.title}"
   end
   
   def create
@@ -20,7 +28,9 @@ class UserGroupMembershipsController < ApplicationController
       @user_group_membership = true
       begin 
         @user_group_membership = UserGroupMembership.create(membership_params.merge({user_id: @user_id}))
-        @user_group_membership.valid_from = membership_params[:valid_from].to_datetime
+        @user_group_membership.valid_from = Date.new(membership_params["valid_from(1i)"].to_i, 
+                                                     membership_params["valid_from(2i)"].to_i,
+                                                     membership_params["valid_from(3i)"].to_i)
         @user_group_membership.valid_from_will_change!
         @user_group_membership.save!
         redirect_to group_members_path(@user_group_membership.group), change: 'members'

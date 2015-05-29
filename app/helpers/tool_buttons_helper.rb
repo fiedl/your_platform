@@ -17,7 +17,9 @@ module ToolButtonsHelper
              :title => title,
              :remote => true,
              'aria-label' => I18n.t(:remove),
-             :confirm => options[:confirm]
+             :data => {
+               :confirm => options[:confirm]
+             }
            )
   end
 
