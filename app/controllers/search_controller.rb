@@ -119,6 +119,20 @@ class SearchController < ApplicationController
       end
     end
   end
+  
+  # This implements the OpenSearch standard in order to support browser search tools
+  # to search the application directly.
+  #
+  # * https://developer.apple.com/library/iad/releasenotes/General/WhatsNewInSafari/Articles/Safari_8_0.html
+  # * http://www.opensearch.org/Specifications/OpenSearch/1.1#OpenSearch_description_document
+  # * http://en.wikipedia.org/wiki/OpenSearch
+  # * http://snippets.aktagon.com/snippets/519-how-to-add-opensearch-to-your-rails-app
+  #
+  def opensearch
+    # fixes Firefox "Firefox could not download the search plugin from:"
+    response.headers["Content-Type"] = 'application/opensearchdescription+xml'
+    render :layout => false
+  end
 
   private
 

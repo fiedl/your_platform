@@ -30,6 +30,8 @@
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
     
+    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
+    
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
     = yield :scripts

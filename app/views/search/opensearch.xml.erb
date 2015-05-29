@@ -1,0 +1,12 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"> 
+  <ShortName><%= app_name %></ShortName> 
+  <Description><%= app_name %>, <%= root_url %></Description> 
+  <Tags>platform, plattform</Tags> 
+  <InputEncoding>UTF-8</InputEncoding> 
+  <Image width="16" height="16"><%= asset_url('favicon.ico') %></Image> 
+  <moz:SearchForm "<%= search_url %>"/>
+  
+  <Url type="text/html"
+    template="<%= search_url(query: '{searchTerms}') %>&amp;utm_source=opensearch&amp;utm_medium=search&amp;utm_campaign=opensearch"/> 
+       
+</OpenSearchDescription> 
