@@ -17,12 +17,6 @@
 //= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
 //= require galleria
 //= require galleria-classic
-// TODO     require app-ng
-// TODO     require_tree ./services-ng
-// TODO     require_tree ./models-ng
-// TODO     require_tree ./filters-ng
-// TODO     require_tree ./directives-ng
-// TODO     require_tree ./controllers-ng
 //= require underscore
 //= require json2
 //= require judge

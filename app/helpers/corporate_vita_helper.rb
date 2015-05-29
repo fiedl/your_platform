@@ -23,7 +23,6 @@ module CorporateVitaHelper
                    :event_by_name,
                    url: status_group_membership_path(membership),
                    class: 'status_event_by_name',
-                   # display_with does more harm than it's good for. We wait for angular!
 #                   display_with: lambda do |v|
 #                     link_to membership.event.name, membership.event, :class => 'status_event_label'
 #                   end
