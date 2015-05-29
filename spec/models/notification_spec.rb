@@ -40,10 +40,10 @@ describe Notification do
         end
         describe "for the post subject being derived from the post text" do
           before { @post.update_attribute :subject, "Lorem ipsum dolor" }
-          it { should == I18n.t(:has_posted_a_new_message, user_title: @member1.title) }
+          it { should == I18n.t(:has_posted_a_new_message, user_title: @member1.title, group_name: @group.name) }
           describe "for the author being unknown (for example, for external authors)" do
             before { @post.update_attribute :author_user_id, nil }
-            it { should == I18n.t(:a_new_message_has_been_posted) }
+            it { should == I18n.t(:a_new_message_has_been_posted, group_name: @group.name) }
           end
         end
       end

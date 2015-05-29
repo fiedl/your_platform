@@ -16,7 +16,7 @@ feature "Group Posts" do
     @group << @other_user
     @parent_group = create :group
     @parent_group << @group
-    @officers = @group.officers_parent.child_groups.create name: 'Officers'
+    @officers = @group.create_officer_group name: 'Officers'
     @officers << @user
   end
   
@@ -62,9 +62,9 @@ feature "Group Posts" do
     
       fill_in :message_text, with: 'This is a real message.'
       find('#confirm_message').click
-
+      
       email_text = ''
-      Timeout::timeout(15) do
+      Timeout::timeout(20) do
         loop do
           # Take the last two emails, since we don't know to which user
           # the mail is sent first.
