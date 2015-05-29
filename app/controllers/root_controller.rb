@@ -4,8 +4,8 @@ class RootController < ApplicationController
   before_action :redirect_to_sign_in_if_needed, :find_and_authorize_page
 
   def index
-    current_user.try(:update_last_seen_activity, "sieht sich die Startseite an", @page)
-    @navable = @page
+    set_current_navable @page
+    set_current_activity :looks_at_the_start_page, @page
     
     # @notifications = current_user.notifications.order('created_at desc').limit(15)
     @announcement_page = Page.find_or_create_by_flag :site_announcement

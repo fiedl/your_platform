@@ -8,6 +8,9 @@ class StatisticsController < ApplicationController
     @list_presets = [
       'corporation_joining_statistics', 'aktivitates_join_and_persist_statistics'
     ]
+    
+    set_current_title t(:statistics)
+    set_current_activity :is_looking_at_statistics
   end
   
   def show
@@ -23,7 +26,10 @@ class StatisticsController < ApplicationController
     else
       raise "statistics preset unknown: #{@list_preset}."
     end
-
+    
+    set_current_title t(@list_preset)
+    set_current_activity :is_looking_at_statistics
+    
     respond_to do |format|
       format.html  # render view
       format.csv do

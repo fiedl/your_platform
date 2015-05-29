@@ -11,6 +11,8 @@ de:
   the_issue_will_be_rechecked_later: "Das Problem wird später routinemäßig neu überprüft. Der Knopf 'Erneut überprüfen' oben führt sofort eine erneute Überprüfung durch, was aber etwas dauert."
   issue_edited_at: "Bearbeitet am:"
   
+  solves_administrative_issues: löst Verwaltungsprobleme
+  
   issues:
     address_has_too_few_lines: "Die Adresse hat zu wenige Zeilen."
     address_has_too_many_lines: "Die Adresse hat zu viele Zeilen."

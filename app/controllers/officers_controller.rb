@@ -10,11 +10,11 @@ class OfficersController < ApplicationController
     @officer_groups_by_scope = @officer_groups.group_by { |officer_group| officer_group.scope }
     @officer_groups_by_scope = @officer_groups_by_scope.sort_by { |scope, officer_groups| scope.id }
     
-    point_navigation_to @structureable
-    @title = "#{@structureable.title}: #{t(:all_officers)}"
+    set_current_navable @structureable
+    set_current_title "#{@structureable.title}: #{t(:all_officers)}"
+    set_current_activity :looks_at_officers, @group
     
     cookies[:group_tab] = "officers"
-    current_user.try(:update_last_seen_activity, "#{t(:looks_at_officers)}: #{@group.title}", @group)
   end
   
   # Required params:

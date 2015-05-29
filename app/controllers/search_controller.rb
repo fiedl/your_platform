@@ -10,7 +10,6 @@ class SearchController < ApplicationController
       # log search query for metrics analysis
       #
       metric_logger.log_event({query: query_string}, type: :search)
-      current_user.try(:update_last_seen_activity, "sucht gerade etwas", nil)
 
       # browse users, pages, groups and events
       #
@@ -72,9 +71,9 @@ class SearchController < ApplicationController
       @results = nil if @results.count == 0
 
     end
-    @navable = Page.find_intranet_root
-    @title = "Suche: #{query_string}"
-
+    set_current_navable Page.find_intranet_root
+    set_current_title "#{t(:search)}: #{query_string}"
+    set_current_activity :is_searching_for_something
   end
   
   # This action results in a redirection to the search result

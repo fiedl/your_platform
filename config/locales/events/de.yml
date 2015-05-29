@@ -22,8 +22,9 @@ de:
   
   is_adding_an_event: trägt eine Veranstaltung ein
   is_looking_at_events: 'sieht sich Veranstaltungen an'
-  is_looking_at_the_event: "sieht sich die Veranstaltung '%{event_name}' an"
+  is_looking_at_the_event: "sieht sich die Veranstaltung an"
   is_looking_at_the_calendar_of: "sieht sich den Kalender von '%{group_name}' an"
+  is_looking_at_the_group_calendar: "sieht sich den Gruppen-Kalender an"
   
   good_day: 'Guten Tag,'
   i_would_like_to_announce_the_following_event: 'ich möchte Sie gerne auf folgende Veranstaltung aufmerksam machen.'

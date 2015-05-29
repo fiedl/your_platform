@@ -12,24 +12,27 @@ class PostsController < ApplicationController
     @new_post.group = @group
     @new_post.author = current_user
     
-    @title = "#{t(:posts)} - #{@group.name}"
-    @navable = @group
+    set_current_title "#{t(:posts)} - #{@group.name}"
+    set_current_navable @group
+    set_current_activity :looks_at_posts, @group
     
     cookies[:group_tab] = "posts"
-    current_user.try(:update_last_seen_activity, "#{t(:looks_at_posts)}: #{@group.title}", @group)
   end
 
   def show
     @post = Post.find(params[:id])
-    @title = @post.subject
     @group = @post.group
-    @navable = @group
+    
+    set_current_title @post.subject
+    set_current_navable @group
+    set_current_activity :looks_at_posts, @group
   end
   
   def new
     @group = Group.find params[:group_id] if params[:group_id].present?
     authorize! :create_post_for, @group
-    @navable = @group
+    
+    set_current_navable @group
   end
   
   def create

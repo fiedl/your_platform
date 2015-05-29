@@ -7,8 +7,8 @@ class MailingListsController < ApplicationController
     
     @email_address_fields = @group.profile_fields.where(type: 'ProfileFieldTypes::Email')
     
-    point_navigation_to @group
-    @title = "#{t(:manage_mailing_lists)}: #{@group.name}"
+    set_current_navable @group
+    set_current_title "#{t(:manage_mailing_lists)}: #{@group.name}"
   end
   
 end

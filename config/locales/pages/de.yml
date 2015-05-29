@@ -11,6 +11,8 @@ de:
   a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde.'
   destroying_page: Inhalt wird gelöscht.
   please_wait: Bitte warten.
+  
+  looks_up_information: sieht sich Informationen an
 
   file: 'Datei'
   helpers:

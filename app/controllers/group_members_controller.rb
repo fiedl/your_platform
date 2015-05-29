@@ -1,15 +1,14 @@
 class GroupMembersController < ApplicationController
-  skip_authorization_check only: :index
   before_action :load_and_authorize_resource
   
   def index
-    point_navigation_to @group
-    @title = "#{@group.name}: #{t(:members)}"
+    authorize! :read, @group
     
+    set_current_navable @group
+    set_current_title "#{@group.name}: #{t(:members)}"
+    set_current_activity :looks_at_member_lists, @group
     cookies[:group_tab] = "members"
-    current_user.try(:update_last_seen_activity, "#{t(:looks_at_member_lists)}: #{@group.title}", @group)
   end
-  
   
   private
   

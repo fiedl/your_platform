@@ -17,8 +17,10 @@ class UserGroupMembershipsController < ApplicationController
       
       @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(@group)
     end
-    point_navigation_to @object
-    @title = "#{t(:memberships)}: #{@object.title}"
+    
+    set_current_navable @object
+    set_current_title "#{t(:memberships)}: #{@object.title}"
+    set_current_activity :is_managing_member_lists, @object
   end
   
   def create

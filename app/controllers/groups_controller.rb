@@ -4,12 +4,12 @@ class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
   
   def index
-    point_navigation_to Page.intranet_root
+    set_current_navable Page.intranet_root
     respond_with @groups
   end
 
   def index_mine
-    point_navigation_to current_user
+    set_current_navable current_user
     @groups = current_user.groups
     respond_with @groups
   end
@@ -84,7 +84,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.html do
         authorize! :read, @group
-        current_user.try(:update_last_seen_activity, "sieht sich Mitgliederlisten an: #{@group.title}", @group)
+        set_current_activity :is_looking_at_member_list, @group
       end
       format.json do
         authorize! :read, @group

@@ -4,6 +4,12 @@ de:
   my_profile:                                              Mein Profil
   show_user_profile:                                       Benutzerprofil anzeigen
   
+  looks_at_profile:                                        sieht sich ein Profil an
+  looks_at_own_profile:                                    sieht sich das eigene Profil an
+  manages_own_profile:                                     pflegt das eigene Profil
+  manages_a_profile:                                       pflegt ein Profil
+  
+  
   contact_information:                                     Kontaktinformationen
   about_myself:                                            Über mich
   study_information:                                       Informationen zum Studium

@@ -37,10 +37,10 @@ class EventsController < ApplicationController
     # Collect the events to list.
     if @group
       @events = Event.find_all_by_group(@group)
-      @navable = @group
+      set_current_navable @group
     elsif @user
       @events = Event.find_all_by_user(@user)
-      @navable = @user
+      set_current_navable @user
     elsif @all
       @events = Event.all
     end
@@ -66,9 +66,9 @@ class EventsController < ApplicationController
         else
           if @group
             cookies[:group_tab] = "events"
-            current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_the_calendar_of, group_name: @group.name), @group)
+            set_current_activity :is_looking_at_the_group_calendar, @group
           else
-            current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_events))
+            set_current_activity :is_looking_at_events
           end
           # renders "index.html.haml"
         end
@@ -81,11 +81,11 @@ class EventsController < ApplicationController
   # GET /events/1
   # GET /events/1.json
   def show
-    @navable = @event
+    set_current_navable @event
     
     respond_to do |format|
       format.html do
-        current_user.try(:update_last_seen_activity, I18n.t(:is_looking_at_the_event, event_name: @event.name), @event)
+        set_current_activity :is_looking_at_the_event, @event
         # show.html.erb
       end
       format.json { render json: @event }
@@ -132,7 +132,7 @@ class EventsController < ApplicationController
         # TODO: Check again, when migrating to Rails 5.
         #
         @event.wait_for_me_to_exist
-        current_user.try(:update_last_seen_activity, I18n.t(:is_adding_an_event), @event)
+        set_current_activity :is_adding_an_event, @event
         
         format.html { redirect_to event_path(@event) }
         format.json { render json: @event.attributes.merge({path: event_path(@event)}), status: :created, location: @event }

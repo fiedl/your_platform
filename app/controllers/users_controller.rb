@@ -15,16 +15,15 @@ class UsersController < ApplicationController
   end
 
   def show
+    set_current_title @user.title
+    set_current_navable @user
+
     if current_user == @user
-      current_user.update_last_seen_activity("sieht sich sein eigenes Profil an", @user)
+      set_current_activity :looks_at_own_profile, @user
     else
-      current_user.try(:update_last_seen_activity, "sieht sich das Profil von #{@user.title} an", @user)
+      set_current_activity :looks_at_profile, @user
     end
-    
-    respond_to do |format|
-      format.html # show.html.erb
-                  #format.json { render json: @profile.sections }  # TODO
-    end
+
     metric_logger.log_event @user.attributes.merge({name: @user.name, title: @user.title}), type: :show_user
   end
 
@@ -111,8 +110,6 @@ class UsersController < ApplicationController
       @user = User.find(params[:id]) if params[:id].present?
       @user ||= User.find_by_alias(params[:alias]) if params[:alias].present?
       @user ||= User.new
-      @title = @user.title
-      @navable = @user
     end
   end
   

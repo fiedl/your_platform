@@ -7,11 +7,12 @@ class ProfileFieldsController < ApplicationController
   
   def index
     authorize! :read, @profileable
-
-    @title = "#{@profileable.title}: #{t(:profile)}"
+    
+    set_current_title "#{@profileable.title}: #{t(:profile)}"
+    set_current_navable @profileable
+    set_current_activity :looks_at_profile, @profileable
     
     cookies[:group_tab] = "profile"
-    current_user.try(:update_last_seen_activity, "#{t(:looks_at_group_profile)}: #{@group.title}", @group)
   end
 
   def create
@@ -27,10 +28,9 @@ class ProfileFieldsController < ApplicationController
 
   def update
     if current_user == @profile_field.profileable
-      current_user.update_last_seen_activity("pflegt sein eigenes Profil", current_user)
+      set_current_activity :manages_own_profile, current_user
     else
-      title = @profile_field.profileable.title
-      current_user.update_last_seen_activity("bearbeitet ein Profil: #{title}", @profile_field.profileable)
+      set_current_activity :manages_a_profile, current_user
     end
     
     @profile_field = ProfileField.find(params[:id])
@@ -69,8 +69,7 @@ class ProfileFieldsController < ApplicationController
     else
       raise "Profileable id is missing!"
     end
-    
-    point_navigation_to @profileable
+
     return @profileable
   end
   

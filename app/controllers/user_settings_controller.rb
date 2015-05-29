@@ -7,9 +7,10 @@ class UserSettingsController < ApplicationController
     authorize! :update, user
     
     @user = user
-    @navable = @user
     
-    @user.update_last_seen_activity "nimmt Benutzereinstellungen vor"
+    set_current_navable @user
+    set_current_title t(:user_settings)
+    set_current_activity :is_managing_user_settings
     
     render action: 'show'
   end
@@ -19,8 +20,9 @@ class UserSettingsController < ApplicationController
     @user = user
     authorize! :update, user
     
-    @navable = @user
-    current_user.update_last_seen_activity "nimmt Benutzereinstellungen vor"
+    set_current_navable @user
+    set_current_title t(:user_settings)
+    set_current_activity :is_managing_user_settings
   end
   
   def update

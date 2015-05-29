@@ -30,11 +30,7 @@ module TitleHelper
   end
   
   def website_title_set_by_controller
-    # yield(:title) uses the new mechanism.
-    # @title uses the old mechanism.
-    # TODO: Remove @title when it is not used in the controllers anymore.
-    #
-    @title || content_for(:title)
+    current_title
   end
   
   def website_title_with_app_name

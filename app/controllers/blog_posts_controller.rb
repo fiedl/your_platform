@@ -24,7 +24,7 @@ class BlogPostsController < PagesController
     @blog_post.save!
     @blog_post.parent_pages << secure_parent
     @page = @blog_post
-    @navable = @blog_post            # this is needed in the BoxHelper in order to show the edit button.
+    set_current_navable @blog_post   # this is needed in the BoxHelper in order to show the edit button.
     @blog_entries = [@blog_post]     # this is needed in the BoxHelper in order to hide the attachment box.
     @this_is_a_new_blog_post = true  # in to make the header a link.
     respond_to do |format|
