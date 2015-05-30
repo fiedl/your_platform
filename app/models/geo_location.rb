@@ -12,7 +12,7 @@ class GeoLocation < ActiveRecord::Base
   # What to do when performing a geocoding query (to google)
   # ==========================================================================================
 
-  geocoded_by :address do |geo_location, geo_query_results|
+  geocoded_by :address, language: I18n.locale do |geo_location, geo_query_results|
     result = geo_query_results.first
     if result
       # Definition of `result` with available methods can be found here:
