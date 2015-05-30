@@ -100,6 +100,8 @@ require 'to_xls'
 # ICS Export (iCal)
 require 'icalendar'
 
+::STAGE = "development" unless defined? ::STAGE
+
 module YourPlatform
   class Engine < ::Rails::Engine
 
