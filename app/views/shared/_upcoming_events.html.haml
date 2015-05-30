@@ -18,16 +18,16 @@
           Kalender-Abo!
     %ul.upcoming_events
       = render partial: 'events/events_lis', locals: {events: events}
-    %table.events_footer
-      %td.show_all
-        - if @group
-          = link_to t(:show_all), group_events_path(group_id: @group.id, all: true)
-        - else
-          = link_to t(:show_all), events_path
-      %td.create_event
+    .events_footer
+      .create_event.right
         - if group_to_create_the_event_for && can?(:create_event, group_to_create_the_event_for)
           %a.btn.btn-default.btn-small#create_event{href: events_path(group_id: group_to_create_the_event_for.id, format: 'json')}
             = icon :plus
             =t :add_event_for
             = surround "'", "'" do
               = group_to_create_the_event_for.name
+      .show_all
+        - if @group
+          = link_to t(:show_all), group_events_path(group_id: @group.id, all: true)
+        - else
+          = link_to t(:show_all), events_path

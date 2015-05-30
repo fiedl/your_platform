@@ -92,13 +92,13 @@
         %span#logo
           = link_to image_tag('logo.png'), root_path, class: 'navbar-brand'
       
-      .col-md-6.col-sm-5.col-xs-12
+      .col-md-6.col-sm-5.col-xs-12.hidden-xs
         %span#category_indicator.right
           %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
         
       .col-md-4.col-sm-5.col-xs-12
-        = render partial: 'support_requests/help_button'
-        %span#header_search
+        #header_help= render partial: 'support_requests/help_button'
+        #header_search
           %span#search_box= render partial: 'shared/search_box'
     
     .row#breadcrumb-bar
@@ -110,12 +110,9 @@
       .row
         #content
           - if show_vertical_nav?
-            .col-md-3
-              .container-fluid
-                .col-xs-8.col-md-12
-                  = vertical_nav
-                .col-xs-4
-                  .row= render partial: 'last_seen_activities/index'
+            .col-md-3#vertical_nav_area.hidden-xs
+              = vertical_nav
+              .row= render partial: 'last_seen_activities/index'
             .col-md-9#content_area
               = flash_area
               = replace_unicode_special_chars_by_html_escape_strings( |

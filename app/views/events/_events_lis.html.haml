@@ -5,7 +5,7 @@
   - group = event.group
   - corporation = group.try(:corporation)
   %li.upcoming_event
-    %span.event.info
+    %small.event.info
       - if event.end_at and event.end_at.to_date != event.start_at.to_date
         %span{class: 'event from_date_to_end_date'}
           = localize(event.start_at.to_date, format: :long).gsub(event.end_at.year.to_s, '')
