@@ -1,0 +1,18 @@
+- # locals:
+- commentable || raise('no commentable given!')
+- show_max_comments ||= 3
+- show_all_comments ||= @show_all_comments
+
+%ul.comments#comments
+
+  - comments = commentable.comments.order('created_at desc')
+  - comments = comments.limit(show_max_comments) if not show_all_comments
+  - comments = comments.reverse
+  - comments.each do |comment|
+    %li= render comment
+
+  - if can? :create_comment_for, commentable
+    %li= render partial: 'comments/new_comment', locals: {commentable: commentable}
+  
+  - if commentable.comments.count > show_max_comments and not show_all_comments
+    %li.show-all-comments= link_to t(:show_all_comments), commentable  # on the commentable#show all comments are shown.

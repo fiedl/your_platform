@@ -92,6 +92,7 @@ Rails.application.routes.draw do
   
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts
+  resources :comments
   
   patch 'notifications/read_all', to: 'notifications#read_all', as: 'read_all_notifications'
   resources :notifications

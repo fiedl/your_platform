@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150527183430) do
+ActiveRecord::Schema.define(version: 20150530224057) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -54,6 +54,15 @@ ActiveRecord::Schema.define(version: 20150527183430) do
   end
 
   add_index "bookmarks", ["user_id"], name: "bookmarks_user_id_fk", using: :btree
+
+  create_table "comments", force: :cascade do |t|
+    t.text     "text",             limit: 65535
+    t.integer  "author_user_id",   limit: 4
+    t.string   "commentable_type", limit: 255
+    t.integer  "commentable_id",   limit: 4
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+  end
 
   create_table "dag_links", force: :cascade do |t|
     t.integer  "ancestor_id",     limit: 4

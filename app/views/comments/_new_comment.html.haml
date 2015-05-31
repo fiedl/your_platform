@@ -1,0 +1,17 @@
+- # locals:
+- #   - commentable
+
+.media.comment.new_comment
+  = form_for(commentable.comments.build) do |form|
+    = form.hidden_field :commentable_type
+    = form.hidden_field :commentable_id
+
+    .media-left.avatar= user_avatar(current_user, size: 24)
+    .media-body
+      %small.comment-header.comment-tools
+        .comment-author= link_to current_user.title, current_user
+      .comment-text
+        = form.text_area :text, placeholder: t(:enter_new_comment_here), class: 'form-control'
+      .comment-tools
+        = form.submit t(:submit_comment), class: 'submit_comment btn btn-primary btn-sm right'
+        

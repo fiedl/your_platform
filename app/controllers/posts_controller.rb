@@ -23,6 +23,8 @@ class PostsController < ApplicationController
     @post = Post.find(params[:id])
     @group = @post.group
     
+    @show_all_comments = true
+    
     set_current_title @post.subject
     set_current_navable @group
     set_current_activity :looks_at_posts, @group

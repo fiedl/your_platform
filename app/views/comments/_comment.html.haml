@@ -1,0 +1,7 @@
+.media.comment
+  .media-left.avatar= user_avatar(comment.author, size: 24)
+  .media-body
+    %small.comment-header
+      .comment-author= link_to comment.author.title, comment.author
+      .comment-time= localize(comment.created_at)
+    .comment-text= markup(comment.text)

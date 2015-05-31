@@ -23,3 +23,5 @@
           
       %div.post-body
         = markup post.text.html_safe
+
+      .post-comments= render partial: 'comments/comments', locals: {commentable: post}
