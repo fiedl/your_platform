@@ -132,6 +132,20 @@ describe Notification do
         end
       end
     end
+    describe "when the user has not chosen a notification policy" do
+      before { @user.update_attribute(:notification_policy, nil) }
+      describe "when it is before 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 14) }
+        it { should_not include @notification }
+      end
+      describe "when it is after 18h" do
+        before { Timecop.travel Time.zone.now.change(hour: 19) }
+        describe "when the notification has been created before 6 pm" do
+          before { @notification.update_attribute(:created_at, Time.zone.now.change(hour: 15)) }
+          it { should_not include @notification }
+        end
+      end
+    end
   end
   
   describe ".upcoming_by_user" do
@@ -163,49 +177,6 @@ describe Notification do
         Notification.first.sent_at.to_i.should == @t.to_i
         subject
         Notification.first.sent_at.to_i.should == @t.to_i
-      end
-    end
-  end
-  
-  describe "#send_at" do
-    before { @notification = Notification.create_from_post(@post).first }
-    subject { @notification.send_at }
-
-    specify { @notification.recipient.should == @member2 }
-    it { should be_kind_of Time }
-
-    describe "when the user wants to be notified :instantly" do
-      before { @member2.update_attribute(:notification_policy, :instantly); @notification.reload }
-      it { should < 1.minute.from_now }
-    end
-    
-    describe "when the user wants to be notified in letter bundles" do
-      before { @member2.update_attribute(:notification_policy, :letter_bundle); @notification.reload }
-      it { should > 1.minute.from_now }
-      it { should < 15.minutes.from_now }
-    end
-    
-    describe "when the user wants to be notified on a daily basis" do
-      before { @member2.update_attribute(:notification_policy, :daily); @notification.reload }
-      describe "when it is before 18h" do
-        before { Timecop.travel Time.zone.now.change(hour: 14) }
-        it { should == Date.today.to_datetime.change(hour: 18) }
-      end
-      describe "when it is after 18h" do
-        before { Timecop.travel Time.zone.now.change(hour: 19) }
-        it { should == Date.tomorrow.to_datetime.change(hour: 18) }
-      end
-    end
-    
-    describe "when the user has not chosen a notification policy" do
-      specify { @member2.read_attribute(:notification_policy).should == nil }
-      describe "when it is before 18h" do
-        before { Timecop.travel Time.zone.now.change(hour: 14) }
-        it { should == Date.today.to_datetime.change(hour: 18) }
-      end
-      describe "when it is after 18h" do
-        before { Timecop.travel Time.zone.now.change(hour: 19) }
-        it { should == Date.tomorrow.to_datetime.change(hour: 18) }
       end
     end
   end

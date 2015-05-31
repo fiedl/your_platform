@@ -85,37 +85,6 @@ class Notification < ActiveRecord::Base
     end
   end
   
-  # Schedule a notification job with resque.
-  #
-  def create_notification_job
-    NotificationJob.set(wait_until: self.send_at).perform_later
-  end
-  
-  # Calculate when this notification should be sent to the user
-  # via email.
-  #
-  # 1. If the recipient wants to be notified instantly, just send it
-  #    in a couple of seconds.
-  # 2. If the recipient wants to be notified in letter bundles,
-  #    wait 10 minutes. Then, if new notifications have been
-  #    created, wait for those. Otherwise, send it.
-  # 3. If the recipient wants to be notified once a day, 
-  #    do it at 6pm.
-  #   
-  def send_at
-    case self.recipient.notification_policy
-    when :instantly
-      15.seconds.from_now
-    when :letter_bundle
-      Time.zone.now + self.class.letter_bundle_wait_time.min
-    else # including :daily
-      if Time.zone.now.hour > 18
-        Time.zone.now.change(hour: 18) + 1.day
-      else
-        Time.zone.now.change(hour: 18)
-      end
-    end
-  end
   
   # Find all notifications that are due to be sent via email.
   # 
@@ -127,7 +96,7 @@ class Notification < ActiveRecord::Base
       # Notifications that are to be sent daily, are due at 6 pm,
       # but only those that have been sent before. Otherwise, the user
       # will get multiple emails after 6 pm.
-      " OR " + (Time.zone.now >= Time.zone.now.change(hour: 18) ? "((users.notification_policy = 'daily' OR users.notification_policy is null) AND notifications.created_at < ?)" : "? is null") + 
+      " OR " + (Time.zone.now >= Time.zone.now.change(hour: 18) ? "(users.notification_policy = 'daily' AND notifications.created_at < ?)" : "? is null") + 
       
       # Notifications that are to be sent in letter bundles, 
       # are due under the following conditions:
