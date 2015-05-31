@@ -288,6 +288,12 @@ class Ability
       # This allows all users to send posts to their own groups.
       # TODO: Post policy for groups.
       can [:create_post, :create_post_for], Group, id: user.group_ids
+      
+      # If a user can read an object, he can comment it.
+      # 
+      can :create_comment_for, [Post] do |commentable|
+        can? :read, commentable
+      end
     end
     
     can :read, Group do |group|
@@ -325,6 +331,13 @@ class Ability
     
     # Users can read post of their groups.
     can :read, Post, group: {id: user.group_ids}
+    
+    # Comments: 
+    # - Users can read comments for all objects they can read anyway.
+    # - And they can create comments for these objects as well (see above.)
+    can :read, Comment do |comment|
+      can? :read, comment.commentable
+    end
   end
   
   def rights_for_everyone

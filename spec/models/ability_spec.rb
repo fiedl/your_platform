@@ -31,6 +31,36 @@ describe Ability do
     subject { ability }
     let(:the_user) { subject }
     
+    context "(posts and comments)", :focus do
+      context "when the user is a member of a group" do
+        before { @group = create(:group); @group.assign_user(user, at: 1.month.ago) }
+        he { should be_able_to :create_post_for, @group }
+        context "when there is a post in this group" do
+          before { @post = @group.posts.create }
+          he { should be_able_to :read, @post }
+          he { should be_able_to :create_comment_for, @post }
+          context "when there is a comment for this post" do
+            before { @comment = @post.comments.create }
+            he { should be_able_to :read, @comment }
+            he { should_not be_able_to :update, @comment }
+          end
+        end
+      end
+      context "when the user is no member of a group" do
+        before { @group = create(:group) }
+        he { should_not be_able_to :create_post_for, @group }
+        context "when there is a post in this group" do
+          before { @post = @group.posts.create }
+          he { should_not be_able_to :read, @post }
+          he { should_not be_able_to :create_comment_for, @post }
+          context "when there is a comment for this post" do
+            before { @comment = @post.comments.create }
+            he { should_not be_able_to :read, @comment }
+          end
+        end
+      end
+    end
+    
     context "when the user is global admin" do
       before { user.global_admin = true }
       
