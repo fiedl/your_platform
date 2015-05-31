@@ -10,3 +10,6 @@
     %p
       %strong= link_to notification.message, notification
     %p= markdown notification.text
+  .notification_links
+    %small
+      = render partial: 'notifications/notification_links', locals: {notification: notification}
