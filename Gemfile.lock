@@ -82,6 +82,7 @@ PATH
       redis-rails
       refile
       responders (~> 2.0)
+      rest-client (>= 1.8)
       sass-rails (>= 3.2)
       sidekiq
       slim_breadcrumb (>= 0.0.3)
@@ -89,6 +90,7 @@ PATH
       sugar-rails
       to_xls
       transaction_retry
+      turboboost
       turbolinks (>= 2.5.3)
       will_paginate (> 3.0)
       workflow_kit (~> 0.0.7)
@@ -138,7 +140,7 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.3.8)
     arel (6.0.0)
-    autoprefixer-rails (5.1.11)
+    autoprefixer-rails (5.2.0)
       execjs
       json
     autosize-rails (1.18.17)
@@ -201,7 +203,7 @@ GEM
     daemons (1.2.2)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
-    devise (3.4.1)
+    devise (3.5.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
       railties (>= 3.2.6, < 5)
@@ -286,7 +288,7 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    i18n-js (3.0.0.rc9)
+    i18n-js (3.0.0.rc10)
       i18n (~> 0.6)
     icalendar (2.3.0)
     jbuilder (2.2.12)
@@ -310,7 +312,7 @@ GEM
     jquery-ui-rails (4.2.1)
       railties (>= 3.2.16)
     json (1.8.2)
-    judge (2.0.6)
+    judge (2.1.0)
       rails (>= 3.1)
     kgio (2.9.3)
     launchy (2.4.3)
@@ -327,7 +329,7 @@ GEM
     lumberjack (1.0.9)
     method_source (0.8.2)
     mime-types (1.25.1)
-    mini_magick (4.2.3)
+    mini_magick (4.2.7)
     mini_portile (0.6.2)
     minitest (5.6.0)
     multi_json (1.11.0)
@@ -342,7 +344,7 @@ GEM
     orm_adapter (0.5.0)
     passgen (1.0.2)
     pdf-core (0.5.1)
-    phony (2.12.13)
+    phony (2.14.1)
     poltergeist (1.6.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -426,8 +428,9 @@ GEM
     redis-store (1.1.4)
       redis (>= 2.2)
     ref (1.0.5)
-    refile (0.5.3)
+    refile (0.5.5)
       mime-types
+      rest-client (~> 1.8)
       sinatra (~> 1.4.5)
     responders (2.1.0)
       railties (>= 4.2.0, < 5)
@@ -539,6 +542,11 @@ GEM
       polyglot
       polyglot (>= 0.3.1)
     ttfunk (1.4.0)
+    turboboost (0.0.12)
+      coffee-rails
+      jquery-rails
+      railties
+      turbolinks
     turbolinks (2.5.3)
       coffee-rails
     tzinfo (1.2.2)

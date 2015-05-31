@@ -90,6 +90,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mini_magick'
   s.add_dependency 'refile'
   s.add_dependency 'jquery-fileupload-rails'
+  s.add_dependency 'rest-client', '>= 1.8'
 
   # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
