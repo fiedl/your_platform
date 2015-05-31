@@ -49,7 +49,34 @@ class Notification < ActiveRecord::Base
         reference_id:   post.id,
         message:        message,
         text:           post.text,
-        sent_at:        options[:sent_at]
+        sent_at:        options[:sent_at]  # when the notification is sent via email
+      )
+    end
+  end
+  
+  # Creates all notifications for users that should be 
+  # notified about comments.
+  #
+  def self.create_from_comment(comment, options = {})
+    recipients = []
+    recipients += [comment.commentable.author] if comment.commentable.respond_to? :author
+    recipients += comment.commentable.comments.map(&:author)
+    recipients -= [comment.author]
+    recipients = recipients.uniq - [nil]
+    
+    recipients.collect do |recipient|
+      locale = recipient.locale
+      message = I18n.t(:has_commented_on, user_title: comment.author.title, commentable_title: comment.commentable.title)
+      
+      self.create(
+        recipient_id:   recipient.id,
+        author_id:      comment.author.id,
+        reference_url:  comment.url,
+        reference_type: comment.class.name,
+        reference_id:   comment.id,
+        message:        message,
+        text:           comment.text,
+        sent_at:        options[:sent_at]  # when the notification is sent via email
       )
     end
   end

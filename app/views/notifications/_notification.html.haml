@@ -1,15 +1,16 @@
 - # We need the inline styling for emails.
 
-%div{style: 'float: left; margin-right: 10px'}
-  = user_avatar(notification.author)
-%div{style: 'overflow: hidden'}
-  %small
-    = link_to notification.author.title, notification.author
-    = localize(notification.created_at)
-  .notification_body
-    %p
-      %strong= link_to notification.message, notification
-    %p= markdown notification.text
-  .notification_links
+.notification
+  %div{style: 'float: left; margin-right: 10px'}
+    = user_avatar(notification.author)
+  %div{style: 'overflow: hidden'}
     %small
-      = render partial: 'notifications/notification_links', locals: {notification: notification}
+      = link_to notification.author.title, notification.author
+      = localize(notification.created_at)
+    .notification_body
+      %p
+        %strong= link_to notification.message, notification
+      %p= markdown notification.text
+    .notification_links
+      %small
+        = render partial: 'notifications/notification_links', locals: {notification: notification}

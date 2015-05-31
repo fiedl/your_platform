@@ -4,6 +4,11 @@ class Post < ActiveRecord::Base
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
   has_many :comments, as: :commentable
+  
+  
+  def title
+    subject
+  end
 
   # This allows to set the author either as email or as email string.
   #

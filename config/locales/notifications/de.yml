@@ -6,8 +6,11 @@ de:
   good_evening: "Guten Abend,"
   good_day: "Guten Tag,"
   good_morning: "Guten Morgen,"
+  
   a_new_message_has_been_posted: "Eine neue Nachricht an %{group_name} ist eingegangen."
   has_posted_a_new_message: "%{user_title} hat eine neue Nachricht an %{group_name} geschrieben."
+  has_commented_on: '%{user_title} hat "%{commentable_title}" kommentiert.'
+  
   you_have_n_unread_notifications: "Sie haben %{n} neue Nachrichten."
   mark_all_notifications_as_read: Alle als gelesen markieren.
   looks_at_notifications: sieht sich die eigenen Benachrichtigungen an

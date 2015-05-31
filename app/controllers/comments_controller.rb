@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
   
-  before_action :find_secure_commentable
+  before_action :find_secure_commentable, only: :create
   
   def create
     authorize! :create_comment_for, @commentable
@@ -9,7 +9,16 @@ class CommentsController < ApplicationController
     @comment.author = current_user
     @comment.save!
     
+    Notification.create_from_comment(@comment)
+    
     redirect_to :back, change: 'comments'
+  end
+  
+  def show
+    @comment = Comment.find params[:id]
+    authorize! :read, @comment
+    
+    redirect_to @comment.commentable
   end
   
   private

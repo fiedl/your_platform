@@ -5,7 +5,7 @@ class NotificationsController < ApplicationController
   
   def index
     @notifications = current_user.notifications.order('created_at desc')
-    authorize! :read, @notifications
+    authorize! :index, Notification
     
     set_current_navable Page.intranet_root
     set_current_title t(:notifications)

@@ -54,6 +54,27 @@ describe Notification do
     end
   end
   
+  describe ".create_from_comment", :focus do
+    before do
+      @comment = @post.comments.build text: "This is a comment."
+      @comment.author = @member2
+      @comment.save
+    end
+    subject { Notification.create_from_comment(@comment) }
+    
+    specify { @post.author.should == @member1 }
+    specify { @comment.author.should == @member2 }
+    
+    it { should be_kind_of Array }
+    its(:count) { should == 1 }
+    its('first.recipient') { should == @member1 }
+    its('first.author') { should == @member2 }
+    its('first.reference') { should == @comment }
+    its('first.message') { should == I18n.t(:has_commented_on, user_title: @member2.title, commentable_title: @post.title) }
+    its('first.text') { should == "This is a comment." }
+    its('first.sent_at') { should == nil }
+  end
+  
   describe ".upcoming" do
     before { @notification1, @notification2 = Notification.create_from_post(@post) }
     subject { Notification.upcoming }
