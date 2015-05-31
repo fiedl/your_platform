@@ -35,7 +35,10 @@ class Notification < ActiveRecord::Base
   #   - sent_at    In order to mark a notification as already sent.
   #
   def self.create_from_post(post, options = {})
-    post.group.members.collect do |group_member|
+    recipients = post.group.members
+    recipients -= [post.author] if post.author.kind_of?(User)
+
+    recipients.collect do |group_member|
       locale = group_member.locale
       message = post.subject if not post.text.start_with?(post.subject)
       message ||= I18n.t(:has_posted_a_new_message, user_title: post.author.title, group_name: post.group.name, locale: locale) if post.author.kind_of?(User)

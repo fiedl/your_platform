@@ -20,9 +20,11 @@ describe Notification do
   describe ".create_from_post" do
     subject { Notification.create_from_post(@post) }
     
+    specify { @post.author.should == @member1 }
+    
     it { should be_kind_of Array }
-    its(:count) { should == @group.members.count }
-    its(:count) { should == 2 }
+    its(:count) { should == @group.members.count - 1 }
+    its(:count) { should == 1 }
     
     describe ".last" do
       before { @notification = Notification.create_from_post(@post).last }
@@ -54,7 +56,7 @@ describe Notification do
     end
   end
   
-  describe ".create_from_comment", :focus do
+  describe ".create_from_comment" do
     before do
       @comment = @post.comments.build text: "This is a comment."
       @comment.author = @member2
@@ -76,20 +78,20 @@ describe Notification do
   end
   
   describe ".upcoming" do
-    before { @notification1, @notification2 = Notification.create_from_post(@post) }
+    before { @notifications = Notification.create_from_post(@post) }
     subject { Notification.upcoming }
-    it { should == [@notification1, @notification2] }
+    it { should == @notifications }
     it "should not include already-read notifications" do
-      @notification1.update_attribute :read_at, Time.zone.now
-      subject.should_not include @notification1
+      @notifications.first.update_attribute :read_at, Time.zone.now
+      subject.should_not include @notifications.first
     end
     it "should not include notifications already sent via email" do
-      @notification2.update_attribute :sent_at, Time.zone.now
-      subject.should_not include @notification2
+      @notifications.first.update_attribute :sent_at, Time.zone.now
+      subject.should_not include @notifications.first
     end
   end
   
-  describe ".due", :focus do
+  describe ".due" do
     before do
       @notification = Notification.create_from_post(@post).first
       @user = @notification.recipient
@@ -134,10 +136,10 @@ describe Notification do
   
   describe ".upcoming_by_user" do
     before { Notification.create_from_post(@post) }
-    subject { Notification.upcoming_by_user(@member1) }
+    subject { Notification.upcoming_by_user(@member2) }
     
     its(:count) { should == 1 }
-    its('first.recipient_id') { should == @member1.id }
+    its('first.recipient_id') { should == @member2.id }
     it { should respond_to :deliver }
   end
   
@@ -150,7 +152,7 @@ describe Notification do
     subject { Notification.deliver }
     
     it "should send all upcoming notifications" do
-      Notification.upcoming.count.should == 2
+      Notification.upcoming.count.should == 1
       subject
       Notification.upcoming.count.should == 0
     end
@@ -169,22 +171,22 @@ describe Notification do
     before { @notification = Notification.create_from_post(@post).first }
     subject { @notification.send_at }
 
-    specify { @notification.recipient.should == @member1 }
+    specify { @notification.recipient.should == @member2 }
     it { should be_kind_of Time }
 
     describe "when the user wants to be notified :instantly" do
-      before { @member1.update_attribute(:notification_policy, :instantly); @notification.reload }
+      before { @member2.update_attribute(:notification_policy, :instantly); @notification.reload }
       it { should < 1.minute.from_now }
     end
     
     describe "when the user wants to be notified in letter bundles" do
-      before { @member1.update_attribute(:notification_policy, :letter_bundle); @notification.reload }
+      before { @member2.update_attribute(:notification_policy, :letter_bundle); @notification.reload }
       it { should > 1.minute.from_now }
       it { should < 15.minutes.from_now }
     end
     
     describe "when the user wants to be notified on a daily basis" do
-      before { @member1.update_attribute(:notification_policy, :daily); @notification.reload }
+      before { @member2.update_attribute(:notification_policy, :daily); @notification.reload }
       describe "when it is before 18h" do
         before { Timecop.travel Time.zone.now.change(hour: 14) }
         it { should == Date.today.to_datetime.change(hour: 18) }
@@ -196,7 +198,7 @@ describe Notification do
     end
     
     describe "when the user has not chosen a notification policy" do
-      specify { @member1.read_attribute(:notification_policy).should == nil }
+      specify { @member2.read_attribute(:notification_policy).should == nil }
       describe "when it is before 18h" do
         before { Timecop.travel Time.zone.now.change(hour: 14) }
         it { should == Date.today.to_datetime.change(hour: 18) }
