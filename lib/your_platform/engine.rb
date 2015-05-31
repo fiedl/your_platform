@@ -80,6 +80,7 @@ require 'jquery-datatables-rails'
 # JavaScript
 require 'turbolinks'
 require 'jquery-turbolinks'
+require 'turboboost'
 
 # Client-Side Validations
 require 'judge'

@@ -2,7 +2,7 @@
 - #   - commentable
 
 .media.comment.new_comment
-  = form_for(commentable.comments.build) do |form|
+  = form_for(commentable.comments.build, turboboost: true) do |form|
     = form.hidden_field :commentable_type
     = form.hidden_field :commentable_id
 

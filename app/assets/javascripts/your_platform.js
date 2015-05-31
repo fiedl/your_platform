@@ -24,3 +24,5 @@
 //= require i18n/translations
 //= require pgwbrowser
 //= require_tree ./your_platform
+//
+//= require turboboost

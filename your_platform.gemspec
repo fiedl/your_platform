@@ -111,6 +111,7 @@ Gem::Specification.new do |s|
   # JavaScript
   s.add_dependency 'turbolinks', '>= 2.5.3'
   s.add_dependency 'jquery-turbolinks'
+  s.add_dependency 'turboboost'
   
   # Client-Side Validations
   s.add_dependency 'judge'
