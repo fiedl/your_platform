@@ -1,6 +1,6 @@
 %h1= "#{t(:new_post_to)} #{@group.name}"
 %div.new_post.post
-  = form_for(@new_post) do |form|
+  = form_for(@new_post, turboboost: true) do |form|
     = form.hidden_field :group_id
     = form.hidden_field :author_user_id
     .media
