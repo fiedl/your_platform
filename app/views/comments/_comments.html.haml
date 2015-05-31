@@ -11,7 +11,7 @@
   - comments.each do |comment|
     %li= render comment
 
-  - if can? :create_comment_for, commentable
+  - if current_user.beta_tester? && can?(:create_comment_for, commentable)
     %li= render partial: 'comments/new_comment', locals: {commentable: commentable}
   
   - if commentable.comments.count > show_max_comments and not show_all_comments
