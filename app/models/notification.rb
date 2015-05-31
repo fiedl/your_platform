@@ -18,7 +18,7 @@
 #     end
 #
 class Notification < ActiveRecord::Base
-  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at
+  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at, :read_at
   
   belongs_to :recipient, class_name: 'User'
   belongs_to :author, class_name: 'User'
@@ -26,6 +26,7 @@ class Notification < ActiveRecord::Base
   
   scope :sent, -> { where.not(sent_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
+  scope :unread, -> { where(read_at: nil) }
   scope :upcoming, -> { where('sent_at IS NULL AND read_at IS NULL') }
   
   # Creates all notifications for users that should

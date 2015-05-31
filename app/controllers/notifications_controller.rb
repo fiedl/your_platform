@@ -22,7 +22,7 @@ class NotificationsController < ApplicationController
   # This marks all notifications of the current_user as read.
   #
   def read_all
-    current_user.notifications.upcoming.update_all read_at: Time.zone.now
+    current_user.notifications.unread.update_all read_at: Time.zone.now
     redirect_to :back, change: 'notifications_menu'
   end
   
