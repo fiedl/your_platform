@@ -28,6 +28,8 @@ class Group < ActiveRecord::Base
   has_profile_fields
 
   has_many :posts
+  
+  default_scope { includes(:flags) }
 
   include GroupMixins::Memberships
   include GroupMixins::Everyone  
@@ -72,7 +74,7 @@ class Group < ActiveRecord::Base
       name + (parent_events.first ? ": " + parent_events.first.name : '')
     elsif has_flag? :contact_people
       name + (parent_events.first ? ": " + parent_events.first.name : '')
-    elsif has_flag?(:admins_parent) && parent_groups.first.parent_groups.first
+    elsif has_flag?(:admins_parent) && parent_groups.first.try(:parent_groups).try(:first)
       name + ": " + parent_groups.first.parent_groups.first.name
     elsif super.present?
       super

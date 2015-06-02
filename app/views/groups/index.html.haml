@@ -1,0 +1,5 @@
+= render partial: 'groups/tabs', locals: {active: 'subgroups'}
+
+%h1.group_of_groups.group_index= current_title
+%div
+  = render partial: 'groups/group_list', locals: {groups: @groups}

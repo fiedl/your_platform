@@ -2,11 +2,15 @@
 - active ||= 'posts'
 
 %ul.nav.nav-tabs.group
+  - if @group.group_of_groups?
+    %li{class: active == 'subgroups' ? 'active' : ''}
+      %a{href: group_subgroups_path(@group)}= @group.name
   - if can? :use, :post_tab
     %li{class: active == 'posts' ? 'active' : ''}
       %a{href: group_posts_path(@group)} Nachrichten
-  %li{class: active == 'profile' ? 'active' : ''}
-    %a{href: group_profile_path(@group)} Kontakt & Profil
+  - unless @group.group_of_groups?
+    %li{class: active == 'profile' ? 'active' : ''}
+      %a{href: group_profile_path(@group)} Kontakt & Profil
   %li{class: active == 'events' ? 'active' : ''}
     %a{href: group_events_path(@group)} Veranstaltungen
   %li{class: active == 'members' ? 'active' : ''}
@@ -16,4 +20,3 @@
   - if can? :manage, @group
     %li{class: active == 'settings' ? 'active' : ''}
       %a{href: group_settings_path(@group)}=t :settings
-    

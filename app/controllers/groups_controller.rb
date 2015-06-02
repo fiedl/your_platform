@@ -4,8 +4,14 @@ class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
   
   def index
-    set_current_navable Page.intranet_root
-    respond_with @groups
+    @group = @parent_group = Group.find(params[:group_id]) if params[:group_id]
+    @groups = (@parent_group.try(:child_groups) || Group.all).includes(:flags)
+    
+    # TODO: Authorize
+    
+    set_current_navable(@parent_group || Page.intranet_root)
+    set_current_title(@parent_group.try(:title) || t(:groups))
+    set_current_activity :is_looking_at_group, @parent_group if @parent_group
   end
 
   def index_mine
