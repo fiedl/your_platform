@@ -10,20 +10,24 @@ module VerticalNavHelper
   # e.g. a Page or a User, is the currently active element.
   #
   def vertical_menu_for(navable)
-    if navable
-      @ancestor_navables = cached_ancestor_navables(navable)
-      @active_navable = navable
-      @active_navables = [@active_navable]
-      @child_navables = cached_child_navables(navable)
-      
-      menu_elements_html(@ancestor_navables, :ancestor) +
-      menu_element(@active_navable, :active) +
-      menu_elements_html(@child_navables, :child)
+    Rails.cache.fetch([current_user, "vertical_menu_for", navable, current_tab]) do
+      if navable
+        @ancestor_navables = cached_ancestor_navables(navable)
+        @active_navable = navable
+        @active_navables = [@active_navable]
+        @child_navables = cached_child_navables(navable)
+        
+        menu_elements_html(@ancestor_navables, :ancestor) +
+        menu_element(@active_navable, :active) +
+        menu_elements_html(@child_navables, :child)
+      end
     end
   end
   
   def show_vertical_nav?
-    @navable.present? && (@navable != Page.find_root) && (@navable.children.count + @navable.ancestors.count > 1)
+    Rails.cache.fetch([@navable, "show_vertical_nav?"]) do
+      @navable.present? && (@navable != Page.find_root) && (@navable.children.count + @navable.ancestors.count > 1)
+    end
   end
 
   def child_navables(navable)

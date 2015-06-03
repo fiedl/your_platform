@@ -12,6 +12,7 @@ concern :UserDateOfBirth do
     cached { date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field }
   end
   def date_of_birth=( date_of_birth )
+    @date_of_birth_will_change = true
     find_or_build_date_of_birth_profile_field.value = date_of_birth
   end
 
@@ -19,7 +20,7 @@ concern :UserDateOfBirth do
     date_of_birth_profile_field || build_date_of_birth_profile_field
   end
   def save_date_of_birth_profile_field
-    date_of_birth_profile_field.try(:save)
+    date_of_birth_profile_field.try(:save) if @date_of_birth_will_change
   end
   private :save_date_of_birth_profile_field
   

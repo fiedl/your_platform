@@ -5,8 +5,9 @@ module BreadcrumbsHelper
   # bread crumb elements.
   #
   def breadcrumb_ul
-    # use this due to tab navigation issues when using turbolinks cache.
-    uncached_breadcrumb_ul
+    Rack::MiniProfiler.step("breadcrumb_ul") do
+      cached_breadcrumb_ul
+    end
   end
   
   def cached_breadcrumb_ul
@@ -20,7 +21,7 @@ module BreadcrumbsHelper
   end
   
   def cached_breadcrumb_ul_for_navable(navable)
-    Rails.cache.fetch([navable, 'breadcrumb_ul_for_navable', navable.ancestors_cache_key]) { breadcrumb_ul_for_navable(navable) }
+    Rails.cache.fetch([navable, 'breadcrumb_ul_for_navable', navable.ancestors_cache_key, current_tab]) { breadcrumb_ul_for_navable(navable) }
   end
   
   def breadcrumb_ul_for_navable( navable )

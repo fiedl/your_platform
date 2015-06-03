@@ -1,3 +1,4 @@
+require 'colored'
 #
 # To understand our caching conventions, have a look at our wiki page:
 # https://github.com/fiedl/wingolfsplattform/wiki/Caching
@@ -110,7 +111,7 @@ module ActiveRecordCacheExtension
   end
   
   def delete_cache
-    # p "DEBUG DELETE CACHE #{self}"
+    # print "DEBUG DELETE CACHE #{self}\n".red.bold
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
   
