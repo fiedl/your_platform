@@ -23,8 +23,9 @@ concern :CurrentLocale do
     cookies[:locale] = nil if cookies[:locale] == ""
   end
   def update_user_locale
-    current_user.try(:locale=, cookies[:locale])
-    current_user.try(:save)
+    if current_user && current_user.locale != cookies[:locale]
+      current_user.update_attribute :locale, cookies[:locale]
+    end
   end
   
   private

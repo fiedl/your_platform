@@ -26,6 +26,8 @@ Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
 end
 
 Rack::MiniProfiler.config.start_hidden = true
+# Rack::MiniProfiler.config.skip_paths += ["/attachments/"]  # FIXME: this does not work, but we want to skip async entries for images and thumbs.
+
 
 if Rails.env.production? || Rails.env.test?
   Rack::MiniProfiler.config.authorization_mode = :whitelist
