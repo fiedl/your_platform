@@ -116,6 +116,21 @@ class User < ActiveRecord::Base
   end
   
 
+  # The preferred locale of the user, which can be set through
+  # the user settings or the page footer.
+  #
+  # In order to suppress the default value and just to read the
+  # setting from the database, call `user.locale(true)`.
+  #
+  def locale(no_default = false)
+    if no_default
+      super()
+    else
+      super() || Setting.preferred_locale || I18n.default_locale
+    end
+  end
+
+
   # This accessors allow to access the gender of the user rather than just asking if the
   # user is female as allowed by the ActiveRecord accessor.
   # (:female is a boolean column in the users table.)

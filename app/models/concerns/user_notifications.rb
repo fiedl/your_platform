@@ -19,13 +19,6 @@ concern :UserNotifications do
     [:daily, :letter_bundle, :instantly]
   end
   
-  # The preferred locale of the user, which can be set through
-  # the user settings or the page footer.
-  #
-  def locale
-    super || Setting.preferred_locale || I18n.default_locale
-  end
-  
   # Later, we can use this for a personal greeting.
   #
   def greeting
