@@ -31,7 +31,7 @@ describe Ability do
     subject { ability }
     let(:the_user) { subject }
     
-    context "(posts and comments)", :focus do
+    context "(posts and comments)" do
       context "when the user is a member of a group" do
         before { @group = create(:group); @group.assign_user(user, at: 1.month.ago) }
         he { should be_able_to :create_post_for, @group }
@@ -167,6 +167,57 @@ describe Ability do
         @sub_page = @page.child_pages.create
         @sub_page.update_attribute :created_at, 11.minutes.ago
         the_user.should_not be_able_to :destroy, @sub_page
+      end
+    end
+    
+    describe "when the user is contact person of an event" do
+      before do
+        @event = create :event
+        @event.contact_people_group.assign_user user, at: 2.minutes.ago
+      end
+      he { should be_able_to :create_page_for, @event }
+      
+      describe "when he is author of a subpage of the event" do
+        before do
+          @page = @event.child_pages.create
+          @page.author = user
+          @page.save
+        end
+        he { should be_able_to :update, @page}
+        he { should be_able_to :create_attachment_for, @page }
+        
+        describe "when he is author of an attachment" do
+          before do
+            @attachment = @page.attachments.create
+            @attachment.author = user
+            @attachment.save
+          end
+          he { should be_able_to :update, @attachment }
+          he { should be_able_to :destroy, @attachment }
+          
+          describe "when the user is also a global officer (bug fix)" do
+            before do
+              @global_officers = create :group
+              @global_officers.add_flag :global_officer
+              @global_officers.assign_user user, at: 1.year.ago
+            end
+            let(:ability) { Ability.new(user, preview_as: 'global_officer') }
+            
+            he { should be_able_to :update, @attachment }
+            he { should be_able_to :destroy, @attachment }
+          end
+        end
+
+        describe "when he is not author of an attachment" do
+          before do
+            @attachment = @page.attachments.create
+            @attachment.author = @other_user = create(:user)
+            @attachment.save
+          end
+          he { should_not be_able_to :update, @attachment }
+          he { should_not be_able_to :destroy, @attachment }
+        end
+
       end
     end
   end

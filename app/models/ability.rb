@@ -113,8 +113,7 @@ class Ability
   
   def rights_for_beta_testers
     can :use, :new_menu_feature
-    can :use, :tab_view
-    can :use, :post_tab
+    can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
   end
   
   def rights_for_developers
@@ -212,7 +211,7 @@ class Ability
       # in order to review their own pages.
       #
       can [:update, :destroy], Attachment do |attachment|
-        can?(:read, attachment.parent) and 
+        attachment.parent.officers_of_self_and_ancestors.include?(user) and
         can?(:read, attachment) and 
         (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
       end
@@ -277,12 +276,19 @@ class Ability
     
       # If a user is contact person of an event, he can provide pages and
       # attachment for this event.
+      #
+      # TODO: New role 'contact person'.
       # 
       can [:update, :create_page_for], Event do |event|
         event.contact_people.include? user
       end
       can [:update, :create_attachment_for, :destroy], Page do |page|
         page.ancestor_events.map(&:contact_people).flatten.include? user
+      end
+      can [:update, :destroy], Attachment do |attachment|
+        attachment.author == user and
+        attachment.parent.kind_of?(Page) and
+        attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
       end
       
       # This allows all users to send posts to their own groups.
