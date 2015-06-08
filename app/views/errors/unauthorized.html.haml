@@ -1,7 +1,33 @@
-%h1 Zugriff nicht authorisiert
+%h1 Zugriff nicht gestattet
 %div
-  %p Sie sind nicht berechtigt, die angeforderte Seite abzurufen. 
-  %p 
-    Haben Sie sich bereits 
-    = link_to "beim System angemeldet?", new_user_account_session_url
-  %p Bitte wenden Sie sich über den blauen Hilfe-Knopf an die Verwaltung, um Hilfestellung bei diesem Problem zu erhalten.
+
+  .media-left
+    = image_tag('aiga_immigration.png', width: 64) # http://commons.wikimedia.org/wiki/File:Aiga_immigration_inv.svg
+  .media-body
+  
+    %p
+      %strong= link_to(session['return_to_after_login'], session['return_to_after_login'])
+
+    %p Sie sind nicht berechtigt, die angeforderte Seite abzurufen. 
+    - unless current_user.present?
+      %p 
+        Haben Sie sich bereits 
+        = link_to "beim System angemeldet?", new_user_account_session_url
+    
+    %p Bitte wenden Sie sich über den blauen Hilfe-Knopf an die Verwaltung, um Hilfestellung bei diesem Problem zu erhalten.
+    
+    - if current_role_preview != current_role.to_s
+      %h2 Rollen-Vorschau
+      %p
+        Sie verwenden aktuell die Vorschau als:
+        %strong= translate(current_role_view) if current_role_view.present?
+      %p= link_to "Als #{translate(current_role.to_s)} anzeigen", session['return_to_after_login'] + "?preview_as=#{current_role.to_s}", class: 'btn btn-primary'
+    
+    - if can_override_access_denied?
+      %h2 Zugriffsbeschränkung aufheben
+    
+      %p 
+        Sie haben die Möglichkeit, diese Zugriffsbeschränkung mit Ihren Administratoren-Rechten zu umgehen.
+        %strong Der Vorgang wird dann aber geloggt.
+        
+      %p= link_to "Trotzdem zugreifen", polymorphic_path([current_navable_or_navable_for_admins_only_confirmation], admins_only_override: true), class: 'btn btn-danger'

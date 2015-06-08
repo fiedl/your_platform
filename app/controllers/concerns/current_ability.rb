@@ -36,4 +36,19 @@ concern :CurrentAbility do
     current_ability(true)
   end
   
+  def current_ability_as_user(reload = false, options = {})
+    #if reload
+    #  @current_ability = nil 
+    #  @current_role = nil
+    #  @current_role_view = nil
+    #end
+    
+    if @current_ability_as_user.nil?
+      options[:read_only_mode] = true if read_only_mode?
+      options[:preview_as] = 'user'
+    end
+
+    @current_ability_as_user ||= ::Ability.new(current_user, options)
+  end
+  
 end

@@ -32,6 +32,11 @@ concern :CurrentNavable do
     # available and the abilities might change now depending on the user's role
     # for the current_navable.
     reload_ability
+    
+    # Check andmin-only access.
+    # See: app/controllers/concerns/confirm_admins_only_access.rb
+    #
+    confirm_admins_only_access_if_needed
   end
   
 end

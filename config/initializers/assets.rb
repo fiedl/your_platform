@@ -8,3 +8,6 @@ Rails.application.config.assets.precompile += %w( galleria-classic.js galleria/c
 
 # Password Strength
 Rails.application.config.assets.precompile += %w( password_strength.js zxcvbn.js )
+
+# Vendor Images
+Rails.application.config.assets.precompile += %w( aiga_immigration.png )

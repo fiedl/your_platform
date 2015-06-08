@@ -18,6 +18,7 @@ class ApplicationController < ActionController::Base
   include CheckAuthorization
   include AcceptTermsOfUse
   include ReadOnlyMode
+  include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
 
   private
