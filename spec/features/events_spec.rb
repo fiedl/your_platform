@@ -210,6 +210,7 @@ feature "Events" do
       
       scenario "looking at upcoming group events" do
         visit group_path(@group)
+        within('.group_tabs') { click_on I18n.t(:events) }
         within('.box.upcoming_events') do
           page.should have_text @event.name
           page.should have_no_text @other_event.name
@@ -218,6 +219,7 @@ feature "Events" do
       
       scenario "exporting group events" do
         visit group_path(@group)
+        within('.group_tabs') { click_on I18n.t(:events) }
         within('.box.upcoming_events') { find('#ics_abo').click }
         page.should have_text 'BEGIN:VCALENDAR'
         page.should have_text @event.name
@@ -240,6 +242,7 @@ feature "Events" do
 
     scenario "creating an event from a group page" do
       visit group_path(@group)
+      within('.group_tabs') { click_on I18n.t(:events) }
       find('#create_event').click
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
     end

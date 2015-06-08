@@ -1,5 +1,5 @@
-%li#notifications_menu{class: "backendBarItem dropdown notifications"}
-  - if current_user.beta_tester?
+- if current_user.notifications.count > 0
+  %li#notifications_menu{class: "backendBarItem dropdown notifications"}
     = link_to notifications_path, class: 'dropdown-toggle' do
       = t(:notifications)
       - if current_user.notifications.unread.count > 0

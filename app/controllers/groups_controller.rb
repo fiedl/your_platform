@@ -22,9 +22,11 @@ class GroupsController < ApplicationController
 
   def show
     if @group
-      redirect_to_group_tab if request.format.html? and can? :use, :tab_view
-    
-      if request.format.html? || request.format.xls? || request.format.csv? || request.format.json?
+      if request.format.html?
+        redirect_to_group_tab
+        return
+
+      elsif request.format.xls? || request.format.csv? || request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do 
           # If this is a collection group, e.g. the corporations_parent group, 
           # do not list the single members.
@@ -88,10 +90,6 @@ class GroupsController < ApplicationController
     end
     
     respond_to do |format|
-      format.html do
-        authorize! :read, @group
-        set_current_activity :is_looking_at_member_list, @group
-      end
       format.json do
         authorize! :read, @group
         render json: @group.serializable_hash.merge({member_count: @memberships.count})

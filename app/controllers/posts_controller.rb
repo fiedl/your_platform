@@ -72,11 +72,7 @@ class PostsController < ApplicationController
     
     respond_to do |format|
       format.html do
-        if can? :use, :post_tab
-          redirect_to group_posts_path(@group), change: 'posts'
-        else
-          redirect_to group_url(@group)
-        end
+        redirect_to group_posts_path(@group), change: 'posts'
       end
       format.json { render json: {recipients_count: @send_counter} }
     end

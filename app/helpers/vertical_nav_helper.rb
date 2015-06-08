@@ -10,7 +10,7 @@ module VerticalNavHelper
   # e.g. a Page or a User, is the currently active element.
   #
   def vertical_menu_for(navable)
-    Rails.cache.fetch([current_user, "vertical_menu_for", navable, current_tab]) do
+    Rails.cache.fetch([current_user, "vertical_menu_for", navable, current_tab, current_role_view]) do
       if navable
         @ancestor_navables = cached_ancestor_navables(navable)
         @active_navable = navable

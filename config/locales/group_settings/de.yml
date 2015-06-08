@@ -4,3 +4,6 @@ de:
   group_type: Gruppen-Typ
   
   manage_members: Mitglieder verwalten
+
+  corporation_token_explanation: 'Dies ist die Abkürzung der Gruppe, wie sie von der zentralen Verwaltung verwendet wird.'
+  :internal_group_token_explanation: 'Diese Abkürzung stellt die Abkürzung der Gruppe, wie sie von den Mitgliedern der Gruppe selbst verwendet wird. Wenn die Gruppenbezeichnung in der Schnellstartleiste (horizontale Navigation) zu lang wird, wird dort stattdessen dieses interne Kürzel verwendet.'

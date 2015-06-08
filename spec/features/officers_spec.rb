@@ -13,8 +13,9 @@ feature "Officers Management" do
   scenario "visiting a group site and looking at the officers" do
     login(:user)
     visit group_path(@group)
+    within('.group_tabs') { click_on I18n.t(:officers) }
 
-    within(".officers.section") do
+    within(".box.officers") do
       page.should have_text "President"
       page.should have_text @user.title
     end
@@ -31,10 +32,11 @@ feature "Officers Management" do
     scenario "visiting the group page and looking at the officers" do
       login(:user)
       visit group_path(@group)
+      within('.group_tabs') { click_on I18n.t(:officers) }
 
-      within(".officers.section") do
+      within(".box.officers") do
         page.should have_text "President"
-        page.should have_no_text "CEO"
+        page.should have_text "CEO"
       end
     end
   end
@@ -42,10 +44,11 @@ feature "Officers Management" do
   scenario "assigning an officer", :js => true do
     login(:admin)
     visit group_path(@group)
+    within('.group_tabs') { click_on I18n.t(:officers) }
     
     @new_user = create(:user)
 
-    within("div.officers.section") do
+    within(".box.officers") do
       page.should have_text "President"
       page.should have_text @user.title
       

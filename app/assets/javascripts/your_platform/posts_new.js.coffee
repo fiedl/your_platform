@@ -7,7 +7,8 @@ $(document).ready ->
 $(document).on 'change keyup paste', '.new_post textarea', ->
   if $('.new_post textarea').val() != ""
     $('.new_post .post_tools').show()
-    $('.box.first h1').text($('.new_post textarea').val().split("\n").first())
+    if $(this).val().split("\n").count() < 3 # for performance reasons
+      $('.box.first h1').text($('.new_post textarea').val().split("\n").first())
   else
     $('.new_post .post_tools').hide()
     $('.box.first h1').text(original_box_title)

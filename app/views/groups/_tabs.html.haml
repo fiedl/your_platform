@@ -1,14 +1,13 @@
 - #locals:
 - active ||= 'posts'
 
-%ul.nav.nav-tabs.group
+%ul.nav.nav-tabs.group.group_tabs
   - if @group.group_of_groups?
     %li{class: active == 'subgroups' ? 'active' : ''}
       %a{href: group_subgroups_path(@group)}= @group.name
-  - if can? :use, :post_tab
+  - unless @group.group_of_groups?
     %li{class: active == 'posts' ? 'active' : ''}
       %a{href: group_posts_path(@group)} Nachrichten
-  - unless @group.group_of_groups?
     %li{class: active == 'profile' ? 'active' : ''}
       %a{href: group_profile_path(@group)} Kontakt & Profil
   %li{class: active == 'events' ? 'active' : ''}

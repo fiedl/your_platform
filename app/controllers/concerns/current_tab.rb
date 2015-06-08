@@ -8,7 +8,7 @@ concern :CurrentTab do
   # considering the current tab the user has used last.
   #
   def current_tab_path(object)
-    if object.kind_of?(Group) and can?(:use, :tab_view)
+    if object.kind_of?(Group)
       case current_tab(object)
       when "subgroups"; group_subgroups_path(object)
       when "posts"; group_posts_path(object)
@@ -16,7 +16,12 @@ concern :CurrentTab do
       when "events"; group_events_path(object)
       when "members"; group_members_path(object)
       when "officers"; group_officers_path(object)
-      when "settings"; group_settings_path(object)
+      when "settings"
+        if can? :change_group_settings, object
+          group_settings_path(object)
+        else
+          group_profile_path(object)
+        end
       else group_profile_path(object)
       end
     else
