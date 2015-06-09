@@ -16,7 +16,7 @@
     
     %p Bitte wenden Sie sich über den blauen Hilfe-Knopf an die Verwaltung, um Hilfestellung bei diesem Problem zu erhalten.
     
-    - if current_role_preview != current_role.to_s
+    - if current_role.to_s.present? && current_role_preview != current_role.to_s
       %h2 Rollen-Vorschau
       %p
         Sie verwenden aktuell die Vorschau als:

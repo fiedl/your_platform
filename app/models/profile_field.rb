@@ -176,7 +176,8 @@ class ProfileField < ActiveRecord::Base
       ProfileFieldTypes::Competence, ProfileFieldTypes::BankAccount,
       ProfileFieldTypes::Description, ProfileFieldTypes::Phone,
       ProfileFieldTypes::NameSurrounding, ProfileFieldTypes::Homepage,
-      ProfileFieldTypes::Date, ProfileFieldTypes::AcademicDegree
+      ProfileFieldTypes::Date, ProfileFieldTypes::AcademicDegree,
+      ProfileFieldTypes::Study
     ]
   end
   

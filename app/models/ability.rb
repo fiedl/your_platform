@@ -310,7 +310,7 @@ class Ability
     end
     
     can :read, Page do |page|
-      page.group.nil? || page.group.members.include?(user)
+      (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
     can [:read, :download], Attachment do |attachment|
       attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
