@@ -150,7 +150,7 @@ class Notification < ActiveRecord::Base
   #
   def self.deliver_for_user(user)
     notifications = self.upcoming_by_user(user)
-    if notifications.count > 0 and user.account and user.beta_tester?
+    if notifications.count > 0 and user.account
       NotificationMailer.notification_email(user, notifications).deliver_now
       notifications.each { |n| n.update_attribute(:sent_at, Time.zone.now) }
       return notifications
