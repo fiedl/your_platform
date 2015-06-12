@@ -160,7 +160,7 @@ class Ability
       can [:create_event, :create_event_for], Group do |group|
         user.in? group.officers_of_self_and_ancestor_groups
       end
-      can [:update, :destroy], Event do |event|
+      can [:update, :destroy, :invite_to], Event do |event|
         event.group && user.in?(event.group.officers_of_self_and_ancestor_groups)
       end
       can :update, Group do |group|
@@ -223,7 +223,7 @@ class Ability
     if not read_only_mode?
       can [:create_post, :create_post_for, :force_post_notification], Group
       can [:create_event, :create_event_for], Group
-      can [:update, :destroy], Event do |event|
+      can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
       end
     end

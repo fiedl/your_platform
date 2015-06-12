@@ -130,6 +130,15 @@ describe Ability do
           
           the_user.should_not be_able_to :destroy, @event
         end
+        he "should be able to invite users to an event" do
+          @event = @group.child_events.create
+          the_user.should be_able_to :invite_to, @event
+        end
+        he { should_not be_able_to :create_event_for, @unrelated_group }
+        he "should not be able to invite users to an event of an unrelated group" do
+          @event = @unrelated_group.child_events.create
+          the_user.should_not be_able_to :invite_to, @event
+        end
       end
     end
     
@@ -220,6 +229,28 @@ describe Ability do
 
       end
     end
+
+    describe "when the user is a global officer" do
+      before do
+        @secretary = Group.everyone.create_officer_group name: 'Secretary'
+        @secretary.add_flag :global_officer
+        @secretary.assign_user user, at: 1.month.ago
+      
+        @any_group = create :group
+      end
+      he { should be_able_to :create_event_for, @any_group }
+    
+      describe "when he is contact person for an event" do
+        before do
+          @event = @any_group.child_events.create
+          @event.contact_people << user
+        end
+      
+        he { should be_able_to :update, @event }
+        he { should be_able_to :invite_to, @event }
+      end
+    end
+
   end
   
   describe "for users without account" do

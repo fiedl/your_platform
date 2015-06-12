@@ -2,7 +2,7 @@ class EventsController < ApplicationController
 
   rescue_from ActiveRecord::RecordNotFound, with: :wait_for_existance
 
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:invite]
   skip_authorize_resource only: [:index, :create, :join_via_get]
 
   # GET /events
@@ -222,7 +222,7 @@ class EventsController < ApplicationController
   #   - event_id
   def invite
     @event = Event.find params[:event_id]
-    authorize! :update, @event
+    authorize! :invite_to, @event
     
     @text = params[:text]
     @recipients = []
