@@ -2,18 +2,20 @@ concern :UserNotifications do
   
   included do
     has_many :notifications, foreign_key: 'recipient_id'
+    
+    after_create { self.update_attribute :notification_policy, :letter_bundle }
   end
   
   # Notification Policy of the user:
   # 
-  #    * :daily           (default)     Deliver the notifications once a day.
+  #    * :daily                         Deliver the notifications once a day.
   #    * :letter_bundle                 Deliver as letter bundle, i.e. when some
   #                                       notifications are collected and nobody
   #                                       contributed for 15 minutes.
   #    * :instantly                     Deliver all notifications without delay.
   #
   def notification_policy
-    super.try(:to_sym) || :daily
+    super.try(:to_sym)
   end
   def notification_policy_possible_settings
     [:daily, :letter_bundle, :instantly]
