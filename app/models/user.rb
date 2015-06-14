@@ -328,6 +328,7 @@ class User < ActiveRecord::Base
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
       UserGroupMembership.create( user: self, group: group ) if group
+      self.add_to_group = nil
     end
     if self.add_to_corporation.present?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
@@ -339,6 +340,7 @@ class User < ActiveRecord::Base
       else
         raise 'corporation not found.'
       end
+      self.add_to_corporation = nil
     end
   end
   private :add_to_group_if_requested

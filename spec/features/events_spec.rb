@@ -301,6 +301,7 @@ feature "Events" do
     end
     
     scenario "editing an event, pt. 3" do
+      @event.id.should be_present
       visit event_path(@event)
       within('tr.publish_on_local_website') do
         find('.best_in_place').click
@@ -313,6 +314,7 @@ feature "Events" do
     end
 
     scenario "inviting group members" do
+      @event.id.should be_present
       visit event_path(@event)
       find('#toggle_invite').click
       page.should have_selector '#invitation_text', visible: true

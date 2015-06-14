@@ -250,7 +250,7 @@ private
   # available to the other server instance. So, try a few times before giving up.
   #
   def wait_for_existance
-    raise 'No id given.' unless params[:id]
+    raise "No id given. Params are: #{params.to_s}" unless params[:id] || params[:event_id]
     counter = 20
     begin
       sleep 0.5
