@@ -140,6 +140,11 @@ class Ability
       can :manage, Group do |group|
         group.admins_of_self_and_ancestors.include? user
       end
+      
+      can :manage, ProfileField do |profile_field|
+        profile_field.profileable.nil? ||  # in order to create profile fields
+          can?(:update, profile_field.profileable)
+      end
     end
   end
   
@@ -214,11 +219,6 @@ class Ability
         attachment.parent.officers_of_self_and_ancestors.include?(user) and
         can?(:read, attachment) and 
         (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
-      end
-      
-      can :manage, ProfileField do |profile_field|
-        profile_field.profileable.nil? ||  # in order to create profile fields
-          can?(:update, profile_field.profileable)
       end
     end
   end

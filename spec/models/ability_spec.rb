@@ -84,6 +84,19 @@ describe Ability do
       end
     end
     
+    context "when the user is a group admin" do
+      before do
+        @group = create :group
+        @group.admins << user
+        time_travel 2.seconds
+      end
+      
+      he "should be able to update its profile fields" do
+        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        the_user.should be_able_to :update, @profile_field
+      end
+    end
+    
     context "when the user is officer of a group" do
       before do
         @group = create :group
@@ -93,6 +106,11 @@ describe Ability do
         @sub_sub_group = @sub_group.child_groups.create(name: "Sub Sub Group")
         @parent_group = @group.parent_groups.create(name: "Parent Group")
         @unrelated_group = create :group
+      end
+      
+      he "should not be able to update its profile fields" do
+        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        the_user.should_not be_able_to :update, @profile_field
       end
     
       describe "(events)" do
