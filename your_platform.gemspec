@@ -41,6 +41,8 @@ Gem::Specification.new do |s|
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
+  s.add_dependency "coffee-rails", '>= 4.1.0'
+  s.add_dependency 'execjs', '>= 2.5.2'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.
@@ -76,7 +78,7 @@ Gem::Specification.new do |s|
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
-  s.add_dependency 'bootstrap-sass', '3.3.3'                                                  # Apache License 2.0
+  s.add_dependency 'bootstrap-sass', '>= 3.3.5'                                                  # Apache License 2.0
   s.add_dependency 'sass-rails', '>= 3.2'
 
   # In Place Editing
