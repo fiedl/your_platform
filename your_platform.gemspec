@@ -31,6 +31,9 @@ Gem::Specification.new do |s|
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "strong_parameters"                                                 # MIT License
   s.add_dependency "responders", "~> 2.0"
+  s.add_dependency "bundler", ">= 1.9.4"
+  s.add_dependency 'web-console', '>= 2.1.3'
+
   
   # JavaScript 
   s.add_dependency "jquery-rails", '>= 3.1.3'
@@ -144,6 +147,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "2.10.0"
   s.add_development_dependency "guard", "1.0.1"
   s.add_development_dependency "guard-rspec", "0.5.5"
-  s.add_development_dependency 'web-console', '>= 2.1.3'
 
 end
