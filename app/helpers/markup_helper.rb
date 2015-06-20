@@ -10,7 +10,7 @@
 module MarkupHelper
   
   def markup(text)
-    markdown replace_quick_link_tags text
+    emojify markdown replace_quick_link_tags mentionify text
   end
   
 end

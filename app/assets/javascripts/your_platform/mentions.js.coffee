@@ -34,3 +34,20 @@ $(document).ready ->
             callback(users)
     }
   }
+  
+  # adding :emoji: to:
+  # - all textareas
+  #
+  $('textarea').atwho {
+    at: ':',
+    searchKey: 'key',
+    displayTpl: "<li>${image_tag} :${key}:</li>",
+    insertTpl: ":${key}:",
+    callbacks: {
+      remoteFilter: (query, callback)->
+        console.log query
+        $.getJSON "/emojis.json", {query: query, limit: 5}, (response)->
+          console.log response
+          callback(response)
+    }
+  }
