@@ -9,7 +9,7 @@
 module QuickLinkHelper
   
   def replace_quick_link_tags(text)
-    text.gsub(/\[\[.*\]\]/) { |query| link_tag_from_search_query(query.gsub('[', '').gsub(']', '')) } if text.present?
+    text.gsub(/\[\[[^\]]*\]\]/) { |query| link_tag_from_search_query(query.gsub('[', '').gsub(']', '')) } if text.present?
   end
   
   private
@@ -22,7 +22,9 @@ module QuickLinkHelper
   end
   
   def link_url_from_search_query(query)
-    Rails.application.routes.url_for controller: :search, action: :lucky_guess, query: query, host: Rails.application.config.action_mailer.default_url_options[:host]
+    options = Rails.application.config.action_mailer.default_url_options
+    options = {only_path: true} if Rails.application.config.action_mailer.default_url_options[:host] == "localhost"
+    Rails.application.routes.url_for({controller: :search, action: :lucky_guess, query: query}.merge(options))
   end
   
   # "foo, bar" 
