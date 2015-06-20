@@ -342,6 +342,7 @@ class Ability
     
     # Users can read post of their groups.
     can :read, Post, group: {id: user.group_ids}
+    can :index_posts, Group, id: user.group_ids
     
     # Comments: 
     # - Users can read comments for all objects they can read anyway.

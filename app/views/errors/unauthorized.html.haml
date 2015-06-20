@@ -16,7 +16,7 @@
     
     %p Bitte wenden Sie sich über den blauen Hilfe-Knopf an die Verwaltung, um Hilfestellung bei diesem Problem zu erhalten.
     
-    - if current_role.to_s.present? && current_role_preview != current_role.to_s
+    - if current_role.to_s.present? && current_role_view != current_role.to_s
       %h2 Rollen-Vorschau
       %p
         Sie verwenden aktuell die Vorschau als:
@@ -30,4 +30,4 @@
         Sie haben die Möglichkeit, diese Zugriffsbeschränkung mit Ihren Administratoren-Rechten zu umgehen.
         %strong Der Vorgang wird dann aber geloggt.
         
-      %p= link_to "Trotzdem zugreifen", polymorphic_path([current_navable_or_navable_for_admins_only_confirmation], admins_only_override: true), class: 'btn btn-danger'
+      %p= link_to "Trotzdem zugreifen", session['return_to_after_login'] + "?admins_only_override=true", class: 'btn btn-danger'

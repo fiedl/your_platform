@@ -34,6 +34,7 @@ describe Ability do
     context "(posts and comments)" do
       context "when the user is a member of a group" do
         before { @group = create(:group); @group.assign_user(user, at: 1.month.ago) }
+        he { should be_able_to :index_posts, @group }
         he { should be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
           before { @post = @group.posts.create }
@@ -48,6 +49,7 @@ describe Ability do
       end
       context "when the user is no member of a group" do
         before { @group = create(:group) }
+        he { should_not be_able_to :index_posts, @group }
         he { should_not be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
           before { @post = @group.posts.create }

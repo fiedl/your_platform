@@ -1,4 +1,8 @@
-%h1.post.post-subject= post.subject
+%h1.post.post-subject
+  - if post == @navable
+    = post.subject
+  - else
+    = link_to post.subject, post
 %div.post
   .media
     .media-left= user_avatar(post.author)

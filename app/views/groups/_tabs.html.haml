@@ -6,8 +6,12 @@
     %li{class: active == 'subgroups' ? 'active' : ''}
       %a{href: group_subgroups_path(@group)}= @group.name
   - unless @group.group_of_groups?
-    %li{class: active == 'posts' ? 'active' : ''}
-      %a{href: group_posts_path(@group)} Nachrichten
+    - # One can see the posts tab under one of these conditions:
+    - # - The user can read all posts of this group.
+    - # - The user can see this particular post (due to an invitation) and, therefore, the posts controller is currently used.
+    - if can?(:index_posts, @group) or params[:controller] == 'posts'
+      %li{class: active == 'posts' ? 'active' : ''}
+        %a{href: group_posts_path(@group)} Nachrichten
     %li{class: active == 'profile' ? 'active' : ''}
       %a{href: group_profile_path(@group)} Kontakt & Profil
   %li{class: active == 'events' ? 'active' : ''}

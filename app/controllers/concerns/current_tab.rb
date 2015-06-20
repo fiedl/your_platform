@@ -11,7 +11,12 @@ concern :CurrentTab do
     if object.kind_of?(Group)
       case current_tab(object)
       when "subgroups"; group_subgroups_path(object)
-      when "posts"; group_posts_path(object)
+      when "posts"
+        if can? :index_posts, object
+          group_posts_path(object)
+        else
+          group_profile_path(object)
+        end
       when "profile"; group_profile_path(object)
       when "events"; group_events_path(object)
       when "members"; group_members_path(object)

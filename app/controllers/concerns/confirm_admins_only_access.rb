@@ -27,6 +27,12 @@ concern :ConfirmAdminsOnlyAccess do
       if current_navable and can?(:read, current_navable) and not current_ability_as_user.can?(:read, current_navable)
         confirm_admins_only_access
       end
+      
+      # TODO: Find a more general solution, here.
+      # This is a quick fix:
+      if params[:controller] == 'posts' and can?(:index_posts, current_navable) and not current_ability_as_user.can?(:index_posts, current_navable)
+        confirm_admins_only_access
+      end
     end
   end
   
