@@ -1,3 +1,5 @@
+original_box_title = ""
+
 $(document).ready ->
   $('.new_post .preview').hide()
   $('.new_post .post_tools').hide()

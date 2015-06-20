@@ -10,7 +10,8 @@ class CommentsController < ApplicationController
     @comment.save!
     
     Notification.create_from_comment(@comment)
-    
+    Mention.create_multiple_and_notify_instantly(current_user, @comment, @comment.text)
+        
     redirect_to :back, change: 'comments'
   end
   

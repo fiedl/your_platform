@@ -9,7 +9,7 @@
         .preview
           .post-header= t(:preview_post)
           .post-body
-        = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control'
+        = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control', data: {user_titles_path: autocomplete_title_users_path}
         .post_tools
           .what_will_happen
             - if can? :force_post_notification, @group

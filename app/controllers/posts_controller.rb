@@ -70,6 +70,8 @@ class PostsController < ApplicationController
       flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
     end
     
+    Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text)
+    
     respond_to do |format|
       format.html do
         redirect_to group_posts_path(@group), change: 'posts'
