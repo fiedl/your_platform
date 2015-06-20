@@ -77,6 +77,29 @@ describe Notification do
     its('first.sent_at') { should == nil }
   end
   
+  describe ".create_from_mention" do
+    before do
+      @post.text = "I'm inviting @[[#{@member2.title}]] to this conversation."
+      @post.save
+      @mention = Mention.create
+      @mention.who = @member1
+      @mention.whom = @member2
+      @mention.reference = @post
+      @mention.save
+    end
+    subject { Notification.create_from_mention(@mention) }
+    
+    it { should be_kind_of Array }
+    its(:count) { should == 1 }
+    its('first.recipient') { should == @member2 }
+    its('first.author') { should == @member1 }
+    its('first.reference') { should == @post }
+    its('first.message') { should include @member1.title }
+    its('first.message') { should include @post.title }
+    its('first.text') { should == @post.text }
+    its('first.sent_at') { should == nil }
+  end
+  
   describe ".upcoming" do
     before { @notifications = Notification.create_from_post(@post) }
     subject { Notification.upcoming }

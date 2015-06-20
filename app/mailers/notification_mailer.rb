@@ -1,6 +1,10 @@
 class NotificationMailer < BaseMailer
   helper AvatarHelper
   helper MarkdownHelper
+  helper MarkupHelper
+  helper EmojiHelper
+  helper QuickLinkHelper
+  helper MentionsHelper
   
   def notification_email(recipient, notifications)
     locale = recipient.locale

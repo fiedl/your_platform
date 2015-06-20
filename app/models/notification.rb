@@ -85,6 +85,25 @@ class Notification < ActiveRecord::Base
     end
   end
   
+  # Creates notifications for users that are mentioned.
+  #
+  def self.create_from_mention(mention, options = {})
+    recipients = [mention.whom]
+    recipients.collect do |recipient|
+      message = I18n.t(:has_mentioned_you_on, user_title: mention.who.title, reference_title: mention.reference_title)
+      self.create(
+        recipient_id:   recipient.id,
+        author_id:      mention.who.id,
+        reference_url:  mention.reference.url,
+        reference_type: mention.reference.class.name,
+        reference_id:   mention.reference.id,
+        message:        message,
+        text:           mention.reference.text,
+        sent_at:        options[:sent_at]  # when the notification is sent via email
+      )
+    end
+  end
+  
   
   # Find all notifications that are due to be sent via email.
   # 

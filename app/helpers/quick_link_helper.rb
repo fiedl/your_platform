@@ -22,7 +22,7 @@ module QuickLinkHelper
   end
   
   def link_url_from_search_query(query)
-    Rails.application.routes.url_for({controller: :search, action: :lucky_guess, query: query, only_path: true})
+    Rails.application.routes.url_for controller: :search, action: :lucky_guess, query: query, host: Rails.application.config.action_mailer.default_url_options[:host]
   end
   
   # "foo, bar" 
