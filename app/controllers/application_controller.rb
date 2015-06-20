@@ -13,6 +13,7 @@ class ApplicationController < ActionController::Base
   include CurrentLocale
   include CurrentAbility
   include CurrentRole
+  include CurrentAccess
 
   include RedirectWwwSubdomain
   include CheckAuthorization

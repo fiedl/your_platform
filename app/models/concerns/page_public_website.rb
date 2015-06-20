@@ -13,6 +13,10 @@ concern :PagePublicWebsite do
     scope :public_website, -> { where(id: public_website_page_ids) }
     
   end
+  
+  def public?
+    self.id.in? self.class.public_website_page_ids
+  end
 
   class_methods do
     

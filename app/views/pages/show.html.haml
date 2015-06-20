@@ -1,6 +1,3 @@
-- if @page.group.present? && @page.group != Group.everyone
-  = render partial: 'shared/authorization_info', locals: {subject: 'page', page: @page}
-
 %div.col-md-12
   = render @page
 

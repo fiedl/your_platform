@@ -11,6 +11,8 @@ class ProfileFieldsController < ApplicationController
     set_current_title "#{@profileable.title}: #{t(:profile)}"
     set_current_navable @profileable
     set_current_activity :looks_at_profile, @profileable
+    set_current_access :signed_in
+    set_current_access_text :all_signed_in_users_can_read_this_group_profile
     
     cookies[:group_tab] = "profile"
   end

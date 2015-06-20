@@ -17,7 +17,9 @@ class UsersController < ApplicationController
   def show
     set_current_title @user.title
     set_current_navable @user
-
+    set_current_access :signed_in
+    set_current_access_text :all_signed_in_users_can_read_this_user_profile
+    
     if current_user == @user
       set_current_activity :looks_at_own_profile, @user
     else

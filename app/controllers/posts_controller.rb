@@ -8,6 +8,8 @@ class PostsController < ApplicationController
     @group = Group.find(params[:group_id]) if params[:group_id].present?
     @posts = @group.posts.order('sent_at DESC') if @group
 
+    authorize! :index_posts, @group
+
     @new_post = Post.new
     @new_post.group = @group
     @new_post.author = current_user
@@ -15,7 +17,9 @@ class PostsController < ApplicationController
     set_current_title "#{t(:posts)} - #{@group.name}"
     set_current_navable @group
     set_current_activity :looks_at_posts, @group
-    
+    set_current_access :group
+    set_current_access_text I18n.t(:all_members_of_group_name_can_read_these_posts, group_name: @group.name)
+        
     cookies[:group_tab] = "posts"
   end
 
@@ -28,6 +32,8 @@ class PostsController < ApplicationController
     set_current_title @post.subject
     set_current_navable @group
     set_current_activity :looks_at_posts, @group
+    set_current_access :group
+    set_current_access_text I18n.t(:members_of_group_name_and_mentioned_users_can_read_and_comment_this_post, group_name: @group.name)
   end
   
   def new

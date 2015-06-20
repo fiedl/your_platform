@@ -13,6 +13,8 @@ class OfficersController < ApplicationController
     set_current_navable @structureable
     set_current_title "#{@structureable.title}: #{t(:all_officers)}"
     set_current_activity :looks_at_officers, @group
+    set_current_access :signed_in
+    set_current_access_text :all_signed_in_users_can_read_this_officer_list
     
     cookies[:group_tab] = "officers"
   end

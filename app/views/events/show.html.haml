@@ -10,11 +10,7 @@
       Kalender-Export
   = render partial: 'events/event_details'
 
-- if can? :update, @event
-  = render partial: 'shared/authorization_info', locals: {subject: 'event', icon: 'eye-open'}
-
 = render partial: 'events/pictures'
-        
 
 %h1=t :attendees
 %div#attendees

@@ -6,7 +6,9 @@ class RootController < ApplicationController
   def index
     set_current_navable @page
     set_current_activity :looks_at_the_start_page, @page
-    
+    set_current_access :user
+    set_current_access_text :the_content_of_the_start_page_is_personalized
+        
     # @notifications = current_user.notifications.order('created_at desc').limit(15)
     @announcement_page = Page.find_or_create_by_flag :site_announcement
     @blog_entries = @news_pages = current_user.news_pages.limit(15).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page, @announcement_page]

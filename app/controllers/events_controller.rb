@@ -67,6 +67,8 @@ class EventsController < ApplicationController
           if @group
             cookies[:group_tab] = "events"
             set_current_activity :is_looking_at_the_group_calendar, @group
+            set_current_access :signed_in
+            set_current_access_text :all_signed_in_users_can_read_these_group_events
           else
             set_current_activity :is_looking_at_events
           end
@@ -86,6 +88,8 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html do
         set_current_activity :is_looking_at_the_event, @event
+        set_current_access :signed_in
+        set_current_access_text :all_signed_in_users_can_read_this_event_and_can_join
         # show.html.erb
       end
       format.json { render json: @event }

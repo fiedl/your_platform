@@ -7,6 +7,9 @@ class GroupMembersController < ApplicationController
     set_current_navable @group
     set_current_title "#{@group.name}: #{t(:members)}"
     set_current_activity :looks_at_member_lists, @group
+    set_current_access :signed_in
+    set_current_access_text :all_signed_in_users_can_read_this_member_list
+    
     cookies[:group_tab] = "members"
   end
   

@@ -105,6 +105,10 @@
       %nav#breadcrumb.navbar
         .container-fluid
           = breadcrumb_ul
+          
+          %span#access_indicator
+            = access_indicator if current_user
+          
     
     .container-fluid
       .row
