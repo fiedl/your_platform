@@ -80,7 +80,8 @@ Gem::Specification.new do |s|
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
-  s.add_dependency 'bootstrap-sass', '>= 3.3.5'                                                  # Apache License 2.0
+  # fix bootstrap to 3.3.3 due to icon issue:
+  s.add_dependency 'bootstrap-sass', '= 3.3.3'                                                  # Apache License 2.0
   s.add_dependency 'sass-rails', '>= 3.2'
 
   # In Place Editing
