@@ -3,11 +3,17 @@ class Post < ActiveRecord::Base
   
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+
   has_many :comments, as: :commentable
-  
-  
+  has_many :mentions, as: :reference
+  has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
+    
   def title
     subject
+  end
+  
+  def mentioned_users
+    directly_mentioned_users + comments.collect { |comment| comment.mentioned_users }.flatten
   end
 
   # This allows to set the author either as email or as email string.

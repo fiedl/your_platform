@@ -240,7 +240,7 @@ describe UserGroupMembershipMixins::ValidityRange do
     end
   end
   
-  describe "(validity range constraints)", :focus do
+  describe "(validity range constraints)" do
     #
     #                     @time                   @now
     # ====================================================> time

@@ -12,7 +12,7 @@ feature 'Group Member List Export' do
     login :admin
   end
   
-  scenario 'exporting a birthday list as csv', :focus do
+  scenario 'exporting a birthday list as csv' do
     visit group_path @group, list: 'birthday_list', format: 'csv'
     page.should have_text @group.members.first.last_name
   end 

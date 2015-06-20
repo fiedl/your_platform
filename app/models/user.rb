@@ -31,6 +31,8 @@ class User < ActiveRecord::Base
 
   has_many                  :bookmarks
   has_many                  :last_seen_activities
+  
+  has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
   is_navable
 
