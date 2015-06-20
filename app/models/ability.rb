@@ -349,6 +349,11 @@ class Ability
     can :read, Comment do |comment|
       can? :read, comment.commentable
     end
+    
+    # Posts and Comments can be read when the users has been mentioned:
+    can :read, [Post, Comment] do |post_or_comment|
+      post_or_comment.mentioned_users.include? user
+    end
   end
   
   def rights_for_everyone

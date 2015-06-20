@@ -61,6 +61,33 @@ describe Ability do
       end
     end
     
+    context "(mentions)" do
+      context "when mentioned in a comment" do
+        before do
+          @group = create :group
+          @post = @group.posts.create
+          @comment = @post.comments.create text: "This comment mentions @[[#{user.title}]] and, thereby, invites him to this post."
+          Mention.create_multiple(create(:user), @comment, @comment.text)
+        end
+        specify { @group.members.should_not include user }
+        he { should_not be_able_to :create_post_for, @group }
+        he { should be_able_to :read, @post }
+        he { should be_able_to :read, @comment }
+        he { should be_able_to :create_comment_for, @post }
+      end
+      context "when mentioned in a post" do
+        before do
+          @group = create :group
+          @post = @group.posts.create text: "This post mentions @[[#{user.title}]] and, thereby, invites him to this post."
+          Mention.create_multiple(create(:user), @post, @post.text)
+        end
+        specify { @group.members.should_not include user }
+        he { should_not be_able_to :create_post_for, @group }
+        he { should be_able_to :read, @post }
+        he { should be_able_to :create_comment_for, @post }
+      end
+    end
+    
     context "when the user is global admin" do
       before { user.global_admin = true }
       
