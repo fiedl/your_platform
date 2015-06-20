@@ -29,7 +29,7 @@ $(document).ready ->
             user_titles = response  # ["John Doe", ...]
             users = []
             for user_title in user_titles
-              unless user_title.includes("✟") # only mention alive users
+              unless user_title.indexOf("✟") != -1 # only mention alive users
                 users.push {title: user_title, name: user_title}
             callback(users)
     }
@@ -45,9 +45,7 @@ $(document).ready ->
     insertTpl: ":${key}:",
     callbacks: {
       remoteFilter: (query, callback)->
-        console.log query
         $.getJSON "/emojis.json", {query: query, limit: 5}, (response)->
-          console.log response
           callback(response)
     }
   }
