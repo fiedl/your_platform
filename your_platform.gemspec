@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
   s.add_dependency "coffee-rails", '>= 4.1.0'
   s.add_dependency 'execjs', '>= 2.5.2'
+  s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.
@@ -75,6 +76,7 @@ Gem::Specification.new do |s|
   # haml template language, http://haml.info
   s.add_dependency 'haml'                                                              # MIT License
   s.add_dependency 'redcarpet', '>= 3.2.3'  # for Markdown                             # MIT License
+  s.add_dependency 'gemoji', '>= 2.1.0'
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'

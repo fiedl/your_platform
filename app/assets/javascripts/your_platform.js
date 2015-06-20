@@ -23,6 +23,7 @@
 //= require i18n
 //= require i18n/translations
 //= require pgwbrowser
+//= require jquery.atwho
 //= require_tree ./your_platform
 //
 //= require turboboost

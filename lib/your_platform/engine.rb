@@ -14,6 +14,7 @@ require 'jquery-ui-rails'
 require 'autosize/rails'
 require 'sugar-rails'
 require 'i18n-js'
+require 'jquery-atwho-rails'
 
 # Data Structures
 require 'acts-as-dag'
@@ -38,6 +39,7 @@ require 'rails-settings-cached'
 # Template Engines
 require 'haml'
 require 'redcarpet'
+require 'gemoji'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'

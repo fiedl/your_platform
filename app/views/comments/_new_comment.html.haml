@@ -11,7 +11,7 @@
       %small.comment-header.comment-tools
         .comment-author= link_to current_user.title, current_user
       .comment-text
-        = form.text_area :text, placeholder: t(:enter_new_comment_here), class: 'form-control'
+        = form.text_area :text, placeholder: t(:enter_new_comment_here), class: 'form-control', data: {user_titles_path: autocomplete_title_users_path}
       .comment-tools
         = form.submit t(:submit_comment), class: 'submit_comment btn btn-primary btn-sm right'
         
