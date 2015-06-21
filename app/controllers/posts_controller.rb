@@ -4,6 +4,17 @@ class PostsController < ApplicationController
   skip_authorize_resource only: [:new, :create, :preview]
   skip_authorization_check only: [:preview]
   
+  # This will skip the cross-site-forgery protection for POST /posts.json,
+  # since incoming emails are not sent via a form in this web app,
+  # nor is the incoming email signed in.
+  #
+  # This is copied from:
+  # https://github.com/ivaldi/brimir: tickets_controller.rb
+  #
+  # TODO: Is there a better way to do this?
+  #
+  skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
+  
   def index
     @group = Group.find(params[:group_id]) if params[:group_id].present?
     @posts = @group.posts.order('sent_at DESC') if @group

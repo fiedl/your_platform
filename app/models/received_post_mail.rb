@@ -22,7 +22,7 @@ class ReceivedPostMail < ReceivedMail
   
   def store_as_posts
     recipient_groups.collect do |group|
-      if group.posts.where(message_id: self.message_id).count == 0
+      if (group.posts.where(message_id: self.message_id).count == 0) || Rails.env.development?
         post = Post.new
         if self.sender_by_email
           post.author_user_id = self.sender_user.id
@@ -40,6 +40,29 @@ class ReceivedPostMail < ReceivedMail
         post.content_type = self.content_type
         post.message_id = self.message_id
         post.save
+        if self.has_attachments?
+
+          # I've copied this from https://github.com/ivaldi/brimir: ticket_mailer.rb
+          self.attachments.each do |attachment|
+            file = StringIO.new(attachment.decoded)
+            # add needed fields for paperclip
+            file.class.class_eval { attr_accessor :original_filename, :content_type }
+            file.original_filename = attachment.filename
+            file.content_type = attachment.mime_type 
+            post_attachment = post.attachments.create(file: file)
+            post_attachment.save # FIXME do we need this because of paperclip?
+          end
+
+          # We need to replace the inline-image sources in the message text:
+          attachment_counter = 0
+          post.text = post.text.gsub(/(<img [^>]* src=")(cid[^>]*localdomain)([^>]*>)/) do
+            attachment_counter += 1
+            attachment = post.attachments.find_by_type("image")[attachment_counter - 1]
+            image_url = Rails.application.routes.url_helpers.root_url(Rails.application.config.action_mailer.default_url_options) + attachment.file.url
+            "#{$1}#{image_url}#{$3}" # "<img src=...>" from regex
+          end
+          post.save
+        end
         post
       end
     end

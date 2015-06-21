@@ -106,6 +106,13 @@ class ReceivedMail
     return @content_type
   end
   
+  def attachments
+    @email.attachments
+  end
+  def has_attachments?
+    @email.has_attachments?
+  end
+  
   private
   
   def encode(string)
