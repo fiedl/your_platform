@@ -55,11 +55,11 @@ class ReceivedPostMail < ReceivedMail
 
           # We need to replace the inline-image sources in the message text:
           attachment_counter = 0
-          post.text = post.text.gsub(/(<img [^>]* src=")(cid[^>]*localdomain)([^>]*>)/) do
+          post.text = post.text.gsub(/(<img [^>]* src=)("cid:[^>"]*")([^>]*>)/) do
             attachment_counter += 1
             attachment = post.attachments.find_by_type("image")[attachment_counter - 1]
             image_url = Rails.application.routes.url_helpers.root_url(Rails.application.config.action_mailer.default_url_options) + attachment.file.url
-            "#{$1}#{image_url}#{$3}" # "<img src=...>" from regex
+            "#{$1}\"#{image_url}\"#{$3}" # "<img src=...>" from regex
           end
           post.save
         end
