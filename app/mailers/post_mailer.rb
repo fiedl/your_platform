@@ -23,13 +23,18 @@ class PostMailer < BaseMailer
     # is shown in the `to` field, but the email is really sent to the
     # individual group members (`smtp_envelope_to`).
     # 
+    # Attention! The `to` fields may be set to a name plus email address
+    # like "John Doe <doe@example.com>", but the `smtp_envelope_to` fields have
+    # to be valid email addresses and nothing more, i.e. "doe@example.com".
+    #
     # See also: http://stackoverflow.com/a/15851602/2066546
     #
-    @to_field = @group.email || to_emails
-    @smtp_envelope_to_field = recipients.collect { |user| "#{user.title} <#{user.email}>" }
+    @to_field = [@group.email] || to_emails
+    @smtp_envelope_to_field = recipients.collect { |user| user.email }
     
     message = mail(to: @to_field, from: sender.email, subject: subject)
     message.smtp_envelope_to = @smtp_envelope_to_field
+    
     return message
   end
   
