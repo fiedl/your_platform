@@ -25,7 +25,7 @@ module IconHelper
     # This helper is defined in:
     # https://github.com/bokmann/font-awesome-rails
     
-    fa_icon icon_key
+    fa_icon icon_key if defined?(fa_icon)  # it's not defined in mailers.
   end
   
   def large_awesome_icon(icon_key)

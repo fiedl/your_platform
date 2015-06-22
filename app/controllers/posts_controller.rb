@@ -62,6 +62,7 @@ class PostsController < ApplicationController
 
     @text = params[:text] || params[:post][:text]
     @subject = params[:subject] || params[:post][:text].split("\n").first
+    @attachments_attributes = params[:attachments_attributes] || params[:post][:attachments_attributes]
     
     if params[:recipient] == 'me'
       @recipients = [current_user]
@@ -75,7 +76,7 @@ class PostsController < ApplicationController
       end
     end
     
-    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
+    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
     @post.save! unless params[:recipient] == 'me'
   
     if params[:notification] == "instantly"

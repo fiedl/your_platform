@@ -5,6 +5,8 @@ class Post < ActiveRecord::Base
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
   
   has_many :attachments, as: :parent
+  accepts_nested_attributes_for :attachments
+  attr_accessible :attachments_attributes
 
   has_many :comments, as: :commentable
   has_many :mentions, as: :reference

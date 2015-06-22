@@ -1,6 +1,6 @@
 %h1= "#{t(:new_post_to)} #{@group.name}"
 %div.new_post.post
-  = form_for(@new_post, turboboost: true) do |form|
+  = form_for(@new_post, turboboost: true, html: {multipart: true}) do |form|
     = form.hidden_field :group_id
     = form.hidden_field :author_user_id
     .media
@@ -11,6 +11,12 @@
           .post-body
         = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control', data: {user_titles_path: autocomplete_title_users_path}
         .post_tools
+          .post_attachment
+            = form.fields_for :attachments, Attachment.new do |builder|
+              %fieldset
+                -#= builder.hidden_field :parent_type, value: 'Post'
+                -#= builder.hidden_field :parent_id, value: 'Post'
+                = builder.file_field :file
           .what_will_happen
             - if can? :force_post_notification, @group
               %select.notification{name: 'notification'}
