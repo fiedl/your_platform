@@ -355,6 +355,11 @@ class Ability
     can :read, [Post, Comment] do |post_or_comment|
       post_or_comment.mentioned_users.include? user
     end
+    
+    # Post attachments can be read if the post can be read.
+    can [:read, :download], Attachment do |attachment|
+      attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
+    end
   end
   
   def rights_for_everyone
