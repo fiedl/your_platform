@@ -50,5 +50,9 @@ class AppVersion
     url_options = Rails.application.config.action_mailer.default_url_options
     "#{url_options[:protocol]}://#{url_options[:host]}:#{url_options[:port]}"
   end
+  
+  def self.email_domain
+    Page.find_root.title if Page.find_root.title.count(".") == 1 and Page.find_root.title.count(" ") == 0
+  end
 
 end

@@ -137,10 +137,20 @@ class PostsController < ApplicationController
   def create_via_email
     authorize! :create, :post_via_email
     if params[:message]
-      @posts = ReceivedPostMail.new(params[:message]).store_as_posts
-      @posts.each { |post| post.send_as_email_to_recipients }
+      if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
+        # Then this responds to a conversation and should not create a new post but a comment instead.
+        # Address example: user-aeng9iLei8lahso9shohfu0vaeth4oom2kooloi2iSh7Hahr.post-345.create-comment.plattform@example.com
+        #
+        @comment = ReceivedCommentMail.new(params[:message]).store_as_comment
+      else
+        # This is the regular case: Creating posts from an email ("group mail feature").
+        # Address exmaple: my-group@example.com
+        #
+        @posts = ReceivedPostMail.new(params[:message]).store_as_posts
+        @posts.each { |post| post.send_as_email_to_recipients }
+      end
     end
-    render json: (@posts || [])
+    render json: (@posts || [@comment.commentable] || [])
   end
   
 end

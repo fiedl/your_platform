@@ -58,7 +58,10 @@ class ReceivedMail
       end
     end
   end
-  
+  def content_without_quotes
+    content.gsub(/<blockquote.*<\/blockquote>/, "")
+  end
+    
   def subject
     if @email.charset
       encode(@email.subject.to_s.force_encoding(@email.charset))
@@ -79,6 +82,9 @@ class ReceivedMail
   def sender
     sender_by_email || sender_by_name
   end
+  def sender_user
+    sender if sender.kind_of?(User)
+  end
   def sender_by_email
     ProfileFieldTypes::Email.where(value: sender_email).first.try(:profileable)
   end
@@ -88,6 +94,9 @@ class ReceivedMail
   
   def recipient_emails
     @email.to
+  end
+  def recipient_email
+    recipient_emails.first
   end
   def recipients
     recipient_emails.collect do |email|

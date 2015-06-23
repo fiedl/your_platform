@@ -32,7 +32,10 @@ class PostMailer < BaseMailer
     @to_field = [@group.email] || to_emails
     @smtp_envelope_to_field = recipients.collect { |user| user.email }
     
-    message = mail(to: @to_field, from: sender.email, subject: subject)
+    message = mail(
+      to: @to_field, from: sender.email, subject: subject,
+      reply_to: ReceivedCommentMail.generate_address(recipients.first, post)
+    )
     message.smtp_envelope_to = @smtp_envelope_to_field
     
     return message

@@ -12,10 +12,6 @@
 #
 class ReceivedPostMail < ReceivedMail
   
-  def sender_user
-    sender if sender.kind_of?(User)
-  end
-  
   def recipient_groups
     recipients.select { |recipient| recipient.kind_of? Group }
   end
