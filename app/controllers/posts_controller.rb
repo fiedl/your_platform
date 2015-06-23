@@ -62,7 +62,7 @@ class PostsController < ApplicationController
 
     @text = params[:text] || params[:post][:text]
     @subject = params[:subject] || params[:post][:text].split("\n").first
-    @attachments_attributes = params[:attachments_attributes] || params[:post][:attachments_attributes]
+    @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
     
     if params[:recipient] == 'me'
       @recipients = [current_user]
