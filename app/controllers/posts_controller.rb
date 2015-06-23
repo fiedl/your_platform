@@ -142,6 +142,7 @@ class PostsController < ApplicationController
         # Address example: user-aeng9iLei8lahso9shohfu0vaeth4oom2kooloi2iSh7Hahr.post-345.create-comment.plattform@example.com
         #
         @comment = ReceivedCommentMail.new(params[:message]).store_as_comment_if_authorized
+        @posts = [@comment.commentable]
       else
         # This is the regular case: Creating posts from an email ("group mail feature").
         # Address exmaple: my-group@example.com
@@ -150,7 +151,7 @@ class PostsController < ApplicationController
         @posts.each { |post| post.send_as_email_to_recipients }
       end
     end
-    render json: (@posts || [@comment.commentable] || [])
+    render json: (@posts || [])
   end
   
 end

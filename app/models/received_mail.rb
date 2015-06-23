@@ -59,7 +59,13 @@ class ReceivedMail
     end
   end
   def content_without_quotes
-    content.gsub(/<blockquote.*<\/blockquote>/m, "").gsub(/Am [0-9].*schrieb.*/m, "").gsub(/----.*/m, "")
+    content
+      .gsub(/<style.*<\/style>/im, "")
+      .gsub(/<head.*<\/head>/im, "")
+      .gsub(/<blockquote.*<\/blockquote>/im, "")
+      .gsub(/Am [0-9].*schrieb.*/im, "")
+      .gsub(/On [0-9].*wrote:.*/im, "")
+      .gsub(/----.*/m, "")
   end
     
   def subject
