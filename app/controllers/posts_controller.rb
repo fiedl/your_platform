@@ -51,7 +51,14 @@ class PostsController < ApplicationController
     @group = Group.find params[:group_id] if params[:group_id].present?
     authorize! :create_post_for, @group
     
+    @new_post = Post.new
+    @new_post.group = @group
+    @new_post.author = current_user
+        
     set_current_navable @group
+    set_current_activity :writes_a_message_to_group, @group
+    set_current_access :group
+    set_current_access_text I18n.t(:members_of_group_and_global_officers_can_write_posts, group_name: @group.name)
   end
   
   def create

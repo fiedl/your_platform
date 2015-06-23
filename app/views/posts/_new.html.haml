@@ -14,8 +14,6 @@
           .post_attachment
             = form.fields_for :attachments, Attachment.new do |builder|
               %fieldset
-                -#= builder.hidden_field :parent_type, value: 'Post'
-                -#= builder.hidden_field :parent_id, value: 'Post'
                 = builder.file_field :file
           .what_will_happen
             - if can? :force_post_notification, @group
