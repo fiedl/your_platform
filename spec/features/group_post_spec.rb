@@ -64,6 +64,8 @@ feature "Group Posts" do
       fill_in :message_text, with: @random_message
       find('#confirm_message').click
       
+      page.should have_text 'Nachricht wurde an 2 Empfänger versandt.'
+      
       email_text = ''
       Timeout::timeout(20) do
         loop do

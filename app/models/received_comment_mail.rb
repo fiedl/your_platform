@@ -35,6 +35,10 @@ class ReceivedCommentMail < ReceivedMail
   def comment_text
     ActionController::Base.helpers.strip_tags(content_without_quotes).strip
   end
+  
+  def store_as_comment_if_authorized
+    store_as_comment if Ability.new(user).can? :create_comment_for, post
+  end
 
   def store_as_comment
     comment = post.comments.build

@@ -31,10 +31,11 @@ class PostMailer < BaseMailer
     #
     @to_field = [@group.email] || to_emails
     @smtp_envelope_to_field = recipients.collect { |user| user.email }
-    
+    @reply_to = ReceivedCommentMail.generate_address(recipients.first, post) if post.try(:id)
+
     message = mail(
       to: @to_field, from: sender.email, subject: subject,
-      reply_to: ReceivedCommentMail.generate_address(recipients.first, post)
+      reply_to: @reply_to
     )
     message.smtp_envelope_to = @smtp_envelope_to_field
     

@@ -52,7 +52,11 @@ class AppVersion
   end
   
   def self.email_domain
-    Page.find_root.title if Page.find_root.title.count(".") == 1 and Page.find_root.title.count(" ") == 0
+    if Page.find_root.title.count(".") == 1 and Page.find_root.title.count(" ") == 0
+      Page.find_root.title
+    elsif Rails.env.test?
+      "example.com"
+    end
   end
 
 end
