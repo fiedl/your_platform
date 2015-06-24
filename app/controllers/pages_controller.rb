@@ -24,7 +24,7 @@ class PagesController < ApplicationController
         return
       end
 
-      @blog_entries = @page.blog_entries.limit(10)
+      @blog_entries = @page.blog_entries.for_display.limit(10)
       @page = @page.becomes(Page)  # rather than BlogPost etc.
       
       set_current_title @page.title
