@@ -64,26 +64,26 @@ class Event < ActiveRecord::Base
   # ==========================================================================================
   
   def find_contact_people_group
-    cached { find_special_group :contact_people }
+    find_special_group :contact_people
   end
   def create_contact_people_group
     create_special_group :contact_people
   end
   def contact_people_group
-    find_contact_people_group || create_contact_people_group
+    cached { find_contact_people_group || create_contact_people_group }
   end
   def contact_people
     contact_people_group.members
   end
   
   def find_attendees_group
-    cached { find_special_group :attendees }
+    find_special_group :attendees
   end
   def create_attendees_group
     create_special_group :attendees
   end
   def attendees_group
-    find_attendees_group || create_attendees_group
+    cached { find_attendees_group || create_attendees_group }
   end
   def attendees
     attendees_group.members
