@@ -11,6 +11,8 @@ class Post < ActiveRecord::Base
   has_many :comments, as: :commentable
   has_many :mentions, as: :reference
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
+  
+  has_many :notifications, as: :reference
     
   def title
     subject
@@ -18,6 +20,17 @@ class Post < ActiveRecord::Base
   
   def mentioned_users
     directly_mentioned_users + comments.collect { |comment| comment.mentioned_users }.flatten
+  end
+  
+  # This determines if the user has not read any part of this conversation,
+  # which can be used to highlight the post in a collection.
+  #
+  # The post is considered unread if either the notifications for the post
+  # or any notification for a comment on this post are unread.
+  #
+  def unread_by?(user)
+    self.notifications.where(recipient_id: user.id, read_at: nil).count > 0 or
+    user.notifications.unread.where(reference_type: 'Comment', reference_id: self.comment_ids).count > 0
   end
 
   # This allows to set the author either as email or as email string.

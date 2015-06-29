@@ -1,12 +1,40 @@
-%div.col-xs-12.col-md-4.col-md-push-8.start_page_elements
-  - if (@announcement_page.content && @announcement_page.content.length > 5) or can?(:update, @announcement_page)
-    = render @announcement_page
-  
-  = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
-  = render partial: 'root/start_page_elements'
-  = render @page
+-# %div.col-xs-12.col-md-4.col-md-push-8.start_page_elements
+-#   - if (@announcement_page.content && @announcement_page.content.length > 5) or can?(:update, @announcement_page)
+-#     = render @announcement_page
+-#   
+-#   = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+-#   = render partial: 'root/start_page_elements'
+-#   = render @page
+-# 
+-# %div.col-xs-12.col-md-8.col-md-pull-4
+-#   - @objects.each do |object|
+-#     - if object.class.base_class.name.in? ['Page', 'Post']
+-#       = render object
 
-%div.col-xs-12.col-md-8.col-md-pull-4
-  - @objects.each do |object|
-    - if object.class.base_class.name.in? ['Page', 'Post']
-      = render object
+- # We render the vertical nav within this view to save some space.
+- # Therefore, deactivate the vertical nav in the layout.
+- @hide_vertical_nav = true
+
+.row
+  .col-md-3.hidden-sm
+    = vertical_nav
+    .row= render partial: 'last_seen_activities/index'
+  .col-md-6
+    = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+    = render @page
+    = render partial: 'root/what_is_new'
+  .col-md-3
+    - if (@announcement_page.content && @announcement_page.content.length > 5) or can?(:update, @announcement_page)
+      = render @announcement_page
+    = render partial: 'root/start_page_elements'
+
+
+.row.filter_news
+  = form_tag(news_path, method: 'get', remote: true) do
+    = text_field_tag :query, "", placeholder: 'Neuigkeiten filtern', class: 'form-control input-lg right filter_news', id: 'filter_news_query', autocomplete: 'off'
+
+.row.insert_loaded_content_here
+
+.row.scroll_to_load
+  = render 'root/scroll_to_load'
+

@@ -3,6 +3,7 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
 
   root :to => 'root#index'
+  get :news, to: 'news#index'
 
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'

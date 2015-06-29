@@ -1,0 +1,13 @@
+%h1.event
+  - if @event && current_navable == @event
+    = best_in_place_if can?(:update, event), event, :name
+  - else
+    = link_to event.title, event
+%div
+  %span.ics_export_buttons
+    %a.btn.btn-default#ics_export.has_tooltip{href: event_path(id: event.id, format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+      = icon :calendar
+      Kalender-Export
+  = render partial: 'events/event_details', locals: {event: event}
+
+= render partial: 'events/pictures', locals: {event: event}

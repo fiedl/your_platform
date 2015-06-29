@@ -25,7 +25,7 @@ module VerticalNavHelper
   end
   
   def show_vertical_nav?
-    Rails.cache.fetch([@navable, "show_vertical_nav?"]) do
+    not @hide_vertical_nav && Rails.cache.fetch([@navable, "show_vertical_nav?"]) do
       @navable.present? && (@navable != Page.find_root) && (@navable.children.count + @navable.ancestors.count > 1)
     end
   end

@@ -11,18 +11,7 @@ class RootController < ApplicationController
         
     # @notifications = current_user.notifications.order('created_at desc').limit(15)
     @announcement_page = Page.find_or_create_by_flag :site_announcement
-    @blog_entries = @news_pages = current_user.news_pages.limit(15).select { |page| can?(:read, page) and (page.attachments.count > 0 or (page.content && page.content.length > 5)) } - [@page, @announcement_page]
-    @posts = current_user.posts_for_me.order('created_at desc').limit(10)
-    @posts_by_mentions = current_user.mentions.order('created_at desc').limit(10).collect do |mention|
-      if mention.reference.kind_of? Post
-        mention.reference
-      elsif mention.reference.kind_of?(Comment) and mention.reference.commentable.kind_of?(Post)
-        mention.reference.commentable
-      end
-    end
-            
-    #@objects = (@notifications.map(&:reference) + @blog_entries).sort_by { |obj| obj.updated_at }.reverse
-    @objects = (@posts + @blog_entries + @posts_by_mentions).uniq.sort_by { |obj| obj.updated_at }.reverse
+    @hide_attachment_drop_fields = true
   end
   
   

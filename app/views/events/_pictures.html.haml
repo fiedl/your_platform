@@ -1,5 +1,7 @@
+- event ||= @event
+
 #attachments.images
-  - if @event.attachments.find_by_type("image").count > 0
-    = render partial: 'attachments/pictures', locals: {attachments: @event.attachments.find_by_type("image")}
+  - if event.attachments.find_by_type("image").count > 0
+    = render partial: 'attachments/pictures', locals: {attachments: event.attachments.find_by_type("image")}
     
-  = render partial: 'attachments/drop_field', locals: {parent: @event, type: :image}
+  = render partial: 'attachments/drop_field', locals: {parent: event, type: :image}

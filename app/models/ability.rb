@@ -360,6 +360,9 @@ class Ability
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
     end
+    
+    # All signed-in users can read their news (timeline).
+    can :index, :news
   end
   
   def rights_for_everyone

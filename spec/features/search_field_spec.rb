@@ -14,7 +14,7 @@ feature "Search Field", js: true do
     context "if there is only one matching user" do
       before do
         @user1 = create( :user, last_name: "foo" )
-        fill_in 'query', with: "foo"
+        within('.navbar-search') { fill_in 'query', with: "foo" }
         
         press_enter in: 'query'
       end
@@ -28,7 +28,7 @@ feature "Search Field", js: true do
       before do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "foobar" )
-        fill_in 'query', with: "foo"
+        within('.navbar-search') { fill_in 'query', with: "foo" }
         press_enter in: 'query'
       end
       specify "searching for foo should list both users" do
@@ -45,7 +45,7 @@ feature "Search Field", js: true do
         @user3.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin", type: "ProfileFieldTypes::Address" )
         @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
 
-        fill_in 'query', with: "foo"
+        within('.navbar-search') { fill_in 'query', with: "foo" }
         press_enter in: 'query'
       end
       specify "searching for foo should list each user only once" do
@@ -68,12 +68,12 @@ feature "Search Field", js: true do
       @page = create(:page, title: "foo", content: "some page content")
     end
     specify "searching for page titles should list the pages" do
-      fill_in 'query', with: "foo"
+      within('.navbar-search') { fill_in 'query', with: "foo" }
       press_enter in: 'query'
       page.should have_content @page.title
     end
     specify "searching for page contents (bodies) should list the pages" do
-      fill_in 'query', with: "some page content"
+      within('.navbar-search') { fill_in 'query', with: "some page content" }
       press_enter in: 'query'
       page.should have_content @page.title
     end
@@ -85,12 +85,12 @@ feature "Search Field", js: true do
       @attachment = @page.attachments.create(title: "bar attachment", description: "some attachment description")
     end
     specify "searching for attachment titles should list their parent pages" do
-      fill_in 'query', with: 'bar attachment'
+      within('.navbar-search') { fill_in 'query', with: 'bar attachment' }
       press_enter in: 'query'
       page.should have_content @page.title
     end
     specify "searching for attachment descriptions should list their parent pages" do
-      fill_in 'query', with: 'some attachment description'
+      within('.navbar-search') { fill_in 'query', with: 'some attachment description' }
       press_enter in: 'query'
       page.should have_content @page.title
     end
@@ -99,7 +99,7 @@ feature "Search Field", js: true do
   describe "finding groups" do
     before do
       @group = create( :group, name: "foo" )
-      fill_in 'query', with: "foo"
+      within('.navbar-search') { fill_in 'query', with: "foo" }
       press_enter in: 'query'
     end
     subject { page }
@@ -109,7 +109,7 @@ feature "Search Field", js: true do
   describe "a space should be interpreted as a wild card" do
     before do
       @page = create( :page, title: "foo some bar page" )
-      fill_in 'query', with: "foo bar"
+      within('.navbar-search') { fill_in 'query', with: "foo bar" }
       press_enter in: 'query'
     end
     subject { page }

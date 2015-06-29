@@ -528,6 +528,9 @@ class User < ActiveRecord::Base
 
   # This method lists all upcoming events of the groups the user is member of.
   #
+  def events
+    Event.find_all_by_groups(self.groups).direct
+  end
   def upcoming_events
     Event.upcoming.find_all_by_groups( self.groups ).direct
   end
