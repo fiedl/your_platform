@@ -13,6 +13,15 @@ class Page < ActiveRecord::Base
   
   include PagePublicWebsite
   
+  scope :for_display, -> { includes(
+                            :ancestor_users,
+                            :ancestor_events, 
+                            :author, 
+                            :parent_pages, 
+                            :parent_users, 
+                            :parent_groups, 
+                            :parent_events
+                          )}
 
   def fill_cache
     group

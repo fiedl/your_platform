@@ -13,7 +13,12 @@ class EventsController < ApplicationController
   def index
     
     # Which events should be listed
-    @group = Group.find params[:group_id] if params[:group_id]
+    @group = Group.includes(
+      :parent_groups,
+      :parent_pages,
+      :parent_events,
+      :nav_node
+    ).find params[:group_id] if params[:group_id]
     @user = Group.find params[:user_id] if params[:user_id]
     @user ||= current_user
     @user ||= UserAccount.find_by_auth_token(params[:token]).try(:user) if params[:token].present?
@@ -48,7 +53,10 @@ class EventsController < ApplicationController
     # Filter if only published events are requested.
     @events = @events.where publish_on_local_website: true if @on_local_website
     @events = @events.where publish_on_global_website: true if @on_global_website
-    
+
+    # Preload groups
+    @events = @events.includes(:parent_groups, :child_groups)
+
     # Order events
     @events = @events.order 'events.start_at, events.created_at'
     

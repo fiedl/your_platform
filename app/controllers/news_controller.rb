@@ -31,12 +31,14 @@ class NewsController < ApplicationController
     # Load Posts directly
     @posts = current_user.posts_for_me.where(created_at: date_range)
     @posts = @posts.where('subject like ?', '%' + query + '%') if query
+    @posts = @posts.includes(:attachments, :author, :group, :comments, :directly_mentioned_users)
     
     # Add Posts by mentions
     @comments_by_mentions = Comment.where(created_at: date_range).includes(:mentions).where(mentions: {whom_user_id: current_user.id})
     @posts_by_mentions = Post.where(created_at: date_range).includes(:mentions).where(mentions: {whom_user_id: current_user.id})
     @comments_by_mentions = @comments_by_mentions.where('text like ?', '%' + query + '%') if query
     @posts_by_mentions = @posts_by_mentions.where('subject like ?', '%' + query + '%') if query
+    @posts_by_mentions = @posts_by_mentions.includes(:attachments, :author, :group, :comments, :directly_mentioned_users)
     @posts = @posts + @posts_by_mentions + Post.where(id: @comments_by_mentions.where(commentable_type: 'Post').pluck(:commentable_id))
     
     # Load Events

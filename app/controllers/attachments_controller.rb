@@ -1,5 +1,6 @@
 class AttachmentsController < ApplicationController
   
+  skip_filter *_process_action_callbacks.map(&:filter), only: :download # skip all filters for downloads
   load_and_authorize_resource
   skip_authorize_resource only: [:create, :description]
   respond_to :html, :json

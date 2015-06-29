@@ -9,7 +9,6 @@ class RootController < ApplicationController
     set_current_access :user
     set_current_access_text :the_content_of_the_start_page_is_personalized
         
-    # @notifications = current_user.notifications.order('created_at desc').limit(15)
     @announcement_page = Page.find_or_create_by_flag :site_announcement
     @hide_attachment_drop_fields = true
   end

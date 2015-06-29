@@ -576,6 +576,7 @@ class User < ActiveRecord::Base
     #
     
     # THIS WORKS BUT LOOKS UGLY. TODO: Refactor this:
+    # avoid double negation (i.e. select pages where user is member!)
     group_ids_the_user_is_no_member_of = 
       Group.pluck(:id) - self.group_ids
     pages_that_belong_to_groups_the_user_is_no_member_of = Page
@@ -583,6 +584,7 @@ class User < ActiveRecord::Base
       .where(groups: {id: group_ids_the_user_is_no_member_of})
     Page
       .where('NOT id IN (?)', (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
+      .for_display
       .order('pages.updated_at DESC')
   end
 

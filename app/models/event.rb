@@ -29,7 +29,7 @@ class Event < ActiveRecord::Base
   # But for convenience, here are a few more accessor methods:
 
   def group
-    self.parent_groups.first
+    @group ||= self.parent_groups.first
   end
   def group=( group )
     self.destroy_dag_links
@@ -64,7 +64,7 @@ class Event < ActiveRecord::Base
   # ==========================================================================================
   
   def find_contact_people_group
-    find_special_group :contact_people
+    cached { find_special_group :contact_people }
   end
   def create_contact_people_group
     create_special_group :contact_people
@@ -77,7 +77,7 @@ class Event < ActiveRecord::Base
   end
   
   def find_attendees_group
-    find_special_group :attendees
+    cached { find_special_group :attendees }
   end
   def create_attendees_group
     create_special_group :attendees
