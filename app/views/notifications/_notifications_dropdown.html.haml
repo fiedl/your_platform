@@ -8,5 +8,5 @@
     - if current_user.notifications.unread.count > 0    
       %ul.dropdown-menu
         %li.read_all= link_to t(:mark_all_notifications_as_read), read_all_notifications_path, remote: true, method: 'patch'
-        - current_user.notifications.unread.order('created_at desc').each do |notification|
+        - current_user.notifications.unread.includes(:author, :reference).order('created_at desc').each do |notification|
           %li= render notification
