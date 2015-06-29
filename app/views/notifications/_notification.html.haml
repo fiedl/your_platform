@@ -11,6 +11,10 @@
       %p
         %strong= link_to notification.message, notification
       %p= markup notification.text
+      
+      - if notification.reference.kind_of?(Post)
+        %p= render partial: 'posts/attachments', locals: {post: notification.reference}
+      
     .notification_links
       %small
         = render partial: 'notifications/notification_links', locals: {notification: notification}

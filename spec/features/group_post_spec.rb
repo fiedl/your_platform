@@ -18,6 +18,8 @@ feature "Group Posts" do
     @parent_group << @group
     @officers = @group.create_officer_group name: 'Officers'
     @officers << @user
+    
+    @random_message = "This is a random message: " + ('a'..'z').to_a.shuffle[0,8].join
   end
   
   describe "as officer:", :js do
@@ -40,7 +42,7 @@ feature "Group Posts" do
       visit group_path(@group)
       find('#new_post').click
 
-      fill_in :message_text, with: 'This is a test message.'
+      fill_in :message_text, with: @random_message
       find('#test_message').click
       
       page.should have_text 'Test-Nachricht wurde versandt.'
@@ -50,31 +52,29 @@ feature "Group Posts" do
       Timeout::timeout(15) do
         loop do
           email_text = ActionMailer::Base.deliveries.last.to_s
-          break if email_text.include?('This is a test message.')
+          break if email_text.include?(@random_message)
         end
       end
-      email_text.should include 'This is a test message.'
-      email_text.should include @user.email
+      email_text.should include @random_message
     end
     scenario 'Sending a group message' do
       visit group_path(@group)
       find('#new_post').click
     
-      fill_in :message_text, with: 'This is a real message.'
+      fill_in :message_text, with: @random_message
       find('#confirm_message').click
+      
+      page.should have_text 'Nachricht wurde an 2 Empfänger versandt.'
       
       email_text = ''
       Timeout::timeout(20) do
         loop do
-          # Take the last two emails, since we don't know to which user
-          # the mail is sent first.
-          email_text = ActionMailer::Base.deliveries.last.to_s + ActionMailer::Base.deliveries[-1].to_s
-          break if email_text.include?('This is a real message.') and email_text.include?(@other_user.email)
+          email_text = ActionMailer::Base.deliveries.last.to_s
+          break if email_text.include?(@random_message)
+          sleep 0.3
         end
       end
-      email_text.should include 'This is a real message.'
-      email_text.should include @user.email
-      email_text.should include @other_user.email
+      email_text.should include @random_message
     end
   end
   

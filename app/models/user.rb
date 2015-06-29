@@ -662,6 +662,12 @@ class User < ActiveRecord::Base
   def self.find_all_by_name( name ) # TODO: Test this
     self.where("CONCAT(first_name, ' ', last_name) = ?", name)
   end
+  
+  # This finds a user matching an auth token.
+  #
+  def self.find_by_token(token)
+    UserAccount.where(auth_token: token).limit(1).first.try(:user)
+  end
 
   # This method finds all users having the given email attribute.
   # notice: case insensitive

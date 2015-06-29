@@ -9,12 +9,22 @@
       <%= image_tag 'logo.png', align: 'right' %>
     <% end %><br />
     
-    <h2><%= @subject %></h2>
+    <h2><%= link_to @subject, @post.url %></h2>
     
     <%= markup @text %>
     
     <p>
-      <br /><br />
+      <%= render partial: 'posts/attachments', locals: {post: @post} %>
+    </p>
+    
+    <p>
+      <hr style="height:1px;border:none;color:#333;background-color:#333;" />
+      <p><small>
+        <%= link_to "Auf der Plattform anzeigen", @post.url %>
+        |
+        <%= link_to t(:write_a_comment), @post.url %>
+      </small></p>
+      <br />
       <small><small>
         <%= app_name %>, <%= link_to(@group.name, @group) %>
       </small></small>

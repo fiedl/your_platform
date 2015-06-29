@@ -51,7 +51,14 @@ class PostsController < ApplicationController
     @group = Group.find params[:group_id] if params[:group_id].present?
     authorize! :create_post_for, @group
     
+    @new_post = Post.new
+    @new_post.group = @group
+    @new_post.author = current_user
+        
     set_current_navable @group
+    set_current_activity :writes_a_message_to_group, @group
+    set_current_access :group
+    set_current_access_text I18n.t(:members_of_group_and_global_officers_can_write_posts, group_name: @group.name)
   end
   
   def create
@@ -62,6 +69,7 @@ class PostsController < ApplicationController
 
     @text = params[:text] || params[:post][:text]
     @subject = params[:subject] || params[:post][:text].split("\n").first
+    @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
     
     if params[:recipient] == 'me'
       @recipients = [current_user]
@@ -75,7 +83,7 @@ class PostsController < ApplicationController
       end
     end
     
-    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now
+    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
     @post.save! unless params[:recipient] == 'me'
   
     if params[:notification] == "instantly"
@@ -129,8 +137,19 @@ class PostsController < ApplicationController
   def create_via_email
     authorize! :create, :post_via_email
     if params[:message]
-      @posts = ReceivedPostMail.new(params[:message]).store_as_posts
-      @posts.each { |post| post.send_as_email_to_recipients }
+      if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
+        # Then this responds to a conversation and should not create a new post but a comment instead.
+        # Address example: user-aeng9iLei8lahso9shohfu0vaeth4oom2kooloi2iSh7Hahr.post-345.create-comment.plattform@example.com
+        #
+        @comment = ReceivedCommentMail.new(params[:message]).store_as_comment_if_authorized
+        @posts = [@comment.commentable]
+      else
+        # This is the regular case: Creating posts from an email ("group mail feature").
+        # Address exmaple: my-group@example.com
+        #
+        @posts = ReceivedPostMail.new(params[:message]).store_as_posts
+        @posts.each { |post| post.send_as_email_to_recipients }
+      end
     end
     render json: (@posts || [])
   end

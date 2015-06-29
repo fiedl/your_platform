@@ -37,8 +37,13 @@ describe Ability do
         he { should be_able_to :index_posts, @group }
         he { should be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
-          before { @post = @group.posts.create }
+          before do
+            @post = @group.posts.create
+            @post_attachment = @post.attachments.create
+          end
           he { should be_able_to :read, @post }
+          he { should be_able_to :read, @post_attachment }
+          he { should be_able_to :download, @post_attachment }
           he { should be_able_to :create_comment_for, @post }
           context "when there is a comment for this post" do
             before { @comment = @post.comments.create }
@@ -52,8 +57,13 @@ describe Ability do
         he { should_not be_able_to :index_posts, @group }
         he { should_not be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
-          before { @post = @group.posts.create }
+          before do
+            @post = @group.posts.create
+            @post_attachment = @post.attachments.create
+          end
           he { should_not be_able_to :read, @post }
+          he { should_not be_able_to :read, @post_attachment }
+          he { should_not be_able_to :download, @post_attachment }
           he { should_not be_able_to :create_comment_for, @post }
           context "when there is a comment for this post" do
             before { @comment = @post.comments.create }
@@ -68,6 +78,7 @@ describe Ability do
         before do
           @group = create :group
           @post = @group.posts.create
+          @post_attachment = @post.attachments.create
           @comment = @post.comments.create text: "This comment mentions @[[#{user.title}]] and, thereby, invites him to this post."
           Mention.create_multiple(create(:user), @comment, @comment.text)
         end
@@ -76,17 +87,22 @@ describe Ability do
         he { should be_able_to :read, @post }
         he { should be_able_to :read, @comment }
         he { should be_able_to :create_comment_for, @post }
+        he { should be_able_to :read, @post_attachment }
+        he { should be_able_to :download, @post_attachment }
       end
       context "when mentioned in a post" do
         before do
           @group = create :group
           @post = @group.posts.create text: "This post mentions @[[#{user.title}]] and, thereby, invites him to this post."
+          @post_attachment = @post.attachments.create
           Mention.create_multiple(create(:user), @post, @post.text)
         end
         specify { @group.members.should_not include user }
         he { should_not be_able_to :create_post_for, @group }
         he { should be_able_to :read, @post }
         he { should be_able_to :create_comment_for, @post }
+        he { should be_able_to :read, @post_attachment }
+        he { should be_able_to :download, @post_attachment }
       end
     end
     

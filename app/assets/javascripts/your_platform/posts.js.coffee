@@ -43,12 +43,21 @@ ready = ->
     $.ajax(
       type: 'POST',
       url: $(this).attr('href'),
+      #contentType: false,
+      #processData: false,
+      #contentType: 'multipart/form-data',
+      #dataType: 'json',
       data: {
         text: $('#message_text').val(),
         subject: $('input.subject').val(),
         recipients_count: recipients_count,
         valid_from: valid_from,
-        notification: 'instantly'
+        notification: 'instantly',
+        #attachment_attributes: {
+        #  "0": {
+        #    file: $('fieldset.attachments input')[0].files
+        #  }
+        #}
       },
       success: (r)->
         if real_message

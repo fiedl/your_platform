@@ -1,4 +1,4 @@
-= render partial: 'shared/authorization_info', locals: {subject: 'new_post', navable: @group}
+= render partial: 'groups/tabs', locals: {active: 'posts'}
 
 %h1.new.post.recipients
   Sammelnachricht an 
@@ -25,13 +25,23 @@
 
 %h1.new.post.message Nachricht
 %div
-  %form
+  = form_for(@new_post, html: {multipart: true}) do |form|
+    = form.hidden_field :group_id
+    = form.hidden_field :author_user_id
     %p
       %textarea#message_text
         = render partial: 'new_post_template_text'
     %p
       Betreff:
       %input.subject{value: "[#{@group.name}] Neues von der #{app_name}"}
+
+    -# # This does not work, yet, since we submit the form using ajax.
+    -# %p
+    -#   = form.fields_for :attachments, Attachment.new do |builder|
+    -#     %fieldset.attachments
+    -#       = builder.file_field :file
+    -#   %br
+
     %p.buttons.right
       %a.btn.btn-default#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
         = icon :envelope

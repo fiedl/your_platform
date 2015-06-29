@@ -27,14 +27,7 @@
           
       %div.post-body
         = markup post.text.html_safe
-      
-      - if post.attachments.count > 0  
-        %div.post-attachments
-          %strong= t(:attachments)
-          %ol.post_attachments
-            - post.attachments.each do |attachment|
-              %li
-                = awesome_icon(:paperclip)
-                = link_to attachment.filename, attachment.file.url, target: '_blank'
+
+      = render partial: 'posts/attachments', locals: {post: post}
 
       .post-comments= render partial: 'comments/comments', locals: {commentable: post}

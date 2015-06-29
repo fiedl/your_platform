@@ -1,68 +1,26 @@
+class App.Attachments
+
+  constructor: ->
+    App.upload_boxes = []
+  
+  # This browses the root_element for $('#attachments')
+  # and binds UploadBoxes to them.
+  #
+  process: (root_element)->
+    if root_element.find('#attachments').size() > 0
+      root_element.find('#attachments').each (index, attachments_element)->
+        if $(attachments_element).find('#new_attachment').size() > 0
+          App.upload_boxes.push new App.UploadBox($(attachments_element))
+
+
+
+App.attachments = new App.Attachments()
+
 $(document).ready ->
-  
-  upload_counter = 0
-  upload_done_counter = 0
-  
-  # This element is inserted by form_for(attachments.build) in the view.
-  $('#new_attachment').fileupload
-    dataType: "script"
-    add: (e, data) ->
-      upload_counter += 1
-      file = data.files[0]
-      data.submit()
-    progress: (e, data) ->
-      show_uploading()
-    done: (e, data) ->
-      upload_done_counter += 1
-      if upload_done_counter >= upload_counter
-        show_success()
-    fail: (e, data)->
-      upload_done_counter += 1
-      show_uploading()
-      if upload_done_counter >= upload_counter
-        $('p.uploading').text I18n.t 'upload_failed_please_contact_support'
-      else
-        $('p.uploading small:first').text I18n.t 'upload_failed_please_contact_support'
+  App.attachments.process($(document))
 
-  $('.attachment_drop_field').on 'dragover', ->
-    $(this).addClass('over')
-    $(this).removeClass('success')
-    $('p.success').hide()
-    $('p.drop_attachments_here').show()
-  $('.attachment_drop_field').on 'dragleave', ->
-    $(this).removeClass('over')
-  $('.attachment_drop_field').on 'drop', ->
-    $(this).removeClass('over')
-    show_uploading()
+$(document).on 'click', '.pictures .remove_button', ->
+  pictures_box = $(this).closest('.box')
+  pictures_box.find('.galleria-image.active').hide('explode')
+  pictures_box.find('.picture-info').hide('explode')
 
-  show_uploading = ->
-    $('.attachment_drop_field').addClass('uploading')
-    $('.attachment_drop_field').removeClass('success')
-    $('p.drop_attachments_here').hide()
-    $('p.success').hide()
-    $('p.uploading').removeClass('hidden').show()
-    $('.attachment_drop_field').find('form').hide()
-    $('.upload_counter').html("" + upload_done_counter + " / " + upload_counter)
-    
-  show_success = ->
-    if $('.attachment_drop_field').size() > 0
-      $('.attachment_drop_field')
-        .removeClass('uploading')
-        .addClass('success')
-      $('p.uploading').hide()
-      $('p.success').removeClass('hidden').show()
-      Turbolinks.visit location.toString(), change: ['attachments', 'attendees']
-      
-  
-  $(document).on 'click', '.pictures .remove_button', ->
-    pictures_box = $(this).closest('.box')
-    pictures_box.find('.galleria-image.active').hide('explode')
-    pictures_box.find('.picture-info').hide('explode')
-
-# When turbolinks is starting to fetch a page, remove the 
-# attachment form in order to avoid double binding of the
-# jquery-file-upload mechanism.
-#
-$(document).on "page:fetch", ->
-  $('#new_attachment').remove()
-  

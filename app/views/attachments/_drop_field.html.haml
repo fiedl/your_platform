@@ -7,7 +7,7 @@
 
 - type ||= :attachment
 
-.box.panel.panel-default.upload_attachment{class: can?(:create_attachment_for, parent) ? '' : 'hidden' }
+.box.panel.panel-default.upload_attachment{class: can?(:create_attachment_for, parent) ? '' : 'hidden', data: {parent_url: parent.url}}
   .attachment_drop_field
     %p.drop_attachments_here
       - if type == :image
@@ -35,7 +35,7 @@
         - else
           = t :files_are_about_to_be_shown_thanks_for_uploading
           
-    = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm'} do |f|
+    = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm new_attachment'} do |f|
       = f.hidden_field :parent_id
       = f.hidden_field :parent_type
     

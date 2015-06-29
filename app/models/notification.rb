@@ -37,7 +37,7 @@ class Notification < ActiveRecord::Base
   #
   def self.create_from_post(post, options = {})
     recipients = post.group.members
-    recipients -= [post.author] if post.author.kind_of?(User)
+    recipients -= [post.author] if post.author.kind_of?(User) and not Rails.env.development?
 
     recipients.collect do |group_member|
       locale = group_member.locale
