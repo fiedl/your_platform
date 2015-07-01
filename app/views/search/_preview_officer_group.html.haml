@@ -1,0 +1,13 @@
+%h4= link_to obj.name, obj
+
+%p= t(:these_are_the_current_officers_of_this_office)
+
+- obj.memberships.includes(:descendant).each do |membership|
+  %p
+    = link_to membership.user.title, membership.user
+    = "(#{t(:since)} #{localize membership.valid_from.to_date})"
+
+- if obj.scope # which is the object the officer is officer for.
+  %p
+    = "#{t(:see_also)}:"
+    = link_to obj.scope.title, obj.scope

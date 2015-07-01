@@ -21,3 +21,6 @@ de:
   creating_new_office: "Erstelle neues Amt. Bitte warten ..."
   destroy_office: Amt entfernen
   office_flags: Typ
+  
+  these_are_the_current_officers_of_this_office: "Dieses Amt bekleidet derzeit:"
+  
