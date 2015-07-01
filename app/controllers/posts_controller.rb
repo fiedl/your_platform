@@ -88,14 +88,14 @@ class PostsController < ApplicationController
   
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
-      Notification.create_from_post(@post, sent_at: Time.zone.now)
+      Notification.create_from_post(@post, sent_at: Time.zone.now) unless params[:recipient] == 'me'
       flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
     else
-      Notification.create_from_post(@post)
+      Notification.create_from_post(@post) unless params[:recipient] == 'me'
       flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
     end
     
-    Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text)
+    Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text) unless params[:recipient] == 'me'
     
     respond_to do |format|
       format.html do
