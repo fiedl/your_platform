@@ -1,6 +1,7 @@
 class UserAccountsController < ApplicationController
 
   load_and_authorize_resource
+  skip_authorize_resource only: [:create]
   layout               false
 
   def show
@@ -28,6 +29,7 @@ class UserAccountsController < ApplicationController
   def create
     @user = User.find_by_id(params[:user_id])
     @user_account = @user.build_account
+    authorize! :create_account_for, @user
 
     respond_to do |format|
       if @user_account.save
