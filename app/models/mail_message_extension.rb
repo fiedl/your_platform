@@ -20,6 +20,11 @@ module MailMessageExtension
         Rails.logger.warn error.message
         recipient_address_needs_review!
         return false
+      rescue Net::SMTPServerBusy => error
+        Rails.logger.debug error
+        Rails.logger.warn "Net::SMTPServerBusy when sending message. Waiting 10 seconds and retrying then ..."
+        sleep 10
+        retry
       end
     else
       recipient_address_needs_review!
