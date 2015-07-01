@@ -130,7 +130,7 @@ class SearchController < ApplicationController
   def opensearch
     # fixes Firefox "Firefox could not download the search plugin from:"
     response.headers["Content-Type"] = 'application/opensearchdescription+xml'
-    render :layout => false
+    render :layout => false, formats: [:xml]
   end
 
   private
