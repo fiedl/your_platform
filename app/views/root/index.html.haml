@@ -5,7 +5,7 @@
 .row
   .col-sm-3.hidden-xs
     = vertical_nav
-    .row= render partial: 'last_seen_activities/index'
+    %p= render partial: 'last_seen_activities/index'
   .col-sm-6
     = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
     = render @page
@@ -24,4 +24,3 @@
 
 .row.scroll_to_load
   = render 'root/scroll_to_load'
-
