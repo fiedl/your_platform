@@ -3,16 +3,18 @@
   
   %hr
   
-  %h2 Profile info
-  %ul
-    %li= link_to @sender_user.title, @sender_user
-    %li
-      Mobile:
-      = @sender_user.mobile
-      
-  %h2 Object info
-  %ul
-    %li= link_to @navable.title, polymorphic_url(@navable, preview_as: @role)
+  - if @sender_user
+    %h2 Profile info
+    %ul
+      %li= link_to @sender_user.title, @sender_user
+      %li
+        Mobile:
+        = @sender_user.mobile
+  
+  - if @navable
+    %h2 Object info
+    %ul
+      %li= link_to @navable.title, polymorphic_url(@navable, preview_as: @role)
   
   %h2 Meta data
   %ul
