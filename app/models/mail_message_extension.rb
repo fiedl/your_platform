@@ -10,6 +10,7 @@ module MailMessageExtension
   def deliver
     if recipient_address.include?('@')
       begin
+        Rails.logger.info "Sending mail smtp_envelope_to #{self.smtp_envelope_to.to_s}."
         return super
       rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
         Rails.logger.debug error
@@ -25,11 +26,11 @@ module MailMessageExtension
       return false
     end
   end
-  
+
   def recipient_address
     self.smtp_envelope_to.try(:first) || self.to.try(:first)
   end
-  
+
   def recipient_address_needs_review!
     raise 'no recipient address' unless recipient_address.present?
     if profile_field = ProfileFieldTypes::Email.where(value: recipient_address).first
