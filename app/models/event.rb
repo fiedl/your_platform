@@ -32,6 +32,7 @@ class Event < ActiveRecord::Base
     @group ||= self.parent_groups.first
   end
   def group=( group )
+    @group = group
     self.destroy_dag_links
     self.parent_groups << group
   end
