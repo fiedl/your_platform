@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe User do
 
-  before do 
+  before do
     @user = create( :user )
     @user.save
   end
@@ -33,11 +33,11 @@ describe User do
   end
 
   describe "#capitalize_name" do
-    [ { first_name: "john", last_name: "doe", 
+    [ { first_name: "john", last_name: "doe",
         capitalized_first_name: "John", capitalized_last_name: "Doe" },
-      { first_name: "Bruno", last_name: "de Silva", 
+      { first_name: "Bruno", last_name: "de Silva",
         capitalized_first_name: "Bruno", capitalized_last_name: "de Silva" },
-      { first_name: "Klaus-Dieter", last_name: "Kunz", 
+      { first_name: "Klaus-Dieter", last_name: "Kunz",
         capitalized_first_name: "Klaus-Dieter", capitalized_last_name: "Kunz" } ].each do |name_to_test|
       describe "for '#{name_to_test[ :capitalized_last_name ]}'" do
         before do
@@ -49,7 +49,7 @@ describe User do
         it "should capitalize the first_name and last_name" do
           @user.first_name.should == name_to_test[ :capitalized_first_name ]
           @user.last_name.should == name_to_test[ :capitalized_last_name ]
-          @user.name.should == name_to_test[ :capitalized_first_name ] + " " + 
+          @user.name.should == name_to_test[ :capitalized_first_name ] + " " +
             name_to_test[ :capitalized_last_name ]
         end
       end
@@ -143,7 +143,7 @@ describe User do
       @user.date_of_birth.should == @date_of_birth
     end
   end
-  
+
   describe "#localized_date_of_birth" do
     subject { @user.localized_date_of_birth }
     describe "for a given date of birth" do
@@ -177,7 +177,7 @@ describe User do
     describe "for setting an empty string" do
       before do
         @user.date_of_birth = 24.years.ago.to_date
-        @given_string = "" 
+        @given_string = ""
       end
       it "should set the date of birth to nil" do
         subject
@@ -195,7 +195,7 @@ describe User do
       end
     end
   end
-  
+
   describe "#date_of_birth_profile_field" do
     subject { @user.date_of_birth_profile_field }
     describe "for no date of birth field created" do
@@ -258,7 +258,7 @@ describe User do
        its(:new_record?) { should == false }
      end
   end
-  
+
   describe "#age" do
     subject { @user.age }
     describe "without date of birth" do
@@ -271,7 +271,7 @@ describe User do
       end
     end
   end
-  
+
   describe "#birthday_this_year" do
     subject { @user.birthday_this_year }
     describe "without date of birth" do
@@ -289,14 +289,14 @@ describe User do
     before do
       @other_field = ProfileFieldTypes::Address.create(label: "My Work", value: "Some Other Address")
       @profile_field = ProfileFieldTypes::Address.create(label: "My Home", value: "Some Address")
-      @user.profile_fields << @other_field 
+      @user.profile_fields << @other_field
       @user.profile_fields << @profile_field
     end
     describe "#postal_address_field" do
       subject { @user.postal_address_field }
       describe "for no primary postal address being set" do
         it "should return nil" do
-          subject.should == nil 
+          subject.should == nil
         end
       end
       describe "for a primary postal address being set" do
@@ -316,7 +316,7 @@ describe User do
       describe "for a primary postal address being set" do
         before { @profile_field.postal_address = true }
         it "should return the address field's value" do
-          subject.should == "Some Address" 
+          subject.should == "Some Address"
         end
       end
     end
@@ -336,9 +336,9 @@ describe User do
         @user.name_surrounding_profile_field.text_above_name.should == "Herrn"
         @user.text_above_name.should == "Herrn"
       end
-      it { should == 
+      it { should ==
         "Herrn\n" +
-        "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+        "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" +
         "Bankdirektor\n" +
         @user.postal_address
       }
@@ -352,9 +352,9 @@ describe User do
           @user.save
         end
         it "should not print it twice" do
-          subject.should == 
+          subject.should ==
           "Herrn\n" +
-          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" +
           "Bankdirektor\n" +
           @user.postal_address
         end
@@ -362,17 +362,17 @@ describe User do
       describe "when there is no text below the name" do
         before { @name_surrounding.update_attributes(text_below_name: nil) }
         it "should leave no blank line" do
-          subject.should == 
+          subject.should ==
           "Herrn\n" +
-          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" +
           @user.postal_address
         end
       end
       describe "when there is no text above the name" do
         before { @name_surrounding.update_attributes(text_above_name: nil) }
         it "should not begin with a blnak line" do
-          subject.should == 
-          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          subject.should ==
+          "Dr. #{@user.first_name} #{@user.last_name} M.Sc.\n" +
           "Bankdirektor\n" +
           @user.postal_address
         end
@@ -380,9 +380,9 @@ describe User do
       describe "when there is neither prefix nor personal title" do
         before { @name_surrounding.update_attributes(name_prefix: nil) }
         it "should set no spaces before the name" do
-          subject.should == 
+          subject.should ==
           "Herrn\n" +
-          "#{@user.first_name} #{@user.last_name} M.Sc.\n" + 
+          "#{@user.first_name} #{@user.last_name} M.Sc.\n" +
           "Bankdirektor\n" +
           @user.postal_address
         end
@@ -390,16 +390,16 @@ describe User do
       describe "when there is no name suffix" do
         before { @name_surrounding.update_attributes(name_suffix: nil) }
         it "should set no spaces after the name" do
-          subject.should == 
+          subject.should ==
           "Herrn\n" +
-          "Dr. #{@user.first_name} #{@user.last_name}\n" + 
+          "Dr. #{@user.first_name} #{@user.last_name}\n" +
           "Bankdirektor\n" +
           @user.postal_address
         end
       end
     end
   end
-  
+
   describe "#phone_profile_fields" do
     subject { @user.phone_profile_fields }
     before do
@@ -412,7 +412,7 @@ describe User do
     it { should_not include @fax_field }
     it { should include @mobile_field }
   end
-  
+
   describe "#phone" do
     subject { @user.phone }
     describe "for a phone number given" do
@@ -450,7 +450,7 @@ describe User do
       end
     end
   end
-  
+
   describe "#mobile" do
     subject { @user.mobile }
     describe "for a mobile phone number given" do
@@ -488,7 +488,7 @@ describe User do
     end
   end
 
-  
+
   # Associated Objects
   # ==========================================================================================
 
@@ -509,14 +509,14 @@ describe User do
       it { should == nil }
     end
   end
-  
+
   describe "#alias=" do
     it "should set the alias attribute" do
       @user.alias = "New Alias"
       @user.alias.should == "New Alias"
     end
   end
-  
+
   describe "#generate_alias" do
     before do
       @user = build(:user, first_name: "Tamara", last_name: "Sweet")
@@ -531,7 +531,7 @@ describe User do
       @user.alias.should_not == "sweet"
     end
   end
-  
+
   describe "#generate_alias!" do
     before do
       @user = build(:user, first_name: "Tamara", last_name: "Sweet")
@@ -546,13 +546,51 @@ describe User do
       @user.alias.should == "sweet"
     end
   end
-  
+
   specify "changed behaviour: on creating the default alias should be nil" do
     @user = User.create(first_name: "James", last_name: "Doe", email: "doe@example.com")
     @user.alias.should == nil
   end
-  
-  
+
+  describe "when two users have the same alias by mistake" do
+    before do
+      @user1 = create :user_with_account
+      @user1.update_attribute :alias, "john"
+      @user2 = create :user_with_account
+      @user2.update_attribute :alias, "john"
+    end
+
+    describe "saving! a user" do
+      subject { @user1.accepted_terms_at = Time.zone.now; @user1.save! }
+      it "should not raise an error" do
+        expect { subject }.to_not raise_error
+      end
+      it "should regenerate the alias" do
+        subject
+        @user1.alias.should_not == "john"
+      end
+    end
+  end
+  describe "when the alias is uniqe" do
+    before do
+      @user1 = create :user_with_account
+      @user1.update_attribute :alias, "john"
+    end
+
+    describe "saving! a user" do
+      subject { @user1.accepted_terms_at = Time.zone.now; @user1.save! }
+      it "should not raise an error" do
+        expect { subject }.to_not raise_error
+      end
+      it "should not change the alias" do
+        old_alias = @user1.alias
+        subject
+        @user1.alias.should == old_alias
+      end
+    end
+  end
+
+
   # User Account
   # ------------------------------------------------------------------------------------------
 
@@ -741,7 +779,7 @@ describe User do
       before do
         @user.cached(:corporations)
         wait_for_cache
-        
+
         first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
@@ -927,7 +965,7 @@ describe User do
       subject.should_not == @corporation1.admins_parent
     end
   end
-  
+
   # Status Groups
   # ------------------------------------------------------------------------------------------
 
@@ -948,7 +986,7 @@ describe User do
       subject.should_not include @another_group
     end
   end
-  
+
   describe "#current_status_membership_in(corporation)" do
     before do
       @corporation = create( :corporation_with_status_groups )
@@ -957,13 +995,13 @@ describe User do
       @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
     end
     subject { @user.current_status_membership_in(@corporation) }
-    
+
     it "should return the correct membership" do
       subject.should == @status_group_membership
     end
   end
 
-  
+
   # Memberships
   # ------------------------------------------------------------------------------------------
 
@@ -1005,8 +1043,8 @@ describe User do
   # ------------------------------------------------------------------------------------------
 
   describe "#workflows" do
-    before do 
-      @group = create( :group )      
+    before do
+      @group = create( :group )
       @workflow = create( :workflow ); @workflow.parent_groups << @group
       @user.save
       @user.parent_groups << @group
@@ -1041,11 +1079,11 @@ describe User do
       end
     end
     describe "(direct/indirect)" do
-      # group_a 
+      # group_a
       #   |----- event_0             <<===
       #   |----- group_b
       #   |        |------ event_1   <<===
-      #   |        |------ user    
+      #   |        |------ user
       #   |
       #   |----- group_c
       #            |------ event_2
@@ -1067,9 +1105,9 @@ describe User do
         # otherwise all users will see all events, since everyone is member of Group.everyone.
         subject.should_not include @event_2
       end
-    end 
+    end
   end
-  
+
   describe "#join" do
     subject { @user.join(@event_or_group); time_travel(2.seconds) }
     describe "(joining an event)" do
@@ -1178,7 +1216,7 @@ describe User do
 
   describe "#member_of?" do
     before do
-      @group = create( :group ); @group.child_users << @user 
+      @group = create( :group ); @group.child_users << @user
       @page = create( :page )
     end
     context "for the user being a descendant of the object" do
@@ -1311,7 +1349,7 @@ describe User do
 
   # User Creation
   # ==========================================================================================
-  
+
   describe ".create" do
     before { @params = {first_name: "Johnny", last_name: "Doe"} }
     subject { @user = User.create(@params) }
@@ -1354,7 +1392,7 @@ describe User do
   describe ".find_all_by_identification_string" do
     before do
       @user.first_name = "Some First Name"
-      @user.last_name = "UniqueLastName" 
+      @user.last_name = "UniqueLastName"
       @user.email = "unique@example.com"
       @user.alias = "s.unique"
       @user.save
@@ -1386,12 +1424,12 @@ describe User do
       @user.first_name = "Johnny"
       @user.last_name = "Doe"
       @user.save
-      @title = @user.title 
+      @title = @user.title
     end
     specify { @title.should_not be_empty }
     subject { User.find_by_title( @title ) }
     it "should find the user by its title" do
-      subject.should == @user 
+      subject.should == @user
     end
   end
 
@@ -1406,7 +1444,7 @@ describe User do
       User.find_all_by_name( @user.name.downcase ).should include( @user )
     end
   end
-  
+
   describe ".find_by_name" do
     before do
       @user = create( :user )
@@ -1426,7 +1464,7 @@ describe User do
       User.find_all_by_email( @user.email.downcase ).should include( @user )
     end
   end
-  
+
   describe ".hidden" do
     before do
       @hidden_user = create(:user); @hidden_user.hidden = true
@@ -1441,7 +1479,7 @@ describe User do
       subject.count.should > 0
     end
   end
-  
+
   describe ".deceased" do
     before do
       @deceased_user = create(:user); @deceased_user.mark_as_deceased(at: 1.year.ago)
@@ -1473,7 +1511,7 @@ describe User do
       User.deceased.alive.should == []
     end
   end
-  
+
   describe ".without_account" do
     before do
       @user_with_account = create(:user_with_account)
@@ -1487,7 +1525,7 @@ describe User do
       subject.where(id: @user_without_account.id).to_a.should == User.where(id: @user_without_account.id).without_account.to_a
     end
   end
-  
+
   describe ".with_email" do
     before do
       @user_with_email = create(:user)
@@ -1508,7 +1546,7 @@ describe User do
       subject.where(id: @user_with_email.id).to_a.should == User.where(id: @user_with_email.id).with_email.to_a
     end
   end
-  
+
   describe ".applicable_for_new_account" do
     before do
       @hidden_user = create(:user); @hidden_user.hidden = true
@@ -1535,7 +1573,7 @@ describe User do
     it { should_not include @user_without_email }
     it { should_not include @user_with_empty_email }
   end
-  
+
   describe "(postal address finder methods)" do
     before do
       @user_with_address = create(:user)
@@ -1544,7 +1582,7 @@ describe User do
       @user_with_empty_address = create(:user)
       @user_with_empty_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "")
     end
-  
+
     describe ".with_postal_address" do
       subject { User.with_postal_address }
       it { should be_kind_of ActiveRecord::Relation }
@@ -1552,7 +1590,7 @@ describe User do
       it { should_not include @user_without_address }
       it { should_not include @user_with_empty_address }
     end
-    
+
     describe ".without_postal_address" do
       subject { User.without_postal_address }
       it { should be_kind_of ActiveRecord::Relation }
@@ -1563,4 +1601,3 @@ describe User do
   end
 
 end
-

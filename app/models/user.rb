@@ -14,7 +14,8 @@ class User < ActiveRecord::Base
   validates_presence_of     :first_name, :last_name
   validates_format_of       :first_name, with: /\A[^\,]*\z/  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
-  
+
+  before_validation         :change_alias_if_already_taken
   validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
 
@@ -31,7 +32,7 @@ class User < ActiveRecord::Base
 
   has_many                  :bookmarks
   has_many                  :last_seen_activities
-  
+
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
   is_navable
@@ -40,14 +41,14 @@ class User < ActiveRecord::Base
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
   after_save                { self.delay.delete_cache }
-  
+
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
-  
+
 
   # Mixins
   # ==========================================================================================
-  
+
   include UserMixins::Memberships
   include UserMixins::Identification
   include ProfileableMixins::Address
@@ -96,14 +97,14 @@ class User < ActiveRecord::Base
   def title
     name
   end
-  
+
   def name_affix
     title.gsub(name, '').strip
   end
-  
-  
+
+
   # This sets the format of the User urls to be
-  # 
+  #
   #     example.com/users/24-john-doe
   #
   # rather than just
@@ -116,7 +117,7 @@ class User < ActiveRecord::Base
   def to_param
     "#{id} #{title}".parameterize
   end
-  
+
 
   # The preferred locale of the user, which can be set through
   # the user settings or the page footer.
@@ -152,7 +153,7 @@ class User < ActiveRecord::Base
     not female?
   end
 
-  
+
   # Date of Death
   # The date of death is localized already!
   # Why?
@@ -160,7 +161,7 @@ class User < ActiveRecord::Base
   def date_of_death
     cached { profile_fields.where(label: 'date_of_death').first.try(:value) }
   end
-  
+
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
@@ -173,9 +174,9 @@ class User < ActiveRecord::Base
   def alive?
     not dead?
   end
-  
+
   # Example:
-  # 
+  #
   #   user.mark_as_deceased at: "2014-03-05".to_datetime
   #
   def mark_as_deceased(options = {})
@@ -187,31 +188,31 @@ class User < ActiveRecord::Base
     set_date_of_death_if_unset(date)
     account.try(:destroy)
   end
-  
+
   # Defines whether the user can be marked as deceased (by a workflow).
   #
   def markable_as_deceased?
     alive?
   end
-  
+
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
       UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
-  
+
   def postal_address_with_name_surrounding
     address_label.to_s
   end
 
   def address_label
     cached do
-      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field, 
+      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field,
         self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
     end
   end
-  
+
 
   # Associated Objects
   # ==========================================================================================
@@ -239,6 +240,13 @@ class User < ActiveRecord::Base
     self.generate_alias! if self.account and self.alias.blank?
   end
   private :generate_alias_if_necessary
+
+  def change_alias_if_already_taken
+    if self.has_account? && self.alias.present? && User.where(alias: self.alias).count > 1
+      self.generate_alias!
+    end
+  end
+
 
 
   # User Account
@@ -307,7 +315,7 @@ class User < ActiveRecord::Base
   def find_or_build_last_seen_activity
     last_seen_activities.last || last_seen_activities.build
   end
-  
+
   def update_last_seen_activity(description = nil, object = nil)
     unless readonly?
       if description and not self.incognito?
@@ -395,7 +403,7 @@ class User < ActiveRecord::Base
       end
     end
   end
-    
+
   # This returns the first corporation where the user is still member of or nil
   #
   def first_corporation
@@ -407,10 +415,10 @@ class User < ActiveRecord::Base
     #     corporation.membership_of( self ).valid_from or Time.zone.now
     #   end.first
     # end
-    
+
     sorted_current_corporations.first
   end
-  
+
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
@@ -427,7 +435,7 @@ class User < ActiveRecord::Base
       end
     end
   end
-  
+
   def last_group_in_first_corporation
     my_groups_in_first_corporation.last
   end
@@ -468,11 +476,11 @@ class User < ActiveRecord::Base
       StatusGroupMembership.find_by_user_and_group(self, status_group)
     end
   end
-  
+
   def current_status_group_in(corporation)
     StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
   end
-  
+
   def status_group_in_primary_corporation
     # - First try the `first_corporation`,  which does not consider corporations the user is
     #   a former member of.
@@ -534,7 +542,7 @@ class User < ActiveRecord::Base
   def upcoming_events
     Event.upcoming.find_all_by_groups( self.groups ).direct
   end
-  
+
   # This makes the user join an event or a grop.
   #
   def join(event_or_group)
@@ -547,18 +555,18 @@ class User < ActiveRecord::Base
   def leave(event_or_group)
     if event_or_group.kind_of? Group
       # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
-      # event_or_group.members.destroy(self)  
+      # event_or_group.members.destroy(self)
       raise 'We need multiple dag links between two nodes!'
     elsif event_or_group.kind_of? Event
       # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
-      event_or_group.attendees_group.members.destroy(self)  
+      event_or_group.attendees_group.members.destroy(self)
     end
   end
-  
-  
+
+
   # News Entries (Pages)
   # -------------------
-  
+
   # List news (Pages) that concern the user.
   #
   #     everyone ---- page_1 ---- page_2      <--- show
@@ -569,15 +577,15 @@ class User < ActiveRecord::Base
   #         |        |-- page_4               <--- show
   #         |
   #         |--- user
-  #     
+  #
   def news_pages
     # List all pages that do not have ancestor groups
     # which the user is no member of.
     #
-    
+
     # THIS WORKS BUT LOOKS UGLY. TODO: Refactor this:
     # avoid double negation (i.e. select pages where user is member!)
-    group_ids_the_user_is_no_member_of = 
+    group_ids_the_user_is_no_member_of =
       Group.pluck(:id) - self.group_ids
     pages_that_belong_to_groups_the_user_is_no_member_of = Page
       .includes(:ancestor_groups)
@@ -618,32 +626,32 @@ class User < ActiveRecord::Base
     Group.hidden_users.assign_user self if hidden == true || hidden == "true"
     Group.hidden_users.unassign_user self if hidden == false || hidden == "false"
   end
-  
+
   def self.find_all_hidden
     self.where(id: Group.hidden_users.member_ids)
   end
-  
+
   def self.find_all_non_hidden
     non_hidden_user_ids = User.pluck(:id) - Group.hidden_users.member_ids
     self.where(id: non_hidden_user_ids)  # in order to make it work with cancan.
   end
 
-  
+
 
   # Group Flags
   # ==========================================================================================
-  
+
   # This efficiently returns all flags of the groups the user is currently in.
   #
   # For example, ony can find out with one sql query whether a user is hidden:
-  # 
+  #
   #     user.group_flags.include? 'hidden_users'
-  # 
+  #
   def group_flags
     groups.joins(:flags).pluck('flags.key')
   end
-  
-  
+
+
   # Finder Methods
   # ==========================================================================================
 
@@ -654,10 +662,10 @@ class User < ActiveRecord::Base
       user.title == title
     end.first
   end
-  
+
   def self.find_by_name( name )
     self.find_all_by_name(name).limit(1).first
-  end    
+  end
 
   # This method finds all users having the given name attribute.
   # notice: case insensitive
@@ -665,7 +673,7 @@ class User < ActiveRecord::Base
   def self.find_all_by_name( name ) # TODO: Test this
     self.where("CONCAT(first_name, ' ', last_name) = ?", name)
   end
-  
+
   # This finds a user matching an auth token.
   #
   def self.find_by_token(token)
@@ -682,31 +690,31 @@ class User < ActiveRecord::Base
       .collect { |ef| ef.profileable }
     return matching_users.to_a
   end
-  
+
   def self.find_by_email( email )
     self.find_all_by_email(email).first
   end
-  
+
   def self.with_group_flags
     self.joins(:groups => :flags)
   end
-  
+
   def self.with_group_flag(flag)
     self.with_group_flags.where("flags.key = ?", flag)
   end
-  
+
   def self.hidden
     self.with_group_flag('hidden_users')
   end
-  
+
   def self.deceased
     self.joins(:profile_fields).where(:profile_fields => {label: 'date_of_death'})
   end
-  
+
   def self.deceased_ids
     self.deceased.pluck(:id)
   end
-  
+
   def self.alive
     if self.deceased_ids.count > 0
       self.where('NOT users.id IN (?)', self.deceased_ids)
@@ -714,23 +722,23 @@ class User < ActiveRecord::Base
       self.all
     end
   end
-  
+
   def self.without_account
     self.includes(:account).where(:user_accounts => { :user_id => nil })
   end
-  
+
   def self.with_email
     self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFieldTypes::Email', '')
   end
-  
+
   def self.applicable_for_new_account
     self.alive.without_account.with_email
   end
-  
+
   def self.joins_groups
     self.joins(:groups).where('dag_links.valid_to IS NULL')
   end
-  
+
   def accept_terms(terms_stamp)
     self.accepted_terms = terms_stamp
     self.accepted_terms_at = Time.zone.now
@@ -739,7 +747,7 @@ class User < ActiveRecord::Base
   def accepted_terms?(terms_stamp)
     self.accepted_terms == terms_stamp
   end
-  
+
 
   # Helpers
   # ==========================================================================================
@@ -752,6 +760,5 @@ class User < ActiveRecord::Base
   def inspect
     "User: #{self.id} #{self.alias}"
   end
-  
-end
 
+end
