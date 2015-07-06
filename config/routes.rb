@@ -68,7 +68,9 @@ Rails.application.routes.draw do
   resources :corporations, controller: 'groups'
   resources :officer_groups
   
-  resources :pages
+  resources :pages do
+    get :photo_contest, to: 'photo_contests#show'
+  end
   
   resources :activities
     

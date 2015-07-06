@@ -124,6 +124,9 @@ class Page < ActiveRecord::Base
   def attachments_by_type( type )
     attachments.find_by_type type
   end
+  def image_attachments
+    attachments_by_type 'image'
+  end
 
 
   # Blog Entries
