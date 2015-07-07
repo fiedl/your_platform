@@ -75,7 +75,7 @@ Gem::Specification.new do |s|
   # Template Engines
   # haml template language, http://haml.info
   s.add_dependency 'haml'                                                              # MIT License
-  s.add_dependency 'redcarpet', '>= 3.2.3'  # for Markdown                             # MIT License
+  s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   
   # Layout: Twitter Bootstrap
