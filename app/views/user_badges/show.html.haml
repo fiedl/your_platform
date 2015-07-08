@@ -1,0 +1,10 @@
+%h1
+  = link_to "Badges", badges_path
+  = "/"
+  = @badge.name
+%div
+  %p= render partial: 'user_badges/user_badge', locals: {badge: @badge}
+  
+  %h2 Awarded to
+  %p= user_links(@badge.users)
+  

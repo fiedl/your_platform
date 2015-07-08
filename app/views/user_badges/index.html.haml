@@ -1,0 +1,6 @@
+%h1.user_badges= current_title
+%div
+  %ul.badges
+    - @badges.each do |badge|
+      %li
+        = render partial: 'user_badges/user_badge', locals: {badge: badge}

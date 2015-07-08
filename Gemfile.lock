@@ -64,6 +64,7 @@ PATH
       jquery-turbolinks
       jquery-ui-rails (~> 4.2.0)
       judge
+      merit
       mini_magick
       passgen
       phony
@@ -137,6 +138,7 @@ GEM
     acts_as_tree (2.2.0)
       activerecord (>= 3.0.0)
     addressable (2.3.8)
+    ambry (0.3.1)
     arel (6.0.0)
     autoprefixer-rails (5.2.1)
       execjs
@@ -332,6 +334,8 @@ GEM
     loofah (2.0.2)
       nokogiri (>= 1.5.9)
     lumberjack (1.0.9)
+    merit (2.3.2)
+      ambry (~> 0.3.0)
     method_source (0.8.2)
     mime-types (1.25.1)
     mini_magick (4.2.7)

@@ -86,6 +86,9 @@
                   %li= link_to t(:change_password), change_password_path
                   %li= link_to t(:settings), user_settings_path(current_user)
                   %li= link_to t(:logout), destroy_user_account_session_url, method: :delete
+              %li
+                = link_to user_badges_path(current_user) do
+                  = merit_indicator(current_user)
 
     .row#header-bar
       .col-sm-2.col-xs-12

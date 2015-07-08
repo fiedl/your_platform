@@ -103,6 +103,9 @@ require 'to_xls'
 # ICS Export (iCal)
 require 'icalendar'
 
+# Gamification
+require 'merit'
+
 ::STAGE = "development" unless defined? ::STAGE
 
 module YourPlatform

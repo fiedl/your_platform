@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
     get :memberships, to: 'user_group_memberships#index'
+    get :badges, to: 'user_badges#index'
   end
   get :settings, to: 'user_settings#index'
 
@@ -108,6 +109,8 @@ Rails.application.routes.draw do
   
   get 'avatars', to: 'avatars#show'
   get 'emojis', to: 'emojis#index'
+  
+  resources :badges, controller: 'user_badges'
   
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'

@@ -1,0 +1,8 @@
+- # locals: badge
+
+.user_badge
+  %p
+  = badge_check_icon if badge.users.include? current_user
+  = badge_label(badge)
+  = badge.description + ", " if badge.description.present?
+  = "awarded #{badge.users.count} times"

@@ -142,6 +142,9 @@ Gem::Specification.new do |s|
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
   
+  # Gamification
+  s.add_dependency 'merit'
+  
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7' 
