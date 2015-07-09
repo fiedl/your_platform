@@ -99,7 +99,7 @@ class ReceivedMail
   end
   
   def recipient_emails
-    @email.to
+    @email.smtp_envelope_to
   end
   def recipient_email
     recipient_emails.first
