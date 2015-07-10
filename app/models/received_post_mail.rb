@@ -16,9 +16,14 @@ class ReceivedPostMail < ReceivedMail
     recipients.select { |recipient| recipient.kind_of? Group }
   end
   
+  def no_duplicates_exist?(group)
+    group.posts.where(message_id: self.message_id).count == 0 and
+    group.posts.where(subject: self.subject, author_user_id: self.sender_user.try(:id), sent_at: 1.minute.ago..1.second.from_now).count == 0
+  end
+  
   def store_as_posts
     recipient_groups.collect do |group|
-      if (group.posts.where(message_id: self.message_id).count == 0) || Rails.env.development?
+      if no_duplicates_exist?(group) || Rails.env.development?
         post = Post.new
         if self.sender_by_email
           post.author_user_id = self.sender_user.id
@@ -60,6 +65,8 @@ class ReceivedPostMail < ReceivedMail
           post.save
         end
         post
+      else # duplicates exist!
+        Rails.logger.warn "Email duplicate found for message #{self.message_id}. Did not save as post!"
       end
     end
   end

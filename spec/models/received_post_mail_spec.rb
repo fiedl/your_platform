@@ -17,6 +17,16 @@ describe ReceivedPostMail do
     "This is a simple text message."
   }
   let(:mail) { ReceivedPostMail.new(message) }
+  
+  let(:email_looped_message) {
+    "From: #{sender_user.name} <#{sender_user.email}>\n" +
+    "To: #{recipient_group.email}\n" +
+    "Subject: Test Mail\n" + 
+    "Message-ID: <uD3saic8Jiexah5aajee9ieba8aiGae6aaph7faelae7Mah7@example.com>\n\n" +
+    "This is a simple text message.\n\n" + 
+    "__________\n" +
+    "Sent through mail group."
+  }
     
   describe "#store_as_posts" do
     subject { mail.store_as_posts }
@@ -54,6 +64,16 @@ describe ReceivedPostMail do
       mail.store_as_posts
       Post.count.should == 1
       mail.store_as_posts
+      Post.count.should == 1
+    end
+    
+    it "should not import the same email twice if it came through an email loop with different message id" do
+      # In this scenario, a recipient address redirects to the mail group address creating an email loop.
+      # The mail system should prevent such email loops by comparing subject, sender and time.
+      Post.destroy_all
+      ReceivedPostMail.new(message).store_as_posts
+      Post.count.should == 1
+      ReceivedPostMail.new(email_looped_message).store_as_posts
       Post.count.should == 1
     end
   end
