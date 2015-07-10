@@ -4,15 +4,15 @@ class Post < ActiveRecord::Base
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
-  has_many :attachments, as: :parent
+  has_many :attachments, as: :parent, dependent: :destroy
   accepts_nested_attributes_for :attachments
   attr_accessible :attachments_attributes
 
-  has_many :comments, as: :commentable
-  has_many :mentions, as: :reference
+  has_many :comments, as: :commentable, dependent: :destroy
+  has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
 
-  has_many :notifications, as: :reference
+  has_many :notifications, as: :reference, dependent: :destroy
 
   def title
     subject
