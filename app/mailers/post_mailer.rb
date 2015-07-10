@@ -33,12 +33,13 @@ class PostMailer < BaseMailer
     @smtp_envelope_to_field = recipients.collect { |user| user.email }
     @reply_to = ReceivedCommentMail.generate_address(recipients.first, post) if post.try(:id)
 
-    message = mail(
-      to: @to_field, from: sender.email, subject: subject,
-      reply_to: @reply_to
-    )
-    message.smtp_envelope_to = @smtp_envelope_to_field
-    
+    I18n.with_locale(recipients.first.try(:locale) || I18n.default_locale) do
+      message = mail(
+        to: @to_field, from: sender.email, subject: subject,
+        reply_to: @reply_to
+      )
+      message.smtp_envelope_to = @smtp_envelope_to_field
+    end
     return message
   end
   

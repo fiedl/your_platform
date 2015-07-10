@@ -25,6 +25,7 @@ require 'redis-rails'
 
 # Workers
 require 'sidekiq'
+require 'sidekiq-limit_fetch'
 
 # Authentification
 require 'devise'

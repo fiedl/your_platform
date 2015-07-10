@@ -33,6 +33,7 @@ class ReceivedMail
   
   def initialize(message)
     require 'mail'
+    @message = message
     @email = Mail.new(message)
     return self
   end

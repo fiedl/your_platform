@@ -58,6 +58,8 @@ Gem::Specification.new do |s|
   # Workers
   s.add_dependency 'foreman'
   s.add_dependency 'sidekiq'
+  s.add_dependency 'sidekiq-limit_fetch'
+  
 
   # Authentification
   s.add_dependency 'devise', '>= 2.2.5'                           # MIT License
