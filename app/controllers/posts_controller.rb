@@ -149,11 +149,11 @@ class PostsController < ApplicationController
         # This is the regular case: Creating posts from an email ("group mail feature").
         # Address exmaple: my-group@example.com
         #
-        # In order to process only one incoming email at a time, we do this in a sidekiq
-        # queue with concurrency 1. Otherwise, two emails with the same message id could
+        # In order to process only one incoming email at a time, we use a job here.
+        # Otherwise, two emails with the same message id could
         # be processed at the same time by two processes, resulting in duplicate messages.
         #
-        StoreMailAsPostsAndSendGroupMailJob.perform_later(params[:message])
+        StoreMailAsPostsAndSendGroupMailJob.perform(params[:message])
       end
     end
     render json: (@posts || [])
