@@ -27,6 +27,15 @@ describe ReceivedPostMail do
     "__________\n" +
     "Sent through mail group."
   }
+  let(:email_looped_message_with_modified_subject) {
+    "From: #{sender_user.name} <#{sender_user.email}>\n" +
+    "To: #{recipient_group.email}\n" +
+    "Subject: [#{recipient_group.name}] Test Mail\n" + 
+    "Message-ID: <uD3saic8Jiexah5aajee9ieba8aiGae6aaph7faelae7Mah7@example.com>\n\n" +
+    "This is a simple text message.\n\n" + 
+    "__________\n" +
+    "Sent through mail group."
+  }
     
   describe "#store_as_posts" do
     subject { mail.store_as_posts }
@@ -82,6 +91,27 @@ describe ReceivedPostMail do
       @posts_created_in_first_run.collect { |post| post.class.name }.should_not include "NilClass"
       @posts_created_in_first_run.collect { |post| post.class.name }.uniq.should == ["Post"]
     end
+
+    it "should not import the same email twice if it came through an email loop with different message id, even if the subject has been modified" do
+      # In this scenario, a recipient address redirects to the mail group address creating an email loop.
+      # The mail system should prevent such email loops by comparing subject, sender and time.
+      Post.destroy_all
+      @posts_created_in_first_run = ReceivedPostMail.new(message).store_as_posts
+      Post.count.should == 1
+      @posts_created_in_second_run = ReceivedPostMail.new(email_looped_message_with_modified_subject).store_as_posts
+      
+      p @posts_created_in_first_run
+      p @posts_created_in_second_run
+      
+      Post.count.should == 1
+      
+      @posts_created_in_first_run.count.should == 1
+      @posts_created_in_second_run.count.should == 0
+      
+      @posts_created_in_first_run.collect { |post| post.class.name }.should_not include "NilClass"
+      @posts_created_in_first_run.collect { |post| post.class.name }.uniq.should == ["Post"]
+    end
+    
   end
 
 end

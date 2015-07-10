@@ -18,7 +18,15 @@ class ReceivedPostMail < ReceivedMail
   
   def no_duplicates_exist?(group)
     group.posts.where(message_id: self.message_id).count == 0 and
-    group.posts.where(subject: self.subject, author_user_id: self.sender_user.try(:id), sent_at: 1.minute.ago..1.second.from_now).count == 0
+    group.posts.where(subject: possible_duplicate_subjects(group), author_user_id: self.sender_user.try(:id), sent_at: 1.minute.ago..1.second.from_now).count == 0
+  end
+  
+  def possible_duplicate_subjects(group)
+    [
+      self.subject,                            # Just the same subject
+      "[#{group.name}] #{self.subject}",       # [My Group] Subject with brackets
+      self.subject.gsub(/\[.*\] (.*)/) { $1 }  # Brackets removed
+    ]
   end
   
   def store_as_posts
