@@ -67,8 +67,9 @@ class ReceivedPostMail < ReceivedMail
         post
       else # duplicates exist!
         Rails.logger.warn "Email duplicate found for message #{self.message_id}. Did not save as post!"
+        nil
       end
-    end
+    end - [nil]
   end
 
 end

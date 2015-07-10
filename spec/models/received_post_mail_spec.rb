@@ -71,10 +71,16 @@ describe ReceivedPostMail do
       # In this scenario, a recipient address redirects to the mail group address creating an email loop.
       # The mail system should prevent such email loops by comparing subject, sender and time.
       Post.destroy_all
-      ReceivedPostMail.new(message).store_as_posts
+      @posts_created_in_first_run = ReceivedPostMail.new(message).store_as_posts
       Post.count.should == 1
-      ReceivedPostMail.new(email_looped_message).store_as_posts
+      @posts_created_in_second_run = ReceivedPostMail.new(email_looped_message).store_as_posts
       Post.count.should == 1
+      
+      @posts_created_in_first_run.count.should == 1
+      @posts_created_in_second_run.count.should == 0
+      
+      @posts_created_in_first_run.collect { |post| post.class.name }.should_not include "NilClass"
+      @posts_created_in_first_run.collect { |post| post.class.name }.uniq.should == ["Post"]
     end
   end
 
