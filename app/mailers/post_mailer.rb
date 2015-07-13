@@ -35,7 +35,14 @@ class PostMailer < BaseMailer
 
     I18n.with_locale(recipients.first.try(:locale) || I18n.default_locale) do
       message = mail(
-        to: @to_field, from: sender.email, subject: subject,
+        to: @to_field, 
+        from: 
+          if sender.kind_of? User 
+            sender.email
+          elsif sender.kind_of? String 
+            sender
+          end, 
+        subject: subject,
         reply_to: @reply_to
       )
       message.smtp_envelope_to = @smtp_envelope_to_field
