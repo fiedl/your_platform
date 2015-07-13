@@ -79,8 +79,8 @@ class AttachmentsController < ApplicationController
           title: @attachment.title,
           description: @attachment.description,
           if @attachment.author
-            author: @attachment.author.title,
-          end
+            author: @attachment.author.title
+          end,
           html: render_to_string(partial: 'attachments/description', formats: [:html], locals: {attachment: @attachment})
         }
       end
