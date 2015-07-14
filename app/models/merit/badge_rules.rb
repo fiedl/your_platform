@@ -26,10 +26,10 @@ module Merit
       # Find badge by badge_id, badge_id takes presidence over badge
       # grant_on 'users#create', badge_id: 7, badge: 'just-registered', to: :itself
 
-      # If it has 10 comments, grant commenter-10 badge
-      grant_on 'comments#create', badge: 'commentator', level: 10 do |comment|
-        comment.user.comments.count == 10
-      end
+      # # If it has 10 comments, grant commenter-10 badge
+      # grant_on 'comments#create', badge: 'commentator', level: 10 do |comment|
+      #   comment.author.comments.count == 10
+      # end
 
       # If it has 5 votes, grant relevant-commenter badge
       # grant_on 'comments#vote', badge: 'relevant-commenter',
