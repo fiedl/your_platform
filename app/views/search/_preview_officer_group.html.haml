@@ -5,7 +5,7 @@
 - obj.memberships.includes(:descendant).each do |membership|
   %p
     = link_to membership.user.title, membership.user
-    = "(#{t(:since)} #{localize membership.valid_from.to_date})"
+    = "(#{t(:since)} #{localize membership.valid_from.to_date if membership.valid_from})"
 
 - if obj.scope # which is the object the officer is officer for.
   %p
