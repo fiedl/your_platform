@@ -113,6 +113,14 @@ class ReceivedMail
   def recipient_by_email(email)
     ProfileFieldTypes::Email.where(value: email).first.try(:profileable)
   end
+  def recipient_group_by_email(email)
+    ProfileFieldTypes::MailingListEmail.where(value: email).first.try(:profileable)
+  end
+  def recipient_groups
+    recipient_emails.collect do |email|
+      recipient_group_by_email(email)
+    end.uniq - [nil]
+  end
   
   def message_id
     @email.message_id

@@ -12,10 +12,6 @@
 #
 class ReceivedPostMail < ReceivedMail
   
-  def recipient_groups
-    recipients.select { |recipient| recipient.kind_of? Group }
-  end
-  
   def no_duplicates_exist?(group)
     group.posts.where(message_id: self.message_id).count == 0 and
     group.posts.where(subject: possible_duplicate_subjects(group), author_user_id: self.sender_user.try(:id), sent_at: 1.minute.ago..1.second.from_now).count == 0

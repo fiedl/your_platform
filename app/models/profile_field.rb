@@ -170,7 +170,8 @@ class ProfileField < ActiveRecord::Base
   #
   def self.possible_types
     [ProfileFieldTypes::General, ProfileFieldTypes::Custom, 
-      ProfileFieldTypes::Organization, ProfileFieldTypes::Email,
+      ProfileFieldTypes::Organization, ProfileFieldTypes::Email, 
+      ProfileFieldTypes::MailingListEmail,
       ProfileFieldTypes::Address, ProfileFieldTypes::About,
       ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory,
       ProfileFieldTypes::Competence, ProfileFieldTypes::BankAccount,

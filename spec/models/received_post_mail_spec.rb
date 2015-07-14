@@ -5,8 +5,7 @@ describe ReceivedPostMail do
   let(:sender_user) { create :user }
   let(:recipient_group) {
     group = create :group
-    group.email = 'example-group@example.com'
-    group.save
+    group.profile_fields.create(type: 'ProfileFieldTypes::MailingListEmail', value: 'example-group@example.com')
     group
   }
   let(:message) { 
@@ -99,10 +98,6 @@ describe ReceivedPostMail do
       @posts_created_in_first_run = ReceivedPostMail.new(message).store_as_posts
       Post.count.should == 1
       @posts_created_in_second_run = ReceivedPostMail.new(email_looped_message_with_modified_subject).store_as_posts
-      
-      p @posts_created_in_first_run
-      p @posts_created_in_second_run
-      
       Post.count.should == 1
       
       @posts_created_in_first_run.count.should == 1
@@ -110,6 +105,15 @@ describe ReceivedPostMail do
       
       @posts_created_in_first_run.collect { |post| post.class.name }.should_not include "NilClass"
       @posts_created_in_first_run.collect { |post| post.class.name }.uniq.should == ["Post"]
+    end
+    
+    it "should not import the post if the recipient email is not a mailing list" do
+      recipient_group.profile_fields.where(type: 'ProfileFieldTypes::MailingListEmail').destroy_all
+      recipient_group.profile_fields.create(type: 'ProfileFieldTypes::Email', value: 'example-group@example.com')
+      
+      Post.destroy_all
+      subject
+      Post.count.should == 0
     end
     
   end

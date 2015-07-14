@@ -29,7 +29,7 @@ module Profileable
   module InstanceMethodsForProfileables
     
     def email
-      @email ||= cached { profile_fields_by_type("ProfileFieldTypes::Email").first.try(:value) }
+      @email ||= cached { profile_fields.where(type: ['ProfileFieldTypes::Email', 'ProfileFieldTypes::MailingListEmail']).first.try(:value) }
     end
     def email=( email )
       @email = nil

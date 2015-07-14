@@ -17,7 +17,7 @@ class ProfileSection < Struct.new(:title, :profileable)
       when :general
         [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::General" ]
       when :contact_information
-        [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", 
+        [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", "ProfileFieldTypes::MailingListEmail",
           "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
       when :about_myself
         [ "ProfileFieldTypes::About" ]
