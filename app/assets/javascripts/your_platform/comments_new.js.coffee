@@ -1,5 +1,8 @@
 $(document).ready ->
-  $('.new_comment .comment-tools').hide()
+  $(document).process_comment_tools()
+
+$.fn.process_comment_tools = ->
+  $(this).find('.new_comment .comment-tools').hide()
   
 $(document).on 'change keyup paste', '.new_comment textarea', ->
   if $(this).val() != ""
