@@ -1,14 +1,17 @@
 $(document).ready ->
+  $(document).process_mentions()
+
+$.fn.process_mentions = ->
   
   # remove previous binds
-  $('textarea').off('atwhoInner')
+  $(this).find('textarea').off('atwhoInner')
   
   # adding @mentions to:
   # - new-comment form
   # - new-post form
   #
-  autocomplete_url = $('.new_comment textarea').attr('data-user-titles-path')
-  $('.new_comment textarea, .new_post textarea').atwho {
+  autocomplete_url = $(this).find('.new_comment textarea').attr('data-user-titles-path')
+  $(this).find('.new_comment textarea, .new_post textarea').atwho {
     at: '@',
     maxLen: 50,
     delay: 400,
@@ -38,7 +41,7 @@ $(document).ready ->
   # adding :emoji: to:
   # - all textareas
   #
-  $('textarea').atwho {
+  $(this).find('textarea').atwho {
     at: ':',
     searchKey: 'key',
     displayTpl: "<li>${image_tag} :${key}:</li>",
