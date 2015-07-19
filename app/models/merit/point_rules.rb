@@ -26,6 +26,7 @@ module Merit
       #
       # score -10, :on => 'comments#destroy'
       
+      score 2, on: 'comments#create', category: 'communication'
     end
   end
 end

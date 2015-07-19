@@ -26,6 +26,12 @@ badge_id = 0
   name: 'first-login',
   level: 1,
   custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'commentator',
+  level: 10,
+  description: 'leave 10 comments',
+  custom_fields: { difficulty: :bronce }
 }].each do |attrs|
   Merit::Badge.create! attrs
 end
