@@ -32,6 +32,67 @@ badge_id = 0
   level: 10,
   description: 'leave 10 comments',
   custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'blogger',
+  level: 10,
+  description: 'create 10 blog posts with 100 or more characters',
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'autobiographer',
+  description: 'create an about-myself profile field with 100 or more characters',
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'editor',
+  description: 'edit a page or blog post created by another user',
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'yearling',
+  description: 'sign in when your first sign in has been over a year ago',
+  custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'global-admin',
+  description: 'become a global administrator',
+  custom_fields: { difficulty: :gold }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'admin',
+  description: 'become an administrator',
+  custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'compliant',
+  description: 'accept the terms of use',
+  custom_fields: { difficulty: :bronce },
+  multiple: true
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'data-kraken',
+  description: 'download 10 exported lists',
+  level: 10,
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'post-office',
+  description: 'download 10 exported address label pdfs',
+  level: 10,
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'captain-of-the-enterprise',
+  description: 'create a post or comment containing the legendary phrase "make it so"',
+  custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'damsel-in-distress',
+  description: 'only a true hero is honest enough to ask for help: create a support-request with the help button',
+  custom_fields: { difficulty: :silver }
+
+
 }].each do |attrs|
   Merit::Badge.create! attrs
 end

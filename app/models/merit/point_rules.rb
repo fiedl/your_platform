@@ -26,6 +26,9 @@ module Merit
       #
       # score -10, :on => 'comments#destroy'
       
+      score 10, on: 'workflows#execute', category: 'administration'
+      score 5, on: ['blog_posts#create', 'pages#create'], category: 'information'
+      score 5, on: 'posts#create', category: 'communication'
       score 2, on: 'comments#create', category: 'communication'
     end
   end
