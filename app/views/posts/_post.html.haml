@@ -23,7 +23,7 @@
               = icon(:tag)
               = link_to post.group.title, post.group
         %div.post-date
-          = localize(post.sent_at)
+          = localize(post.sent_at) if post.sent_at
           
       %div.post-body
         = markup post.text.html_safe
