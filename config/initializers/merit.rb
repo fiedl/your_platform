@@ -91,6 +91,31 @@ badge_id = 0
   name: 'damsel-in-distress',
   description: 'only a true hero is honest enough to ask for help: create a support-request with the help button',
   custom_fields: { difficulty: :silver }
+}, {
+    id: (badge_id = badge_id+1),
+    name: 'detective',
+    description: 'who searches will find it: search something with the search button',
+    custom_fields: { difficulty: :bronce }
+}, {
+    id: (badge_id = badge_id+1),
+    name: 'host',
+    description: 'creates 2 events',
+    custom_fields: { difficulty: :bronce }
+}, {
+    id: (badge_id = badge_id+1),
+    name: 'great host',
+    description: 'creates 10 events',
+    custom_fields: { difficulty: :silver }
+}, {
+    id: (badge_id = badge_id+1),
+    name: 'participant',
+    description: 'creates 2 events',
+    custom_fields: { difficulty: :bronce }
+}, {
+    id: (badge_id = badge_id+1),
+    name: 'party checker',
+    description: 'creates 40 events',
+    custom_fields: { difficulty: :silver }
 
 
 }].each do |attrs|

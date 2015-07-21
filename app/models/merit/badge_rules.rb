@@ -33,6 +33,21 @@ module Merit
       grant_on 'comments#create', badge: 'commentator', level: 10 do |comment|
         comment.author.comments.count == 10
       end
+      
+      #If it has 1 search button, grant detective-1 badge
+      grant_on 'search#index', badge: 'detective', lavel: 1, to: :user
+      
+      #If it has 2 search button, grant host badge
+      grant_on 'events#update', badge: 'host', lavel: 2
+      
+      #If it has 10 search button, grant great host badge
+      grant_on 'events#update', badge: 'great host', lavel: 10
+
+      #If it has 2 search button, grant participant badge
+      grant_on 'events#join', badge: 'particpant', lavel: 2
+
+      #If it has 40 search button, grant party checker badge
+      grant_on 'events#join', badge: 'party checker', lavel: 40
 
       # If it has 5 votes, grant relevant-commenter badge
       # grant_on 'comments#vote', badge: 'relevant-commenter',

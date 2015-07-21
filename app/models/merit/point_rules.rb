@@ -30,6 +30,8 @@ module Merit
       score 5, on: ['blog_posts#create', 'pages#create'], category: 'information'
       score 5, on: 'posts#create', category: 'communication'
       score 2, on: 'comments#create', category: 'communication'
+      score 1, on: 'events#join', category: 'social activity'
+      score 2, on: 'events#update', category: 'social activity'
     end
   end
 end
