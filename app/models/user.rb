@@ -62,6 +62,7 @@ class User < ActiveRecord::Base
   include UserRoles
   include UserNotifications
   include UserPosts
+  include UserMerit
 
   # General Properties
   # ==========================================================================================
