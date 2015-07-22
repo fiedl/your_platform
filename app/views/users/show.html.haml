@@ -4,6 +4,11 @@
   %ul.nav.nav-tabs.user
     %li.active
       %a{href: '#general', data: {toggle: 'tab'}} Überblick
+    - if can? :use, :merit
+      %li
+        %a{href: '#merit', data: {toggle: 'tab'}} 
+          Plattform-Rang
+          = beta_badge
     %li
       %a{href: '#contact', data: {toggle: 'tab'}} Kontakt
     %li
@@ -11,7 +16,7 @@
     %li
       %a{href: '#career', data: {toggle: 'tab'}} Studium und Beruf
     %li
-      %a{href: '#more', data: {toggle: 'tab'}} Weitere Informationen
+      %a{href: '#more', data: {toggle: 'tab'}} Weiteres
 
 .tab-content.user
 
@@ -34,6 +39,10 @@
         = render partial: 'users/special_general_info_fields', locals: {user: @user}
         = render partial: 'users/dead_badge', locals: { user: @user }
         = render partial: 'users/hidden_flag_switch', locals: { user: @user }
+
+  - if can? :use, :merit
+    #merit{class: tab_pane_class}
+      = render partial: 'users/merit', locals: {user: @user}
 
   - # Contact Info Box
   #contact{class: tab_pane_class}

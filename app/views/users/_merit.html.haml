@@ -1,0 +1,24 @@
+- # locals: user
+
+%h1= user.title
+%div
+  = render partial: 'avatar'
+  %ul.attributes
+    %li.rank.attribute
+      %span.label-wrapper
+        %span.attribute-label Plattform-Rang
+      %span.value-wrapper
+        %span.attribute-value= user.level
+    %li.score.attribute
+      %span.label-wrapper
+        %span.attribute-label Punktestand
+      %span.value-wrapper
+        %span.attribute-value= user.points 
+
+%h1.user_badges Abzeichen
+%div
+  %ul.badges
+    - user.badges.each do |badge|
+      %li
+        = render partial: 'user_badges/user_badge', locals: {badge: badge}
+  
