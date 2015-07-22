@@ -94,7 +94,7 @@ badge_id = 0
 }, {
     id: (badge_id = badge_id+1),
     name: 'detective',
-    description: 'who searches will find it: search something with the search button',
+    description: 'Seek, and ye shall find: search something with the search button',
     custom_fields: { difficulty: :bronce }
 }, {
     id: (badge_id = badge_id+1),
