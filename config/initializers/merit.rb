@@ -91,6 +91,11 @@ badge_id = 0
   name: 'damsel-in-distress',
   description: 'only a true hero is honest enough to ask for help: create a support-request with the help button',
   custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'calendar-uplink',
+  description: 'subscribe to your personal ical calendar feed',
+  custom_fields: { difficulty: :bronce }
 
 
 }].each do |attrs|

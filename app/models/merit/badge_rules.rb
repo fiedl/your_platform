@@ -33,6 +33,8 @@ module Merit
       grant_on 'comments#create', badge: 'commentator', level: 10 do |comment|
         comment.author.comments.count == 10
       end
+      
+      # 'calendar-uplink' is granted manually in 'events#index'
 
       # If it has 5 votes, grant relevant-commenter badge
       # grant_on 'comments#vote', badge: 'relevant-commenter',

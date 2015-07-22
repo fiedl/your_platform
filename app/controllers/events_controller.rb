@@ -84,7 +84,10 @@ class EventsController < ApplicationController
         end
       end
       format.json { render json: @events }
-      format.ics { send_data @events.to_ics, filename: "#{@group.try(:name)} #{Time.zone.now}".parameterize + ".ics" }
+      format.ics do
+        @user.try(:grant_badge, 'calendar-uplink')
+        send_data @events.to_ics, filename: "#{@group.try(:name)} #{Time.zone.now}".parameterize + ".ics"
+      end
     end
   end
 
