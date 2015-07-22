@@ -76,7 +76,7 @@
 
             %ul.nav.navbar-nav.navbar-right
               %li.last.dropdown
-                %a.dropdown-toggle{'data-toggle' => 'dropdown', :href => '#'}
+                %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
                   = render 'layouts/session_bar_avatar'
                   = current_user.title
                   %b.caret
@@ -85,7 +85,7 @@
                   %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true)
                   %li= link_to t(:change_password), change_password_path
                   %li= link_to t(:settings), user_settings_path(current_user)
-                  %li= link_to t(:logout), destroy_user_account_session_url, method: :delete
+                  %li= link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out'
               %li
                 = link_to user_badges_path(current_user) do
                   = merit_indicator(current_user)
