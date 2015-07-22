@@ -44,7 +44,7 @@ module Merit
       grant_on 'events#update', badge: 'great host', level: 30
 
       #If it has 2 search button, grant participant badge
-      grant_on 'events#join', badge: 'particpant', level: 2
+      grant_on 'events#join', badge: 'participant', level: 2
 
       #If it has 40 search button, grant party checker badge
       grant_on 'events#join', badge: 'party checker', level: 40
