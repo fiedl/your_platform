@@ -21,6 +21,13 @@ class SearchController < ApplicationController
       @groups = Group.where( "name like ?", q )
       @events = Event.where("name like ?", q).order('start_at DESC')
 
+      # Convert to arrays in order to be able to add results through
+      # associations below.
+      @users = @users.to_a
+      @pages = @pages.to_a
+      @groups = @groups.to_a
+      @events = @events.to_a
+      
       # browse profile fields
       #
       profile_fields = ProfileField.where("value like ? or label like ?", q, q).collect do |profile_field|
@@ -45,7 +52,7 @@ class SearchController < ApplicationController
       @pages = @pages.uniq
       @groups = @groups.uniq
       @events = @events.uniq
-
+      
       # AUTHORIZATION
       #
       @users = filter_by_authorization(@users)

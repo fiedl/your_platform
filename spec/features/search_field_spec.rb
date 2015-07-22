@@ -61,6 +61,19 @@ feature "Search Field", js: true do
         u3.size.should == 1
       end
     end
+    
+    describe "by profile field" do
+      before do
+        @user1 = create :user
+        @user1.profile_fields.create(type: 'ProfileFieldTypes::Address', value: 'Pariser Platz 1\n 10117 Berlin')
+      end
+      specify "searching for a string in a profile field should result in the corresponding user" do
+        within('.navbar-search') { fill_in 'query', with: "Berlin" }
+        press_enter in: 'query'
+        
+        page.should have_text @user1.title
+      end
+    end
   end
 
   describe "finding pages" do
