@@ -6,6 +6,8 @@ en:
   found_users: Found Users
   found_groups: Found Groups
   found_pages: Found Pages
+  found_events: Found Events
+  found_posts: Found Posts
 
   no_results_found: No results found.
   

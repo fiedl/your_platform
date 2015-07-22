@@ -20,13 +20,15 @@ class SearchController < ApplicationController
         .order('title')
       @groups = Group.where( "name like ?", q )
       @events = Event.where("name like ?", q).order('start_at DESC')
-
+      @posts = Post.where("subject like ? or text like ?", q, q)
+      
       # Convert to arrays in order to be able to add results through
       # associations below.
       @users = @users.to_a
       @pages = @pages.to_a
       @groups = @groups.to_a
       @events = @events.to_a
+      @posts = @posts.to_a
       
       # browse profile fields
       #
@@ -46,12 +48,20 @@ class SearchController < ApplicationController
       attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
       @pages += attachments.collect { |attachment| attachment.parent }
       
+      # browse comments
+      #
+      comments = Comment.where("text like ?", q)
+      comments.each do |comment|
+        @posts << comment.commentable if comment.commentable.kind_of? Post
+      end
+      
       # eleminiate duplicate results
       #
       @users = @users.uniq
       @pages = @pages.uniq
       @groups = @groups.uniq
       @events = @events.uniq
+      @posts = @posts.uniq
       
       # AUTHORIZATION
       #
@@ -59,8 +69,9 @@ class SearchController < ApplicationController
       @pages = filter_by_authorization(@pages)
       @groups = filter_by_authorization(@groups)
       @events = filter_by_authorization(@events)
+      @posts = filter_by_authorization(@posts)
 
-      @results = @users + @pages + @groups + @events
+      @results = @users + @pages + @groups + @events + @posts
       if @results.count == 1
         redirect_to @results.first
       end
@@ -75,6 +86,7 @@ class SearchController < ApplicationController
       @users = nil if @users.count == 0
       @groups = nil if @groups.count == 0
       @events = nil if @events.count == 0
+      @posts = nil if @posts.count == 0
       @results = nil if @results.count == 0
 
     end
