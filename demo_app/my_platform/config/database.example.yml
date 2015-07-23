@@ -1,17 +1,19 @@
 development:
-  adapter: mysql2
-  encoding: utf8
+  adapter: postgresql
+  encoding: unicode
   reconnect: false
   database: my_platform_development
   pool: 25
-  username: 
+  username: YOUR SYSTEM USER
   password: 
+  host: localhost
   
 test:
-  adapter: mysql2
-  encoding: utf8
+  adapter: postgresql
+  encoding: unicode
   reconnect: false
   database: my_platform_test
   pool: 5
-  username: 
+  username: YOUR SYSTEM USER
   password: 
+  host: localhost
