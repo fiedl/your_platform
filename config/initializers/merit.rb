@@ -92,31 +92,35 @@ badge_id = 0
   description: 'only a true hero is honest enough to ask for help: create a support-request with the help button',
   custom_fields: { difficulty: :silver }
 }, {
-    id: (badge_id = badge_id+1),
-    name: 'detective',
-    description: 'Seek, and ye shall find: search something with the search button',
-    custom_fields: { difficulty: :bronce }
+  id: (badge_id = badge_id+1),
+  name: 'detective',
+  description: 'Seek, and ye shall find: search something with the search button',
+  level: 1,
+  custom_fields: { difficulty: :bronce }
 }, {
-    id: (badge_id = badge_id+1),
-    name: 'host',
-    description: 'creates 2 events',
-    custom_fields: { difficulty: :bronce }
+  id: (badge_id = badge_id+1),
+  name: 'host',
+  description: 'creates 2 events',
+  level: 3,
+  custom_fields: { difficulty: :bronce }
 }, {
-    id: (badge_id = badge_id+1),
-    name: 'great host',
-    description: 'creates 10 events',
-    custom_fields: { difficulty: :silver }
+  id: (badge_id = badge_id+1),
+  name: 'great host',
+  description: 'creates 10 events',
+  level: 30,
+  custom_fields: { difficulty: :silver }
 }, {
-    id: (badge_id = badge_id+1),
-    name: 'participant',
-    description: 'creates 2 events',
-    custom_fields: { difficulty: :bronce }
+  id: (badge_id = badge_id+1),
+  name: 'participant',
+  description: 'creates 2 events',
+  level: 2,
+  custom_fields: { difficulty: :bronce }
 }, {
-    id: (badge_id = badge_id+1),
-    name: 'party checker',
-    description: 'creates 40 events',
-    custom_fields: { difficulty: :silver }
-
+  id: (badge_id = badge_id+1),
+  name: 'party checker',
+  description: 'creates 40 events',
+  level: 40,
+  custom_fields: { difficulty: :silver }
 
 }].each do |attrs|
   Merit::Badge.create! attrs
