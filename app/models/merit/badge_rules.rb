@@ -34,7 +34,19 @@ module Merit
         comment.author.comments.count == 10
       end
       
+      grant_on 'workflows#execute', badge: 'eleminator' do |workflow|
+        # activity workflow & ['Ehrenhafter Austritt', 'Schlichter Austritt', 'Streichung']
+      end
+      grant_on 'workflows#execute', badge: 'princess-leia' do |workflow|
+        # activity workflow & ['Burschung', ...]
+      end
+      
       # 'calendar-uplink' is granted manually in 'events#index'
+      
+      grant_on 'profile_fields#update', badge: 'thanks-for-letting-us-know', to: :user
+      
+      
+      
 
       # If it has 5 votes, grant relevant-commenter badge
       # grant_on 'comments#vote', badge: 'relevant-commenter',

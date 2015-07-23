@@ -7,7 +7,7 @@ Merit.setup do |config|
   config.orm = :active_record
 
   # Add application observers to get notifications when reputation changes.
-  # config.add_observer 'MyObserverClassName'
+  # config.add_observer 'ReputationChangeObserver'
 
   # Define :user_model_name. This model will be used to grand badge if no
   # `:to` option is given. Default is 'User'.
@@ -40,7 +40,7 @@ badge_id = 0
   custom_fields: { difficulty: :bronce }
 }, {
   id: (badge_id = badge_id+1),
-  name: 'autobiographer',
+  name: 'auto-biographer',
   description: 'create an about-myself profile field with 100 or more characters',
   custom_fields: { difficulty: :bronce }
 }, {
@@ -93,8 +93,29 @@ badge_id = 0
   custom_fields: { difficulty: :silver }
 }, {
   id: (badge_id = badge_id+1),
+  name: 'eliminator',
+  description: 'execute each destructive status workflow at least once',
+  custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'princess-leia',
+  description: 'exeute each constructive status workflow at least once',
+  custom_fields: { difficulty: :silver }
+}, {
+  id: (badge_id = badge_id+1),
   name: 'calendar-uplink',
   description: 'subscribe to your personal ical calendar feed',
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'thanks-for-letting-us-know',
+  description: 'update own profile',
+  custom_fields: { difficulty: :bronce }
+}, {
+  id: (badge_id = badge_id+1),
+  name: 'good-profile',
+  description: 'fill out at least 14 profile fields',
+  level: 14,
   custom_fields: { difficulty: :bronce }
 
 
