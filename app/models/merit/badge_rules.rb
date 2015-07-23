@@ -34,20 +34,15 @@ module Merit
         comment.author.comments.count == 10
       end
       
-      #If it has 1 search button, grant detective-1 badge
       grant_on 'search#index', badge: 'detective', level: 1
       
-      #If it has 3 search button, grant host badge
       grant_on 'events#update', badge: 'host', level: 3
       
-      #If it has 30 search button, grant great host badge
-      grant_on 'events#update', badge: 'great host', level: 30
+      grant_on 'events#update', badge: 'great-host', level: 30
 
-      #If it has 2 search button, grant participant badge
       grant_on 'events#join', badge: 'participant', level: 2
 
-      #If it has 40 search button, grant party checker badge
-      grant_on 'events#join', badge: 'party checker', level: 40
+      grant_on 'events#join', badge: 'party-checker', level: 40
 
       # If it has 5 votes, grant relevant-commenter badge
       # grant_on 'comments#vote', badge: 'relevant-commenter',

@@ -100,13 +100,13 @@ badge_id = 0
 }, {
   id: (badge_id = badge_id+1),
   name: 'host',
-  description: 'creates 2 events',
+  description: 'creates 3 events',
   level: 3,
   custom_fields: { difficulty: :bronce }
 }, {
   id: (badge_id = badge_id+1),
-  name: 'great host',
-  description: 'creates 10 events',
+  name: 'great-host',
+  description: 'creates 30 events',
   level: 30,
   custom_fields: { difficulty: :silver }
 }, {
@@ -117,7 +117,7 @@ badge_id = 0
   custom_fields: { difficulty: :bronce }
 }, {
   id: (badge_id = badge_id+1),
-  name: 'party checker',
+  name: 'party-checker',
   description: 'creates 40 events',
   level: 40,
   custom_fields: { difficulty: :silver }
