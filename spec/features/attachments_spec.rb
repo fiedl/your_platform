@@ -35,4 +35,25 @@ feature "Attachments" do
     end
   end
 
+  context "when the attachment has an author" do
+    before do
+      @group << @user
+      login @user
+    end
+    scenario "description of the attachment", :js do
+      visit @page
+      page.should have_content @user.title
+    end
+  end
+
+  context "when the attachment has no author" do
+    before do
+      @group << @user
+      login @user
+    end
+    scenario "description of the attachment", :js do
+      visit @page
+      page.should have_no_content @user.title
+    end
+  end
 end
