@@ -7,6 +7,7 @@ feature "Attachments" do
     @user = create :user_with_account
     @group = create :group
     @page = @group.child_pages.create
+    @user2 = create :user_with_account
     @attachment = create :attachment, parent_id: @page.id, parent_type: 'Page'
   end
 
@@ -39,10 +40,11 @@ feature "Attachments" do
     before do
       @group << @user
       login @user
+      @attachment.author = @user2
     end
     scenario "description of the attachment", :js do
       visit page_path(@page)
-      page.should have_content @user.title
+      page.should have_content @user2.title
     end
   end
 
@@ -53,7 +55,7 @@ feature "Attachments" do
     end
     scenario "description of the attachment", :js do
       visit page_path(@page)
-      page.should have_no_content @user.title
+      page.should have_no_content @user2.title
     end
   end
 end
