@@ -41,7 +41,7 @@ feature "Attachments" do
       login @user
     end
     scenario "description of the attachment", :js do
-      visit @page
+      visit page_path(@page)
       page.should have_content @user.title
     end
   end
@@ -52,7 +52,7 @@ feature "Attachments" do
       login @user
     end
     scenario "description of the attachment", :js do
-      visit @page
+      visit page_path(@page)
       page.should have_no_content @user.title
     end
   end
