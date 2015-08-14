@@ -44,9 +44,9 @@ class User < ActiveRecord::Base
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
   after_save                { self.delay.delete_cache }
-
-  # after_commit     					:delete_cache, prepend: true
-  # before_destroy    				:delete_cache, prepend: true
+  
+  include PgSearch
+  pg_search_scope :search, against: [:first_name, :last_name]
 
 
   # Mixins
@@ -674,8 +674,8 @@ class User < ActiveRecord::Base
   # This method finds all users having the given name attribute.
   # notice: case insensitive
   #
-  def self.find_all_by_name( name ) # TODO: Test this
-    self.where("CONCAT(first_name, ' ', last_name) = ?", name)
+  def self.find_all_by_name(name)
+    self.search(name)
   end
 
   # This finds a user matching an auth token.
@@ -688,7 +688,8 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    email_fields = ProfileField.where( type: "ProfileFieldTypes::Email", value: email )
+    t = ProfileFieldTypes::Email.arel_table # http://stackoverflow.com/a/21467580/2066546
+    email_fields = ProfileFieldTypes::Email.where(t[:value].matches(email))
     matching_users = email_fields
       .select{ |ef| ef.profileable_type == "User" }
       .collect { |ef| ef.profileable }

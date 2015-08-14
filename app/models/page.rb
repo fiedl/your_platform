@@ -11,6 +11,9 @@ class Page < ActiveRecord::Base
   
   serialize :redirect_to
   
+  include PgSearch
+  pg_search_scope :search, against: [:title, :content]
+  
   include PagePublicWebsite
   
   scope :for_display, -> { includes(

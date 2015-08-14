@@ -10,6 +10,9 @@ class Attachment < ActiveRecord::Base
   before_create :set_default_title_if_empty
   before_destroy :remove_file!
 
+  include PgSearch
+  pg_search_scope :search, against: [:title, :description, :file]
+
   def thumb_url
     url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
     url = file.url( :video_thumb ) if has_type?( "video" )

@@ -709,7 +709,7 @@ describe User do
       subject.should include( Group.everyone )
     end
     it "should return all ancestor groups" do
-      subject.should == @user.ancestor_groups
+      @user.groups(true).should == @user.ancestor_groups(true)
     end
   end
 

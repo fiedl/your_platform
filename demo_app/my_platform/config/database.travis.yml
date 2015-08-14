@@ -1,9 +1,9 @@
 test:
-  adapter: mysql2
-  encoding: utf8
+  adapter: postgresql
+  encoding: unicode
   reconnect: false
   database: my_platform_test
   pool: 5
-  username: root
+  username: postgres
   password:
   host: localhost

@@ -14,6 +14,9 @@ class Post < ActiveRecord::Base
 
   has_many :notifications, as: :reference, dependent: :destroy
 
+  include PgSearch
+  pg_search_scope :search, against: [:subject, :text]
+
   def title
     subject
   end

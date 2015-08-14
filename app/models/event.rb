@@ -6,6 +6,9 @@ class Event < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
+  include PgSearch
+  pg_search_scope :search, against: [:name, :description]
+
   
   # General Properties
   # ==========================================================================================

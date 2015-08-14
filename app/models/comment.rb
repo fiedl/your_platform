@@ -7,4 +7,7 @@ class Comment < ActiveRecord::Base
   has_many :mentions, as: :reference
   has_many :mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
   
+  include PgSearch
+  pg_search_scope :search, against: [:text]
+    
 end

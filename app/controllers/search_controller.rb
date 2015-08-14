@@ -4,23 +4,20 @@ class SearchController < ApplicationController
   skip_authorization_check
 
   def index
-    query_string = params[ :query ]
+    q = query_string = params[ :query ]
     if query_string.present?
       
       # log search query for metrics analysis
       #
       metric_logger.log_event({query: query_string}, type: :search)
-
+      
       # browse users, pages, groups and events
       #
-      q = "%" + query_string.gsub( ' ', '%' ) + "%"
-      @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
-        .order('last_name', 'first_name')
-      @pages = Page.where("title like ? OR content like ?", q, q)
-        .order('title')
-      @groups = Group.where( "name like ?", q )
-      @events = Event.where("name like ?", q).order('start_at DESC')
-      @posts = Post.where("subject like ? or text like ?", q, q)
+      @users = User.search(query_string).order('last_name', 'first_name')
+      @pages = Page.search(query_string).order('title')
+      @groups = Group.search(query_string)
+      @events = Event.search(query_string)
+      @posts = Post.search(query_string)
       
       # Convert to arrays in order to be able to add results through
       # associations below.
@@ -32,10 +29,7 @@ class SearchController < ApplicationController
       
       # browse profile fields
       #
-      profile_fields = ProfileField.where("value like ? or label like ?", q, q).collect do |profile_field|
-        profile_field.parent || profile_field
-      end.uniq
-      profile_fields.each do |profile_field|
+      ProfileField.search(query_string).to_a.uniq.each do |profile_field|
         if profile_field.profileable.kind_of? User
           @users << profile_field.profileable
         elsif profile_field.profileable.kind_of? Group
@@ -45,13 +39,12 @@ class SearchController < ApplicationController
       
       # browse attachments
       #
-      attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
+      attachments = Attachment.where(parent_type: 'Page').search(query_string)
       @pages += attachments.collect { |attachment| attachment.parent }
       
       # browse comments
       #
-      comments = Comment.where("text like ?", q)
-      comments.each do |comment|
+      Comment.search(query_string).each do |comment|
         @posts << comment.commentable if comment.commentable.kind_of? Post
       end
       
@@ -163,15 +156,13 @@ class SearchController < ApplicationController
   def find_preview_object(query_string)
     object = nil
     if query_string.present?
-      like_query_string = "%" + query_string.gsub( ' ', '%' ) + "%"
-    
       # The order of these assignments determines the priority.
       #
       object = Corporation.where(token: query_string).limit(1).first
       object ||= User.where(last_name: query_string).limit(1).first
-      object ||= Page.where("title like ?", like_query_string).limit(1).first
-      object ||= Group.where("name like ?", like_query_string).limit(1).first
-      object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
+      object ||= Page.search(query_string).limit(1).first
+      object ||= Group.search(query_string).limit(1).first
+      object ||= User.search(query_string).limit(1).first
 
       object = nil unless can? :read, object
     end

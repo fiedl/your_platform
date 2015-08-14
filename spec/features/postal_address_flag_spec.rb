@@ -25,7 +25,7 @@ feature "Postal Address Flag" do
       click_on I18n.t(:edit)
       first("input[type='radio']").click()
       wait_for_ajax
-
+      
       visit user_path @user
       page.should have_content "Home Address #{@home_address.value} Postanschrift".gsub("\n", "")
       page.should have_no_content "Study Address #{@study_address.value} Postanschrift".gsub("\n", "")

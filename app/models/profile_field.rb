@@ -49,6 +49,12 @@ class ProfileField < ActiveRecord::Base
   #
   has_many_flags
 
+  # Full text search: `ProfileField.search('foo')`
+  #
+  include PgSearch
+  pg_search_scope :search, against: [:value, :label],
+    associated_against: {children: :value}
+
   # Often, profile_fields are to be displayed in a certain manner on a HTML page.
   # This method returns the profile_field's value as HTML code in the way
   # the profile_field should be displayed.

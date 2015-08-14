@@ -69,7 +69,7 @@ module ProfileableMixins::Address
   # Primary Postal Address or, if not existent, the first address field.
   #
   def postal_address_field_or_first_address_field
-    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first
+    postal_address_field || address_profile_fields.where.not(value: [nil, '']).first
   end
 
   # This method returns the postal address of the user.
@@ -103,7 +103,10 @@ module ProfileableMixins::Address
   module ClassMethods
     
     def with_postal_address
-      self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
+      self.joins(:address_profile_fields)
+        .where.not(profile_fields: {profileable_id: nil}) # no address field present
+        .where.not(profile_fields: {value: ''})
+        .uniq
     end
   
     def with_postal_address_ids
@@ -111,7 +114,7 @@ module ProfileableMixins::Address
     end
   
     def without_postal_address
-      self.where('NOT users.id IN (?)', self.with_postal_address_ids)
+      self.where.not(users: {id: self.with_postal_address_ids})
     end
     
   end

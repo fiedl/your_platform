@@ -17,6 +17,7 @@ require 'i18n-js'
 require 'jquery-atwho-rails'
 
 # Data Structures
+require 'pg_search'
 require 'acts-as-dag'
 require 'acts_as_tree'
 

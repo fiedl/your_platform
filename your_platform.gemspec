@@ -45,7 +45,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'execjs', '>= 2.5.2'
   s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
 
+
   # Data Structures
+  # Fulltext search
+  s.add_dependency 'pg_search'
+  
   # Retry transactions: Rescue from deadlocks.
   s.add_dependency 'transaction_retry'
   # DAG Structure, https://github.com/resgraph/acts-as-dag
