@@ -60,6 +60,15 @@
           = icon 'list-alt'
           = t :address_list
       %li
+        = link_to group_path(@group, :format => :csv, :list => :dpag_internetmarke) do
+          = icon 'list-alt'
+          = t :address_list_for_dpag_internetmarke
+          %small (ISO 8859-1)
+      %li
+        %a.export_list_answers{href: 'https://www.deutschepost.de/de/i/internetmarke-porto-drucken/haeufige-fragen.html'}
+          = awesome_icon 'question-circle'
+          Hilfe zur DPAG-Internetmarke
+      %li
         = link_to group_path(@group, :format => :csv, :list => :phone_list) do
           = icon 'list-alt'
           = t :phone_list

@@ -43,6 +43,9 @@ class ListExport
         :postal_address_country, :postal_address_country_code,
         :personal_title, :address_label_text_above_name, :address_label_text_below_name,
         :address_label_text_before_name, :address_label_text_after_name]
+    when 'dpag_internetmarke'
+      #NAME;ZUSATZ;STRASSE;NUMMER;PLZ;STADT;LAND;ADRESS_TYP
+      [:name, :text_below_name, :postal_address_street_name, :postal_address_street_number, :postal_address_postal_code, :postal_address_town, :postal_address_country, :dpag_postal_address_type]
     when 'phone_list'
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
@@ -60,17 +63,21 @@ class ListExport
   end
   
   def headers
-    columns.collect do |column|
-      if column.kind_of? Symbol
-        I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
-      else
-        column
+    if preset == 'dpag_internetmarke'
+      %w(NAME ZUSATZ STRASSE NUMMER PLZ STADT LAND ADRESS_TYP)
+    else
+      columns.collect do |column|
+        if column.kind_of? Symbol
+          I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
+        else
+          column
+        end
       end
     end
   end
   
   def processed_data
-    if preset.to_s.in?(['birthday_list', 'address_list', 'phone_list', 'email_list']) && @data.kind_of?(Group)
+    if preset.to_s.in?(['birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list']) && @data.kind_of?(Group)
       # To be able to generate lists from Groups as well as search results, these presets expect 
       # an Array of Users as data. If a Group is given instead, just take the group members as data.
       #
@@ -207,6 +214,18 @@ class ListExport
       data.sort_by do |row|
         row.first
       end
+    when 'dpag_internetmarke'
+      # The first entry is the sender!
+      @data = [{
+        :name => "Bitte eintragen: Absender-Name",
+        :text_below_name => "",
+        :postal_address_street_name => "Absender-Straße",
+        :postal_address_street_number => "Absender-Hausnummer",
+        :postal_address_postal_code => "Absender-PLZ",
+        :postal_address_country => "Absender-Land",
+        :dpag_postal_address_type => "HOUSE"
+      }] + @data
+      @data
     else
       data
     end
@@ -214,7 +233,7 @@ class ListExport
   
   def raise_error_if_data_is_not_valid
     case preset.to_s
-    when 'birthday_list', 'address_list', 'phone_list', 'email_list', 'name_list'
+    when 'birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list', 'name_list'
       data.kind_of?(Group) || data.first.kind_of?(User) || raise("Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
     when 'member_development'
       data.kind_of?(Group) || raise('The member_development list can only be generated for a Group, not an Array of Users.')
@@ -325,6 +344,12 @@ class ListExportUser < User
   def postal_address_street
     address_label.street
   end
+  def postal_address_street_name
+    postal_address_street.split(" ")[0..-2].join(" ") if postal_address_street.present?
+  end
+  def postal_address_street_number
+    postal_address_street.split(" ").last if postal_address_street.present?
+  end
   def postal_address_postal_code
     address_label.postal_code
   end
@@ -351,6 +376,9 @@ class ListExportUser < User
   end
   def address_label_text_after_name
     address_label.name_suffix
+  end
+  def dpag_postal_address_type
+    "HOUSE"
   end
   
   def cache_key

@@ -36,6 +36,7 @@ en:
   name_list:                      Name list
   birthday_list:                  Birthday list
   address_list:                   Address list
+  address_list_for_dpag_internetmarke: Address list for 'DPAG Internetmarke'
   phone_list:                     Phone list
   email_list:                     Email list
   member_development:             Member Development

@@ -98,11 +98,19 @@ class GroupsController < ApplicationController
         authorize! :read, @group
         authorize! :export_member_list, @group
         
-        # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
-        #bom = "\377\376".force_encoding('utf-16le')
-        bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
+        # The export for "DPAG Internetmarke" requires an "latin western 1" encoding.
+        # Everything else, we encode as UTF-8.
+        #
+        csv_data = @list_export.to_csv
+        if list_preset == 'dpag_internetmarke'
+          csv_data = csv_data.encode('ISO-8859-1')
+        else
+          # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
+          #bom = "\377\376".force_encoding('utf-16le')
+          bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
+          csv_data = bom + csv_data
+        end
         
-        csv_data = bom + @list_export.to_csv
         send_data csv_data, filename: "#{@file_title}.csv"
       end
       format.xls do

@@ -21,6 +21,8 @@ de:
   postal_address:             Postanschrift
   postal_address_updated_at:  Letzte Änderung der Postanschrift am
   postal_address_street:      Straße und Hausnummer
+  postal_address_street_name: Straße
+  postal_address_street_number: Hausnummer
   postal_address_postal_code: Postleitzahl (PLZ)
   postal_address_state:       Bundesland
   postal_address_town:        Stadt
@@ -30,6 +32,7 @@ de:
   address_label_text_below_name: Zeile unter dem Namen
   address_label_text_before_name: Text vor dem Namen
   address_label_text_after_name: Text hinter dem Namen
+  dpag_postal_address_type: DPAG-Adress-Typ
   
   phone_label:                Beschriftung
   email_label:                Beschriftung
