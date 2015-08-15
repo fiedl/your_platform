@@ -45,7 +45,7 @@ class ListExport
         :address_label_text_before_name, :address_label_text_after_name]
     when 'dpag_internetmarke'
       #NAME;ZUSATZ;STRASSE;NUMMER;PLZ;STADT;LAND;ADRESS_TYP
-      [:name, :text_below_name, :postal_address_street_name, :postal_address_street_number, :postal_address_postal_code, :postal_address_town, :postal_address_country, :dpag_postal_address_type]
+      [:personal_title_and_name, :text_below_name, :postal_address_street_name, :postal_address_street_number, :postal_address_postal_code, :postal_address_town, :postal_address_country_code_3_letters, :dpag_postal_address_type]
     when 'phone_list'
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
@@ -218,6 +218,7 @@ class ListExport
       # The first entry is the sender!
       @data = [{
         :name => "Bitte eintragen: Absender-Name",
+        :personal_title_and_name => "Bitte eintragen: Absender-Name",
         :text_below_name => "",
         :postal_address_street_name => "Absender-Straße",
         :postal_address_street_number => "Absender-Hausnummer",
@@ -318,6 +319,10 @@ end
 require 'user'
 class ListExportUser < User
   
+  def personal_title_and_name
+    "#{personal_title} #{name}".strip
+  end
+  
   # Birthday, Date of Birth, Date of Death
   #
   def current_age
@@ -364,6 +369,9 @@ class ListExportUser < User
   end
   def postal_address_country_code
     address_label.country_code
+  end
+  def postal_address_country_code_3_letters
+    address_label.country_code_with_3_letters
   end
   def address_label_text_above_name
     address_label.text_above_name

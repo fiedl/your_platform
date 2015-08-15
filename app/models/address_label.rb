@@ -103,4 +103,8 @@ class AddressLabel
     return self
   end
   
+  def country_code_with_3_letters
+    GeoLocation.country_codes_3_letters_from_2_letters[self.country_code]
+  end
+  
 end
