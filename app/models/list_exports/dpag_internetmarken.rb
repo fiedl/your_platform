@@ -38,5 +38,12 @@ module ListExports
       }
     end
     
+    # The dpag software does not recognize "" as empty value. Thus,
+    # we need to replace those.
+    #
+    def to_csv
+      super.gsub(';"";', ';;')
+    end
+      
   end
 end
