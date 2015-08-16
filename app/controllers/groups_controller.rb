@@ -84,6 +84,8 @@ class GroupsController < ApplicationController
     
       if list_preset.in? ['member_development', 'join_statistics']
         @list_export = ListExport.new(@group, list_preset)
+      elsif list_preset == 'dpag_internetmarke'
+        @list_export = ListExports::DpagInternetmarken.from_group(@group)
       else
         @list_export = ListExport.new(@members, list_preset)
       end
