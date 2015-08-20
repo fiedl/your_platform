@@ -31,9 +31,6 @@ class ListExport
   
   def columns
     case preset.to_s
-    when 'birthday_list'
-      [:last_name, :first_name, :name_affix, :localized_birthday_this_year, 
-        :localized_date_of_birth, :current_age]
     when 'address_list'
       [:last_name, :first_name, :name_affix, :postal_address_with_name_surrounding,
         :postal_address, :cached_localized_postal_address_updated_at, 
@@ -43,9 +40,6 @@ class ListExport
         :postal_address_country, :postal_address_country_code,
         :personal_title, :address_label_text_above_name, :address_label_text_below_name,
         :address_label_text_before_name, :address_label_text_after_name]
-    when 'dpag_internetmarke'
-      #NAME;ZUSATZ;STRASSE;NUMMER;PLZ;STADT;LAND;ADRESS_TYP
-      [:personal_title_and_name, :text_below_name, :postal_address_street_name, :postal_address_street_number, :postal_address_postal_code, :postal_address_town, :postal_address_country_code_3_letters, :dpag_postal_address_type]
     when 'phone_list'
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
@@ -63,15 +57,11 @@ class ListExport
   end
   
   def headers
-    if preset == 'dpag_internetmarke'
-      %w(NAME ZUSATZ STRASSE NUMMER PLZ STADT LAND ADRESS_TYP)
-    else
-      columns.collect do |column|
-        if column.kind_of? Symbol
-          I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
-        else
-          column
-        end
+    columns.collect do |column|
+      if column.kind_of? Symbol
+        I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
+      else
+        column
       end
     end
   end
@@ -198,10 +188,6 @@ class ListExport
 
   def sorted_data
     case preset.to_s
-    when 'birthday_list'
-      data.sort_by do |user|
-        user.date_of_birth.try(:strftime, "%m-%d") || ''
-      end
     when 'address_list', 'name_list'
       data.sort_by do |user|
         user.last_name + user.first_name
@@ -214,19 +200,6 @@ class ListExport
       data.sort_by do |row|
         row.first
       end
-    when 'dpag_internetmarke'
-      # The first entry is the sender!
-      @data = [{
-        :name => "Bitte eintragen: Absender-Name",
-        :personal_title_and_name => "Bitte eintragen: Absender-Name",
-        :text_below_name => "",
-        :postal_address_street_name => "Absender-Straße",
-        :postal_address_street_number => "Absender-Hausnummer",
-        :postal_address_postal_code => "Absender-PLZ",
-        :postal_address_country => "Absender-Land",
-        :dpag_postal_address_type => "HOUSE"
-      }] + @data
-      @data
     else
       data
     end
