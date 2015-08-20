@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   
   # Workers
   s.add_dependency 'foreman'
-  s.add_dependency 'sidekiq'
+  s.add_dependency 'sidekiq', '>= 3.4.2'
   s.add_dependency 'sidekiq-limit_fetch'
   
 
