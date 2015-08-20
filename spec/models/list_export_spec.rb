@@ -12,25 +12,6 @@ describe ListExport do
     @user_title_without_name = '""' if @user_title_without_name.blank? # to match the csv format
   end
   
-  describe "birthday_list: " do
-    before do
-      @user.date_of_birth = "1925-09-28".to_date
-      @user.save
-      @next_birthday = @user.date_of_birth.change(:year => Time.zone.now.year)
-      
-      @list_export = ListExport.new(@group.members, :birthday_list)
-    end
-    describe "#headers" do
-      subject { @list_export.headers }
-      it { should include 'Nachname', 'Vorname', 'Namenszusatz', 'Diesjähriger Geburtstag', 'Geburtsdatum', 'Aktuelles Alter' }
-    end
-    describe "#to_csv" do
-      subject { @list_export.to_csv }
-      it { should include "Nachname;Vorname;Namenszusatz;Diesjähriger Geburtstag;Geburtsdatum;Aktuelles Alter" }
-      it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};#{I18n.localize(@next_birthday)};#{I18n.localize(@user.date_of_birth)};#{@user.age}" }
-    end
-  end
-  
   describe "address_list: " do
     before do
       @address1 = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")

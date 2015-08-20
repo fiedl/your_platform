@@ -92,5 +92,17 @@ module ListExports
       {col_sep: ';', quote_char: '"'}
     end
     
+    # This exports the `data` into xls format, which can be served via
+    # 
+    #   send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', 
+    #     filename: "#{@file_title}.xls")
+    #
+    # Internally, we use the to_xls gem:
+    # https://github.com/splendeo/to_xls
+    #
+    def to_xls
+      data_rows.to_xls(columns: columns, headers: headers, header_format: {weight: 'bold'})
+    end
+    
   end
 end

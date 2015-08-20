@@ -21,7 +21,7 @@ module ListExports
     
     def column(column_name)
       if @object.respond_to? :values
-        @object[column_name]
+        @object[column_name] || @object[column_name.to_sym]
       elsif @object.respond_to? column_name
         @object.try(:send, column_name) 
       else
@@ -33,7 +33,7 @@ module ListExports
     # by method in order to write the columns in the correct order.
     #
     def method_missing(method_name, *args, &block)
-      @object[method_name] || @object[method_name.to_sym]
+      self.column(method_name)
     end
     
   end
