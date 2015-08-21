@@ -37,6 +37,10 @@ en:
   birthday_list:                  Birthday list
   address_list:                   Address list
   address_list_for_dpag_internetmarke: Address list for 'DPAG Internetmarke'
+  dpag_internetmarke:             DPAG Internetmarke
+  dpag_internetmarken:            DPAG Internetmarken
+  dpag_internetmarken_in_germany: DPAG Internetmarken for Addresses in Germany
+  dpag_internetmarken_not_in_germany: DPAG Internetmarken for Addresses not in Germany
   phone_list:                     Phone list
   email_list:                     Email list
   member_development:             Member Development

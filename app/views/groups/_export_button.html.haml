@@ -60,11 +60,19 @@
           = icon 'list-alt'
           = t :address_list
       %li
-        = link_to group_path(@group, :format => :csv, :list => :dpag_internetmarke) do
+        = link_to group_path(@group, :format => :csv, :list => :dpag_internetmarken) do
           = icon 'list-alt'
           = t :address_list_for_dpag_internetmarke
           %small (ISO 8859-1)
-      %li
+      %li.indent
+        = link_to group_path(@group, :format => :csv, :list => :dpag_internetmarken_in_germany) do
+          = icon 'list-alt'
+          nur Inland (DE)
+      %li.indent
+        = link_to group_path(@group, :format => :csv, :list => :dpag_internetmarken_not_in_germany) do
+          = icon 'list-alt'
+          nur Ausland
+      %li.indent
         %a.export_list_answers{href: 'https://www.deutschepost.de/de/i/internetmarke-porto-drucken/haeufige-fragen.html'}
           = awesome_icon 'question-circle'
           Hilfe zur DPAG-Internetmarke

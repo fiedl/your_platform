@@ -46,6 +46,9 @@ de:
   address_list:                   Adressliste
   address_list_for_dpag_internetmarke: Adressliste für DPAG-Internetmarken
   dpag_internetmarke:             DPAG-Internetmarke
+  dpag_internetmarken:            DPAG-Internetmarken
+  dpag_internetmarken_in_germany: DPAG-Internetmarken Inland (DE)
+  dpag_internetmarken_not_in_germany: DPAG-Internetmarken Ausland
   phone_list:                     Telefonliste
   email_list:                     E-Mail-Liste
   member_development:             Mitglieder-Entwicklung

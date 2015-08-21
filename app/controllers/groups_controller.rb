@@ -85,8 +85,12 @@ class GroupsController < ApplicationController
       case list_preset
       when 'member_development', 'join_statistics'
         @list_export = ListExport.new(@group, list_preset)
-      when 'dpag_internetmarke'
+      when 'dpag_internetmarken'
         @list_export = ListExports::DpagInternetmarken.from_group(@group)
+      when 'dpag_internetmarken_in_germany'
+        @list_export = ListExports::DpagInternetmarkenInGermany.from_group(@group)
+      when 'dpag_internetmarken_not_in_germany'
+        @list_export = ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
       when 'birthday_list'
         @list_export = ListExports::BirthdayList.from_group(@group)
       else
