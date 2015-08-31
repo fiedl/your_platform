@@ -149,7 +149,9 @@ Gem::Specification.new do |s|
   
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
-  s.add_dependency 'eventmachine', '>= 1.0.7' 
+  s.add_dependency 'eventmachine', '>= 1.0.7'
+  # https://github.com/lautis/uglifier/pull/86
+  s.add_dependency 'uglifier', '>= 2.7.2' 
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
