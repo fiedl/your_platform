@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     get 'change_password' => 'devise/registrations#edit', :as => 'change_password'
     get 'reset_password' => 'devise/passwords#edit', as: 'reset_password' # from email with token
     put 'change_password/:id' => 'devise/registrations#update', :as => 'registration' #todo: change to patch in rails 4.0
+    get 'forgot-password', to: 'devise/passwords#new'
+    get 'passwort-vergessen', to: 'devise/passwords#new'
   end
 
   get 'search/guess', to: "search#lucky_guess"
