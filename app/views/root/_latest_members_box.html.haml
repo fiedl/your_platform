@@ -11,7 +11,7 @@
       %p
         = "Insgesamt #{group.memberships_this_year.count} dieses Jahr."
       %p.list_all
-        = link_to I18n.t(:show_all), group
+        = link_to I18n.t(:show_all), group_members_path(group)
 
     -# Hack to show the 'new user' button here:
     - if box_heading == "Aktivmeldungen"
