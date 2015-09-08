@@ -18,4 +18,4 @@
   = render partial: 'attachments/documents', locals: {attachments: attachments, parent: page}
 
 - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
-  = render partial: 'attachments/drop_field', locals: {parent: page}
+  .hidden-print= render partial: 'attachments/drop_field', locals: {parent: page}

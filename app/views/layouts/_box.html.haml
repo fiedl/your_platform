@@ -5,7 +5,7 @@
         %tr
           %td.box_heading
             %h1.panel-title= heading
-          %td.box_toolbar
+          %td.box_toolbar.hidden-print
             %span.box_toolbar
               - if show_box_edit_button? box_class, @navable
                 = save_button :class => box_class
