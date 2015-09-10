@@ -111,7 +111,7 @@ class GroupsController < ApplicationController
         # Everything else, we encode as UTF-8.
         #
         csv_data = @list_export.to_csv
-        if list_preset.include? 'dpag_internetmarke'
+        if list_preset.try(:include?, 'dpag_internetmarke')
           csv_data = csv_data.encode('ISO-8859-1')
         else
           # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
