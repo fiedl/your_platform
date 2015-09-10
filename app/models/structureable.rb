@@ -68,6 +68,10 @@ module Structureable
     # defined in the module `StructureableInstanceMethods`.
     #
     prepend StructureableInstanceMethods
+    
+    # Use the connected-groups mechanism.
+    #
+    include StructureableConnectedGroups
   end
 
   module StructureableInstanceMethods
