@@ -11,14 +11,6 @@ class MembershipCollection
     return self
   end
   
-  def dag_links
-    links = DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true)
-    links = links.where(descendant_id: @user.id) if @user
-    links = links.where(ancestor_id: @group.id) if @group
-    return links
-  end
-  
-  
   def to_a
     if @direct
       find_all_direct_memberships
@@ -27,6 +19,8 @@ class MembershipCollection
         find_all_memberships_by_user
       elsif @group and not @user
         find_all_memberships_by_group
+      elsif @user and @group
+        find_all_memberships_by_user_and_group
       end
     end
   end
@@ -35,6 +29,18 @@ class MembershipCollection
   
   private
   
+  def dag_links_for(attrs = {})
+    user = attrs[:user]; group = attrs[:group]
+    links = DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true)
+    links = links.where(descendant_id: user.id) if user
+    links = links.where(ancestor_id: group.id) if group
+    return links
+  end
+  
+  def dag_links
+    dag_links_for user: @user, group: @group
+  end
+    
   def find_all_direct_memberships
     dag_links.collect do |direct_link|
       Membership.new(user: direct_link.descendant, group: direct_link.ancestor)
@@ -51,7 +57,15 @@ class MembershipCollection
   
   def find_all_memberships_by_group
     find_all_direct_memberships + @group.connected_descendant_groups.collect do |descendant_group|
-      DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true, ancestor_id: descendant_group.id).collect do |direct_link|
+      dag_links_for(group: descendant_group).collect do |direct_link|
+        Membership.new(user: direct_link.descendant, group: descendant_group)
+      end
+    end.flatten
+  end
+  
+  def find_all_memberships_by_user_and_group
+    find_all_direct_memberships + @group.connected_descendant_groups.collect do |descendant_group|
+      dag_links_for(group: descendant_group, user: @user).collect do |direct_link|
         Membership.new(user: direct_link.descendant, group: descendant_group)
       end
     end.flatten
