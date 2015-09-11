@@ -17,20 +17,37 @@ describe Membership do
     @user2 = create :user; @group1 << @user2
   end
   
-  describe ".where(user: @user1)" do
-    subject { Membership.where(user: @user1) }
-    it { should be_kind_of MembershipCollection }
-    its(:to_a) { should be_kind_of Array }
-    its(:first) { should be_kind_of Membership }
-    its(:count) { should == 2 }
-  end
+  describe ".where" do
   
-  describe ".where(group: @group3)" do
-    subject { Membership.where(group: @group3) }
-    it { should be_kind_of MembershipCollection }
-    its(:to_a) { should be_kind_of Array }
-    its(:first) { should be_kind_of Membership }
-    its(:count) { should == 1 }
+    describe ".where(user: @user1)" do
+      subject { Membership.where(user: @user1) }
+      it { should be_kind_of MembershipCollection }
+      its(:to_a) { should be_kind_of Array }
+      its(:first) { should be_kind_of Membership }
+      its(:count) { should == 2 }
+    end
+    
+    describe "for groups that have direct members" do
+      describe ".where(group: @group3)" do
+        subject { Membership.where(group: @group3) }
+        it { should be_kind_of MembershipCollection }
+        its(:to_a) { should be_kind_of Array }
+        its(:first) { should be_kind_of Membership }
+        its(:count) { should == 1 }
+        its('direct.count') { should == 1 }
+      end
+    end
+    
+    describe "for groups that have indirect members" do
+      describe ".where(group: @group2)" do
+        subject { Membership.where(group: @group2) }
+        it { should be_kind_of MembershipCollection }
+        its(:to_a) { should be_kind_of Array }
+        its(:first) { should be_kind_of Membership }
+        its(:count) { should == 1 }
+        its('direct.count') { should == 0 }
+      end
+    end
   end
   
   describe ".direct" do
