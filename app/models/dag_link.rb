@@ -18,6 +18,7 @@ class DagLink < ActiveRecord::Base
   before_destroy :delete_cache
   
   include DagLinkRepair
+  include DagLinkValidityRange
   
   def fill_cache
     valid_from

@@ -1,4 +1,6 @@
 class MembershipCollection
+  
+  include MembershipCollectionValidityRange
 
   def where(constraints)
     @user = constraints[:user]
@@ -29,14 +31,6 @@ class MembershipCollection
   
   private
   
-  def dag_links_for(attrs = {})
-    user = attrs[:user]; group = attrs[:group]
-    links = DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true)
-    links = links.where(descendant_id: user.id) if user
-    links = links.where(ancestor_id: group.id) if group
-    return links
-  end
-  
   def dag_links
     dag_links_for user: @user, group: @group
   end
@@ -64,11 +58,12 @@ class MembershipCollection
   end
   
   def find_all_memberships_by_user_and_group
-    find_all_direct_memberships + @group.connected_descendant_groups.collect do |descendant_group|
-      dag_links_for(group: descendant_group, user: @user).collect do |direct_link|
-        Membership.new(user: direct_link.descendant, group: descendant_group)
-      end
-    end.flatten
+    find_all_direct_memberships + 
+    if @group.connected_descendant_groups.select { |descendant_group| dag_links_for(group: descendant_group, user: @user).count > 0 }.count > 0
+      [ Membership.new(user: @user, group: @group) ]
+    else
+      []
+    end
   end
   
 end

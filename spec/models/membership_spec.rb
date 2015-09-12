@@ -18,6 +18,23 @@ describe Membership do
   end
   
   describe ".where" do
+    describe ".where(user: ..., group: ...)" do
+      describe "for a direct membership" do
+        subject { Membership.where(user: @user1, group: @group3) }
+        its(:count) { should == 1 }
+        its('first.user') { should == @user1 }
+        its('first.group') { should == @group3 }
+        its('first.direct?') { should == true }
+      end
+      describe "for an indirect membership" do
+        subject { Membership.where(user: @user1, group: @group2) }
+        its(:count) { should == 1 }
+        its('first.user') { should == @user1 }
+        its('first.group') { should == @group2 }
+        its('first.direct?') { should == false }
+      end
+    end
+    
     describe ".where(user: @user1)" do
       subject { Membership.where(user: @user1) }
       it { should be_kind_of MembershipCollection }
@@ -78,5 +95,33 @@ describe Membership do
       Membership.where(user: @user1).direct.to_a.should == Membership.direct.where(user: @user1).to_a
     end
   end
-
+  
+  describe "#save!" do
+    subject { @membership.save! }
+    
+    describe "for direct memberships" do
+      before { @membership = Membership.where(user: @user2, group: @group1).first }
+      it "should save a changed valid_from and valid_to attributes" do
+        @membership.valid_from = @time1 = 2.months.ago
+        @membership.valid_to = @time2 = 1.month.ago
+        subject
+        @membership.reload.valid_from.to_i.should == @time1.to_i
+        @membership.reload.valid_to.to_i.should == @time2.to_i
+        @membership.dag_link.reload.valid_from.to_i.should == @time1.to_i
+        @membership.dag_link.reload.valid_to.to_i.should == @time2.to_i
+      end
+    end
+    
+    describe "for indirect memberships" do
+      before { @membership = Membership.where(user: @user1, group: @group2).first }
+      specify "requirements" do
+        @membership.user.should == @user1
+        @membership.group.should == @group2
+      end
+      it "should raise an error, since indirect memberships are non-persistent objects" do
+        expect { subject }.to raise_error
+      end
+    end
+  end
+  
 end
