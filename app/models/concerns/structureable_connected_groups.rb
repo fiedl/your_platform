@@ -5,12 +5,17 @@
 # Example:
 # 
 #     group1
-#       |---- group2 --- group3
-#       |---- event1
-#               |------ attendees_group
+#       |---- group2 --- group3 --------------
+#       |---- event1                          |
+#       |       |------ attendees_group ---- user1
+#       |
+#     officers_parent ---- officer_group --- user2     
 #
 #   In the example, groups 1, 2, and 3 are connected groups. But the attendees_group
 #   is not connected to them, because a non-group object, event1, is in between.
+#
+#   Despite `officers_parent` being a group, `user2` is not regarded as
+#   connected to `group1`, since officers aren't necessarily members of a group.
 #
 # The here implemented mechanism should be independent of the DagLink model,
 # i.e. can only ask for directly connected objects. Therefore, it relies on caching
@@ -23,7 +28,7 @@ concern :StructureableConnectedGroups do
   end
   
   def connected_ancestor_group_ids
-    cached { (parent_group_ids + parent_groups.collect(&:connected_ancestor_group_ids).flatten).uniq }
+    cached { select_connected_groups(parent_groups).collect { |parent_group| [parent_group.id] + parent_group.connected_ancestor_group_ids }.uniq }
   end
   
   def connected_descendant_groups
@@ -31,7 +36,15 @@ concern :StructureableConnectedGroups do
   end
   
   def connected_descendant_group_ids
-    cached { (child_group_ids + child_groups.collect(&:connected_descendant_group_ids).flatten).uniq }
+    cached { select_connected_groups(child_groups).collect { |child_group| [child_group.id] + child_group.connected_descendant_group_ids }.uniq }
+  end
+  
+  private
+  
+  def select_connected_groups(groups)
+    groups.includes(:flags).select do |group|
+      not group.has_flag? :officers_parent
+    end
   end
   
 end
