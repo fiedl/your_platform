@@ -110,6 +110,56 @@ describe MembershipValidityRange do
     end
   end
   
+  describe "#where" do
+    #
+    #    @group1 --- @subgroup1     @user1
+    #       |
+    #       |------- @subgroup2 
+    #
+    before do
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @subgroup2 = @group1.child_groups.create name: 'subgroup2'
+      @user1 = create :user
+    end
+    subject { Membership.where(user: @user1, group: @group1) }
+    
+    describe "for user and group" do
+      before { @t1 = 2.years.ago; @t2 = 1.year.ago; @t3 = 1.month.ago; @t4 = nil }
+      describe "if the user has multiple direct memberships in that group" do
+        before do
+          @membership1 = Membership.create group: @group1, user: @user1, valid_from: @t1, valid_to: @t2
+          @membership2 = Membership.create group: @group1, user: @user1, valid_from: @t3
+        end
+        its(:count) { should == 2 }
+        specify "the memberships should have the correct validity range" do
+          subject.to_a.collect { |membership| membership.valid_from.try(:to_i) }.should include @t1.to_i, @t3.to_i
+          subject.to_a.collect { |membership| membership.valid_to.try(:to_i) }.should include @t2.to_i, @t4
+        end
+      end
+      describe "if the user has multiple indirect memberships in that group" do
+        before do
+          @membership1 = Membership.create group: @subgroup1, user: @user1, valid_from: @t1, valid_to: @t2
+          @membership2 = Membership.create group: @subgroup2, user: @user1, valid_from: @t3
+        end
+        its(:count) { should == 2 }
+        specify "the memberships should have the correct validity range" do
+          subject.to_a.collect { |membership| membership.valid_from.try(:to_i) }.should include @t1.to_i, @t3.to_i
+          subject.to_a.collect { |membership| membership.valid_to.try(:to_i) }.should include @t2.to_i, @t4
+        end
+      end
+      describe "if the user has direct and indirect memberships in that group" do
+        before do
+          @membership1 = Membership.create group: @group1, user: @user1, valid_from: @t1, valid_to: @t2
+          @membership2 = Membership.create group: @subgroup1, user: @user1, valid_from: @t3
+        end
+        its(:count) { should == 2 }
+        specify "the memberships should have the correct validity range" do
+          subject.to_a.collect { |membership| membership.valid_from.try(:to_i) }.should include @t1.to_i, @t3.to_i
+          subject.to_a.collect { |membership| membership.valid_to.try(:to_i) }.should include @t2.to_i, @t4
+        end
+      end
+    end
   end
   
 end

@@ -84,4 +84,27 @@ class Membership
     end
   end
   
+  # Create a membership of the user `u` in the group `g`.
+  #
+  #    membership = Membership.create(user: u, group: g)
+  #    membership = Membership.create(user: u, group: g, valid_from: 1.month_ago, valid_to: 1.day.ago)
+  #
+  def self.create(params)
+    user = params[:user]
+    user ||= User.find params[:user_id] if params[:user_id]
+    user ||= User.find_by_title params[:user_title] if params[:user_title]
+    raise "Could not create Membership without user." unless user
+    
+    group = params[ :group ]
+    group ||= Group.find params[:group_id] if params[:group_id]
+    raise "Could not create Membership without group." unless group
+    
+    new_dag_link = DagLink.create!(ancestor_id: group.id, ancestor_type: 'Group', 
+      descendant_id: user.id, descendant_type: 'User',
+      valid_from: params[:valid_from] || Time.zone.now,
+      valid_to: params[:valid_to])
+      
+    Membership.new(user: user, group: group, 
+      valid_from: new_dag_link.valid_from, valid_to: new_dag_link.valid_to)
+  end
 end

@@ -140,4 +140,52 @@ describe Membership do
     end
   end
   
+  describe ".create" do
+    #
+    #    @group1 --- @subgroup1     @user1
+    #
+    before do
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @user1 = create :user
+    end
+    describe "creating a direct membership" do
+      subject { Membership.create group: @group1, user: @user1 }
+      it "should create the corresponding dag link" do
+        @user1.links_as_child.count.should == 0
+        subject
+        @user1.links_as_child.count.should == 1
+        @user1.links_as_child.first.ancestor.should == @group1
+      end
+      it { should be_kind_of Membership }
+      its(:group) { should == @group1 }
+      its(:user) { should == @user1 }
+      
+      describe "if the membership already exists indirectly" do
+        before { Membership.create group: @subgroup1, user: @user1 }
+        it "should create the corresponding dag link" do
+          @user1.links_as_child.count.should == 1
+          subject
+          @user1.links_as_child.count.should == 2
+          @user1.links_as_child.last.ancestor.should == @group1
+        end
+        it { should be_kind_of Membership }
+        its(:group) { should == @group1 }
+        its(:user) { should == @user1 }
+      end
+    end
+    
+    describe "creating a direct membership with validity range" do
+      before { @time1 = 1.month.ago; @time2 = 10.days.ago }
+      subject { Membership.create group: @group1, user: @user1, valid_from: @time1, valid_to: @time2 }
+      it { should be_kind_of Membership }
+      its(:group) { should == @group1 }
+      its(:user) { should == @user1 }
+      its('valid_from.to_i') { should == @time1.to_i }
+      its('valid_to.to_i') { should == @time2.to_i }
+      its('dag_link.valid_from.to_i') { should == @time1.to_i }
+      its('dag_link.valid_to.to_i') { should == @time2.to_i }
+    end
+  end
+  
 end
