@@ -96,6 +96,22 @@ describe Membership do
     end
   end
   
+  describe ".uniq" do
+    #
+    #    @group1 --- @subgroup1 ------
+    #       |                         |
+    #       |------- @subgroup2 --- @user1
+    #
+    before do
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @subgroup2 = @group1.child_groups.create name: 'subgroup2'
+      @user1 = create :user; @subgroup1 << @user1; @subgroup2 << @user1
+    end
+    subject { Membership.where(user: @user1).uniq }
+    its(:count) { should == Membership.where(user: @user1).count - 1 }
+  end
+  
   describe "#save!" do
     subject { @membership.save! }
     

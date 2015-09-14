@@ -13,18 +13,26 @@ class MembershipCollection
     return self
   end
   
+  def uniq
+    @uniq = true
+    return self
+  end
+  
   def to_a
+    memberships = []
     if @direct
-      find_all_direct_memberships
+      memberships = find_all_direct_memberships
     else
       if @user and not @group
-        find_all_memberships_by_user
+        memberships = find_all_memberships_by_user
       elsif @group and not @user
-        find_all_memberships_by_group
+        memberships = find_all_memberships_by_group
       elsif @user and @group
-        find_all_memberships_by_user_and_group
+        memberships = find_all_memberships_by_user_and_group
       end
     end
+    memberships = memberships.uniq { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] } if @uniq
+    return memberships
   end
   
   delegate :count, :first, :last, to: :to_a
