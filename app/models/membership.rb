@@ -20,14 +20,26 @@ class Membership
   include MembershipValidityRangeLocalization
   
   def initialize(attrs = {})
-    @user = attrs[:user]
-    @group = attrs[:group]
-    @valid_from = attrs[:valid_from]
-    @valid_to = attrs[:valid_to]
+    @dag_link = attrs[:dag_link]
+    @user = @dag_link.try(:descendant) || attrs[:user]
+    @group = @dag_link.try(:ancestor) || attrs[:group]
+    @valid_from = @dag_link.try(:valid_from) || attrs[:valid_from]
+    @valid_to = @dag_link.try(:valid_to) || attrs[:valid_to]
   end
   
   def self.where(constraints = {})
     MembershipCollection.new.where(constraints)
+  end
+  
+  # This represents a single direct membership, which is identified by the id of the
+  # dag link that connects the user and the group of the membership.
+  #
+  def self.find(id)
+    if link = DagLink.find(id)
+      Membership.new(dag_link: link)
+    else
+      nil
+    end
   end
   
   def self.direct
@@ -48,6 +60,9 @@ class Membership
   end
   
   concerning :Persistence do
+    def id
+      dag_link.try(:id)
+    end
     def save
       write_attributes_to_dag_link
       dag_link.save

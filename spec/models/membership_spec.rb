@@ -86,6 +86,26 @@ describe Membership do
     end
   end
   
+  describe ".find" do
+    subject { Membership.find(@dag_link_id) }
+    #
+    #   group2 --- group3 --- user1
+    #
+    describe "for a direct membership" do
+      before { @dag_link_id = Membership.where(user: @user1, group: @group3).first.dag_link.id }
+      it { should be_kind_of Membership }
+      its(:user) { should == @user1 }
+      its(:group) { should == @group3 }
+      its(:direct?) { should be_true }
+    end
+    describe "for a non-existent dag link" do
+      before { @dag_link_id = DagLink.pluck(:id).max + 5 }
+      it "should raise an error" do
+        expect { subject }.to raise_error
+      end
+    end
+  end
+  
   describe ".direct" do
     it "reduces the scope to direct memberships" do
       Membership.where(user: @user1).direct.count.should == 1
