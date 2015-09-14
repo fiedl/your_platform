@@ -68,6 +68,7 @@ class UserGroupMembership < DagLink
       #
       new_membership.set_valid_from_to_now(true)
       new_membership.save
+      new_membership.recalculate_indirect_validity_ranges
       
       return new_membership
     end

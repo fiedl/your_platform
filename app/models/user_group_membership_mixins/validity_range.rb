@@ -68,8 +68,12 @@
 module UserGroupMembershipMixins::ValidityRange
   extend ActiveSupport::Concern
   
+  included do
+    default_scope { valid }
+  end
+  
   #
-  # This has been moved to DagLinkValidityRange.
+  # The rest has been moved to DagLinkValidityRange.
   #
   
 end

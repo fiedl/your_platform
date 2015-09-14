@@ -138,12 +138,16 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
     end
   end
   
+  def recalculate_indirect_validity_ranges
+    self.indirect_memberships.each do |indirect_membership|
+      indirect_membership.recalculate_validity_range_from_direct_memberships
+      indirect_membership.save
+    end
+  end
+  
   def recalculate_indirect_validity_ranges_if_needed
     if self.direct? and @need_to_recalculate_indirect_memberships == true
-      self.indirect_memberships.each do |indirect_membership|
-        indirect_membership.recalculate_validity_range_from_direct_memberships
-        indirect_membership.save
-      end
+      recalculate_indirect_validity_ranges
     end
   end
   private :recalculate_indirect_validity_ranges_if_needed

@@ -74,8 +74,6 @@ concern :DagLinkValidityRange do
     attr_accessible :valid_from, :valid_to, :valid_from_localized_date, :valid_to_localized_date
     before_validation :set_valid_from_to_now
     
-    # default_scope { valid }
-    
     # Validity Perspective
     # TODO: Allow :valid to include memberships that BECOME valid in the future.
     scope :valid, -> { where("valid_from IS NULL OR valid_from <= ?", Time.zone.now).where("valid_to IS NULL OR valid_to >= ?", Time.zone.now) }
