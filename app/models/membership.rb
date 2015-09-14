@@ -17,6 +17,7 @@ class Membership
   attr_accessor :user, :group, :valid_from, :valid_to
   
   include MembershipValidityRange
+  include MembershipValidityRangeLocalization
   
   def initialize(attrs = {})
     @user = attrs[:user]
