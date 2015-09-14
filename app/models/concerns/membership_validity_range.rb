@@ -36,4 +36,27 @@ concern :MembershipValidityRange do
     end
   end
   
+  concerning :ValidityCheck do
+    # This method checks whether the membership is valid at the given time.
+    #
+    # This is not to be confused with ActiveRecord's `valid` method, which checks whether the
+    # record matches the requirements to store it in the database.
+    #
+    # The following examples are equivalent:
+    #
+    #     membership.currently_valid?
+    #     membership.valid_at? Time.zone.now
+    # 
+    def valid_at?(time)
+      (self.valid_from == nil || self.valid_from <= time) && (self.valid_to == nil || self.valid_to >= time)
+    end
+    
+    # This method checks whether the present time lies within the validity range
+    # of the membership.
+    #
+    def currently_valid?
+      valid_at?(Time.zone.now)
+    end
+  end
+  
 end

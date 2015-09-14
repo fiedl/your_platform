@@ -60,5 +60,56 @@ describe MembershipValidityRange do
       end
       
     end
-  end  
+  end
+  
+  describe "#currently_valid?" do
+    subject { @membership.currently_valid? }
+    describe "for direct memberships" do
+      describe "for a membership without validity range" do
+        before { @membership = Membership.where(user: @user1, group: @subgroup1).first }
+        it { should be_true }
+      end
+      describe "for a current membership" do
+        before do
+          @membership = Membership.where(user: @user1, group: @subgroup1).first
+          @membership.dag_link.update_attribute :valid_from, 1.month.ago
+          @membership = Membership.where(user: @user1, group: @subgroup1).first
+        end
+        it { should be_true }
+      end
+      describe "for a past membership" do
+        before do
+          @membership = Membership.where(user: @user1, group: @subgroup1).first
+          @membership.dag_link.update_attribute :valid_from, 1.month.ago
+          @membership.dag_link.update_attribute :valid_to, 10.days.ago
+          @membership = Membership.where(user: @user1, group: @subgroup1).first
+        end
+        it { should be_false }
+      end
+    end
+    describe "for indirect memberships" do
+      describe "for a membership without validity range" do
+        before { @membership = Membership.where(user: @user1, group: @group1).first }
+        it { should be_true }
+      end
+      describe "for a current membership" do
+        before do
+          Membership.where(user: @user1, group: @subgroup1).first.dag_link.update_attribute :valid_from, 1.month.ago
+          @membership = Membership.where(user: @user1, group: @group1).first
+        end
+        it { should be_true }
+      end
+      describe "for a past membership" do
+        before do
+          Membership.where(user: @user1, group: @subgroup1).first.dag_link.update_attribute :valid_from, 1.month.ago
+          Membership.where(user: @user1, group: @subgroup1).first.dag_link.update_attribute :valid_to, 10.days.ago
+          @membership = Membership.where(user: @user1, group: @group1).first
+        end
+        it { should be_false }
+      end
+    end
+  end
+  
+  end
+  
 end
