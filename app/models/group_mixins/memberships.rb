@@ -40,7 +40,7 @@ module GroupMixins::Memberships
     #  This method builds a new membership having this group (self) as group associated.
     #
     def build_membership
-      direct_memberships.build(descendant_type: 'User')
+      Membership.build(group: self)
     end
     
     # This returns the UserGroupMembership object that represents the membership of the 

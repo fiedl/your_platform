@@ -44,7 +44,7 @@ Rails.application.routes.draw do
     get :profile, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
-    get :memberships, to: 'user_group_memberships#index'
+    get :memberships, to: 'memberships#index'
     get :badges, to: 'user_badges#index'
   end
   get :settings, to: 'user_settings#index'
@@ -62,7 +62,7 @@ Rails.application.routes.draw do
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
-    get :memberships, to: 'user_group_memberships#index'
+    get :memberships, to: 'memberships#index'
   end
   get :my_groups, to: 'groups#index_mine'
   
@@ -86,6 +86,7 @@ Rails.application.routes.draw do
   end
   resources :profile_fields  
   resources :workflows
+  resources :memberships
   resources :user_group_memberships
   resources :status_group_memberships
   resources :relationships

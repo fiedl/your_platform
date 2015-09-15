@@ -5,24 +5,6 @@ class UserGroupMembershipsController < ApplicationController
 
   respond_to :json, :html
   
-  def index
-    if params[:user_id]
-      @object = @user = User.find(params[:user_id])
-      authorize! :manage, @user
-      
-      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_user(@user)
-    elsif params[:group_id]
-      @object = @group = Group.find(params[:group_id])
-      authorize! :manage, @group
-      
-      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(@group)
-    end
-    
-    set_current_navable @object
-    set_current_title "#{t(:memberships)}: #{@object.title}"
-    set_current_activity :is_managing_member_lists, @object
-  end
-  
   def create
     if membership_params[:user_title].present?
       @user_id = User.find_by_title(membership_params[:user_title]).id
