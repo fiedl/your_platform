@@ -76,11 +76,9 @@ describe GroupMixins::Memberships do
   
   describe "#build_membership" do
     subject { @group.build_membership }
-    it { should be_kind_of UserGroupMembership }
-    its(:ancestor_type) { should == 'Group' }
-    its(:ancestor_id) { should == @group.id }
-    its(:descendant_type) { should == 'User' }
-    its(:descendant_id) { should == nil }
+    it { should be_kind_of Membership }
+    its(:group) { should == @group }
+    its(:user) { should == nil }
     its(:new_record?) { should == true }    
   end
   
