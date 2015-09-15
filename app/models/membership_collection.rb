@@ -53,28 +53,27 @@ class MembershipCollection
   def find_all_memberships_by_user
     find_all_direct_memberships.collect do |direct_membership|
       [ direct_membership ] + direct_membership.group.connected_ancestor_groups.collect do |ancestor_group|
-        Membership.new(user: direct_membership.user, group: ancestor_group,
+        Membership.new(user: @user, group: ancestor_group,
           valid_from: direct_membership.valid_from, valid_to: direct_membership.valid_to)
       end
     end.flatten
   end
   
   def find_all_memberships_by_group
-    find_all_direct_memberships + @group.connected_descendant_groups.collect do |descendant_group|
-      dag_links_for(group: descendant_group).collect do |direct_link|
-        Membership.new(user: direct_link.descendant, group: descendant_group,
-          valid_from: direct_link.valid_from, valid_to: direct_link.valid_to)
-      end
-    end.flatten
+    find_all_direct_memberships + 
+    dag_links_for(group_ids: @group.connected_descendant_group_ids).collect do |direct_link|
+      Membership.new(user: direct_link.descendant, group: @group,
+        valid_from: direct_link.valid_from, valid_to: direct_link.valid_to)
+    end
   end
   
   def find_all_memberships_by_user_and_group
     find_all_direct_memberships + 
     @group.connected_descendant_groups.collect do |descendant_group|
-      if link = dag_links_for(group: descendant_group, user: @user).first
+      dag_links_for(group: descendant_group, user: @user).collect do |link|
         Membership.new(user: @user, group: @group, valid_from: link.valid_from, valid_to: link.valid_to)
       end
-    end - [nil]
+    end.flatten - [nil]
   end
   
 end

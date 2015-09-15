@@ -43,25 +43,34 @@ describe Membership do
       its(:count) { should == 2 }
     end
     
-    describe "for groups that have direct members" do
-      describe ".where(group: @group3)" do
-        subject { Membership.where(group: @group3) }
-        it { should be_kind_of MembershipCollection }
-        its(:to_a) { should be_kind_of Array }
-        its(:first) { should be_kind_of Membership }
-        its(:count) { should == 1 }
-        its('direct.count') { should == 1 }
+    describe ".where(group: ...)" do
+      #
+      #      group2 --- group3 --- user1
+      #
+      describe "for groups that have direct members" do
+        describe ".where(group: @group3)" do
+          subject { Membership.where(group: @group3) }
+          it { should be_kind_of MembershipCollection }
+          its(:to_a) { should be_kind_of Array }
+          its(:first) { should be_kind_of Membership }
+          its(:count) { should == 1 }
+          its('direct.count') { should == 1 }
+          its('first.user') { should == @user1 }
+          its('first.group') { should == @group3 }
+        end
       end
-    end
-    
-    describe "for groups that have indirect members" do
-      describe ".where(group: @group2)" do
-        subject { Membership.where(group: @group2) }
-        it { should be_kind_of MembershipCollection }
-        its(:to_a) { should be_kind_of Array }
-        its(:first) { should be_kind_of Membership }
-        its(:count) { should == 1 }
-        its('direct.count') { should == 0 }
+      
+      describe "for groups that have indirect members" do
+        describe ".where(group: @group2)" do
+          subject { Membership.where(group: @group2) }
+          it { should be_kind_of MembershipCollection }
+          its(:to_a) { should be_kind_of Array }
+          its(:first) { should be_kind_of Membership }
+          its(:count) { should == 1 }
+          its('direct.count') { should == 0 }
+          its('first.user') { should == @user1 }
+          its('first.group') { should == @group2 }
+        end
       end
     end
     
