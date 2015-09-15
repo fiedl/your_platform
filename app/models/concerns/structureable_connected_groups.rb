@@ -28,7 +28,7 @@ concern :StructureableConnectedGroups do
   end
   
   def connected_ancestor_group_ids
-    cached { select_connected_groups(parent_groups).collect { |parent_group| [parent_group.id] + parent_group.connected_ancestor_group_ids }.uniq }
+    cached { select_connected_groups(parent_groups).collect { |parent_group| [parent_group.id] + parent_group.connected_ancestor_group_ids }.flatten.uniq }
   end
   
   def connected_descendant_groups
@@ -36,13 +36,13 @@ concern :StructureableConnectedGroups do
   end
   
   def connected_descendant_group_ids
-    cached { select_connected_groups(child_groups).collect { |child_group| [child_group.id] + child_group.connected_descendant_group_ids }.uniq }
+    cached { select_connected_groups(child_groups).collect { |child_group| [child_group.id] + child_group.connected_descendant_group_ids }.flatten.uniq }
   end
   
   private
   
   def select_connected_groups(groups)
-    groups.includes(:flags).select do |group|
+    groups.select do |group|
       not group.has_flag? :officers_parent
     end
   end

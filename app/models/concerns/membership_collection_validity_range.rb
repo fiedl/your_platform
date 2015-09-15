@@ -137,10 +137,11 @@ concern :MembershipCollectionValidityRange do
   private
   
   def dag_links_for(attrs = {})
-    user = attrs[:user]; group = attrs[:group]
     links = DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true)
-    links = links.where(descendant_id: user.id) if user
-    links = links.where(ancestor_id: group.id) if group
+    links = links.where(descendant_id: attrs[:user].id) if attrs[:user]
+    links = links.where(ancestor_id: attrs[:group].id) if attrs[:group]
+    links = links.where(descendant_id: attrs[:user_ids]) if attrs[:user_ids]
+    links = links.where(ancestor_id: attrs[:group_ids]) if attrs[:group_ids]
     
     # Validity Perspective
     #
@@ -157,6 +158,10 @@ concern :MembershipCollectionValidityRange do
     links = links.at_time(@at_time) if @at_time
     links = links.this_year if @this_year
     links = links.started_after(@started_after) if @started_after
+    
+    # Include the associated objects to avoid the N+1 problem.
+    #
+    links = links.includes(:ancestor, :descendant)
     
     return links
   end

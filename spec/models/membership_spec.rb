@@ -36,11 +36,29 @@ describe Membership do
     end
     
     describe ".where(user: @user1)" do
+      #
+      #      page1 -------|
+      #      group4 --- group2 --- group3 --- user1
+      #
+      before { @group4 = @group2.parent_groups.create name: 'group4' }
       subject { Membership.where(user: @user1) }
       it { should be_kind_of MembershipCollection }
       its(:to_a) { should be_kind_of Array }
       its(:first) { should be_kind_of Membership }
-      its(:count) { should == 2 }
+      its(:count) { should == 3 }
+      it "should not perform too many queries" do
+        # (User, Group, DagLink, Flag)  for the direct links
+        # (Group, Flag, Flag) for each generation hop, in this case, 3 hops, without caching.
+        count_queries(13) { subject.to_a }.should <= 13  # scales with number of hops
+      end
+      describe "when connected groups are already cached" do
+        before { @user1.connected_ancestor_groups }
+        it "should not perform too many queries" do
+          # (User, Group, DagLink, Flag)  for the direct links
+          # (Group, Flag)  for the indirect connected groups
+          count_queries(6) { subject.to_a }.should <= 6  # does not scale with number of hops
+        end
+      end
     end
     
     describe ".where(group: ...)" do
@@ -106,6 +124,9 @@ describe Membership do
       its(:user) { should == @user1 }
       its(:group) { should == @group3 }
       its(:direct?) { should be_true }
+      it "should perform only 4 queries: DagLink, User, Group and Flags" do
+        count_queries(4) { subject }.should <= 4
+      end
     end
     describe "for a non-existent dag link" do
       before { @dag_link_id = DagLink.pluck(:id).max + 5 }

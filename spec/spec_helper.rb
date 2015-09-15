@@ -206,6 +206,19 @@ Spork.prefork do
     # Call `debug` to enter pry.
     #
     config.include Debug
+    
+    # This counts the number of queries performed within the block.
+    #
+    # Usage:
+    #
+    #     expected_count = 10
+    #     count = count_queries(expected_count) do
+    #       SomeModel.first
+    #     end
+    #
+    # If the count does not match the expected_count, the queries are printed out.
+    #
+    config.include CountQueries
 
     # Devise test helper for controller tests
     config.include Devise::TestHelpers, :type => :controller
