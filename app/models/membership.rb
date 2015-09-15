@@ -14,8 +14,12 @@
 #
 class Membership
   
+  # http://guides.rubyonrails.org/active_model_basics.html#model
+  include ActiveModel::Model
+  
   attr_accessor :user, :group, :valid_from, :valid_to
   
+  include MembershipPersistence
   include MembershipValidityRange
   include MembershipValidityRangeLocalization
   
@@ -47,6 +51,7 @@ class Membership
   end
   
   def ==(other_membership)
+    other_membership.kind_of? Membership and
     self.group.id == other_membership.group.id and
     self.user.id = other_membership.user.id and
     self.valid_from == other_membership.valid_from and
@@ -59,47 +64,25 @@ class Membership
     dag_link ? true : false
   end
   
-  concerning :Persistence do
-    def id
-      dag_link.try(:id)
-    end
-    def save
-      write_attributes_to_dag_link
-      dag_link.save
-    end
-    
-    def save!
-      raise 'Cannot save! Indirect memberships are non-persistent objects.' unless direct?
-      write_attributes_to_dag_link
-      dag_link.save!
-    end
-    
-    def write_attributes_to_dag_link
-      dag_link.valid_from = @valid_from
-      dag_link.valid_to = @valid_to
-    end
-  
-    def reload
-      @dag_link = nil
-      @valid_from = dag_link.valid_from
-      @valid_to = dag_link.valid_to
-      return self
-    end
-    
-    # Direct memberships are stored as DagLinks in the database.
-    # This is, because we've used the acts_as_dag gem earlier:
-    # https://github.com/resgraph/acts-as-dag
-    # 
-    # In contrast to the gem, we do not store indirect links
-    # in the database anymore, since this makes write operations
-    # too expensive for large graphs.
-    #
-    def dag_link
-      @dag_link ||= DagLink.where(ancestor_type: 'Group', descendant_type: 'User', direct: true,
-        ancestor_id: group.id, descendant_id: user.id).first
-    end
+  def to_param
+    id.to_s
   end
-  
+
+  def group_id
+    group.try(:id)
+  end
+  def group_id=(new_group_id)
+    group = Group.find new_group_id
+  end
+
+  def user_title
+    user.try(:title)
+  end
+  def user_title=(new_user_title)
+    user = User.find_by_title new_user_title
+  end
+
+
   # Create a membership of the user `u` in the group `g`.
   #
   #    membership = Membership.create(user: u, group: g)
@@ -123,4 +106,5 @@ class Membership
     Membership.new(user: user, group: group, 
       valid_from: new_dag_link.valid_from, valid_to: new_dag_link.valid_to)
   end
+  
 end
