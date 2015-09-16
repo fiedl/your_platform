@@ -33,19 +33,11 @@ class GroupMembersController < ApplicationController
     @memberships = @memberships.started_after(params[:valid_from].to_datetime) if params[:valid_from].present?
     
     allowed_members = @group.members.accessible_by(current_ability)
-    allowed_memberships = @group.memberships.where(descendant_id: allowed_members.map(&:id))
-    @memberships = @memberships & allowed_memberships
+    @memberships = @memberships.to_a.select { |membership| membership.user.in? allowed_members }
   end
   
   def load_members_from_memberships
-    # Fill also the members into a separate variable.
-    #
-    @members = @group.members.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)})
-    
-    # For some special groups, the first method of retreiving the members does not work.
-    # Fallback to these slower methods:
-    @members = User.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)}) if @members.empty?
-    @members = @memberships.collect { |membership| membership.user } if @members.empty?
+    @members = @memberships.collect { |membership| membership.user }
   end
   
   def load_own_memberships

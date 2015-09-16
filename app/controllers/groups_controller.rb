@@ -52,19 +52,11 @@ class GroupsController < ApplicationController
           # Make sure only members that are allowed to be seen are in this array!
           #
           allowed_member_ids = @group.members.accessible_by(current_ability).pluck(:id)
-          allowed_memberships = @group.memberships.where(descendant_id: allowed_member_ids)
-          @memberships = @memberships & allowed_memberships
+          @memberships = @memberships.to_a.select { |m| m.user.id.in? allowed_member_ids }
         end
         
         Rack::MiniProfiler.step('groups#show controller: fetch members') do
-          # Fill also the members into a separate variable.
-          #
-          @members = @group.members.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)})
-          
-          # For some special groups, the first method of retreiving the members does not work.
-          # Fallback to these slower methods:
-          @members = User.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)}) if @members.empty?
-          @members = @memberships.collect { |membership| membership.user } if @members.empty?
+          @members = @memberships.collect { |membership| membership.user }
         end
         
         # for performance reasons deactivated for the moment.

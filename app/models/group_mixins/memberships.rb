@@ -107,17 +107,23 @@ module GroupMixins::Memberships
     # memberships.
     #
     def memberships_for_member_list
-      cached do
-        if corporation?
-          (
-            memberships_including_members - 
-              becomes(Corporation).former_members_memberships -
-              becomes(Corporation).deceased_members_memberships
-          )
-        else
-          memberships_including_members
-        end
-      end
+      Membership.where(group: self).now.join_validity_ranges_of_indirect_memberships
+            
+      #
+      # TODO: Use and override `memberships` instead.
+      #
+      
+      # cached do
+      #   if corporation?
+      #     (
+      #       memberships_including_members - 
+      #         becomes(Corporation).former_members_memberships -
+      #         becomes(Corporation).deceased_members_memberships
+      #     )
+      #   else
+      #     memberships_including_members
+      #   end
+      # end
     end
     def memberships_for_member_list_count
       cached { memberships_for_member_list.count }
