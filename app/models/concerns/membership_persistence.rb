@@ -33,19 +33,15 @@ concern :MembershipPersistence do
   end
   
   def update_attributes!(attrs = {})
-    attrs.each do |key, value|
-      send("#{key}=", value)
-    end
+    set_attributes(attrs)
     save!
   end
   
-  def write_attributes_to_dag_link
-    dag_link.valid_from = @valid_from
-    dag_link.valid_to = @valid_to
-    dag_link.ancestor_id = @group.id
-    dag_link.descendant_id = @user.id
+  def update_attributes(attrs = {})
+    set_attributes(attrs)
+    save if direct?
   end
-
+  
   def reload
     @dag_link = nil
     @valid_from = dag_link.valid_from
@@ -53,10 +49,6 @@ concern :MembershipPersistence do
     return self
   end
 
-  def _read_attribute(key)
-    send(key) if key.in? [:valid_from, :valid_to]
-  end
-  
   delegate :destroyed?, :new_record?, to: :dag_link
   
   def destroyable?
@@ -65,6 +57,25 @@ concern :MembershipPersistence do
   
   def destroy
     (destroyable? && dag_link.try(:destroy)) || raise("could not destroy membership #{id}.")
+  end
+  
+  private
+  
+  def write_attributes_to_dag_link
+    dag_link.valid_from = @valid_from
+    dag_link.valid_to = @valid_to
+    dag_link.ancestor_id = @group.id
+    dag_link.descendant_id = @user.id
+  end
+
+  def _read_attribute(key)
+    send(key) if key.in? [:valid_from, :valid_to]
+  end
+
+  def set_attributes(attrs)
+    attrs.each do |key, value|
+      send("#{key}=", value)
+    end
   end
   
   
