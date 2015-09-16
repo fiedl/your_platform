@@ -143,25 +143,28 @@ concern :MembershipCollectionValidityRange do
     links = links.where(descendant_id: attrs[:user_ids]) if attrs[:user_ids]
     links = links.where(ancestor_id: attrs[:group_ids]) if attrs[:group_ids]
     
-    # Validity Perspective
-    #
-    links = links.valid if @valid
-    links = links.invalid if @invalid
-    links = links.with_invalid if @with_invalid
-    
-    # Time Perspective
-    #
-    links = links.now if @now
-    links = links.past if @past
-    links = links.with_past if @with_past
-    links = links.now_and_in_the_past if @now_and_in_the_past
-    links = links.at_time(@at_time) if @at_time
-    links = links.this_year if @this_year
-    links = links.started_after(@started_after) if @started_after
-    
-    # Include the associated objects to avoid the N+1 problem.
-    #
-    links = links.includes(:ancestor, :descendant)
+    unless attrs[:ignore_validity_range_filters]
+      # Validity Perspective
+      #
+      links = links.valid if @valid
+      links = links.invalid if @invalid
+      links = links.with_invalid if @with_invalid
+      
+      # Time Perspective
+      #
+      links = links.now if @now
+      links = links.past if @past
+      links = links.with_past if @with_past
+      links = links.now_and_in_the_past if @now_and_in_the_past
+      links = links.at_time(@at_time) if @at_time
+      links = links.this_year if @this_year
+      links = links.started_after(@started_after) if @started_after
+    end
+    unless attrs[:no_eager_loading]
+      # Include the associated objects to avoid the N+1 problem.
+      #
+      links = links.includes(:ancestor, :descendant)
+    end
     
     return links
   end

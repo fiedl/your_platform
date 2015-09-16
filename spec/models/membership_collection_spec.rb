@@ -170,5 +170,131 @@ describe MembershipCollection do
     end
   end
   
+  describe "#join_validity_ranges_of_indirect_memberships" do
+    # Join the validity ranges of indirect memberships.
+    #
+    #     @group1
+    #        |------- @subgroup1 -----|
+    #        |------- @subgroup2 --- @user1
+    #
+    # First, user1 joins subgroup1, then moves to subgroup2.
+    #
+    #    |-----------|                   first indirect membership in @group1
+    #                |---------          second indirect membership in @group2
+    #    |---------------------          joined indirect membership
+    #
+    before do
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @subgroup2 = @group1.child_groups.create name: 'subgroup2'
+      @user1 = create :user; @subgroup1 << @user1; @subgroup2 << @user1
+      @time1 = 1.year.ago; @time2 = 6.months.ago; @time3 = 2.months.ago; @time4 = nil
+      Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+      Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+    end
+    describe "for a group" do
+      subject { Membership.where(group: @group1).join_validity_ranges_of_indirect_memberships }
+      it { should be_kind_of MembershipCollection }
+      it "should join the indirect memberships, i.e. count only one membership, not two" do
+        subject.count.should == 1
+      end
+      its('first.valid_from.to_i') { should == @time1.to_i }
+      describe "for a right-open interval" do
+        before do
+          @time4 = nil
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a left-open interval" do
+        before do
+          @time1 = nil
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a closed interval" do
+        before do
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+    end
+    describe "for a user" do
+      subject { Membership.where(user: @user1).join_validity_ranges_of_indirect_memberships }
+      it { should be_kind_of MembershipCollection }
+      it "should join the indirect memberships, i.e. count only one membership, not two" do
+        subject.count.should == 3
+        subject.indirect.count.should == 1
+      end
+      describe "for a right-open interval" do
+        before do
+          @time4 = nil
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('indirect.first.valid_from.to_i') { should == @time1.to_i }
+        its('indirect.first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a left-open interval" do
+        before do
+          @time1 = nil
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('indirect.first.valid_from.to_i') { should == @time1.to_i }
+        its('indirect.first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a closed interval" do
+        before do
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('indirect.first.valid_from.to_i') { should == @time1.to_i }
+        its('indirect.first.valid_to.to_i') { should == @time4.to_i }
+      end
+    end
+    describe "for user and group" do
+      subject { Membership.where(user: @user1, group: @group1).join_validity_ranges_of_indirect_memberships }
+      it { should be_kind_of MembershipCollection }
+      it "should join the indirect memberships, i.e. count only one membership, not two" do
+        subject.count.should == 1
+        subject.indirect.count.should == 1
+      end
+      describe "for a right-open interval" do
+        before do
+          @time4 = nil
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a left-open interval" do
+        before do
+          @time1 = nil
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+      describe "for a closed interval" do
+        before do
+          @time4 = 1.day.ago
+          Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+        end
+        its('first.valid_from.to_i') { should == @time1.to_i }
+        its('first.valid_to.to_i') { should == @time4.to_i }
+      end
+    end
+    
+  end
     
 end
