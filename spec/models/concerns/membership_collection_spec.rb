@@ -138,5 +138,36 @@ describe MembershipCollection do
     subject { Membership.where(user: @user1).uniq }
     its(:count) { should == Membership.where(user: @user1).count - 1 }
   end
+  
+  describe "#first_per_group", :focus do
+    # If a user has two memberships in a group, differing in the validity range,
+    # this filter selects the first, i.e. earliest, membership for each group.
+    #
+    #    @group1 --- @subgroup1 ------
+    #       |                         |
+    #       |------- @subgroup2 --- @user1
+    #
+    before do
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @subgroup2 = @group1.child_groups.create name: 'subgroup2'
+      @user1 = create :user; @subgroup1 << @user1; @subgroup2 << @user1
+      @time1 = 1.year.ago; @time2 = 6.months.ago; @time3 = 2.months.ago; @time4 = nil
+      Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+      Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+    end
+    describe "with past memberships" do
+      subject { Membership.where(group: @group1).first_per_group }
+      it { should be_kind_of MembershipCollection }
+      its(:count) { should == 1 }
+      its('first.valid_from.to_i') { should == @time1.to_i }
+    end
+    describe "only current memberships" do
+      subject { Membership.where(group: @group1).now.first_per_group }
+      it { should be_kind_of MembershipCollection }
+      its(:count) { should == 1 }
+      its('first.valid_from.to_i') { should == @time3.to_i }
+    end
+  end
     
 end

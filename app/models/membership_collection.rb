@@ -18,6 +18,14 @@ class MembershipCollection
     return self
   end
   
+  # If a user has two memberships in a group, differing in the validity range,
+  # this filter selects the first, i.e. earliest, membership for each group.
+  #
+  def first_per_group
+    @first_per_group = true
+    return self
+  end
+  
   def to_a
     memberships = []
     if @direct
@@ -32,6 +40,12 @@ class MembershipCollection
       end
     end
     memberships = memberships.uniq { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] } if @uniq
+    if @first_per_group
+      memberships = memberships.group_by { |m| [m.group, m.user] }.collect do |group_and_user, memberships|
+        min_valid_from_to_i = memberships.collect { |m| m.valid_from.to_i }.min
+        memberships.detect { |m| m.valid_from.to_i == min_valid_from_to_i }
+      end
+    end
     return memberships
   end
   
