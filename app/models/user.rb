@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   # Mixins
   # ==========================================================================================
 
-  include UserMixins::Memberships
+  include UserMemberships
   include UserMixins::Identification
   include ProfileableMixins::Address
   include UserCorporations
