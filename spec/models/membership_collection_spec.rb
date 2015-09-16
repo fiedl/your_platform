@@ -139,7 +139,7 @@ describe MembershipCollection do
     its(:count) { should == Membership.where(user: @user1).count - 1 }
   end
   
-  describe "#first_per_group", :focus do
+  describe "#first_per_group" do
     # If a user has two memberships in a group, differing in the validity range,
     # this filter selects the first, i.e. earliest, membership for each group.
     #
@@ -169,5 +169,6 @@ describe MembershipCollection do
       its('first.valid_from.to_i') { should == @time3.to_i }
     end
   end
+  
     
 end
