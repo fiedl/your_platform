@@ -47,7 +47,7 @@ module GroupsHelper
   def sub_group_membership_lis( options = {} )
     c = ""
     c += membership_li( options[ :user ], options[ :group ] )
-    sub_groups_where_user_is_member = options[ :group ].child_groups & options[ :user ].groups
+    sub_groups_where_user_is_member = options[ :group ].child_groups & options[ :user ].groups.to_a
     current_indent = options[ :indent ] + 1
     max_indent = options[ :max_indent ]
     current_indent = max_indent if current_indent > max_indent

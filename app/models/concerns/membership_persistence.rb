@@ -59,6 +59,10 @@ concern :MembershipPersistence do
     (destroyable? && dag_link.try(:destroy)) || raise("could not destroy membership #{id}.")
   end
   
+  def _read_attribute(key)
+    send(key) if key.in? [:valid_from, :valid_to]
+  end
+
   private
   
   def write_attributes_to_dag_link
@@ -66,10 +70,6 @@ concern :MembershipPersistence do
     dag_link.valid_to = @valid_to
     dag_link.ancestor_id = @group.id
     dag_link.descendant_id = @user.id
-  end
-
-  def _read_attribute(key)
-    send(key) if key.in? [:valid_from, :valid_to]
   end
 
   def set_attributes(attrs)

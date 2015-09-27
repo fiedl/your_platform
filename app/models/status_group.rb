@@ -16,7 +16,7 @@ class StatusGroup < Group
     user_groups = options[:with_invalid] ? user.parent_groups : user.direct_groups
     user.corporations.collect do |corporation|
       StatusGroup.find_all_by_corporation(corporation)
-    end.flatten & user_groups
+    end.flatten & user_groups.to_a
   end
   
   def self.find_by_user_and_corporation(user, corporation)

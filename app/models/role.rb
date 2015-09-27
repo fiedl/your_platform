@@ -42,7 +42,7 @@ class Role
     @object
   end
   def group
-    @object
+    @object if @object.kind_of?(Group)
   end
   
   #
@@ -53,10 +53,14 @@ class Role
     member? && full_member?
   end
   
+  # To be a full member of a `group`, a `user` has
+  # (a) to be member of the `group` and the `group` has to be flagged `:full_members`.
+  # (b) to be member of one of the subgroups of `group` that is flagged `:full_members`.
+  #
   def full_member?
-    object.kind_of?(Group) &&
-      ( user.groups.flagged(:full_members).where(id: group.descendant_group_ids).exists? ||
-        user.groups.flagged(:full_members).exists?(group.id) )
+    return false unless group
+    full_members_group_ids = ([group.id] + group.connected_descendant_group_ids) & Group.flagged(:full_members).pluck(:id)
+    (user.groups.map(&:id) & full_members_group_ids).count > 0
   end
     
   def member?

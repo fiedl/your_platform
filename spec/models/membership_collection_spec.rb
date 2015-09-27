@@ -170,6 +170,58 @@ describe MembershipCollection do
     end
   end
   
+  describe "#groups" do
+    #      group1 --- page1 --- group2 --- group3 --- user1
+    #        |
+    #        |------- user2
+    before { @membership_collection = @user1.memberships }
+    subject { @membership_collection.groups }
+    it { should be_kind_of GroupCollection }
+    it { should include @group2, @group3 }
+    describe "for #direct" do
+      before { @membership_collection = @membership_collection.direct }
+      it { should_not include @group2 }
+    end
+    describe "for #indirect" do
+      before { @membership_collection = @membership_collection.indirect }
+      it { should_not include @group1 }
+    end
+  end
+  
+  describe "#destroy_all" do
+    # Example: 
+    #
+    #      group1 --- page1 --- group2 --- group3 --- user1
+    #        |
+    #        |------- user2
+    #        |-------group4 --- user1 (past membership)
+    #
+    before do
+      @group4 = @group1.child_groups.create name: 'group4'
+      @group4 << @user1
+      Membership.where(user: @user1, group: @group4).first.invalidate at: 10.days.ago
+
+      @memberships = Membership.where(user: @user1)
+    end
+    describe "for #now" do
+      subject { @memberships.now.destroy_all; Membership.where(user: @user1).groups }
+      it { should include @group1, @group4 }
+      it { should_not include @group3, @group2 }
+    end
+    
+    describe "for #past" do
+      subject { @memberships.past.destroy_all; Membership.where(user: @user1).groups }
+      it { should_not include @group1, @group4 }
+      it { should include @group3, @group2 }
+    end
+
+    describe "for #with_past" do
+      subject { @memberships.with_past.destroy_all; Membership.where(user: @user1).groups }
+      it { should_not include @group1, @group4 }
+      it { should_not include @group3, @group2 }
+    end
+  end
+  
   describe "#join_validity_ranges_of_indirect_memberships" do
     # Join the validity ranges of indirect memberships.
     #

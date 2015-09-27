@@ -331,6 +331,7 @@ Spork.prefork do
   #
   I18n.default_locale = :de
   I18n.locale = :de
+  TEST_TIMEZONE = "Berlin"
   
   
   # Request Host

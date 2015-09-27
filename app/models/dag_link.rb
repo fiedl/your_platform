@@ -3,6 +3,7 @@ class DagLink < ActiveRecord::Base
 
   attr_accessible :ancestor_id, :ancestor_type, :count, :descendant_id, :descendant_type, :direct if defined? attr_accessible
   acts_as_dag_links polymorphic: true
+  has_many_flags
 
   # We have to workaround a bug in Rails 3 here. But, since Rails 3 is no longer fully supported,
   # this is not going to be fixed.

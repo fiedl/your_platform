@@ -90,14 +90,28 @@ describe UserMemberships do
   end
   
   describe "(Groups)" do
+    #
+    #   @indirect_group
+    #        |------------ @group
+    #        |                |------ @user1  # @membership1
+    #        |                |------ @user2
+    #        |
+    #        |------------ @group2
+    #                         |------ @user1
+    #
+    before do
+      Membership.create user: @user1, group: @group2
+    end
+    
     describe "#groups" do
       subject { @user1.groups }
       it { should include @group }
       it { should include @indirect_group }
-      it "should not include groups of invalidated memberships" do
-        @membership1.invalidate at: 10.minutes.ago
-        subject.should_not include @group
-        subject.should_not include @indirect_group
+      describe "when a direct membership has been invalidated" do
+        before { @membership1.invalidate at: 10.minutes.ago }
+        it { should_not include @group }
+        it { should include @group2 }
+        it { should include @indirect_group }
       end
     end    
     
@@ -111,6 +125,7 @@ describe UserMemberships do
       subject { @user.indirect_groups }
       it { should include @indirect_group }
       it { should_not include @group }
+      its(:count) { should == 1 }
     end
   end
 end

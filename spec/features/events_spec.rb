@@ -229,8 +229,9 @@ feature "Events" do
   end
 
   context "for officers", js: true do
-    background do 
-      @group.officers_parent.child_groups.create(name: 'President').assign_user @user, at: 1.hour.ago
+    background do
+      @group.assign_user @user, at: 10.hours.ago
+      @group.create_officer_group(name: 'President').assign_user @user, at: 1.hour.ago
       login @user
     end
     
@@ -342,7 +343,7 @@ feature "Events" do
     background do
       @corporation = create :corporation_with_status_groups
       @corporation.status_groups.first.assign_user @user, at: 1.month.ago
-      @president = @corporation.officers_parent.child_groups.create name: 'President'
+      @president = @corporation.create_officer_group name: 'President'
       @president.assign_user @user, at: 5.days.ago
       @other_event = create :event
       @other_event.parent_groups << @corporation

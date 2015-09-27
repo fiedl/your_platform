@@ -149,9 +149,9 @@ module GroupMixins::Memberships
     #
     def assign_user( user, options = {} )
       if user and not user.in?(self.direct_members)
-        membership = UserGroupMembership.create(user: user, group: self)
+        membership = Membership.create(user: user, group: self)
         time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
-        membership.update_attribute(:valid_from, time_of_joining)
+        membership.update_attributes valid_from: time_of_joining
         return membership
       end
     end

@@ -5,14 +5,16 @@ feature "Group Posts" do
   
   background do
     #
-    #  @super_group
+    #  @parent_group
     #       |-------- @group ------ @other_user
-    #       |
-    #     @officers ----- @user
+    #                    |--------- @user
+    #                    |
+    #                  @officers -- @user
     #
     @user = create :user_with_account
     @other_user = create :user_with_account
     @group = create :group
+    @group << @user
     @group << @other_user
     @parent_group = create :group
     @parent_group << @group

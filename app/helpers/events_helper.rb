@@ -5,11 +5,11 @@ module EventsHelper
   end
   
   def groups_the_current_user_can_create_events_for
-    current_user.groups.find_all_by_flag(:officers_parent).collect { |op| op.parent_groups.first }
+    current_user.officer_groups.collect { |officer_group| officer_group.scope_group } - [nil]
   end
 
   def first_group_the_current_user_can_create_events_for
-    current_user.groups.find_all_by_flag(:officers_parent).first.try(:parent_groups).try(:first)
+    current_user.officer_groups.detect { |officer_group| officer_group.scope_group }.try(:scope_group)
   end
   
   def everyone_group_if_the_user_can_create_events_there

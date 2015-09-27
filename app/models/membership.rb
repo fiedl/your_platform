@@ -22,6 +22,7 @@ class Membership
   include MembershipPersistence
   include MembershipValidityRange
   include MembershipValidityRangeLocalization
+  include MembershipReview
   
   def initialize(attrs = {})
     @dag_link = attrs[:dag_link]
@@ -51,11 +52,12 @@ class Membership
   end
   
   def ==(other_membership)
-    other_membership.kind_of? Membership and
-    self.group.id == other_membership.group.id and
-    self.user.id = other_membership.user.id and
-    self.valid_from == other_membership.valid_from and
-    self.valid_to == other_membership.valid_to
+    super ||
+      other_membership.instance_of?(self.class) &&
+      self.group.id == other_membership.group.id &&
+      self.user.id == other_membership.user.id &&
+      self.valid_from.try(:to_i) == other_membership.valid_from.try(:to_i) &&
+      self.valid_to.try(:to_i) == other_membership.valid_to.try(:to_i)
   end
   
   alias_method :eql?, :==
@@ -81,6 +83,20 @@ class Membership
   def user_title=(new_user_title)
     user = User.find_by_title new_user_title
   end
+  
+  # Invalidate the current membership and move the user to the given group.
+  # 
+  #     membership.move_to other_group
+  #     membership.move_to other_group, at: 1.hour.ago
+  #
+  def move_to(group_to_move_in, options = {})
+    time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
+    self.invalidate at: time
+    new_membership = Membership.create(user: self.user, group: group_to_move_in)
+    new_membership.update_attributes valid_from: time
+    return new_membership
+  end
+  
 
 
   # Create a membership of the user `u` in the group `g`.

@@ -450,8 +450,8 @@ class User < ActiveRecord::Base
 
   def corporate_vita_memberships_in(corporation)
     Rails.cache.fetch([self, 'corporate_vita_memberships_in', corporation], expires_in: 1.week) do
-      group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group')
+      corporation_status_groups = corporation.status_groups
+      self.memberships.with_past.select { |m| m.group.in? corporation_status_groups }
     end
   end
 
@@ -511,16 +511,15 @@ class User < ActiveRecord::Base
   # all workflows of all groups the user is a member of.
   #
   def workflows
-    my_workflows = []
-    self.groups.each do |group|
-      my_workflows += group.child_workflows
-    end
-    return my_workflows
+    self.groups.collect do |group|
+      group.child_workflows
+    end.flatten - [nil]
   end
 
   def workflows_for(group)
-    (([group.becomes(Group)] + group.descendant_groups) & self.groups)
-      .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
+    (self.groups & ([group] + group.connected_descendant_groups)).collect do |group|
+      group.child_workflows
+    end.flatten - [nil]
   end
 
   def workflows_by_corporation
@@ -647,12 +646,12 @@ class User < ActiveRecord::Base
 
   # This efficiently returns all flags of the groups the user is currently in.
   #
-  # For example, ony can find out with one sql query whether a user is hidden:
+  # For example, ony can find out with one query whether a user is hidden:
   #
   #     user.group_flags.include? 'hidden_users'
   #
   def group_flags
-    groups.joins(:flags).pluck('flags.key')
+    cached { self.groups.collect { |g| f.flags }.flatten }
   end
 
 

@@ -18,7 +18,7 @@ concern :MembershipValidityRange do
     #     
     def make_invalid(time = Time.zone.now)
       dag_link.try(:make_invalid, time)
-      return self
+      return self.reload
     end
     
     # This is just an alias for `make_invalid`.

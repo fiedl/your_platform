@@ -165,7 +165,7 @@ concern :MembershipCollectionValidityRange do
       #
       links = links.includes(:ancestor, :descendant)
     end
-    
+
     return links
   end
   

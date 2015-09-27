@@ -7,7 +7,19 @@ class OfficerGroup < Group
   end
   
   def structureable
-    parent.parent_groups.first || parent.parent_pages.first
+    scope_group || scope_page
+  end
+  
+  # This is the group the officer is responsible for.
+  #
+  def scope_group
+    parent.parent_groups.first
+  end
+  
+  # This is the page the officer is responsible for.
+  #
+  def scope_page
+    parent.parent_pages.first
   end
   
   def parent

@@ -708,8 +708,8 @@ describe User do
     it "should include the groups the user is an indirect member of" do
       subject.should include( Group.everyone )
     end
-    it "should return all ancestor groups" do
-      subject.should == @user.ancestor_groups
+    it "should return all connected ancestor groups" do
+      subject.collect(&:id).sort.should == @user.connected_ancestor_groups.collect(&:id).sort
     end
   end
 
@@ -1006,20 +1006,42 @@ describe User do
   # ------------------------------------------------------------------------------------------
 
   describe "#memberships" do
+    # Join the validity ranges of indirect memberships.
+    #
+    #     @group1
+    #        |------- @subgroup1 -----|      <--- past membership
+    #        |------- @subgroup2 --- @user1
+    #
+    # First, user1 joins subgroup1, then moves to subgroup2.
+    #
+    #    |-----------|                   first indirect membership in @group1
+    #                |---------          second indirect membership in @group2
+    #    |---------------------          joined indirect membership
+    #
     before do
-      @group = create( :group )
-      @group.child_users << @user
-      @membership = UserGroupMembership.find_by( user: @user, group: @group )
+      @group1 = create :group, name: 'group1'
+      @subgroup1 = @group1.child_groups.create name: 'subgroup1'
+      @subgroup2 = @group1.child_groups.create name: 'subgroup2'
+      @user1 = create :user; @subgroup1 << @user1; @subgroup2 << @user1
+      @time1 = 1.year.ago; @time2 = 6.months.ago; @time3 = 2.months.ago; @time4 = nil
+      Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
+      Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
+      
+      @membership1 = Membership.where(user: @user1, group: @group1).first
+      @submembership1 = Membership.where(user: @user1, group: @subgroup1).first  # past membership
+      @submembership2 = Membership.where(user: @user1, group: @subgroup2).first
     end
-    subject { @user.memberships }
-    it "should return an array of the user's memberships" do
-      subject.should == [ @membership ]
+    subject { @user1.memberships }
+    specify "prelims" do
+      @membership1.should be_kind_of Membership
+      @submembership2.should be_kind_of Membership
+      @submembership1.should be_kind_of Membership
     end
-    it "should be the same as UserGroupMembership.find_all_by_user" do
-      subject.should == UserGroupMembership.find_all_by_user( @user )
-    end
-    it "should allow to chain other ActiveRelation scopes, like `only_valid`" do
-      subject.only_valid.should == [ @membership ]
+    it { should be_kind_of MembershipCollection }
+    it "should only include current memberships per default" do
+      binding.pry
+      subject.should include @membership1, @submembership2
+      subject.count.should == 2
     end
   end
 

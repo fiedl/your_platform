@@ -21,15 +21,15 @@ concern :UserMemberships do
   end
   
   def groups
-    memberships.map(&:group)
+    GroupCollection.new(memberships: memberships.join_validity_ranges_of_indirect_memberships)
   end
   
   def direct_groups
-    direct_memberships.map(&:group)
+    GroupCollection.new(memberships: direct_memberships)
   end
   
   def indirect_groups
-    indirect_memberships.map(&:group)
+    GroupCollection.new(memberships: indirect_memberships.join_validity_ranges_of_indirect_memberships)
   end
 
 end

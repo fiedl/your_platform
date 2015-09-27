@@ -72,11 +72,23 @@ class MembershipCollection
     return memberships
   end
   
+  def groups
+    GroupCollection.new(memberships: self)
+  end
+  
   delegate :count, :first, :last, to: :to_a
-  delegate :map, to: :to_a
+  delegate :map, :collect, :select, :each, to: :to_a
   
   def include?(*other_memberships)
-    to_a.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] }.include?(*other_memberships.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] })
+    binding.pry
+    to_a.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] }
+    .include?(*other_memberships.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] })
+  end
+  
+  def destroy_all
+    self.each do |membership|
+      membership.destroy if membership.destroyable?
+    end
   end
   
   private

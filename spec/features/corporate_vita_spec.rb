@@ -79,14 +79,14 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.where(user: @user, group: @status_groups.first).first
         visit user_path( @user )
       end
 
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(TEST_TIMEZONE).to_date
 
           page.should have_content @valid_from_formatted
 
@@ -97,14 +97,14 @@ feature 'Corporate Vita', js: true do
             page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
           end
 
-          @new_date = 10.days.ago.to_date
+          @new_date = 10.days.ago.in_time_zone(TEST_TIMEZONE).to_date
           fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
           
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
           
           wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+          Membership.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end
@@ -150,17 +150,17 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.where(user: @user, group: @status_groups.first).first
         visit user_path( @user )
       end
 
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(TEST_TIMEZONE).to_date
 
           page.should have_content @valid_from_formatted
-
+          save_and_open_page 
           # activate inplace editing of the date_field
           first('.best_in_place.status_group_date_of_joining').click
 
@@ -168,14 +168,14 @@ feature 'Corporate Vita', js: true do
             page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
           end
 
-          @new_date = 10.days.ago.to_date
+          @new_date = 10.days.ago.in_time_zone(TEST_TIMEZONE).to_date
           fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
 
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
 
           wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+          Membership.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end

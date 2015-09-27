@@ -31,14 +31,23 @@ concern :UserRoles do
   def member_of?( object, options = {} )
     if object.kind_of? Group
       if options[:with_invalid] or options[:also_in_the_past]
-        self.ancestor_group_ids.include? object.id
-      else  # only current memberships:
-        self.group_ids.include? object.id  # This uses the validity range mechanism
+        self.groups.with_past.include? object
+      else
+        self.groups.now.include? object
       end
     else
       self.ancestors.include? object
     end
   end
+
+
+  # Officer Status
+  # ------------------------------------------------------------------------------------------
+  
+  def officer_groups
+    cached { self.groups.select { |g| g.type == "OfficerGroup" } }
+  end
+
 
   # Admins
   # ------------------------------------------------------------------------------------------
