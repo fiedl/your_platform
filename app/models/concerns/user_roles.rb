@@ -172,10 +172,22 @@ concern :UserRoles do
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
+  
+
+  # Officers
+  # ==========================================================================================
+  
+  def officer_of_anything?
+    self.groups.detect { |g| g.type == 'OfficerGroup' } || false
+  end
 
 
   # Methods transferred from former Role class
   # ==========================================================================================
+
+  def global_officer?
+    is_global_officer?
+  end
 
   def is_global_officer?
     cached { global_admin? || ancestor_groups.flagged(:global_officer).exists? }

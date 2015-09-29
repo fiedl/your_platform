@@ -155,11 +155,11 @@ class Ability
     end
     
     if not read_only_mode?
-      # Group emails
-      #
-      can [:create_post, :create_post_for, :force_post_notification], Group do |group|
-        user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
-      end
+      # # Group emails
+      # #
+      # # can [:create_post, :create_post_for, :force_post_notification], Group do |group|
+      #   user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
+      # end
     
       # Local officers can create events in their groups.
       #
@@ -227,7 +227,6 @@ class Ability
   def rights_for_global_officers
     can :export_member_list, Group
     if not read_only_mode?
-      can [:create_post, :create_post_for, :force_post_notification], Group
       can [:create_event, :create_event_for], Group
       can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
@@ -296,10 +295,6 @@ class Ability
         attachment.parent.kind_of?(Page) and
         attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
       end
-      
-      # This allows all users to send posts to their own groups.
-      # TODO: Post policy for groups.
-      can [:create_post, :create_post_for], Group, id: user.group_ids
       
       # If a user can read an object, he can comment it.
       # 
@@ -413,12 +408,14 @@ class Ability
       obj.created_at < timestamp
     end
     
-    # Everyone can create posts via email, i.e. send email messages to our
-    # json api.
+    # Send messages to a group, either via web ui or via email:
+    # This is allowed if the user matches the mailing-list-sender-filter setting.
+    # Definition in: concerns/group_mailing_lists.rb
     #
-    # TODO: Add a kind of auth token sent by our postfix script.
-    #
-    can :create, :post_via_email
+    can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
+      group.user_matches_mailing_list_sender_filter?(user)
+    end
+      
     
     # All users can use the blue help button.
     #
