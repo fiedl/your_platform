@@ -18,6 +18,14 @@
                                    :profile_field => {:type => 'ProfileFieldTypes::MailingListEmail', :label => t(:mailing_list)},
                                    :section => 'mailing_list_adresses'), :method => 'post')
 
+%h1.sender_filter= t :mailing_list_sender_filter
+%div.section.sender_filter
+  %p
+    %strong Absender-Filter:
+    = best_in_place @group, :mailing_list_sender_filter, as: :select, collection: Hash[@group.mailing_list_sender_filter_settings.collect { |setting| [setting, I18n.t("sender_filter.#{setting}")] }]
+  %p Es werden nur Nachrichten von diesen Absendern zugelassen. Alle übrigen Nachrichten werden abgewiesen.
+  
+
 %h1 E-Mail-Verteiler einrichten
 %div
   %p 
