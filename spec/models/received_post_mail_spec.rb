@@ -35,6 +35,39 @@ describe ReceivedPostMail do
     "__________\n" +
     "Sent through mail group."
   }
+  
+  describe "#deliver_rejection_emails" do
+    before { mail.store_as_posts_when_authorized }
+    subject { mail.deliver_rejection_emails }
+    
+    it "should send a rejection email to the sender user" do
+      subject
+      rejection_mail = ActionMailer::Base.deliveries.last
+      rejection_mail.to.should == [sender_user.email]
+      rejection_mail.subject.should == "Re: Test Mail"
+      rejection_mail.body.should include recipient_group.name
+      rejection_mail.body.should include "You are not authorized"
+    end
+    
+    describe "when the recipient could not be determined" do
+      let(:message) { 
+        "From: #{sender_user.name} <#{sender_user.email}>\n" +
+        "To: unknown.recipient@example.com\n" +
+        "Subject: Test Mail\n\n" +
+        "This is a simple text message."
+      }
+      let(:mail) { ReceivedPostMail.new(message) }
+      
+      it "should send a rejection email to the sender user" do
+        subject
+        rejection_mail = ActionMailer::Base.deliveries.last
+        rejection_mail.to.should == [sender_user.email]
+        rejection_mail.subject.should == "Re: Test Mail"
+        rejection_mail.body.should include "unknown.recipient@example.com"
+        rejection_mail.body.should include "Recipient could not be determined"
+      end
+    end
+  end
     
   describe "#store_as_posts" do
     subject { mail.store_as_posts }
