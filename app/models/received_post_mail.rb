@@ -89,10 +89,10 @@ class ReceivedPostMail < ReceivedMail
   
   def deliver_rejection_emails
     @unauthorized_groups && @unauthorized_groups.each do |group|
-      PostRejectionMailer.post_rejection_email(self.sender_email, group.name, "Re: #{self.subject}", "You are not authorized to send messages to this group.").deliver_later
+      PostRejectionMailer.post_rejection_email(self.sender_email, group.name, "Re: #{self.subject}", "You are not authorized to send messages to this group.").deliver_now
     end
     self.unmatched_recipient_emails.each do |email|
-      PostRejectionMailer.post_rejection_email(self.sender_email, email, "Re: #{self.subject}", "Recipient could not be determined. Maybe a typo in the email address?").deliver_later
+      PostRejectionMailer.post_rejection_email(self.sender_email, email, "Re: #{self.subject}", "Recipient could not be determined. Maybe a typo in the email address?").deliver_now
     end
   end
 

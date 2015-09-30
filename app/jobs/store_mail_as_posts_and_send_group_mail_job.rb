@@ -22,7 +22,7 @@ class StoreMailAsPostsAndSendGroupMailJob < ActiveJob::Base
       @posts = received_post_mail.store_as_posts_when_authorized
       received_post_mail.deliver_rejection_emails
     end
-    @posts.each { |post| post.send_as_email_to_recipients }  # TODO: post deliveries table to avoid timeout and generate delivery reports.
+    @posts.each { |post| post.send_as_email_to_recipients }
   end
   
   # We have to lock post mail processing in a way that does not allow

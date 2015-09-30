@@ -89,7 +89,7 @@ class PostsController < ApplicationController
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
       Notification.create_from_post(@post, sent_at: Time.zone.now) unless params[:recipient] == 'me'
-      flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
+      flash[:notice] = "Nachricht wird an #{@send_counter} Empfänger versandt."
     else
       Notification.create_from_post(@post) unless params[:recipient] == 'me'
       flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
@@ -101,7 +101,7 @@ class PostsController < ApplicationController
       format.html do
         redirect_to group_posts_path(@group), change: 'posts'
       end
-      format.json { render json: {recipients_count: @send_counter} }
+      format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
     end
     
   end

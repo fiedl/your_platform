@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150928210248) do
+ActiveRecord::Schema.define(version: 20150930184703) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -251,6 +251,17 @@ ActiveRecord::Schema.define(version: 20150928210248) do
   end
 
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
+
+  create_table "post_deliveries", force: :cascade do |t|
+    t.integer  "post_id",    limit: 4
+    t.integer  "user_id",    limit: 4
+    t.string   "user_email", limit: 255
+    t.datetime "sent_at"
+    t.datetime "failed_at"
+    t.string   "comment",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string   "subject",         limit: 255
