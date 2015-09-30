@@ -135,7 +135,23 @@ class PostsController < ApplicationController
   # https://github.com/ivaldi/brimir
   #
   def create_via_email
-    authorize! :create, :post_via_email
+    #
+    # ## Authorization
+    # 
+    # In case of comments, the user is authenticated by his user token that is included in the
+    # reply-to email address, e.g. user-aeng9iLe...oi2iSh7Hahr.post-345.create-comment.plattform@example.com.
+    # We do not check authorization for comments at the moment. TODO
+    #
+    # In case of posts, the user is authenticated by the sender email address.
+    # TODO: Support uploading public keys to protect from forged email addresses.
+    # The authorization is done in the StoreMailAsPostsAndSendGroupMailJob.
+    # Rejection messages are also sent in the StoreMailAsPostsAndSendGroupMailJob.
+    #
+    # The following authorization step generally checks whether the platform mailgate
+    # should be used. This way, the mailgate can be switched off in the Ability class.
+    #
+    authorize! :use, :platform_mailgate
+    
     if params[:message]
       if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
         # Then this responds to a conversation and should not create a new post but a comment instead.

@@ -415,7 +415,12 @@ class Ability
     can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
       group.user_matches_mailing_list_sender_filter?(user)
     end
-      
+    
+    # Activate platform mailgate, i.e. accept incoming email.
+    # The authorization to send to a specific group is done separately in
+    # the StoreMailAsPostsAndSendGroupMailJob.
+    #
+    can :use, :platform_mailgate
     
     # All users can use the blue help button.
     #

@@ -19,9 +19,10 @@ class StoreMailAsPostsAndSendGroupMailJob < ActiveJob::Base
     wait_for_unlock
     lock do
       received_post_mail = ReceivedPostMail.new(message)
-      @posts = received_post_mail.store_as_posts
+      @posts = received_post_mail.store_as_posts_when_authorized
+      # received_post_mail.deliver_rejection_emails  # TODO
     end
-    @posts.each { |post| post.send_as_email_to_recipients }
+    @posts.each { |post| post.send_as_email_to_recipients }  # TODO: post deliveries table to avoid timeout and generate delivery reports.
   end
   
   # We have to lock post mail processing in a way that does not allow
