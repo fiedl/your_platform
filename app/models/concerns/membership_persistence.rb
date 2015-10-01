@@ -29,7 +29,7 @@ concern :MembershipPersistence do
   def save!
     raise 'Cannot save! Indirect memberships are non-persistent objects.' unless direct?
     write_attributes_to_dag_link
-    dag_link.save!
+    dag_link.changed? ? dag_link.save! : true
   end
   
   def update_attributes!(attrs = {})

@@ -471,13 +471,13 @@ class User < ActiveRecord::Base
 
   def status_group_memberships
     self.status_groups.collect do |group|
-      StatusGroupMembership.find_by_user_and_group( self, group )
+      self.memberships.where(group: group).first
     end
   end
 
   def current_status_membership_in( corporation )
     if status_group = current_status_group_in(corporation)
-      StatusGroupMembership.find_by_user_and_group(self, status_group)
+      self.memberships.where(group: status_group).first
     end
   end
 
@@ -651,7 +651,7 @@ class User < ActiveRecord::Base
   #     user.group_flags.include? 'hidden_users'
   #
   def group_flags
-    cached { self.groups.collect { |g| f.flags }.flatten }
+    cached { self.groups.collect { |g| g.flags_to_syms }.flatten }
   end
 
 

@@ -80,7 +80,6 @@ class MembershipCollection
   delegate :map, :collect, :select, :each, to: :to_a
   
   def include?(*other_memberships)
-    binding.pry
     to_a.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] }
     .include?(*other_memberships.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] })
   end

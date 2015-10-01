@@ -160,7 +160,6 @@ feature 'Corporate Vita', js: true do
           @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(TEST_TIMEZONE).to_date
 
           page.should have_content @valid_from_formatted
-          save_and_open_page 
           # activate inplace editing of the date_field
           first('.best_in_place.status_group_date_of_joining').click
 

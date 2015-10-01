@@ -767,7 +767,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Membership.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -780,7 +780,7 @@ describe User do
         @user.cached(:corporations)
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Membership.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -791,7 +791,7 @@ describe User do
         @user.cached(:corporations)
         wait_for_cache
 
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Membership.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -802,7 +802,7 @@ describe User do
         @user.cached(:corporations)
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Membership.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -819,7 +819,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Membership.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -831,7 +831,7 @@ describe User do
     end
     context "when user entered corporation S" do
       before do
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Membership.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -839,7 +839,7 @@ describe User do
     end
     context "when user entered corporation H as guest" do
       before do
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Membership.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -849,7 +849,7 @@ describe User do
       before do
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Membership.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -874,7 +874,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Membership.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -887,7 +887,7 @@ describe User do
         @user.cached(:current_corporations)
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Membership.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -896,7 +896,7 @@ describe User do
     context "when user entered corporation H as guest" do
       before do
         @user.cached(:current_corporations)
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Membership.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -909,7 +909,7 @@ describe User do
 
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Membership.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -992,7 +992,7 @@ describe User do
       @corporation = create( :corporation_with_status_groups )
       @status_group = @corporation.status_groups.first
       @status_group.assign_user @user
-      @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
+      @status_group_membership = Membership.where(user: @user, group: @status_group).first
     end
     subject { @user.current_status_membership_in(@corporation) }
 
@@ -1027,7 +1027,7 @@ describe User do
       Membership.where(user: @user1, group: @subgroup1).first.update_attributes valid_from: @time1, valid_to: @time2
       Membership.where(user: @user1, group: @subgroup2).first.update_attributes valid_from: @time3, valid_to: @time4
       
-      @membership1 = Membership.where(user: @user1, group: @group1).first
+      @membership1 = Membership.where(user: @user1, group: @group1).last
       @submembership1 = Membership.where(user: @user1, group: @subgroup1).first  # past membership
       @submembership2 = Membership.where(user: @user1, group: @subgroup2).first
     end
@@ -1039,7 +1039,6 @@ describe User do
     end
     it { should be_kind_of MembershipCollection }
     it "should only include current memberships per default" do
-      binding.pry
       subject.should include @membership1, @submembership2
       subject.count.should == 2
     end
@@ -1361,10 +1360,10 @@ describe User do
     subject { @user.group_flags }
     describe "for the user being hidden" do
       before { @user.hidden = true }
-      it { should include 'hidden_users' }
+      it { should include :hidden_users }
     end
     describe "for the user not being hidden" do
-      it { should_not include 'hidden_users' }
+      it { should_not include :hidden_users }
     end
   end
 
