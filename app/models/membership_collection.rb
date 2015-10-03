@@ -25,6 +25,12 @@ class MembershipCollection
     return self
   end
   
+  def without(*without_members)
+    # `flatten` for `without(blondes, brunettes)`, which are two arrays.
+    @without_members = without_members.flatten
+    return self
+  end
+  
   # If a user has two memberships in a group, differing in the validity range,
   # this filter selects the first, i.e. earliest, membership for each group.
   #
@@ -69,6 +75,7 @@ class MembershipCollection
         memberships.detect { |m| m.valid_from.to_i == min_valid_from_to_i }
       end
     end
+    memberships.select! { |m| not m.user.in? @without_members } if @without_members
     return memberships
   end
   

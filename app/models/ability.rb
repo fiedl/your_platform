@@ -292,12 +292,12 @@ class Ability
         event.contact_people.include? user
       end
       can [:update, :create_attachment_for, :destroy], Page do |page|
-        page.ancestor_events.map(&:contact_people).flatten.include? user
+        page.ancestor_events.collect { |event| event.contact_people.to_a }.flatten.include? user
       end
       can [:update, :destroy], Attachment do |attachment|
         attachment.author == user and
         attachment.parent.kind_of?(Page) and
-        attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
+        attachment.parent.ancestor_events.collect { |event| event.contact_people.to_a }.flatten.include?(user)
       end
       
       # This allows all users to send posts to their own groups.

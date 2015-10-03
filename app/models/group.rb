@@ -31,7 +31,8 @@ class Group < ActiveRecord::Base
   
   default_scope { includes(:flags) }
 
-  include GroupMixins::Memberships
+  include GroupMemberships
+  include GroupMemberAssignment
   include GroupMixins::Everyone  
   include GroupMixins::Corporations
   include GroupMixins::Roles

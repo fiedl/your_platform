@@ -31,9 +31,7 @@ class GroupMembersController < ApplicationController
   def load_and_authorize_memberships
     @memberships = @group.memberships_for_member_list
     @memberships = @memberships.started_after(params[:valid_from].to_datetime) if params[:valid_from].present?
-    
-    allowed_members = @group.members.accessible_by(current_ability)
-    @memberships = @memberships.to_a.select { |membership| membership.user.in? allowed_members }
+    @memberships = @memberships.select { |membership| can? :read, membership.user }
   end
   
   def load_members_from_memberships

@@ -1155,18 +1155,16 @@ describe User do
       time_travel 2.seconds
     end
     describe "(leaving an event)" do
-      # TODO: We need multiple dag links between two nodes!
       before { @event_or_group = @event; subject }
       specify { @event.attendees.should_not include @user}
       specify { @event.attendees_group.members.should_not include @user }
-      specify { @event.attendees_group.child_users.should_not include @user }
+      specify { @event.attendees_group.child_users.should include @user }
     end
     describe "(leaving a group)" do
       before { @event_or_group = @group; subject }
-      # TODO: We need multiple dag links between two nodes!
-      # specify { @group.members.should_not include @user }
-      # specify { @group.members.former.should include @user }
-      # specify { @group.child_users.should include @user }
+      specify { @group.members.should_not include @user }
+      specify { @group.members.former.should include @user }
+      specify { @group.child_users.should include @user }
     end
   end
 

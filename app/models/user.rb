@@ -557,12 +557,9 @@ class User < ActiveRecord::Base
   end
   def leave(event_or_group)
     if event_or_group.kind_of? Group
-      # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
-      # event_or_group.members.destroy(self)
-      raise 'We need multiple dag links between two nodes!'
+      event_or_group.unassign self
     elsif event_or_group.kind_of? Event
-      # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
-      event_or_group.attendees_group.members.destroy(self)
+      event_or_group.attendees_group.unassign self
     end
   end
 

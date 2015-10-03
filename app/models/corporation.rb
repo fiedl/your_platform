@@ -76,5 +76,20 @@ class Corporation < Group
   def deceased_members_memberships
     child_groups.find_by_flag(:deceased_parent).try(:memberships) || []
   end
+  
+  # This overrides the group memberships.
+  # 
+  # For a corporation, the members of the 'former members' subgroup
+  # of the corporation are excluded, even though they still have 
+  # memberships in the dag-link sense.
+  #
+  # They should not appear in member lists, list exports, mailing lists,
+  # et cetera.
+  #
+  alias_method :original_memberships, :memberships
+  def memberships
+    original_memberships.without(former_members, deceased_members)
+  end
+
 
 end
