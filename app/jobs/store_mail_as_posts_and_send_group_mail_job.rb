@@ -19,7 +19,8 @@ class StoreMailAsPostsAndSendGroupMailJob < ActiveJob::Base
     wait_for_unlock
     lock do
       received_post_mail = ReceivedPostMail.new(message)
-      @posts = received_post_mail.store_as_posts
+      @posts = received_post_mail.store_as_posts_when_authorized
+      received_post_mail.deliver_rejection_emails
     end
     @posts.each { |post| post.send_as_email_to_recipients }
   end

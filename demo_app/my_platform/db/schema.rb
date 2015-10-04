@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150707223927) do
+ActiveRecord::Schema.define(version: 20150930184703) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -133,14 +133,15 @@ ActiveRecord::Schema.define(version: 20150707223927) do
   add_index "geo_locations", ["address"], name: "index_geo_locations_on_address", using: :btree
 
   create_table "groups", force: :cascade do |t|
-    t.string   "name",           limit: 255
+    t.string   "name",                       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "token",          limit: 255
-    t.string   "extensive_name", limit: 255
-    t.string   "internal_token", limit: 255
-    t.text     "body",           limit: 65535
-    t.string   "type",           limit: 255
+    t.string   "token",                      limit: 255
+    t.string   "extensive_name",             limit: 255
+    t.string   "internal_token",             limit: 255
+    t.text     "body",                       limit: 65535
+    t.string   "type",                       limit: 255
+    t.string   "mailing_list_sender_filter", limit: 255
   end
 
   create_table "issues", force: :cascade do |t|
@@ -250,6 +251,17 @@ ActiveRecord::Schema.define(version: 20150707223927) do
   end
 
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
+
+  create_table "post_deliveries", force: :cascade do |t|
+    t.integer  "post_id",    limit: 4
+    t.integer  "user_id",    limit: 4
+    t.string   "user_email", limit: 255
+    t.datetime "sent_at"
+    t.datetime "failed_at"
+    t.string   "comment",    limit: 255
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
+  end
 
   create_table "posts", force: :cascade do |t|
     t.string   "subject",         limit: 255

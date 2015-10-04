@@ -12,8 +12,9 @@ class Post < ActiveRecord::Base
   has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
 
+  has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
-
+  
   def title
     subject
   end
@@ -82,19 +83,18 @@ class Post < ActiveRecord::Base
   end
   def send_as_email_to_recipients(recipients = nil)
     recipients ||= group.members
-
-    # We want only one recipient in the 'to' field of each email.
-    # Thus, deliver separately.
-    #
-    successfully_delivered_to = recipients.select do |recipient|
-      if recipient.has_account? and not recipient.email_does_not_work?
-        Rails.logger.info "Sending post as email to #{recipient.inspect} ..."
-        PostMailer.post_email(text, [recipient], email_subject, author, group, self).deliver
-      end
+    
+    recipients.each do |recipient_user|
+      delivery = self.deliveries.build
+      delivery.user = recipient_user
+      delivery.save
+    end
+    
+    self.deliveries.due.pluck(:id).each do |delivery_id|
+      PostDelivery.delay.deliver_if_due(delivery_id)
     end
 
-    logger.info "Sent Post email to #{successfully_delivered_to.count} recipients."
-    return successfully_delivered_to.count
+    return self.deliveries.count
   end
 
   def email_subject

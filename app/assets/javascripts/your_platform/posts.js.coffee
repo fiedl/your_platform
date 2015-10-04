@@ -62,6 +62,7 @@ ready = ->
       success: (r)->
         if real_message
           $('p.buttons.right').text(I18n.t( 'message_has_been_sent_to_n_recipients', {n: r.recipients_count}))
+          Turbolinks.visit r.post_url
     )
     click_event.preventDefault()
 

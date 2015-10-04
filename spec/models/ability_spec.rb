@@ -55,7 +55,6 @@ describe Ability do
       context "when the user is no member of a group" do
         before { @group = create(:group) }
         he { should_not be_able_to :index_posts, @group }
-        he { should_not be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
           before do
             @post = @group.posts.create
@@ -83,7 +82,6 @@ describe Ability do
           Mention.create_multiple(create(:user), @comment, @comment.text)
         end
         specify { @group.members.should_not include user }
-        he { should_not be_able_to :create_post_for, @group }
         he { should be_able_to :read, @post }
         he { should be_able_to :read, @comment }
         he { should be_able_to :create_comment_for, @post }
@@ -98,7 +96,6 @@ describe Ability do
           Mention.create_multiple(create(:user), @post, @post.text)
         end
         specify { @group.members.should_not include user }
-        he { should_not be_able_to :create_post_for, @group }
         he { should be_able_to :read, @post }
         he { should be_able_to :create_comment_for, @post }
         he { should be_able_to :read, @post_attachment }

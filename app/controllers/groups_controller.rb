@@ -214,6 +214,7 @@ class GroupsController < ApplicationController
     permitted_keys += [:internal_token] if can? :change_internal_token, @group
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
     permitted_keys += [:body] if can? :update, @group
+    permitted_keys += [:mailing_list_sender_filter] if can? :update, @group
     params.require(:group).permit(*permitted_keys)
   end
   

@@ -1,5 +1,5 @@
 %h1.post.post-subject
-  - if post == @navable
+  - if @post and not @posts
     = post.subject
   - else
     = link_to post.subject, post
@@ -24,6 +24,10 @@
               = link_to post.group.title, post.group
         %div.post-date
           = localize(post.sent_at) if post.sent_at
+        - if @post and not @posts
+          %div.post-deliveries#post-deliveries
+            =t :post_sent_to_n_recipients, n: post.deliveries.sent.map(&:user_id).uniq.count if post.deliveries.sent.count > 0
+            =t :post_failed_to_send_to_n_recipients, n: post.deliveries.failed.map(&:user_id).uniq.count if post.deliveries.failed.count > 0
           
       %div.post-body
         = markup post.text.html_safe

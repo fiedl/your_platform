@@ -1,0 +1,20 @@
+en:
+  mailing_list: Mailing list
+  mailing_lists: Mailing lists
+  manage_mailing_lists: Manage mailing lists
+  
+  what_are_mailing_lists: What are mailing lists?
+  mailing_lists_forward_emails_to_all_group_members: Mailing lists forward emails to mailing list addresses (e.g. mailing-list@example.com) to all group members.
+  no_need_to_manage_list_members_separately: The mailing lists use the current memberships stored in this application. There is no need to manage the mailing list memberships separately.
+
+  mailing_list_adresses: Mailing list addresses
+  
+  mailing_list_sender_filter: Sender filter for mailing lists
+  sender_filter:
+    open:                     Open (default for officer groups)
+    users_with_account:       Users with account
+    corporation_members:      Corporation memebrs (default for groups of a corporation)
+    group_members:            Group members (default for regular groups)
+    group_officers:           Group officers
+    officers:                 Officers
+    global_officers:          Global officers
