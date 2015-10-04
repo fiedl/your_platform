@@ -57,26 +57,28 @@ class MembershipCollection
   end
   
   def to_a
-    memberships = []
-    memberships += find_all_direct_memberships unless @indirect
-    unless @direct
-      memberships += if @user and not @group
-        find_all_indirect_memberships_by_user
-      elsif @group and not @user
-        find_all_indirect_memberships_by_group
-      elsif @user and @group
-        find_all_indirect_memberships_by_user_and_group
+    Rails.cache.fetch [cache_key, 'to_a'] do
+      memberships = []
+      memberships += find_all_direct_memberships unless @indirect
+      unless @direct
+        memberships += if @user and not @group
+          find_all_indirect_memberships_by_user
+        elsif @group and not @user
+          find_all_indirect_memberships_by_group
+        elsif @user and @group
+          find_all_indirect_memberships_by_user_and_group
+        end
       end
-    end
-    memberships = memberships.uniq { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] } if @uniq
-    if @first_per_group
-      memberships = memberships.group_by { |m| [m.group, m.user] }.collect do |group_and_user, memberships|
-        min_valid_from_to_i = memberships.collect { |m| m.valid_from.to_i }.min
-        memberships.detect { |m| m.valid_from.to_i == min_valid_from_to_i }
+      memberships = memberships.uniq { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] } if @uniq
+      if @first_per_group
+        memberships = memberships.group_by { |m| [m.group, m.user] }.collect do |group_and_user, memberships|
+          min_valid_from_to_i = memberships.collect { |m| m.valid_from.to_i }.min
+          memberships.detect { |m| m.valid_from.to_i == min_valid_from_to_i }
+        end
       end
+      memberships.select! { |m| not m.user.in? @without_members } if @without_members
+      memberships
     end
-    memberships.select! { |m| not m.user.in? @without_members } if @without_members
-    return memberships
   end
   
   def groups
@@ -173,6 +175,15 @@ class MembershipCollection
   def max_valid_to_of(dag_links)
     valid_to_nil = dag_links.where(valid_to: nil).present?
     max_valid_to = valid_to_nil ? nil : dag_links.maximum(:valid_to)
+  end
+  
+  def cache_key
+    [primary_cache_scope, "membership_collection", 
+      @direct, @indirect, @uniq, @first_per_group, @join_validity_ranges_of_indirect_memberships, @without_members,
+      @valid, @invalid, @with_invalid, @now, @past, @with_past, @now_and_in_the_past, @at_time, @this_year, @started_after]
+  end
+  def primary_cache_scope
+    @user || @group || raise('Neither user nor group given. Unable to find cache scope.')
   end
   
 end

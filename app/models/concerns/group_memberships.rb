@@ -1,6 +1,6 @@
 concern :GroupMemberships do
   
-  def memberships
+  def memberships(reload = false)
     Membership.where(group: self).now
   end
   
