@@ -2,7 +2,7 @@
 - # how the page would look like for regular users and lesser
 - # roles.
 
-- if current_role && ((current_navable && current_role.officer?) or current_role.global_officer?)
+- if show_role_preview_menu?
   - active_or_not = (current_role_view != current_role.to_s) ? 'active' : ''
 
   %li{class: "backendBarItem dropdown #{active_or_not} role-preview-switcher"}

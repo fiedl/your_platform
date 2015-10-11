@@ -51,8 +51,9 @@
 
           .collapse.navbar-collapse#logged-in-bar-collapse
             %ul.nav.navbar-nav
-              -# %li
-              -#   = link_to t(:my_profile), current_user, :class => 'my_profile'
+              - if not show_role_preview_menu?
+                %li
+                  = link_to t(:my_profile), current_user, :class => 'my_profile'
               %li.dropdown.my_groups
                 %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
                   = t :my_groups
