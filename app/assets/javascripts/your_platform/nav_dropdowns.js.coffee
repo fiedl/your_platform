@@ -19,8 +19,9 @@ $(document).on 'mouseenter', trigger_selector, (event)->
           "top": trigger_link.position().top + trigger_link.closest('li').height(),
           "left": trigger_link.position().left
         })
-        $('ul#nav_dropdown').show()
-        $('ul#nav_dropdown li:not(.child)').hide()
+        if $('ul#nav_dropdown li.child').size() > 0
+          $('ul#nav_dropdown').show()
+          $('ul#nav_dropdown li:not(.child)').hide()
   false
 
 $(document).on 'mouseleave', trigger_selector, (event)->

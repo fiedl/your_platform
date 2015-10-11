@@ -5,7 +5,8 @@
     = best_in_place_if can?(:update, attachment), attachment, :title, nil: I18n.t(:click_here_to_set_an_image_title)
   .picture-description
     = best_in_place_if can?(:update, attachment), attachment, :description, nil: I18n.t(:click_here_to_set_an_image_description)
-  .picture-author
-    &copy;
-    = attachment.created_at.year.to_s + ","
-    = link_to attachment.author.title, attachment.author
+  - if attachment.author
+    .picture-author
+      &copy;
+      = attachment.created_at.year.to_s + ","
+      = link_to attachment.author.title, attachment.author

@@ -374,6 +374,9 @@ class Ability
     # All users can read the public website.
     #
     can :read, Page, id: Page.public_website_page_ids
+    can [:read, :download], Attachment do |attachment|
+      attachment.parent.public?
+    end
     
     # Listing Events and iCalendar (ICS) Export:
     #

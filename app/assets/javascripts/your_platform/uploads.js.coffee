@@ -91,7 +91,7 @@ class App.UploadBox
       self.show_uploading()
 
   refresh_attachments_section: ->
-    @root_element.ajax_reload(@parent_url(), '#attachments')
+    @root_element.ajax_reload(@parent_url(), '#attachments, #inline-pictures')
     
   parent_url: ->
     @find('.box.upload_attachment').attr('data-parent-url')
