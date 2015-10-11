@@ -1,0 +1,11 @@
+%h1.project= best_in_place_if can?(:update, @project), @project, :title
+%div.project
+  %p
+    =t :created_at
+    =l @project.created_at
+  %p
+    =t :updated_at
+    =l @project.updated_at
+  %p
+    = best_in_place_if can?(:update, @project), @project, :description, as: :textarea
+    

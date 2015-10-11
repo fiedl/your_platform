@@ -75,6 +75,8 @@ Rails.application.routes.draw do
     get :photo_contest, to: 'photo_contests#show'
   end
   
+  resources :projects
+  
   resources :activities
     
   post :create_officers_group, to: 'officers#create_officers_group'

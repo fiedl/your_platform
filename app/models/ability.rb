@@ -359,6 +359,11 @@ class Ability
     
     # All signed-in users can read their news (timeline).
     can :index, :news
+    
+    # Read projects
+    can [:read, :update], Project do |project|
+      project.group.members.include? user
+    end
   end
   
   def rights_for_everyone
