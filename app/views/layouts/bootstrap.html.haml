@@ -96,12 +96,12 @@
         %span#logo
           = link_to image_tag('logo.png'), root_path, class: 'navbar-brand'
       
-      .col-md-3.col-sm-5.col-xs-12
+      .col-sm-5.col-xs-12
         #header_help= render partial: 'support_requests/help_button'
         #header_search
           %span#search_box= render partial: 'shared/search_box'
 
-    .row#horizontal-nav-bar
+    .row#horizontal-nav-bar.hidden-xs
       -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
       %span#category_indicator.right
         %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
