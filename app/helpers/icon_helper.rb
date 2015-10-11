@@ -4,7 +4,7 @@ module IconHelper
     if icon_key.to_s.in? ['beer', 'coffee', 'key', 'lock', 'unlock', 'unlock-alt']
       awesome_icon(icon_key)
     else
-      glyphicon(icon_key)
+      glyphicon(icon_key.to_s.gsub('glyphicon-', ''))
     end
   end
   

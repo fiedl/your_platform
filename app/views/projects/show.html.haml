@@ -1,11 +1,19 @@
-%h1.project= best_in_place_if can?(:update, @project), @project, :title
+= render partial: 'projects/tabs', locals: {active: 'info'}
+
+%h1.project
+  -#%span{style: 'font-weight: normal'}= "#{t(:my_projects)} / "
+  = best_in_place_if can?(:update, @project), @project, :title
 %div.project
   %p
-    =t :created_at
+    %strong=t :created_at
     =l @project.created_at
   %p
-    =t :updated_at
+    %strong=t :updated_at
     =l @project.updated_at
   %p
+    %strong=t :description
     = best_in_place_if can?(:update, @project), @project, :description, as: :textarea
+  %p
+    %strong=t :group
+    = link_to @project.group.title, @project.group
     

@@ -1,0 +1,20 @@
+%h1.projects= current_title
+%div.projects
+  %table.datatable.projects.display
+    %thead
+      %tr
+        %th=t :title
+        %th=t :group
+        %th=t :created_at
+        %th=t :updated_at
+    %tbody
+      - @projects.each do |project|
+        %tr
+          %td
+            %strong= link_to (project.title || "Project #{project.id}"), project
+          %td= link_to project.group.name, project.group if project.group
+          %td=l project.created_at.to_date
+          %td=l project.updated_at.to_date
+          
+  %p
+    = link_to t(:new_project), new_project_path, class: 'btn btn-default right'
