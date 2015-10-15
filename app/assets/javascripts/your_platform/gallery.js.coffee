@@ -69,7 +69,8 @@ class App.Gallery
       # each instance, again. Therefore, we need to find out, here, whether
       # to process the following stuff, now.
       #
-      if self.root_element and self.find('.galleria-thumbnails').length > 0 and not self.ready_bindings_done
+      if self.root_element and self.find('.galleria-thumbnails').length > 0 and self.root_element.attr('id') == this._target.id
+
         self.ready_bindings_done = true
         self.galleria_instance = this
 
