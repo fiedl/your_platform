@@ -10,6 +10,9 @@
       %span.right
         = icon(:tag)
         = link_to page.parents.first.title, page.parents.first
+  
+  - if (image_attachments = page.attachments_by_type("image")) && image_attachments.try(:any?)
+    #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: image_attachments, inline: true}
 
   %div.page_body
     %div{ id: 'page_content', data: { mercury: 'full' } }
@@ -34,6 +37,5 @@
           = localize(page.updated_at)
 
 #attachments
-  = render(partial: 'pages/pictures', locals: {page: page}) 
   = render(partial: 'pages/videos', locals: {page: page}) 
   = render(partial: 'pages/attachments', locals: {page: page})

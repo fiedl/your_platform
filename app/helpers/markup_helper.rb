@@ -12,7 +12,7 @@ module MarkupHelper
   def markup(text)
     if text
       if not text.include?("<html>")
-        emojify markdown replace_quick_link_tags mentionify text
+        emojify markdown replace_quick_link_tags mentionify youtubify text
       else
         text.html_safe
       end

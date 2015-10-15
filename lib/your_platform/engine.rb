@@ -41,6 +41,7 @@ require 'rails-settings-cached'
 require 'haml'
 require 'redcarpet'
 require 'gemoji'
+require 'auto_html'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'
