@@ -99,7 +99,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'mini_magick'
-  s.add_dependency 'refile'
+  s.add_dependency 'refile', '~> 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
 

@@ -35,7 +35,7 @@ class App.Gallery
     popupLinks: false,
     trueFullscreen: false,
     #carousel: false,
-    swipe: true,
+    #swipe: 'auto',
     responsive: true,
     #height: 0.625, # 16:10
     height: 0.5629, # 16:9
