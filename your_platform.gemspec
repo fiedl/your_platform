@@ -79,6 +79,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'                                                              # MIT License
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
+  s.add_dependency 'auto_html', '>= 1.6.4'
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
