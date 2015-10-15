@@ -6,6 +6,7 @@ class BaseMailer < ActionMailer::Base
   helper MentionsHelper
   helper QuickLinkHelper
   helper EmojiHelper
+  helper YouTubeHelper
   
   helper ApplicationHelper
   default from: 'wingolfsplattform@wingolf.org'
