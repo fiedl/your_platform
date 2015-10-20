@@ -155,12 +155,6 @@ class Ability
     end
     
     if not read_only_mode?
-      # # Group emails
-      # #
-      # # can [:create_post, :create_post_for, :force_post_notification], Group do |group|
-      #   user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
-      # end
-    
       # Local officers can create events in their groups.
       #
       can [:create_event, :create_event_for], Group do |group|
@@ -231,6 +225,9 @@ class Ability
       can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
       end
+
+      # Global officers can post to any group.
+      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
     end
   end
       

@@ -313,6 +313,15 @@ describe Ability do
       end
       he { should be_able_to :create_event_for, @any_group }
     
+      he "should be able to post to any group" do
+        @any_group = create :group
+      
+        the_user.should be_able_to :create_post, @any_group
+        the_user.should be_able_to :create_post_for, @any_group
+        the_user.should be_able_to :create_post_via_email, @any_group
+        the_user.should be_able_to :force_post_notification, @any_group
+      end
+
       describe "when he is contact person for an event" do
         before do
           @event = @any_group.child_events.create
