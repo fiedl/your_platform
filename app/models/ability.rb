@@ -380,7 +380,7 @@ class Ability
     #
     can :read, Page, id: Page.public_website_page_ids
     can [:read, :download], Attachment do |attachment|
-      attachment.parent.public?
+      attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
     
     # Listing Events and iCalendar (ICS) Export:
