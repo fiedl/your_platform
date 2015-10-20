@@ -104,7 +104,7 @@ class UsersController < ApplicationController
       permitted_keys += [:wingolfsblaetter_abo] if can? :update, @user
       permitted_keys += [:notification_policy] if can? :update, @user
     else  # user creation
-      permitted_keys += [:first_name, :last_name, :female, :date_of_birth, :add_to_group, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :work_address, :email, :phone, :mobile, :create_account] if can? :create, :aktivmeldung
+      permitted_keys += [:first_name, :last_name, :female, :date_of_birth, :add_to_group, :add_to_corporation, :aktivmeldungsdatum, :study_address, :home_address, :work_address, :email, :phone, :mobile, :create_account] if can? :create, User
     end
     params.require(:user).permit(*permitted_keys)
   end
