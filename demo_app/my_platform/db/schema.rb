@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150930184703) do
+ActiveRecord::Schema.define(version: 20151020181604) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -296,6 +296,13 @@ ActiveRecord::Schema.define(version: 20150930184703) do
   add_index "profile_fields", ["profileable_id", "profileable_type", "type"], name: "profileable_type", using: :btree
   add_index "profile_fields", ["profileable_id", "profileable_type"], name: "profileable", using: :btree
   add_index "profile_fields", ["type"], name: "type", using: :btree
+
+  create_table "projects", force: :cascade do |t|
+    t.string   "title",       limit: 255
+    t.text     "description", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
 
   create_table "relationships", force: :cascade do |t|
     t.string   "name",       limit: 255
