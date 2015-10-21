@@ -8,6 +8,10 @@ feature 'Corporate Vita', js: true do
     @user = create( :user_with_account )
     @corporation = create( :corporation_with_status_groups )
     @status_groups = @corporation.status_groups
+
+    # In order to create a clean workflow state after creating the corporations:
+    Workflow.destroy_all
+    Workflow.find_or_create_mark_as_deceased_workflow
   end
 
   pending "as local admin"
@@ -16,7 +20,7 @@ feature 'Corporate Vita', js: true do
 
     background do
       @status_groups.first.assign_user @user
-
+      
       @first_promotion_workflow = create( :promotion_workflow, name: 'First Promotion',
                                           :remove_from_group_id => @status_groups.first.id,
                                           :add_to_group_id => @status_groups.second.id )
