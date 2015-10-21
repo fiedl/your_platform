@@ -1,4 +1,4 @@
-- if can? :manage, @user
+- if can? :change_status, @user
   - executable_workflows_by_corporation = {}
   - @user.workflows_by_corporation.each do |corporation_title, workflows|
     - executable_workflows = workflows.select { |workflow| can? :execute, workflow }

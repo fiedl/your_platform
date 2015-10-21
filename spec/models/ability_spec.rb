@@ -150,6 +150,8 @@ describe Ability do
       he "should not be able to change his own 'hidden' attribute" do
         the_user.should_not be_able_to :change_hidden, user
       end
+      he { should be_able_to :update, user }
+      he { should be_able_to :change_status, user }
     end
     
     context "when the user is officer of a group" do

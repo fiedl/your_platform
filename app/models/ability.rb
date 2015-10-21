@@ -142,6 +142,8 @@ class Ability
         group.admins_of_self_and_ancestors.include? user
       end
       
+      can [:update, :change_first_name, :change_alias, :change_status], User, id: Role.of(user).administrated_users.map(&:id)
+      
       can :manage, ProfileField do |profile_field|
         profile_field.profileable.nil? ||  # in order to create profile fields
           can?(:update, profile_field.profileable)
