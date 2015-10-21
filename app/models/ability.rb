@@ -148,6 +148,14 @@ class Ability
         profile_field.profileable.nil? ||  # in order to create profile fields
           can?(:update, profile_field.profileable)
       end
+      
+      can :execute, Workflow do |workflow|
+        # Local admins can execute workflows of groups they're admins of.
+        # And they can execute the mark_as_deceased workflow, which is a global workflow.
+        #
+        (workflow == Workflow.find_mark_as_deceased_workflow) or
+        (workflow.admins_of_ancestors.include?(user))
+      end
     end
   end
   

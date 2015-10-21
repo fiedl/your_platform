@@ -13,7 +13,7 @@ class WorkflowsController < WorkflowKit::WorkflowsController
   #
   def execute
     authorize! :execute, Workflow.find(params[:id])
-    authorize! :manage, User.find(params[:user_id]) if params[:user_id]
+    authorize! :change_status, User.find(params[:user_id]) if params[:user_id]
     super
   end
 end
