@@ -392,6 +392,10 @@ describe Ability do
     end
 
     describe "for global officers" do
+      # Currently, we've got an override in place (in the Ability model)
+      # that allows global officers to post to any group, even if not 
+      # specified by the Group#mailing_list_sender_filter.
+
       before do
         @corporation = create :corporation_with_status_groups
         @corporation << @group
@@ -405,11 +409,11 @@ describe Ability do
       describe "sender filter" do
         describe '(empty)' do
           before { @group.mailing_list_sender_filter = ""; @group.save }
-          he { should_not be_able_to :create_post_for, @group }
+          he { should be_able_to :create_post_for, @group }
         end
         describe '(nil)' do
           before { @group.mailing_list_sender_filter = nil; @group.save }
-          he { should_not be_able_to :create_post_for, @group }
+          he { should be_able_to :create_post_for, @group }
         end
         describe 'open' do
           before { @group.mailing_list_sender_filter = :open; @group.save }
@@ -421,11 +425,11 @@ describe Ability do
         end
         describe 'corporation_members' do
           before { @group.mailing_list_sender_filter = :corporation_members; @group.save }
-          he { should_not be_able_to :create_post_for, @group }
+          he { should be_able_to :create_post_for, @group }
         end
         describe 'group_members' do
           before { @group.mailing_list_sender_filter = :group_members; @group.save }
-          he { should_not be_able_to :create_post_for, @group }
+          he { should be_able_to :create_post_for, @group }
         end
         describe 'officers' do
           before { @group.mailing_list_sender_filter = :officers; @group.save }
@@ -433,7 +437,7 @@ describe Ability do
         end
         describe 'group_officers' do
           before { @group.mailing_list_sender_filter = :group_officers; @group.save }
-          he { should_not be_able_to :create_post_for, @group }
+          he { should be_able_to :create_post_for, @group }
         end
         describe 'global_officers' do
           before { @group.mailing_list_sender_filter = :global_officers; @group.save }
