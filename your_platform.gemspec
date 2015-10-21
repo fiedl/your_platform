@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
 
   
   # JavaScript 
-  s.add_dependency "jquery-rails", '>= 3.1.3'
+  s.add_dependency "jquery-rails", '>= 3.1.3', '<= 4.0.4' # Fix version due to datatables issue (http://stackoverflow.com/a/31150030/2066546)
   s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
