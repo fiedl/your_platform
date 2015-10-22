@@ -30,7 +30,7 @@
             =t :post_failed_to_send_to_n_recipients, n: post.deliveries.failed.map(&:user_id).uniq.count if post.deliveries.failed.count > 0
           
       %div.post-body
-        = markup post.text.html_safe
+        = markup post.text
 
       = render partial: 'posts/attachments', locals: {post: post}
 

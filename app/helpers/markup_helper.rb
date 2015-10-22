@@ -11,10 +11,10 @@ module MarkupHelper
   
   def markup(text)
     if text
-      if not text.include?("<html>")
-        emojify markdown replace_quick_link_tags mentionify youtubify text
+      if not text.downcase.include?("<html>")
+        sanitize emojify markdown replace_quick_link_tags mentionify youtubify text
       else
-        text.html_safe
+        sanitize text
       end
     end
   end
