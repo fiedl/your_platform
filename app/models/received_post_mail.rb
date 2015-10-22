@@ -91,9 +91,18 @@ class ReceivedPostMail < ReceivedMail
     @unauthorized_groups && @unauthorized_groups.each do |group|
       PostRejectionMailer.post_rejection_email(self.sender_email, group.name, "Re: #{self.subject}", "You are not authorized to send messages to this group.").deliver_now
     end
-    self.unmatched_recipient_emails.each do |email|
-      PostRejectionMailer.post_rejection_email(self.sender_email, email, "Re: #{self.subject}", "Recipient could not be determined. Maybe a typo in the email address?").deliver_now
-    end
+
+    # # Do not send a rejection message at the moment when a recipient is not listed.
+    # # TODO: Reactivate when we actually use the smtp_envelope_to.
+    # # Otherwise, if a message is sent
+    # # 
+    # #    To: group@example.com, another-user@gmail.com
+    # # 
+    # # then another-user@gmail.com will be processed, but is not found in our user database.
+    # # 
+    # self.unmatched_recipient_emails.each do |email|
+    #   PostRejectionMailer.post_rejection_email(self.sender_email, email, "Re: #{self.subject}", "Recipient could not be determined. Maybe a typo in the email address?").deliver_now
+    # end
   end
 
 end
