@@ -108,6 +108,9 @@ require 'icalendar'
 # Gamification
 require 'merit'
 
+# Dummy User Generation
+require 'faker'
+
 ::STAGE = "development" unless defined? ::STAGE
 
 module YourPlatform

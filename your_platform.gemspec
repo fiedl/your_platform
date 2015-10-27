@@ -148,6 +148,9 @@ Gem::Specification.new do |s|
   # Gamification
   s.add_dependency 'merit'
   
+  # Dummy Data Generation
+  s.add_dependency 'faker'
+  
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
