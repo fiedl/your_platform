@@ -13,6 +13,8 @@ class NewsController < ApplicationController
       load_news(@days_ago.days.ago..(@days_ago-1).days.ago)
     end
     
+    @view_setting = current_user.settings.root_index_view_setting || RootController.default_view_setting
+    
     @hide_attachment_drop_fields = true
     render html: view_context.convert_to_content_box(render_partial('news/index'))
   end

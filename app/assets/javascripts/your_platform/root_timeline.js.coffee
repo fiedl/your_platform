@@ -31,16 +31,25 @@ $(document).ready ->
   is_loading = false
 
   if $('.scroll-indicator').size() > 0
+    
+    # initial loading
+    #
+    if $('.news_entry').size() == 0
+      for t in [500, 600, 700]
+        setTimeout ->
+          is_loading = false
+          load_next_page()
+        , t
 
-    setTimeout ->
-      load_next_page()
-    , 1000
-
+    # loading on scroll
+    #
     $(window).scroll ->
-      if $(window).scrollTop() > $(document).height() - $(window).height() - 300
-        if $('#filter_news_query').val() == ""
+      if $(window).scrollTop() > $(document).height() - $(window).height() - 800
+        if $('#filter_news_query').val() == "" or $('#filter_news_query').size() == 0
           load_next_page()
 
+$(document).on 'click', '.scroll-indicator', ->
+  load_next_page()
 
 $(document).on 'mouseenter', '.timeline_entry.already_read', ->
   $(this).css('height', 'auto').animate {

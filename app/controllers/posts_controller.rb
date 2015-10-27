@@ -99,7 +99,11 @@ class PostsController < ApplicationController
     
     respond_to do |format|
       format.html do
-        redirect_to group_posts_path(@group), change: 'posts'
+        if params[:post][:sent_from_root_page]
+          redirect_to root_path, change: 'social_stream'
+        else
+          redirect_to group_posts_path(@group), change: 'posts'
+        end
       end
       format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
     end

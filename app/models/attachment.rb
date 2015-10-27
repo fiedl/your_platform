@@ -39,6 +39,10 @@ class Attachment < ActiveRecord::Base
   def file_size_human
     helpers.number_to_human_size( self.file_size )
   end
+  
+  def image?
+    self.content_type.include? 'image'
+  end
 
   def self.find_by_type( type )
     where( "content_type like ?", "%" + type + "%" )

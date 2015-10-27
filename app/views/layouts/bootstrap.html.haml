@@ -135,23 +135,4 @@
                   convert_to_content_box { yield }                    |
                 )                                                     |    
         
-    %footer.footer#footer
-      %div.container.narrow.row
-        %ul.footer-links
-          %li
-            %a(href="https://github.com/fiedl/your_platform") github
-          %li.muted ·
-          %li
-            %a= link_to t(:imprint), Page.find_by_flag(:imprint)
-          %li.muted ·
-          - if current_user
-            %li
-              = link_to t(:terms_of_use), terms_path
-            %li.muted ·
-          %li= language_switcher_html
-      #footer_line
-      .clear
-      %small
-        #version_footer= app_version_footer
-      
-
+    .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer

@@ -52,39 +52,62 @@ input.filter_news
   clear: both
   overflow: hidden
 
-.timeline_entry
-  width: 45%
-  position: relative
-
-.timeline_entry:nth-child(odd)
-  clear: left
-  float: left
-    
-.timeline_entry:nth-child(even)
-  clear: right
-  float: right
-  margin-top: 100px
-  margin-bottom: 50px
-
-.timeline_entry:nth-child(odd)::after
-  background: #DBAF26
-  content: ""
-  height: 2px
-  position: absolute
-  right: -11.2%
-  top: 30px
-  width: 11.2%
-
-.timeline_entry:nth-child(even)::before
-  background: #DBAF26
-  content: ""
-  height: 2px
-  position: absolute
-  top: 30px
-  width: 11.2%
-  left: -11.2%
+  .timeline_entry
+    width: 45%
+    position: relative
+  
+  .timeline_entry:nth-child(odd)
+    clear: left
+    float: left
+      
+  .timeline_entry:nth-child(even)
+    clear: right
+    float: right
+    margin-top: 100px
+    margin-bottom: 50px
+  
+  .timeline_entry:nth-child(odd)::after
+    background: #DBAF26
+    content: ""
+    height: 2px
+    position: absolute
+    right: -11.2%
+    top: 30px
+    width: 11.2%
+  
+  .timeline_entry:nth-child(even)::before
+    background: #DBAF26
+    content: ""
+    height: 2px
+    position: absolute
+    top: 30px
+    width: 11.2%
+    left: -11.2%
 
 .timeline_entry.already_read
   opacity: 0.2
   height: 200px
   overflow: hidden
+
+
+.root_view_switcher
+  margin-top: -32px
+  margin-bottom: 16px
+  font-size: 120%
+  
+.last_seen_activities
+  margin-bottom: 50px
+  
+.side-col .box.upcoming_events
+  .head
+    height: 70px
+    
+.box.new_post
+  form
+    margin: 10px
+  textarea
+    height: 34px
+  .input-group-btn
+    vertical-align: top
+  .post_buttons
+    text-align: right
