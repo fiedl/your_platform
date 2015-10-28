@@ -126,6 +126,14 @@ $(document).ready ->
       {"width": "25%", "targets": 2}
     ]
   }, common_configuration))
+  $('.datatable.projects').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "order": [[3, "desc"]]
+    columnDefs: [
+      { type: 'de_date', targets: 2 },
+      { type: 'de_date', targets: 3 }
+    ]
+  }, common_configuration))
   
   # Insert above.
   # This modified the common_configuration:

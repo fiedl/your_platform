@@ -1,0 +1,3 @@
+de:
+  post_sent_to_n_recipients: "Erfolgreich an %{n} Empfänger gesendet."
+  post_failed_to_send_to_n_recipients: "Versand an %{n} Empfänger fehlgeschlagen."

@@ -1,10 +1,13 @@
 - @objects_by_date.each do |date, objects|
-  .row
-    .root_page_date_heading
-      = localize date, format: "%A" # week day
-      %br
-      = localize date, format: :long
-  .row.root_page_two_column_news.timeline
+  - if @view_setting == 'timeline'
+    .row
+      .root_page_date_heading
+        = localize date, format: "%A" # week day
+        %br
+        = localize date, format: :long
+  - view_class = 'row root_page_two_column_news timeline' if @view_setting == 'timeline'
+  - view_class = 'root_page_one_column_news social' if @view_setting == 'social'
+  %div{class: view_class}
     - objects.each do |obj|
       - css = 'already_read' if obj.kind_of?(Post) && (not obj.unread_by?(current_user))
       .timeline_entry{class: css}= render obj

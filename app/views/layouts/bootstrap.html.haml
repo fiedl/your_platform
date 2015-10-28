@@ -51,8 +51,9 @@
 
           .collapse.navbar-collapse#logged-in-bar-collapse
             %ul.nav.navbar-nav
-              %li
-                = link_to t(:my_profile), current_user, :class => 'my_profile'
+              - if not show_role_preview_menu?
+                %li
+                  = link_to t(:my_profile), current_user, :class => 'my_profile'
               %li.dropdown.my_groups
                 %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
                   = t :my_groups
@@ -91,18 +92,19 @@
                   = merit_indicator(current_user)
 
     .row#header-bar
-      .col-sm-2.col-xs-12
+      .col-sm-7.col-xs-12
         %span#logo
           = link_to image_tag('logo.png'), root_path, class: 'navbar-brand'
       
-      .col-md-6.col-sm-5.col-xs-12.hidden-xs
-        %span#category_indicator.right
-          %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
-        
-      .col-md-4.col-sm-5.col-xs-12
+      .col-sm-5.col-xs-12
         #header_help= render partial: 'support_requests/help_button'
         #header_search
           %span#search_box= render partial: 'shared/search_box'
+
+    .row#horizontal-nav-bar.hidden-xs
+      -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
+      %span#category_indicator.right
+        %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
     
     .row#breadcrumb-bar
       %nav#breadcrumb.navbar
@@ -133,23 +135,4 @@
                   convert_to_content_box { yield }                    |
                 )                                                     |    
         
-    %footer.footer#footer
-      %div.container.narrow.row
-        %ul.footer-links
-          %li
-            %a(href="https://github.com/fiedl/your_platform") github
-          %li.muted ·
-          %li
-            %a= link_to t(:imprint), Page.find_by_flag(:imprint)
-          %li.muted ·
-          - if current_user
-            %li
-              = link_to t(:terms_of_use), terms_path
-            %li.muted ·
-          %li= language_switcher_html
-      #footer_line
-      .clear
-      %small
-        #version_footer= app_version_footer
-      
-
+    .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer

@@ -55,7 +55,6 @@ describe Ability do
       context "when the user is no member of a group" do
         before { @group = create(:group) }
         he { should_not be_able_to :index_posts, @group }
-        he { should_not be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
           before do
             @post = @group.posts.create
@@ -83,7 +82,6 @@ describe Ability do
           Mention.create_multiple(create(:user), @comment, @comment.text)
         end
         specify { @group.members.should_not include user }
-        he { should_not be_able_to :create_post_for, @group }
         he { should be_able_to :read, @post }
         he { should be_able_to :read, @comment }
         he { should be_able_to :create_comment_for, @post }
@@ -98,7 +96,6 @@ describe Ability do
           Mention.create_multiple(create(:user), @post, @post.text)
         end
         specify { @group.members.should_not include user }
-        he { should_not be_able_to :create_post_for, @group }
         he { should be_able_to :read, @post }
         he { should be_able_to :create_comment_for, @post }
         he { should be_able_to :read, @post_attachment }
@@ -127,6 +124,11 @@ describe Ability do
         
         the_user.should_not be_able_to :destroy, @page
       end
+      
+      he "should be able to change the 'hidden' attribute of any user" do
+        @other_user = create :user
+        the_user.should be_able_to :change_hidden, @other_user
+      end
     end
     
     context "when the user is a group admin" do
@@ -140,6 +142,16 @@ describe Ability do
         @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
         the_user.should be_able_to :update, @profile_field
       end
+      
+      he "should not be able to change the 'hidden' attribute of the group members" do
+        @other_user = create :user; @group << @other_user
+        the_user.should_not be_able_to :change_hidden, @other_user
+      end
+      he "should not be able to change his own 'hidden' attribute" do
+        the_user.should_not be_able_to :change_hidden, user
+      end
+      he { should be_able_to :update, user }
+      he { should be_able_to :change_status, user }
     end
     
     context "when the user is officer of a group" do
@@ -303,6 +315,15 @@ describe Ability do
       end
       he { should be_able_to :create_event_for, @any_group }
     
+      he "should be able to post to any group" do
+        @any_group = create :group
+      
+        the_user.should be_able_to :create_post, @any_group
+        the_user.should be_able_to :create_post_for, @any_group
+        the_user.should be_able_to :create_post_via_email, @any_group
+        the_user.should be_able_to :force_post_notification, @any_group
+      end
+
       describe "when he is contact person for an event" do
         before do
           @event = @any_group.child_events.create

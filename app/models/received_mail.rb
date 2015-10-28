@@ -121,6 +121,11 @@ class ReceivedMail
       recipient_group_by_email(email)
     end.uniq - [nil]
   end
+  def unmatched_recipient_emails
+    recipient_emails.select do |email|
+      recipient_by_email(email).nil?
+    end - [nil]
+  end
   
   def message_id
     @email.message_id

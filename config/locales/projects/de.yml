@@ -1,0 +1,8 @@
+de:
+  project: Projekt
+  projects: Projekte
+  new_project: Neues Projekt
+  
+  projects_of_str: 'Projekte von %{str}'
+  my_projects: Meine Projekte
+  all_my_projects: Alle meine Projekte

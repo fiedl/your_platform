@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   root :to => 'root#index'
   get :news, to: 'news#index'
+  
+  get :public, to: 'public_root#index', as: 'public_root'
 
   get :setup, to: 'setup#index'
   post :setup, to: 'setup#create'
@@ -74,6 +76,8 @@ Rails.application.routes.draw do
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'
   end
+  
+  resources :projects
   
   resources :activities
     

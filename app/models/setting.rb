@@ -5,8 +5,6 @@
 #   * Setting.support_email
 #
 class Setting < RailsSettings::CachedSettings
-	attr_accessible :var if defined? attr_accessible
-
   def self.app_name=(name)
     super(name)
     Rails.cache.delete_matched 'app_version_footer*'
@@ -16,4 +14,8 @@ class Setting < RailsSettings::CachedSettings
     return nil if super == ""
     super
   end
+end
+
+class RailsSettings::CachedSettings
+  attr_accessible :var if defined? attr_accessible
 end

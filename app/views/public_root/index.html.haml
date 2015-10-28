@@ -1,0 +1,14 @@
+- @hide_vertical_nav = true
+
+.row.row-eq-height
+  .col.col-sm-9
+    = render @page
+  
+  .col.col-sm-3.public_root_events
+    = render partial: 'shared/upcoming_events', locals: {events: @events, force_show: true, parent_group: nil}
+
+- if @public_root_element_pages.try(:any?)
+  .row.row-eq-height.public_root_elements
+    .col.col-sm-6= render @public_root_element_pages.first
+    - @public_root_element_pages[1..-1].each do |p|
+      .col.col-sm-3= render p

@@ -22,8 +22,8 @@ class Group < ActiveRecord::Base
   
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
-  is_structureable( ancestor_class_names: %w(Group Page Event), 
-                    descendant_class_names: %w(Group User Page Workflow Event) )
+  is_structureable(ancestor_class_names: %w(Group Page Event), 
+                   descendant_class_names: %w(Group User Page Workflow Event Project))
   is_navable
   has_profile_fields
 
@@ -40,8 +40,9 @@ class Group < ActiveRecord::Base
   include GroupMixins::HiddenUsers
   include GroupMixins::Developers
   include GroupMixins::Officers
-
   include GroupMixins::Import
+  include GroupMailingLists
+  include GroupDummyUsers
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
   after_save       { self.delay.delete_cache }

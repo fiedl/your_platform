@@ -159,6 +159,8 @@ module Structureable
           self.child_pages << object unless self.child_pages.include? object
         elsif object.kind_of? Event
           self.child_events << object unless self.child_events.include? object
+        elsif object.kind_of? Project
+          self.child_projects << object unless self.child_projects.include? object
         elsif object.nil?
           raise "Something is wrong! You've tried to add nil."
         else

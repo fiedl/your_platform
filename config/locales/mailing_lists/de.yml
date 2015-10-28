@@ -8,3 +8,13 @@ de:
   no_need_to_manage_list_members_separately: "Hierbei wird immer das aktuelle Mitglieder-Verzeichnis der Plattform verwendet, sodass die Adressaten der E-Mail-Verteiler nicht separat gepflegt werden müssen."
   
   mailing_list_adresses: Verteiler-Adressen
+  
+  mailing_list_sender_filter: Absender-Filter für E-Mail-Verteiler
+  sender_filter:
+    open:                     Offen (Standard für Amtsträger-Gruppen)
+    users_with_account:       Benutzer mit Account
+    corporation_members:      Mitglieder der Korporation (Standard für Gruppen einer Korporation)
+    group_members:            Mitglieder der Gruppe (Standard für reguläre Gruppen)
+    group_officers:           Amtsträger der Gruppe
+    officers:                 Amtsträger
+    global_officers:          Bundesamtsträger

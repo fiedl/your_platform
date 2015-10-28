@@ -142,9 +142,19 @@ class Ability
         group.admins_of_self_and_ancestors.include? user
       end
       
+      can [:update, :change_first_name, :change_alias, :change_status], User, id: Role.of(user).administrated_users.map(&:id)
+      
       can :manage, ProfileField do |profile_field|
         profile_field.profileable.nil? ||  # in order to create profile fields
           can?(:update, profile_field.profileable)
+      end
+      
+      can :execute, Workflow do |workflow|
+        # Local admins can execute workflows of groups they're admins of.
+        # And they can execute the mark_as_deceased workflow, which is a global workflow.
+        #
+        (workflow == Workflow.find_mark_as_deceased_workflow) or
+        (workflow.admins_of_ancestors.include?(user))
       end
     end
   end
@@ -155,12 +165,6 @@ class Ability
     end
     
     if not read_only_mode?
-      # Group emails
-      #
-      can [:create_post, :create_post_for, :force_post_notification], Group do |group|
-        user.in?(group.officers_of_self_and_ancestor_groups) || user.in?(group.corporation.try(:officers) || [])
-      end
-    
       # Local officers can create events in their groups.
       #
       can [:create_event, :create_event_for], Group do |group|
@@ -227,11 +231,13 @@ class Ability
   def rights_for_global_officers
     can :export_member_list, Group
     if not read_only_mode?
-      can [:create_post, :create_post_for, :force_post_notification], Group
       can [:create_event, :create_event_for], Group
       can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
       end
+
+      # Global officers can post to any group.
+      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
     end
   end
       
@@ -300,10 +306,6 @@ class Ability
         attachment.parent.ancestor_events.collect { |event| event.contact_people.to_a }.flatten.include?(user)
       end
       
-      # This allows all users to send posts to their own groups.
-      # TODO: Post policy for groups.
-      can [:create_post, :create_post_for], Group, id: user.group_ids
-      
       # If a user can read an object, he can comment it.
       # 
       can :create_comment_for, [Post] do |commentable|
@@ -367,6 +369,11 @@ class Ability
     
     # All signed-in users can read their news (timeline).
     can :index, :news
+    
+    # Read projects
+    can [:read, :update], Project do |project|
+      project.group.members.include? user
+    end
   end
   
   def rights_for_everyone
@@ -382,6 +389,9 @@ class Ability
     # All users can read the public website.
     #
     can :read, Page, id: Page.public_website_page_ids
+    can [:read, :download], Attachment do |attachment|
+      attachment.parent.kind_of?(Page) && attachment.parent.public?
+    end
     
     # Listing Events and iCalendar (ICS) Export:
     #
@@ -416,12 +426,19 @@ class Ability
       obj.created_at < timestamp
     end
     
-    # Everyone can create posts via email, i.e. send email messages to our
-    # json api.
+    # Send messages to a group, either via web ui or via email:
+    # This is allowed if the user matches the mailing-list-sender-filter setting.
+    # Definition in: concerns/group_mailing_lists.rb
     #
-    # TODO: Add a kind of auth token sent by our postfix script.
+    can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
+      group.user_matches_mailing_list_sender_filter?(user)
+    end
+    
+    # Activate platform mailgate, i.e. accept incoming email.
+    # The authorization to send to a specific group is done separately in
+    # the StoreMailAsPostsAndSendGroupMailJob.
     #
-    can :create, :post_via_email
+    can :use, :platform_mailgate
     
     # All users can use the blue help button.
     #

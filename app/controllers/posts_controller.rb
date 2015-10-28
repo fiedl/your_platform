@@ -89,7 +89,7 @@ class PostsController < ApplicationController
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
       Notification.create_from_post(@post, sent_at: Time.zone.now) unless params[:recipient] == 'me'
-      flash[:notice] = "Nachricht wurde an #{@send_counter} Empfänger versandt."
+      flash[:notice] = "Nachricht wird an #{@send_counter} Empfänger versandt."
     else
       Notification.create_from_post(@post) unless params[:recipient] == 'me'
       flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
@@ -99,9 +99,13 @@ class PostsController < ApplicationController
     
     respond_to do |format|
       format.html do
-        redirect_to group_posts_path(@group), change: 'posts'
+        if params[:post][:sent_from_root_page]
+          redirect_to root_path, change: 'social_stream'
+        else
+          redirect_to group_posts_path(@group), change: 'posts'
+        end
       end
-      format.json { render json: {recipients_count: @send_counter} }
+      format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
     end
     
   end
@@ -135,7 +139,23 @@ class PostsController < ApplicationController
   # https://github.com/ivaldi/brimir
   #
   def create_via_email
-    authorize! :create, :post_via_email
+    #
+    # ## Authorization
+    # 
+    # In case of comments, the user is authenticated by his user token that is included in the
+    # reply-to email address, e.g. user-aeng9iLe...oi2iSh7Hahr.post-345.create-comment.plattform@example.com.
+    # We do not check authorization for comments at the moment. TODO
+    #
+    # In case of posts, the user is authenticated by the sender email address.
+    # TODO: Support uploading public keys to protect from forged email addresses.
+    # The authorization is done in the StoreMailAsPostsAndSendGroupMailJob.
+    # Rejection messages are also sent in the StoreMailAsPostsAndSendGroupMailJob.
+    #
+    # The following authorization step generally checks whether the platform mailgate
+    # should be used. This way, the mailgate can be switched off in the Ability class.
+    #
+    authorize! :use, :platform_mailgate
+    
     if params[:message]
       if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
         # Then this responds to a conversation and should not create a new post but a comment instead.

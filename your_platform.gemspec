@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
 
   
   # JavaScript 
-  s.add_dependency "jquery-rails", '>= 3.1.3'
+  s.add_dependency "jquery-rails", '>= 3.1.3', '<= 4.0.4' # Fix version due to datatables issue (http://stackoverflow.com/a/31150030/2066546)
   s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
@@ -79,6 +79,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml'                                                              # MIT License
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
+  s.add_dependency 'auto_html', '>= 1.6.4'
   
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
@@ -99,7 +100,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave'                                                       # MIT License
   s.add_dependency 'mini_magick'
-  s.add_dependency 'refile'
+  s.add_dependency 'refile', '~> 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
 
@@ -146,6 +147,9 @@ Gem::Specification.new do |s|
   
   # Gamification
   s.add_dependency 'merit'
+  
+  # Dummy Data Generation
+  s.add_dependency 'faker'
   
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

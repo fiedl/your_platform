@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   before_validation         :change_alias_if_already_taken
   validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
-
+  
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
   validates_associated      :account
 
@@ -47,7 +47,17 @@ class User < ActiveRecord::Base
 
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
-
+  
+  
+  # Easy user settings: https://github.com/huacnlee/rails-settings-cached
+  # For example:
+  #
+  #     user = User.find(123)
+  #     user.settings.color = :red
+  #     user.settings.color  # =>  :red
+  #
+  include RailsSettings::Extend
+  
 
   # Mixins
   # ==========================================================================================

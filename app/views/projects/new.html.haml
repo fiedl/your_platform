@@ -1,0 +1,27 @@
+%a.btn.btn-default.right{href: projects_path}
+  = icon('glyphicon-th')
+  = t(:all_my_projects)
+
+%h1=t :new_project
+%div.projects.new
+
+  = form_for(@project) do |f|
+  
+    %p
+      = f.label t(:title)
+      %br
+      = f.text_field :title, size: 60
+      
+    %p
+      = f.label t(:description)
+      %br
+      = f.text_area :description
+  
+    %p
+      = f.label t(:corporation)
+      %br
+      = f.text_field :corporation_name, class: 'autocomplete user-select-corporation', size: 60, data: {autocomplete_url: corporations_path(format: 'json')}
+    
+    %p Das Projekt wird automatisch Ihrer eigenen Firma zugeordnet. Sie können außerdem eine zusätzliche Firma angeben, z.B. den Kunden, für den Sie das Projekt umsetzen.
+    
+    %p= f.submit class: 'btn btn-success', value: t(:new_project)

@@ -1,11 +1,15 @@
-- # Locals: post
-- raise('no post given.') if not post
+- # Locals:
+- post || raise('no post given.')
+- hide_images ||= false
 
-- if post.attachments.count > 0  
+- attachments = post.attachments.to_a
+- attachments.select! { |attachment| not attachment.image? } if hide_images
+
+- if attachments.count > 0  
   %div.post-attachments
     %strong= t(:attachments)
     %ol.post_attachments
-      - post.attachments.each do |attachment|
+      - attachments.each do |attachment|
         %li
           = awesome_icon(:paperclip)
           = link_to attachment.filename, attachment.file_url, target: '_blank'

@@ -32,7 +32,9 @@ de:
   see_also: Siehe auch
   
   filter_table: "Tabelle filtern ..."
-  
+
+  created_at: Erstellt am
+  updated_at: Letzte Änderung am
   last_update: Letzte Änderung
   format: Format
   
