@@ -30,7 +30,7 @@
         %div.post-date
           = localize(post.sent_at) if post.sent_at
         - if @post and not @posts
-          %div.post-deliveries#post-deliveries
+          %div.post-deliveries#post-deliveries{data: {keep_polling: @keep_polling_delivery_counters ? 'true' : 'false'}}
             =t :post_sent_to_n_recipients, n: post.deliveries.sent.map(&:user_id).uniq.count if post.deliveries.sent.count > 0
             =t :post_failed_to_send_to_n_recipients, n: post.deliveries.failed.map(&:user_id).uniq.count if post.deliveries.failed.count > 0
       

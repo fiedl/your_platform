@@ -39,6 +39,7 @@ class PostsController < ApplicationController
     @group = @post.group
     
     @show_all_comments = true
+    @keep_polling_delivery_counters = (@post.created_at >= 5.minutes.ago)
     
     set_current_title @post.subject
     set_current_navable @group
