@@ -1,3 +1,5 @@
+- show_images_on_top = (post.content_type != 'html') # When html, we want the images wherever the user has placed them, for example via email.
+
 %h1.post.post-subject
   - if @post and not @posts
     = post.subject
@@ -5,7 +7,7 @@
     = link_to post.subject, post
 %div.post
 
-  - if (image_attachments = post.attachments.find_by_type("image")) && image_attachments.try(:any?)
+  - if show_images_on_top && (image_attachments = post.attachments.find_by_type("image")) && image_attachments.try(:any?)
     #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: image_attachments, inline: true, hide_description: true}
   
 
@@ -37,6 +39,6 @@
       %div.post-body
         = markup post.text
 
-      = render partial: 'posts/attachments', locals: {post: post, hide_images: true}
+      = render partial: 'posts/attachments', locals: {post: post, hide_images: show_images_on_top}
 
       .post-comments= render partial: 'comments/comments', locals: {commentable: post}
