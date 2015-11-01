@@ -86,7 +86,7 @@ class MembershipCollection
   end
   
   delegate :count, :first, :last, to: :to_a
-  delegate :map, :collect, :select, :each, to: :to_a
+  delegate :map, :collect, :select, :detect, :each, to: :to_a
   
   def include?(*other_memberships)
     to_a.collect { |m| [m.group.id, m.user.id, m.valid_from, m.valid_to] }

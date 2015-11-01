@@ -189,6 +189,14 @@ concern :UserRoles do
   def officer_of_anything?
     self.groups.detect { |g| g.type == 'OfficerGroup' } || false
   end
+  
+  def officer_of?(obj)
+    obj.officer_groups.collect { |g| g.members.to_a }.flatten.include? self
+  end
+  
+  def officer_or_subgroup_officer_of?(obj)
+    obj.officers_groups_of_self_and_descendant_groups.collect { |g| g.members.to_a }.flatten.include? self
+  end
 
 
   # Methods transferred from former Role class

@@ -119,6 +119,9 @@ class Membership
       valid_from: params[:valid_from] || Time.zone.now,
       valid_to: params[:valid_to])
       
+    user.delete_cache
+    group.delete_cache
+      
     Membership.new(user: user, group: group, 
       valid_from: new_dag_link.valid_from, valid_to: new_dag_link.valid_to)
   end

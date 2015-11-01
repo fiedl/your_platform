@@ -120,6 +120,9 @@ module StructureableMixins::Roles
   def officers_groups
     self.officers_parent.descendant_officer_groups
   end
+  def officer_groups
+    self.officers_groups
+  end
   
   def direct_officers
     self.find_officers_parent_group.try(:descendant_users) || []

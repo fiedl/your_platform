@@ -55,7 +55,7 @@ concern :GroupMemberships do
   end
   
   def direct_members(reload = false)
-    members.direct
+    MemberCollection.new(memberships: memberships.direct, group: self)
   end
   
   def indirect_members

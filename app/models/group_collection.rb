@@ -36,6 +36,6 @@ class GroupCollection
   end
   
   delegate :count, :first, :last, to: :to_a
-  delegate :map, :collect, :select, :include?, :+, :-, :&, to: :to_a
+  delegate :map, :collect, :select, :detect, :include?, :+, :-, :&, to: :to_a
     
 end

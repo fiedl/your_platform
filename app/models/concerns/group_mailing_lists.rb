@@ -42,12 +42,12 @@ concern :GroupMailingLists do
         # Everyone can contact officers.
         true
       elsif self.corporation.present?
-        # If the group has an associated corporation, all members
+        # If the group has an associated corporation, all members and officers
         # of the corporation can post.
-        user && user.member_of?(self.corporation)
+        user && (user.member_of?(self.corporation) || user.officer_or_subgroup_officer_of?(self.corporation))
       else
-        # If this is a regular group, all group members can post.
-        user && user.member_of?(self)
+        # If this is a regular group, all group members and officers can post.
+        user && (user.member_of?(self) || user.officer_of?(self))
       end
     else
       false

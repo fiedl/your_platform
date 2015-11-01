@@ -296,12 +296,13 @@ describe Ability do
       end
     end
 
-    describe "for officers of the @group" do
+    describe "for officers (and members) of the @group" do
       before do
         @corporation = create :corporation_with_status_groups
         @corporation << @group
         @officer_group = @group.create_officer_group name: 'President'
         @officer_group.assign_user user
+        @group.assign_user user
       end
       
       describe "sender filter" do
