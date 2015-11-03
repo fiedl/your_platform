@@ -178,7 +178,8 @@ class MembershipCollection
   end
   
   def cache_key
-    [primary_cache_scope, "membership_collection", 
+    [primary_cache_scope, "membership_collection",
+      @user, @group, # we need both for Membership.where(user: ..., group: ...) despite the primary scope.
       @direct, @indirect, @uniq, @first_per_group, @join_validity_ranges_of_indirect_memberships, @without_members,
       @valid, @invalid, @with_invalid, @now, @past, @with_past, @now_and_in_the_past, @at_time, @this_year, @started_after]
   end

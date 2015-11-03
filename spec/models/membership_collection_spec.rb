@@ -110,6 +110,44 @@ describe MembershipCollection do
         its(:count) { should == 1 }
         its('direct.count') { should == 0 }
       end
+      
+      describe "when there are direct and indirect memberships" do
+        #   @indirect_group
+        #        |------------ @group
+        #        |                |------ @user1
+        #        |                |------ @user2
+        #        |
+        #        |------------ @group2
+        #
+        before do
+          @group = create(:group, name: 'group')
+          @user1 = create(:user); @group.assign_user(@user1)
+          @user2 = create(:user); @group.assign_user(@user2)
+          @user = @user1
+          @membership1 = Membership.where(user: @user1, group: @group).first
+          @membership2 = Membership.where(user: @user2, group: @group).first
+          @indirect_group = @group.parent_groups.create name: 'indirect_group'
+          @indirect_membership1 = Membership.where(user: @user1, group: @indirect_group).first
+          @indirect_membership2 = Membership.where(user: @user2, group: @indirect_group).first
+          @group2 = @indirect_group.child_groups.create
+        end
+        describe "when the selector group is a direct group" do
+          subject { Membership.where(group: @group, user: @user) }
+          its(:count) { should == 1 }
+          its(:first) { should == @membership1 }
+          its(:first) { should be_kind_of Membership }
+          its('first.group') { should == @group }
+          its('first.user') { should == @user }
+        end
+        describe "when the selector group is an indirect group" do
+          subject { Membership.where(group: @indirect_group, user: @user) }
+          its(:count) { should == 1 }
+          its(:first) { should == @indirect_membership1 }
+          its(:first) { should be_kind_of Membership }
+          its('first.group') { should == @indirect_group }
+          its('first.user') { should == @user }
+        end
+      end
     end
   end
   
