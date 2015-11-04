@@ -76,6 +76,10 @@ class Membership
   def group_id=(new_group_id)
     group = Group.find new_group_id
   end
+  
+  def user_id
+    user.try(:id)
+  end
 
   def user_title
     user.try(:title)
@@ -124,6 +128,10 @@ class Membership
       
     Membership.new(user: user, group: group, 
       valid_from: new_dag_link.valid_from, valid_to: new_dag_link.valid_to)
+  end
+  
+  def inspect
+    "Membership(user: #{user_id}, group: #{group_id})"
   end
   
 end

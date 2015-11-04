@@ -39,6 +39,11 @@ class MembershipCollection
     return self
   end
   
+  def uncached
+    @uncached = true
+    return self
+  end
+  
   # Join the validity ranges of indirect memberships.
   #
   #     group1
@@ -57,7 +62,7 @@ class MembershipCollection
   end
   
   def to_a
-    Rails.cache.fetch [cache_key, 'to_a'] do
+    Rails.cache.fetch [cache_key, 'to_a'], force: @uncached do
       memberships = []
       memberships += find_all_direct_memberships unless @indirect
       unless @direct
@@ -85,7 +90,7 @@ class MembershipCollection
     GroupCollection.new(memberships: self)
   end
   
-  delegate :count, :first, :last, to: :to_a
+  delegate :count, :first, :last, :sort_by, to: :to_a
   delegate :map, :collect, :select, :detect, :each, to: :to_a
   
   def include?(*other_memberships)

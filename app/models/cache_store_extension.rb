@@ -10,19 +10,29 @@ module CacheStoreExtension
     return result
   end
   
-  #def fetch(key, options = {}, &block)
-  #  rescue_from_undefined_class_or_module do
-  #    rescue_from_other_errors(block) do
-  #      super(key, {force: @ignore_cache}.merge(options), &block)
-  #    end
-  #  end
-  #end
+  def fetch(key, options = {}, &block)
+    rescue_from_undefined_class_or_module do
+      rescue_from_too_big_to_marshal do
+        rescue_from_other_errors(block) do
+          super(key, {force: @ignore_cache}.merge(options), &block)
+        end
+      end
+    end
+  end
   
   def delete_regex(regex)
     if @data
-      keys = @data.keys.select { |key| key =~ regex }
+      keys = list_keys(regex)
       @data.del(*keys) if keys.count > 0
     end
+  end
+  
+  def list_keys(regex)
+    regex = Regexp.new "#{regex.reload.cache_key}/*" if regex.kind_of? ActiveRecord::Base
+    @data.keys.select { |key| key =~ regex }
+  end
+  def ls(regex)
+    list_keys(regex)
   end
   
   # This autoloads classes or modules that are required to instanciate
@@ -45,23 +55,23 @@ module CacheStoreExtension
   end
   private :rescue_from_undefined_class_or_module
   
-  # # This provides a solution to errors like
-  # # "year too big to marshal: 16 UTC".
-  # #
-  # # Note that this error confusingly does not neccessarily have
-  # # something to do with caching dates.
-  # #
-  # def rescue_from_too_big_to_marshal
-  #   begin
-  #     yield
-  #   rescue ArgumentError, NameError => exc
-  #     if exc.message.match(%r|year too big to marshal: (.+)|)
-  #       yield.reload  # Reloading the ActiveRecord objects can help.
-  #     else
-  #       raise exc
-  #     end
-  #   end
-  # end
+  # This provides a solution to errors like
+  # "year too big to marshal: 16 UTC".
+  #
+  # Note that this error confusingly does not neccessarily have
+  # something to do with caching dates.
+  #
+  def rescue_from_too_big_to_marshal
+    begin
+      yield
+    rescue ArgumentError, NameError => exc
+      if exc.message.match(%r|year too big to marshal: (.+)|)
+        yield.reload  # Reloading the ActiveRecord objects can help.
+      else
+        raise exc
+      end
+    end
+  end
   
   def rescue_from_other_errors(block_without_fetch, &block_with_fetch)
     begin
