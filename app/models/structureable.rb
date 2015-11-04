@@ -72,6 +72,7 @@ module Structureable
     # Use the connected-groups mechanism.
     #
     include StructureableConnectedGroups
+    include StructureableConnectedLeafGroups
   end
 
   module StructureableInstanceMethods

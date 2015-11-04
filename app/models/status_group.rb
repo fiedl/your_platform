@@ -7,9 +7,7 @@
 class StatusGroup < Group
   
   def self.find_all_by_corporation(corporation)
-    corporation.leaf_groups.select do |group|
-      group.ancestor_events.count == 0
-    end
+    corporation.connected_leaf_groups
   end
   
   def self.find_all_by_user(user, options = {})

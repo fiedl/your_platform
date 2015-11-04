@@ -35,7 +35,7 @@ class Corporation < Group
   def is_first_corporation_this_user_has_joined?( user )
     return false if not user.groups.include? self
     return true if user.corporations.count == 1
-    this_membership_valid_from = UserGroupMembership.find_by_user_and_group( user, self ).valid_from
+    this_membership_valid_from = Membership.where(user: user, group: self).first.valid_from
     user.memberships.each do |membership|
       return false if membership.valid_from.to_i < this_membership_valid_from.to_i
     end

@@ -60,11 +60,11 @@ describe Corporation do
       @another_corporation = create( :corporation )
       @user = create( :user )
 
-      @first_membership = UserGroupMembership.create( user: @user, group: @first_corporation )
+      @first_membership = Membership.create(user: @user, group: @first_corporation)
       @first_membership.valid_from = 1.year.ago
       @first_membership.save
 
-      @second_membership = UserGroupMembership.create( user: @user, group: @second_corporation )
+      @second_membership = Membership.create(user: @user, group: @second_corporation)
     end
     describe "for the corporation the user has joined first" do
       subject { @first_corporation.is_first_corporation_this_user_has_joined?( @user ) }
