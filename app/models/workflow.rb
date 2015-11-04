@@ -16,8 +16,12 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
       .downcase
   end
 
-  def wah_group  # => TODO: corporation
-    ( self.ancestor_groups & Corporation.all ).first
+  def corporation
+    (self.ancestor_groups & Corporation.all).first
+  end
+  
+  def ancestor_groups
+    connected_ancestor_groups
   end
   
   def self.find_or_create_mark_as_deceased_workflow
