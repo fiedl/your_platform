@@ -32,7 +32,6 @@ PATH
   remote: .
   specs:
     your_platform (1.0.1)
-      acts-as-dag (>= 2.5.7)
       acts_as_tree
       auto_html (>= 1.6.4)
       autosize-rails
@@ -136,9 +135,6 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    acts-as-dag (4.0.0)
-      activemodel
-      activerecord (~> 4.0, >= 4.0.0)
     acts_as_tree (2.2.0)
       activerecord (>= 3.0.0)
     addressable (2.3.8)

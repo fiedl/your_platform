@@ -17,7 +17,6 @@ require 'i18n-js'
 require 'jquery-atwho-rails'
 
 # Data Structures
-require 'acts-as-dag'
 require 'acts_as_tree'
 
 # Caching
