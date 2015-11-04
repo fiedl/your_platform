@@ -35,7 +35,10 @@ concern :GroupMemberships do
   
   def latest_memberships
     cached do
-      self.memberships.with_invalid.order_by(&:valid_from).last(10)
+      self.memberships.with_invalid
+        .select { |membership| membership.valid_from.present? }
+        .sort_by { |membership| membership.valid_from }
+        .last(10)
     end
   end
   

@@ -10,7 +10,7 @@ describe "cache" do
   describe "cache_key" do
     before { @user = create :user }
     subject { @user.cache_key }
-    its(:length) { should == "users/4190-20151103154958".length } 
+    its(:length) { should == "users/#{@user.id}-20151103154958".length } 
   end
   
   describe "after storing the User#title in the cache" do

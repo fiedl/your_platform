@@ -10,10 +10,10 @@ describe MembershipValidityRange do
   #
   before do
     @group1 = create :group, name: 'group1'
-    @subgroup1 = @group1.child_groups.create name: 'group2'
+    @subgroup1 = @group1.child_groups.create name: 'subgroup1'
     @group2 = create :group, name: 'group2'
-    @user1 = create :user; @subgroup1 << @user1; @group2 << @user1
-    @user2 = create :user; @group2 << @user2
+    @user1 = create :user, last_name: 'user1'; @subgroup1 << @user1; @group2 << @user1
+    @user2 = create :user, last_name: 'user2'; @group2 << @user2
   end
   
   describe "#invalidate" do
@@ -72,7 +72,7 @@ describe MembershipValidityRange do
       describe "for a current membership" do
         before do
           @membership = Membership.where(user: @user1, group: @subgroup1).first
-          @membership.dag_link.update_attribute :valid_from, 1.month.ago
+          @membership.dag_link.update_attributes valid_from: 1.month.ago
           @membership = Membership.where(user: @user1, group: @subgroup1).first
         end
         it { should be_true }
@@ -80,8 +80,7 @@ describe MembershipValidityRange do
       describe "for a past membership" do
         before do
           @membership = Membership.where(user: @user1, group: @subgroup1).first
-          @membership.dag_link.update_attribute :valid_from, 1.month.ago
-          @membership.dag_link.update_attribute :valid_to, 10.days.ago
+          @membership.dag_link.update_attributes valid_from: 1.month.ago, valid_to: 10.days.ago
           @membership = Membership.where(user: @user1, group: @subgroup1).first
         end
         it { should be_false }
