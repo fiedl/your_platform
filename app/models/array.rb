@@ -12,4 +12,8 @@ class Array
     collect { |element| element.reload if element.respond_to?(:reload) }
   end
   
+  def pluck(attr_name)
+    map(&attr_name)
+  end
+  
 end
