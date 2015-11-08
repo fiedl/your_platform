@@ -74,6 +74,10 @@ module Structureable
     include StructureableConnectedGroups
     include StructureableConnectedLeafGroups
     include StructureableConnectedPages
+    
+    # Methods to manage the graph-related cache.
+    #
+    include StructureableGraphCache
   end
 
   module StructureableInstanceMethods
