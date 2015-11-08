@@ -73,6 +73,7 @@ module Structureable
     #
     include StructureableConnectedGroups
     include StructureableConnectedLeafGroups
+    include StructureableConnectedPages
   end
 
   module StructureableInstanceMethods
