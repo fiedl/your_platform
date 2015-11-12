@@ -29,5 +29,6 @@ class ApplicationController < ActionController::Base
   def render_partial(partial, locals = {})
     render_to_string(partial: partial, locals: locals, layout: false, formats: [:html])
   end
+  helper_method :render_partial
   
 end

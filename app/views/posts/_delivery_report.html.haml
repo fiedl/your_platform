@@ -1,0 +1,26 @@
+- # locals:
+- post ||= locals[:post] || raise('no post given for delivery report')
+
+%h3=t :delivery_report
+#post_created_via
+  =t :post_has_been_created_via_email if post.created_via_email?
+  =t :post_has_been_created_via_contact_form if post.created_via_contact_form?
+  =t :post_has_been_created_via_social_messaging if post.created_via_social_messaging?
+
+- if post.successfully_sent_to_count > 0
+  %h4=t :delivery_report_successful
+  #successfully_sent_to
+    = t(:post_sent_to_n_recipients, n: post.successfully_sent_to_count)
+    .user_avatar_list= user_avatars(post.successfully_sent_to)
+
+- if post.failed_to_send_to_count > 0
+  %h4=t :delivery_report_failed
+  #failed_to_send_to
+    = t(:post_failed_to_send_to_n_recipients, n: post.failed_to_send_to_count)
+    .user_avatar_list= user_avatars(post.failed_to_sent_to)
+
+- if post.pending_to_send_to_count > 0
+  %h4=t :delivery_report_pending
+  #pending_to_send_to
+    = t(:post_will_be_sent_to_n_recipients, n: post.pending_to_send_to_count)
+    .user_avatar_list= user_avatars(post.pending_to_send_to)

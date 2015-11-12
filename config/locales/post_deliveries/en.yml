@@ -1,3 +1,13 @@
 en:
   post_sent_to_n_recipients: "Successfully sent to %{n} recipients."
   post_failed_to_send_to_n_recipients: "Failed to send to %{n} recipients."
+  post_will_be_sent_to_n_recipients: "Sending to %{n} recipients."
+  
+  delivery_report: Delivery report
+  delivery_report_successful: Successfull
+  delivery_report_failed: Failed
+  delivery_report_pending: Pending
+  
+  post_has_been_created_via_email: 'The message has been created via mailing list. The recipients are notified via mailing list.'
+  post_has_been_created_via_contact_form: 'The message has been created via a contact form. The recipients are notified via mailing list.'
+  post_has_been_created_via_social_messaging: 'The message has been created via the "Posts" feature. The recipients are notified according to their own notification settings, but not later than 6 pm.'
