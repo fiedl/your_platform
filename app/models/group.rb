@@ -162,8 +162,8 @@ class Group < ActiveRecord::Base
   # Groups
   # ------------------------------------------------------------------------------------------
 
-  def descendant_groups_by_name( descendant_group_name )
-    self.descendant_groups.where( :name => descendant_group_name )
+  def descendant_groups_by_name(descendant_group_name)
+    self.descendant_groups.select { |g| g.name == descendant_group_name }
   end
 
   def corporation
@@ -172,23 +172,11 @@ class Group < ActiveRecord::Base
     end
   end
   def corporation_id
-    (([self.id] + ancestor_group_ids) & Corporation.pluck(:id)).first
+    (([self.id] + connected_ancestor_group_ids) & Corporation.pluck(:id)).first
   end
 
   def corporation?
     kind_of? Corporation
-  end
-  
-  # This returns all sub-groups of the corporation that have no
-  # sub-groups of their ownes except for officer groups. 
-  # This is needed for the selection of status groups.
-  #
-  def leaf_groups
-    cached do
-      self.descendant_groups.order('id').includes(:flags).select do |group|
-        group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-      end
-    end
   end
   
   def find_deceased_members_parent_group
@@ -196,6 +184,12 @@ class Group < ActiveRecord::Base
   end
   def deceased
     find_deceased_members_parent_group
+  end
+  
+  concerning :GroupDescendantUsers do
+    def descendant_users
+      raise('Changed interface! Please use `Group#members` or `Group#members.with_past`.')
+    end
   end
 
 end

@@ -1,5 +1,9 @@
 concern :StructureableConnectedLeafGroups do
   
+  def leaf_groups
+    connected_leaf_groups
+  end
+
   def connected_leaf_groups
     cached do
       connected_descendant_groups.select do |group|

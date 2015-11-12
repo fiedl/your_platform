@@ -21,6 +21,11 @@ concern :StructureableGraphCache do
   
   concerning :OfficerHasChanged do
     def refresh_cache_after_officer_has_changed
+      affected_nodes_after_officer_has_changed
+      .refresh_cached :find_admins
+      .refresh_cached :officers_of_self_and_parent_groups
+      
+      # TODO: `refresh_role_cache`
     end
     
     def affected_nodes_after_officer_has_changed
@@ -32,25 +37,26 @@ concern :StructureableGraphCache do
   
   concerning :MembershipHasChanged do
     def refresh_cache_after_membership_has_changed
+      affected_nodes_after_membership_has_changed
+      .refresh_cached :members
+      .refresh_cached :memberships
     end
     
     def affected_nodes_after_membership_has_changed
+      connected_ancestor_groups
     end
   end
   
   concerning :SubgroupHasChanged do
     def refresh_cache_after_subgroup_has_changed
+      affected_nodes_after_subgroup_has_changed
+      .refresh_cached :connected_descendant_groups
+      .refresh_cached :members
+      .refresh_cached :memberships
     end
     
     def affected_nodes_after_subgroup_has_changed
-    end
-  end
-  
-  concerning :SupergroupHasChanged do  
-    def refresh_cache_after_supergroup_has_changed
-    end
-    
-    def affected_nodes_after_supergroup_has_changed
+      connected_ancestor_groups
     end
   end
   

@@ -34,26 +34,29 @@ module StructureableMixins::Roles
   end
   
   def delete_caches_concerning_roles
-    if self.class.base_class.name == 'Group'
-      # For an admins_parent, this is called recursively until the original group
-      # is reached.
-      #
-      #   group
-      #     |---- officers_parent
-      #                |------------ admins_parent
-      #                |------------ some officer group
-      #
-      if has_flag?(:officers_parent) || has_flag?(:admins_parent)
-        parent_groups.each do |group| 
-          group.delete_cache
-          if group.descendants.count > 0
-            bulk_delete_cached :admins_of_ancestors, group.descendants
-            bulk_delete_cached :admins_of_self_and_ancestors, group.descendants
-            bulk_delete_cached "*officers*", group.descendants
-          end
-        end
-      end
-    end
+    
+    # TODO:
+    
+    ### if self.class.base_class.name == 'Group'
+    ###   # For an admins_parent, this is called recursively until the original group
+    ###   # is reached.
+    ###   #
+    ###   #   group
+    ###   #     |---- officers_parent
+    ###   #                |------------ admins_parent
+    ###   #                |------------ some officer group
+    ###   #
+    ###   if has_flag?(:officers_parent) || has_flag?(:admins_parent)
+    ###     parent_groups.each do |group| 
+    ###       group.delete_cache
+    ###       if group.descendants.count > 0
+    ###         bulk_delete_cached :admins_of_ancestors, group.descendants
+    ###         bulk_delete_cached :admins_of_self_and_ancestors, group.descendants
+    ###         bulk_delete_cached "*officers*", group.descendants
+    ###       end
+    ###     end
+    ###   end
+    ### end
   end
   
 
@@ -74,7 +77,7 @@ module StructureableMixins::Roles
   end
 
   def create_officers_parent_group
-    if self.ancestor_groups(true).find_all_by_flag(:officers_parent).count == 0 and not self.has_flag?(:officers_parent)
+    if self.connected_ancestor_groups.detect { |g| g.has_flag? :officers_parent }.nil? and not self.has_flag?(:officers_parent)
       # Do not allow officer cascades.
       create_special_group(:officers_parent)
     end

@@ -17,6 +17,8 @@ describe StructureableGraphCache do
   #      |
   #   @aktivitas_group
   #      |------------------ @fuxen_group --------- @fux_user
+  #      |                          |-------------- @fuxen_subgroup
+  #      |
   #      |------------------ @burschen_group ------ @burschen_protokolle_page
   #      |------------------ @protokolle_pages ---- @protokolle_sub_page
   #      |
@@ -36,6 +38,7 @@ describe StructureableGraphCache do
     @philisterschaft_group = @erlangen_corporation.child_groups.create name: "Philisterschaft"
     @aktivitas_group = @erlangen_corporation.child_groups.create name: "Aktivitas"
     @fuxen_group = @aktivitas_group.child_groups.create name: "Fuxen"
+    @fuxen_subgroup = @fuxen_group.child_groups.create name: 'fuxen_subgroup'
     @burschen_group = @aktivitas_group.child_groups.create name: "Burschen"
     @protokolle_page = @aktivitas_group.child_pages.create title: "Protokolle"
     @protokolle_sub_page = @protokolle_page.child_pages.create title: "Protokolle WS 2015/16"
@@ -65,6 +68,27 @@ describe StructureableGraphCache do
     it { should_not include @root_page, @intranet_root_page }
     it { should_not include @officers_parent_group, @chargen_group, @senior_group }
     it { should include @fux_user }
+  end
+  
+  describe "#affected_nodes_after_membership_has_changed" do
+    subject { @fuxen_group.affected_nodes_after_membership_has_changed }
+    it { should_not include @fuxen_group }
+    it { should include @aktivitas_group, @erlangen_corporation, @corporations_group, @everyone_group }
+    it { should_not include @burschen_group, @philisterschaft_group, @berlin_corporation }
+    it { should_not include @protokolle_page, @root_page, @intranet_root_page }
+    it { should_not include @officers_parent_group, @chargen_group, @senior_group }
+    it { should_not include @fux_user }
+  end
+  
+  describe "#affected_nodes_after_subgroup_has_changed" do
+    subject { @fuxen_group.affected_nodes_after_subgroup_has_changed }
+    it { should_not include @fuxen_group }
+    it { should include @aktivitas_group, @erlangen_corporation, @corporations_group, @everyone_group }
+    it { should_not include @burschen_group, @philisterschaft_group, @berlin_corporation }
+    it { should_not include @protokolle_page, @root_page, @intranet_root_page }
+    it { should_not include @officers_parent_group, @chargen_group, @senior_group }
+    it { should_not include @fux_user }
+    it { should_not include @fuxen_subgroup }
   end
   
 end

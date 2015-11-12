@@ -53,6 +53,11 @@ describe Group do
   # ------------------------------------------------------------------------------------------
 
   describe "(Workflows)" do
+    # 
+    # @group
+    #   |---- @subgroup --- @subworkflow
+    #   |---- @workflow
+    #
     before do
       @group = create( :group )
       @subgroup = create( :group )
@@ -112,42 +117,6 @@ describe Group do
       it { should include *@recent_events }
       it { should_not include *@unrelated_events }
     end
-  end
-
-
-  # Users
-  # ------------------------------------------------------------------------------------------
-
-  describe "(Users)" do
-
-    before do
-      @user = create( :user )
-      @group = create( :group )
-      @subgroup = create( :group ); @group.child_groups << @subgroup
-    end
-
-    describe "#descendant_users" do
-      describe "for usual groups" do
-        before { @user.parent_groups << @subgroup }
-        subject { @group.descendant_users }
-
-        it "should return all descendant users, including the users of the subgroups" do
-          subject.should include( @user )
-        end
-      end
-    end
-
-    describe "#child_users" do
-      describe "for usual groups" do
-        before { @user.parent_groups << @group }
-        subject { @group.child_users }
-
-        it "should return all child users" do
-          subject.should include( @user )
-        end
-      end
-    end
-
   end
 
 

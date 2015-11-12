@@ -39,6 +39,16 @@ concern :StructureableConnectedGroups do
     cached { select_connected_groups(child_groups).collect { |child_group| [child_group.id] + child_group.connected_descendant_group_ids }.flatten.uniq }
   end
   
+  def ancestor_groups(reload = false)
+    @ancestor_groups = nil if reload
+    @ancestor_groups ||= connected_ancestor_groups
+  end
+  
+  def descendant_groups(reload = false)
+    @descendant_groups = nil if reload
+    @descendant_groups ||= connected_descendant_groups
+  end
+  
   private
   
   def select_connected_groups(groups)
