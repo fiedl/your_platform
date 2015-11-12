@@ -15,6 +15,8 @@ class Post < ActiveRecord::Base
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
   
+  include PostDeliveryReport
+  
   def title
     subject
   end
@@ -162,5 +164,5 @@ class Post < ActiveRecord::Base
 
     return message
   end
-
+  
 end
