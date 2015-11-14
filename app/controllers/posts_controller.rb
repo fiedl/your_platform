@@ -40,6 +40,7 @@ class PostsController < ApplicationController
     
     @show_all_comments = true
     @keep_polling_delivery_counters = (@post.created_at >= 5.minutes.ago)
+    @show_delivery_report = params[:show_delivery_report].present?
     
     set_current_title @post.subject
     set_current_navable @group
