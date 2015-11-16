@@ -26,7 +26,7 @@ Geocoder::Lookup::Test.add_stub(
         country: 'France',
         country_code: 'FR',
         city: 'Grenoble',
-        postal_code: '38000',
+        postal_code: '38100',
         street_number: '44',
         route: 'Rue de Stalingrad'
     }
@@ -63,6 +63,23 @@ Geocoder::Lookup::Test.add_stub(
         postal_code: '38000',
         street_number: '44',
         route: 'Rue de Stalingrad'
+    }
+]
+)
+Geocoder::Lookup::Test.add_stub(
+    "Postfach 1234\n10117 Berlin", [
+    {
+        latitude: nil,
+        longitude: nil,
+        address: nil,
+        state: nil,
+        state_code: nil,
+        country: nil,
+        country_code: nil,
+        city: nil,
+        postal_code: nil,
+        street_number: nil,
+        route: nil
     }
 ]
 )
