@@ -80,6 +80,13 @@ module ProfileFieldTypes
             self.second_address_line = self.read_attribute(:value)
             self.add_flag :needs_review
           end
+          
+          # For foreign addresses, better include the state/region field, since
+          # we do not know if this field is needed there.
+          #
+          if self.geo_information(:country_code).try(:downcase) != default_country_code.try(:downcase)
+            self.region = self.geo_information(:state)
+          end
 
           if old_value.gsub("\n", "").gsub(",", "").gsub(" ", "") != self.value.gsub("\n", "").gsub(",", "").gsub(" ", "")
             # The old and the new value differ. This could simply mean that 
