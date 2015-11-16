@@ -24,10 +24,15 @@ de:
   work_mobile: Mobiltelefon geschäftlich
   custom: Benutzerdefiniert
 
+  first_address_line: Straße und Hausnummer
+  second_address_line: Zweite Adresszeile (optional)
   postal_code: Postleitzahl (PLZ)
+  city: Stadt
   town: Stadt
+  region: Region (optional)
   country: Land
   country_code: Länder-Kennzeichen
+  address_needs_review: Adresse bitte überprüfen
   
   email_address: E-Mail-Adresse
   

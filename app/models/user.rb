@@ -219,6 +219,16 @@ class User < ActiveRecord::Base
   def postal_address_with_name_surrounding
     address_label.to_s
   end
+  
+  def name_with_surrounding
+    cached {
+      (
+        name_surrounding_profile_field.text_above_name + "\n" +
+        (name_surrounding_profile_field.name_prefix + " " + name + name_surrounding_profile_field.name_suffix).strip + "\n" +
+        name_surrounding_profile_field.text_below_name
+      ).strip
+    }
+  end
 
   def address_label
     cached do

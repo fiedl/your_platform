@@ -3,6 +3,30 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 ready = ->
+  
+  $(document).on 'click', '.address_profile_field.value.editable', ->
+    $(this).closest('.box').trigger('edit')
+  $('.address_profile_field.value.editable').bind 'save', ->
+    url = $(this).data('profile-field-url') + '.json'
+    field_to_replace = $(this).find('.display_html')
+    field_to_replace.html('...')
+    setTimeout ->
+      $.ajax(
+        url: url,
+        type: 'GET',
+        success: (result)->
+          field_to_replace.html(result.display_html)
+      )
+    , 500
+    
+  $(document).on 'click', '.address_needs_review .confirm-review-button', ->
+    wrapper = $(this).closest('.address_needs_review')
+    wrapper.find('.label')
+      .removeClass('label-warning').addClass('label-success')
+      .text(I18n.t('thanks'))
+    setTimeout ->
+      wrapper.remove()
+    , 800
 
  # # Entfernen-Button der Profilfelder mit Funktion ausstatten.
  # # ------------------------------------------------------------------------------------------

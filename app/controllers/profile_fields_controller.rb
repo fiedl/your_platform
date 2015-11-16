@@ -50,6 +50,12 @@ class ProfileFieldsController < ApplicationController
     respond_with_bip @profile_field
   end
   
+  def show
+    @profile_field ||= ProfileField.find params[:id]
+    authorize! :read, @profile_field
+    render json: @profile_field.to_json(methods: :display_html)
+  end
+  
   def destroy
     respond_with @profile_field.destroy
   end

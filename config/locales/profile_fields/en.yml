@@ -11,10 +11,15 @@ en:
   iban: IBAN
   bic: BIC
   
+  first_address_line: First address line
+  second_address_line: Second address line
   postal_code: Postal Code
   town: Town
+  city: City
+  region: Region or state
   country: Country
   country_code: Country Code
+  address_needs_review: Address needs review
 
   email_address: Email Address
 
