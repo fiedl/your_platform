@@ -97,6 +97,7 @@ module ProfileFieldTypes
             self.add_flag :needs_review
           end
           
+          self.save
           return self
         end
       end

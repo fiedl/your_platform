@@ -23,6 +23,17 @@ describe ProfileFieldTypes::Address do
       its(:city) { should == 'Berlin' }
       its(:value) { should == "Pariser Platz 1\n10117 Berlin" }
       its('country_code.downcase') { should == 'de' }
+      
+      specify "the conversion should be persistent" do
+        subject
+        @reloaded_field = ProfileField.find(@profile_field.id)
+        @reloaded_field.children_count.should > 0
+        @reloaded_field.street_with_number.should == 'Pariser Platz 1'
+        @reloaded_field.postal_code.should == '10117'
+        @reloaded_field.city.should == 'Berlin'
+        @reloaded_field.value.should == "Pariser Platz 1\n10117 Berlin"
+      end
+      
     end
   end
   
