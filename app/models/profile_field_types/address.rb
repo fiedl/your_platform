@@ -59,8 +59,40 @@ module ProfileFieldTypes
             read_attribute :value
           end
         end
+        
+        # First, we had all address fields store as free-text value.
+        # This method migrates this format to the new one where street, city etc.
+        # are stored as separate child profile fields.
+        #
+        def convert_to_format_with_separate_fields
+          old_value = self.value
 
+          if self.geo_information(:street).present?
+            self.first_address_line = self.geo_information(:street)
+            self.city = self.geo_information(:city)
+            self.postal_code = self.geo_information(:postal_code)
+            self.country_code = self.geo_information(:country_code)
+          else
+            # If we can't extract the street name, copy the whole address into
+            # the second address line field. Otherwise, we'd lose this information
+            # in the ui.
+            #
+            self.second_address_line = self.read_attribute(:value)
+            self.add_flag :needs_review
+          end
 
+          if old_value.gsub("\n", "").gsub(",", "").gsub(" ", "") != self.value.gsub("\n", "").gsub(",", "").gsub(" ", "")
+            # The old and the new value differ. This could simply mean that 
+            # "Frankreich" has been replaced by "France". But it could also mean
+            # that the address is not readable anymore. In any case, it should
+            # be checked manually.
+            # 
+            self.add_flag :needs_review
+          end
+          
+          return self
+        end
+      end
     end
 
     # Google Maps integration
