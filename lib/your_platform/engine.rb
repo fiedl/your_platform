@@ -54,6 +54,7 @@ require 'best_in_place'
 # Geo Coding
 require 'geocoder'
 require 'gmaps4rails'
+require 'biggs'
 
 # Form Helpers
 require 'formtastic'
