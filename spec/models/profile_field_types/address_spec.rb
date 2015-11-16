@@ -34,6 +34,20 @@ describe ProfileFieldTypes::Address do
         @reloaded_field.value.should == "Pariser Platz 1\n10117 Berlin"
       end
       
+      describe "after #convert_to_format_with_separate_fields twice" do
+        before do
+          @profile_field = ProfileField.find @profile_field.id
+          @profile_field.convert_to_format_with_separate_fields
+        end
+        
+        its(:children_count) { should > 0 }
+        its(:street_with_number) { should == 'Pariser Platz 1' }
+        its(:first_address_line) { should == 'Pariser Platz 1' }
+        its(:postal_code) { should == '10117' }
+        its(:city) { should == 'Berlin' }
+        its(:value) { should == "Pariser Platz 1\n10117 Berlin" }
+        its('country_code.downcase') { should == 'de' }
+      end
     end
   end
   
