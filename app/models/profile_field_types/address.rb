@@ -19,7 +19,7 @@ module ProfileFieldTypes
         end
         
         def country
-          #self.get_field(:country) || geo_information(:country)
+          geo_information(:country) || country_code
         end
         
         def country_code
@@ -36,6 +36,10 @@ module ProfileFieldTypes
         
         def postal_code
           self.get_field(:postal_code) || geo_information(:postal_code)
+        end
+        
+        def plz
+          postal_code if country_code.downcase == 'de'
         end
         
         def state # state/province/region
@@ -84,11 +88,11 @@ module ProfileFieldTypes
           # For foreign addresses, better include the state/region field, since
           # we do not know if this field is needed there.
           #
-          if self.geo_information(:country_code).try(:downcase) != default_country_code.try(:downcase)
+          if self.geo_information(:country_code).present? && self.geo_information(:country_code).try(:downcase) != default_country_code.try(:downcase)
             self.region = self.geo_information(:state)
           end
 
-          if old_value.gsub("\n", "").gsub(",", "").gsub(" ", "") != self.value.gsub("\n", "").gsub(",", "").gsub(" ", "")
+          if old_value && self.value && old_value.gsub("\n", "").gsub(",", "").gsub(" ", "") != self.value.gsub("\n", "").gsub(",", "").gsub(" ", "")
             # The old and the new value differ. This could simply mean that 
             # "Frankreich" has been replaced by "France". But it could also mean
             # that the address is not readable anymore. In any case, it should
@@ -132,7 +136,8 @@ module ProfileFieldTypes
 
       def geo_information( key )
         return nil if self.value == "—"
-        return geo_location.send(key).strip if self.value && geo_location.send(key).try(:strip).present?
+        return geo_location.send(key).strip if self.value.present? && geo_location.send(key).kind_of?(String) && geo_location.send(key).strip.present?
+        return geo_location.send(key) if self.value.present? && geo_location.send(key).present?
       end
 
       def geocoded?

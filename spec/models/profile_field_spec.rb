@@ -119,7 +119,7 @@ describe ProfileFieldTypes::Address do
   describe "#display_html" do
     subject { @address_field.display_html }
     it "should have a line-break in it" do
-      subject.should include( "<br />" )
+      subject.should include( "<br" )
     end
   end
 

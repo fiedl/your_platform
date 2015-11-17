@@ -35,7 +35,7 @@
     - if profile_field.children_count > 0
       - if profile_field.type == 'ProfileFieldTypes::Address'
         #address_profile_field
-          .do_not_show_in_edit_mode.address_profile_field.value{class: can?(:update, profile_field) ? 'editable' : '', data: {profile_field_id: profile_field.id, profile_field_url: profile_field.url}}
+          .do_not_show_in_edit_mode.address_profile_field.editable.value{class: (can?(:update, profile_field) ? 'can_edit' : ''), data: {profile_field_id: profile_field.id, profile_field_url: profile_field.url}}
             %p.name_and_surrounding= simple_format profile_field.profileable.name_with_surrounding
             .display_html= profile_field.display_html
           - if can?(:update, profile_field)
@@ -43,8 +43,10 @@
               %ul
                 - profile_field.children.each do |child_field|
                   = render partial: 'profile_fields/profile_field', object: child_field
-              = render partial: 'profile_fields/postal_address_flag_switch', locals: { profile_field: profile_field }
-              
+
+          = render partial: 'profile_fields/postal_address_flag_switch', locals: { profile_field: profile_field }
+
+          - if can?(:update, profile_field)
             - if profile_field.needs_review?
               .address_needs_review
                 .label.label-warning=t :address_needs_review

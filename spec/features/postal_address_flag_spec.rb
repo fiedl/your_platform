@@ -27,8 +27,8 @@ feature "Postal Address Flag" do
       wait_for_ajax
 
       visit user_path @user
-      page.should have_content "Home Address #{@home_address.value} Postanschrift".gsub("\n", "")
-      page.should have_no_content "Study Address #{@study_address.value} Postanschrift".gsub("\n", "")
+      page.should have_content "Home Address #{@user.name} #{@home_address.value} Postanschrift".gsub("\n", "")
+      page.should have_no_content "Study Address #{@user.name} #{@study_address.value} Postanschrift".gsub("\n", "")
       @user.reload.postal_address_field.should == @home_address
 
       click_on I18n.t(:edit)
@@ -36,8 +36,8 @@ feature "Postal Address Flag" do
       wait_for_ajax
 
       visit user_path @user
-      page.should have_no_content "Home Address #{@home_address.value} Postanschrift".gsub("\n", "")
-      page.should have_content "Study Address #{@study_address.value} Postanschrift".gsub("\n", "")
+      page.should have_no_content "Home Address #{@user.name} #{@home_address.value} Postanschrift".gsub("\n", "")
+      page.should have_content "Study Address #{@user.name} #{@study_address.value} Postanschrift".gsub("\n", "")
       @user.reload.postal_address_field.should == @study_address
 
     end

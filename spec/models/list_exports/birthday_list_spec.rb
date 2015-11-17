@@ -24,9 +24,9 @@ describe ListExports::BirthdayList do
   
   describe "#to_csv" do
     subject { @list_export.to_csv }
-    it { should == 
+    it { Timecop.travel "2015-08-20".to_datetime { should == 
       "Nachname;Vorname;Namenszusatz;Diesjähriger Geburtstag;Geburtsdatum;Aktuelles Alter\n" +
-      "Doe;Jonathan;\"\";13.11.2015;13.11.1986;28\n"
+      "Doe;Jonathan;\"\";13.11.2015;13.11.1986;28\n" }
     }
   end
   

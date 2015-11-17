@@ -4,7 +4,7 @@
 
 ready = ->
   
-  $(document).on 'click', '.address_profile_field.value.editable', ->
+  $(document).on 'click', '.address_profile_field.value.can_edit', ->
     $(this).closest('.box').trigger('edit')
   $('.address_profile_field.value.editable').bind 'save', ->
     url = $(this).data('profile-field-url') + '.json'

@@ -223,9 +223,9 @@ class User < ActiveRecord::Base
   def name_with_surrounding
     cached {
       (
-        name_surrounding_profile_field.text_above_name + "\n" +
-        (name_surrounding_profile_field.name_prefix + " " + name + name_surrounding_profile_field.name_suffix).strip + "\n" +
-        name_surrounding_profile_field.text_below_name
+        name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
+        "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
+        name_surrounding_profile_field.try(:text_below_name).to_s
       ).strip
     }
   end
