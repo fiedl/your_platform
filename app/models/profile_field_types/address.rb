@@ -23,11 +23,12 @@ module ProfileFieldTypes
         end
         
         def country_if_not_default
-          country if country_code.downcase != default_country_code.downcase
+          country if country_code != default_country_code
         end
         
         def country_code
-          self.get_field(:country_code) || geo_information(:country_code) || default_country_code
+          code = self.get_field(:country_code) || geo_information(:country_code) || default_country_code
+          code.present? ? code.to_s.downcase : nil
         end
         
         def default_country_code

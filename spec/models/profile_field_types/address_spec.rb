@@ -175,4 +175,20 @@ describe ProfileFieldTypes::Address do
       it { should_not have_flag :needs_review }
     end
   end
+  
+  describe "#country_code" do
+    subject { @profile_field.save; @profile_field.reload.country_code }
+    describe "when set as symbol" do
+      before { @profile_field.country_code = :at }
+      it { should == 'at' }
+    end
+    describe "when set in small letters" do
+      before { @profile_field.country_code = 'at' }
+      it { should == 'at' }
+    end
+    describe "when set in capital letters" do
+      before { @profile_field.country_code = 'AT' }
+      it { should == 'at' }
+    end
+  end
 end
