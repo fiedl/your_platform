@@ -19,7 +19,11 @@ module ProfileFieldTypes
         end
         
         def country
-          geo_information(:country) || country_code
+          Biggs.country_names[country_code] if country_code
+        end
+        
+        def country_if_not_default
+          country if country_code.downcase != default_country_code.downcase
         end
         
         def country_code

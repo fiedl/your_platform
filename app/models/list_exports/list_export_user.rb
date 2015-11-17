@@ -52,7 +52,7 @@ module ListExports
       address_label.state
     end
     def postal_address_country
-      address_label.country
+      postal_address_field.country_if_not_default
     end
     def postal_address_country_code
       address_label.country_code
