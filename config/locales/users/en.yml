@@ -26,6 +26,11 @@ en:
   delete_account:                Delete User Account
   user_account_deleted:          'User account was successfully deleted.'
   
+  male_or_female_salutation:     Salutation
+  to_mr:                         Mr.
+  to_mrs:                        Mrs.
+  to_ms:                         Ms.
+
   personal_title:                Personal Title
   
   avatar:                        Avatar

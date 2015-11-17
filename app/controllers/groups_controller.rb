@@ -81,21 +81,7 @@ class GroupsController < ApplicationController
       list_preset = params[:list]
       list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
       @file_title = "#{@group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
-
-      case list_preset
-      when 'member_development', 'join_statistics'
-        @list_export = ListExport.new(@group, list_preset)
-      when 'dpag_internetmarken'
-        @list_export = ListExports::DpagInternetmarken.from_group(@group)
-      when 'dpag_internetmarken_in_germany'
-        @list_export = ListExports::DpagInternetmarkenInGermany.from_group(@group)
-      when 'dpag_internetmarken_not_in_germany'
-        @list_export = ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
-      when 'birthday_list'
-        @list_export = ListExports::BirthdayList.from_group(@group)
-      else
-        @list_export = ListExport.new(@members, list_preset)
-      end
+      @list_export = list_export_by_preset(list_preset)
     end
     
     respond_to do |format|
@@ -187,6 +173,23 @@ class GroupsController < ApplicationController
   end
   
   private
+  
+  def list_export_by_preset(list_preset)
+    case list_preset
+    when 'member_development', 'join_statistics'
+      ListExport.new(@group, list_preset)
+    when 'dpag_internetmarken'
+      ListExports::DpagInternetmarken.from_group(@group)
+    when 'dpag_internetmarken_in_germany'
+      ListExports::DpagInternetmarkenInGermany.from_group(@group)
+    when 'dpag_internetmarken_not_in_germany'
+      ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
+    when 'birthday_list'
+      ListExports::BirthdayList.from_group(@group)
+    else
+      ListExport.new(@members, list_preset)
+    end
+  end
   
   def load_resource
     @group = Group.find params[:id]

@@ -36,6 +36,12 @@ module ListExports
     def postal_address_street_number
       postal_address_street.split(" ").last if postal_address_street.present?
     end
+    def postal_address_street_with_number
+      postal_address_field.street_with_number
+    end
+    def postal_address_second_address_line
+      postal_address_field.second_address_line
+    end
     def postal_address_postal_code
       address_label.postal_code
     end

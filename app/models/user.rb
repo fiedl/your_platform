@@ -166,6 +166,23 @@ class User < ActiveRecord::Base
   def male?
     not female?
   end
+  
+  # This is the salutation for addess labels, for example:
+  # 
+  #     Mr.
+  #     John Doe
+  #
+  def male_or_female_salutation
+    if female?
+      if age < 18
+        I18n.translate(:to_ms, locale)
+      else
+        I18n.translate(:to_mrs, locale)
+      end
+    else
+      I18n.translate(:to_mr, locale)
+    end
+  end
 
 
   # Date of Death
