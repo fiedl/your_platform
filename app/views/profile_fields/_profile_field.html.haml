@@ -5,7 +5,12 @@
 - profile_field_css_class = profile_field.parent ? 'attribute profile_field profile_field_child' : 'attribute profile_field profile_field_parent'
 - profile_field_css_class += " #{profile_field.key}" if profile_field.parent_id
 - input_type = :input
-- input_type = :textarea if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type   
+- input_type = :textarea if %w(ProfileFieldTypes::Address ProfileFieldTypes::Description ProfileFieldTypes::About).include? profile_field.type
+- collection = nil
+- if profile_field.parent.present? and profile_field.key.to_s == 'country_code'
+  - input_type = :select
+  - country_codes = GeoLocation.country_codes.sort
+  - collection = Hash[*country_codes.zip(country_codes).flatten]
 -# # For the moment, no 'date' type. The date selector does not work properly with edit_mode.
 -# input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"
 - no_remove ||= false
@@ -30,7 +35,7 @@
   - # value
   %span.value-wrapper
     - if profile_field.children_count == 0
-      = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value'}
+      = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value', collection: collection}
           
     - if profile_field.children_count > 0
       - if profile_field.type == 'ProfileFieldTypes::Address'

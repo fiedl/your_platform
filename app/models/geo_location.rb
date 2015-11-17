@@ -377,5 +377,9 @@ class GeoLocation < ActiveRecord::Base
       "AN" => "ANT"
     }
   end
+  
+  def self.country_codes
+    self.country_codes_3_letters_from_2_letters.keys
+  end
 
 end

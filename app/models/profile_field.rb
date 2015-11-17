@@ -8,6 +8,10 @@ class ProfileField < ActiveRecord::Base
   
   after_commit           :delete_cache
   
+  before_save {
+    self.value ||= parent.default_country_code.upcase if parent && parent.kind_of?(ProfileFieldTypes::Address) && self.key.to_s == 'country_code'
+  }
+  
   include ProfileFieldMixins::HasChildProfileFields
   
   # Only allow the type column to be an existing class name.
