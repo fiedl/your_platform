@@ -9,7 +9,7 @@
 - collection = nil
 - if profile_field.parent.present? and profile_field.key.to_s == 'country_code'
   - input_type = :select
-  - country_codes = GeoLocation.country_codes.sort
+  - country_codes = [profile_field.parent.default_country_code.upcase] + GeoLocation.country_codes.sort
   - collection = Hash[*country_codes.zip(country_codes).flatten]
 -# # For the moment, no 'date' type. The date selector does not work properly with edit_mode.
 -# input_type = 'date' if profile_field.type == "ProfileFieldTypes::Date"

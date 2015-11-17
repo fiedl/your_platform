@@ -69,20 +69,26 @@ module ProfileFieldTypes
         # are stored as separate child profile fields.
         #
         def convert_to_format_with_separate_fields
+          p "converting profile field #{id} of #{profileable.try(:class).try(:name)} #{profileable.try(:id)} ..."
+          
           old_value = self.value
-
+          
           if self.geo_information(:street).present?
             self.first_address_line = self.geo_information(:street)
             self.city = self.geo_information(:city)
             self.postal_code = self.geo_information(:postal_code)
             self.country_code = self.geo_information(:country_code)
           else
-            # If we can't extract the street name, copy the whole address into
-            # the second address line field. Otherwise, we'd lose this information
-            # in the ui.
+            # If we haven't processed this field already.
             #
-            self.second_address_line = self.read_attribute(:value)
-            self.add_flag :needs_review
+            unless self.get_field(:first_address_line).present?
+              # If we can't extract the street name, copy the whole address into
+              # the second address line field. Otherwise, we'd lose this information
+              # in the ui.
+              #
+              self.second_address_line = self.read_attribute(:value)
+              self.add_flag :needs_review
+            end
           end
           
           # For foreign addresses, better include the state/region field, since
@@ -92,7 +98,9 @@ module ProfileFieldTypes
             self.region = self.geo_information(:state)
           end
 
-          if old_value && self.value && old_value.gsub("\n", "").gsub(",", "").gsub(" ", "") != self.value.gsub("\n", "").gsub(",", "").gsub(" ", "")
+          if old_value && self.value && [old_value, self.value].collect { |v|
+              v.gsub("traße", "tr.").gsub("\n", "").gsub(",", "").gsub(" ", "") 
+            }.uniq.count == 2
             # The old and the new value differ. This could simply mean that 
             # "Frankreich" has been replaced by "France". But it could also mean
             # that the address is not readable anymore. In any case, it should
@@ -102,6 +110,7 @@ module ProfileFieldTypes
           end
           
           self.save
+          
           return self
         end
       end

@@ -23,6 +23,7 @@ describe ProfileFieldTypes::Address do
       its(:city) { should == 'Berlin' }
       its(:value) { should == "Pariser Platz 1\n10117 Berlin" }
       its('country_code.downcase') { should == 'de' }
+      it { should_not have_flag :needs_review }
       
       specify "the conversion should be persistent" do
         subject
@@ -47,6 +48,7 @@ describe ProfileFieldTypes::Address do
         its(:city) { should == 'Berlin' }
         its(:value) { should == "Pariser Platz 1\n10117 Berlin" }
         its('country_code.downcase') { should == 'de' }
+        it { should_not have_flag :needs_review }
       end
     end
   end
@@ -69,6 +71,7 @@ describe ProfileFieldTypes::Address do
       its(:city) { should == nil }
       its(:value) { should == "Postfach 1234\n10117 Berlin" }
       its('country_code.downcase') { should == @profile_field.default_country_code.downcase }
+      it { should have_flag :needs_review }
     end
   end
   
@@ -94,6 +97,7 @@ describe ProfileFieldTypes::Address do
       its(:city) { should == 'Berlin' }
       its(:value) { should == "Postfach 1234\n10117 Berlin" }
       its('country_code.downcase') { should == 'de' }
+      it { should_not have_flag :needs_review }
     end
   end
   
@@ -119,6 +123,7 @@ describe ProfileFieldTypes::Address do
       its(:city) { should == 'Berlin' }
       its(:value) { should == "Pariser Platz 1\n10117 Berlin" }
       its('country_code.downcase') { should == 'de' }
+      it { should_not have_flag :needs_review }
     end
   end
   
@@ -158,5 +163,16 @@ describe ProfileFieldTypes::Address do
     its(:city) { should == 'Grenoble' }
     its(:value) { should == "44 Rue de Stalingrad\n38100 Grenoble\nFrance" }
     its('country_code.downcase') { should == 'fr' }
+    
+    describe "after #convert_to_format_with_separate_fields" do
+      before { @profile_field.convert_to_format_with_separate_fields }
+
+      its(:street_with_number) { should == '44 Rue de Stalingrad' }
+      its(:postal_code) { should == '38100' }
+      its(:city) { should == 'Grenoble' }
+      its(:value) { should == "44 Rue de Stalingrad\n38100 Grenoble\nFrance" }
+      its('country_code.downcase') { should == 'fr' }
+      it { should_not have_flag :needs_review }
+    end
   end
 end
