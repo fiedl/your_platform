@@ -60,12 +60,16 @@ module ProfileFieldTypes
             state: get_field(:region)
           ).strip
         end
+
+        def original_value
+          read_attribute :value
+        end
         
         def value
           if first_address_line.present?
             composed_address
           else
-            read_attribute :value
+            original_value
           end
         end
         

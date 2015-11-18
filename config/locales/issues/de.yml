@@ -20,4 +20,6 @@ de:
     destination_country_is_missing: "Das Bestimmungsland fehlt möglicherweise."
     the_destination_country_has_to_be_the_last_line: "Bei Auslandsadressen muss das Bestimmungsland in der letzten Zeile genannt werden."
     could_not_extract_street: "Straße nicht erkannt."
-    the_geo_system_could_not_extract_the_street_from_this_address: "Das Geo-System konnte aus der vorliegenden Adresse keine Straße extrahieren. Bitte Adresse entsprechend umformatieren. Tipp: Mit Google-Maps kann man gut ausprobieren, ob die Adresse automatisiert von einem Geo-System ausgewertet werden kann."
+    the_geo_system_could_not_extract_the_street_from_this_address: "Der Straßenname konnte nicht erkannt werden. Bitte entnehmen Sie die korrekten Informationen der folgenden ursprünglichen Adresse und tragen Sie sie rechts in die dafür vorgesehenen Felder ein."
+    could_not_deliver_to_email: "E-Mail-Adresse nicht erreichbar."
+    please_enter_the_correct_email_address: "Bitte tragen Sie rechts die korrekte E-Mail-Adresse ein."

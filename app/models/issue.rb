@@ -35,10 +35,12 @@ class Issue < ActiveRecord::Base
     objects.collect { |obj| self.scan_object(obj) }.flatten - [nil]
   end
   def self.scan_object(object)
-    return self.scan_address_field(object) if object.kind_of?(ProfileFieldTypes::Address)
+    return self.scan_address_field(object) if object.kind_of? ProfileFieldTypes::Address
+    return self.scan_email_field(object) if object.kind_of? ProfileFieldTypes::Email
   end
   def self.scan_all
-    self.scan_objects(ProfileFieldTypes::Address.all)
+    #self.scan_objects(ProfileFieldTypes::Address.all)
+    self.scan_objects(ProfileFieldTypes::Email.all)
   end
   
   def self.scan_address_field(address_field)
@@ -52,11 +54,19 @@ class Issue < ActiveRecord::Base
       if address_field.country_code == "A" and not (address_field.value.include?("Österreich") or address_field.value.include?("Austria"))
         address_field.issues.create title: 'issues.destination_country_is_missing', description: 'issues.the_destination_country_has_to_be_the_last_line', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
-      if address_field.try(:geo_location).try(:street).try(:strip).blank? && address_field.value.try(:strip).present? && address_field.value.to_s.split("\n").count > 1
+      if address_field.try(:street_with_number).try(:strip).blank? && address_field.value.try(:strip).present? && address_field.value.to_s.split("\n").count > 1
         address_field.issues.create title: 'issues.could_not_extract_street', description: 'issues.the_geo_system_could_not_extract_the_street_from_this_address', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
     end
     return address_field.issues(true)
+  end
+  
+  def self.scan_email_field(email_field)
+    email_field.issues.destroy_all
+    if email_field.value.try(:present?) && PostDelivery.where(user_email: email_field.value, created_at: 3.weeks.ago..Time.zone.now).failed.count > 0
+      email_field.issues.create title: 'issues.could_not_deliver_to_email', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
+    end
+    return email_field.issues(true)
   end
   
   

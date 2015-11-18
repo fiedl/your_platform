@@ -16,3 +16,5 @@ en:
     address_needs_between_2_and_4_lines: "In order to print the address correctly on address labels, the address needs two to four lines. The name does not belong here; it will be added by the system later."
     destination_country_is_missing: "The destination country is possibly missing."
     the_destination_country_has_to_be_the_last_line: "The destination country has to be the last line of the address."
+    could_not_extract_street: "Could not extract street."
+    the_geo_system_could_not_extract_the_street_from_this_address: "The street could not be extracted from the original address. Please enter the address data into the appropriate fields on the right hand side."

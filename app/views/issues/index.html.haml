@@ -3,32 +3,26 @@
   %a#rescan.btn.btn-default.right{href: "?rescan=#{current_role_view == 'global_admin' ? 'all' : 'mine'}"}
     = icon('refresh')
     = t(:rescan)
-  %table.issues.datatable
-    %thead
-      %tr
-        %th= t(:issue)
-        %th= t(:context)
-        %th= t(:reference)
-        %th= t(:responsible_admin)
-    %tbody
-      - @issues.each do |issue|
-        %tr
-          %td
-            .description-container
-              - if issue.resolved_at
-                = t(:issue_edited_at)
-                = localize(issue.resolved_at)
-              - else
-                %p
-                  %strong= t(issue.title)
-                %p= t(issue.description) 
-          %td
-            - if issue.reference.kind_of? ProfileField
-              %div= link_to issue.reference.profileable.title, issue.reference.profileable
-              %strong= best_in_place issue.reference, :label
-          %td
-            - if issue.reference.kind_of? ProfileField
-              %div= best_in_place issue.reference, :value, as: 'textarea'
-          %td= link_to(issue.responsible_admin.title, issue.responsible_admin) if issue.responsible_admin
 
-          
+- @issues.each do |issue|
+  - if issue.reference.kind_of? ProfileField
+    %h1= issue.reference.profileable.title
+    %div
+      .col-sm-6
+        .context_container
+          %div= link_to issue.reference.profileable.title, issue.reference.profileable
+        .description-container
+          - if issue.resolved_at
+            = t(:issue_edited_at)
+            = localize(issue.resolved_at)
+          - else
+            %p
+              %strong= t(issue.title)
+            %p= t(issue.description)
+        - if issue.reference.respond_to?(:original_value) && issue.reference.value != issue.reference.original_value
+          .original_value_container
+            %strong=t :original_value
+            %p= simple_format issue.reference.original_value
+      .col-sm-6
+        .reference_container
+          = render partial: 'profile_fields/profile_field_value', locals: {profile_field: issue.reference}
