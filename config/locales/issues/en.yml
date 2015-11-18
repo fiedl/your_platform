@@ -11,6 +11,9 @@ en:
   issue_edited_at: "Worked on issue on:"
   scanning_issue: "Checking ..."
   
+  there_are_n_unresolved_issues_in_your_domain: "There are %{n} administrative issues in your domain."
+  please_click_above_link_and_resolve_issues: "Please click the above links and resolve these issues."
+    
   issues:
     address_has_too_few_lines: "The address has too few lines."
     address_has_too_many_lines: "The address has too many lines."

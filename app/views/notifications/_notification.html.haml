@@ -5,7 +5,7 @@
     = user_avatar(notification.author)
   %div{style: 'overflow: hidden'}
     %small
-      = link_to notification.author.title, notification.author
+      = link_to notification.author.title, notification.author if notification.author
       = localize(notification.created_at)
     .notification_body
       %p

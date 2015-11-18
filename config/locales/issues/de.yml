@@ -14,6 +14,9 @@ de:
   
   solves_administrative_issues: löst Verwaltungsprobleme
   
+  there_are_n_unresolved_issues_in_your_domain: "Es gibt %{n} Verwaltungsprobleme in Ihrem Zuständigkeitsbereich."
+  please_click_above_link_and_resolve_issues: "Bitte klicken Sie auf obigen Link und lösen Sie die dort aufgelisteten Problme."
+  
   issues:
     address_has_too_few_lines: "Die Adresse hat zu wenige Zeilen."
     address_has_too_many_lines: "Die Adresse hat zu viele Zeilen."

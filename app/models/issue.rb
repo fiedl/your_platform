@@ -75,6 +75,21 @@ class Issue < ActiveRecord::Base
   # TODO 
   # - als ungültig markierte e-mail-adresse
   
+  # Notify responsible admins if there are open issues.
+  #
+  def self.notify_admins
+    Issue.unresolved.pluck(:responsible_admin_id).uniq.collect do |admin_id|
+      admin = User.find admin_id
+      issues = Issue.unresolved.by_admin(admin)
+      issues_url = "#{AppVersion.root_url}/issues"
+      I18n.with_locale(admin.locale) do
+        message = I18n.t(:there_are_n_unresolved_issues_in_your_domain, n: issues.count)
+        text = I18n.t(:please_click_above_link_and_resolve_issues)
+        notification = Notification.create recipient_id: admin_id, reference_url: issues_url, message: message, text: text
+      end
+    end
+  end
+  
   def reference_content
     return reference.value if reference.kind_of?(ProfileField)
   end
