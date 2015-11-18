@@ -6,7 +6,10 @@
 
 - @issues.each do |issue|
   - if issue.reference.kind_of? ProfileField
-    %h1= issue.reference.profileable.title
+    %h1
+      = issue.reference.profileable.title
+      .label.label-warning.scanning_issue=t :scanning_issue
+      .label.label-success.thanks_for_fixing_issue=t :thanks
     %div
       .col-sm-6
         .context_container

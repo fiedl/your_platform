@@ -53,7 +53,10 @@ class ProfileFieldsController < ApplicationController
   def show
     @profile_field ||= ProfileField.find params[:id]
     authorize! :read, @profile_field
-    render json: @profile_field.to_json(methods: :display_html)
+    
+    Issue.scan_object(@profile_field) if params[:scan_for_issues].present?
+
+    render json: @profile_field.to_json(methods: [:display_html, :issues])
   end
   
   def destroy

@@ -9,6 +9,7 @@ en:
   context: Context
   the_issue_will_be_rechecked_later: "The issue will be re-checked later automatically. You may re-scan manually using the button 'Scan again' above, but this will take a while."
   issue_edited_at: "Worked on issue on:"
+  scanning_issue: "Checking ..."
   
   issues:
     address_has_too_few_lines: "The address has too few lines."

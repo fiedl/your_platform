@@ -10,6 +10,7 @@ de:
   context: Kontext
   the_issue_will_be_rechecked_later: "Das Problem wird später routinemäßig neu überprüft. Der Knopf 'Erneut überprüfen' oben führt sofort eine erneute Überprüfung durch, was aber etwas dauert."
   issue_edited_at: "Bearbeitet am:"
+  scanning_issue: "Überprüfen ..."
   
   solves_administrative_issues: löst Verwaltungsprobleme
   
