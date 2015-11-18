@@ -10,7 +10,11 @@
     %div
       .col-sm-6
         .context_container
-          %div= link_to issue.reference.profileable.title, issue.reference.profileable
+          %p
+            = link_to issue.reference.profileable.title, issue.reference.profileable
+            - if issue.reference.profileable.phone_field.try(:value).present?
+              %br
+              = "#{issue.reference.profileable.phone_field.label}: #{issue.reference.profileable.phone_field.value}"
         .description-container
           - if issue.resolved_at
             = t(:issue_edited_at)
