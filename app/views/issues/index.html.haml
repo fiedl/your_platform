@@ -26,7 +26,7 @@
             %p
               %strong= t(issue.title)
             %p= t(issue.description)
-        - if issue.reference.respond_to?(:original_value) && issue.reference.value != issue.reference.original_value
+        - if issue.reference.respond_to?(:original_value) && (issue.reference.value != issue.reference.original_value || issue.reference.kind_of?(ProfileFieldTypes::Address))
           .original_value_container
             %strong=t :original_value
             %p= simple_format issue.reference.original_value
