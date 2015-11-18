@@ -18,3 +18,6 @@ en:
     the_destination_country_has_to_be_the_last_line: "The destination country has to be the last line of the address."
     could_not_extract_street: "Could not extract street."
     the_geo_system_could_not_extract_the_street_from_this_address: "The street could not be extracted from the original address. Please enter the address data into the appropriate fields on the right hand side."
+    could_not_deliver_to_email: "Could not deliver to email address"
+    please_enter_the_correct_email_address: "Please enter the correct email address on the right hand side."
+    email_needs_review: "Email address needs review."

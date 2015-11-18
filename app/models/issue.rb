@@ -39,7 +39,7 @@ class Issue < ActiveRecord::Base
     return self.scan_email_field(object) if object.kind_of? ProfileFieldTypes::Email
   end
   def self.scan_all
-    #self.scan_objects(ProfileFieldTypes::Address.all)
+    self.scan_objects(ProfileFieldTypes::Address.all)
     self.scan_objects(ProfileFieldTypes::Email.all)
   end
   
@@ -65,6 +65,8 @@ class Issue < ActiveRecord::Base
     email_field.issues.destroy_all
     if email_field.value.try(:present?) && PostDelivery.where(user_email: email_field.value, created_at: 3.weeks.ago..Time.zone.now).failed.count > 0
       email_field.issues.create title: 'issues.could_not_deliver_to_email', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
+    elsif email_field.value.present? && email_field.needs_review?
+      email_field.issues.create title: 'issues.email_needs_review', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
     end
     return email_field.issues(true)
   end

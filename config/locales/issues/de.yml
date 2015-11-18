@@ -23,3 +23,4 @@ de:
     the_geo_system_could_not_extract_the_street_from_this_address: "Der Straßenname konnte nicht erkannt werden. Bitte entnehmen Sie die korrekten Informationen der folgenden ursprünglichen Adresse und tragen Sie sie rechts in die dafür vorgesehenen Felder ein."
     could_not_deliver_to_email: "E-Mail-Adresse nicht erreichbar."
     please_enter_the_correct_email_address: "Bitte tragen Sie rechts die korrekte E-Mail-Adresse ein."
+    email_needs_review: "Bitte E-Mail-Adresse überprüfen."
