@@ -20,6 +20,8 @@ de:
   post_has_been_created_via_contact_form: 'Die Nachricht wurde über das Formular "Sammelnachricht senden" erstellt. Empfänger werden umgehend per E-Mail-Verteiler informiert.'
   post_has_been_created_via_social_messaging: 'Empfänger werden gemäß ihrer eigenen Einstellungen sofort oder gesammelt benachrichtigt, spätestens jedoch nach einem Tag.'
   
+  post_created_via: 'Eingesendet via:'
   post_created_via_email: 'Eingesendet via: E-Mail'
   post_created_via_contact_form: 'Eingesendet via: Kontakt-Form "Sammelnachricht senden"'
   post_created_via_social_messaging: 'Eingesendet via: "Nachrichten"'
+  

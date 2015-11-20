@@ -4,7 +4,7 @@
 module PostDeliveryReport
   
   def created_via_email?
-    self.message_id.present?
+    self.message_id.present? || (self.sent_via.present? && self.sent_via.include?('@'))
   end
 
   def created_via_contact_form?

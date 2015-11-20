@@ -14,3 +14,5 @@ en:
   post_has_been_created_via_email: 'The message has been created via mailing list. The recipients are notified via mailing list.'
   post_has_been_created_via_contact_form: 'The message has been created via a contact form. The recipients are notified via mailing list.'
   post_has_been_created_via_social_messaging: 'The message has been created via the "Posts" feature. The recipients are notified according to their own notification settings, but not later than 6 pm.'
+
+  post_created_via: 'Post created via:'
