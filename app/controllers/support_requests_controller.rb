@@ -16,7 +16,7 @@ class SupportRequestsController < ApplicationController
       locale: I18n.locale,
       location: params[:location],
       displayed_navable_object: @navable.inspect,
-      role: Role.of(current_user).for(@navable).to_s
+      role: (current_user ? Role.of(current_user).for(@navable).to_s : nil)
     }
     
     SupportRequestMailer.support_request_email(@sender_user, @to_email, @text, @meta_data, @navable).deliver_now
