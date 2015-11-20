@@ -7,9 +7,10 @@ class SupportRequestMailer < BaseMailer
     @meta_data = meta_data
     @navable = navable
     @role = meta_data[:role]
-    @subject = (text.split("\n") - [nil, "", "Lieber Bundesbruder Kornder,"]).first
+    @subject = (text.split("\n") - [nil, "", "Lieber Bundesbruder Kornder,"]).first.first(100)
+    @from_email = sender_user.try(:email) || SupportRequestsController.support_email
     
-    mail to: [receiver_email], from: sender_user.email, subject: @subject
+    mail to: [receiver_email], from: @from_email, subject: @subject
   end
   
 end
