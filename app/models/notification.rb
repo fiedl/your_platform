@@ -27,7 +27,7 @@ class Notification < ActiveRecord::Base
   scope :sent, -> { where.not(sent_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
-  scope :upcoming, -> { where('sent_at IS NULL AND read_at IS NULL') }
+  scope :upcoming, -> { where(sent_at: nil, read_at: nil) }
   
   # Creates all notifications for users that should
   # be notified about this post.

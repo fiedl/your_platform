@@ -70,7 +70,7 @@ class PostsController < ApplicationController
     authorize! :create_post_for, @group
 
     @text = params[:text] || params[:post][:text]
-    @subject = params[:subject] || params[:post][:text].split("\n").first
+    @subject = params[:subject] || params[:post][:text].split("\n").first.first(100)
     @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
     
     if params[:recipient] == 'me'
@@ -86,7 +86,7 @@ class PostsController < ApplicationController
     end
     
     @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
-    @post.save! unless params[:recipient] == 'me'
+    @post.save!
   
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
@@ -98,6 +98,8 @@ class PostsController < ApplicationController
     end
     
     Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text) unless params[:recipient] == 'me'
+    
+    @post.destroy if params[:recipient] == 'me'
     
     respond_to do |format|
       format.html do
