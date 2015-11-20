@@ -35,6 +35,9 @@ class Page < ActiveRecord::Base
   def title
     super.present? ? super : I18n.translate(self.flags.first, default: '')
   end
+  def to_s
+    title
+  end
   
   # This is the group the page belongs to, for example:
   #

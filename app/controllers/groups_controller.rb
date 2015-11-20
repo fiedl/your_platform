@@ -185,7 +185,9 @@ class GroupsController < ApplicationController
     when 'dpag_internetmarken_not_in_germany'
       ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
     when 'birthday_list'
-      ListExports::BirthdayList.from_group(@group)
+      ListExports::BirthdayList.from_group(@group, quater: params[:quater])
+    when 'special_birthdays'
+      ListExports::SpecialBirthdays.from_group(@group, quater: params[:quater])
     else
       ListExport.new(@members, list_preset)
     end

@@ -47,8 +47,14 @@ module ProfileFieldTypes
           postal_code if country_code.downcase == 'de'
         end
         
-        def state # state/province/region
-          geo_information(:state)
+        def province
+          region
+        end
+        def state
+          region
+        end
+        def region
+          self.get_field(:region) || geo_information(:state)
         end
         
         def composed_address

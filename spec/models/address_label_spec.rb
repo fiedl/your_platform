@@ -38,7 +38,7 @@ describe AddressLabel do
   describe "#country_code" do 
     subject { address_label.country_code }
     it { should == @address_field.country_code }
-    it { should == "DE" }
+    it { should == "de" }
   end
   
   describe "#text_above_name" do

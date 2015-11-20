@@ -8,6 +8,8 @@ en:
   date_of_birth:              Date of birth
   birthday:                   Birthday
   age:                        Age
+  next_age:                   Next age
+  next_birthday:              Next birthday
   
   user_hidden:                User hidden
   hidden_users_can_only_be_seen_by_admins:   'Hidden users can only be seen by competent administrators. For all other users, hidden users are invisible.'

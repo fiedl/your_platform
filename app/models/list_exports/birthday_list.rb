@@ -13,18 +13,31 @@ module ListExports
         :last_name,
         :first_name,
         :name_affix,
-        :localized_birthday_this_year,
         :localized_date_of_birth,
-        :current_age
+        :localized_next_birthday,
+        :next_age
       ]
     end
     
     # Sort the listed users by day of birth.
     #
     def data
-      super.sort_by do |user|
-        user.date_of_birth.try(:strftime, "%m-%d") || ''
-      end
+      super.select { |user|
+        case @options[:quater]
+        when nil, ''
+          true
+        when '1'
+          user.date_of_birth && user.date_of_birth.month.in?([1, 2, 3])
+        when '2'
+          user.date_of_birth && user.date_of_birth.month.in?([4, 5, 6])
+        when '3'
+          user.date_of_birth && user.date_of_birth.month.in?([7, 8, 9])
+        when '4'
+          user.date_of_birth && user.date_of_birth.month.in?([10, 11, 12])
+        end
+      }.sort_by { |user|
+        user.next_birthday.try(:strftime, "%y-%m-%d") || ''
+      }
     end
     
   end

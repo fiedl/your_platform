@@ -220,7 +220,7 @@ describe ProfileFieldTypes::Address do
     end
     
     its( :country ) { should == "Germany" }
-    its( :country_code ) { should == "DE" }
+    its( :country_code ) { should == "de" }
     its( :city ) { should == "Berlin" }
     its( :postal_code ) { should == "10117" }
     its( :plz ) { should == "10117" }

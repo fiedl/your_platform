@@ -15,6 +15,9 @@ module ListExports
     def localized_date_of_birth
       I18n.localize date_of_birth if date_of_birth
     end
+    def localized_next_birthday
+      I18n.localize next_birthday if next_birthday
+    end
   
     # Address
     #

@@ -35,6 +35,7 @@ en:
   tables:                         Tables
   name_list:                      Name list
   birthday_list:                  Birthday list
+  special_birthdays:              Special birthdays  
   address_list:                   Address list
   address_list_for_dpag_internetmarke: Address list for 'DPAG Internetmarke'
   dpag_internetmarke:             DPAG Internetmarke
