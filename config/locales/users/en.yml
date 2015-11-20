@@ -1,5 +1,6 @@
 en:
   person:                     Person
+  author:                     Author
   
   first_and_last_name:        First and last name
   email:                      Email

@@ -6,9 +6,9 @@ concern :CurrentIssues do
 
   def current_issues
     if can? :manage, :all_issues
-      Issue.all
+      Issue.all.unresolved
     else
-      Issue.by_admin(current_user)
+      Issue.by_admin(current_user).unresolved
     end
   end
 

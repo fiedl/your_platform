@@ -10,9 +10,16 @@ en:
   the_issue_will_be_rechecked_later: "The issue will be re-checked later automatically. You may re-scan manually using the button 'Scan again' above, but this will take a while."
   issue_edited_at: "Worked on issue on:"
   scanning_issue: "Checking ..."
+  issue_resolved_at: Resolved at
   
   there_are_n_unresolved_issues_in_your_domain: "There are %{n} administrative issues in your domain."
   please_click_above_link_and_resolve_issues: "Please click the above links and resolve these issues."
+  
+  new_issue: New issue
+  report_new_issue: Report new issue
+  reported_by: Reported by
+  invalid_email: Invalid email address
+  i_have_resolved_the_issue: I have resolved the issue
     
   issues:
     address_has_too_few_lines: "The address has too few lines."

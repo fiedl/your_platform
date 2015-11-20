@@ -1,4 +1,8 @@
 $(document).ready ->
+  
+  # issues#index
+  # =======================================================================================
+  
   $('.thanks_for_fixing_issue').hide()
   $('.scanning_issue').hide()
   $('body.issues .box .value.editable').bind 'save', ->
@@ -18,3 +22,14 @@ $(document).ready ->
           profile_field.closest('.box').find('.scanning_issue').hide()
       )
     , 500
+
+  $('body.issues .destroy-container .btn').click ->
+    $(this).closest('.box').find('.destroy-container').hide()
+    $(this).closest('.box').find('.thanks_for_fixing_issue').show()
+    $(this).closest('.box').trigger('toggle-minimized')
+
+
+  # issues#new
+  # =======================================================================================
+
+  $('body.issues textarea#description').autosize()

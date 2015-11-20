@@ -1,0 +1,11 @@
+%h1 Ungültige E-Mail-Adresse melden
+%div
+  = form_tag issues_path, html: {class: 'form-inline'} do
+    .form-group
+      = label_tag :invalid_email, t(:invalid_email)
+      .input-group
+        .input-group-addon @
+        = text_field_tag :invalid_email, '', class: 'form-control'
+      = label_tag :description, t(:description)
+      = text_area_tag :description, '', class: 'form-control'
+      = submit_tag 'Melden', class: 'btn btn-primary pull-right'
