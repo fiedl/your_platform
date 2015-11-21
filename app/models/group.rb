@@ -42,6 +42,18 @@ class Group < ActiveRecord::Base
   include GroupMixins::Import
   include GroupMailingLists
   include GroupDummyUsers
+  include GroupWelcomeMessage
+  
+  # Easy group settings: https://github.com/huacnlee/rails-settings-cached
+  # For example:
+  #
+  #     group = Group.find(123)
+  #     group.settings.color = :red
+  #     group.settings.color  # =>  :red
+  #
+  include RailsSettings::Extend
+  
+  
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
   after_save       { self.delay.delete_cache }
@@ -115,6 +127,7 @@ class Group < ActiveRecord::Base
   def group_of_groups=(add_the_flag)
     add_the_flag ? add_flag(:group_of_groups) : remove_flag(:group_of_groups)
   end
+  
   
   
   # Associated Objects

@@ -31,6 +31,13 @@
         .profile_field_label=t :group_type
       %span.value-wrapper= I18n.t(@group.type.try(:underscore) || :group, default: @group.type)
 
+%h1=t :welcome_message
+%div
+  %P= best_in_place_if can?(:update, @group), @group, :welcome_message, as: :textarea, class: 'group_welcome_message', inner_class: 'form-control autosize'
+  %p
+    .show_only_in_edit_mode= render partial: 'shared/markdown_help'
+  %p=t :welcome_message_explanation
+
 -# %h1 Gruppen-Beitritt
 -# %div
 -#   %p Das funktioniert noch nicht:

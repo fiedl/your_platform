@@ -6,4 +6,7 @@ de:
   manage_members: Mitglieder verwalten
 
   corporation_token_explanation: 'Dies ist die Abkürzung der Gruppe, wie sie von der zentralen Verwaltung verwendet wird.'
-  :internal_group_token_explanation: 'Diese Abkürzung stellt die Abkürzung der Gruppe, wie sie von den Mitgliedern der Gruppe selbst verwendet wird. Wenn die Gruppenbezeichnung in der Schnellstartleiste (horizontale Navigation) zu lang wird, wird dort stattdessen dieses interne Kürzel verwendet.'
+  internal_group_token_explanation: 'Diese Abkürzung stellt die Abkürzung der Gruppe, wie sie von den Mitgliedern der Gruppe selbst verwendet wird. Wenn die Gruppenbezeichnung in der Schnellstartleiste (horizontale Navigation) zu lang wird, wird dort stattdessen dieses interne Kürzel verwendet.'
+  
+  welcome_message: Begrüßungsnachricht
+  welcome_message_explanation: "Diese Nachricht wird neuen Gruppenmitgliedern gesendet, wenn sie der Gruppe beitreten oder z.B. durch einen Status-Workflow hinzugefügt werden. Hierbei werden die Benachrichtigungseinstellungen des Benutzers berücksichtigt. D.h. die Benachrichtigung erfolgt ggf. nicht sofort, sondern als Sammelnachricht um 18:00 Uhr."
