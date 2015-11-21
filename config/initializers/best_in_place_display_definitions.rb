@@ -25,6 +25,7 @@ BestInPlace::DisplayMethods.add_model_method(ProfileField, :value, :display_html
 #
 BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :body, :markup)
+BestInPlace::DisplayMethods.add_helper_method(Group, :welcome_message, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)
 
 BestInPlace::DisplayMethods.add_helper_method(Group, :direct_members_titles_string, :add_quick_links_to_comma_separated_list)

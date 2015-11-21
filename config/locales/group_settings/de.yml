@@ -10,3 +10,4 @@ de:
   
   welcome_message: Begrüßungsnachricht
   welcome_message_explanation: "Diese Nachricht wird neuen Gruppenmitgliedern gesendet, wenn sie der Gruppe beitreten oder z.B. durch einen Status-Workflow hinzugefügt werden. Hierbei werden die Benachrichtigungseinstellungen des Benutzers berücksichtigt. D.h. die Benachrichtigung erfolgt ggf. nicht sofort, sondern als Sammelnachricht um 18:00 Uhr."
+  welcome_to_the_group_xyz: "Willkommen in der Gruppe '%{xyz}'!"

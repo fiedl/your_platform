@@ -33,9 +33,10 @@
 
 %h1=t :welcome_message
 %div
-  %P= best_in_place_if can?(:update, @group), @group, :welcome_message, as: :textarea, class: 'group_welcome_message', inner_class: 'form-control autosize'
+  = best_in_place_if can?(:update, @group), @group, :welcome_message, as: :textarea, inner_class: 'form-control autosize'
   %p
     .show_only_in_edit_mode= render partial: 'shared/markdown_help'
+  %hr
   %p=t :welcome_message_explanation
 
 -# %h1 Gruppen-Beitritt
