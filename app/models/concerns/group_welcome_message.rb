@@ -25,6 +25,7 @@ concern :GroupWelcomeMessage do
         notification.text = welcome_message
       end
       notification.save
+      return notification
     end
   end
   

@@ -186,6 +186,17 @@ class GroupsController < ApplicationController
     end
   end
   
+  # POST groups/123/test_welcome_message
+  def test_welcome_message
+    @group = Group.find params[:group_id]
+    authorize! :update, @group
+    notification = @group.send_welcome_message_to current_user
+    Notification.deliver_for_user current_user
+    respond_to do |format|
+      format.json { render json: notification }
+    end
+  end
+  
   private
   
   def load_resource

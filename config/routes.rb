@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
     get :memberships, to: 'user_group_memberships#index'
+    post :test_welcome_message, to: 'groups#test_welcome_message'
   end
   get :my_groups, to: 'groups#index_mine'
   
