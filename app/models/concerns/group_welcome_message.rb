@@ -7,7 +7,7 @@ concern :GroupWelcomeMessage do
     alias_method :assign_user_before_welcome_message, :assign_user
     def assign_user(user, options = {})
       membership = assign_user_before_welcome_message(user, options)
-      trigger_welcome_messages_for(user) #unless Rails.console? or Rails.rake_task?
+      trigger_welcome_messages_for(user) unless Rails.console? or Rails.rake_task?
       return membership
     end
   end
