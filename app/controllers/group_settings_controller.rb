@@ -3,7 +3,7 @@ class GroupSettingsController < ApplicationController
   
   def index
     @group = Group.find params[:group_id]
-    authorize! :manage, @group
+    authorize! :update, @group
     
     set_current_navable @group
     set_current_title "#{t(:group_settings)}: #{@group.name}"

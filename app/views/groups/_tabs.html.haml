@@ -20,6 +20,6 @@
     %a{href: group_members_path(@group)} Mitglieder
   %li{class: active == 'officers' ? 'active' : ''}
     %a{href: group_officers_path(@group)} Amtsträger
-  - if can? :manage, @group
+  - if can? :update, @group
     %li{class: active == 'settings' ? 'active' : ''}
       %a{href: group_settings_path(@group)}=t :settings
