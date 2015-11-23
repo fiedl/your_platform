@@ -1,6 +1,6 @@
 class GroupsController < ApplicationController
   before_action :load_resource, only: [:show, :update, :destroy]
-  authorize_resource :group, except: [:create]
+  authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
   
   def index
