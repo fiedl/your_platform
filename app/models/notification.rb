@@ -18,7 +18,7 @@
 #     end
 #
 class Notification < ActiveRecord::Base
-  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at, :read_at
+  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at, :read_at, :failed_at
   
   belongs_to :recipient, class_name: 'User'
   belongs_to :author, class_name: 'User'
@@ -27,7 +27,8 @@ class Notification < ActiveRecord::Base
   scope :sent, -> { where.not(sent_at: nil) }
   scope :read, -> { where.not(read_at: nil) }
   scope :unread, -> { where(read_at: nil) }
-  scope :upcoming, -> { where(sent_at: nil, read_at: nil) }
+  scope :failed, -> { where.not(failed_at: nil) }
+  scope :upcoming, -> { where(sent_at: nil, read_at: nil, failed_at: nil) }
   
   # Creates all notifications for users that should
   # be notified about this post.
@@ -165,13 +166,15 @@ class Notification < ActiveRecord::Base
   # The notification mail is *not* sent:
   #   * if the user has no upcoming notifications
   #   * if the user has no account
-  #   * if the user is no beta tester (TODO: notifications for all)
   #
   def self.deliver_for_user(user)
     notifications = self.upcoming_by_user(user)
     if notifications.count > 0 and user.account
-      NotificationMailer.notification_email(user, notifications).deliver_now
-      notifications.each { |n| n.update_attribute(:sent_at, Time.zone.now) }
+      if NotificationMailer.notification_email(user, notifications).deliver_now
+        notifications.each { |n| n.update_attribute(:sent_at, Time.zone.now) }
+      else
+        notifications.each { |n| n.update_attribute(:failed_at, Time.zone.now) }
+      end
       return notifications
     else
       return []

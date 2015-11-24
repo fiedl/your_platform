@@ -29,7 +29,7 @@ module PostDeliveryReport
     User.find failed_to_send_to_user_ids
   end
   def failed_to_send_to_user_ids
-    self.deliveries.failed.pluck(:user_id).uniq
+    self.deliveries.failed.pluck(:user_id).uniq + self.notifications.failed.pluck(:recipient_id)
   end
   def failed_to_send_to_count
     failed_to_send_to_user_ids.count
