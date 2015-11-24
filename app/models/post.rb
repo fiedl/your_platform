@@ -95,6 +95,8 @@ class Post < ActiveRecord::Base
     self.deliveries.due.pluck(:id).each do |delivery_id|
       PostDelivery.delay.deliver_if_due(delivery_id)
     end
+    
+    self.notifications.where(sent_at: nil).update_all sent_at: Time.zone.now
 
     return self.deliveries.count
   end

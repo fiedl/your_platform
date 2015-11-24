@@ -431,6 +431,13 @@ class Ability
       group.user_matches_mailing_list_sender_filter?(user)
     end
     
+    # Force instant delivery after creating the post.
+    #
+    can :deliver, Post do |post|
+      post.author == user and
+      can? :force_post_notification, post.group
+    end
+    
     # Activate platform mailgate, i.e. accept incoming email.
     # The authorization to send to a specific group is done separately in
     # the StoreMailAsPostsAndSendGroupMailJob.

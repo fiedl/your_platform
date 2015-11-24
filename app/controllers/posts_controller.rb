@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   
   authorize_resource
-  skip_authorize_resource only: [:new, :create, :preview]
+  skip_authorize_resource only: [:new, :create, :preview, :deliver]
   skip_authorization_check only: [:preview]
   
   # This will skip the cross-site-forgery protection for POST /posts.json,
@@ -126,6 +126,22 @@ class PostsController < ApplicationController
         render html: view_context.markup(params[:text])
       end
     end
+  end
+  
+  # PUT posts/123/deliver
+  #
+  # This forces a post delivery, which is useful when the user decides
+  # that a post should be delivered instantly after creating the post.
+  # Otherwise, the recipients would be notified according to their own
+  # notification policy.
+  #
+  def deliver
+    @post = Post.find params[:post_id]
+    authorize! :deliver, @post
+    @post.notify_recipients
+    respond_to do |format|
+      format.json { render json: @post }
+    end    
   end
   
   private

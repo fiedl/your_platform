@@ -11,12 +11,14 @@ de:
   test_message_sent: Test-Nachricht wurde versandt.
   resend_test_message_to_my_own_address: Erneut zum Testen an meine eigene Adresse senden.
   message_has_been_sent_to_n_recipients: "Nachricht wurde an %{n} Empfänger versandt."
+  message_sent: Nachricht gesendet.
   
   new_post_to: Neue Nachricht an
   enter_new_post_here: "Neue Nachricht eingeben ..."
   
   notify_according_to_notification_settings: Gemäß Benachrichtigungs-Einstellungen benachrichtigen
   notify_all_immideately: Alle sofort benachrichtigen
+  deliver_instantly: Sofort senden
   
   submit_post: Abschicken
   preview_post: Vorschau

@@ -70,6 +70,13 @@ ready = ->
     )
     click_event.preventDefault()
 
+
+  $(document).on 'click', '.send_message_instantly', ->
+    $(this)
+    .removeClass('btn-default')
+    .addClass('btn-success')
+    .delay(500)
+    .hide()
       
 $(document).ready(ready)
 
