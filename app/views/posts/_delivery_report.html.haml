@@ -22,7 +22,7 @@
   - if post.failed_to_send_to_count > 0
     %p#failed_to_send_to
       %h4= "#{t(:delivery_report_failed_to_send)}:"
-      %span.user_avatar_list= user_avatars(post.failed_to_sent_to)
+      %span.user_avatar_list= user_avatars(post.failed_to_send_to)
 
   - # If the post has been sent via group mail, display the email.
   - if post.sent_via.present?

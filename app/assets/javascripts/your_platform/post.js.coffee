@@ -1,6 +1,8 @@
 $(document).ready ->
+  $(document).process_post_delivery_report_tools()
   
-  $("a.short_delivery_report").each ->
+$.fn.process_post_delivery_report_tools = ->
+  $(this).find("a.short_delivery_report").each ->
     link = $(this)
     url = link.data('long-report-url')
     link.popover
@@ -12,13 +14,13 @@ $(document).ready ->
     if link.data('show-delivery-report') == true
       setTimeout (-> link.popover('show')), 500
 
-  $("a.short_delivery_report").mouseenter ->
+  $(this).find("a.short_delivery_report").mouseenter ->
     $(this).popover('show')
     $(this).addClass('just-opened')
     link = $(this)
     setTimeout (-> link.removeClass('just-opened')), 100
   
-  $("a.short_delivery_report").mouseleave ->
+  $(this).find("a.short_delivery_report").mouseleave ->
     # Prevent the popover from staying open when the mouse just passes over.
     $(this).popover('hide') if $(this).hasClass('just-opened')
 

@@ -34,7 +34,7 @@
           |
           %span.post-deliveries#post-deliveries
             %a.short_delivery_report{href: '#', data: {show_long_delivery_report: @show_delivery_report ? 'true' : 'false', long_report_url: post_deliveries_url(post)}}
-              = t(:n_recipients, n: post.recipients.count)
+              = t(:n_recipients, n: post.recipients_count)
       
       %div.post-body
         = markup post.text

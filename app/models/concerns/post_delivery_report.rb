@@ -45,4 +45,8 @@ module PostDeliveryReport
     pending_to_send_to_user_ids.count
   end
   
+  def recipients_count
+    (successfully_sent_to_user_ids + failed_to_send_to_user_ids + pending_to_send_to_user_ids).uniq.count
+  end
+  
 end
