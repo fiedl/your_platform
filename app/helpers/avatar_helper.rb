@@ -22,7 +22,7 @@ module AvatarHelper
   def user_avatars(users)
     users.collect do |user|
       link_to(user_avatar(user, size: 24), user, class: 'has_tooltip avatar_link', title: user.title, data: {placement: 'bottom'})
-    end.join
+    end.join.html_safe
   end
 
   # This returns the html code for an avatar image of the given user.

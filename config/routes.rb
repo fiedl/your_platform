@@ -107,6 +107,7 @@ Rails.application.routes.draw do
   
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts do
+    get :deliveries, to: 'post_deliveries#index'
     put :deliver, to: 'posts#deliver'
   end
   resources :comments

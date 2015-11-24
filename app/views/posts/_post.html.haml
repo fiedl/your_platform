@@ -31,13 +31,10 @@
               = link_to post.group.title, post.group
         %div.post-date
           = localize(post.sent_at) if post.sent_at
-        - if (@post and not @posts) or post == @posts.first
-          %div.post-deliveries#post-deliveries{data: {keep_polling: @keep_polling_delivery_counters ? 'true' : 'false'}}
-            %a.short_delivery_report.has_popover{href: '#', data: {toggle: 'popover', placement: 'bottom', title: t(:sent_to), html: true, show_long_delivery_report: @show_delivery_report ? 'true' : 'false', content: render_partial('posts/delivery_report', locals: {post: post})}}
-              =t :post_sent_to_n_recipients, n: post.successfully_sent_to_count if post.successfully_sent_to_count > 0
-              =t :failed_n, n: post.failed_to_send_to_count if post.failed_to_send_to_count > 0
-              =t :pending_n, n: post.pending_to_send_to_count if post.pending_to_send_to_count > 0
-            
+          |
+          %span.post-deliveries#post-deliveries
+            %a.short_delivery_report{href: '#', data: {show_long_delivery_report: @show_delivery_report ? 'true' : 'false', long_report_url: post_deliveries_url(post)}}
+              = t(:n_recipients, n: post.recipients.count)
       
       %div.post-body
         = markup post.text

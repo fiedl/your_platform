@@ -4,6 +4,7 @@ de:
   post_will_be_sent_to_n_recipients: "Nachricht wird an %{n} Empfänger versandt."
   failed_n: "Fehlgeschlagen: %{n}."
   pending_n: "Ausstehend: %{n}."
+  n_recipients: "%{n} Empfänger"
   
   sent_to: Gesendet an
   

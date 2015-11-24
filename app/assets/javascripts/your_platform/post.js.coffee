@@ -1,20 +1,26 @@
-turbolinks_options = {
-  change: ['post-deliveries'],
-  showProgressBar: false,
-  scroll: false 
-}
-
-reload_delivery_status = ->
-  if $('#post-deliveries').size() > 0 
-    if $('#post-deliveries').data('keep-polling')
-
-      # FIXME: `showProgressBar: false` does not suffice, apparently.
-      Turbolinks.ProgressBar.disable()
-
-      Turbolinks.visit(window.location.pathname, turbolinks_options)
-      setTimeout reload_delivery_status, 10000
-
 $(document).ready ->
-  if $('#post-deliveries').size() > 0
-    setTimeout reload_delivery_status, 5000
+  
+  $("a.short_delivery_report").each ->
+    link = $(this)
+    url = link.data('long-report-url')
+    link.popover
+      placement: 'bottom',
+      title: I18n.t('sent_to'),
+      html: true,
+      trigger: 'manual',
+      content: -> ajax = $.ajax({url: url, method: 'get', async: false}).responseText
+    if link.data('show-delivery-report') == true
+      setTimeout (-> link.popover('show')), 500
 
+  $("a.short_delivery_report").mouseenter ->
+    $(this).popover('show')
+    $(this).addClass('just-opened')
+    link = $(this)
+    setTimeout (-> link.removeClass('just-opened')), 100
+  
+  $("a.short_delivery_report").mouseleave ->
+    # Prevent the popover from staying open when the mouse just passes over.
+    $(this).popover('hide') if $(this).hasClass('just-opened')
+
+  $('body').click ->
+    $("a.short_delivery_report").popover('hide')

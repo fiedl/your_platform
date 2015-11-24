@@ -35,6 +35,10 @@ class Post < ActiveRecord::Base
     self.notifications.where(recipient_id: user.id, read_at: nil).count > 0 or
     user.notifications.unread.where(reference_type: 'Comment', reference_id: self.comment_ids).count > 0
   end
+  
+  def recipients
+    User.find(notifications.pluck(:recipient_id))
+  end
 
   # This allows to set the author either as email or as email string.
   #
