@@ -36,7 +36,7 @@
         = icon :envelope
         =t :deliver_instantly
   
-  - if current_role.global_admin? # As debug info:
+  - if can? :read, :post_created_via_debug_info
     #post_created_via
       %p=t :post_created_via_email if post.created_via_email?
       %p=t :post_created_via_contact_form if post.created_via_contact_form?
