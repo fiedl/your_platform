@@ -3,32 +3,7 @@
   %a#rescan.btn.btn-default.right{href: "?rescan=#{current_role_view == 'global_admin' ? 'all' : 'mine'}"}
     = icon('refresh')
     = t(:rescan)
-  %table.issues.datatable
-    %thead
-      %tr
-        %th= t(:issue)
-        %th= t(:context)
-        %th= t(:reference)
-        %th= t(:responsible_admin)
-    %tbody
-      - @issues.each do |issue|
-        %tr
-          %td
-            .description-container
-              - if issue.resolved_at
-                = t(:issue_edited_at)
-                = localize(issue.resolved_at)
-              - else
-                %p
-                  %strong= t(issue.title)
-                %p= t(issue.description) 
-          %td
-            - if issue.reference.kind_of? ProfileField
-              %div= link_to issue.reference.profileable.title, issue.reference.profileable
-              %strong= best_in_place issue.reference, :label
-          %td
-            - if issue.reference.kind_of? ProfileField
-              %div= best_in_place issue.reference, :value, as: 'textarea'
-          %td= link_to(issue.responsible_admin.title, issue.responsible_admin) if issue.responsible_admin
 
-          
+- @issues.each do |issue|
+  - if issue.reference.kind_of? ProfileField
+    = render partial: 'issues/issue', locals: {issue: issue}

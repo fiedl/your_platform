@@ -119,7 +119,7 @@ describe ProfileFieldTypes::Address do
   describe "#display_html" do
     subject { @address_field.display_html }
     it "should have a line-break in it" do
-      subject.should include( "<br />" )
+      subject.should include( "<br" )
     end
   end
 
@@ -220,7 +220,7 @@ describe ProfileFieldTypes::Address do
     end
     
     its( :country ) { should == "Germany" }
-    its( :country_code ) { should == "DE" }
+    its( :country_code ) { should == "de" }
     its( :city ) { should == "Berlin" }
     its( :postal_code ) { should == "10117" }
     its( :plz ) { should == "10117" }

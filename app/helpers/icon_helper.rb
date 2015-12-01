@@ -31,5 +31,13 @@ module IconHelper
   def large_awesome_icon(icon_key)
     fa_icon "#{icon_key} 2x"
   end
+  
+  def excel_icon
+    image_tag image_path('img/excel2013_file_bw_semitransparent_107.png'), height: 16
+  end
+  
+  def csv_icon
+    icon 'list-alt'
+  end
 
 end

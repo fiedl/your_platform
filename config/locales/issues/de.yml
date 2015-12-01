@@ -10,8 +10,19 @@ de:
   context: Kontext
   the_issue_will_be_rechecked_later: "Das Problem wird später routinemäßig neu überprüft. Der Knopf 'Erneut überprüfen' oben führt sofort eine erneute Überprüfung durch, was aber etwas dauert."
   issue_edited_at: "Bearbeitet am:"
+  issue_resolved_at: Gelöst am
+  scanning_issue: "Überprüfen ..."
   
   solves_administrative_issues: löst Verwaltungsprobleme
+  
+  there_are_n_unresolved_issues_in_your_domain: "Es gibt %{n} Verwaltungsprobleme in Ihrem Zuständigkeitsbereich."
+  please_click_above_link_and_resolve_issues: "Bitte klicken Sie auf obigen Link und lösen Sie die dort aufgelisteten Problme."
+  
+  new_issue: Neues Problem
+  report_new_issue: Neues Problem melden
+  reported_by: Gemeldet von
+  invalid_email: Ungültige E-Mail-Adresse
+  i_have_resolved_the_issue: Ich habe das Problem gelöst.
   
   issues:
     address_has_too_few_lines: "Die Adresse hat zu wenige Zeilen."
@@ -20,4 +31,7 @@ de:
     destination_country_is_missing: "Das Bestimmungsland fehlt möglicherweise."
     the_destination_country_has_to_be_the_last_line: "Bei Auslandsadressen muss das Bestimmungsland in der letzten Zeile genannt werden."
     could_not_extract_street: "Straße nicht erkannt."
-    the_geo_system_could_not_extract_the_street_from_this_address: "Das Geo-System konnte aus der vorliegenden Adresse keine Straße extrahieren. Bitte Adresse entsprechend umformatieren. Tipp: Mit Google-Maps kann man gut ausprobieren, ob die Adresse automatisiert von einem Geo-System ausgewertet werden kann."
+    the_geo_system_could_not_extract_the_street_from_this_address: "Der Straßenname konnte nicht erkannt werden. Bitte entnehmen Sie die korrekten Informationen der folgenden ursprünglichen Adresse und tragen Sie sie rechts in die dafür vorgesehenen Felder ein."
+    could_not_deliver_to_email: "E-Mail-Adresse nicht erreichbar."
+    please_enter_the_correct_email_address: "Bitte tragen Sie rechts die korrekte E-Mail-Adresse ein."
+    email_needs_review: "Bitte E-Mail-Adresse überprüfen."

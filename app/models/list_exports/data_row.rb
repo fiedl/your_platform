@@ -25,7 +25,7 @@ module ListExports
       elsif @object.respond_to? column_name
         @object.try(:send, column_name) 
       else
-        raise "Don't know how to access the given attribute or value."
+        raise "Don't know how to access the given attribute or value: #{column_name}"
       end
     end
     

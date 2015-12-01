@@ -1,5 +1,6 @@
 en:
   person:                     Person
+  author:                     Author
   
   first_and_last_name:        First and last name
   email:                      Email
@@ -7,6 +8,8 @@ en:
   date_of_birth:              Date of birth
   birthday:                   Birthday
   age:                        Age
+  next_age:                   Next age
+  next_birthday:              Next birthday
   
   user_hidden:                User hidden
   hidden_users_can_only_be_seen_by_admins:   'Hidden users can only be seen by competent administrators. For all other users, hidden users are invisible.'
@@ -26,6 +29,11 @@ en:
   delete_account:                Delete User Account
   user_account_deleted:          'User account was successfully deleted.'
   
+  male_or_female_salutation:     Salutation
+  to_mr:                         Mr.
+  to_mrs:                        Mrs.
+  to_ms:                         Ms.
+
   personal_title:                Personal Title
   
   avatar:                        Avatar

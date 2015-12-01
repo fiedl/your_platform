@@ -113,7 +113,7 @@ Rails.application.routes.draw do
   patch 'notifications/read_all', to: 'notifications#read_all', as: 'read_all_notifications'
   resources :notifications
   
-  get :issues, to: 'issues#index'
+  resources :issues
   
   post :support_requests, to: 'support_requests#create'
   

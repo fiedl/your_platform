@@ -18,9 +18,11 @@ class Issue < ActiveRecord::Base
   
   belongs_to :reference, polymorphic: true
   belongs_to :responsible_admin, class_name: 'User'
+  belongs_to :author, class_name: 'User'
   
   scope :unresolved, -> { where(resolved_at: nil) }
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
+  scope :automatically_created, -> { where author_id: nil }
   
   def self.scan(object_or_objects = nil)
     if object_or_objects && object_or_objects.respond_to?(:to_a)
@@ -35,14 +37,16 @@ class Issue < ActiveRecord::Base
     objects.collect { |obj| self.scan_object(obj) }.flatten - [nil]
   end
   def self.scan_object(object)
-    return self.scan_address_field(object) if object.kind_of?(ProfileFieldTypes::Address)
+    return self.scan_address_field(object) if object.kind_of? ProfileFieldTypes::Address
+    return self.scan_email_field(object) if object.kind_of? ProfileFieldTypes::Email
   end
   def self.scan_all
-    self.scan_objects(ProfileFieldTypes::Address.all)
+    self.scan_objects(ProfileFieldTypes::Address.all) +
+    self.scan_objects(ProfileFieldTypes::Email.all)
   end
   
   def self.scan_address_field(address_field)
-    address_field.issues.destroy_all
+    address_field.issues.destroy_auto
     if address_field.postal_or_first_address?
       if address_field.value.to_s.split("\n").count < 2
         address_field.issues.create title: 'issues.address_has_too_few_lines', description: 'issues.address_needs_between_2_and_4_lines', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
@@ -52,19 +56,52 @@ class Issue < ActiveRecord::Base
       if address_field.country_code == "A" and not (address_field.value.include?("Österreich") or address_field.value.include?("Austria"))
         address_field.issues.create title: 'issues.destination_country_is_missing', description: 'issues.the_destination_country_has_to_be_the_last_line', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
-      if address_field.try(:geo_location).try(:street).try(:strip).blank? && address_field.value.try(:strip).present? && address_field.value.to_s.split("\n").count > 1
+      if address_field.try(:street_with_number).try(:strip).blank? && address_field.value.try(:strip).present? && address_field.value.to_s.split("\n").count > 1
         address_field.issues.create title: 'issues.could_not_extract_street', description: 'issues.the_geo_system_could_not_extract_the_street_from_this_address', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
     end
     return address_field.issues(true)
   end
   
+  def self.scan_email_field(email_field)
+    email_field.issues.destroy_auto
+    if email_field.value.try(:present?) && PostDelivery.where(user_email: email_field.value, created_at: 3.weeks.ago..Time.zone.now).failed.count > 0
+      email_field.issues.create title: 'issues.could_not_deliver_to_email', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
+    elsif email_field.value.present? && email_field.needs_review?
+      email_field.issues.create title: 'issues.email_needs_review', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
+    end
+    return email_field.issues(true)
+  end
   
-  # TODO 
-  # - als ungültig markierte e-mail-adresse
+  # Notify responsible admins if there are open issues.
+  #
+  def self.notify_admins
+    Issue.unresolved.pluck(:responsible_admin_id).uniq.collect do |admin_id|
+      admin = User.find admin_id
+      issues = Issue.unresolved.by_admin(admin)
+      issues_url = "#{AppVersion.root_url}/issues"
+      I18n.with_locale(admin.locale) do
+        message = I18n.t(:there_are_n_unresolved_issues_in_your_domain, n: issues.count)
+        text = I18n.t(:please_click_above_link_and_resolve_issues)
+        notification = Notification.create recipient_id: admin_id, reference_url: issues_url, message: message, text: text
+      end
+    end
+  end
   
   def reference_content
     return reference.value if reference.kind_of?(ProfileField)
+  end
+  
+  def resolve
+    self.resolved_at = Time.zone.now
+    self.save
+  end
+  
+  def self.destroy_auto
+    self.destroy_automatically_created
+  end
+  def self.destroy_automatically_created
+    self.automatically_created.destroy_all
   end
   
 end

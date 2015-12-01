@@ -16,7 +16,12 @@ describe Issue do
     describe "()" do
       subject { Issue.scan }
       describe "when a bad address is present" do
-        before { @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown"); @address_field.postal_address = true }
+        before do
+          @address_field = ProfileFieldTypes::Address.create(label: "Home Address", value: "Unknown")
+          @address_field.postal_address = true
+          @user = create :user
+          @user.profile_fields << @address_field
+        end
         its(:count) { should == 1 }
         its('first.title') { should == 'issues.address_has_too_few_lines' }
         its('first.reference') { should == @address_field }

@@ -51,6 +51,20 @@ concern :UserDateOfBirth do
     end
   end
   
+  def next_age
+    age + 1 if age
+  end
+  
+  def next_birthday
+    if birthday_this_year.nil?
+      nil
+    elsif birthday_this_year > Time.zone.now
+      birthday_this_year
+    else
+      birthday_this_year + 1.year
+    end
+  end
+  
   def birthday_this_year
     cached do
       begin

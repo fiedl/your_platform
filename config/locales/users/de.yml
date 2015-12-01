@@ -1,5 +1,6 @@
 de:
   person:                     Person
+  author:                     Autor
   
   first_and_last_name:        Vor- und Zuname
   name_affix:                 Namenszusatz
@@ -8,8 +9,10 @@ de:
   date_of_birth:              Geburtsdatum
   birthday:                   Geburtstag
   birthday_this_year:         Diesjähriger Geburtstag
+  next_birthday:              Nächster Geburtstag
   age:                        Alter
   current_age:                Aktuelles Alter
+  next_age:                   Geburtstag
   
   user_hidden:                Benutzer versteckt
   hidden_users_can_only_be_seen_by_admins:   'Versteckte Benutzer können nur von zuständigen Administratoren gesehen werden. Für alle anderen Benutzer sind sie unsichtbar.'
@@ -21,8 +24,10 @@ de:
   postal_address:             Postanschrift
   postal_address_updated_at:  Letzte Änderung der Postanschrift am
   postal_address_street:      Straße und Hausnummer
+  postal_address_street_with_number: Straße und Hausnummer
   postal_address_street_name: Straße
   postal_address_street_number: Hausnummer
+  postal_address_second_address_line: Zweite Adresszeile
   postal_address_postal_code: Postleitzahl (PLZ)
   postal_address_state:       Bundesland
   postal_address_town:        Stadt
@@ -54,6 +59,11 @@ de:
   gender:                        Geschlecht
   male:                          Männlich
   female:                        Weiblich
+
+  male_or_female_salutation:     Anrede
+  to_mr:                         Herrn
+  to_mrs:                        Frau
+  to_ms:                         Fräulein
   
   personal_title:                Persönlicher Titel
   

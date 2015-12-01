@@ -82,6 +82,10 @@ class Group < ActiveRecord::Base
     I18n.t( super.to_sym, default: super ) if super.present?
   end
   
+  def name_with_surrounding
+    name
+  end
+  
   def extensive_name
     if has_flag? :attendees
       name + (parent_events.first ? ": " + parent_events.first.name : '')

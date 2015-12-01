@@ -157,6 +157,9 @@ class ListExport
       # 
       if @data.kind_of? Group
         @groups = @data.child_groups
+        if preset.to_s == 'join_and_persist_statistics'
+          @groups = @groups.select { |g| g.members.count > 0 }
+        end
       elsif @data.kind_of? Array
         @groups = @data
       end
@@ -307,6 +310,9 @@ class ListExportUser < User
   def localized_date_of_birth
     I18n.localize date_of_birth if date_of_birth
   end
+  def localized_next_birthday
+    I18n.localize next_birthday if next_birthday
+  end
   
   # Address
   #
@@ -341,7 +347,7 @@ class ListExportUser < User
     address_label.country
   end
   def postal_address_country_code
-    address_label.country_code
+    address_label.country_code.upcase
   end
   def postal_address_country_code_3_letters
     address_label.country_code_with_3_letters

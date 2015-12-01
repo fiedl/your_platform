@@ -13,6 +13,11 @@ module MayNeedReview
     # 
     scope :no_review_needed, -> { where.not(id: self.review_needed.pluck(:id)) }
     
+    after_update -> {
+      # Mark as reviewd on chaning the field.
+      self.remove_flag :needs_review if changed?
+    }
+    
     extend ClassMethods
     include InstanceMethods
     

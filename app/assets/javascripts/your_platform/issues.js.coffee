@@ -1,14 +1,35 @@
-$(document).on 'ajax:success', 'table.issues .best_in_place', ->
-  container = $(this).closest('tr').find('td:first')
-    .find('.description-container')
-  container.fadeOut ->
-    container.text(I18n.t('the_issue_will_be_rechecked_later'))
-    container.fadeIn()
+$(document).ready ->
+  
+  # issues#index
+  # =======================================================================================
+  
+  $('.thanks_for_fixing_issue').hide()
+  $('.scanning_issue').hide()
+  $('body.issues .box .value.editable').bind 'save', ->
+    profile_field = $(this)
+    url = profile_field.data('bip-url') + '.json?scan_for_issues=true' # "bip" is "best in place"
+    profile_field.closest('.box').find('.scanning_issue').show()
+    setTimeout ->
+      $.ajax(
+        url: url,
+        type: 'GET',
+        success: (result)->
+          profile_field.closest('.box').find('.scanning_issue').hide()
+          if result.issues.length == 0
+            profile_field.closest('.box').find('.thanks_for_fixing_issue').show()
+            profile_field.closest('.box').trigger('toggle-minimized')
+        failed: ->
+          profile_field.closest('.box').find('.scanning_issue').hide()
+      )
+    , 500
 
-    # # This did not work. TODO: Fix this:
-    # setTimeout ->
-    #   container.closest('tr').find('td').fadeTo(0.4)
-    # , 2000
+  $('body.issues .destroy-container .btn').click ->
+    $(this).closest('.box').find('.destroy-container').hide()
+    $(this).closest('.box').find('.thanks_for_fixing_issue').show()
+    $(this).closest('.box').trigger('toggle-minimized')
 
-$(document).on 'click', '#rescan.btn', ->
-  $(this).hide().after('<span class="glyphicon glyphicon-refresh"></span> ' + I18n.t('rescanning_issues_please_wait'))
+
+  # issues#new
+  # =======================================================================================
+
+  $('body.issues textarea#description').autosize()

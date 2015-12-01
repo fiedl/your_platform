@@ -166,6 +166,23 @@ class User < ActiveRecord::Base
   def male?
     not female?
   end
+  
+  # This is the salutation for addess labels, for example:
+  # 
+  #     Mr.
+  #     John Doe
+  #
+  def male_or_female_salutation
+    if female?
+      if age < 18
+        I18n.translate(:to_ms, locale)
+      else
+        I18n.translate(:to_mrs, locale)
+      end
+    else
+      I18n.translate(:to_mr, locale)
+    end
+  end
 
 
   # Date of Death
@@ -218,6 +235,16 @@ class User < ActiveRecord::Base
 
   def postal_address_with_name_surrounding
     address_label.to_s
+  end
+  
+  def name_with_surrounding
+    cached {
+      (
+        name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
+        "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
+        name_surrounding_profile_field.try(:text_below_name).to_s
+      ).strip
+    }
   end
 
   def address_label

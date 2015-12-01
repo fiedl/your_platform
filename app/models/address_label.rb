@@ -9,12 +9,12 @@ class AddressLabel
     self.name = name
     self.company = company
     self.postal_address = address_field.try(:value)
-    self.street = address_field.try(:geo_location).try(:street)
+    self.street = address_field.try(:street_with_number)
     self.postal_code = address_field.try(:postal_code)
-    self.state = address_field.try(:geo_location).try(:state)
+    self.state = address_field.try(:region)
     self.country_code = address_field.try(:country_code)
-    self.country = address_field.try(:geo_location).try(:country)
-    self.city = address_field.try(:geo_location).try(:city)
+    self.country = address_field.try(:country)
+    self.city = address_field.try(:city)
     self.text_above_name = name_surrounding_field.try(:text_above_name).try(:strip)
     self.text_below_name = name_surrounding_field.try(:text_below_name).try(:strip)
     self.name_prefix = name_surrounding_field.try(:name_prefix).try(:strip)
@@ -104,7 +104,7 @@ class AddressLabel
   end
   
   def country_code_with_3_letters
-    GeoLocation.country_codes_3_letters_from_2_letters[self.country_code]
+    GeoLocation.country_codes_3_letters_from_2_letters[self.country_code.upcase]
   end
   
 end

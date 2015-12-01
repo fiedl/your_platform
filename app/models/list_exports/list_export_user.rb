@@ -15,6 +15,9 @@ module ListExports
     def localized_date_of_birth
       I18n.localize date_of_birth if date_of_birth
     end
+    def localized_next_birthday
+      I18n.localize next_birthday if next_birthday
+    end
   
     # Address
     #
@@ -36,6 +39,12 @@ module ListExports
     def postal_address_street_number
       postal_address_street.split(" ").last if postal_address_street.present?
     end
+    def postal_address_street_with_number
+      postal_address_field_or_first_address_field.try(:street_with_number)
+    end
+    def postal_address_second_address_line
+      postal_address_field_or_first_address_field.try(:second_address_line)
+    end
     def postal_address_postal_code
       address_label.postal_code
     end
@@ -46,7 +55,7 @@ module ListExports
       address_label.state
     end
     def postal_address_country
-      address_label.country
+      postal_address_field_or_first_address_field.try(:country_if_not_default)
     end
     def postal_address_country_code
       address_label.country_code

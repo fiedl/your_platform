@@ -23,10 +23,13 @@ concern :UserProfile do
   end
   
   def phone
-    (landline_profile_fields + phone_profile_fields).first.try(:value)
+    phone_field.try(:value)
   end
   def phone=(new_number)
     (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
+  end
+  def phone_field
+    (landline_profile_fields + phone_profile_fields).first
   end
   
   def mobile
