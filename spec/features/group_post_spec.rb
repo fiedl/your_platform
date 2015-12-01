@@ -34,7 +34,7 @@ feature "Group Posts" do
       # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
       page.should have_text 'Anzahl der Empfänger: 2'
       
-      fill_in :valid_from, with: I18n.localize('2015-12-01'.to_date)
+      fill_in :valid_from, with: I18n.localize('2025-12-01'.to_date)
       # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
       page.should have_text 'Anzahl der Empfänger: 0'
     end
