@@ -17,9 +17,11 @@
         
         %li.nav-header
           = t :tasks
+          - if can? :create, Issue
+            = link_to new_issue_path, id: 'new_issue_button_in_dropdown' do
+              = icon :plus
         %li.issues_task{class: current_issues.count == 0 ? 'good' : 'bad'}
           = link_to "#{current_issues.count} #{t(:administrative_issues)}", issues_path
-
         %li.nav-header
           = t :preview_as
         - current_role.allowed_preview_roles.each do |preview_role|
