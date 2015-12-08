@@ -89,8 +89,12 @@ class GeoLocation < ActiveRecord::Base
   # This method returns true if the location is in Europe.
   #
   def in_europe?
-    country_code.in?(%w(AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GG GI GR GB HR HU IE IM IS IT JE LI LT LU LV MC MD\
- MK MT NL NO PL PT RO RU SE SI SJ SK SM TR UA UK VA YU))
+    country_code.in? GeoLocation.european_country_codes
+  end
+  
+  def self.european_country_codes
+    %w(AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GG GI GR GB HR HU IE IM IS IT JE LI LT LU LV MC MD\
+     MK MT NL NO PL PT RO RU SE SI SJ SK SM TR UA UK VA YU)
   end
 
   # The following method is a country-specific accessor to the the German
