@@ -24,7 +24,7 @@ de:
   work_mobile: Mobiltelefon geschäftlich
   custom: Benutzerdefiniert
 
-  first_address_line: Straße und Hausnummer
+  first_address_line: Straße und Hausnummer (oder Postfach)
   second_address_line: Zweite Adresszeile (optional)
   postal_code: Postleitzahl (PLZ)
   city: Stadt
