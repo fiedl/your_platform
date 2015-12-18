@@ -156,7 +156,9 @@ Gem::Specification.new do |s|
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
   # https://github.com/lautis/uglifier/pull/86
-  s.add_dependency 'uglifier', '>= 2.7.2' 
+  s.add_dependency 'uglifier', '>= 2.7.2'
+  s.add_dependency 'mail', '>= 2.6.0' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_309
+  s.add_dependency 'nokogiri', '>= 1.6.7.1' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_311
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
