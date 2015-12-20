@@ -84,7 +84,7 @@ module ProfileFieldTypes
         # are stored as separate child profile fields.
         #
         def convert_to_format_with_separate_fields
-          p "converting profile field #{id} of #{profileable.try(:class).try(:name)} #{profileable.try(:id)} ..."
+          # p "converting profile field #{id} of #{profileable.try(:class).try(:name)} #{profileable.try(:id)} ..."
           
           old_value = self.value
           

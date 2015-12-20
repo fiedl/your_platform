@@ -1,0 +1,19 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  database: your_platform_dummy_development
+  pool: 25
+  username: fiedl
+  password: 
+  host: localhost
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  reconnect: false
+  database: your_platform_dummy_test
+  pool: 5
+  username: fiedl
+  password: 
+  host: localhost

@@ -1,8 +1,10 @@
 //
+//= require jquery-ujs
+//= require jquery-ui
+//
 //= require sugar
 //= require jquery.appear-1.1.1
 //= require slim_breadcrumb
-//= require jquery.ui.all
 //= require jquery.autosize
 //= require jquery-ui-timepicker-addon
 //= require jquery-ui-timepicker-de
@@ -13,8 +15,7 @@
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
 //= require refile
-//= require dataTables/jquery.dataTables
-//= require dataTables/bootstrap/3/jquery.dataTables.bootstrap
+//= require datatables
 //= require galleria
 //= require galleria-classic
 //= require underscore
@@ -26,4 +27,5 @@
 //= require jquery.atwho
 //= require_tree ./your_platform
 //
-//= require turboboost
+//= require turbolinks
+//= require turboboost/turboboost

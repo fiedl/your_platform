@@ -6,15 +6,9 @@
 require 'rubygems'
 
 # Rails and Additions
-require 'rails-i18n'
+require 'sprockets'
 require 'strong_parameters' unless defined? ActionController::Parameters
-
-# JavaScript
-require 'jquery-ui-rails'
-require 'autosize/rails'
-require 'sugar-rails'
-require 'i18n-js'
-require 'jquery-atwho-rails'
+require 'rails-i18n'
 
 # Data Structures
 require 'acts-as-dag'
@@ -42,6 +36,18 @@ require 'haml'
 require 'redcarpet'
 require 'gemoji'
 require 'auto_html'
+
+# JavaScript
+require 'rails-assets-jquery-ujs'
+require 'rails-assets-jquery-ui'
+require 'autosize/rails'
+require 'sugar-rails'
+require 'i18n-js'
+require 'jquery-atwho-rails'
+require 'turbolinks'
+require 'jquery-turbolinks'
+require 'turboboost'
+require 'rails-assets-datatables'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'
@@ -80,12 +86,6 @@ require 'workflow_kit'
 # View Helpers
 require 'phony' 
 require 'will_paginate'
-require 'jquery-datatables-rails'
-
-# JavaScript
-require 'turbolinks'
-require 'jquery-turbolinks'
-require 'turboboost'
 
 # Client-Side Validations
 require 'judge'

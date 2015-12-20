@@ -29,21 +29,25 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack', '>= 1.6.2'
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
-  s.add_dependency "strong_parameters"                                                 # MIT License
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
   s.add_dependency 'web-console', '>= 2.1.3'
+  s.add_dependency 'sprockets-rails', '~> 2.3'
 
   
   # JavaScript 
-  s.add_dependency "jquery-rails", '>= 3.1.3', '<= 4.0.4' # Fix version due to datatables issue (http://stackoverflow.com/a/31150030/2066546)
-  s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
+  s.add_dependency 'rails-assets-jquery-ujs'
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
   s.add_dependency "coffee-rails", '>= 4.1.0'
   s.add_dependency 'execjs', '>= 2.5.2'
   s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
+  s.add_dependency 'rails-assets-jquery-ui'
+  s.add_dependency 'turbolinks', '>= 2.5.3'
+  s.add_dependency 'jquery-turbolinks'
+  s.add_dependency 'turboboost'
+  s.add_dependency 'rails-assets-datatables', '>= 1.10.10'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.
@@ -120,12 +124,6 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'
-  s.add_dependency 'jquery-datatables-rails', '~> 3.1.1'
-  
-  # JavaScript
-  s.add_dependency 'turbolinks', '>= 2.5.3'
-  s.add_dependency 'jquery-turbolinks'
-  s.add_dependency 'turboboost'
   
   # Client-Side Validations
   s.add_dependency 'judge'
