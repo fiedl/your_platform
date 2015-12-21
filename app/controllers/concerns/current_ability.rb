@@ -27,7 +27,7 @@ concern :CurrentAbility do
       options[:read_only_mode] = true if read_only_mode?
     
       # Preview role mechanism
-      options[:preview_as] = current_role_view
+      options[:preview_as] = current_role_preview
     end
 
     @current_ability ||= ::Ability.new(current_user, options)
