@@ -347,7 +347,7 @@ class ListExportUser < User
     address_label.country
   end
   def postal_address_country_code
-    address_label.country_code.upcase
+    address_label.country_code.try(:upcase)
   end
   def postal_address_country_code_3_letters
     address_label.country_code_with_3_letters
