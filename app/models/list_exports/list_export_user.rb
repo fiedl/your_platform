@@ -58,7 +58,7 @@ module ListExports
       postal_address_field_or_first_address_field.try(:country_if_not_default)
     end
     def postal_address_country_code
-      address_label.country_code
+      address_label.country_code.upcase
     end
     def postal_address_country_code_3_letters
       address_label.country_code_with_3_letters
