@@ -23,6 +23,11 @@ class Page < ActiveRecord::Base
                             :parent_events
                           )}
 
+
+  def not_empty?
+    attachments.count > 0 or (content && content.length > 5)
+  end
+
   def fill_cache
     group
   end
