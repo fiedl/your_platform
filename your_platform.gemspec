@@ -66,7 +66,7 @@ Gem::Specification.new do |s|
   
 
   # Authentification
-  s.add_dependency 'devise', '>= 2.2.5'                           # MIT License
+  s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
   s.add_dependency 'passgen'
 
   # Authorization
@@ -153,7 +153,7 @@ Gem::Specification.new do |s|
   # https://github.com/lautis/uglifier/pull/86
   s.add_dependency 'uglifier', '>= 2.7.2'
   s.add_dependency 'mail', '>= 2.6.0' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_309
-  s.add_dependency 'nokogiri', '>= 1.6.7.1' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_311
+  s.add_dependency 'nokogiri', '>= 1.6.7.2' # CVE-2015-7499, https://gemnasium.com/fiedl/your_platform/alerts#advisory_328
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
