@@ -1,0 +1,4 @@
+%h1= "Workflow: #{@workflow.name}"
+%div
+  %p= @workflow.parent_groups.collect { |group| link_to group.name, group }.join(", ").html_safe
+  %p= @workflow.description

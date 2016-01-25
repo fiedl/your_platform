@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
     get :memberships, to: 'user_group_memberships#index'
+    get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
   end
   get :my_groups, to: 'groups#index_mine'
@@ -93,7 +94,6 @@ Rails.application.routes.draw do
     get 'description(.:format)', to: 'attachments#description'
   end
   resources :profile_fields  
-  resources :workflows
   resources :user_group_memberships
   resources :status_group_memberships
   resources :relationships
@@ -122,14 +122,16 @@ Rails.application.routes.draw do
   
   resources :badges, controller: 'user_badges'
   
-  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
-  mount WorkflowKit::Engine => "/workflow_kit", as: 'workflow_kit'
-  
   get :statistics, to: 'statistics#index', as: 'statistics_index'
   get "/statistics/:list", to: 'statistics#show', as: 'statistics'
 
   resources :bookmarks
   get :my_bookmarks, controller: "bookmarks", action: "index"
+  
+  resources :workflows do
+    put 'execute', on: :member
+  end
+  put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
   
   get "errors/unauthorized"
   

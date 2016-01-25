@@ -80,9 +80,6 @@ require 'edit_mode'
 # Hide slim breadcrumb elements until user hovers the separator
 require 'slim_breadcrumb'
 
-# Workflow Kit
-require 'workflow_kit'
-
 # View Helpers
 require 'phony' 
 require 'will_paginate'

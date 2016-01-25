@@ -1,0 +1,9 @@
+= render partial: 'groups/tabs', locals: {active: 'settings'} if @group
+
+%h1
+  = "#{@group.name}:" if @group
+  Workflows
+%div.workflows
+  %ul
+    - @workflows.each do |workflow|
+      %li= link_to workflow.name, workflow

@@ -8,7 +8,7 @@ module WorkflowsHelper
     workflow_params = { user_id: user.id }
     link_to(
             (icon(workflow_icon(workflow)) + " " + workflow.name).html_safe,
-            workflow_kit.execute_workflow_path( workflow, workflow_params ), 
+            execute_workflow_path( workflow, workflow_params ), 
             method: :put,
             :class => 'workflow_trigger',
             title: title

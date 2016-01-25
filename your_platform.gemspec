@@ -118,9 +118,6 @@ Gem::Specification.new do |s|
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
   
-  # Workflow Kit
-  s.add_dependency 'workflow_kit', '~> 0.0.7'                                          # MIT License
-
   # View Helpers
   s.add_dependency 'phony'                                         
   s.add_dependency 'will_paginate', '> 3.0'

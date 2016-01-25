@@ -202,6 +202,10 @@ Spork.prefork do
     #
     config.include AutoComplete
     
+    # Workflow Kit
+    #
+    config.include WorkflowKit::Factory
+    
     # Debug
     # Call `debug` to enter pry.
     #
