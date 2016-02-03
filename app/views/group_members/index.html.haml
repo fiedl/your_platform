@@ -21,6 +21,7 @@
     = render partial: 'groups/export_button'
     - if can? :manage_memberships_manually, @group
       = link_to t(:user_group_memberships), group_memberships_path(@group), class: 'btn btn-default right'
+    %br{clear: 'all'}
     %span#group_members
       .child_users
         - if @members.count > 0
