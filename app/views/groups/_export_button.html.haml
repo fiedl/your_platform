@@ -91,6 +91,20 @@
           = csv_icon
           = t :phone_list
       %li
+        = link_to group_path(@group, :format => :csv, :list => :email_list) do
+          = csv_icon
+          = t :email_list
+      - @group.mailing_lists.each do |mailing_list|
+        %li.indent
+          = link_to "mailto:#{mailing_list.value}" do
+            = icon :envelope
+            = "#{t(:mailing_list)}: #{mailing_list.value}"
+      - if can? :manage, @group
+        %li.indent
+          = link_to group_mailing_lists_path(@group) do
+            = icon :envelope
+            = t :install_mailing_list
+      %li
         = link_to group_path(@group, :format => :csv, :list => :member_development) do
           = csv_icon
           = t :member_development

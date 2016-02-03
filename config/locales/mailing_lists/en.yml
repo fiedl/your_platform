@@ -2,6 +2,7 @@ en:
   mailing_list: Mailing list
   mailing_lists: Mailing lists
   manage_mailing_lists: Manage mailing lists
+  install_mailing_list: Install mailing list
   
   what_are_mailing_lists: What are mailing lists?
   mailing_lists_forward_emails_to_all_group_members: Mailing lists forward emails to mailing list addresses (e.g. mailing-list@example.com) to all group members.

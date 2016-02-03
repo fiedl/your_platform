@@ -2,6 +2,7 @@ de:
   mailing_list: E-Mail-Verteiler
   mailing_lists: E-Mail-Verteiler
   manage_mailing_lists: E-Mail-Verteiler verwalten
+  install_mailing_list: E-Mail-Verteiler einrichten
   
   what_are_mailing_lists: Was sind E-Mail-Verteiler?
   mailing_lists_forward_emails_to_all_group_members: E-Meil-Verteiler nehmen eingehende E-Mails an so genannte **Verteiler-Adressen** (z.B. erlanger-burschen@wingolf.org) entgegen und **leiten sie an alle Gruppen-Mitglieder weiter** (im Beispiel an alle Burschen des Erlanger Wingolfs).
