@@ -99,6 +99,11 @@
           = link_to "mailto:#{mailing_list.value}" do
             = icon :envelope
             = "#{t(:mailing_list)}: #{mailing_list.value}"
+      - if can? :create_post_for, @group
+        %li.indent
+          = link_to group_posts_path(@group) do
+            = icon :envelope
+            = t :write_new_post_to_str, str: @group.name
       - if can? :manage, @group
         %li.indent
           = link_to group_mailing_lists_path(@group) do

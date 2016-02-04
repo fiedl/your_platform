@@ -12,6 +12,8 @@ de:
   resend_test_message_to_my_own_address: Erneut zum Testen an meine eigene Adresse senden.
   message_has_been_sent_to_n_recipients: "Nachricht wurde an %{n} Empfänger versandt."
   
+  write_new_post_to_str: "Nachricht an '%{str}' schreiben"
+
   new_post_to: Neue Nachricht an
   enter_new_post_here: "Neue Nachricht eingeben ..."
   
