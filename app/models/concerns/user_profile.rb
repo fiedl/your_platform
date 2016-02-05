@@ -7,12 +7,6 @@ concern :UserProfile do
        :organizations, :bank_account_information]
   end
 
-  def phone_profile_fields
-    profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
-      not field.label.downcase.include? 'fax'
-    end
-  end
-  
   def landline_profile_fields
     phone_profile_fields - mobile_phone_profile_fields
   end
@@ -29,7 +23,7 @@ concern :UserProfile do
     (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
   end
   def phone_field
-    (landline_profile_fields + phone_profile_fields).first
+    landline_profile_fields.first || phone_profile_fields.first
   end
   
   def mobile

@@ -16,6 +16,7 @@ module Profileable
     has_many :address_profile_fields, -> { where type: 'ProfileFieldTypes::Address' }, class_name: 'ProfileFieldTypes::Address', as: :profileable, dependent: :destroy, autosave: true
     
     include InstanceMethodsForProfileables
+    include ProfileFields
   end
   
   def default_profile_section_titles
@@ -27,26 +28,6 @@ module Profileable
   end  
 
   module InstanceMethodsForProfileables
-    
-    def email
-      @email ||= cached { profile_fields.where(type: ['ProfileFieldTypes::Email', 'ProfileFieldTypes::MailingListEmail']).first.try(:value) }
-    end
-    def email=( email )
-      @email = nil
-      @email_profile_field = profile_fields_by_type( "ProfileFieldTypes::Email" ).first unless @email_profile_field
-      @email_profile_field = profile_fields.build( type: "ProfileFieldTypes::Email", label: "email" ) unless @email_profile_field
-      @email_profile_field.value = email
-    end
-    def email_does_not_work?
-      email_needs_review? or email_empty?
-    end
-    def email_needs_review?
-      profile_fields_by_type("ProfileFieldTypes::Email").review_needed.count > 0
-    end
-    def email_empty?
-      not email.present?
-    end
-    
     def profile
       @profile ||= Profile.new(self)
     end
@@ -62,7 +43,6 @@ module Profileable
     def profile_fields_by_type( type_or_types )
       profile_fields.where( type: type_or_types )
     end
-    
   end
  
 end
