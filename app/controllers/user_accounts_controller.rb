@@ -3,6 +3,8 @@ class UserAccountsController < ApplicationController
   load_and_authorize_resource
   skip_authorize_resource only: [:create]
   layout               false
+  
+  after_action :log_public_activity_for_user, only: [:create, :destroy]
 
   def show
     @user_account = UserAccount.find(params[:id])
@@ -33,13 +35,13 @@ class UserAccountsController < ApplicationController
 
     respond_to do |format|
       if @user_account.save
-
+        
         @user.send_welcome_email
         
         format.html { redirect_to :back, notice: t(:user_account_created) }
         format.json { render json: @user_account, status: :created, location: @user_account }
       else
-        format.html { render action: "new" }
+        format.html { redirect_to :back, flash: {error: @user_account.errors.full_messages.join(", ")} }
         format.json { render json: @user_account.errors, status: :unprocessable_entity }
       end
     end
@@ -47,6 +49,8 @@ class UserAccountsController < ApplicationController
 
   def destroy
     @user_account = UserAccount.find(params[:id])
+    @user = @user_account.user
+    
     @user_account.destroy
 
     respond_to do |format|
@@ -54,4 +58,19 @@ class UserAccountsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  private
+  
+  # The PublicActivity::Activity is logged by the application controller. But we need
+  # to log additional information here.
+  #
+  def log_public_activity_for_user
+    PublicActivity::Activity.create(
+      trackable: @user,
+      key: "#{action_name} user account",
+      owner: current_user
+    )
+  end
+  
+
 end

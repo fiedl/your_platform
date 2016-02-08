@@ -1,4 +1,4 @@
-class UserAccountMailer < ActionMailer::Base
+class UserAccountMailer < BaseMailer
   def welcome_email( user, password ) 
     @user = user
     @password = password

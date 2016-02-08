@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     put :settings, to: 'user_settings#update'
     get :memberships, to: 'user_group_memberships#index'
     get :badges, to: 'user_badges#index'
+    get :activities, to: 'activities#index'
   end
   get :settings, to: 'user_settings#index'
 

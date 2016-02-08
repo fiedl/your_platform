@@ -3,6 +3,10 @@ class ProfileFieldsController < ApplicationController
   before_action :load_profileable, :only => [:create, :index]
   load_and_authorize_resource except: :index
   skip_authorization_check only: :index
+  
+  before_action :log_public_activity_for_profileable, only: [:destroy]
+  after_action :log_public_activity_for_profileable, only: [:create, :update]
+  
   respond_to :json, :js
   
   def index
@@ -96,6 +100,25 @@ class ProfileFieldsController < ApplicationController
       raise "security interrupt: '#{params[:profile_field][:type]}' is not a permitted profile field type."
     end
     params[:profile_field][:type]
+  end
+  
+  # The PublicActivity::Activity is logged by the application controller. But it is not
+  # very helpful to know that profile field 1234 has been changed or deleted. Therefore,
+  # we log additional information here.
+  #
+  def log_public_activity_for_profileable
+    PublicActivity::Activity.create(
+      trackable: @profile_field.profileable,
+      key: "#{action_name} profile field",
+      owner: current_user,
+      parameters: {
+        label: @profile_field.label,
+        value: @profile_field.value,
+        parent_label: @profile_field.parent.try(:label),
+        parent_value: @profile_field.parent.try(:value),
+        type: @profile_field.type
+      }
+    )
   end
 
 end

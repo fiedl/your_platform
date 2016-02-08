@@ -85,7 +85,10 @@ $(document).ready ->
   
   $('.datatable.activities').dataTable(jQuery.extend({
     "pageLength": 100,
-    "order": [[0, "desc"]]
+    "order": [[0, "desc"]],
+    "columnDefs": [
+      {width: "50%", targets: 4}
+    ]
   }, common_configuration))
   $('.datatable.members').dataTable(jQuery.extend({
     "pageLength": 20,
