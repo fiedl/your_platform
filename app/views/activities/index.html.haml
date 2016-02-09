@@ -22,4 +22,8 @@
               = link_to (object_title || activity.trackable.class.name), activity.trackable
             - rescue
               = (object_title || activity.trackable.class.name)
-          %td= activity.parameters
+          %td
+            - begin
+              = activity.parameters
+            - rescue => e
+              = e.message.to_s
