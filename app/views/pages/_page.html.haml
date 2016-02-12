@@ -6,9 +6,11 @@
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
     - if can? :manage, page
-      .activities_tool.tool
+      .activities_tool.tool.do_not_show_in_edit_mode
         = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
-      
+    - if can? :destroy, page
+      .delete_page_tool.tool
+        = link_to icon(:trash), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_page', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
     .archive_tools.tool
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
@@ -30,9 +32,6 @@
     
     .page_footer
       %span.page_footer_box
-        - if can? :destroy, page
-          = link_to I18n.t(:destroy_page_again), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger has_tooltip destroy_page right', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
-        
         - if page.author
           %span.page_author
             = link_to(page.author.title, page.author) + ", "
