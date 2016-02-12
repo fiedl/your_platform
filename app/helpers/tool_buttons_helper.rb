@@ -41,6 +41,9 @@ module ToolButtonsHelper
 
   def edit_button( options = {} )
     tool_button :edit, "edit black", t(:edit), options
+    #link_to '#', class: 'edit_button' do
+    #  tool_icon(:edit)
+    #end
   end
 
   def save_button( options = {} )
