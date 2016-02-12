@@ -81,6 +81,7 @@ Rails.application.routes.draw do
   
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'
+    get :activities, to: 'activities#index'
   end
   
   resources :projects

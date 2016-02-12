@@ -5,6 +5,9 @@
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
+    - if can? :manage, page
+      .activities_tool.tool
+        = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
       
     .archive_tools.tool
       = archived_label(page)
