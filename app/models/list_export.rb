@@ -51,8 +51,7 @@ class ListExport
     when 'join_statistics', 'join_and_persist_statistics'
       [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse
     else
-      # This name_list is the default.
-      [:last_name, :first_name, :name_affix, :personal_title, :academic_degree]
+      raise "The list '#{preset.to_s}' is not defined."
     end
   end
   
