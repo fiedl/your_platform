@@ -3,7 +3,7 @@ require 'spec_helper'
 describe ListExports::NameList do
   
   before do
-    @group = create :group
+    @group = create :group, name: 'MyGroup'
     @user = create :user, :with_address, first_name: "Jonathan", last_name: "Doe"
     @user.address_profile_fields.first.update_attributes value: "Pariser Platz 1\n 10117 Berlin"
     @user.profile_fields.create label: 'personal_title', value: "Dr."
@@ -22,13 +22,13 @@ describe ListExports::NameList do
 
   describe "#headers" do
     subject { @list_export.headers }
-    it { should include 'Nachname', 'Vorname', 'Namenszusatz', 'Persönlicher Titel', 'Akademischer Grad' }
+    it { should include 'Nachname', 'Vorname', 'Namenszusatz', 'Persönlicher Titel', 'Akademischer Grad', "Mitglied in 'MyGroup' seit" }
   end
 
   describe "#to_csv" do
     subject { @list_export.to_csv }
-    it { should include "Nachname;Vorname;Namenszusatz;Persönlicher Titel;Akademischer Grad" }
-    it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Dr.;Dr. rer. nat." }
+    it { should include "Nachname;Vorname;Namenszusatz;Persönlicher Titel;Akademischer Grad;Mitglied in 'MyGroup' seit" }
+    it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Dr.;Dr. rer. nat.;#{I18n.l(Date.today)}" }
   end
   
 end

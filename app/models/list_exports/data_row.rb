@@ -16,7 +16,7 @@ module ListExports
     
     def initialize(object)
       @object = object
-      @object = @object.becomes ListExportUser if @object.kind_of? User
+      @object = @object.becomes ListExportUser if @object.kind_of? User and not @object.kind_of? ListExportUser
     end
     
     def column(column_name)

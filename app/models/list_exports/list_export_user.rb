@@ -3,6 +3,10 @@ module ListExports
     def personal_title_and_name
       "#{personal_title} #{name}".strip
     end
+    
+    # Name list
+    #
+    attr_accessor :member_since
   
     # Birthday, Date of Birth, Date of Death
     #

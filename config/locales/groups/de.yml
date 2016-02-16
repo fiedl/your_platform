@@ -64,3 +64,5 @@ de:
   send_with_book_rate:            Als Büchersendung kennzeichnen
   exported_by:                    Exportiert von
   compact_address_format:         Kompaktes Adressformat
+  member_since:                   Mitglied seit
+  member_of_str_since:            "Mitglied in '%{str}' seit"
