@@ -24,7 +24,7 @@ module ListExports
     #
     def data
       super.collect { |user|
-        user = user.becomes(ListExportUser)
+        user = user.becomes(ListExports::ListExportUser)
         user.member_since = I18n.localize(user.date_of_joining(group))
         user
       }.sort_by { |user|
