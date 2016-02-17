@@ -21,7 +21,7 @@ module ListExports
     
     def column(column_name)
       if @object.respond_to? :values
-        @object[column_name] || @object[column_name.to_sym]
+        @object[column_name.to_s] || @object[column_name.to_sym]
       elsif @object.respond_to? column_name
         @object.try(:send, column_name) 
       else
