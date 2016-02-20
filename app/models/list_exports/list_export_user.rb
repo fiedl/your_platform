@@ -3,6 +3,9 @@ module ListExports
     def personal_title_and_name
       "#{personal_title} #{name}".strip
     end
+    def name_affix_without_deceased_symbol
+      name_affix.gsub(" (✟)", "")
+    end
   
     # Birthday, Date of Birth, Date of Death
     #
@@ -17,6 +20,12 @@ module ListExports
     end
     def localized_next_birthday
       I18n.localize next_birthday if next_birthday
+    end
+    def localized_date_of_death
+      date_of_death # which is localized already
+    end
+    def age_at_date_of_death
+      ((date_of_death.to_date - date_of_birth) / 365.25).to_int
     end
   
     # Address

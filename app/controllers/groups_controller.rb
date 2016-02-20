@@ -199,6 +199,8 @@ class GroupsController < ApplicationController
       ListExports::BirthdayList.from_group(@group, quater: params[:quater])
     when 'special_birthdays'
       ListExports::SpecialBirthdays.from_group(@group, quater: params[:quater])
+    when 'deceased_members'
+      ListExports::DeceasedMembers.from_group(@group)
     else
       ListExport.new(@members, list_preset)
     end
