@@ -29,7 +29,7 @@ module ListExports
       date_of_death # which is localized already
     end
     def age_at_date_of_death
-      ((date_of_death.to_date - date_of_birth) / 365.25).to_int
+      ((date_of_death.to_date - date_of_birth) / 365.25).to_int if date_of_death and date_of_birth
     end
   
     # Address
