@@ -187,6 +187,8 @@ class GroupsController < ApplicationController
   
   def list_export_by_preset(list_preset)
     case list_preset
+    when 'name_list', '', nil
+      ListExports::NameList.from_group(@group)
     when 'member_development', 'join_statistics'
       ListExport.new(@group, list_preset)
     when 'dpag_internetmarken'

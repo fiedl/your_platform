@@ -51,8 +51,7 @@ class ListExport
     when 'join_statistics', 'join_and_persist_statistics'
       [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse
     else
-      # This name_list is the default.
-      [:last_name, :first_name, :name_affix, :personal_title, :academic_degree]
+      raise "The list '#{preset.to_s}' is not defined."
     end
   end
   
@@ -60,6 +59,8 @@ class ListExport
     columns.collect do |column|
       if column.kind_of? Symbol
         I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
+      elsif column.include?("_")
+        column.humanize
       else
         column
       end
@@ -119,12 +120,13 @@ class ListExport
       @leaf_groups = @group.leaf_groups
       # FIXME: The leaf groups should not return any officer group. Make this fix unneccessary:
       @leaf_groups -= @group.descendant_groups.where(name: ['officers', 'Amtsträger'])
-      @leaf_group_names = @leaf_groups.collect { |group| group.name }
+      @leaf_groups -= @group.descendant_groups.where(name: ['attendees', 'Teilnehmer', 'contact_people', 'Ansprechpartner'])
+      @leaf_group_names = @leaf_groups.map(&:name)
       @leaf_group_ids = @leaf_groups.collect { |group| group.id }
       # /FIXME - please uncomment:
       #@leaf_group_names = @leaf_groups.pluck(:name)
       #@leaf_group_ids = @leaf_groups.pluck(:id }
-      
+
       @group.members.collect do |user|
         user = user.becomes(ListExportUser)
         row = {
@@ -280,11 +282,15 @@ class HashWrapper
     @hash = hash
   end
   
+  def get(column_name)
+    @hash[column_name.to_s] || @hash[column_name.to_sym]
+  end
+  
   # This is a workaround for the to_xls gem, which requires to access the attributes
   # by method in order to write the columns in the correct order.
   #
-  def method_missing(method_name, *args, &block)  
-    @hash[method_name] || @hash[method_name.to_sym]
+  def method_missing(method_name, *args, &block)
+    get(method_name)
   end
 end
 

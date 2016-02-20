@@ -72,4 +72,16 @@ module UserMixins::Memberships
       )
     
   end
+  
+  def joined_at(group)
+    Rails.cache.fetch [self, 'joined_at', group] do
+      group.membership_of(self).valid_from
+    end
+  end    
+  
+  def date_of_joining(group)
+    Rails.cache.fetch [self, 'date_of_joining', group] do
+      self.joined_at(group).to_date
+    end
+  end
 end

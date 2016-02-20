@@ -116,21 +116,4 @@ describe ListExport do
     end
   end
   
-  describe "name_list: " do
-    before do
-      @user.profile_fields.create(type: 'ProfileFieldTypes::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)
-      @user.profile_fields.create(type: 'ProfileFieldTypes::General', value: "Dr.", label: :personal_title)
-      
-      @list_export = ListExport.new(@group.members, :name_list)
-    end
-    describe "#headers" do
-      subject { @list_export.headers }
-      it { should include 'Nachname', 'Vorname', 'Namenszusatz', 'Persönlicher Titel', 'Akademischer Grad' }
-    end
-    describe "#to_csv" do
-      subject { @list_export.to_csv }
-      it { should include "Nachname;Vorname;Namenszusatz;Persönlicher Titel;Akademischer Grad" }
-      it { should include "#{@user.last_name};#{@user.first_name};#{@user_title_without_name};Dr.;Dr. rer. nat." }
-    end
-  end
 end

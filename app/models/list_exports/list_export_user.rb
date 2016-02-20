@@ -6,6 +6,10 @@ module ListExports
     def name_affix_without_deceased_symbol
       name_affix.gsub(" (✟)", "")
     end
+    
+    # Name list
+    #
+    attr_accessor :member_since
   
     # Birthday, Date of Birth, Date of Death
     #

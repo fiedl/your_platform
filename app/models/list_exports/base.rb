@@ -44,6 +44,10 @@ module ListExports
       self.new(group.members.to_a, options.merge({group: group}))
     end
     
+    def group
+      @options[:group]
+    end
+    
     # The columns that are to be exported are listed here as array of Symbols or Strings.
     # During the export, these names are used either as methods on the ActiveRecord objects,
     # or as keys for the Hashes in the `data`.
