@@ -81,7 +81,7 @@ module UserMixins::Memberships
   
   def date_of_joining(group)
     Rails.cache.fetch [self, 'date_of_joining', group] do
-      self.joined_at(group).to_date
+      self.joined_at(group).try(:to_date)
     end
   end
 end
