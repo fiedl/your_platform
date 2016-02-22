@@ -46,7 +46,15 @@ module PostDeliveryReport
   end
   
   def recipients_count
-    (successfully_sent_to_user_ids + failed_to_send_to_user_ids + pending_to_send_to_user_ids).uniq.count
+    @recipients_count ||= (successfully_sent_to_user_ids + failed_to_send_to_user_ids + pending_to_send_to_user_ids).uniq.count
+  end
+  
+  # Some posts are too old: There is not enough information to reconstruct the deliveries.
+  # In those cases, do not show the deliveries. Otherwise "0 recipients" would be shown,
+  # which is misleading.
+  #
+  def has_delivery_report?
+    (recipients_count > 0) || sent_via.present?
   end
   
 end

@@ -37,6 +37,15 @@ class PostDelivery < ActiveRecord::Base
         self.save
         return false
       end
+    elsif not user.has_account?
+      self.comment = "User has no account."
+      self.failed_at = Time.zone.now
+      self.save
+      return false
+    elsif user.email_does_not_work?
+      self.comment = "Email does not work."
+      self.failed_at = Time.zone.now
+      self.save
     end
   end
   

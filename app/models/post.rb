@@ -91,9 +91,11 @@ class Post < ActiveRecord::Base
     recipients ||= group.members
     
     recipients.each do |recipient_user|
-      delivery = self.deliveries.build
-      delivery.user = recipient_user
-      delivery.save
+      unless self.deliveries.pluck(:user_id).include? recipient_user.id
+        delivery = self.deliveries.build
+        delivery.user = recipient_user
+        delivery.save
+      end
     end
     
     self.deliveries.due.pluck(:id).each do |delivery_id|

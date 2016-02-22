@@ -31,10 +31,11 @@
               = link_to post.group.title, post.group
         %div.post-date
           = localize(post.sent_at) if post.sent_at
-          |
-          %span.post-deliveries#post-deliveries
-            %a.short_delivery_report{href: '#', data: {show_long_delivery_report: @show_delivery_report ? 'true' : 'false', long_report_url: post_deliveries_url(post)}}
-              = t(:n_recipients, n: post.recipients_count)
+          - if post.has_delivery_report?
+            |
+            %span.post-deliveries#post-deliveries
+              %a.short_delivery_report{href: '#', data: {show_long_delivery_report: @show_delivery_report ? 'true' : 'false', long_report_url: post_deliveries_url(post)}}
+                = t(:n_recipients, n: post.recipients_count)
       
       %div.post-body
         = markup post.text
