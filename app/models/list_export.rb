@@ -59,7 +59,7 @@ class ListExport
     columns.collect do |column|
       if column.kind_of? Symbol
         I18n.translate column.to_s.gsub('cached_', '').gsub('localized_', '')
-      elsif column.include?("_")
+      elsif column.to_s.include?("_") && column.respond_to?(:humanize)
         column.humanize
       else
         column
