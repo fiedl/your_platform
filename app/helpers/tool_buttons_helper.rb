@@ -40,7 +40,10 @@ module ToolButtonsHelper
   end
 
   def edit_button( options = {} )
-    tool_button :edit, "edit black", t(:edit), options
+    tool_button :edit, "edit black", "", {title: t(:edit)}.merge(options)
+    #link_to '#', class: 'edit_button' do
+    #  tool_icon(:edit)
+    #end
   end
 
   def save_button( options = {} )

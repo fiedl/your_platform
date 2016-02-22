@@ -1,13 +1,14 @@
-- if can? :destroy, @event
-  %p
-    = link_to "Veranstaltung wieder löschen", event_path(@event, format: 'json'), method: 'delete', class: 'btn btn-danger has_tooltip destroy_event', title: 'Die neue Veranstaltung kann bis zehn Minuten nach der Erstellung gelöscht werden, falls sie versehentlich erstellt wurde.', data: {redirect: root_path}
-
-%h1= best_in_place_if can?(:update, @event), @event, :name
+%h1
+  = best_in_place_if can?(:update, @event), @event, :name
+  - if can? :destroy, @event
+    .tool.destroy_event_tool
+      = link_to icon(:trash), event_path(@event, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_event', title: 'Die neue Veranstaltung kann bis zehn Minuten nach der Erstellung gelöscht werden, falls sie versehentlich erstellt wurde.', data: {redirect: root_path}
+  - else  # This is a ui choice: If the event has just been created, we do not show the export button together with the destroy button in order not to clutter the tool bar.
+    .ics_export_buttons.tool
+      %a.btn.btn-default#ics_export{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+        = icon :calendar
+        Kalender-Export
 %div
-  %span.ics_export_buttons
-    %a.btn.btn-default#ics_export.has_tooltip{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
-      = icon :calendar
-      Kalender-Export
   = render partial: 'events/event_details'
 
 = render partial: 'events/pictures'

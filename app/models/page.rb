@@ -12,17 +12,11 @@ class Page < ActiveRecord::Base
   serialize :redirect_to
   
   include PagePublicWebsite
+  include Archivable
   
-  scope :for_display, -> { includes(
-                            :ancestor_users,
-                            :ancestor_events, 
-                            :author, 
-                            :parent_pages, 
-                            :parent_users, 
-                            :parent_groups, 
-                            :parent_events
-                          )}
-
+  scope :for_display, -> { not_archived.includes(:ancestor_users, 
+    :ancestor_events, :author, :parent_pages, 
+    :parent_users, :parent_groups, :parent_events) }
 
   def not_empty?
     attachments.count > 0 or (content && content.length > 5)

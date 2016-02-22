@@ -40,19 +40,19 @@ feature "Role Preview" do
     
     visit group_profile_path(@group)
     within ".box.first" do
-      page.should have_text I18n.t(:edit)
+      page.should have_selector '.edit_button'
     end
     within ".role-preview-switcher" do
       click_on I18n.t(:officer)
     end
     within ".box.first" do
-      page.should have_no_text I18n.t(:edit)
+      page.should have_no_selector '.edit_button'
     end
     within ".role-preview-switcher" do
       click_on I18n.t(:admin)
     end
     within ".box.first" do
-      page.should have_text I18n.t(:edit)
+      page.should have_selector '.edit_button'
     end
     
   end

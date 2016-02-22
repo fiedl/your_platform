@@ -1,41 +1,48 @@
-%h1
-  - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
-    = best_in_place_if can?(:update, page), page, :title
-  - else  # Blog Entries:
-    = link_to(page) do
-      = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-%div.page
-  - if @navable != page and not @navable.in?(page.parents) and page.parents.first
-    .page_header
-      %span.right
-        = icon(:tag)
-        = link_to page.parents.first.title, page.parents.first
+.page_with_attachments
+  %h1
+    - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
+      = best_in_place_if can?(:update, page), page, :title
+    - else  # Blog Entries:
+      = link_to(page) do
+        = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
+    - if can? :manage, page
+      .activities_tool.tool.do_not_show_in_edit_mode
+        = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
+    - if can? :destroy, page
+      .delete_page_tool.tool
+        = link_to icon(:trash), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_page', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
+    .archive_tools.tool
+      = archived_label(page)
+      = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
+  %div.page
+    - if @navable != page and not @navable.in?(page.parents) and page.parents.first
+      .page_header
+        %span.right
+          = icon(:tag)
+          = link_to page.parents.first.title, page.parents.first
+    
+    - if (image_attachments = page.attachments_by_type("image")) && image_attachments.try(:any?)
+      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: image_attachments, inline: true}
   
-  - if (image_attachments = page.attachments_by_type("image")) && image_attachments.try(:any?)
-    #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: image_attachments, inline: true}
-
-  %div.page_body
-    %div{ id: 'page_content', data: { mercury: 'full' } }
-      = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
-    .show_only_in_edit_mode
-      = render partial: 'shared/markdown_help'
+    %div.page_body
+      %div{ id: 'page_content', data: { mercury: 'full' } }
+        = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
+      .show_only_in_edit_mode
+        = render partial: 'shared/markdown_help'
+    
+    .page_footer
+      %span.page_footer_box
+        - if page.author
+          %span.page_author
+            = link_to(page.author.title, page.author) + ", "
+        %span.page_created_at
+          = localize(page.created_at) if page.created_at
+        - if page.updated_at && page.updated_at > page.created_at + 1.hour
+          %span.page_updated_at
+            = " | "       
+            = t(:edited_at)
+            = localize(page.updated_at)
   
-  .page_footer
-    %span.page_footer_box
-      - if can? :destroy, page
-        = link_to I18n.t(:destroy_page_again), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger has_tooltip destroy_page right', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
-      
-      - if page.author
-        %span.page_author
-          = link_to(page.author.title, page.author) + ", "
-      %span.page_created_at
-        = localize(page.created_at) if page.created_at
-      - if page.updated_at && page.updated_at > page.created_at + 1.hour
-        %span.page_updated_at
-          = " | "       
-          = t(:edited_at)
-          = localize(page.updated_at)
-
-#attachments
-  = render(partial: 'pages/videos', locals: {page: page}) 
-  = render(partial: 'pages/attachments', locals: {page: page})
+  #attachments
+    = render(partial: 'pages/videos', locals: {page: page}) 
+    = render(partial: 'pages/attachments', locals: {page: page})

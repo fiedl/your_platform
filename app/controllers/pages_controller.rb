@@ -52,6 +52,8 @@ class PagesController < ApplicationController
   end
 
   def update
+    params[:page] ||= {}
+    params[:page][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     params[:blog_post] ||= params[:page]  # required for blog posts in respond_with_bip
     @page.update_attributes params[ :page ]
     respond_with_bip(@page)

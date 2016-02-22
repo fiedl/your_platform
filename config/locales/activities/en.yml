@@ -7,3 +7,6 @@ en:
   looks_at_group_profile: "is looking at group profile"
   looks_at_officers: "is looking up officers"
   manages_group_settings: "is managing group settings"
+  writes_a_message_to_group: "writes am message to a group"
+  
+  show_page_activity_log: "Show activity log"
