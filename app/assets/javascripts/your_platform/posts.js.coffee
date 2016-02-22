@@ -2,6 +2,10 @@ ready = ->
   
   $('.new.post #message_text').autosize()
   
+  $('.short_delivery_report').each ->
+    if $(this).data('show-long-delivery-report') == true
+      $(this).popover('show')
+  
   refresh_number_of_recipients_display = ->
     $('span.member_count').text("…")
     valid_from = ""
@@ -66,6 +70,13 @@ ready = ->
     )
     click_event.preventDefault()
 
+
+  $(document).on 'click', '.send_message_instantly', ->
+    $(this)
+    .removeClass('btn-default')
+    .addClass('btn-success')
+    .delay(500)
+    .hide()
       
 $(document).ready(ready)
 

@@ -109,7 +109,10 @@ Rails.application.routes.draw do
   end
   
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
-  resources :posts
+  resources :posts do
+    get :deliveries, to: 'post_deliveries#index'
+    put :deliver, to: 'posts#deliver'
+  end
   resources :comments
   
   patch 'notifications/read_all', to: 'notifications#read_all', as: 'read_all_notifications'

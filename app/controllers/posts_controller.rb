@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   
   authorize_resource
-  skip_authorize_resource only: [:new, :create, :preview]
+  skip_authorize_resource only: [:new, :create, :preview, :deliver]
   skip_authorization_check only: [:preview]
   
   # This will skip the cross-site-forgery protection for POST /posts.json,
@@ -40,6 +40,7 @@ class PostsController < ApplicationController
     
     @show_all_comments = true
     @keep_polling_delivery_counters = (@post.created_at >= 5.minutes.ago)
+    @show_delivery_report = params[:show_delivery_report].present?
     
     set_current_title @post.subject
     set_current_navable @group
@@ -69,7 +70,7 @@ class PostsController < ApplicationController
     authorize! :create_post_for, @group
 
     @text = params[:text] || params[:post][:text]
-    @subject = params[:subject] || params[:post][:text].split("\n").first
+    @subject = params[:subject] || params[:post][:text].split("\n").first.first(100)
     @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
     
     if params[:recipient] == 'me'
@@ -85,7 +86,7 @@ class PostsController < ApplicationController
     end
     
     @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
-    @post.save! unless params[:recipient] == 'me'
+    @post.save!
   
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
@@ -97,6 +98,8 @@ class PostsController < ApplicationController
     end
     
     Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text) unless params[:recipient] == 'me'
+    
+    @post.destroy if params[:recipient] == 'me'
     
     respond_to do |format|
       format.html do
@@ -123,6 +126,22 @@ class PostsController < ApplicationController
         render html: view_context.markup(params[:text])
       end
     end
+  end
+  
+  # PUT posts/123/deliver
+  #
+  # This forces a post delivery, which is useful when the user decides
+  # that a post should be delivered instantly after creating the post.
+  # Otherwise, the recipients would be notified according to their own
+  # notification policy.
+  #
+  def deliver
+    @post = Post.find params[:post_id]
+    authorize! :deliver, @post
+    @post.notify_recipients
+    respond_to do |format|
+      format.json { render json: @post }
+    end    
   end
   
   private

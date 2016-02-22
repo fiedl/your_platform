@@ -1,5 +1,5 @@
 class Post < ActiveRecord::Base
-  attr_accessible :author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text if defined? attr_accessible
+  attr_accessible :author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text, :sent_via if defined? attr_accessible
 
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
@@ -14,6 +14,8 @@ class Post < ActiveRecord::Base
 
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
+  
+  include PostDeliveryReport
   
   def title
     subject
@@ -32,6 +34,10 @@ class Post < ActiveRecord::Base
   def unread_by?(user)
     self.notifications.where(recipient_id: user.id, read_at: nil).count > 0 or
     user.notifications.unread.where(reference_type: 'Comment', reference_id: self.comment_ids).count > 0
+  end
+  
+  def recipients
+    User.find(notifications.pluck(:recipient_id))
   end
 
   # This allows to set the author either as email or as email string.
@@ -93,6 +99,8 @@ class Post < ActiveRecord::Base
     self.deliveries.due.pluck(:id).each do |delivery_id|
       PostDelivery.delay.deliver_if_due(delivery_id)
     end
+    
+    self.notifications.where(sent_at: nil).update_all sent_at: Time.zone.now
 
     return self.deliveries.count
   end
@@ -162,5 +170,5 @@ class Post < ActiveRecord::Base
 
     return message
   end
-
+  
 end

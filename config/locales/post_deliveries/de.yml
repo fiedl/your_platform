@@ -1,3 +1,28 @@
 de:
   post_sent_to_n_recipients: "Erfolgreich an %{n} Empfänger gesendet."
   post_failed_to_send_to_n_recipients: "Versand an %{n} Empfänger fehlgeschlagen."
+  post_will_be_sent_to_n_recipients: "Nachricht wird an %{n} Empfänger versandt."
+  failed_n: "Fehlgeschlagen: %{n}."
+  pending_n: "Ausstehend: %{n}."
+  n_recipients: "%{n} Empfänger"
+  
+  sent_to: Gesendet an
+  
+  delivery_report: Sendebericht
+  delivery_report_successful: Erfolgreich
+  delivery_report_failed: Fehlgeschlagen
+  delivery_report_pending: Ausstehend
+  
+  delivery_report_sent: Zugestellt an
+  delivery_report_failed_to_send: Konnte nicht zustellen
+  delivery_report_pending: Noch nicht zugestellt
+  
+  post_has_been_created_via_email: 'Die Nachricht wurde via E-Mail-Verteiler erstellt. Empfänger werden umgehend per E-Mail-Verteiler informiert.'
+  post_has_been_created_via_contact_form: 'Die Nachricht wurde über das Formular "Sammelnachricht senden" erstellt. Empfänger werden umgehend per E-Mail-Verteiler informiert.'
+  post_has_been_created_via_social_messaging: 'Empfänger werden gemäß ihrer eigenen Einstellungen sofort oder gesammelt benachrichtigt, spätestens jedoch nach einem Tag.'
+  
+  post_created_via: 'Eingesendet via:'
+  post_created_via_email: 'Eingesendet via: E-Mail'
+  post_created_via_contact_form: 'Eingesendet via: Kontakt-Form "Sammelnachricht senden"'
+  post_created_via_social_messaging: 'Eingesendet via: "Nachrichten"'
+  

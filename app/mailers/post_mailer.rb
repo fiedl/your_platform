@@ -36,11 +36,12 @@ class PostMailer < BaseMailer
       # If the sender is recognized by the system, replies generate comments.
       @from_field = "#{sender.title} <#{sender.email}>"
       @reply_to = ReceivedCommentMail.generate_address(recipients.first, post) if post.try(:id)
+      @show_delivery_report_link = ([sender.id] == recipients.map(&:id))
     else
       @from_field = sender.to_s
       @reply_to = @from_field
     end
-
+    
     I18n.with_locale(recipients.first.try(:locale) || I18n.default_locale) do
       message = mail(
         to: @to_field, from: @from_field, subject: subject,

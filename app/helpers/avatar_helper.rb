@@ -16,6 +16,14 @@ module AvatarHelper
       end
     end.html_safe
   end
+  
+  # Display avatars for several users.
+  #
+  def user_avatars(users)
+    users.collect do |user|
+      link_to(user_avatar(user, size: 24), user, class: 'has_tooltip avatar_link', title: user.title, data: {placement: 'bottom'})
+    end.join.html_safe
+  end
 
   # This returns the html code for an avatar image of the given user.
   # This image is just provided by gravatar.

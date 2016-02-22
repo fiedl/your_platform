@@ -1,0 +1,43 @@
+- # locals:
+- post ||= locals[:post] || raise('no post given for delivery report')
+
+.long_delivery_report
+
+  - if post.successfully_sent_to_count > 0
+    %p#successfully_sent_to
+      %span.user_avatar_list= user_avatars(post.successfully_sent_to)
+  
+  - if post.pending_to_send_to_count > 0
+    %p#pending_to_send_to
+      %h4= "#{t(:delivery_report_pending)}:"
+      %span.user_avatar_list= user_avatars(post.pending_to_send_to)
+    
+    - # This has to be shown only when there are pending messages,
+    - # because this explains why not all messages have been sent, yet.
+    - if post.created_via_social_messaging?
+      %p#post_created_via
+        =t :post_has_been_created_via_social_messaging 
+      %p.notification_settings= link_to t(:notification_settings), user_settings_path(current_user)
+    
+  - if post.failed_to_send_to_count > 0
+    %p#failed_to_send_to
+      %h4= "#{t(:delivery_report_failed_to_send)}:"
+      %span.user_avatar_list= user_avatars(post.failed_to_send_to)
+
+  - # If the post has been sent via group mail, display the email.
+  - if post.sent_via.present?
+    %p#post_created_via
+      =t :post_created_via
+      = link_to post.sent_via, "mailto:#{post.sent_via}"
+      
+  - if post.pending_to_send_to_count > 0 && can?(:deliver, post)
+    %p#deliver_now
+      = button_to post_deliver_path(post), remote: true, method: 'put', class: 'btn btn-default send_message_instantly', disable_with: t(:message_sent) do
+        = icon :envelope
+        =t :deliver_instantly
+  
+  - if can? :read, :post_created_via_debug_info
+    #post_created_via
+      %p=t :post_created_via_email if post.created_via_email?
+      %p=t :post_created_via_contact_form if post.created_via_contact_form?
+      %p=t :post_created_via_social_messaging if post.created_via_social_messaging?

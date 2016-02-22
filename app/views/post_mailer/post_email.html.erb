@@ -23,6 +23,10 @@
         <%= link_to "Auf der Plattform anzeigen", @post.url %>
         |
         <%= link_to t(:write_a_comment), @post.url %>
+        <% if @show_delivery_report_link %>
+          |
+          <%= link_to t(:delivery_report), @post.url + "?show_delivery_report=true" %>
+        <% end %>
       </small></p>
       <br />
       <small><small>

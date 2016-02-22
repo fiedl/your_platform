@@ -7,6 +7,7 @@ $(document).ready ->
     this.process_box_tools()
     this.process_comment_tools()
     this.process_mentions()
+    this.process_post_delivery_report_tools()
     
     App.attachments.process($(this))
     App.galleries.process($(this))
