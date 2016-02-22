@@ -6,7 +6,7 @@ module ArchivableHelper
   #
   def archive_button(archivable)
     if not archivable.archived?
-      link_to icon(:archive), archivable, class: 'btn btn-info archive_button', title: t(:archive_str, str: archivable.title)
+      link_to icon(:trash), archivable, class: 'btn btn-info archive_button', title: t(:archive_str, str: archivable.title)
     elsif archivable.archived?
       link_to icon(:undo), archivable, class: 'btn btn-info unarchive_button', title: t(:restore)
     end
