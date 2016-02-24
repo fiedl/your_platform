@@ -38,7 +38,6 @@ class PostsController < ApplicationController
       @posts.each { |post| authorize! :read, post }
       
       set_current_title t(:my_posts)
-      set_current_navable current_user
     end
   end
 
