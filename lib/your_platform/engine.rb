@@ -88,8 +88,8 @@ require 'will_paginate'
 require 'judge'
 
 # Metrics
-require 'fnordmetric'
 require 'rack-mini-profiler'
+require 'redis_analytics'
 
 # Activity Logger
 require 'public_activity'

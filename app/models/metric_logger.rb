@@ -46,7 +46,9 @@ class MetricLogger
     register_session unless options[:type].in? ["_set_name", "_set_picture"]
     data.merge!({ _type: options[:type] })
     data.merge!({ _session: session_id })
-    FNORD_METRIC.event(data) unless Rails.env.test?
+    
+    # FNORD_METRIC.event(data) unless Rails.env.test?
+    # TODO: Replace fnordmetric with something else.
   end
   
   # This is a shortcut for one-line logs, where no current_user is required.

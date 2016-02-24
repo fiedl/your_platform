@@ -140,12 +140,13 @@ Rails.application.routes.draw do
   
   get "errors/unauthorized"
   
-  # Sidekiq Web UI
-  sidekiq_constraint = lambda do |request|
+  # Dashboards for global admins:
+  global_admin_constraint = lambda do |request|
     request.env['warden'].authenticate? && request.env['warden'].user.user.global_admin?
   end
-  constraints sidekiq_constraint do
+  constraints global_admin_constraint do
     mount Sidekiq::Web => '/sidekiq'
+    mount RedisAnalytics::Dashboard::Engine => "/analytics"
   end
   
   # Refile File Attachments
