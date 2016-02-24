@@ -173,4 +173,30 @@ class Post < ActiveRecord::Base
     return message
   end
   
+  
+  # Find all posts that are sent by or sent to a user.
+  #
+  def self.by_user(user)
+    from_or_to_user(user)
+  end
+  def self.from_or_to_user(user)
+    ids = from_user(user).pluck(:id) + to_user_via_group(user).pluck(:id) + to_user_via_mention(user).map(&:id)
+    Post.where(id: ids).uniq.order(:created_at)
+  end
+  def self.from_user(user)
+    self.where(author_user_id: user.id)
+  end
+  def self.to_user_via_group(user)
+    self.where(group_id: user.group_ids)
+  end
+  def self.to_user_via_mention(user)
+    user.mentions.collect do |mention|
+      if mention.reference.kind_of? Post
+        mention.reference
+      elsif mention.reference.kind_of?(Comment) && mention.reference.commentable.kind_of?(Post)
+        mention.reference.commentable
+      end
+    end
+  end
+  
 end

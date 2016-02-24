@@ -3,6 +3,7 @@ de:
   current_posts: Aktuelle Nachrichten
 
   all_posts: Alle Nachrichten
+  my_posts: Meine Nachrichten
 
   read_on: Weiterlesen
   this_message_has_been_deliverd_through_mailing_list: "Diese Nachricht wurde über den E-Mail-Verteiler der Gruppe '%{group_name}' übermittelt."

@@ -5,10 +5,10 @@ concern :UserPosts do
   end
   
   def posts_for_me
-    posts_in_my_groups
+    Post.from_or_to_user(self)
   end
   def posts_in_my_groups
-    Post.where(group_id: self.group_ids)
+    Post.to_user_via_group(self)
   end
   
 end

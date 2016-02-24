@@ -1,7 +1,7 @@
 class PostsController < ApplicationController
   
   authorize_resource
-  skip_authorize_resource only: [:new, :create, :preview, :deliver]
+  skip_authorize_resource only: [:new, :create, :preview, :deliver, :index]
   skip_authorization_check only: [:preview]
   
   # This will skip the cross-site-forgery protection for POST /posts.json,
@@ -16,22 +16,30 @@ class PostsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
   
   def index
-    @group = Group.find(params[:group_id]) if params[:group_id].present?
-    @posts = @group.posts.order('sent_at DESC') if @group
-
-    authorize! :index_posts, @group
-
-    @new_post = Post.new
-    @new_post.group = @group
-    @new_post.author = current_user
-    
-    set_current_title "#{t(:posts)} - #{@group.name}"
-    set_current_navable @group
-    set_current_activity :looks_at_posts, @group
-    set_current_access :group
-    set_current_access_text I18n.t(:all_members_of_group_name_can_read_these_posts, group_name: @group.name)
-        
-    cookies[:group_tab] = "posts"
+    if params[:group_id].present?
+      @group = Group.find(params[:group_id])
+      @posts = @group.posts.order('sent_at DESC') if @group
+      
+      authorize! :index_posts, @group
+      
+      @new_post = Post.new
+      @new_post.group = @group
+      @new_post.author = current_user
+      
+      set_current_title "#{t(:posts)} - #{@group.name}"
+      set_current_navable @group
+      set_current_activity :looks_at_posts, @group
+      set_current_access :group
+      set_current_access_text I18n.t(:all_members_of_group_name_can_read_these_posts, group_name: @group.name)
+          
+      cookies[:group_tab] = "posts"
+    else
+      @posts = Post.from_or_to_user(current_user).select { |post| can? :read, post }.reverse
+      @posts.each { |post| authorize! :read, post }
+      
+      set_current_title t(:my_posts)
+      set_current_navable current_user
+    end
   end
 
   def show
