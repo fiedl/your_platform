@@ -10,7 +10,6 @@ concern :CheckAuthorization do
     check_authorization(:unless => :devise_controller?)
     
     rescue_from CanCan::AccessDenied do |exception|
-      binding.pry
       session['exception.action'] = exception.action
       if exception.subject.kind_of?(String) or exception.subject.kind_of?(Symbol)
         session['exception.subject'] = exception.subject
