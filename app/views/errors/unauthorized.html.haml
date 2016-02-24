@@ -7,6 +7,8 @@
 
     %p
       %strong= link_to(session['return_to_after_login'], session['return_to_after_login'])
+    %p
+      %pre= @reason
 
     %p Sie sind nicht berechtigt, die angeforderte Seite abzurufen.
     - unless current_user.present?

@@ -19,6 +19,7 @@ class ErrorsController < ApplicationController
   # -------------------------------------------------------------------------
 
   def unauthorized
+    @reason = session['exception.action'].to_s + ", " + session['exception.subject'].to_s
     if not current_user
       redirect_to sign_in_path, flash: { error: I18n.t(:unauthorized_please_sign_in) }
     end
