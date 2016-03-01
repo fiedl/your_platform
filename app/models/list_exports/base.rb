@@ -1,3 +1,5 @@
+require 'csv'
+
 # This class helps to export data to CSV, XLS and possibly others.
 #
 # Example:
