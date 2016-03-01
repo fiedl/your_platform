@@ -144,8 +144,13 @@ Rails.application.routes.draw do
   global_admin_constraint = lambda do |request|
     request.env['warden'].authenticate? && request.env['warden'].user.user.global_admin?
   end
+  developer_constraint = lambda do |request|
+    request.env['warden'].authenticate? && (request.env['warden'].user.user.developer? || request.env['warden'].user.user.global_admin?)
+  end
   constraints global_admin_constraint do
     mount Sidekiq::Web => '/sidekiq'
+  end
+  constraints developer_constraint do
     mount RedisAnalytics::Dashboard::Engine => "/analytics"
   end
   
