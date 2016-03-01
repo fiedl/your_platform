@@ -154,6 +154,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'uglifier', '>= 2.7.2'
   s.add_dependency 'mail', '>= 2.6.0' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_309
   s.add_dependency 'nokogiri', '>= 1.6.7.2' # CVE-2015-7499, https://gemnasium.com/fiedl/your_platform/alerts#advisory_328
+  s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
 
   # Development Dependencies 
   # --------------------------------------------------------------------------------
