@@ -1,4 +1,5 @@
 //
+//= require jquery.turbolinks
 //= require jquery-ujs
 //= require jquery-ui
 //
@@ -27,4 +28,4 @@
 //= require_tree ./your_platform
 //
 //= require turbolinks
-//= require turboboost/turboboost
+

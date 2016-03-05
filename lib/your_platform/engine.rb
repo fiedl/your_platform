@@ -45,8 +45,6 @@ require 'sugar-rails'
 require 'i18n-js'
 require 'jquery-atwho-rails'
 require 'turbolinks'
-require 'jquery-turbolinks'
-require 'turboboost'
 require 'rails-assets-datatables'
 
 # Layout: Twitter Bootstrap
