@@ -10,7 +10,6 @@
 //= require jquery-ui-timepicker-de
 //= require best_in_place
 //= require best_in_place_datetime
-//= require edit_mode
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl

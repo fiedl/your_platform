@@ -112,9 +112,6 @@ Gem::Specification.new do |s|
   # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
 
-  # Edit Mode
-  s.add_dependency 'edit_mode', '>= 1.0.2'                                             # MIT License
-
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
   
