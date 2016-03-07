@@ -37,5 +37,4 @@ $.fn.process_box_tools = ->
     edit_button.hide() if box.find('div.content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
 
   this.find('.box_header_table td.box_toolbar').each ->
-    console.log $(this).find('a:visible,button:visible').length
     $(this).remove() if $(this).find('a:visible,button:visible').length == 0
