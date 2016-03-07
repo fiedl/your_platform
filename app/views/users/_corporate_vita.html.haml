@@ -1,23 +1,23 @@
 - if user
-  %table{ id: 'corporate_vita' }
-    - for corporation in user.corporations
-      - memberships = user.corporate_vita_memberships_in(corporation)
-      - if memberships.count > 0
-        %tr
-          %th{ colspan: 3}= corporation.title
-          - for membership in memberships
-            - needs_review = (can?(:manage, user) && membership.needs_review?)
-            - needs_review_class = needs_review ? 'needs_review' : ''
-            %tr{ class: "membership #{needs_review_class}" }
-              %td
-                - if needs_review
-                  = link_to(user_group_membership_path(membership, 'user_group_membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
-                    = icon 'ok'
-              %td.membership_valid_from
-                - if can? :update, membership
-                  = status_group_membership_valid_from_best_in_place( membership )
-                - else
-                  = membership.valid_from_localized_date
-              %td.membership_group= link_to membership.group.title.singularize, membership.group, :class => 'status_group_label'
-              -# %td= status_group_membership_promoted_on_event( membership )
-
+  %span{class: "corporate-vita-for-user-#{user.id} corporate-vita-for-user", data: {user_id: user.id}}
+    %table{ id: 'corporate_vita' }
+      - for corporation in user.corporations
+        - memberships = user.corporate_vita_memberships_in(corporation)
+        - if memberships.count > 0
+          %tr
+            %th{ colspan: 3}= corporation.title
+            - for membership in memberships
+              - needs_review = (can?(:manage, user) && membership.needs_review?)
+              - needs_review_class = needs_review ? 'needs_review' : ''
+              %tr{ class: "membership #{needs_review_class}" }
+                %td
+                  - if needs_review
+                    = link_to(user_group_membership_path(membership, 'user_group_membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
+                      = icon 'ok'
+                %td.membership_valid_from
+                  - if can? :update, membership
+                    = status_group_membership_valid_from_best_in_place( membership )
+                  - else
+                    = membership.valid_from_localized_date
+                %td.membership_group= link_to membership.group.title.singularize, membership.group, :class => 'status_group_label'
+                -# %td= status_group_membership_promoted_on_event( membership )

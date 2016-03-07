@@ -157,6 +157,17 @@ Rails.application.routes.draw do
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
   
+  
+  namespace :api do
+    namespace :v1 do
+      resources :users do
+        get :corporate_vita, to: 'users/corporate_vita#show'
+        get :change_status_button, to: 'users/change_status_button#show'
+      end
+    end
+  end
+  
+  
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
     
   get ':alias', to: 'users#show'
