@@ -1,7 +1,8 @@
-%div.deceased_modal.modal.fade
+- user ||= @user
+%div.deceased_modal.modal.fade{class: "deceased-modal-for-user-#{user.id}"}
   - workflow = Workflow.find_by_name('Todesfall')
   - workflow || raise('mark-as-deceased workflow missing. Please call "Workflow.find_or_create_mark_as_deceased_workflow".')
-  = form_tag(execute_workflow_path(workflow), {:method => :put, :class => 'deceased_modal_date_of_death'}) do
+  = form_tag execute_status_workflow_path(workflow, {user_id: user.id}), method: :put, remote: true, class:'deceased_modal_date_of_death' do
 
     .modal-dialog
       .modal-content
@@ -10,11 +11,11 @@
             %span{'aria-hidden' => true} &times;
           %h4= "✟ #{I18n.t(:event_of_death)}"
         %div.modal-body
-          = hidden_field_tag :user_id, @user.id
+          = hidden_field_tag :user_id, user.id
           %table
             %tr
               %td=t :person
-              %td= @user.title
+              %td= user.title
             %tr
               %td
                 %label=t :date_of_death

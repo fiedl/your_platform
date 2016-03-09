@@ -1,7 +1,7 @@
 module CorporateVitaHelper
   def corporate_vita_for_user( user )
     render partial: 'users/corporate_vita', locals: { 
-      user: @user,
+      user: user || @user,
     } 
   end
 

@@ -138,6 +138,7 @@ Rails.application.routes.draw do
     put 'execute', on: :member
   end
   put 'workflow_kit/workflows/:id/execute', to: 'workflows#execute'
+  put 'users/:user_id/status_workflows/:id/execute(.:format)', to: 'workflows/status_workflows#execute', as: 'execute_status_workflow'
   
   get "errors/unauthorized"
   

@@ -115,6 +115,11 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
   
+  def renew_cache
+    delete_cache
+    fill_cache
+  end
+  
   def cache_created_at(method_name, arguments = nil)
     ::CacheAdditions
     Rails.cache.created_at [self, method_name, arguments]

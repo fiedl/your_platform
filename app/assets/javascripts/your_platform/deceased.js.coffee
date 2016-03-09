@@ -1,22 +1,17 @@
-ready = ->
-  $('.deceased_trigger').click( (event)->
-    $('.workflow_triggers ul.dropdown-menu').dropdown('toggle')
+$(document).on 'click', '.deceased_trigger', (event)->
+  trigger_link = $(this)
+  dropdown = trigger_link.closest('.workflow_triggers').find('ul.dropdown-menu')
     
-    $('.deceased_modal').remove()
-    $('body').append($('.deceased_trigger').data('modal-body'))
-    $('.deceased_modal').modal('show')
-    
-    $('.confirm_event_of_death').click( ->
-      btn = $(this)
-      
-      btn.attr('data-loading-text', "Bitte warten ...")
-      btn.button("loading")
-    )
-
-    event.stopPropagation()
-    event.preventDefault()
-    return false
-  )
+  dropdown.dropdown('toggle')
   
+  $('.deceased_modal').remove()
+  $('body').append trigger_link.data('modal-body')
+  $('.deceased_modal').modal('show')
+  
+  event.stopPropagation()
+  event.preventDefault()
+  return false
 
-$(document).ready(ready)
+
+$(document).on 'click', '.confirm_event_of_death', ->
+  $('.deceased_modal').modal('hide')
