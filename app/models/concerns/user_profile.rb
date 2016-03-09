@@ -32,16 +32,33 @@ concern :UserProfile do
   def mobile=(new_number)
     (mobile_phone_profile_fields.first || profile_fields.create(label: I18n.t(:mobile), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)
   end
-
-  def profile_field_value(label)
-    profile_fields.where(label: label).first.try(:value).try(:strip)
+  
+  def profile_field_by_label(label)
+    profile_fields.where(label: label).first
   end
-  def personal_title
-    cached { profile_field_value 'personal_title' }
+  def profile_field_value(label)
+    profile_field_by_label(label).try(:value).try(:strip)
   end
   
+  def personal_title_field
+    profile_field_by_label 'personal_title'
+  end
+  def personal_title
+    cached { personal_title_field }
+  end
+  
+  def academic_degree_field
+    profile_field_by_label 'academic_degree'
+  end
   def academic_degree
-    cached { profile_field_value 'academic_degree' }
+    cached { academic_degree_field }
+  end
+  
+  def study_fields
+    profile_fields.where(type: 'ProfileFieldTypes::Study')
+  end
+  def primary_study_field
+    study_fields.first
   end
 
   def name_surrounding_profile_field

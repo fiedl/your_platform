@@ -19,6 +19,13 @@ concern :ProfileFields do
     not email.present?
   end
   
+  def email_fields
+    profile_fields.where type: 'ProfileFieldTypes::Email'
+  end
+  def primary_email_field
+    email_fields.first
+  end
+  
   def phone_profile_fields
     profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
       not field.label.downcase.include? 'fax'

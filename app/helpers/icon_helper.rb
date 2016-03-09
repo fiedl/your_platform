@@ -1,7 +1,7 @@
 module IconHelper
   
   def icon(icon_key)
-    if icon_key.to_s.in? ['beer', 'coffee', 'key', 'lock', 'unlock', 'unlock-alt', 'archive', 'undo', 'history']
+    if icon_key.to_s.in? ['beer', 'coffee', 'key', 'lock', 'unlock', 'unlock-alt', 'archive', 'undo', 'history', 'folder-open', 'sort-alpha-asc', 'sort-numeric-asc', 'sort-numeric-desc']
       awesome_icon(icon_key)
     else
       glyphicon(icon_key.to_s.gsub('glyphicon-', ''))

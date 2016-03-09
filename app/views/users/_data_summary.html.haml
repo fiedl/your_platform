@@ -1,0 +1,16 @@
+- user || raise('user not given')
+
+%ul.attributes.profile_fields
+  = profile_field_li user.personal_title_field
+  = profile_field_li user.date_of_birth_field
+
+  = profile_field_li user.primary_address_field
+  = profile_field_li user.phone_field
+  = profile_field_li user.primary_email_field
+
+  = profile_field_li user.academic_degree_field
+  - user.study_fields.each do |study_field|
+    = profile_field_li study_field
+
+= render partial: 'users/workflow_triggers', locals: {user: user}
+= corporate_vita_for_user user

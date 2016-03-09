@@ -19,6 +19,10 @@
   %div
     .alert.alert-success.updating_member_list.hidden=t :updating_member_list
     = render partial: 'groups/export_button'
+    - if can? :update_members, @group
+      = link_to group_member_data_summaries_path(@group), class: 'btn btn-default right' do
+        = icon 'folder-open'
+        = t(:data_administration)
     - if can? :manage_memberships_manually, @group
       = link_to t(:user_group_memberships), group_memberships_path(@group), class: 'btn btn-default right'
     %br{clear: 'all'}

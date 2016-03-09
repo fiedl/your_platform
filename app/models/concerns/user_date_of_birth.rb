@@ -16,6 +16,9 @@ concern :UserDateOfBirth do
     find_or_build_date_of_birth_profile_field.value = date_of_birth
   end
 
+  def date_of_birth_field
+    find_or_build_date_of_birth_profile_field
+  end
   def find_or_build_date_of_birth_profile_field
     date_of_birth_profile_field || build_date_of_birth_profile_field
   end

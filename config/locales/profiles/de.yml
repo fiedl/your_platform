@@ -3,6 +3,7 @@ de:
   user_profile:                                            Benutzerprofil
   my_profile:                                              Mein Profil
   show_user_profile:                                       Benutzerprofil anzeigen
+  show_whole_profile:                                      Gesamtes Profil anzeigen
   
   looks_at_profile:                                        sieht sich ein Profil an
   looks_at_own_profile:                                    sieht sich das eigene Profil an

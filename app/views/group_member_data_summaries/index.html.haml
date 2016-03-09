@@ -1,0 +1,21 @@
+= render partial: 'groups/tabs', locals: {active: 'members'}
+
+%h1= current_title
+%div
+  = "#{t(:sort_members_by)}:"
+  = link_to "?sort_by=name", class: 'btn btn-default' do
+    = icon 'sort-alpha-asc'
+    = t(:name)
+  = link_to "?sort_by=member_since", class: 'btn btn-default' do
+    = icon 'sort-numeric-desc'
+    = t(:member_since)
+
+
+- @members.each do |member|
+  %h1.member_data_summary
+    = link_to member.title, member
+    = link_to member, class: 'member_profile tool btn btn-default' do
+      = icon 'user'
+      = t(:show_whole_profile)
+  %div
+    = render partial: 'users/data_summary', locals: {user: member}

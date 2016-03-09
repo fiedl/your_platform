@@ -7,6 +7,11 @@ module ProfileableMixins::Address
     self.id ? profile_fields.where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
   end
   
+  
+  def primary_address_field
+    postal_address_field_or_first_address_field
+  end
+  
   # The postal address at the study location.
   #
   def study_address

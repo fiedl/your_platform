@@ -65,6 +65,7 @@ Rails.application.routes.draw do
     resources :posts
     get :profile, to: 'profile_fields#index'
     get :members, to: 'group_members#index'
+    get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'mailing_lists#index'
