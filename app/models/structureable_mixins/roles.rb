@@ -16,7 +16,7 @@ module StructureableMixins::Roles
   end
   
   def fill_cache
-    super
+    super if defined?(super)
     if respond_to?(:child_groups) # TODO: Refactor this. It should be possible to find the admins for a user.
       find_admins
       admins_of_ancestors

@@ -44,14 +44,14 @@ concern :UserProfile do
     profile_field_by_label 'personal_title'
   end
   def personal_title
-    cached { personal_title_field }
+    cached { personal_title_field.try(:value).try(:strip) }
   end
   
   def academic_degree_field
     profile_field_by_label 'academic_degree'
   end
   def academic_degree
-    cached { academic_degree_field }
+    cached { academic_degree_field.try(:value).try(:strip) }
   end
   
   def study_fields
