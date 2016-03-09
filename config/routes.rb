@@ -54,6 +54,8 @@ Rails.application.routes.draw do
     get :activities, to: 'activities#index'
   end
   get :settings, to: 'user_settings#index'
+  
+  get :authorized_users, to: 'authorized_users#index'
 
   get 'groups/:id/address_labels/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
