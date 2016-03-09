@@ -11,8 +11,13 @@ class CommentsController < ApplicationController
     
     Notification.create_from_comment(@comment)
     Mention.create_multiple_and_notify_instantly(current_user, @comment, @comment.text)
-        
-    redirect_to :back, change: 'comments'
+    
+    respond_to do |format|
+      # Render the comment and reset the comment form.
+      # app/views/comments/create.js.coffee
+      #
+      format.js
+    end
   end
   
   def show
