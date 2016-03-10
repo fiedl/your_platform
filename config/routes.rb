@@ -52,6 +52,7 @@ Rails.application.routes.draw do
     get :memberships, to: 'user_group_memberships#index'
     get :badges, to: 'user_badges#index'
     get :activities, to: 'activities#index'
+    get :contact, to: 'user_contact_information#index', as: 'contact_information'
   end
   get :settings, to: 'user_settings#index'
   

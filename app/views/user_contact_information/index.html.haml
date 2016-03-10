@@ -1,0 +1,7 @@
+= render partial: 'users/tabs', locals: {active: 'contact'}
+
+#contact
+  = profile_section @user.profile.section :contact_information
+
+#communication
+  = render partial: 'users/communication_box', locals: {user: @user}

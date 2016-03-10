@@ -1,0 +1,5 @@
+- active ||= 'general'
+
+%ul.nav.nav-tabs.user.user_tabs
+  %li{class: active == 'contact' ? 'active' : ''}
+    %a{href: user_contact_information_path(@user)} Kontakt
