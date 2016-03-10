@@ -28,13 +28,10 @@ $.fn.process_box_tools = ->
     tool.detach()
     tool.prependTo(box_toolbar)
     
-  # Hide 'edit' buttons for boxes where no .editable element 
+  # Remove 'edit' buttons for boxes where no .editable element 
   # is included.
   #
-  this.find('.edit_button:visible').each ->
+  this.find('.edit_button').each ->
     edit_button = $(this)
     box = edit_button.closest('.box')
-    edit_button.hide() if box.find('div.content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
-
-  this.find('.box_header_table td.box_toolbar').each ->
-    $(this).remove() if $(this).find('a:visible,button:visible').length == 0
+    edit_button.remove() if box.find('div.content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0

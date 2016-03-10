@@ -77,10 +77,11 @@
     = optional_profile_section @user.profile.section :bank_account_information
     
     - # Groups Box
-    %h1= t(:groups_of) + " " + @user.first_name
-    %div
+    %h1
+      = t(:groups_of) + " " + @user.first_name
       - if can? :manage, @user
-        = link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+    %div
       = groups_of_user_table @user
     
     -#   / Events
