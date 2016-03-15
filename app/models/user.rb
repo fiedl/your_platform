@@ -529,6 +529,21 @@ class User < ActiveRecord::Base
     #
     cached { current_status_group_in(first_corporation || corporations.first) }
   end
+  
+  def status_export_string
+    cached {
+      self.corporations.collect do |corporation|
+        if membership = self.current_status_membership_in(corporation)
+          "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.singularize} in #{corporation.name}"
+        else
+          ""
+        end
+      end.join("\n")
+    }
+  end
+  def status_string
+    status_export_string
+  end
 
 
   # Relationships
