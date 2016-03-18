@@ -2,4 +2,4 @@
 
 %ul.nav.nav-tabs.user.user_tabs
   %li{class: active == 'contact' ? 'active' : ''}
-    %a{href: user_contact_information_path(@user)} Kontakt
+    = link_to t(:contact), user_contact_information_path(@user)

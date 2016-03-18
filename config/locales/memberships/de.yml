@@ -1,5 +1,6 @@
 de:
   memberships: Mitgliedschaften
   user_group_memberships: Benutzer-Gruppen-Mitgliedschaften
+  show_group_memberships: Gruppen-Mitgliedschaften anzeigen
   
   is_managing_member_lists: pflegt Mitgliederlisten
