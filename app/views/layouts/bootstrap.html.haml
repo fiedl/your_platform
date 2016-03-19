@@ -120,8 +120,7 @@
         #content
           - if show_vertical_nav?
             .col-md-3#vertical_nav_area.hidden-xs
-              = vertical_nav
-              .row= render partial: 'last_seen_activities/index'
+              = render partial: 'layouts/vertical_nav'
             .col-md-9#content_area
               = flash_area
               = replace_unicode_special_chars_by_html_escape_strings( |

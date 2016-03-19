@@ -1,11 +1,5 @@
 module VerticalNavHelper
 
-  # Returns the html code for the vertical navigation, i.e. the vertical menu.
-  #
-  def vertical_nav
-    render partial: 'layouts/vertical_nav'
-  end
-
   # Generates the HTML code for a vertical menu, where the given navable object,
   # e.g. a Page or a User, is the currently active element.
   #
