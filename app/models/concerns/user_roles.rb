@@ -10,14 +10,14 @@ concern :UserRoles do
   #
   def role_for( structureable )
     return nil if not structureable.respond_to? :parent_groups
-    return :main_admin if self.main_admin_of? structureable
+    # return :main_admin if self.main_admin_of? structureable
     return :admin if self.admin_of? structureable
     return :member if self.member_of? structureable
   end
   
   # Member Status
   # ------------------------------------------------------------------------------------------
-  
+
   # This method is a dirty hack to preserve the obsolete role model mechanism, 
   # which is currently not in use, since the abilities are defined directly in the 
   # Ability class.
@@ -58,46 +58,25 @@ concern :UserRoles do
   def admin_of?( structureable )
     self.admin_of.include? structureable
   end
-
-  # This method returns all structureable objects the user is directly administrator of,
-  # i.e. the user is a member of the administrators group of this object.
-  #
-  def directly_administrated_objects( role = :admin )
-    admin_group_flag = :admins_parent if role == :admin
-    admin_group_flag = :main_admins_parent if role == :main_admin
-    admin_groups = self.ancestor_groups.find_all_by_flag( admin_group_flag )
-    if admin_groups.count > 0
-      objects = admin_groups.collect do |admin_group|
-        admin_group.administrated_object
-      end
-    else
-      []
-    end
+  
+  def directly_administrated_objects
+    Role.of(self).directly_administrated_objects
+  end
+  
+  def administrated_objects
+    Role.of(self).administrated_objects
   end
 
-  # This method returns all structureable objects the user is administrator of.
-  #
-  def administrated_objects( role = :admin )
-    objects = directly_administrated_objects( role )
-    if objects
-      objects += objects.collect do |directly_administrated_object|
-        directly_administrated_object.descendants
-      end.flatten
-      objects
-    else
-      []
-    end
-  end
-
-  # Main Admins
-  # ------------------------------------------------------------------------------------------
-
-  # This method says whether the user (self) is a main admin of the given
-  # structureable object.
-  #
-  def main_admin_of?( structureable )
-    self.administrated_objects( :main_admin ).include? structureable
-  end
+   
+  # # Main Admins
+  # # ------------------------------------------------------------------------------------------
+  # 
+  # # This method says whether the user (self) is a main admin of the given
+  # # structureable object.
+  # #
+  # def main_admin_of?( structureable )
+  #   self.administrated_objects( :main_admin ).include? structureable
+  # end
 
 
   # Guest Status

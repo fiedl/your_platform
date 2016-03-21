@@ -34,10 +34,10 @@ describe User do
       before { @object.admins << @user }
       it { should == :admin }
     end
-    context "for the user being a main_admin of the object" do
-      before { @object.main_admins << @user }
-      it { should == :main_admin }
-    end
+    # context "for the user being a main_admin of the object" do
+    #   before { @object.main_admins << @user }
+    #   it { should == :main_admin }
+    # end
     context "for the object being not structureable" do
       before { @object = "This is a string." }
       it { should == nil }
@@ -146,37 +146,37 @@ describe User do
     end
   end
   
-  # Main Admins
-  # ------------------------------------------------------------------------------------------
-  
-  describe "#main_admin_of?" do
-    before do
-      @page = create( :page )
-    end
-    subject { @user.main_admin_of? @page }
-    context "for the main_admins_parent_group existing" do
-      before { @page.create_main_admins_parent_group }
-      context "for the user being a main admin of the object" do
-        before { @page.main_admins << @user }
-        it { should == true }
-      end
-      context "for the user being just a regular admin of the object" do
-        before { @page.admins << @user }
-        it { should == false }
-      end
-      context "for the user being just a regular member of the object" do
-        before do
-          @group = create( :group )
-          @group.child_users << @user
-          @page.child_groups << @group
-        end
-        it "should be false" do
-          @user.member_of?( @page ).should be_true # just to make sure
-          subject.should == false
-        end
-      end
-    end
-  end
+  # # Main Admins
+  # # ------------------------------------------------------------------------------------------
+  # 
+  # describe "#main_admin_of?" do
+  #   before do
+  #     @page = create( :page )
+  #   end
+  #   subject { @user.main_admin_of? @page }
+  #   context "for the main_admins_parent_group existing" do
+  #     before { @page.create_main_admins_parent_group }
+  #     context "for the user being a main admin of the object" do
+  #       before { @page.main_admins << @user }
+  #       it { should == true }
+  #     end
+  #     context "for the user being just a regular admin of the object" do
+  #       before { @page.admins << @user }
+  #       it { should == false }
+  #     end
+  #     context "for the user being just a regular member of the object" do
+  #       before do
+  #         @group = create( :group )
+  #         @group.child_users << @user
+  #         @page.child_groups << @group
+  #       end
+  #       it "should be false" do
+  #         @user.member_of?( @page ).should be_true # just to make sure
+  #         subject.should == false
+  #       end
+  #     end
+  #   end
+  # end
   
   
   # Guest Status
