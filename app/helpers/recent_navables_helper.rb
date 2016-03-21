@@ -4,6 +4,8 @@ module RecentNavablesHelper
     @recent_navables ||= if current_user && current_navable
       add_current_navable_to_recent_navables
       cached_recent_navables - [current_navable]
+    else
+      []
     end
   end
   
