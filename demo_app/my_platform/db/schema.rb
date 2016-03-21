@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160215070331) do
+ActiveRecord::Schema.define(version: 20160321123835) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -226,6 +226,14 @@ ActiveRecord::Schema.define(version: 20160215070331) do
   end
 
   add_index "nav_nodes", ["navable_id", "navable_type"], name: "navable_type", using: :btree
+
+  create_table "navable_visits", force: :cascade do |t|
+    t.integer  "navable_id",   limit: 4
+    t.string   "navable_type", limit: 255
+    t.integer  "group_id",     limit: 4
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "notifications", force: :cascade do |t|
     t.integer  "recipient_id",   limit: 4

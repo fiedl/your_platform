@@ -60,6 +60,7 @@ class AttachmentsController < ApplicationController
         path = @attachment.file.versions[secure_version].current_path
       end
     else
+      current_user.track_visit @attachment.parent if @attachment.parent && current_user
       path = @attachment.file.current_path
     end
     send_file path, x_sendfile: true, disposition: :inline
