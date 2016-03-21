@@ -1,0 +1,8 @@
+- if recommended_navables.any? && current_user.beta_tester?
+  #recommended_navables.vertical_nav
+    %ul.nav.nav-pills.nav-stacked
+      %li.nav-header
+        =t :recommended_navables
+        (Beta)
+      - recommended_navables.each do |navable|
+        %li.recent= link_to navable.title, navable
