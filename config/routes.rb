@@ -41,7 +41,7 @@ Rails.application.routes.draw do
   get "compact-nav-search(.:format)/(:query)", to: "compact_nav_search#show", as: 'compact_nav_search'
 
   mount Judge::Engine => '/judge'
-
+  
   resources :users do
     put :forgot_password, on: :member
     get :events, to: 'events#index'
@@ -169,6 +169,7 @@ Rails.application.routes.draw do
         get :change_status_button, to: 'users/change_status_button#show'
         get :titles, on: :collection, to: 'users/titles#index'
       end
+      get :navigation, to: 'navigation#show'
     end
   end
   

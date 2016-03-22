@@ -1,4 +1,8 @@
 module VerticalNavHelper
+  
+  def vertical_nav_for(navable)
+    vertical_menu_for(navable)
+  end
 
   # Generates the HTML code for a vertical menu, where the given navable object,
   # e.g. a Page or a User, is the currently active element.

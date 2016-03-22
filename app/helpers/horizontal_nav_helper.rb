@@ -1,7 +1,12 @@
 module HorizontalNavHelper
+  
   def horizontal_nav
-    Rails.cache.fetch([current_user, "horizontal_nav", current_navable]) do
-      present HorizontalNav.for_user(current_user, current_navable: current_navable)
+    horizontal_nav_for current_navable
+  end
+  
+  def horizontal_nav_for(navable)
+    Rails.cache.fetch([current_user, "horizontal_nav", navable]) do
+      present HorizontalNav.for_user(current_user, current_navable: navable)
     end
   end
   

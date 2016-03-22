@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
 module BreadcrumbsHelper
   
+  def breadcrumbs_for(navable)
+    cached_breadcrumb_ul_for_navable(navable)
+  end
+  
   # This returns the html code for an unordered list containing the
   # bread crumb elements.
   #
