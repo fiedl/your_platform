@@ -11,8 +11,9 @@ $(document).ready ->
       }
     })
     
+    selector = '.my_indicator, #recommended_navables, #recent_navables'
     if $('#user_incognito').prop('checked') == true
-      $('.my_indicator').hide()
+      $(selector).hide()
     else
-      $('.my_indicator').show()
+      $(selector).show()
         

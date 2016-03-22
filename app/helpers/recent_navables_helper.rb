@@ -1,7 +1,7 @@
 module RecentNavablesHelper
   
   def recent_navables
-    @recent_navables ||= if current_user && current_navable
+    @recent_navables ||= if current_user && current_navable && (not current_user.incognito?)
       add_current_navable_to_recent_navables
       cached_recent_navables - [current_navable]
     else

@@ -30,8 +30,9 @@
   = form_for @user do |f|
     %label
       = f.check_box :incognito, data: {url: user_settings_path(user_id: @user.id)}
-      %strong=t :incognito
-      = t :incognito_explanation
+      %strong= t :incognito
+    %p
+      %strong= t :incognito_explanation
     %p= t :incognito_warning
     
 - if @user.has_account?  
