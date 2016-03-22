@@ -10,7 +10,7 @@
       .post-header.alert.alert-warning= t(:preview_post)
       .post-body
     .input-group.form-group
-      = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control post_text_field', data: {user_titles_path: autocomplete_title_users_path}
+      = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control post_text_field', data: {user_titles_path: titles_api_v1_users_path}
       .input-group-btn
         %button.btn.btn-default.camera-button.has_tooltip{title: t(:add_photo_or_document)}
           = icon :camera

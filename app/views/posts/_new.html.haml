@@ -10,7 +10,7 @@
           .preview
             .post-header= t(:preview_post)
             .post-body
-          = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control', data: {user_titles_path: autocomplete_title_users_path}
+          = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control', data: {user_titles_path: titles_api_v1_users_path}
           .post_tools
             .post_attachment
               = form.fields_for :attachments, Attachment.new do |builder|

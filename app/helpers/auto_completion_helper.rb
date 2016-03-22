@@ -10,7 +10,7 @@ module AutoCompletionHelper
     
     html = best_in_place( object, attribute, 
                    html_attrs: { 
-                     'data-autocomplete-url' => autocomplete_title_users_path,
+                     'data-autocomplete-url' => titles_api_v1_users_path,
                      :class => 'multiple-users-select-input'
                    },
                    activator: (activator_id.present? ? ('#' + activator_id) : '')
@@ -24,7 +24,7 @@ module AutoCompletionHelper
   def user_best_in_place( object, attribute )
     best_in_place( object, attribute,
                    html_attrs: {
-                     'data-autocomplete-url' => autocomplete_title_users_path,
+                     'data-autocomplete-url' => titles_api_v1_users_path,
                      :class => "user-select-input #{attribute}"
                    },
                    classes: "relationships #{attribute}" )

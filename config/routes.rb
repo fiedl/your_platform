@@ -43,7 +43,6 @@ Rails.application.routes.draw do
   mount Judge::Engine => '/judge'
 
   resources :users do
-    get :autocomplete_title, on: :collection
     put :forgot_password, on: :member
     get :events, to: 'events#index'
     get :profile, to: 'profile_fields#index'
@@ -168,6 +167,7 @@ Rails.application.routes.draw do
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
+        get :titles, on: :collection, to: 'users/titles#index'
       end
     end
   end

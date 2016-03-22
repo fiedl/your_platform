@@ -59,18 +59,6 @@ class UsersController < ApplicationController
     respond_with @user
   end
 
-  def autocomplete_title
-    query = params[:term] if params[ :term ]
-    query ||= params[ :query ] if params[ :query ]
-    query ||= ""
-    
-    @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", "%#{query}%")
-
-    # render json: json_for_autocomplete(@users, :title)
-    # render json: @users.to_json( :methods => [ :title ] )
-    render json: @users.map(&:title)
-  end
-
   def forgot_password
     authorize! :update, @user.account
     @user.account.send_new_password
