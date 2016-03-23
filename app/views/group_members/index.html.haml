@@ -38,7 +38,7 @@
     = form_for @new_user_group_membership, remote: true do |form|
       = form.hidden_field :group_id
       %span.add_group_member_name_field.left
-        = form.text_field :user_title, 'data-autocomplete-url' => autocomplete_title_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
+        = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
       %span.add_group_member_tools.right
         = form.date_select :valid_from, value: Date.today, class: 'valid-from-field'
         = form.submit t(:add), class: 'btn btn-primary add-user-button'
