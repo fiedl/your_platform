@@ -359,6 +359,14 @@ class Ability
       post_or_comment.mentioned_users.include? user
     end
     
+    # Users can always read posts they have created, e.g.
+    # - if they have left the group later
+    # - if they have addressed another group
+    # 
+    can :read, Post do |post|
+      post.author == user
+    end
+    
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)

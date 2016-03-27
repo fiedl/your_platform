@@ -8,6 +8,7 @@ de:
   all_signed_in_users_can_read_this_event_and_can_join: "Alle angemeldeten Benutzer können diese Veranstaltungsinformationen sehen, der Veranstaltung beitreten und Veranstaltungsbilder hochladen."
   all_members_of_group_name_can_read_these_posts: "Nur Mitglieder der Gruppe '%{group_name}' können diese Nachrichten lesen."
   members_of_group_name_and_mentioned_users_can_read_and_comment_this_post: "Nur Mitglieder der Gruppe '%{group_name}' und mit der '@'-Notation erwähnte Personen können diese Nachricht lesen und kommentieren."
+  author_of_post_members_of_group_name_and_mentioned_users_can_read_and_comment_this_post: "Nur der Autor der Nachricht, Mitglieder der Gruppe '%{group_name}' und mit der '@'-Notation erwähnte Personen können diese Nachricht lesen und kommentieren."
   members_of_group_and_global_officers_can_write_posts: "Mitglieder der Gruppe '%{group_name}' und globale Amtsträger können hier Nachrichten an '%{group_name}' schreiben."
   members_of_group_name_can_read_this_content: "Nur Mitglieder der Gruppe '%{group_name}' können diesen Inhalt lesen."
   the_content_of_the_start_page_is_personalized: "Der Inhalt dieser Startseite ist personalisiert und damit für jeden Benutzer verschieden. Jeder sieht nur die Inhalte, auf die er Zugriffsrechte hat."

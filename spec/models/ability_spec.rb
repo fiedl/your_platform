@@ -68,6 +68,11 @@ describe Ability do
             before { @comment = @post.comments.create }
             he { should_not be_able_to :read, @comment }
           end
+          context "when the user is the author of a post (e.g. via email)" do
+            before { @post.author = user; @post.save }
+            he { should be_able_to :read, @post }
+            he { should be_able_to :create_comment_for, @post }
+          end
         end
       end
     end

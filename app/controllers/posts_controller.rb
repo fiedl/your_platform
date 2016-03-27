@@ -53,7 +53,7 @@ class PostsController < ApplicationController
     set_current_navable @group
     set_current_activity :looks_at_posts, @group
     set_current_access :group
-    set_current_access_text I18n.t(:members_of_group_name_and_mentioned_users_can_read_and_comment_this_post, group_name: @group.name)
+    set_current_access_text I18n.t(:author_of_post_members_of_group_name_and_mentioned_users_can_read_and_comment_this_post, group_name: @group.name)
   end
   
   def new
