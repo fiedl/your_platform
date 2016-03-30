@@ -244,6 +244,7 @@ class Ability
   def rights_for_signed_in_users
     can :read, :terms_of_use
     can :accept, :terms_of_use if not read_only_mode?
+    can :use, :single_sign_on
     
     # Regular users can read users that are not hidden.
     # And they can read themselves.

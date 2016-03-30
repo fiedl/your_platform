@@ -164,6 +164,7 @@ Rails.application.routes.draw do
   
   namespace :api do
     namespace :v1 do
+      get :sso, to: 'single_sign_on#sign_in'
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
