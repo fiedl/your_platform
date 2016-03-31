@@ -22,8 +22,8 @@ module MailMessageExtension
         return false
       rescue Net::SMTPServerBusy => error
         Rails.logger.debug error
-        Rails.logger.warn "Net::SMTPServerBusy when sending message. Waiting 10 seconds and retrying then ..."
-        sleep 10
+        Rails.logger.warn "Net::SMTPServerBusy when sending message. Waiting 60 seconds and retrying then ..."
+        sleep 60
         retry
       end
     else

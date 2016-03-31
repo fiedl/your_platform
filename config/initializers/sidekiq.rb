@@ -3,7 +3,7 @@ Sidekiq.default_worker_options = { 'backtrace' => true, retry: false }
 # Define queues here instead of config/sidekiq.rb.
 # This way, this defines default queues for all your_platform applications.
 #
-Sidekiq.options[:queues] = ['default', 'mailgate']
+Sidekiq.options[:queues] = ['default', 'mailgate', 'mailers']
 
 # https://github.com/brainopia/sidekiq-limit_fetch
 #

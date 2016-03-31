@@ -249,8 +249,10 @@ class EventsController < ApplicationController
       @recipients = group.members
     end
     
-    for recipient in @recipients
-      EventMailer.invitation_email(@text, [recipient], @event, current_user).deliver
+    @recipients.each do |recipient|
+      if recipient.has_account? and not recipient.email_does_not_work?
+        EventMailer.invitation_email(@text, [recipient], @event, current_user).deliver_later
+      end
     end
     
     respond_to do |format|
