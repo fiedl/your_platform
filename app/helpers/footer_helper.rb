@@ -6,7 +6,10 @@ module FooterHelper
         ", " +
         link_to("Commit #{AppVersion.short_commit_id}", AppVersion.github_commit_url) + 
         " | " +
-        link_to("Changelog", AppVersion.changelog_url)
+        link_to("Changelog", AppVersion.changelog_url.gsub("deploy", "production")) +
+        "<br />\n" +
+        "YourPlatform-Engine, " +
+        link_to("Changelog", AppVersion.your_platform_changelog_url)
       ).html_safe
     end
   end

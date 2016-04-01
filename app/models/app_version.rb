@@ -58,5 +58,9 @@ class AppVersion
       "example.com"
     end
   end
+  
+  def self.your_platform_changelog_url
+    "https://github.com/fiedl/your_platform/commits/master"
+  end
 
 end
