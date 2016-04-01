@@ -14,6 +14,8 @@ concern :UserRecommendations do
       .take(10)
       .collect { |type_and_id_and_count| # [[type, id], count] 
         type_and_id_and_count.first.first.constantize.find(type_and_id_and_count.first.last)
+      }.select { |navable| 
+        self.can? :read, navable
       }
   end
   

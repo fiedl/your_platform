@@ -147,6 +147,14 @@ class User < ActiveRecord::Base
       super() || Setting.preferred_locale || I18n.default_locale
     end
   end
+  
+  
+  def ability
+    @ability ||= Ability.new(self)
+  end
+  def can?(what, with_whom)
+    ability.can? what, with_whom
+  end
 
 
   # This accessors allow to access the gender of the user rather than just asking if the
