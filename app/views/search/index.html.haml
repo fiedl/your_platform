@@ -2,6 +2,10 @@
 %div
   - if not @results
     %p= t :no_results_found
+    - if current_user.nil?
+      %p Sie sind nicht am System angemeldet.
+      - session['return_to_after_login'] = request.fullpath
+      %p= link_to "Anmelden", new_user_account_session_url, class: 'btn btn-primary'
 
 - if @users
   %h1= t :found_users

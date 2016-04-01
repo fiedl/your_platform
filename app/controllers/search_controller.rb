@@ -16,6 +16,7 @@ class SearchController < ApplicationController
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
         .order('last_name', 'first_name')
+      @users = [User.find_by_title(query_string)] if @users.none?
       @pages = Page.where("title like ? OR content like ?", q, q)
         .order('title')
       @groups = Group.where( "name like ?", q )
@@ -109,8 +110,8 @@ class SearchController < ApplicationController
       @result ||= Group.where(name: query_string).limit(1).first
       @result ||= User.find_by_name(query_string)
       @result ||= User.find_by_title(query_string)
-      if @result
-        redirect_to @result if can? :read, @result
+      if @result && can?(:read, @result)
+        redirect_to @result
       else
         redirect_to :action => :index, query: query_string
       end
