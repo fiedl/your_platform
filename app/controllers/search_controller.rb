@@ -16,7 +16,7 @@ class SearchController < ApplicationController
       q = "%" + query_string.gsub( ' ', '%' ) + "%"
       @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
         .order('last_name', 'first_name')
-      @users = [User.find_by_title(query_string)] if @users.none?
+      @users = [User.find_by_title(query_string)] - [nil] if @users.none?
       @pages = Page.where("title like ? OR content like ?", q, q)
         .order('title')
       @groups = Group.where( "name like ?", q )
