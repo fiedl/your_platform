@@ -147,6 +147,9 @@ Gem::Specification.new do |s|
   # Dummy Data Generation
   s.add_dependency 'faker'
   
+  # Console
+  s.add_dependency "table-formatter"
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
