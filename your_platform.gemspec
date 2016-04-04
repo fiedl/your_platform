@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  # Dependencies 
+  # Dependencies
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
@@ -34,8 +34,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'web-console', '>= 2.1.3'
   s.add_dependency 'sprockets-rails', '~> 2.3'
 
-  
-  # JavaScript 
+
+  # JavaScript
   s.add_dependency 'rails-assets-jquery-ujs'
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
@@ -55,15 +55,15 @@ Gem::Specification.new do |s|
   # DAG Structure, https://github.com/resgraph/acts-as-dag
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
-  
+
   # Caching
   s.add_dependency 'redis-rails'
-  
+
   # Workers
   s.add_dependency 'foreman'
   s.add_dependency 'sidekiq', '>= 3.4.2'
   s.add_dependency 'sidekiq-limit_fetch'
-  
+
 
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
@@ -73,7 +73,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancan'                                                            # MIT License
 
   # To use ActiveModel has_secure_password (password encryption)
-  s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
+  s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
 
   # Settings
   s.add_dependency 'rails-settings-cached'
@@ -84,7 +84,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   s.add_dependency 'auto_html', '~> 1.6.4'
-  
+
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
   # fix bootstrap to 3.3.3 due to icon issue:
@@ -93,7 +93,7 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-  
+
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
   s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
@@ -117,36 +117,36 @@ Gem::Specification.new do |s|
 
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
-  
+
   # View Helpers
-  s.add_dependency 'phony'                                         
+  s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
-  
+
   # Client-Side Validations
   s.add_dependency 'judge'
-  
+
   # Metrics
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
   s.add_dependency 'redis_analytics'
-  
+
   # Activity Feed
   s.add_dependency 'public_activity', '~> 1.4.1'                                       # MIT License
-  
+
   # XLS Export
   s.add_dependency 'to_xls'
-  
+
   # PDF Export
   s.add_dependency 'prawn'
-  
+
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
-  
+
   # Gamification
   s.add_dependency 'merit'
-  
+
   # Dummy Data Generation
   s.add_dependency 'faker'
-  
+
   # Console
   s.add_dependency "table-formatter"
 
@@ -159,7 +159,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '>= 1.6.7.2' # CVE-2015-7499, https://gemnasium.com/fiedl/your_platform/alerts#advisory_328
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
 
-  # Development Dependencies 
+  # Development Dependencies
   # --------------------------------------------------------------------------------
 
   s.add_development_dependency "rspec-rails", "2.10.0"
