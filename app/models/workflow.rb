@@ -8,7 +8,7 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
 
   def name_as_verb
-    
+
     # TODO: This is German only! Internationalize!
     name
       .gsub( /ung/, 'en' )
@@ -16,18 +16,43 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
       .downcase
   end
 
+  def name_as_participle_perfect_passive
+    name
+      .gsub(/(.*)meldung/, '\1gemeldet')  # Aktivmeldung -> aktivgemeldet
+      .gsub(/(.*)ception/, '\1cipiert')  # Reception -> recipiert
+      .gsub(/(.*)ierung/, '\1iert')  # Inaktivierung -> inaktiviert
+      .gsub(/(.*)ung/, 'ge\1t')  # Burschung -> geburscht
+      .gsub(/(.*)ation/, '\1iert')  # Philistration -> philistriert
+      .downcase
+  end
+
+  # Generates a message that announces the promotion of the
+  # given user, e.g.
+  #
+  #   "John Doe has been promoted to Board Member"
+  #
+  def promotion_message_string(user)
+    if self.name == "Todesfall"
+      "#{user.title} ist verstorben."
+    elsif self.name == "Aktivmeldung"
+      "#{user.title} hat sich #{self.name_as_participle_perfect_passive}."
+    else
+      "#{user.title} wurde #{self.name_as_participle_perfect_passive}."
+    end
+  end
+
   def wah_group  # => TODO: corporation
     ( self.ancestor_groups & Corporation.all ).first
   end
-  
+
   def self.find_or_create_mark_as_deceased_workflow
     self.find_mark_as_deceased_workflow || self.create_mark_as_deceased_workflow
   end
-  
+
   def self.find_mark_as_deceased_workflow
     Workflow.where(name: "Todesfall").first
   end
-  
+
   def self.create_mark_as_deceased_workflow
     raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
     workflow = Workflow.create(name: "Todesfall")

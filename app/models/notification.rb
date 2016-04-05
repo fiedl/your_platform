@@ -111,6 +111,27 @@ class Notification < ActiveRecord::Base
     end
   end
 
+  # Creates notifications for admins that have to be informed about
+  # executed status workflows.
+  #
+  def self.create_from_status_workflow(workflow, target_user, current_user)
+    recipients = target_user.admins_of_self_and_ancestors.uniq
+    recipients.collect do |recipient|
+      if recipient.can? :read, target_user
+        message = workflow.promotion_message_string(target_user)
+        self.create(
+          recipient_id:   recipient.id,
+          author_id:      current_user.id,
+          reference_url:  target_user.url,
+          reference_type: 'User',
+          reference_id:   target_user.id,
+          message:        message,
+          sent_at:        nil  # has to be sent by the notification worker.
+        )
+      end
+    end
+  end
+
 
   # Find all notifications that are due to be sent via email.
   #

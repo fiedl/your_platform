@@ -1,0 +1,19 @@
+- # We need the inline styling for emails.
+
+.notification
+  %div{style: 'float: left; margin-right: 10px'}
+    = user_avatar(notification.author)
+  %div{style: 'overflow: hidden'}
+    %small
+      = link_to notification.author.title, notification.author if notification.author
+      = localize(notification.created_at)
+    .notification_body
+      %p
+        %strong= link_to notification.message, notification
+      %p= markup notification.text
+
+      %p= render partial: 'posts/attachments', locals: {post: notification.reference}
+
+    .notification_links
+      %small
+        = link_to t(:write_a_comment), notification
