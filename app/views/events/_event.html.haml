@@ -3,6 +3,7 @@
     = best_in_place_if can?(:update, event), event, :name
   - else
     = link_to event.title, event
+  = render partial: 'shared/voting_tools', locals: {votable: event}
 %div
   %span.ics_export_buttons
     %a.btn.btn-default#ics_export.has_tooltip{href: event_path(id: event.id, format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
