@@ -31,6 +31,20 @@
         .profile_field_label=t :group_type
       %span.value-wrapper= I18n.t(@group.type.try(:underscore) || :group, default: @group.type)
 
+%h1=t :communication
+%div
+  %h2 Absender-Filter
+  %p= "Wer darf an die Gruppe '#{@group.title}' Nachrichten schreiben?"
+  %p= best_in_place @group, :mailing_list_sender_filter, as: :select, collection: Hash[@group.mailing_list_sender_filter_settings.collect { |setting| [setting, I18n.t("sender_filter.#{setting}")] }]
+  
+  - if current_user.beta_tester?
+    %h2=t :mailing_lists
+    %p
+      = link_to group_mailing_lists_path(@group), class: 'btn btn-default' do
+        = icon :envelope
+        = t(:manage_mailing_lists)
+      = beta_badge
+
 %h1=t :welcome_message
 %div
   = best_in_place_if can?(:update, @group), @group, :welcome_message, as: :textarea, inner_class: 'form-control autosize'
@@ -53,8 +67,3 @@
 -#       %option Niemand darf Mitglieder hinzufügen (vom System verwaltetete Gruppe)
 -#   %p
 -#     = link_to t(:manage_members), group_path(@group) + "#members", class: 'btn btn-default'
-
-- if current_user.beta_tester?
-  %h1=t :mailing_lists
-  %div
-    = link_to t(:manage_mailing_lists), group_mailing_lists_path(@group), class: 'btn btn-default'
