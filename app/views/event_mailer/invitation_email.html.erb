@@ -4,15 +4,15 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body style="font-family: Helvetica; line-height: 150%">
-    
+
     <%= link_to root_url do %>
       <%= image_tag 'logo.png', align: 'right' %>
     <% end %><br />
-    
+
     <%= simple_format @text_before_event_table %>
-    
+
     <h2><%= link_to @event.title, event_url(@event)%></h2>
-    
+
     <table>
       <tr>
         <th align="right"><%=t :description %></th>
@@ -22,20 +22,20 @@
       <tr>
         <th align="right"><%=t :start_at %></th>
         <td width="15"></td>
-        <td><%=l @event.start_at %></td>
+        <td><%=l @event.start_at %> <%= @timezone || "UTC" if @timezone != User.default_timezone %></td>
       </tr>
       <% if @event.end_at %>
         <tr>
           <th align="right"><%=t :end_at %></th>
           <td width="15"></td>
-          <td><%=l @event.end_at %></td>
+          <td><%=l @event.end_at %> <%= @timezone || "UTC" if @timezone != User.default_timezone %></td>
         </tr>
       <% end %>
       <tr>
         <th align="right"><%=t :location %></th>
         <td width="15"></td>
         <td><%= @event.location %></td>
-      </tr>  
+      </tr>
       <tr>
         <th align="right"><%=t :contact_people %></th>
         <td width="15"></td>
@@ -57,7 +57,7 @@
         <td><%= link_to "Veranstaltung in Kalender exportieren.", event_url(@event, format: 'ics')%></td>
       </tr>
     </table>
-    
-    <%= simple_format @text_after_event_table %>        
+
+    <%= simple_format @text_after_event_table %>
   </body>
 </html>

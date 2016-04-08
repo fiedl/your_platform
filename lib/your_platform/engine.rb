@@ -81,7 +81,7 @@ require 'edit_mode'
 require 'slim_breadcrumb'
 
 # View Helpers
-require 'phony' 
+require 'phony'
 require 'will_paginate'
 
 # Client-Side Validations
@@ -102,6 +102,7 @@ require 'to_xls'
 
 # ICS Export (iCal)
 require 'icalendar'
+require 'icalendar/tzinfo'
 
 # Gamification
 require 'merit'
@@ -115,18 +116,18 @@ module YourPlatform
   class Engine < ::Rails::Engine
 
     engine_name "your_platform"
-    
+
     config.autoload_paths += %W(#{config.root}/app/models/concerns)
     config.autoload_paths += %W(#{config.root}/app/pdfs)
 
     # In order to override the locales in the main_app, add the following to the main app's
     # config/initializers/locale.rb:
-    # 
-    #     Rails.application.config.i18n.load_path += 
+    #
+    #     Rails.application.config.i18n.load_path +=
     #       Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
-    # 
+    #
     config.i18n.load_path += Dir[Engine.root.join('config', 'locales', '**', '*.{rb,yml}').to_s]
-    
+
     # You can override this in your app's config/application.rb.
     # But adding locales makes only sense if you add additional locales to the your_platform engine.
     #

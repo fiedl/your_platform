@@ -8,7 +8,7 @@ class User < ActiveRecord::Base
 
   # Gamification: https://github.com/merit-gem/merit
   include Merit
-  has_merit                 
+  has_merit
 
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
@@ -20,7 +20,7 @@ class User < ActiveRecord::Base
   before_validation         :change_alias_if_already_taken
   validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
   validates_format_of       :email, :with => Devise::email_regexp, :if => Proc.new { |user| user.email.present? }, judge: :ignore
-  
+
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
   validates_associated      :account
 
@@ -47,8 +47,8 @@ class User < ActiveRecord::Base
 
   # after_commit     					:delete_cache, prepend: true
   # before_destroy    				:delete_cache, prepend: true
-  
-  
+
+
   # Easy user settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
   #
@@ -57,7 +57,7 @@ class User < ActiveRecord::Base
   #     user.settings.color  # =>  :red
   #
   include RailsSettings::Extend
-  
+
 
   # Mixins
   # ==========================================================================================
@@ -147,8 +147,24 @@ class User < ActiveRecord::Base
       super() || Setting.preferred_locale || I18n.default_locale
     end
   end
-  
-  
+
+  def timezone
+    # TODO: Implement a setting where the user can choose his own time zone.
+    # See: http://railscasts.com/episodes/106-time-zones-revised
+    User.default_timezone
+  end
+  def time_zone
+    timezone
+  end
+
+  def self.default_timezone
+    AppVersion.default_timezone
+  end
+  def self.default_time_zone
+    default_timezone
+  end
+
+
   def ability
     @ability ||= Ability.new(self)
   end
@@ -175,9 +191,9 @@ class User < ActiveRecord::Base
   def male?
     not female?
   end
-  
+
   # This is the salutation for addess labels, for example:
-  # 
+  #
   #     Mr.
   #     John Doe
   #
@@ -245,7 +261,7 @@ class User < ActiveRecord::Base
   def postal_address_with_name_surrounding
     address_label.to_s
   end
-  
+
   def name_with_surrounding
     cached {
       (
@@ -538,7 +554,7 @@ class User < ActiveRecord::Base
     #
     cached { current_status_group_in(first_corporation || corporations.first) }
   end
-  
+
   def status_export_string
     cached {
       self.corporations.collect do |corporation|

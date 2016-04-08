@@ -17,7 +17,7 @@
 %div#attendees
   %div#attendees_avatars
     = render partial: 'groups/member_avatars', locals: {group: @event.attendees_group}
-  
+
   - if can? :join, @event
     %p.center.join_event
       - if @event.attendees.include? current_user
@@ -31,10 +31,10 @@
         %a.btn.btn-danger#leave_event{href: event_leave_path(@event, format: 'json'), class: leave_button_hidden_class}
           = icon :user
           Doch nicht teilnehmen
-  
+
   - if can? :invite_to, @event
     %p.center.invitation
-      %a.btn.btn-default.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'right'}}
+      %a.btn.btn-default.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'top'}}
         = icon :envelope
         = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"
       %form.hidden#invite
