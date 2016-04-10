@@ -1,0 +1,16 @@
+= render partial: 'groups/tabs', locals: {active: 'events'}
+
+%h1
+  = current_title
+%div.semester_calendar
+  = form_for @semester_calendar, method: 'patch', url: group_semester_calendar_path(@semester_calendar.group) do |f|
+    %ul.semester_calendar
+      = f.fields_for :events do |builder|
+        %li
+          = builder.text_field :localized_start_at
+          = builder.text_field :name
+          = builder.check_box :publish_on_local_website
+          = builder.check_box :publish_on_global_website
+          -#= builder.hidden_field :_destroy_event
+      %li
+        = f.submit t(:save), class: 'btn btn-primary'

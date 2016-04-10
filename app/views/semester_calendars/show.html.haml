@@ -1,0 +1,15 @@
+= render partial: 'groups/tabs', locals: {active: 'events'}
+
+%h1= current_title
+%div.semester_calendar
+  %ul.semester_calendar
+    - @semester_calendar.events.group_by { |event| event.start_at.month }.each do |month, events|
+      %li.month_name
+        %strong
+          = I18n.t('date.month_names')[month]
+          = events.first.start_at.year
+      - events.each do |event|
+        %li
+          %small= localize event.start_at
+          %br
+          = link_to event.title, event
