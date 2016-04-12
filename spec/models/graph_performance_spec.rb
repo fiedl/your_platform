@@ -119,8 +119,8 @@ if ENV['CI'] != 'travis'
 
   describe "graph performance: " do
 
-    $number_of_groups = 100
-    $number_of_users = 10
+    $number_of_groups = 10
+    $number_of_users = 2
 
     before :each do
       clear_db

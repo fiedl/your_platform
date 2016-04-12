@@ -27,15 +27,15 @@ module GroupMixins::Roles
   #     some_group.administrated_object == nil
   #
   def administrated_object
-    if self.ancestor_groups.find_all_by_flag( :officers_parent ).count == 0 and
-        not self.has_flag? :officers_parent
-      return nil
-    end
     object = self
-    until object.has_flag? :officers_parent
+    counter = 0
+    until object.has_flag?(:officers_parent)
       object = object.parents.first
+      return nil if object.nil?
+      counter += 1
+      counter < 5 || raise('This, aparently is no admins group.')
     end
     object = object.parents.first
   end
-  
+
 end

@@ -1,5 +1,5 @@
 concern :UserRoles do
-  
+
   # Roles and Rights
   # ==========================================================================================
 
@@ -14,16 +14,16 @@ concern :UserRoles do
     return :admin if self.admin_of? structureable
     return :member if self.member_of? structureable
   end
-  
+
   # Member Status
   # ------------------------------------------------------------------------------------------
-  
-  # This method is a dirty hack to preserve the obsolete role model mechanism, 
-  # which is currently not in use, since the abilities are defined directly in the 
+
+  # This method is a dirty hack to preserve the obsolete role model mechanism,
+  # which is currently not in use, since the abilities are defined directly in the
   # Ability class.
   #
   # Options:
-  # 
+  #
   #   with_invalid, also_in_the_past : true/false
   #
   # TODO: refactor it together with the role model mechanism.
@@ -43,7 +43,7 @@ concern :UserRoles do
 
   # Officer Status
   # ------------------------------------------------------------------------------------------
-  
+
   def officer_groups
     cached { self.groups.select { |g| g.type == "OfficerGroup" } }
   end
@@ -78,7 +78,7 @@ concern :UserRoles do
     if admin_groups.count > 0
       objects = admin_groups.collect do |admin_group|
         admin_group.administrated_object
-      end
+      end - [nil]
     else
       []
     end
@@ -90,7 +90,7 @@ concern :UserRoles do
     objects = directly_administrated_objects( role )
     if objects
       objects += objects.collect do |directly_administrated_object|
-        directly_administrated_object.descendants
+        directly_administrated_object.connected_descendants
       end.flatten
       objects
     else
@@ -130,9 +130,9 @@ concern :UserRoles do
   # Developer Status
   # ==========================================================================================
 
-  # This method returns whether the user is a developer. This is needed, for example, 
-  # to determine if some features are presented to the current_user. 
-  # 
+  # This method returns whether the user is a developer. This is needed, for example,
+  # to determine if some features are presented to the current_user.
+  #
   def developer?
     cached { self.developer }
   end
@@ -146,10 +146,10 @@ concern :UserRoles do
       Group.developers.unassign_user self
     end
   end
-  
+
   # Beta Tester Status
   # ==========================================================================================
-  
+
   def beta_tester?
     @beta_tester ||= self.beta_tester
   end
@@ -163,7 +163,7 @@ concern :UserRoles do
       Group.find_or_create_by_flag(:beta_testers).child_users.destroy(self)
     end
   end
-  
+
   # Global Admin Switch
   # ==========================================================================================
 
@@ -181,19 +181,19 @@ concern :UserRoles do
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
-  
+
 
   # Officers
   # ==========================================================================================
-  
+
   def officer_of_anything?
     self.groups.detect { |g| g.type == 'OfficerGroup' } || false
   end
-  
+
   def officer_of?(obj)
     obj.officer_groups.collect { |g| g.members.to_a }.flatten.include? self
   end
-  
+
   def officer_or_subgroup_officer_of?(obj)
     obj.officers_groups_of_self_and_descendant_groups.collect { |g| g.members.to_a }.flatten.include? self
   end
@@ -207,7 +207,7 @@ concern :UserRoles do
   end
 
   def is_global_officer?
-    cached { global_admin? || ancestor_groups.flagged(:global_officer).exists? }
+    cached { global_admin? || groups.flagged(:global_officer).any? }
   end
 
   def administrated_user_ids
@@ -221,6 +221,6 @@ concern :UserRoles do
     end
     return false
   end
-  
-  
+
+
 end

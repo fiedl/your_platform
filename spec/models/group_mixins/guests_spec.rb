@@ -8,7 +8,7 @@ describe GroupMixins::Guests do
   describe "guests_parent_group" do
 
     before do
-      @container_group = create( :group ) 
+      @container_group = create( :group )
       @container_subgroup = create( :group ) # this is to test if subgroup's guests are NOT listed
       @container_subgroup.parent_groups << @container_group
       @guests_parent = @container_group.create_guests_parent_group
@@ -45,7 +45,7 @@ describe GroupMixins::Guests do
         subject.should include( @guests_sub1 )
       end
       it "should NOT find the guests of the container group's subgroups" do
-        subject.should_not include( @guests_sub2 ) 
+        subject.should_not include( @guests_sub2 )
       end
     end
 
@@ -59,7 +59,7 @@ describe GroupMixins::Guests do
       describe "if the group does not have a guests_parent group" do
         subject { @other_group.find_guest_users }
         it "should still return an empty array" do
-          subject.should == []
+          subject.should.to_a == []
         end
       end
     end
@@ -67,7 +67,7 @@ describe GroupMixins::Guests do
     subject { @container_group }
     its( :guests_parent ) { should == @guests_parent }
     its( :guests_parent! ) { should == @guests_parent }
-    
+
     its( :guests ) { should == @container_group.find_guest_users }
 
   end

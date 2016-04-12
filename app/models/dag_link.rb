@@ -58,7 +58,7 @@ class DagLink < ActiveRecord::Base
     super
     ancestor.try(:delete_cache)
     descendant.try(:delete_cache)
-    ancestor.connected_ancestor_groups.each { |g| g.delete_cached :connected_descendant_group_ids }
+    ancestor.connected_ancestor_groups.each { |g| g.delete_cached :connected_descendant_group_ids } if ancestor.respond_to? :parent_groups
     descendant.connected_descendant_groups.each { |g| g.delete_cached :connected_ancestor_group_ids } if descendant.kind_of? Group
   end
 

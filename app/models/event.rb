@@ -6,7 +6,7 @@ class Event < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-  
+
   # General Properties
   # ==========================================================================================
 
@@ -14,7 +14,7 @@ class Event < ActiveRecord::Base
   def title
     name
   end
-  
+
   def to_param
     "#{id} #{name} #{start_at.year}-#{start_at.month}-#{start_at.day}".parameterize
   end
@@ -39,10 +39,10 @@ class Event < ActiveRecord::Base
   def groups
     self.parent_groups
   end
-  
+
   # Times
   # ==========================================================================================
-  
+
   def localized_start_at
     I18n.localize start_at.to_time if start_at.present?
   end
@@ -50,7 +50,7 @@ class Event < ActiveRecord::Base
     attribute_will_change! :start_at
     self.start_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
-  
+
   def localized_end_at
     I18n.localize end_at.to_time if end_at.present?
   end
@@ -58,12 +58,12 @@ class Event < ActiveRecord::Base
     attribute_will_change! :end_at
     self.end_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
-  
+
 
 
   # Contact People and Attendees
   # ==========================================================================================
-  
+
   def find_contact_people_group
     find_special_group :contact_people
   end
@@ -76,7 +76,7 @@ class Event < ActiveRecord::Base
   def contact_people
     contact_people_group.members
   end
-  
+
   def find_attendees_group
     find_special_group :attendees
   end
@@ -89,13 +89,13 @@ class Event < ActiveRecord::Base
   def attendees
     attendees_group.members
   end
-  
+
   def destroy
     find_attendees_group.try(:destroy)
     find_contact_people_group.try(:destroy)
     super
   end
-  
+
 
   # Scopes
   # ==========================================================================================
@@ -118,39 +118,26 @@ class Event < ActiveRecord::Base
   # Date.today.to_datetime is 0h.
   #
   scope :upcoming, lambda { where("(start_at > ? AND end_at IS NULL) OR (end_at IS NOT NULL AND end_at > ?)", Date.today.to_datetime, Date.today.to_datetime) }
-  
+
   def upcoming?
     Event.upcoming.pluck(:id).include? self.id
   end
-  
-  scope :direct, lambda { includes( :links_as_descendant ).where( :dag_links => { :direct => true } ) }
-
 
   # Finder Methods
   # ==========================================================================================
 
-  def self.find_all_by_group( group )
-    ancestor_id = group.id if group
-    self.includes( :links_as_descendant )
-      .where( :dag_links => { 
-                :ancestor_type => "Group", :ancestor_id => ancestor_id
-              } )
-      .order('start_at')
+  def self.find_all_by_group(group)
+    self.where(id: ([group] + group.connected_descendant_groups).map(&:child_event_ids).flatten).order(:start_at)
   end
 
-  def self.find_all_by_groups( groups )
-    group_ids = groups.collect { |g| g.id }
-    self.includes( :links_as_descendant )
-      .where( :dag_links => { 
-                :ancestor_type => "Group", :ancestor_id => group_ids
-              } )
-      .order('start_at')
+  def self.find_all_by_groups(groups)
+    self.where(id: groups.collect { |g| [g] + g.connected_descendant_groups }.flatten.map(&:child_event_ids).flatten).order(:start_at)
   end
-  
+
   def self.find_all_by_user(user)
     self.find_all_by_groups(user.groups).direct
   end
-  
+
 
   # Calendar Export
   # ==========================================================================================
@@ -172,7 +159,7 @@ class Event < ActiveRecord::Base
     e.last_modified = Icalendar::Values::DateTime.new(self.updated_at)
     return e
   end
-  
+
   def to_icalendar
     cal = Icalendar::Calendar.new
     cal.add_event self.to_icalendar_event
@@ -183,18 +170,18 @@ class Event < ActiveRecord::Base
   def to_ics
     self.to_icalendar.to_ical
   end
-  
+
   def to_ical
     self.to_ics
   end
-  
+
   # Example:
   #     Group.find(12).events.to_ics
   #
   def self.to_ics
     self.to_icalendar.to_ical
   end
-  
+
   def self.to_icalendar
     cal = Icalendar::Calendar.new
     self.all.each do |event|
@@ -203,18 +190,18 @@ class Event < ActiveRecord::Base
     cal.publish
     return cal
   end
-  
+
   def self.to_ical
     self.to_ics
   end
-  
+
 
   # Existance
   # ==========================================================================================
-  
+
   # For some strange reason, the callbacks of the creation of an event appear to
   # prevent the event form being found in the database after its creation.
-  # 
+  #
   # In the EventsController and in specs, we need to make sure that the event exists
   # before continuing. Otherwise `ActiveRecord::RecordNotFound` is raised in the controller
   # or when redirecting to the event.
@@ -231,5 +218,5 @@ class Event < ActiveRecord::Base
       retry
     end
   end
-  
+
 end

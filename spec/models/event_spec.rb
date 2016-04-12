@@ -55,8 +55,8 @@ describe Event do
       @event.groups.should include @group, @another_group
     end
   end
-  
-  
+
+
   # Contact People and Attendees
   # ==========================================================================================
 
@@ -76,7 +76,7 @@ describe Event do
       @event.contact_people.should_not include @user
     end
   end
-  
+
   describe "#attendees" do
     subject { @event.attendees }
     before { @user = create :user }
@@ -105,7 +105,7 @@ describe Event do
   # ==========================================================================================
 
   describe ".upcoming" do
-    before do 
+    before do
       @upcoming_event = create( :event, start_at: 5.hours.from_now )
       @recent_event = create(:event, start_at: 2.days.ago, end_at: 2.days.ago + 2.hours)
       @recent_event_today = create(:event, start_at: Date.today.to_datetime.change(hour: 0, min: 5))
@@ -140,8 +140,8 @@ describe Event do
     end
   end
 
-  describe ".direct" do
-    # group_a 
+  describe ".direct [removed]" do
+    # group_a
     #   |----- event_0
     #   |----- group_b
     #   |        |------ event_1
@@ -159,15 +159,11 @@ describe Event do
     end
     it "should list direct events" do
       @group_a.events.should include @event_0, @event_1, @event_2
-      @group_a.events.direct.should include @event_0
-      @group_a.events.direct.should_not include @event_1
-    end
-    it "should commute with .find_all_by_group" do
-      Event.find_all_by_group( @group_a ).direct.to_a.should ==
-        Event.direct.find_all_by_group( @group_a ).to_a
+      @group_a.child_events.should include @event_0
+      @group_a.child_events.should_not include @event_1
     end
   end
-  
+
 
   # Finder Methods
   # ==========================================================================================
@@ -196,12 +192,12 @@ describe Event do
 
   describe ".find_all_by_groups" do
     before do
-      @group1 = create( :group )
-      @event1 = @group1.events.create( :start_at => 5.hours.from_now )
-      @group2 = create( :group )
-      @event2 = @group2.events.create( :start_at => 2.hours.from_now )
-      @group3 = create( :group )
-      @event3 = @group3.events.create
+      @group1 = create :group
+      @event1 = @group1.child_events.create start_at: 5.hours.from_now
+      @group2 = create :group
+      @event2 = @group2.child_events.create start_at: 2.hours.from_now
+      @group3 = create :group
+      @event3 = @group3.child_events.create
     end
     subject { Event.find_all_by_groups( [ @group1, @group2 ] ) }
     it "should return the events of the given groups" do
@@ -214,11 +210,11 @@ describe Event do
       subject.first.start_at.should < subject.last.start_at
     end
   end
-  
-  
+
+
   # Structure
   # ==========================================================================================
-  
+
   # The following DAG structure should be possible in the model layer (bug fix).
   #
   #   @corporation
@@ -241,7 +237,7 @@ describe Event do
     @user = create :user
     @group = create :group
     @group.assign_user @user
-    
+
     @event = Event.new
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
@@ -249,19 +245,19 @@ describe Event do
     @event.parent_groups << @group
     @event.contact_people_group.assign_user @user
   end
-  
-  
+
+
   describe "#destroy" do
     subject { @event.destroy }
-    
+
     it "should destroy the contact people and attendees groups as well" do
       @contact_people_group = @event.contact_people_group
       @attendees_group = @event.attendees_group
-      
+
       subject
       Group.exists?(id: @contact_people_group.id).should == false
       Group.exists?(id: @attendees_group.id).should == false
     end
   end
-  
+
 end

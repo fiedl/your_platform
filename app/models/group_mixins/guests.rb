@@ -1,7 +1,7 @@
 #
 # All groups have associated special groups, for example the `guests_parent` group, which
-# contains all guests of the group. 
-# 
+# contains all guests of the group.
+#
 # This mixin provides the accessor methods for the guests_parent special group.
 #
 # The mechanism used in the mixin is defined in `StructureableMixins::HasSpecialGroups`.
@@ -13,8 +13,8 @@ module GroupMixins::Guests
   included do
     # see, for example, http://stackoverflow.com/questions/5241527/splitting-a-class-into-multiple-files-in-ruby-on-rails
   end
-  
-  
+
+
   # Guests
   # ==========================================================================================
 
@@ -39,7 +39,7 @@ module GroupMixins::Guests
   end
 
   def find_guest_users
-    guests_parent.descendant_users
+    guests_parent.members
   end
 
   def guests
@@ -57,5 +57,5 @@ module GroupMixins::Guests
   def find_guests_groups
     find_guests_parent_group.descendant_groups
   end
-  
-end  
+
+end

@@ -30,7 +30,7 @@ concern :StructureableConnectedGroups do
   end
 
   def connected_ancestor_groups
-    Group.find connected_ancestor_group_ids
+    Group.where(id: connected_ancestor_group_ids)
   end
 
   def connected_ancestor_group_ids
@@ -38,7 +38,7 @@ concern :StructureableConnectedGroups do
   end
 
   def connected_descendant_groups
-    Group.find connected_descendant_group_ids
+    Group.where(id: connected_descendant_group_ids)
   end
 
   def connected_descendant_group_ids

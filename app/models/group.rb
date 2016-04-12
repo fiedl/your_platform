@@ -3,15 +3,15 @@
 # This class represents a user group. Besides users, groups may have sub-groups as children.
 # One group may have several parent-groups. Therefore, the relations between groups, users,
 # etc. is stored using the DAG model, which is implemented by the `is_structureable` method.
-# 
+#
 class Group < ActiveRecord::Base
-  
+
   if defined? attr_accessible
     attr_accessible( :name, # just the name of the group; example: 'Corporation A'
                       :body, # a description text displayed on the groups pages top
-                      :token, # (optional) a short-name, abbreviation of the group's name, in 
+                      :token, # (optional) a short-name, abbreviation of the group's name, in
                               # a global context; example: 'A'
-                      :internal_token, # (optional) an internal abbreviation, i.e. used by the 
+                      :internal_token, # (optional) an internal abbreviation, i.e. used by the
                                        # members of the group; example: 'AC'
                       :extensive_name, # (optional) a long version of the group's name;
                                        # example: 'The Corporation of A'
@@ -19,21 +19,21 @@ class Group < ActiveRecord::Base
                                                     # titles of the child users of the group.
                       )
   end
-  
+
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
-  is_structureable(ancestor_class_names: %w(Group Page Event), 
+  is_structureable(ancestor_class_names: %w(Group Page Event),
                    descendant_class_names: %w(Group User Page Workflow Event Project))
   is_navable
   has_profile_fields
 
   has_many :posts
-  
+
   default_scope { includes(:flags) }
 
   include GroupMemberships
   include GroupMemberAssignment
-  include GroupMixins::Everyone  
+  include GroupMixins::Everyone
   include GroupMixins::Corporations
   include GroupMixins::Roles
   include GroupMixins::Guests
@@ -52,14 +52,14 @@ class Group < ActiveRecord::Base
     super
     ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
   end
-    
+
   # General Properties
   # ==========================================================================================
 
   # The title of the group, i.e. a kind of caption, e.g. used in the <title> tag of the
   # webpage. By default, this returns just the name of the group. But this may be changed
   # in the main application.
-  # 
+  #
   def title
     self.name
   end
@@ -71,7 +71,7 @@ class Group < ActiveRecord::Base
   def name
     I18n.t( super.to_sym, default: super ) if super.present?
   end
-  
+
   def extensive_name
     if has_flag? :attendees
       name + (parent_events.first ? ": " + parent_events.first.name : '')
@@ -85,7 +85,7 @@ class Group < ActiveRecord::Base
       name
     end
   end
-  
+
   def name_with_corporation
     if self.corporation && self.corporation.id != self.id
       "#{self.name} (#{self.corporation.name})"
@@ -93,9 +93,9 @@ class Group < ActiveRecord::Base
       self.name
     end
   end
-  
+
   # This sets the format of the Group urls to be
-  # 
+  #
   #     example.com/groups/24-planeswalkers
   #
   # rather than just
@@ -105,8 +105,8 @@ class Group < ActiveRecord::Base
   def to_param
     "#{id} #{title}".parameterize
   end
-  
-  
+
+
   # Mark this group of groups, i.e. the primary members of the group are groups,
   # not users. This does not effect the DAG structure, but may affect the way
   # the group is displayed.
@@ -117,25 +117,25 @@ class Group < ActiveRecord::Base
   def group_of_groups=(add_the_flag)
     add_the_flag ? add_flag(:group_of_groups) : remove_flag(:group_of_groups)
   end
-  
-  
+
+
   # Associated Objects
   # ==========================================================================================
 
   # Events
   # ------------------------------------------------------------------------------------------
-  
+
   def events
-    self.descendant_events
+    Event.find_all_by_group(self)
   end
 
   def upcoming_events
     self.events.upcoming.order('start_at')
   end
-  
-  
+
+
   # Adress Labels (PDF)
-  # options: 
+  # options:
   #   - sender:      Sender line including sender address.
   #   - book_rate:   Whether the "Büchersendung"/"Envois à taxe réduite" badge
   #                  is to be printed.
@@ -178,14 +178,14 @@ class Group < ActiveRecord::Base
   def corporation?
     kind_of? Corporation
   end
-  
+
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
   end
   def deceased
     find_deceased_members_parent_group
   end
-  
+
   concerning :GroupDescendantUsers do
     def descendant_users
       raise('Changed interface! Please use `Group#members` or `Group#members.with_past`.')

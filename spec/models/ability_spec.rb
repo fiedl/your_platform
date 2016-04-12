@@ -1,9 +1,9 @@
 require 'spec_helper'
 require 'cancan/matchers'
 
-# In order to call the user "he" rather than "it", 
+# In order to call the user "he" rather than "it",
 # we have to define an alias here.
-# 
+#
 # http://stackoverflow.com/questions/12317558/alias-it-in-rspec
 #
 RSpec.configure do |c|
@@ -11,13 +11,13 @@ RSpec.configure do |c|
 end
 
 describe Ability do
-  
+
   # I'm sorry. I do have problems with cancan's terminology, here.
-  # For me, the User can do something, i.e. I would ask 
+  # For me, the User can do something, i.e. I would ask
   #
   #   @user.can? :manage, @page
   #
-  # But for cancan, it's 
+  # But for cancan, it's
   #
   #   Ability.new(@user).can? :manage, @page
   #
@@ -30,7 +30,7 @@ describe Ability do
     let(:ability) { Ability.new(user) }
     subject { ability }
     let(:the_user) { subject }
-    
+
     context "(posts and comments)" do
       context "when the user is a member of a group" do
         before { @group = create(:group); @group.assign_user(user, at: 1.month.ago) }
@@ -71,7 +71,7 @@ describe Ability do
         end
       end
     end
-    
+
     context "(mentions)" do
       context "when mentioned in a comment" do
         before do
@@ -102,47 +102,48 @@ describe Ability do
         he { should be_able_to :download, @post_attachment }
       end
     end
-    
+
     context "when the user is global admin" do
       before { user.global_admin = true }
-      
+
       he "should not be able to destroy events that are older than 10 minutes" do
         @event = create :event, name: "Recent Event"
         @event.update_attribute :created_at, 11.minutes.ago
-        
+
         the_user.should_not be_able_to :destroy, @event
       end
-      
+
       he "should be able to destroy recently created pages" do
         @page = create :page, title: "New Page"
-        
+
         the_user.should be_able_to :destroy, @page
       end
       he "should not be able to destroy pages that are older than 10 minutes" do
         @page = create :page, title: "Old Page"
         @page.update_attribute :created_at, 11.minutes.ago
-        
+
         the_user.should_not be_able_to :destroy, @page
       end
-      
+
       he "should be able to change the 'hidden' attribute of any user" do
         @other_user = create :user
         the_user.should be_able_to :change_hidden, @other_user
       end
     end
-    
+
     context "when the user is a group admin" do
       before do
         @group = create :group
+        @group << user
         @group.admins << user
         time_travel 2.seconds
       end
-      
+
       he "should be able to update its profile fields" do
         @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
         the_user.should be_able_to :update, @profile_field
       end
-      
+
       he "should not be able to change the 'hidden' attribute of the group members" do
         @other_user = create :user; @group << @other_user
         the_user.should_not be_able_to :change_hidden, @other_user
@@ -153,7 +154,7 @@ describe Ability do
       he { should be_able_to :update, user }
       he { should be_able_to :change_status, user }
     end
-    
+
     context "when the user is officer of a group" do
       before do
         @group = create :group
@@ -164,12 +165,12 @@ describe Ability do
         @parent_group = @group.parent_groups.create(name: "Parent Group")
         @unrelated_group = create :group
       end
-      
+
       he "should not be able to update its profile fields" do
         @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
         the_user.should_not be_able_to :update, @profile_field
       end
-    
+
       describe "(events)" do
         he "should be able to create an event in his group" do
           the_user.should be_able_to :create_event, @group
@@ -195,14 +196,14 @@ describe Ability do
         end
         he "should be able to destroy just created events in his domain" do
           @event = @group.child_events.create name: "Special Event"
-          
+
           user.should be_in @group.officers_of_self_and_ancestors
           the_user.should be_able_to :destroy, @event
         end
         he "should not be able to destroy events that are older than 10 minutes" do
           @event = @group.child_events.create name: "Recent Event"
           @event.update_attribute :created_at, 11.minutes.ago
-          
+
           the_user.should_not be_able_to :destroy, @event
         end
         he "should be able to invite users to an event" do
@@ -216,13 +217,13 @@ describe Ability do
         end
       end
     end
-    
+
     describe "when the user is a page admin" do
       before do
         @page = create :page
         @page.admins << user
       end
-      
+
       he { should be_able_to :create_page_for, @page }
       he "should be able to destroy the sub-page" do
         @sub_page = @page.child_pages.create
@@ -234,14 +235,14 @@ describe Ability do
         the_user.should_not be_able_to :destroy, @sub_page
       end
     end
-    
+
     describe "when the user is a page officer" do
       before do
         @page = create :page
         @secretary = @page.officers_parent.child_groups.create name: 'Secretary'
         @secretary << user
       end
-      
+
       he { should be_able_to :create_page_for, @page }
       he "should be able to destroy the sub-page" do
         @sub_page = @page.child_pages.create
@@ -253,14 +254,14 @@ describe Ability do
         the_user.should_not be_able_to :destroy, @sub_page
       end
     end
-    
+
     describe "when the user is contact person of an event" do
       before do
         @event = create :event
         @event.contact_people_group.assign_user user, at: 2.minutes.ago
       end
       he { should be_able_to :create_page_for, @event }
-      
+
       describe "when he is author of a subpage of the event" do
         before do
           @page = @event.child_pages.create
@@ -269,7 +270,7 @@ describe Ability do
         end
         he { should be_able_to :update, @page}
         he { should be_able_to :create_attachment_for, @page }
-        
+
         describe "when he is author of an attachment" do
           before do
             @attachment = @page.attachments.create
@@ -278,7 +279,7 @@ describe Ability do
           end
           he { should be_able_to :update, @attachment }
           he { should be_able_to :destroy, @attachment }
-          
+
           describe "when the user is also a global officer (bug fix)" do
             before do
               @global_officers = create :group
@@ -286,7 +287,7 @@ describe Ability do
               @global_officers.assign_user user, at: 1.year.ago
             end
             let(:ability) { Ability.new(user, preview_as: 'global_officer') }
-            
+
             he { should be_able_to :update, @attachment }
             he { should be_able_to :destroy, @attachment }
           end
@@ -310,14 +311,14 @@ describe Ability do
         @secretary = Group.everyone.create_officer_group name: 'Secretary'
         @secretary.add_flag :global_officer
         @secretary.assign_user user, at: 1.month.ago
-      
+
         @any_group = create :group
       end
       he { should be_able_to :create_event_for, @any_group }
-    
+
       he "should be able to post to any group" do
         @any_group = create :group
-      
+
         the_user.should be_able_to :create_post, @any_group
         the_user.should be_able_to :create_post_for, @any_group
         the_user.should be_able_to :create_post_via_email, @any_group
@@ -329,21 +330,21 @@ describe Ability do
           @event = @any_group.child_events.create
           @event.contact_people << user
         end
-      
+
         he { should be_able_to :update, @event }
         he { should be_able_to :invite_to, @event }
       end
     end
 
   end
-  
+
   describe "for users without account" do
     let(:user) { create(:user) }
     let(:ability) { Ability.new(user) }
     subject { ability }
     let(:the_user) { subject }
-    
-  
+
+
     describe "(public pages)" do
       before do
         @root = Page.find_or_create_root
@@ -352,11 +353,11 @@ describe Ability do
         @some_public_page = @root.child_pages.create title: 'This page is public.'
         Page.public_website_page_ids(true)  # reload cached ids
       end
-      
+
       he "should be able to access the imprint page" do
         @page = create :page, title: "Imprint"
         @page.add_flag :imprint
-      
+
         the_user.should be_able_to :read, @page
       end
       he { should be_able_to :read, Page.find_root }

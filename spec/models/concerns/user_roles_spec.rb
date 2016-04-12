@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 
-  before do 
+  before do
     @user = create( :user )
     @user.save
   end
@@ -10,53 +10,59 @@ describe User do
 
   # Roles
   # ==========================================================================================
-  
+
   describe "#role_for" do
-    before do
-      @object = create( :page )
-      @object.create_main_admins_parent_group
-      @sub_object = create( :group ); @sub_object.parent_pages << @object
-      @sub_sub_object = create( :user ); @sub_sub_object.parent_groups << @sub_object
-    end
-    subject { @user.role_for @object }
-    context "for the user being not related to the object" do
-      it { should == nil }
-    end
-    context "for the user being a member of the object" do
+    context "for pages" do
       before do
-        @group = create( :group )
-        @group.child_users << @user
-        @object.child_groups << @group 
+        @object = create( :page )
+        @object.create_main_admins_parent_group
+        @sub_object = create( :group ); @sub_object.parent_pages << @object
+        @sub_sub_object = create( :user ); @sub_sub_object.parent_groups << @sub_object
       end
-      it { should == :member }
+      subject { @user.role_for @object }
+
+      context "for the user being not related to the object" do
+        it { should == nil }
+      end
+      context "for the user being an admin of the object" do
+        before { @object.admins << @user }
+        it { should == :admin }
+      end
+      context "for the user being a main_admin of the object" do
+        before { @object.main_admins << @user }
+        it { should == :main_admin }
+      end
+      context "for the object being not structureable" do
+        before { @object = "This is a string." }
+        it { should == nil }
+      end
+      context "for descendant objects of administrated objects" do
+        before { @object.admins << @user }
+        it "should return the inherited role" do
+          @user.role_for( @object ).should == :admin
+          @user.role_for( @sub_object ).should == :admin
+          @user.role_for( @sub_sub_object ).should == :admin
+        end
+      end
     end
-    context "for the user being an admin of the object" do
-      before { @object.admins << @user }
-      it { should == :admin }
-    end
-    context "for the user being a main_admin of the object" do
-      before { @object.main_admins << @user }
-      it { should == :main_admin }
-    end
-    context "for the object being not structureable" do
-      before { @object = "This is a string." }
-      it { should == nil }
-    end
-    context "for descendant objects of administrated objects" do
-      before { @object.admins << @user }
-      it "should return the inherited role" do
-        @user.role_for( @object ).should == :admin
-        @user.role_for( @sub_object ).should == :admin
-        @user.role_for( @sub_sub_object ).should == :admin
+    context "for groups" do
+      before do
+        @object = create(:group)
+      end
+      subject { @user.role_for @object }
+
+      context "for the user being a member of the object" do
+        before { @object << @user }
+        it { should == :member }
       end
     end
   end
-  
+
   # Admins
   # ------------------------------------------------------------------------------------------
-  
+
   describe "#admin_of" do
-    before do 
+    before do
       @group = create( :group, name: "Directly Administrated Group" )
       @group.find_or_create_admins_parent_group
       @group.admins_parent.child_users << @user
@@ -64,7 +70,7 @@ describe User do
     subject { @user.admin_of }
     it { should == @user.administrated_objects }
   end
-  
+
   describe "#admin_of?" do
     before do
       @group = create( :group, name: "Directly Administrated Group" )
@@ -103,7 +109,7 @@ describe User do
       it { should == false }
     end
   end
-  
+
   describe "#directly_administrated_objects" do
     before do
       @group = create( :group, name: "Directly Administrated Group" )
@@ -118,7 +124,7 @@ describe User do
       end
     end
   end
-  
+
   describe "#administrated_objects" do
     before do
       @group = create( :group, name: "Administrated Group" )
@@ -145,43 +151,39 @@ describe User do
       end
     end
   end
-  
+
   # Main Admins
   # ------------------------------------------------------------------------------------------
-  
+
   describe "#main_admin_of?" do
     before do
-      @page = create( :page )
+      @group = create(:group)
     end
-    subject { @user.main_admin_of? @page }
+    subject { @user.main_admin_of? @group }
     context "for the main_admins_parent_group existing" do
-      before { @page.create_main_admins_parent_group }
+      before { @group.create_main_admins_parent_group }
       context "for the user being a main admin of the object" do
-        before { @page.main_admins << @user }
+        before { @group.main_admins << @user }
         it { should == true }
       end
       context "for the user being just a regular admin of the object" do
-        before { @page.admins << @user }
+        before { @group.admins << @user }
         it { should == false }
       end
       context "for the user being just a regular member of the object" do
-        before do
-          @group = create( :group )
-          @group.child_users << @user
-          @page.child_groups << @group
-        end
+        before { @group << @user }
         it "should be false" do
-          @user.member_of?( @page ).should be_true # just to make sure
+          @user.member_of?(@group).should be_true # just to make sure
           subject.should == false
         end
       end
     end
   end
-  
-  
+
+
   # Guest Status
   # ==========================================================================================
-  
+
   describe "#guest_of?" do
     before { @group = create( :group ) }
     subject { @user.guest_of? @group }
@@ -196,11 +198,11 @@ describe User do
       it { should == true }
     end
   end
-  
-  
+
+
   # Developers
   # ==========================================================================================
-  
+
   describe "#developer?" do
     subject { @user.developer? }
     describe "for no developers group existing" do
@@ -234,5 +236,5 @@ describe User do
       end
     end
   end
-  
+
 end

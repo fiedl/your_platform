@@ -74,6 +74,7 @@ module Structureable
     include StructureableConnectedGroups
     include StructureableConnectedLeafGroups
     include StructureableConnectedPages
+    include StructureableConnectedDescendants
 
     # Methods to manage the graph-related cache.
     #

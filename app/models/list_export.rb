@@ -1,3 +1,5 @@
+require 'csv'
+
 # This class helps to export data to CSV, XLS and possibly others.
 #
 # Example:
@@ -17,10 +19,10 @@
 #   * https://github.com/zdavatz/spreadsheet
 #   * Formatting xls: http://scm.ywesee.com/?p=spreadsheet/.git;a=blob;f=lib/spreadsheet/format.rb
 #   * to_xls gem example: http://stackoverflow.com/questions/15600987/
-# 
+#
 class ListExport
   attr_accessor :data, :preset, :csv_options
-  
+
   def initialize(initial_data, initial_preset = nil)
     @data = initial_data; @preset = initial_preset
     @csv_options =  { col_sep: ';', quote_char: '"' }
@@ -28,13 +30,13 @@ class ListExport
     @data = processed_data
     @data = sorted_data
   end
-  
+
   def columns
     case preset.to_s
     when 'address_list'
       [:last_name, :first_name, :name_affix, :postal_address_with_name_surrounding,
-        :postal_address, :cached_localized_postal_address_updated_at, 
-        :postal_address_street, 
+        :postal_address, :cached_localized_postal_address_updated_at,
+        :postal_address_street,
         :postal_address_postal_code, :postal_address_town,
         :postal_address_state,
         :postal_address_country, :postal_address_country_code,
@@ -55,7 +57,7 @@ class ListExport
       [:last_name, :first_name, :name_affix, :personal_title, :academic_degree]
     end
   end
-  
+
   def headers
     columns.collect do |column|
       if column.kind_of? Symbol
@@ -65,15 +67,15 @@ class ListExport
       end
     end
   end
-  
+
   def processed_data
     if preset.to_s.in?(['birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list']) && @data.kind_of?(Group)
-      # To be able to generate lists from Groups as well as search results, these presets expect 
+      # To be able to generate lists from Groups as well as search results, these presets expect
       # an Array of Users as data. If a Group is given instead, just take the group members as data.
       #
       @data = @data.members
     end
-    
+
     # Make the extended methods available that are defined below.
     #
     if @data.respond_to?(:first) && @data.first.kind_of?(User)
@@ -124,7 +126,7 @@ class ListExport
       # /FIXME - please uncomment:
       #@leaf_group_names = @leaf_groups.pluck(:name)
       #@leaf_group_ids = @leaf_groups.pluck(:id }
-      
+
       @group.members.collect do |user|
         user = user.becomes(ListExportUser)
         row = {
@@ -146,7 +148,7 @@ class ListExport
       #
       # From a list of groups, this creates one row per group.
       # The columns count the number of memberships valid from the year given by the column.
-      # 
+      #
       # For the 'join_and_persist_statistics', only memberships are counted
       # that are still valid, i.e. still persist.
       #
@@ -154,7 +156,7 @@ class ListExport
       #  group1     24     22     25     28    ...
       #  group2     31     28     27     32    ...
       #   ...
-      # 
+      #
       if @data.kind_of? Group
         @groups = @data.child_groups
       elsif @data.kind_of? Array
@@ -164,7 +166,7 @@ class ListExport
         row = {}
         columns.each do |column|
           row[column] = if column.kind_of? Integer
-            year = column 
+            year = column
             memberships = []
             if preset.to_s == 'join_statistics'
               memberships = group.memberships.with_past
@@ -204,16 +206,16 @@ class ListExport
       data
     end
   end
-  
+
   def raise_error_if_data_is_not_valid
     case preset.to_s
     when 'birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list', 'name_list'
       data.kind_of?(Group) || data.first.kind_of?(User) || raise("Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
     when 'member_development'
       data.kind_of?(Group) || raise('The member_development list can only be generated for a Group, not an Array of Users.')
-    end    
+    end
   end
-  
+
   def to_csv
     CSV.generate(csv_options) do |csv|
       csv << headers
@@ -222,7 +224,7 @@ class ListExport
           if row.respond_to? :values
             row[column_name]
           elsif row.respond_to? column_name
-            row.try(:send, column_name) 
+            row.try(:send, column_name)
           else
             raise "Don't know how to access the given attribute or value. Trying to access '#{column_name}' on '#{row}'."
           end
@@ -230,13 +232,13 @@ class ListExport
       end
     end
   end
-  
+
   def to_xls
     header_format = {weight: 'bold'}
     @data = @data.collect { |hash| HashWrapper.new(hash) } if @data.first.kind_of? Hash
     @data.to_xls(columns: columns, headers: headers, header_format: header_format)
   end
-  
+
   def to_html
     ("
       <table class='datatable joining statistics'>
@@ -253,17 +255,17 @@ class ListExport
       </table>
     ").html_safe
   end
-  
+
   def to_a
     @data
   end
-  
+
   def to_s
     to_csv
   end
-  
+
   private
-  
+
   def helpers
     ActionController::Base.helpers
   end
@@ -276,11 +278,11 @@ class HashWrapper
   def initialize(hash)
     @hash = hash
   end
-  
+
   # This is a workaround for the to_xls gem, which requires to access the attributes
   # by method in order to write the columns in the correct order.
   #
-  def method_missing(method_name, *args, &block)  
+  def method_missing(method_name, *args, &block)
     @hash[method_name] || @hash[method_name.to_sym]
   end
 end
@@ -291,11 +293,11 @@ end
 #
 require 'user'
 class ListExportUser < User
-  
+
   def personal_title_and_name
     "#{personal_title} #{name}".strip
   end
-  
+
   # Birthday, Date of Birth, Date of Death
   #
   def current_age
@@ -307,7 +309,7 @@ class ListExportUser < User
   def localized_date_of_birth
     I18n.localize date_of_birth if date_of_birth
   end
-  
+
   # Address
   #
   def postal_address_with_name_surrounding
@@ -361,7 +363,7 @@ class ListExportUser < User
   def dpag_postal_address_type
     "HOUSE"
   end
-  
+
   def cache_key
     # Otherwise the cached information of the user won't be used.
     super.gsub('list_export_users/', 'users/')
