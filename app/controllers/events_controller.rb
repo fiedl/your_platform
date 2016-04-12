@@ -46,7 +46,7 @@ class EventsController < ApplicationController
       @events = Event.find_all_by_group(@group)
       set_current_navable @group
     elsif @user
-      @events = Event.find_all_by_user(@user)
+      @events = @user.events
       set_current_navable @user
     elsif @all
       @events = Event.all
