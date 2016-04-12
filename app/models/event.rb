@@ -152,7 +152,9 @@ class Event < ActiveRecord::Base
   end
 
   def self.find_all_by_user(user)
-    self.find_all_by_groups(user.groups).direct
+    ids = find_all_by_groups(user.groups).direct.pluck(:id)
+    ids += user.ancestor_event_ids
+    self.where(id: ids.uniq).order(:start_at)
   end
 
 

@@ -619,9 +619,7 @@ class User < ActiveRecord::Base
   # as well as all events the user has joined.
   #
   def events
-    ids = Event.find_all_by_groups(self.groups).direct.pluck(:id)
-    ids += self.ancestor_event_ids
-    Event.where(id: ids.uniq).order(:start_at)
+    Event.find_all_by_user(self)
   end
   def upcoming_events
     events.upcoming
