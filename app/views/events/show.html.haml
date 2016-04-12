@@ -32,7 +32,7 @@
           = icon :user
           Doch nicht teilnehmen
 
-  - if can? :invite_to, @event
+  - if can?(:invite_to, @event) && @event.group
     %p.center.invitation
       %a.btn.btn-default.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'top'}}
         = icon :envelope
