@@ -71,6 +71,20 @@ if ENV['CI'] != 'travis'
     def number_of_parent_group_ancestor_groups
       parent_group.ancestor_groups.count
     end
+
+    def find_ancestor_group_descendants
+      ancestor_group.descendants.to_a
+    end
+    def find_ancestor_group_members
+      ancestor_group.members.to_a
+    end
+    def find_connected_descendant_groups
+      ancestor_group.connected_descendant_groups.to_a
+    end
+
+    def clear_graph
+      DagLink.delete_all
+    end
   end
 
   class Neo4jTestGraph < TestGraph
@@ -79,6 +93,18 @@ if ENV['CI'] != 'travis'
     end
     def number_of_parent_group_ancestor_groups
       parent_group.neo_node.query_as(:self).match("self<-[*]-(n)").pluck(:n).count
+    end
+
+    def find_ancestor_group_descendants
+      ancestor_group.neo_node.query_as(:self).match("self-[*]->(n)").pluck(:n).collect { |n| n.to_active_record }
+    end
+    def find_ancestor_group_members
+      User.find(ancestor_group.neo_node.query_as(:self).match("self-[*]->(u:User)").pluck('u.active_record_id'))
+    end
+
+    def clear_db
+      # clear_model_memory_caches
+      Neo4j::Session.current._query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
     end
   end
 
@@ -171,52 +197,42 @@ if ENV['CI'] != 'travis'
       graph.number_of_parent_group_ancestor_groups.should == 0
     end
 
+    specify "finding all #{$number_of_groups * $number_of_users} members" do
+      graph.create_groups
+      graph.add_users_to_groups
+      graph.create_parent_group
+      graph.move_groups_into_parent_group
+      graph.create_ancestor_group
+      graph.move_parent_group_into_ancestor_group
+      benchmark { graph.find_ancestor_group_members }
+      benchmark("second run: finding all #{$number_of_groups * $number_of_users} members") { graph.find_ancestor_group_members }
+      graph.find_ancestor_group_members.count.should == $number_of_groups * $number_of_users
+      graph.find_ancestor_group_members.first.should be_kind_of User
+    end
 
+    specify "finding all connected descendant groups" do
+      graph.create_groups
+      graph.add_users_to_groups
+      graph.create_parent_group
+      graph.move_groups_into_parent_group
+      graph.create_ancestor_group
+      graph.move_parent_group_into_ancestor_group
+      benchmark { graph.find_connected_descendant_groups }
+      benchmark("second run: all connected descendant groups") { graph.find_connected_descendant_groups }
+      graph.find_connected_descendant_groups.count.should == $number_of_groups + 1
+    end
 
-
-    describe "with child users" do
-      describe "with parent group" do
-        describe "with ancestor group" do
-
-
-
-          specify "finding all descendants" do
-            if defined? Neo4j and parent_group.respond_to? :neo_node
-              benchmark do
-                ancestor_group.neo_node.query_as(:self).match("self-[*]->(n)").pluck(:n).collect { |n| n.to_active_record }
-              end
-            else
-              benchmark do
-                ancestor_group.descendants.to_a
-              end
-            end
-
-            if defined? Neo4j and ancestor_group.respond_to? :neo_node
-              ancestor_group.neo_node.query_as(:self).match("self-[*]->(n)").pluck(:n).count.should > $number_of_groups
-            end
-            ancestor_group.descendants.count.should > $number_of_groups
-          end
-
-          specify "finding all descendant users" do
-            if defined? Neo4j
-              benchmark do
-                User.find(ancestor_group.neo_node.query_as(:self).match("self-[*]->(u:User)").pluck('u.active_record_id'))
-              end
-            else
-              benchmark do
-                ancestor_group.descendant_users.to_a
-              end
-            end
-
-            if defined? Neo4j
-              User.find(ancestor_group.neo_node.query_as(:self).match("self-[*]->(u:User)").pluck('u.active_record_id')).count.should > $number_of_groups
-              User.find(ancestor_group.neo_node.query_as(:self).match("self-[*]->(u:User)").pluck('u.active_record_id')).first.should be_kind_of User
-            end
-            ancestor_group.descendant_users.count.should > $number_of_groups
-            ancestor_group.descendant_users.first.should be_kind_of User
-          end
-        end
+    specify "creating 10 events for ancestor group" do
+      graph.create_groups
+      graph.add_users_to_groups
+      graph.create_parent_group
+      graph.move_groups_into_parent_group
+      graph.create_ancestor_group
+      graph.move_parent_group_into_ancestor_group
+      benchmark do
+        10.times { graph.ancestor_group.child_events.create }
       end
+      graph.ancestor_group.events.count.should == 10
     end
 
     after(:all) do
@@ -224,12 +240,12 @@ if ENV['CI'] != 'travis'
     end
 
     $results = []
-    def benchmark
+    def benchmark(description = nil)
       duration_in_seconds = Benchmark.realtime {
         yield
       }.round(4)
 
-      description = RSpec.current_example.metadata[:description] if RSpec.respond_to? :current_example  # rspec 3
+      description ||= RSpec.current_example.metadata[:description] if RSpec.respond_to? :current_example  # rspec 3
       description ||= example.description  # rspec 2
       duration = "#{duration_in_seconds} seconds"
 
@@ -253,10 +269,7 @@ if ENV['CI'] != 'travis'
     end
 
     def clear_db
-      if defined? Neo4j
-        # clear_model_memory_caches
-        Neo4j::Session.current._query('MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r')
-      end
+      graph.clear_graph
     end
 
   end
