@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
-  # Dependencies 
+  # Dependencies
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
@@ -34,8 +34,8 @@ Gem::Specification.new do |s|
   s.add_dependency "bundler", ">= 1.9.4"
   s.add_dependency 'web-console', '>= 2.1.3'
 
-  
-  # JavaScript 
+
+  # JavaScript
   s.add_dependency "jquery-rails", '>= 3.1.3', '<= 4.0.4' # Fix version due to datatables issue (http://stackoverflow.com/a/31150030/2066546)
   s.add_dependency "jquery-ui-rails", '~> 4.2.0'                                       # MIT, GPL2
   s.add_dependency "autosize-rails" # autosize textbox
@@ -49,15 +49,15 @@ Gem::Specification.new do |s|
   # Retry transactions: Rescue from deadlocks.
   s.add_dependency 'transaction_retry'
   s.add_dependency 'acts_as_tree'                                                      # MIT License
-  
+
   # Caching
   s.add_dependency 'redis-rails'
-  
+
   # Workers
   s.add_dependency 'foreman'
   s.add_dependency 'sidekiq', '>= 3.4.2'
   s.add_dependency 'sidekiq-limit_fetch'
-  
+
 
   # Authentification
   s.add_dependency 'devise', '>= 2.2.5'                           # MIT License
@@ -67,7 +67,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cancan'                                                            # MIT License
 
   # To use ActiveModel has_secure_password (password encryption)
-  s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License 
+  s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
 
   # Settings
   s.add_dependency 'rails-settings-cached'
@@ -78,7 +78,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   s.add_dependency 'auto_html', '>= 1.6.4'
-  
+
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
   # fix bootstrap to 3.3.3 due to icon issue:
@@ -87,7 +87,7 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-  
+
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
   s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
@@ -110,52 +110,55 @@ Gem::Specification.new do |s|
 
   # Hide slim breadcrumb elements until user hovers the separator
   s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
-  
+
   # Workflow Kit
   s.add_dependency 'workflow_kit', '~> 0.0.7'                                          # MIT License
 
   # View Helpers
-  s.add_dependency 'phony'                                         
+  s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
   s.add_dependency 'jquery-datatables-rails', '~> 3.1.1'
-  
+
   # JavaScript
   s.add_dependency 'turbolinks', '>= 2.5.3'
   s.add_dependency 'jquery-turbolinks'
   s.add_dependency 'turboboost'
-  
+
   # Client-Side Validations
   s.add_dependency 'judge'
-  
+
   # Metrics
   s.add_dependency 'fnordmetric'                                                       # MIT License
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
-  
+
   # Activity Feed
   s.add_dependency 'public_activity', '~> 1.4.1'                                       # MIT License
-  
+
   # XLS Export
   s.add_dependency 'to_xls'
-  
+
   # PDF Export
   s.add_dependency 'prawn'
-  
+
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
-  
+
   # Gamification
   s.add_dependency 'merit'
-  
+
   # Dummy Data Generation
   s.add_dependency 'faker'
-  
+
+  # Console
+  s.add_dependency "table-formatter"
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
   # https://github.com/lautis/uglifier/pull/86
-  s.add_dependency 'uglifier', '>= 2.7.2' 
+  s.add_dependency 'uglifier', '>= 2.7.2'
 
-  # Development Dependencies 
+  # Development Dependencies
   # --------------------------------------------------------------------------------
 
   s.add_development_dependency "rspec-rails", "2.10.0"
