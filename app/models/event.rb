@@ -16,7 +16,11 @@ class Event < ActiveRecord::Base
   end
 
   def to_param
-    "#{id} #{name} #{start_at.year}-#{start_at.month}-#{start_at.day}".parameterize
+    if start_at
+      "#{id} #{name} #{start_at.year}-#{start_at.month}-#{start_at.day}".parameterize
+    else
+      "#{id} #{name}".parameterize
+    end
   end
 
 

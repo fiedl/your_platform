@@ -11,7 +11,7 @@ class EventsController < ApplicationController
   # ATTENTION: The index action has to handly authorization manually!
   #
   def index
-    
+
     # Which events should be listed
     @group = Group.includes(
       :parent_groups,
@@ -27,7 +27,7 @@ class EventsController < ApplicationController
     @on_global_website = params[:published_on_global_website]
     @public = @on_local_website || @on_global_website
     @limit = params[:limit].to_i
-    
+
     # Check the permissions.
     if @group
       @public ? authorize!(:index_public_events, :all) : authorize!(:index_events, @group)
@@ -37,8 +37,10 @@ class EventsController < ApplicationController
       authorize! :index_events, :all
     elsif @all and @public
       authorize! :index_public_events, :all
-    end  
-    
+    else
+      unauthorized!
+    end
+
     # Collect the events to list.
     if @group
       @events = Event.find_all_by_group(@group)
@@ -49,7 +51,7 @@ class EventsController < ApplicationController
     elsif @all
       @events = Event.all
     end
-    
+
     # Filter if only published events are requested.
     @events = @events.where publish_on_local_website: true if @on_local_website
     @events = @events.where publish_on_global_website: true if @on_global_website
@@ -59,11 +61,11 @@ class EventsController < ApplicationController
 
     # Order events
     @events = @events.order 'events.start_at, events.created_at'
-    
+
     # Limit the number of events.
     # If a limit exists, make sure to return upcoming events.
     @events = @events.upcoming.limit(@limit) if @limit && @limit > 0
-    
+
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public
 
@@ -95,7 +97,7 @@ class EventsController < ApplicationController
   # GET /events/1.json
   def show
     set_current_navable @event
-    
+
     respond_to do |format|
       format.html do
         set_current_activity :is_looking_at_the_event, @event
@@ -116,14 +118,14 @@ class EventsController < ApplicationController
   def create
     @group = Group.find(params[:group_id])
     authorize! :create_event, @group
-    
+
     @event = Event.new(params[:event])
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
-    
+
     respond_to do |format|
       if @event.save
-        
+
         # Attention: The save call will call some callbacks, which might cause
         # one of the following calls to run into sql deadlock issues.
         # ActiveRecord of Rails 3 does not resolve these issues.
@@ -139,7 +141,7 @@ class EventsController < ApplicationController
         @event.create_attendees_group
         @event.create_contact_people_group
         @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
-        
+
         # To avoid `ActiveRecord::RecordNotFound` after the redirect, we have to
         # make sure the record can be found.
         #
@@ -148,7 +150,7 @@ class EventsController < ApplicationController
         #
         @event.wait_for_me_to_exist
         set_current_activity :is_adding_an_event, @event
-        
+
         format.html { redirect_to event_path(@event) }
         format.json { render json: @event.attributes.merge({path: event_path(@event)}), status: :created, location: @event }
       else
@@ -182,8 +184,8 @@ class EventsController < ApplicationController
       format.json { head :no_content }
     end
   end
-  
-  
+
+
   # POST /events/1/join
   def join
     change_attendance(true)
@@ -201,7 +203,7 @@ class EventsController < ApplicationController
       redirect_to Event.find(params[:event_id])
     end
   end
-  
+
   def change_attendance(join = true)
     @event = Event.find params[:event_id]
     authorize! :join, @event
@@ -217,7 +219,7 @@ class EventsController < ApplicationController
       format.json do
         render json: {
           attendees_avatars: render_to_string(
-            partial: 'groups/member_avatars', 
+            partial: 'groups/member_avatars',
             layout: false,
             formats: [:json, :html],
             handlers: [:haml],
@@ -228,8 +230,8 @@ class EventsController < ApplicationController
     end
   end
   private :change_attendance
-  
-  
+
+
   # POST /events/:event_id/invite/:recipient
   # params:
   #   - recipient
@@ -238,31 +240,31 @@ class EventsController < ApplicationController
   def invite
     @event = Event.find params[:event_id]
     authorize! :invite_to, @event
-    
+
     @text = params[:text]
     @recipients = []
-    
+
     if params['recipient'] == 'me'
       @recipients = [current_user]
     elsif params['recipient'].to_i > 0
       group = Group.find params['recipient'].to_i
       @recipients = group.members
     end
-    
+
     @recipients.each do |recipient|
       if recipient.has_account? and not recipient.email_does_not_work?
         EventMailer.invitation_email(@text, [recipient], @event, current_user).deliver_later
       end
     end
-    
+
     respond_to do |format|
       format.html { redirect_to event_url(@event) }
       format.json { head :no_content }
     end
   end
-  
+
 private
-  
+
   # For some strange reason, some ajax calls fail since the object is not yet
   # available to the other server instance. So, try a few times before giving up.
   #
@@ -277,5 +279,5 @@ private
       retry until counter <= 0
     end
   end
-  
+
 end

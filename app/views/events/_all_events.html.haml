@@ -10,7 +10,7 @@
         %th=t :contact_people
         %th=t :attendees
     %tbody
-      - for event in @events
+      - @events.each do |event|
         %tr.event
           %td.name
             %strong= link_to(event.name, event)
