@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 
   delegate                  :send_welcome_email, :to => :account
 
-  is_structureable          ancestor_class_names: %w(Page Group), descendant_class_names: %w(Page)
+  is_structureable          ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page)
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
@@ -615,13 +615,16 @@ class User < ActiveRecord::Base
   # Events
   # ------------------------------------------------------------------------------------------
 
-  # This method lists all upcoming events of the groups the user is member of.
+  # This method lists all upcoming events of the groups the user is member of
+  # as well as all events the user has joined.
   #
   def events
-    Event.find_all_by_groups(self.groups).direct
+    ids = Event.find_all_by_groups(self.groups).direct.pluck(:id)
+    ids += self.ancestor_event_ids
+    Event.where(id: ids.uniq).order(:start_at)
   end
   def upcoming_events
-    Event.upcoming.find_all_by_groups( self.groups ).direct
+    events.upcoming
   end
 
   # This makes the user join an event or a grop.
