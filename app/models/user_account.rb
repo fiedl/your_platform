@@ -157,6 +157,6 @@ class UserAccount < ActiveRecord::Base
 
   def send_welcome_email
     raise 'attempt to send welcome email with empty password' unless self.password
-    UserAccountMailer.welcome_email(self.user, self.password).deliver
+    UserAccountMailer.welcome_email(self.user, self.password).deliver_now
   end
 end

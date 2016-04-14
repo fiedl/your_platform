@@ -8,8 +8,8 @@ class BaseMailer < ActionMailer::Base
   helper EmojiHelper
   helper YouTubeHelper
   helper ActionView::Helpers::SanitizeHelper
-  
+
   helper ApplicationHelper
-  default from: 'wingolfsplattform@wingolf.org'
-  
+  default from: SupportRequestsController.support_email
+
 end
