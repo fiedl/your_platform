@@ -44,6 +44,7 @@ Rails.application.routes.draw do
 
   resources :users do
     put :forgot_password, on: :member
+    resource :account, controller: 'user_accounts'
     get :events, to: 'events#index'
     get :profile, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
@@ -96,7 +97,6 @@ Rails.application.routes.draw do
 
   post :create_officers_group, to: 'officers#create_officers_group'
 
-  resources :user_accounts
   resources :blog_posts
   resources :attachments do
     get 'description(.:format)', to: 'attachments#description'

@@ -1,16 +1,21 @@
 de:
   password: Passwort
   password_confirmation: Passwort-Bestätigung
-  
+
   mr: Herr
   mrs: Frau
-  
+
   welcome_to_the_new_intranet_platform: 'Willkommen zur neuen Intranet-Plattform'
   with_this_email_you_get_your_account_data: 'mit dieser E-Mail-Nachricht erhalten Sie Ihre Zugangsdaten zur neuen Intranet-Plattform.'
   this_message_has_been_generated_automatically: 'Dies ist eine automatisch generierte E-Mail-Nachricht.'
-  
+
   password:                      Passwort
   send_new_password:             Neues Passwort per E-Mail zusenden
   new_password_has_been_sent_to: "%{user_name} wurde ein neues Passwort per E-Mail übersandt."
-  
-  
+
+  you_may_login_with_alias_name_or_email: 'Zur Anmeldung am System können Alias, Name oder E-Mail-Adresse verwendet werden:'
+  platform_access: 'Zugang zur Plattform'
+  the_user_account_has_been_created_at_str1_and_updated_at_str2: "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am %{str1}. Die Zugangsdaten wurden zuletzt am %{str2} geändert."
+  lock_platform_access: 'Zugang zur Plattform sperren:'
+  lock_user_account: 'Benutzerkonto sperren'
+  this_locks_platform_access_for_str_no_data_will_be_lost: "Dies sperrt den Zugang zur Plattform für %{str}. Alle Daten bleiben erhalten."

@@ -1,39 +1,31 @@
 %dl
-  %dt
-    Identifikation möglich mit folgenden Daten:
+  %dt= t :you_may_login_with_alias_name_or_email
   %dd
     %dl
-      - # User.attributes_used_for_identification
       %span
         %dt= t :alias
         %dd= best_in_place_if can?(:change_alias, @user), @user, :alias
       %span
         %dt= t :name
-        %dd= @user.name 
+        %dd= @user.name
       %span
         %dt= t :email
         %dd= @user.email
-    
+
 .show_only_in_edit_mode
   %dl
     - if can? :update, @user
-      %dt
-        Zugang zur Plattform
-      %dd
-        = "Der Zugang zur Plattform (Benutzerkonto) wurde erstellt am #{localize(@user.account.created_at)}. Die Zugangsdaten wurden zuletzt am #{localize(@user.account.updated_at)} geändert."
+      %dt= t :platform_access
+      %dd= t :the_user_account_has_been_created_at_str1_and_updated_at_str2, str1: localize(@user.account.created_at), str2: localize(@user.account.updated_at)
       %dt
         = t('password') + ':'
       - if @user == current_user
         %dd.change_password
           %p= link_to t(:change_password), edit_registration_path, :class => 'btn btn-success'
-      - if can? :manage, @user
+      - if can? :manage, @user.account
         %dd.request_new_password
           %p= button_to t(:send_new_password), forgot_password_user_path(@user.id), method: :put, :class => 'btn btn-success'
-        %dt
-          Zugang zur Plattform sperren:
+        %dt= t :lock_platform_access
         %dd.lock_account
-          = button_to "Benutzerkonto sperren", user_account_path(@user.account.id), :method => :delete, :class => 'btn btn-danger'
-          %p
-            Dies sperrt den Zugang zur Plattform für 
-            = "#{link_to @user.title, @user}.".html_safe
-            Alle Daten bleiben erhalten.
+          = button_to t(:lock_user_account), user_account_path(@user), :method => :delete, :class => 'btn btn-danger'
+          %p= t(:this_locks_platform_access_for_str_no_data_will_be_lost, str: link_to(@user.title, @user)).html_safe

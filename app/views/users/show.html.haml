@@ -107,6 +107,7 @@
           = render @user.account
         - else
           %p= t :user_has_no_account
-          %span.show_only_in_edit_mode
-            = link_to t(:create_account), user_accounts_path(:user_id => @user.id), :method => :post, :class => "btn btn-success"
-            %p= t 'formtastic.hints.create_account'
+          - if can? :create_account_for, @user
+            %span.show_only_in_edit_mode
+              = link_to t(:create_account), user_account_path(@user), :method => :post, :class => "btn btn-success"
+              %p= t 'formtastic.hints.create_account'

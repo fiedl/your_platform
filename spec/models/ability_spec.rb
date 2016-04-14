@@ -140,6 +140,7 @@ describe Ability do
       before do
         @group = create :group
         @group.admins << user
+        @other_user = create :user_with_account; @group << @other_user
         time_travel 2.seconds
       end
 
@@ -149,14 +150,16 @@ describe Ability do
       end
 
       he "should not be able to change the 'hidden' attribute of the group members" do
-        @other_user = create :user; @group << @other_user
         the_user.should_not be_able_to :change_hidden, @other_user
       end
       he "should not be able to change his own 'hidden' attribute" do
         the_user.should_not be_able_to :change_hidden, user
       end
-      he { should be_able_to :update, user }
-      he { should be_able_to :change_status, user }
+
+      he { should be_able_to :update, @other_user }
+      he { should be_able_to :change_status, @other_user }
+      he { should be_able_to :create_account_for, @other_user }
+      he { should be_able_to :manage, @other_user.account }
     end
 
     context "when the user is officer of a group" do

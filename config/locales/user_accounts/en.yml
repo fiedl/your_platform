@@ -1,13 +1,19 @@
 en:
   password: Password
   password_confirmation: Password Confirmation
-  
+
   mr: 'Mr.'
   mrs: 'Mrs.'
-  
+
   welcome_to_the_new_intranet_platform: 'Welcome to the new intranet platform'
   with_this_email_you_get_your_account_data: 'Please find your user account information below.'
-  
+
   send_new_password:             Send new password via email
   new_password_has_been_sent_to: "A new password has been sent to %{user_name} via email."
-  
+
+  you_may_login_with_alias_name_or_email: 'You use alias, name or email as login:'
+  platform_access: 'Platform access'
+  the_user_account_has_been_created_at_str1_and_updated_at_str2: "Platform access (user account) has been granted on %{str1}. The login credentials have last been changed on %{str2}."
+  lock_platform_access: 'Lock platform access:'
+  lock_user_account: 'Lock user account'
+  this_locks_platform_access_for_str_no_data_will_be_lost: "This locks platform access for %{str}. The user data won't be deleted."
