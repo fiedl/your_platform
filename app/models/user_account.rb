@@ -1,37 +1,37 @@
 #
 # Every User may have an UserAccount that enables the user to log in to the website.
-# 
+#
 #    user = User.create(...)       # This user may not log in.
 #    account = user.build_account
 #    account.password = "foo"
 #    account.save                  # Now, the user may log in.
-#    account.destroy               # Now, the user may not log in anymore. 
+#    account.destroy               # Now, the user may not log in anymore.
 #
 class UserAccount < ActiveRecord::Base
-  
-  # For authentication, we use devise, 
+
+  # For authentication, we use devise,
   # https://github.com/plataformatec/devise.
-  # 
+  #
   # Available Modules:
-  #   Database Authenticatable: 
+  #   Database Authenticatable:
   #     encrypts and stores a password in the database to validate the authenticity of a user
-  #     while signing in. The authentication can be done both through POST requests or 
+  #     while signing in. The authentication can be done both through POST requests or
   #     HTTP Basic Authentication.
   #   Omniauthable: adds Omniauth (https://github.com/intridea/omniauth) support;
   #   Confirmable: sends emails with confirmation instructions and verifies whether an account
   #     is already confirmed during sign in.
   #   Recoverable: resets the user password and sends reset instructions.
-  #   Registerable: handles signing up users through a registration process, also allowing 
+  #   Registerable: handles signing up users through a registration process, also allowing
   #     them to edit and destroy their account.
-  #   Rememberable: manages generating and clearing a token for remembering the user from a 
+  #   Rememberable: manages generating and clearing a token for remembering the user from a
   #     saved cookie.
   #   Trackable: tracks sign in count, timestamps and IP address.
   #   Timeoutable: expires sessions that have no activity in a specified period of time.
-  #   Validatable: provides validations of email and password. It's optional and can be customized, 
+  #   Validatable: provides validations of email and password. It's optional and can be customized,
   #     so you're able to define your own validations.
-  #   Lockable: locks an account after a specified number of failed sign-in attempts. 
+  #   Lockable: locks an account after a specified number of failed sign-in attempts.
   #     Can unlock via email or after a specified time period.
-  # 
+  #
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable
   attr_accessible :login, :password, :password_confirmation, :remember_me if defined? attr_accessible
 
@@ -44,7 +44,7 @@ class UserAccount < ActiveRecord::Base
                              # This needs to run before validation, since validation
                              # requires a password to be set in order to allow saving the account.
                              # See ressources of `has_secure_password` above.
-  
+
   before_save              :generate_password_if_unset
                              # This is required, because, apparently, the `before_validation` callback is not called
                              # if the account is created via an association (like User.create( ... , create_account: true )).
@@ -56,10 +56,10 @@ class UserAccount < ActiveRecord::Base
   def readonly?
     false # Otherwise, the user is not able to login.
   end
-  
-  # HACK: This method seems to be required by the PasswordController and is missing, 
+
+  # HACK: This method seems to be required by the PasswordController and is missing,
   # since we have a virtual email field.
-  # TODO: If we ever change the Password authentication 
+  # TODO: If we ever change the Password authentication
   def email= value
     #dummy required by devise to create an 'error' user account
   end
@@ -67,7 +67,7 @@ class UserAccount < ActiveRecord::Base
   def email_changed?
     false
   end
-  
+
   # Configure each account to *not* automatically log out when the browser is closed.
   # After a system reboot, the user is still logged in, which is the expected behaviour
   # for this application.
@@ -94,11 +94,11 @@ class UserAccount < ActiveRecord::Base
   # can be identified by this alias even if there are other users with surname *Doe*.
   #
   def self.identify(login_string)
-    
+
     # Priorization: Check alias first. (Bug fix)
     user_identified_by_alias = User.find_by_alias(login_string)
     users_that_match_the_login_string = [ User.find_by_alias(login_string) ] if user_identified_by_alias
-    
+
     # What can go wrong?
     # 1. No user could match the login string.
     users_that_match_the_login_string ||= User.find_all_by_identification_string( login_string )
@@ -107,10 +107,10 @@ class UserAccount < ActiveRecord::Base
 
     # 2. The user may not have an active user account.
     users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.select do |user|
-      user.has_account? 
+      user.has_account?
     end
     raise 'user_has_no_account' unless users_that_match_the_login_string_and_have_an_account.count > 0
-    
+
     # 3. The identification string may refer to several users with an active user account.
     raise 'identification_not_unique' if users_that_match_the_login_string_and_have_an_account.count > 1
     identified_user = users_that_match_the_login_string_and_have_an_account.first
@@ -137,11 +137,11 @@ class UserAccount < ActiveRecord::Base
       end
     end
   end
-  
+
   def auth_token
     super || generate_auth_token!
   end
-  
+
   def generate_auth_token!
     # see also: https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
     #
@@ -157,6 +157,6 @@ class UserAccount < ActiveRecord::Base
 
   def send_welcome_email
     raise 'attempt to send welcome email with empty password' unless self.password
-    UserAccountMailer.welcome_email( self.user, self.password ).deliver
+    UserAccountMailer.welcome_email(self.user, self.password).deliver
   end
 end

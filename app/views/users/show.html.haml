@@ -1,4 +1,4 @@
-- tab_pane_class = "" 
+- tab_pane_class = ""
 - if can? :use, :tab_view
   - tab_pane_class = "tab-pane fade"
   %ul.nav.nav-tabs.user
@@ -6,7 +6,7 @@
       %a{href: '#general', data: {toggle: 'tab'}} Überblick
     -#- if can? :use, :merit
     -#  %li
-    -#    %a{href: '#merit', data: {toggle: 'tab'}} 
+    -#    %a{href: '#merit', data: {toggle: 'tab'}}
     -#      Plattform-Rang
     -#      = beta_badge
     %li
@@ -61,10 +61,10 @@
   #career{class: tab_pane_class}
     - # About Box
     = optional_profile_section @user.profile.section(:about_myself), {formatting_help: true}
-    
+
     - # Study Info Box
     = optional_profile_section @user.profile.section :study_information
-    
+
     - # Career Info Box
     = optional_profile_section @user.profile.section(:career_information), { lock_label: true }
 
@@ -75,7 +75,7 @@
 
     - # Bank Account Info Box
     = optional_profile_section @user.profile.section :bank_account_information
-    
+
     - # Groups Box
     %h1
       = t(:groups_of) + " " + @user.first_name
@@ -83,22 +83,22 @@
         .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
     %div
       = groups_of_user_table @user
-    
+
     -#   / Events
     -#   - if @user.upcoming_events.present?
     -#     %h1
     -#       Veranstaltungen von #{@user.first_name}
     -#     %div
     -#       = upcoming_events_list_for_user( @user )
-    -# 
+    -#
     -#   / Relationships
     -#   %h1.section.relationships= t(:relationships)
     -#   %div
     -#     = relationships_of_user_ul @user
-    
+
     - # Communication Box
     = render partial: 'users/communication_box', locals: {user: @user}
-    
+
     - # Login Data
     - if can? :update, @user
       %h1.section.access= t(:access_information)

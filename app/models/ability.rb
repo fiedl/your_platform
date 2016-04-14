@@ -1,26 +1,26 @@
 # This ability class defines the basic structure for our role-based
 # authorization system.
-# 
+#
 # You can either override it completely or use the following method
 # to defined your own rights.
 #
 #     # app/model/ability.rb
 #     require_dependency YourPlatform::Engine.root.join('app/models/ability').to_s
-#     
+#
 #     module AbilityDefinitions
 #       def rights_for_local_admins
 #         super
 #         can :do, :amazing_things
 #       end
 #     end
-# 
+#
 #     class Ability
 #       prepend AbilityDefinitions
 #     end
 #
 # For an extensive example, have a look at:
 # https://github.com/fiedl/wingolfsplattform/blob/master/app/models/ability.rb
-# 
+#
 class Ability
   include CanCan::Ability
 
@@ -34,12 +34,12 @@ class Ability
     #     can :read, :all
     #   end
     #
-    # The first argument to `can` is the action you are giving the user 
+    # The first argument to `can` is the action you are giving the user
     # permission to do.
     # If you pass :manage it will apply to every action. Other common actions
     # here are :read, :create, :update and :destroy.
     #
-    # The second argument is the resource the user can perform the action on. 
+    # The second argument is the resource the user can perform the action on.
     # If you pass :all it will apply to every resource. Otherwise pass a Ruby
     # class of the resource.
     #
@@ -55,17 +55,17 @@ class Ability
     # Attention: Check outside whether the user's role allowes that preview!
     # Currently, this is done in ApplicationController#current_ability.
     #
-    @preview_as = options[:preview_as] 
+    @preview_as = options[:preview_as]
     @preview_as = nil if @preview_as.blank?
-    
+
     # These roles do not make sense here and may block the `view_as?` method.
     @preview_as = nil if @preview_as.in? ['full_member']
-    
+
     @token = options[:token]
-  
+
     @read_only_mode = options[:read_only_mode]
     @user = user
-    
+
     if user.try(:account) # has to be able to sign in
       if user.global_admin? and view_as?(:global_admin)
         rights_for_global_admins
@@ -89,7 +89,7 @@ class Ability
     end
     rights_for_everyone
   end
-  
+
   def view_as?(role)
     (view_as.nil?) or (view_as.to_s == '') or if role.kind_of?(Array)
       view_as.in? role
@@ -110,29 +110,29 @@ class Ability
   def user
     @user
   end
-  
+
   def rights_for_beta_testers
     can :use, :new_menu_feature
     can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
     can :use, :merit
   end
-  
+
   def rights_for_developers
     can :use, Rack::MiniProfiler
   end
-  
+
   def rights_for_global_admins
     if read_only_mode?
       can :read, :all
       can :index, :all
     else
       can :manage, :all
-      
+
       # There are features for developers and beta testers.
       cannot :use, :all
     end
   end
-  
+
   def rights_for_local_admins
     # Achtung Wingolfsplattform: Überschreibt diese Methode derzeit!
     can :index, PublicActivity::Activity
@@ -141,14 +141,14 @@ class Ability
       can :manage, Group do |group|
         group.admins_of_self_and_ancestors.include? user
       end
-      
+
       can [:update, :change_first_name, :change_alias, :change_status], User, id: Role.of(user).administrated_users.map(&:id)
-      
+
       can :manage, ProfileField do |profile_field|
         profile_field.profileable.nil? ||  # in order to create profile fields
           can?(:update, profile_field.profileable)
       end
-      
+
       can :execute, Workflow do |workflow|
         # Local admins can execute workflows of groups they're admins of.
         # And they can execute the mark_as_deceased workflow, which is a global workflow.
@@ -158,12 +158,12 @@ class Ability
       end
     end
   end
-  
+
   def rights_for_local_officers
     can :export_member_list, Group do |group|
       user.in? group.officers_of_self_and_ancestors
     end
-    
+
     if not read_only_mode?
       # Local officers can create events in their groups.
       #
@@ -176,14 +176,14 @@ class Ability
       can :update, Group do |group|
         group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
       end
-      
+
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
       #
       can [:update, :destroy], Page do |page|
         can?(:read, page) and page.officers_of_self_and_ancestors.include?(user) and (page.author == user or page.author.nil?)
       end
-      
+
       # Create, update and destroy Pages
       #
       can :create_page_for, [Group, Page] do |parent|
@@ -192,7 +192,7 @@ class Ability
       can [:update, :destroy], Page do |page|
         (page.author == user) && (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
       end
-      
+
       # Create, update and destroy Attachments
       #
       can :create_attachment_for, Page do |page|
@@ -203,8 +203,8 @@ class Ability
         (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
         ((attachment.author == user) || (attachment.parent.respond_to?(:author) && attachment.parent.author == user))
       end
-            
-      
+
+
       # Local officers of pages can add attachments to the page and subpages
       # and modify their own attachments.
       #
@@ -212,22 +212,22 @@ class Ability
         can?(:read, page) and page.officers_of_self_and_ancestors.include?(user)
       end
       can [:update, :destroy], Attachment do |attachment|
-        can?(:read, attachment.parent) and 
-        can?(:read, attachment) and 
+        can?(:read, attachment.parent) and
+        can?(:read, attachment) and
         attachment.author == user
       end
-      
-      # Local officers can also modify any attachment of their own pages 
+
+      # Local officers can also modify any attachment of their own pages
       # in order to review their own pages.
       #
       can [:update, :destroy], Attachment do |attachment|
         attachment.parent.officers_of_self_and_ancestors.include?(user) and
-        can?(:read, attachment) and 
+        can?(:read, attachment) and
         (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
       end
     end
   end
-  
+
   def rights_for_global_officers
     can :export_member_list, Group
     if not read_only_mode?
@@ -240,18 +240,18 @@ class Ability
       can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
     end
   end
-      
+
   def rights_for_signed_in_users
     can :read, :terms_of_use
     can :accept, :terms_of_use if not read_only_mode?
     can :use, :single_sign_on
-    
+
     # Regular users can read users that are not hidden.
     # And they can read themselves.
     #
     can :read, User, id: User.find_all_non_hidden.pluck(:id)
     can :read, user
-        
+
     if not read_only_mode?
       # Regular users can create, update or destroy own profile fields
       # that do not belong to the General section.
@@ -260,20 +260,20 @@ class Ability
         field.profileable.nil? or # to allow creating fields
         ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General'))
       end
-      
+
       # They can change their first name, but not their surname.
-      # 
+      #
       can [:update, :change_first_name, :change_alias], User, :id => user.id
-      
+
       # They can change their password, i.e. modify their user account.
       #
       can :update, UserAccount, :user_id => user.id
-      
+
       # Regular users can update their own validity ranges of memberships
       # in order to update their corporate vita.
       #
       can :update, UserGroupMembership, :descendant_id => user.id
-      
+
       # Everyone who can join an event, can add images to this event.
       # Then, he will automatically join the event.
       # Also, all contact people can add images.
@@ -286,12 +286,12 @@ class Ability
         attachment.parent.kind_of?(Event) and
         (attachment.parent.attendees.include?(user) or attachment.parent.contact_people.include?(user))
       end
-    
+
       # If a user is contact person of an event, he can provide pages and
       # attachment for this event.
       #
       # TODO: New role 'contact person'.
-      # 
+      #
       can [:update, :create_page_for], Event do |event|
         event.contact_people.include? user
       end
@@ -303,28 +303,28 @@ class Ability
         attachment.parent.kind_of?(Page) and
         attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
       end
-      
+
       # If a user can read an object, he can comment it.
-      # 
+      #
       can :create_comment_for, [Post] do |commentable|
         can? :read, commentable
       end
     end
-    
+
     can :read, Group do |group|
       # Regular users cannot see the former_members_parent groups
       # and their descendant groups.
       #
       not (group.has_flag?(:former_members_parent) || group.ancestor_groups.find_all_by_flag(:former_members_parent).count > 0)
     end
-    
+
     can :read, Page do |page|
       (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
     can [:read, :download], Attachment do |attachment|
       attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
     end
-        
+
     # All users can join events.
     #
     can :read, Event
@@ -339,49 +339,49 @@ class Ability
     # Name auto completion
     #
     can :autocomplete_title, User
-    
+
     # All users can read their notifications.
     can :index, Notification
     can :read, Notification, recipient: {id: user.id}
-    
+
     # Users can read post of their groups.
     can :read, Post, group: {id: user.group_ids}
     can :index_posts, Group, id: user.group_ids
-    
-    # Comments: 
+
+    # Comments:
     # - Users can read comments for all objects they can read anyway.
     # - And they can create comments for these objects as well (see above.)
     can :read, Comment do |comment|
       can? :read, comment.commentable
     end
-    
+
     # Posts and Comments can be read when the users has been mentioned:
     can :read, [Post, Comment] do |post_or_comment|
       post_or_comment.mentioned_users.include? user
     end
-    
+
     # Users can always read posts they have created, e.g.
     # - if they have left the group later
     # - if they have addressed another group
-    # 
+    #
     can :read, Post do |post|
       post.author == user
     end
-    
+
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
     end
-    
+
     # All signed-in users can read their news (timeline).
     can :index, :news
-    
+
     # Read projects
     can [:read, :update], Project do |project|
       project.group.members.include? user
     end
   end
-  
+
   def rights_for_everyone
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
@@ -391,21 +391,21 @@ class Ability
       # FIXME: Make this block unnecessary.
       page.has_flag?(:imprint)
     end
-    
+
     # All users can read the public website.
     #
     can :read, Page, id: Page.public_website_page_ids
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
-    
+
     # Listing Events and iCalendar (ICS) Export:
     #
     # There are event lists on public websites and webcal feeds.
     # Therefore the user might not be logged in through a regular
     # session. Some public feeds can be seen by anyone. Other
     # feeds require an auth token.
-    # 
+    #
     if token.present?
       tokened_user = UserAccount.find_by_auth_token(token)
       if tokened_user
@@ -419,11 +419,11 @@ class Ability
       end
     end
     can :index_public_events, :all
-    
+
     # Nobody can destroy events and pages that are older than 10 minutes.
     timestamp = 10.minutes.ago
     cannot :destroy, [Event, Page], ["created_at >= ?", timestamp] do |obj|
-      # Please note: The ">=" above is the wrong way by intention. 
+      # Please note: The ">=" above is the wrong way by intention.
       # Apparently, cancan does not distinguish between `can` and `cannot` there.
       # TODO: Fix this! Does upgrade to the cancancan project solve this?
       #
@@ -431,7 +431,7 @@ class Ability
       # FIXME: Make this block unnecessary.
       obj.created_at < timestamp
     end
-    
+
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
     # Definition in: concerns/group_mailing_lists.rb
@@ -439,28 +439,28 @@ class Ability
     can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
       group.user_matches_mailing_list_sender_filter?(user)
     end
-    
+
     # Force instant delivery after creating the post.
     #
     can :deliver, Post do |post|
       post.author == user and
       can? :force_post_notification, post.group
     end
-    
+
     # Activate platform mailgate, i.e. accept incoming email.
     # The authorization to send to a specific group is done separately in
     # the StoreMailAsPostsAndSendGroupMailJob.
     #
     can :use, :platform_mailgate
-    
+
     # All users can use the blue help button.
     #
     can :create, :support_request
-    
+
     # All users can load avatar images, since this is an api.
     # See AvatarsController.
-    # 
+    #
     can :read, :avatars
-    
+
   end
 end
