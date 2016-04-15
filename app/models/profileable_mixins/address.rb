@@ -114,23 +114,23 @@ module ProfileableMixins::Address
   module ClassMethods
 
     def with_primary_address
-      profilables_with_address_field_with_direct_value = self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""')
-      self.joins(:address_profile_fields).select do |profileable|
-        # The `value` is a composition of other sub-profile-fields, not necessarily written
-        # to the database directly. That's why we have to double-check.
-        profileable.in?(profilables_with_address_field_with_direct_value) || profileable.postal_address_field_or_first_address_field.try(:value).present?
-      end.uniq
+      self.where(id: self.with_primary_address_ids)
     end
     def with_postal_address
       with_primary_address
     end
 
     def with_primary_address_ids
-      self.with_primary_address.map(&:id)
+      profilables_with_address_field_with_direct_value = self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""')
+      ids = self.joins(:address_profile_fields).select do |profileable|
+        # The `value` is a composition of other sub-profile-fields, not necessarily written
+        # to the database directly. That's why we have to double-check.
+        profileable.in?(profilables_with_address_field_with_direct_value) || profileable.postal_address_field_or_first_address_field.try(:value).present?
+      end.uniq.map(&:id)
     end
 
     def without_primary_address
-      self.where('NOT users.id IN (?)', self.with_primary_address_ids)
+      self.where.not(id: self.with_primary_address_ids)
     end
     def without_postal_address
       without_primary_address
