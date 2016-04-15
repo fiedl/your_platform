@@ -1,17 +1,17 @@
 module ProfileableMixins::Address
   extend ActiveSupport::Concern
-  
+
   # Scope for profile fields that are postal addresses.
   #
   def address_fields
     self.id ? profile_fields.where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
   end
-  
-  
+
+
   def primary_address_field
     postal_address_field_or_first_address_field
   end
-  
+
   # The postal address at the study location.
   #
   def study_address
@@ -33,7 +33,7 @@ module ProfileableMixins::Address
   def work_or_study_address_labels
     ["Arbeits- oder Studienanschrift", "Work or Study Address"]
   end
-  
+
   # The postal address of the work place.
   #
   def work_address
@@ -62,7 +62,7 @@ module ProfileableMixins::Address
   def home_address_labels
     ["Heimatanschrift", "Private Anschrift", "Home Address"]
   end
-  
+
   # Primary Postal Address
   #
   def postal_address_field
@@ -70,11 +70,17 @@ module ProfileableMixins::Address
       address_field.postal_address? == true
     end.first
   end
-  
+
   # Primary Postal Address or, if not existent, the first address field.
   #
+  # First, try the address field that is flagged as :postal_address.
+  # Next, try the first address field that is not empty.
+  # Next, try any address field. With the new address field mechanism,
+  #   the `value` field may be composed of other profile fields. In this
+  #   case the datatbase attribute `value` will be empty.
+  #
   def postal_address_field_or_first_address_field
-    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first
+    postal_address_field || address_profile_fields.where("value != ? AND NOT value IS NULL", '').first || address_profile_fields.first
   end
 
   # This method returns the postal address of the user.
@@ -84,7 +90,7 @@ module ProfileableMixins::Address
   def postal_address
     cached { postal_address_field_or_first_address_field.try(:value) }
   end
-  
+
   def postal_address_in_one_line
     postal_address.split("\n").collect { |line| line.strip }.join(", ") if postal_address
   end
@@ -96,28 +102,39 @@ module ProfileableMixins::Address
       # if the date is earlier, the date is actually the date
       # of the data migration and should not be shown.
       #
-      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date 
-        postal_address_field_or_first_address_field.updated_at.to_date 
+      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date
+        postal_address_field_or_first_address_field.updated_at.to_date
       end
     end
   end
-  
+
   included do
   end
 
   module ClassMethods
-    
+
+    def with_primary_address
+      profilables_with_address_field_with_direct_value = self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""')
+      self.joins(:address_profile_fields).select do |profileable|
+        # The `value` is a composition of other sub-profile-fields, not necessarily written
+        # to the database directly. That's why we have to double-check.
+        profileable.in?(profilables_with_address_field_with_direct_value) || profileable.postal_address_field_or_first_address_field.try(:value).present?
+      end.uniq
+    end
     def with_postal_address
-      self.joins(:address_profile_fields).where('profile_fields.profileable_id IS NOT NULL AND profile_fields.value != ""').uniq
+      with_primary_address
     end
-  
-    def with_postal_address_ids
-      self.with_postal_address.pluck(:id)
+
+    def with_primary_address_ids
+      self.with_primary_address.map(&:id)
     end
-  
+
+    def without_primary_address
+      self.where('NOT users.id IN (?)', self.with_primary_address_ids)
+    end
     def without_postal_address
-      self.where('NOT users.id IN (?)', self.with_postal_address_ids)
+      without_primary_address
     end
-    
+
   end
 end
