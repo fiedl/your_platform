@@ -17,10 +17,18 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   end
 
   def name_as_participle_perfect_passive
+    #     Workflow.pluck(:name).uniq   # => ["Aktivmeldung", "Reception", "Branderung", "Burschung", "Inaktivierung loci",
+    #                                        "Inaktivierung non loci", "Reaktivierung", "Konkneipierung", "Philistration",
+    #                                        "Todesfall", "Streichung", "Schlichter Austritt", "Ehrenhafter Austritt",
+    #                                        "Dimissio i.p.", "Exclusio"]
     name
       .gsub(/(.*)meldung/, '\1gemeldet')  # Aktivmeldung -> aktivgemeldet
       .gsub(/(.*)ception/, '\1cipiert')  # Reception -> recipiert
       .gsub(/(.*)ierung/, '\1iert')  # Inaktivierung -> inaktiviert
+      .gsub('Streichung', 'gestrichen')
+      .gsub(/(.*)er Austritt/, '\1 ausgetreten') # Ehrenhafter Austritt -> ehrenhaft ausgetreten
+      .gsub('Exclusio', 'ausgeschlossen per exclusio')
+      .gsub('Dimissio i.p.', 'ausgeschlossen per dimissio in perpetuo')
       .gsub(/(.*)ung/, 'ge\1t')  # Burschung -> geburscht
       .gsub(/(.*)ation/, '\1iert')  # Philistration -> philistriert
       .downcase
@@ -36,6 +44,8 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
       "#{user.title} ist verstorben."
     elsif self.name == "Aktivmeldung"
       "#{user.title} hat sich #{self.name_as_participle_perfect_passive}."
+    elsif self.name.include? "Austritt"
+      "#{user.title} ist #{self.name_as_participle_perfect_passive}."
     else
       "#{user.title} wurde #{self.name_as_participle_perfect_passive}."
     end
