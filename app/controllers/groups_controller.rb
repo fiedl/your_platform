@@ -84,6 +84,18 @@ class GroupsController < ApplicationController
       @list_export = list_export_by_preset(list_preset)
     end
 
+    # Log exports.
+    #
+    if not request.format.html?
+      PublicActivity::Activity.create!(
+        trackable: @group,
+        key: "Export #{params[:list] || params[:pdf_type]}",
+        owner: current_user,
+        parameters: params.except('authenticity_token')
+      )
+    end
+
+
     respond_to do |format|
       format.json do
         authorize! :read, @group
