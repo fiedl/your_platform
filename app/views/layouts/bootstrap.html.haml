@@ -13,7 +13,7 @@
     = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
     = stylesheet_link_tag 'bootstrap_layout', :media => 'all'
     = stylesheet_link_tag 'application', :media => 'all'
-    
+
     / For third-generation iPad with high-resolution Retina display:
     / Size should be 144 x 144 pixels
     = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
@@ -29,9 +29,9 @@
     / For all other devices
     / Size should be 32 x 32 pixels
     = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
-    
+
     %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
-    
+
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
     = yield :scripts
@@ -60,10 +60,10 @@
                   %b.caret= ''
                 %ul.dropdown-menu
                   = groups_of_user_table current_user
-              
+
               - # role indicator and preview menu
               = render partial: 'layouts/role_preview_switcher'
-              
+
               - # notifications
               = render partial: 'notifications/notifications_dropdown'
 
@@ -95,7 +95,7 @@
       .col-sm-7.col-xs-12
         %span#logo
           = link_to image_tag('logo.png'), root_path, class: 'navbar-brand'
-      
+
       .col-sm-5.col-xs-12
         #header_help= render partial: 'support_requests/help_button'
         #header_search
@@ -105,16 +105,16 @@
       -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
       %span#category_indicator.right
         %ul.nav.navbar-nav.nav-pills#horizontal_nav= horizontal_nav_lis
-    
+
     .row#breadcrumb-bar
       %nav#breadcrumb.navbar
         .container-fluid
-          = breadcrumb_ul
-          
+          = breadcrumbs
+
           %span#access_indicator
             = access_indicator if current_user
-          
-    
+
+
     .container-fluid
       .row
         #content
@@ -132,6 +132,6 @@
               = flash_area
               = replace_unicode_special_chars_by_html_escape_strings( |
                   convert_to_content_box { yield }                    |
-                )                                                     |    
-        
+                )                                                     |
+
     .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
