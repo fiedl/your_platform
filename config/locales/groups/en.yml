@@ -1,9 +1,9 @@
 en:
   group: Group
   groups: Groups
-  
+
   corporation: Corporation
-  
+
   everyone: Everyone
   officers_parent: Officers
   officers: Officers
@@ -17,7 +17,7 @@ en:
   main_admins: Main Administrators
   deceased_parent: Deceased
   former_members_parent: Former Members
-  
+
   my_groups:                      My Groups
   sub_groups:                     Sub Groups
   members:                        Members
@@ -30,12 +30,14 @@ en:
   extensive_name:                 Extensive Name
 
   add_member:                     Add Member
-  
+
   download_list:                  Download list
   tables:                         Tables
+  the_export_will_be_logged:      'For privacy reasons, the export will be logged.'
+
   name_list:                      Name list
   birthday_list:                  Birthday list
-  special_birthdays:              Special birthdays  
+  special_birthdays:              Special birthdays
   address_list:                   Address list
   address_list_for_dpag_internetmarke: Address list for 'DPAG Internetmarke'
   dpag_internetmarke:             DPAG Internetmarke
@@ -49,9 +51,9 @@ en:
 
   member_since:                   Member since
   member_of_str_since:            "Member of '%{str}' since"
-  
+
   pdf_files:                      PDF Files
   address_labels:                 Address Labels
   sender:                         Sender
   create_address_labels_pdf:      Create PDF with Address Labels
-  
+

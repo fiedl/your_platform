@@ -6,6 +6,11 @@
       .caret
     %ul.dropdown-menu.list_export
 
+      %li.info
+        .alert.alert-warning
+          = fa_icon 'info-circle'
+          = t :the_export_will_be_logged
+
       %li.nav-header=t :pdf_files
       - trigger_class = (params[:trigger_export] == 'pdf') ? 'auto_trigger' : ''
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
