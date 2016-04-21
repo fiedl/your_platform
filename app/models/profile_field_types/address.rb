@@ -58,9 +58,10 @@ module ProfileFieldTypes
         end
 
         def composed_address
+          first_and_second_address_line = (get_field(:first_address_line).to_s + "\n" + get_field(:second_address_line).to_s).strip
           Biggs::Formatter.new(blank_country_on: default_country_code).format(
             get_field(:country_code),
-            street: get_field(:first_address_line),
+            street: first_and_second_address_line,
             city: get_field(:city),
             zip: get_field(:postal_code),
             state: get_field(:region)
