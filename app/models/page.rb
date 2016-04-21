@@ -8,14 +8,14 @@ class Page < ActiveRecord::Base
   has_many :attachments, as: :parent, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
-  
+
   serialize :redirect_to
-  
+
   include PagePublicWebsite
   include Archivable
-  
-  scope :for_display, -> { not_archived.includes(:ancestor_users, 
-    :ancestor_events, :author, :parent_pages, 
+
+  scope :for_display, -> { not_archived.includes(:ancestor_users,
+    :ancestor_events, :author, :parent_pages,
     :parent_users, :parent_groups, :parent_events) }
 
   def not_empty?
@@ -25,10 +25,10 @@ class Page < ActiveRecord::Base
   def fill_cache
     group
   end
-  
-  
+
+
   # This is the page title. If the title is not given in the
-  # database, try to translate the flag of the page, e.g. 
+  # database, try to translate the flag of the page, e.g.
   # for the 'imprint' page.
   #
   def title
@@ -37,7 +37,7 @@ class Page < ActiveRecord::Base
   def to_s
     title
   end
-  
+
   # This is the group the page belongs to, for example:
   #
   #     group_1
@@ -62,7 +62,7 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # This sets the format of the Page urls to be
-  # 
+  #
   #     example.com/pages/24-products
   #
   # rather than just
@@ -72,21 +72,21 @@ class Page < ActiveRecord::Base
   def to_param
     "#{id} #{title}".parameterize
   end
-  
-  
+
+
   # Quick Assignment of Children
   # ----------------------------------------------------------------------------------------------------
 
   # Add a child to this page. This could be a blog entry or another page or even a group.
   # Example:
-  # 
+  #
   #     my_page << another_page
   #
   def <<(child)
     unless child.in? self.children
       if child.in? self.descendants
         link = DagLink.where(
-          ancestor_type: 'Page', ancestor_id: self.id, 
+          ancestor_type: 'Page', ancestor_id: self.id,
           descendant_type: child.class.name, descendant_id: child.id
         ).first
         link.make_direct
@@ -103,7 +103,7 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # The `redirect_to` attribute can have the following forms:
-  # 
+  #
   #   * "http://example.com"
   #   * {controller: 'users', action: 'index'}
   #   * "users#index"  as short form of the previous one.
@@ -153,6 +153,10 @@ class Page < ActiveRecord::Base
 
   # root
 
+  def self.root
+    self.find_root
+  end
+
   def self.find_root
     Page.find_by_flag( :root )
   end
@@ -171,6 +175,10 @@ class Page < ActiveRecord::Base
 
 
   # intranet root
+
+  def self.intranet_root
+    self.find_intranet_root
+  end
 
   def self.find_intranet_root
     Page.find_by_flag( :intranet_root )
@@ -210,9 +218,9 @@ class Page < ActiveRecord::Base
     n = help_page.nav_node; n.hidden_menu = true; n.save;
     return help_page
   end
-  
+
   # imprint
-  
+
   def self.create_imprint
     imprint_page = Page.create
     imprint_page.add_flag :imprint
@@ -221,5 +229,5 @@ class Page < ActiveRecord::Base
   def self.find_imprint
     Page.find_by_flag :imprint
   end
-  
+
 end
