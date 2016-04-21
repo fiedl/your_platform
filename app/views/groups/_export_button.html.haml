@@ -9,7 +9,10 @@
       %li.info
         .alert.alert-warning
           = fa_icon 'info-circle'
-          = t :the_export_will_be_logged
+          - if can? :read, :exports_log
+            = link_to t(:the_export_will_be_logged), activities_exports_path
+          - else
+            = t :the_export_will_be_logged
 
       %li.nav-header=t :pdf_files
       - trigger_class = (params[:trigger_export] == 'pdf') ? 'auto_trigger' : ''

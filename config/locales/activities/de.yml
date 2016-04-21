@@ -1,14 +1,17 @@
 de:
   activities: Aktivitäten
   activity_log: Aktivitäts-Log
-  
+
+  exports_log: Export-Logbuch
+  export_log: Export-Logbuch
+
   looks_at_member_lists: "sieht sich Mitgliederlisten an"
   looks_at_posts: "sieht sich Nachrichten an"
   looks_at_group_profile: "sieht sich Profilinformationen an"
   looks_at_officers: "sieht sich Amtsträger an"
   manages_group_settings: "nimmt Gruppen-Einstellungen vor"
   writes_a_message_to_group: "schreibt eine Nachricht an die Gruppe"
-  
+
   looks_at_contact_information: "schlägt Kontaktinformationen nach"
-  
+
   show_page_activity_log: "Änderungs-Historie anzeigen"

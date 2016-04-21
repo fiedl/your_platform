@@ -93,6 +93,9 @@ Rails.application.routes.draw do
 
   resources :projects
 
+  namespace :activities do
+    get :exports, to: 'exports#index'
+  end
   resources :activities
 
   post :create_officers_group, to: 'officers#create_officers_group'
