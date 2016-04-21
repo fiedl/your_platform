@@ -3,7 +3,7 @@ en:
   user_profile:                                            User profile
   my_profile:                                              My Profile
   show_user_profile:                                       Show user profile
-  
+
   contact_information:                                     Contact Information
   about_myself:                                            About Myself
   study_information:                                       Study Information
@@ -25,10 +25,12 @@ en:
   mobile:                                                  Mobile
   fax:                                                     Fax
   homepage:                                                Homepage
-  
+
+  postal_address_label:                                    Postal address
+
   academic_degree:                                         Academic Degree
   study:                                                   Study
-  
+
   professional_category:                                   Professional Category
   occupational_area:                                       Occupational Area
   employment_status:                                       Employment Status

@@ -4,13 +4,13 @@ de:
   my_profile:                                              Mein Profil
   show_user_profile:                                       Benutzerprofil anzeigen
   show_whole_profile:                                      Gesamtes Profil anzeigen
-  
+
   looks_at_profile:                                        sieht sich ein Profil an
   looks_at_own_profile:                                    sieht sich das eigene Profil an
   manages_own_profile:                                     pflegt das eigene Profil
   manages_a_profile:                                       pflegt ein Profil
-  
-  
+
+
   contact:                                                 Kontakt
   contact_information:                                     Kontaktinformationen
   about_myself:                                            Über mich
@@ -33,15 +33,17 @@ de:
   mobile:                                                  Mobil
   fax:                                                     Fax
   homepage:                                                Homepage
-  
+
+  postal_address_label:                                    Postanschrift
+
   academic_degree:                                         Akademischer Grad
   study:                                                   Studium
-  
+
   professional_category:                                   Berufsgruppe
   occupational_area:                                       Tätigkeitsbereich
   employment_status:                                       Beschäftigungsstatus
   competence:                                              Kompetenz
-  
+
   about:                                                   Über mich
   comments_by_admin:                                       Bemerkungen der Administratoren
 
