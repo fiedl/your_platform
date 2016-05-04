@@ -115,7 +115,7 @@ class Notification < ActiveRecord::Base
   # executed status workflows.
   #
   def self.create_from_status_workflow(workflow, target_user, current_user)
-    recipients = target_user.admins_of_self_and_ancestors.uniq
+    recipients = (target_user.admins_of_self_and_ancestors - Group.global_admins.members).uniq
     recipients.collect do |recipient|
       if recipient.can? :read, target_user
         message = workflow.promotion_message_string(target_user)
