@@ -1,53 +1,53 @@
-# 
-# This module contains the methods of the Group model regarding the associated 
+#
+# This module contains the methods of the Group model regarding the associated
 # user group memberships and users, i.e. members.
 #
 module GroupMixins::Memberships
-  
+
   extend ActiveSupport::Concern
-  
+
   included do
 
     # User Group Memberships
     # ==========================================================================================
-    
-    # This associates all UserGroupMembership objects of the group, including indirect 
+
+    # This associates all UserGroupMembership objects of the group, including indirect
     # memberships.
     #
-    has_many( :memberships, 
+    has_many( :memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User' },
               class_name: 'UserGroupMembership',
               foreign_key: :ancestor_id )
-    
-    # This associates all memberships of the group that are direct, i.e. direct 
+
+    # This associates all memberships of the group that are direct, i.e. direct
     # parent_group-child_user memberships.
     #
     has_many( :direct_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
-              class_name: 'UserGroupMembership', 
+              class_name: 'UserGroupMembership',
               foreign_key: :ancestor_id )
-              
-    # This associates all memberships of the group that are indirect, i.e. 
+
+    # This associates all memberships of the group that are indirect, i.e.
     # ancestor_group-descendant_user memberships, where groups are between the
     # ancestor_group and the descendant_user.
     #
     has_many( :indirect_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
-              class_name: 'UserGroupMembership', 
+              class_name: 'UserGroupMembership',
               foreign_key: :ancestor_id )
-     
-    
+
+
     #  This method builds a new membership having this group (self) as group associated.
     #
     def build_membership
       direct_memberships.build(descendant_type: 'User')
     end
-    
-    # This returns the UserGroupMembership object that represents the membership of the 
+
+    # This returns the UserGroupMembership object that represents the membership of the
     # given user in this group.
-    # 
+    #
     # options:
-    #   - also_in_the_past 
+    #   - also_in_the_past
     #
     def membership_of(user, options = {})
       if options[:also_in_the_past]
@@ -57,24 +57,24 @@ module GroupMixins::Memberships
       end
       base.find_by_user_and_group(user, self)
     end
-    
+
     # This returns a string of the titles of the direct members of this group. This is used
     # for in-place editing, for example.
-    # 
+    #
     # The string would be something like this:
-    # 
+    #
     #    "#{user1.title}, #{user2.title}, ..."
     #
     def direct_members_titles_string
       direct_members.collect { |user| user.title }.join( ", " )
     end
-    
+
     # This sets the memberships of a group according to the given string of user titles.
-    # 
+    #
     # For example, after calling
-    # 
+    #
     #    direct_members_titles_string = "#{user1.title}, #{user2.title}",
-    # 
+    #
     # the users `user1` and `user2` are the only direct members of the group.
     # The memberships are removed using the standard methods, which means that the memberships
     # are only marked as deleted. See: acts_as_paranoid_dag gem.
@@ -93,24 +93,24 @@ module GroupMixins::Memberships
         assign_user new_member if new_member
       end
     end
-    
+
     def memberships_including_members
       memberships.includes(:descendant).order(valid_from: :desc)
     end
-    
+
     # This returns the memberships that appear in the member list
     # of the group.
     #
     # For a regular group, these are just the usual memberships.
     # For a corporation, the members of the 'former members' subgroup
-    # of the corporation are excluded, even though they still have 
+    # of the corporation are excluded, even though they still have
     # memberships.
     #
     def memberships_for_member_list
       cached do
         if corporation?
           (
-            memberships_including_members - 
+            memberships_including_members -
               becomes(Corporation).former_members_memberships -
               becomes(Corporation).deceased_members_memberships
           )
@@ -122,13 +122,13 @@ module GroupMixins::Memberships
     def memberships_for_member_list_count
       cached { memberships_for_member_list.count }
     end
-    
+
     def latest_memberships
       cached do
         self.memberships.with_invalid.reorder('valid_from DESC').limit(10).includes(:descendant)
       end
     end
-    
+
     def memberships_this_year
       cached do
         self.memberships.this_year
@@ -137,7 +137,7 @@ module GroupMixins::Memberships
 
     # User Assignment
     # ==========================================================================================
-    
+
     # This assings the given user as a member to the group, i.e. this will
     # create a UserGroupMembership.
     #
@@ -149,7 +149,7 @@ module GroupMixins::Memberships
         return membership
       end
     end
-    
+
     # This method will remove a UserGroupMembership, i.e. terminate the membership
     # of the given user in this group.
     #
@@ -159,16 +159,16 @@ module GroupMixins::Memberships
         UserGroupMembership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
       end
     end
-    
-    
+
+
     def calculate_validity_range_of_indirect_memberships
-      self.indirect_memberships.where(valid_from: nil).each do |membership| 
+      self.indirect_memberships.where(valid_from: nil).each do |membership|
         membership.recalculate_validity_range_from_direct_memberships
         membership.save
       end
     end
-    
-    
+
+
     # Members
     # ==========================================================================================
 
@@ -177,27 +177,27 @@ module GroupMixins::Memberships
     # Attention! The conditions on the `memberships` association are ignored by Rails 3
     # when generating the SQL query. This is why the conditions have to be repeated here.
     #
-    has_many(:members, 
+    has_many(:members,
       -> { where('dag_links.ancestor_type' => 'Group').uniq },
-      through: :memberships, 
+      through: :memberships,
       source: :descendant, source_type: 'User'
       )
 
     # This associates only the direct group members (users).
     #
-    has_many(:direct_members, 
+    has_many(:direct_members,
       -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true).uniq },
-      through: :direct_memberships, 
+      through: :direct_memberships,
       source: :descendant, source_type: 'User'
       )
-    
+
     # This associates only the indirect group members (users).
     #
-    has_many(:indirect_members, 
+    has_many(:indirect_members,
       -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false).uniq },
-      through: :indirect_memberships, 
+      through: :indirect_memberships,
       source: :descendant, source_type: 'User'
       )
-    
+
   end
 end

@@ -16,8 +16,8 @@ class UserGroupMembership < DagLink
 
   include UserGroupMembershipMixins::ValidityRange
   include UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
-  
-  
+
+
   # May Need Review Flag
   # ====================================================================================================
 
@@ -29,13 +29,13 @@ class UserGroupMembership < DagLink
   has_many_flags
   may_need_review
   attr_accessible :needs_review if defined? attr_accessible
-  
+
 
   # General Properties
   # ====================================================================================================
 
   # Title, e.g. 'Membership of John Doe in GroupXY'
-  # 
+  #
   def title
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
@@ -55,20 +55,20 @@ class UserGroupMembership < DagLink
       user ||= User.find params[:user_id] if params[:user_id]
       user ||= User.find_by_title params[:user_title] if params[:user_title]
       raise "Could not create UserGroupMembership without user." unless user
-      
+
       group = params[ :group ]
       group ||= Group.find params[:group_id] if params[:group_id]
       raise "Could not create UserGroupMembership without group." unless group
-      
+
       new_membership = DagLink
         .create(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
         .becomes(UserGroupMembership)
-        
+
       # This needs to be called manually, since DagLink won't call the proper callback.
       #
       new_membership.set_valid_from_to_now(true)
       new_membership.save
-      
+
       return new_membership
     end
   end
@@ -128,21 +128,21 @@ class UserGroupMembership < DagLink
 
 
   # Access Methods to Associated User and Group
-  # ====================================================================================================   
+  # ====================================================================================================
 
   def user
     self.descendant
   end
-  
+
   def user=(new_user)
     self.descendant_id = new_user.id
     self.descendant_type = 'User'
   end
-  
+
   def user_id
     self.descendant_id
   end
-    
+
   def user_title
     user.try(:title)
   end
@@ -153,26 +153,26 @@ class UserGroupMembership < DagLink
   def group
     self.ancestor
   end
-  
+
   def group_id
     self.ancestor_id
   end
-  
+
   def ensure_correct_ancestor_and_descendant_type
     self.ancestor_type = 'Group'
     self.descendant_type = 'User'
   end
   private :ensure_correct_ancestor_and_descendant_type
 
-  
+
   # Associated Corporation
   # ====================================================================================================
 
-  # If this membership is a subgroup membership of a corporation, this method will return the 
+  # If this membership is a subgroup membership of a corporation, this method will return the
   # corporation. Otherwise, this will return nil.
   #
   # corporation
-  #     |-------- group 
+  #     |-------- group
   #                 |---( membership )---- user
   #
   #     membership = UserGroupMembership.find_by_user_and_group( user, group )
@@ -186,7 +186,7 @@ class UserGroupMembership < DagLink
 
 
   # Access Methods to Associated Direct Memberships
-  # ====================================================================================================  
+  # ====================================================================================================
 
   # Returns the direct memberships corresponding to this membership (self).
   # For clarification, consider the following structure:
@@ -199,17 +199,17 @@ class UserGroupMembership < DagLink
   # Thus, this method, called on a membership of user and group1 will return the membership between
   # user and group2.
   #
-  #     UserGroupMembership.find_by( user: user, group: group1 ).direct_memberships.should 
+  #     UserGroupMembership.find_by( user: user, group: group1 ).direct_memberships.should
   #       include( UserGroupMembership.find_by( user: user, group: group2 ) )
   #
   # An indirect membership can also have several direct memberships, as shown in this figure:
-  # 
+  #
   #   group1
   #     |--------------- group2
   #     |                  |
   #     |---- group3       |
   #             |------------- user
-  # 
+  #
   # Here, group2 and grou3 are children of group1. user is member of group2 and group3.
   # Hence, the indirect membership of user and group1 will include both direct memberships.
   #
@@ -217,24 +217,24 @@ class UserGroupMembership < DagLink
     descendant_groups_of_self_group = self.group.descendant_groups
     descendant_group_ids_of_self_group = descendant_groups_of_self_group.pluck(:id)
     group_ids = descendant_group_ids_of_self_group + [ self.group.id ]
-    
+
     memberships = UserGroupMembership
     if options[:with_invalid] || self.read_attribute( :valid_to )
       # If the membership itself is invalidated, also consider the invalidated direct memberships.
       # Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
       # `direct_memberships` in order to have the invalidated direct memberships included.
-      memberships = memberships.with_invalid 
+      memberships = memberships.with_invalid
     end
-    
+
     memberships = memberships
       .find_all_by_user( self.user )
       .where( :direct => true )
       .where( :ancestor_id => group_ids, :ancestor_type => 'Group' )
-      
+
     memberships = memberships.order('valid_from')
     memberships
   end
-  
+
   def direct_memberships_now_and_in_the_past
     direct_memberships(with_invalid: true)
   end
@@ -248,7 +248,7 @@ class UserGroupMembership < DagLink
 
 
   # Access Methods to Associated Indirect Memberships
-  # ====================================================================================================  
+  # ====================================================================================================
 
   def indirect_memberships
     self.group.ancestor_groups.collect do |ancestor_group|
@@ -259,13 +259,13 @@ class UserGroupMembership < DagLink
   end
 
   # Methods to Change the Membership
-  # ====================================================================================================  
+  # ====================================================================================================
 
   # Destroy the current membership and move the user over to the given group.
-  # 
+  #
   #    group1                       group2
   #      |---- user       =>          |---- user
-  # 
+  #
   def move_to_group( group_to_move_in, options = {} )
     time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
     invalidate at: time
@@ -280,21 +280,21 @@ class UserGroupMembership < DagLink
   def promote_to( new_group, options = {} )
     self.move_to_group( new_group, options )
   end
-  
-  
+
+
   # Destroy
   # ==========================================================================================
-  
+
   # The regular destroy method won't trigger DagLink's callbacks properly,
   # causing the former dag link bug. By calling the DagLink's destroy method
   # we'll ensure the callbacks are called and indirect memberships are destroyed
   # correctly.
-  # 
+  #
   def destroy
     DagLink.where(id: self.id).first.destroy
   end
-  
-  
+
+
 end
 
 
