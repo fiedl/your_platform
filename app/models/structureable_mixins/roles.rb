@@ -122,7 +122,7 @@ module StructureableMixins::Roles
   end
 
   def direct_officers
-    self.find_officers_parent_group.try(:descendant_users) || []
+    self.find_officers_parent_group.try(:members) || []
   end
 
   def officers_of_self_and_parent_groups
@@ -142,7 +142,7 @@ module StructureableMixins::Roles
   def find_officers
     cached do
       if respond_to? :child_groups
-        find_officers_parent_group.try(:descendant_users)
+        find_officers_parent_group.try(:members)
       end || []
     end
   end
@@ -167,7 +167,7 @@ module StructureableMixins::Roles
   #
   def officers
     self.find_officers_parent_groups_of_self_and_of_descendant_groups.collect do |officers_parent|
-      officers_parent.descendant_users
+      officers_parent.members
     end.flatten.uniq
   end
 
@@ -217,13 +217,13 @@ module StructureableMixins::Roles
   end
 
   def admins
-    find_or_create_admins_parent_group.try( :descendant_users ) || []
+    find_or_create_admins_parent_group.try(:members) || []
   end
 
   def find_admins
     cached do
       if respond_to? :child_groups
-        find_admins_parent_group.try( :descendant_users )
+        find_admins_parent_group.try(:members)
       end || []
     end || []
   end
@@ -303,7 +303,7 @@ module StructureableMixins::Roles
   end
 
   def main_admins
-    main_admins_parent.descendant_users
+    main_admins_parent.members
   end
 
 end
