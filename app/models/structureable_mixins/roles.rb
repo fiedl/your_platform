@@ -2,7 +2,7 @@
 # This module extends the Structureable models by methods for the interaction with roles.
 # For example, a structureable object is being equipped with a `admins` association
 # that lists all (direct) admin users of the object. To make a user an admin of a structureable
-# object, you may call `object.admins << user`.
+# object, you may call `object.assign_admin user`.
 #
 # This module is included by `include StructureableMixins::Roles`.
 #
@@ -186,7 +186,7 @@ module StructureableMixins::Roles
   # One can access or assign the admins of the structureable object by calling:
   #
   #   my_structureable.admins          # => Array of users
-  #   my_structureable.admins << user
+  #   my_structureable.assign_admin user
   #
 
   def find_admins_parent_group
@@ -217,7 +217,11 @@ module StructureableMixins::Roles
   end
 
   def admins
-    find_or_create_admins_parent_group.try(:members) || []
+    find_or_create_admins_parent_group.try(:direct_members) || []
+  end
+
+  def assign_admin(user, options = {})
+    admins_parent.assign_user user, options
   end
 
   def find_admins
@@ -279,7 +283,7 @@ module StructureableMixins::Roles
   # One can access or assign the main admins of the structureable object by calling:
   #
   #   my_structureable.main_admins          # => Array of users
-  #   my_structureable.main_admins << user
+  #   my_structureable.main_assign_admin user
   #
 
   def find_main_admins_parent_group

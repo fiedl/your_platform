@@ -8,7 +8,7 @@ feature 'Change Status' do
     @user_to_promote = create :user
     @corporation.status_groups.first.assign_user @user_to_promote, at: 1.year.ago
     @local_admin = create :user_with_account
-    @corporation.admins << @local_admin
+    @corporation.assign_admin @local_admin
     
     @workflow = @corporation.status_groups.first.child_workflows.first
   end

@@ -1,5 +1,5 @@
 concern :UserRoles do
-  
+
   # Roles and Rights
   # ==========================================================================================
 
@@ -14,16 +14,16 @@ concern :UserRoles do
     return :admin if self.admin_of? structureable
     return :member if self.member_of? structureable
   end
-  
+
   # Member Status
   # ------------------------------------------------------------------------------------------
 
-  # This method is a dirty hack to preserve the obsolete role model mechanism, 
-  # which is currently not in use, since the abilities are defined directly in the 
+  # This method is a dirty hack to preserve the obsolete role model mechanism,
+  # which is currently not in use, since the abilities are defined directly in the
   # Ability class.
   #
   # Options:
-  # 
+  #
   #   with_invalid, also_in_the_past : true/false
   #
   # TODO: refactor it together with the role model mechanism.
@@ -58,19 +58,19 @@ concern :UserRoles do
   def admin_of?( structureable )
     self.admin_of.include? structureable
   end
-  
+
   def directly_administrated_objects
     Role.of(self).directly_administrated_objects
   end
-  
+
   def administrated_objects
     Role.of(self).administrated_objects
   end
 
-   
+
   # # Main Admins
   # # ------------------------------------------------------------------------------------------
-  # 
+  #
   # # This method says whether the user (self) is a main admin of the given
   # # structureable object.
   # #
@@ -100,9 +100,9 @@ concern :UserRoles do
   # Developer Status
   # ==========================================================================================
 
-  # This method returns whether the user is a developer. This is needed, for example, 
-  # to determine if some features are presented to the current_user. 
-  # 
+  # This method returns whether the user is a developer. This is needed, for example,
+  # to determine if some features are presented to the current_user.
+  #
   def developer?
     cached { self.developer }
   end
@@ -116,10 +116,10 @@ concern :UserRoles do
       Group.developers.unassign_user self
     end
   end
-  
+
   # Beta Tester Status
   # ==========================================================================================
-  
+
   def beta_tester?
     @beta_tester ||= self.beta_tester
   end
@@ -133,7 +133,7 @@ concern :UserRoles do
       Group.find_or_create_by_flag(:beta_testers).child_users.destroy(self)
     end
   end
-  
+
   # Global Admin Switch
   # ==========================================================================================
 
@@ -145,17 +145,17 @@ concern :UserRoles do
   end
   def global_admin=(new_setting)
     if new_setting == true
-      Group.everyone.admins << self
+      Group.everyone.assign_admin self
     else
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
       UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
-  
+
 
   # Officers
   # ==========================================================================================
-  
+
   def officer_of_anything?
     self.groups.detect { |g| g.type == 'OfficerGroup' } || false
   end
@@ -183,6 +183,6 @@ concern :UserRoles do
     end
     return false
   end
-  
-  
+
+
 end

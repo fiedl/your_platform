@@ -939,7 +939,7 @@ describe User do
       @corporation1.status_groups.first.assign_user @user
       @corporation1.status_groups.last.assign_user @user
       @corporation2.status_groups.first.assign_user @user
-      @corporation1.admins << @user
+      @corporation1.assign_admin @user
       time_travel 5.seconds
       @user.reload
     end
@@ -956,7 +956,7 @@ describe User do
       @corporation1.status_groups.first.assign_user @user, at: 10.months.ago
       @corporation1.status_groups.last.assign_user @user, at: 2.months.ago
       @corporation2.status_groups.first.assign_user @user, at: 1.month.ago
-      @corporation1.admins << @user
+      @corporation1.assign_admin @user
       @user.reload
     end
     subject { @user.cached(:last_group_in_first_corporation) }

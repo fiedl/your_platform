@@ -121,10 +121,10 @@ describe StructureableMixins::Roles do
       @my_admin = create :user
       @other_admin = create :user
       
-      @ancestor1.admins << @admin1
-      @ancestor2.admins << @admin2
-      @my_structureable.admins << @my_admin
-      @no_ancestor.admins << @other_admin
+      @ancestor1.assign_admin @admin1
+      @ancestor2.assign_admin @admin2
+      @my_structureable.assign_admin @my_admin
+      @no_ancestor.assign_admin @other_admin
       
       @my_structureable.reload
     end
@@ -234,7 +234,7 @@ describe StructureableMixins::Roles do
 
   describe "#admins <<" do
     before { @admin_user = create( :user ) }
-    subject { @my_structureable.admins << @admin_user }
+    subject { @my_structureable.assign_admin @admin_user }
     context "for the admin group existing" do
       before { @my_structureable.find_or_create_admins_parent_group }
       it "should add the user to the admins of the structureable object" do
@@ -293,12 +293,12 @@ describe StructureableMixins::Roles do
         @my_structureable.main_admins_parent.child_users << @admin_user
         subject.should include @admin_user
       end
-      it "should list main_admins added by 'main_admins << user'" do
-        @my_structureable.main_admins << @admin_user
+      it "should list main_admins added by 'main_assign_admin user'" do
+        @my_structureable.main_assign_admin @admin_user
         subject.should include @admin_user
       end
       it "should not list the admins that are no main admins" do
-        @my_structureable.admins << @admin_user
+        @my_structureable.assign_admin @admin_user
         subject.should_not include @admin_user
       end
     end
@@ -311,7 +311,7 @@ describe StructureableMixins::Roles do
 
   describe "#main_admins <<" do
     before { @admin_user = create( :user ) }
-    subject { @my_structureable.main_admins << @admin_user }
+    subject { @my_structureable.main_assign_admin @admin_user }
     context "for the admin group existing" do
       before { @my_structureable.create_main_admins_parent_group }
       it "should add the user to the main admins of the structureable object" do
@@ -345,12 +345,12 @@ describe StructureableMixins::Roles do
   describe "structures: " do
     before { @user = create(:user) }
     specify "each admin should also be an officer" do
-      @my_structureable.admins << @user
+      @my_structureable.assign_admin @user
       @user.should be_in @my_structureable.admins
       @user.should be_in @my_structureable.officers
     end
     specify "each main_admin should also be an admin and also be an officer" do
-      @my_structureable.main_admins << @user
+      @my_structureable.main_assign_admin @user
       @user.should be_in @my_structureable.main_admins
       @user.should be_in @my_structureable.admins
       @user.should be_in @my_structureable.officers
@@ -379,7 +379,7 @@ describe StructureableMixins::Roles do
     end
     specify "an admin of group2 should not be considered an admin of group1" do
       @group1.admins.should == []
-      @group2.admins << @user
+      @group2.assign_admin @user
       @group2.admins.should include @user
       @group1.admins.should == []
     end

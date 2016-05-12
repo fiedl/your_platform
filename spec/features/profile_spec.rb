@@ -7,7 +7,7 @@ feature "Profile", :js do
     before do
       @user = create :user_with_account
       @group = create :group
-      @group.admins << @user
+      @group.assign_admin @user
       
       login @user
     end

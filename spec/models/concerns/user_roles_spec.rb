@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe User do
 
-  before do 
+  before do
     @user = create( :user )
     @user.save
   end
@@ -10,7 +10,7 @@ describe User do
 
   # Roles
   # ==========================================================================================
-  
+
   describe "#role_for" do
     before do
       @object = create( :page )
@@ -26,16 +26,16 @@ describe User do
       before do
         @group = create( :group )
         @group.child_users << @user
-        @object.child_groups << @group 
+        @object.child_groups << @group
       end
       it { should == :member }
     end
     context "for the user being an admin of the object" do
-      before { @object.admins << @user }
+      before { @object.assign_admin @user }
       it { should == :admin }
     end
     # context "for the user being a main_admin of the object" do
-    #   before { @object.main_admins << @user }
+    #   before { @object.main_assign_admin @user }
     #   it { should == :main_admin }
     # end
     context "for the object being not structureable" do
@@ -43,7 +43,7 @@ describe User do
       it { should == nil }
     end
     context "for descendant objects of administrated objects" do
-      before { @object.admins << @user }
+      before { @object.assign_admin @user }
       it "should return the inherited role" do
         @user.role_for( @object ).should == :admin
         @user.role_for( @sub_object ).should == :admin
@@ -51,12 +51,12 @@ describe User do
       end
     end
   end
-  
+
   # Admins
   # ------------------------------------------------------------------------------------------
-  
+
   describe "#admin_of" do
-    before do 
+    before do
       @group = create( :group, name: "Directly Administrated Group" )
       @group.find_or_create_admins_parent_group
       @group.admins_parent.child_users << @user
@@ -64,7 +64,7 @@ describe User do
     subject { @user.admin_of }
     it { should == @user.administrated_objects }
   end
-  
+
   describe "#admin_of?" do
     before do
       @group = create( :group, name: "Directly Administrated Group" )
@@ -103,7 +103,7 @@ describe User do
       it { should == false }
     end
   end
-  
+
   describe "#directly_administrated_objects" do
     before do
       @group = create( :group, name: "Directly Administrated Group" )
@@ -118,7 +118,7 @@ describe User do
       end
     end
   end
-  
+
   describe "#administrated_objects" do
     before do
       @group = create( :group, name: "Administrated Group" )
@@ -145,10 +145,10 @@ describe User do
       end
     end
   end
-  
+
   # # Main Admins
   # # ------------------------------------------------------------------------------------------
-  # 
+  #
   # describe "#main_admin_of?" do
   #   before do
   #     @page = create( :page )
@@ -157,11 +157,11 @@ describe User do
   #   context "for the main_admins_parent_group existing" do
   #     before { @page.create_main_admins_parent_group }
   #     context "for the user being a main admin of the object" do
-  #       before { @page.main_admins << @user }
+  #       before { @page.main_assign_admin @user }
   #       it { should == true }
   #     end
   #     context "for the user being just a regular admin of the object" do
-  #       before { @page.admins << @user }
+  #       before { @page.assign_admin @user }
   #       it { should == false }
   #     end
   #     context "for the user being just a regular member of the object" do
@@ -177,11 +177,11 @@ describe User do
   #     end
   #   end
   # end
-  
-  
+
+
   # Guest Status
   # ==========================================================================================
-  
+
   describe "#guest_of?" do
     before { @group = create( :group ) }
     subject { @user.guest_of? @group }
@@ -196,11 +196,11 @@ describe User do
       it { should == true }
     end
   end
-  
-  
+
+
   # Developers
   # ==========================================================================================
-  
+
   describe "#developer?" do
     subject { @user.developer? }
     describe "for no developers group existing" do
@@ -234,5 +234,5 @@ describe User do
       end
     end
   end
-  
+
 end

@@ -139,7 +139,7 @@ describe Ability do
     context "when the user is a group admin" do
       before do
         @group = create :group
-        @group.admins << user
+        @group.assign_admin user
         @other_user = create :user_with_account; @group << @other_user
         time_travel 2.seconds
       end
@@ -228,7 +228,7 @@ describe Ability do
     describe "when the user is a page admin" do
       before do
         @page = create :page
-        @page.admins << user
+        @page.assign_admin user
       end
 
       he { should be_able_to :create_page_for, @page }

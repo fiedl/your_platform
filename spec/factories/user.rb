@@ -78,7 +78,7 @@ FactoryGirl.define do
       create_account true
       
       after :create do |admin|
-        Group.find_everyone_group.admins << admin
+        Group.find_everyone_group.assign_admin admin
       end
     end
     
@@ -89,7 +89,7 @@ FactoryGirl.define do
       create_account true
       after :create do |admin, evaluator|
         raise 'Please set object to administrate, e.g.:  create :local_admin, of: @group' unless evaluator.of.respond_to?(:admins)
-        evaluator.of.admins << admin
+        evaluator.of.assign_admin admin
       end
     end
     

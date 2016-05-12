@@ -7,7 +7,7 @@ feature "Role Preview" do
     @group = create :group
     @user = create :user_with_account
     
-    @group.admins << @user
+    @group.assign_admin @user
   end
   
   scenario "Using role previews as local group admin" do

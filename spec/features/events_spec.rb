@@ -368,7 +368,7 @@ feature "Events" do
   describe "invitation email" do
     background do
       @group << @user
-      @group.admins << @user
+      @group.assign_admin @user
       time_travel 5.seconds
     end
     scenario "sending an invitation email", js: true do
