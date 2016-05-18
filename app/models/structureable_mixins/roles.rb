@@ -217,7 +217,7 @@ module StructureableMixins::Roles
   end
 
   def admins
-    find_or_create_admins_parent_group.try(:direct_members) || []
+    find_or_create_admins_parent_group.try(:members) || []
   end
 
   def assign_admin(user, options = {})
@@ -252,8 +252,8 @@ module StructureableMixins::Roles
     cached do
       if local_admins.any?
         local_admins
-      elsif Role.non_techical_global_admins.any?
-        Role.non_techical_global_admins
+      elsif Role.non_technical_global_admins.any?
+        Role.non_technical_global_admins
       else
         Role.global_admins
       end
@@ -308,6 +308,10 @@ module StructureableMixins::Roles
 
   def main_admins
     main_admins_parent.members
+  end
+
+  def assign_main_admin(user, options = {})
+    main_admins_parent.assign_user user, options
   end
 
 end

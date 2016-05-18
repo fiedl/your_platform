@@ -37,7 +37,7 @@ describe StructureableMixins::Roles do
     describe "for the group existing" do
       before { @admins_parent_group = @my_structureable.find_or_create_admins_parent_group }
       it { should == @admins_parent_group }
-    end  
+    end
   end
 
   describe "#find_admins_parent_group" do
@@ -45,7 +45,7 @@ describe StructureableMixins::Roles do
     context "if existent" do
       before { @admins_parent_group = @my_structureable.find_or_create_admins_parent_group }
       it "should return the existant group" do
-        subject.should == @admins_parent_group 
+        subject.should == @admins_parent_group
       end
     end
     context "if absent" do
@@ -73,11 +73,11 @@ describe StructureableMixins::Roles do
   describe "#admins" do
     subject { @my_structureable.admins }
     context "if the admins_parent_group exists" do
-      before { @my_structureable.find_or_create_admins_parent_group } 
+      before { @my_structureable.find_or_create_admins_parent_group }
       it { should == [] }
     end
     context "if admin users exist" do
-      before do 
+      before do
         @admin_user = create( :user )
         @my_structureable.admins_parent.child_users << @admin_user
       end
@@ -91,11 +91,11 @@ describe StructureableMixins::Roles do
       end
     end
   end
-  
+
   describe "#admins_of_self_and_ancestors" do
     subject { @my_structureable.admins_of_self_and_ancestors }
     before do
-      # ATTENTION: For cache deletion, the `descendants` method is called 
+      # ATTENTION: For cache deletion, the `descendants` method is called
       # on the ancestors.
       # Since the ancestor classes are not patched to include the
       # `MyStructureable` as descendants,
@@ -115,17 +115,17 @@ describe StructureableMixins::Roles do
       @ancestor2 = @my_structureable.parent_groups.create name: 'Ancestor 2'
       @ancestor1 = @ancestor2.parent_groups.create name: 'Ancestor 1'
       @no_ancestor = @ancestor1.child_groups.create name: 'No Ancestor'
-      
+
       @admin1 = create :user
       @admin2 = create :user
       @my_admin = create :user
       @other_admin = create :user
-      
+
       @ancestor1.assign_admin @admin1
       @ancestor2.assign_admin @admin2
       @my_structureable.assign_admin @my_admin
       @no_ancestor.assign_admin @other_admin
-      
+
       @my_structureable.reload
     end
     it "should include the ancestors' admins" do
@@ -160,11 +160,11 @@ describe StructureableMixins::Roles do
   describe "#find_admins" do
     subject { @my_structureable.admins }
     context "if the admins_parent_group exists" do
-      before { @my_structureable.create_admins_parent_group } 
+      before { @my_structureable.create_admins_parent_group }
       it { should == [] }
     end
     context "if admin users exist" do
-      before do 
+      before do
         @admin_user = create( :user )
         @my_structureable.admins_parent.child_users << @admin_user
       end
@@ -198,7 +198,7 @@ describe StructureableMixins::Roles do
       it { should == @group.find_admins }
     end
     context "if an admin users exists" do
-      before do 
+      before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.admins_parent << admin_user
@@ -207,7 +207,7 @@ describe StructureableMixins::Roles do
       it { should == @group.find_admins }
     end
     context "if new admin is added via group" do
-      before do 
+      before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.cached(:find_admins)
@@ -219,12 +219,12 @@ describe StructureableMixins::Roles do
       it { should == @group.find_admins }
     end
     context "if new admin is added via child_users" do
-      before do 
+      before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.cached(:find_admins)
         wait_for_cache
-        
+
         @group.admins_parent.child_users << admin_user
         @group.reload
       end
@@ -269,12 +269,12 @@ describe StructureableMixins::Roles do
     it { should be_kind_of Group }
     it "should have the admins_parent as parent group" do
       @admins_parent = @my_structureable.admins_parent
-      subject.parent_groups.should include @admins_parent 
+      subject.parent_groups.should include @admins_parent
     end
     specify "users of this group should also be members of the admins_parent_group" do
       @user = create( :user )
-      @my_structureable.main_admins_parent.child_users << @user 
-      @user.ancestor_groups.should include( @my_structureable.admins_parent, 
+      @my_structureable.main_admins_parent.child_users << @user
+      @user.ancestor_groups.should include( @my_structureable.admins_parent,
                                             @my_structureable.main_admins_parent )
     end
   end
@@ -293,8 +293,8 @@ describe StructureableMixins::Roles do
         @my_structureable.main_admins_parent.child_users << @admin_user
         subject.should include @admin_user
       end
-      it "should list main_admins added by 'main_assign_admin user'" do
-        @my_structureable.main_assign_admin @admin_user
+      it "should list main_admins added by 'assign_main_admin user'" do
+        @my_structureable.assign_main_admin @admin_user
         subject.should include @admin_user
       end
       it "should not list the admins that are no main admins" do
@@ -311,7 +311,7 @@ describe StructureableMixins::Roles do
 
   describe "#main_admins <<" do
     before { @admin_user = create( :user ) }
-    subject { @my_structureable.main_assign_admin @admin_user }
+    subject { @my_structureable.assign_main_admin @admin_user }
     context "for the admin group existing" do
       before { @my_structureable.create_main_admins_parent_group }
       it "should add the user to the main admins of the structureable object" do
@@ -350,27 +350,27 @@ describe StructureableMixins::Roles do
       @user.should be_in @my_structureable.officers
     end
     specify "each main_admin should also be an admin and also be an officer" do
-      @my_structureable.main_assign_admin @user
+      @my_structureable.assign_main_admin @user
       @user.should be_in @my_structureable.main_admins
       @user.should be_in @my_structureable.admins
       @user.should be_in @my_structureable.officers
     end
   end
-  
+
 
 
   # Complex Structures
   # ------------------------------------------------------------------------------------------
   #
   #    group1
-  #      |----- :officers_parent 
+  #      |----- :officers_parent
   #      |         |--------------- :admins_parent
   #      |                               |---------- :main_admins_parent
   #      |----- group2
   #                |---- :officers_parent
   #                          |------------ :admins_parent
   #                                           |------------- :main_admins_parent
-  # 
+  #
   describe "complex structures: " do
     before do
       @group1 = create(:group)
@@ -409,7 +409,7 @@ describe StructureableMixins::Roles do
   # ------------------------------------------------------------------------------------------
   #
   #    group1
-  #      |----- :officers_parent 
+  #      |----- :officers_parent
   #                |--------------- :admins_parent
   #                |                      |---------- :officers_parent  <---- forbidden
   #                |
@@ -418,7 +418,7 @@ describe StructureableMixins::Roles do
   #                |----- :public_relations_officer
   #                                |
   #                                |----- :officers_parent    <-------------- forbidden
-  #                
+  #
   #
   describe "preventing officer cascades: " do
     before do
@@ -451,8 +451,8 @@ describe StructureableMixins::Roles do
       @public_relations_officer.reload.children.should == []
     end
   end
-  
-  
+
+
   # Officers
   # ==========================================================================================
 
@@ -464,7 +464,7 @@ describe StructureableMixins::Roles do
       #                              |--------------- @subgroup_officers_parent
       #                                                  |--- @officer2
       #
-      @container_group = create( :group ) 
+      @container_group = create( :group )
       @container_subgroup = create( :group ) # this is to test if subgroup's officers are listed as well
       @container_subgroup.parent_groups << @container_group
       @officers_parent = @container_group.create_officers_parent_group
@@ -500,14 +500,14 @@ describe StructureableMixins::Roles do
         subject.should include( @officer1 )
       end
       it "should not find the officers of the container group's subgroups" do
-        subject.should_not include( @officer2 ) 
+        subject.should_not include( @officer2 )
       end
     end
 
     subject { @container_group }
     its( :officers_parent ) { should == @officers_parent }
     its( :officers_parent! ) { should == @officers_parent }
-    
+
     describe "#officers" do
       subject { @container_group.officers }
       it "should list the users that are officers" do
