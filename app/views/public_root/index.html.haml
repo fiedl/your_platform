@@ -6,6 +6,8 @@
   
   .col.col-sm-3.public_root_events
     = render partial: 'shared/upcoming_events', locals: {events: @events, force_show: true, parent_group: nil}
+= draggable_boxes_row(@page) do
+  .col.col-sm-6.col-xs-12
 
   - @teaser_box_pages.each do |page|
     .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: page, teaser_box: true}

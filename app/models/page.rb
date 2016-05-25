@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to, :author if defined? attr_accessible
+  attr_accessible        :content, :title, :redirect_to, :author, :author_user_id, :box_configuration if defined? attr_accessible
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
   is_navable
@@ -10,6 +10,7 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
   serialize :redirect_to
+  serialize :box_configuration
 
   include PagePublicWebsite
   include Archivable

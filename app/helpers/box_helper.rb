@@ -6,9 +6,10 @@ module BoxHelper
     heading = options[ :heading ]
     content = options[ :content ]
     content = yield unless content
-    box_class = options[ :box_class ]
+    box_class = options[:box_class]
+    box_id = options[:box_id]
 
-    render partial: 'layouts/box', locals: { heading: heading, content: content, box_class: box_class }
+    render partial: 'layouts/box', locals: {heading: heading, content: content, box_class: box_class, box_id: box_id}
   end
 
   def convert_to_content_box( html_code = nil )
@@ -19,7 +20,7 @@ module BoxHelper
   end
 
   def html_convert_h1_to_boxes( html_code, options = {} )
-    
+
     # Further Nokogiri Reference
     # * http://stackoverflow.com/questions/3449767/
     # * http://www.engineyard.com/blog/2010/getting-started-with-nokogiri/
@@ -36,20 +37,21 @@ module BoxHelper
       heading_class = h1_node.attr( :class )
       heading_class ||= ""
       heading_class += " first" if box_counter == 1
+      heading_id = h1_node.attr(:id)
 
       content_element = h1_node.next_element
       if content_element
         content = content_element.to_html.html_safe
-        content_element.remove()      
+        content_element.remove()
       end
       content ||= "" # because content_box expects a String
 
-      h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
+      h1_node.replace content_box(heading: heading, content: content, box_class: heading_class, box_id: heading_id)
     end
-    
+
     return doc.to_s.html_safe
   end
-  
+
   def show_box_edit_button?(box_class, navable)
     return can? :create_attachment_for, navable if box_class == 'attachments'
     return can? :update, navable

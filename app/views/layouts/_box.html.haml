@@ -1,5 +1,10 @@
+- # locals:
+- heading ||= ""
+- box_class ||= ""
+- box_id ||= ""
+
 .edit_mode_group
-  %div{:class => "box panel panel-default #{box_class}"}
+  %div{:class => "box panel panel-default #{box_class}", id: box_id}
     .head.panel-heading
       %table.box_header_table
         %tr

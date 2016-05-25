@@ -4,7 +4,7 @@
 - page_class = teaser_box ? 'teaser_box' : ''
 
 .page_with_attachments
-  %h1.page{class: page_class}
+  %h1.page{class: page_class, id: "page-#{page.id}-box"}
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
       = best_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
