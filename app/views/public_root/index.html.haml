@@ -7,6 +7,10 @@
   .col.col-sm-3.public_root_events
     = render partial: 'shared/upcoming_events', locals: {events: @events, force_show: true, parent_group: nil}
 
+  - @teaser_box_pages.each do |page|
+    .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: page, teaser_box: true}
+
+
 - if @public_root_element_pages.try(:any?)
   .row.row-eq-height.public_root_elements
     .col.col-sm-6= render @public_root_element_pages.first

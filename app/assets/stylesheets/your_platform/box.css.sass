@@ -2,6 +2,10 @@
 // boxes should not overflow:
 // https://css-tricks.com/snippets/css/prevent-long-urls-from-breaking-out-of-container/
 
+.col
+  padding-left: 8px
+  padding-right: 8px
+
 .box
   /* These are technically the same, but use both */
   overflow-wrap: break-word
@@ -18,13 +22,17 @@
   -moz-hyphens: auto
   -webkit-hyphens: auto
   hyphens: auto
-  
 
 .box .box_header_table
   table-layout: fixed
+  td.box_heading
+    width: 100%
+  td.box_toolbar
+    text-align: right
 
 .box .panel-heading .tool
   display: inline-block
-  
+
 .box td.box_toolbar
   white-space: nowrap
+  width: auto

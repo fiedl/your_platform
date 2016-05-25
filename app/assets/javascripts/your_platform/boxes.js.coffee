@@ -12,7 +12,7 @@ $(document).on 'cancel', '.box', ->
   App.adjust_box_heights_for $(this).closest('.col')
 
 $(document).ready ->
-  $('.content_twoCols_right > div.col-xs-12').each -> 
+  $('.content_twoCols_right > div.col-xs-12').each ->
     $(this).find('.box:first').addClass('first')
 
 $(document).ready ->
@@ -29,8 +29,17 @@ $.fn.process_box_tools = ->
       .find('span.box_toolbar').first()
     tool.detach()
     tool.prependTo(box_toolbar)
-    
-  # Remove 'edit' buttons for boxes where no .editable element 
+
+  # If there is a panel-footer added to the content, move it outside
+  # the panel-body to display it correctly.
+  #
+  this.find('.panel-body .panel-footer').each ->
+    footer = $(this)
+    panel = footer.closest('.panel')
+    footer.detach()
+    footer.appendTo(panel)
+
+  # Remove 'edit' buttons for boxes where no .editable element
   # is included.
   #
   this.find('.edit_button').each ->

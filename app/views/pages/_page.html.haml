@@ -1,5 +1,10 @@
+- # locals:
+- page || raise('no page given')
+- teaser_box ||= false
+- page_class = teaser_box ? 'teaser_box' : ''
+
 .page_with_attachments
-  %h1
+  %h1.page{class: page_class}
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
       = best_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
@@ -14,35 +19,49 @@
     .archive_tools.tool
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
-  %div.page
+  %div.page{class: page_class}
     - if @navable != page and not @navable.in?(page.parents) and page.parents.first
       .page_header
         %span.right
           = icon(:tag)
           = link_to page.parents.first.title, page.parents.first
-    
-    - if (image_attachments = page.attachments_by_type("image")) && image_attachments.try(:any?)
-      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: image_attachments, inline: true}
-  
+
+    - if page.image_attachments.any?
+      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments, inline: true}
+
     %div.page_body
-      %div{ id: 'page_content', data: { mercury: 'full' } }
-        = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
-      .show_only_in_edit_mode
-        = render partial: 'shared/markdown_help'
-    
-    .page_footer
-      %span.page_footer_box
-        - if page.author
-          %span.page_author
-            = link_to(page.author.title, page.author) + ", "
-        %span.page_created_at
-          = localize(page.created_at) if page.created_at
-        - if page.updated_at && page.updated_at > page.created_at + 1.hour
-          %span.page_updated_at
-            = " | "       
-            = t(:edited_at)
-            = localize(page.updated_at)
-  
-  #attachments
-    = render(partial: 'pages/videos', locals: {page: page}) 
-    = render(partial: 'pages/attachments', locals: {page: page})
+      - if teaser_box
+        = markup page.teaser_text
+      - else
+        %div{ id: 'page_content', data: { mercury: 'full' } }
+          = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
+        .show_only_in_edit_mode
+          = render partial: 'shared/markdown_help'
+
+    - unless teaser_box
+      - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
+        .hidden-print.show_only_in_edit_mode
+          = render partial: 'attachments/drop_field', locals: {parent: page}
+
+    - unless teaser_box
+      .page_footer.do_not_show_in_edit_mode
+        %span.page_footer_box
+          - if page.author
+            %span.page_author
+              = link_to(page.author.title, page.author) + ", "
+          %span.page_created_at
+            = localize(page.created_at) if page.created_at
+          - if page.updated_at && page.updated_at > page.created_at + 1.hour
+            %span.page_updated_at
+              = " | "
+              = t(:edited_at)
+              = localize(page.updated_at)
+
+    - if teaser_box
+      .panel-footer
+        = link_to t(:learn_more), page
+
+  - unless teaser_box
+    #attachments
+      = render(partial: 'pages/videos', locals: {page: page})
+      = render(partial: 'pages/attachments', locals: {page: page})

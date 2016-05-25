@@ -38,6 +38,16 @@ class Page < ActiveRecord::Base
     title
   end
 
+
+  def teaser_text
+    if content
+      teaser_content = content.split("\n\n").first
+      teaser_content += "\n\n" + content.split("\n\n").second if teaser_content.start_with?("http") # For inline videos etc.
+      teaser_content
+    end
+  end
+
+
   # This is the group the page belongs to, for example:
   #
   #     group_1

@@ -5,7 +5,12 @@ class PublicRootController < ApplicationController
     authorize! :read, @page
     
     @public_root_element_pages = Page.flagged(:public_root_element)
-    
+
+    @child_pages = @page.child_pages - @public_root_element_pages - Page.flagged(:imprint) - Page.flagged(:intranet_root)
+    @child_pages.select! { |p| not p.title.in? @public_root_element_pages.pluck(:title) }
+
+    @teaser_box_pages = @public_root_element_pages + @child_pages
+
     @events = Event.where(publish_on_global_website: true)
       .upcoming.order('events.start_at, events.created_at')
       .limit(5)
