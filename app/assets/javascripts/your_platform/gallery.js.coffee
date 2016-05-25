@@ -21,6 +21,9 @@ class App.Gallery
   find: (selector)->
     @root_element.find(selector)
 
+  closest: (selector)->
+    @root_element.closest(selector)
+
   # Basic galleria configuration.
   # See: http://galleria.io/docs/options/
   #
@@ -38,10 +41,13 @@ class App.Gallery
     #swipe: 'auto',
     responsive: true,
     #height: 0.625, # 16:10
-    height: 0.5629, # 16:9
+    #height: 0.5629, # 16:9
+    height: 0.5, # 16:9 with border correction
     debug: false,
     ## height: $(this).find('img').attr('height')
-    lightbox: true
+    lightbox: true,
+    thumbnails: false,
+    imageMargin: 0,
   }
 
   initSettings: ->
@@ -78,11 +84,15 @@ class App.Gallery
         # shown below the image.
         #
         self.galleria_instance.bind 'loadfinish', (e)->
+          self.add_magnification_glass() # needs to be in loadfinish to detect video
           if e.galleriaData
             self.current_image_data = e.galleriaData
             self.show_description()
 
-        self.hide_thumbs_if_only_one_image()
+        if self.root_element.hasClass('deactivate-auto-lightbox')
+          self.galleria_instance.setOptions 'lightbox', false
+
+        # self.hide_thumbs_if_only_one_image()
         self.hide_errors_container()
         # self.bind_fullscreen_events()
 
@@ -110,6 +120,7 @@ class App.Gallery
         self.picture_info_element().find('.remove_button')
           .removeClass('show_only_in_edit_mode')
           .hide()
+        App.adjust_box_heights_for self.closest('.col')
     })
 
   # /attachments/123/filename.png
@@ -124,16 +135,16 @@ class App.Gallery
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
 
-  # Hide thumbnail collections with less than 2 elements,
-  # since they only confuse people there.
-  #
-  hide_thumbs_if_only_one_image: ->
-    if @find('.galleria-thumbnails .galleria-image').size() < 2
-      @find('.galleria-thumbnails').hide()
-      @find('.galleria-stage').css('bottom', '10px')
-      @find('.galleria-container').height (index, height)-> height - 50
-    else
-      @find('.galleria-thumbnails').show()
+  # # Hide thumbnail collections with less than 2 elements,
+  # # since they only confuse people there.
+  # #
+  # hide_thumbs_if_only_one_image: ->
+  #   if @find('.galleria-thumbnails .galleria-image').size() < 2
+  #     @find('.galleria-thumbnails').hide()
+  #     @find('.galleria-stage').css('bottom', '10px')
+  #     @find('.galleria-container').height (index, height)-> height - 50
+  #   else
+  #     @find('.galleria-thumbnails').show()
 
   # Do not show galleria errors. These are not useful
   # in production.
@@ -180,6 +191,22 @@ class App.Gallery
     #
     # $(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', ->
     #   $(this).closest('.galleria').data('galleria').enterFullscreen()
+
+  add_magnification_glass: ->
+    self = this
+    # TODO: if link exists
+    self.find('.galleria-container').append('<span class="galleria-magnification-glass"><i class="fa fa-search-plus"></i></span>')
+    self.find('.galleria-magnification-glass').bind 'click', ->
+      self.open_lightbox()
+      setTimeout (-> self.play_lightbox_video()), 500
+    if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').size() > 0
+      self.find('.galleria-magnification-glass').addClass('for-small-video')
+
+  play_lightbox_video: ->
+    $('.galleria-lightbox-image .galleria-image img').mouseup()
+
+  open_lightbox: ->
+    @galleria_instance.openLightbox()
 
   enter_fullscreen_mode: ->
     @galleria_instance.enterFullscreen()
