@@ -1,3 +1,7 @@
+- # locals:
+- # attachment
+- show_author ||= (attachment.parent.kind_of?(Event))
+
 .picture-info
   .picture-title
     - if can? :destroy, attachment
@@ -5,7 +9,7 @@
     = best_in_place_if can?(:update, attachment), attachment, :title, nil: I18n.t(:click_here_to_set_an_image_title)
   .picture-description
     = best_in_place_if can?(:update, attachment), attachment, :description, nil: I18n.t(:click_here_to_set_an_image_description)
-  - if attachment.author
+  - if attachment.author and show_author
     .picture-author
       &copy;
       = attachment.created_at.year.to_s + ","

@@ -40,6 +40,7 @@ class Group < ActiveRecord::Base
   include GroupMixins::Developers
   include GroupMixins::Officers
   include GroupMixins::Import
+  include GroupAttachments
   include GroupProfile
   include GroupMailingLists
   include GroupDummyUsers
