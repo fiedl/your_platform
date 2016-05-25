@@ -14,18 +14,19 @@ module Profileable
     @profile_section_titles = options[:profile_sections] || default_profile_section_titles
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
     has_many :address_profile_fields, -> { where type: 'ProfileFieldTypes::Address' }, class_name: 'ProfileFieldTypes::Address', as: :profileable, dependent: :destroy, autosave: true
-    
+
     include InstanceMethodsForProfileables
     include ProfileFields
+    include ProfileableMixins::Address
   end
-  
+
   def default_profile_section_titles
-    [:contact_information, :about_myself, :study_information, :career_information, 
+    [:contact_information, :about_myself, :study_information, :career_information,
      :organizations, :bank_account_information, :description]
   end
-  def profile_section_titles 
+  def profile_section_titles
     @profile_section_titles
-  end  
+  end
 
   module InstanceMethodsForProfileables
     def profile
@@ -35,14 +36,14 @@ module Profileable
     def profile_section_titles
       self.class.profile_section_titles
     end
-    
+
     def profile_sections
       self.profile.sections
     end
-    
+
     def profile_fields_by_type( type_or_types )
       profile_fields.where( type: type_or_types )
     end
   end
- 
+
 end
