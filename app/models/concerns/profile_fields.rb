@@ -1,5 +1,5 @@
 concern :ProfileFields do
-  
+
   def email
     @email ||= cached { profile_fields.where(type: ['ProfileFieldTypes::Email', 'ProfileFieldTypes::MailingListEmail']).first.try(:value) }
   end
@@ -18,18 +18,26 @@ concern :ProfileFields do
   def email_empty?
     not email.present?
   end
-  
+
   def email_fields
     profile_fields.where type: 'ProfileFieldTypes::Email'
   end
   def primary_email_field
     email_fields.first
   end
-  
+
   def phone_profile_fields
     profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
       not field.label.downcase.include? 'fax'
     end
   end
-  
+
+  def website
+    unless @website
+      @website = profile_fields.where(type: 'ProfileFieldTypes::Homepage').first.try(:value)
+      @website = "https://#{@website}" if @website and not (@website.start_with?("http://") or @website.start_with?("https://"))
+    end
+    @website
+  end
+
 end
