@@ -21,7 +21,7 @@ var doc    = window.document,
 
 // internal constants
     VERSION = 1.41,
-    DEBUG = true,
+    DEBUG = false,
     TIMEOUT = 30000,
     DUMMY = false,
     NAV = navigator.userAgent.toLowerCase(),
@@ -116,20 +116,23 @@ var doc    = window.document,
     _video = {
         youtube: {
             reg: /https?:\/\/(?:[a-zA_Z]{2,3}.)?(?:youtube\.com\/watch\?)((?:[\w\d\-\_\=]+&amp;(?:amp;)?)*v(?:&lt;[A-Z]+&gt;)?=([0-9a-zA-Z\-\_]+))/i,
+            api_key: function() {
+              return $('.video-gallery').data('you-tube-api-key')
+            },
             embed: function() {
-                return 'http://www.youtube.com/embed/' + this.id;
+                return 'https://www.youtube.com/embed/' + this.id;
             },
             getUrl: function() {
-                return PROT + '//gdata.youtube.com/feeds/api/videos/' + this.id + '?v=2&alt=json-in-script&callback=?';
+                return 'https://www.googleapis.com/youtube/v3/videos?id=' + this.id + '&part=contentDetails&key=' + this.api_key() + '&';
             },
             get_thumb: function(data) {
-                return data.entry.media$group.media$thumbnail[2].url;
+                return PROT + '//img.youtube.com/vi/'+this.id+'/default.jpg';
             },
             get_image: function(data) {
-                if ( data.entry.yt$hd ) {
+                if ( data.items[0].contentDetails.definition === 'hd' ) {
                     return PROT + '//img.youtube.com/vi/'+this.id+'/maxresdefault.jpg';
                 }
-                return data.entry.media$group.media$thumbnail[3].url;
+                return PROT + '//img.youtube.com/vi/'+this.id+'/hqdefault.jpg';
             }
         },
         vimeo: {
