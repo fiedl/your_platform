@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # Each Navable object has got an associated NavNode, i.e. an object representing the information
 # relevant to the position of the Navable object within the navigational structure.
 #
@@ -9,9 +7,9 @@ class NavNode < ActiveRecord::Base
   belongs_to :navable, polymorphic: true
 
   # The +url_component+ represents the part of the url, which is contributed by
-  # the Navable object. 
+  # the Navable object.
   #
-  # If you have the following url 
+  # If you have the following url
   #   http://example.com/products/phones/ ,
   # and the current Navable is the Page @products_page, then its +url_component+ is
   # 'products/'.
@@ -21,27 +19,27 @@ class NavNode < ActiveRecord::Base
   #
   # The default +url_component+ uses the Navable's title.
   # But you can override the url_component of a Navable just by setting it.
-  # 
+  #
   #     @nav_node = @products_page.nav_node
   #     @nav_node.url_component = "our_products/"
   #     @nav_node.save
-  # 
+  #
   def url_component
     super || "#{self.navable.title.parameterize}/"
   end
 
   # The +breadcrumb_item+ is the string representing the Navable in a breadcrumb navigation.
-  # 
+  #
   # For example:   example.com  >  Products  >  Phones
   #                                --------
-  # The String "Products" is the +breadcrumb_item+ of the @products_page. 
+  # The String "Products" is the +breadcrumb_item+ of the @products_page.
   # It defaults to the Navable's title and can be customized using the setter method
   # +breadcrumb_item=+.
   #
   def breadcrumb_item
     super || self.navable.title
   end
-  
+
   # The +menu_item+ is the string representing the Navable in the vertical menu.
   # It defaults to the Navable's title and can be customized using the setter method
   # +menu_item=+.
@@ -49,11 +47,11 @@ class NavNode < ActiveRecord::Base
   def menu_item
     super || self.navable.title
   end
-  
+
   # The +hidden_menu+ attribute says if the Navable should be hidden from
-  # the vertical menu. 
+  # the vertical menu.
   #
-  # By default, 
+  # By default,
   #   * Pages are shown in the menu
   #   * Groups are shown in the menu
   #   *   exception: The :officers_parent groups are hidden in the menu.
@@ -61,7 +59,7 @@ class NavNode < ActiveRecord::Base
   #   * Events are hidden in the menu
   #   * Workflows are hidden in the menu
   #
-  # You can override the setting for a Navable by using the setter method 
+  # You can override the setting for a Navable by using the setter method
   # +hidden_menu=+ on the NavNode.
   #
   def hidden_menu
@@ -73,22 +71,22 @@ class NavNode < ActiveRecord::Base
     hidden = false if hidden.nil?
     return hidden
   end
-  
+
   # +slim_breadcrumbs+ marks if the Navable should be hidden from the breadcrumb navigation
   # in order to save space.
-  # 
+  #
   # By default, no element is hidden from the breadcrumb navigation.
-  # To hide an element, just set 
+  # To hide an element, just set
   #
   #   @some_page.nav_node.update_attribute(:slim_breadcrumb, true)
-  # 
+  #
   def slim_breadcrumb
     super || false
   end
 
   # +url+ returns the joined url_components of this NavNode's Navable and its ancestors
   # resulting in the generated url of the Navable.
-  # 
+  #
   # Example:
   #   Breadcrumb:  Example.com  >  Products  >  Phones
   #   Url:         http://example.com/products/phones
@@ -101,7 +99,7 @@ class NavNode < ActiveRecord::Base
       nav_node.url_component
     end.join.gsub( /(\/)$/, '' ) # The gsub call removes the trailing slash.
   end
-  
+
   # +breadcrumbs+ returns an Array of breadcrumb Hashes representing the route to the
   # Navable associated with this NavNode.
   #
@@ -109,7 +107,7 @@ class NavNode < ActiveRecord::Base
   #   Breadcrumb:  Example.com  >  Products  >  Phones
   #   Url:         http://example.com/products/phones
   #
-  #     @phones_page.nav_node.breadcrumbs  
+  #     @phones_page.nav_node.breadcrumbs
   #       # => [ {title: "Example.com", navable: @root_page, slim: false},
   #              {title: "Products", navable: @products_page, slim: false},
   #              {title: "Phones", navable: @phones_page, slim: false} ]
@@ -118,8 +116,8 @@ class NavNode < ActiveRecord::Base
     breadcrumbs_to_return = []
     navables = self.ancestor_navables_and_own
     for navable in navables do
-      breadcrumbs_to_return << { title: navable.nav_node.breadcrumb_item, 
-                                 navable: navable, 
+      breadcrumbs_to_return << { title: navable.nav_node.breadcrumb_item,
+                                 navable: navable,
                                  slim: navable.nav_node.slim_breadcrumb }
     end
     return breadcrumbs_to_return
@@ -141,14 +139,14 @@ class NavNode < ActiveRecord::Base
     end
     path.reverse
   end
-  
+
   # This returns the Navable ancestors of the Navable associated with this NavNode as an Array
   # plus this NavNode's Navable as last element.
   #
   def ancestor_navables_and_own
     ancestor_navables + [ self.navable ]
   end
-  
+
   # +ancestor_nodes+ returns an Array of the NavNodes of the ancestors of the Navable
   # associated with this NavNode.
   #
@@ -157,10 +155,10 @@ class NavNode < ActiveRecord::Base
       ancestor.nav_node
     end
   end
-  
+
   # +ancestor_nodes_and_self+ returns an Array of the NavNodes of the ancestors of the
   # Navable associated with this NavNode  plus  this NavNode as last element.
-  # 
+  #
   def ancestor_nodes_and_self
     ancestor_nodes + [ self ]
   end
