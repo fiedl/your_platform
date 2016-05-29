@@ -1,11 +1,15 @@
 - @hide_vertical_nav = true
 
 .row.row-eq-height
-  .col.col-sm-9
+  .col.col-sm-9.col-xs-12
     = render @page
-  
+
   .col.col-sm-3.public_root_events
-    = render partial: 'shared/upcoming_events', locals: {events: @events, force_show: true, parent_group: nil}
+    %h1#public-root-events-box
+      = t(:events)
+    %div
+      = render partial: 'events/events_lis', locals: {events: @events, show_location_rather_than_group: true}
+
 = draggable_boxes_row(@page) do
   .col.col-sm-6.col-xs-12
     %h1#corporations-map-box= t(:corporation_map_title)

@@ -1,5 +1,6 @@
 - # locals:
 - events ||= []
+- show_location_rather_than_group ||= false
 
 - for event in events do
   - group = event.group
@@ -16,14 +17,16 @@
         = succeed ',' do
           %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
         -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
-        = succeed ',' do 
+        = succeed ',' do
           %span{class: "event start_at_time"}= localize event.start_at, :format => :time
-      - if group
+      - if group and not show_location_rather_than_group
         %span{class: "event group"}
         = link_to group.name, group
         - if corporation && (corporation.id != group.id)
           = surround '(', ')' do
             = link_to corporation.token, corporation
+      - if show_location_rather_than_group
+        = event.location
     %span{class: "event name"}
       %strong
         = link_to event.name, event
