@@ -1,0 +1,21 @@
+- # locals:
+- navable || raise('no navable given')
+- nav_node ||= navable.nav_node
+
+%h2 Navigation
+%table.settings
+  %tr
+    %th Im Menü verstecken
+    %td= best_in_place nav_node, :hidden_menu
+  %tr
+    %th Im Menü ausblenden, wenn unnötig
+    %td= best_in_place nav_node, :slim_menu
+  %tr
+    %th In den Breadcrumbs ausblenden, wenn unnötig
+    %td= best_in_place nav_node, :slim_breadcrumb, as: :checkbox
+  %tr
+    %th Abweichende Beschriftung im Menü
+    %td= best_in_place nav_node, :menu_item
+  %tr
+    %th Abweichende Beschriftung in den Breadcrumbs
+    %td= best_in_place nav_node, :breadcrumb_item

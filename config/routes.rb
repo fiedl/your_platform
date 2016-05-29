@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get :datenschutz, to: 'privacy#index'
 
   get "vertical_navs/:navable_type/:navable_id", to: 'vertical_navs#show', as: :vertical_nav
+  resources :nav_nodes
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
   devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]
@@ -89,6 +90,7 @@ Rails.application.routes.draw do
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'
     get :activities, to: 'activities#index'
+    get :settings, to: 'page_settings#index'
   end
 
   resources :projects

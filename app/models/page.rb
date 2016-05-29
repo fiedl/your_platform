@@ -19,6 +19,16 @@ class Page < ActiveRecord::Base
     :ancestor_events, :author, :parent_pages,
     :parent_users, :parent_groups, :parent_events) }
 
+  # Easy settings: https://github.com/huacnlee/rails-settings-cached
+  # For example:
+  #
+  #     page = Page.find(123)
+  #     page.settings.color = :red
+  #     page.settings.color  # =>  :red
+  #
+  include RailsSettings::Extend
+
+
   def not_empty?
     attachments.count > 0 or (content && content.length > 5)
   end
