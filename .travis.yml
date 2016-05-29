@@ -1,6 +1,6 @@
 rvm:
-  - "2.2.2"
-env: 
+  - "2.3.1"
+env:
   - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3"
 cache: bundler
 sudo: false
