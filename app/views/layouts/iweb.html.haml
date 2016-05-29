@@ -1,0 +1,25 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    %meta{:charset => 'utf-8'}/
+    %title= website_title_with_app_name
+    = csrf_meta_tags
+    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+    = stylesheet_link_tag 'iweb_layout', :media => 'all'
+    = stylesheet_link_tag 'application', :media => 'all'
+    = gmaps4rails_api_script_tags
+    = javascript_include_tag 'application'
+    = yield :scripts
+    = yield :head
+
+  %body.iweb-layout{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'iweb', navable: @navable.try(:to_global_id)}}
+    .container-fluid
+      .row#horizontal-nav-bar
+        #category_indicator
+          %ul.nav.navbar-nav#horizontal_nav= horizontal_nav_lis
+      #header.row
+        = image_tag 'iweb_header.png'
+      .row
+        = flash_area
+      .row
+        = replace_unicode_special_chars_by_html_escape_strings(convert_to_content_box { yield })

@@ -1,8 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  layout "bootstrap"
-
+  include CurrentLayout
   include CurrentTimeZone
   include CurrentUser
   include CurrentNavable

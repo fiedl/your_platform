@@ -147,6 +147,16 @@ class NavNode < ActiveRecord::Base
     ancestor_navables + [ self.navable ]
   end
 
+  # The breadcrumb_root is the navable that is the left-most of the breadcrums
+  # of the navable.
+  #
+  #    example.com > About us
+  #    ~~~~~~~~~~~
+  #
+  def breadcrumb_root
+    cached { ancestor_navables_and_own.first }
+  end
+
   # +ancestor_nodes+ returns an Array of the NavNodes of the ancestors of the Navable
   # associated with this NavNode.
   #

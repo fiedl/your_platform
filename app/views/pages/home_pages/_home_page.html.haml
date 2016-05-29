@@ -1,0 +1,5 @@
+= draggable_boxes_row(home_page) do
+  .col-sm-9.col-xs-12.resizable_col
+    = render partial: 'pages/page', locals: {page: home_page}
+  - home_page.child_pages.each do |page|
+    .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: page, teaser_box: true}
