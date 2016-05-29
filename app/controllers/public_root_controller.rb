@@ -11,7 +11,9 @@ class PublicRootController < ApplicationController
       .limit(5)
 
     @hide_attachment_drop_fields = false
-    
+
+    @new_page = @page.child_pages.build
+
     set_current_navable @page
     set_current_activity :looks_at_the_start_page, @page
     set_current_access :public
