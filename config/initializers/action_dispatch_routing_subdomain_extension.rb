@@ -1,0 +1,1 @@
+require 'action_dispatch_routing_subdomain_extension'
