@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   layout "bootstrap"
 
+  include CurrentLayout
   include CurrentTimeZone
   include CurrentUser
   include CurrentNavable
