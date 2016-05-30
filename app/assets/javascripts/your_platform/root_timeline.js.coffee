@@ -1,19 +1,28 @@
 last_loaded_day = 0
 is_loading = false
+current_day_interval = 1
 
 load_next_page = ->
+  if last_loaded_day < 20000
+    load_next_news_for_n_days(current_day_interval)
+  else
+    $('.scroll_to_load').hide()
+
+load_next_news_for_n_days = (n)->
   unless is_loading
     is_loading = true
-    last_loaded_day += 1
+    last_loaded_day += n
     $.ajax {
       type: 'GET',
       url: '/news',
       data: {
-        days_ago: last_loaded_day
+        days_ago: last_loaded_day,
+        days_num: n
       },
       success: (result)->
         is_loading = false
         if result.length > 0
+          current_day_interval = 1
           $('.row.insert_loaded_content_here').show()
           $(result)
             .appendTo($('.row.insert_loaded_content_here'))
@@ -21,6 +30,7 @@ load_next_page = ->
             .fadeIn()
             .process()
         else
+          current_day_interval = Math.pow(current_day_interval + 1, 1.2)
           load_next_page()
       failure: (result)->
         is_loading = false
@@ -31,7 +41,7 @@ $(document).ready ->
   is_loading = false
 
   if $('.scroll-indicator').size() > 0
-    
+
     # initial loading
     #
     if $('.news_entry').size() == 0
