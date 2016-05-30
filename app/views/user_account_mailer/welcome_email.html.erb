@@ -4,13 +4,13 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body style="font-family: Helvetica; line-height: 150%">
-    
+
     <%= link_to root_url do %>
       <%= image_tag 'logo.png', align: 'right' %>
     <% end %><br />
-    
-    <h3><%=t :welcome_to_the_new_intranet_platform %></h3>
-    
+
+    <h3><%= @subject %>!</h3>
+
     <p><%=t :good_day %> <%= @mr_or_mrs %> <%= @user.last_name%>,</p>
 
     <p><%=t :with_this_email_you_get_your_account_data %></p>
@@ -27,6 +27,6 @@
       <%=t :this_message_has_been_generated_automatically %><br />
       <%= link_to(root_url, root_url) %>
     </p>
-    
+
   </body>
 </html>
