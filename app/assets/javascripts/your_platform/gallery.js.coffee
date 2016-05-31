@@ -34,15 +34,15 @@ class App.Gallery
     #autoplay: 9000,
     popupLinks: false,
     trueFullscreen: false,
-    #carousel: false,
+    carousel: false,
+    thumbnails: false,
     #swipe: 'auto',
     responsive: true,
     #height: 0.625, # 16:10
     height: 0.5629, # 16:9
     debug: false,
     ## height: $(this).find('img').attr('height')
-    lightbox: true,
-    carousel: false
+    lightbox: true
   }
 
   initSettings: ->
@@ -111,17 +111,6 @@ class App.Gallery
         self.picture_info_element().find('.remove_button')
           .removeClass('show_only_in_edit_mode')
           .hide()
-
-        # # These are some tests, maybe needed when thumbnails and
-        # # slideshow are shown together.
-        # #
-        # self.picture_info_element()
-        #   .css('position', 'relative')
-        #   .css('top', (- self.find('.galleria-thumbnails-container').height() - self.picture_info_element().height() - 10) + "px")
-        # self.find('.galleria-thumbnails-container')
-        #   .css('top', (self.find('.galleria-thumbnails-container').position().top + self.picture_info_element().height() + 30) + "px")
-        # self.find('.galleria-container')
-        #   .css('height', (self.find('.galleria-container').height() + self.picture_info_element().height() + 20) + "px")
     })
 
   # /attachments/123/filename.png
@@ -136,18 +125,15 @@ class App.Gallery
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
 
-  # Hide thumbnail collections with less than a couple of elements,
-  # since they only confuse people there.
+  # Hide thumbnail collections. Thumbnails are handled by YourPlatform
+  # separately.
+  #
+  # See: app/view/attachments/_image_thumbnails.html.haml
   #
   hide_thumbs_or_slideshow: ->
-    if (@find('.galleria-thumbnails .galleria-image').size() < 6) or (@find('.galleria-container').width() < 350)
-      @find('.galleria-thumbnails').hide()
-      @find('.galleria-stage').css('bottom', '10px')
-      @find('.galleria-container').height (index, height)-> height - 50
-    else
-      @find('.galleria-thumbnails').show()
-      @find('.galleria-stage').hide()
-      @picture_info_element().hide()
+    @find('.galleria-thumbnails').hide()
+    @find('.galleria-stage').css('bottom', '10px')
+    @find('.galleria-container').height (index, height)-> height - 50
 
   # Do not show galleria errors. These are not useful
   # in production.
@@ -161,7 +147,7 @@ class App.Gallery
     # Clicking on the thumbnail activates the lightbox.
     #
     @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
-      self.galleria_instance.openLightbox()
+      self.open_lightbox()
 
     # # Clicking on an gallery image switches to fullscreen mode,
     # # i.e. covers the full browser window.
@@ -201,8 +187,21 @@ class App.Gallery
     # $(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', ->
     #   $(this).closest('.galleria').data('galleria').enterFullscreen()
 
+  open_lightbox: ->
+    @galleria_instance.openLightbox()
+
   enter_fullscreen_mode: ->
     @galleria_instance.enterFullscreen()
 
   leave_fullscreen_mode: ->
     @galleria_instance.exitFullscreen()
+
+  show: (image_big_url)->
+    image_url = image_big_url
+    slides = @galleria_instance._data
+    slide_to_show = slides.filter((slide) -> image_url.indexOf(slide.big) > -1).first()
+    if slide_to_show
+      slide_index = slides.indexOf(slide_to_show)
+      @galleria_instance.setOptions('transition', 'fade')
+      @galleria_instance.show(slide_index)
+

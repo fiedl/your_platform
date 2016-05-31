@@ -5,12 +5,13 @@
 - attachments ||= []
 - inline ||= false
 - hide_description ||= false
+- thumbnails = (attachments.count > 6) if thumbnails.nil?
 
 - if not inline
   %h1.pictures= t :pictures
 .pictures
   = galleria theme: 'classic' do
-    - for attachment in attachments
+    - attachments.each do |attachment|
       = render partial: 'attachments/picture', locals: { attachment: attachment }
   - unless hide_description
     .picture-info
@@ -18,3 +19,6 @@
         = attachments.first.title
       .picture-description
         = attachments.first.description
+
+  - if thumbnails
+    = render partial: 'attachments/image_thumbnails', locals: {attachments: attachments}

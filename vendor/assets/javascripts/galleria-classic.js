@@ -76,20 +76,6 @@ Galleria.addTheme({
 
         this.bind('loadfinish', function(e) {
             this.$('loader').fadeOut(200);
-
-            // Move thumbnails below.
-            var stage = this.$("stage");
-            var thumbnail_container = this.$('thumbnails-container');
-            var container = this.$('container');
-            if (stage.is(":visible")) {
-              var image = stage.find('.galleria-image:last');
-              thumbnail_container.css('top', (image.height() + 20) + "px");
-              container.css('height', (image.height() + thumbnail_container.height() + 20) + "px");
-              this.$('image-nav').css('top', (image.height() / 2) + "px");
-            } else {
-              container.css('height', (thumbnail_container.height() + 20) + "px");
-            }
-
         });
     }
 });
