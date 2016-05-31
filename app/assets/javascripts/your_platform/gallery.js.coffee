@@ -146,8 +146,8 @@ class App.Gallery
       @find('.galleria-container').height (index, height)-> height - 50
     else
       @find('.galleria-thumbnails').show()
-      @find('.galleria-stage').remove()
-      @picture_info_element().remove()
+      @find('.galleria-stage').hide()
+      @picture_info_element().hide()
 
   # Do not show galleria errors. These are not useful
   # in production.
