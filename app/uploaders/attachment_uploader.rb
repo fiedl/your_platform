@@ -30,9 +30,9 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     Rails.env || raise('no rails env')
     "#{Rails.root}/tmp/uploads/#{Rails.env}_env/"
   end
-    
 
-  process :set_content_type  
+
+  process :set_content_type
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
@@ -53,21 +53,21 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   version :thumb, :if => :image_or_pdf? do
     process :cover
     process :modify_content_type
-    
-    def full_filename(for_file = model.attachment.file)		
-      "thumb.png"		
+
+    def full_filename(for_file = model.attachment.file)
+      "thumb.png"
     end
   end
-  
+
   version :medium, :if => :image? do
     process :resize_to_limit => [580,330]
   end
-  
+
   version :big, if: :image? do
     process :resize_to_limit => [1024,768]
   end
-  
-  # 
+
+  #
   # version :video_thumb, :if => :video? do
   #   process :create_video_thumb
   #   process :set_content_type => [ "image/jpeg" ]
@@ -75,31 +75,31 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   #     "video-thumb.jpg"
   #   end
   # end
-  # 
+  #
   # def video?( new_file )
   #   new_file.content_type.include?('video')
   # end
 
   def image_or_pdf?( new_file )
-    new_file && new_file.content_type.present? && 
+    new_file && new_file.content_type.present? &&
       (new_file.content_type.include?('image') || new_file.content_type.include?('pdf'))
   end
-  
+
   def image?( new_file )
     new_file && new_file.content_type.present? && new_file.content_type.include?('image')
   end
-  
+
   def pdf?(new_file)
     new_file && new_file.content_type.present? && new_file.content_type.include?('pdf')
   end
-  
+
   # This method filteres out all pages except for the cover page.
   # This is used when making a thumbnail for pdf files. pdf files can have several pages,
   # but only the first page should be used for the thumbnail, not one thumbnail for each page.
   #
   # Taken from: http://afreshcup.com/home/2012/9/27/thumbnailing-pdfs-with-minimagick.html
   #
-  def cover 
+  def cover
     manipulate! do |img|
       img.format("png", 0)
       img.resize("100x100")
@@ -107,18 +107,18 @@ class AttachmentUploader < CarrierWave::Uploader::Base
       img
     end
   end
-  
+
   def modify_content_type( *args )
     type = args[0] || "image/png"
     self.file.instance_variable_set( :@content_type, type )
   end
-  # 
+  #
   # def create_video_thumb( *args )
   #   original_file = self.file.instance_variable_get( :@file )
   #   original_file_title = original_file.split( "/" ).last
   #   thumb_title = "thumb.jpg"
   #   tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
-  # 
+  #
   #   `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
   #   `mv '#{tmp_thumb_file}' '#{original_file}'`
   # end
@@ -134,7 +134,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # def filename
   #   "original.#{model.attachment.file.extension}" if original_filename
   # end
-  
+
   def url(version = nil)
     model.id || raise('Model has no id.')
     if version
@@ -147,11 +147,11 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     basename = File.basename(filename).gsub(/.#{extension}$/, '')
     Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension, version: version )
   end
-  
+
   def filetitle
     File.basename(to_s)
   end
-  
+
 
   def self.valid_versions
     [:thumb, :medium, :big, :video_thumb]
