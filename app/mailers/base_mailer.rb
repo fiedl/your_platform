@@ -1,4 +1,5 @@
 class BaseMailer < ActionMailer::Base
+  helper LogoHelper
   helper MailerHelper
   helper MarkupHelper
   helper IconHelper

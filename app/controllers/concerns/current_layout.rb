@@ -6,7 +6,7 @@ concern :CurrentLayout do
 
   def current_logo_url
     #current_navable.nav_node.breadcrumb_root
-    Attachment.logos.first.try(:file).try(:url)
+    Attachment.logos.first.try(:file).try(:url) || image_url('logo.png')
   end
 
 end

@@ -94,7 +94,7 @@
     .row#header-bar
       .col-sm-7.col-xs-12
         %span#logo
-          = link_to image_tag(current_logo_url || 'logo.png'), root_path, class: 'navbar-brand'
+          = link_to image_tag(logo_url), root_path, class: 'navbar-brand'
 
       .col-sm-5.col-xs-12
         #header_help= render partial: 'support_requests/help_button'
