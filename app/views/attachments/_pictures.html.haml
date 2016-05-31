@@ -1,4 +1,4 @@
-- # locals: 
+- # locals:
 - #   - attachments
 - #   - inline         suppress separate box if true
 - #
@@ -9,7 +9,7 @@
 - if not inline
   %h1.pictures= t :pictures
 .pictures
-  .galleria{data: {theme_js_path: asset_path('galleria-classic.js')}}
+  = galleria theme: 'classic' do
     - for attachment in attachments
       = render partial: 'attachments/picture', locals: { attachment: attachment }
   - unless hide_description
