@@ -1,12 +1,9 @@
-# encoding: utf-8
-
 require 'carrierwave/processing/mime_types'
 
 class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   include CarrierWave::MiniMagick
-  # include CarrierWave::MiniMagick
   include CarrierWave::MimeTypes
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
@@ -31,8 +28,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     "#{Rails.root}/tmp/uploads/#{Rails.env}_env/"
   end
 
-
   process :set_content_type
+  process :store_dimensions
 
   # Provide a default URL as a default if there hasn't been a file uploaded:
   # def default_url
@@ -67,18 +64,18 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     process :resize_to_limit => [1024,768]
   end
 
-  #
-  # version :video_thumb, :if => :video? do
-  #   process :create_video_thumb
-  #   process :set_content_type => [ "image/jpeg" ]
-  #   def full_filename( for_file = model.attachment.file )
-  #     "video-thumb.jpg"
-  #   end
-  # end
-  #
-  # def video?( new_file )
-  #   new_file.content_type.include?('video')
-  # end
+
+  version :video_thumb, :if => :video? do
+    process :create_video_thumb
+    process :set_content_type => [ "image/jpeg" ]
+    def full_filename( for_file = model.attachment.file )
+      "video-thumb.jpg"
+    end
+  end
+
+  def video?( new_file )
+    new_file.content_type.include?('video')
+  end
 
   def image_or_pdf?( new_file )
     new_file && new_file.content_type.present? &&
@@ -112,16 +109,30 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     type = args[0] || "image/png"
     self.file.instance_variable_set( :@content_type, type )
   end
-  #
-  # def create_video_thumb( *args )
-  #   original_file = self.file.instance_variable_get( :@file )
-  #   original_file_title = original_file.split( "/" ).last
-  #   thumb_title = "thumb.jpg"
-  #   tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
-  #
-  #   `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
-  #   `mv '#{tmp_thumb_file}' '#{original_file}'`
-  # end
+
+  def create_video_thumb( *args )
+    original_file = self.file.instance_variable_get( :@file )
+    original_file_title = original_file.split( "/" ).last
+    thumb_title = "thumb.jpg"
+    tmp_thumb_file = original_file.gsub( original_file_title, thumb_title )
+
+    `ffmpeg  -itsoffset -4  -i '#{original_file}' -vcodec mjpeg -vframes 1 -an -f rawvideo -s 200x112 '#{tmp_thumb_file}'`
+    `mv '#{tmp_thumb_file}' '#{original_file}'`
+  end
+
+  def store_dimensions
+     if file && model
+       if image?(file)
+         model.width, model.height = ::MiniMagick::Image.open(file.file)[:dimensions]
+       elsif video?(file)
+         # http://stackoverflow.com/a/11236144/2066546
+         json = `ffprobe -v quiet -print_format json -show_format -show_streams "#{self.file.file}"`
+         info = JSON.parse(json)
+         model.width = info["streams"].first["width"]
+         model.height = info["streams"].first["height"]
+       end
+     end
+   end
 
   # Add a white list of extensions which are allowed to be uploaded.
   # For images you might use something like this:

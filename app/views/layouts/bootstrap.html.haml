@@ -10,6 +10,8 @@
     /[if lt IE 9]
       <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
 
+
+
     = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
     = stylesheet_link_tag 'bootstrap_layout', :media => 'all'
     = stylesheet_link_tag 'application', :media => 'all'
@@ -34,6 +36,7 @@
 
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
+    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js"
     = yield :scripts
     = yield :head
 
