@@ -6,6 +6,7 @@ de:
   mrs: Frau
 
   welcome_to_the_new_intranet_platform: 'Willkommen zur neuen Intranet-Plattform'
+  welcome_to_app_name: "Willkommen zur %{app_name}"
   with_this_email_you_get_your_account_data: 'mit dieser E-Mail-Nachricht erhalten Sie Ihre Zugangsdaten zur neuen Intranet-Plattform.'
   this_message_has_been_generated_automatically: 'Dies ist eine automatisch generierte E-Mail-Nachricht.'
 

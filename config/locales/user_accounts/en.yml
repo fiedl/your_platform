@@ -6,6 +6,7 @@ en:
   mrs: 'Mrs.'
 
   welcome_to_the_new_intranet_platform: 'Welcome to the new intranet platform'
+  welcome_to_app_name: "Welcome to %{app_name}"
   with_this_email_you_get_your_account_data: 'Please find your user account information below.'
 
   send_new_password:             Send new password via email

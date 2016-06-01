@@ -1,6 +1,4 @@
 - attachments = page.attachments.includes(:author, :parent).find_without_types("video", "image")
-- if current_user
-  - attachments += page.attachments.includes(:author, :parent).find_by_type("video").select { |attachment| can? :update, attachment }
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
 
 - # - attachments = .order('created_at DESC')

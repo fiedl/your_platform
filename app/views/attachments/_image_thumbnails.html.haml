@@ -1,0 +1,6 @@
+- # locals:
+- attachments ||= []
+
+.image_attachment_thumbnails
+  - attachments.each do |attachment|
+    = image_tag attachment.thumb_url, data: {attachment_id: attachment.id, image_big_url: attachment.big_url}

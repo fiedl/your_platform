@@ -1,8 +1,6 @@
-%span.video-attachment.video-element{ id: "attachment-#{attachment.id}" }
-  = link_to image_tag( attachment.thumb_url ), attachment.file.url, class: "sublime"
-  = video_tag attachment.file.url, class: "sublime lightbox"
-  = remove_button( attachment )
-  %span.video-title 
-    = best_in_place attachment, :title
-  %span.video-description
-    = best_in_place attachment, :description
+- # Locals:
+- attachment || raise('no attachment given')
+
+= afterglow_video(attachment)
+
+= render partial: 'attachments/description', locals: {attachment: attachment}

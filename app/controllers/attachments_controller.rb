@@ -1,11 +1,11 @@
 class AttachmentsController < ApplicationController
-  
+
   skip_filter *_process_action_callbacks.map(&:filter), only: :download # skip all filters for downloads
   load_and_authorize_resource
   skip_authorize_resource only: [:create, :description]
   respond_to :html, :json
   layout nil
-  
+
   def index
   end
 
@@ -63,9 +63,10 @@ class AttachmentsController < ApplicationController
       current_user.track_visit @attachment.parent if @attachment.parent && current_user && (not current_user.incognito?)
       path = @attachment.file.current_path
     end
-    send_file path, x_sendfile: true, disposition: :inline
+    send_file path, x_sendfile: true, disposition: :inline,
+      range: (@attachment.video?), type: @attachment.content_type
   end
-  
+
   # This returns a json object with description information of the
   # requested file.
   #
@@ -85,7 +86,7 @@ class AttachmentsController < ApplicationController
       end
     end
   end
-  
+
 private
 
   # This method secures the version parameter from a DoS attack.
@@ -96,10 +97,54 @@ private
       version.to_s == params[:version]
     end.first
   end
-  
+
   def secure_parent
     return Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
     return Event.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Event'
+  end
+
+  def send_file(path, options = {})
+    if options[:range]
+      send_file_with_range(path, options)
+    else
+      super(path, options)
+    end
+  end
+
+  # To stream videos, we have to handle the requested byte range.
+  #
+  # For a summary, see http://stackoverflow.com/a/37570158/2066546.
+  #
+  # In order to find out the correct headers, we've put a test-video.mp4 into the public folder
+  # and inspected the requests. For example, the first requests results in a 200 to check if the
+  # video is actually there. Then, the byte range is requested and the corresponding data is sent.
+  #
+  # Sending the correct data and extracting the byte range from the request header
+  # is taken from http://stackoverflow.com/q/22581727/2066546.
+  #
+  # Possible alternative, but did not work with Rails 4.2:
+  # https://github.com/adamcooke/send_file_with_range
+  #
+  def send_file_with_range(path, options = {})
+    if File.exist?(path)
+      size = File.size(path)
+      if !request.headers["Range"]
+        status_code = 200 # 200 OK
+        offset = 0
+        length = File.size(path)
+      else
+        status_code = 206 # 206 Partial Content
+        bytes = Rack::Utils.byte_ranges(request.headers, size)[0]
+        offset = bytes.begin
+        length = bytes.end - bytes.begin
+      end
+      response.header["Accept-Ranges"] = "bytes"
+      response.header["Content-Range"] = "bytes #{bytes.begin}-#{bytes.end}/#{size}" if bytes
+
+      send_data IO.binread(path, length, offset), options
+    else
+      raise ActionController::MissingFile, "Cannot read file #{path}."
+    end
   end
 
 end

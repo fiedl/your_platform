@@ -4,10 +4,12 @@ class UserAccountMailer < BaseMailer
     @password = password
     @mr_or_mrs = @user.female? ? t(:mrs) : t(:mr)
 
+    @subject = I18n.t :welcome_to_app_name, app_name: AppVersion.app_name
+
     to = "#{@user.title} <#{@user.email}>"
 
     I18n.with_locale(@user.locale) do
-      mail to: [to], subject: t(:welcome_to_the_new_intranet_platform)
+      mail to: [to], subject: @subject
     end
 
   end

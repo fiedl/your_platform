@@ -1,16 +1,17 @@
-- # locals: 
+- # locals:
 - #   - attachments
 - #   - inline         suppress separate box if true
 - #
 - attachments ||= []
 - inline ||= false
 - hide_description ||= false
+- thumbnails = (attachments.count > 6) if thumbnails.nil?
 
 - if not inline
   %h1.pictures= t :pictures
 .pictures
-  .galleria{data: {theme_js_path: asset_path('galleria-classic.js')}}
-    - for attachment in attachments
+  = galleria theme: 'classic' do
+    - attachments.each do |attachment|
       = render partial: 'attachments/picture', locals: { attachment: attachment }
   - unless hide_description
     .picture-info
@@ -18,3 +19,6 @@
         = attachments.first.title
       .picture-description
         = attachments.first.description
+
+  - if thumbnails
+    = render partial: 'attachments/image_thumbnails', locals: {attachments: attachments}

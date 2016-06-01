@@ -2,6 +2,8 @@ concern :CurrentLayout do
 
   included do
     layout :current_layout
+
+    helper_method :current_logo_url
   end
 
   def current_layout
@@ -23,6 +25,11 @@ concern :CurrentLayout do
 
   def permitted_layouts
     %w(bootstrap minimal compact iweb)
+  end
+
+  def current_logo_url
+    #current_navable.nav_node.breadcrumb_root
+    Attachment.logos.first.try(:file).try(:url)
   end
 
 end

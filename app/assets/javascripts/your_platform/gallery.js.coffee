@@ -37,7 +37,8 @@ class App.Gallery
     #autoplay: 9000,
     popupLinks: false,
     trueFullscreen: false,
-    #carousel: false,
+    carousel: false,
+    thumbnails: false,
     #swipe: 'auto',
     responsive: true,
     #height: 0.625, # 16:10
@@ -92,9 +93,9 @@ class App.Gallery
         if self.root_element.hasClass('deactivate-auto-lightbox')
           self.galleria_instance.setOptions 'lightbox', false
 
-        # self.hide_thumbs_if_only_one_image()
+        self.hide_thumbs_or_slideshow()
         self.hide_errors_container()
-        # self.bind_fullscreen_events()
+        self.bind_fullscreen_events()
 
   has_unique_id: ->
     (@root_element.attr('id') || "").indexOf('ui-id') > -1
@@ -135,16 +136,15 @@ class App.Gallery
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
 
-  # # Hide thumbnail collections with less than 2 elements,
-  # # since they only confuse people there.
-  # #
-  # hide_thumbs_if_only_one_image: ->
-  #   if @find('.galleria-thumbnails .galleria-image').size() < 2
-  #     @find('.galleria-thumbnails').hide()
-  #     @find('.galleria-stage').css('bottom', '10px')
-  #     @find('.galleria-container').height (index, height)-> height - 50
-  #   else
-  #     @find('.galleria-thumbnails').show()
+  # Hide thumbnail collections. Thumbnails are handled by YourPlatform
+  # separately.
+  #
+  # See: app/view/attachments/_image_thumbnails.html.haml
+  #
+  hide_thumbs_or_slideshow: ->
+    @find('.galleria-thumbnails').hide()
+    @find('.galleria-stage').css('bottom', '10px')
+    @find('.galleria-container').height (index, height)-> height - 50
 
   # Do not show galleria errors. These are not useful
   # in production.
@@ -153,7 +153,13 @@ class App.Gallery
     $('.galleria-errors').hide()
 
   bind_fullscreen_events: ->
-    # self = this
+    self = this
+
+    # Clicking on the thumbnail activates the lightbox.
+    #
+    @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
+      self.open_lightbox()
+
     # # Clicking on an gallery image switches to fullscreen mode,
     # # i.e. covers the full browser window.
     # #
@@ -213,3 +219,13 @@ class App.Gallery
 
   leave_fullscreen_mode: ->
     @galleria_instance.exitFullscreen()
+
+  show: (image_big_url)->
+    image_url = image_big_url
+    slides = @galleria_instance._data
+    slide_to_show = slides.filter((slide) -> image_url.indexOf(slide.big) > -1).first()
+    if slide_to_show
+      slide_index = slides.indexOf(slide_to_show)
+      @galleria_instance.setOptions('transition', 'fade')
+      @galleria_instance.show(slide_index)
+

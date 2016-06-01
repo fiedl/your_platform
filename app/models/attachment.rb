@@ -3,12 +3,14 @@ class Attachment < ActiveRecord::Base
 
   belongs_to :parent, polymorphic: true
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
-  
+
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes
   before_create :set_default_title_if_empty
   before_destroy :remove_file!
+
+  scope :logos, -> { where('title like ?', "%logo%") }
 
   def thumb_url
     url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
@@ -16,7 +18,7 @@ class Attachment < ActiveRecord::Base
     url = helpers.image_path( 'file.png' ) unless url
     return url
   end
-  
+
   def medium_url
     file.url(:medium) if has_type? 'image'
   end
@@ -28,10 +30,10 @@ class Attachment < ActiveRecord::Base
     self.content_type.include? type
   end
 
-  def filename 
+  def filename
     self.file.to_s.split( "/" ).last if self.file
   end
-  
+
   def file_url
     AppVersion.root_url + file.url if file.url.present?
   end
@@ -39,9 +41,13 @@ class Attachment < ActiveRecord::Base
   def file_size_human
     helpers.number_to_human_size( self.file_size )
   end
-  
+
   def image?
     self.content_type.include? 'image'
+  end
+
+  def video?
+    self.content_type.include? 'video'
   end
 
   def self.find_by_type( type )

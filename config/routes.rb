@@ -97,6 +97,7 @@ Rails.application.routes.draw do
 
   namespace :activities do
     get :exports, to: 'exports#index'
+    #get :addresses, to: 'addresses#index'
   end
   resources :activities
 
