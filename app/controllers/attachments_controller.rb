@@ -64,8 +64,7 @@ class AttachmentsController < ApplicationController
       path = @attachment.file.current_path
     end
     send_file path, x_sendfile: true, disposition: :inline,
-      stream: (@attachment.video?), range: (@attachment.video?),
-      type: @attachment.content_type
+      range: (@attachment.video?), type: @attachment.content_type
   end
 
   # This returns a json object with description information of the
