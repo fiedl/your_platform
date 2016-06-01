@@ -46,6 +46,10 @@ class Attachment < ActiveRecord::Base
     self.content_type.include? 'image'
   end
 
+  def video?
+    self.content_type.include? 'video'
+  end
+
   def self.find_by_type( type )
     where( "content_type like ?", "%" + type + "%" )
   end
