@@ -2,7 +2,10 @@
 # relevant to the position of the Navable object within the navigational structure.
 #
 class NavNode < ActiveRecord::Base
-  attr_accessible :breadcrumb_item, :hidden_menu, :menu_item, :slim_breadcrumb, :slim_menu, :slim_url, :url_component if defined? attr_accessible
+  attr_accessible :breadcrumb_item, :slim_breadcrumb,
+    :hidden_menu, :menu_item, :slim_menu,
+    :slim_url, :url_component,
+    :hidden_teaser_box
 
   belongs_to :navable, polymorphic: true
 
@@ -70,6 +73,17 @@ class NavNode < ActiveRecord::Base
     hidden = true if self.navable.kind_of?(Page) && (self.navable.type == "BlogPost")
     hidden = false if hidden.nil?
     return hidden
+  end
+
+  def show_in_menu
+    not hidden_menu
+  end
+  def show_in_menu=(new_value)
+    self.hidden_menu = (not new_value)
+  end
+
+  def hidden_teaser_box
+    super || false
   end
 
   # +slim_breadcrumbs+ marks if the Navable should be hidden from the breadcrumb navigation

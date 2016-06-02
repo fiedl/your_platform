@@ -9,10 +9,13 @@
 
 module Navable
   def is_navable
-    has_one                :nav_node, as: :navable, dependent: :destroy, autosave: true
+    has_one :nav_node, as: :navable, dependent: :destroy, autosave: true
 
     accepts_nested_attributes_for :nav_node
     attr_accessible :nav_node_attributes
+
+    #delegate :show_in_menu, :show_in_menu=, to: :nav_node
+    #attr_accessible :show_in_menu
 
     include InstanceMethodsForNavables
   end
@@ -26,9 +29,7 @@ module Navable
     end
 
     def nav_node
-      node = super
-      node = build_nav_node unless node
-      return node
+      @nav_node ||= (super || build_nav_node)
     end
 
     def navnode
@@ -44,10 +45,14 @@ module Navable
     #
     def navable_children
       (respond_to?(:child_groups) ? child_groups : []) +
-      (respond_to?(:child_pages) ? child_pages : [])
+      (respond_to?(:child_pages) ? child_pages.where.not(id: nil) : [])
     end
 
-    private
+    def build_nav_node(*args)
+      n = super(*args)
+      n.navable = self
+      return n
+    end
 
   end
 end

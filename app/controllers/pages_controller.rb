@@ -30,6 +30,14 @@ class PagesController < ApplicationController
 
       @blog_entries = @page.blog_entries.for_display
 
+      if @page.settings.show_events_box_for_group
+        @events = Group.find(@page.settings.show_events_box_for_group).events
+        @events = @events.where(publish_on_global_website: true) if @page.settings.show_only_events_published_on_global_website
+        @events = @events.where(published_on_local_website: true) if @page.settings.show_only_events_published_on_local_website
+        @events = @events.upcoming.order('events.start_at, events.created_at').limit(5)
+        @events = @events.select { |event| current_ability.can? :read, event }
+      end
+
       set_current_title @page.title
       set_current_navable @page
       set_current_activity :looks_up_information, @page
@@ -66,6 +74,7 @@ class PagesController < ApplicationController
     params[:page][:title] ||= I18n.t(:new_page)
     params[:page][:author_user_id] ||= current_user.id
     @new_page = @association.create!(page_params)
+
     redirect_to @new_page
   end
 
@@ -87,12 +96,22 @@ private
     params[:page] ||= params[:blog_post]
 
     params[:page] ||= {}
-    params[:page][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
+    params[:page][:archived] ||= params[:archived]
+    params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
+    if params[:show_in_menu] == "false" or params[:type] == "hidden"
+      params[:page][:nav_node_attributes] ||= {}
+      params[:page][:nav_node_attributes][:hidden_menu] = true
+    end
+    if params[:show_as_teaser_box] == "false" or params[:type] == "hidden"
+      params[:page][:nav_node_attributes] ||= {}
+      params[:page][:nav_node_attributes][:hidden_teaser_box] = true
+    end
 
     permitted_keys = []
-    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, @page
+    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
     permitted_keys += [:type, :author_user_id, :archived] if can? :manage, @page
     permitted_keys += [:title, :content, :type, :author_user_id] if @page.new_record? and can? :create_page_for, secure_parent
+    permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
 
     params.require(:page).permit(*permitted_keys)
   end

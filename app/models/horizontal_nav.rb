@@ -27,7 +27,11 @@ class HorizontalNav
   end
 
   def public_navables
-    [breadcrumb_root] + breadcrumb_root.child_pages
+    if breadcrumb_root
+      [breadcrumb_root] + breadcrumb_root.child_pages
+    else
+      []
+    end
     # [ Page.find_root ] + Page.find_root.child_pages.where(type: [nil, 'Page']) - [ Page.find_intranet_root, Page.find_imprint ] - Page.flagged(:public_root_element)
   end
 
@@ -40,7 +44,7 @@ class HorizontalNav
   end
 
   def breadcrumb_root
-    @breadcrumb_root ||= current_navable.nav_node.breadcrumb_root
+    @breadcrumb_root ||= current_navable.try(:nav_node).try(:breadcrumb_root)
   end
 
   def logged_in?

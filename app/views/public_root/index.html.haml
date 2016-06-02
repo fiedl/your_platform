@@ -19,38 +19,5 @@
   - @teaser_box_pages.each do |page|
     .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: page, teaser_box: true}
 
-- if can? :create_page_for, @page
-  .row
-    .col.col-sm-3
-      .box.add_teaser_box
-        %a.btn.btn-default{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
-          = icon :plusw
-          Neuer Inhalt ...
-
-  #new_page_modal.modal.fade
-    = form_for @new_page do |f|
-      .modal-dialog
-        .modal-content
-          %div.modal-header
-            %a.close{href: '#', data: {dismiss: 'modal'}, 'aria-label' => 'Close'}
-              %span{'aria-hidden' => true} &times;
-            %h4 Neuer Inhalt
-          %div.modal-body
-            = hidden_field_tag :parent_id, @page.id
-            %p
-              Hierdurch wird ein neuer Inhalt auf der Seite
-              = @page.title
-              erstellt.
-            %table
-              %tr
-                %td Überschrift
-                %td= f.text_field :title
-              %tr
-                %td Optionen
-                %td
-                  = label_tag :show_in_menu do
-                    = check_box_tag :show_in_menu
-                    im horizontalen Navigationsmenü anzeigen
-          %div.modal-footer
-            %a.btn.btn-default{href: '#', data: {dismiss: 'modal'}}= t :cancel
-            = f.submit t(:confirm), class: 'btn btn-primary'
+.row
+  = render partial: 'pages/new_page_button', locals: {parent_page: @page}

@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to, :author, :author_user_id, :box_configuration if defined? attr_accessible
+  attr_accessible        :content, :title, :redirect_to, :author, :author_user_id, :box_configuration, :type if defined? attr_accessible
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
   is_navable
@@ -49,7 +49,19 @@ class Page < ActiveRecord::Base
     title
   end
 
-
+  def child_teaser_boxes
+    teaser_boxes
+  end
+  def teaser_boxes
+    # # For some reason, this does not work: FIXME
+    # child_pages
+    #   .where.not(type: 'BlogPost')
+    #   .where.not(nav_nodes: {hidden_teaser_box: true})
+    #
+    child_pages
+      .select { |page| not page.type == 'BlogPost'}
+      .select { |page| not page.nav_node.hidden_teaser_box }
+  end
   def teaser_text
     if content
       teaser_content = content.split("\n\n").first

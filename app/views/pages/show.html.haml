@@ -1,27 +1,30 @@
-%div.col-md-12
-  = render @page
+= render partial: 'pages/home_pages/home_page', locals: {home_page: @page}
 
-- # officers
-- # We show the officers box only if there are any officers groups, since this is used only for special pages
-- # at the moment. Most global admins won't assign officers to pages.
-- #
-- if @page.find_officers_groups.any?
-  = render partial: 'officers/officers_box', locals: {structureable: @page}
 
-%div.col3
-
-  - if can?(:create_page_for, @page)
-    - # No nested blog posts!
-    - # The user might suspect to create a sibling, but really would create a nested blog post.
-    - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
-    - #
-    - if (Page.find(@page.id).type != 'BlogPost')  
-      %div.blog_tools.box
-        = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success add_blog_post", :method => :post, :remote => :true do
-          = icon :plus
-          = I18n.t(:add_blog_entry)
-  
-  #blog_entries
-    - if @blog_entries.count > 0
-      - for blog_entry_page in @blog_entries
-        = render partial: 'pages/page', object: blog_entry_page
+-#%div.col-md-12
+-#  = render @page
+-#
+-#- # officers
+-#- # We show the officers box only if there are any officers groups, since this is used only for special pages
+-#- # at the moment. Most global admins won't assign officers to pages.
+-#- #
+-#- if @page.find_officers_groups.any?
+-#  = render partial: 'officers/officers_box', locals: {structureable: @page}
+-#
+-#%div.col3
+-#
+-#  -# - if can?(:create_page_for, @page)
+-#  -#   - # No nested blog posts!
+-#  -#   - # The user might suspect to create a sibling, but really would create a nested blog post.
+-#  -#   - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
+-#  -#   - #
+-#  -#   - if (Page.find(@page.id).type != 'BlogPost')
+-#  -#     %div.blog_tools.box
+-#  -#       = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success add_blog_post", :method => :post, :remote => :true do
+-#  -#         = icon :plus
+-#  -#         = I18n.t(:add_blog_entry)
+-#
+-#  #blog_entries
+-#    - if @blog_entries.count > 0
+-#      - for blog_entry_page in @blog_entries
+-#        = render partial: 'pages/page', object: blog_entry_page

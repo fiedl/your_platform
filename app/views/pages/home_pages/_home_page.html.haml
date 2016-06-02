@@ -1,5 +1,27 @@
 = draggable_boxes_row(home_page) do
+
+  - if home_page.settings.show_corporation_map
+    .col.col-sm-6.col-xs-12
+      %h1#corporations-map-box= t(:corporation_map_title)
+      %div
+        = render partial: 'shared/corporation_map'
+
+  - if @events
+    .col.col-sm-3.public_root_events
+      %h1#public-root-events-box
+        = t(:events)
+      %div
+        = render partial: 'events/events_lis', locals: {events: @events, show_location_rather_than_group: true}
+
   .col-sm-9.col-xs-12.resizable_col
     = render partial: 'pages/page', locals: {page: home_page}
-  - home_page.child_pages.each do |page|
+  - home_page.teaser_boxes.each do |page|
     .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: page, teaser_box: true}
+
+.row
+  = render partial: 'pages/new_page_button', locals: {parent_page: home_page}
+
+.row#blog_entries
+  - if home_page.blog_entries.count > 0
+    - home_page.blog_entries.each do |blog_entry|
+      = render partial: 'pages/page', object: blog_entry

@@ -40,4 +40,8 @@ module IconHelper
     icon 'list-alt'
   end
 
+  def help_icon
+    icon 'question-sign'
+  end
+
 end
