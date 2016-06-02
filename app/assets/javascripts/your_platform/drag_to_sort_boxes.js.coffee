@@ -67,11 +67,18 @@ $(document).ready ->
   $('.draggable_boxes .resizable_col .box').each ->
     $(this).append("<span class='resize_handle'></span>")
 
-  $.each box_configuration, (index, configuration) ->
-    box = $("##{configuration.id}.box")
-    col = box.closest('.col, .resizable_col')
-    row = box.closest('.row')
-    row.append(col)
-    col.removeClass "col-sm-3 col-sm-6 col-sm-9"
-    col.addClass configuration.class
-    col.show('fade')
+  # Loop through box configuration in reverse in order to have new
+  # boxes appear at the end rather at the top.
+  #
+  if box_configuration
+    i = Object.keys(box_configuration).length
+    while i > 0
+      i--
+      configuration = box_configuration[i]
+      box = $("##{configuration.id}.box")
+      col = box.closest('.col, .resizable_col')
+      row = box.closest('.row')
+      row.prepend(col)
+      col.removeClass "col-sm-3 col-sm-6 col-sm-9"
+      col.addClass configuration.class
+      col.show('fade')
