@@ -84,6 +84,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   s.add_dependency 'auto_html', '~> 1.6.4'
+  s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '~> 4.3.0'
@@ -93,6 +94,7 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
+  s.add_dependency 'rails-assets-wysihtml5x'
 
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License

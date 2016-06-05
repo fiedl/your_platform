@@ -33,8 +33,11 @@
       - if teaser_box
         = markup page.teaser_text
       - else
-        %div{ id: 'page_content', data: { mercury: 'full' } }
-          = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
+        = render partial: 'shared/wysiwyg_toolbar'
+        %div{id: 'page_content', class: ("wysiwyg editable" if can?(:update, page)), data: {url: page_path(page)}}
+          = markup page.content
+
+          -#= best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
         .show_only_in_edit_mode
           = render partial: 'shared/markdown_help'
 

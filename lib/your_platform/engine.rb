@@ -36,6 +36,7 @@ require 'haml'
 require 'redcarpet'
 require 'gemoji'
 require 'auto_html'
+require 'reverse_markdown'
 
 # JavaScript
 require 'rails-assets-jquery-ujs'
@@ -56,6 +57,7 @@ require 'sass-rails'
 
 # In Place Editing
 require 'best_in_place'
+require 'rails-assets-wysihtml5x'
 
 # Geo Coding
 require 'geocoder'
