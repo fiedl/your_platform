@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
   has_many                  :comments, foreign_key: 'author_user_id', class_name: 'Comment'
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
-  is_navable
+  include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested

@@ -24,13 +24,13 @@ class Group < ActiveRecord::Base
 
   is_structureable(ancestor_class_names: %w(Group Page Event),
                    descendant_class_names: %w(Group User Page Workflow Event Project))
-  is_navable
   has_profile_fields
 
   has_many :posts
 
   default_scope { includes(:flags) }
 
+  include Navable
   include GroupMixins::Memberships
   include GroupMixins::Everyone
   include GroupMixins::Corporations

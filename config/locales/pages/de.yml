@@ -8,7 +8,7 @@ de:
   add_attachment: 'Anhang hinzufügen'
 
   destroy_page_again: Eintrag wieder löschen
-  a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde.'
+  a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde. Danach kann er nur noch archiviert werden, um ihn auszublenden, aber in der Datenbank zu belassen.'
   destroying_page: Inhalt wird gelöscht.
   please_wait: Bitte warten.
 
@@ -28,6 +28,11 @@ de:
   for_example_for_special_pages_like_the_imprint: Die neue Seite wird weder im Menü noch auf der übergeordneten Seite angezeigt. Man gelangt also nur durch einen händisch erzeugten Verweis auf diese Seite. Dies ist z.B. für Spezialseiten wie das Impressum die richtige Wahl.
   the_page_options_may_be_changed_later_on_the_page_settings_page: Die Optionen können später auf der Einstellungsseite des Inhalts verändert werden.
   decision_help: Entscheidungshilfe
+
+  page_settings: Seiten-Einstellungen
+  destroy_page_permanently: Seite unwiderruflich löschen
+  archive_page: Seite archivieren
+  unarchive_page: Seite wiederherstellen
 
   file: 'Datei'
   helpers:

@@ -2,9 +2,10 @@ class Event < ActiveRecord::Base
   attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website if defined? attr_accessible
 
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
-  is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
+
+  include Navable
 
 
   # General Properties

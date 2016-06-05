@@ -44,4 +44,8 @@ module IconHelper
     icon 'question-sign'
   end
 
+  def settings_icon
+    icon 'cog'
+  end
+
 end

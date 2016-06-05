@@ -1,14 +1,9 @@
-# -*- coding: utf-8 -*-
+# A navable object has a menu, breadcrumbs etc.
+# Special settings (like hiding a navable from the menu) are determined by the `nav_node`.
 #
-# This module provides the +is_navable+ method for ActiveRecord::Base.
-# Calling this method marks the model (User, Page, ...) as navable, i.e. has menu, breadcrumbs, etc.
-#
-# The inclusion in ActiveRecord::Base is done in
-# config/initializers/active_record_navable_extension.rb.
-#
+concern :Navable do
+  included do
 
-module Navable
-  def is_navable
     has_one :nav_node, as: :navable, dependent: :destroy, autosave: true
 
     accepts_nested_attributes_for :nav_node
@@ -17,9 +12,12 @@ module Navable
     #delegate :show_in_menu, :show_in_menu=, to: :nav_node
     #attr_accessible :show_in_menu
 
-    include InstanceMethodsForNavables
-  end
-  module InstanceMethodsForNavables
+    delegate :hidden_menu, :hidden_menu=,
+      :slim_menu, :slim_menu=,
+      :slim_breadcrumb, :slim_breadcrumb=,
+      to: :nav_node
+    attr_accessible :hidden_menu, :slim_menu, :slim_breadcrumb
+
     def is_navable?
       true
     end

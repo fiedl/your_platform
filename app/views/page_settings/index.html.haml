@@ -15,22 +15,44 @@
     %tr
       %th Weiterleitung nach
       %td= best_in_place @page, :redirect_to
+    %tr
+      %th= t :created_at
+      %td= localize @page.created_at
+    %tr
+      %th= t :updated_at
+      %td= localize @page.updated_at
 
   = render partial: 'shared/nav_node_settings', locals: {navable: @page}
 
-  %h2 Löschen
-  %a.btn.btn-info{href: '#'}
-    %table.settings
-      %tr
-        %th Seite archivieren
-        %td= archive_button @page
-
 = render partial: 'officers/officers_box', locals: {structureable: @page}
 
+%h1 Besondere Inhalte
+%div
+  Bei Bedarf können auf der Seite
+  = @page.title
+  zusätzliche Boxen angezeigt werden:
 
+  %table.settings
+    %tr
+      %th Karte der Standorte
+      %td
+        = ajax_check_box @page, :show_corporation_map, "Karte der Standorte anzeigen"
+        Welche Gruppe?
+    %tr
+      %th Veranstaltungen
+      %td
+        %p settings.show_events_box_for_group
+        %p settings.show_only_events_published_on_global_website
+        %p settings.show_only_events_published_on_local_website
 
-Weitere Einstellungen:
-settings.show_corporation_map
-settings.show_events_box_for_group
-settings.show_only_events_published_on_global_website
-settings.show_only_events_published_on_local_website
+%h1.danger_zone Danger Zone™
+%div
+  %p= t :a_new_page_can_be_destroyed_within_ten_minutes
+  %p= destroy_page_button @page, t(:destroy_page_permanently)
+  %p
+    = archived_label @page
+    - if @page.archived?
+      = archive_button @page, t(:unarchive_page)
+    - else
+      = archive_button @page, t(:archive_page)
+

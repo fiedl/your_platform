@@ -59,6 +59,10 @@ class PagesController < ApplicationController
   end
 
   def update
+    if page_params[:content].include? "<br>" or page_params[:content].include? "<p>"
+      params[:page][:content] = ReverseMarkdown.convert params[:page][:content]
+    end
+
     @page.update_attributes page_params
     respond_with_bip(@page)
   end
@@ -106,12 +110,16 @@ private
       params[:page][:nav_node_attributes] ||= {}
       params[:page][:nav_node_attributes][:hidden_teaser_box] = true
     end
+    params[:page][:show_corporation_map] = false if params[:page][:show_corporation_map].in? ["0", "false"]
+    params[:page][:show_corporation_map] = true if params[:page][:show_corporation_map] == "true"
 
     permitted_keys = []
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
     permitted_keys += [:type, :author_user_id, :archived] if can? :manage, @page
     permitted_keys += [:title, :content, :type, :author_user_id] if @page.new_record? and can? :create_page_for, secure_parent
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
+    permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb] if can? :manage, @page
+    permitted_keys += [:show_corporation_map] if can? :manage, @page
 
     params.require(:page).permit(*permitted_keys)
   end

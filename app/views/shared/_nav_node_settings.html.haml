@@ -5,14 +5,14 @@
 %h2 Navigation
 %table.settings
   %tr
-    %th Im Menü verstecken
-    %td= best_in_place nav_node, :hidden_menu
+    %th Menü-Optionen
+    %td
+      = ajax_check_box navable, :hidden_menu, "Im Menü verstecken"
+      = ajax_check_box navable, :slim_menu, "Im Menü ausblenden, um Platz zu sparen"
   %tr
-    %th Im Menü ausblenden, wenn unnötig
-    %td= best_in_place nav_node, :slim_menu
-  %tr
-    %th In den Breadcrumbs ausblenden, wenn unnötig
-    %td= best_in_place nav_node, :slim_breadcrumb, as: :checkbox
+    %th Breadcrumb-Optionen
+    %td
+      = ajax_check_box navable, :slim_breadcrumb, "In Breadcrumbs ausblenden, um Platz zu sparen"
   %tr
     %th Abweichende Beschriftung im Menü
     %td= best_in_place nav_node, :menu_item

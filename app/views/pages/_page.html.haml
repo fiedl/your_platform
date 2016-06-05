@@ -13,9 +13,7 @@
     - if can? :manage, page
       .activities_tool.tool.do_not_show_in_edit_mode
         = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
-    - if can? :destroy, page
-      .delete_page_tool.tool
-        = link_to icon(:trash), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_page', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
+    .delete_page_tool.tool= destroy_page_button(page)
     .archive_tools.tool
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)

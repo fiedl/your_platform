@@ -3,7 +3,6 @@ class Page < ActiveRecord::Base
   attr_accessible        :content, :title, :redirect_to, :author, :author_user_id, :box_configuration, :type if defined? attr_accessible
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
-  is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
 
@@ -12,6 +11,7 @@ class Page < ActiveRecord::Base
   serialize :redirect_to
   serialize :box_configuration
 
+  include Navable
   include PagePublicWebsite
   include Archivable
 
@@ -27,6 +27,9 @@ class Page < ActiveRecord::Base
   #     page.settings.color  # =>  :red
   #
   include RailsSettings::Extend
+  delegate :show_corporation_map, :show_corporation_map=,
+    to: :settings
+  attr_accessible :show_corporation_map
 
 
   def not_empty?
