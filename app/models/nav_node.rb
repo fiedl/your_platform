@@ -9,6 +9,13 @@ class NavNode < ActiveRecord::Base
 
   belongs_to :navable, polymorphic: true
 
+  after_save :delete_cache
+
+  def delete_cache
+    super
+    Rails.cache.delete_matched '*horizontal_nav*' if @hidden_menu_has_changed
+  end
+
   # The +url_component+ represents the part of the url, which is contributed by
   # the Navable object.
   #
@@ -74,7 +81,14 @@ class NavNode < ActiveRecord::Base
     hidden = false if hidden.nil?
     return hidden
   end
+  def hidden_menu=(new_value)
+    @hidden_menu_has_changed = true
+    super(new_value)
+  end
 
+  def show_in_menu?
+    show_in_menu
+  end
   def show_in_menu
     not hidden_menu
   end
@@ -85,6 +99,17 @@ class NavNode < ActiveRecord::Base
   def hidden_teaser_box
     super || false
   end
+
+  def show_as_teaser_box?
+    show_as_teaser_box
+  end
+  def show_as_teaser_box
+    not hidden_teaser_box
+  end
+  def show_as_teaser_box=(new_value)
+    self.hidden_teaser_box = (not new_value)
+  end
+
 
   # +slim_breadcrumbs+ marks if the Navable should be hidden from the breadcrumb navigation
   # in order to save space.

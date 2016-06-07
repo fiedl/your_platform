@@ -19,7 +19,7 @@ class HorizontalNav
       intranet_navables
     else
       public_navables
-    end
+    end.select { |navable| navable.show_in_menu? }
   end
 
   def intranet_navables
@@ -28,7 +28,7 @@ class HorizontalNav
 
   def public_navables
     if breadcrumb_root
-      [breadcrumb_root] + breadcrumb_root.child_pages
+      [breadcrumb_root] + breadcrumb_root.horizontal_nav_child_pages
     else
       []
     end

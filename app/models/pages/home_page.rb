@@ -43,6 +43,12 @@ class Pages::HomePage < Page
     true
   end
 
+  # These child pages are shown in the horizontal nav.
+  #
+  def horizontal_nav_child_pages
+    self.child_pages.select { |p| p.show_in_menu? }
+  end
+
   # To save us from managing separate routes and controllers for this
   # subclass, override the model name.
   #

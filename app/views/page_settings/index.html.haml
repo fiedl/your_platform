@@ -24,13 +24,17 @@
 
   = render partial: 'shared/nav_node_settings', locals: {navable: @page}
 
+- if @page.kind_of? Pages::HomePage
+  %h1.home_page_settings Homepage-Einstellungen
+  %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
+
 = render partial: 'officers/officers_box', locals: {structureable: @page}
 
-%h1 Besondere Inhalte
+%h1 Boxen auf dieser Seite
 %div
-  Bei Bedarf können auf der Seite
+  Hier kann ausgewählt werden, welche Inhalte auf der Seite
   = @page.title
-  zusätzliche Boxen angezeigt werden:
+  als Boxen angezeigt werden:
 
   %table.settings
     %tr
@@ -44,6 +48,13 @@
         %p settings.show_events_box_for_group
         %p settings.show_only_events_published_on_global_website
         %p settings.show_only_events_published_on_local_website
+    %tr
+      %th Unterseiten
+      %td
+        - @page.child_pages.each do |teaser_page|
+          %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
+
+
 
 %h1.danger_zone Danger Zone™
 %div

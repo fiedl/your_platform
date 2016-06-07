@@ -102,23 +102,23 @@ private
     params[:page] ||= {}
     params[:page][:archived] ||= params[:archived]
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
-    if params[:show_in_menu] == "false" or params[:type] == "hidden"
-      params[:page][:nav_node_attributes] ||= {}
-      params[:page][:nav_node_attributes][:hidden_menu] = true
-    end
-    if params[:show_as_teaser_box] == "false" or params[:type] == "hidden"
-      params[:page][:nav_node_attributes] ||= {}
-      params[:page][:nav_node_attributes][:hidden_teaser_box] = true
+    if params[:type] == "hidden"
+      params[:page][:show_in_menu] = false
+      params[:page][:show_as_teaser_box] = false
     end
     params[:page][:show_corporation_map] = false if params[:page][:show_corporation_map].in? ["0", "false"]
     params[:page][:show_corporation_map] = true if params[:page][:show_corporation_map] == "true"
+    params[:page][:show_as_teaser_box] = false if params[:page][:show_as_teaser_box].in? ["0", "false"]
+    params[:page][:show_as_teaser_box] = true if params[:page][:show_as_teaser_box] == "true"
+    params[:page][:show_in_menu] = false  if params[:page][:show_in_menu].in? ["0", "false"]
+    params[:page][:show_in_menu] = true if params[:page][:show_in_menu] == "true"
 
     permitted_keys = []
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
     permitted_keys += [:type, :author_user_id, :archived] if can? :manage, @page
     permitted_keys += [:title, :content, :type, :author_user_id] if @page.new_record? and can? :create_page_for, secure_parent
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
-    permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb] if can? :manage, @page
+    permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu] if can? :manage, @page
     permitted_keys += [:show_corporation_map] if can? :manage, @page
 
     params.require(:page).permit(*permitted_keys)

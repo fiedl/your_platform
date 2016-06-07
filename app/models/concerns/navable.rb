@@ -15,8 +15,11 @@ concern :Navable do
     delegate :hidden_menu, :hidden_menu=,
       :slim_menu, :slim_menu=,
       :slim_breadcrumb, :slim_breadcrumb=,
+      :show_in_menu, :show_in_menu?, :show_in_menu=,
+      :show_as_teaser_box, :show_as_teaser_box?, :show_as_teaser_box=,
       to: :nav_node
-    attr_accessible :hidden_menu, :slim_menu, :slim_breadcrumb
+    attr_accessible :hidden_menu, :slim_menu, :slim_breadcrumb,
+      :show_as_teaser_box, :show_in_menu
 
     def is_navable?
       true
