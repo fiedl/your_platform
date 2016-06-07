@@ -121,7 +121,7 @@ class App.Gallery
         self.picture_info_element().find('.remove_button')
           .removeClass('show_only_in_edit_mode')
           .hide()
-        App.adjust_box_heights_for self.closest('.col')
+        App.adjust_box_heights_for self.closest('.col, .resizable_col')
     })
 
   # /attachments/123/filename.png

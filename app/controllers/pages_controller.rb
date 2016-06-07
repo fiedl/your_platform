@@ -59,7 +59,7 @@ class PagesController < ApplicationController
   end
 
   def update
-    if page_params[:content].include? "<br>" or page_params[:content].include? "<p>"
+    if page_params[:content] && (page_params[:content].include?("<br>") || page_params[:content].include?("<p>"))
       params[:page][:content] = ReverseMarkdown.convert params[:page][:content]
     end
 

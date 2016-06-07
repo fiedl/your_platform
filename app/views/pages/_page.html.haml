@@ -10,13 +10,14 @@
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-    - if can? :manage, page
-      .activities_tool.tool.do_not_show_in_edit_mode
-        = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
-    .delete_page_tool.tool= destroy_page_button(page)
-    .archive_tools.tool
-      = archived_label(page)
-      = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
+    - if not teaser_box
+      - if can? :manage, page
+        .activities_tool.tool.do_not_show_in_edit_mode
+          = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
+      .delete_page_tool.tool= destroy_page_button(page)
+      .archive_tools.tool
+        = archived_label(page)
+        = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
   %div.page{class: page_class}
     - if @navable != page and not @navable.in?(page.parents) and page.parents.first
       .page_header

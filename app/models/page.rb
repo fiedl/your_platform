@@ -64,6 +64,7 @@ class Page < ActiveRecord::Base
     child_pages
       .select { |page| not page.type == 'BlogPost'}
       .select { |page| not page.nav_node.hidden_teaser_box }
+      .select { |page| not page.new_record? }
   end
   def teaser_text
     if content
