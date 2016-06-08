@@ -47,18 +47,28 @@ $(document).ready ->
     resize: (event, ui)->
       ui.size.height = ui.originalSize.height
     stop: (event, ui)->
-      if ui.size.width < 300
+      row_width = $(this).closest('.row').width()
+      column_width = row_width / 4
+      if ui.size.width < column_width
         $(this).addClass('col-sm-3')
         $(this).removeClass('col-sm-6')
         $(this).removeClass('col-sm-9')
-      if ui.size.width > 300 and ui.size.width < 600
+        $(this).removeClass('col-sm-12')
+      if ui.size.width > column_width and ui.size.width < column_width * 2
         $(this).addClass('col-sm-6')
         $(this).removeClass('col-sm-3')
         $(this).removeClass('col-sm-9')
-      if ui.size.width > 600
+        $(this).removeClass('col-sm-12')
+      if ui.size.width > column_width * 2 and ui.size.width < column_width * 3
         $(this).addClass('col-sm-9')
         $(this).removeClass('col-sm-3')
         $(this).removeClass('col-sm-6')
+        $(this).removeClass('col-sm-12')
+      if ui.size.width > column_width * 3
+        $(this).addClass('col-sm-12')
+        $(this).removeClass('col-sm-3')
+        $(this).removeClass('col-sm-6')
+        $(this).removeClass('col-sm-9')
       $(this).css 'width', ''
       save_box_configuration()
       App.adjust_box_heights()
@@ -79,6 +89,6 @@ $(document).ready ->
       col = box.closest('.col, .resizable_col')
       row = box.closest('.row')
       row.prepend(col)
-      col.removeClass "col-sm-3 col-sm-6 col-sm-9"
+      col.removeClass "col-sm-3 col-sm-6 col-sm-9 col-sm-12"
       col.addClass configuration.class
       col.show('fade')
