@@ -13,4 +13,18 @@ module LogoHelper
     @logo_url
   end
 
+  def logo
+    if current_navable
+      link_to current_navable.home_page do
+        image_tag logo_url
+      end
+    else
+      image_tag logo_url
+    end
+  end
+
+  def current_logo
+    logo
+  end
+
 end

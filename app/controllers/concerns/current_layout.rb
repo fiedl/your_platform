@@ -7,10 +7,10 @@ concern :CurrentLayout do
   end
 
   def current_layout
-    layout = (permitted_layouts & [layout_setting]).first
+    #layout = (permitted_layouts & [layout_setting]).first
     layout ||= current_navable.layout if current_navable.respond_to? :layout
     layout ||= "bootstrap"
-    return layout
+    return (permitted_layouts & [layout]).first
   end
 
   def layout_setting

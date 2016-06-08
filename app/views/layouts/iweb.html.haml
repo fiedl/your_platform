@@ -18,7 +18,15 @@
         #category_indicator
           %ul.nav.navbar-nav#horizontal_nav= horizontal_nav_lis
       #header.row
-        = image_tag 'iweb_header.png'
+        #home_page_title.col-xs-12.col-sm-8
+          .home_page_title
+            = best_in_place_if can?(:manage, current_home_page), current_home_page, :home_page_title
+            -#%div{id: 'page_current_home_page', class: ("wysiwyg editable" if can?(:manage, current_home_page)), data: {url: page_path(current_home_page)}}
+            -#  = current_home_page.home_page_title
+          .home_page_sub_title= best_in_place_if can?(:manage, current_home_page), current_home_page, :home_page_sub_title
+        #logo.col-xs-12.col-sm-4= current_logo
+
+
       .row
         = flash_area
       .row

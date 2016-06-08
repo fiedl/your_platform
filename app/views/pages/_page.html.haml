@@ -40,10 +40,10 @@
         .show_only_in_edit_mode
           = render partial: 'shared/markdown_help'
 
-    -#- unless teaser_box
-    -#  - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
-    -#    .hidden-print.show_only_in_edit_mode
-    -#      = render partial: 'attachments/drop_field', locals: {parent: page}
+    - unless teaser_box
+      - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
+        .hidden-print.show_only_in_edit_mode
+          #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
     - unless teaser_box
       .page_footer.do_not_show_in_edit_mode

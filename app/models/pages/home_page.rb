@@ -4,7 +4,12 @@
 #
 class Pages::HomePage < Page
 
-  delegate :layout, :layout=, to: :settings
+  delegate :layout, :layout=,
+    :home_page_title, :home_page_title=,
+    :home_page_sub_title, :home_page_sub_title=,
+    to: :settings
+  attr_accessible :layout,
+    :home_page_title, :home_page_sub_title
 
   # The home page can be associated with a group
   # that is represented by that homepage, for example

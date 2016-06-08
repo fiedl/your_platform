@@ -24,16 +24,40 @@ body.iweb-layout
         color: #463C3C
         font-weight: bold
   #header
+    padding-top: 10px
     > img
       width: 100%
+    #logo
+      text-align: center
+    #home_page_title
+      text-align: center
+      font-family: 'Garamond-Bold', 'Garamond', serif
+      font-weight: 700
+      font-size: 30px
+      color: rgb(167, 167, 167)
+      .home_page_sub_title
+        font-size: 19px
+        font-family: 'Garamond', serif
+        font-weight: normal
+        letter-spacing: 0.24em
+
   .box.first
     border: none
+    .panel-heading h1
+      display: none
   .panel-default
     .panel-heading
       background-color: white
       border-color: white
+      padding-top: 3px
+      padding-bottom: 0px
+    .panel-body
+      padding-top: 2px
     .panel-footer
       background-color: white
       border-color: white
   .page_footer
     display: none
+
+  .galleria-container
+    -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
