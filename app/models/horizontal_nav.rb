@@ -27,7 +27,7 @@ class HorizontalNav
   end
 
   def public_navables
-    if breadcrumb_root
+    if breadcrumb_root.respond_to? :horizontal_nav_child_pages
       [breadcrumb_root] + breadcrumb_root.horizontal_nav_child_pages
     else
       []

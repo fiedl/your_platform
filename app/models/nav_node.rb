@@ -212,5 +212,9 @@ class NavNode < ActiveRecord::Base
     ancestor_nodes + [ self ]
   end
 
+  def cache_key
+    [navable, "nav_node"]
+  end
+
 end
 

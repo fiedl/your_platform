@@ -20,7 +20,7 @@ make_heights_equal = (cols)->
     $(col).data('making-heights-equal', null)
 
 App.adjust_box_heights_for = (this_col) ->
-  unless this_col.data('making-heights-equal')
+  if this_col and $(this_col).size() > 0 and not this_col.data('making-heights-equal')
     if this_col.closest('.row-eq-height')
       cols_to_adjust_height = $(".row-eq-height .col").filter (index)->
         $(this).position().top == this_col.position().top

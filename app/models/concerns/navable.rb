@@ -41,6 +41,24 @@ concern :Navable do
       nav_node
     end
 
+    def home_page
+      nav_node.breadcrumb_root if nav_node.breadcrumb_root.kind_of? Pages::HomePage
+    end
+
+    unless defined? layout
+      def layout
+        home_page.try(:layout)
+      end
+    end
+
+    def show_vertical_nav?
+      if self.respond_to?(:public?) && self.public?
+        (self.type != 'Pages::HomePage') && ((self.navable_children.select(&:show_in_menu?).count > 0) || self.parents.first.try(:show_vertical_nav?))
+      else
+        (self.children.count + self.ancestors.count > 1)
+      end
+    end
+
     # We do not show all kinds of objects in the menu.
     # Therefore select the appropriate items.
     #

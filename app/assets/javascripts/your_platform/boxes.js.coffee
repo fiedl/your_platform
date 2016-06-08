@@ -21,7 +21,8 @@ $(document).ready ->
 $.fn.process_box_tools = ->
   this.find('.box.event .edit_button').hide()
   this.find('.box.event #ics_export').hide()
-  this.find('.archive_tools.tool .archive_button').hide()
+  this.find('.shown_on_edit_button_hover').hide()
+  this.find('.shown_on_box_header_hover').hide()
 
   this.find('.box .panel-title .tool').each ->
     tool = $(this)

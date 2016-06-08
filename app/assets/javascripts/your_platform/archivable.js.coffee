@@ -47,8 +47,3 @@ $(document).on 'click', '.unarchive_button', (e)->
 
   return false
 
-$(document).on 'mouseenter', '.edit_button', ->
-  $(this).closest('.box').find('.archive_tools.tool .archive_button').show('fade')
-
-$(document).on 'mouseleave', '.panel-heading', ->
-  $(this).find('.archive_button').hide('fade')

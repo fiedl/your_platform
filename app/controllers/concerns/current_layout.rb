@@ -9,7 +9,7 @@ concern :CurrentLayout do
   def current_layout
     #layout = (permitted_layouts & [layout_setting]).first
     layout ||= current_navable.layout if current_navable.respond_to? :layout
-    layout ||= "bootstrap"
+    layout ||= default_layout
     return (permitted_layouts & [layout]).first
   end
 
@@ -25,6 +25,10 @@ concern :CurrentLayout do
 
   def permitted_layouts
     %w(bootstrap minimal compact iweb)
+  end
+
+  def default_layout
+    Page.root.try(:layout) || 'bootstrap'
   end
 
   def current_logo_url

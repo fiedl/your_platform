@@ -96,22 +96,26 @@ class PagesController < ApplicationController
 private
 
   def page_params
-    # STI override:
+    # For some tools, like best_in_place, we need to sync up the params of single-table-inherited
+    # models, like blog posts. For example, if `BestInPlace::Utils.object_to_key(blog_post)` returns
+    # "blog_post", `params[:blog_post]` needs to be filled. On the other hand, the operations below
+    # operate on the `params[:page]` hash. I.e. we need both sync directions.
+    #
     params[:page] ||= params[:blog_post]
+    params[:blog_post] ||= params[:page]
 
     params[:page] ||= {}
     params[:page][:archived] ||= params[:archived]
+
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
     if params[:type] == "hidden"
-      params[:page][:show_in_menu] = false
-      params[:page][:show_as_teaser_box] = false
+      params[:show_in_menu] = false
+      params[:show_as_teaser_box] = false
     end
-    params[:page][:show_corporation_map] = false if params[:page][:show_corporation_map].in? ["0", "false"]
-    params[:page][:show_corporation_map] = true if params[:page][:show_corporation_map] == "true"
-    params[:page][:show_as_teaser_box] = false if params[:page][:show_as_teaser_box].in? ["0", "false"]
-    params[:page][:show_as_teaser_box] = true if params[:page][:show_as_teaser_box] == "true"
-    params[:page][:show_in_menu] = false  if params[:page][:show_in_menu].in? ["0", "false"]
-    params[:page][:show_in_menu] = true if params[:page][:show_in_menu] == "true"
+
+    handle_checkbox_param :show_in_menu
+    handle_checkbox_param :show_as_teaser_box
+    handle_checkbox_param :show_corporation_map
 
     permitted_keys = []
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
@@ -123,6 +127,13 @@ private
     permitted_keys += [:show_corporation_map] if can? :manage, @page
 
     params.require(:page).permit(*permitted_keys)
+  end
+
+  def handle_checkbox_param(param)
+    # For example: params[:page][:show_in_menu] ||= params[:show_in_menu]
+    params[:page][param] ||= params[param]
+    params[:page][param] = false if params[:page][param].in? ["0", "false"]
+    params[:page][param] = true if params[:page][param] == "true"
   end
 
 
