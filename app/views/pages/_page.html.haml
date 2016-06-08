@@ -6,7 +6,8 @@
 .page_with_attachments
   %h1.page{class: page_class, id: "page-#{page.id}-box"}
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
-      = best_in_place_if can?(:update, page), page, :title
+      -#= best_in_place_if can?(:update, page), page, :title
+      = wysiwyg_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
@@ -37,13 +38,8 @@
       - if teaser_box
         = markup page.teaser_text
       - else
-        = render partial: 'shared/wysiwyg_toolbar'
-        %div{id: 'page_content', class: ("wysiwyg editable" if can?(:update, page)), data: {url: page_path(page)}}
+        = wysiwyg_in_place_if can?(:update, page), page, :content, toolbar: true, multiline: true, activate: 'manual' do
           = markup page.content
-
-          -#= best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
-        .show_only_in_edit_mode
-          = render partial: 'shared/markdown_help'
 
     - unless teaser_box
       - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)

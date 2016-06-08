@@ -37,16 +37,20 @@ $(document).ready ->
       toolbar: toolbar.get(0),
       showToolbarAfterInit: false,
       parserRules: parser_rules,
-      classNameCommandActive: 'active'
+      classNameCommandActive: 'active',
+      useLineBreaks: editable.hasClass('multiline')
     }
 
     editable.data('editor', editor)
     editable.on 'edit', ->
       editor.enable()
+      editable.addClass('active')
       toolbar.show('blind')
+
 
     editable.on 'save', ->
       editor.disable()
+      editable.removeClass('active')
       toolbar.hide('blind')
 
       html = editor.getValue()
@@ -56,19 +60,35 @@ $(document).ready ->
         url: url,
         data: {
           _method: 'PATCH',
-          page: {
-            content: html
+          "#{editable.data('object-key')}": { # e.g. "page"
+            "#{editable.data('attribute-key')}": html # e.g. "content"
           }
         },
         success: (result)->
-          editor.setValue(result['display_as'])
+          editor.setValue(result['display_as']) if result
           editable.effect('highlight')
       }
 
     editable.on 'cancel', ->
       editor.disable()
+      editable.removeClass('active')
       toolbar.hide('blind')
 
     editor.on 'load', ->
       toolbar.find('a').attr('href', '#')
       editor.disable()
+
+$(document).on 'keydown', '.wysihtml5-sandbox', (e)->
+      if e.keyCode == 27 # escape
+        $(this).trigger('cancel')
+        $(this).closest('.edit_mode_group').trigger('cancel')
+      if e.keyCode == 13 # enter
+        unless $(this).hasClass('multiline')
+          $(this).trigger('save')
+          $(this).closest('.edit_mode_group').trigger('save')
+
+
+$(document).on 'click', '.wysihtml5-sandbox', (e)->
+  if $(this).data('activate') == "click"
+    $(this).trigger('edit')
+    $(this).data('editor').focus()

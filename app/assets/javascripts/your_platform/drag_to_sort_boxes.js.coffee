@@ -40,6 +40,7 @@ $(document).ready ->
     update: ->
       save_box_configuration()
       App.adjust_box_heights()
+    cancel: '.currently_in_edit_mode *'
   }
 
   $('.draggable_boxes .resizable_col').resizable {
