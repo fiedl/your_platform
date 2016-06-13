@@ -61,6 +61,10 @@ class PagesController < ApplicationController
   def update
     if page_params[:content] && (page_params[:content].include?("<br>") || page_params[:content].include?("<p>"))
       params[:page][:content] = ReverseMarkdown.convert params[:page][:content]
+      params[:page][:content].gsub! '\\*', '*'
+      params[:page][:content].gsub! '&gt;', '>'
+      params[:page][:content].gsub! '\\>', '>'
+      params[:page][:content].gsub!(/\]\(\[[^ ]*\]\(([^ ]*)\)\)/, '](\1)') # correct images after auto linking the image url
     end
 
     @page.update_attributes page_params

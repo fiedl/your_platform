@@ -21,6 +21,14 @@ $(document).ready ->
         h2:     1
         h3:     1,
         blockquote: 1,
+        img: {
+          check_attributes: {
+            width: 'dimension',
+            alt: 'alt',
+            src: 'url',
+            height: 'dimension'
+          }
+        },
         a:      {
           set_attributes: {
             target: "_blank",
