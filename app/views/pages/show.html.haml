@@ -7,11 +7,11 @@
 
 = draggable_boxes_row(page) do
 
-  - if page.settings.show_corporation_map
+  - if page.settings.show_group_map
     .col.col-sm-6.col-xs-12
-      %h1#corporations-map-box= t(:corporation_map_title)
+      %h1#group-map-box= t(:group_map_title)
       %div
-        = render partial: 'shared/corporation_map'
+        = render partial: 'shared/group_map'
 
   - if @events
     .col.col-sm-3.public_root_events

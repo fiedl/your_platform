@@ -119,7 +119,7 @@ private
 
     handle_checkbox_param :show_in_menu
     handle_checkbox_param :show_as_teaser_box
-    handle_checkbox_param :show_corporation_map
+    handle_checkbox_param :show_group_map
 
     permitted_keys = []
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
@@ -128,7 +128,7 @@ private
     permitted_keys += [:title, :content, :type, :author_user_id] if @page.new_record? and can? :create_page_for, secure_parent
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
     permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu] if can? :manage, @page
-    permitted_keys += [:show_corporation_map] if can? :manage, @page
+    permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
 
     params.require(:page).permit(*permitted_keys)
   end

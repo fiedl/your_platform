@@ -40,8 +40,10 @@
     %tr
       %th Karte der Standorte
       %td
-        = ajax_check_box @page, :show_corporation_map, "Karte der Standorte anzeigen"
-        Welche Gruppe?
+        %p= ajax_check_box @page, :show_group_map, "Karte der Standorte anzeigen"
+        %p
+          Gruppen-ID:
+          = best_in_place @page, :group_map_parent_group_id
     %tr
       %th Veranstaltungen
       %td

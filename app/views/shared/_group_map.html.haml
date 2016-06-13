@@ -1,0 +1,11 @@
+.group_map
+  .info_area
+    %p.all_n_corporations=t :all_n_locations_in_germany, n: group_map_items.count
+    %p.title
+    %p.address
+    %p.phone
+    %p.website
+    %p.email
+  .group_map_background
+    - group_map_items.each do |map_item|
+      %span.map_item{data: map_item.to_hash}

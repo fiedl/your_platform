@@ -88,6 +88,11 @@ class MapItem
     end
   end
 
+  def self.from_groups(groups_or_parent_group)
+    groups = groups_or_parent_group.kind_of?(Group) ? groups_or_parent_group.child_groups : groups_or_parent_group
+    groups.collect { |group| self.from_group(group) }
+  end
+
   def self.from_corporation(corporation)
     self.from_group(corporation)
   end

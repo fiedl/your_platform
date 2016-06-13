@@ -27,9 +27,9 @@ class Page < ActiveRecord::Base
   #     page.settings.color  # =>  :red
   #
   include RailsSettings::Extend
-  delegate :show_corporation_map, :show_corporation_map=,
+  delegate :show_group_map, :show_group_map=, :group_map_parent_group_id=,
     to: :settings
-  attr_accessible :show_corporation_map
+  attr_accessible :show_group_map, :group_map_parent_group_id
 
 
   def not_empty?
@@ -72,6 +72,10 @@ class Page < ActiveRecord::Base
       teaser_content += "\n\n" + content.split("\n\n").second if teaser_content.start_with?("http") # For inline videos etc.
       teaser_content
     end
+  end
+
+  def group_map_parent_group_id
+    settings.group_map_parent_group_id || Group.corporations_parent.id
   end
 
 
