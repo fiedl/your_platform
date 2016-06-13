@@ -1,0 +1,11 @@
+- # We need the inline styling for emails.
+
+.notification
+  %div{style: 'float: left; margin-right: 10px'}
+  %div{style: 'overflow: hidden'}
+    %small
+      = localize(notification.created_at)
+    .notification_body
+      %p
+        %strong= link_to notification.message, notification
+      %p= markup notification.text
