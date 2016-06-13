@@ -58,13 +58,15 @@ class AttachmentsController < ApplicationController
     if secure_version
       if @attachment.file.versions[secure_version]
         path = @attachment.file.versions[secure_version].current_path
+        content_type = @attachment.file.versions[secure_version].content_type
       end
     else
       current_user.track_visit @attachment.parent if @attachment.parent && current_user && (not current_user.incognito?)
       path = @attachment.file.current_path
+      content_type = @attachment.content_type
     end
     send_file path, x_sendfile: true, disposition: :inline,
-      range: (@attachment.video?), type: @attachment.content_type
+      range: (@attachment.video?), type: content_type
   end
 
   # This returns a json object with description information of the
