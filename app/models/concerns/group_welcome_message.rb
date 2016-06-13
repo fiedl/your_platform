@@ -1,21 +1,22 @@
 concern :GroupWelcomeMessage do
-  
+
   included do
     delegate :welcome_message, :welcome_message=, to: :settings
     attr_accessible :welcome_message
 
     alias_method :assign_user_before_welcome_message, :assign_user
     def assign_user(user, options = {})
-      membership = assign_user_before_welcome_message(user, options)
-      trigger_welcome_messages_for(user) unless Rails.console? or Rails.rake_task?
-      return membership
+      trigger_welcome_messages_for(user) if Rails.env.test? or (not Rails.console? and not Rails.rake_task?)
+      assign_user_before_welcome_message(user, options)
     end
   end
-  
+
   def trigger_welcome_messages_for(user)
-    ([self] + self.ancestor_groups).each { |group| group.send_welcome_message_to(user) }
+    ([self] + self.ancestor_groups)
+    .select { |group| not user.member_of? group, at: 10.seconds.ago }
+    .each { |group| group.send_welcome_message_to user }
   end
-  
+
   def send_welcome_message_to(user)
     if welcome_message.present?
       notification = user.notifications.build
@@ -28,5 +29,5 @@ concern :GroupWelcomeMessage do
       return notification
     end
   end
-  
+
 end
