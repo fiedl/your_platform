@@ -3,7 +3,8 @@
 - # horizontal nav presenter.
 
 #horizontal-nav
-  %ul.nav.nav-pills.center
-    - child_navables(@navable).each do |child|
-      %li{class: "#{child.class.name} #{child.class.base_class.name}"}
-        = link_to child.title, child
+  - if @navable
+    %ul.nav.nav-pills.center
+      - child_navables(@navable).each do |child|
+        %li{class: "#{child.class.name} #{child.class.base_class.name}"}
+          = link_to child.title, child

@@ -10,4 +10,4 @@
 - when 'Group'
   = render partial: 'notifications/welcome_notification', locals: {notification: notification}
 - else
-  - raise('notification type not handled, yet.')
+  = render partial: 'notifications/generic_notification', locals: {notification: notification}

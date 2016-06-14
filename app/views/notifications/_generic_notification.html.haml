@@ -11,9 +11,3 @@
       %p
         %strong= link_to notification.message, notification
       %p= markup notification.text
-
-      %p= render partial: 'posts/attachments', locals: {post: notification.reference} if notification.reference
-
-    .notification_links
-      %small
-        = link_to t(:write_a_comment), notification
