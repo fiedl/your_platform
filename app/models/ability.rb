@@ -222,8 +222,9 @@ class Ability
       # in order to review their own pages.
       #
       can [:update, :destroy], Attachment do |attachment|
-        attachment.parent.officers_of_self_and_ancestors.include?(user) and
-        can?(:read, attachment) and
+        attachment.parent.respond_to?(:officers_of_self_and_ancestors) &&
+        attachment.parent.officers_of_self_and_ancestors.include?(user) &&
+        can?(:read, attachment) &&
         (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
       end
     end
