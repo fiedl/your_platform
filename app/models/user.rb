@@ -74,6 +74,7 @@ class User < ActiveRecord::Base
   include UserPosts
   include UserMerit
   include UserRecommendations
+  include UserOmniauth
 
   # General Properties
   # ==========================================================================================

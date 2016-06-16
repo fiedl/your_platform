@@ -1,14 +1,34 @@
-%h1= t :login
-%div
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+.row
+
+  .col-md-6.col-xs-12
+    %h1= t :login
     %div
-      = f.label :login, raw("#{t :login_name}&nbsp;&nbsp;&nbsp; (#{t :login_name_explanation})")
-      = f.text_field :login, :autofocus => true
+      = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+        %div
+          = f.label :login, raw("#{t :login_name}&nbsp;&nbsp;&nbsp; (#{t :login_name_explanation})")
+          = f.text_field :login, :autofocus => true
 
-    %div
-      = f.label :password, I18n.t(:password)
-      = f.password_field :password
+        %div
+          = f.label :password, I18n.t(:password)
+          = f.password_field :password
 
-    = f.submit t :login
+        = f.submit t(:login), class: 'btn btn-primary'
 
-  = render 'devise/shared/links'
+      = render 'devise/shared/links'
+
+  - if Rails.application.secrets.omniauth_github_app_id
+    .col-md-6.col-xs-12
+      %h1 Mit externen Diensten anmelden
+      %div
+        - if Rails.application.secrets.omniauth_github_app_id
+          %p
+            = link_to "/auth/github", class: 'btn btn-github btn-block btn-social' do
+              = fa_icon :github
+              Login mit Github
+        %h3 Was ist das?
+        %p Bei Klick auf einen der obigen Knöpfe wird beim gewählten Dienst nachgefragt, ob Sie dort eingeloggt sind, und, wie Ihre E-Mail-Adresse lautet. Anhand der E-Mail-Adresse kann die Plattform Sie dann anmelden.
+        %h3 Was bedeutet das für den Datenschutz?
+        %p Der gewählte Dienst kann Sie mit anderen Benutzern in Verbindung bringen, die den Dienst und die Plattform nutzen. Ansonsten werden keine Daten ausgetauscht.
+
+
+        -#%p Hierdurch wird ein externer Dienst zur Authentifizierung verwendet. Beim externen Dienst muss man sich mit Benutzername und Passwort anmelden. Der Dienst gibt dann die angemeldete E-Mail-Adresse an die Plattform weiter, wodurch man dann auf der Plattform angemeldet wird.

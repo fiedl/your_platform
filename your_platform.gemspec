@@ -68,6 +68,7 @@ Gem::Specification.new do |s|
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
   s.add_dependency 'passgen'
+  s.add_dependency 'omniauth-github'
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License
@@ -90,6 +91,7 @@ Gem::Specification.new do |s|
   # fix bootstrap to 3.3.3 due to icon issue:
   s.add_dependency 'bootstrap-sass', '= 3.3.3'                                                  # Apache License 2.0
   s.add_dependency 'sass-rails', '>= 3.2'
+  s.add_dependency 'rails-assets-bootstrap-social'
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
