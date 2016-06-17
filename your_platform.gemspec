@@ -70,6 +70,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'passgen'
   s.add_dependency 'omniauth-github'
   s.add_dependency 'omniauth-twitter'
+  s.add_dependency 'omniauth-google-oauth2'
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License

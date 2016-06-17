@@ -53,6 +53,7 @@ PATH
       mini_magick
       nokogiri (>= 1.6.7.2)
       omniauth-github
+      omniauth-google-oauth2
       omniauth-twitter
       passgen
       phony
@@ -347,6 +348,11 @@ GEM
     omniauth-github (1.1.2)
       omniauth (~> 1.0)
       omniauth-oauth2 (~> 1.1)
+    omniauth-google-oauth2 (0.3.1)
+      jwt (~> 1.0)
+      multi_json (~> 1.3)
+      omniauth (>= 1.1.1)
+      omniauth-oauth2 (>= 1.3.1)
     omniauth-oauth (1.1.0)
       oauth
       omniauth (~> 1.0)

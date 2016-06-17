@@ -10,5 +10,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       Rails.application.secrets.omniauth_twitter_app_id,
       Rails.application.secrets.omniauth_twitter_app_secret
   end
+  if Rails.application.secrets.omniauth_google_app_id
+    provider :google_oauth2,
+      Rails.application.secrets.omniauth_google_app_id,
+      Rails.application.secrets.omniauth_google_app_secret
+  end
 
 end

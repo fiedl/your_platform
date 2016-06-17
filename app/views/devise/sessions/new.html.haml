@@ -30,6 +30,12 @@
             = link_to "/auth/github", class: 'btn btn-github btn-block btn-social' do
               = fa_icon :github
               Login mit Github
+        - if Rails.application.secrets.omniauth_google_app_id
+          %p
+            = link_to "/auth/google_oauth2", class: 'btn btn-google btn-block btn-social' do
+              = fa_icon :google
+              Login mit Google
+
         %h3 Was ist das?
         %p Bei Klick auf einen der obigen Knöpfe wird beim gewählten Dienst nachgefragt, ob Sie dort eingeloggt sind, und, wie Ihre E-Mail-Adresse lautet. Anhand der E-Mail-Adresse kann die Plattform Sie dann anmelden.
         %h3 Was bedeutet das für den Datenschutz?
