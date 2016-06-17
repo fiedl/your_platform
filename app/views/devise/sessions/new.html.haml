@@ -16,10 +16,15 @@
 
       = render 'devise/shared/links'
 
-  - if Rails.application.secrets.omniauth_github_app_id
+  - if Rails.application.secrets.omniauth_facebook_app_id || Rails.application.secrets.omniauth_twitter_app_id || Rails.application.secrets.omniauth_github_app_id || Rails.application.secrets.omniauth_google_app_id
     .col-md-6.col-xs-12
       %h1 Mit externen Diensten anmelden
       %div
+        - if Rails.application.secrets.omniauth_twitter_app_id
+          %p
+            = link_to "/auth/twitter", class: 'btn btn-twitter btn-block btn-social' do
+              = fa_icon :twitter
+              Login mit Twitter
         - if Rails.application.secrets.omniauth_github_app_id
           %p
             = link_to "/auth/github", class: 'btn btn-github btn-block btn-social' do

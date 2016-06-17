@@ -25,6 +25,7 @@ require 'sidekiq-limit_fetch'
 require 'devise'
 require 'passgen'
 require 'omniauth-github'
+require 'omniauth-twitter'
 
 # Authorization
 require 'cancan'

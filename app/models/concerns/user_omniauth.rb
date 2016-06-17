@@ -3,10 +3,11 @@ concern :UserOmniauth do
 
     def from_omniauth(auth)
       case auth.provider
-      when 'github'
+      when 'github', 'twitter'
         User.find_by_email auth.info.email if auth.info.email.present?
       else
-        raise "Omniauth provider not handled, yet. " + auth.to_s
+        binding.pry if Rails.env.development?
+        raise "Omniauth provider #{auth.provider} not handled, yet."
       end
     end
   end
