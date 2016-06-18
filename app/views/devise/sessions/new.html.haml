@@ -20,6 +20,11 @@
     .col-md-6.col-xs-12
       %h1 Mit externen Diensten anmelden
       %div
+        - if Rails.application.secrets.omniauth_facebook_app_id
+          %p
+            = link_to "/auth/facebook", class: 'btn btn-facebook btn-block btn-social' do
+              = fa_icon :facebook
+              Login mit Facebook
         - if Rails.application.secrets.omniauth_twitter_app_id
           %p
             = link_to "/auth/twitter", class: 'btn btn-twitter btn-block btn-social' do
@@ -37,7 +42,7 @@
               Login mit Google
 
         %h3 Was ist das?
-        %p Bei Klick auf einen der obigen Knöpfe wird beim gewählten Dienst nachgefragt, ob Sie dort eingeloggt sind, und, wie Ihre E-Mail-Adresse lautet. Anhand der E-Mail-Adresse kann die Plattform Sie dann anmelden.
+        %p Bei Klick auf einen der obigen Knöpfe wird beim gewählten Dienst nachgefragt, ob Sie dort eingeloggt sind, und, wie Ihre E-Mail-Adresse lautet. Anhand der E-Mail-Adresse kann die Plattform Sie dann anmelden, ohne dass Sie Ihr Plattform-Passwort angeben müssen.
         %h3 Was bedeutet das für den Datenschutz?
         %p Der gewählte Dienst kann Sie mit anderen Benutzern in Verbindung bringen, die den Dienst und die Plattform nutzen. Ansonsten werden keine Daten ausgetauscht.
 

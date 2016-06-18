@@ -27,6 +27,7 @@ require 'passgen'
 require 'omniauth-github'
 require 'omniauth-twitter'
 require 'omniauth-google-oauth2'
+require 'omniauth-facebook'
 
 # Authorization
 require 'cancan'

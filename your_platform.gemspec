@@ -71,6 +71,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-github'
   s.add_dependency 'omniauth-twitter'
   s.add_dependency 'omniauth-google-oauth2'
+  s.add_dependency 'omniauth-facebook', '~> 3.0.0'
 
   # Authorization
   s.add_dependency 'cancan'                                                            # MIT License

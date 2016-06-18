@@ -15,5 +15,10 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       Rails.application.secrets.omniauth_google_app_id,
       Rails.application.secrets.omniauth_google_app_secret
   end
-
+  if Rails.application.secrets.omniauth_facebook_app_id
+    provider :facebook,
+      Rails.application.secrets.omniauth_facebook_app_id,
+      Rails.application.secrets.omniauth_facebook_app_secret,
+      scope: 'email'
+  end
 end
