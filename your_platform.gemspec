@@ -78,6 +78,7 @@ Gem::Specification.new do |s|
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
+  s.add_dependency 'has_secure_token' # TODO: This is included in Rails 5. Remove this when migrating to Rails 5.
 
   # Settings
   s.add_dependency 'rails-settings-cached'

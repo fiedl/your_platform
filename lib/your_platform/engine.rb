@@ -32,6 +32,9 @@ require 'omniauth-facebook'
 # Authorization
 require 'cancan'
 
+# Encryption
+require 'has_secure_token'
+
 # Settings
 require 'rails-settings-cached'
 

@@ -42,6 +42,7 @@ PATH
       gmaps4rails (= 2.0.2)
       gravatar_image_tag
       haml
+      has_secure_token
       i18n-js (>= 3.0.0.rc8)
       icalendar
       jquery-atwho-rails (>= 1.1.0)
@@ -275,6 +276,8 @@ GEM
       spork (>= 0.8.4)
     haml (4.0.7)
       tilt
+    has_secure_token (1.0.0)
+      activerecord (>= 3.0)
     hashie (3.4.4)
     highline (1.7.8)
     hike (1.2.3)
