@@ -1,24 +1,26 @@
+require 'omni_auth_provider'
+
 Rails.application.config.middleware.use OmniAuth::Builder do
-  if Rails.application.secrets.omniauth_github_app_id
+  if OmniAuthProvider.github.available?
     provider :github,
-      Rails.application.secrets.omniauth_github_app_id,
-      Rails.application.secrets.omniauth_github_app_secret,
+      OmniAuthProvider.github.app_id,
+      OmniAuthProvider.github.app_secret,
       scope: 'user:email' # https://developer.github.com/v3/oauth/#scopes
   end
-  if Rails.application.secrets.omniauth_twitter_app_id
+  if OmniAuthProvider.twitter.available?
     provider :twitter,
-      Rails.application.secrets.omniauth_twitter_app_id,
-      Rails.application.secrets.omniauth_twitter_app_secret
+      OmniAuthProvider.twitter.app_id,
+      OmniAuthProvider.twitter.app_secret
   end
-  if Rails.application.secrets.omniauth_google_app_id
+  if OmniAuthProvider.google.available?
     provider :google_oauth2,
-      Rails.application.secrets.omniauth_google_app_id,
-      Rails.application.secrets.omniauth_google_app_secret
+      OmniAuthProvider.google.app_id,
+      OmniAuthProvider.google.app_secret
   end
-  if Rails.application.secrets.omniauth_facebook_app_id
+  if OmniAuthProvider.facebook.available?
     provider :facebook,
-      Rails.application.secrets.omniauth_facebook_app_id,
-      Rails.application.secrets.omniauth_facebook_app_secret,
+      OmniAuthProvider.facebook.app_id,
+      OmniAuthProvider.facebook.app_secret,
       scope: 'email'
   end
 end
