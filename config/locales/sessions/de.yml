@@ -7,15 +7,15 @@ de:
   login_failed:             Anmeldung fehlgeschlagen.
   wrong_password:           Das angegebene Passwort war falsch.
   user_has_no_account:      Der Benutzer hat kein aktives Benutzerkonto.
-  
+
   unauthorized_please_sign_in:    'Zugriff nicht gestattet. Bitte melden Sie sich zunächst am System an.'
 
   good_bye:                 Auf Wiedersehen!
   logout:                   Abmelden
-  
+
   sign_in:                  Anmelden
   sign_out:                 Abmelden
-  sign_up:                  Registrieren 
+  sign_up:                  Registrieren
 
   submit_send_instructions: Passwort zurücksetzen
   forgot_password:          Passwort vergessen?
@@ -35,3 +35,11 @@ de:
     change_password:        'Neues Passwort wählen'
     ignore_notice:          'Wenn Sie die Änderung nicht beantragt haben, ignorieren Sie bitte diese E-Mail-Nachricht.'
     change_notice:          'Ihr Passwort wird sich nicht ändern, wenn Sie obigem Link nicht folgen.'
+
+  sign_in_with_external_services: Mit externen Diensten anmelden
+  sign_in_with_str: "Login mit %{str}"
+  what_is_that: Was ist das?
+  this_will_sign_in_through_external_service: "Bei Klick auf einen der obigen Knöpfe wird beim gewählten Dienst nachgefragt, ob Sie dort eingeloggt sind, und, wie Ihre E-Mail-Adresse lautet. Anhand der E-Mail-Adresse kann die Plattform Sie dann anmelden, ohne dass Sie Ihr Plattform-Passwort angeben müssen."
+  this_will_only_work_for_matching_emails: "Hierfür ist es notwendig, dass die E-Mail-Adresse, die Sie beim externen Dienst als Primäradresse angegeben haben, ebenfalls in Ihrem Plattform-Profil hinterlegt ist."
+  what_does_than_mean_for_privacy: Was bedeutet das für den Datenschutz?
+  the_external_server_can_connect_you_to_other_users: "Der gewählte Dienst kann Sie mit anderen Benutzern in Verbindung bringen, die den Dienst und die Plattform nutzen. Ansonsten werden keine Daten ausgetauscht."
