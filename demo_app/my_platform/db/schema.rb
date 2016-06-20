@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160321123835) do
+ActiveRecord::Schema.define(version: 20160620085208) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -41,9 +41,23 @@ ActiveRecord::Schema.define(version: 20160321123835) do
     t.string   "content_type",   limit: 255
     t.integer  "file_size",      limit: 4
     t.integer  "author_user_id", limit: 4
+    t.integer  "width",          limit: 4
+    t.integer  "height",         limit: 4
   end
 
   add_index "attachments", ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
+
+  create_table "auth_tokens", force: :cascade do |t|
+    t.string   "token",         limit: 255
+    t.integer  "user_id",       limit: 4
+    t.string   "resource_type", limit: 255
+    t.integer  "resource_id",   limit: 4
+    t.integer  "post_id",       limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  add_index "auth_tokens", ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
 
   create_table "badges_sashes", force: :cascade do |t|
     t.integer  "badge_id",      limit: 4
