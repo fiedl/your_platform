@@ -6,8 +6,8 @@ class UsersController < ApplicationController
   before_action :find_user, only: [:show, :update, :forgot_password]
   authorize_resource except: [:forgot_password]
 
-  skip_before_action :verify_authenticity_token, only: -> {
-    params[:avatar].present?
+  skip_before_action :verify_authenticity_token, if: -> {
+    params[:user][:avatar].present?
     # Make sure in `user_params` that only the avatar can pass then!
   }
 
@@ -87,7 +87,7 @@ class UsersController < ApplicationController
     permitted_keys = []
     if @user
       permitted_keys += [:avatar, :remove_avatar] if can? :update, @user
-      unless params[:avatar].present?
+      unless params[:user][:avatar].present?
         # Because if the avatar is present, the authenticity
         # token check is skipped due to:
         # https://github.com/refile/refile/issues/185
