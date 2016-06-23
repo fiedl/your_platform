@@ -1,0 +1,22 @@
+de:
+  page_settings: Seiten-Einstellungen
+  back_to_the_page: Zurück zur Seite
+
+  page_title: Seiten-Titel
+  page_type: Seiten-Typ
+  page_author: Autor
+  redirect_page_to: 'Weiterleiten nach'
+
+  home_page_settings: Homepage-Einstellungen
+  boxes_on_this_page: Boxen auf dieser Seite
+  select_boxes_to_display_on_the_page_str: "Hier kann ausgewählt werden, welche Inhalte auf der Seite '%{str}' als Boxen angezeigt werden:"
+  horizontal_nav: Horizontales Menü
+  layout: Layout
+  home_page_title: Homepage-Überschrift
+  home_page_sub_title: Homepage-Untertitel
+
+  locations_map: Karte der Standorte
+  show_locations_map: Karte der Standorte anzeigen
+  locations_map_group_id: "Gruppen-ID der Gruppe, deren Untergruppen auf der Karte angezeigt werden sollen:"
+
+  danger_zone_tm: Danger Zone™

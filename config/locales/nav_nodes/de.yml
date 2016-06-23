@@ -1,0 +1,13 @@
+de:
+  navigation: Navigation
+
+  menu_options: Menü-Optionen
+  hidden_menu: Im Menü verstecken
+  show_in_menu: Im Menü anzeigen
+
+  breadcrumb_options: Breadcrumb-Optionen
+  slim_menu: "Im Menü ausblenden, wenn Platz gespart werden soll."
+  slim_breadcrumb: "In der Breadcrumb-Leiste ausblenden, wenn Platz gespart werden soll."
+
+  separate_menu_label: Abweichende Beschriftung im Menü
+  separate_breadcrumb_label: Abweichende Beschriftung des Breadcrumb-Eintrags

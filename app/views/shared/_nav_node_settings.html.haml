@@ -2,20 +2,20 @@
 - navable || raise('no navable given')
 - nav_node ||= navable.nav_node
 
-%h2 Navigation
+%h2= t :navigation
 %table.settings
   %tr
-    %th Menü-Optionen
+    %th= t :menu_options
     %td
-      = ajax_check_box navable, :hidden_menu, "Im Menü verstecken"
-      = ajax_check_box navable, :slim_menu, "Im Menü ausblenden, um Platz zu sparen"
+      = ajax_check_box navable, :show_in_menu, t(:show_in_menu)
+      = ajax_check_box navable, :slim_menu, t(:slim_menu)
   %tr
-    %th Breadcrumb-Optionen
+    %th= t :breadcrumb_options
     %td
-      = ajax_check_box navable, :slim_breadcrumb, "In Breadcrumbs ausblenden, um Platz zu sparen"
+      = ajax_check_box navable, :slim_breadcrumb, t(:slim_breadcrumb)
   %tr
-    %th Abweichende Beschriftung im Menü
+    %th= t :separate_menu_label
     %td= best_in_place nav_node, :menu_item
   %tr
-    %th Abweichende Beschriftung in den Breadcrumbs
+    %th= t :separate_breadcrumb_label
     %td= best_in_place nav_node, :breadcrumb_item

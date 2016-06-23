@@ -1,0 +1,13 @@
+en:
+  navigation: Navigation
+
+  menu_options: Menu options
+  hidden_menu: Hide in menu
+  show_in_menu: Show in menu
+
+  breadcrumb_options: Breadcrumb options
+  slim_menu: "Hide in menu when attempting to save space."
+  slim_breadcrumb: "Hide in breadcrumbs when attempting to save space."
+
+  separate_menu_label: Separate menu label
+  separate_breadcrumb_label: Separate breadcrumb label

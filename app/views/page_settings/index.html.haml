@@ -1,19 +1,19 @@
 %h1.page_settings
   = current_title
-  .back_to_page.tool= link_to "Zurück zur Seite", @page, class: 'btn btn-default'
+  .back_to_page.tool= link_to t(:back_to_the_page), @page, class: 'btn btn-default'
 %div
   %table.settings
     %tr
-      %th Titel
+      %th= t :page_title
       %td= best_in_place @page, :title
     %tr
-      %th Seiten-Typ
+      %th= t :page_type
       %td= best_in_place @page, :type
     %tr
-      %th Autor
+      %th= t :page_author
       %td= best_in_place @page, :author
     %tr
-      %th Weiterleitung nach
+      %th= t :redirect_page_to
       %td= best_in_place @page, :redirect_to
     %tr
       %th= t :created_at
@@ -25,24 +25,20 @@
   = render partial: 'shared/nav_node_settings', locals: {navable: @page}
 
 - if @page.kind_of? Pages::HomePage
-  %h1.home_page_settings Homepage-Einstellungen
+  %h1.home_page_settings= t :home_page_settings
   %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
 
-= render partial: 'officers/officers_box', locals: {structureable: @page}
-
-%h1 Boxen auf dieser Seite
+%h1= t :boxes_on_this_page
 %div
-  Hier kann ausgewählt werden, welche Inhalte auf der Seite
-  = @page.title
-  als Boxen angezeigt werden:
+  = t :select_boxes_to_display_on_the_page_str, str: @page.title
 
   %table.settings
     %tr
-      %th Karte der Standorte
+      %th= t :locations_map
       %td
-        %p= ajax_check_box @page, :show_group_map, "Karte der Standorte anzeigen"
+        %p= ajax_check_box @page, :show_group_map, t(:show_locations_map)
         %p
-          Gruppen-ID:
+          = t :locations_map_group_id
           = best_in_place @page, :group_map_parent_group_id
     %tr
       %th Veranstaltungen
@@ -56,9 +52,9 @@
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
 
+= render partial: 'officers/officers_box', locals: {structureable: @page}
 
-
-%h1.danger_zone Danger Zone™
+%h1.danger_zone= t :danger_zone_tm
 %div
   %p= t :a_new_page_can_be_destroyed_within_ten_minutes
   %p= destroy_page_button @page, t(:destroy_page_permanently)
