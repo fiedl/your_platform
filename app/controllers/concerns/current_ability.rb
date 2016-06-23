@@ -20,8 +20,12 @@ concern :CurrentAbility do
     end
 
     if @current_ability.nil?
-      # Auth token, for example for calender feeds
-      options[:token] = params[:token]
+      # Auth token. This can either be a permanent `User#token`,
+      # e.g. for calender feeds, or it can be an `AuthToken#token`,
+      # which allows access to a certain resource.
+      #
+      options[:token] = current_auth_token
+      options[:user_by_auth_token] = current_user_by_auth_token
 
       # Read-only mode
       options[:read_only_mode] = true if read_only_mode?
@@ -30,7 +34,7 @@ concern :CurrentAbility do
       options[:preview_as] = current_role_preview
     end
 
-    @current_ability ||= ::Ability.new(current_user, options)
+    @current_ability ||= ::Ability.new(current_devise_user, options)
   end
   def reload_ability
     current_ability(true)

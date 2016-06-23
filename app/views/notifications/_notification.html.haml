@@ -1,5 +1,13 @@
 - notification || raise('no notification given')
 
-= render partial: 'notifications/post_notification', locals: {notification: notification} if notification.reference.kind_of? Post
-= render partial: 'notifications/comment_notification', locals: {notification: notification} if notification.reference.kind_of? Comment
-= render partial: 'notifications/user_status_notification', locals: {notification: notification} if notification.reference.kind_of? User
+- case notification.reference_type
+- when 'Post'
+  = render partial: 'notifications/post_notification', locals: {notification: notification}
+- when 'Comment'
+  = render partial: 'notifications/comment_notification', locals: {notification: notification}
+- when 'User'
+  = render partial: 'notifications/user_status_notification', locals: {notification: notification}
+- when 'Group'
+  = render partial: 'notifications/welcome_notification', locals: {notification: notification}
+- else
+  = render partial: 'notifications/generic_notification', locals: {notification: notification}

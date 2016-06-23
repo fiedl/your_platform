@@ -7,12 +7,12 @@ en:
   login_failed:             Login Failed.
   wrong_password:           Wrong password.
   user_has_no_account:      The user does not have an active user account.
-  
+
   unauthorized_please_sign_in:    'Access denied. Please sign in first.'
 
   good_bye:                 Good bye!
   logout:                   Logout
-  
+
   sign_in:                  Sign In
   sign_out:                 Sign Out
   sign_up:                  Sign Up
@@ -35,3 +35,11 @@ en:
     change_password:        Change my password
     ignore_notice:          If you didn't request this, please ignore this email.
     change_notice:          Your password won't change until you access the link above and create a new one.
+
+  sign_in_with_external_services: Sign in through external service
+  sign_in_with_str: "Sign in through %{str}"
+  what_is_that: "What's that?"
+  this_will_sign_in_through_external_service: "Clicking one of the above buttons will ask the external service about your email address and if you are signed in. Using this information, you'll be able to sign in here without your platform password."
+  this_will_only_work_for_matching_emails: "For this to work, the primary email address registered at the external service has to be part of your platform profile as well."
+  what_does_than_mean_for_privacy: What does that mean for privacy?
+  the_external_server_can_connect_you_to_other_users: "The external service may recognize some sort of connection between you and other people using the external service and this platform. Apart from that, no data will be exchanged."

@@ -24,9 +24,16 @@ require 'sidekiq-limit_fetch'
 # Authentification
 require 'devise'
 require 'passgen'
+require 'omniauth-github'
+require 'omniauth-twitter'
+require 'omniauth-google-oauth2'
+require 'omniauth-facebook'
 
 # Authorization
 require 'cancan'
+
+# Encryption
+require 'has_secure_token'
 
 # Settings
 require 'rails-settings-cached'
@@ -54,6 +61,7 @@ require 'rails-assets-datatables'
 require 'font-awesome-rails'
 require 'bootstrap-sass'
 require 'sass-rails'
+require 'rails-assets-bootstrap-social'
 
 # In Place Editing
 require 'best_in_place'

@@ -1,7 +1,7 @@
 class ErrorsController < ApplicationController
 
   skip_authorization_check
-  
+
   # General Exception Handling: Show Message on Error Page
   # -------------------------------------------------------------------------
   #
@@ -19,10 +19,15 @@ class ErrorsController < ApplicationController
   # -------------------------------------------------------------------------
 
   def unauthorized
+    # If the unauthorized error is raised, make sure there are no resuduals
+    # of a user by token. Otherwise, the ui could have signs of beging signed in
+    # and not being signed in at the same time.
+    cookies[:token] = nil
+
     @reason = session['exception.action'].to_s + ", " + session['exception.subject'].to_s
-    if not current_user
+    if not current_devise_user
       redirect_to sign_in_path, flash: { error: I18n.t(:unauthorized_please_sign_in) }
     end
   end
-    
+
 end

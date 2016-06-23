@@ -1,16 +1,50 @@
 - set_current_navable Page.root if Page.root
 
-%h1= t :login
-%div
-  = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+.row
+  .col-md-6.col-xs-12
+    %h1= t :login
     %div
-      = f.label :login, raw("#{t :login_name}&nbsp;&nbsp;&nbsp; (#{t :login_name_explanation})")
-      = f.text_field :login, :autofocus => true
+      = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+        %div
+          = f.label :login, raw("#{t :login_name}&nbsp;&nbsp;&nbsp; (#{t :login_name_explanation})")
+          = f.text_field :login, :autofocus => true
 
-    %div
-      = f.label :password, I18n.t(:password)
-      = f.password_field :password
+        %div
+          = f.label :password, I18n.t(:password)
+          = f.password_field :password
 
-    = f.submit t :login
+        = f.submit t(:login), class: 'btn btn-primary'
 
-  = render 'devise/shared/links'
+      = render 'devise/shared/links'
+
+  - if OmniAuthProvider.any?
+    .col-md-6.col-xs-12
+      %h1= t :sign_in_with_external_services
+      %div
+        - if OmniAuthProvider.facebook.available?
+          %p
+            = link_to "/auth/facebook", class: 'btn btn-facebook btn-block btn-social' do
+              = fa_icon :facebook
+              = t :sign_in_with_str, str: "Facebook"
+        - if OmniAuthProvider.twitter.available?
+          %p
+            = link_to "/auth/twitter", class: 'btn btn-twitter btn-block btn-social' do
+              = fa_icon :twitter
+              = t :sign_in_with_str, str: "Twitter"
+        - if OmniAuthProvider.github.available?
+          %p
+            = link_to "/auth/github", class: 'btn btn-github btn-block btn-social' do
+              = fa_icon :github
+              = t :sign_in_with_str, str: "Github"
+        - if OmniAuthProvider.google.available?
+          %p
+            = link_to "/auth/google_oauth2", class: 'btn btn-google btn-block btn-social' do
+              = fa_icon :google
+              = t :sign_in_with_str, str: "Google"
+
+        %h3= t :what_is_that
+        %p= t :this_will_sign_in_through_external_service
+        %p= t :this_will_only_work_for_matching_emails
+
+        %h3= t :what_does_than_mean_for_privacy
+        %p= t :the_external_server_can_connect_you_to_other_users

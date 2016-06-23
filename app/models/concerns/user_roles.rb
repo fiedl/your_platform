@@ -30,7 +30,9 @@ concern :UserRoles do
   #
   def member_of?( object, options = {} )
     if object.kind_of? Group
-      if options[:with_invalid] or options[:also_in_the_past]
+      if options[:at]
+        UserGroupMembership.find_all_by(user: self, group: object).at_time(options[:at]).any?
+      elsif options[:with_invalid] or options[:also_in_the_past]
         self.ancestor_group_ids.include? object.id
       else  # only current memberships:
         self.group_ids.include? object.id  # This uses the validity range mechanism

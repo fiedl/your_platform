@@ -4,7 +4,6 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:
   include CarrierWave::MiniMagick
-  include CarrierWave::MimeTypes
 
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
   # include Sprockets::Helpers::RailsHelper
@@ -88,6 +87,10 @@ class AttachmentUploader < CarrierWave::Uploader::Base
 
   def pdf?(new_file)
     new_file && new_file.content_type.present? && new_file.content_type.include?('pdf')
+  end
+
+  def set_content_type
+    model.content_type = self.file.content_type
   end
 
   # This method filteres out all pages except for the cover page.

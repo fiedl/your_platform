@@ -61,31 +61,41 @@ class Ability
     # These roles do not make sense here and may block the `view_as?` method.
     @preview_as = nil if @preview_as.in? ['full_member']
 
+    # There are two kinds of token: `User#token` and `AuthToken#token`,
+    # which are both handled by the same parameter:
     @token = options[:token]
+    @user_by_auth_token = options[:user_by_auth_token]
 
     @read_only_mode = options[:read_only_mode]
-    @user = user
+    @user = user || @user_by_auth_token
 
-    if user.try(:account) # has to be able to sign in
-      if user.global_admin? and view_as?(:global_admin)
-        rights_for_global_admins
+    if @user.try(:account) # has to be able to sign in
+      if @user_by_auth_token
+        # The user is identified via auth token.
+        # So, do not grant the regular rights but only
+        # the rights granted by the token.
+        rights_for_auth_token_users
+      elsif user
+        if user.global_admin? and view_as?(:global_admin)
+          rights_for_global_admins
+        end
+        if user.admin_of_anything? and view_as?(:admin)
+          rights_for_local_admins
+        end
+        if view_as?([:officer, :admin])
+          rights_for_local_officers
+        end
+        if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
+          rights_for_global_officers
+        end
+        if user.developer?
+          rights_for_developers
+        end
+        if user.beta_tester?
+          rights_for_beta_testers
+        end
+        rights_for_signed_in_users
       end
-      if user.admin_of_anything? and view_as?(:admin)
-        rights_for_local_admins
-      end
-      if view_as?([:officer, :admin])
-        rights_for_local_officers
-      end
-      if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
-        rights_for_global_officers
-      end
-      if user.developer?
-        rights_for_developers
-      end
-      if user.beta_tester?
-        rights_for_beta_testers
-      end
-      rights_for_signed_in_users
     end
     rights_for_everyone
   end
@@ -103,7 +113,12 @@ class Ability
   def preview_as
     @preview_as
   end
-  attr_reader :token
+  def token
+    @token if @user_by_auth_token
+  end
+  def auth_token
+    @auth_token ||= AuthToken.where(token: token).first if @user_by_auth_token
+  end
   def read_only_mode?
     @read_only_mode
   end
@@ -222,8 +237,9 @@ class Ability
       # in order to review their own pages.
       #
       can [:update, :destroy], Attachment do |attachment|
-        attachment.parent.officers_of_self_and_ancestors.include?(user) and
-        can?(:read, attachment) and
+        attachment.parent.respond_to?(:officers_of_self_and_ancestors) &&
+        attachment.parent.officers_of_self_and_ancestors.include?(user) &&
+        can?(:read, attachment) &&
         (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
       end
     end
@@ -259,7 +275,13 @@ class Ability
       #
       can [:create, :read, :update, :destroy], ProfileField do |field|
         field.profileable.nil? or # to allow creating fields
-        ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General'))
+        ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General') and (field.key != 'date_of_birth'))
+      end
+
+      # Regular users can update their personal title and academic degree.
+      #
+      can :update, ProfileField do |field|
+        (field.profileable == user) and (field.key.in? ['personal_title', 'academic_degree', 'cognomen'])
       end
 
       # They can change their first name, but not their surname.
@@ -380,6 +402,24 @@ class Ability
     # Read projects
     can [:read, :update], Project do |project|
       project.group.members.include? user
+    end
+  end
+
+  def rights_for_auth_token_users
+    p "===TOKEN #{auth_token.user} #{auth_token.resource}"
+    if auth_token && Ability.new(auth_token.user).can?(:read, auth_token.resource)
+      can :read, auth_token.resource
+
+      if auth_token.resource.kind_of? Page
+        auth_token.resource.attachments.each do |attachment|
+          can [:read, :download], attachment
+        end
+      elsif auth_token.resource.kind_of? Event
+        auth_token.resource.attachments.each do |attachment|
+          can [:read, :download], attachment
+        end
+        # TODO  can post photos
+      end
     end
   end
 

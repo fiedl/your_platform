@@ -32,6 +32,8 @@ Rails.application.routes.draw do
     put 'change_password/:id' => 'devise/registrations#update', :as => 'registration' #todo: change to patch in rails 4.0
     get 'forgot-password', to: 'devise/passwords#new'
     get 'passwort-vergessen', to: 'devise/passwords#new'
+
+    get "/auth/:provider/callback", to: 'sessions#create'
   end
 
   get 'search/guess', to: "search#lucky_guess"

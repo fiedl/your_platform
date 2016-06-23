@@ -75,6 +75,19 @@ describe Ability do
           end
         end
       end
+
+      context "(user profile)" do
+        before do
+          user.date_of_birth = 30.years.ago.to_date
+          user.personal_title = "Dr."
+          user.academic_degree = "Dr. rer. nat."
+          user.save
+        end
+
+        he { should_not be_able_to :update, user.date_of_birth_field }
+        he { should be_able_to :update, user.personal_title_field }
+        he { should be_able_to :update, user.academic_degree_field }
+      end
     end
 
     context "(mentions)" do

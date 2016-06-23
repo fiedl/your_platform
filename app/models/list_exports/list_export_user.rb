@@ -6,11 +6,11 @@ module ListExports
     def name_affix_without_deceased_symbol
       name_affix.gsub(" (✟)", "")
     end
-    
+
     # Name list
     #
     attr_accessor :member_since
-  
+
     # Birthday, Date of Birth, Date of Death
     #
     def current_age
@@ -31,7 +31,7 @@ module ListExports
     def age_at_date_of_death
       ((date_of_death.to_date - date_of_birth) / 365.25).to_int if date_of_death and date_of_birth
     end
-  
+
     # Address
     #
     def postal_address_with_name_surrounding
@@ -76,6 +76,13 @@ module ListExports
     def postal_address_country_code_3_letters
       address_label.country_code_with_3_letters
     end
+    def postal_address_postal_code_and_town
+      address_label.postal_address
+        .gsub(postal_address_street_with_number.to_s, '')
+        .gsub(postal_address_second_address_line.to_s, '')
+        .gsub(postal_address_country.to_s, '')
+        .gsub("\n", '')
+    end
     def address_label_text_above_name
       address_label.text_above_name
     end
@@ -91,7 +98,7 @@ module ListExports
     def dpag_postal_address_type
       "HOUSE"
     end
-  
+
     def cache_key
       # Otherwise the cached information of the user won't be used.
       super.gsub('list_export_users/', 'users/')
