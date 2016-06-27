@@ -28,7 +28,7 @@
   %h1.home_page_settings= t :home_page_settings
   %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
 
-%h1= t :boxes_on_this_page
+%h1.boxes_on_this_page= t :boxes_on_this_page
 %div
   = t :select_boxes_to_display_on_the_page_str, str: @page.title
 
@@ -41,7 +41,7 @@
           = t :locations_map_group_id
           = best_in_place @page, :group_map_parent_group_id
     %tr
-      %th Veranstaltungen
+      %th= t :events
       %td
         %p settings.show_events_box_for_group
         %p settings.show_only_events_published_on_global_website

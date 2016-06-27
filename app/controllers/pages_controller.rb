@@ -135,7 +135,7 @@ private
 
   def handle_checkbox_param(param)
     # For example: params[:page][:show_in_menu] ||= params[:show_in_menu]
-    params[:page][param] ||= params[param]
+    params[:page][param] ||= params[param] if params[param]
     params[:page][param] = false if params[:page][param].in? ["0", "false"]
     params[:page][param] = true if params[:page][param] == "true"
   end
