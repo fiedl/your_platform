@@ -27,10 +27,6 @@ class Page < ActiveRecord::Base
   #     page.settings.color  # =>  :red
   #
   include RailsSettings::Extend
-  delegate :show_group_map, :show_group_map=, :group_map_parent_group_id=,
-    to: :settings
-  attr_accessible :show_group_map, :group_map_parent_group_id
-
 
   def not_empty?
     attachments.count > 0 or (content && content.length > 5)

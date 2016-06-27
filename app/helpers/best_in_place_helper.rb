@@ -4,6 +4,15 @@ module BestInPlaceHelper
     link_to(icon(:edit), '#', id: activator_id, class: options[:class])
   end
 
+  # For example:
+  #
+  #   setting_in_place @page, :layout
+  #
+  def setting_in_place(object, setting_key, options = nil)
+    setting = object.settings.where(var: setting_key).first_or_create
+    best_in_place setting, :value
+  end
+
   def ajax_check_box(object, attribute, label)
     form_for object, remote: true do |f|
       f.label attribute do
@@ -12,6 +21,11 @@ module BestInPlaceHelper
         label
       end
     end
+  end
+
+  def setting_check_box(object, setting_key, label)
+    setting = object.settings.where(var: setting_key).first_or_create
+    ajax_check_box setting, :value, label
   end
 
   def wysiwyg_in_place(object, attribute, options = {})

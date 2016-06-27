@@ -57,7 +57,9 @@ Rails.application.routes.draw do
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
   end
+
   get :settings, to: 'user_settings#index'
+  patch 'settings/:id', to: 'settings#update', as: 'rails_settings_scoped_setting'
 
   get :authorized_users, to: 'authorized_users#index'
 

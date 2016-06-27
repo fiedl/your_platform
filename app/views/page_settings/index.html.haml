@@ -36,14 +36,16 @@
     %tr
       %th= t :locations_map
       %td
-        %p= ajax_check_box @page, :show_group_map, t(:show_locations_map)
+        %p= setting_check_box @page, :show_group_map, t(:show_locations_map)
         %p
           = t :locations_map_group_id
-          = best_in_place @page, :group_map_parent_group_id
+          = setting_in_place @page, :group_map_parent_group_id
     %tr
       %th= t :events
       %td
-        %p settings.show_events_box_for_group
+        %p
+          settings.show_events_box_for_group
+          -#= best_in_place
         %p settings.show_only_events_published_on_global_website
         %p settings.show_only_events_published_on_local_website
     %tr
