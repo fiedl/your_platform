@@ -53,7 +53,11 @@ class AppVersion
 
   def self.domain
     url_options = Rails.application.config.action_mailer.default_url_options
-    "#{url_options[:host]}:#{url_options[:port]}"
+    if url_options[:port].present?
+      "#{url_options[:host]}:#{url_options[:port]}"
+    else
+      url_options[:host]
+    end
   end
 
   def self.email_domain
