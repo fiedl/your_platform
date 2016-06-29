@@ -1,0 +1,60 @@
+// http://codepen.io/fiedl/pen/ezvMOL?editors=1100 (without flex)
+// https://gist.github.com/fiedl/350f98f50de99a0e45521cdf2be243fe
+// http://codepen.io/fiedl/pen/OXpqvx?editors=1100 (with flex)
+
+ul.keys-and-values
+
+  // No bullets:
+  > li, .value-wrapper ul > li
+    list-style: none
+
+  // Layout:
+  .label-wrapper, .value-wrapper
+    display: inline-block
+    vertical-align: top
+  > li, .value-wrapper ul > li
+    display: flex
+    flex-wrap: wrap
+
+  // Layout: Paddings and Margins:
+  padding: 0px
+  > li > .value-wrapper ul
+    padding: 0px
+  .label-wrapper, .value-wrapper
+    margin-top: 5px
+  > li > .value-wrapper
+    margin-bottom: 10px
+  .value-wrapper
+    margin-left: 15px
+  .label-wrapper > .label
+    margin: 0px
+    padding: 0px
+
+  // Layout: Widths:
+  $label-min-width: 150px
+  $sub-label-min-width: 120px
+  > li > .label-wrapper
+    min-width: $label-min-width
+  > li > .value-wrapper ul > li > .label-wrapper
+    min-width: $sub-label-min-width
+  > li > .value-wrapper
+    min-width: 125px
+    flex-grow: 1
+  > li > .value-wrapper ul > li > .value-wrapper
+    min-width: 100px
+    flex-grow: 1
+  .value-wrapper input, .value-wrapper textarea
+    width: 100%
+  .value-wrapper textarea
+    min-height: 100px
+
+  // Font:
+  > li > .label-wrapper
+    font-weight: bold
+    color: #999
+    > .label
+      color: #999
+  > li > .value-wrapper ul > li > .label-wrapper
+    color: #777
+    > .label
+      color: #777

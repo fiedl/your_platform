@@ -27,18 +27,20 @@
       &nbsp;
       %span.regular_case
         = @user.name_affix
+      .workflow-tool.tool= render partial: 'workflow_triggers'
     %div
-      = render partial: 'avatar'
-      = render partial: 'workflow_triggers'
-      %ul.attributes
-        = render partial: 'user_corporation_attribute'
-        %li.name.attribute= render partial: 'user_name_attribute'
-        = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
-        - general_fields = @user.profile.section(:general).fields
-        = profile_field_lis general_fields, lock_label: true, no_remove: true
-        = render partial: 'users/special_general_info_fields', locals: {user: @user}
-        = render partial: 'users/dead_badge', locals: { user: @user }
-        = render partial: 'users/hidden_flag_switch', locals: { user: @user }
+      .media
+        .media-left= render partial: 'avatar'
+        .media-body
+          %ul.attributes.keys-and-values
+            = render partial: 'user_corporation_attribute'
+            %li.name.attribute= render partial: 'user_name_attribute'
+            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
+            - general_fields = @user.profile.section(:general).fields
+            = profile_field_lis general_fields, lock_label: true, no_remove: true
+            = render partial: 'users/special_general_info_fields', locals: {user: @user}
+            = render partial: 'users/dead_badge', locals: { user: @user }
+            = render partial: 'users/hidden_flag_switch', locals: { user: @user }
 
   -#- if can? :use, :merit
   -#  #merit{class: tab_pane_class}
@@ -53,7 +55,7 @@
     - if @user.corporations.count > 0
       %h1.section.corporate_vita= t :corporate_vita
       %div
-        = render partial: 'workflow_triggers'
+        .pull-right= render partial: 'workflow_triggers'
         - if can? :manage, @user
           = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
         = corporate_vita_for_user @user

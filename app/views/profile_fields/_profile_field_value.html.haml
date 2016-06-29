@@ -4,9 +4,12 @@
   - country_codes = [profile_field.parent.default_country_code.upcase] + GeoLocation.country_codes.sort
   - collection = Hash[*country_codes.zip(country_codes).flatten]
 
+- if profile_field.type == 'ProfileFieldTypes::About'
+  - input_type = :textarea
+
 - if profile_field.children_count == 0
   = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value', collection: collection}
-      
+
 - if profile_field.children_count > 0
   - if profile_field.type == 'ProfileFieldTypes::Address'
     #address_profile_field
@@ -27,11 +30,11 @@
             .label.label-warning=t :address_needs_review
             = link_to(profile_field_path(profile_field, 'profile_field[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
               = icon 'ok'
-        
+
 
   - else # profile fields that are no addresses:
     %ul
       - profile_field.children.each do |child_field|
         = render partial: 'profile_fields/profile_field', object: child_field
-  
+
 - # render partial: 'shared/flags', locals: { flagable: profile_field }

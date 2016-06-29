@@ -4,20 +4,20 @@
 
 %li.officer_entry
 
-  %span.button-wrapper
+  .button-wrapper
     - if can?(:destroy, officer_group) and can?(:create_officers_group_for, structureable) and officer_group.descendant_users.count == 0
       %a.btn.btn-danger.remove_button#destroy_office.show_only_in_edit_mode{href: group_path(officer_group, format: 'json')}
         = icon :trash
-    
-  %span.label-wrapper
+
+  .label-wrapper
     - if can? :rename, officer_group
       - if current_user.developer?
-        .icon-small.copy-to-clipboard{title: "Group.find(#{officer_group.id})"}
+        .icon-small.copy-to-clipboard.show_only_in_edit_mode{title: "Group.find(#{officer_group.id})"}
           = icon :wrench
       = best_in_place officer_group, :name
     - else
       = officer_group.name
-  
+
     - if can? :rename, officer_group
       %span.group_flags.show_only_in_edit_mode
         - for flag in officer_group.flags
@@ -25,5 +25,5 @@
             = icon :tag
             =t flag
 
-  %span.value-wrapper
+  .value-wrapper
     = render partial: 'officers/officer_group_members', locals: {officer_group: officer_group}

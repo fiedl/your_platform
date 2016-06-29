@@ -4,5 +4,5 @@
 - if can? :update, @user
   %h1.section.communication= t(:communication)
   %div
-    %ul.attributes
+    %ul.attributes.keys-and-values
       = profile_field_lis @user.profile.section(:communication).fields, no_remove: true, lock_label: true

@@ -5,7 +5,7 @@
     - executable_workflows = workflows.select { |workflow| can? :execute, workflow }
     - executable_workflows_by_corporation[corporation_title] = executable_workflows if executable_workflows.any?
   - if executable_workflows_by_corporation.any? or (user.markable_as_deceased?)
-    %div.btn-group.workflow_triggers.pull-right{class: "workflow-triggers-for-user-#{user.id}"}
+    %div.btn-group.workflow_triggers{class: "workflow-triggers-for-user-#{user.id}"}
       %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
         = icon 'chevron-up'
         = I18n.t(:change_status)
