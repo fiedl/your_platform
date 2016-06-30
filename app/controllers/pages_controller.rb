@@ -30,10 +30,14 @@ class PagesController < ApplicationController
 
       @blog_entries = @page.blog_entries.for_display
 
-      if @page.settings.show_events_box_for_group
-        @events = Group.find(@page.settings.show_events_box_for_group).events
+      if @page.settings.show_events
+        if @page.settings.show_events_for_group_id
+          @events = Group.find(@page.settings.show_events_for_group_id.to_i).events
+        else
+          @events = Event.all
+        end
         @events = @events.where(publish_on_global_website: true) if @page.settings.show_only_events_published_on_global_website
-        @events = @events.where(published_on_local_website: true) if @page.settings.show_only_events_published_on_local_website
+        @events = @events.where(publish_on_local_website: true) if @page.settings.show_only_events_published_on_local_website
         @events = @events.upcoming.order('events.start_at, events.created_at').limit(5)
         @events = @events.select { |event| current_ability.can? :read, event }
       end

@@ -46,11 +46,12 @@
     %tr
       %th= t :events
       %td
+        %p= setting_check_box @page, :show_events
         %p
-          settings.show_events_box_for_group
-          -#= best_in_place
-        %p settings.show_only_events_published_on_global_website
-        %p settings.show_only_events_published_on_local_website
+          = t :show_events_for_group_id
+          = setting_in_place @page, :show_events_for_group_id
+        %p= setting_check_box @page, :show_only_events_published_on_global_website
+        %p= setting_check_box @page, :show_only_events_published_on_local_website
     %tr
       %th= t :officers
       %td

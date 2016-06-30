@@ -19,6 +19,11 @@ de:
   show_locations_map: Karte der Standorte anzeigen
   locations_map_group_id: "Gruppen-ID der Gruppe, deren Untergruppen auf der Karte angezeigt werden sollen:"
 
+  show_events: Veranstaltungen anzeigen
+  show_events_for_group_id: "Veranstaltungen der Gruppe mit folgender ID anzeigen:"
+  show_only_events_published_on_global_website: "Nur Veranstaltungen anzeigen, für die 'Auf globaler öffentlicher Homepage' ausgewählt wurde."
+  show_only_events_published_on_local_website: "Nur Veranstaltungen anzeigen, für die 'Auf lokaler Homepage veröffentlichen' ausgewählt wurde."
+
   show_officers: Amtsträger anzeigen
   show_officers_of_group_id: Amtsträger der Gruppe mit folgender ID anzeigen.
   for_empty_field_show_page_officers: "Wenn das Feld leer ist, werden die Amtsträger angezeigt, die direkt dieser Inhaltsseite zugeordnet sind (siehe Kasten 'Amtsträger' weiter unten). Wenn hingegen eine Gruppen-ID angegeben ist, werden stattdessen die Amtsträger dieser Gruppe angezeigt."

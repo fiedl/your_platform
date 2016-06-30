@@ -19,6 +19,11 @@ en:
   show_locations_map: Show locations map
   locations_map_group_id: "Group id of the group thats child groups are to be shown on the locations map:"
 
+  show_events: Show events
+  show_events_for_group_id: "Show events of the group with id:"
+  show_only_events_published_on_global_website: "Show only events with 'publish on global website' selected."
+  show_only_events_published_on_local_website: "Show only events with 'publish on local website' selected."
+
   show_officers: Show officers
   show_officers_of_group_id: Show officers of the group with the following id.
   for_empty_field_show_page_officers: "If this field is empty then show the officers of this page (box 'officers' below). If a group id is given then show the officers of this group instead."
