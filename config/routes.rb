@@ -59,7 +59,7 @@ Rails.application.routes.draw do
   end
 
   get :settings, to: 'user_settings#index'
-  patch 'settings/:id', to: 'settings#update', as: 'rails_settings_scoped_setting'
+  resources :settings, as: 'rails_settings_scoped_setting'
 
   get :authorized_users, to: 'authorized_users#index'
 
