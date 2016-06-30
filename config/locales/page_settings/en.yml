@@ -19,4 +19,9 @@ en:
   show_locations_map: Show locations map
   locations_map_group_id: "Group id of the group thats child groups are to be shown on the locations map:"
 
+  show_officers: Show officers
+  show_officers_of_group_id: Show officers of the group with the following id.
+  for_empty_field_show_page_officers: "If this field is empty then show the officers of this page (box 'officers' below). If a group id is given then show the officers of this group instead."
+  show_only_the_first_n_offices: "Show only the first N offices:"
+
   danger_zone_tm: Danger Zone™

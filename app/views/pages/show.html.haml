@@ -7,6 +7,9 @@
 
 = draggable_boxes_row(page) do
 
+  .col.col-sm-9.col-xs-12.resizable_col
+    = render page
+
   - if page.settings.show_group_map
     .col.col-sm-6.col-xs-12
       %h1#group-map-box= t(:group_map_title)
@@ -14,16 +17,21 @@
         = render partial: 'shared/group_map'
 
   - if @events
-    .col.col-sm-3.public_root_events
+    .col.col-sm-3.col-xs-12.public_root_events
       %h1#public-root-events-box
         = t(:events)
       %div
         = render partial: 'events/events_lis', locals: {events: @events, show_location_rather_than_group: true}
 
-  .col.col-sm-9.col-xs-12.resizable_col
-    = render page
   - page.teaser_boxes.each do |p|
-    .col.col-sm-3.resizable_col= render partial: 'pages/page', locals: {page: p, teaser_box: true}
+    .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/page', locals: {page: p, teaser_box: true}
+
+  - if page.settings.show_officers
+    .col.col-sm-3.col-xs-12.resizable_col
+      - if page.settings.show_officers_for_group_id
+        = render partial: 'officers/officers_box', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.settings.show_only_the_first_n_offices.try(:to_i)}
+      - else
+        = render partial: 'officers/officers_box', locals: {structureable: page}
 
 .row
   = render partial: 'pages/new_page_button', locals: {parent_page: page}
@@ -34,16 +42,6 @@
       = render partial: 'pages/page', object: blog_entry
 
 
--#%div.col-md-12
--#  = render @page
--#
--#- # officers
--#- # We show the officers box only if there are any officers groups, since this is used only for special pages
--#- # at the moment. Most global admins won't assign officers to pages.
--#- #
--#- if @page.find_officers_groups.any?
--#  = render partial: 'officers/officers_box', locals: {structureable: @page}
--#
 -#%div.col3
 -#
 -#  -# - if can?(:create_page_for, @page)

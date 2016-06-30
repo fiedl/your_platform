@@ -28,7 +28,10 @@
   %h1.home_page_settings= t :home_page_settings
   %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
 
-%h1.boxes_on_this_page= t :boxes_on_this_page
+%h1.boxes_on_this_page
+  = t :boxes_on_this_page
+  .help_tool.tool
+    %a.show_hidden_help{href: '#'}= help_icon
 %div
   = t :select_boxes_to_display_on_the_page_str, str: @page.title
 
@@ -48,6 +51,17 @@
           -#= best_in_place
         %p settings.show_only_events_published_on_global_website
         %p settings.show_only_events_published_on_local_website
+    %tr
+      %th= t :officers
+      %td
+        %p= setting_check_box @page, :show_officers
+        %p
+          %strong= t :show_officers_of_group_id
+          = setting_in_place @page, :show_officers_for_group_id
+          %p.hidden_help= t :for_empty_field_show_page_officers
+        %p
+          = t :show_only_the_first_n_offices
+          = setting_in_place @page, :show_only_the_first_n_offices
     %tr
       %th Unterseiten
       %td
