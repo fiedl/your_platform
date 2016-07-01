@@ -1,15 +1,12 @@
 $(document).on 'edit', '.box', ->
   # This is needed for css styling.
   $(this).find('.content').addClass 'currently_in_edit_mode'
-  App.adjust_box_heights_for $(this).closest('.col')
 
 $(document).on 'save', '.box', ->
   $(this).find('.content').removeClass 'currently_in_edit_mode'
-  App.adjust_box_heights_for $(this).closest('.col')
 
 $(document).on 'cancel', '.box', ->
   $(this).find('.content').removeClass 'currently_in_edit_mode'
-  App.adjust_box_heights_for $(this).closest('.col')
 
 $(document).ready ->
   $('.content_twoCols_right > div.col-xs-12').each ->

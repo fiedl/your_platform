@@ -121,7 +121,6 @@ class App.Gallery
         self.picture_info_element().find('.remove_button')
           .removeClass('show_only_in_edit_mode')
           .hide()
-        App.adjust_box_heights_for self.closest('.col, .resizable_col')
     })
 
   # /attachments/123/filename.png
@@ -143,8 +142,6 @@ class App.Gallery
   #
   hide_thumbs_or_slideshow: ->
     @find('.galleria-thumbnails').hide()
-    @find('.galleria-stage').css('bottom', '10px')
-    @find('.galleria-container').height (index, height)-> height - 50
 
   # Do not show galleria errors. These are not useful
   # in production.
