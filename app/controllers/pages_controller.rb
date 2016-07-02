@@ -23,10 +23,6 @@ class PagesController < ApplicationController
         redirect_to root_path
         return
       end
-      if @page.has_flag?(:root)
-        redirect_to public_root_path
-        return
-      end
 
       @blog_entries = @page.blog_entries.for_display
 
