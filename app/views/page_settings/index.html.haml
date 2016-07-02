@@ -11,7 +11,7 @@
       %td= best_in_place @page, :type
     %tr
       %th= t :page_author
-      %td= best_in_place @page, :author
+      %td= user_best_in_place @page, :author_title
     %tr
       %th= t :redirect_page_to
       %td= best_in_place @page, :redirect_to

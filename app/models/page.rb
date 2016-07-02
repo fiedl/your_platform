@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to, :author, :author_user_id, :box_configuration, :type if defined? attr_accessible
+  attr_accessible        :content, :title, :redirect_to, :author, :author_title, :author_user_id, :box_configuration, :type if defined? attr_accessible
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
 
@@ -47,6 +47,14 @@ class Page < ActiveRecord::Base
   def to_s
     title
   end
+
+  def author_title=(new_title)
+    self.author = User.find_by_title(new_title)
+  end
+  def author_title
+    self.author.try(:title)
+  end
+
 
   def child_teaser_boxes
     teaser_boxes
