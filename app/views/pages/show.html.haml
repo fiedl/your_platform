@@ -14,7 +14,7 @@
     .col.col-sm-6.col-xs-12
       %h1#group-map-box= t(:group_map_title)
       %div
-        = render partial: 'shared/group_map'
+        = render partial: 'shared/group_map', locals: {page: page}
 
   - if @events
     .col.col-sm-3.col-xs-12.public_root_events

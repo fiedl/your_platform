@@ -16,6 +16,7 @@ de:
   home_page_sub_title: Homepage-Untertitel
 
   locations_map: Karte der Standorte
+  group_map_sub_title: Untertitel der Karte
   show_locations_map: Karte der Standorte anzeigen
   locations_map_group_id: "Gruppen-ID der Gruppe, deren Untergruppen auf der Karte angezeigt werden sollen:"
 

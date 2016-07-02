@@ -16,6 +16,7 @@ en:
   home_page_sub_title: Home page sub title
 
   locations_map: Locations map
+  group_map_sub_title: Map sub title
   show_locations_map: Show locations map
   locations_map_group_id: "Group id of the group thats child groups are to be shown on the locations map:"
 
