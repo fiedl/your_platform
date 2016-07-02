@@ -12,7 +12,12 @@ $(document).ready ->
         em:     1,
         br:     1,
         p:      1,
-        div:    {},
+        div:    {
+          check_attributes: {
+            contenteditable: "any",
+            "*": "any"
+          }
+        },
         span:   {},
         ul:     1,
         ol:     1,
@@ -38,13 +43,14 @@ $(document).ready ->
             href:   "url" # important to avoid XSS
           }
         }
-      }
+      },
+      classes: "any"
     }
 
-    editor = new wysihtml5.Editor editable.get(0), {
+    editor = new wysihtml.Editor editable.get(0), {
       toolbar: toolbar.get(0),
       showToolbarAfterInit: false,
-      parserRules: parser_rules,
+      #parserRules: parser_rules,
       classNameCommandActive: 'active',
       useLineBreaks: editable.hasClass('multiline')
     }
@@ -61,6 +67,11 @@ $(document).ready ->
       editable.removeClass('active')
       toolbar.hide('blind')
 
+      # Replace video galleries with the link in order to persist them correctly.
+      editable.find('.wysihtml-uneditable-container.for-video-gallery').each ->
+        video_url = $(this).find('.video-gallery').data('video-url')
+        $(this).replaceWith(video_url)
+
       html = editor.getValue()
       url = editable.data('url')
       $.ajax {
@@ -75,6 +86,7 @@ $(document).ready ->
         success: (result)->
           editor.setValue(result['display_as']) if result
           editable.effect('highlight')
+          App.galleries.process(editable)
       }
 
     editable.on 'cancel', ->

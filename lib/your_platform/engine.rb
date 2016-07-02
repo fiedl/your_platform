@@ -65,7 +65,7 @@ require 'rails-assets-bootstrap-social'
 
 # In Place Editing
 require 'best_in_place'
-require 'rails-assets-wysihtml5x'
+require 'rails-assets-Voog--wysihtml'
 
 # Geo Coding
 require 'geocoder'
