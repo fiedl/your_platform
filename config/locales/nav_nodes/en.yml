@@ -9,5 +9,7 @@ en:
   slim_menu: "Hide in menu when attempting to save space."
   slim_breadcrumb: "Hide in breadcrumbs when attempting to save space."
 
+  show_as_teaser_box: Show as teaser box
+
   separate_menu_label: Separate menu label
   separate_breadcrumb_label: Separate breadcrumb label

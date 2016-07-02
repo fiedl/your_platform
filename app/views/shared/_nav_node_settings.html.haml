@@ -7,8 +7,9 @@
   %tr
     %th= t :menu_options
     %td
-      = ajax_check_box navable, :show_in_menu, t(:show_in_menu)
-      = ajax_check_box navable, :slim_menu, t(:slim_menu)
+      = ajax_check_box navable, :show_in_menu
+      = ajax_check_box navable, :slim_menu
+      = ajax_check_box navable, :show_as_teaser_box
   %tr
     %th= t :breadcrumb_options
     %td

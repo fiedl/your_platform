@@ -9,5 +9,7 @@ de:
   slim_menu: "Im Menü ausblenden, wenn Platz gespart werden soll."
   slim_breadcrumb: "In der Breadcrumb-Leiste ausblenden, wenn Platz gespart werden soll."
 
+  show_as_teaser_box: Als Teaser-Box anzeigen
+
   separate_menu_label: Abweichende Beschriftung im Menü
   separate_breadcrumb_label: Abweichende Beschriftung des Breadcrumb-Eintrags
