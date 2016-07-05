@@ -70,7 +70,7 @@ module UserGroupMembershipMixins::ValidityRange
   extend ActiveSupport::Concern
 
   included do
-    attr_accessible :valid_from, :valid_to, :valid_from_localized_date, :valid_to_localized_date
+    attr_accessible :valid_from, :valid_to, :valid_from_localized_date, :valid_to_localized_date if defined? attr_accessible
     before_validation :set_valid_from_to_now
 
     default_scope { valid }

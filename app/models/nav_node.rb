@@ -5,7 +5,7 @@ class NavNode < ActiveRecord::Base
   attr_accessible :breadcrumb_item, :slim_breadcrumb,
     :hidden_menu, :menu_item, :slim_menu,
     :slim_url, :url_component,
-    :hidden_teaser_box
+    :hidden_teaser_box if defined? attr_accessible
 
   belongs_to :navable, polymorphic: true
 

@@ -6,7 +6,7 @@ class Post < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
   accepts_nested_attributes_for :attachments
-  attr_accessible :attachments_attributes
+  attr_accessible :attachments_attributes if defined? attr_accessible
 
   has_many :comments, as: :commentable, dependent: :destroy
   has_many :mentions, as: :reference, dependent: :destroy
@@ -14,9 +14,9 @@ class Post < ActiveRecord::Base
 
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
-  
+
   include PostDeliveryReport
-  
+
   def title
     subject
   end
@@ -35,7 +35,7 @@ class Post < ActiveRecord::Base
     self.notifications.where(recipient_id: user.id, read_at: nil).count > 0 or
     user.notifications.unread.where(reference_type: 'Comment', reference_id: self.comment_ids).count > 0
   end
-  
+
   def recipients
     User.find(notifications.pluck(:recipient_id))
   end
@@ -89,7 +89,7 @@ class Post < ActiveRecord::Base
   end
   def send_as_email_to_recipients(recipients = nil)
     recipients ||= group.members
-    
+
     recipients.each do |recipient_user|
       unless self.deliveries.pluck(:user_id).include? recipient_user.id
         delivery = self.deliveries.build
@@ -97,11 +97,11 @@ class Post < ActiveRecord::Base
         delivery.save
       end
     end
-    
+
     self.deliveries.due.pluck(:id).each do |delivery_id|
       PostDelivery.delay.deliver_if_due(delivery_id)
     end
-    
+
     self.notifications.where(sent_at: nil).update_all sent_at: Time.zone.now
 
     return self.deliveries.count
@@ -172,8 +172,8 @@ class Post < ActiveRecord::Base
 
     return message
   end
-  
-  
+
+
   # Find all posts that are sent by or sent to a user.
   #
   def self.by_user(user)
@@ -198,5 +198,5 @@ class Post < ActiveRecord::Base
       end
     end
   end
-  
+
 end

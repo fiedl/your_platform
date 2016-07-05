@@ -2,7 +2,7 @@ module WorkflowKit
   class Parameter < ActiveRecord::Base
     self.table_name = "workflow_kit_parameters"
 
-    attr_accessible :key, :value
+    attr_accessible :key, :value if defined? attr_accessible
 
     belongs_to :parameterable, polymorphic: true
 

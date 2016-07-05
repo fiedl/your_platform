@@ -2,7 +2,7 @@ module WorkflowKit
   class Workflow < ActiveRecord::Base
     self.table_name = "workflow_kit_workflows"
 
-    attr_accessible :description, :name, :parameters
+    attr_accessible :description, :name, :parameters if defined? attr_accessible
 
     has_many :steps, dependent: :destroy
 
@@ -19,7 +19,7 @@ module WorkflowKit
       end
     end
 
-    def steps 
+    def steps
       super.order( :sequence_index ).order( :created_at )
     end
 

@@ -7,10 +7,7 @@ concern :Navable do
     has_one :nav_node, as: :navable, dependent: :destroy, autosave: true
 
     accepts_nested_attributes_for :nav_node
-    attr_accessible :nav_node_attributes
-
-    #delegate :show_in_menu, :show_in_menu=, to: :nav_node
-    #attr_accessible :show_in_menu
+    attr_accessible :nav_node_attributes if defined? attr_accessible
 
     delegate :hidden_menu, :hidden_menu=,
       :slim_menu, :slim_menu=,
@@ -19,7 +16,7 @@ concern :Navable do
       :show_as_teaser_box, :show_as_teaser_box?, :show_as_teaser_box=,
       to: :nav_node
     attr_accessible :hidden_menu, :slim_menu, :slim_breadcrumb,
-      :show_as_teaser_box, :show_in_menu
+      :show_as_teaser_box, :show_in_menu if defined? attr_accessible
 
     def is_navable?
       true
