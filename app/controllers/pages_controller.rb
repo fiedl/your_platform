@@ -129,6 +129,7 @@ private
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
     permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu] if can? :manage, @page
     permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
+    permitted_keys += [:settings => [:horizontal_nav_page_id_order => []]] if can? :manage, @page
 
     params.require(:page).permit(*permitted_keys)
   end

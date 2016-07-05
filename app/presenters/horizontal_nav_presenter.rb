@@ -26,7 +26,7 @@ class HorizontalNavPresenter < BasePresenter
   private
 
   def ul_tag
-    content_tag :ul, :class => "nav nav-tabs" do
+    content_tag :ul, id: 'horizontal_nav', class: 'nav navbar-nav nav-pills', data: {breadcrumb_root_path: page_path(horizontal_nav.breadcrumb_root)} do
       yield
     end
   end
@@ -50,7 +50,8 @@ class HorizontalNavPresenter < BasePresenter
     options = {}
     if link_object.try(:id)
       options = options.merge({data: {
-        vertical_nav_path: vertical_nav_path(navable_type: object.class.base_class.name, navable_id: object.id)
+        vertical_nav_path: vertical_nav_path(navable_type: object.class.base_class.name, navable_id: object.id),
+        page_id: (link_object.id if link_object.kind_of?(Page))
       }})
     end
 
@@ -112,4 +113,5 @@ class HorizontalNavPresenter < BasePresenter
   def total_length_of_titles
     nav_link_objects.collect { |object| title_for(object).length }.sum
   end
+
 end

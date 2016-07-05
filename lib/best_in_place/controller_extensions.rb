@@ -20,8 +20,8 @@ module BestInPlace
         render json: renderer.render_json(obj)
       else
         render json: {
-          display_as: obj.send(updating_attr),
-          # object: obj.to_json
+          display_as: obj.send(updating_attr)
+          # object: obj.as_json
         }
       end
     end

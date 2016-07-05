@@ -15,8 +15,7 @@
   %body.iweb-layout{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'iweb', navable: @navable.try(:to_global_id)}}
     .container-fluid
       .row#horizontal-nav-bar
-        #category_indicator
-          %ul.nav.navbar-nav#horizontal_nav= horizontal_nav_lis
+        = horizontal_nav
       #header.row
         #home_page_title.col-xs-12.col-sm-8
           .home_page_title
