@@ -46,7 +46,7 @@
         .hidden-print.show_only_in_edit_mode
           #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
-    - unless teaser_box
+    - if not teaser_box and not page.public?
       .page_footer.do_not_show_in_edit_mode
         %span.page_footer_box
           - if page.author

@@ -1,9 +1,10 @@
 - page ||= @page
 
 - if can? :manage, page
-  = link_to page_settings_path(page), id: 'page_settings_button', class: 'btn btn-default right' do
-    = settings_icon
-    = t :page_settings
+  .row
+    = link_to page_settings_path(page), id: 'page_settings_button', class: 'btn btn-default pull-right' do
+      = settings_icon
+      = t :page_settings
 
 = draggable_boxes_row(page) do
 
@@ -11,7 +12,7 @@
     = render page
 
   - if page.settings.show_group_map
-    .col.col-sm-6.col-xs-12
+    .col.col-sm-6.col-xs-12.resizable_col
       %h1#group-map-box= t(:group_map_title)
       %div
         = render partial: 'shared/group_map', locals: {page: page}

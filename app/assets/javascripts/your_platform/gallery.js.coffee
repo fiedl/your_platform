@@ -27,7 +27,7 @@ class App.Gallery
   # Basic galleria configuration.
   # See: http://galleria.io/docs/options/
   #
-  default_galleria_options: {
+  default_galleria_options: -> {
     imageCrop: 'landscape',
     transition: 'slide',
     initialTransition: 'fade',
@@ -41,9 +41,7 @@ class App.Gallery
     thumbnails: false,
     #swipe: 'auto',
     responsive: true,
-    #height: 0.625, # 16:10
-    #height: 0.5629, # 16:9
-    height: 0.5, # 16:9 with border correction
+    height: @default_height(),
     debug: false,
     ## height: $(this).find('img').attr('height')
     lightbox: true,
@@ -51,9 +49,16 @@ class App.Gallery
     imageMargin: 0,
   }
 
+  default_height: ->
+    if @closest('.box').width() > 250
+      # return 0.5629, # 16:9
+      return 0.5 # 16:9 aspect ratio with border correction
+    else
+      return 0.625 # 16:10
+
   initSettings: ->
     self = this
-    Galleria.configure(self.default_galleria_options)
+    Galleria.configure(self.default_galleria_options())
 
   initTheme: ->
     # Initialize galleria. One has to load a theme here,
@@ -64,7 +69,7 @@ class App.Gallery
 
   runGalleria: ->
     self = this
-    Galleria.run(self.unique_id(), self.default_galleria_options)
+    Galleria.run(self.unique_id(), self.default_galleria_options())
 
   store_gallery_instance_in_data_attribute: ->
     @root_element.data('gallery', this)
