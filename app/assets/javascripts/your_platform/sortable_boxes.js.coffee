@@ -39,7 +39,6 @@ $(document).ready ->
     handle: '.panel-heading',
     update: ->
       save_box_configuration()
-      App.adjust_box_heights()
     cancel: '.currently_in_edit_mode *'
   }
 
