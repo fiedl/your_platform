@@ -50,7 +50,7 @@ $(document).ready ->
     editor = new wysihtml.Editor editable.get(0), {
       toolbar: toolbar.get(0),
       showToolbarAfterInit: false,
-      #parserRules: parser_rules,
+      parserRules: parser_rules,
       classNameCommandActive: 'active',
       useLineBreaks: editable.hasClass('multiline')
     }
@@ -98,7 +98,7 @@ $(document).ready ->
       toolbar.find('a').attr('href', '#')
       editor.disable()
 
-$(document).on 'keydown', '.wysihtml5-sandbox', (e)->
+$(document).on 'keydown', '.wysihtml-sandbox', (e)->
       if e.keyCode == 27 # escape
         $(this).trigger('cancel')
         $(this).closest('.edit_mode_group').trigger('cancel')
@@ -108,7 +108,7 @@ $(document).on 'keydown', '.wysihtml5-sandbox', (e)->
           $(this).closest('.edit_mode_group').trigger('save')
 
 
-$(document).on 'click', '.wysihtml5-sandbox', (e)->
+$(document).on 'click', '.wysihtml-sandbox', (e)->
   if $(this).data('activate') == "click"
     $(this).trigger('edit')
     $(this).data('editor').focus()
