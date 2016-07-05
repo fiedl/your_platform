@@ -12,7 +12,7 @@
     = yield :scripts
     = yield :head
 
-  %body.iweb-layout{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'iweb', navable: @navable.try(:to_global_id)}}
+  = body_tag do
     .container-fluid
       .row#horizontal-nav-bar
         = horizontal_nav

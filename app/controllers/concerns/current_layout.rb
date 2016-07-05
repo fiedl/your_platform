@@ -4,10 +4,12 @@ concern :CurrentLayout do
     layout :current_layout
 
     helper_method :current_logo_url
+    helper_method :current_layout
   end
 
   def current_layout
     #layout = (permitted_layouts & [layout_setting]).first
+    layout ||= (permitted_layouts & [params[:layout]]).first
     layout ||= current_navable.layout if current_navable.respond_to? :layout
     layout ||= default_layout
     return (permitted_layouts & [layout]).first
