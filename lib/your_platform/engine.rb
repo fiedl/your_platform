@@ -94,6 +94,10 @@ require 'slim_breadcrumb'
 require 'phony'
 require 'will_paginate'
 
+# Gallery
+require 'rails-assets-vvvmax--unitegallery'
+# also, galleria is in our `vendor` directory.
+
 # Client-Side Validations
 require 'judge'
 

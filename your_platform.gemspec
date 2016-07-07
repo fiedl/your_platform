@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
   # --------------------------------------------------------------------------------
 
   # Rails and Rails Additions
-  s.add_dependency "rails", ">= 4.2.5.1"
+  s.add_dependency "rails", "~> 4.2"
   s.add_dependency 'rack', '>= 1.6.2'
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
@@ -129,6 +129,10 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
+
+  # Gallery
+  s.add_dependency 'rails-assets-vvvmax--unitegallery'
+  # also, galleria is in our `vendor` directory.
 
   # Client-Side Validations
   s.add_dependency 'judge'

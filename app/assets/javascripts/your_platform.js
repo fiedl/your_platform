@@ -27,6 +27,7 @@
 //= require jquery.atwho
 //= require wysihtml/wysihtml
 //= require wysihtml/wysihtml.toolbar
+// require unitegallery/unitegallery
 //= require_tree ./your_platform
 //
 //= require turbolinks
