@@ -26,7 +26,10 @@ class HorizontalNavPresenter < BasePresenter
   private
 
   def ul_tag
-    content_tag :ul, id: 'horizontal_nav', class: 'nav navbar-nav nav-pills', data: {breadcrumb_root_path: page_path(horizontal_nav.breadcrumb_root)} do
+    content_tag :ul, id: 'horizontal_nav', class: 'nav navbar-nav nav-pills', data: {
+      breadcrumb_root_path: page_path(horizontal_nav.breadcrumb_root),
+      sortable: (not horizontal_nav.currently_in_intranet? and can?(:manage, current_home_page))
+    } do
       yield
     end
   end

@@ -1,17 +1,17 @@
 class App.UploadBox
-  
+
   upload_counter: 0
   upload_done_counter: 0
   root_element: {}
-  
+
   # Initialize like this:
-  # 
+  #
   #    attachments_section = ').attachments')
   #    upload_box = new App.UploadBox(attachments_section)
   #
   # If there is only upload box on the page,
   # giving $(document) as root_element will suffice.
-  # 
+  #
   #    root_element = $(document)
   #    upload_box = new App.UploadBox(root_element)
   #
@@ -20,11 +20,11 @@ class App.UploadBox
     @unbind_previous_fileupload()
     @bind_fileupload()
     @bind_drag_events()
-    
+
   unbind_previous_fileupload: ->
     @find('form.new_attachment').unbind()
     @find('form.new_attachment').off()
-  
+
   # This binds the fileupload callbacks to the upload form field.
   # The `fileupload` method is provided by https://github.com/blueimp/jQuery-File-Upload.
   # The `form.new_attachment` element is inserted by form_for(attachments.build) in the view.
@@ -38,7 +38,7 @@ class App.UploadBox
       progress: (e, data) -> self.show_uploading()
       done: (e, data) -> self.upload_done()
       fail: (e, data)-> self.upload_failed()
-  
+
   file_added: (data)->
     @upload_counter += 1
     file = data.files[0]
@@ -54,7 +54,7 @@ class App.UploadBox
       @find('p.uploading').text I18n.t 'upload_failed_please_contact_support'
     else
       @find('p.uploading small:first').text I18n.t 'upload_failed_please_contact_support'
-      
+
   # This is just a shortcut to find a dom element in the root element
   # of this uploader.
   #
@@ -69,7 +69,7 @@ class App.UploadBox
     @find('p.uploading').removeClass('hidden').show()
     @find('.attachment_drop_field').find('form').hide()
     @find('.upload_counter').html("" + @upload_done_counter + " / " + @upload_counter)
-    
+
   show_success: ->
     @find('.attachment_drop_field')
       .removeClass('uploading').addClass('success')
@@ -91,7 +91,15 @@ class App.UploadBox
       self.show_uploading()
 
   refresh_attachments_section: ->
-    @root_element.ajax_reload(@parent_url(), '#attachments, #inline-pictures')
-    
+    @root_element.closest('.box').ajax_reload {
+      url: @parent_url(),
+      selectors: ['#attachments', '#inline-pictures'],
+      success: ->
+        @inline_pictures_element().find('.show_only_in_edit_mode').show() # since we are already in edit mode.
+    }
+
+  inline_pictures_element: ->
+    @root_element.closest('.box').find('#inline-pictures')
+
   parent_url: ->
     @find('.box.upload_attachment').attr('data-parent-url')

@@ -1,5 +1,5 @@
 $(document).ready ->
-  if user_can_manage_home_page()
+  if user_can_sort_horizontal_nav()
     nav_ul().sortable {
       update: -> save_horizontal_nav_order()
     }
@@ -10,8 +10,8 @@ nav_ul = ->
 update_url = ->
   nav_ul().data('breadcrumb-root-path')
 
-user_can_manage_home_page = ->
-  true if update_url()
+user_can_sort_horizontal_nav = ->
+  true if nav_ul().data('sortable')
 
 save_horizontal_nav_order = ->
   $.ajax {

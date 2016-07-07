@@ -121,11 +121,11 @@ class App.Gallery
         self.picture_info_element()
           .hide()
           .replaceWith(result.html).show()
-        self.picture_info_element()
-          .find('.best_in_place').best_in_place()
         self.picture_info_element().find('.remove_button')
           .removeClass('show_only_in_edit_mode')
           .hide()
+        self.picture_info_element().apply_edit_mode()
+        self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
     })
 
   # /attachments/123/filename.png
@@ -139,6 +139,9 @@ class App.Gallery
 
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
+
+  currently_in_edit_mode: ->
+    @root_element.closest('.edit_mode_group').hasClass('currently_in_edit_mode')
 
   # Hide thumbnail collections. Thumbnails are handled by YourPlatform
   # separately.

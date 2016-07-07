@@ -19,7 +19,11 @@ concern :CurrentNavable do
   end
 
   def current_home_page
-    current_navable.home_page if current_navable && current_navable.respond_to?(:home_page)
+    if current_navable && current_navable.respond_to?(:home_page) && current_navable.home_page
+      current_navable.home_page
+    else
+      Page.root
+    end
   end
 
   # This method sets the currently shown navable object.

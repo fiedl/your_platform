@@ -4,9 +4,15 @@ body.iweb-layout
   font-size: 15px
   h2
     font-size: 20px
+  h1, h2, h3, h4
+    margin-top: 20px
+    margin-bottom: 10px
+  h1.panel-title
+    margin-top: 5px
+    margin-bottom: 10px
 
   > .container-fluid
-    max-width: 700px
+    max-width: 650px
     margin-left: auto
     margin-right: auto
   #horizontal-nav-bar
@@ -26,6 +32,7 @@ body.iweb-layout
         background: none
   #header
     padding-top: 10px
+    margin-bottom: 15px
     > img
       width: 100%
     #logo
@@ -56,6 +63,9 @@ body.iweb-layout
   .page_footer
     display: none
 
+  #inline-pictures
+    margin-bottom: 65px
+
   .galleria-container
     -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
 
@@ -70,3 +80,8 @@ body.pages-homepage.iweb-layout
       background: none
     .panel-title
       display: none
+
+// No global page settings button for this compact layout.
+body.iweb-layout
+  .row.for_settings_button
+    display: none

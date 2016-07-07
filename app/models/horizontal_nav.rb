@@ -19,7 +19,7 @@ class HorizontalNav
       intranet_navables
     else
       public_navables
-    end.select { |navable| navable.try(:show_in_menu?) }
+    end
   end
 
   def intranet_navables
@@ -37,7 +37,7 @@ class HorizontalNav
         pages = (pages_by_id.values_at(*breadcrumb_root.settings.horizontal_nav_page_id_order) + pages).uniq
       end
 
-      pages.select { |page| page.try(:id) } # Filter "new page" element.
+      pages.select { |page| page.try(:id) && page.show_in_menu? } # Filter "new page" element.
     else
       []
     end
