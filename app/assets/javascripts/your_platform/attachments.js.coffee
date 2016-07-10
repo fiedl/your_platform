@@ -24,8 +24,3 @@ $(document).on 'click', '.pictures .remove_button', ->
   pictures_box.find('.galleria-image.active').hide('explode')
   pictures_box.find('.picture-info').hide('explode')
 
-$(document).on 'click', '.image_attachment_thumbnails img', ->
-  image_big_url = $(this).data('image-big-url')
-  gallery = $(this).closest('.box').find('.galleria').data('gallery')
-  gallery.show(image_big_url)
-  gallery.open_lightbox()

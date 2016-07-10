@@ -160,10 +160,11 @@ class App.Gallery
   bind_fullscreen_events: ->
     self = this
 
-    # Clicking on the thumbnail activates the lightbox.
-    #
-    @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
-      self.open_lightbox()
+    # We've removed the galleria thumbnails and handle them manually below galleria.
+    # # Clicking on the thumbnail activates the lightbox.
+    # #
+    # @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
+    #   self.open_lightbox()
 
     # # Clicking on an gallery image switches to fullscreen mode,
     # # i.e. covers the full browser window.

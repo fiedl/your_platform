@@ -68,9 +68,9 @@ PATH
       rails-assets-Voog--wysihtml
       rails-assets-bootstrap-social
       rails-assets-datatables (>= 1.10.10)
+      rails-assets-jquery-masonry
       rails-assets-jquery-ui
       rails-assets-jquery-ujs
-      rails-assets-vvvmax--unitegallery
       rails-i18n
       rails-settings-cached
       redcarpet (>= 3.3.2)
@@ -419,14 +419,24 @@ GEM
       rails-assets-font-awesome (~> 4.5)
     rails-assets-datatables (1.10.12)
       rails-assets-jquery (>= 1.7.0)
+    rails-assets-desandro-matches-selector (2.0.1)
+    rails-assets-ev-emitter (1.0.3)
+    rails-assets-fizzy-ui-utils (2.0.2)
+      rails-assets-desandro-matches-selector (~> 2.0.0)
     rails-assets-font-awesome (4.6.3)
+    rails-assets-get-size (2.0.2)
     rails-assets-jquery (2.2.4)
+    rails-assets-jquery-masonry (4.1.0)
+      rails-assets-get-size (>= 2.0.2, < 3)
+      rails-assets-outlayer (>= 2.1.0, < 3)
     rails-assets-jquery-ui (1.11.4)
       rails-assets-jquery (>= 1.6)
     rails-assets-jquery-ujs (1.2.1)
       rails-assets-jquery (> 1.8)
-    rails-assets-vvvmax--unitegallery (1.7.28)
-      rails-assets-jquery (>= 1.9.0)
+    rails-assets-outlayer (2.1.0)
+      rails-assets-ev-emitter (>= 1.0.0, < 2)
+      rails-assets-fizzy-ui-utils (>= 2.0.0, < 3)
+      rails-assets-get-size (>= 2.0.2, < 3)
     rails-deprecated_sanitizer (1.0.3)
       activesupport (>= 4.2.0.alpha)
     rails-dom-testing (1.0.7)

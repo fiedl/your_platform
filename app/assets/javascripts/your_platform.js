@@ -27,7 +27,8 @@
 //= require jquery.atwho
 //= require wysihtml/wysihtml
 //= require wysihtml/wysihtml.toolbar
-// require unitegallery/unitegallery
+//= require 'jquery-masonry/dist/masonry.pkgd'
+//= require imagesloaded
 //= require_tree ./your_platform
 //
 //= require turbolinks

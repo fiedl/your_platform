@@ -7,9 +7,10 @@
     = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
     = stylesheet_link_tag 'iweb_layout', :media => 'all'
     = stylesheet_link_tag 'application', :media => 'all'
+
     = gmaps4rails_api_script_tags
     = javascript_include_tag 'application'
-    = javascript_include_tag 'unitegallery/unitegallery'
+
     = yield :scripts
     = yield :head
 
