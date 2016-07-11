@@ -139,7 +139,8 @@ module ProfileFieldTypes
             lng: longitude,
             lat: latitude
           },
-          title: title
+          title: title,
+          profileable_title: profileable.try(:title)
         })
       end
 

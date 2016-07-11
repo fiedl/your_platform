@@ -185,6 +185,7 @@ Rails.application.routes.draw do
         get :titles, on: :collection, to: 'users/titles#index'
       end
       get :navigation, to: 'navigation#show'
+      get 'search/preview', to: '/search#preview', defaults: {format: :json}
     end
   end
 

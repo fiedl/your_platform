@@ -7,6 +7,10 @@ module ProfileableMixins::Address
     self.id ? profile_fields.where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
   end
 
+  def address_fields_json
+    cached { address_fields.to_json }
+  end
+
 
   def primary_address_field
     postal_address_field_or_first_address_field

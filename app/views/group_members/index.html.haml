@@ -4,14 +4,14 @@
 -# %div
 -#   - if @own_memberships.now.count == 0
 -#     %a.btn.btn-success Beitreten
--#   - elsif @own_memberships.now.direct.count > 0 
+-#   - elsif @own_memberships.now.direct.count > 0
 -#     %a.btn.btn-danger Gruppe verlassen
 -#   - @own_memberships.each do |membership|
 -#     %p
 -#       Mitglied seit
 -#       = localize membership.valid_from.to_date if membership.valid_from
 -#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
-    
+
 #members
   %h1.section.members
     = @title
@@ -42,3 +42,7 @@
       %span.add_group_member_tools.right
         = form.date_select :valid_from, value: Date.today, class: 'valid-from-field'
         = form.submit t(:add), class: 'btn btn-primary add-user-button'
+
+%h1.group_members_map= t :map
+%div
+  .google_maps.with_info_window{data: {datatable: 'table.members'}}

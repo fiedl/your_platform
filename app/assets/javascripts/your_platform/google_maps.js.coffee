@@ -4,6 +4,7 @@ class App.GoogleMap
   map: {}
   markers: []
   bounds: {}
+  current_info_window: {}
 
   constructor: (map_div)->
     @map_div = map_div
@@ -15,7 +16,22 @@ class App.GoogleMap
     @map_div.data 'map', @map
 
   profile_fields: ->
-    @map_div.data('profile-fields')
+    if @map_div.data('profile-fields')
+      return @map_div.data('profile-fields')
+    else if @map_div.data('selector')
+      fields = []
+      for entry in $(@map_div.data('selector'))
+        if $(entry).data('profile-fields')?
+          fields = fields.concat $(entry).data('profile-fields')
+      return fields
+    else if @map_div.data('datatable')
+      datatable = $(@map_div.data('datatable')).DataTable()
+      selected_rows = datatable.$('tr', {filter: 'applied'})
+      fields = []
+      for row in selected_rows
+        if $(row).data('profile-fields')?
+          fields = fields.concat $(row).data('profile-fields')
+      return fields
 
   dom_element: ->
     @map_div.get(0)
@@ -32,15 +48,24 @@ class App.GoogleMap
     @map.fitBounds(@bounds)
 
   init_markers: ->
-    @markers = []
-    for profile_field in @profile_fields()
+    self = this
+    self.markers = []
+    for profile_field in self.profile_fields()
       if profile_field.position.lng?
         marker = new google.maps.Marker {
-          map: @map,
+          map: self.map,
           position: profile_field.position,
-          title: profile_field.title
+          title: profile_field.title,
+          profileable_title: profile_field.profileable_title
         }
-        @markers.push marker
+        if self.need_info_window()
+          marker.addListener 'click', ->
+            self.show_marker_info_window this
+        self.markers.push marker
+
+  reload_markers: ->
+    marker.setMap(null) for marker in @markers
+    @init_markers()
 
   zoom_map: ->
     self = this
@@ -59,6 +84,27 @@ class App.GoogleMap
     center = @map.getCenter()
     google.maps.event.trigger @map, 'resize'
     @map.setCenter(center)
+
+  show_marker_info_window: (marker)->
+    self = this
+    $.ajax({
+      type: 'GET',
+      url: '/api/v1/search/preview',
+      data: {
+        query: marker.profileable_title
+      },
+      success: (result) ->
+        if result?
+          if self.current_info_window.close?
+            self.current_info_window.close()
+          self.current_info_window = new google.maps.InfoWindow {
+            content: result.body
+          }
+          self.current_info_window.open(self.map, marker)
+    })
+
+  need_info_window: ->
+    @map_div.hasClass('with_info_window')
 
 $(document).ready ->
   App.google_maps = []

@@ -6,7 +6,7 @@ class SearchController < ApplicationController
   def index
     query_string = params[ :query ]
     if query_string.present?
-      
+
       # log search query for metrics analysis
       #
       metric_logger.log_event({query: query_string}, type: :search)
@@ -22,7 +22,7 @@ class SearchController < ApplicationController
       @groups = Group.where( "name like ?", q )
       @events = Event.where("name like ?", q).order('start_at DESC')
       @posts = Post.where("subject like ? or text like ?", q, q)
-      
+
       # Convert to arrays in order to be able to add results through
       # associations below.
       @users = @users.to_a
@@ -30,7 +30,7 @@ class SearchController < ApplicationController
       @groups = @groups.to_a
       @events = @events.to_a
       @posts = @posts.to_a
-      
+
       # browse profile fields
       #
       profile_fields = ProfileField.where("value like ? or label like ?", q, q).collect do |profile_field|
@@ -43,19 +43,19 @@ class SearchController < ApplicationController
           @groups << profile_field.profileable
         end
       end
-      
+
       # browse attachments
       #
       attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
       @pages += attachments.collect { |attachment| attachment.parent }
-      
+
       # browse comments
       #
       comments = Comment.where("text like ?", q)
       comments.each do |comment|
         @posts << comment.commentable if comment.commentable.kind_of? Post
       end
-      
+
       # eleminiate duplicate results
       #
       @users = @users.uniq
@@ -63,7 +63,7 @@ class SearchController < ApplicationController
       @groups = @groups.uniq
       @events = @events.uniq
       @posts = @posts.uniq
-      
+
       # AUTHORIZATION
       #
       @users = filter_by_authorization(@users)
@@ -76,7 +76,7 @@ class SearchController < ApplicationController
       if @results.count == 1
         redirect_to @results.first
       end
-      
+
       if @results.count < 100
         @large_map_address_fields = @results.collect do |result|
           result.profile_fields.where(type: "ProfileFieldTypes::Address") if result.respond_to? :profile_fields
@@ -95,7 +95,7 @@ class SearchController < ApplicationController
     set_current_title "#{t(:search)}: #{query_string}"
     set_current_activity :is_searching_for_something
   end
-  
+
   # This action results in a redirection to the search result
   # considered to be a lucky guess.
   #
@@ -119,7 +119,7 @@ class SearchController < ApplicationController
       redirect_to :action => :index
     end
   end
-  
+
   # This returns title and body of a preview field (quick search).
   #
   def preview
@@ -138,7 +138,7 @@ class SearchController < ApplicationController
       end
     end
   end
-  
+
   # This implements the OpenSearch standard in order to support browser search tools
   # to search the application directly.
   #
@@ -160,12 +160,12 @@ class SearchController < ApplicationController
       can? :read, resource
     end
   end
-  
+
   def find_preview_object(query_string)
     object = nil
     if query_string.present?
       like_query_string = "%" + query_string.gsub( ' ', '%' ) + "%"
-    
+
       # The order of these assignments determines the priority.
       #
       object = Corporation.where(token: query_string).limit(1).first
@@ -173,6 +173,7 @@ class SearchController < ApplicationController
       object ||= Page.where("title like ?", like_query_string).limit(1).first
       object ||= Group.where("name like ?", like_query_string).limit(1).first
       object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
+      object ||= User.find_by_title(query_string)
 
       object = nil unless can? :read, object
     end
