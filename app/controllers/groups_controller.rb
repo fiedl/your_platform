@@ -99,7 +99,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.json do
         authorize! :read, @group
-        render json: @group.serializable_hash.merge({member_count: @memberships.count})
+        render json: @group.serializable_hash.merge({member_count: @memberships.try(:count)})
       end
       format.csv do
         authorize! :read, @group
@@ -236,6 +236,10 @@ class GroupsController < ApplicationController
   #   http://railscasts.com/episodes/371-strong-parameters
   #
   def group_params
+    # Need to sync in both directions for best in place:
+    params[:corporation] ||= params[:group]
+    params[:officer_group] ||= params[:group]
+
     # STI override:
     params[:group] ||= params[:corporation] # for Corporation objects
     params[:group] ||= params[:officer_group] # for OfficerGroup objects

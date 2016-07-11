@@ -93,6 +93,8 @@ class App.Gallery
           self.add_magnification_glass() # needs to be in loadfinish to detect video
           if e.galleriaData
             self.current_image_data = e.galleriaData
+            self.find('.galleria-image').removeClass('active')
+            $(e.imageTarget).closest('.galleria-image').addClass('active')
             self.show_description()
 
         if self.root_element.hasClass('deactivate-auto-lightbox')

@@ -6,8 +6,10 @@
 - #                   Default: :attachment (which is all attachments).
 
 - type ||= :attachment
+- parent_url ||= parent.url if parent.kind_of? Page
+- parent_url ||= group_profile_url(parent) if parent.kind_of? Group
 
-.box.panel.panel-default.upload_attachment{class: can?(:create_attachment_for, parent) ? '' : 'hidden', data: {parent_url: parent.url}}
+.box.panel.panel-default.upload_attachment{class: can?(:create_attachment_for, parent) ? '' : 'hidden', data: {parent_url: parent_url}}
   .attachment_drop_field
     %p.drop_attachments_here
       - if type == :image
@@ -29,17 +31,16 @@
       - else
         = t :files_have_been_uploaded
       %br
-      %small 
+      %small
         - if type == :image
           = t :images_are_about_to_be_shown_as_gallery_thanks_for_uploading
         - else
           = t :files_are_about_to_be_shown_thanks_for_uploading
-          
+
     = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm new_attachment'} do |f|
       = f.hidden_field :parent_id
       = f.hidden_field :parent_type
-    
+
       - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
       - # f.file_field :file, multiple: true, name: "attachment[file]"
       = f.file_field :file, name: "attachment[file]"
-  
