@@ -39,7 +39,6 @@ PATH
       formtastic
       gemoji (>= 2.1.0)
       geocoder
-      gmaps4rails (= 2.0.2)
       gravatar_image_tag
       haml
       has_secure_token
@@ -68,6 +67,7 @@ PATH
       rails-assets-Voog--wysihtml
       rails-assets-bootstrap-social
       rails-assets-datatables (>= 1.10.10)
+      rails-assets-imagesloaded
       rails-assets-jquery-masonry
       rails-assets-jquery-ui
       rails-assets-jquery-ujs
@@ -237,7 +237,7 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faker (1.6.4)
+    faker (1.6.5)
       i18n (~> 0.5)
     faraday (0.9.2)
       multipart-post (>= 1.2, < 3)
@@ -425,6 +425,8 @@ GEM
       rails-assets-desandro-matches-selector (~> 2.0.0)
     rails-assets-font-awesome (4.6.3)
     rails-assets-get-size (2.0.2)
+    rails-assets-imagesloaded (4.1.0)
+      rails-assets-ev-emitter (~> 1.0.0)
     rails-assets-jquery (2.2.4)
     rails-assets-jquery-masonry (4.1.0)
       rails-assets-get-size (>= 2.0.2, < 3)

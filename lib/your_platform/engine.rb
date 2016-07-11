@@ -69,7 +69,6 @@ require 'rails-assets-Voog--wysihtml'
 
 # Geo Coding
 require 'geocoder'
-require 'gmaps4rails'
 require 'biggs'
 
 # Form Helpers

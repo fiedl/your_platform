@@ -34,7 +34,7 @@
 
     %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
 
-    = gmaps4rails_api_script_tags
+    = google_maps_api_script_tag
     = javascript_include_tag 'application'
     = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js"
     = yield :scripts

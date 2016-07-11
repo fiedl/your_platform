@@ -104,7 +104,6 @@ Gem::Specification.new do |s|
 
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
   s.add_dependency 'biggs'
 
   # Formtastic Form Helper
