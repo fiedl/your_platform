@@ -91,6 +91,7 @@ class App.Gallery
         #
         self.galleria_instance.bind 'loadfinish', (e)->
           self.add_magnification_glass() # needs to be in loadfinish to detect video
+          self.active_video_on_mobile()
           if e.galleriaData
             self.current_image_data = e.galleriaData
             self.find('.galleria-image').removeClass('active')
@@ -116,19 +117,28 @@ class App.Gallery
 
   show_description: ->
     self = this
-    $.ajax({
-      type: 'GET',
-      url: self.description_path(),
-      success: (result) ->
-        self.picture_info_element()
-          .hide()
-          .replaceWith(result.html).show()
-        self.picture_info_element().find('.remove_button')
-          .removeClass('show_only_in_edit_mode')
-          .hide()
-        self.picture_info_element().apply_edit_mode()
-        self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
-    })
+    if self.is_video_gallery()
+      self.picture_info_element().hide()
+    else
+      $.ajax({
+        type: 'GET',
+        url: self.description_path(),
+        success: (result) ->
+          self.picture_info_element()
+            .hide()
+            .replaceWith(result.html).show()
+          self.picture_info_element().find('.remove_button')
+            .removeClass('show_only_in_edit_mode')
+            .hide()
+          self.picture_info_element().apply_edit_mode()
+          self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
+          ## When the user enters a title, it should stay visible when
+          ## exiting edit mode.
+          #self.picture_info_element().on 'change paste keydown', 'input', ->
+          #  self.picture_info_element().find('.show_only_in_edit_mode')
+          #    .removeClass('show_only_in_edit_mode')
+
+      })
 
   # /attachments/123/filename.png
   image_path: ->
@@ -209,15 +219,43 @@ class App.Gallery
   add_magnification_glass: ->
     self = this
     # TODO: if link exists
-    self.find('.galleria-container').append('<span class="galleria-magnification-glass"><i class="fa fa-search-plus"></i></span>')
-    self.find('.galleria-magnification-glass').bind 'click', ->
-      self.open_lightbox()
-      setTimeout (-> self.play_lightbox_video()), 500
-    if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').size() > 0
-      self.find('.galleria-magnification-glass').addClass('for-small-video')
+    unless self.is_ios()
+      self.find('.galleria-container').append('<span class="galleria-magnification-glass"><i class="fa fa-search-plus"></i></span>')
+      self.find('.galleria-magnification-glass').bind 'click', ->
+        self.open_lightbox()
+        setTimeout (-> self.play_lightbox_video()), 500
+      ## The idea is to open the video in a lightbox for small boxes.
+      ## But this prevents the user from further exploring the site.
+      #if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').size() > 0
+      #  self.find('.galleria-magnification-glass').addClass('for-small-video')
+      #
+      # And hide the small magnification class if the video starts playing.
+      if self.is_video_gallery()
+        self.find('.galleria-image img').bind 'mouseup', ->
+          self.find('.galleria-magnification-glass').hide()
+
+  active_video_on_mobile: ->
+    self = this
+    # On iOS, the autoplay is suppressed on the iframe-embedded video.
+    # Therefore, the user would have to click twice to start the video,
+    # one click to replace the image by the iframe, one click to start
+    # the video. This is annoying! Therefore, insert the iframe
+    # without the first click.
+    if self.is_ios()
+      if self.is_video_gallery()
+        self.find('.galleria-magnification-glass').hide()
+        self.find('.galleria-image-nav').hide()
+        self.find('.galleria-counter').hide()
+        self.find('.galleria-videoicon').click()
 
   play_lightbox_video: ->
     $('.galleria-lightbox-image .galleria-image img').mouseup()
+
+  is_video_gallery: ->
+    @root_element.hasClass('video-gallery')
+
+  is_ios: ->
+    navigator.userAgent.match(/(iPod|iPhone|iPad)/i)
 
   open_lightbox: ->
     @galleria_instance.openLightbox()

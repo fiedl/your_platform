@@ -1,4 +1,5 @@
 class PagesController < ApplicationController
+  include MarkdownHelper
 
   load_and_authorize_resource
   skip_authorize_resource only: [:create]
@@ -59,12 +60,8 @@ class PagesController < ApplicationController
   end
 
   def update
-    if page_params[:content] && (page_params[:content].include?("<br>") || page_params[:content].include?("<p>"))
-      params[:page][:content] = ReverseMarkdown.convert params[:page][:content]
-      params[:page][:content].gsub! '\\*', '*'
-      params[:page][:content].gsub! '&gt;', '>'
-      params[:page][:content].gsub! '\\>', '>'
-      params[:page][:content].gsub!(/\]\(\[[^ ]*\]\(([^ ]*)\)\)/, '](\1)') # correct images after auto linking the image url
+    if page_params[:content]
+      params[:page][:content] = html2markdown params[:page][:content]
     end
 
     @page.update_attributes page_params

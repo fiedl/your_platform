@@ -1,5 +1,12 @@
 $(document).ready ->
 
+  # scale down the map for smaller devices
+  if $('.group_map').width() < 350
+    ratio = 0.7
+    $('.group_map_background')
+      .width($('.group_map_background').width() * ratio)
+      .height($('.group_map_background').height() * ratio)
+
   map_top_latitude = 56.073419     # 249px ^= 54.881828 - 47.273977; 39px
   map_bottom_latitude = 46.326814
   map_left_longitude = 3.762347    # 42 - 270; 185px ^= 15.056013 - 5.851924; 42px ^= 2,0895769622
@@ -23,7 +30,7 @@ $(document).ready ->
       )
       setTimeout (-> map_item.show('puff')), 1000 + counter * 50
 
-$(document).on 'mouseenter', '.group_map .map_item', ->
+$(document).on 'mouseenter touchstart', '.group_map .map_item', ->
   map_item = $(this)
   map_item.closest('.group_map').find('.map_item').removeClass('active')
   map_item.switchClass '', 'active', 100, ->

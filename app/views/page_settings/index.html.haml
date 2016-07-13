@@ -8,7 +8,7 @@
       %td= best_in_place @page, :title
     %tr
       %th= t :page_type
-      %td= best_in_place @page, :type
+      %td= best_in_place @page, :type, as: :select, collection: Page.types.collect { |type| type.try(:name) }.collect { |type| [type, type] }
     %tr
       %th= t :page_author
       %td= user_best_in_place @page, :author_title

@@ -20,7 +20,9 @@ class HorizontalNavPresenter < BasePresenter
   end
 
   def nav_link_objects
-    horizontal_nav.link_objects
+    horizontal_nav.link_objects.select do |obj|
+      obj.kind_of?(Hash) || can?(:read, obj)
+    end
   end
 
   private

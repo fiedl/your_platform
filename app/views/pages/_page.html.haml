@@ -31,8 +31,9 @@
           = icon(:tag)
           = link_to page.parents.first.title, page.parents.first
 
-    - if page.image_attachments.any?
-      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments, inline: true}
+    #inline-pictures
+      - if page.image_attachments.any?
+        = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments, inline: true}
 
     %div.page_body
       - if teaser_box

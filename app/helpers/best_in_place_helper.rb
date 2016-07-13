@@ -8,9 +8,9 @@ module BestInPlaceHelper
   #
   #   setting_in_place @page, :layout
   #
-  def setting_in_place(object, setting_key, options = nil)
+  def setting_in_place(object, setting_key, options = {})
     setting = object.settings.where(var: setting_key).first_or_create
-    best_in_place setting, :value
+    best_in_place setting, :value, options
   end
 
   def ajax_check_box(object, attribute, label = nil)

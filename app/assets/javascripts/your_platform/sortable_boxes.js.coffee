@@ -33,13 +33,16 @@ $(document).ready ->
       }
     }
 
-  panelList.sortable {
+  $('.draggable_boxes').sortable {
     # Only make the .panel-heading child elements support dragging.
     # Omit this to make then entire <li>...</li> draggable.
+    connectWith: '.draggable_boxes',
     handle: '.panel-heading',
     update: ->
       save_box_configuration()
-    cancel: '.currently_in_edit_mode *'
+    cancel: '.currently_in_edit_mode *',
+    placeholder: 'draggable-box-placeholder col col-sm-3 col-xs-12',
+    tolerance: "pointer"
   }
 
   $('.draggable_boxes .resizable_col').resizable {

@@ -2,8 +2,9 @@
 
 %h1.group_profile= best_in_place_if can?(:rename, @group), @group, :name
 %div
-  - if @group.image_attachments.any?
-    #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: @group.image_attachments, inline: true}
+  #inline-pictures
+    - if @group.image_attachments.any?
+      = render partial: 'attachments/pictures', locals: {attachments: @group.image_attachments, inline: true}
   - if can? :update, @group
     .hidden-print.show_only_in_edit_mode
       #attachments= render partial: 'attachments/drop_field', locals: {parent: @group, type: :image}

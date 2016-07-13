@@ -26,7 +26,6 @@ $(document).ready ->
 
     for selector in selectors
       target = root_element.find(selector).addBack(selector)
-      console.log target
       target.fadeOut()
 
     $.ajax {
@@ -35,8 +34,6 @@ $(document).ready ->
       success: (result)->
         for selector in selectors
           target = root_element.find(selector).addBack(selector)
-          console.log "new"
-          console.log target
           result_content = $(result).find(selector).html()
           target.html(result_content)
           target.fadeIn()

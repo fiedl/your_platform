@@ -64,8 +64,9 @@ class Page < ActiveRecord::Base
   end
   def teaser_text
     if content
-      teaser_content = content.split("\n\n").first
-      teaser_content += "\n\n" + content.split("\n\n").second if teaser_content.start_with?("http") # For inline videos etc.
+      paragraphs = content.gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
+      teaser_content = paragraphs.first
+      teaser_content += "\n\n" + paragraphs.second if teaser_content.start_with?("http") # For inline videos etc.
       teaser_content
     end
   end
@@ -265,6 +266,11 @@ class Page < ActiveRecord::Base
   end
   def self.find_imprint
     Page.find_by_flag :imprint
+  end
+
+
+  def self.types
+    [nil, Page, BlogPost, Pages::HomePage]
   end
 
 end

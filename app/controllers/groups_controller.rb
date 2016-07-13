@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  include MarkdownHelper
   before_action :load_resource, only: [:show, :update, :destroy]
   authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
@@ -158,6 +159,10 @@ class GroupsController < ApplicationController
   end
 
   def update
+    if group_params[:body]
+      params[:group][:body] = html2markdown params[:group][:body]
+    end
+
     @group.update_attributes(group_params)
     respond_to do |format|
       format.json { respond_with_bip @group.reload }

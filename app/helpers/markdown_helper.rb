@@ -22,6 +22,22 @@ module MarkdownHelper
     #
     rendered_html.valid_encoding? ? rendered_html : text
   end
+
+  # Reverse markdown for saving wysiwyg.
+  #
+  def html2markdown(text)
+    if text.include?("<br>") || text.include?("<p>")
+      text = ReverseMarkdown.convert text
+      text.gsub! '\\*', '*'
+      text.gsub! '&gt;', '>'
+      text.gsub! '\\>', '>'
+      # correct images after auto linking the image url:
+      text.gsub!(/\]\(\[[^ ]*\]\(([^ ]*)\)\)/, '](\1)')
+      # revert auto-linking since markdown will auto link on render:
+      text.gsub!(/\[([^ ]*)\]\(\1\)/, '\1')
+    end
+    text
+  end
 end
 
 # In order to use the markdown helper method with best_in_place's :display_with argument,
