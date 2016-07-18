@@ -6,7 +6,7 @@ FactoryGirl.define do
 
     sequence( :last_name ) { |n| "Doe#{n}" }
     first_name "John"
-    
+
     sequence( :alias ) { |n| "j.doe#{n}" }
     sequence( :email ) { |n| "j.doe#{n}@example.com" }
 
@@ -19,6 +19,7 @@ FactoryGirl.define do
     trait :with_address do
       after :create do |user|
         user.profile_fields.create(type: ProfileFieldTypes::Address.name)
+        user.address_fields.first.postal_address = true
       end
     end
 
@@ -57,7 +58,7 @@ FactoryGirl.define do
         user.set_date_of_death_if_unset 1.day.ago
       end
     end
-    
+
     trait :accepted_terms_of_use do
       after :create do |user|
         user.accept_terms TermsOfUseController.current_terms_stamp
@@ -76,12 +77,12 @@ FactoryGirl.define do
     #
     factory :admin do
       create_account true
-      
+
       after :create do |admin|
         Group.find_everyone_group.assign_admin admin
       end
     end
-    
+
     factory :local_admin do
       transient do
         of nil  # syntax: create(:local_admin, of: @group)
@@ -92,6 +93,6 @@ FactoryGirl.define do
         evaluator.of.assign_admin admin
       end
     end
-    
+
   end
 end

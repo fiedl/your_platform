@@ -122,11 +122,14 @@ private
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
     permitted_keys += [:type, :author_title, :author_user_id, :archived] if can? :manage, @page
     permitted_keys += [:layout, :home_page_title, :home_page_sub_title] if @page.kind_of? Pages::HomePage and can? :manage, @page
-    permitted_keys += [:title, :content, :type, :author_user_id] if @page.new_record? and can? :create_page_for, secure_parent
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
-    permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu] if can? :manage, @page
     permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
     permitted_keys += [:settings => [:horizontal_nav_page_id_order => []]] if can? :manage, @page
+
+    if (@page.new_record? and can?(:create_page_for, secure_parent)) or can?(:manage, @page)
+      permitted_keys += [:title, :content, :type, :author_user_id]
+      permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu]
+    end
 
     params.require(:page).permit(*permitted_keys)
   end

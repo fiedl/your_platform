@@ -1,7 +1,7 @@
 #header-bar
   #first-header-line
     #claim-area.hidden-xs
-      = current_home_page.settings.home_page_sub_title
+      = current_home_page.try(:settings).try(:home_page_sub_title)
     #search-area
       #header_help= render partial: 'support_requests/help_button'
       #header_search

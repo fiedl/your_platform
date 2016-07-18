@@ -18,6 +18,8 @@ concern :Navable do
     attr_accessible :hidden_menu, :slim_menu, :slim_breadcrumb,
       :show_as_teaser_box, :show_in_menu if defined? attr_accessible
 
+    after_save { nav_node.save }
+
     def is_navable?
       true
     end

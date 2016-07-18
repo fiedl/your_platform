@@ -4,18 +4,18 @@
 #   * Setting.preferred_locale
 #   * Setting.support_email
 #
-class Setting < RailsSettings::CachedSettings
+class Setting < RailsSettings::Base
   def self.app_name=(name)
     super(name)
     Rails.cache.delete_matched 'app_version_footer*'
   end
-  
+
   def self.preferred_locale
     return nil if super == ""
     super
   end
 end
 
-class RailsSettings::CachedSettings
+class RailsSettings::Base
   attr_accessible :var if defined? attr_accessible
 end

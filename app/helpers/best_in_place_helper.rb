@@ -16,7 +16,7 @@ module BestInPlaceHelper
   def ajax_check_box(object, attribute, label = nil)
     label ||= I18n.t(attribute)
     form_for object, remote: true do |f|
-      f.label attribute do
+      content_tag :label do
         f.hidden_field(attribute, value: false) +
         f.check_box(attribute, {class: 'ajax_check_box'}, true) +
         label
@@ -53,7 +53,7 @@ module BestInPlaceHelper
     end
 
     ((options[:toolbar] && condition) ? render(partial: 'shared/wysiwyg_toolbar') : '').html_safe +
-    content_tag(:div, id: "edit-#{object.class.name.underscore}-#{object.id}", class: "#{condition ? 'wysiwyg editable' : ''} #{options[:multiline] ? 'multiline' : ''}", data: {url: object.url, object_key: object.class.base_class.name.underscore, attribute_key: attribute, activate: options[:activate]}) do
+    content_tag(:div, id: "edit-#{object.class.name.underscore}-#{object.id}", class: "#{condition ? 'wysiwyg editable' : ''} #{options[:multiline] ? 'multiline' : ''}", data: {url: object.path, object_key: object.class.base_class.name.underscore, attribute_key: attribute, activate: options[:activate]}) do
       if block_given?
         yield
       else

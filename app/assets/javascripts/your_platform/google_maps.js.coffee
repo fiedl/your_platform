@@ -52,11 +52,18 @@ class App.GoogleMap
     self.markers = []
     for profile_field in self.profile_fields()
       if profile_field.position.lng?
+        if profile_field.profileable_type == 'Group'
+          marker_color = 'yellow'
+        else
+          marker_color = 'red'
+        marker_image = "http://maps.google.com/mapfiles/ms/icons/#{marker_color}-dot.png"
         marker = new google.maps.Marker {
           map: self.map,
           position: profile_field.position,
           title: profile_field.title,
-          profileable_title: profile_field.profileable_title
+          profileable_title: profile_field.profileable_title,
+          icon: marker_image,
+          zIndex: if (marker_color == 'yellow') then 500 else null
         }
         if self.need_info_window()
           marker.addListener 'click', ->
@@ -107,17 +114,18 @@ class App.GoogleMap
     @map_div.hasClass('with_info_window')
 
 $(document).ready ->
-  App.google_maps = []
+  if google?
+    App.google_maps = []
 
-  $('.google_maps').each ->
-    map = new App.GoogleMap($(this))
-    App.google_maps.push map
+    $('.google_maps').each ->
+      map = new App.GoogleMap($(this))
+      App.google_maps.push map
 
-  # Fix for bootstrap javascript nav tabs:
-  $('a[data-toggle="tab"]').on 'shown.bs.tab', ->
-    # http://www.bootply.com/102241
-    for google_map in App.google_maps
-      google_map.redraw()
+    # Fix for bootstrap javascript nav tabs:
+    $('a[data-toggle="tab"]').on 'shown.bs.tab', ->
+      # http://www.bootply.com/102241
+      for google_map in App.google_maps
+        google_map.redraw()
 
 
 

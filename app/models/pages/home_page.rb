@@ -46,6 +46,13 @@ class Pages::HomePage < Page
     true
   end
 
+  # The home page root of a home page is the home page itself,
+  # since it is its own breadcrumb root.
+  #
+  def home_page
+    self
+  end
+
   # These child pages are shown in the horizontal nav.
   #
   def horizontal_nav_child_pages

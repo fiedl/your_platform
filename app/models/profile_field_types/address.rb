@@ -140,7 +140,8 @@ module ProfileFieldTypes
             lat: latitude
           },
           title: title,
-          profileable_title: profileable.try(:title)
+          profileable_title: profileable.try(:title),
+          profileable_type: profileable_type
         })
       end
 

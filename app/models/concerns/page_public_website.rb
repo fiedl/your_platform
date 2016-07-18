@@ -23,7 +23,7 @@ concern :PagePublicWebsite do
   end
 
   def part_of_a_local_public_website?
-    self.nav_node.breadcrumb_root.type == 'Pages::HomePage'
+    self.nav_node.breadcrumb_root.try(:type) == 'Pages::HomePage'
   end
 
   def home_page

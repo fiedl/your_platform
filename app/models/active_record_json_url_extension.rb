@@ -12,10 +12,14 @@ module ActiveRecordJsonUrlExtension
   def url
     UrlHelper.new(self).url
   end
-  
+
+  def path
+    UrlHelper.new(self).path
+  end
+
   # The following class generates a scope that prevents the url helpers
   # from being included directly into ActiveRecordJsonUrlExtension and therefore
-  # into ActiveRecord::Base. 
+  # into ActiveRecord::Base.
   #
   #   class MyModel < ActiveRecord::Base
   #   end
@@ -24,7 +28,7 @@ module ActiveRecordJsonUrlExtension
   #
   # You may call `my_instance.url()` to get the same result as for
   # `url_for(my_instance)`.
-  # But you should not be able to call, for example, 
+  # But you should not be able to call, for example,
   # `my_instance.my_model_path( ... )`.
   #
   class UrlHelper
@@ -34,12 +38,17 @@ module ActiveRecordJsonUrlExtension
     def initialize(obj)
       @obj = obj
     end
-    
+
     def url_options
-      Rails.application.config.action_mailer.default_url_options || raise("Please set 'config.action_mailer.default_url_options = {host: ...}' in the application config.")
+      (Rails.application.config.action_mailer.default_url_options || raise("Please set 'config.action_mailer.default_url_options = {host: ...}' in the application config.")).merge({ only_path: @only_path })
     end
-  
+
     def url
+      url_for(@obj)
+    end
+
+    def path
+      @only_path = true
       url_for(@obj)
     end
   end

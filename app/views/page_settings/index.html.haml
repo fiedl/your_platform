@@ -3,22 +3,22 @@
   .back_to_page.tool= link_to t(:back_to_the_page), @page, class: 'btn btn-default'
 %div
   %table.settings
-    %tr
+    %tr.page_title
       %th= t :page_title
       %td= best_in_place @page, :title
-    %tr
+    %tr.page_type
       %th= t :page_type
       %td= best_in_place @page, :type, as: :select, collection: Page.types.collect { |type| type.try(:name) }.collect { |type| [type, type] }
-    %tr
+    %tr.page_author
       %th= t :page_author
       %td= user_best_in_place @page, :author_title
-    %tr
+    %tr.redirect_page_to
       %th= t :redirect_page_to
       %td= best_in_place @page, :redirect_to
-    %tr
+    %tr.created_at
       %th= t :created_at
       %td= localize @page.created_at
-    %tr
+    %tr.updated_at
       %th= t :updated_at
       %td= localize @page.updated_at
 
@@ -36,7 +36,7 @@
   = t :select_boxes_to_display_on_the_page_str, str: @page.title
 
   %table.settings
-    %tr
+    %tr.locations_map
       %th= t :locations_map
       %td
         %p= setting_check_box @page, :show_group_map, t(:show_locations_map)
@@ -46,16 +46,16 @@
         %p
           = t :group_map_sub_title
           = setting_in_place @page, :group_map_sub_title
-    %tr
+    %tr.events
       %th= t :events
       %td
-        %p= setting_check_box @page, :show_events
-        %p
+        .show_events= setting_check_box @page, :show_events
+        .show_events_for_group_id
           = t :show_events_for_group_id
           = setting_in_place @page, :show_events_for_group_id
-        %p= setting_check_box @page, :show_only_events_published_on_global_website
-        %p= setting_check_box @page, :show_only_events_published_on_local_website
-    %tr
+        .global_website= setting_check_box @page, :show_only_events_published_on_global_website
+        .local_website= setting_check_box @page, :show_only_events_published_on_local_website
+    %tr.officers
       %th= t :officers
       %td
         %p= setting_check_box @page, :show_officers
@@ -66,8 +66,8 @@
         %p
           = t :show_only_the_first_n_offices
           = setting_in_place @page, :show_only_the_first_n_offices
-    %tr
-      %th Unterseiten
+    %tr.sub_pages
+      %th= t :sub_pages
       %td
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title

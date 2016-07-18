@@ -53,7 +53,7 @@ class HorizontalNav
   end
 
   def breadcrumb_root
-    @breadcrumb_root ||= current_navable.try(:nav_node).try(:breadcrumb_root).reload
+    @breadcrumb_root ||= current_navable.try(:nav_node).try(:breadcrumb_root).try(:reload)
   end
 
   def logged_in?

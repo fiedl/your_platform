@@ -30,19 +30,19 @@
     = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
     / For all other devices
     / Size should be 32 x 32 pixels
-    = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+    -#= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
 
     %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
 
     = google_maps_api_script_tag
     = javascript_include_tag 'application'
-    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js"
+    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js" unless Rails.env.test? # Takes tooooo long.
     = yield :scripts
     = yield :head
 
   = body_tag do
     - if user_account_signed_in?
-      %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
+      %nav#logged-in-bar.navbar.navbar-default.navbar-top
         .container-fluid
           .navbar-header
             %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
@@ -90,9 +90,10 @@
                   %li= link_to t(:change_password), change_password_path
                   %li= link_to t(:settings), user_settings_path(current_user)
                   %li= link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out'
-              %li
-                = link_to user_badges_path(current_user) do
-                  = merit_indicator(current_user)
+              - if can? :use, :merit
+                %li
+                  = link_to user_badges_path(current_user) do
+                    = merit_indicator(current_user)
 
     .row#header-bar-wrapper
       = render partial: 'layouts/header_bar'

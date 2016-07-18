@@ -81,6 +81,7 @@ class Ability
         end
         if user.admin_of_anything? and view_as?(:admin)
           rights_for_local_admins
+          rights_for_page_admins
         end
         if view_as?([:officer, :admin])
           rights_for_local_officers
@@ -128,7 +129,6 @@ class Ability
 
   def rights_for_beta_testers
     can :use, :new_menu_feature
-    can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
     can :use, :merit
   end
 
@@ -175,6 +175,15 @@ class Ability
     end
   end
 
+  def rights_for_page_admins
+    can :manage, Page do |page|
+      user.administrated_objects.include? page
+    end
+    can :manage, Attachment do |attachment|
+      can? :manage, attachment.parent
+    end
+  end
+
   def rights_for_local_officers
     can :export_member_list, Group do |group|
       user.in? group.officers_of_self_and_ancestors
@@ -216,7 +225,7 @@ class Ability
       end
       can :update, Attachment do |attachment|
         can?(:read, attachment) &&
-        (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
+        (attachment.parent.respond_to?(:group) && attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
         ((attachment.author == user) || (attachment.parent.respond_to?(:author) && attachment.parent.author == user))
       end
 
@@ -511,5 +520,9 @@ class Ability
     #
     can :read, :avatars
 
+    # Use the tabs view in users#show. This has been a beta feature previously.
+    # TODO: Remove the feature switch whenever you feel we won't switch back.
+    #
+    can :use, :tab_view
   end
 end

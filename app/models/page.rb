@@ -268,6 +268,19 @@ class Page < ActiveRecord::Base
     Page.find_by_flag :imprint
   end
 
+  # All descendant pages where no other object type is inbetween.
+  #
+  def connected_descendant_pages
+    cached do
+      # The step between root and intranet root needs to be
+      # excluded here, since this is no ordinary step between
+      # pages.
+      # See: `#administrated_objects`.
+      (self.child_pages - [Page.intranet_root]).collect do |child_page|
+        [child_page] + child_page.connected_descendant_pages
+      end.flatten.uniq
+    end
+  end
 
   def self.types
     [nil, Page, BlogPost, Pages::HomePage]

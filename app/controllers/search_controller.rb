@@ -77,7 +77,7 @@ class SearchController < ApplicationController
         redirect_to @results.first
       end
 
-      if @results.count < 100
+      if @results.count < 300
         @large_map_address_fields = @results.collect do |result|
           result.profile_fields.where(type: "ProfileFieldTypes::Address") if result.respond_to? :profile_fields
         end.flatten - [nil]

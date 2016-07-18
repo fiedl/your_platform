@@ -149,7 +149,13 @@ class Role
     admin_groups.collect { |g| g.parent_groups.first.parent_groups.first } - [nil]
   end
   def administrated_objects
-    directly_administrated_objects + directly_administrated_objects.collect { |o| o.descendants }.flatten
+    directly_administrated_objects + directly_administrated_objects.collect do |obj|
+      if obj.kind_of? Group
+        obj.descendants
+      elsif obj.kind_of? Page
+        obj.connected_descendant_pages
+      end
+    end.flatten
   end
   def administrated_users
     directly_administrated_groups.collect { |g| g.descendant_users }.flatten

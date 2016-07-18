@@ -6,12 +6,12 @@
     %td.show_in_menu
       - ([home_page] + home_page.child_pages).each do |p|
         %p= ajax_check_box p, :show_in_menu, p.title
-  %tr
+  %tr.layout
     %th= t :layout
     %td= setting_in_place home_page, :layout, as: :select, collection: ApplicationController.new.permitted_layouts.collect { |layout| [layout, layout]}
-  %tr
+  %tr.home_page_title
     %th= t :home_page_title
     %td= setting_in_place home_page, :home_page_title
-  %tr
+  %tr.home_page_sub_title
     %th= t :home_page_sub_title
     %td= setting_in_place home_page, :home_page_sub_title

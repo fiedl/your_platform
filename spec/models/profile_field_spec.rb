@@ -41,7 +41,7 @@ describe ProfileField do
   end
 
   it { should respond_to( :display_html ) }
-  
+
 
 end
 
@@ -66,7 +66,7 @@ describe ProfileFieldTypes::Organization do
   end
 
   subject { @organization }
-  
+
   # Here it is only tested whether the methods exist. The functionality is
   # provided by the same mechanism as tested unter the BankAccount section.
 
@@ -115,7 +115,7 @@ describe ProfileFieldTypes::Address do
                                                      value: "Pariser Platz 1\n 10117 Berlin" )
   end
   subject { @address_field }
-  
+
   describe "#display_html" do
     subject { @address_field.display_html }
     it "should have a line-break in it" do
@@ -143,7 +143,7 @@ describe ProfileFieldTypes::Address do
       its( :queried_at ) { should be_kind_of Time }
     end
     describe "after saving, after geocoding" do
-      before { @address_field.save; @address_field.geocode }      
+      before { @address_field.save; @address_field.geocode }
       it { should be_kind_of GeoLocation }
       its( :country_code ) { should == "DE" }
       its( :queried_at ) { should be_kind_of Time }
@@ -209,22 +209,20 @@ describe ProfileFieldTypes::Address do
     end
   end
 
-  its( :gmaps4rails_address ) { should == @address_field.value }
-
   describe "after saving" do
     before { @address_field.save }
 
     specify "latitude and longitude should be correct" do
-      subject.latitude.round(4).should == 52.5163 
+      subject.latitude.round(4).should == 52.5163
       subject.longitude.round(4).should == 13.3778
     end
-    
+
     its( :country ) { should == "Germany" }
     its( :country_code ) { should == "de" }
     its( :city ) { should == "Berlin" }
     its( :postal_code ) { should == "10117" }
     its( :plz ) { should == "10117" }
-    
+
   end
 
   describe "postal address: " do
@@ -308,7 +306,7 @@ describe ProfileFieldTypes::Employment do
 
   it { should respond_to :from, :to, :organization, :position, :task }
   it { should respond_to :from=, :to=, :organization=, :position=, :task= }
-  
+
   describe "#from" do
     subject { @profile_field.from }
     describe "before setting" do
@@ -352,7 +350,7 @@ describe ProfileFieldTypes::BankAccount do
     end
     it "should create the correct labels for the children" do
       subject.children.collect { |child| child.label }.should ==
-        [ I18n.t( :account_holder ), I18n.t( :account_number ), I18n.t( :bank_code ), 
+        [ I18n.t( :account_holder ), I18n.t( :account_number ), I18n.t( :bank_code ),
           I18n.t( :credit_institution ), I18n.t( :iban ), I18n.t( :bic ) ]
     end
 
@@ -404,13 +402,13 @@ describe ProfileFieldTypes::BankAccount do
     it { should == 6 }
   end
 
-end  
+end
 
 # Description Field
 # ==========================================================================================
 
 describe ProfileFieldTypes::Description do
-  before { @description_field = ProfileFieldTypes::Description.create( label: "Heraldic Animal", 
+  before { @description_field = ProfileFieldTypes::Description.create( label: "Heraldic Animal",
                                                                        value: "The heraldic animal of the organisation is a fox." ) }
   subject { @description_field }
   its( :display_html ) { should include( @description_field.value ) }
@@ -421,24 +419,24 @@ end
 # ==========================================================================================
 
 describe ProfileFieldTypes::Phone do
-  
+
   describe "international number with leading 00" do
     subject { ProfileFieldTypes::Phone.create( value: "0049800123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
-  
+
   describe "international number with leading +" do
     subject { ProfileFieldTypes::Phone.create( value: "+49 800 123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
-  
+
   describe "national number" do
     subject { ProfileFieldTypes::Phone.create( value: "0800123456789" ) }
     it "should not be formatted, since the country is not unique" do
       subject.value.should == "0800123456789"
     end
   end
-  
+
 end
 
 
