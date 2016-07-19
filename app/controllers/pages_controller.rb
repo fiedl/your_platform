@@ -84,7 +84,7 @@ class PagesController < ApplicationController
   end
 
   def destroy
-    @parent = @page.parents.first
+    @parent = @page.parents.first || Page.intranet_root
     @page.destroy
 
     respond_to do |format|

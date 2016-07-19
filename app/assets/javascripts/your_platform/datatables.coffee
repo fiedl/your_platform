@@ -1,5 +1,5 @@
 $(document).ready ->
-  
+
   # Sorting by date in German:
   # http://datatables.net/plug-ins/sorting/date-de
   #
@@ -39,8 +39,8 @@ $(document).ready ->
         y = Infinity
       z = ((if (x < y) then 1 else ((if (x > y) then -1 else 0))))
       z
-  
-  
+
+
   language_options = ->
     if $('body').data('locale') == 'de'
       {
@@ -64,11 +64,11 @@ $(document).ready ->
         "oAria": {
           "sSortAscending":  ": aktivieren, um Spalte aufsteigend zu sortieren",
           "sSortDescending": ": aktivieren, um Spalte absteigend zu sortieren"
-        } 
+        }
       }
     else
       {}
- 
+
   common_configuration = {
     "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
     "sPaginationType": "full_numbers",
@@ -82,7 +82,7 @@ $(document).ready ->
       else
         $(settings.nTableWrapper).find('.dataTables_paginate').show()
   }
-  
+
   $('.datatable.activities').dataTable(jQuery.extend({
     "pageLength": 100,
     "order": [[0, "desc"]],
@@ -138,7 +138,14 @@ $(document).ready ->
       { type: 'de_date', targets: 3 }
     ]
   }, common_configuration))
-  
+  $('.datatable.home_pages').dataTable(jQuery.extend({
+    "pageLength": 50,
+    "order": [[3, "desc"]]
+    columnDefs: [
+      { type: 'de_date', targets: 2 },
+      { type: 'de_date', targets: 3 }
+    ]
+  }, common_configuration))
   # Insert above.
   # This modified the common_configuration:
   $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
@@ -157,7 +164,7 @@ $(document).ready ->
         $(settings.nTableWrapper).find('.dataTables_paginate').hide()
       else
         $(settings.nTableWrapper).find('.dataTables_paginate').show()
-      
+
       # This callback draws group headers.
       api = @api()
       rows = api.rows(page: 'current').nodes()
@@ -168,11 +175,10 @@ $(document).ready ->
           last = group
         return
   }))
-  
-  
-  
+
+
+
   # Modify the datatable filter bar.
   $('.dataTables_filter label input')
     .attr('placeholder', I18n.t('type_to_filter_table'))
     .addClass('form-control')
-  

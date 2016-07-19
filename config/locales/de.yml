@@ -3,6 +3,8 @@ de:
     formats:
       time: ! '%H:%M Uhr'
 
+  title: Titel
+
   map: Karte
   page: Seite
   group: Gruppe

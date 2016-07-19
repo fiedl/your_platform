@@ -173,6 +173,9 @@ class Ability
         (workflow.admins_of_ancestors.include?(user))
       end
     end
+
+    can :index, :home_pages
+    can :create, Pages::HomePage
   end
 
   def rights_for_page_admins

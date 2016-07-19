@@ -15,12 +15,13 @@ feature "Search Field", js: true do
       before do
         @user1 = create( :user, last_name: "foo" )
         within('.navbar-search') { fill_in 'query', with: "foo" }
-        
+
         press_enter in: 'query'
       end
       specify "searching for foo should redirect to the user page" do
         page.should have_content( @user1.title )
         page.should have_content( I18n.t( :name ) )
+        click_tab :contact_info_tab
         page.should have_content( I18n.t( :contact_information ) )
       end
     end
@@ -61,7 +62,7 @@ feature "Search Field", js: true do
         u3.size.should == 1
       end
     end
-    
+
     describe "by profile field" do
       before do
         @user1 = create :user
@@ -70,7 +71,7 @@ feature "Search Field", js: true do
       specify "searching for a string in a profile field should result in the corresponding user" do
         within('.navbar-search') { fill_in 'query', with: "Berlin" }
         press_enter in: 'query'
-        
+
         page.should have_text @user1.title
       end
     end
@@ -91,7 +92,7 @@ feature "Search Field", js: true do
       page.should have_content @page.title
     end
   end
-  
+
   describe "finding attachments" do
     before do
       @page = create(:page, title: "foo page")

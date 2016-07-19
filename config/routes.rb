@@ -97,6 +97,9 @@ Rails.application.routes.draw do
     get :settings, to: 'page_settings#index'
   end
 
+  get :home_pages, to: 'pages/home_pages#index'
+  post :home_pages, to: 'pages/home_pages#create'
+
   resources :projects
 
   namespace :activities do

@@ -20,7 +20,7 @@ feature 'Corporate Vita', js: true do
 
     background do
       @status_groups.first.assign_user @user
-      
+
       @first_promotion_workflow = create( :promotion_workflow, name: 'First Promotion',
                                           :remove_from_group_id => @status_groups.first.id,
                                           :add_to_group_id => @status_groups.second.id )
@@ -33,7 +33,7 @@ feature 'Corporate Vita', js: true do
 
       #login(:local_admin, of: @corporation)
       login :global_admin
-      
+
       visit user_path( @user )
     end
 
@@ -53,7 +53,8 @@ feature 'Corporate Vita', js: true do
           click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
-        
+
+        click_tab :corporate_info_tab
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -65,12 +66,14 @@ feature 'Corporate Vita', js: true do
         end
 
         # run the second workflow
+        click_tab :general_user_info_tab
         within '.box.first' do
           click_on I18n.t(:change_status)
           click_on @second_promotion_workflow.name
         end
 
-        within first '.section.corporate_vita' do
+        click_tab :corporate_info_tab
+        within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
           page.should have_content @status_groups.last.name
@@ -88,6 +91,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.to_date
@@ -103,10 +107,10 @@ feature 'Corporate Vita', js: true do
 
           @new_date = 10.days.ago.to_date
           fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
-          
+
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
-          
+
           wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
           UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
@@ -159,6 +163,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.to_date
@@ -194,6 +199,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should still be visible in the profile' do
+        click_tab :corporate_info_tab
         page.should have_content @status_groups.first.name
       end
     end
@@ -246,6 +252,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should not be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.to_date

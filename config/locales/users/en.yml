@@ -1,21 +1,27 @@
 en:
+  general_user_info_tab:      Info
+  contact_info_tab:           Contact
+  corporate_info_tab:         Corporate Vita
+  study_and_work_tab:         'Work & Study'
+  more_info_tab:              More
+
   person:                     Person
   author:                     Author
-  
+
   first_and_last_name:        First and last name
   email:                      Email
-  
+
   date_of_birth:              Date of birth
   birthday:                   Birthday
   age:                        Age
   next_age:                   Next age
   next_birthday:              Next birthday
-  
+
   user_hidden:                User hidden
   hidden_users_can_only_be_seen_by_admins:   'Hidden users can only be seen by competent administrators. For all other users, hidden users are invisible.'
   deceased:                   Deceased
   event_of_death:             Event of Death
-  
+
   create_user:                   Create User
   enter_details_for_new_user:    Please enter details for the new user.
 
@@ -28,20 +34,20 @@ en:
   user_account_created:          'User account was successfully created.'
   delete_account:                Delete User Account
   user_account_deleted:          'User account was successfully deleted.'
-  
+
   male_or_female_salutation:     Salutation
   to_mr:                         Mr.
   to_mrs:                        Mrs.
   to_ms:                         Ms.
 
   personal_title:                Personal Title
-  
+
   avatar:                        Avatar
   change_avatar:                 Change avatar
   remove_avatar:                 Remove uploaded avatar
   uploading_avatar:              Uploading avatar. Please wait.
-  
-    
+
+
   formtastic:
 
     hints:
@@ -62,4 +68,3 @@ en:
         email:        		 Email
         create_account:          Create User Account
 
-  
