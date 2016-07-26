@@ -23,7 +23,11 @@ concern :PagePublicWebsite do
   end
 
   def part_of_a_local_public_website?
-    self.nav_node.breadcrumb_root.try(:type) == 'Pages::HomePage'
+    (self.nav_node.breadcrumb_root.try(:type) == 'Pages::HomePage') and not part_of_the_intranet?
+  end
+
+  def part_of_the_intranet?
+    (self.id == Page.intranet_root.id) or (self.ancestor_pages.include?(Page.intranet_root))
   end
 
   def home_page
