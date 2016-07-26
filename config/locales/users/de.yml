@@ -35,12 +35,15 @@ de:
   postal_address_town:        Stadt
   postal_address_country:     Land
   postal_address_country_code: Länder-Kennzeichen
+  postal_address_country_code_3_letters: Länder-Kennzeichen (ISO 3166-1 alpha-3)
   postal_address_postal_code_and_town: Postleitzahl und Stadt
   address_label_text_above_name: Zeile über dem Namen
   address_label_text_below_name: Zeile unter dem Namen
   address_label_text_before_name: Text vor dem Namen
   address_label_text_after_name: Text hinter dem Namen
   dpag_postal_address_type: DPAG-Adress-Typ
+  personal_title_and_name: Persönlicher Titel und Name
+
 
   phone_label:                Beschriftung
   email_label:                Beschriftung
