@@ -4,9 +4,11 @@ describe ListExports::AddressList do
 
   before do
     @group = create :group
+    @subgroup = create :group
+    @group << @subgroup
     @corporation = create :corporation_with_status_groups, name: "Monster, Inc."
     @user = create :user
-    @group.assign_user @user
+    @subgroup.assign_user @user
     @corporation.status_groups.first.assign_user @user  # in order to give the @user a #title other than his #name.
     @user_title_without_name = @user.title.gsub(@user.name, '').strip
     @user_title_without_name = '""' if @user_title_without_name.blank? # to match the csv format
@@ -46,6 +48,7 @@ describe ListExports::AddressList do
     it { should include 'Zeile unter dem Namen' }
     it { should include 'Text vor dem Namen' }
     it { should include 'Text hinter dem Namen' }
+    it { should include 'Funktion in der exportierten Gruppe'}
   end
   describe "#to_csv" do
     subject { list_export.to_csv }
@@ -83,6 +86,7 @@ describe ListExports::AddressList do
     it { should include "Dr." }
     it { should include "M.Sc." }
     it { should include "Dr. #{@user.name}" }
+    it { should include @subgroup.extensive_name }
   end
 
 end

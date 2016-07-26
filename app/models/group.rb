@@ -240,6 +240,10 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def status_groups
+    StatusGroup.find_all_by_group(self)
+  end
+
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
   end

@@ -23,7 +23,8 @@ module ListExports
         :address_label_text_above_name,
         :address_label_text_below_name,
         :address_label_text_before_name,
-        :address_label_text_after_name
+        :address_label_text_after_name,
+        :function_in_list_export_group
       ]
     end
 
