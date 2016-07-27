@@ -16,6 +16,7 @@ feature "Smoke test" do
   scenario "Testing the rails cache" do
     Rails.cache.write "foo", "bar"
     Rails.cache.read("foo").should == "bar"
+    Rails.cache.should be_kind_of ActiveSupport::Cache::RedisStore
   end
 
   scenario "Testing the sidekiq connection" do

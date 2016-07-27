@@ -1,3 +1,17 @@
+# Attention: Due to the load order, it's wise to double-check
+# whether the cache store is set correctly.
+# http://stackoverflow.com/a/38619281/2066546
+#
+# If you are not sure if it worked, implement a spec like this
+# in your application:
+#
+#    # spec/features/smoke_spec.rb
+#    feature "Smoke test" do
+#      scenario "Testing the rails cache" do
+#        Rails.cache.should be_kind_of ActiveSupport::Cache::RedisStore
+#      end
+#    end
+
 require_relative './redis'
 
 ENV['REDIS_HOST'] || raise('ENV["REDIS_HOST"] not set, yet.')
@@ -15,3 +29,6 @@ Rails.application.config.cache_store = :redis_store, {
     end,
   namespace: "#{::STAGE}_cache"
 }
+
+# http://stackoverflow.com/a/38619281/2066546
+Rails.cache = ActiveSupport::Cache.lookup_store(Rails.application.config.cache_store)
