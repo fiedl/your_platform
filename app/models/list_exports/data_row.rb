@@ -16,7 +16,7 @@ module ListExports
 
     def initialize(object, options = {})
       @object = object
-      @object = @object.becomes ListExportUser if @object.kind_of? User and not @object.kind_of? ListExportUser
+      @object = @object.becomes ListExports::ListExportUser if @object.kind_of? User and not @object.kind_of? ListExports::ListExportUser
       @object.list_export_group = options[:group] if @object.respond_to? :list_export_group
     end
 
@@ -26,7 +26,7 @@ module ListExports
       elsif @object.respond_to? column_name
         @object.try(:send, column_name)
       else
-        raise "Don't know how to access the given attribute or value: #{column_name}"
+        raise "Don't know how to access the given attribute or value: #{column_name}. Object: #{@object.class.name} #{@object.try(:id)}."
       end
     end
 
