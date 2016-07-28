@@ -171,6 +171,9 @@ Rails.application.routes.draw do
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
 
+  resources :incoming_mails
+  post :incoming_emails, to: 'incoming_mails#create'
+  post :mailgate, to: 'incoming_mails#create'
 
   namespace :api do
     namespace :v1 do
