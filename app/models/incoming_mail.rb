@@ -1,5 +1,61 @@
+# Attributes:
+#   t.string :raw_message
+#   t.string :message_id
+#   t.string :in_reply_to_message_id
+#   t.string :from
+#   t.text :to
+#   t.text :cc
+#   t.string :envelope_to
+#   t.string :subject
+#   t.text :content, limit: 1073741823
+#   t.text :text_content, limit: 1073741823
+#
 class IncomingMail < ActiveRecord::Base
+  mount_uploader :raw_message_file, RawMessageUploader
+  validates :raw_message, presence: true, unless: :new_record?
 
+  #has_many :processed_objects, polymorphic: true
 
+  def self.create_and_process(message)
+    self.create_from_message(message).process
+  end
+
+  def self.create_from_message(message)
+    message = Mail::Message.new(message) if message.kind_of? String
+
+    incoming_mail = self.new
+    incoming_mail.message_id = message.message_id
+    incoming_mail.from = message.from.try(:join, ", ")
+    incoming_mail.to = message.to.try(:join, ", ")
+    incoming_mail.subject = message.subject
+    incoming_mail.save!
+
+    # Storing the raw message needs to come after `save!`
+    # because the uploader needs the model to have an `id`.
+    incoming_mail.raw_message = message
+
+    return incoming_mail
+  end
+
+  def raw_message
+    @raw_message ||= File.read raw_message_file.path
+  end
+
+  def raw_message=(new_raw_message)
+    raise('Please save the record first. We need it to have an id to upload the raw message.') if new_record?
+    raw_message_file.store! new_raw_message
+
+    # If something goes wrong, this helps to find out what:
+    File.exist?(raw_message_file.cache_dir) || raise("Cache directory does not exist: #{incoming_mail.raw_message.cache_dir}.")
+    File.exist?(raw_message_file.store_dir) || raise("Storage directory does not exist: #{incoming_mail.raw_message.store_dir}.")
+    raw_message_file.path || raise('Upload did not work.')
+    File.file?(raw_message_file.path) || raise('Upload did not work. File does not exist.')
+
+    return raw_message_file
+  end
+
+  def process
+    return [self]
+  end
 
 end

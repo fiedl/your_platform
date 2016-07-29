@@ -36,15 +36,21 @@
 #     The app's `/incoming_emails` path is handled by this controller.
 #
 class IncomingMailsController < ApplicationController
+  respond_to :json
 
   # POST /incoming_emails
   # Provide the raw message as `message` parameter.
   #
   def create
-    params[:message] || raise('No `message` parameter given. Have a look at https://github.com/fiedl/your_platform/blob/master/app/controllers/incoming_emails_controller.rb.')
-
-    @created_objects = IncomingMail.create_and_process params
+    authorize! :create, IncomingMail
+    @created_objects = IncomingMail.create_and_process incoming_mail_params[:message]
     render json: @created_objects
+  end
+
+  def incoming_mail_params
+    params[:message] ||= params[:incoming_mail].try(:[], :message)
+    params[:message] || raise('No `message` parameter given. Have a look at https://github.com/fiedl/your_platform/blob/master/app/controllers/incoming_emails_controller.rb.')
+    params.permit(:message)
   end
 
 end

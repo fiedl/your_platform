@@ -171,9 +171,10 @@ Rails.application.routes.draw do
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
 
+  post :incoming_mails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :incoming_emails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :mailgate, to: 'incoming_mails#create', defaults: {format: :json}
   resources :incoming_mails
-  post :incoming_emails, to: 'incoming_mails#create'
-  post :mailgate, to: 'incoming_mails#create'
 
   namespace :api do
     namespace :v1 do

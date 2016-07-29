@@ -1,6 +1,6 @@
 require 'carrierwave/processing/mime_types'
 
-class AttachmentUploader < CarrierWave::Uploader::Base
+class AttachmentUploader < BaseUploader
 
   # Include RMagick or MiniMagick support:
   include CarrierWave::MiniMagick
@@ -8,24 +8,6 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Include the Sprockets helpers for Rails 3.1+ asset pipeline compatibility:
   # include Sprockets::Helpers::RailsHelper
   # include Sprockets::Helpers::IsolatedHelper
-
-  # Choose what kind of storage to use for this uploader:
-  storage :file
-  # storage :fog
-
-  # Override the directory where uploaded files will be stored.
-  # This is a sensible default for uploaders that are meant to be mounted:
-  def store_dir
-    model.id || raise('Model has no id. But need one to save the file.')
-    "#{Rails.root}/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
-  end
-  def cache_dir
-    # model.id || raise('Model has no id. But need one to save the file.')
-    # "#{Rails.root}/tmp/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
-    Rails.root || raise('no rails root')
-    Rails.env || raise('no rails env')
-    "#{Rails.root}/tmp/uploads/#{Rails.env}_env/"
-  end
 
   process :set_content_type
   process :store_dimensions
