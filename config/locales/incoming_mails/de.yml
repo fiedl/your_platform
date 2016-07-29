@@ -1,0 +1,7 @@
+de:
+  your_email_message: "Ihre E-Mail-Nachricht"
+  to_the_recipient: "an den Empfänger"
+  has_been_rejected: "wurde zurückgewiesen"
+  reason: "Grund"
+  we_could_not_determine_who_you_are: "Der E-Mail-Adresse, von der Sie diese Nachricht gesendet haben, konnte kein Benutzer-Konto auf unserer Plattform zugeordnet werden. Bitte stellen Sie sicher, dass Sie von einer Adresse aus schreiben, die auf der Plattform hinterlegt ist."
+  if_you_need_help_reply_to_contact_our_support_team: "Wenn Sie Hilfe benötigen, wenden Sie sich bitte an unser Support-Team, indem Sie auf diese automatische E-Mail-Nachricht antworten."

@@ -5,6 +5,7 @@ module LastEmail
       return ActionMailer::Base.deliveries.last if ActionMailer::Base.deliveries.last.present?
       sleep 1
     end
+    return nil
   end
 
   def email_text
