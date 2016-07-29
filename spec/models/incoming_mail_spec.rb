@@ -117,7 +117,20 @@ describe IncomingMail do
       its(:cc) { should == "all-testers@example.com" }
       its(:destinations) { should == ["all-developers@example.com"] }
     end
-
   end
 
+  describe "#process" do
+    subject { incoming_mail.process }
+    let(:incoming_mail) { IncomingMail.create_from_message example_raw_message }
+    let(:example_raw_message) { %{
+      From: john@example.com
+      To: all-developers@example.com
+      Subject: Great news for all developers!
+      Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+      Free drinks this evening!
+    }.gsub("  ", "") }
+
+    it { should be_kind_of Array}
+  end
 end

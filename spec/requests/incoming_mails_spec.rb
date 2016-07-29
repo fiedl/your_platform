@@ -24,11 +24,11 @@ describe "Incoming mails" do
       it { should_not be_unauthorized }
       it { should be_success } # "201 created"
 
-      it 'returns the created objects as json array' do
+      it 'returns the created incoming_mail' do
         subject
         json_response = JSON.parse response.body
-        json_response.should be_kind_of Array
-        json_response.count.should == 1
+        json_response.should be_kind_of Hash
+        json_response['id'].should == IncomingMail.last.id
       end
     end
 

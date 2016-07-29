@@ -74,4 +74,8 @@ class IncomingMail < ActiveRecord::Base
     return [self]
   end
 
+  def self.process(id)
+    find(id).process
+  end
+
 end
