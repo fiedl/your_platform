@@ -71,7 +71,9 @@ class IncomingMail < ActiveRecord::Base
   end
 
   def process
-    return [self]
+    self.class.subclasses.collect do |incoming_mail_subclass|
+      incoming_mail_subclass.find(id).process
+    end.flatten
   end
 
   def self.process(id)
