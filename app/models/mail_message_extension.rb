@@ -46,4 +46,11 @@ module MailMessageExtension
     end
   end
 
+  # When we have an incoming email, the smtp envelope is already gone and unavailable
+  # to this application. Thus, we need to read out the headers.
+  #
+  def smtp_envelope_to_header
+    header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.map(&:value)
+  end
+
 end

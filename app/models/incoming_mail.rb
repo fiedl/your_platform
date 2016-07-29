@@ -25,8 +25,12 @@ class IncomingMail < ActiveRecord::Base
 
     incoming_mail = self.new
     incoming_mail.message_id = message.message_id
+    incoming_mail.in_reply_to_message_id = message.in_reply_to
     incoming_mail.from = message.from.try(:join, ", ")
     incoming_mail.to = message.to.try(:join, ", ")
+    incoming_mail.cc = message.cc.try(:join, ", ")
+    incoming_mail.envelope_to = message.smtp_envelope_to_header.try(:join, ", ") if message.smtp_envelope_to_header.any?
+    incoming_mail.envelope_to ||= message.smtp_envelope_to.try(:join, ", ")
     incoming_mail.subject = message.subject
     incoming_mail.save!
 
@@ -52,6 +56,18 @@ class IncomingMail < ActiveRecord::Base
     File.file?(raw_message_file.path) || raise('Upload did not work. File does not exist.')
 
     return raw_message_file
+  end
+
+  def in_reply_to
+    self.class.where(message_id: in_reply_to_message_id)
+  end
+
+  def destinations
+    if envelope_to
+      envelope_to.split(",").map(&:strip)
+    else
+      (to.to_s.split(",") + cc.to_s.split(",")).map(&:strip)
+    end
   end
 
   def process
