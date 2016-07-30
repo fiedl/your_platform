@@ -5,7 +5,7 @@
 #
 class IncomingMails::MailWithUnknownSender < IncomingMail
 
-  def process
+  def process(options = {})
     if sender_user
       return []
     else

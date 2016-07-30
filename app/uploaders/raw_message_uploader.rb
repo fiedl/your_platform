@@ -5,7 +5,7 @@ class RawMessageUploader < BaseUploader
   #
   # See: https://github.com/carrierwaveuploader/carrierwave/wiki/How-to:-Upload-from-a-string-in-Rails-3-or-later
   #
-  def store!(new_file)
+  def store!(new_file = nil)
     if new_file.kind_of? String
       new_file = RawMessageUploadStringIO.new('message.eml', new_file)
     elsif new_file.kind_of? Mail::Message

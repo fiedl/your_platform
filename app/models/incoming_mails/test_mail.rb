@@ -9,7 +9,7 @@
 #
 class IncomingMails::TestMail < IncomingMail
 
-  def process
+  def process(options = {})
     if sender_user && recipient_group && recipient_group.has_flag?(:mail_test_group)
       recipient_group.child_users << sender_user unless recipient_group.child_users.include? sender_user
       recipient_group.update mailing_list_sender_filter: :open

@@ -44,7 +44,7 @@ class IncomingMailsController < ApplicationController
   def create
     authorize! :create, IncomingMail
     @incoming_mail = IncomingMail.create_from_message incoming_mail_params[:message]
-    IncomingMail.delay.process @incoming_mail.id
+    IncomingMail.process @incoming_mail.id, async: true
     render json: @incoming_mail
   end
 

@@ -3,7 +3,7 @@
 #
 class IncomingMails::GroupMailingListMail < IncomingMail
 
-  def process
+  def process(options = {})
     if sender_user && recipient_group && authorized?
       recipient_group.members.with_account.collect do |user|
         message = Mail.new(raw_message)

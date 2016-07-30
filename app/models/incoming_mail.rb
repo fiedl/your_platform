@@ -12,7 +12,7 @@
 #
 class IncomingMail < ActiveRecord::Base
   mount_uploader :raw_message_file, RawMessageUploader
-  validates :raw_message, presence: true, unless: :new_record?
+  validates :raw_message_file, presence: true, unless: :new_record?
 
   #has_many :processed_objects, polymorphic: true
 
@@ -96,15 +96,23 @@ class IncomingMail < ActiveRecord::Base
     IncomingMails::TestMail
     return subclasses
   end
-  def process
+  def process(options = {})
     self.class.load_subclasses
     self.class.subclasses.collect do |incoming_mail_subclass|
-      incoming_mail_subclass.process id
+      if options[:async]
+        incoming_mail_subclass.delay.process id
+      else
+        incoming_mail_subclass.process id
+      end
     end.flatten
   end
 
-  def self.process(id)
-    find(id).process
+  # options:
+  #   - async: whether to process the independent steps
+  #            asynchronously through sidekiq.
+  #
+  def self.process(id, options = {})
+    find(id).process(options)
   end
 
 end

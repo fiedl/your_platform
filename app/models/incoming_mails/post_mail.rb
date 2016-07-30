@@ -1,6 +1,6 @@
 class IncomingMails::PostMail < IncomingMail
 
-  def process
+  def process(options = {})
     return [self]
   end
 
