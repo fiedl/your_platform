@@ -83,6 +83,28 @@ describe IncomingMails::GroupMailingListMail do
       end
     end
 
+    describe "when the body contains a utf-8-🍕" do
+      let(:example_raw_message) { %{
+        From: john@example.com
+        To: all-developers@example.com
+        Subject: Great news for all developers!
+        Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+        Free drinks and 🍕 this evening!
+      }.gsub("  ", "") }
+      before do
+        @group = developers_group
+        @user = john_doe
+        @group.update! mailing_list_sender_filter: :open
+        @member = create :user_with_account
+        @group << @member
+      end
+      it 'forwards the mail with 🍕' do
+        subject
+        last_email.body_in_utf8.should include '🍕'
+      end
+    end
+
   end
 end
 
