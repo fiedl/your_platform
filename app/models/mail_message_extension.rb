@@ -53,4 +53,31 @@ module MailMessageExtension
     header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.map(&:value)
   end
 
+  # For forwarding a modified message through action mailer, we need to deliver
+  # the message object. But in order to do that we need to import some settings
+  # from action mailer.
+  #
+  def deliver_with_action_mailer_now
+    #action_delivery = ActionMailer::MessageDelivery.new(nil, nil)
+    #action_delivery.__setobj__(self)
+    #ActionMailer::DeliveryMethods.wrap_delivery_behavior(self, Rails.application.config.action_mailer.delivery_method)
+    # action_delivery.delivery_method Rails.application.config.action_mailer.delivery_method
+    #action_delivery.deliver!
+    import_delivery_method_from_actionmailer
+    deliver
+  end
+
+  def import_delivery_method_from_actionmailer
+    case Rails.application.config.action_mailer.delivery_method
+    when :test
+      delivery_method Mail::TestMailer
+    when :smtp
+      delivery_method Mail::SMTP, Rails.application.config.action_mailer.smtp_settings
+    when :letter_opener
+      delivery_method LetterOpener::DeliveryMethod, location: File.join(Rails.root, 'tmp/letter_opener')
+    when :sendmail
+      delivery_method Mail::Sendmail, location: '/usr/sbin/sendmail', arguments: '-i -t'
+    end
+  end
+
 end

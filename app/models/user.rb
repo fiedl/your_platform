@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
 
   has_one                   :account, class_name: "UserAccount", autosave: true, inverse_of: :user, dependent: :destroy
   validates_associated      :account
+  scope                     :with_account, -> { joins(:account) }
 
   delegate                  :send_welcome_email, :to => :account
 

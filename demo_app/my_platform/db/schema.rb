@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160729063204) do
+ActiveRecord::Schema.define(version: 20160729181419) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -159,7 +159,7 @@ ActiveRecord::Schema.define(version: 20160729063204) do
   end
 
   create_table "incoming_mails", force: :cascade do |t|
-    t.string   "raw_message",            limit: 255
+    t.string   "raw_message_file",       limit: 255
     t.string   "message_id",             limit: 255
     t.string   "in_reply_to_message_id", limit: 255
     t.string   "from",                   limit: 255

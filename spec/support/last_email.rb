@@ -1,9 +1,9 @@
 module LastEmail
 
   def last_email
-    5.times do
+    15.times do
       return ActionMailer::Base.deliveries.last if ActionMailer::Base.deliveries.last.present?
-      sleep 1
+      sleep 0.3
     end
     return nil
   end

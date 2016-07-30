@@ -69,10 +69,37 @@ class IncomingMail < ActiveRecord::Base
       (to.to_s.split(",") + cc.to_s.split(",")).map(&:strip)
     end
   end
+  def destination
+    raise "No destinations." if destinations.count == 0
+    raise "The envelope contains several recipients: #{destinations.join(', ')}" if destinations.count > 1
+    destinations.first
+  end
 
+  def sender_user
+    sender_profileable if sender_profileable.kind_of? User
+  end
+  def sender_profileable
+    ProfileFieldTypes::Email.where(value: from).first.try(:profileable)
+  end
+
+  def recipient_group
+    recipient_profileable if recipient_profileable.kind_of? Group
+  end
+  def recipient_profileable
+    ProfileFieldTypes::MailingListEmail.where(value: destination).first.try(:profileable)
+  end
+
+  def self.load_subclasses
+    IncomingMails::GroupMailingListMail
+    IncomingMails::MailWithUnknownSender
+    IncomingMails::PostMail
+    IncomingMails::TestMail
+    return subclasses
+  end
   def process
+    self.class.load_subclasses
     self.class.subclasses.collect do |incoming_mail_subclass|
-      incoming_mail_subclass.find(id).process
+      incoming_mail_subclass.process id
     end.flatten
   end
 

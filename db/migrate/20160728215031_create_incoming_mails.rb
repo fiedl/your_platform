@@ -1,7 +1,7 @@
 class CreateIncomingMails < ActiveRecord::Migration
   def change
     create_table :incoming_mails do |t|
-      t.string :raw_message
+      t.string :raw_message_file
       t.string :message_id
       t.string :in_reply_to_message_id
       t.string :from

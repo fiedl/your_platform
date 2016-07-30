@@ -16,11 +16,4 @@ class IncomingMails::MailWithUnknownSender < IncomingMail
     end
   end
 
-  def sender_user
-    sender_profileable if sender_profileable.kind_of? User
-  end
-  def sender_profileable
-    ProfileFieldTypes::Email.where(value: from).first.try(:profileable)
-  end
-
 end
