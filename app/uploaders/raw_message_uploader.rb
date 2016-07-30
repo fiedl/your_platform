@@ -7,11 +7,9 @@ class RawMessageUploader < BaseUploader
   #
   def store!(new_file = nil)
     if new_file.kind_of? String
-      new_file = RawMessageUploadStringIO.new('message.eml', new_file)
+      new_file = RawMessageUploadStringIO.new(filename, new_file)
     elsif new_file.kind_of? Mail::Message
-      #new_file_name = "#{(new_file.message_id || 'message')}.eml"
-      new_file_name = 'message.eml'
-      new_file = RawMessageUploadStringIO.new(new_file_name, new_file.to_s)
+      new_file = RawMessageUploadStringIO.new(filename, new_file.to_s)
     end
     super(new_file)
   end
