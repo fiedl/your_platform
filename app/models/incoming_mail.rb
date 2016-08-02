@@ -110,6 +110,13 @@ class IncomingMail < ActiveRecord::Base
     ProfileFieldTypes::MailingListEmail.where(value: destination).first.try(:profileable)
   end
 
+  def in_reply_to_commentable
+    @in_reply_to_commentable ||= if in_reply_to_message_id
+      Comment.where(message_id: in_reply_to_message_id).last.try(:commentable) ||
+      Post.where(message_id: in_reply_to_message_id).last
+    end
+  end
+
   def authorized?
     recipient_group || raise('Cannot determine recipient group.')
     Ability.new(sender_user).can? :create_post_for, recipient_group

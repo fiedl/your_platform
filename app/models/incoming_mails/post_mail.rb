@@ -1,7 +1,7 @@
 class IncomingMails::PostMail < IncomingMail
 
   def process(options = {})
-    if authorized?
+    if authorized? and not in_reply_to_commentable
 
       post = recipient_group.posts.new
       post.incoming_mail_id = self.id

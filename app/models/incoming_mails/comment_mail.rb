@@ -5,7 +5,12 @@ class IncomingMails::CommentMail < IncomingMail
 
   def process(options = {})
     if authorized?
-      comment = commentable.comments.create author_user_id: sender_user.id, text: text_content
+      comment = commentable.comments.create message_id: message_id,
+        author_user_id: sender_user.id, text: text_content
+
+      comment.incoming_mail_id = self.id
+      comment.save
+
       [comment]
     else
       []
@@ -13,10 +18,7 @@ class IncomingMails::CommentMail < IncomingMail
   end
 
   def commentable
-    # TODO: Wenn jemand auf einen Kommentar antwortet, muss es natürlich
-    # wieder ein Kommentar auf den Post werden.
-
-    @commentable ||= Post.where(message_id: in_reply_to_message_id).last
+    in_reply_to_commentable
   end
 
   def authorized?
