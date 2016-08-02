@@ -43,6 +43,18 @@ module YourPlatformMailMessageExtensions
     end
   end
 
+  def content_type
+    super || guess_content_type
+  end
+
+  def guess_content_type
+    if body_in_utf8.include? "<p>"
+      'text/html'
+    else
+      'text/plain'
+    end
+  end
+
   def recipient_address
     self.smtp_envelope_to.try(:first) || self.to.try(:first)
   end

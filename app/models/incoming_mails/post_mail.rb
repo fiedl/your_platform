@@ -17,7 +17,7 @@ class IncomingMails::PostMail < IncomingMail
 
       post.sent_at = Time.zone.now
       post.subject = subject
-      post.text = ExtendedEmailReplyParser.extract_text(message)
+      post.text = text_content
       post.message_id = message_id
       post.sent_via = destination
       post.save

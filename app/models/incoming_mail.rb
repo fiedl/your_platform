@@ -33,6 +33,7 @@ class IncomingMail < ActiveRecord::Base
     incoming_mail.envelope_to = message.smtp_envelope_to_header.try(:join, ", ") if message.smtp_envelope_to_header.any?
     incoming_mail.envelope_to ||= message.smtp_envelope_to.try(:join, ", ")
     incoming_mail.subject = message.subject
+    incoming_mail.text_content = ExtendedEmailReplyParser.extract_text(message)
     incoming_mail.save!
 
     # Storing the raw message needs to come after `save!`
@@ -114,16 +115,20 @@ class IncomingMail < ActiveRecord::Base
     Ability.new(sender_user).can? :create_post_for, recipient_group
   end
 
-  def self.load_subclasses
-    IncomingMails::GroupMailingListMail
-    IncomingMails::MailWithoutAuthorization
-    IncomingMails::PostMail
-    IncomingMails::TestMail
-    return subclasses
+  def self.processor_sub_classes
+    # Does not work in development due to delayed constant auto loading:
+    # # self.subclasses
+    [
+      IncomingMails::GroupMailingListMail,
+      IncomingMails::MailWithoutAuthorization,
+      IncomingMails::TestMail,
+      IncomingMails::PostMail,
+      IncomingMails::CommentMail
+    ]
   end
+
   def process(options = {})
-    self.class.load_subclasses
-    self.class.subclasses.collect do |incoming_mail_subclass|
+    self.class.processor_sub_classes.collect do |incoming_mail_subclass|
       if options[:async] and Rails.env.production?
         incoming_mail_subclass.delay.process id
       else
