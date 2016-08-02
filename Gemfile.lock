@@ -34,6 +34,7 @@ PATH
       edit_mode (>= 1.0.2)
       eventmachine (>= 1.0.7)
       execjs (>= 2.5.2)
+      extended_email_reply_parser
       faker
       font-awesome-rails (~> 4.3.0)
       foreman
@@ -225,12 +226,18 @@ GEM
       jquery-rails
       jquery-turbolinks
       rails (>= 3.2)
+    email_reply_parser (0.5.9)
     email_spec (1.6.0)
       launchy (~> 2.1)
       mail (~> 2.2)
     erubis (2.7.0)
     eventmachine (1.2.0.1)
     execjs (2.6.0)
+    extended_email_reply_parser (0.3.1)
+      activesupport
+      charlock_holmes
+      email_reply_parser (~> 0.5.9)
+      mail
     factory_girl (4.5.0)
       activesupport (>= 3.0.0)
     factory_girl_rails (4.5.0)

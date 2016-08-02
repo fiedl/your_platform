@@ -156,8 +156,9 @@ Gem::Specification.new do |s|
   # Console
   s.add_dependency "table-formatter"
 
-  # Encoding
+  # Emails and Encoding
   s.add_dependency 'charlock_holmes'
+  s.add_dependency 'extended_email_reply_parser'
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

@@ -1,8 +1,16 @@
-# This is prepended to Mail::Message.
-# https://github.com/mikel/mail/blob/master/lib/mail/message.rb
-#
-module MailMessageExtension
+require File.join(Gem.loaded_specs['mail'].full_gem_path, 'lib/mail/message')
+require File.join(Gem.loaded_specs['extended_email_reply_parser'].full_gem_path, 'lib/extended_email_reply_parser/mail/message')
 
+# This extends the mail message class, which is originally defined in
+#
+#     https://github.com/mikel/mail
+#     https://github.com/mikel/mail/blob/master/lib/mail/message.rb
+#
+# and further extended in
+#
+#     https://github.com/fiedl/extended_email_reply_parser
+#
+module YourPlatformMailMessageExtensions
   # This method overrides the original delivery method in order to
   # handle cases where the message cannot be delivered. In those
   # cases, the email adress is marked as 'invalid'.
@@ -56,17 +64,6 @@ module MailMessageExtension
     header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.map(&:value)
   end
 
-  # http://stackoverflow.com/a/15818886/2066546
-  def body_in_utf8
-    require 'charlock_holmes/string'
-    body = self.body.decoded
-    if body.present?
-      encoding = body.detect_encoding[:encoding]
-      body = body.force_encoding(encoding).encode('UTF-8')
-    end
-    return body
-  end
-
   # For forwarding a modified message through action mailer, we need to deliver
   # the message object. But in order to do that we need to import some settings
   # from action mailer.
@@ -115,4 +112,8 @@ module MailMessageExtension
     find_delivery || create_delivery
   end
 
+end
+
+class Mail::Message
+  prepend YourPlatformMailMessageExtensions
 end

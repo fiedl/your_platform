@@ -1,1 +1,1 @@
-Mail::Message.send(:prepend, MailMessageExtension)
+require_relative '../../app/models/mail/message'

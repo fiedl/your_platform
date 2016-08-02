@@ -118,6 +118,10 @@ require 'merit'
 # Dummy User Generation
 require 'faker'
 
+# Emails and Encoding
+require 'charlock_holmes'
+require 'extended_email_reply_parser'
+
 ::STAGE = "development" unless defined? ::STAGE
 
 module YourPlatform
