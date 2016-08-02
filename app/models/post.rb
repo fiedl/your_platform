@@ -12,11 +12,11 @@ class Post < ActiveRecord::Base
   has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
 
-  has_many :deliveries, class_name: 'PostDelivery'
+  has_many :deliveries, as: :deliverable
   has_many :notifications, as: :reference, dependent: :destroy
-  
+
   include PostDeliveryReport
-  
+
   def title
     subject
   end
@@ -35,7 +35,7 @@ class Post < ActiveRecord::Base
     self.notifications.where(recipient_id: user.id, read_at: nil).count > 0 or
     user.notifications.unread.where(reference_type: 'Comment', reference_id: self.comment_ids).count > 0
   end
-  
+
   def recipients
     User.find(notifications.pluck(:recipient_id))
   end
@@ -88,23 +88,23 @@ class Post < ActiveRecord::Base
     send_as_email_to_recipients
   end
   def send_as_email_to_recipients(recipients = nil)
-    recipients ||= group.members
-    
-    recipients.each do |recipient_user|
-      unless self.deliveries.pluck(:user_id).include? recipient_user.id
-        delivery = self.deliveries.build
-        delivery.user = recipient_user
-        delivery.save
-      end
-    end
-    
-    self.deliveries.due.pluck(:id).each do |delivery_id|
-      PostDelivery.delay.deliver_if_due(delivery_id)
-    end
-    
-    self.notifications.where(sent_at: nil).update_all sent_at: Time.zone.now
-
-    return self.deliveries.count
+  #  recipients ||= group.members
+  #
+  #  recipients.each do |recipient_user|
+  #    unless self.deliveries.pluck(:user_id).include? recipient_user.id
+  #      delivery = self.deliveries.build
+  #      delivery.user = recipient_user
+  #      delivery.save
+  #    end
+  #  end
+  #
+  #  self.deliveries.due.pluck(:id).each do |delivery_id|
+  #    PostDelivery.delay.deliver_if_due(delivery_id)
+  #  end
+  #
+  #  self.notifications.where(sent_at: nil).update_all sent_at: Time.zone.now
+  #
+  #  return self.deliveries.count
   end
 
   def email_subject
@@ -112,68 +112,6 @@ class Post < ActiveRecord::Base
   end
 
 
-  # Each post may be delivered to all group members via email. ("Group Mail Feature").
-  # This method returns the message to deliver to the group members.
-  # This is done separately (i.e. one user at a time) in order to (a) not reveal the
-  # email addresses, and (b) avoid being caught by a spam filter.
-  #
-  # Calling this method will produce, *not deliver* the mail messages.
-  #
-  def messages_to_deliver_to_mailing_list_members
-    self.group.descendant_users.collect do |user|
-      message_for_email_delivery_to_user(user)
-    end
-  end
-
-  # This method returns the modified subject, which is used by the Group Mail Feature.
-  # Give a post subject 'My Fancy Subject" and the post's group's name being "Test Group",
-  # this mehtod returns "[Test Group] My Fancy Subject".
-  #
-  # If the subject already contains the prefix, like in "Re: [Test Group] My Fancy Subject",
-  # of cause, the prefix isn't added, twice.
-  #
-  def modified_subject
-    prefix = "[#{self.group.name}] "
-    if self.subject.include? prefix
-      return subject
-    else
-      return prefix + subject
-    end
-  end
-
-  # This method returns a mail footer, which may be added to the messages delivered via
-  # email. The footer contains, e.g. a link to the group's site.
-  #
-  def mailing_list_footer
-    "\n\n\n" +
-      "_____________________________________\n" +
-      I18n.t(:this_message_has_been_deliverd_through_mailing_list, group_name: self.group.name ) + "\n" +
-      self.group.url + "\n"
-  end
-
-  # This method returns the modified message, ready for delivery via email
-  # to the specified user.
-  #
-  def message_for_email_delivery_to_user( user )
-
-    # use the stored message as template
-    message = self.entire_message
-
-    # modify the subject according to the group's name
-    message.subject = self.modified_subject
-
-    # modify the envelope_to field, but keep the to field as it is.
-    # Thereby, the group mail address is shown in the mail programs
-    # as recipient.
-    message.smtp_envelope_to = user.email
-
-    # add the footer for each part
-    message.add_to_body self.mailing_list_footer
-
-    return message
-  end
-  
-  
   # Find all posts that are sent by or sent to a user.
   #
   def self.by_user(user)
@@ -198,5 +136,5 @@ class Post < ActiveRecord::Base
       end
     end
   end
-  
+
 end

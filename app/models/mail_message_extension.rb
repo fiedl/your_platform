@@ -11,13 +11,16 @@ module MailMessageExtension
     if recipient_address.include?('@')
       begin
         Rails.logger.info "Sending mail smtp_envelope_to #{self.smtp_envelope_to.to_s}."
-        return super
+        result = super
+        create_delivery
+        return result
       rescue Net::SMTPFatalError, Net::SMTPSyntaxError => error
         Rails.logger.debug error
         Rails.logger.warn "smtp-envelope-to field: #{self.smtp_envelope_to.to_s}"
         Rails.logger.warn "to field: #{self.to.to_s}"
         Rails.logger.warn "recognized recipient address (address only!): #{recipient_address}"
         Rails.logger.warn error.message
+        create_failed_delivery comment: error.message
         recipient_address_needs_review!
         return false
       rescue Net::SMTPServerBusy => error
@@ -69,11 +72,6 @@ module MailMessageExtension
   # from action mailer.
   #
   def deliver_with_action_mailer_now
-    #action_delivery = ActionMailer::MessageDelivery.new(nil, nil)
-    #action_delivery.__setobj__(self)
-    #ActionMailer::DeliveryMethods.wrap_delivery_behavior(self, Rails.application.config.action_mailer.delivery_method)
-    # action_delivery.delivery_method Rails.application.config.action_mailer.delivery_method
-    #action_delivery.deliver!
     import_delivery_method_from_actionmailer
     deliver
   end
@@ -89,6 +87,32 @@ module MailMessageExtension
     when :sendmail
       delivery_method Mail::Sendmail, location: '/usr/sbin/sendmail', arguments: '-i -t'
     end
+  end
+
+  def create_delivery
+    Delivery.create message_id: message_id,
+      in_reply_to: in_reply_to,
+      user_email: recipient_address,
+      user_id: User.find_by_email(recipient_address).try(:id),
+      subject: subject,
+      sent_at: (date || Time.zone.now)
+  end
+
+  def create_failed_delivery(options = {})
+    delivery = create_delivery
+    delivery.sent_at = nil
+    delivery.failed_at = Time.zone.now
+    delivery.comment = options[:comment]
+    delivery.save
+    delivery
+  end
+
+  def find_delivery
+    Delivery.where(message_id: message_id, user_email: recipient_address).last
+  end
+
+  def delivery
+    find_delivery || create_delivery
   end
 
 end

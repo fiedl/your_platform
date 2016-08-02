@@ -28,6 +28,7 @@ PATH
       bundler (>= 1.9.4)
       cancan
       carrierwave
+      charlock_holmes
       coffee-rails (>= 4.1.0)
       devise (>= 3.5.4)
       edit_mode (>= 1.0.2)
@@ -184,6 +185,7 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
+    charlock_holmes (0.7.3)
     childprocess (0.5.8)
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)

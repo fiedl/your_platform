@@ -10,9 +10,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         message.smtp_envelope_to = user.email
         message.subject = subject_with_group_name
         message.deliver_with_action_mailer_now
-
-        # TODO: Persist delivery that it can be seen in the delivery reports!
-        # TODO: Return Delivery
+        message.delivery
       end
     else
       []

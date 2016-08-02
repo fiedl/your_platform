@@ -1,29 +1,29 @@
 # Issues are things admins need to take a look at and resolve them.
 # For example: Missing emails, implausible postal addresses etc.
-# 
+#
 # ## Usage
-# 
+#
 #     Issue.scan            # Perform an overall scan for issues.
 #     Issue.scan(object)    # Scan a specific object for issues.
 #     Issue.scan(objects)   # Scan multiple objects.
 #
 #     Issue.unresolved      # Scope that detects only unresolved issues.
-# 
+#
 #     issues = Issue.scan
 #     issue = issues.first
 #     issue.resecan         # Rescan a specific issue.
 #
 class Issue < ActiveRecord::Base
   attr_accessible :title, :description, :resolved_at, :responsible_admin_id
-  
+
   belongs_to :reference, polymorphic: true
   belongs_to :responsible_admin, class_name: 'User'
   belongs_to :author, class_name: 'User'
-  
+
   scope :unresolved, -> { where(resolved_at: nil) }
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
   scope :automatically_created, -> { where author_id: nil }
-  
+
   def self.scan(object_or_objects = nil)
     if object_or_objects && object_or_objects.respond_to?(:to_a)
       self.scan_objects(object_or_objects)
@@ -44,7 +44,7 @@ class Issue < ActiveRecord::Base
     self.scan_objects(ProfileFieldTypes::Address.all) +
     self.scan_objects(ProfileFieldTypes::Email.all)
   end
-  
+
   def self.scan_address_field(address_field)
     address_field.issues.destroy_auto
     if address_field.postal_or_first_address?
@@ -62,17 +62,17 @@ class Issue < ActiveRecord::Base
     end
     return address_field.issues(true)
   end
-  
+
   def self.scan_email_field(email_field)
     email_field.issues.destroy_auto
-    if email_field.value.try(:present?) && PostDelivery.where(user_email: email_field.value, created_at: 3.weeks.ago..Time.zone.now).failed.count > 0
+    if email_field.value.try(:present?) && Delivery.where(user_email: email_field.value, created_at: 3.weeks.ago..Time.zone.now).failed.count > 0
       email_field.issues.create title: 'issues.could_not_deliver_to_email', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
     elsif email_field.value.present? && email_field.needs_review?
       email_field.issues.create title: 'issues.email_needs_review', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
     end
     return email_field.issues(true)
   end
-  
+
   # Notify responsible admins if there are open issues.
   #
   def self.notify_admins
@@ -87,21 +87,21 @@ class Issue < ActiveRecord::Base
       end
     end
   end
-  
+
   def reference_content
     return reference.value if reference.kind_of?(ProfileField)
   end
-  
+
   def resolve
     self.resolved_at = Time.zone.now
     self.save
   end
-  
+
   def self.destroy_auto
     self.destroy_automatically_created
   end
   def self.destroy_automatically_created
     self.automatically_created.destroy_all
   end
-  
+
 end

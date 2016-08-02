@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160729181419) do
+ActiveRecord::Schema.define(version: 20160802130333) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -104,6 +104,21 @@ ActiveRecord::Schema.define(version: 20160729181419) do
 
   add_index "dag_links", ["ancestor_id", "ancestor_type", "direct"], name: "dag_ancestor", using: :btree
   add_index "dag_links", ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
+
+  create_table "deliveries", force: :cascade do |t|
+    t.integer  "deliverable_id",   limit: 4
+    t.integer  "user_id",          limit: 4
+    t.string   "user_email",       limit: 255
+    t.datetime "sent_at"
+    t.datetime "failed_at"
+    t.string   "comment",          limit: 255
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.string   "deliverable_type", limit: 255
+    t.string   "message_id",       limit: 255
+    t.string   "subject",          limit: 255
+    t.string   "in_reply_to",      limit: 255
+  end
 
   create_table "events", force: :cascade do |t|
     t.string   "name",                      limit: 255
@@ -291,17 +306,6 @@ ActiveRecord::Schema.define(version: 20160729181419) do
   end
 
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
-
-  create_table "post_deliveries", force: :cascade do |t|
-    t.integer  "post_id",    limit: 4
-    t.integer  "user_id",    limit: 4
-    t.string   "user_email", limit: 255
-    t.datetime "sent_at"
-    t.datetime "failed_at"
-    t.string   "comment",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-  end
 
   create_table "posts", force: :cascade do |t|
     t.string   "subject",         limit: 255

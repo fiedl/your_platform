@@ -96,7 +96,7 @@ class IncomingMail < ActiveRecord::Base
 
   def self.load_subclasses
     IncomingMails::GroupMailingListMail
-    IncomingMails::MailWithUnknownSender
+    IncomingMails::MailWithoutAuthorization
     IncomingMails::PostMail
     IncomingMails::TestMail
     return subclasses
@@ -104,7 +104,7 @@ class IncomingMail < ActiveRecord::Base
   def process(options = {})
     self.class.load_subclasses
     self.class.subclasses.collect do |incoming_mail_subclass|
-      if options[:async]
+      if options[:async] and Rails.env.production?
         incoming_mail_subclass.delay.process id
       else
         incoming_mail_subclass.process id
