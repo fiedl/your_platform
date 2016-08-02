@@ -5,4 +5,5 @@ de:
   reason: "Grund"
   we_could_not_determine_who_you_are: "Der E-Mail-Adresse, von der Sie diese Nachricht gesendet haben, konnte kein Benutzer-Konto auf unserer Plattform zugeordnet werden. Bitte stellen Sie sicher, dass Sie von einer Adresse aus schreiben, die auf der Plattform hinterlegt ist."
   your_account_is_inactive_please_reply: "Ihr Benutzer-Konto auf der Plattform ist inaktiv. Dies kann verschiedene Ursachen haben. Bitte wenden Sie sich zur Klärung an unser Support-Team, indem Sie auf diese Nachricht antworten."
+  you_are_unauthorized_to_send_to_this_mailing_list: "Sie sind nicht berechtigt, an diese E-Mail-Liste zu schreiben, da sie mit einem Absender-Filter versehen wurde."
   if_you_need_help_reply_to_contact_our_support_team: "Wenn Sie Hilfe benötigen, wenden Sie sich bitte an unser Support-Team, indem Sie auf diese automatische E-Mail-Nachricht antworten."

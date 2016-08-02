@@ -4,7 +4,7 @@
 class IncomingMails::GroupMailingListMail < IncomingMail
 
   def process(options = {})
-    if sender_user && recipient_group && authorized?
+    if recipient_group && authorized?
       recipient_group.members.with_account.collect do |user|
         message = Mail.new(raw_message)
         message.smtp_envelope_to = user.email
@@ -17,12 +17,6 @@ class IncomingMails::GroupMailingListMail < IncomingMail
     else
       []
     end
-  end
-
-  def authorized?
-    sender_user || raise('Cannot determine sender user.')
-    recipient_group || raise('Cannot determine recipient group.')
-    sender_user.can? :create_post_for, recipient_group
   end
 
   def subject_with_group_name

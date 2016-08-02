@@ -22,7 +22,13 @@ describe IncomingMails::GroupMailingListMail do
       create :user_with_account, email: 'john@example.com'
     }
 
-    before { ActionMailer::Base.deliveries = [] }
+    before do
+      ActionMailer::Base.deliveries = []
+      @group = developers_group
+      @user = john_doe
+      @member = create :user_with_account
+      @group << @member
+    end
 
     shared_examples_for "nothing to do" do
       it 'does not send any email' do
@@ -37,45 +43,45 @@ describe IncomingMails::GroupMailingListMail do
       it { should == [] }
     end
 
+    shared_examples_for "forwarding the message" do
+      it 'forwards the email to the members with account' do
+        expect { subject }.to change { ActionMailer::Base.deliveries.count }.by 1
+        last_email.smtp_envelope_to.should == [@member.email]
+        last_email.to.should == ['all-developers@example.com']
+        last_email.from.should == ['john@example.com']
+        last_email.subject.should include 'Great news for all developers!'
+        last_email.body.should include 'Free drinks this evening!'
+      end
+      it 'does not create any post' do
+        expect { subject }.not_to change { Post.count }
+      end
+      it 'does not raise an error' do
+        expect { subject }.not_to raise_error
+      end
+    end
+
     describe "when the sender is unknown" do
-      before { @group = developers_group }
+      before { @user.destroy }
       it_behaves_like 'nothing to do'
+
+      describe "when the mailing list is open" do
+        before { @group.update! mailing_list_sender_filter: :open }
+        it_behaves_like 'forwarding the message'
+      end
     end
     describe "when the recipient is unknwon" do
-      before { @user = john_doe }
+      before { @group.destroy }
       it_behaves_like 'nothing to do'
     end
     describe "when sender and recipient group exist" do
-      before do
-        @group = developers_group
-        @user = john_doe
-      end
       describe "when the sender is unauthorized" do
         it_behaves_like "nothing to do"
       end
       describe "when the sender is authorized" do
         before do
           @group.update! mailing_list_sender_filter: :open
-          @member = create :user_with_account
-          @group << @member
         end
-
-        it 'forwards the email to the members with account' do
-          expect { subject }.to change { ActionMailer::Base.deliveries.count }.by 1
-          last_email.smtp_envelope_to.should == [@member.email]
-          last_email.to.should == ['all-developers@example.com']
-          last_email.from.should == ['john@example.com']
-          last_email.subject.should include 'Great news for all developers!'
-          last_email.body.should include 'Free drinks this evening!'
-        end
-        it 'does not create any post' do
-          expect { subject }.not_to change { Post.count }
-        end
-        it 'does not raise an error' do
-          expect { subject }.not_to raise_error
-        end
-        it { should == [ one_delivery_here ] }
-
+        it_behaves_like 'forwarding the message'
         describe "when the group has no members" do
           before { @member.destroy }
           it_behaves_like "nothing to do"
@@ -93,8 +99,6 @@ describe IncomingMails::GroupMailingListMail do
         Free drinks and 🍕 this evening!
       }.gsub("  ", "") }
       before do
-        @group = developers_group
-        @user = john_doe
         @group.update! mailing_list_sender_filter: :open
         @member = create :user_with_account
         @group << @member

@@ -89,6 +89,11 @@ class IncomingMail < ActiveRecord::Base
     ProfileFieldTypes::MailingListEmail.where(value: destination).first.try(:profileable)
   end
 
+  def authorized?
+    recipient_group || raise('Cannot determine recipient group.')
+    Ability.new(sender_user).can? :create_post_for, recipient_group
+  end
+
   def self.load_subclasses
     IncomingMails::GroupMailingListMail
     IncomingMails::MailWithUnknownSender
