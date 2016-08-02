@@ -16,6 +16,18 @@ class Post < ActiveRecord::Base
   has_many :deliveries, as: :deliverable
   has_many :notifications, as: :reference, dependent: :destroy
 
+  def deliveries
+    if self.message_id
+      Delivery.where(message_id: self.message_id)
+    else
+      super
+    end
+  end
+
+  def associate_deliveries
+    Delivery.where(message_id: message_id, deliverable_id: nil).update_all deliverable_type: 'Post', deliverable_id: id
+  end
+
   include PostDeliveryReport
 
   def title

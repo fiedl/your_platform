@@ -22,6 +22,7 @@ class IncomingMail < ActiveRecord::Base
 
   def self.create_from_message(message)
     message = Mail::Message.new(message) if message.kind_of? String
+    message.message_id ||= Mail::MessageIdField.new.value if Rails.env.development? # Because our test mails usually don't have a message id.
 
     incoming_mail = self.new
     incoming_mail.message_id = message.message_id

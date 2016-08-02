@@ -22,8 +22,7 @@ class IncomingMails::PostMail < IncomingMail
       post.sent_via = destination
       post.save
 
-      # TODO: Associate the corresponding deliveries. But they are handled async and don't
-      # know the post id, yet.
+      post.associate_deliveries
 
       #if self.has_attachments?
       #
