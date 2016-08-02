@@ -58,6 +58,10 @@ class IncomingMail < ActiveRecord::Base
     return raw_message_file
   end
 
+  def message
+    @message ||= Mail.new(raw_message)
+  end
+
   def in_reply_to
     self.class.where(message_id: in_reply_to_message_id)
   end
@@ -79,7 +83,22 @@ class IncomingMail < ActiveRecord::Base
     sender_profileable if sender_profileable.kind_of? User
   end
   def sender_profileable
+    sender_profileable_by_email || sender_by_name
+  end
+  def sender_profileable_by_email
     ProfileFieldTypes::Email.where(value: from).first.try(:profileable)
+  end
+  def sender_by_name
+    User.find_by_name sender_name
+  end
+  def sender_email
+    from
+  end
+  def sender_string
+    message.header[:from].value
+  end
+  def sender_name
+    sender_string.gsub(" <#{sender_email}>", "")
   end
 
   def recipient_group

@@ -3,6 +3,7 @@ class Post < ActiveRecord::Base
 
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+  belongs_to :incoming_mail
 
   has_many :attachments, as: :parent, dependent: :destroy
   accepts_nested_attributes_for :attachments

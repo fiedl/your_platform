@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160802130333) do
+ActiveRecord::Schema.define(version: 20160802133650) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -308,19 +308,20 @@ ActiveRecord::Schema.define(version: 20160802130333) do
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
 
   create_table "posts", force: :cascade do |t|
-    t.string   "subject",         limit: 255
-    t.text     "text",            limit: 65535
-    t.integer  "group_id",        limit: 4
-    t.integer  "author_user_id",  limit: 4
-    t.string   "external_author", limit: 255
+    t.string   "subject",          limit: 255
+    t.text     "text",             limit: 65535
+    t.integer  "group_id",         limit: 4
+    t.integer  "author_user_id",   limit: 4
+    t.string   "external_author",  limit: 255
     t.datetime "sent_at"
     t.boolean  "sticky"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "entire_message",  limit: 65535
-    t.string   "message_id",      limit: 255
-    t.string   "content_type",    limit: 255
-    t.string   "sent_via",        limit: 255
+    t.text     "entire_message",   limit: 65535
+    t.string   "message_id",       limit: 255
+    t.string   "content_type",     limit: 255
+    t.string   "sent_via",         limit: 255
+    t.integer  "incoming_mail_id", limit: 4
   end
 
   add_index "posts", ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
