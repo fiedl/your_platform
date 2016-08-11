@@ -1,5 +1,13 @@
-// profiles#show
-if ($('body').hasClass('profiles')) {
+// profile_fields#index
+if ($('body').hasClass('profile_fields')) {
+
+  var created_profile_field = $("<%= j render partial: 'profile_fields/profile_field_tr', locals: {profile_field: @profile_field} %>");
+
+  $('table.profile_fields tbody').append(created_profile_field);
+  created_profile_field.apply_edit_mode();
+
+// previous behaviour, e.g. profiles#show, mailing_lists#index
+} else {
 
   <% # Close the dropdown menu %>
   var section = $(".section.<%= escape_javascript(params[:section]) %>");
@@ -27,13 +35,5 @@ if ($('body').hasClass('profiles')) {
     textBox.focus();
     textBox.select();
   }
-
-// profile_fields#index
-} else if ($('body').hasClass('profile_fields')) {
-
-  var created_profile_field = $("<%= j render partial: 'profile_fields/profile_field_tr', locals: {profile_field: @profile_field} %>");
-
-  $('table.profile_fields tbody').append(created_profile_field);
-  created_profile_field.apply_edit_mode();
 
 }
