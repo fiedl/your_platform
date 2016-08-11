@@ -54,9 +54,10 @@
           = excel_icon
           = t :member_development
       - if can? :export_stammdaten_for, @group
-        = link_to group_path(@group, :format => :xls, :list => :stammdaten) do
-          = excel_icon
-          = t :stammdaten
+        %li
+          = link_to group_path(@group, :format => :xls, :list => :stammdaten) do
+            = excel_icon
+            = t :stammdaten
       - if can? :export, :wingolfsblaetter_export_format
         %li
           = link_to group_path(@group, :format => :xls, :list => :wingolfsblaetter) do
@@ -125,9 +126,10 @@
           = csv_icon
           = t :member_development
       - if can? :export_stammdaten_for, @group
-        = link_to group_path(@group, :format => :csv, :list => :stammdaten) do
-          = csv_icon
-          = t :stammdaten
+        %li
+          = link_to group_path(@group, :format => :csv, :list => :stammdaten) do
+            = csv_icon
+            = t :stammdaten
       - if can? :export, :wingolfsblaetter_export_format
         %li
           = link_to group_path(@group, :format => :csv, :list => :wingolfsblaetter) do
