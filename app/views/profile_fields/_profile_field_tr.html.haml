@@ -1,0 +1,8 @@
+- profile_field || raise('no profile_field given')
+- profile_field_types ||= ProfileField.possible_types.map(&:name)
+
+%tr{class: "profile-field-#{profile_field.id}"}
+  %td= best_in_place profile_field, :label
+  %td= best_in_place profile_field, :type, as: :select, collection: Hash[profile_field_types.collect { |type| [type, type] }]
+  %td= render partial: 'profile_fields/profile_field_value', locals: {profile_field: profile_field}
+  %td= remove_button(profile_field, show_only_in_edit_mode: false)

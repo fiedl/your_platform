@@ -1,12 +1,16 @@
 de:
+  profile_fields: Profilfelder
   profile_field:
     label: Beschriftung
     phone:
       number: Nummer
-  
+
+  profile_fields_maintenance_view: Wartungsansicht für Profilfelder
+  add_profile_field: Profilfeld hinzufügen
+
   former_name: Geburtsname
   date_of_death: Verstorben am
-  
+
   address: Adresse
   study_address: Semesteranschrift
   parental_address: Heimatanschrift
@@ -33,10 +37,10 @@ de:
   country: Land
   country_code: Länder-Kennzeichen
   address_needs_review: Adresse bitte überprüfen
-  
+
   email_address: E-Mail-Adresse
   mailing_list_email: E-Mail-Verteiler
-  
+
   phone: Telefon
   phone_number: Telefonnummer
 
@@ -47,7 +51,7 @@ de:
   credit_institution: Kreditinstitut
   iban: IBAN
   bic: BIC
-  
+
   employment: Beschäftigung
   from: Von
   to: Bis
@@ -67,13 +71,13 @@ de:
   experience_as: Erfahrungen als
   professional_categories: Berufsgruppen
   occupational_areas: Tätigkeitsbereiche
-  
+
   study: Studium
   university: Universität
   subject: Fach
   specialization: Spezialisierung
   further_study: Weiteres Studium
-  
+
   name_field: Namensfeld
   text_above_name: Zeile über dem Namen
   text_below_name: Zeile unter dem Namen

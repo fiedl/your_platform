@@ -1,2 +1,16 @@
-= render 'profiles/group_profile' if @group
-= render 'profiles/user_profile' if @user
+%h1.profile_fields= current_title
+%div
+  %table.profile_fields.datatable
+    %thead
+      %tr
+        %th Label
+        %th Type
+        %th Value
+        %th Destroy
+    %tbody
+      - @profile_fields.each do |profile_field|
+        = render partial: 'profile_fields/profile_field_tr', locals: {profile_field: profile_field}
+
+  = link_to profile_fields_path(profileable_type: @profileable.class.name, profileable_id: @profileable.id, profile_field: {type: 'ProfileFieldTypes::General'}), class: 'add_profile_field btn btn-default', remote: true, method: 'post' do
+    = tool_icon :plus
+    = t :add_profile_field

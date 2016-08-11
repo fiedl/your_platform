@@ -3,7 +3,7 @@
 # You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
 
 ready = ->
-  
+
   $(document).on 'click', '.address_profile_field.value.can_edit', ->
     $(this).closest('.box').trigger('edit')
   $('.address_profile_field.value.editable').bind 'save', ->
@@ -18,7 +18,7 @@ ready = ->
           field_to_replace.html(result.display_html)
       )
     , 500
-    
+
   $(document).on 'click', '.address_needs_review .confirm-review-button', ->
     wrapper = $(this).closest('.address_needs_review')
     wrapper.find('.label')
@@ -28,25 +28,10 @@ ready = ->
       wrapper.remove()
     , 800
 
- # # Entfernen-Button der Profilfelder mit Funktion ausstatten.
- # # ------------------------------------------------------------------------------------------
- # $( document ).on( 'click', ".profile_field * .remove_button", (event) ->
- #
- #   # Per Ajax die Seite im Hintergrund aufrufen, zu der der Entfernen-Button auch
- #   # ohne JavaScript führen würde.
- #   $.ajax(
- #     url: $( this ).attr( 'href' ),
- #     type: 'DELETE'
- #   )
- #
- #   # Per jQuerry-Effekt das bearbeitbare Feld ausblenden.
- #   $( this ).closest( ".profile_field" ).hide( 'blind' ).remove()
- #
- #   # Das Klick-Ereignis an dieser Stelle abbrechen, sodass der Button
- #   # nicht doch noch ohne JavaScript zur hinterlegten Seite weiterleitet.
- #   event.preventDefault()
- #
- # )
+  # Remove profile fields
+  # ------------------------------------------------------------------------------------------
+  #
+  # This is handled in `app/views/profile_fields/destroy.js`, now.
 
   # Postal Address
   # ------------------------------------------------------------------------------------------

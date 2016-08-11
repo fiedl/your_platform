@@ -27,6 +27,9 @@
       &nbsp;
       %span.regular_case
         = @user.name_affix
+      - if can? :manage, @user
+        .tool.profile_fields_index
+          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-default'
     %div
       = render partial: 'avatar'
       = render partial: 'workflow_triggers'

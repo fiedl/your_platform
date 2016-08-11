@@ -48,7 +48,8 @@ Rails.application.routes.draw do
     put :forgot_password, on: :member
     resource :account, controller: 'user_accounts'
     get :events, to: 'events#index'
-    get :profile, to: 'profile_fields#index'
+    get :profile, to: 'profiles#show'
+    get :profile_fields, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
     get :memberships, to: 'user_group_memberships#index'
@@ -71,7 +72,8 @@ Rails.application.routes.draw do
     get 'semester_calendar/edit', to: 'semester_calendars#edit'
     patch :semester_calendar, to: 'semester_calendars#update'
     resources :posts
-    get :profile, to: 'profile_fields#index'
+    get :profile, to: 'profiles#show'
+    get :profile_fields, to: 'profile_fields#index'
     get :members, to: 'group_members#index'
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
