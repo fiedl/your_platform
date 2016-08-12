@@ -174,6 +174,11 @@ Rails.application.routes.draw do
   mount Refile.app, at: '/refile', as: :refile_app
 
 
+  namespace :mobile do
+    get :dashboard, to: 'dashboard#index'
+  end
+
+
   namespace :api do
     namespace :v1 do
       get :sso, to: 'single_sign_on#sign_in'
