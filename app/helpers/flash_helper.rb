@@ -5,13 +5,15 @@
 # http://guides.rubyonrails.org/action_controller_overview.html#the-flash
 #
 module FlashHelper
-  
+
   def flash_area
-    flash.collect do |type, message|
-      alert_field(type, message)
-    end.join("\n").html_safe + announcement_flash
+    content_tag :div, id: 'flash_area' do
+      flash.collect do |type, message|
+        alert_field(type, message)
+      end.join("\n").html_safe + announcement_flash
+    end
   end
-  
+
   # Show a twitter bootstrap alert field.
   # Possible types (bootstrap): info (blue), success (green), warning (yellow), danger (red)
   # Possible types (rails):     notice (-> info), alert (-> warning)
@@ -26,21 +28,21 @@ module FlashHelper
       close_button + message
     end.html_safe
   end
-  
+
   def announcement_flash
     announcement_file = File.join(Rails.root, "tmp", "announcement.md")
     if File.exist?(announcement_file)
       file_content = File.read(announcement_file)
       if file_content.present?
         content_tag :div, :class => 'alert alert-warning' do
-          markup(file_content) 
+          markup(file_content)
         end
       end
     end
   end
-  
+
   private
-  
+
   # Converts the given type to a type string used by twitter bootstrap.
   # http://getbootstrap.com/components/#alerts
   #
@@ -52,9 +54,9 @@ module FlashHelper
     type = "danger" if type == "error"
     return type
   end
-  
+
   def close_button
     content_tag :button, "×", {:class => "close", :data => {:dismiss => :alert}, :type => "button"}
   end
-  
+
 end
