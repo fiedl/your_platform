@@ -503,5 +503,8 @@ class Ability
     #
     can :read, :avatars
 
+    # Everyone can read the mobile app's welcome screen.
+    can :read, :mobile_welcome
+
   end
 end

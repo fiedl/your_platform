@@ -1,3 +1,17 @@
-%h1 Willkommen!
-%div
-  Das Vademecum in der Tasche!
+.col-xs-12.col-sm-6
+  = link_to '#', class: 'btn btn-default btn-large nav' do
+    = fa_icon 'users'
+    Adressbuch
+
+.col-xs-12.col-sm-6
+  = link_to '#', class: 'btn btn-default btn-large nav' do
+    = fa_icon 'file-text-o'
+    Aktuelle Dokumente
+
+.col-xs-12.col-sm-6
+  %h1 Veranstaltungen
+  %div
+    = render partial: 'events/events_lis', locals: {events: @events}
+
+.row.sign_out
+  = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'

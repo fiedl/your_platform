@@ -46,6 +46,10 @@ class AppVersion
     Setting.app_name || Rails.application.class.parent_name
   end
 
+  def self.mobile_app_name
+    self.app_name
+  end
+
   def self.root_url
     url_options = Rails.application.config.action_mailer.default_url_options
     "#{url_options[:protocol]}://#{url_options[:host]}:#{url_options[:port]}"

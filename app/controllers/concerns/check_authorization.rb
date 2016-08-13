@@ -35,6 +35,14 @@ concern :CheckAuthorization do
     session['return_to_after_login'] || root_path
   end
 
+  def after_sign_out_path_for(resource)
+    if cookies[:layout] == 'mobile'
+      mobile_welcome_path
+    else
+      sign_in_path
+    end
+  end
+
   protected
 
   def configure_permitted_devise_parameters
