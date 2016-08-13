@@ -20,10 +20,10 @@ Rails.application.routes.draw do
   get "vertical_navs/:navable_type/:navable_id", to: 'vertical_navs#show', as: :vertical_nav
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
-  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]
+  devise_for :user_accounts, controllers: {sessions: "sessions"}, :skip => [:registrations]
   devise_scope :user_account do
-    get 'sign_in' => 'devise/sessions#new', as: :sign_in
-    delete 'sign_out' => 'devise/sessions#destroy', as: :sign_out
+    get 'sign_in' => 'sessions#new', as: :sign_in
+    delete 'sign_out' => 'sessions#destroy', as: :sign_out
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_password'
     get 'change_password' => 'devise/registrations#edit', :as => 'change_password'
