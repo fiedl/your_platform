@@ -44,7 +44,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'execjs', '>= 2.5.2'
   s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
   s.add_dependency 'rails-assets-jquery-ui'
-  s.add_dependency 'turbolinks', '>= 2.5.3'
+  s.add_dependency 'turbolinks', '>= 5.0'
   s.add_dependency 'jquery-turbolinks'
   s.add_dependency 'turboboost'
   s.add_dependency 'rails-assets-datatables', '>= 1.10.10'

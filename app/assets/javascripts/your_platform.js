@@ -28,4 +28,5 @@
 //= require_tree ./your_platform
 //
 //= require turbolinks
+//= require turbolinks-compatibility
 //= require turboboost/turboboost
