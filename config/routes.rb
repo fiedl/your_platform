@@ -177,6 +177,7 @@ Rails.application.routes.draw do
   namespace :mobile do
     get :welcome, to: 'welcome#index'
     get :dashboard, to: 'dashboard#index'
+    get 'partials/:partial_key', to: 'partials#show'
   end
 
 

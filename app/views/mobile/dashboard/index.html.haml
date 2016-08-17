@@ -8,10 +8,11 @@
     = fa_icon 'file-text-o'
     Aktuelle Dokumente
 
-.col-xs-12.col-sm-6
-  %h1 Veranstaltungen
-  %div
-    = render partial: 'events/events_lis', locals: {events: @events}
+- if can? :read, :mobile_events
+  .col-xs-12.col-sm-6
+    %h1.events Veranstaltungen
+    %div
+      .events_list_partial
 
 .row.sign_out
   = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'

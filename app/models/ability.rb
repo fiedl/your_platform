@@ -403,6 +403,11 @@ class Ability
     can [:read, :update], Project do |project|
       project.group.members.include? user
     end
+
+    # Mobile app
+    can :read, :mobile_welcome
+    can :read, :mobile_dashboard
+    can :read, :mobile_events
   end
 
   def rights_for_auth_token_users
