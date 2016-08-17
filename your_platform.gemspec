@@ -147,6 +147,9 @@ Gem::Specification.new do |s|
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
 
+  # VCF Export
+  s.add_dependency 'vcardigan'
+
   # Gamification
   s.add_dependency 'merit'
 

@@ -187,6 +187,7 @@ Rails.application.routes.draw do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
         get :titles, on: :collection, to: 'users/titles#index'
+        get :avatar, to: '/avatars#show'
       end
       get :navigation, to: 'navigation#show'
     end

@@ -75,6 +75,7 @@ class User < ActiveRecord::Base
   include UserMerit
   include UserRecommendations
   include UserOmniauth
+  include UserVcfExport
 
   # General Properties
   # ==========================================================================================

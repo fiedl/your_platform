@@ -5,14 +5,14 @@ class ProfileField < ActiveRecord::Base
 
   belongs_to             :profileable, polymorphic: true
   has_many               :issues, as: :reference, dependent: :destroy
-  
+
   after_commit           :delete_cache
-  
+
   include ProfileFieldMixins::HasChildProfileFields
-  
+
   # Only allow the type column to be an existing class name.
   #
-  validates_each :type do |record, attr, value| 
+  validates_each :type do |record, attr, value|
     if value
       if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFieldTypes::" ) )
         record.errors.add "#{value} is not a ProfileFieldTypes class."
@@ -64,13 +64,13 @@ class ProfileField < ActiveRecord::Base
     end
   end
 
-  # This method returns the key, i.e. the un-translated label, 
+  # This method returns the key, i.e. the un-translated label,
   # which is needed for child profile fields.
   #
   def key
     read_attribute :label
   end
-  
+
   # This method returns the label text of the profile_field.
   # If a translation exists, the translation is returned instead.
   #
@@ -79,10 +79,10 @@ class ProfileField < ActiveRecord::Base
     label_text = self.underscored_type if not label_text.present?
     translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text.present?
   end
-  
+
   # If the field has children, their values are included in the main field's value.
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
-  # 
+  #
   def value
     if children_count > 0
       ( [ super ] + children.collect { |child| child.value } ).join(", ")
@@ -90,13 +90,13 @@ class ProfileField < ActiveRecord::Base
       super
     end
   end
-  
+
   def delete_cache
     super
     parent.try(:delete_cache)
     profileable.delete_cache if profileable && profileable.respond_to?(:delete_cache)
   end
-  
+
   def children_count
     children.count
   end
@@ -107,7 +107,7 @@ class ProfileField < ActiveRecord::Base
   def underscored_type
     self.type.demodulize.underscore
   end
-  
+
 
   # This creates an easier way to access a composed ProfileField's child field
   # values. Instead of calling
@@ -131,7 +131,7 @@ class ProfileField < ActiveRecord::Base
   # Furthermore, this method modifies the intializer to build the child fields
   # on build of the main profile_field.
   extend ProfileFieldMixins::HasChildProfileFields
-  
+
   # For child profile fields, this returns the profileable of the parent.
   # For parents, this returns just the assigned profileable.
   #
@@ -146,7 +146,7 @@ class ProfileField < ActiveRecord::Base
       orig_profileable
     end
   end
-  
+
 
   # In order to namespace the type classes of the profile_fields, we place them
   # in a module. In order to be able to use the type column without including
@@ -164,13 +164,13 @@ class ProfileField < ActiveRecord::Base
     type = "ProfileFieldTypes::#{type}" if not type.include?( "::" ) if type
   end
   private :include_module_in_type_column
-  
-  
+
+
   # List all possible types. This is needed for code injection security checks.
   #
   def self.possible_types
-    [ProfileFieldTypes::General, ProfileFieldTypes::Custom, 
-      ProfileFieldTypes::Organization, ProfileFieldTypes::Email, 
+    [ProfileFieldTypes::General, ProfileFieldTypes::Custom,
+      ProfileFieldTypes::Organization, ProfileFieldTypes::Email,
       ProfileFieldTypes::MailingListEmail,
       ProfileFieldTypes::Address, ProfileFieldTypes::About,
       ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory,
@@ -181,14 +181,18 @@ class ProfileField < ActiveRecord::Base
       ProfileFieldTypes::Study
     ]
   end
-  
-  
+
+
   # Some profile fields may contain values that need review, e.g. when an email could
   # not be delivered to an email address.
   #
   # This is stored as the flag :needs_review.
   #
   may_need_review
-   
+
+  def vcard_property_type
+    # Subclasses need to override this. For example for phones: "TEL", emails: "EMAIL", ...
+  end
+
 end
 

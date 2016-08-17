@@ -112,6 +112,9 @@ require 'to_xls'
 require 'icalendar'
 require 'icalendar/tzinfo'
 
+# VCF Export
+require 'vcardigan'
+
 # Gamification
 require 'merit'
 

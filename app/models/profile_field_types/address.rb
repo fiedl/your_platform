@@ -9,6 +9,9 @@ module ProfileFieldTypes
     #   ActionController::Base.helpers.simple_format self.value
     # end
 
+    def vcard_property_type
+      "ADR"
+    end
 
     concerning :SubFields do
       included do
