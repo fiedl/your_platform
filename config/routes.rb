@@ -178,6 +178,8 @@ Rails.application.routes.draw do
     get :welcome, to: 'welcome#index'
     get :dashboard, to: 'dashboard#index'
     get :contacts, to: 'contacts#index'
+    get :documents, to: 'documents#index'
+    get 'documents/:id', to: 'documents#show', as: 'document'
     get 'partials/:partial_key', to: 'partials#show'
   end
 

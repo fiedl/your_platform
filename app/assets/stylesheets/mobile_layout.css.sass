@@ -57,3 +57,36 @@ body.mobile.contacts
     font-size: 14pt
     border: grey
 
+body.mobile.documents
+  ul
+    padding: 0
+    li
+      list-style: none
+      background-color: white
+      margin-bottom: 5px
+  .document
+    a
+      color: black
+      display: flex
+      padding: 5px
+      .thumb
+        width: 110px
+      .title
+        font-weight: bold
+        font-size: 110%
+      .scope
+        font-size: 90%
+  .scroll_wrapper
+    -webkit-overflow-scrolling: touch
+    overflow-y: scroll
+
+    padding: 0px
+    position: fixed
+    top: 0
+    right: 0
+    left: 0
+    bottom: 0
+  iframe
+    border: 0px none transparent
+    width: 100%
+    height: 100%

@@ -12,6 +12,14 @@ class Attachment < ActiveRecord::Base
 
   scope :logos, -> { where('title like ?', "%logo%") }
 
+  def title
+    super || filename
+  end
+
+  def scope
+    parent.try(:group) || parent.parents.first || parent
+  end
+
   def thumb_url
     url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
     url = file.url( :video_thumb ) if has_type?( "video" )
@@ -48,6 +56,10 @@ class Attachment < ActiveRecord::Base
 
   def video?
     self.content_type.include? 'video'
+  end
+
+  def pdf?
+    self.content_type.include? 'pdf'
   end
 
   def self.find_by_type( type )

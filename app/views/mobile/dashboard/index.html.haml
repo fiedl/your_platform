@@ -1,12 +1,16 @@
-.col-xs-12.col-sm-6
-  = link_to '#', class: 'btn btn-default btn-large nav' do
-    = fa_icon 'users'
-    Adressbuch
+.app_logo
+  .logo= image_tag 'logo.png'
+  .app_name= AppVersion.mobile_app_name
 
 .col-xs-12.col-sm-6
-  = link_to '#', class: 'btn btn-default btn-large nav' do
-    = fa_icon 'file-text-o'
-    Aktuelle Dokumente
+  - if can? :read, :mobile_contacts
+    = link_to mobile_contacts_path, class: 'btn btn-default btn-large nav' do
+      = fa_icon 'users'
+      Adressbuch
+  - if can? :read, :mobile_documents
+    = link_to mobile_documents_path, class: 'btn btn-default btn-large nav' do
+      = fa_icon 'file-text-o'
+      Aktuelle Dokumente
 
 - if can? :read, :mobile_events
   .col-xs-12.col-sm-6

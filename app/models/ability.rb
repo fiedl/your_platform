@@ -409,6 +409,7 @@ class Ability
     can :read, :mobile_dashboard
     can :read, :mobile_contacts
     can :read, :mobile_events
+    can :read, :mobile_documents
   end
 
   def rights_for_auth_token_users

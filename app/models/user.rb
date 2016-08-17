@@ -78,6 +78,7 @@ class User < ActiveRecord::Base
   include UserSearch
   include UserContacts
   include UserVcfExport
+  include UserDocuments
 
   # General Properties
   # ==========================================================================================
