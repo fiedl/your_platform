@@ -12,4 +12,4 @@ $(document).ready ->
     App.attachments.process($(this))
     App.galleries.process($(this))
 
-    afterglow.init()
+    afterglow.init() if afterglow?
