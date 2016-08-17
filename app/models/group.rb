@@ -80,7 +80,7 @@ class Group < ActiveRecord::Base
   # 'admins', use the translation.
   #
   def name
-    I18n.t( super.to_sym, default: super ) if super.present?
+    I18n.t( super.to_sym, default: super ) if defined?(super) && super.present?
   end
 
   def name_with_surrounding
