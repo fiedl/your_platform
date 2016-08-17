@@ -7,7 +7,6 @@ class Mobile::WelcomeController < ApplicationController
       redirect_to mobile_dashboard_path
     else
       set_current_title "Vademecum"
-      session['return_to_after_login'] = mobile_dashboard_path
     end
   end
 

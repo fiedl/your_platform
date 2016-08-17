@@ -17,7 +17,7 @@ concern :CheckAuthorization do
         session['exception.subject'] = "#{exception.subject.class.name} #{exception.subject.id if exception.subject.respond_to?(:id)}"
         # exception.subject.to_s.first(50)
       end
-      session['return_to_after_login'] = request.fullpath
+      store_location_for :user_account, request.fullpath
       redirect_to errors_unauthorized_url
     end
   end
@@ -32,13 +32,18 @@ concern :CheckAuthorization do
   end
 
   def after_sign_in_path_for(resource)
-    session['return_to_after_login'] || root_path
+    if cookies[:layout] == 'mobile'
+      mobile_dashboard_path
+    else
+      stored_location_for(resource) || root_path
+    end
   end
 
   def after_sign_out_path_for(resource)
     if cookies[:layout] == 'mobile'
       mobile_welcome_path
     else
+      # TODO: Maybe set this to the public home page in sf/wingolf-org
       sign_in_path
     end
   end
