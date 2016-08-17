@@ -12,22 +12,23 @@ $(document).ready ->
 
 
 load_from_partial = (selector, partial)->
-  target = $(selector)
-  url = "/mobile/partials/#{partial}"
-  $.ajax {
-    type: 'GET',
-    url: url,
-    success: (result)->
-      $(selector).replaceWith result
-      $(selector).hide()
-      $(selector).fadeIn()
-      $(selector).process()
-      bind_links_to_vcf_files_within selector
-    failure: (result)->
-      target.fadeOut()
-      console.log "failed to load mobile partial #{url}"
-      console.log result
-  }
+  if $(selector).size() > 0
+    target = $(selector)
+    url = "/mobile/partials/#{partial}"
+    $.ajax {
+      type: 'GET',
+      url: url,
+      success: (result)->
+        $(selector).replaceWith result
+        $(selector).hide()
+        $(selector).fadeIn()
+        $(selector).process()
+        bind_links_to_vcf_files_within selector
+      failure: (result)->
+        target.fadeOut()
+        console.log "failed to load mobile partial #{url}"
+        console.log result
+    }
 
 # We have to modify the links to vcf files such that the files
 # will not be downloded but opened embedded.
