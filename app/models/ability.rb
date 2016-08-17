@@ -407,6 +407,7 @@ class Ability
     # Mobile app
     can :read, :mobile_welcome
     can :read, :mobile_dashboard
+    can :read, :mobile_contacts
     can :read, :mobile_events
   end
 

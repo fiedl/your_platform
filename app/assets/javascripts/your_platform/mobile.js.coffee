@@ -3,6 +3,11 @@
 
 $(document).ready ->
   load_from_partial 'body.mobile.dashboard .events_list_partial', 'events'
+  load_from_partial 'body.mobile.contacts .recent_contacts_partial', 'recent_contacts'
+
+  $('body.mobile.contacts .people_search_results').hide()
+
+  bind_people_search_to 'body.mobile.contacts input.people_search'
 
 load_from_partial = (selector, partial)->
   target = $(selector)
@@ -21,3 +26,17 @@ load_from_partial = (selector, partial)->
       console.log "failed to load mobile partial #{url}"
       console.log result
   }
+
+bind_people_search_to = (target)->
+  $(target).on 'keyup paste change', ->
+    if $(target).val().length > 3
+      url = $(target).closest('form').attr('action')
+      $.ajax
+        type: 'GET',
+        url: url,
+        data:
+          query: $(target).val()
+        success: (result)->
+          $('.people_search_results').fadeIn()
+          $('.people_search_results_partial').replaceWith result
+          bind_links_to_vcf_files_within '.people_search_results_partial'
