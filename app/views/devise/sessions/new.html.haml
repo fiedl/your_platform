@@ -7,7 +7,7 @@
         %div
           = f.label :login, t(:login_name)
           %small= t :login_name_explanation
-          = f.text_field :login, :autofocus => true
+          = f.text_field :login, :autofocus => true, autocorrect: 'off'
 
         %div
           = f.label :password, I18n.t(:password)
