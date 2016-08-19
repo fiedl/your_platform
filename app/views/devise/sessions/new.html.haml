@@ -6,7 +6,7 @@
       = form_for resource, as: resource_name, url: session_path(resource_name), turboboost: true do |f|
         %div
           = f.label :login, t(:login_name)
-          %small= t :login_name_explanation
+          %small.login_explanation= t :login_name_explanation
           = f.text_field :login, :autofocus => true, autocorrect: 'off'
 
         %div
