@@ -13,10 +13,15 @@
       Aktuelle Dokumente
 
 - if can? :read, :mobile_events
-  .col-xs-12.col-sm-6
-    %h1.events Veranstaltungen
-    %div
-      .events_list_partial
+  = Rails.cache.fetch([current_user, 'mobile_envets'], expires_in: 15.minutes) do
+    - capture_haml do
+      .col-xs-12.col-sm-6
+        %h1.events Veranstaltungen
+        %div
+          = render partial: 'mobile/partials/events'
+          -#.events_list_partial
 
 .row.sign_out
+  = link_to "App-Info", mobile_app_info_path
+  %span.separator •
   = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'
