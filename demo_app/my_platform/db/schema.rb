@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620085208) do
+ActiveRecord::Schema.define(version: 20160908104540) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -344,6 +344,14 @@ ActiveRecord::Schema.define(version: 20160620085208) do
   create_table "sashes", force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "semester_calendars", force: :cascade do |t|
+    t.integer  "group_id",   limit: 4
+    t.integer  "year",       limit: 4
+    t.integer  "term",       limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
   end
 
   create_table "settings", force: :cascade do |t|

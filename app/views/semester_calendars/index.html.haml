@@ -1,0 +1,11 @@
+= render partial: 'groups/tabs', locals: {group: @group, active: 'events'}
+%h1.semester_calendars
+  = current_title
+  .new_semester_calendar.tool
+    = link_to group_semester_calendars_path(group_id: @group.id), method: 'post', turboboost: true, class: 'btn btn-default' do
+      = t :new_semester_calendar
+%div
+  %ul
+    - @semester_calendars.reverse.each do |semester_calendar|
+      %li
+        = link_to semester_calendar.title(locale: current_user.locale), semester_calendar

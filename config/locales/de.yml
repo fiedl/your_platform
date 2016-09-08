@@ -13,12 +13,12 @@ de:
   untitled: Unbenannt
   edited_at: Bearbeitet am
   since: Seit
-  
+
   imprint: Impressum
   help: Hilfe
-  
+
   you_may_leave_out_www: 'Tipp: Sie dürfen das "www." gerne weglassen, wenn Sie die Internetadresse in den Browser eingeben.'
-  
+
   others: Andere
 
   you_are_admin: Sie sind Administrator.
@@ -27,15 +27,16 @@ de:
   confirm: Bestätigen
   optional: optional
   thanks: Danke!
-  
+
   show_all: Alle anzeigen
   overview: Überblick
   see_also: Siehe auch
-  
+  back: Zurück
+
   filter_table: "Tabelle filtern ..."
 
   created_at: Erstellt am
   updated_at: Letzte Änderung am
   last_update: Letzte Änderung
   format: Format
-  
+

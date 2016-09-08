@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     get :mine, on: :collection, to: 'groups#index_mine'
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
+    resources :semester_calendars
     get :semester_calendar, to: 'semester_calendars#show'
     get 'semester_calendar/edit', to: 'semester_calendars#edit'
     patch :semester_calendar, to: 'semester_calendars#update'
@@ -121,7 +122,11 @@ Rails.application.routes.draw do
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
   end
-  resources :semester_calendars
+  resources :semester_calendars do
+    member do
+      patch :update_term_and_year, to: 'semester_calendars#update_term_and_year'
+    end
+  end
 
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts do

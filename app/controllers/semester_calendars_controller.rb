@@ -14,40 +14,80 @@
 #      12 Dez |
 #
 class SemesterCalendarsController < ApplicationController
+  before_action :load_resource
 
   def show
-    @group = Group.find(params[:group_id] || raise('no group_id given'))
     authorize! :read, @group
-    authorize! :index_events, @group
-
-    @semester_calendar = @group.semester_calendar
+    authorize! :read, @semester_calendar
 
     set_current_navable @group
     set_current_title "#{@group.title}: #{t(:semester_calendar)}"
   end
 
   def edit
-    @group = Group.find(params[:group_id] || raise('no group_id given'))
     authorize! :read, @group
-    authorize! :index_events, @group
     authorize! :create_event, @group
-
-    @semester_calendar = @group.semester_calendar
+    authorize! :update, @semester_calendar
 
     set_current_navable @group
     set_current_title "#{@group.title}: #{t(:semester_calendar)}"
   end
 
   def update
-    @group = Group.find(params[:group_id] || raise('no group_id given'))
     authorize! :read, @group
-    authorize! :index_events, @group
     authorize! :create_event, @group
+    authorize! :update, @semester_calendar
 
-    @semester_calendar = @group.semester_calendar
-    @semester_calendar.update_attributes(params[:semester_calendar])
+    @semester_calendar.update_attributes(semester_calendar_params)
+    redirect_to group_semester_calendar_path(group_id: @group.id, id: @semester_calendar.id)
+  end
 
-    redirect_to group_semester_calendar_path(@group)
+  def update_term_and_year
+    authorize! :read, @group
+    authorize! :create_event, @group
+    authorize! :update, @semester_calendar
+
+    @semester_calendar.update_attributes(semester_calendar_params)
+    @semester_calendar.reload
+
+    # Then, the javascript in app/views/semester_calendars/update_term_and_year.js
+    # is executed.
+  end
+
+  def index
+    authorize! :read, @group
+
+    @semester_calendars = @group.semester_calendars.order(:year, :term)
+
+    set_current_navable @group
+    set_current_title I18n.t(:semester_calendars)
+  end
+
+  def create
+    authorize! :create_semester_calendar_for, @group
+
+    @semester_calendar = @group.semester_calendars.new(year: Time.zone.now.year)
+    @semester_calendar.save!
+    redirect_to @semester_calendar
+  end
+
+  private
+
+  def load_resource
+    if params[:group_id]
+      @group = Group.find params[:group_id]
+      @semester_calendar = @group.semester_calendars.find(params[:id]) if params[:id]
+      @semester_calendar ||= @group.semester_calendars.last
+    else
+      @semester_calendar = SemesterCalendar.find params[:id]
+      @group = @semester_calendar.group
+    end
+  end
+
+  def semester_calendar_params
+    if @semester_calendar and can?(:update, @semester_calendar)
+      params.require(:semester_calendar).permit(:year, :term, events_attributes: [:id, :name, :location, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :_destroy])
+    end
   end
 
 end

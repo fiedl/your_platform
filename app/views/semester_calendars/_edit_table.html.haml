@@ -1,0 +1,45 @@
+- semester_calendar || raise('no semester_calendar given')
+
+= form_for semester_calendar, remote: true, turboboost: true do |form|
+  %table.table-header-rotated
+    %thead
+      %tr
+        %th.no-rotate
+          %div
+            %span Wann
+        %th.no-rotate
+          %div
+            %span Veranstaltung
+        %th.no-rotate
+          %div
+            %span Ort
+        %th.rotate
+          %div
+            %span Aktive
+        %th.rotate
+          %div
+            %span Philister
+        %th.rotate
+          %div
+            %span Verbindungshomepage
+        %th.rotate
+          %div
+            %span wingolf.org
+        %th.rotate
+          %div
+            %span Löschen
+    %tbody
+      = form.fields_for :events do |builder|
+        %tr
+          %td.event_starts_at= builder.text_field :localized_start_at
+          %td.event_name= builder.text_field :name
+          %td.event_location= builder.text_field :location
+          %td= builder.check_box :aktive
+          %td= builder.check_box :philister
+          %td= builder.check_box :publish_on_local_website
+          %td= builder.check_box :publish_on_global_website
+          %td
+            - # http://railscasts.com/episodes/196-nested-model-form-revised
+            = builder.hidden_field :_destroy
+            = link_to '#', class: 'btn btn-danger btn-xs destroy_semester_calendar_event' do
+              = icon :trash

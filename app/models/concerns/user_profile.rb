@@ -17,7 +17,11 @@ concern :UserProfile do
   end
 
   def phone
-    phone_field.try(:value)
+    if landline_profile_fields.first.try(:value).present?
+      landline_profile_fields.first.value
+    else
+      mobile
+    end
   end
   def phone=(new_number)
     (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFieldTypes::Phone')).update_attributes(value: new_number)

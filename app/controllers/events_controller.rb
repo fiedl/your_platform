@@ -11,14 +11,21 @@ class EventsController < ApplicationController
   # ATTENTION: The index action has to handly authorization manually!
   #
   def index
-
-    # Which events should be listed
     @group = Group.includes(
       :parent_groups,
       :parent_pages,
       :parent_events,
       :nav_node
     ).find params[:group_id] if params[:group_id]
+
+    # Show semetser calendars for corporations
+    if @group.kind_of? Corporation
+      authorize! :read, @group
+      redirect_to group_semester_calendars_path(group_id: @group.id)
+      return
+    end
+
+    # Which events should be listed
     @user = Group.find params[:user_id] if params[:user_id]
     @user ||= current_user
     @user ||= UserAccount.find_by_auth_token(params[:token]).try(:user) if params[:token].present?

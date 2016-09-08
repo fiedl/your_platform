@@ -28,6 +28,7 @@ class Group < ActiveRecord::Base
   has_profile_fields
 
   has_many :posts
+  has_many :semester_calendars
 
   default_scope { includes(:flags) }
 
@@ -176,10 +177,6 @@ class Group < ActiveRecord::Base
 
   def upcoming_events
     self.events.upcoming.order('start_at')
-  end
-
-  def semester_calendar
-    @semester_calendar ||= SemesterCalendar.new(self)
   end
 
 
