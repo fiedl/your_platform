@@ -12,9 +12,9 @@
     %p
       %small= "#{t(:uploaded_at)} #{localize attachment.updated_at.to_date}"
 
-    - if can? :update, semester_calendar
+    - if can? :create_attachment_for, semester_calendar
       %small
-        %a.replace_semester_calendar_pdf{href: '#'} Neue Version hochladen
+        %a.replace_semester_calendar_pdf{href: '#'}= t :upload_new_version
 
-  - if can? :update, semester_calendar
+  - if can? :create_attachment_for, semester_calendar
     #new_attachment= render partial: 'attachments/drop_field', locals: {parent: semester_calendar, type: :pdf}

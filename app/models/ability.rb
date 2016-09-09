@@ -196,6 +196,9 @@ class Ability
       can :update, SemesterCalendar do |semester_calendar|
         semester_calendar.group && user.in?(semester_calendar.group.officers_of_self_and_ancestor_groups)
       end
+      can :create_attachment_for, SemesterCalendar do |semester_calendar|
+        can? :update, semester_calendar
+      end
 
 
       # Local officers of pages can edit their pages and sub-pages
