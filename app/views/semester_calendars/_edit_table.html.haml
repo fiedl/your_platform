@@ -6,20 +6,20 @@
       %tr
         %th.no-rotate
           %div
-            %span Wann
+            %span= t :semester_calendars_when
         %th.no-rotate
           %div
-            %span Veranstaltung
+            %span= t :semester_calendars_event
         %th.no-rotate
           %div
-            %span Ort
+            %span= t :semester_calendars_location
         - semester_calendar_check_box_columns.each do |column_name|
           %th.rotate
             %div
               %span= t("semester_calendars_#{column_name}")
         %th.rotate
           %div
-            %span Löschen
+            %span= t :delete
     %tbody
       = form.fields_for :events do |builder|
         = render partial: 'event_edit_row', locals: {form: builder}

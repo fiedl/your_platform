@@ -23,7 +23,7 @@
             = link_to event.title, event
 
 .col-sm-4.col-xs-12
-  %h1 PDF
+  %h1.semester_calendar_pdf PDF
   %div
     = render partial: 'semester_calendars/pdf', locals: {semester_calendar: @semester_calendar}
 

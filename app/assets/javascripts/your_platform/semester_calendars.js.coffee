@@ -3,7 +3,9 @@ $(document).ready ->
 
   $('.change_semester_ok_button').hide()
 
-#$('td.event_starts_at input, td.event_name input, td.event_location input').on 'focus', ->
+  if $('.replace_semester_calendar_pdf').size() > 0
+    $('.semester_calendar_pdf #new_attachment').hide()
+
 $(document).on 'focus', 'td.event_starts_at input, td.event_name input, td.event_location input', ->
   $('td.event_starts_at, td.event_name, td.event_location').css('width', '')
   $(this).closest('td').css('width', '45%')
@@ -34,4 +36,9 @@ $(document).on 'click', '.add_semester_calendar_event', ->
   new_table_row = $(this).data('fields').replace(regexp, time)
   $('.semester_calendar .edit_table tbody').append new_table_row
   $('.semester_calendar .edit_table tr').last().find('td.event_starts_at input').datetimepicker()
+  false
+
+$(document).on 'click', '.replace_semester_calendar_pdf', ->
+  $(this).hide()
+  $('.semester_calendar_pdf #new_attachment').show()
   false

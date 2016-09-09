@@ -2,7 +2,7 @@
 - # Locals:
 - #   - parent        Object the attachments are added to, e.g. a Page or an Event.
 - #   - type          The kind of attachment that is allowed here, e.g.
-- #                   :image, :attachment.
+- #                   :image, :pdf, :attachment.
 - #                   Default: :attachment (which is all attachments).
 
 - type ||= :attachment
@@ -12,6 +12,8 @@
     %p.drop_attachments_here
       - if type == :image
         = t :drop_images_here
+      - elsif type == :pdf
+        = t :drop_pdf_here
       - else
         = t :drop_documents_or_images_here
     %p.uploading.hidden
@@ -29,17 +31,20 @@
       - else
         = t :files_have_been_uploaded
       %br
-      %small 
+      %small
         - if type == :image
           = t :images_are_about_to_be_shown_as_gallery_thanks_for_uploading
         - else
           = t :files_are_about_to_be_shown_thanks_for_uploading
-          
+
     = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm new_attachment'} do |f|
       = f.hidden_field :parent_id
       = f.hidden_field :parent_type
-    
+
       - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
       - # f.file_field :file, multiple: true, name: "attachment[file]"
-      = f.file_field :file, name: "attachment[file]"
-  
+
+      - if type == :pdf
+        = f.file_field :file, name: "attachment[file]", accept: 'application/pdf'
+      - else
+        = f.file_field :file, name: "attachment[file]"

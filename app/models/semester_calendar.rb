@@ -17,6 +17,8 @@ class SemesterCalendar < ActiveRecord::Base
   belongs_to :group
   enum term: [:winter_term, :summer_term]
 
+  has_many :attachments, as: :parent, dependent: :destroy
+
   # # This does not work in rails 4. TODO: Re-check in rails 5.
   # has_many :events, -> (semester_calendar) { where(start_at: semester_calendar.current_terms_time_range) }, through: :group, source: :descendant_events
   # accepts_nested_attributes_for :events
