@@ -193,6 +193,11 @@ class Ability
         group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
       end
 
+      can :update, SemesterCalendar do |semester_calendar|
+        semester_calendar.group && user.in?(semester_calendar.group.officers_of_self_and_ancestor_groups)
+      end
+
+
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
       #
@@ -358,6 +363,10 @@ class Ability
     can :index, Event
     can :index_events, Group
     can :index_events, User, :id => user.id
+    can :read, SemesterCalendar do |semester_calendar|
+      can? :read, semester_calendar.group
+    end
+
 
     # Name auto completion
     #

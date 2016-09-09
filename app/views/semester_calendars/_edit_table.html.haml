@@ -13,33 +13,15 @@
         %th.no-rotate
           %div
             %span Ort
-        %th.rotate
-          %div
-            %span Aktive
-        %th.rotate
-          %div
-            %span Philister
-        %th.rotate
-          %div
-            %span Verbindungshomepage
-        %th.rotate
-          %div
-            %span wingolf.org
+        - semester_calendar_check_box_columns.each do |column_name|
+          %th.rotate
+            %div
+              %span= t("semester_calendars_#{column_name}")
         %th.rotate
           %div
             %span Löschen
     %tbody
       = form.fields_for :events do |builder|
-        %tr
-          %td.event_starts_at= builder.text_field :localized_start_at
-          %td.event_name= builder.text_field :name
-          %td.event_location= builder.text_field :location
-          %td= builder.check_box :aktive
-          %td= builder.check_box :philister
-          %td= builder.check_box :publish_on_local_website
-          %td= builder.check_box :publish_on_global_website
-          %td
-            - # http://railscasts.com/episodes/196-nested-model-form-revised
-            = builder.hidden_field :_destroy
-            = link_to '#', class: 'btn btn-danger btn-xs destroy_semester_calendar_event' do
-              = icon :trash
+        = render partial: 'event_edit_row', locals: {form: builder}
+
+  = link_to_add_semester_calendar_event t(:add_event), form: form, class: 'btn btn-default'

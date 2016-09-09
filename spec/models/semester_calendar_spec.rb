@@ -22,7 +22,7 @@ describe SemesterCalendar do
 
   describe "#update" do
     describe "when changing event attributes" do
-      subject { @semester_calendar.update! events_attributes: [{id: @event.id, name: "Special BBQ"}] }
+      subject { @semester_calendar.update! events_attributes: {0 => {id: @event.id, name: "Special BBQ"}} }
       it "should update the changed attribute on the event" do
         subject
         @event.reload.name.should == "Special BBQ"
@@ -31,6 +31,18 @@ describe SemesterCalendar do
         @old_start_at = @event.start_at
         subject
         @event.reload.start_at.to_i.should == @old_start_at.to_i
+      end
+    end
+
+    describe "when adding a new event's attributes" do
+      subject { @semester_calendar.update! events_attributes: {0 => {name: "New event"}} }
+      it "should create the new event" do
+        subject
+        Event.last.name.should == "New event"
+      end
+      it "should add the new event to the calendars corporation" do
+        subject
+        Event.last.ancestor_groups.should include @corporation
       end
     end
   end

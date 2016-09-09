@@ -58,9 +58,15 @@ class SemesterCalendar < ActiveRecord::Base
           raise("event #{event_params[:id]} not found.")
         end
       else
-        events.push(Event.new(event_params))
+        new_event = Event.create(event_params.except(:_destroy).merge({group_id: group.id}))
+        events.push(new_event)
       end
     end
+  end
+
+  def save(*args)
+    super(*args)
+    self.events.map(&:save)
   end
 
   def update_attributes(attributes)
@@ -112,6 +118,5 @@ class SemesterCalendar < ActiveRecord::Base
       winter_term_end - 20.days
     end
   end
-
 
 end

@@ -1,10 +1,13 @@
 class Event < ActiveRecord::Base
-  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website if defined? attr_accessible
+  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id if defined? attr_accessible
 
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
   is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
+
+  attr_accessor :group_id
+  after_save :assign_to_group_given_by_group_id
 
 
   # General Properties
@@ -35,14 +38,24 @@ class Event < ActiveRecord::Base
   def group
     @group ||= self.parent_groups.first
   end
-  def group=( group )
-    @group = group
-    self.destroy_dag_links
-    self.parent_groups << group
+  def group=(new_group)
+    if @group != new_group
+      @group = new_group
+      self.destroy_dag_links
+      self.parent_groups << new_group
+    end
   end
   def groups
     self.parent_groups
   end
+  def group_id
+    @group_id ||= group.try(:id)
+  end
+
+  def assign_to_group_given_by_group_id
+    self.group = Group.find(group_id) if group_id
+  end
+
 
   # Times
   # ==========================================================================================

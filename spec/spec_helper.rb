@@ -222,6 +222,8 @@ Spork.prefork do
     # TODO: When upgrading rspec, use this instead:
     # config.include ControllerMacros
 
+    config.include CapybaraHelper
+
 
     # Database Wiping Policy
     # ......................................................................................
