@@ -17,3 +17,11 @@ de:
   all_semester_calendars_short: Alle Programme
 
   semester_calendars_no_pdf_uploaded: Keine PDF-Version hochgeladen.
+
+  calendar_abo: Kalender-Abo
+  ical_abo: iCal-Abo
+  get_all_semester_calendars_of_str_automatically: "Alle Semesterprogramme von '%{str}' automatisch auf Smartphone oder Rechner abonnieren:"
+
+  ical_all_events: Alle Termine
+  ical_events_concerning_me: Termine, die mich betreffen
+  ical_events_from_the_homepage: Nur termine von der Homepage

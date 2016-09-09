@@ -31,3 +31,22 @@
   %div
     = render partial: 'semester_calendars/info_section', locals: {semester_calendar: @semester_calendar}
 
+
+  %h1= t :calendar_abo
+  %div
+    %p
+      %small= t :get_all_semester_calendars_of_str_automatically, str: @group.title
+    %p
+      %a.btn.btn-default{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+        = icon :calendar
+        = t :ical_all_events
+
+      - if current_user.member_of? @group
+        %a.btn.btn-default{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+          = icon :calendar
+          = t :ical_events_concerning_me
+
+      - else
+        %a.btn.btn-default{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+          = icon :calendar
+          = t :ical_events_from_the_homepage
