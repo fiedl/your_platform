@@ -4,14 +4,14 @@
 -# %div
 -#   - if @own_memberships.now.count == 0
 -#     %a.btn.btn-success Beitreten
--#   - elsif @own_memberships.now.direct.count > 0 
+-#   - elsif @own_memberships.now.direct.count > 0
 -#     %a.btn.btn-danger Gruppe verlassen
 -#   - @own_memberships.each do |membership|
 -#     %p
 -#       Mitglied seit
 -#       = localize membership.valid_from.to_date if membership.valid_from
 -#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
-    
+
 #members
   %h1.section.members
     = @title
@@ -29,7 +29,7 @@
     %span#group_members
       .child_users
         - if @members.count > 0
-          = render partial: 'groups/member_list', locals: {memberships: @memberships, group: @group}
+          = render partial: 'groups/member_list', locals: {members: @members, memberships: @memberships, group: @group}
 
 -# - if can? :create_memberships, @group
 - if can? :manage_memberships_manually, @group
