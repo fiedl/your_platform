@@ -6,7 +6,7 @@
   .media-body
 
     %p
-      %strong= link_to(session['return_to_after_login'], session['return_to_after_login'])
+      %strong= link_to(@original_path, @original_path)
     %p
       %pre= @reason
 
@@ -23,7 +23,7 @@
       %p
         Sie verwenden aktuell die Vorschau als:
         %strong= translate(current_role_view) if current_role_view.present?
-      %p= link_to "Als #{translate(current_role.to_s)} anzeigen", session['return_to_after_login'] + "?preview_as=#{current_role.to_s}", class: 'btn btn-primary'
+      %p= link_to "Als #{translate(current_role.to_s)} anzeigen", @path_for_current_role, class: 'btn btn-primary'
 
     - if can_override_access_denied?
       %h2 Zugriffsbeschränkung aufheben
@@ -32,4 +32,4 @@
         Sie haben die Möglichkeit, diese Zugriffsbeschränkung mit Ihren Administratoren-Rechten zu umgehen.
         %strong Der Vorgang wird dann aber geloggt.
 
-      %p= link_to "Trotzdem zugreifen", session['return_to_after_login'] + "?admins_only_override=true", class: 'btn btn-danger'
+      %p= link_to "Trotzdem zugreifen", @override_path, class: 'btn btn-danger'
