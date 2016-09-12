@@ -19,7 +19,7 @@ class EventsController < ApplicationController
     ).find params[:group_id] if params[:group_id]
 
     # Show semetser calendars for corporations
-    if @group.kind_of? Corporation
+    if can?(:use, :semester_calendars) && @group.kind_of?(Corporation)
       authorize! :read, @group
       redirect_to group_semester_calendars_path(group_id: @group.id)
       return

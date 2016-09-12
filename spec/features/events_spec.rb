@@ -115,7 +115,7 @@ feature "Events" do
           page.should have_text I18n.localize(@event.start_at.to_date, format: :long)
           page.should have_text @event.group.name
           page.should have_no_text @other_event.name
-          page.should have_text I18n.t(:show_all)
+          page.should have_text I18n.t(:show_all_events)
           page.should have_selector '#ics_abo'
           page.should have_no_selector '#create_event'
           page.should have_no_text I18n.t('date.to')
@@ -189,7 +189,7 @@ feature "Events" do
 
       scenario "listing all events" do
         visit root_path
-        within('.box.upcoming_events') { click_on I18n.t(:show_all) }
+        within('.box.upcoming_events') { click_on I18n.t(:show_all_events) }
         page.should have_text I18n.t :my_events
         page.should have_text @event.name
         page.should have_no_text @other_event.name
