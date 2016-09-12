@@ -2,6 +2,9 @@ de:
   semester_calendar: Semesterprogramm
   semester_calendars: Semesterprogramme
   new_semester_calendar: Neues Semesterprogramm
+  enter_semester_calendar: Semesterprogramm eintragen
+  create_semester_calendar: Semesterprogramm erstellen
+  show_semester_calendars: Semesterprogramme anzeigen
 
   term: Semester
   winter_term: Wintersemester
@@ -16,6 +19,8 @@ de:
   all_semester_calendars: Alle Semesterprogramme
   all_semester_calendars_short: Alle Programme
 
+  semester_calendar_updated_at: Stand
+
   semester_calendars_no_pdf_uploaded: Keine PDF-Version hochgeladen.
 
   calendar_abo: Kalender-Abo
@@ -25,3 +30,6 @@ de:
   ical_all_events: Alle Termine
   ical_events_concerning_me: Termine, die mich betreffen
   ical_events_from_the_homepage: Nur termine von der Homepage
+
+  events_from_the_global_website: Veranstaltungen von der öffentlichen Homepage
+  new_semester_calendar_for_which_corporation: Für welche Organisation?

@@ -1,0 +1,9 @@
+%h1.new_semester_calendar= current_title
+%div
+  = t :new_semester_calendar_for_which_corporation
+
+  = form_for @new_semester_calendar, turboboost: true do |f|
+    = f.hidden_field :year
+    = f.hidden_field :term
+    = f.collection_select :group_id, @corporations, :id, :title
+    = f.submit  t(:create_semester_calendar), class: 'btn btn-primary'

@@ -8,6 +8,7 @@ describe SemesterCalendar do
     @event_in_another_term = Event.create name: "Christmas Party", start_at: Time.zone.now.change(month: 12)
     @corporation << @event
     @corporation << @event_in_another_term
+    @semester_calendar.events(true)
   end
 
   describe "#events" do

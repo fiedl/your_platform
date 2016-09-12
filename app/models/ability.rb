@@ -199,6 +199,7 @@ class Ability
       can :create_attachment_for, SemesterCalendar do |semester_calendar|
         can? :update, semester_calendar
       end
+      can :create, SemesterCalendar
 
 
       # Local officers of pages can edit their pages and sub-pages

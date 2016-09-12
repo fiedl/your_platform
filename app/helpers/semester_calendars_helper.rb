@@ -1,5 +1,10 @@
 module SemesterCalendarsHelper
 
+  def semester_calendar_terms_hash
+    # For select inputs
+    SemesterCalendar.terms.keys.map { |term| [t(term), term] }
+  end
+
   def semester_calendar_check_box_columns
     [:publish_on_local_website, :publish_on_global_website]
   end

@@ -14,6 +14,9 @@ $(document).on 'change', '.semester_calendar .semester select', ->
   $('.edit_table').html('')
   $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
 
+$(document).on 'change', '.semester_calendars .semester select', ->
+  $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
+
 $(document).on 'input', '.semester_calendar .edit_table input', ->
   $('.semester_calendar .semester select').prop('disabled', 'disabled')
 

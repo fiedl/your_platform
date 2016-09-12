@@ -42,7 +42,8 @@ class SemesterCalendar < ActiveRecord::Base
     end
   end
 
-  def events
+  def events(reload = false)
+    @events = nil if reload
     @events ||= group.events.where(start_at: current_terms_time_range).order(:start_at).to_a
   end
 
@@ -94,11 +95,17 @@ class SemesterCalendar < ActiveRecord::Base
   def summer_term_end
     Time.zone.now.change(month: 8, day: 31, year: year)
   end
+  def summer_term_range
+    summer_term_start..summer_term_end
+  end
   def winter_term_start
     Time.zone.now.change(month: 9, day: 1, year: year)
   end
   def winter_term_end
     Time.zone.now.change(month: 2, day: 28, year: year + 1)
+  end
+  def winter_term_range
+    winter_term_start..winter_term_end
   end
 
   def president
@@ -118,6 +125,19 @@ class SemesterCalendar < ActiveRecord::Base
       summer_term_end - 20.days
     else
       winter_term_end - 20.days
+    end
+  end
+
+  def self.all_public_events_for(params = {})
+    time_range = SemesterCalendar.new(params).current_terms_time_range
+    Event.where(publish_on_global_website: true, start_at: time_range)
+  end
+
+  def self.current_term
+    if self.new(year: Time.zone.now.year).summer_term_range.cover? Time.zone.now
+      :summer_term
+    else
+      :winter_term
     end
   end
 
