@@ -386,4 +386,13 @@ describe Ability do
       he { should_not be_able_to :read, @some_internal_page }
     end
   end
+
+  describe "for users with accounts identified by auth tokens" do
+    let(:user) { create :user_with_account }
+    let(:other_user) { create :user_with_account }
+    let(:ability) { Ability.new(nil, token: user.account.auth_token) }
+    subject { ability }
+    he { should be_able_to :index_events, user }
+    he { should_not be_able_to :index_events, other_user }
+  end
 end

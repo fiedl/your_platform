@@ -114,7 +114,7 @@ class Ability
     @preview_as
   end
   def token
-    @token if @user_by_auth_token
+    @token
   end
   def auth_token
     @auth_token ||= AuthToken.where(token: token).first if @user_by_auth_token
