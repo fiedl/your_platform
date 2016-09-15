@@ -7,7 +7,7 @@ class Attachment < ActiveRecord::Base
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes
-  before_create :set_default_title_if_empty
+  after_create :set_default_title_if_empty
   before_destroy :remove_file!
 
   scope :logos, -> { where('title like ?', "%logo%") }
@@ -99,6 +99,7 @@ class Attachment < ActiveRecord::Base
   def set_default_title_if_empty
     if file.present? && file.filename.present? && file_changed?
       self.title ||= File.basename(file.filename, '.*').titleize
+      self.save
     end
   end
 
