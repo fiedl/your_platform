@@ -131,16 +131,17 @@ Spork.prefork do
   # Capybara & Poltergeist  Configuration
   # ----------------------------------------------------------------------------------------
 
-  Capybara.register_driver :poltergeist do |app|
-
-    # The `inspector: true` argument gives you the possibility to stop the execution
-    # of the tests using `page.driver.debug` in your spec code. This will open an
-    # inspector in the browser that allows you to see the current DOM structure and
-    # other information useful for debugging tests.
-    #
-    Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: (not ENV['NO_JS_ERRORS'].present?))
+  unless ENV['SELENIUM']
+    Capybara.register_driver :poltergeist do |app|
+      # The `inspector: true` argument gives you the possibility to stop the execution
+      # of the tests using `page.driver.debug` in your spec code. This will open an
+      # inspector in the browser that allows you to see the current DOM structure and
+      # other information useful for debugging tests.
+      #
+      Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: (not ENV['NO_JS_ERRORS'].present?))
+    end
+    Capybara.javascript_driver = :poltergeist
   end
-  Capybara.javascript_driver = :poltergeist
 
   # Set the time that Capybara should wait for ajax requests to be finished.
   # The default is 2 seconds.

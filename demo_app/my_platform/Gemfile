@@ -76,6 +76,7 @@ source 'https://rubygems.org' do
     gem 'guard-rspec'
     gem 'capybara'
     gem 'poltergeist'
+    gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
     gem 'guard-spork'

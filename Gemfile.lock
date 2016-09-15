@@ -511,6 +511,7 @@ GEM
       sexp_processor (~> 4.0)
     ruby_parser (3.7.2)
       sexp_processor (~> 4.1)
+    rubyzip (1.2.0)
     safe_yaml (1.0.4)
     sass (3.2.19)
     sass-rails (4.0.5)
@@ -521,6 +522,10 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
+    selenium-webdriver (2.53.4)
+      childprocess (~> 0.5)
+      rubyzip (~> 1.0)
+      websocket (~> 1.0)
     sexp_processor (4.6.0)
     shellany (0.0.1)
     sidekiq (4.2.0)
@@ -610,6 +615,7 @@ GEM
       activemodel (>= 4.2)
       debug_inspector
       railties (>= 4.2)
+    websocket (1.2.3)
     websocket-driver (0.6.3)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
@@ -653,6 +659,7 @@ DEPENDENCIES
   rspec-rerun!
   sass-rails (~> 4.0.3)!
   sdoc (~> 0.4.0)!
+  selenium-webdriver!
   simplecov!
   spork!
   spring!
