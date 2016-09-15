@@ -1,15 +1,11 @@
 # The members of this special group type are defined by their
-# address being within a certain raidius of a given center.
+# address being within a certain raidius of a given center
+# in terms of geo coordinates.
 #
 #     radius_center_address: String
 #     radius_in_km: Integer
 #
-# Also, we need a selector on the corporation status.
-#
-# This is a temporary solution, which is likely to be replaced
-# with something more customizable, later.
-#
-class RadiusGroup < Group
+class Groups::GeoSearchGroup < Group
 
   include RailsSettings::Extend
   delegate :radius_center_address=,
@@ -41,10 +37,7 @@ class RadiusGroup < Group
 
   def apply_status_selector(users)
     users.select do |user|
-      user.alive? &&
-      user.wingolfit? &&
-      user.aktiver? &&
-      (not user.corporations.include? corporation)
+      user.alive?
     end
   end
 
