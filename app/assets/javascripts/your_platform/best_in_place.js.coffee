@@ -5,8 +5,8 @@ $(document).ready ->
 
   # $('.best_in_place.click_does_not_trigger_edit')
 
-  $('.best_in_place').bind "ajax:success", ->
-    $(this).effect 'highlight'
+$(document).on 'ajax:success', '.best_in_place', ->
+  $(this).effect 'highlight'
 
 # Clicking on ajax checkboxes submits their forms.
 $(document).on 'change', '.ajax_check_box', ->
