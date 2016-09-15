@@ -59,8 +59,20 @@ module CapybaraHelper
   end
 
   def enter_in_place(selector, text)
+    enter_in_place_with_pressing_enter(selector, text)
+  end
+
+  def enter_in_place_with_pressing_enter(selector, text)
+    enter_in_place_without_pressing_enter(selector, "#{text}\n")
+  end
+
+  def enter_in_place_without_pressing_enter(selector, text)
     find_best_in_place(selector).click
-    find_best_in_place(selector).find('input').set(text + "\n")
+    find_best_in_place(selector).find('input').set(text)
+  end
+
+  def enter_in_edit_mode(selector, text)
+    enter_in_place_without_pressing_enter(selector, text)
   end
 
   def find_best_in_place(selector)
@@ -72,18 +84,3 @@ module CapybaraHelper
   end
 
 end
-
-## https://github.com/ryanb/cancan/blob/master/lib/cancan/matchers.rb
-#RSpec::Matchers.define :be_able_to do |*args|
-#  match do |ability|
-#    ability.can?(*args)
-#  end
-#
-#  failure_message_for_should do |ability|
-#    "expected to be able to #{args.map(&:inspect).join(" ")}"
-#  end
-#
-#  failure_message_for_should_not do |ability|
-#    "expected not to be able to #{args.map(&:inspect).join(" ")}"
-#  end
-#end
