@@ -15,8 +15,8 @@ class AvatarsController < ApplicationController
   def show
     authorize! :read, :avatars
 
-    @user = User.find_by_email(params[:email])
-    @user ||= User.find params[:user_id]
+    @user = User.find_by_email(params[:email]) if params[:email]
+    @user ||= User.find params[:user_id] if params[:user_id]
     @size = params[:size]
 
     if @user
