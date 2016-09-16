@@ -32,16 +32,16 @@ feature "Issues", :js do
     # up to four lines:
 
     click_on :edit
-    enter_in_edit_mode 'li.region', ""
+    enter_in_edit_mode 'li.region', "-"
     enter_in_edit_mode 'li.first_address_line', "King's College, King's Parade"
-    enter_in_edit_mode 'li.second_address_line', ""
+    enter_in_edit_mode 'li.second_address_line', "-"
     click_on :save
 
     page.should have_text t(:scanning_issue)
     page.should have_no_text t(:scanning_issue)
     page.should have_text t(:thanks)
 
-    @address_field.reload.region.should be_empty
+    @address_field.reload.region.should be_blank
 
     Issue.scan(@address_field)
     Issue.count.should == 0
