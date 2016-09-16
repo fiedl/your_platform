@@ -47,7 +47,7 @@ module ProfileFieldTypes
         end
 
         def plz
-          postal_code if country_code.downcase == 'de'
+          postal_code if country_code.try(:downcase) == 'de'
         end
 
         def province
