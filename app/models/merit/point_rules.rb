@@ -13,23 +13,27 @@ module Merit
     include Merit::PointRulesMethods
 
     def initialize
-      # score 10, :on => 'users#create' do |user|
-      #   user.bio.present?
-      # end
-      #
-      # score 15, :on => 'reviews#create', :to => [:reviewer, :reviewed]
-      #
-      # score 20, :on => [
-      #   'comments#create',
-      #   'photos#create'
-      # ]
-      #
-      # score -10, :on => 'comments#destroy'
-      
-      score 10, on: 'workflows#execute', category: 'administration'
-      score 5, on: ['blog_posts#create', 'pages#create'], category: 'information'
-      score 5, on: 'posts#create', category: 'communication'
-      score 2, on: 'comments#create', category: 'communication'
+      unless ActiveRecord::Base.read_only_mode?
+
+        # score 10, :on => 'users#create' do |user|
+        #   user.bio.present?
+        # end
+        #
+        # score 15, :on => 'reviews#create', :to => [:reviewer, :reviewed]
+        #
+        # score 20, :on => [
+        #   'comments#create',
+        #   'photos#create'
+        # ]
+        #
+        # score -10, :on => 'comments#destroy'
+
+        score 10, on: 'workflows#execute', category: 'administration'
+        score 5, on: ['blog_posts#create', 'pages#create'], category: 'information'
+        score 5, on: 'posts#create', category: 'communication'
+        score 2, on: 'comments#create', category: 'communication'
+
+      end
     end
   end
 end
