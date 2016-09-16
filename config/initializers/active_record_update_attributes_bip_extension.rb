@@ -1,0 +1,1 @@
+require 'active_record_update_attributes_bip_extension'
