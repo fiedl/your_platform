@@ -1,6 +1,6 @@
 - semester_calendar || raise('no semester_calendar given')
 
-= form_for semester_calendar, remote: true, turboboost: true do |form|
+= form_for semester_calendar, remote: true, turboboost: true, html: {class: 'edit semester_calendar warn_when_leaving'} do |form|
   %table.table-header-rotated
     %thead
       %tr

@@ -1,3 +1,4 @@
-
 de:
   fields_have_to_be_given:       Diese Felder müssen angegeben werden.
+
+  are_you_sure_to_leave_without_saving: "Du hast die Änderungen noch nicht gespeichert. Wenn Du das Formular jetzt verlässt, gehen die Änderungen verloren. Bist Du sicher, dass Du das Formular verlassen möchtest, ohne die Änderungen zu speichern?"
