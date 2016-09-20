@@ -23,6 +23,12 @@ class SemesterCalendar < ActiveRecord::Base
   # has_many :events, -> (semester_calendar) { where(start_at: semester_calendar.current_terms_time_range) }, through: :group, source: :descendant_events
   # accepts_nested_attributes_for :events
 
+  scope :current, -> {
+    where(year: Time.zone.now.year..(Time.zone.now.year + 1)).select { |semester_calendar|
+      semester_calendar.current_terms_time_range.cover? Time.zone.now
+    }
+  }
+
   def title(options = {})
     locale = options[:locale] || I18n.default_locale
     "#{term_to_s(locale)} #{year_to_s}"

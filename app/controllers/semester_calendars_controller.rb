@@ -24,6 +24,16 @@ class SemesterCalendarsController < ApplicationController
     set_current_title "#{@group.title}: #{t(:semester_calendar)}"
   end
 
+  def show_current
+    authorize! :read, @group
+
+    if @semester_calendar = @group.semester_calendars.current.last
+      redirect_to @semester_calendar
+    else
+      redirect_to group_semester_calendars_path(@group)
+    end
+  end
+
   def new
     authorize! :create, SemesterCalendar
 

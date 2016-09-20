@@ -69,9 +69,7 @@ Rails.application.routes.draw do
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :semester_calendars
-    get :semester_calendar, to: 'semester_calendars#show'
-    get 'semester_calendar/edit', to: 'semester_calendars#edit'
-    patch :semester_calendar, to: 'semester_calendars#update'
+    get :semester_calendar, to: 'semester_calendars#show_current', as: 'current_semester_calendar'
     resources :posts
     get :profile, to: 'profiles#show'
     get :profile_fields, to: 'profile_fields#index'
