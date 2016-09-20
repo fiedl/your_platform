@@ -25,9 +25,13 @@ class SemesterCalendar < ActiveRecord::Base
 
   scope :current, -> {
     where(year: Time.zone.now.year..(Time.zone.now.year + 1)).select { |semester_calendar|
-      semester_calendar.current_terms_time_range.cover? Time.zone.now
+      semester_calendar.current?
     }
   }
+
+  def current?
+    current_terms_time_range.cover? Time.zone.now
+  end
 
   def title(options = {})
     locale = options[:locale] || I18n.default_locale

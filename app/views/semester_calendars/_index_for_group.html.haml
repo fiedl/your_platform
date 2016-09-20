@@ -6,11 +6,12 @@
       = t :new_semester_calendar
 %div
   %h2= @group.title
-  %ul
+  %ul.semester_calendars
     - @semester_calendars.reverse.each do |semester_calendar|
-      %li
+      %li{class: "#{semester_calendar.current? ? 'current' : ''}"}
         = link_to semester_calendar.title(locale: current_user.locale), semester_calendar
 
   - if can? :index, SemesterCalendar
-    .show_semester_calendars_of_all_groups
-      = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+    .show_other_semester_calendars_links
+      .show_semester_calendars_of_all_groups
+        = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path

@@ -6,10 +6,13 @@
     - if can? :update, @semester_calendar
       .edit-semester-calendar.tool
         = link_to t(:edit), edit_semester_calendar_path(@semester_calendar), class: 'btn btn-default'
-    .back-to-index.tool
-      = link_to t(:show_all), group_semester_calendars_path(group_id: @group.id), class: 'btn btn-default'
   %div
-    %p.semester= @semester_calendar.title(locale: current_user.locale)
+    %p.semester
+      = @semester_calendar.title(locale: current_user.locale)
+      %small
+        = surround "(", ")" do
+          = link_to "Anderes Semester?", group_semester_calendars_path(group_id: @group.id)
+
     %ul.semester_calendar
       - @semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
         %li.month_name
@@ -23,8 +26,11 @@
             = link_to event.title, event
 
     - if can? :index, SemesterCalendar
-      .show_semester_calendars_of_all_groups
-        = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+      .show_other_semester_calendars_links
+        .show_semester_calendars_of_all_groups
+          = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+        .show_all_semesters
+          = link_to "Semesterprogramme anderer Semester anzeigen", group_semester_calendars_path(group_id: @group.id)
 
 .col-sm-4.col-xs-12
   %h1.semester_calendar_pdf PDF
