@@ -31,6 +31,10 @@
         = link_to t(:new_semester_calendar), new_semester_calendar_path, class: 'btn btn-default'
 
   - if @public_events.any?
-    %h1.public_events= t :events_from_the_global_website
+    %h1.public_events
+      = t :events_from_the_global_website
+      .tool.public_ical_feed
+        = surround "(", ")" do
+          = link_to "iCal", public_events_url(protocol: 'webcal', format: 'ics')
     %div
       = render partial: 'events/events_lis', locals: {events: @public_events}
