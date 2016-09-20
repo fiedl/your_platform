@@ -25,7 +25,10 @@
   - if can? :create, SemesterCalendar
     %h1= t :enter_semester_calendar
     %div
-      = link_to t(:new_semester_calendar), new_semester_calendar_path, class: 'btn btn-default'
+      - if @corporation_of_the_current_officer
+        = link_to "#{t(:new_semester_calendar)}: #{@corporation_of_the_current_officer.title}", group_semester_calendars_path(group_id: @corporation_of_the_current_officer.id), method: 'post', turbolinks: true, class: 'btn btn-default'
+      - else
+        = link_to t(:new_semester_calendar), new_semester_calendar_path, class: 'btn btn-default'
 
   - if @public_events.any?
     %h1.public_events= t :events_from_the_global_website

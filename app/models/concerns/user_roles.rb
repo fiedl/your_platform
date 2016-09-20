@@ -162,6 +162,10 @@ concern :UserRoles do
     self.groups.detect { |g| g.type == 'OfficerGroup' } || false
   end
 
+  def corporations_the_user_is_officer_in
+    Corporation.where(id: self.groups.where(type: 'OfficerGroup').collect { |g| g.ancestor_group_ids }.flatten.uniq)
+  end
+
 
   # Methods transferred from former Role class
   # ==========================================================================================

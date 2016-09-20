@@ -98,6 +98,12 @@ class SemesterCalendarsController < ApplicationController
       @semester_calendars = @semester_calendars.where(year: params[:year]) if params[:year]
       @semester_calendars = @semester_calendars.where(term: SemesterCalendar.terms[params[:term]]) if params[:term]
 
+      if current_user.corporations_the_user_is_officer_in.count == 1
+        @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
+      else
+        @corporation_of_the_current_officer = Corporation.find 12
+      end
+
       @public_events = SemesterCalendar.all_public_events_for(year: params[:year], term: params[:term]).order(:start_at)
 
       set_current_title t(:semester_calendars)
@@ -110,7 +116,11 @@ class SemesterCalendarsController < ApplicationController
   def create
     authorize! :create_semester_calendar_for, @group
 
-    @semester_calendar = @group.semester_calendars.new(semester_calendar_params)
+    attributes = semester_calendar_params
+    attributes[:year] ||= Time.zone.now.year
+    attributes[:term] ||= SemesterCalendar.current_term
+
+    @semester_calendar = @group.semester_calendars.new(attributes)
     @semester_calendar.save!
     redirect_to edit_semester_calendar_path(@semester_calendar)
   end

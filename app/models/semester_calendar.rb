@@ -44,6 +44,10 @@ class SemesterCalendar < ActiveRecord::Base
     end
   end
 
+  def year
+    super || Time.zone.now.year
+  end
+
   def year_to_s
     if summer_term?
       year.to_s
