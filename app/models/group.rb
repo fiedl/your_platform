@@ -28,7 +28,6 @@ class Group < ActiveRecord::Base
   has_profile_fields
 
   has_many :posts
-  has_many :semester_calendars
 
   default_scope { includes(:flags) }
 
@@ -45,6 +44,7 @@ class Group < ActiveRecord::Base
   include GroupMailingLists
   include GroupDummyUsers
   include GroupWelcomeMessage
+  include GroupSemesterCalendars
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
