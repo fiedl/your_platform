@@ -26,6 +26,7 @@ feature "Semester Calendars", :js do
 
     @event = Event.last
     @event.title.should == "My new event"
+    @event.contact_people.to_a.should == [@officer]
 
     page.should have_text "My new event"
   end

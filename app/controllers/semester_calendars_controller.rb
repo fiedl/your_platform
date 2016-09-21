@@ -155,7 +155,7 @@ class SemesterCalendarsController < ApplicationController
   def semester_calendar_params
     if (@semester_calendar and can?(:update, @semester_calendar)) or (@group and can?(:create_semester_calendar_for, @group))
       if params[:semester_calendar]
-        params.require(:semester_calendar).permit(:year, :term, events_attributes: [:id, :name, :location, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :_destroy])
+        params.require(:semester_calendar).permit(:year, :term, events_attributes: [:id, :name, :location, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :contact_person_id, :_destroy])
       else
         {}
       end

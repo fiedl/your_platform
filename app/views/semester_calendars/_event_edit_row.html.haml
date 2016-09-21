@@ -2,6 +2,7 @@
 - builder ||= form
 
 %tr
+  = builder.hidden_field :contact_person_id
   %td.event_starts_at= builder.text_field :localized_start_at
   %td.event_name= builder.text_field :name
   %td.event_location= builder.text_field :location

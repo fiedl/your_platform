@@ -1,5 +1,5 @@
 class Event < ActiveRecord::Base
-  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id if defined? attr_accessible
+  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id, :contact_person_id if defined? attr_accessible
 
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
   is_navable
@@ -9,6 +9,8 @@ class Event < ActiveRecord::Base
   attr_accessor :group_id
   after_save :assign_to_group_given_by_group_id
 
+  attr_accessor :contact_person_id
+  after_save :assign_contact_person_given_by_contact_person_id
 
   # General Properties
   # ==========================================================================================
@@ -113,6 +115,14 @@ class Event < ActiveRecord::Base
     super
   end
 
+  def assign_contact_person_given_by_contact_person_id
+    # Assign the contact person in a background job to save some time here.
+    Event.delay.assign_contact_person_to_event self.id, contact_person_id if contact_person_id
+  end
+
+  def self.assign_contact_person_to_event(event_id, contact_person_id)
+    Event.find(event_id).contact_people_group << User.find(contact_person_id)
+  end
 
   # Scopes
   # ==========================================================================================
