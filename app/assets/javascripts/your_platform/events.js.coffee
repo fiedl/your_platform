@@ -11,6 +11,10 @@ ready = ->
 
   #$('body.events * .start_at * input').lock()
 
+  # This is using the jqeruy ui datepicker together with the
+  # timepicker addon from http://trentrichardson.com/examples/timepicker/.
+  # https://github.com/trentrichardson/jQuery-Timepicker-Addon
+  #
   $.timepicker.setDefaults
     dateFormat: "DD, dd. MM yy,",
     timeFormat: "HH:mm 'Uhr'",

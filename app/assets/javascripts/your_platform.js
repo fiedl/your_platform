@@ -6,10 +6,11 @@
 //= require jquery.appear-1.1.1
 //= require slim_breadcrumb
 //= require jquery.autosize
-//= require jquery-ui-timepicker-addon
-//= require jquery-ui-timepicker-de
+//= require jqueryui-timepicker-addon
+//= require jqueryui-timepicker-addon/i18n/jquery-ui-timepicker-de
 //= require best_in_place
 //= require best_in_place_datetime
+//= require jquery.ui.datepicker-de
 //= require edit_mode
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic

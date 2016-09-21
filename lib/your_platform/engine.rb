@@ -55,6 +55,7 @@ require 'jquery-turbolinks'
 require 'turbolinks'
 require 'turboboost'
 require 'rails-assets-datatables'
+require 'rails-assets-trentrichardson--jQuery-Timepicker-Addon'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'
