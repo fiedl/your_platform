@@ -1,0 +1,37 @@
+en:
+  semester_calendar: Semester calendar
+  semester_calendars: Semester calendars
+  new_semester_calendar: New semester calendar
+  enter_semester_calendar: Enter semester calendar
+  create_semester_calendar: Create semester calendar
+  show_semester_calendars: Show semester calendar
+
+  term: Term
+  winter_term: Winter term
+  summer_term: Summer term
+
+  fon: Fon
+
+  semester_calendars_when: When
+  semester_calendars_event: Event
+  semester_calendars_location: Location
+
+  all_semester_calendars: All semester calendars
+  all_semester_calendars_short: All calendars
+
+  semester_calendar_updated_at: Last updated at
+
+  semester_calendars_no_pdf_uploaded: No PDF version uploaded, yet.
+
+  calendar_abo: Subscribe to calendar
+  ical_abo: iCal subscription
+  get_all_semester_calendars_of_str_automatically: "Get all semester calendars of '%{str}' automatically on your smartphone or computer."
+
+  ical_all_events: All events
+  ical_events_concerning_me: Only events concerning me
+  ical_events_from_the_homepage: Only events from the website
+
+  events_from_the_global_website: Events from the global website
+  new_semester_calendar_for_which_corporation: For which corporporation?
+
+  add_event_to_semester_calendar: Add event
