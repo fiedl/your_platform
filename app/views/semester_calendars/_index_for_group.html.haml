@@ -8,8 +8,11 @@
   %h2= @group.title
   %ul.semester_calendars
     - @semester_calendars.reverse.each do |semester_calendar|
-      %li{class: "#{semester_calendar.current? ? 'current' : ''}"}
+      %li{class: "#{semester_calendar.current? ? 'current' : ''} semester_calendar_#{semester_calendar.id}"}
         = link_to semester_calendar.title(locale: current_user.locale), semester_calendar
+        - if can? :destroy, semester_calendar
+          = link_to semester_calendar_path(semester_calendar), method: 'delete', remote: true, class: 'btn btn-danger btn-xs show_only_in_edit_mode' do
+            = icon :trash
 
   - if can? :index, SemesterCalendar
     .show_other_semester_calendars_links

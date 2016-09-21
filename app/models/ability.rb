@@ -498,6 +498,13 @@ class Ability
       obj.created_at < timestamp
     end
 
+    # Nobody can destroy semester calendars with attachments.
+    #
+    cannot :destroy, SemesterCalendar do |semester_calendar|
+      semester_calendar.attachments.count > 0
+    end
+
+
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
     # Definition in: concerns/group_mailing_lists.rb

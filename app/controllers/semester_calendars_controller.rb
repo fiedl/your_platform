@@ -125,6 +125,19 @@ class SemesterCalendarsController < ApplicationController
     redirect_to edit_semester_calendar_path(@semester_calendar)
   end
 
+  def destroy
+    authorize! :destroy, @semester_calendar
+
+    PublicActivity::Activity.create!(
+      trackable: @group,
+      key: "Destroy semester calendar #{@semester_calendar.title(locale: current_user.locale)}",
+      owner: current_user,
+      parameters: params.except('authenticity_token')
+    )
+
+    @semester_calendar.destroy
+  end
+
   private
 
   def load_resource
