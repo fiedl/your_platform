@@ -100,8 +100,6 @@ class SemesterCalendarsController < ApplicationController
 
       if current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
-      else
-        @corporation_of_the_current_officer = Corporation.find 12
       end
 
       @public_events = SemesterCalendar.all_public_events_for(year: params[:year], term: params[:term]).order(:start_at)
