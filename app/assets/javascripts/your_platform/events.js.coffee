@@ -18,11 +18,14 @@ ready = ->
   $.timepicker.setDefaults
     dateFormat: "DD, dd. MM yy,",
     timeFormat: "HH:mm 'Uhr'",
-    parse: 'loose'
+    parse: 'loose',
+    showHour: true,
+    showMinute: true,
     showSecond: false,
-    stepMinute: 5,
+    stepMinute: 15,
     hour: 20,
-    minute: 15
+    minute: 15,
+    timeInput: true
 
   $('#create_event').click (e)->
     $.ajax({

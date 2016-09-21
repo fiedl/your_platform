@@ -21,7 +21,7 @@ $(document).on 'input', '.semester_calendar .edit_table input', ->
   $('.semester_calendar .semester select').prop('disabled', 'disabled')
 
 $(document).on 'click', '.save_semester_calendar_button', ->
-  $(this).replaceWith("Bitte warten ...")
+  $(this).replaceWith(I18n.t('please_wait') + "..")
   $('.semester_calendar .edit_table form').trigger('submit.rails')
   $('.semester_calendar input').prop('disabled', 'disabled')
   $('.semester_calendar select').prop('disabled', 'disabled')
