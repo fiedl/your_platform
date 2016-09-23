@@ -25,6 +25,8 @@ $(document).on 'click', '.save_semester_calendar_button', ->
   $('.semester_calendar .edit_table form').trigger('submit.rails')
   $('.semester_calendar input').prop('disabled', 'disabled')
   $('.semester_calendar select').prop('disabled', 'disabled')
+  $('.semester_calendar .edit_table a').prop('disabled', 'disabled').addClass('disabled')
+  $('.semester_calendar .edit_table').prepend('<div class="alert alert-success">' + I18n.t('please_wait_while_semester_calendar_is_saving') + '</div>')
   false
 
 $(document).on 'click', '.semester_calendar .btn.destroy_semester_calendar_event', ->
