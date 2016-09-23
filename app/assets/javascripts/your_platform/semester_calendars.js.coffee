@@ -31,7 +31,7 @@ $(document).on 'click', '.save_semester_calendar_button', ->
 
 $(document).on 'click', '.semester_calendar .btn.destroy_semester_calendar_event', ->
   $(this).prev('input[type=hidden]').val('1')
-  $(this).closest('tr').hide('drop')
+  $(this).closest('tr').hide()
   false
 
 $(document).on 'click', '.add_semester_calendar_event', ->
