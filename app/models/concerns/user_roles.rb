@@ -166,6 +166,14 @@ concern :UserRoles do
     Corporation.where(id: self.groups.where(type: 'OfficerGroup').collect { |g| g.ancestor_group_ids }.flatten.uniq)
   end
 
+  def primarily_administrated_corporation
+    if global_admin?
+      primary_corporation
+    else
+      (corporations_the_user_is_officer_in & [primary_corporation]).first
+    end
+  end
+
 
   # Methods transferred from former Role class
   # ==========================================================================================

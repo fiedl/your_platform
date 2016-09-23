@@ -491,6 +491,13 @@ class User < ActiveRecord::Base
     sorted_current_corporations.first
   end
 
+  # The primary corporation is the one the user is most associated with.
+  #
+  def primary_corporation
+    # Temporary hack. This might not be correct for all cases.
+    first_corporation
+  end
+
   # This returns the groups within the first corporation
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
