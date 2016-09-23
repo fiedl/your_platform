@@ -10,6 +10,7 @@
     %td= builder.check_box column_name
   %td
     - # http://railscasts.com/episodes/196-nested-model-form-revised
-    = builder.hidden_field :_destroy
-    = link_to '#', class: 'btn btn-danger btn-xs destroy_semester_calendar_event' do
-      = icon :trash
+    - if builder.object.new_record? or can?(:destroy, builder.object)
+      = builder.hidden_field :_destroy
+      = link_to '#', class: 'btn btn-danger btn-xs destroy_semester_calendar_event' do
+        = icon :trash
