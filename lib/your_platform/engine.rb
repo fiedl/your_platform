@@ -13,6 +13,7 @@ require 'rails-i18n'
 # Data Structures
 require 'acts-as-dag'
 require 'acts_as_tree'
+require 'wannabe_bool'
 
 # Caching
 require 'redis-rails'
