@@ -75,8 +75,12 @@ class SemesterCalendar < ActiveRecord::Base
           raise("event #{event_params[:id]} not found.")
         end
       else
-        new_event = Event.create(event_params.except(:_destroy).merge({group_id: group.id}))
-        events.push(new_event)
+        if event_params[:name].present?
+          new_event = Event.create(event_params.except(:_destroy).merge({group_id: group.id}))
+          events.push(new_event)
+        else
+          Rails.logger.warn "Skipping creation of event without name: #{event_params.to_s}"
+        end
       end
     end
   end
