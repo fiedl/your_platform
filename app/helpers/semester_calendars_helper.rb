@@ -14,7 +14,7 @@ module SemesterCalendarsHelper
     form = options[:form] || raise('no form given')
     semester_calendar = form.object
     new_event = semester_calendar.group.child_events.new
-    new_event.contact_person_id = semester_calendar_default_contact_person.try(:id)
+    new_event.contact_person_id = semester_calendar_default_contact_person(semester_calendar).try(:id)
     uniq_id = new_event.object_id
     fields = form.fields_for :events, new_event, child_index: uniq_id do |builder|
       render partial: "semester_calendars/event_edit_row", locals: {form: builder}
@@ -29,7 +29,7 @@ module SemesterCalendarsHelper
       .gsub("Fri", "Fr").gsub("Sat", "Sa").gsub("Sun", "So")
   end
 
-  def semester_calendar_default_contact_person
+  def semester_calendar_default_contact_person(semester_calendar)
     current_user
   end
 
