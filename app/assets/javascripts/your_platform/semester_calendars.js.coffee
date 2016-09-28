@@ -1,12 +1,13 @@
 $(document).ready ->
   $('td.event_starts_at input').datetimepicker()
+  $('td.event_starts_at select').first().focus()
 
   $('.change_semester_ok_button').hide()
 
   if $('.replace_semester_calendar_pdf').size() > 0
     $('.semester_calendar_pdf #new_attachment').hide()
 
-$(document).on 'focus', 'td.event_starts_at input, td.event_name input, td.event_location input', ->
+$(document).on 'focus', 'td.event_starts_at input, td.event_starts_at select, td.event_name input, td.event_location input', ->
   $('td.event_starts_at, td.event_name, td.event_location').css('width', '')
   $(this).closest('td').css('width', '45%')
 
@@ -18,6 +19,9 @@ $(document).on 'change', '.semester_calendars .semester select', ->
   $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
 
 $(document).on 'input', '.semester_calendar .edit_table input', ->
+  $('.semester_calendar .semester select').prop('disabled', 'disabled')
+
+$(document).on 'change', '.semester_calendar .edit_table select', ->
   $('.semester_calendar .semester select').prop('disabled', 'disabled')
 
 $(document).on 'click', '.save_semester_calendar_button', ->
