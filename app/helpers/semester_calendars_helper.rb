@@ -22,4 +22,11 @@ module SemesterCalendarsHelper
     link_to title, '#', class: "add_semester_calendar_event #{options[:class]}", data: {id: uniq_id, fields: fields.gsub("\n", "")}
   end
 
+  def format_event_datetime(datetime)
+    datetime.strftime("%a, %d.%m %H:%M")
+      .gsub(":00", "h st").gsub(":15", "h ct")
+      .gsub("Mon", "Mo").gsub("Tue", "Di").gsub("Wed", "Mi").gsub("Thu", "Do")
+      .gsub("Fri", "Fr").gsub("Sat", "Sa").gsub("Sun", "So")
+  end
+
 end

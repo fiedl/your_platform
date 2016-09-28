@@ -21,9 +21,8 @@
             = events.first.start_at.year
         - events.each do |event|
           %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
-            %small= localize event.start_at
-            %br
-            = link_to event.title, event
+            .event_starts_at= format_event_datetime(event.start_at)
+            .event_title= link_to event.title, event
 
     - if can? :index, SemesterCalendar
       .show_other_semester_calendars_links
