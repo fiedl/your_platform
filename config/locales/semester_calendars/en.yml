@@ -37,3 +37,7 @@ en:
 
   add_event_to_semester_calendar: Add event
   please_wait_while_semester_calendar_is_saving: "Please wait while saving. For typical semester calendars, this might take five minutes. 🍕 🍺 ☕️ — When finished, please consider uploading the semester calendar as pdf."
+
+  is_looking_at_semester_calendar: "is looking at a semester calendar"
+  is_editing_a_semester_calendar: "is creating a semester calendar"
+  is_looking_at_semester_calendars: "is browsing semester calendars"
