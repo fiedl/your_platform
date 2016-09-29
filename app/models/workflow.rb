@@ -51,9 +51,14 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
     end
   end
 
-  def wah_group  # => TODO: corporation
-    ( self.ancestor_groups & Corporation.all ).first
+  def corporation
+    self.ancestor_groups.where(type: 'Corporation').first
   end
+
+  def wah_group  # => TODO: Delete this method and check specs.
+    corporation
+  end
+  deprecate :wah_group  # http://stackoverflow.com/a/7112231/2066546
 
   def self.find_or_create_mark_as_deceased_workflow
     self.find_mark_as_deceased_workflow || self.create_mark_as_deceased_workflow
