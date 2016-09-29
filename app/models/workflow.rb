@@ -45,9 +45,9 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
     elsif self.name == "Aktivmeldung"
       "#{user.title} hat sich #{self.name_as_participle_perfect_passive}."
     elsif self.name.include? "Austritt"
-      "#{user.title} ist #{self.name_as_participle_perfect_passive}."
+      "#{user.title} ist #{self.name_as_participle_perfect_passive} (#{corporation.title})."
     else
-      "#{user.title} wurde #{self.name_as_participle_perfect_passive}."
+      "#{user.title} wurde #{self.name_as_participle_perfect_passive} (#{corporation.title})."
     end
   end
 
