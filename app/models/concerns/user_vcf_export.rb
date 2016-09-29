@@ -13,7 +13,7 @@ concern :UserVcfExport do
       if profile_field.vcard_property_type
         vcard[key].add 'label', profile_field.label
         vcard[key].add 'X-ABLabel', profile_field.label
-        vcard[key].add profile_field.vcard_property_type, profile_field.value.gsub("\n", ";")
+        vcard[key].add profile_field.vcard_property_type, profile_field.value.try(:gsub, "\n", ";")
       end
     end
 
