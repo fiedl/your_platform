@@ -11,11 +11,9 @@ $(document).on 'focus', 'td.event_name input, td.event_location input', ->
   $('td.event_name, td.event_location').css('width', '')
   $(this).closest('td').css('width', '45%')
 
-$(document).on 'change', '.semester_calendar .semester select', ->
-  $('.edit_table').html('')
-  $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
-
 $(document).on 'change', '.semester_calendars .semester select', ->
+  # This works for semester_calendars#edit as well as for #index.
+  $('.edit_table').html('')
   $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
 
 $(document).on 'input', '.semester_calendar .edit_table input', ->

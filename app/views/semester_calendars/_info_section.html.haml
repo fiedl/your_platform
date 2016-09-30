@@ -1,14 +1,14 @@
 .semester_calendar_info
   %p.semester= @semester_calendar.title(locale: current_user.locale)
-  - if @semester_calendar.respond_to? :senior
+  - if @semester_calendar.respond_to?(:senior) && @semester_calendar.senior
     %p.senior
       Senior:
       = link_to_user_with_phone_number @semester_calendar.senior
-  - if @semester_calendar.respond_to? :fuxmajor
+  - if @semester_calendar.respond_to?(:fuxmajor) && @semester_calendar.fuxmajor
     %p.fuxmajor
       Fuxmajor:
       = link_to_user_with_phone_number @semester_calendar.fuxmajor
-  - if @semester_calendar.respond_to? :kneipwart
+  - if @semester_calendar.respond_to?(:kneipwart) && @semester_calendar.kneipwart
     %p.kneipwart
       Kneipwart:
       = link_to_user_with_phone_number @semester_calendar.kneipwart

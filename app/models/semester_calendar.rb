@@ -61,6 +61,11 @@ class SemesterCalendar < ActiveRecord::Base
     @events ||= group.events.where(start_at: current_terms_time_range).order(:start_at).to_a
   end
 
+  def reload
+    @events = nil
+    super
+  end
+
   def events_attributes=(attributes)
     attributes.each do |i, event_params|
       if event_params[:id].present?
