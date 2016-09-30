@@ -135,7 +135,7 @@ class SemesterCalendar < ActiveRecord::Base
   end
 
   def officer(key)
-    officer_group(key).memberships.at_time(officer_valuation_date).first.user
+    officer_group(key).memberships.at_time(officer_valuation_date).first.try(:user)
   end
 
   def officer_valuation_date
