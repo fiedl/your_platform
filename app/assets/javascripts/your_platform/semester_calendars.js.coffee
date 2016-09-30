@@ -15,6 +15,7 @@ $(document).on 'change', '.semester_calendars .semester select', ->
   # This works for semester_calendars#edit as well as for #index.
   $('.edit_table').html('')
   $(this).closest('form').trigger('submit.rails') # http://stackoverflow.com/a/15847260/2066546
+  $('.semester_calendar .semester select').prop('disabled', 'disabled')
 
 $(document).on 'input', '.semester_calendar .edit_table input', ->
   $('.semester_calendar .semester select').prop('disabled', 'disabled')
