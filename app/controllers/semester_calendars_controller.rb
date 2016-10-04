@@ -90,7 +90,7 @@ class SemesterCalendarsController < ApplicationController
       @group = Group.find(params[:group_id])
 
       authorize! :read, @group
-      @semester_calendars = @group.semester_calendars.order(:year, :term)
+      @semester_calendars = @group.semester_calendars.order(:year, 'term desc')
 
       set_current_navable @group
       set_current_title "#{I18n.t(:semester_calendars)} #{@group.title}"
