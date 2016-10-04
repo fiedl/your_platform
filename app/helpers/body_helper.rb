@@ -7,6 +7,7 @@ module BodyHelper
         "#{current_layout}-layout",
         "#{current_layout}_layout",
         @navable.try(:class).try(:name).try(:parameterize),
+        ("demo_mode" if demo_mode?)
       ].join(" "),
       data: {
         locale: I18n.locale,
