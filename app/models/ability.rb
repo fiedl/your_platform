@@ -130,11 +130,11 @@ class Ability
     can :use, :new_menu_feature
     can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
     can :use, :merit
+    can :use, :semester_calendars
   end
 
   def rights_for_developers
     can :use, Rack::MiniProfiler
-    can :use, :semester_calendars
   end
 
   def rights_for_global_admins
