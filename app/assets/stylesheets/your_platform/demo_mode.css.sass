@@ -1,0 +1,35 @@
+=obscure
+  filter: blur(3px)
+
+body.demo_mode
+  .obscure-in-demo
+    +obscure
+
+  .vertical_nav .active.user
+    +obscure
+
+  .date-of-birth .value-wrapper
+    +obscure
+
+  #general .name .value-wrapper
+    +obscure
+
+  .address_profile_field
+    +obscure
+
+  .profile_field .value-wrapper
+    +obscure
+
+  .user_account
+    .alias, .name, .email
+      dd
+        +obscure
+
+  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle)
+    +obscure
+
+  .avatar
+    +obscure
+
+  .direct_officers
+    +obscure
