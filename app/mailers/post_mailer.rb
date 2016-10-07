@@ -5,24 +5,24 @@ class PostMailer < BaseMailer
     @subject = subject.gsub(/\[.*\]/, '')
     @group = group
     @post = post
-    
+
     # ## `to` vs. `smtp_envelope_to`.
     #
-    # In emails as in physical mails (paper sheet in paper envelope), 
-    # the recipient on the envelope may differ from the recipient on 
+    # In emails as in physical mails (paper sheet in paper envelope),
+    # the recipient on the envelope may differ from the recipient on
     # the letter sheet itself.
-    # 
-    # As the mailman would only consider the envelope's recipient, 
+    #
+    # As the mailman would only consider the envelope's recipient,
     # so do mail servers.
-    # 
-    # That means, one actually can tell the smtp service to send an 
-    # email to a recipient different than the one listed in the `To:` 
+    #
+    # That means, one actually can tell the smtp service to send an
+    # email to a recipient different than the one listed in the `To:`
     # field of the email header.
-    # 
+    #
     # This feature is used for our email lists: The group email address
     # is shown in the `to` field, but the email is really sent to the
     # individual group members (`smtp_envelope_to`).
-    # 
+    #
     # Attention! The `to` fields may be set to a name plus email address
     # like "John Doe <doe@example.com>", but the `smtp_envelope_to` fields have
     # to be valid email addresses and nothing more, i.e. "doe@example.com".
@@ -31,7 +31,7 @@ class PostMailer < BaseMailer
     #
     @to_field = [@group.email] || to_emails
     @smtp_envelope_to_field = recipients.collect { |user| user.email }
-    
+
     if sender.kind_of? User
       # If the sender is recognized by the system, replies generate comments.
       @from_field = "#{sender.title} <#{sender.email}>"
@@ -41,7 +41,7 @@ class PostMailer < BaseMailer
       @from_field = sender.to_s
       @reply_to = @from_field
     end
-    
+
     I18n.with_locale(recipients.first.try(:locale) || I18n.default_locale) do
       message = mail(
         to: @to_field, from: @from_field, subject: subject,
@@ -51,5 +51,5 @@ class PostMailer < BaseMailer
     end
     return message
   end
-  
+
 end
