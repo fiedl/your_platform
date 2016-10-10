@@ -88,6 +88,7 @@ class SemesterCalendar < ActiveRecord::Base
         end
       end
     end
+    self.touch if attributes.any?
   end
 
   def save(*args)
