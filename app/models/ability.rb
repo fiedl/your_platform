@@ -130,7 +130,6 @@ class Ability
     can :use, :new_menu_feature
     can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
     can :use, :merit
-    can :use, :semester_calendars
   end
 
   def rights_for_developers
@@ -449,6 +448,11 @@ class Ability
   end
 
   def rights_for_everyone
+
+    # Feature switches
+    #
+    can :use, :semester_calendars
+
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
     #
