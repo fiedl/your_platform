@@ -201,6 +201,9 @@ class Ability
         can? :update, semester_calendar
       end
       can :create, SemesterCalendar
+      can :destroy, SemesterCalendar do |semester_calendar|
+        can? :update, semester_calendar
+      end
 
 
       # Local officers of pages can edit their pages and sub-pages
