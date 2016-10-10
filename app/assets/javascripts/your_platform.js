@@ -26,6 +26,8 @@
 //= require i18n/translations
 //= require pgwbrowser
 //= require jquery.atwho
+//= require Chart.bundle
+//= require chartkick
 //= require_tree ./your_platform
 //
 //= require turbolinks

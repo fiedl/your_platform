@@ -15,6 +15,7 @@
 #
 class SemesterCalendarsController < ApplicationController
   before_action :load_resource, except: [:index, :new]
+  after_action :log_public_activity_for_semester_calendar, only: [:update]
 
   def show
     authorize! :read, @group
@@ -103,6 +104,7 @@ class SemesterCalendarsController < ApplicationController
       @semester_calendars = SemesterCalendar.all
       @semester_calendars = @semester_calendars.where(year: params[:year]) if params[:year]
       @semester_calendars = @semester_calendars.where(term: SemesterCalendar.terms[params[:term]]) if params[:term]
+      @semester_calendars = @semester_calendars.order('updated_at desc')
 
       if current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
@@ -168,5 +170,21 @@ class SemesterCalendarsController < ApplicationController
       end
     end
   end
+
+
+  def log_public_activity_for_semester_calendar
+    @semester_calendar.events.each do |event|
+      PublicActivity::Activity.create(
+        trackable: event,
+        key: "edit event via semester calendar",
+        owner: current_user,
+        parameters: {
+          event_name: event.title,
+          group_name: event.group.try(:name)
+        }
+      )
+    end
+  end
+
 
 end

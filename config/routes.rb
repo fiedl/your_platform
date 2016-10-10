@@ -99,6 +99,8 @@ Rails.application.routes.draw do
   namespace :activities do
     get :exports, to: 'exports#index'
     #get :addresses, to: 'addresses#index'
+    get :charts, to: 'charts#index'
+    get 'charts/per_corporation_and_time', to: 'charts#activities_per_corporation_and_time'
   end
   resources :activities
 

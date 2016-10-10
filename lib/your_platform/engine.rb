@@ -100,6 +100,8 @@ require 'judge'
 # Metrics
 require 'rack-mini-profiler'
 require 'redis_analytics'
+require 'chartkick'
+require 'groupdate'
 
 # Activity Logger
 require 'public_activity'
