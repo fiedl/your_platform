@@ -10,7 +10,7 @@ class BlogPostsController < PagesController
   respond_to :json, :js
 
   def show
-    redirect_to page_url(id: params[:id])
+    redirect_to page_path(id: params[:id])
   end
 
   def create

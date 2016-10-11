@@ -18,7 +18,7 @@ concern :CheckAuthorization do
         # exception.subject.to_s.first(50)
       end
       store_location_for :user_account, request.fullpath
-      redirect_to errors_unauthorized_url
+      redirect_to errors_unauthorized_path
     end
   end
 
