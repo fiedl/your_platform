@@ -7,8 +7,8 @@ class App.Attachments
   # and binds UploadBoxes to them.
   #
   process: (root_element)->
-    if root_element.find('#attachments').size() > 0
-      root_element.find('#attachments').each (index, attachments_element)->
+    if root_element.find('#attachments, .attachments').size() > 0
+      root_element.find('#attachments, .attachments').each (index, attachments_element)->
         if $(attachments_element).find('#new_attachment').size() > 0
           App.upload_boxes.push new App.UploadBox($(attachments_element))
 
