@@ -1,0 +1,22 @@
+- if show_vertical_nav? and content_for?(:side_bar)
+  .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
+  .col-sm-6#content_area
+    = render partial: 'shared/flashes'
+    = convert_to_content_box { yield }
+  .col-sm-3
+    = yield :side_bar
+- elsif show_vertical_nav? and not content_for?(:side_bar)
+  .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
+  .col-sm-9#content_area
+    = render partial: 'shared/flashes'
+    = convert_to_content_box { yield }
+- elsif not show_vertical_nav? and content_for(:side_bar)
+  .col-sm-9#content_area
+    = render partial: 'shared/flashes'
+    = convert_to_content_box { yield }
+  .col-sm-3
+    = yield :side_bar
+- else
+  #content_area
+    = render partial: 'shared/flashes'
+    = convert_to_content_box { yield }

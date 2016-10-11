@@ -121,20 +121,6 @@
     .container-fluid
       .row
         #content
-          - if show_vertical_nav?
-            .col-md-3#vertical_nav_area.hidden-xs
-              = render partial: 'layouts/vertical_nav'
-            .col-md-9#content_area
-              = flash_area
-              = replace_unicode_special_chars_by_html_escape_strings( |
-                  convert_to_content_box { yield }                    |
-                )                                                     |
-            \ 
-          - else
-            #content_area
-              = flash_area
-              = replace_unicode_special_chars_by_html_escape_strings( |
-                  convert_to_content_box { yield }                    |
-                )                                                     |
+          = render partial: 'layouts/multi_column_content_area'
 
     .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
