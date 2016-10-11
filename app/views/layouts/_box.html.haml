@@ -1,16 +1,8 @@
 .edit_mode_group
-  %div{:class => "box panel panel-default #{box_class}"}
-    .head.panel-heading
-      %table.box_header_table
-        %tr
-          %td.box_heading
-            %h1.panel-title= heading
-          %td.box_toolbar.hidden-print
-            %span.box_toolbar
-              - if show_box_edit_button? box_class, @navable
-                = save_button :class => box_class
-                = edit_button(:class => box_class,             |
-                  :id => (strip_tags(heading) + "EditButton")) |
+  .box.panel.panel-default{class: box_class}
+    .head.panel-heading.box_header
+      %h1.box_heading.panel-title= heading
+      = box_toolbar(box_class, @navable, heading)
     .divider
-    .content.panel-body
+    .content.panel-body.box_content
       = content

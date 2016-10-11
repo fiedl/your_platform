@@ -19,12 +19,15 @@
   -webkit-hyphens: auto
   hyphens: auto
 
-.box .box_header_table
-  table-layout: fixed
 
-.box .panel-heading .tool
+.box_header
+  display: flex
+  width: 100%
+  .box_heading
+    flex-grow: 1
+
+.box .box_header .tool
   display: inline-block
-  
 
-.box td.box_toolbar
+.box .box_toolbar
   white-space: nowrap

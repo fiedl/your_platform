@@ -40,7 +40,7 @@ module BoxHelper
       content_element = h1_node.next_element
       if content_element
         content = content_element.to_html.html_safe
-        content_element.remove()      
+        content_element.remove()
       end
       content ||= "" # because content_box expects a String
 
@@ -53,6 +53,17 @@ module BoxHelper
   def show_box_edit_button?(box_class, navable)
     return can? :create_attachment_for, navable if box_class == 'attachments'
     return can? :update, navable
+  end
+
+  def box_toolbar(box_class, navable, heading)
+    content_tag :span, class: 'box_toolbar hidden-print' do
+      if show_box_edit_button?(box_class, navable)
+        [
+          save_button(class: box_class),
+          edit_button(class: box_class, id: strip_tags(heading) + "EditButton")
+        ].join.html_safe
+      end
+    end
   end
 
 end
