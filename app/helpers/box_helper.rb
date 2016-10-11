@@ -19,7 +19,7 @@ module BoxHelper
   end
 
   def html_convert_h1_to_boxes( html_code, options = {} )
-    
+
     # Further Nokogiri Reference
     # * http://stackoverflow.com/questions/3449767/
     # * http://www.engineyard.com/blog/2010/getting-started-with-nokogiri/
@@ -46,10 +46,10 @@ module BoxHelper
 
       h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
     end
-    
+
     return doc.to_s.html_safe
   end
-  
+
   def show_box_edit_button?(box_class, navable)
     return can? :create_attachment_for, navable if box_class == 'attachments'
     return can? :update, navable

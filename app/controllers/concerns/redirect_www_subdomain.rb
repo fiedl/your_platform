@@ -1,9 +1,9 @@
 concern :RedirectWwwSubdomain do
-  
+
   included do
     before_action :redirect_www_subdomain
   end
-  
+
   # Redirect the www subdomain to non-www, e.g.
   # http://www.example.com to http://example.com.
   #
@@ -17,5 +17,5 @@ concern :RedirectWwwSubdomain do
       redirect_to "http://" + request.host.gsub('www.','')
     end
   end
-  
+
 end
