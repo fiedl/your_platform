@@ -14,9 +14,9 @@ Sidekiq.options[:limits] = {default: 25, mailgate: 1}
 # http://stackoverflow.com/questions/14825565/sidekiq-deploy-to-multiple-environments
 #
 Sidekiq.configure_server do |config|
-  config.redis = {host: ENV['REDIS_HOST'], port: '6379', namespace: "#{::STAGE}_sidekiq" }
+  config.redis = {host: ENV['REDIS_HOST'], port: '6379', namespace: "#{::STAGE}_sidekiq", timeout: 15.0 }
 end
 
 Sidekiq.configure_client do |config|
-  config.redis = {host: ENV['REDIS_HOST'], port: '6379', namespace: "#{::STAGE}_sidekiq" }
+  config.redis = {host: ENV['REDIS_HOST'], port: '6379', namespace: "#{::STAGE}_sidekiq", timeout: 15.0 }
 end

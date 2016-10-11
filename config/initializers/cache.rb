@@ -27,7 +27,8 @@ Rails.application.config.cache_store = :redis_store, {
     elsif Rails.env.test?
       90.minutes
     end,
-  namespace: "#{::STAGE}_cache"
+  namespace: "#{::STAGE}_cache",
+  timeout: 15.0
 }
 
 # http://stackoverflow.com/a/38619281/2066546
