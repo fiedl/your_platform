@@ -17,7 +17,6 @@ class ApplicationController < ActionController::Base
   include CurrentAccess
   include CurrentBreadcrumbs
 
-  include RedirectWwwSubdomain
   include CheckAuthorization
   include AcceptTermsOfUse
   include ReadOnlyMode
