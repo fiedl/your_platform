@@ -210,6 +210,8 @@ Rails.application.routes.draw do
 
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
 
-  get ':alias', to: 'users#show'
+  get ':permalink', to: 'tags#show', constraints: lambda { |request| Permalink.where(reference_type: 'Tag', path: request[:permalink]).any? }
+  get ':permalink', to: 'pages#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+  get ':alias', to: 'users#show', constraints: lambda { |request| User.where(alias: request[:alias]).any? }
 
 end

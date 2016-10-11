@@ -1,5 +1,6 @@
 class PagesController < ApplicationController
 
+  before_action :find_resource_by_permalink, only: :show
   load_and_authorize_resource
   skip_authorize_resource only: [:create]
 
@@ -85,6 +86,10 @@ class PagesController < ApplicationController
 
 
 private
+
+  def find_resource_by_permalink
+    @page ||= Permalink.find_by(path: params[:permalink]).try(:reference)
+  end
 
   def secure_parent
     # params[:parent_type] ||= params[:page][:parent_type] if params[:page]

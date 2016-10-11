@@ -8,6 +8,7 @@ class Page < ActiveRecord::Base
   acts_as_taggable
 
   has_many :attachments, as: :parent, dependent: :destroy
+  has_many :permalinks, as: :reference, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
