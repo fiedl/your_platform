@@ -18,7 +18,7 @@ $.fn.process_box_tools = ->
   this.find('.box.event #ics_export').hide()
   this.find('.archive_button').hide()
 
-  this.find('.box .tool').each ->
+  this.find('.box .box_header .tool').each ->
     tool = $(this)
     box_toolbar = tool.closest('.box')
       .find('.box_toolbar').first()
@@ -28,10 +28,10 @@ $.fn.process_box_tools = ->
   # Remove 'edit' buttons for boxes where no .editable element
   # is included.
   #
-  this.find('.edit_button').each ->
+  this.find('.box_header .edit_button').each ->
     edit_button = $(this)
     box = edit_button.closest('.box')
-    edit_button.remove() if box.find('.content,.box_content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
+    edit_button.remove() if box.find('.box_content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
 
 $(document).ready ->
   $(document).process_box_tools()
