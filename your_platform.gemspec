@@ -57,6 +57,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   s.add_dependency 'wannabe_bool'
+  s.add_dependency 'acts-as-taggable-on', '~> 4.0'
 
   # Caching
   s.add_dependency 'redis-rails'

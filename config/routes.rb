@@ -178,6 +178,9 @@ Rails.application.routes.draw do
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
 
+  get 'tags/:tag_name', to: 'tags#show', as: :tag
+  resources :tags
+  resources :tags, path: :acts_as_taggable_on_tags, as: :acts_as_taggable_on_tags
 
   namespace :mobile do
     get :welcome, to: 'welcome#index'

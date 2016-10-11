@@ -1,0 +1,10 @@
+.tag_properties
+  .title
+    = best_in_place_if can?(:update, @tag), @tag, :title
+  .body
+    = best_in_place_if can?(:update, @tag), @tag, :body
+  .tag_image.image.attachments
+    - if @tag.image
+      = image_tag(@tag.image.medium_url)
+    - if can? :create_attachment_for, @tag
+      #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @tag, type: :image}

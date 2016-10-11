@@ -65,6 +65,9 @@ class Attachment < ActiveRecord::Base
   def self.find_by_type( type )
     where( "content_type like ?", "%" + type + "%" )
   end
+  def self.by_type(type)
+    find_by_type(type)
+  end
 
   def self.find_without_types( *types )
     self.all.to_a.collect do |attachment|

@@ -19,6 +19,7 @@ PATH
       actionpack (>= 4.2.5.2)
       activerecord (>= 4.2.7.1)
       acts-as-dag (>= 2.5.7)
+      acts-as-taggable-on (~> 4.0)
       acts_as_tree
       auto_html (~> 1.6.4)
       autosize-rails
@@ -140,6 +141,8 @@ GEM
     acts-as-dag (4.0.0)
       activemodel
       activerecord (~> 4.0, >= 4.0.0)
+    acts-as-taggable-on (4.0.0)
+      activerecord (>= 4.0)
     acts_as_tree (2.6.0)
       activerecord (>= 3.0.0)
     addressable (2.4.0)
@@ -336,7 +339,7 @@ GEM
     mimemagic (0.3.2)
     mini_magick (4.5.1)
     mini_portile2 (2.1.0)
-    minitest (5.9.0)
+    minitest (5.9.1)
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)

@@ -40,4 +40,8 @@ module IconHelper
     icon 'list-alt'
   end
 
+  def folder_icon
+    fa_icon 'folder-open-o'
+  end
+
 end

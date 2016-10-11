@@ -5,6 +5,8 @@ class Page < ActiveRecord::Base
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
   is_navable
 
+  acts_as_taggable
+
   has_many :attachments, as: :parent, dependent: :destroy
 
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'

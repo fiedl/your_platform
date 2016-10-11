@@ -14,6 +14,7 @@ require 'rails-i18n'
 require 'acts-as-dag'
 require 'acts_as_tree'
 require 'wannabe_bool'
+require 'acts-as-taggable-on'
 
 # Caching
 require 'redis-rails'
