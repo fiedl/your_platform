@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161011205505) do
+ActiveRecord::Schema.define(version: 20161012060722) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(version: 20161011205505) do
     t.integer "taggings_count", limit: 4,     default: 0
     t.string  "title",          limit: 255
     t.text    "body",           limit: 65535
+    t.string  "subtitle",       limit: 255
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
