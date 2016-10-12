@@ -1,0 +1,7 @@
+de:
+  tag: Etikett
+  tags: Etikette
+  edit_tag: Etikett bearbeiten
+
+  contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}'"
+  show_contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}' anzeigen"

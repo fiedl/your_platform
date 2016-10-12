@@ -3,15 +3,18 @@ class TagsController < ApplicationController
   authorize_resource class: 'ActsAsTaggableOn::Tag'
 
   def show
-    @pages = Page.tagged_with @tag.name
-    @taggables = @pages
-
+    find_taggables
     set_current_title @tag.title
   end
 
   def update
     @tag.update tag_params
     respond_with_bip @tag
+  end
+
+  def edit
+    find_taggables
+    set_current_title "#{t(:edit_tag)}: #{@tag.name}"
   end
 
   private
@@ -23,11 +26,19 @@ class TagsController < ApplicationController
   def find_resource
     if params[:id]
       @tag = ActsAsTaggableOn::Tag.find params[:id]
+    elsif params[:tag_name].to_i
+      @tag = ActsAsTaggableOn::Tag.find params[:tag_name]
     elsif params[:tag_name]
       @tag = ActsAsTaggableOn::Tag.find_by name: params[:tag_name]
     else
       @tag = ActsAsTaggableOn::Tag.all
     end
   end
+
+  def find_taggables
+    @pages = Page.tagged_with @tag.name
+    @taggables = @pages
+  end
+
 
 end
