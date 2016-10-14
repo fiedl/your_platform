@@ -12,3 +12,6 @@
     %p.kneipwart
       Kneipwart:
       = link_to_user_with_phone_number @semester_calendar.kneipwart
+  - if @semester_calendar.current? && @semester_calendar.officer_group(:senior) && can?(:update_memberships, @semester_calendar.officer_group(:senior))
+    %p.change_officers
+      = link_to t(:enter_new_officers), group_officers_path(group_id: @semester_calendar.group.id)
