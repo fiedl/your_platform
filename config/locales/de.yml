@@ -2,6 +2,9 @@ de:
   time:
     formats:
       time: ! '%H:%M Uhr'
+      minimal: '%d.%m.%Y, %H:%M'
+      minimal_with_weekday: '%a, %d.%m.%Y, %H:%M'
+      default: '%a, %d.%m.%Y, %H:%M'
 
   map: Karte
   page: Seite
@@ -41,3 +44,4 @@ de:
   format: Format
 
   delete: Löschen
+
