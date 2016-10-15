@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
   end
   get :settings, to: 'user_settings#index'
+  get 'settings/app', to: 'app_settings#index', as: 'app_settings'
 
   get :authorized_users, to: 'authorized_users#index'
 

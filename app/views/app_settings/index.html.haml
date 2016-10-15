@@ -1,0 +1,27 @@
+%h1.app_settings= current_title
+%div
+  %h2= t :app_name
+  %ul.settings
+    %li
+      = t :app_name
+      = best_in_place Setting, :app_name
+
+  %h2= t :logo
+  .attachments
+    - if Attachment.logos.last
+      = image_tag Attachment.logos.last.try(:file_path)
+    #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @logo_page, title: "logo", type: :image}
+
+  %h2 Root-Breadcrumb
+  %ul.settings
+    %li
+      = t :root_domain
+      = best_in_place @root_page, :title
+    %li
+      = t :redirect
+      = best_in_place @root_page, :redirect_to
+
+- content_for :side_bar do
+  = link_to settings_path do
+    = settings_icon
+    = "#{t(:see_also)}: #{t(:user_settings)}"

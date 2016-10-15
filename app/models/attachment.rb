@@ -46,6 +46,10 @@ class Attachment < ActiveRecord::Base
     AppVersion.root_url + file.url if file.url.present?
   end
 
+  def file_path
+    file.try(:url)
+  end
+
   def file_size_human
     helpers.number_to_human_size( self.file_size )
   end

@@ -44,4 +44,8 @@ module IconHelper
     fa_icon 'folder-open-o'
   end
 
+  def settings_icon
+    fa_icon 'sliders' # cogs, wrench
+  end
+
 end

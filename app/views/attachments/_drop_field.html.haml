@@ -4,6 +4,7 @@
 - #   - type          The kind of attachment that is allowed here, e.g.
 - #                   :image, :pdf, :attachment.
 - #                   Default: :attachment (which is all attachments).
+- #   - title         The title to set for the attachment after uploading.
 
 - type ||= :attachment
 
@@ -40,6 +41,7 @@
     = form_for parent.attachments.build, html: {class: 'visible-xs visible-sm new_attachment'} do |f|
       = f.hidden_field :parent_id
       = f.hidden_field :parent_type
+      = f.hidden_field :title, value: title if defined?(title)
 
       - # issue: https://github.com/carrierwaveuploader/carrierwave/issues/1079
       - # f.file_field :file, multiple: true, name: "attachment[file]"
