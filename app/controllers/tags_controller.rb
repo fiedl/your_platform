@@ -20,13 +20,13 @@ class TagsController < ApplicationController
   private
 
   def tag_params
-    params.require(:acts_as_taggable_on_tag).permit(:title, :body)
+    params.require(:acts_as_taggable_on_tag).permit(:title, :subtitle, :body)
   end
 
   def find_resource
     if params[:id]
       @tag = ActsAsTaggableOn::Tag.find params[:id]
-    elsif params[:tag_name].to_i
+    elsif params[:tag_name].to_i > 0
       @tag = ActsAsTaggableOn::Tag.find params[:tag_name]
     elsif params[:tag_name]
       @tag = ActsAsTaggableOn::Tag.find_by name: params[:tag_name]
