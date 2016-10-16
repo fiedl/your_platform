@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012060722) do
+ActiveRecord::Schema.define(version: 20161016193544) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -273,6 +273,7 @@ ActiveRecord::Schema.define(version: 20161012060722) do
     t.integer  "author_user_id", limit: 4
     t.string   "type",           limit: 255
     t.datetime "archived_at"
+    t.text     "teaser_text",    limit: 65535
   end
 
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree

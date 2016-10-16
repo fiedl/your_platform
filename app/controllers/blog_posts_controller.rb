@@ -29,6 +29,9 @@ class BlogPostsController < PagesController
     @this_is_a_new_blog_post = true  # in to make the header a link.
     respond_to do |format|
       format.js
+      format.html do
+        redirect_to @blog_post
+      end
     end
   end
 

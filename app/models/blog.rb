@@ -1,0 +1,3 @@
+class Blog < Page
+
+end

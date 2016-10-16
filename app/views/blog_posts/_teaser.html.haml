@@ -1,0 +1,6 @@
+%h1.blog_post_teaser= link_to blog_post.title, blog_post
+%div
+  = render partial: 'blog_posts/image', object: blog_post, as: :blog_post
+  = render partial: 'blog_posts/meta', object: blog_post, as: :blog_post, locals: {teaser: true}
+  = markup blog_post.teaser_text
+  = link_to t(:read_more), blog_post, class: 'more-link'

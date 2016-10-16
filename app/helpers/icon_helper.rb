@@ -48,4 +48,8 @@ module IconHelper
     fa_icon 'sliders' # cogs, wrench
   end
 
+  def create_icon
+    fa_icon 'plus-circle'
+  end
+
 end

@@ -107,6 +107,7 @@ Rails.application.routes.draw do
 
   post :create_officers_group, to: 'officers#create_officers_group'
 
+  resources :blogs
   resources :blog_posts
   resources :attachments do
     get 'description(.:format)', to: 'attachments#description'
@@ -212,7 +213,9 @@ Rails.application.routes.draw do
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
 
   get ':permalink', to: 'tags#show', constraints: lambda { |request| Permalink.where(reference_type: 'Tag', path: request[:permalink]).any? }
+  get ':permalink', to: 'blogs#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(Blog) }
   get ':permalink', to: 'pages#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+  get ':permalink', to: 'groups#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
   get ':alias', to: 'users#show', constraints: lambda { |request| User.where(alias: request[:alias]).any? }
 
 end

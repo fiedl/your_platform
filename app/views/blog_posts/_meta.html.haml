@@ -1,0 +1,4 @@
+- # locals:
+- teaser ||= false
+
+= render partial: 'pages/meta', object: blog_post, as: :page, locals: {teaser: teaser }

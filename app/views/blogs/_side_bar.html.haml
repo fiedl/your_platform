@@ -1,0 +1,3 @@
+= link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default' do
+  = create_icon
+  = t :create_blog_post_in_str, str: @blog.title

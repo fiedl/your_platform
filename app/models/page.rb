@@ -41,6 +41,22 @@ class Page < ActiveRecord::Base
     title
   end
 
+
+  def teaser_text
+    super || content.split("\n").first
+  end
+
+  def teaser_image_url
+    if image_attachments.first
+      image_attachments.first.medium_url
+    else
+      URI.extract(content)
+        .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
+        .first
+        .try(:gsub, ")", "") # to fix markdown image urls
+    end
+  end
+
   # This is the group the page belongs to, for example:
   #
   #     group_1

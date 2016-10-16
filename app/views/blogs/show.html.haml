@@ -1,0 +1,5 @@
+#posts
+  = render partial: 'blog_posts/teaser', collection: @blog_posts, as: :blog_post
+
+- content_for :side_bar do
+  = render partial: 'blogs/side_bar'
