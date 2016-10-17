@@ -496,6 +496,14 @@ class Ability
     end
     can :index_public_events, :all
 
+    # RSS Feeds
+    can :index, :feeds
+    can :read, :default_feed
+    can :read, :public_feed
+    if token.present? # && tokened_user = UserAccount.find_by_auth_token(token).try(:user)
+      can :read, :personal_feed
+    end
+
     # Nobody can destroy events and pages that are older than 10 minutes.
     timestamp = 10.minutes.ago
     cannot :destroy, [Event, Page], ["created_at >= ?", timestamp] do |obj|

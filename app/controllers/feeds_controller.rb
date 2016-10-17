@@ -5,6 +5,7 @@ class FeedsController < ApplicationController
     set_current_title t :feeds
 
     @feeds = Blog.all + ActsAsTaggableOn::Tag.all
+    @feeds = @feeds.select { |feed| can? :read, feed }
   end
 
   def show
@@ -13,11 +14,11 @@ class FeedsController < ApplicationController
     when 'default'
       authorize! :read, :default_feed
       default_feed
-    when 'public'
+    when 'personal'
       authorize! :read, :personal_feed
       personal_feed
-    when 'overall'
-      authorize! :read, :overall_feed
+    when 'public'
+      authorize! :read, :public_feed
       public_feed
     end.select { |page| can?(:read, page) && page.not_empty? }
   end
