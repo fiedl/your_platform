@@ -3,5 +3,8 @@ de:
   tags: Etikette
   edit_tag: Etikett bearbeiten
 
+  category: Kategorie
+  categories: Kategorien
+
   contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}'"
   show_contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}' anzeigen"

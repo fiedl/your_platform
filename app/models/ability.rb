@@ -468,6 +468,9 @@ class Ability
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
+    can [:read, :download], Attachment do |attachment|
+      attachment.id.in? Attachment.logos.pluck(:id)
+    end
 
     # Listing Events and iCalendar (ICS) Export:
     #

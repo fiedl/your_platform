@@ -52,4 +52,8 @@ module IconHelper
     fa_icon 'plus-circle'
   end
 
+  def rss_icon
+    fa_icon 'rss'
+  end
+
 end

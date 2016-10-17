@@ -1,3 +1,5 @@
+- content_for :head, auto_discovery_link_tag(:rss, tag_path(@tag, format: "rss"))
+
 = render @taggables
 
 - content_for :side_bar do

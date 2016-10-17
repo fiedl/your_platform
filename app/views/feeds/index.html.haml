@@ -1,0 +1,20 @@
+%h1.rss_feeds= t :rss_feeds
+%div
+  %table
+    %tr
+      %th= t :default_feed
+      %td= rss_button  feed_path(id: 'default', format: "rss", token: current_user.try(:token))
+    -#- if current_user
+    -#  %tr
+    -#    %th= t :personal_feed
+    -#    %td= rss_button  feed_path(id: 'personal', format: "rss", token: current_user.token)
+    -#%tr
+    -#  %th= t :public_feed
+    -#  %td= rss_button  feed_path(id: 'public', format: "rss")
+    %tr
+      %th= t :categories
+      %td
+    - @feeds.each do |feed|
+      %tr
+        %td= link_to feed.title, feed
+        %td= rss_button polymorphic_path(feed, format: "rss")

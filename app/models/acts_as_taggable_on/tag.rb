@@ -16,4 +16,8 @@ class ActsAsTaggableOn::Tag
     attachments.by_type('image').last
   end
 
+  def to_param
+    "#{id} #{title}".parameterize
+  end
+
 end

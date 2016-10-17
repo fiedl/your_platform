@@ -43,13 +43,13 @@ class Page < ActiveRecord::Base
 
 
   def teaser_text
-    super || content.split("\n").first
+    super || content.to_s.split("\n").first
   end
 
   def teaser_image_url
     if image_attachments.first
       image_attachments.first.medium_url
-    else
+    elsif content.present?
       URI.extract(content)
         .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
         .first

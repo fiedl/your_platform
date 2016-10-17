@@ -380,6 +380,10 @@ class User < ActiveRecord::Base
   end
   private :build_account_if_requested
 
+  def token
+    account.try(:auth_token)
+  end
+
 
   # Activities
   # ------------------------------------------------------------------------------------------
