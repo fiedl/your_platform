@@ -23,4 +23,4 @@
   - if page.tags.any?
     %li.tags.page_tags
       = icon :tag
-      = tag_links_for(page)
+      = render partial: 'tags/tag_list', object: page, as: :taggable

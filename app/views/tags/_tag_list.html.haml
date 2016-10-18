@@ -1,0 +1,9 @@
+- taggable || raise('no taggable given')
+
+- if can? :update, taggable
+  - activator_id = "#{taggable.cache_key} tag list activator".parameterize
+  = best_in_place taggable, :tag_list, activator: "##{activator_id}"
+  = best_in_place_activator activator_id, class: 'tag_list_activator best_in_place_activator do_not_show_in_edit_mode'
+
+- else
+  = tag_links_for taggable
