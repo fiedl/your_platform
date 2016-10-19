@@ -20,7 +20,7 @@
 
     = render partial: 'pages/meta', object: page, as: :page
 
-    .page_teaser{class: ('show_only_in_edit_mode' if page.content.try(:include?, page.teaser_text)}
+    .page_teaser{class: ('show_only_in_edit_mode' if page.content.try(:include?, page.teaser_text))}
       = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, activator: 'manual'
 
     %div.page_body{data: {upload_url: attachments_path(parent_id: page.id, parent_type: 'Page')}}
