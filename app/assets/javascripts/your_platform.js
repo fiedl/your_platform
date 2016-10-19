@@ -28,6 +28,7 @@
 //= require jquery.atwho
 //= require Chart.bundle
 //= require chartkick
+//= require bootstrap-tokenfield
 //= require_tree ./your_platform
 //
 //= require turbolinks
