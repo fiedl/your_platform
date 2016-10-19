@@ -6,10 +6,14 @@
   -#    = t :app_name
   -#    = best_in_place Setting, :app_name
 
-  %h2= t :logo
+  %h2= t :logos
   .attachments
-    - if Attachment.logos.last
-      = image_tag Attachment.logos.last.try(:file_path)
+    %ul.logos
+      - Attachment.logos.each do |logo|
+        %li
+          = image_tag logo.file_path
+          Key:
+          = best_in_place logo, :title
     #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @logo_page, title: "logo", type: :image}
 
   %h2 Root-Breadcrumb

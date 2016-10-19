@@ -13,12 +13,11 @@ module LogoHelper
     @logo_url
   end
 
-  def logo_image_tag
-    if current_logo
-      image_tag current_logo_url #, width: current_logo.width, height: current_logo.height
-    else
-      image_tag default_logo
-    end
+  def logo_image_tag(logo_key = nil)
+    logo_path = Attachment.logos.where(title: logo_key).last.try(:file_path) if logo_key
+    logo_path ||= current_logo_url if current_logo
+    logo_path ||= default_logo
+    image_tag logo_path
   end
 
 end
