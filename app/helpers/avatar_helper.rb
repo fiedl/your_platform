@@ -8,9 +8,10 @@ module AvatarHelper
   #
   def user_avatar(user, options = {})
     options[:size] ||= 36
+    options[:class] = "img-rounded #{options[:class]}"
     content_tag(:span, class: 'avatar') do
       if user.try(:avatar_id?)
-        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: 'img-rounded'
+        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: options[:class]
       else
         user_gravatar(user, options)
       end
@@ -39,7 +40,6 @@ module AvatarHelper
     options[:gravatar][:secure] = true
 
     options[:class] ||= ""
-    options[:class] += " img-rounded"
 
     # Default Url
     # Instead of
