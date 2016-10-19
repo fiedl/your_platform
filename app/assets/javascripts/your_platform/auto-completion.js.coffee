@@ -89,6 +89,16 @@ $(document).on 'keydown', ".user-select-input", ->
       , response
 
 
+# Tag lists
+# -------------------------------------------------------------------------
+$(document).on 'keydown', '.best_in_place.tag_list input', ->
+  availableTags = $('.best_in_place.tag_list').data('available-tags')
+  $(this).autocomplete_multiple
+    source: (request, response) ->
+      # delegate back to autocomplete, but extract the last term
+      # https://jqueryui.com/autocomplete/#multiple
+      response($.ui.autocomplete.filter(availableTags, extractLast(request.term)))
+
 
 # 2016-10-19: Is this needed in the keydown event? TODO
 #
