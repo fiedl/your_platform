@@ -14,6 +14,8 @@ class Page < ActiveRecord::Base
 
   serialize :redirect_to
 
+  include RailsSettings::Extend
+
   include PagePublicWebsite
   include Archivable
 
