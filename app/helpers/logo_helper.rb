@@ -13,4 +13,12 @@ module LogoHelper
     @logo_url
   end
 
+  def logo_image_tag
+    if current_logo
+      image_tag current_logo_url #, width: current_logo.width, height: current_logo.height
+    else
+      image_tag default_logo
+    end
+  end
+
 end

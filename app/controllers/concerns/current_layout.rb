@@ -3,8 +3,11 @@ concern :CurrentLayout do
   included do
     layout :current_layout
 
-    helper_method :current_logo_url
     helper_method :current_layout
+
+    helper_method :current_logo_url
+    helper_method :current_logo
+    helper_method :default_logo
   end
 
   def current_layout
@@ -36,7 +39,15 @@ concern :CurrentLayout do
 
   def current_logo_url
     #current_navable.nav_node.breadcrumb_root
-    Attachment.logos.first.try(:file).try(:url)
+    current_logo.try(:file).try(:url)
+  end
+
+  def current_logo
+    Attachment.logos.last
+  end
+
+  def default_logo
+    'logo.png'
   end
 
   # The mobile app appends the parameter `?layout=mobile` once.
