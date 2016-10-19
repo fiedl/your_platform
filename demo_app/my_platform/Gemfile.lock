@@ -72,6 +72,7 @@ PATH
       rails (>= 4.2.5.1)
       rails-assets-bootstrap-social
       rails-assets-datatables (>= 1.10.10)
+      rails-assets-inline-attachment
       rails-assets-jquery-ui
       rails-assets-jquery-ujs
       rails-assets-trentrichardson--jQuery-Timepicker-Addon (>= 1.6.3)
@@ -432,6 +433,7 @@ GEM
     rails-assets-datatables (1.10.12)
       rails-assets-jquery (>= 1.7.0)
     rails-assets-font-awesome (4.6.3)
+    rails-assets-inline-attachment (2.0.3)
     rails-assets-jquery (3.1.1)
     rails-assets-jquery-ui (1.12.1)
       rails-assets-jquery (>= 1.6)
@@ -541,10 +543,10 @@ GEM
       websocket (~> 1.0)
     sexp_processor (4.6.0)
     shellany (0.0.1)
-    sidekiq (4.2.2)
+    sidekiq (4.2.3)
       concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
-      rack-protection (~> 1.5)
+      rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
     sidekiq-limit_fetch (3.4.0)
       sidekiq (>= 4)

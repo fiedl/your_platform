@@ -29,6 +29,8 @@
 //= require Chart.bundle
 //= require chartkick
 //= require bootstrap-tokenfield
+//= require inline-attachment/inline-attachment
+//= require inline-attachment/jquery.inline-attachment
 //= require_tree ./your_platform
 //
 //= require turbolinks

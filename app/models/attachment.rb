@@ -89,6 +89,12 @@ class Attachment < ActiveRecord::Base
     end.flatten
   end
 
+  def as_json(*args)
+    super.merge({
+      file_path: file_path
+    })
+  end
+
   private
 
   def helpers

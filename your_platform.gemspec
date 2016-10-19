@@ -50,6 +50,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-datatables', '>= 1.10.10'
   s.add_dependency 'rails-assets-trentrichardson--jQuery-Timepicker-Addon', '>= 1.6.3'
   s.add_dependency 'bootstrap_tokenfield_rails'
+  s.add_dependency 'rails-assets-inline-attachment'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.

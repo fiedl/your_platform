@@ -153,7 +153,12 @@ class Page < ActiveRecord::Base
     attachments.find_by_type type
   end
   def image_attachments
-    attachments_by_type 'image'
+    attachments.find_by_type('image').select do |attachment|
+      # Do not list images that are `![markdown-images](...)` within the
+      # page content as attachments in order to avoid displaying them
+      # twice.
+      not attachment.file_path.in? self.content
+    end
   end
 
 

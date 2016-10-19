@@ -59,6 +59,7 @@ require 'turboboost'
 require 'rails-assets-datatables'
 require 'rails-assets-trentrichardson--jQuery-Timepicker-Addon'
 require 'bootstrap_tokenfield_rails'
+require 'rails-assets-inline-attachment'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'
