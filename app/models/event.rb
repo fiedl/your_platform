@@ -191,7 +191,7 @@ class Event < ActiveRecord::Base
     e.summary = self.name
     e.description = self.description
     e.location = self.location
-    if self.contact_people.first
+    if self.contact_people.first.try(:email).present?
       e.organizer = self.contact_people.first.email
       e.organizer.ical_params = {'CN' => self.contact_people.first.title}
     end
