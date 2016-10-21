@@ -86,7 +86,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'has_secure_token' # TODO: This is included in Rails 5. Remove this when migrating to Rails 5.
 
   # Settings
-  s.add_dependency 'rails-settings-cached'
+  s.add_dependency 'rails-settings-cached', '>= 0.6.5'
 
   # Template Engines
   # haml template language, http://haml.info
