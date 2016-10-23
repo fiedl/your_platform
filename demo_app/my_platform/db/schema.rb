@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161016193544) do
+ActiveRecord::Schema.define(version: 20161020225033) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20161016193544) do
     t.integer  "author_user_id", limit: 4
     t.integer  "width",          limit: 4
     t.integer  "height",         limit: 4
+    t.string   "type",           limit: 255
   end
 
   add_index "attachments", ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
