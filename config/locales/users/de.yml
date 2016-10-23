@@ -22,6 +22,9 @@ de:
   deceased:                   Verstorben
   event_of_death:             Todesfall
 
+  date_of_org_membership_end: Ende der Mitgliedschaft
+  reason_for_membership_end:  Art des Ausscheidens
+
   postal_address_with_name_surrounding: Postanschrift mit Name
   postal_address:             Postanschrift
   postal_address_updated_at:  Letzte Änderung der Postanschrift am

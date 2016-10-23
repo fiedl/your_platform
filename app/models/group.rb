@@ -248,5 +248,16 @@ class Group < ActiveRecord::Base
     find_deceased_members_parent_group
   end
 
+  # This is an alias for the group that represents the main organization.
+  # This is, for example, used to determine when the membership in the
+  # main org ended.
+  #
+  # Feel free to override this method in the main app to match your
+  # organizational structure.
+  #
+  def self.main_org
+    self.corporations_parent
+  end
+
 end
 
