@@ -36,9 +36,6 @@ class ListExport
     when 'phone_list'
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
-    when 'email_list'
-      [:last_name, :first_name, :name_affix, :email_label, :email_address]
-      # One row per email, not per user. See `#processed_data`.
     when 'member_development'
       [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
     when 'join_statistics', 'join_and_persist_statistics'
@@ -61,7 +58,7 @@ class ListExport
   end
 
   def processed_data
-    if preset.to_s.in?(['birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list']) && @data.kind_of?(Group)
+    if preset.to_s.in?(['birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list']) && @data.kind_of?(Group)
       # To be able to generate lists from Groups as well as search results, these presets expect
       # an Array of Users as data. If a Group is given instead, just take the group members as data.
       #
@@ -87,20 +84,6 @@ class ListExport
           :name_affix         => user.name_affix,
           :phone_label        => phone_field.label,
           :phone_number       => phone_field.value
-        } }
-      }.flatten
-    when 'email_list'
-      #
-      # For the email list, one row represents one email address of a user,
-      # not a user. I.e. there can be several rows per user.
-      #
-      data.collect { |user|
-        user.profile_fields.where(type: 'ProfileFieldTypes::Email').collect { |email_field| {
-          :last_name          => user.last_name,
-          :first_name         => user.first_name,
-          :name_affix         => user.name_affix,
-          :email_label        => email_field.label,
-          :email_address      => email_field.value
         } }
       }.flatten
     when 'member_development'

@@ -213,6 +213,8 @@ class GroupsController < ApplicationController
       ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
     when 'birthday_list'
       ListExports::BirthdayList.from_group(@group, quater: params[:quater])
+    when 'email_list'
+      ListExports::EmailList.from_group(@group)
     when 'special_birthdays'
       ListExports::SpecialBirthdays.from_group(@group, quater: params[:quater])
     when 'deceased_members'
