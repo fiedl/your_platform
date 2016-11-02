@@ -19,13 +19,26 @@ class Activities::ChartsController < ApplicationController
   def activities_per_corporation_and_time
     authorize! :index, :activity_charts
 
-    @activitiy_series_for_each_corporation = Corporation.all.collect { |corporation|
+    # The `groupdate` gem is used for date binning:
+    # https://github.com/ankane/groupdate#dynamic-grouping
+    group_by_period = params[:group_by_period] || params[:binning] || 'day'
+
+    # Determine time range.
+    from_days_ago = (params[:from_days_ago] || 7).to_i.days.ago
+    to_days_ago = (params[:to_days_ago] || 0).to_i.days.ago
+
+    @activitiy_series_for_each_corporation = Corporation.all.sort_by { |corporation|
+      -PublicActivity::Activity
+        .where(created_at: from_days_ago..to_days_ago)
+        .where(owner_type: 'User', owner_id: corporation.member_ids)
+        .count
+    }.collect { |corporation|
       {
         name: corporation.token,
         data: PublicActivity::Activity
-          .where(created_at: 1.week.ago..Time.zone.now)
+          .where(created_at: from_days_ago..to_days_ago)
           .where(owner_type: 'User', owner_id: corporation.member_ids)
-          .group_by_day(:created_at)
+          .group_by_period(group_by_period, :created_at)
           .count
       }
     }
