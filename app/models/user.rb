@@ -847,6 +847,15 @@ class User < ActiveRecord::Base
     self.accepted_terms == terms_stamp
   end
 
+  def self.apply_filter(filter)
+    if filter && filter.include?("without_email")
+      ids = self.select { |user| not user.email.present? or user.email_needs_review? }.map(&:id)
+      where(id: ids)
+    else
+      self.all
+    end
+  end
+
 
   # Helpers
   # ==========================================================================================

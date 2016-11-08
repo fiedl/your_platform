@@ -64,7 +64,7 @@ Rails.application.routes.draw do
 
   get :authorized_users, to: 'authorized_users#index'
 
-  get 'groups/:id/address_labels/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
+  get 'groups/:id/address_labels/(:filter)/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
   resources :groups do
     get :subgroups, to: 'groups#index'

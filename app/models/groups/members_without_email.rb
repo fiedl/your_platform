@@ -5,7 +5,7 @@ class Groups::MembersWithoutEmail < Group
   end
 
   def member_ids
-    parent_groups.first.members.select { |user| not user.email.present? or user.email_needs_review? }.map(&:id)
+    parent_groups.first.members.apply_filter('without_email')
   end
 
   # This is used to determine the routes for this resource.

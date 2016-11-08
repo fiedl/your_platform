@@ -26,6 +26,10 @@
           = icon :th
           =t :address_labels
           (DPAG 70x37)
+      %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
+        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'zweckform', filter: 'without_email'), :class => "address_labels_export_button #{trigger_class}" do
+          = icon :th
+          Etiketten (Zweckform 3475) für Mitglieder ohne E-Mail-Adresse
 
 
       %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"

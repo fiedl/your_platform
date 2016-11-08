@@ -134,7 +134,7 @@ class GroupsController < ApplicationController
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]
         end
-        options = {sender: params[:sender], book_rate: params[:book_rate], export_user: current_user}
+        options = {sender: params[:sender], book_rate: params[:book_rate], export_user: current_user, filter: params[:filter]}
 
         if params[:pdf_type].present?
           options[:type] = "AddressLabelsDpag7037Pdf" if params[:pdf_type].include?("dpag")
