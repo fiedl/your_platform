@@ -43,5 +43,13 @@ class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
     # grid.show_all
   end
 
+  def page_header_text
+    "Druck auf Zweckform 3475, 70x36 mm², 24 Stk pro Blatt, DIN-A4. Skalierung auf 100% stellen!"
+  end
+  def page_header
+    bounding_box([0, 28.85.cm], width: 18.5.cm, height: 0.5.cm) do
+      text page_header_text, size: 8.pt, align: :center
+    end
+  end
 
 end
