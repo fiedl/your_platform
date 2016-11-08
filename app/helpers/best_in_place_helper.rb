@@ -17,7 +17,7 @@ module BestInPlaceHelper
     if condition
       setting_in_place object, setting_key, options
     else
-      object.send setting_key
+      object.settings.send setting_key
     end
   end
 
