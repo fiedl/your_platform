@@ -193,13 +193,13 @@ class Group < ActiveRecord::Base
     options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
-    Rails.cache.fetch [self.cache_key, "members_postal_addresses", @filter] do
+    #Rails.cache.fetch [self.cache_key, "members_postal_addresses", @filter] do
       members
         .apply_filter(@filter)
         .collect { |user| user.address_label }
         .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
         # .collect { |address_label| address_label.to_s }
-    end
+    #end
   end
   def cached_members_postal_addresses_created_at
     Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
