@@ -149,7 +149,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'to_xls'
 
   # PDF Export
-  s.add_dependency 'prawn'
+  s.add_dependency 'prawn', '2.0.2' # 2.1.0 breaks layout margins
 
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
