@@ -1,6 +1,6 @@
 class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
-  
-  # address_label:    Array of AddressLabel objects. When calling `addresses[i].to_s`, the i-th 
+
+  # address_label:    Array of AddressLabel objects. When calling `addresses[i].to_s`, the i-th
   #                   address is returned as String.
   # options:
   #   - title:        The title of the document, e.g. "Addresses of all CEOs".
@@ -12,19 +12,19 @@ class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
   #
   def initialize(address_labels, options = {title: '', updated_at: Time.zone.now, sender: '', book_rate: false})
     super(page_size: 'A4', top_margin: 8.mm, bottom_margin: 8.mm, left_margin: 10.mm, right_margin: 10.mm)
-    
+
     @document_title = options[:title]
     @document_updated_at = options[:updated_at]
     @required_page_count = (address_labels.count / 24).round + 1
     @sender = options[:sender]
     @book_rate = options[:book_rate]
-    
+
     define_grid columns: 3, rows: 8, gutter: 10.mm
-    
+
     for p in (0..(@required_page_count - 1))
       page_header
       page_footer
-      
+
       for y in 0..7
        for x in 0..2
          grid(y, x).bounding_box do
@@ -39,8 +39,9 @@ class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
       end
       start_new_page if p < (@required_page_count - 1)
     end
-    
+
     # grid.show_all
   end
-  
+
+
 end
