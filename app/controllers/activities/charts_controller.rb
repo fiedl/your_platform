@@ -27,7 +27,14 @@ class Activities::ChartsController < ApplicationController
     from_days_ago = (params[:from_days_ago] || 7).to_i.days.ago
     to_days_ago = (params[:to_days_ago] || 0).to_i.days.ago
 
-    @activitiy_series_for_each_corporation = Corporation.all.sort_by { |corporation|
+    # Filter Corporation
+    if filter_corporation = params[:corporation]
+      corporations = Corporation.where(token: filter_corporation)
+    else
+      corporations = Corporation.all
+    end
+
+    @activitiy_series_for_each_corporation = corporations.sort_by { |corporation|
       -PublicActivity::Activity
         .where(created_at: from_days_ago..to_days_ago)
         .where(owner_type: 'User', owner_id: corporation.member_ids)
