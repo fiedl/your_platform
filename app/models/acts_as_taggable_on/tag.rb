@@ -2,7 +2,8 @@ require_dependency ActsAsTaggableOn::Engine.root.join('lib/acts_as_taggable_on/t
 
 class ActsAsTaggableOn::Tag
   has_many :attachments, as: :parent, dependent: :destroy
-  has_many :permalinks, as: :reference, dependent: :destroy
+
+  include HasPermalinks
 
   def title
     if super.present?

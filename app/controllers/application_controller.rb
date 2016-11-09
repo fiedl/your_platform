@@ -33,4 +33,13 @@ class ApplicationController < ActionController::Base
   end
   helper_method :render_partial
 
+  def url_for(args = {})
+    if args.respond_to?(:permalinks) && args.permalinks.any?
+      super(args.permalink_path)
+    else
+      super
+    end
+  end
+  helper_method :url_for
+
 end
