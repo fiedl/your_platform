@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   get :settings, to: 'user_settings#index'
   get 'settings/app', to: 'app_settings#index', as: 'app_settings'
   resources :settings, as: 'rails_settings_scoped_setting'
+  resources :settings, as: 'setting'
 
   get :authorized_users, to: 'authorized_users#index'
 

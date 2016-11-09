@@ -1,10 +1,13 @@
 %h1.app_settings= current_title
 %div
-  -#%h2= t :app_name
-  -#%ul.settings
-  -#  %li
-  -#    = t :app_name
-  -#    = best_in_place Setting, :app_name
+  %h2= t :app_name
+  %ul.settings
+    %li
+      = t :app_name
+      = setting_in_place Setting, :app_name
+    %li
+      = t :preferred_locale
+      = setting_in_place Setting, :preferred_locale, as: :select, collection: I18n.available_locales
 
   %h2= t :logos
   .attachments
