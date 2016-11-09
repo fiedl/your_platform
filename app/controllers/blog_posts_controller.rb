@@ -10,7 +10,7 @@ class BlogPostsController < PagesController
   respond_to :json, :js
 
   def show
-    redirect_to page_path(id: params[:id])
+    set_current_navable @blog_post
   end
 
   def create

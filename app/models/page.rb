@@ -174,7 +174,7 @@ class Page < ActiveRecord::Base
   #   |------------------ Page: "Entry 2"
   #
   def blog_entries
-    self.child_pages.where(type: "BlogPost").order('created_at DESC')
+    self.descendant_pages.where(type: "BlogPost").order('created_at DESC')
   end
 
 
