@@ -157,7 +157,7 @@ class Page < ActiveRecord::Base
       # Do not list images that are `![markdown-images](...)` within the
       # page content as attachments in order to avoid displaying them
       # twice.
-      not attachment.file_path.in? self.content
+      not self.content.try(:include?, attachment.file_path)
     end
   end
 
