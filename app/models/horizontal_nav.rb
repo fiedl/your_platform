@@ -19,7 +19,7 @@ class HorizontalNav
       intranet_navables
     else
       public_navables
-    end
+    end.select { |navable| not navable.nav_node.hidden_menu?}
   end
 
   def intranet_navables
