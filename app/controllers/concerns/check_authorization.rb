@@ -17,6 +17,7 @@ concern :CheckAuthorization do
         session['exception.subject'] = "#{exception.subject.class.name} #{exception.subject.id if exception.subject.respond_to?(:id)}"
         # exception.subject.to_s.first(50)
       end
+      Rails.logger.info "Access denied for user #{current_user.try(:id)} on #{exception.action} for #{session['exception.subject']}."
       store_location_for :user_account, request.fullpath
       redirect_to errors_unauthorized_path
     end
