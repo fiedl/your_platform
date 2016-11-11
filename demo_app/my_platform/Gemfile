@@ -100,7 +100,6 @@ source 'https://rubygems.org' do
     # see: http://stackoverflow.com/questions/13807686
   gem 'json'
   gem 'colored'
-  gem 'prawn', github: 'prawnpdf/prawn'
 end
 
 source 'https://rails-assets.org'
