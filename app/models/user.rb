@@ -13,8 +13,8 @@ class User < ActiveRecord::Base
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
-  validates_presence_of     :first_name, :last_name
-  validates_format_of       :first_name, with: /\A[^\,]*\z/  # The name must not contain a comma.
+  validates_presence_of     :last_name
+  validates_format_of       :first_name, with: /\A[^\,]*\z/, if: Proc.new { |user| user.first_name.present? }  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
 
   before_validation         :change_alias_if_already_taken
@@ -89,6 +89,15 @@ class User < ActiveRecord::Base
   def name
     first_name + " " + last_name if first_name && last_name
   end
+  def name=(new_name)
+    if new_name.present?
+      self.last_name = new_name.strip.split(" ").last
+      self.first_name = new_name.gsub(last_name, "").strip
+    else
+      self.last_name = nil
+      self.first_name = nil
+    end
+  end
 
   # This method will make the first_name and the last_name capitalized.
   # For example:
@@ -105,8 +114,8 @@ class User < ActiveRecord::Base
   end
 
   def capitalized_name_string( name_string )
-    return name_string if name_string.include?( " " )
-    return name_string.slice( 0, 1 ).capitalize + name_string.slice( 1 .. -1 )
+    return name_string if name_string.try(:include?, " ")
+    return name_string.slice(0, 1).capitalize + name_string.slice(1..-1) if name_string.present?
   end
   private :capitalized_name_string
 
@@ -335,6 +344,9 @@ class User < ActiveRecord::Base
   def has_no_account?
     not self.account.present?
   end
+  def guest_user?
+    has_no_account?
+  end
 
   # This method activates the user account, i.e. grants the user the right to log in.
   #
@@ -373,7 +385,7 @@ class User < ActiveRecord::Base
     if self.create_account == true
       self.account.destroy if self.has_account?
       self.account = self.build_account
-      self.create_account = false # to make sure that this code is nut run twice.
+      create_account = false # to make sure that this code is nut run twice.
       return self.account
     end
 
@@ -849,11 +861,15 @@ class User < ActiveRecord::Base
 
   def self.apply_filter(filter)
     if filter && filter.include?("without_email")
-      ids = self.select { |user| not user.email.present? or user.email_needs_review? }.map(&:id)
-      where(id: ids)
+      self.without_email
     else
       self.all
     end
+  end
+
+  def self.without_email
+    ids = self.select { |user| not user.email.present? or user.email_needs_review? }.map(&:id)
+    where(id: ids)
   end
 
 
