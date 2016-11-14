@@ -1,6 +1,11 @@
 %ul.dropdown-menu.dropdown-menu-right{role: 'menu'}
-  %li= link_to t(:my_profile), user_path(current_user)
-  %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true)
-  %li= link_to t(:change_password), change_password_path
-  %li= link_to t(:settings), user_settings_path(current_user)
+  - if current_user.account
+    %li= link_to t(:my_profile), user_path(current_user)
+    %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true)
+    %li= link_to t(:change_password), change_password_path
+    %li= link_to t(:settings), user_settings_path(current_user)
+  - elsif current_user.guest_user?
+    %p= t :you_are_signed_in_as_guest_user_via_cookie
+    %p= current_user.title
+    %p= current_user.email
   %li= link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out'

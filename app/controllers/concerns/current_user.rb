@@ -36,4 +36,12 @@ concern :CurrentUser do
     end
   end
 
+  def sign_out_guest_user
+    if cookies[:guest_user_name] || cookies[:guest_user_email]
+      cookies[:guest_user_name] = nil
+      cookies[:guest_user_email] = nil
+      set_flash_message! :notice, :signed_out
+    end
+  end
+
 end

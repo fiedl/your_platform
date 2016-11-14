@@ -1,5 +1,10 @@
 class SessionsController < Devise::SessionsController
 
+  # In order to allow guest users to sign out, skip checking if the user is already
+  # signed out through devise. http://stackoverflow.com/a/26244910/2066546
+  #
+  skip_before_filter :verify_signed_out_user
+
   def new
     set_current_title t :sign_in
     super
@@ -32,6 +37,7 @@ class SessionsController < Devise::SessionsController
   #
   # We override it in order to
   #   - call `destroy_current_activity`
+  #   - remove cookie for guest login
   #   - redirect also for JS requests for turbolinks 5 (mobile)
   #
   def destroy
@@ -40,6 +46,8 @@ class SessionsController < Devise::SessionsController
     signed_out = (Devise.sign_out_all_scopes ? sign_out : sign_out(resource_name))
     set_flash_message! :notice, :signed_out if signed_out
     yield if block_given?
+
+    sign_out_guest_user
 
     redirect_to after_sign_out_path_for nil
   end
