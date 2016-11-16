@@ -4,6 +4,7 @@ en:
   add_attachment: 'Add Attachment'
   add_attachments: 'Add Attachments'
   
+  attachments_of_str: "Attachments of '%{str}'"
   drop_images_here: Drop images here!
   drop_documents_or_images_here: Drop documents or images here!
   
@@ -29,3 +30,7 @@ en:
   videos: Videos
   audios: Audios
   file: File
+
+  uploaded_at: Uploaded at
+  upload_new_version: Upload new version
+  manage_attachments: Manage attachments

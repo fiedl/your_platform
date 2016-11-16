@@ -17,6 +17,8 @@ class AttachmentsController < ApplicationController
 
     set_current_navable @parent
     set_current_title t(:attachments_of_str, str: @parent.title)
+    set_current_access :admin
+    set_current_access_text :only_global_admins_can_access_this
   end
 
   def create

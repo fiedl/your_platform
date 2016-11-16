@@ -37,9 +37,3 @@ $(document).on 'click', '.unarchive_button', (e)->
     button.hide 'blind'
 
   return false
-
-$(document).on 'mouseenter', '.edit_button', ->
-  $(this).closest('.box').find('.archive_button').show('fade')
-
-$(document).on 'mouseleave', '.box_header', ->
-  $(this).find('.archive_button').hide('fade')

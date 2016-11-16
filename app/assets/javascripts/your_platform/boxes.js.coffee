@@ -17,6 +17,7 @@ $.fn.process_box_tools = ->
   this.find('.box.event .edit_button').hide()
   this.find('.box.event #ics_export').hide()
   this.find('.archive_button').hide()
+  this.find('.manage_attachments_button').hide()
 
   this.find('.box .box_header .tool').each ->
     tool = $(this)
@@ -35,3 +36,11 @@ $.fn.process_box_tools = ->
 
 $(document).ready ->
   $(document).process_box_tools()
+
+$(document).on 'mouseenter', '.edit_button', ->
+  $(this).closest('.box').find('.archive_button').show('fade')
+  $(this).closest('.box').find('.manage_attachments_button').show('fade')
+
+$(document).on 'mouseleave', '.box_header', ->
+  $(this).find('.archive_button').hide('fade')
+  $(this).find('.manage_attachments_button').hide('fade')

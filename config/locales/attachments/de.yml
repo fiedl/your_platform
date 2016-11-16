@@ -33,6 +33,7 @@ de:
 
   uploaded_at: Hochgeladen am
   upload_new_version: Neue Version hochladen
+  manage_attachments: Anhänge verwalten
 
   helpers:
     submit:

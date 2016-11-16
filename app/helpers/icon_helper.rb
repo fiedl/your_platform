@@ -56,4 +56,8 @@ module IconHelper
     fa_icon 'rss'
   end
 
+  def attachment_icon
+    awesome_icon(:paperclip)
+  end
+
 end

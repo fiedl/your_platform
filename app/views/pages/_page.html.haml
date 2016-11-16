@@ -11,6 +11,9 @@
     - if can? :destroy, page
       .delete_page_tool.tool
         = link_to icon(:trash), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_page', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
+    - if can? :manage, page
+      .attachment_tools.tool
+        = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
     .archive_tools.tool
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
