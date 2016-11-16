@@ -96,6 +96,7 @@ Rails.application.routes.draw do
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'
     get :activities, to: 'activities#index'
+    get :attachments, to: 'attachments#index'
   end
 
   resources :projects
@@ -126,6 +127,7 @@ Rails.application.routes.draw do
     get :join, to: 'events#join_via_get', as: 'join_via_get'
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
+    get :attachments, to: 'attachments#index'
   end
   resources :semester_calendars do
     member do
@@ -137,6 +139,7 @@ Rails.application.routes.draw do
   resources :posts do
     get :deliveries, to: 'post_deliveries#index'
     put :deliver, to: 'posts#deliver'
+    get :attachments, to: 'attachments#index'
   end
   resources :comments
 

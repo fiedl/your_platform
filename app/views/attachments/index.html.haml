@@ -1,0 +1,9 @@
+- @parent || raise('no @parent given')
+- @attachments || raise('no @attachments given')
+
+%h1.attachments= current_title
+%div
+  %table.attachments
+    = render partial: 'attachment', collection: @attachments, as: :attachment, locals: {show_technical_information: true}
+
+  = render partial: 'attachments/drop_field', locals: {parent: @parent}

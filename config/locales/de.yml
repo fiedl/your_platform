@@ -42,6 +42,7 @@ de:
   updated_at: Letzte Änderung am
   last_update: Letzte Änderung
   format: Format
+  type: Typ
 
   delete: Löschen
 

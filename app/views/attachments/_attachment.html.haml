@@ -1,3 +1,7 @@
+- # locals:
+- attachment || raise('no attachment given')
+- show_technical_information ||= false
+
 %tr{ id: "attachment-#{attachment.id}" }
   %td 
     = link_to image_tag( attachment.thumb_url ), attachment.file.url
@@ -15,6 +19,11 @@
         = link_to attachment.filename, attachment.file.url
       %p.attachment.description
         = best_in_place_if can?(:update, attachment), attachment, :description
+
+      - if show_technical_information && can?(:manage, attachment)
+        %p.attachment.type
+        = "#{t(:type)}: "
+        = best_in_place attachment, :type
 
       %p.attachment.filesize
         = attachment.file_size_human

@@ -2,12 +2,21 @@ class AttachmentsController < ApplicationController
 
   skip_filter *_process_action_callbacks.map(&:filter), only: :download # skip all filters for downloads
   skip_before_action :verify_authenticity_token, only: [:create] # via inline-attachment gem
-  load_and_authorize_resource
+  load_and_authorize_resource except: [:index]
   skip_authorize_resource only: [:create, :description]
   respond_to :html, :json
   layout nil
 
   def index
+    @parent = Page.find params[:page_id] if params[:page_id]
+    @parent = Post.find params[:post_id] if params[:post_id]
+    @parent = Event.find params[:post_id] if params[:event_id]
+    authorize! :read, @parent
+
+    @attachments = @parent.attachments
+
+    set_current_navable @parent
+    set_current_title t(:attachments_of_str, str: @parent.title)
   end
 
   def create

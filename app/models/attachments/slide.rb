@@ -21,4 +21,8 @@ class Attachments::Slide < Attachments::Image
     I18n.t(:read_more)
   end
 
+  def self.model_name
+    Attachment.model_name
+  end
+
 end

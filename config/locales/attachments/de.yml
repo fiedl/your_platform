@@ -3,6 +3,7 @@ de:
   attachments: 'Anhänge'
   add_attachment: 'Anhang hinzufügen'
   add_attachments: 'Anhänge hinzufügen'
+  attachments_of_str: "Anhänge von '%{str}'"
 
   drop_images_here: Bilder hierher schieben!
   drop_documents_or_images_here: Dokumente oder Bilder hierher schieben!
