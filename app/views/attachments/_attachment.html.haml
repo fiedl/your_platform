@@ -3,7 +3,7 @@
 - show_technical_information ||= false
 
 %tr{ id: "attachment-#{attachment.id}" }
-  %td 
+  %td
     = link_to image_tag( attachment.thumb_url ), attachment.file.url
   %td
     %span.attachment-description
@@ -14,7 +14,7 @@
 
         - if can? :destroy, attachment
           = remove_button attachment
-          
+
       %p.attachment.filename
         = link_to attachment.filename, attachment.file.url
       %p.attachment.description

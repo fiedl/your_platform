@@ -3,7 +3,6 @@ $(document).ready ->
 
 $.fn.process_comment_tools = ->
   $(this).find('.new_comment .comment-tools').hide()
-  
 $(document).on 'change keyup paste', '.new_comment textarea', ->
   if $(this).val() != ""
     $(this).closest('.new_comment').find('.comment-tools').show()
