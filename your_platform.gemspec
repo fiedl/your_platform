@@ -63,6 +63,7 @@ Gem::Specification.new do |s|
 
   # Caching
   s.add_dependency 'redis-rails'
+  s.add_dependency 'redis-namespace'
 
   # Workers
   s.add_dependency 'foreman'
