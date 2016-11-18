@@ -3,8 +3,7 @@ require 'redis_analytics'
 require_relative '../../app/models/redis_analytics/metrics'
 
 RedisAnalytics.configure do |configuration|
-  configuration.redis_connection = Redis.new(host: ENV['REDIS_HOST'], port: '6379')
-  configuration.redis_namespace = "#{::STAGE}_redis_analytics"
+  configuration.redis_connection = RedisConnectionConfiguration.new(:redis_analytics).to_namespaced_redis
 
   # We only want to track signed in users, not bots et cetera.
   #
