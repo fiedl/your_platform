@@ -107,7 +107,13 @@ class RedisConnectionConfiguration
   end
 
   def to_namespaced_redis
-    Redis::DynamicNamespace.new(namespace, redis: to_redis)
+    if namespace.kind_of? String
+      Redis::Namespace.new(namespace, redis: to_redis)
+    elsif namespace.kind_of? Proc
+      Redis::DynamicNamespace.new(namespace, redis: to_redis)
+    else
+      raise("Don't know how to handle namespace of type #{namespace.class.name}.")
+    end
   end
 end
 
