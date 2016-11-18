@@ -18,6 +18,7 @@ require 'acts-as-taggable-on'
 
 # Caching
 require 'redis-rails'
+require 'redis-namespace'
 
 # Workers
 require 'sidekiq'

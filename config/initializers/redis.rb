@@ -11,6 +11,34 @@
 ENV['REDIS_HOST'] ||= 'redis' if (Resolv.getaddress "redis" rescue false)
 ENV['REDIS_HOST'] ||= 'localhost'
 
+class Redis
+  class DynamicNamespace < BasicObject
+    # Uses the given block to generate a redis namespace dynamically
+    # @param options [Hash{Symbol=>Object}]
+    # @option options [Redis] :redis (Redis.current)
+    def initialize(namespace_proc, options = {})
+      @namespace_proc = namespace_proc
+      @options = options.dup
+    end
+
+    # @return [String]
+    def current_namespace
+      @namespace_proc.call
+    end
+
+    # @api private
+    def method_missing(*a,&b)
+      Namespace.new(current_namespace, @options).public_send(*a,&b)
+    end
+  end
+
+  # monkey-patch Redis::Namespace to make it think that
+  # DynamicNamespace is one of it
+  def Namespace.===(other)
+    super or other.kind_of?(DynamicNamespace)
+  end
+end
+
 # Use this class to provide a configuration for a `:redis_store`:
 #
 # Where you normally write
@@ -25,6 +53,20 @@ ENV['REDIS_HOST'] ||= 'localhost'
 #
 # This way, we can collect the common configuration options in the
 # class below.
+#
+# Where you normally write
+#
+#     configuration.redis_connection = Redis.new({...})
+#
+# you may write
+#
+#     configuration.redis_connection =
+#       RedisConnectionConfiguration.new(:redis_analytics).to_redis
+#
+# And if you want to apply the dynamic namespace automatically, write:
+#
+#     configuration.redis_connection =
+#       RedisConnectionConfiguration.new(:redis_analytics).to_namespaced_redis
 #
 class RedisConnectionConfiguration
 
@@ -58,6 +100,14 @@ class RedisConnectionConfiguration
 
   def to_hash
     default_options.merge(@options)
+  end
+
+  def to_redis
+    Redis.new self.to_hash
+  end
+
+  def to_namespaced_redis
+    Redis::DynamicNamespace.new(namespace, redis: to_redis)
   end
 end
 
