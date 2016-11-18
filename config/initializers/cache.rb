@@ -17,19 +17,15 @@ require_relative './redis'
 ENV['REDIS_HOST'] || raise('ENV["REDIS_HOST"] not set, yet.')
 ::STAGE || raise('::STAGE not set, yet.')
 
-Rails.application.config.cache_store = :redis_store, {
-  host: ENV['REDIS_HOST'],
-  port: '6379',
+Rails.application.config.cache_store = :redis_store, RedisConnectionConfiguration.new(:cache, {
   expires_in: if Rails.env.production?
       1.week
     elsif Rails.env.development?
       1.day
     elsif Rails.env.test?
       90.minutes
-    end,
-  namespace: "#{::STAGE}_cache",
-  timeout: 15.0
-}
+    end
+}).to_hash
 
 # http://stackoverflow.com/a/38619281/2066546
 Rails.cache = ActiveSupport::Cache.lookup_store(Rails.application.config.cache_store)
