@@ -186,8 +186,10 @@ class Event < ActiveRecord::Base
 
   def to_icalendar_event
     e = Icalendar::Event.new
-    e.dtstart = Icalendar::Values::DateTime.new(self.start_at.utc, tzid: 'UTC')
-    e.dtend = Icalendar::Values::DateTime.new((self.end_at || self.start_at + 1.hour).utc, tzid: 'UTC')
+    if self.start_at
+      e.dtstart = Icalendar::Values::DateTime.new(self.start_at.utc, tzid: 'UTC')
+      e.dtend = Icalendar::Values::DateTime.new((self.end_at || self.start_at + 1.hour).utc, tzid: 'UTC')
+    end
     e.summary = self.name
     e.description = self.description
     e.location = self.location
