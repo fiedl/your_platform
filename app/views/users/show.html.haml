@@ -23,7 +23,7 @@
   - # General Info Box
   #general{class: tab_pane_class + " in active"}
     %h1.section.general.no_uppercase
-      .obscure-in-demo= editable_first_and_last_name(@user)
+      %span.obscure-in-demo= editable_first_and_last_name(@user)
       &nbsp;
       %span.regular_case
         = @user.name_affix
