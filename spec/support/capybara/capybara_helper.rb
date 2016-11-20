@@ -83,4 +83,10 @@ module CapybaraHelper
     end
   end
 
+  def drop_attachment_in_drop_field(filename = 'pdf-upload.pdf')
+    local_file_path = File.expand_path(File.join(__FILE__, "../../../support/uploads/#{filename}"))
+    File.exist?(local_file_path).should == true
+    find('#attachment_file', visible: false).set local_file_path
+  end
+
 end

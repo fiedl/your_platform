@@ -36,4 +36,19 @@ feature "Semester Calendars", :js do
 
     page.should have_text "My new event"
   end
+
+  if ENV['CI'] != 'travis'  # they do not support uploads
+    scenario "Uploading a pdf" do
+      login @officer
+      visit semester_calendar_path(@semester_calendar)
+
+      within "#attachments.semester_calendar_pdf" do
+        drop_attachment_in_drop_field 'pdf-upload.pdf'
+      end
+      #within "#attachments" do
+        page.should have_text I18n.t(:uploaded_at)
+      #end
+      @semester_calendar.attachments.first.pdf?.should be_true
+    end
+  end
 end
