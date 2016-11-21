@@ -120,6 +120,7 @@ private
   def secure_parent
     return Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
     return Event.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Event'
+    return SemesterCalendar.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'SemesterCalendar'
   end
 
   # When uploading images through the inline-attachment gem,
