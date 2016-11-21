@@ -104,7 +104,7 @@ class SemesterCalendarsController < ApplicationController
       @semester_calendars = SemesterCalendar.all
       @semester_calendars = @semester_calendars.where(year: params[:year]) if params[:year]
       @semester_calendars = @semester_calendars.where(term: SemesterCalendar.terms[params[:term]]) if params[:term]
-      @semester_calendars = @semester_calendars.order('updated_at desc')
+      @semester_calendars = @semester_calendars.includes(:group).order('groups.name asc')
 
       if current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
