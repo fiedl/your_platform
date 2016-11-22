@@ -3,12 +3,30 @@ concern :AttachmentSearch do
     include Elasticsearch::Model
     include Elasticsearch::Model::Callbacks
 
-    # http://rny.io/rails/elasticsearch/2013/08/05/full-text-search-for-attachments-with-rails-and-elasticsearch.html
-    mapping _source: { excludes: ['file'] } do
-      indexes :id, type: 'integer'
-      indexes :title
-      indexes :filename
-      indexes :file_for_elasticsearch, type: 'attachment'
+    settings({
+      analysis: {
+        filter: {
+          trigrams_filter: {
+            type: 'ngram',
+            min_gram: 3,
+            max_gram: 3
+          }
+        },
+        analyzer: {
+          trigrams: {
+            type: 'custom',
+            tokenizer: 'standard',
+            filter: ['lowercase', 'trigrams_filter']
+          }
+        }
+      }
+    }) do
+      mappings _source: { excludes: ['file'] } do
+        indexes :id, type: 'integer'
+        indexes :title, analyzer: 'trigrams'
+        indexes :filename, analyzer: 'trigrams'
+        #   #   indexes :file_for_elasticsearch, type: 'attachment'
+      end
     end
   end
 
@@ -27,16 +45,20 @@ concern :AttachmentSearch do
 
   class_methods do
     def search(query)
-      __elasticsearch__.search(
-        {
-          query: {
-            multi_match: {
-              query: query,
-              fields: ['title', 'filename', 'file_for_elasticsearch']
-            }
+      __elasticsearch__.search({
+        query: {
+          query_string: {
+            query: query,
+            fields: ['title', 'filename'],
+            default_operator: 'AND',
+            locale: 'de'
           }
+          #multi_match: {
+          #  query: query,
+          #  fields: ['title', 'filename', 'file_for_elasticsearch']
+          #}
         }
-      )
+      }).records.records
     end
   end
 end
