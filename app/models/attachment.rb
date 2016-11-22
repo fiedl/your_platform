@@ -12,6 +12,8 @@ class Attachment < ActiveRecord::Base
 
   scope :logos, -> { where('title like ?', "%logo%") }
 
+  include AttachmentSearch
+
   def title
     super || filename
   end

@@ -71,6 +71,9 @@ require 'rails-assets-bootstrap-social'
 # In Place Editing
 require 'best_in_place'
 
+# Search
+require 'elasticsearch/model'
+
 # Geo Coding
 require 'geocoder'
 require 'gmaps4rails'
