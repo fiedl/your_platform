@@ -25,7 +25,7 @@ concern :AttachmentSearch do
         indexes :id, type: 'integer'
         indexes :title, analyzer: 'trigrams'
         indexes :filename, analyzer: 'trigrams'
-        #   #   indexes :file_for_elasticsearch, type: 'attachment'
+        indexes :file_for_elasticsearch, type: 'attachment'
       end
     end
   end
@@ -40,7 +40,7 @@ concern :AttachmentSearch do
   end
 
   def as_indexed_json(options = {})
-    as_json(methods: [:filename]) #[:filename, :file_for_elasticsearch])
+    as_json(methods: [:filename, :file_for_elasticsearch])
   end
 
   class_methods do
@@ -49,14 +49,8 @@ concern :AttachmentSearch do
         query: {
           query_string: {
             query: query,
-            fields: ['title', 'filename'],
-            default_operator: 'AND',
-            locale: 'de'
+            default_operator: 'AND'
           }
-          #multi_match: {
-          #  query: query,
-          #  fields: ['title', 'filename', 'file_for_elasticsearch']
-          #}
         }
       }).records.records
     end
