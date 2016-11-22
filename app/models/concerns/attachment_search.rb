@@ -39,8 +39,8 @@ concern :AttachmentSearch do
     Base64.encode64(open(path_to_file) { |file| file.read })
   end
 
-  def to_indexed_json
-    to_json(methods: [:filename, :file_for_elasticsearch])
+  def as_indexed_json(options = {})
+    as_json(methods: [:filename]) #[:filename, :file_for_elasticsearch])
   end
 
   class_methods do
