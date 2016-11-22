@@ -35,8 +35,10 @@ concern :AttachmentSearch do
   end
 
   def file_base64
-    path_to_file = self.file.file.file
-    Base64.encode64(open(path_to_file) { |file| file.read })
+    if self.file && self.file.file && self.file.file.file
+      path_to_file = self.file.file.file
+      Base64.encode64(open(path_to_file) { |file| file.read })
+    end
   end
 
   def as_indexed_json(options = {})
