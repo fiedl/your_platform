@@ -23,9 +23,9 @@ concern :AttachmentSearch do
     }) do
       mappings _source: { excludes: ['file'] } do
         indexes :id, type: 'integer'
-        indexes :title, analyzer: 'trigrams'
-        indexes :filename, analyzer: 'trigrams'
-        indexes :file_for_elasticsearch, type: 'attachment'
+        indexes :title, type: 'text', analyzer: 'trigrams', term_vector: 'with_positions_offsets'
+        indexes :filename, type: 'text', analyzer: 'trigrams', term_vector: 'with_positions_offsets'
+        indexes :file_for_elasticsearch, type: 'attachment', fields: { content: { type: 'text', store: true, term_vector: 'with_positions_offsets' } }
       end
     end
   end
@@ -47,14 +47,28 @@ concern :AttachmentSearch do
 
   class_methods do
     def search(query)
+      elastic_search_results(query).records.records
+    end
+
+    def elastic_search_results(query)
       __elasticsearch__.search({
         query: {
           query_string: {
             query: query,
-            default_operator: 'AND'
+            default_operator: 'AND',
+            fields: ['title', 'filename', 'file_for_elasticsearch.content']
           }
+        },
+        highlight: {
+          fields: {
+            'file_for_elasticsearch.content' => {
+              matched_fields: ['title', 'filename', 'file_for_elasticsearch.content'],
+              type: 'fvh'
+            }
+          },
+          require_field_match: false
         }
-      }).records.records
+      })
     end
   end
 end
