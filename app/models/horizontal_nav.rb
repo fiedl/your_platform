@@ -2,6 +2,7 @@ class HorizontalNav
   def initialize(args)
     @user = args[:user]
     @current_navable = args[:current_navable]
+    @current_home_page = args[:current_home_page]
   end
 
   def self.for_user(user, args = {})
@@ -27,7 +28,11 @@ class HorizontalNav
   end
 
   def public_navables
-    [ Page.find_root ] + (Page.find_root ? Page.find_root.child_pages.where(type: [nil, 'Page', 'Blog']) : []) - [ Page.find_intranet_root, Page.find_imprint ] - Page.flagged(:public_root_element)
+    navables = [current_home_page]
+    navables += current_home_page.child_pages.where(type: [nil, 'Page', 'Blog'])
+    navables -= [Page.find_intranet_root, Page.find_imprint]
+    navables -= Page.flagged(:public_root_element)
+    return navables
   end
 
   def currently_in_intranet?
@@ -36,6 +41,14 @@ class HorizontalNav
 
   def current_navable
     @current_navable
+  end
+
+  def current_home_page
+    @current_home_page || Page.root
+  end
+
+  def breadcrumb_root
+    @breadcrumb_root ||= current_navable.try(:nav_node).try(:breadcrumb_root).try(:reload)
   end
 
   def logged_in?

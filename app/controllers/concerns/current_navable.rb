@@ -1,7 +1,7 @@
 concern :CurrentNavable do
   
   included do
-    helper_method :current_navable, :point_navigation_to, :set_current_navable
+    helper_method :current_navable, :current_home_page, :point_navigation_to, :set_current_navable
   end
   
   # This method returns the navable object the navigational elements on the 
@@ -17,7 +17,18 @@ concern :CurrentNavable do
     @navable
   end
   
-  # This method sets the currently shown navable object. 
+
+  def current_home_page
+    @current_home_page ||= if current_navable && current_navable.respond_to?(:home_page) && current_navable.home_page
+      current_navable.home_page
+    elsif Page.find_by(title: request.host)
+      Page.find_by(title: request.host)
+    else
+      Page.root
+    end
+  end
+
+  # This method sets the currently shown navable object.
   # Have a look at #current_navable.
   #
   def point_navigation_to(navable)

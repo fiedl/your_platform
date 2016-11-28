@@ -1,7 +1,7 @@
 class PublicRootController < ApplicationController
 
   def index
-    @page = Page.public_root
+    @page = public_root_page
     authorize! :read, @page
 
     if @page.kind_of? Blog
@@ -20,6 +20,12 @@ class PublicRootController < ApplicationController
       set_current_access :public
       set_current_access_text :this_is_the_public_website_and_can_be_read_by_all_internet_users
     end
+  end
+
+  private
+
+  def public_root_page
+    Page.find_by(title: request.host) || Page.public_root
   end
 
 end
