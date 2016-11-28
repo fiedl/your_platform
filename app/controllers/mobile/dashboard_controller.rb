@@ -10,7 +10,7 @@ class Mobile::DashboardController < ApplicationController
 
   private
 
-  def find_layout
+  def current_layout
     cookies[:layout] = 'mobile'
   end
 
