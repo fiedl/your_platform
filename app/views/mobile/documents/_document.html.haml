@@ -4,7 +4,7 @@
 -#= link_to document.title, document.file_url
 
 .document
-  = link_to document.file_url do
+  = link_to document.file_path do
     .thumb= image_tag document.thumb_url
     .info
       .title= document.title
