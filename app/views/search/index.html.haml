@@ -22,14 +22,14 @@
     %ul
       - @events.each do |event|
         %li= link_to event.title, event
-        
+
 - if @groups
   %h1= t :found_groups
   %div
     %ul
       - for object in @groups
         %li= link_to object.title, object
-        
+
 - if @pages
   %h1= t :found_pages
   %div
