@@ -49,6 +49,7 @@ class SearchController < ApplicationController
       else
         attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
         @pages += attachments.collect { |attachment| attachment.parent }
+        @attachments = []
       end
 
       # browse comments
