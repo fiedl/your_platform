@@ -452,6 +452,7 @@ class Ability
     # Feature switches
     #
     can :use, :semester_calendars
+    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
 
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
