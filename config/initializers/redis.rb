@@ -83,7 +83,7 @@ class RedisConnectionConfiguration
   def default_options
     {
       host: ENV['REDIS_HOST'],
-      port: '6379',
+      port: Rails.application.secrets.redis_port || '6379',
       expires_in: 1.week,
       namespace: namespace,
       timeout: 15.0
