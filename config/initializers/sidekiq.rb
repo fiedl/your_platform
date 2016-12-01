@@ -19,9 +19,10 @@ Sidekiq.options[:limits] = {default: 25, mailgate: 1}
 # https://github.com/mperham/sidekiq/wiki/Using-Redis#complete-control
 # http://stackoverflow.com/q/40638628/2066546
 #
+sidekiq_redis_port = Rails.application.secrets.sidekiq_redis_port || "6379"
 Sidekiq.configure_server do |config|
-  config.redis = ConnectionPool.new(size: 25) { RedisConnectionConfiguration.new(:sidekiq).to_namespaced_redis }
+  config.redis = ConnectionPool.new(size: 25) { RedisConnectionConfiguration.new(:sidekiq, port: sidekiq_redis_port).to_namespaced_redis }
 end
 Sidekiq.configure_client do |config|
-  config.redis = ConnectionPool.new(size: 5) { RedisConnectionConfiguration.new(:sidekiq).to_namespaced_redis }
+  config.redis = ConnectionPool.new(size: 5) { RedisConnectionConfiguration.new(:sidekiq, port: sidekiq_redis_port).to_namespaced_redis }
 end
