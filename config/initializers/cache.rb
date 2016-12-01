@@ -17,7 +17,10 @@ require_relative './redis'
 ENV['REDIS_HOST'] || raise('ENV["REDIS_HOST"] not set, yet.')
 ::STAGE || raise('::STAGE not set, yet.')
 
+
+cache_redis_port = Rails.application.secrets.cache_redis_port || "6379"
 Rails.application.config.cache_store = :redis_store, RedisConnectionConfiguration.new(:cache, {
+  port: cache_redis_port,
   expires_in: if Rails.env.production?
       1.week
     elsif Rails.env.development?
