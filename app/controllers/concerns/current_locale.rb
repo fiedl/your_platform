@@ -1,14 +1,14 @@
 concern :CurrentLocale do
-  
+
   included do
     before_action :update_locale_cookie, :update_user_locale, :set_locale
     helper_method :current_locale
   end
-  
+
   def current_locale
     current_user.try(:locale) || I18n.locale
   end
-  
+
   # The locale of the application s set as follows:
   #   1. Use the url parameter 'locale' if given.
   #   2. Use the `Setting.preferred_locale`, which is a global application setting, if set.
@@ -28,17 +28,17 @@ concern :CurrentLocale do
       current_user.update_attribute :locale, cookies[:locale]
     end
   end
-  
+
   private
-  
+
   # This method prevents a DoS attack.
   #
   def secure_locale_param
     if params[:locale].present? and params[:locale].in? I18n.available_locales.collect { |l| l.to_s }
-      params[:locale] 
+      params[:locale]
     end
   end
-  
+
   def secure_locale_from_accept_language_header
     # This comparison is to prevent a DoS attack.
     # See: http://brakemanscanner.org/docs/warning_types/denial_of_service/
@@ -56,5 +56,5 @@ concern :CurrentLocale do
   def browser_language_if_supported_by_app
     secure_locale_from_accept_language_header
   end
-    
+
 end
