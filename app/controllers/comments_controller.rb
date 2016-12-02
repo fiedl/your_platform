@@ -35,6 +35,8 @@ class CommentsController < ApplicationController
 
   def find_secure_commentable
     @commentable = Post.find params[:comment][:commentable_id] if params[:comment][:commentable_type] == 'Post'
+    @commentable = Page.find params[:comment][:commentable_id] if params[:comment][:commentable_type] == 'Page'
+    @commentable || raise('commentable not found.')
   end
 
 end

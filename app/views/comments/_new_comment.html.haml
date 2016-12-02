@@ -6,12 +6,17 @@
     = form.hidden_field :commentable_type
     = form.hidden_field :commentable_id
 
-    .media-left.avatar= user_avatar(current_user, size: 24)
+    - if current_user
+      .media-left.avatar= user_avatar(current_user, size: 24)
+
+    = render partial: 'shared/guest_user_name_and_email_form'
+
     .media-body
-      %small.comment-header.comment-tools
-        .comment-author= link_to current_user.title, current_user
+      - if current_user
+        %small.comment-header.comment-tools
+          .comment-author= link_to current_user.title, current_user
       .comment-text
         = form.text_area :text, placeholder: t(:enter_new_comment_here), class: 'form-control', data: {user_titles_path: titles_api_v1_users_path}
       .comment-tools
-        = form.submit t(:submit_comment), class: 'submit_comment btn btn-primary btn-sm right'
-        
+        = form.submit t(:submit_comment), id: 'submit_comment', class: 'submit_comment btn btn-primary btn-sm right'
+

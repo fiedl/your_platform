@@ -31,7 +31,7 @@ PATH
       eventmachine (>= 1.0.7)
       execjs (>= 2.5.2)
       faker
-      font-awesome-rails (~> 4.4.0)
+      font-awesome-rails (>= 4.7)
       foreman
       formtastic
       gemoji (>= 2.1.0)
@@ -65,7 +65,6 @@ PATH
       rails (>= 4.2.5.1)
       rails-assets-bootstrap-social
       rails-assets-datatables (>= 1.10.10)
-      rails-assets-font-awesome (>= 4.7)
       rails-assets-inline-attachment
       rails-assets-jquery-ui
       rails-assets-jquery-ujs
@@ -261,8 +260,8 @@ GEM
       multipart-post (>= 1.2, < 3)
     fastercsv (1.5.5)
     ffi (1.9.14)
-    font-awesome-rails (4.4.0.0)
-      railties (>= 3.2, < 5.0)
+    font-awesome-rails (4.7.0.0)
+      railties (>= 3.2, < 5.1)
     foreman (0.82.0)
       thor (~> 0.19.1)
     formatador (0.2.5)

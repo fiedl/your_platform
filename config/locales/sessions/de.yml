@@ -44,4 +44,6 @@ de:
   what_does_than_mean_for_privacy: Was bedeutet das für den Datenschutz?
   the_external_server_can_connect_you_to_other_users: "Der gewählte Dienst kann Sie mit anderen Benutzern in Verbindung bringen, die den Dienst und die Plattform nutzen. Ansonsten werden keine Daten ausgetauscht."
 
+  guest_user_name: Name
+  guest_user_email: E-Mail
   you_are_signed_in_as_guest_user_via_cookie: Sie sind per Cookie als Gast eingeloggt.

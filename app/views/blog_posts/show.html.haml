@@ -1,3 +1,4 @@
 = render @blog_post
 
-.blog_post_comments= render partial: 'comments/comments', locals: {commentable: @blog_post}
+#comments.blog_post_comments
+  = render partial: 'comments/comments', locals: {commentable: @blog_post}

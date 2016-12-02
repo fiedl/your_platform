@@ -473,6 +473,12 @@ class Ability
       attachment.id.in? Attachment.logos.pluck(:id)
     end
 
+    # All users can comment contents they can read.
+    #
+    can :create_comment_for, BlogPost do |blog_post|
+      can? :read, blog_post
+    end
+
     # Listing Events and iCalendar (ICS) Export:
     #
     # There are event lists on public websites and webcal feeds.

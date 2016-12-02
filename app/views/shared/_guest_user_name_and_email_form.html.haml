@@ -1,0 +1,8 @@
+- if current_user.try(:guest_user?) or current_user.nil?
+  .col_one_third
+    = label_tag :guest_user_name, t(:guest_user_name)
+    = text_field_tag :guest_user_name, current_user.try(:name), size: 22, tabindex: 1
+  .col_one_third.col_last
+    = label_tag :guest_user_email, t(:guest_user_email)
+    = text_field_tag :guest_user_email, current_user.try(:email), size: 22, tabindex: 2
+  .clear
