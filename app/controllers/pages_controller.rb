@@ -24,14 +24,9 @@ class PagesController < ApplicationController
         redirect_to root_path
         return
       end
-      if @page.has_flag?(:root)
-        redirect_to public_root_path
-        return
-      end
 
       @blog_entries = @page.blog_entries.for_display
-      @page = @page.becomes(Page)  # rather than BlogPost etc.
-      
+
       set_current_title @page.title
       set_current_navable @page
       set_current_activity :looks_up_information, @page
