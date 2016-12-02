@@ -3,6 +3,8 @@ class GuestUser < User
   def self.find_or_create(name, email)
     if guest = self.find_by_name_and_email(name, email)
       guest
+    elsif email.present? && user = User.find_by_email(email)
+      nil # it's a real user, no guest!
     else
       GuestUser.create(name: name, email: email)
     end

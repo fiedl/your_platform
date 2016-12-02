@@ -103,7 +103,8 @@ describe GuestUser do
         User.first.account.should be_nil
       end
       it "should return the newly created user" do
-        subject.should == GuestUser.first
+        result = subject
+        result.should == GuestUser.first
       end
     end
 
