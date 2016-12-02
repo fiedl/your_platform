@@ -14,7 +14,8 @@ class DagLink < ActiveRecord::Base
   #
   # See: app/models/active_record_associations_patches.rb
   #
-  after_save { self.delay.delete_cache }
+  after_save { self.delay.renew_cache }
+  #after_save { self.delay.delete_cache }
   before_destroy :delete_cache
 
   include DagLinkRepair
@@ -28,5 +29,11 @@ class DagLink < ActiveRecord::Base
     ancestor.try(:delete_cache)
     descendant.try(:delete_cache)
   end
-  
+
+  def renew_cache
+    super
+    ancestor.try(:renew_cache)
+    descendant.try(:renew_cache)
+  end
+
 end

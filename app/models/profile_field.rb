@@ -6,7 +6,7 @@ class ProfileField < ActiveRecord::Base
   belongs_to             :profileable, polymorphic: true
   has_many               :issues, as: :reference, dependent: :destroy
 
-  after_commit           :delete_cache
+  after_commit           :renew_cache
 
   include ProfileFieldMixins::HasChildProfileFields
 
@@ -95,6 +95,16 @@ class ProfileField < ActiveRecord::Base
     super
     parent.try(:delete_cache)
     profileable.delete_cache if profileable && profileable.respond_to?(:delete_cache)
+  end
+
+  def renew_cache
+    super
+    parent.try(:renew_cache)
+    profileable.renew_cache if profileable && profileable.respond_to?(:renew_cache)
+  end
+
+  def fill_cache
+    # Nothing to do here in the base class.
   end
 
   def children_count

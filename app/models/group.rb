@@ -58,12 +58,18 @@ class Group < ActiveRecord::Base
 
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
-  after_save       { self.delay.delete_cache }
+  after_save       { self.delay.renew_cache }
 
   def delete_cache
     super
     ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
   end
+
+  def renew_cache
+    super
+    ancestor_groups(true).each { |g| g.renew_cached(:leaf_groups); g.renew_cached(:status_groups) }
+  end
+
 
   # General Properties
   # ==========================================================================================

@@ -201,7 +201,7 @@ module ProfileFieldTypes
           else
             self.remove_flag :postal_address
           end
-          self.delete_cache
+          self.renew_cache
         end
       end
       def postal_address?

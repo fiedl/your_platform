@@ -13,3 +13,9 @@ module CacheAdditions
 end
 
 ActiveSupport::Cache::Store.include(CacheAdditions)
+
+class ActiveSupport::Cache::Entry
+  def created_at
+    @created_at
+  end
+end

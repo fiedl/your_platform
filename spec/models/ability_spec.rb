@@ -193,6 +193,9 @@ describe Ability do
 
       describe "(events)" do
         he "should be able to create an event in his group" do
+
+          #@group.reload # löst das Problem. Warum?
+
           the_user.should be_able_to :create_event, @group
         end
         he "should be able to update events in his group" do

@@ -1,4 +1,5 @@
 require 'colored'
+require 'cache_additions'
 #
 # To understand our caching conventions, have a look at our wiki page:
 # https://github.com/fiedl/wingolfsplattform/wiki/Caching
@@ -46,6 +47,7 @@ module ActiveRecordCacheExtension
   #   arguments
   #
   def cached_block(options = {}, &block)
+    self.cached_at ||= Time.zone.now
     # This gives the method name that called the #cached method.
     # See: http://www.ruby-doc.org/core-2.1.2/Kernel.html
     #
@@ -58,8 +60,12 @@ module ActiveRecordCacheExtension
       key = caller_method_name
     end
     rescue_from_too_big_to_marshal(block) do
-      Rails.cache.fetch([self, key], expires_in: 1.week) do
-        process_result_for_caching(yield)
+      if Rails.cache.created_at([self.cache_key, key]).nil? || Rails.cache.created_at([self.cache_key, key]) < self.cached_at
+        result = process_result_for_caching(yield)
+        Rails.cache.write [self.cache_key, key], result, expires_in: 1.week
+        result
+      else
+        Rails.cache.read [self.cache_key, key]
       end
     end
   end
@@ -103,6 +109,11 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/#{method_name}/*"
   end
 
+  def renew_cached(method_name)
+    self.delete_cached method_name
+    self.send method_name
+  end
+
   def bulk_delete_cached(method_name, objects)
     ids = objects.map &:id
     regex = /.*\/(#{ids.join('|')})(-.*|)\/#{method_name}.*/
@@ -116,12 +127,18 @@ module ActiveRecordCacheExtension
   end
 
   def renew_cache
-    delete_cache
+    self.cached_at = Time.zone.now
     fill_cache
   end
 
+  def fill_cache
+    self.class.cached_methods.try(:each) do |method_name|
+      #print "-> Filling cached :#{method_name}\n"
+      self.send method_name
+    end
+  end
+
   def cache_created_at(method_name, arguments = nil)
-    ::CacheAdditions
     Rails.cache.created_at [self, method_name, arguments]
   end
 
@@ -153,6 +170,30 @@ module ActiveRecordCacheExtension
     end
   end
 
+  def cached_at
+    Rails.cache.read [self.cache_key, 'cached_at']
+  end
+  def cached_at=(datetime)
+    Rails.cache.write [self.cache_key, 'cached_at'], datetime
+  end
+
   module ClassMethods
+    attr_accessor :cached_methods
+
+    def cache(method_name)
+      cache_method method_name
+    end
+
+    def cache_method(method_name)
+      alias_method "uncached_#{method_name}", method_name
+
+      define_method(method_name) {
+        cached_block(method_name: method_name) { self.send "uncached_#{method_name}" }
+      }
+
+      self.cached_methods ||= []
+      self.cached_methods << method_name
+    end
+
   end
 end
