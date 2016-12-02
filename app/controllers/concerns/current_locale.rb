@@ -2,6 +2,7 @@ concern :CurrentLocale do
   
   included do
     before_action :update_locale_cookie, :update_user_locale, :set_locale
+    helper_method :current_locale
   end
   
   def current_locale
