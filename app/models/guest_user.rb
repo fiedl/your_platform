@@ -1,11 +1,7 @@
 class GuestUser < User
 
   def self.find_or_create(name, email)
-    if email.present? && guest = GuestUser.find_by_email(email)
-      guest
-    elsif email.present? && User.find_by_email(email)
-      nil # no guest!
-    elsif name.present? && guest = GuestUser.find_by_name(name)
+    if guest = self.find_by_name_and_email(name, email)
       guest
     else
       GuestUser.create(name: name, email: email)
@@ -25,6 +21,16 @@ class GuestUser < User
     self.find_all_by_name(name).without_email.without_account.last
   end
 
+  def self.find_by_name_and_email(name, email)
+    if email.present? && guest = GuestUser.find_by_email(email)
+      guest
+    elsif email.present? && User.find_by_email(email)
+      nil # no guest!
+    elsif name.present? && guest = GuestUser.find_by_name(name)
+      guest
+    end
+  end
+
   def self.create(args)
     user = self.new
     if args[:email].present? and not args[:name].present?
@@ -36,6 +42,10 @@ class GuestUser < User
     user.email = args[:email]
     user.save
     return user
+  end
+
+  def model_name
+    User.model_name
   end
 
 end
