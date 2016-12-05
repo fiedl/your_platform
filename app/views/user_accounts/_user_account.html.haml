@@ -1,14 +1,14 @@
-%dl
+%dl.user_account
   %dt= t :you_may_login_with_alias_name_or_email
   %dd
     %dl
-      %span
+      %span.alias
         %dt= t :alias
         %dd= best_in_place_if can?(:change_alias, @user), @user, :alias
-      %span
+      %span.name
         %dt= t :name
         %dd= @user.name
-      %span
+      %span.email
         %dt= t :email
         %dd= @user.email
 

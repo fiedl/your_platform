@@ -44,10 +44,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'execjs', '>= 2.5.2'
   s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
   s.add_dependency 'rails-assets-jquery-ui'
-  s.add_dependency 'turbolinks', '>= 2.5.3'
+  s.add_dependency 'turbolinks', '>= 5.0'
   s.add_dependency 'jquery-turbolinks'
   s.add_dependency 'turboboost'
   s.add_dependency 'rails-assets-datatables', '>= 1.10.10'
+  s.add_dependency 'rails-assets-trentrichardson--jQuery-Timepicker-Addon', '>= 1.6.3'
+  s.add_dependency 'bootstrap_tokenfield_rails'
+  s.add_dependency 'rails-assets-inline-attachment'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.
@@ -55,9 +58,12 @@ Gem::Specification.new do |s|
   # DAG Structure, https://github.com/resgraph/acts-as-dag
   s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
   s.add_dependency 'acts_as_tree'                                                      # MIT License
+  s.add_dependency 'wannabe_bool'
+  s.add_dependency 'acts-as-taggable-on', '~> 4.0'
 
   # Caching
   s.add_dependency 'redis-rails'
+  s.add_dependency 'redis-namespace'
 
   # Workers
   s.add_dependency 'foreman'
@@ -81,7 +87,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'has_secure_token' # TODO: This is included in Rails 5. Remove this when migrating to Rails 5.
 
   # Settings
-  s.add_dependency 'rails-settings-cached'
+  s.add_dependency 'rails-settings-cached', '>= 0.6.5'
 
   # Template Engines
   # haml template language, http://haml.info
@@ -92,7 +98,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
-  s.add_dependency 'font-awesome-rails', '~> 4.3.0'
+  s.add_dependency 'font-awesome-rails', '>= 4.7'
   # fix bootstrap to 3.3.3 due to icon issue:
   s.add_dependency 'bootstrap-sass', '= 3.3.3'                                                  # Apache License 2.0
   s.add_dependency 'sass-rails', '>= 3.2'
@@ -101,6 +107,9 @@ Gem::Specification.new do |s|
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
   s.add_dependency 'rails-assets-Voog--wysihtml'
+
+  # Search
+  s.add_dependency 'elasticsearch-model'
 
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
@@ -140,6 +149,8 @@ Gem::Specification.new do |s|
   # Metrics
   s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
   s.add_dependency 'redis_analytics'
+  s.add_dependency 'chartkick'
+  s.add_dependency 'groupdate'
 
   # Activity Feed
   s.add_dependency 'public_activity', '~> 1.4.1'                                       # MIT License
@@ -148,10 +159,13 @@ Gem::Specification.new do |s|
   s.add_dependency 'to_xls'
 
   # PDF Export
-  s.add_dependency 'prawn'
+  s.add_dependency 'prawn', '2.0.2' # 2.1.0 breaks layout margins
 
   # ICS Export (iCal)
   s.add_dependency 'icalendar'
+
+  # VCF Export
+  s.add_dependency 'vcardigan'
 
   # Gamification
   s.add_dependency 'merit'
@@ -168,8 +182,9 @@ Gem::Specification.new do |s|
   # https://github.com/lautis/uglifier/pull/86
   s.add_dependency 'uglifier', '>= 2.7.2'
   s.add_dependency 'mail', '>= 2.6.0' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_309
-  s.add_dependency 'nokogiri', '>= 1.6.7.2' # CVE-2015-7499, https://gemnasium.com/fiedl/your_platform/alerts#advisory_328
+  s.add_dependency 'nokogiri', '>= 1.6.8' # CVE-2015-8806, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_392
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
+  s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
 
   # Development Dependencies
   # --------------------------------------------------------------------------------

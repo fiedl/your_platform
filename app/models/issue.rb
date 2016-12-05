@@ -24,6 +24,11 @@ class Issue < ActiveRecord::Base
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
   scope :automatically_created, -> { where author_id: nil }
 
+  scope :concerning_postal_addresses, -> {
+    ids = all.select { |issue| issue.reference.kind_of? ProfileFieldTypes::Address }.map(&:id)
+    where(id: ids)
+  }
+
   def self.scan(object_or_objects = nil)
     if object_or_objects && object_or_objects.respond_to?(:to_a)
       self.scan_objects(object_or_objects)

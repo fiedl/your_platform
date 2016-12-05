@@ -135,7 +135,7 @@ class GroupsController < ApplicationController
           # TODO: This should not be inside a GET request; but I wasn't sure how to do it properly.
           session[:address_labels_pdf_sender] = params[:sender]
         end
-        options = {sender: params[:sender], book_rate: params[:book_rate], export_user: current_user}
+        options = {sender: params[:sender], book_rate: params[:book_rate], export_user: current_user, filter: params[:filter]}
 
         if params[:pdf_type].present?
           options[:type] = "AddressLabelsDpag7037Pdf" if params[:pdf_type].include?("dpag")
@@ -206,6 +206,8 @@ class GroupsController < ApplicationController
     case list_preset
     when 'name_list', '', nil
       ListExports::NameList.from_group(@group)
+    when 'address_list'
+      ListExports::AddressList.from_group(@group)
     when 'member_development', 'join_statistics'
       ListExport.new(@group, list_preset)
     when 'dpag_internetmarken'
@@ -216,10 +218,14 @@ class GroupsController < ApplicationController
       ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
     when 'birthday_list'
       ListExports::BirthdayList.from_group(@group, quater: params[:quater])
+    when 'email_list'
+      ListExports::EmailList.from_group(@group)
     when 'special_birthdays'
       ListExports::SpecialBirthdays.from_group(@group, quater: params[:quater])
     when 'deceased_members'
       ListExports::DeceasedMembers.from_group(@group)
+    when 'former_and_deceased_members'
+      ListExports::FormerAndDeceasedMembers.from_group(@group)
     else
       ListExport.new(@members, list_preset)
     end

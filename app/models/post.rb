@@ -8,13 +8,13 @@ class Post < ActiveRecord::Base
   accepts_nested_attributes_for :attachments
   attr_accessible :attachments_attributes if defined? attr_accessible
 
-  has_many :comments, as: :commentable, dependent: :destroy
   has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
 
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
 
+  include Commentable
   include PostDeliveryReport
 
   def title

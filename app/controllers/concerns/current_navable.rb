@@ -19,8 +19,10 @@ concern :CurrentNavable do
   end
 
   def current_home_page
-    if current_navable && current_navable.respond_to?(:home_page) && current_navable.home_page
+    @current_home_page ||= if current_navable && current_navable.respond_to?(:home_page) && current_navable.home_page
       current_navable.home_page
+    elsif Page.find_by(title: request.host)
+      Page.find_by(title: request.host)
     else
       Page.root
     end

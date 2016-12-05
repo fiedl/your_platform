@@ -23,6 +23,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_postal_address do
+      after :create do |user|
+        address_field = user.profile_fields.create(type: ProfileFieldTypes::Address.name)
+        address_field.postal_address = true
+      end
+    end
+
     trait :with_bank_account do
       after :create do |user|
         user.profile_fields.create(type: ProfileFieldTypes::BankAccount.name)

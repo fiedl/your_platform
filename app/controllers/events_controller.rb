@@ -11,22 +11,31 @@ class EventsController < ApplicationController
   # ATTENTION: The index action has to handly authorization manually!
   #
   def index
-
-    # Which events should be listed
     @group = Group.includes(
       :parent_groups,
       :parent_pages,
       :parent_events,
       :nav_node
     ).find params[:group_id] if params[:group_id]
-    @user = Group.find params[:user_id] if params[:user_id]
-    @user ||= current_user
-    @user ||= UserAccount.find_by_auth_token(params[:token]).try(:user) if params[:token].present?
+
+    # Which events should be listed
     @all = params[:all]
     @on_local_website = params[:published_on_local_website]
     @on_global_website = params[:published_on_global_website]
     @public = @on_local_website || @on_global_website
     @limit = params[:limit].to_i
+
+    # Show semetser calendars for corporations
+    if (! @public) && can?(:use, :semester_calendars) && @group.kind_of?(Corporation)
+      authorize! :read, @group
+      redirect_to group_semester_calendars_path(group_id: @group.id)
+      return
+    end
+
+    # Which events, part ii: Events for a certain user:
+    @user = User.find params[:user_id] if params[:user_id]
+    @user ||= current_user
+    @user ||= UserAccount.find_by_auth_token(params[:token]).try(:user) if params[:token].present?
 
     # Check the permissions.
     if @group

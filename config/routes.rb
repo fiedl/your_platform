@@ -21,10 +21,10 @@ Rails.application.routes.draw do
   resources :nav_nodes
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
-  devise_for :user_accounts, :controllers => {:sessions => 'sessions'}, :skip => [:registrations]
+  devise_for :user_accounts, controllers: {sessions: "sessions"}, :skip => [:registrations]
   devise_scope :user_account do
-    get 'sign_in' => 'devise/sessions#new', as: :sign_in
-    delete 'sign_out' => 'devise/sessions#destroy', as: :sign_out
+    get 'sign_in' => 'sessions#new', as: :sign_in
+    delete 'sign_out' => 'sessions#destroy', as: :sign_out
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_password'
     get 'change_password' => 'devise/registrations#edit', :as => 'change_password'
@@ -49,7 +49,8 @@ Rails.application.routes.draw do
     put :forgot_password, on: :member
     resource :account, controller: 'user_accounts'
     get :events, to: 'events#index'
-    get :profile, to: 'profile_fields#index'
+    get :profile, to: 'profiles#show'
+    get :profile_fields, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
     get :memberships, to: 'user_group_memberships#index'
@@ -59,22 +60,24 @@ Rails.application.routes.draw do
   end
 
   get :settings, to: 'user_settings#index'
+  get 'settings/app', to: 'app_settings#index', as: 'app_settings'
   resources :settings, as: 'rails_settings_scoped_setting'
+  resources :settings, as: 'setting'
 
   get :authorized_users, to: 'authorized_users#index'
 
-  get 'groups/:id/address_labels/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
+  get 'groups/:id/address_labels/(:filter)/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
   resources :groups do
     get :subgroups, to: 'groups#index'
     get :mine, on: :collection, to: 'groups#index_mine'
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
-    get :semester_calendar, to: 'semester_calendars#show'
-    get 'semester_calendar/edit', to: 'semester_calendars#edit'
-    patch :semester_calendar, to: 'semester_calendars#update'
+    resources :semester_calendars
+    get :semester_calendar, to: 'semester_calendars#show_current', as: 'current_semester_calendar'
     resources :posts
-    get :profile, to: 'profile_fields#index'
+    get :profile, to: 'profiles#show'
+    get :profile_fields, to: 'profile_fields#index'
     get :members, to: 'group_members#index'
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
@@ -95,6 +98,7 @@ Rails.application.routes.draw do
     get :photo_contest, to: 'photo_contests#show'
     get :activities, to: 'activities#index'
     get :settings, to: 'page_settings#index'
+    get :attachments, to: 'attachments#index'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
@@ -105,11 +109,14 @@ Rails.application.routes.draw do
   namespace :activities do
     get :exports, to: 'exports#index'
     #get :addresses, to: 'addresses#index'
+    get :charts, to: 'charts#index'
+    get 'charts/per_corporation_and_time', to: 'charts#activities_per_corporation_and_time'
   end
   resources :activities
 
   post :create_officers_group, to: 'officers#create_officers_group'
 
+  resources :blogs
   resources :blog_posts
   resources :attachments do
     get 'description(.:format)', to: 'attachments#description'
@@ -125,13 +132,19 @@ Rails.application.routes.draw do
     get :join, to: 'events#join_via_get', as: 'join_via_get'
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
+    get :attachments, to: 'attachments#index'
   end
-  resources :semester_calendars
+  resources :semester_calendars do
+    member do
+      patch :update_term_and_year, to: 'semester_calendars#update_term_and_year'
+    end
+  end
 
   get 'posts/preview', to: 'posts#preview', as: 'post_preview'
   resources :posts do
     get :deliveries, to: 'post_deliveries#index'
     put :deliver, to: 'posts#deliver'
+    get :attachments, to: 'attachments#index'
   end
   resources :comments
 
@@ -178,6 +191,26 @@ Rails.application.routes.draw do
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
 
+  get 'tags/:tag_name', to: 'tags#show', as: :tag
+  resources :tags
+  resources :tags, path: :acts_as_taggable_on_tags, as: :acts_as_taggable_on_tags
+
+  get :feeds, to: 'feeds#index', as: :feeds
+
+  # ATTENTION: Changing feed urls might break subscribed feeds!
+  get 'feeds/:id(.:format)', to: 'feeds#show', as: :feed
+
+  namespace :mobile do
+    get :welcome, to: 'welcome#index'
+    get :dashboard, to: 'dashboard#index'
+    get :app_info, to: 'app_info#index'
+    get :contacts, to: 'contacts#index'
+    get :documents, to: 'documents#index'
+    get 'documents/:id', to: 'documents#show', as: 'document'
+    get 'events/:id', to: 'events#show', as: 'event'
+    get 'partials/:partial_key', to: 'partials#show'
+  end
+
 
   namespace :api do
     namespace :v1 do
@@ -186,6 +219,7 @@ Rails.application.routes.draw do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
         get :titles, on: :collection, to: 'users/titles#index'
+        get :avatar, to: '/avatars#show'
       end
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}
@@ -195,6 +229,10 @@ Rails.application.routes.draw do
 
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
 
-  get ':alias', to: 'users#show'
+  get ':permalink', to: 'tags#show', constraints: lambda { |request| Permalink.where(reference_type: 'Tag', path: request[:permalink]).any? }
+  get ':permalink', to: 'blogs#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(Blog) }
+  get ':permalink', to: 'pages#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+  get ':permalink', to: 'groups#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+  get ':alias', to: 'users#show', constraints: lambda { |request| User.where(alias: request[:alias]).any? }
 
 end

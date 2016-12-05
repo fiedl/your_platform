@@ -9,6 +9,9 @@ module ProfileFieldTypes
     #   ActionController::Base.helpers.simple_format self.value
     # end
 
+    def vcard_property_type
+      "ADR"
+    end
 
     concerning :SubFields do
       included do
@@ -44,7 +47,7 @@ module ProfileFieldTypes
         end
 
         def plz
-          postal_code if country_code.downcase == 'de'
+          postal_code if country_code.try(:downcase) == 'de'
         end
 
         def province

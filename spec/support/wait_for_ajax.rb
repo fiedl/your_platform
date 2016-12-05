@@ -16,6 +16,12 @@ module WaitForAjax
     sleep(wait_time * 1.5)
   end
 
+  # def wait_for_ajax
+  #   Timeout.timeout(Capybara.default_max_wait_time) do
+  #     loop until finished_all_ajax_requests?
+  #   end
+  # end
+
   def wait_time
     @wait_time ||= wait_time_from_benchmark
   end
@@ -34,6 +40,13 @@ module WaitForAjax
     yield(block)
     t2 = Time.zone.now
     (t2 - t1).seconds
+  end
+
+  # http://stackoverflow.com/q/36536111/2066546
+  #
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').to_i == 0
+  rescue Timeout::Error
   end
 
 end

@@ -23,8 +23,12 @@ module ProfileFieldTypes
         value = value[ 1..-1 ] if value.start_with?( "+" ) # because Phony can't handle leading +
         value = Phony.formatted( value, :format => format, :spaces => ' ' )
       end
-      
+
       return value
+    end
+
+    def vcard_property_type
+      "TEL"
     end
 
     private

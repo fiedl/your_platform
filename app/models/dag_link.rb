@@ -6,19 +6,19 @@ class DagLink < ActiveRecord::Base
 
   # We have to workaround a bug in Rails 3 here. But, since Rails 3 is no longer fully supported,
   # this is not going to be fixed.
-  # 
+  #
   # https://github.com/rails/rails/issues/7618
   #
   # With our workaround, the `delete_cache` method is called on the `DagLink` when
   # `group.members.destroy(user)` is called.
-  # 
+  #
   # See: app/models/active_record_associations_patches.rb
   #
   after_save { self.delay.delete_cache }
   before_destroy :delete_cache
-  
+
   include DagLinkRepair
-  
+
   def fill_cache
     valid_from
   end

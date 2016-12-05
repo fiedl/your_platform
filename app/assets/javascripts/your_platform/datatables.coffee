@@ -146,6 +146,11 @@ $(document).ready ->
       { type: 'de_date', targets: 3 }
     ]
   }, common_configuration))
+  $('.datatable.profile_fields').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "order": [[0, "asc"]]
+  }, common_configuration))
+
   # Insert above.
   # This modified the common_configuration:
   $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {

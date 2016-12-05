@@ -25,6 +25,11 @@ class ErrorsController < ApplicationController
     cookies[:token] = nil
 
     @reason = session['exception.action'].to_s + ", " + session['exception.subject'].to_s
+
+    @original_path = stored_location_for :user_account
+    @override_path = "#{@original_path}?admins_only_override=true"
+    @path_for_current_role = "#{@original_path}?preview_as=#{current_role.to_s}"
+
     if not current_devise_user
       redirect_to sign_in_path, flash: { error: I18n.t(:unauthorized_please_sign_in) }
     end

@@ -1,5 +1,5 @@
 class RootController < ApplicationController
-  
+
   before_action :redirect_to_setup_if_needed
   before_action :redirect_to_sign_in_if_needed, :find_and_authorize_page
 
@@ -8,15 +8,15 @@ class RootController < ApplicationController
     set_current_activity :looks_at_the_start_page, @page
     set_current_access :user
     set_current_access_text :the_content_of_the_start_page_is_personalized
-        
+
     @announcement_page = Page.find_or_create_by_flag :site_announcement
     @hide_attachment_drop_fields = true
-    
+
     @view_setting = view_setting
     @new_post = current_user.posts.new
   end
-  
-  
+
+
 private
 
   def redirect_to_setup_if_needed
@@ -25,12 +25,12 @@ private
       redirect_to setup_path
     end
   end
-  
+
   # If a public website exists, which is not just a redirection, then signed-out
   # users are shown the public website.
   #
   # If no public website exists, the users are shown sign-in form.
-  # 
+  #
   def redirect_to_sign_in_if_needed
     unless current_user or @need_setup
       if Page.public_website_present?
@@ -46,7 +46,7 @@ private
     @navable = @page
     authorize! :show, @page
   end
-  
+
   # The user may choose how to view the root page:
   #   - 'timeline'
   #   - 'social'
@@ -67,5 +67,5 @@ private
   def self.default_view_setting
     'timeline'
   end
-  
+
 end

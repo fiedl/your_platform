@@ -15,7 +15,13 @@
     %li{class: active == 'profile' ? 'active' : ''}
       %a{href: group_profile_path(@group)} Kontakt & Profil
   %li{class: active == 'events' ? 'active' : ''}
-    %a{href: group_events_path(@group)} Veranstaltungen
+    - if @group.use_semester_calendars? && can?(:use, :semester_calendars)
+      - if params[:action] == 'show'
+        %a{href: group_semester_calendars_path(@group)}= t :semester_calendar
+      - else
+        %a{href: group_current_semester_calendar_path(@group)}= t :semester_calendar
+    - else
+      %a{href: group_events_path(@group)}= t :events
   - unless @group.group_of_groups?
     %li{class: active == 'members' ? 'active' : ''}
       %a{href: group_members_path(@group)} Mitglieder

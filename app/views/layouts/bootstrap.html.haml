@@ -84,12 +84,7 @@
                   = render 'layouts/session_bar_avatar'
                   = current_user.title
                   %b.caret
-                %ul.dropdown-menu{role: 'menu'}
-                  %li= link_to t(:my_profile), user_path(current_user)
-                  %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true)
-                  %li= link_to t(:change_password), change_password_path
-                  %li= link_to t(:settings), user_settings_path(current_user)
-                  %li= link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out'
+                = render partial: 'layouts/current_user_dropdown'
               - if can? :use, :merit
                 %li
                   = link_to user_badges_path(current_user) do
@@ -110,20 +105,6 @@
     .container-fluid
       .row
         #content
-          - if show_vertical_nav?
-            .col-md-3#vertical_nav_area.hidden-xs
-              = render partial: 'layouts/vertical_nav'
-            .col-md-9#content_area
-              = flash_area
-              = replace_unicode_special_chars_by_html_escape_strings( |
-                  convert_to_content_box { yield }                    |
-                )                                                     |
-            \ 
-          - else
-            #content_area
-              = flash_area
-              = replace_unicode_special_chars_by_html_escape_strings( |
-                  convert_to_content_box { yield }                    |
-                )                                                     |
+          = render partial: 'layouts/multi_column_content_area'
 
     .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer

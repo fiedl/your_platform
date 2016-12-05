@@ -1,0 +1,16 @@
+- form || raise('no form object given')
+- builder ||= form
+
+%tr
+  = builder.hidden_field :contact_person_id
+  %td.event_starts_at= builder.datetime_select :start_at, {use_two_digit_numbers: true, use_month_names: false, date_separator: ".", datetime_separator: "<br />\n"}
+  %td.event_name= builder.text_field :name
+  %td.event_location= builder.text_field :location
+  - semester_calendar_check_box_columns.each do |column_name|
+    %td= builder.check_box column_name
+  %td
+    - # http://railscasts.com/episodes/196-nested-model-form-revised
+    - if builder.object.new_record? or can?(:destroy, builder.object)
+      = builder.hidden_field :_destroy
+      = link_to '#', class: 'btn btn-danger btn-xs destroy_semester_calendar_event' do
+        = icon :trash

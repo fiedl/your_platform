@@ -1,8 +1,18 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :redirect_to, :author, :author_title, :author_user_id, :box_configuration, :type if defined? attr_accessible
+  if defined? attr_accessible
+    attr_accessible :title, :content
+    attr_accessible :author, :author_title, :author_user_id
+    attr_accessible :teaser_text
+    attr_accessible :box_configuration
+    attr_accessible :redirect_to
+    attr_accessible :tag_list
+    attr_accessible :type
+  end
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
+
+  acts_as_taggable
 
   has_many :attachments, as: :parent, dependent: :destroy
 
@@ -15,6 +25,7 @@ class Page < ActiveRecord::Base
   include PagePublicWebsite
   include Archivable
   include PageHasSettings
+  include HasPermalinks
 
   scope :for_display, -> { not_archived.includes(:ancestor_users,
     :ancestor_events, :author, :parent_pages,
@@ -63,11 +74,21 @@ class Page < ActiveRecord::Base
       .select { |page| not page.new_record? }
   end
   def teaser_text
-    if content
+    super || if content
       paragraphs = content.gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
       teaser_content = paragraphs.first
       teaser_content += "\n\n" + paragraphs.second if teaser_content.start_with?("http") # For inline videos etc.
       teaser_content
+    end
+  end
+  def teaser_image_url
+    if image_attachments.first
+      image_attachments.first.medium_url
+    elsif content.present?
+      URI.extract(content)
+        .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
+        .first
+        .try(:gsub, ")", "") # to fix markdown image urls
     end
   end
 
@@ -75,6 +96,10 @@ class Page < ActiveRecord::Base
     settings.group_map_parent_group_id || Group.corporations_parent.id
   end
 
+
+  def as_json(options = {})
+    super.as_json(options).merge({tag_list: tag_list})
+  end
 
   # This is the group the page belongs to, for example:
   #
@@ -165,7 +190,12 @@ class Page < ActiveRecord::Base
     attachments.find_by_type type
   end
   def image_attachments
-    attachments_by_type 'image'
+    attachments.find_by_type('image').select do |attachment|
+      # Do not list images that are `![markdown-images](...)` within the
+      # page content as attachments in order to avoid displaying them
+      # twice.
+      not self.content.try(:include?, attachment.file_path)
+    end
   end
 
 
@@ -181,7 +211,7 @@ class Page < ActiveRecord::Base
   #   |------------------ Page: "Entry 2"
   #
   def blog_entries
-    self.child_pages.where(type: "BlogPost").order('created_at DESC')
+    self.descendant_pages.where(type: "BlogPost").order('created_at DESC')
   end
 
 

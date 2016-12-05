@@ -47,7 +47,7 @@ concern :PagePublicWebsite do
     #
     def public_website_page_ids(reload = false)
       @public_website_page_ids = nil if reload
-      @public_website_page_ids ||= (Page.flagged(:root).pluck(:id) + (Page.flagged(:root).first.try(:descendant_page_ids) || []) - Page.flagged(:intranet_root).pluck(:id) - (Page.flagged(:intranet_root).first.try(:descendant_page_ids) || []))
+      @public_website_page_ids ||= (Page.flagged(:root).pluck(:id) + (Page.flagged(:root).try(:collect) { |root_page| root_page.descendant_page_ids }) || []).flatten - [nil] - Page.flagged(:intranet_root).pluck(:id) - (Page.flagged(:intranet_root).first.try(:descendant_page_ids) || [])
     end
 
     # The public website is present if the Page.find_root has no redirect_to entry,

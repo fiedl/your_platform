@@ -1,0 +1,27 @@
+.app_logo
+  .logo= image_tag 'logo.png'
+  .app_name= AppVersion.mobile_app_name
+
+.col-xs-12.col-sm-6
+  - if can? :read, :mobile_contacts
+    = link_to mobile_contacts_path, class: 'btn btn-default btn-large nav' do
+      = fa_icon 'users'
+      Adressbuch
+  - if can? :read, :mobile_documents
+    = link_to mobile_documents_path, class: 'btn btn-default btn-large nav' do
+      = fa_icon 'file-text-o'
+      Aktuelle Dokumente
+
+- if can? :read, :mobile_events
+  = Rails.cache.fetch([current_user, 'mobile_envets'], expires_in: 15.minutes) do
+    - capture_haml do
+      .col-xs-12.col-sm-6
+        %h1.events Veranstaltungen
+        %div
+          = render partial: 'mobile/partials/events'
+          -#.events_list_partial
+
+.row.sign_out
+  = link_to "App-Info", mobile_app_info_path
+  %span.separator •
+  = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'

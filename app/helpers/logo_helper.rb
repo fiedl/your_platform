@@ -23,8 +23,27 @@ module LogoHelper
     end
   end
 
-  def current_logo
-    logo
+  def logo_image_tag(logo_key = nil)
+    logo_path = Attachment.logos.where(title: logo_key).last.try(:file_path) if logo_key
+    logo_path ||= current_logo_url if current_logo
+    logo_path ||= default_logo
+    image_tag logo_path
   end
 
+  # To which path leads the logo?
+  # - To the public website if present.
+  # - To the intranet if already on the public website.
+  # - To the intranet if no public website present.
+  #
+  def logo_link_path
+    if Page.public_website_present?
+      if current_navable.kind_of?(Page) && current_navable.has_flag?(:root)
+        root_path
+      else
+        public_root_path
+      end
+    else
+      root_path
+    end
+  end
 end

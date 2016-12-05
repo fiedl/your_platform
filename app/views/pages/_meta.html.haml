@@ -1,0 +1,26 @@
+- # locals:
+- # page
+- teaser ||= false
+
+%ul.box_meta
+  - if page.created_at
+    %li.created_at.page_created_at
+      = icon :calendar
+      = localize(page.created_at)
+  - if (not teaser) && page.updated_at && page.updated_at > page.created_at + 1.hour
+    %li.updated_at.page_updated_at
+      = icon :edit
+      = t(:edited_at)
+      = localize(page.updated_at)
+  - if (not teaser) && page.author
+    %li.author.page_author
+      = icon :user
+      = link_to(page.author.title, page.author)
+  - if (not teaser) && @navable != page and not @navable.in?(page.parents) and page.parents.first
+    %li.page_parent
+      = folder_icon
+      = link_to page.parents.first.title, page.parents.first
+  - if page.tags.any?
+    %li.tags.page_tags
+      = icon :tag
+      = render partial: 'tags/tag_list', object: page, as: :taggable

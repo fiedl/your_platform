@@ -14,8 +14,11 @@
     - if not teaser_box
       - if can? :manage, page
         .activities_tool.tool.do_not_show_in_edit_mode.shown_on_box_header_hover
-          = link_to icon(:history), page_activities_path(page), class: 'btn btn-default', title: t(:show_page_activity_log)
+          = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)
       .delete_page_tool.tool= destroy_page_button(page)
+      - if can? :manage, page
+        .attachment_tools.tool
+          = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
       .archive_tools.tool
         = archived_label(page)
         - if (page.type == 'BlogPost') && can?(:update, page)
@@ -24,16 +27,19 @@
       .page_settings_tool.tool
         .shown_on_box_header_hover
           = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
+
+
   %div.page{class: page_class}
-    - if @navable != page and not @navable.in?(page.parents) and page.parents.first
-      .page_header
-        %span.right
-          = icon(:tag)
-          = link_to page.parents.first.title, page.parents.first
 
     #inline-pictures
       - if page.image_attachments.any?
         = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments, inline: true}
+
+    = render partial: 'pages/meta', object: page, as: :page
+
+    - if page.kind_of? BlogPost
+      .page_teaser{class: ('show_only_in_edit_mode' if page.content.try(:include?, page.teaser_text.to_s))}
+        = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, activator: 'manual'
 
     %div.page_body
       - if teaser_box
@@ -47,25 +53,11 @@
         .hidden-print.show_only_in_edit_mode
           #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
-    - if not teaser_box and not page.public?
-      .page_footer.do_not_show_in_edit_mode
-        %span.page_footer_box
-          - if page.author
-            %span.page_author
-              = link_to(page.author.title, page.author) + ", "
-          %span.page_created_at
-            = localize(page.created_at) if page.created_at
-          - if page.updated_at && page.updated_at > page.created_at + 1.hour
-            %span.page_updated_at
-              = " | "
-              = t(:edited_at)
-              = localize(page.updated_at)
-
     - if teaser_box
       .panel-footer
         = link_to t(:learn_more), page
 
   - unless teaser_box
-    #attachments
+    #attachments.attachments
       = render(partial: 'pages/videos', locals: {page: page})
       = render(partial: 'pages/attachments', locals: {page: page})

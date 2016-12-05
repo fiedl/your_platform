@@ -3,23 +3,25 @@ de:
   attachments: 'Anhänge'
   add_attachment: 'Anhang hinzufügen'
   add_attachments: 'Anhänge hinzufügen'
-  
+  attachments_of_str: "Anhänge von '%{str}'"
+
   drop_images_here: Bilder hierher schieben!
   drop_documents_or_images_here: Dokumente oder Bilder hierher schieben!
-  
+  drop_pdf_here: PDF hierher schieben!
+
   uploading_images: Bilder werden hochgeladen.
   uploading_files: Dateien werden hochgeladen.
   please_wait_until_this_field_is_green_again: 'Bitte warten, bis dieses Feld wieder grün wird.'
-  
+
   images_have_been_uploaded: Bilder sind hochgeladen!
   files_have_been_uploaded: Dateien sind hochgeladen!
-  
+
   upload_failed: Hochladen fehlgeschlagen.
   upload_failed_please_contact_support: "Mindestens eine Datei konnte nicht hochgeladen werden. Sollte dieses Problem wiederholt auftreten, wenden Sie sich bitte an die Administration."
-  
+
   images_are_about_to_be_shown_as_gallery_thanks_for_uploading: Die Bilder werden gleich als Gallerie angezeigt. Danke für's Hochladen!
   files_are_about_to_be_shown_thanks_for_uploading: Gleich werden die Dateien angezeigt. Danke für's Hochladen!
-  
+
   click_here_to_set_an_image_title: 'Hier klicken, um einen Bild-Titel zu vergeben.'
   click_here_to_set_an_image_description: 'Hier klicken, um eine Bild-Beschreibung einzugeben.'
 
@@ -28,6 +30,10 @@ de:
   videos: 'Video-Dateien'
   audios: 'Audio-Dateien'
   file: 'Datei'
+
+  uploaded_at: Hochgeladen am
+  upload_new_version: Neue Version hochladen
+  manage_attachments: Anhänge verwalten
 
   helpers:
     submit:

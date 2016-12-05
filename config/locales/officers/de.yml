@@ -1,14 +1,15 @@
 de:
   add_office: Amt hinzufügen
   add_officer: Amtsträger hinzufügen
-  
+
   officers:                  Amtsträger
   officer:                   Amtsträger
 
   add_officer:               Amtsträger hinzufügen
   remove_officer:            Amtsträger entfernen
   change_officer:            Amtsträger wechseln
-  
+  enter_new_officers:        Neue Amtsträger eintragen
+
   all_officers: Alle Amtsträger
   officers_overview: Amtsträger-Überblick
   officer_group_scope: Zuständigkeit
@@ -21,6 +22,5 @@ de:
   creating_new_office: "Erstelle neues Amt. Bitte warten ..."
   destroy_office: Amt entfernen
   office_flags: Typ
-  
+
   these_are_the_current_officers_of_this_office: "Dieses Amt bekleidet derzeit:"
-  

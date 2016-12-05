@@ -1,4 +1,4 @@
-%h1.issues= t(:administrative_issues) + " (#{@issues.count})"
+%h1.issues= "#{current_title} (#{@issues.count})"
 %div
   %a#rescan.btn.btn-default.right{href: "?rescan=#{current_role_view == 'global_admin' ? 'all' : 'mine'}"}
     = icon('refresh')

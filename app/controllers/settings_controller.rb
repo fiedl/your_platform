@@ -20,6 +20,8 @@ class SettingsController < ApplicationController
   def new_value
     value = params[:rails_settings_scoped_settings].try(:[], :value)
     value ||= params['rails_settings/settings'].try(:[], :value)
+    value ||= params[:setting].try(:[], :value)
+
     value = false if value == "false" or value == "0"
     value = true if value == "true" or value == "1"
     return value

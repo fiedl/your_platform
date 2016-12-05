@@ -1,7 +1,7 @@
 require 'prawn/measurement_extensions'
 
 class AddressLabelsPdf < Prawn::Document
-  
+
   def book_rate_line(address_label)
     move_up 2.mm
     address_label.kind_of?(AddressLabel) || raise('Expected AddressLabel, got String. This might be caused by a change of interface. Please call `uncached(:members_postal_addresses)` on all Groups.')
@@ -9,16 +9,16 @@ class AddressLabelsPdf < Prawn::Document
     text "<b>#{book_rate_text}</b>", size: 12.pt, inline_format: true
     move_down 1.mm
   end
-  
+
   def sender_line
     text "<u>#{@sender}</u>", size: sender_line_font_size, inline_format: true
     move_down 2.mm
   end
-  
+
   def sender_line_font_size
     5.pt
   end
-  
+
   # This method is to adjust the font size according to the number of lines
   # required in order to have all addresses fit into their box, but have the
   # font as large as possible.
@@ -41,7 +41,7 @@ class AddressLabelsPdf < Prawn::Document
       return 7.pt
     end
   end
-  
+
   # This method estimates the number of lines required for the given string.
   # Some lines are longer than 35 characters and they will broken into the
   # new line in the PDF. Therefore we need this estimate.
@@ -54,15 +54,7 @@ class AddressLabelsPdf < Prawn::Document
       0
     end
   end
-    
-  def page_header_text
-    "Druck auf Zweckform 3475, 70x36 mm², 24 Stk pro Blatt, DIN-A4. Skalierung auf 100% stellen!"
-  end
-  def page_header
-    bounding_box([0, 28.85.cm], width: 18.5.cm, height: 0.5.cm) do
-      text page_header_text, size: 8.pt, align: :center
-    end
-  end
+
   def page_footer_text
     "#{Rails.application.class.parent_name}: #{@document_title}, Datenstand: #{I18n.localize(@document_updated_at)}, Seite #{page_number} von #{@required_page_count}"
   end
@@ -71,17 +63,17 @@ class AddressLabelsPdf < Prawn::Document
       text page_footer_text, size: 8.pt, align: :center
     end
   end
-  
+
   def fallback_fonts
     define_fonts
     ["dejavu", "times", 'kai']
   end
-  
+
   def define_fonts
     # The idea to use fallback fonts to have chinese characters supported along
     # with other UTF-8 characters, was taken from:
     # http://stackoverflow.com/a/11097644/2066546
-    
+
     kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
     # action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
     dejavu = "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"

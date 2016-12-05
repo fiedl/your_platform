@@ -57,4 +57,15 @@ module BoxHelper
     return can? :update, navable
   end
 
+  def box_toolbar(box_class, navable, heading)
+    content_tag :span, class: 'box_toolbar hidden-print' do
+      if show_box_edit_button?(box_class, navable)
+        [
+          save_button(class: box_class),
+          edit_button(class: box_class, id: strip_tags(heading) + "EditButton")
+        ].join.html_safe
+      end
+    end
+  end
+
 end

@@ -11,10 +11,17 @@ module ActiveRecordUpdateAttributesBipExtension
   # http://apidock.com/rails/v4.2.1/ActiveRecord/Persistence/update, former:
   # http://apidock.com/rails/v3.2.13/ActiveRecord/Persistence/update_attributes
   #
-  def update_attributes(attributes)
+  def update_attributes(attributes, options = {})
+
     # We allow `nil`, but we do not allow "" (empty string).
     non_empty_attributes = attributes.select { |key, value| value != "" }
-    super(non_empty_attributes)
+
+    # Replace "-" with `nil` to be able to remove values intentionally.
+    non_empty_attributes.each do |key, value|
+      non_empty_attributes[key] = nil if value == "-"
+    end
+
+    super(non_empty_attributes, options)
   end
 
   module ClassMethods

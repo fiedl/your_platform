@@ -1,0 +1,27 @@
+- semester_calendar || raise('no semester_calendar given')
+
+= form_for semester_calendar, remote: true, turboboost: true, html: {class: 'edit semester_calendar warn_when_leaving'} do |form|
+  %table.table-header-rotated
+    %thead
+      %tr
+        %th.no-rotate
+          %div
+            %span= t :semester_calendars_when
+        %th.no-rotate
+          %div
+            %span= t :semester_calendars_event
+        %th.no-rotate
+          %div
+            %span= t :semester_calendars_location
+        - semester_calendar_check_box_columns.each do |column_name|
+          %th.rotate
+            %div
+              %span= t("semester_calendars_#{column_name}")
+        %th.rotate
+          %div
+            %span= t :delete
+    %tbody
+      = form.fields_for :events do |builder|
+        = render partial: 'event_edit_row', locals: {form: builder}
+
+  = link_to_add_semester_calendar_event t(:add_event_to_semester_calendar), form: form, class: 'btn btn-default'

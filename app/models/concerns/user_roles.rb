@@ -94,8 +94,28 @@ concern :UserRoles do
   # Former Member
   # ==========================================================================================
 
+  def former_member?
+    cached { current_corporations.none? && corporations.any? }
+  end
+
   def former_member_of_corporation?( corporation )
     corporation.becomes(Corporation).former_members.include? self
+  end
+
+  def date_of_org_membership_end
+    memberships.with_past.find_by(ancestor_id: Group.main_org.id, ancestor_type: 'Group').try(:valid_to).try(:to_date)
+  end
+
+  def localized_date_of_org_membership_end
+    cached { I18n.localize date_of_org_membership_end if date_of_org_membership_end }
+  end
+
+  def reason_for_membership_end
+    if dead?
+      I18n.t(:deceased)
+    else
+      status_string
+    end
   end
 
 
@@ -160,6 +180,18 @@ concern :UserRoles do
 
   def officer_of_anything?
     self.groups.detect { |g| g.type == 'OfficerGroup' } || false
+  end
+
+  def corporations_the_user_is_officer_in
+    Corporation.where(id: self.groups.where(type: 'OfficerGroup').collect { |g| g.ancestor_group_ids }.flatten.uniq)
+  end
+
+  def primarily_administrated_corporation
+    if global_admin?
+      primary_corporation
+    else
+      (corporations_the_user_is_officer_in & [primary_corporation]).first
+    end
   end
 
 

@@ -32,7 +32,7 @@ class App.UploadBox
   bind_fileupload: ->
     self = this  # since `this` can be redefiend
     self.find('form.new_attachment').fileupload
-      dataType: "script"
+      dataType: "json"
       dropZone: self.find('.attachment_drop_field')
       add: (e, data) -> self.file_added(data)
       progress: (e, data) -> self.show_uploading()

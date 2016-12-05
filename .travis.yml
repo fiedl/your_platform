@@ -11,12 +11,14 @@ addons:
       - libicu-dev
 services:
   - redis-server
+  - elasticsearch
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler
 install:
   - travis_retry bundle install
 before_script:
+  - sleep 10
   - cd demo_app/my_platform
   - cp config/database.travis.yml config/database.yml
   - cp config/secrets.example.yml config/secrets.yml

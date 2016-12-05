@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160620085208) do
+ActiveRecord::Schema.define(version: 20161020225033) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20160620085208) do
     t.integer  "author_user_id", limit: 4
     t.integer  "width",          limit: 4
     t.integer  "height",         limit: 4
+    t.string   "type",           limit: 255
   end
 
   add_index "attachments", ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
@@ -275,9 +276,18 @@ ActiveRecord::Schema.define(version: 20160620085208) do
     t.string   "type",              limit: 255
     t.datetime "archived_at"
     t.text     "box_configuration", limit: 65535
+    t.text     "teaser_text",       limit: 65535
   end
 
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
+
+  create_table "permalinks", force: :cascade do |t|
+    t.string   "path",           limit: 255
+    t.string   "reference_type", limit: 255
+    t.integer  "reference_id",   limit: 4
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+  end
 
   create_table "post_deliveries", force: :cascade do |t|
     t.integer  "post_id",    limit: 4
@@ -348,6 +358,14 @@ ActiveRecord::Schema.define(version: 20160620085208) do
     t.datetime "updated_at"
   end
 
+  create_table "semester_calendars", force: :cascade do |t|
+    t.integer  "group_id",   limit: 4
+    t.integer  "year",       limit: 4
+    t.integer  "term",       limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
   create_table "settings", force: :cascade do |t|
     t.string   "var",        limit: 255,   null: false
     t.text     "value",      limit: 65535
@@ -366,6 +384,36 @@ ActiveRecord::Schema.define(version: 20160620085208) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "taggings", force: :cascade do |t|
+    t.integer  "tag_id",        limit: 4
+    t.integer  "taggable_id",   limit: 4
+    t.string   "taggable_type", limit: 255
+    t.integer  "tagger_id",     limit: 4
+    t.string   "tagger_type",   limit: 255
+    t.string   "context",       limit: 128
+    t.datetime "created_at"
+  end
+
+  add_index "taggings", ["context"], name: "index_taggings_on_context", using: :btree
+  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+  add_index "taggings", ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
+  add_index "taggings", ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
+  add_index "taggings", ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
+  add_index "taggings", ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
+  add_index "taggings", ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
+
+  create_table "tags", force: :cascade do |t|
+    t.string  "name",           limit: 255
+    t.integer "taggings_count", limit: 4,     default: 0
+    t.string  "title",          limit: 255
+    t.text    "body",           limit: 65535
+    t.string  "subtitle",       limit: 255
+  end
+
+  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "user_accounts", force: :cascade do |t|
     t.string   "encrypted_password",     limit: 255, default: "", null: false

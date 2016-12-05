@@ -8,13 +8,13 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
-  
+
   # Show full error reports.
   config.consider_all_requests_local       = true
-  
+
   # Caching
+  # See also: config/initializers/cache.rb
   config.action_controller.perform_caching = true
-  config.cache_store = :redis_store, 'redis://localhost:6379/0/', { expires_in: 1.day, namespace: 'my_platform_rails_4_development_cache' }
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
@@ -37,7 +37,7 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
-  
+
   # Mailer Settings
   config.action_mailer.delivery_method = :letter_opener
   config.action_mailer.default_url_options = {host: 'localhost', port: 3000, protocol: 'http'}

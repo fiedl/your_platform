@@ -1,0 +1,8 @@
+- taggable || raise('no taggable given')
+
+- if can? :update, taggable
+  - activator_id = "#{taggable.cache_key} tag list activator".parameterize
+  = best_in_place taggable, :tag_list, class: 'tag_list autocomplete_tag_list', data: {available_tags: ActsAsTaggableOn::Tag.pluck(:name)}
+
+- else
+  = tag_links_for taggable

@@ -1,5 +1,5 @@
 class Attachment < ActiveRecord::Base
-  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author if defined? attr_accessible
+  attr_accessible :description, :file, :parent_id, :parent_type, :title, :author, :type if defined? attr_accessible
 
   belongs_to :parent, polymorphic: true
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
@@ -7,10 +7,20 @@ class Attachment < ActiveRecord::Base
   mount_uploader :file, AttachmentUploader
 
   before_save :update_file_attributes
-  before_create :set_default_title_if_empty
+  after_create :set_default_title_if_empty
   before_destroy :remove_file!
 
   scope :logos, -> { where('title like ?', "%logo%") }
+
+  # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
+  def title
+    super || filename
+  end
+
+  def scope
+    parent.try(:group) || parent.parents.first || parent
+  end
 
   def thumb_url
     url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
@@ -38,6 +48,10 @@ class Attachment < ActiveRecord::Base
     AppVersion.root_url + file.url if file.url.present?
   end
 
+  def file_path
+    file.try(:url)
+  end
+
   def file_size_human
     helpers.number_to_human_size( self.file_size )
   end
@@ -50,8 +64,15 @@ class Attachment < ActiveRecord::Base
     self.content_type.include? 'video'
   end
 
+  def pdf?
+    self.content_type.include? 'pdf'
+  end
+
   def self.find_by_type( type )
     where( "content_type like ?", "%" + type + "%" )
+  end
+  def self.by_type(type)
+    find_by_type(type)
   end
 
   def self.find_without_types( *types )
@@ -68,6 +89,12 @@ class Attachment < ActiveRecord::Base
       end
       re
     end.flatten
+  end
+
+  def as_json(*args)
+    super.merge({
+      file_path: file_path
+    })
   end
 
   private
@@ -87,6 +114,7 @@ class Attachment < ActiveRecord::Base
   def set_default_title_if_empty
     if file.present? && file.filename.present? && file_changed?
       self.title ||= File.basename(file.filename, '.*').titleize
+      self.save
     end
   end
 

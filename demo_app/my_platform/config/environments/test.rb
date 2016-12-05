@@ -18,8 +18,10 @@ Rails.application.configure do
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
+
+  # Caching
+  # See also: config/initializers/cache.rb
   config.action_controller.perform_caching = true  # default: false
-  config.cache_store = :redis_store, 'redis://localhost:6379/0/', { expires_in: 1.day, namespace: 'my_platform_rails_4_test_cache' }
 
   # Raise exceptions instead of rendering exception templates.
   config.action_dispatch.show_exceptions = false

@@ -4,8 +4,6 @@ $(document).ready ->
 
   Turbolinks.enableTransitionCache() if $('body').data('env') != 'test'
 
-
-
 # If the layout changes, then turbolinks does not load the changed layout.
 # And if the navigational elements differ between the layouts, this can look
 # quite strange.
@@ -27,3 +25,9 @@ $(document).ready ->
       location.reload()
   if new_layout
     current_layout = new_layout
+
+# Do not store alert messages in cache. Otherwise, they would be shown
+# when a page is restored from cache.
+#
+$(document).on 'turbolinks:before-cache', ->
+  $(".alert").remove()

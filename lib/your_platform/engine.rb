@@ -13,9 +13,12 @@ require 'rails-i18n'
 # Data Structures
 require 'acts-as-dag'
 require 'acts_as_tree'
+require 'wannabe_bool'
+require 'acts-as-taggable-on'
 
 # Caching
 require 'redis-rails'
+require 'redis-namespace'
 
 # Workers
 require 'sidekiq'
@@ -52,10 +55,13 @@ require 'autosize/rails'
 require 'sugar-rails'
 require 'i18n-js'
 require 'jquery-atwho-rails'
-require 'turbolinks'
 require 'jquery-turbolinks'
+require 'turbolinks'
 require 'turboboost'
 require 'rails-assets-datatables'
+require 'rails-assets-trentrichardson--jQuery-Timepicker-Addon'
+require 'bootstrap_tokenfield_rails'
+require 'rails-assets-inline-attachment'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'
@@ -66,6 +72,9 @@ require 'rails-assets-bootstrap-social'
 # In Place Editing
 require 'best_in_place'
 require 'rails-assets-Voog--wysihtml'
+
+# Search
+require 'elasticsearch/model'
 
 # Geo Coding
 require 'geocoder'
@@ -104,6 +113,8 @@ require 'judge'
 # Metrics
 require 'rack-mini-profiler'
 require 'redis_analytics'
+require 'chartkick'
+require 'groupdate'
 
 # Activity Logger
 require 'public_activity'
@@ -117,6 +128,9 @@ require 'to_xls'
 # ICS Export (iCal)
 require 'icalendar'
 require 'icalendar/tzinfo'
+
+# VCF Export
+require 'vcardigan'
 
 # Gamification
 require 'merit'

@@ -23,11 +23,14 @@
   - # General Info Box
   #general{class: tab_pane_class + " in active"}
     %h1.section.general.no_uppercase
-      = editable_first_and_last_name(@user)
+      %span.obscure-in-demo= editable_first_and_last_name(@user)
       &nbsp;
       %span.regular_case
         = @user.name_affix
       .workflow-tool.tool= render partial: 'workflow_triggers'
+      - if can? :manage, @user
+        .tool.profile_fields_index
+          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-default'
     %div
       .media
         .media-left= render partial: 'avatar'
@@ -35,7 +38,7 @@
           %ul.attributes.keys-and-values
             = render partial: 'user_corporation_attribute'
             %li.name.attribute= render partial: 'user_name_attribute'
-            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true
+            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth'
             - general_fields = @user.profile.section(:general).fields
             = profile_field_lis general_fields, lock_label: true, no_remove: true
             = render partial: 'users/special_general_info_fields', locals: {user: @user}

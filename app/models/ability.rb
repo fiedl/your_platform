@@ -115,7 +115,7 @@ class Ability
     @preview_as
   end
   def token
-    @token if @user_by_auth_token
+    @token
   end
   def auth_token
     @auth_token ||= AuthToken.where(token: token).first if @user_by_auth_token
@@ -204,6 +204,18 @@ class Ability
       can :update, Group do |group|
         group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
       end
+
+      can :update, SemesterCalendar do |semester_calendar|
+        semester_calendar.group && user.in?(semester_calendar.group.officers_of_self_and_ancestor_groups)
+      end
+      can :create_attachment_for, SemesterCalendar do |semester_calendar|
+        can? :update, semester_calendar
+      end
+      can :create, SemesterCalendar
+      can :destroy, SemesterCalendar do |semester_calendar|
+        can? :update, semester_calendar
+      end
+
 
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
@@ -370,6 +382,10 @@ class Ability
     can :index, Event
     can :index_events, Group
     can :index_events, User, :id => user.id
+    can :read, SemesterCalendar do |semester_calendar|
+      can? :read, semester_calendar.group
+    end
+
 
     # Name auto completion
     #
@@ -415,6 +431,14 @@ class Ability
     can [:read, :update], Project do |project|
       project.group.members.include? user
     end
+
+    # Mobile app
+    can :read, :mobile_welcome
+    can :read, :mobile_dashboard
+    can :read, :mobile_app_info
+    can :read, :mobile_contacts
+    can :read, :mobile_events
+    can :read, :mobile_documents
   end
 
   def rights_for_auth_token_users
@@ -436,6 +460,18 @@ class Ability
   end
 
   def rights_for_everyone
+
+    # Feature switches
+    #
+    can :use, :semester_calendars
+    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
+    # Use the tabs view in users#show. This has been a beta feature previously.
+    # TODO: Remove the feature switch whenever you feel we won't switch back.
+    #
+    can :use, :tab_view
+
+
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
     #
@@ -452,6 +488,15 @@ class Ability
     end
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Page) && attachment.parent.public?
+    end
+    can [:read, :download], Attachment do |attachment|
+      attachment.id.in? Attachment.logos.pluck(:id)
+    end
+
+    # All users can comment contents they can read.
+    #
+    can :create_comment_for, BlogPost do |blog_post|
+      can? :read, blog_post
     end
 
     # All users can read public events.
@@ -477,9 +522,20 @@ class Ability
           # to that user.
           tokened_user == other_user.account
         end
+        can :read, Event do |event|
+          tokened_user.user.can? :read, event
+        end
       end
     end
     can :index_public_events, :all
+
+    # RSS Feeds
+    can :index, :feeds
+    can :read, :default_feed
+    can :read, :public_feed
+    if token.present? # && tokened_user = UserAccount.find_by_auth_token(token).try(:user)
+      can :read, :personal_feed
+    end
 
     # Nobody can destroy events and pages that are older than 10 minutes.
     timestamp = 10.minutes.ago
@@ -492,6 +548,13 @@ class Ability
       # FIXME: Make this block unnecessary.
       obj.created_at < timestamp
     end
+
+    # Nobody can destroy semester calendars with attachments.
+    #
+    cannot :destroy, SemesterCalendar do |semester_calendar|
+      semester_calendar.attachments.count > 0
+    end
+
 
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
@@ -523,9 +586,8 @@ class Ability
     #
     can :read, :avatars
 
-    # Use the tabs view in users#show. This has been a beta feature previously.
-    # TODO: Remove the feature switch whenever you feel we won't switch back.
-    #
-    can :use, :tab_view
+    # Everyone can read the mobile app's welcome screen.
+    can :read, :mobile_welcome
+
   end
 end

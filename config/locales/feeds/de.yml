@@ -1,0 +1,8 @@
+de:
+  feeds: Feeds
+  rss_feeds: RSS-Feeds
+
+  default_feed: Standard-Feed
+  personal_feed: Personalisierter Feed
+  public_feed: Öffentlicher Feed
+  overall_feed: Gesamt-Feed

@@ -1,11 +1,17 @@
 class Event < ActiveRecord::Base
-  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website if defined? attr_accessible
+  attr_accessible :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id, :contact_person_id if defined? attr_accessible
 
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
 
   has_many :attachments, as: :parent, dependent: :destroy
 
   include Navable
+
+  attr_accessor :group_id
+  after_save :assign_to_group_given_by_group_id
+
+  attr_accessor :contact_person_id
+  after_save :assign_contact_person_given_by_contact_person_id
 
 
   # General Properties
@@ -36,14 +42,24 @@ class Event < ActiveRecord::Base
   def group
     @group ||= self.parent_groups.first
   end
-  def group=( group )
-    @group = group
-    self.destroy_dag_links
-    self.parent_groups << group
+  def group=(new_group)
+    if @group != new_group
+      @group = new_group
+      self.destroy_dag_links
+      self.parent_groups << new_group
+    end
   end
   def groups
     self.parent_groups
   end
+  def group_id
+    @group_id ||= group.try(:id)
+  end
+
+  def assign_to_group_given_by_group_id
+    self.group = Group.find(group_id) if group_id
+  end
+
 
   # Times
   # ==========================================================================================
@@ -101,6 +117,14 @@ class Event < ActiveRecord::Base
     super
   end
 
+  def assign_contact_person_given_by_contact_person_id
+    # Assign the contact person in a background job to save some time here.
+    Event.delay.assign_contact_person_to_event self.id, contact_person_id if contact_person_id
+  end
+
+  def self.assign_contact_person_to_event(event_id, contact_person_id)
+    Event.find(event_id).contact_people_group << User.find(contact_person_id)
+  end
 
   # Scopes
   # ==========================================================================================
@@ -164,12 +188,14 @@ class Event < ActiveRecord::Base
 
   def to_icalendar_event
     e = Icalendar::Event.new
-    e.dtstart = Icalendar::Values::DateTime.new(self.start_at.utc, tzid: 'UTC')
-    e.dtend = Icalendar::Values::DateTime.new((self.end_at || self.start_at + 1.hour).utc, tzid: 'UTC')
+    if self.start_at
+      e.dtstart = Icalendar::Values::DateTime.new(self.start_at.utc, tzid: 'UTC')
+      e.dtend = Icalendar::Values::DateTime.new((self.end_at || self.start_at + 1.hour).utc, tzid: 'UTC')
+    end
     e.summary = self.name
     e.description = self.description
     e.location = self.location
-    if self.contact_people.first
+    if self.contact_people.first.try(:email).present?
       e.organizer = self.contact_people.first.email
       e.organizer.ical_params = {'CN' => self.contact_people.first.title}
     end

@@ -2,6 +2,9 @@ de:
   time:
     formats:
       time: ! '%H:%M Uhr'
+      minimal: '%d.%m.%Y, %H:%M'
+      minimal_with_weekday: '%a, %d.%m.%Y, %H:%M'
+      default: '%a, %d.%m.%Y, %H:%M'
 
   title: Titel
 
@@ -29,6 +32,7 @@ de:
   confirm: Bestätigen
   optional: optional
   thanks: Danke!
+
   ok: OK
   cancel: Abbrechen
   link: Link
@@ -37,6 +41,8 @@ de:
   overview: Überblick
   see_also: Siehe auch
 
+  back: Zurück
+
   filter_table: "Tabelle filtern ..."
 
   created_at: Erstellt am
@@ -44,3 +50,6 @@ de:
   last_update: Letzte Änderung
   format: Format
 
+  type: Typ
+
+  delete: Löschen

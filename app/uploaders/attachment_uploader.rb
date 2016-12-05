@@ -17,7 +17,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
     model.id || raise('Model has no id. But need one to save the file.')
-    "#{Rails.root}/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
+    "#{Rails.root}/uploads/#{Rails.env}_env/#{model.class.base_class.to_s.underscore}s/#{model.id}"
   end
   def cache_dir
     # model.id || raise('Model has no id. But need one to save the file.')
@@ -156,10 +156,13 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     else
       filename = self.current_path
     end
-    filename || raise('No filename.')
-    extension = File.extname(filename).gsub(/^./, '')
-    basename = File.basename(filename).gsub(/.#{extension}$/, '')
-    Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension, version: version )
+    if filename
+      extension = File.extname(filename).gsub(/^./, '')
+      basename = File.basename(filename).gsub(/.#{extension}$/, '')
+      Rails.application.routes.url_helpers.attachment_download_path(id: model.id, basename: basename, extension: extension, version: version )
+    else
+      nil
+    end
   end
 
   def filetitle

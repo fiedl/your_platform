@@ -46,4 +46,3 @@ $(document).on 'click', '.unarchive_button', (e)->
       Turbolinks.reload()
 
   return false
-

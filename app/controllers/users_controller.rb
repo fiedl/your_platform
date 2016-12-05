@@ -32,6 +32,16 @@ class UsersController < ApplicationController
     end
 
     metric_logger.log_event @user.attributes.merge({name: @user.name, title: @user.title}), type: :show_user
+
+    respond_to do |format|
+      format.html
+      format.json
+      format.js
+      format.vcf do
+        current_user.add_recent_contact @user
+        render text: @user.to_vcf
+      end
+    end
   end
 
   def new

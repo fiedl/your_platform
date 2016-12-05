@@ -6,6 +6,14 @@ class User < ActiveRecord::Base
                               :notification_policy
   end
 
+  # Virtual attribute, which can be used in member lists to add a note in memory when the user
+  # has joined a group or list.
+  #
+  # See:
+  #   - `_member_list.html.haml`
+  #
+  attr_accessor :member_since
+
   # Gamification: https://github.com/merit-gem/merit
   include Merit
   has_merit
@@ -13,8 +21,8 @@ class User < ActiveRecord::Base
   attr_accessor             :create_account, :add_to_group, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
-  validates_presence_of     :first_name, :last_name
-  validates_format_of       :first_name, with: /\A[^\,]*\z/  # The name must not contain a comma.
+  validates_presence_of     :last_name
+  validates_format_of       :first_name, with: /\A[^\,]*\z/, if: Proc.new { |user| user.first_name.present? }  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
 
   before_validation         :change_alias_if_already_taken
@@ -74,6 +82,11 @@ class User < ActiveRecord::Base
   include UserMerit
   include UserRecommendations
   include UserOmniauth
+  include UserSearch
+  include UserContacts
+  include UserVcfExport
+  include UserDocuments
+  include UserGeoSearch
 
   # General Properties
   # ==========================================================================================
@@ -82,6 +95,15 @@ class User < ActiveRecord::Base
   #
   def name
     first_name + " " + last_name if first_name && last_name
+  end
+  def name=(new_name)
+    if new_name.present?
+      self.last_name = new_name.strip.split(" ").last
+      self.first_name = new_name.gsub(last_name, "").strip
+    else
+      self.last_name = nil
+      self.first_name = nil
+    end
   end
 
   # This method will make the first_name and the last_name capitalized.
@@ -99,8 +121,8 @@ class User < ActiveRecord::Base
   end
 
   def capitalized_name_string( name_string )
-    return name_string if name_string.include?( " " )
-    return name_string.slice( 0, 1 ).capitalize + name_string.slice( 1 .. -1 )
+    return name_string if name_string.try(:include?, " ")
+    return name_string.slice(0, 1).capitalize + name_string.slice(1..-1) if name_string.present?
   end
   private :capitalized_name_string
 
@@ -329,6 +351,9 @@ class User < ActiveRecord::Base
   def has_no_account?
     not self.account.present?
   end
+  def guest_user?
+    has_no_account?
+  end
 
   # This method activates the user account, i.e. grants the user the right to log in.
   #
@@ -367,12 +392,16 @@ class User < ActiveRecord::Base
     if self.create_account == true
       self.account.destroy if self.has_account?
       self.account = self.build_account
-      self.create_account = false # to make sure that this code is nut run twice.
+      create_account = false # to make sure that this code is nut run twice.
       return self.account
     end
 
   end
   private :build_account_if_requested
+
+  def token
+    account.try(:auth_token)
+  end
 
 
   # Activities
@@ -483,6 +512,13 @@ class User < ActiveRecord::Base
     # end
 
     sorted_current_corporations.first
+  end
+
+  # The primary corporation is the one the user is most associated with.
+  #
+  def primary_corporation
+    # Temporary hack. This might not be correct for all cases.
+    first_corporation
   end
 
   # This returns the groups within the first corporation
@@ -673,7 +709,7 @@ class User < ActiveRecord::Base
       .includes(:ancestor_groups)
       .where(groups: {id: group_ids_the_user_is_no_member_of})
     Page
-      .where('NOT id IN (?)', (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
+      .where.not(id: (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
       .for_display
       .order('pages.updated_at DESC')
   end
@@ -828,6 +864,19 @@ class User < ActiveRecord::Base
   end
   def accepted_terms?(terms_stamp)
     self.accepted_terms == terms_stamp
+  end
+
+  def self.apply_filter(filter)
+    if filter && filter.include?("without_email")
+      self.without_email
+    else
+      self.all
+    end
+  end
+
+  def self.without_email
+    ids = self.select { |user| not user.email.present? or user.email_needs_review? }.map(&:id)
+    where(id: ids)
   end
 
 

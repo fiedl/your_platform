@@ -3,13 +3,16 @@
     %tr
       %th=t :last_name
       %th=t :first_name
-      %th Aktivitätszahl
+      %th=t :name_affix
       %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{@group.name}' geführt wird.", data: {placement: 'left'}} Seit
   %tbody
-    - for membership in memberships do
-      %tr.member{data: {profile_fields: membership.user.address_fields_json}}
+    - if memberships
+      - members = memberships.collect { |m| u = m.user; u.member_since = membership.valid_from.try(:to_date); u }
+    - if members
+      - members.each do |member|
+        %tr.member{data: {profile_fields: member.address_fields_json}}
         %td
-          %strong= link_to membership.user.last_name, membership.user
-        %td= membership.user.first_name
-        %td= membership.user.name_affix
-        %td= localize(membership.valid_from.to_date) if membership.valid_from
+          %strong= link_to member.last_name, member
+        %td= member.first_name
+        %td= member.name_affix
+        %td= localize(member.member_since) if member.member_since

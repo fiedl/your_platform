@@ -1,2 +1,43 @@
 de:
   semester_calendar: Semesterprogramm
+  semester_calendars: Semesterprogramme
+  new_semester_calendar: Neues Semesterprogramm
+  enter_semester_calendar: Semesterprogramm eintragen
+  create_semester_calendar: Semesterprogramm erstellen
+  show_semester_calendars: Semesterprogramme anzeigen
+  edit_semester_calendar: Semesterprogramm bearbeiten
+
+  term: Semester
+  winter_term: Wintersemester
+  summer_term: Sommersemester
+
+  fon: Tel.
+
+  semester_calendars_when: Wann
+  semester_calendars_event: Veranstaltung
+  semester_calendars_location: Ort
+
+  all_semester_calendars: Alle Semesterprogramme
+  all_semester_calendars_short: Alle Programme
+
+  semester_calendar_updated_at: Stand
+
+  semester_calendars_no_pdf_uploaded: Keine PDF-Version hochgeladen.
+
+  calendar_abo: Kalender-Abo
+  ical_abo: iCal-Abo
+  get_all_semester_calendars_of_str_automatically: "Alle Semesterprogramme von '%{str}' automatisch auf Smartphone oder Rechner abonnieren:"
+
+  ical_all_events: Alle Termine
+  ical_events_concerning_me: Termine, die mich betreffen
+  ical_events_from_the_homepage: Nur termine von der Homepage
+
+  events_from_the_global_website: Veranstaltungen von der öffentlichen Homepage
+  new_semester_calendar_for_which_corporation: Für welche Organisation?
+
+  add_event_to_semester_calendar: Veranstaltung hinzufügen
+  please_wait_while_semester_calendar_is_saving: "Das Semesterprogramm wird nun gespeichert. Das kann bei typischen Semesterprogrammen fünf Minuten dauern. Nur Geduld :) 🍕 🍺 ☕️ — Wenn das Speichern fertig ist, kann das Semesterprogramm als PDF hochgeladen werden."
+
+  is_looking_at_semester_calendar: "sieht sich ein Semesterprogramm an"
+  is_editing_a_semester_calendar: "erstellt ein Semesterprogramm"
+  is_looking_at_semester_calendars: "sieht sich Semesterprogramme an"

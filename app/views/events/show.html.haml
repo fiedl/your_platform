@@ -7,11 +7,13 @@
     .ics_export_buttons.tool
       %a.btn.btn-default#ics_export{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
         = icon :calendar
-        Kalender-Export
+        .hidden-xs
+          Kalender-Export
 %div
   = render partial: 'events/event_details'
 
-= render partial: 'events/pictures'
+.hidden-xs
+  = render partial: 'events/pictures'
 
 %h1=t :attendees
 %div#attendees
@@ -33,7 +35,7 @@
           Doch nicht teilnehmen
 
   - if can?(:invite_to, @event) && @event.group
-    %p.center.invitation
+    %p.center.invitation.hidden-xs
       %a.btn.btn-default.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'top'}}
         = icon :envelope
         = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"

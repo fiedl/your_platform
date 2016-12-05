@@ -1,16 +1,20 @@
 en:
+  profile_fields: Profile fileds
   profile_field:
     label: Label
     phone:
       number: Number
-  
+
+  profile_fields_maintenance_view: Profile fields maintenance view
+  add_profile_field: Add profile field
+
   account_holder: Account Holder
   account_number: Account Number
   bank_code: Bank Code
   credit_institution: Credit Institution
   iban: IBAN
   bic: BIC
-  
+
   first_address_line: First address line
   second_address_line: Second address line
   postal_code: Postal Code

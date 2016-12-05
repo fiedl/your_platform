@@ -4,7 +4,7 @@ module CacheAdditions
     key = namespaced_key(name, options)
     read_entry(key, options)
   end
-  
+
   # This method reveals when a cache entry has been created.
   #
   def created_at(name)

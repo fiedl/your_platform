@@ -4,18 +4,18 @@ $(document).ready ->
   $('.new_post .preview').hide()
   $('.new_post .post_tools').hide()
   $('.new_post textarea').autosize()
-  original_box_title = $('.box.first.new_post .panel-title h1').text()
+  original_box_title = $('.box.first.new_post .box_header h1').text()
   if $('.new_post .camera-button').size() > 0
     $('.new_post textarea').height($('.new_post .camera-button').height())
-  
+
 $(document).on 'change keyup paste', '.new_post textarea', ->
   if $('.new_post textarea').val() != ""
     $('.new_post .post_tools').show()
     if $(this).val().split("\n").count() < 3 # for performance reasons
-      $('.box.first.new_post .panel-title h1').text($('.new_post textarea').val().split("\n").first())
+      $('.box.first.new_post .box_header h1').text($('.new_post textarea').val().split("\n").first())
   else
     $('.new_post .post_tools').hide()
-    $('.box.first.new_post .panel-title h1').text(original_box_title)
+    $('.box.first.new_post .box_header h1').text(original_box_title)
     if $('.new_post .camera-button').size() > 0
       $('.new_post textarea').height($('.new_post .camera-button').height())
 
@@ -48,7 +48,7 @@ $(document).on 'click', '.preview_post', ->
 
 $(document).on 'click', '.new_post .preview', ->
   hide_preview_stuff()
-  
+
 $(document).on 'click', '.dropdown-menu.select_post_recipient a', ->
   $('.new_post input.group_id').val($(this).data('group-id'))
   $('.btn.recipient').dropdown('toggle')
@@ -56,7 +56,7 @@ $(document).on 'click', '.dropdown-menu.select_post_recipient a', ->
   $('.btn.recipient').text(I18n.t('recipient') + ": " + $(this).data('group-title'))
   $('.submit_post').removeClass('hidden').show()
   false
-  
+
 $(document).on 'click', '.new_post .camera-button', ->
   $('.new_post .post_tools').show()
   $('.new_post .post_attachment').removeClass('hidden').show()

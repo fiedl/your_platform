@@ -1,12 +1,107 @@
-ul.semester_calendar
-  list-style: none
-  margin: 0px
-  padding: 0px
+.semester_calendar
+  .table-header-rotated
+    margin-top: -60px
 
-  li
-    margin-bottom: 10px
-    margin-top: 0px
+  .semester
+    font-size: 120%
+    font-weight: bold
+    small
+      font-size: 68%
+      font-weight: normal
 
-  li.month_name
-    margin-bottom: 10px
-    margin-top: 10px
+  .global_event
+    font-weight: bold
+    font-size: 120%
+
+  .local_event
+    font-weight: bold
+
+  .past_event
+    opacity: 0.7
+
+  ul.semester_calendar
+    list-style: none
+    margin: 0px
+    padding: 0px
+
+    li
+      margin-bottom: 10px
+      margin-top: 0px
+
+    li.month_name
+      margin-bottom: 10px
+      margin-top: 25px
+
+    .event_starts_at, .event_title
+      display: inline-block
+    .event_starts_at
+      font-size: 80%
+      width: 30%
+    .event_title
+      width: 65%
+      vertical-align: top
+
+  .edit_table input[type='submit']
+    display: none
+
+  .table-header-rotated
+    border-collapse: collapse
+    .csstransforms & td
+      width: 30px
+    .no-csstransforms & th
+      padding: 5px 10px
+    td
+      text-align: center
+      padding: 10px 5px
+      border: 1px solid #ccc
+    th.no-rotate
+      vertical-align: bottom
+      padding-bottom: 10px
+    th.rotate
+      height: 140px
+      white-space: nowrap
+      // Firefox needs the extra DIV for some reason, otherwise the text disappears if you rotate
+      > div
+        transform: translate(25px, 51px) rotate(315deg)
+        width: 30px
+      > div > span
+        border-bottom: 1px solid #ccc
+        padding: 5px 10px
+    th.row-header
+      padding: 0 10px
+      border-bottom: 1px solid #ccc
+    td input
+      width: 90%
+      font-weight: normal
+
+  td.event_starts_at
+    width: 185px
+
+
+.box.semester_calendar_pdf .semester_calendar_pdf
+  overflow: hidden
+
+.show_other_semester_calendars_links
+  margin-top: 40px
+  font-size: 80%
+
+.semester_calendars
+  .semester
+    font-size: 130%
+  ul.semester_calendars
+    margin-top: 20px
+    li
+      margin-bottom: 10px
+      strong
+        font-size: 110%
+    li.current
+      font-weight: bold
+      font-size: 120%
+
+.box.public_events
+  .event.info
+    display: block
+
+.new_semester_calendar
+  form select
+    font-size: 120%

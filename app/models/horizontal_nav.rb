@@ -2,6 +2,7 @@ class HorizontalNav
   def initialize(args)
     @user = args[:user]
     @current_navable = args[:current_navable]
+    @current_home_page = args[:current_home_page]
   end
 
   def self.for_user(user, args = {})
@@ -19,7 +20,7 @@ class HorizontalNav
       intranet_navables
     else
       public_navables
-    end
+    end.select { |navable| not navable.nav_node.hidden_menu?}
   end
 
   def intranet_navables
@@ -27,21 +28,26 @@ class HorizontalNav
   end
 
   def public_navables
-    if breadcrumb_root.respond_to? :horizontal_nav_child_pages
-      pages = [breadcrumb_root] + breadcrumb_root.horizontal_nav_child_pages
-
-      # Sort by the persisted order.
-      # http://stackoverflow.com/a/7790994/2066546
-      if breadcrumb_root.respond_to?(:settings) && breadcrumb_root.settings.horizontal_nav_page_id_order.kind_of?(Array)
-        pages_by_id = Hash[pages.map { |p| [p.id, p] }]
-        pages = (pages_by_id.values_at(*breadcrumb_root.settings.horizontal_nav_page_id_order) + pages).uniq
-      end
-
-      pages.select { |page| page.try(:id) && page.show_in_menu? } # Filter "new page" element.
+    pages = [current_home_page]
+    if current_home_page.respond_to? :horizontal_nav_child_pages
+      pages += current_home_page.horizontal_nav_child_pages
     else
-      []
+      pages += current_home_page.child_pages.where(type: [nil, 'Page', 'Blog'])
     end
-    # [ Page.find_root ] + Page.find_root.child_pages.where(type: [nil, 'Page']) - [ Page.find_intranet_root, Page.find_imprint ] - Page.flagged(:public_root_element)
+    pages -= [Page.find_intranet_root, Page.find_imprint]
+    pages -= Page.flagged(:public_root_element)
+
+    # Sort by the persisted order.
+    # http://stackoverflow.com/a/7790994/2066546
+    if current_home_page.respond_to?(:settings) && current_home_page.settings.horizontal_nav_page_id_order.kind_of?(Array)
+      pages_by_id = Hash[pages.map { |p| [p.id, p] }]
+      pages = (pages_by_id.values_at(*current_home_page.settings.horizontal_nav_page_id_order) + pages).uniq
+    end
+
+    # Filter "new page" element (id: nil) and hidden pages.
+    pages = pages.select { |page| page.try(:id) && page.show_in_menu? }
+
+    return pages
   end
 
   def currently_in_intranet?
@@ -50,6 +56,10 @@ class HorizontalNav
 
   def current_navable
     @current_navable
+  end
+
+  def current_home_page
+    @current_home_page || Page.root
   end
 
   def breadcrumb_root

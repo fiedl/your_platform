@@ -45,15 +45,20 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
     elsif self.name == "Aktivmeldung"
       "#{user.title} hat sich #{self.name_as_participle_perfect_passive}."
     elsif self.name.include? "Austritt"
-      "#{user.title} ist #{self.name_as_participle_perfect_passive}."
+      "#{user.title} ist #{self.name_as_participle_perfect_passive} (#{corporation.title})."
     else
-      "#{user.title} wurde #{self.name_as_participle_perfect_passive}."
+      "#{user.title} wurde #{self.name_as_participle_perfect_passive} (#{corporation.title})."
     end
   end
 
-  def wah_group  # => TODO: corporation
-    ( self.ancestor_groups & Corporation.all ).first
+  def corporation
+    self.ancestor_groups.where(type: 'Corporation').first
   end
+
+  def wah_group  # => TODO: Delete this method and check specs.
+    corporation
+  end
+  deprecate :wah_group  # http://stackoverflow.com/a/7112231/2066546
 
   def self.find_or_create_mark_as_deceased_workflow
     self.find_mark_as_deceased_workflow || self.create_mark_as_deceased_workflow

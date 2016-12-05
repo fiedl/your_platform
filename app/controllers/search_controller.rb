@@ -13,10 +13,8 @@ class SearchController < ApplicationController
 
       # browse users, pages, groups and events
       #
-      q = "%" + query_string.gsub( ' ', '%' ) + "%"
-      @users = User.where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
-        .order('last_name', 'first_name')
-      @users = [User.find_by_title(query_string)] - [nil] if @users.none?
+      q = "%" + query_string.gsub(' ', '%') + "%"
+      @users = User.search(query_string)
       @pages = Page.where("title like ? OR content like ?", q, q)
         .order('title')
       @groups = Group.where( "name like ?", q )
@@ -46,8 +44,13 @@ class SearchController < ApplicationController
 
       # browse attachments
       #
-      attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
-      @pages += attachments.collect { |attachment| attachment.parent }
+      if can? :use, :pdf_search
+        @attachments = Attachment.search(query_string)
+      else
+        attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
+        @pages += attachments.collect { |attachment| attachment.parent }
+        @attachments = []
+      end
 
       # browse comments
       #
@@ -71,9 +74,10 @@ class SearchController < ApplicationController
       @groups = filter_by_authorization(@groups)
       @events = filter_by_authorization(@events)
       @posts = filter_by_authorization(@posts)
+      @attachments = filter_by_authorization(@attachments)
 
-      @results = @users + @pages + @groups + @events + @posts
-      if @results.count == 1
+      @results = @users + @pages + @groups + @events + @posts + @attachments
+      if @results.count == 1 and not @attachments.count == 1
         redirect_to @results.first
       end
 
@@ -88,8 +92,8 @@ class SearchController < ApplicationController
       @groups = nil if @groups.count == 0
       @events = nil if @events.count == 0
       @posts = nil if @posts.count == 0
+      @attachments = nil if @attachments.count == 0
       @results = nil if @results.count == 0
-
     end
     set_current_navable Page.find_intranet_root
     set_current_title "#{t(:search)}: #{query_string}"

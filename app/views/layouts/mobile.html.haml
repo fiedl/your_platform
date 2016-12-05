@@ -1,0 +1,18 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    %meta{:charset => 'utf-8'}/
+    %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
+    %meta{:content => 'width=device-width, user-scalable=no', :name => 'viewport'}/
+    %title= current_title
+    = csrf_meta_tags
+    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+    = stylesheet_link_tag 'mobile_layout', :media => 'all'
+    = stylesheet_link_tag 'application', :media => 'all'
+    = javascript_include_tag 'application'
+    = yield :scripts
+    = yield :head
+  %body.mobile{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'mobile', navable: @navable.try(:to_global_id)}}
+    #content_area
+      = flash_area
+      = convert_to_content_box { yield }

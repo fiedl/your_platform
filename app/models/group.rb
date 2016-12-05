@@ -45,6 +45,7 @@ class Group < ActiveRecord::Base
   include GroupMailingLists
   include GroupDummyUsers
   include GroupWelcomeMessage
+  include GroupSemesterCalendars
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -81,7 +82,7 @@ class Group < ActiveRecord::Base
   # 'admins', use the translation.
   #
   def name
-    I18n.t( super.to_sym, default: super ) if super.present?
+    I18n.t( super.to_sym, default: super ) if defined?(super) && super.present?
   end
 
   def name_with_surrounding
@@ -179,32 +180,31 @@ class Group < ActiveRecord::Base
     self.events.upcoming.order('start_at')
   end
 
-  def semester_calendar
-    @semester_calendar ||= SemesterCalendar.new(self)
-  end
-
 
   # Adress Labels (PDF)
   # options:
   #   - sender:      Sender line including sender address.
   #   - book_rate:   Whether the "Büchersendung"/"Envois à taxe réduite" badge
   #                  is to be printed.
+  #   - filter:      ["without_email"]
   #
   def members_to_pdf(options = {sender: '', book_rate: false, type: "AddressLabelsPdf"})
+    @filter = options[:filter]
     timestamp = cached_members_postal_addresses_created_at || Time.zone.now
     options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
-    cached do
+    #Rails.cache.fetch [self.cache_key, "members_postal_addresses", @filter] do
       members
+        .apply_filter(@filter)
         .collect { |user| user.address_label }
         .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
         # .collect { |address_label| address_label.to_s }
-    end
+    #end
   end
   def cached_members_postal_addresses_created_at
-    cached do
-      members.collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+    Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
+      members.apply_filter(@filter).collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
     end
   end
 
@@ -241,11 +241,26 @@ class Group < ActiveRecord::Base
     end
   end
 
+  def status_groups
+    StatusGroup.find_all_by_group(self)
+  end
+
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
   end
   def deceased
     find_deceased_members_parent_group
+  end
+
+  # This is an alias for the group that represents the main organization.
+  # This is, for example, used to determine when the membership in the
+  # main org ended.
+  #
+  # Feel free to override this method in the main app to match your
+  # organizational structure.
+  #
+  def self.main_org
+    self.corporations_parent
   end
 
 end

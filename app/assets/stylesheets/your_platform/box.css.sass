@@ -23,17 +23,16 @@
   -webkit-hyphens: auto
   hyphens: auto
 
-.box .box_header_table
-  table-layout: fixed
-  td.box_heading
-    width: 100%
-  td.box_toolbar
-    text-align: right
+.box_header
+  display: flex
+  width: 100%
+  .box_heading
+    flex-grow: 1
 
-.box .panel-heading .tool
+.box .box_header .tool
   display: inline-block
 
-.box td.box_toolbar
+.box .box_toolbar
   white-space: nowrap
   width: auto
 

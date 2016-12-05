@@ -1,0 +1,37 @@
+%h1.app_settings= current_title
+%div
+  %h2= t :app_name
+  %ul.settings
+    %li
+      = t :app_name
+      = setting_in_place Setting, :app_name
+    %li
+      = t :preferred_locale
+      = setting_in_place Setting, :preferred_locale, as: :select, collection: I18n.available_locales
+    %li
+      = t :support_email
+      = setting_in_place Setting, :support_email
+
+  %h2= t :logos
+  .attachments
+    %ul.logos
+      - Attachment.logos.each do |logo|
+        %li
+          = image_tag logo.file_path
+          Key:
+          = best_in_place logo, :title
+    #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @logo_page, title: "logo", type: :image}
+
+  %h2 Root-Breadcrumb
+  %ul.settings
+    %li
+      = t :root_domain
+      = best_in_place @root_page, :title
+    %li
+      = t :redirect
+      = best_in_place @root_page, :redirect_to
+
+- content_for :side_bar do
+  = link_to settings_path do
+    = settings_icon
+    = "#{t(:see_also)}: #{t(:user_settings)}"

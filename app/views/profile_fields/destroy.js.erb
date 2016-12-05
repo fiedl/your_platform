@@ -1,3 +1,5 @@
-
-// Remove the list element of the relationship that has been destroyed.
+// profiles#show: Remove the list element of the relationship that has been destroyed.
 $("#profile_field_id_<%= @profile_field.id %>").remove();
+
+// profile_fields#index:
+$("tr.profile-field-<%= @profile_field.id %>").remove();

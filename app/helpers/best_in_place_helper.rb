@@ -9,8 +9,18 @@ module BestInPlaceHelper
   #   setting_in_place @page, :layout
   #
   def setting_in_place(object, setting_key, options = {})
-    setting = object.settings.where(var: setting_key).first_or_create
+    setting = (object == Setting ? Setting : object.settings)
+      .where(var: setting_key).first_or_create
+    options[:collection] = Hash[options[:collection].collect { |item| [item, item] }] if options[:collection].kind_of? Array
     best_in_place setting, :value, options
+  end
+
+  def setting_in_place_if(condition, object, setting_key, options = {})
+    if condition
+      setting_in_place object, setting_key, options
+    else
+      object.settings.send setting_key
+    end
   end
 
   def ajax_check_box(object, attribute, label = nil)

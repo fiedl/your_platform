@@ -37,6 +37,15 @@
       - for object in @pages
         %li= link_to object.title, object
 
+- if can?(:use, :pdf_search) && @attachments
+  %h1= t :attachments
+  %div
+    %ul
+      - @attachments.each do |attachment|
+        %li
+          .title= link_to attachment.title, attachment
+          .preview= attachment.highlight.html_safe
+
 - if @posts
   %h1= t :found_posts
   %div

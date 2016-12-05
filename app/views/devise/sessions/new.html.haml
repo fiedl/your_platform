@@ -4,10 +4,11 @@
   .col-md-6.col-xs-12
     %h1= t :login
     %div
-      = form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+      = form_for resource, as: resource_name, url: session_path(resource_name) do |f|
         %div
-          = f.label :login, raw("#{t :login_name}&nbsp;&nbsp;&nbsp; (#{t :login_name_explanation})")
-          = f.text_field :login, :autofocus => true
+          = f.label :login, t(:login_name)
+          %small.login_explanation= t :login_name_explanation
+          = f.text_field :login, :autofocus => true, autocorrect: 'off'
 
         %div
           = f.label :password, I18n.t(:password)

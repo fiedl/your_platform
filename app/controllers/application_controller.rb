@@ -15,10 +15,10 @@ class ApplicationController < ActionController::Base
   include CurrentAccess
   include CurrentBreadcrumbs
 
-  include RedirectWwwSubdomain
   include CheckAuthorization
   include AcceptTermsOfUse
   include ReadOnlyMode
+  include DemoMode
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
 
@@ -30,5 +30,14 @@ class ApplicationController < ActionController::Base
     render_to_string(partial: partial, locals: locals, layout: false, formats: [:html])
   end
   helper_method :render_partial
+
+  def url_for(args = {})
+    if args.respond_to?(:permalinks) && args.permalinks.any?
+      super(args.permalink_path)
+    else
+      super
+    end
+  end
+  helper_method :url_for
 
 end

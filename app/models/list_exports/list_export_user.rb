@@ -1,5 +1,8 @@
 module ListExports
   class ListExportUser < User
+
+    attr_accessor :list_export_group
+
     def personal_title_and_name
       "#{personal_title} #{name}".strip
     end
@@ -98,6 +101,20 @@ module ListExports
     def dpag_postal_address_type
       "HOUSE"
     end
+
+    # User-group relation
+    #
+    # Some exports need information about the relation of the user
+    # and the group that is exported, for example the date of the user
+    # joining the group, or the role the user plays for that group.
+    #
+    def function_in_list_export_group
+      function_group_in_list_export_group.try(:extensive_name)
+    end
+    def function_group_in_list_export_group
+      (self.direct_groups & list_export_group.descendant_groups).first
+    end
+
 
     def cache_key
       # Otherwise the cached information of the user won't be used.

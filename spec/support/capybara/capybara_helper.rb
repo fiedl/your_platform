@@ -59,8 +59,20 @@ module CapybaraHelper
   end
 
   def enter_in_place(selector, text)
+    enter_in_place_with_pressing_enter(selector, text)
+  end
+
+  def enter_in_place_with_pressing_enter(selector, text)
+    enter_in_place_without_pressing_enter(selector, "#{text}\n")
+  end
+
+  def enter_in_place_without_pressing_enter(selector, text)
     find_best_in_place(selector).click
-    find_best_in_place(selector).find('input').set(text + "\n")
+    find_best_in_place(selector).find('input').set(text)
+  end
+
+  def enter_in_edit_mode(selector, text)
+    enter_in_place_without_pressing_enter(selector, text)
   end
 
   def find_best_in_place(selector)
@@ -69,6 +81,12 @@ module CapybaraHelper
     else
       find(selector).find(".best_in_place")
     end
+  end
+
+  def drop_attachment_in_drop_field(filename = 'pdf-upload.pdf')
+    local_file_path = File.expand_path(File.join(__FILE__, "../../../support/uploads/#{filename}"))
+    File.exist?(local_file_path).should == true
+    find('#attachment_file', visible: false).set local_file_path
   end
 
 end

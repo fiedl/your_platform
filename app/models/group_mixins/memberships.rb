@@ -92,6 +92,7 @@ module GroupMixins::Memberships
       for new_member in new_members
         assign_user new_member if new_member
       end
+      self.touch
     end
 
     def memberships_including_members

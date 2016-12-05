@@ -1,12 +1,14 @@
 module BodyHelper
 
-  def body_tag
+  def body_tag(options = {})
     content_tag :body,
       class: [
         controller.controller_name,
         "#{current_layout}-layout",
         "#{current_layout}_layout",
-        @navable.try(:class).try(:name).try(:parameterize)
+        @navable.try(:class).try(:name).try(:parameterize),
+        ("demo_mode" if demo_mode?),
+        options[:class]
       ].join(" "),
       data: {
         locale: I18n.locale,

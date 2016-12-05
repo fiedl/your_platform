@@ -81,6 +81,7 @@ class NavNode < ActiveRecord::Base
     hidden = false if hidden.nil?
     return hidden
   end
+
   def hidden_menu=(new_value)
     @hidden_menu_has_changed = true
     super(new_value)
@@ -109,7 +110,6 @@ class NavNode < ActiveRecord::Base
   def show_as_teaser_box=(new_value)
     self.hidden_teaser_box = (not new_value)
   end
-
 
   # +slim_breadcrumbs+ marks if the Navable should be hidden from the breadcrumb navigation
   # in order to save space.

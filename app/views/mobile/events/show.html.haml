@@ -1,0 +1,23 @@
+= inline_pictures_for(@event)
+
+%h1= @event.title
+%div
+  = markup @event.description
+
+  %h2 Wann geht's los?
+  %p= localize @event.start_at
+
+  - if @event.end_at
+    %p
+      Bis:
+      = localize @event.end_at
+
+  %h2 Veranstaltungsort
+  = @event.location
+
+  %h2 Ansprechpartner
+  - @event.contact_people.each do |user|
+    %p= mobile_user_link user
+
+.event-documents
+  = render partial: 'mobile/partials/documents'

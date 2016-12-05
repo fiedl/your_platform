@@ -196,6 +196,8 @@ RSpec.configure do |config|
   #
   config.include LastEmail
 
+  config.include CapybaraHelper
+
   # Debug
   # Call `debug` to enter pry.
   #

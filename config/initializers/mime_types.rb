@@ -1,4 +1,5 @@
 Mime::Type.register "application/xls", :xls
+#Mime::Type.register 'text/x-vcard', :vcf
 
 # http://stackoverflow.com/a/2443434/2066546
 #Mime::Type.register "video/mp4", :m4v

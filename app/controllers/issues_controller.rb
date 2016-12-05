@@ -1,25 +1,25 @@
 class IssuesController < ApplicationController
   respond_to :html, :json
-  
+
   before_action :load_issues, only: :index
   load_and_authorize_resource
-  
+
   def index
     authorize! :index, Issue
     redirect_to issues_path if params[:rescan].present?
-    
+
     set_current_title t(:administrative_issues)
     set_current_activity :solves_administrative_issues
   end
-  
+
   def show
     @issue = Issue.find params[:id]
   end
-  
+
   def new
     set_current_title t(:report_new_issue)
   end
-  
+
   def create
     if params[:invalid_email].present?
       email_field = ProfileFieldTypes::Email.where(value: params[:invalid_email]).first
@@ -35,7 +35,7 @@ class IssuesController < ApplicationController
       end
     end
   end
-  
+
   def destroy
     @issue.reference.try(:remove_flag, :needs_review)
     if @issue.author
@@ -49,9 +49,9 @@ class IssuesController < ApplicationController
     end
     head :ok
   end
-  
+
   private
-  
+
   def load_issues
     @issues = current_issues
     if params[:rescan] == 'all'

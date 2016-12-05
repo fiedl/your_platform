@@ -45,7 +45,23 @@ module IconHelper
   end
 
   def settings_icon
-    icon 'cog'
+    fa_icon 'sliders' # cogs, wrench  # icon 'cog'
+  end
+
+  def folder_icon
+    fa_icon 'folder-open-o'
+  end
+
+  def create_icon
+    fa_icon 'plus-circle'
+  end
+
+  def rss_icon
+    fa_icon 'rss'
+  end
+
+  def attachment_icon
+    awesome_icon(:paperclip)
   end
 
 end
