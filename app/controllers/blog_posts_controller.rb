@@ -4,9 +4,6 @@
 class BlogPostsController < PagesController
   prepend_before_action :set_inheritance_instance_variable
 
-  load_and_authorize_resource
-  skip_authorize_resource only: [:create]
-
   respond_to :json, :js
 
   def show
