@@ -32,8 +32,8 @@ private
   # If no public website exists, the users are shown sign-in form.
   #
   def redirect_to_sign_in_if_needed
-    unless current_user or @need_setup
-      if Page.public_website_present?
+    unless @need_setup
+      if Page.public_website_present? && cannot?(:read, Page.intranet_root)
         redirect_to public_root_path
       else
         redirect_to sign_in_path
