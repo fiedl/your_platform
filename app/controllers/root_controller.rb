@@ -1,6 +1,7 @@
 class RootController < ApplicationController
 
   before_action :redirect_to_setup_if_needed
+  before_action :redirect_to_public_website_if_needed
   before_action :redirect_to_sign_in_if_needed, :find_and_authorize_page
 
   def index
@@ -26,18 +27,20 @@ private
     end
   end
 
+  def redirect_to_public_website_if_needed
+    if not @need_setup and Page.public_website_present? and cannot?(:read, Page.intranet_root)
+      redirect_to public_root_path
+    end
+  end
+
   # If a public website exists, which is not just a redirection, then signed-out
   # users are shown the public website.
   #
   # If no public website exists, the users are shown sign-in form.
   #
   def redirect_to_sign_in_if_needed
-    unless @need_setup
-      if Page.public_website_present? && cannot?(:read, Page.intranet_root)
-        redirect_to public_root_path
-      else
-        redirect_to sign_in_path
-      end
+    if not @need_setup and not current_user
+      redirect_to sign_in_path
     end
   end
 
