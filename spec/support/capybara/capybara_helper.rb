@@ -9,11 +9,11 @@ module CapybaraHelper
     end
   end
 
-  def click_on(link_text)
+  def click_on(link_text, options = {})
     if link_text.kind_of?(String) or link_text.kind_of?(Symbol)
-      super(t(link_text, default: link_text))
+      super(t(link_text, default: link_text), options)
     else # It could already be a node.
-      super link_text
+      super link_text, options
     end
   end
 
