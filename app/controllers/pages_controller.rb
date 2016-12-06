@@ -1,12 +1,15 @@
 class PagesController < ApplicationController
 
-  before_action :find_resource_by_permalink, only: :show
-  load_and_authorize_resource
+  before_action :find_resource_by_permalink, only: [:show, :update]
+  before_action :find_resource_by_id, only: [:show, :update]
+  load_resource except: [:show, :update]
+  authorize_resource
   skip_authorize_resource only: [:create]
 
   respond_to :html, :json
 
   def show
+    authorize! :read, @page
     if @page
       if @page.redirect_to
         target = @page.redirect_to
@@ -48,6 +51,7 @@ class PagesController < ApplicationController
   end
 
   def update
+    authorize! :update, @page
     params[:page] ||= {}
     params[:page][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     params[:blog_post] ||= params[:page]  # required for blog posts in respond_with_bip
@@ -83,7 +87,12 @@ class PagesController < ApplicationController
 private
 
   def find_resource_by_permalink
-    @page ||= Permalink.find_by(path: params[:permalink]).try(:reference)
+    page_id = Permalink.find_by(path: params[:permalink], reference_type: 'Page').try(:reference_id)
+    @page ||= Page.find(page_id) if page_id
+  end
+
+  def find_resource_by_id
+    @page ||= Page.find(params[:id])
   end
 
   def secure_parent

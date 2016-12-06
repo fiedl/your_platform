@@ -10,6 +10,7 @@ class BlogPostsController < PagesController
   respond_to :json, :js
 
   def show
+    @blog_post ||= @page
     set_current_navable @blog_post
   end
 
@@ -36,6 +37,7 @@ class BlogPostsController < PagesController
   end
 
   def update
+    @blog_post ||= @page
     params[:blog_post] ||= {}
     params[:blog_post][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     set_inheritance_instance_variable

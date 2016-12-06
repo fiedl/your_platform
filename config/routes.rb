@@ -223,10 +223,17 @@ Rails.application.routes.draw do
 
   get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
 
-  get ':permalink', to: 'tags#show', constraints: lambda { |request| Permalink.where(reference_type: 'Tag', path: request[:permalink]).any? }
-  get ':permalink', to: 'blogs#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(Blog) }
-  get ':permalink', to: 'pages#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
-  get ':permalink', to: 'groups#show', constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+  # We need 'show' for short permalinks and 'put' to make best_in_place work,
+  # which does not distinguish when generating the url.
+  # https://github.com/bernat/best_in_place/blob/master/lib/best_in_place/helper.rb
+  #
+  {get: 'show', put: 'update'}.each do |http_method, controller_method|
+    send http_method, ':permalink', to: "tags##{controller_method}", constraints: lambda { |request| Permalink.where(reference_type: 'Tag', path: request[:permalink]).any? }
+    send http_method, ':permalink', to: "blogs##{controller_method}", constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(Blog) }
+    send http_method, ':permalink', to: "blog_posts##{controller_method}", constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(BlogPost) }
+    send http_method, ':permalink', to: "pages##{controller_method}", constraints: lambda { |request| Permalink.where(reference_type: 'Page', path: request[:permalink]).any? }
+    send http_method, ':permalink', to: "groups##{controller_method}", constraints: lambda { |request| Permalink.where(reference_type: 'Group', path: request[:permalink]).any? }
+  end
   get ':alias', to: 'users#show', constraints: lambda { |request| User.where(alias: request[:alias]).any? }
 
 end
