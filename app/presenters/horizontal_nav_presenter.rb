@@ -44,9 +44,12 @@ class HorizontalNavPresenter < BasePresenter
 
   def nav_link(link_object)
     title = possibly_shortened_title_for(link_object)
-    object = link_object
-    object = link_object.except(:title) if link_object.kind_of? Hash
-    
+    if link_object.kind_of? Hash
+      object = link_object[:path] || link_object.except(:title)
+    else
+      object = link_object
+    end
+
     options = {}
     if link_object.try(:id)
       options = options.merge({data: {
