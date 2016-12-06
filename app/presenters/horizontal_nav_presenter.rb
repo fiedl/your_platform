@@ -95,7 +95,8 @@ class HorizontalNavPresenter < BasePresenter
   end
 
   def title_for(object)
-    title = object[:title] if object
+    title ||= object.nav_node.menu_item if object.respond_to? :nav_node
+    title ||= object[:title] if object
     title ||= object.title if object
     title ||= ""
   end
