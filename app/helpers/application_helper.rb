@@ -11,7 +11,11 @@ module ApplicationHelper
   end
 
   def application_name
-    AppVersion.app_name
+    @application_name ||= if current_home_page.settings.app_name.present?
+      current_home_page.settings.app_name
+    else
+      AppVersion.app_name
+    end
   end
 
   def app_name
