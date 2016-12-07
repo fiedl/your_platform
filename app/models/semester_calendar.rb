@@ -114,19 +114,19 @@ class SemesterCalendar < ActiveRecord::Base
   #   Time.zone.now.month.in? 3..8
   # end
   def summer_term_start
-    Time.zone.now.change(month: 3, day: 1, year: year)
+    Time.zone.now.change(month: 3, day: 15, year: year)
   end
   def summer_term_end
-    Time.zone.now.change(month: 8, day: 31, year: year)
+    Time.zone.now.change(month: 9, day: 14, year: year)
   end
   def summer_term_range
     summer_term_start..summer_term_end
   end
   def winter_term_start
-    Time.zone.now.change(month: 9, day: 1, year: year)
+    Time.zone.now.change(month: 9, day: 15, year: year)
   end
   def winter_term_end
-    Time.zone.now.change(month: 2, day: 28, year: year + 1)
+    Time.zone.now.change(month: 3, day: 14, year: year + 1)
   end
   def winter_term_range
     winter_term_start..winter_term_end
