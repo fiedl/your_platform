@@ -14,13 +14,13 @@ class TagsController < ApplicationController
 
   def edit
     find_taggables
-    set_current_title "#{t(:edit_tag)}: #{@tag.name}"
+    set_current_title t(:edit_tag_str, str: @tag.name)
   end
 
   private
 
   def tag_params
-    params.require(:acts_as_taggable_on_tag).permit(:title, :subtitle, :body)
+    params.require(:acts_as_taggable_on_tag).permit(:title, :subtitle, :body, :permalinks_list)
   end
 
   def find_resource
@@ -30,9 +30,16 @@ class TagsController < ApplicationController
       @tag = ActsAsTaggableOn::Tag.find params[:tag_name]
     elsif params[:tag_name]
       @tag = ActsAsTaggableOn::Tag.find_by name: params[:tag_name]
+    elsif params[:permalink]
+      find_resource_by_permalink
     else
       @tag = ActsAsTaggableOn::Tag.all
     end
+  end
+
+  def find_resource_by_permalink
+    tag_id = Permalink.find_by(path: params[:permalink], reference_type: 'ActsAsTaggableOn::Tag').try(:reference_id)
+    @tag ||= ActsAsTaggableOn::Tag.find(tag_id) if tag_id
   end
 
   def find_taggables

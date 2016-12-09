@@ -6,6 +6,9 @@ de:
       minimal_with_weekday: '%a, %d.%m.%Y, %H:%M'
       default: '%a, %d.%m.%Y, %H:%M'
 
+  title: Titel
+  subtitle: Untertitel
+
   map: Karte
   page: Seite
   group: Gruppe

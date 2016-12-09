@@ -229,7 +229,7 @@ Rails.application.routes.draw do
   # https://github.com/bernat/best_in_place/blob/master/lib/best_in_place/helper.rb
   #
   {get: 'show', put: 'update'}.each do |http_method, controller_method|
-    send http_method, '*permalink', to: "tags##{controller_method}", constraints: lambda { |request| Permalink.for_host(request.host).where(reference_type: 'Tag', path: request[:permalink]).any? }
+    send http_method, '*permalink', to: "tags##{controller_method}", constraints: lambda { |request| Permalink.for_host(request.host).where(reference_type: 'ActsAsTaggableOn::Tag', path: request[:permalink]).any? }
     send http_method, '*permalink', to: "blogs##{controller_method}", constraints: lambda { |request| Permalink.for_host(request.host).where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(Blog) }
     send http_method, '*permalink', to: "blog_posts##{controller_method}", constraints: lambda { |request| Permalink.for_host(request.host).where(reference_type: 'Page', path: request[:permalink]).first.try(:reference).kind_of?(BlogPost) }
     send http_method, '*permalink', to: "pages##{controller_method}", constraints: lambda { |request| Permalink.for_host(request.host).where(reference_type: 'Page', path: request[:permalink]).any? }
