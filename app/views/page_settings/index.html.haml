@@ -28,10 +28,7 @@
   %h1.home_page_settings= t :home_page_settings
   %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
 
-%h1.boxes_on_this_page
-  = t :boxes_on_this_page
-  .help_tool.tool
-    %a.show_hidden_help{href: '#'}= help_icon
+%h1.boxes_on_this_page= t :boxes_on_this_page
 %div
   = t :select_boxes_to_display_on_the_page_str, str: @page.title
 
