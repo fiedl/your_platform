@@ -69,6 +69,10 @@
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
 
+%h1.permalinks= t :permalinks
+%div
+  = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @page}
+
 = render partial: 'officers/officers_box', locals: {structureable: @page}
 
 %h1.danger_zone= t :danger_zone_tm
