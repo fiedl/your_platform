@@ -97,6 +97,7 @@ Rails.application.routes.draw do
     get :photo_contest, to: 'photo_contests#show'
     get :activities, to: 'activities#index'
     get :attachments, to: 'attachments#index'
+    get :permalinks, to: 'permalinks#index'
   end
 
   resources :projects
