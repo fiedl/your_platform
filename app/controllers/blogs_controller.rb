@@ -9,8 +9,10 @@ class BlogsController < PagesController #ApplicationController
   end
 
   def update
-    params[:page] = params[:blog]
-    @page = @blog
+    params[:page] ||= params[:blog]
+    params[:blog] ||= params[:page]
+    @page ||= @blog
+    @blog ||= @page
     super
   end
 
