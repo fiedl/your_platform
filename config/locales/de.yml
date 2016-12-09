@@ -7,6 +7,7 @@ de:
       default: '%a, %d.%m.%Y, %H:%M'
 
   title: Titel
+  subtitle: Untertitel
 
   map: Karte
   page: Seite

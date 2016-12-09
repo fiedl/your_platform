@@ -9,6 +9,7 @@ require 'rubygems'
 require 'sprockets'
 require 'strong_parameters' unless defined? ActionController::Parameters
 require 'rails-i18n'
+require 'decent_exposure'
 
 # Data Structures
 require 'acts-as-dag'

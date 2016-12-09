@@ -2,5 +2,14 @@
 
 = render @taggables
 
+- if can? :manage, @tag
+  - content_for :side_bar do
+    .edit_tag.widget.clearfix
+      = link_to edit_tag_path(@tag) do
+        = icon :edit
+        = t :edit_tag_str, str: @tag.title
+
 - content_for :side_bar do
-  = render partial: 'tags/properties'
+  .body.widget.clearfix
+    %h4=best_in_place_if can?(:update, @tag), @tag, :title
+    = best_in_place_if can?(:update, @tag), @tag, :body, as: :textarea

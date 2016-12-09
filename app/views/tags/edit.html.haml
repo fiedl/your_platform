@@ -1,3 +1,38 @@
 %h1= current_title
 %div
-  = render partial: 'tags/properties'
+  .title
+    %label= t :title
+    = best_in_place_if can?(:update, @tag), @tag, :title
+  .subtitle
+    %label= t :subtitle
+    = best_in_place_if can?(:update, @tag), @tag, :subtitle, as: :textarea
+
+- content_for :side_bar do
+  = link_to "#{t(:back)}: #{t(:show_contents_tagged_with_str, str: @tag.name)}", @tag
+
+- content_for :side_bar do
+  .body.widget
+    %h4= t :description
+    = best_in_place_if can?(:update, @tag), @tag, :body, as: :textarea
+
+
+%h1= t :images
+%div
+  .tag_image.image.attachments
+    - if @tag.image
+      = image_tag(@tag.image.medium_url)
+    - if can? :create_attachment_for, @tag
+      #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @tag, type: :image}
+
+%h1= t :permalinks
+%div
+  .tag_permalinks_list
+    = best_in_place @tag, :permalinks_list, as: :textarea
+
+%h1= t :contents_tagged_with_str, str: @tag.name
+%div
+  %ul.taggables
+    - @taggables.each do |taggable|
+      %li
+        = link_to taggable.title, taggable
+

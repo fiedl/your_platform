@@ -2,6 +2,7 @@ de:
   tag: Etikett
   tags: Etikette
   edit_tag: Etikett bearbeiten
+  edit_tag_str: "Kategorie '%{str}' bearbeiten"
 
   category: Kategorie
   categories: Kategorien

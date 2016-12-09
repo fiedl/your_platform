@@ -43,13 +43,11 @@ concern :CurrentLayout do
   end
 
   def current_logo_url
-    #current_navable.nav_node.breadcrumb_root
     current_logo.try(:file).try(:url)
   end
 
   def current_logo
-    # TODO
-    Attachment.logos.last
+    Attachment.where(parent_type: 'Page', parent_id: current_home_page.child_pages.pluck(:id)).logos.last || Attachment.logos.last
   end
 
   def default_logo

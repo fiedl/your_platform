@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161020225033) do
+ActiveRecord::Schema.define(version: 20161209081055) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -287,6 +287,7 @@ ActiveRecord::Schema.define(version: 20161020225033) do
     t.integer  "reference_id",   limit: 4
     t.datetime "created_at",                 null: false
     t.datetime "updated_at",                 null: false
+    t.string   "host",           limit: 255
   end
 
   create_table "post_deliveries", force: :cascade do |t|

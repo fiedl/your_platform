@@ -2,18 +2,33 @@
 # relevant to the position of the Navable object within the navigational structure.
 #
 class NavNode < ActiveRecord::Base
-  attr_accessible :breadcrumb_item, :slim_breadcrumb,
-    :hidden_menu, :menu_item, :slim_menu,
-    :slim_url, :url_component,
-    :hidden_teaser_box if defined? attr_accessible
+  if defined? attr_accessible
+    attr_accessible :breadcrumb_item, :slim_breadcrumb
+    attr_accessible :hidden_menu, :menu_item, :slim_menu
+    attr_accessible :slim_url, :url_component
+    attr_accessible :hidden_teaser_box
+    attr_accessible :hidden_footer
+  end
 
   belongs_to :navable, polymorphic: true
+
+  include RailsSettings::Extend
+  delegate :hidden_footer, :hidden_footer=, to: :settings
 
   after_save :delete_cache
 
   def delete_cache
     super
     Rails.cache.delete_matched '*horizontal_nav*' if @hidden_menu_has_changed
+  end
+
+
+  # Show the navable object in the page footer?
+  def show_in_footer?
+    return false if hidden_footer
+    return true if hidden_footer == false
+    return false if navable.kind_of?(Page) && navable.attachments.logos.any?
+    return true
   end
 
   # The +url_component+ represents the part of the url, which is contributed by

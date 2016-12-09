@@ -1,7 +1,7 @@
 class BlogsController < PagesController #ApplicationController
 
   def show
-    @blog_root_page = @blog
+    @blog_root_page = @blog ||= @page
     @blog_posts = @blog.blog_entries.for_display
 
     set_current_navable @blog_root_page
@@ -9,8 +9,10 @@ class BlogsController < PagesController #ApplicationController
   end
 
   def update
-    params[:page] = params[:blog]
-    @page = @blog
+    params[:page] ||= params[:blog]
+    params[:blog] ||= params[:page]
+    @page ||= @blog
+    @blog ||= @page
     super
   end
 

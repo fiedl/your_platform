@@ -4,12 +4,10 @@
 class BlogPostsController < PagesController
   prepend_before_action :set_inheritance_instance_variable
 
-  load_and_authorize_resource
-  skip_authorize_resource only: [:create]
-
   respond_to :json, :js
 
   def show
+    @blog_post ||= @page
     set_current_navable @blog_post
   end
 
@@ -36,6 +34,7 @@ class BlogPostsController < PagesController
   end
 
   def update
+    @blog_post ||= @page
     params[:blog_post] ||= {}
     params[:blog_post][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     set_inheritance_instance_variable

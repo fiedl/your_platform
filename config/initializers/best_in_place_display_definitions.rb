@@ -37,3 +37,8 @@ BestInPlace::DisplayMethods.add_helper_method(User, :corporation_name, :add_quic
 BestInPlace::DisplayMethods.add_helper_method(Page, :tag_list, :insert_links_into_tag_list)
 BestInPlace::DisplayMethods.add_helper_method(BlogPost, :tag_list, :insert_links_into_tag_list)
 
+BestInPlace::DisplayMethods.add_helper_method(ActsAsTaggableOn::Tag, :permalinks_list, :simple_format)
+BestInPlace::DisplayMethods.add_helper_method(Page, :permalinks_list, :simple_format)
+BestInPlace::DisplayMethods.add_helper_method(Blog, :permalinks_list, :simple_format)
+BestInPlace::DisplayMethods.add_helper_method(BlogPost, :permalinks_list, :simple_format)
+
