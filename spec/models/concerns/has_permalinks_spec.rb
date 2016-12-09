@@ -79,12 +79,11 @@ describe HasPermalinks do
       end
     end
 
-    specify "changing the permalinks_list should update the permalinks and destroy unneeded" do
+    specify "changing the permalinks_list should not destroy permalinks (they are permanent!)" do
       page.permalinks_list = "foo bar"
       page.permalink_paths.should == %w{foo bar}
       page.permalinks_list = "bar baz"
-      page.permalink_paths.should == %w{bar baz}
-      Permalink.where(path: "foo").any?.should == false
+      page.permalink_paths.should == %w{foo bar baz}
     end
 
   end

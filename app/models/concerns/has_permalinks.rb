@@ -35,7 +35,7 @@ concern :HasPermalinks do
       Permalink.new path: path, host: host
     end
 
-    self.permalinks = new_permalinks
+    self.permalinks += new_permalinks.select { |permalink| permalink.valid? }
 
     return self.permalinks
   end
