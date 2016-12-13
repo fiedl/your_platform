@@ -80,11 +80,13 @@ module ListExports
       address_label.country_code_with_3_letters
     end
     def postal_address_postal_code_and_town
-      address_label.postal_address
-        .gsub(postal_address_street_with_number.to_s, '')
-        .gsub(postal_address_second_address_line.to_s, '')
-        .gsub(postal_address_country.to_s, '')
-        .gsub("\n", '')
+      if str = address_label.postal_address
+        str.gsub!(postal_address_street_with_number.to_s, '') if postal_address_street_with_number.to_s.present?
+        str.gsub!("\n" + postal_address_second_address_line.to_s, '') if postal_address_second_address_line.to_s.present?
+        str.gsub!("\n" + postal_address_country.to_s, '') if postal_address_country.to_s.present?
+        str.gsub!("\n", '')
+        str
+      end
     end
     def address_label_text_above_name
       address_label.text_above_name
