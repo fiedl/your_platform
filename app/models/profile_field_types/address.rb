@@ -59,14 +59,9 @@ module ProfileFieldTypes
         def region
           self.get_field(:region) || geo_information(:state)
         end
-        def state_shortcut
-          if country_code == 'us' && state.present?
-            str = state
-            GeoLocation.usa_state_shortcuts.each { |k, v| str.sub!(k, v) }
-            str
-          else
-            state
-          end
+        def state_shortcut(str)
+          GeoLocation.usa_state_shortcuts.each { |k, v| str.sub!(k, v) } if str.present?
+          str
         end
 
         def composed_address
@@ -76,7 +71,7 @@ module ProfileFieldTypes
             street: first_and_second_address_line,
             city: get_field(:city),
             zip: get_field(:postal_code),
-            state: state_shortcut
+            state: state_shortcut(get_field(:region))
           ).strip
         end
 
