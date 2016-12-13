@@ -25,7 +25,7 @@ class GeoLocation < ActiveRecord::Base
       geo_location.postal_code = result.postal_code
       geo_location.street = [result.route, result.street_number].join(" ")
       geo_location.state = result.state
-      
+
       # There is no way to determine whether the street format is
       # `{{street name}} {{street number}}` or `{{street number}} {{street name}}`.
       # Therefore take the format from the original input.
@@ -38,8 +38,8 @@ class GeoLocation < ActiveRecord::Base
     end
     self
   end
-  
-  # This method performs the geociding query and stores the query datetime. 
+
+  # This method performs the geociding query and stores the query datetime.
   #
   def geocode
     self.queried_at = DateTime.now
@@ -58,7 +58,7 @@ class GeoLocation < ActiveRecord::Base
     save
   end
 
-  # This method returns `true` if the geocoding query has been performed, already.  
+  # This method returns `true` if the geocoding query has been performed, already.
   #
   # After a query, the attributes may still be empty, since this might be an
   # invalid address. Therefore, it's good to know, whether the query has been
@@ -72,7 +72,7 @@ class GeoLocation < ActiveRecord::Base
   # Finder Methods
   # ==========================================================================================
 
-  # Find a geo_location object by address string. 
+  # Find a geo_location object by address string.
   # If the address already exists in the database, return the object from
   # the database. Otherwise, create a new database entry for the address
   # and perform a geocoding query.
@@ -91,7 +91,7 @@ class GeoLocation < ActiveRecord::Base
   def in_europe?
     country_code.in? GeoLocation.european_country_codes
   end
-  
+
   def self.european_country_codes
     %w(AD AL AT BA BE BG BY CH CY CZ DE DK EE ES FI FO FR GG GI GR GB HR HU IE IM IS IT JE LI LT LU LV MC MD\
      MK MT NL NO PL PT RO RU SE SI SJ SK SM TR UA UK VA YU)
@@ -101,7 +101,7 @@ class GeoLocation < ActiveRecord::Base
   # Postleitzahl (PLZ). If returns the German postal code if the
   # address is in Germany. Otherwise, it returns nil.
   #
-  # There are cases when the maps api can't isolate the postal code. 
+  # There are cases when the maps api can't isolate the postal code.
   # In this case, the `postal_code` returns `nil`.
   # Try to get it from the regex then.
   #
@@ -110,10 +110,10 @@ class GeoLocation < ActiveRecord::Base
       postal_code || address.match(/(\d{5})/).try(:[], 1)
     end
   end
-  
+
   # This returns the country code by ISO 3166-1-Alpha-3.
   #
-  # Example: 
+  # Example:
   #
   #     User.first.address_fields.first.geo_location.country_code_with_3_letters
   #     #  => "DEU"
@@ -121,7 +121,7 @@ class GeoLocation < ActiveRecord::Base
   def country_code_with_3_letters
     GeoLocation.country_codes_3_letters_from_2_letters[self.country_code]
   end
-  
+
   # This is a hash mapping of ISO 3166-1-Alpha-2 to ISO 3166-1-Alpha-3.
   # See this issue: https://github.com/fiedl/wingolfsplattform/issues/67.
   #
@@ -381,9 +381,24 @@ class GeoLocation < ActiveRecord::Base
       "AN" => "ANT"
     }
   end
-  
+
   def self.country_codes
     self.country_codes_3_letters_from_2_letters.keys
+  end
+
+  def self.usa_state_shortcuts
+    {"Alabama"=>"AL", "Alaska"=>"AK", "Arizona"=>"AZ", "Arkansas"=>"AR","California"=>"CA",
+      "Colorado"=>"CO", "Connecticut"=>"CT", "Delaware"=>"DE", "District of Columbia"=>"DC",
+      "Florida"=>"FL", "Georgia"=>"GA", "Hawaii"=>"HI", "Idaho"=>"ID", "Illinois"=>"IL",
+      "Indiana"=>"IN", "Iowa"=>"IA","Kansas"=>"KS", "Kentucky"=>"KY", "Louisiana"=>"LA",
+      "Maine"=>"ME","Maryland"=>"MD", "Massachusetts"=>"MA", "Michigan"=>"MI", "Minnesota"=>"MN",
+      "Mississippi"=>"MS", "Missouri"=>"MO", "Montana"=>"MT","Nebraska"=>"NE", "Nevada"=>"NV",
+      "New Hampshire"=>"NH", "NewJersey"=>"NJ", "New Mexico"=>"NM", "New York"=>"NY",
+      "North Carolina"=>"NC", "North Dakota"=>"ND", "Ohio"=>"OH", "Oklahoma"=>"OK",
+      "Oregon"=>"OR", "Pennsylvania"=>"PA", "Puerto Rico"=>"PR", "Rhode Island"=>"RI",
+      "South Carolina"=>"SC", "South Dakota"=>"SD", "Tennessee"=>"TN", "Texas"=>"TX",
+      "Utah"=>"UT", "Vermont"=>"VT", "Virginia"=>"VA", "Washington"=>"WA", "West Virginia"=>"WV",
+      "Wisconsin"=>"WI", "Wyoming"=>"WY"}
   end
 
 end
