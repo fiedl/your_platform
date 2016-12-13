@@ -84,7 +84,7 @@ module ListExports
         str.gsub!(postal_address_street_with_number.to_s, ' ') if postal_address_street_with_number.to_s.present?
         str.gsub!("\n" + postal_address_second_address_line.to_s, ' ' ) if postal_address_second_address_line.to_s.present?
         str.gsub!(/\n#{postal_address_country.to_s}\z/m, ' ') if postal_address_country.to_s.present?
-        str.gsub!("\n", '')
+        str.gsub!("\n", ' ')
         str.gsub!("  ", " ")
         str = str.strip
         str
