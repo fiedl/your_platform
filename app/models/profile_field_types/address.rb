@@ -62,7 +62,7 @@ module ProfileFieldTypes
         def state_shortcut
           if country_code == 'us' && state.present?
             str = state
-            GeoLocation.usa_state_shortcuts.each { |state_name, state_shortcut| str.sub!(state_name, state_shortcut) }
+            GeoLocation.usa_state_shortcuts.each { |k, v| str.sub!(k, v) }
             str
           else
             state
