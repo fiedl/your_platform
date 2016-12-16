@@ -86,7 +86,6 @@ class AddressLabelsPdf < Prawn::Document
     # with other UTF-8 characters, was taken from:
     # http://stackoverflow.com/a/11097644/2066546
 
-    # action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
     kai = "#{font_directory}/gkai00mp.ttf"
     dejavu = "#{font_directory}/DejaVuSans.ttf"
 
@@ -104,13 +103,6 @@ class AddressLabelsPdf < Prawn::Document
       :bold        => "Times-Bold",
       :bold_italic => "Times-BoldItalic"
     })
-
-    # font_families.update("action_man" => {
-    #   :normal      => { :file => action_man_path, :font => "ActionMan" },
-    #   :italic      => { :file => action_man_path, :font => "ActionMan-Italic" },
-    #   :bold        => { :file => action_man_path, :font => "ActionMan-Bold" },
-    #   :bold_italic => { :file => action_man_path, :font => "ActionMan-BoldItalic" }
-    # })
 
     font_families.update("kai" => {
       :normal => { :file => kai, :font => "Kai" },
