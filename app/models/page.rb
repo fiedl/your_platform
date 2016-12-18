@@ -166,17 +166,21 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # This method returns all Page objects that can be regarded as blog entries of self.
-  # Blog entries are simply child pages of self that have the :blog_entry flag.
   # They won't show up in the vertical menu.
   #
   # Page: "My Blog"
-  #   |------------------ Page: "Entry 1"
-  #   |------------------ Page: "Entry 2"
+  #   |------------------ BlogPost: "Entry 1"
+  #   |------------------ BlogPost: "Entry 2"
   #
   def blog_entries
-    self.descendant_pages.where(type: "BlogPost").order('created_at DESC')
+    blog_posts
   end
-
+  def blog_posts
+    child_pages.where(type: "BlogPost").order('created_at DESC')
+  end
+  def descendant_blog_posts
+    descendant_pages.where(type: "BlogPost").order('created_at DESC')
+  end
 
   # Finder and Creator Methods
   # ----------------------------------------------------------------------------------------------------
