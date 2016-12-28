@@ -50,7 +50,7 @@ class Page < ActiveRecord::Base
 
 
   def teaser_text
-    super || content.to_s.split("\n").first
+    super || content.to_s.gsub(teaser_youtube_url.to_s, '').strip.split("\n").first
   end
 
   def teaser_image_url
@@ -63,6 +63,11 @@ class Page < ActiveRecord::Base
         .try(:gsub, ")", "") # to fix markdown image urls
     end
   end
+
+  def teaser_youtube_url
+    content.to_s.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/).try(:[], 0)
+  end
+
 
   # This is the group the page belongs to, for example:
   #
