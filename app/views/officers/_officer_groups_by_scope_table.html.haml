@@ -6,6 +6,7 @@
       %th= t(:officer_group_office)
       %th.show_only_in_edit_mode= t(:office_flags)
       %th= t(:officer_group_officers)
+      %th
       %th= t(:officer_group_updated_at)
   %tbody
     - @officer_groups.each do |officer_group|
@@ -28,6 +29,9 @@
         %td.members
           %p= render partial: 'officer_group_members', locals: {officer_group: officer_group}
 
+        %td.history
+          - if can? :manage, officer_group
+            = link_to icon(:history), group_memberships_path(group_id: officer_group.id), class: 'btn btn-default btn-sm', title: t(:office_history)
         %td.updated_at
           %p= localize officer_group.updated_at.to_date
     - @officer_groups_by_scope.each do |scope, officer_groups|
@@ -42,6 +46,7 @@
                 %input{type: 'hidden', name: 'parent_id', value: scope.id}
                 = form.text_field :name, placeholder: t(:create_new_office_for, scope_title: scope.title)
                 = form.submit t(:submit_create_new_office_for, scope_title: scope.title), class: 'btn btn-primary btn-sm hidden'
+          %td
           %td
           %td
           %td
