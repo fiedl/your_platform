@@ -8,6 +8,8 @@ class BlogPostsController < PagesController
 
   def show
     @blog_post ||= @page
+    authorize! :read, @blog_post
+
     set_current_navable @blog_post
   end
 
