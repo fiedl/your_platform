@@ -7,12 +7,12 @@
     %h1= app_name
     %div.side_footer
       = render partial: 'layouts/footer'
-  
+
   .col-sm-9
     .row
       .col-sm-4.hidden-xs.side-col
         = render partial: 'layouts/vertical_nav'
-    
+
       .col-sm-8
         = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
         = render partial: 'root/what_is_new'
