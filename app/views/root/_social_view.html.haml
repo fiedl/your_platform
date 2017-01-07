@@ -15,11 +15,12 @@
 
       .col-sm-8
         = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
-        = render partial: 'root/what_is_new'
-    
+        -#= render partial: 'root/what_is_new'
+
     .row
       .col-sm-12#social_stream
-        .row.new_post= render partial: 'root/new_post', locals: {sent_from_root_page: true}
+        -#- if can? :use, :new_post_in_social_stream
+        -#  .row.new_post= render partial: 'root/new_post', locals: {sent_from_root_page: true}
         .row.insert_loaded_content_here
         .row.scroll_to_load
           = render 'root/scroll_to_load'
