@@ -58,7 +58,7 @@ module ActiveRecordCacheExtension
       key = caller_method_name
     end
     rescue_from_too_big_to_marshal(block) do
-      Rails.cache.fetch([self, key], expires_in: 1.week) do
+      Rails.cache.fetch([self.cache_key, key], expires_in: 1.week) do
         process_result_for_caching(yield)
       end
     end
