@@ -24,17 +24,26 @@ load_next_news_for_n_days = (n)->
         if result.length > 0
           current_day_interval = 1
           $('.row.insert_loaded_content_here').show()
-          $(result)
-            .appendTo($('.row.insert_loaded_content_here'))
+          new_elements = $(result).appendTo($('.row.insert_loaded_content_here'))
+          new_elements
             .hide()
             .fadeIn()
             .process()
+          add_read_more_links_to new_elements
         else
           current_day_interval = Math.pow(current_day_interval + 1, 1.2)
           load_next_page()
       failure: (result)->
         is_loading = false
     }
+
+add_read_more_links_to = (html)->
+  $(html).find('.box').each ->
+    box = $(this)
+    box.addClass 'news'
+    if box.height() > 250
+      box.append('<div class="panel-footer"><a href="#" class="read-on">' + I18n.t('read_on') + '</a></div>')
+      box.addClass 'collapsed'
 
 $(document).ready ->
   last_loaded_day = 0
@@ -62,14 +71,13 @@ $(document).on 'click', '.scroll-indicator', ->
   load_next_page()
 
 $(document).on 'mouseenter', '.timeline_entry.already_read', ->
-  $(this).css('height', 'auto').animate {
+  $(this).animate {
     opacity: 1
   }
 
 $(document).on 'mouseleave', '.timeline_entry.already_read', ->
   $(this).animate {
     opacity: 0.2,
-    height: '200px'
   }
 
 $(document).on 'submit', '.filter_news form', (event)->
@@ -102,4 +110,10 @@ $(document).on 'submit', '.filter_news form', (event)->
     }
 
   event.preventDefault()
+  false
+
+$(document).on 'click', '.news a.read-on', ->
+  box = $(this).closest('.box')
+  box.find('.panel-footer').remove()
+  box.removeClass 'collapsed'
   false

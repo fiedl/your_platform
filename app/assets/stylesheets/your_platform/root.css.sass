@@ -86,9 +86,14 @@ input.filter_news
 
 .timeline_entry.already_read
   opacity: 0.2
-  height: 200px
-  overflow: hidden
 
+.box.news.collapsed
+  .panel-body
+    max-height: 200px
+    overflow: hidden
+  a.read-on
+    display: block
+    text-align: center
 
 .root_view_switcher
   margin-bottom: 16px
