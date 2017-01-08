@@ -1,8 +1,7 @@
 - collection = nil
 - if profile_field.parent.present? and profile_field.key.to_s == 'country_code'
   - input_type = :select
-  - country_codes = [profile_field.parent.default_country_code.upcase] + GeoLocation.country_codes.sort
-  - collection = Hash[*country_codes.zip(country_codes).flatten]
+  - collection = ProfileFieldTypes::Address.country_codes_hash
 
 - if profile_field.children_count == 0
   = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value', collection: collection}

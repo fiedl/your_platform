@@ -6,20 +6,24 @@ form.formtastic
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075)
     padding: 4px 6px
     outline: none
-        
+
   input.invalid, textarea.invalid, select.invalid
     border-color: #b94a48
     color: #b94a48
-    
+
   input.valid, textarea.valid, select.valid
     border-color: #468847
-  
+
   ol li
     list-style: none
-    
-  label.label
-    min-width: 130px
+
+  label.label, legend.label
     display: inline-block
-    
+    text-align: left
+    border-bottom: none
+
   textarea, input
     min-width: 6cm
+
+  fieldset.inputs fieldset.inputs li
+    margin-bottom: 0em

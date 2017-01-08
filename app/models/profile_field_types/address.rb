@@ -35,7 +35,7 @@ module ProfileFieldTypes
         end
 
         def default_country_code
-          'de'
+          self.class.default_country_code
         end
 
         def city
@@ -137,6 +137,18 @@ module ProfileFieldTypes
           return self
         end
       end
+    end
+
+    def self.default_country_code
+      'DE'
+    end
+
+    def self.country_codes
+      [default_country_code] + GeoLocation.country_codes.sort
+    end
+
+    def self.country_codes_hash
+      Hash[*country_codes.zip(country_codes).flatten]
     end
 
     # Google Maps integration
