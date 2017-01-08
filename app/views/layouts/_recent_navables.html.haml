@@ -3,4 +3,4 @@
     %ul.nav.nav-pills.nav-stacked
       %li.nav-header=t :recently_visited
       - recent_navables.each do |navable|
-        %li.recent= link_to navable.title, navable
+        %li.recent= link_to navable.title, navable, class: navable.class.name.underscore
