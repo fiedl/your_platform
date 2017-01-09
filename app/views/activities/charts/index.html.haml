@@ -25,5 +25,8 @@
     = label_tag :sum, "Summe anzeigen"
     = check_box_tag :sum, 'true', params[:sum]
 
+    = label_tag :height, "Höhe der Grafik, z.B. '800px'"
+    = text_field_tag :height, params[:height]
+
     %br
     = submit_tag "Aktualisieren"
