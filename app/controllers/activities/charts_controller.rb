@@ -28,10 +28,11 @@ class Activities::ChartsController < ApplicationController
     to_days_ago = (params[:to_days_ago] || 0).to_i.days.ago
 
     # Filter Corporation
-    if filter_corporation = params[:corporation]
-      corporations = Corporation.where(token: filter_corporation)
-    elsif params[:corporation] == 'none'
+    if params[:corporation] == 'none'
       corporations = []
+    elsif filter_corporation = params[:corporation]
+      corporations = Corporation.where(token: filter_corporation)
+      corporations ||= Corporation.all
     else
       corporations = Corporation.all
     end
@@ -43,7 +44,7 @@ class Activities::ChartsController < ApplicationController
     @activitiy_series_for_each_corporation = corporations.sort_by { |corporation|
       -PublicActivity::Activity
         .where(created_at: from_days_ago..to_days_ago)
-        .where(trackable_type ? {trackable_Type: trackable_type} : "true")
+        .where(trackable_type.present? ? {trackable_Type: trackable_type} : "true")
         .where(owner_type: 'User', owner_id: corporation.member_ids)
         .count
     }.collect { |corporation|
@@ -51,7 +52,7 @@ class Activities::ChartsController < ApplicationController
         name: corporation.token,
         data: PublicActivity::Activity
           .where(created_at: from_days_ago..to_days_ago)
-          .where(trackable_type ? {trackable_Type: trackable_type} : "true")
+          .where(trackable_type.present? ? {trackable_Type: trackable_type} : "true")
           .where(owner_type: 'User', owner_id: corporation.member_ids)
           .group_by_period(group_by_period, :created_at)
           .count
@@ -64,7 +65,7 @@ class Activities::ChartsController < ApplicationController
         name: "Sum",
         data: PublicActivity::Activity
           .where(created_at: from_days_ago..to_days_ago)
-          .where(trackable_type ? {trackable_Type: trackable_type} : "true")
+          .where(trackable_type.present? ? {trackable_Type: trackable_type} : "true")
           .group_by_period(group_by_period, :created_at)
           .count
       }]
