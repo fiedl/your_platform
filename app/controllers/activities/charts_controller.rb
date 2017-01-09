@@ -32,7 +32,7 @@ class Activities::ChartsController < ApplicationController
       corporations = []
     elsif filter_corporation = params[:corporation]
       corporations = Corporation.where(token: filter_corporation)
-      corporations ||= Corporation.all
+      corporations = Corporation.all if corporations.none?
     else
       corporations = Corporation.all
     end
