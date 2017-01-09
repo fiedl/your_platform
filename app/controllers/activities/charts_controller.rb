@@ -30,10 +30,13 @@ class Activities::ChartsController < ApplicationController
     # Filter Corporation
     if filter_corporation = params[:corporation]
       corporations = Corporation.where(token: filter_corporation)
+    elsif params[:corporation] == 'none'
+      corporations = []
     else
       corporations = Corporation.all
     end
 
+    # Collect data.
     @activitiy_series_for_each_corporation = corporations.sort_by { |corporation|
       -PublicActivity::Activity
         .where(created_at: from_days_ago..to_days_ago)
@@ -49,6 +52,17 @@ class Activities::ChartsController < ApplicationController
           .count
       }
     }
+
+    # Display the sum of all corporations if requested.
+    if params[:sum]
+      @activitiy_series_for_each_corporation += [{
+        name: "Sum",
+        data: PublicActivity::Activity
+          .where(created_at: from_days_ago..to_days_ago)
+          .group_by_period(group_by_period, :created_at)
+          .count
+      }]
+    end
 
     render json: @activitiy_series_for_each_corporation.chart_json
   end
