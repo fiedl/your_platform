@@ -36,10 +36,14 @@ class Activities::ChartsController < ApplicationController
       corporations = Corporation.all
     end
 
+    # Filter trackable type (Event, ...)
+    trackable_type = params[:trackable_type]
+
     # Collect data.
     @activitiy_series_for_each_corporation = corporations.sort_by { |corporation|
       -PublicActivity::Activity
         .where(created_at: from_days_ago..to_days_ago)
+        .where(trackable_type ? {trackable_Type: trackable_type} : "true")
         .where(owner_type: 'User', owner_id: corporation.member_ids)
         .count
     }.collect { |corporation|
@@ -47,6 +51,7 @@ class Activities::ChartsController < ApplicationController
         name: corporation.token,
         data: PublicActivity::Activity
           .where(created_at: from_days_ago..to_days_ago)
+          .where(trackable_type ? {trackable_Type: trackable_type} : "true")
           .where(owner_type: 'User', owner_id: corporation.member_ids)
           .group_by_period(group_by_period, :created_at)
           .count
@@ -59,6 +64,7 @@ class Activities::ChartsController < ApplicationController
         name: "Sum",
         data: PublicActivity::Activity
           .where(created_at: from_days_ago..to_days_ago)
+          .where(trackable_type ? {trackable_Type: trackable_type} : "true")
           .group_by_period(group_by_period, :created_at)
           .count
       }]

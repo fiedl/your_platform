@@ -10,6 +10,9 @@
     = label_tag :corporation, "Verbindung ('E', ..., 'none', 'all')"
     = text_field_tag :corporation, params[:corporation]
 
+    = label_tag :trackable_Type, "Typ ('Event', 'SemesterCalendar', 'Page', 'User', 'ProfileField', ...)"
+    = text_field_tag :trackable_type, params[:trackable_type]
+
     = label_tag :from_days_ago, "Start: vor N Tagen"
     = text_field_tag :from_days_ago, params[:from_days_ago]
 
