@@ -18,8 +18,8 @@
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
   %div.page
-    - if page.image_attachments.any?
-      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments, inline: true}
+    - if page.image_attachments_not_listed_in_content.any?
+      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
 
     = render partial: 'pages/meta', object: page, as: :page
 
