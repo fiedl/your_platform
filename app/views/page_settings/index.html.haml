@@ -1,0 +1,37 @@
+%h1.page_settings
+  = current_title
+  .back_to_page.tool= link_to t(:back_to_the_page), @page, class: 'btn btn-default'
+%div
+  %table.settings
+    %tr.page_title
+      %th= t :page_title
+      %td= best_in_place @page, :title
+    %tr.page_type
+      %th= t :page_type
+      %td= best_in_place @page, :type, as: :select, collection: Page.types.collect { |type| type.try(:name) }.collect { |type| [type, type] }
+    %tr.page_author
+      %th= t :page_author
+      %td= user_best_in_place @page, :author_title
+    %tr.redirect_page_to
+      %th= t :redirect_page_to
+      %td= best_in_place @page, :redirect_to
+    %tr.created_at
+      %th= t :created_at
+      %td= localize @page.created_at
+    %tr.updated_at
+      %th= t :updated_at
+      %td= localize @page.updated_at
+
+= render partial: 'officers/officers_box', locals: {structureable: @page}
+
+%h1.danger_zone= t :danger_zone_tm
+%div
+  %p= t :a_new_page_can_be_destroyed_within_ten_minutes
+  -#%p= destroy_page_button @page, t(:destroy_page_permanently)
+  %p
+    = archived_label @page
+    - if @page.archived?
+      = archive_button @page, t(:unarchive_page)
+    - else
+      = archive_button @page, t(:archive_page)
+

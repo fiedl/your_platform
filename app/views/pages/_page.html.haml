@@ -17,6 +17,10 @@
     .archive_tools.tool
       = archived_label(page)
       = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
+    - if can? :manage, page
+      .page_settings_tool.tool
+        .shown_on_box_header_hover
+          = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
   %div.page
     - if page.image_attachments_not_listed_in_content.any?
       #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}

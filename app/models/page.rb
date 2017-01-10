@@ -44,6 +44,14 @@ class Page < ActiveRecord::Base
   end
 
 
+  def author_title=(new_title)
+    self.author = User.find_by_title(new_title)
+  end
+  def author_title
+    self.author.try(:title)
+  end
+
+
   def as_json(options = {})
     super.as_json(options).merge({tag_list: tag_list})
   end
@@ -271,6 +279,11 @@ class Page < ActiveRecord::Base
   end
   def self.find_imprint
     Page.find_by_flag :imprint
+  end
+
+
+  def self.types
+    [nil, Page, BlogPost, Blog]
   end
 
 end

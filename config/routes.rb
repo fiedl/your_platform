@@ -98,6 +98,7 @@ Rails.application.routes.draw do
     get :activities, to: 'activities#index'
     get :attachments, to: 'attachments#index'
     get :permalinks, to: 'permalinks#index'
+    get :settings, to: 'page_settings#index'
   end
 
   resources :projects
