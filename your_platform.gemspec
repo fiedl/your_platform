@@ -115,11 +115,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
   s.add_dependency 'biggs'
 
-  # Formtastic Form Helper
+  # Form Helper
   s.add_dependency 'formtastic'  # MIT License
+  s.add_dependency 'simple_form'
 
   # File Uploads
-  s.add_dependency 'carrierwave'                                                       # MIT License
+  s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick'
   s.add_dependency 'refile', '~> 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
@@ -170,6 +171,9 @@ Gem::Specification.new do |s|
 
   # Console
   s.add_dependency "table-formatter"
+
+  # Contact form
+  s.add_dependency 'mail_form'
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

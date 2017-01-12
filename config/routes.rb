@@ -192,6 +192,8 @@ Rails.application.routes.draw do
   resources :tags
   resources :tags, path: :acts_as_taggable_on_tags, as: :acts_as_taggable_on_tags
 
+  resources :contact_messages, only: [:new, :create]
+
   get :feeds, to: 'feeds#index', as: :feeds
 
   # ATTENTION: Changing feed urls might break subscribed feeds!

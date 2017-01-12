@@ -555,6 +555,10 @@ class Ability
     #
     can :create, :support_request
 
+    # All users can use the contact form.
+    #
+    can :create, ContactMessage
+
     # All users can load avatar images, since this is an api.
     # See AvatarsController.
     #

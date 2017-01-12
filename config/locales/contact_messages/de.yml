@@ -1,0 +1,12 @@
+de:
+  new_contact_message_title: Kontakt
+  this_message_will_be_sent_cc_to_your_email: Sie erhalten die Nachricht in Kopie an Ihre eigene E-Mail-Adresse.
+  contact_message_has_been_sent: Danke für Ihre Nachricht! Wir melden uns in Kürze bei Ihnen.
+  send_message: Nachricht absenden
+
+  mail_form:
+    attributes:
+      contact_message:
+        name: Ihr Name
+        email: Ihre E-Mail-Adresse
+        message: Ihre Nachricht an uns

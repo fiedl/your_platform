@@ -82,6 +82,7 @@ require 'biggs'
 
 # Form Helpers
 require 'formtastic'
+require 'simple_form'
 
 # File Uploads
 require 'carrierwave'
@@ -132,6 +133,9 @@ require 'merit'
 
 # Dummy User Generation
 require 'faker'
+
+# Contact form
+require 'mail_form'
 
 ::STAGE = "development" unless defined? ::STAGE
 
