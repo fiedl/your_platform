@@ -1,6 +1,6 @@
 class Page < ActiveRecord::Base
 
-  attr_accessible        :content, :title, :teaser_text, :redirect_to, :author, :tag_list if defined? attr_accessible
+  attr_accessible        :content, :title, :teaser_text, :redirect_to, :author, :tag_list, :teaser_image_url if defined? attr_accessible
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
   is_navable
@@ -62,13 +62,26 @@ class Page < ActiveRecord::Base
   end
 
   def teaser_image_url
-    if image_attachments.first
-      image_attachments.first.medium_url
-    elsif content.present?
+    if self.settings.teaser_image_url
+      self.settings.teaser_image_url
+    else
+      possible_teaser_image_urls.first
+    end
+  end
+  def teaser_image_url=(new_url)
+    if new_url.present?
+      self.settings.teaser_image_url = new_url
+    else
+      self.settings.teaser_image_url = nil
+    end
+  end
+  def possible_teaser_image_urls
+    image_attachments.map(&:medium_url) + if content.present?
       URI.extract(content)
         .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
-        .first
-        .try(:gsub, ")", "") # to fix markdown image urls
+        .collect { |url| url.gsub(")", "") } # to fix markdown image urls
+    else
+      []
     end
   end
 

@@ -2,17 +2,20 @@ de:
   add_blog_entry: Blog-Eintrag hinzufügen
   add_blog_post: Blog-Eintrag hinzufügen
   new_blog_post: Neuer Blog-Eintrag
-  
+
   attachment: 'Anhang'
   attachments: 'Anhänge'
   add_attachment: 'Anhang hinzufügen'
-  
+
   destroy_page_again: Eintrag wieder löschen
   a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde.'
   destroying_page: Inhalt wird gelöscht.
   please_wait: Bitte warten.
-  
+
   looks_up_information: sieht sich Informationen an
+
+  teaser_image: Vorschau-Bild
+  teaser_image_url: Vorschau-Bild-Url
 
   file: 'Datei'
   helpers:
