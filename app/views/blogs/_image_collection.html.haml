@@ -1,0 +1,4 @@
+%div.masonry-thumbs{data: {type: 'group', lightbox: 'gallery'}}
+  - @blog_posts.collect(&:possible_teaser_image_urls).flatten.each do |image_url|
+    %a.gallery-item{href: image_url, data: {lightbox: "gallery-item"}}
+      = image_tag image_url
