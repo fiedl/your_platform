@@ -473,6 +473,12 @@ class Ability
       attachment.id.in? Attachment.logos.pluck(:id)
     end
 
+    # All users can read the public bios of the users.
+    #
+    can :read_public_bio, User do |user|
+      user.account
+    end
+
     # All users can comment contents they can read.
     #
     can :create_comment_for, BlogPost do |blog_post|
