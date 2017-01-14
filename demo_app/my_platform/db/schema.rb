@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161209081055) do
+ActiveRecord::Schema.define(version: 20170114221016) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -413,6 +413,25 @@ ActiveRecord::Schema.define(version: 20161209081055) do
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
+
+  create_table "term_infos", force: :cascade do |t|
+    t.integer  "term_id",                   limit: 4
+    t.integer  "corporation_id",            limit: 4
+    t.integer  "number_of_members",         limit: 4
+    t.integer  "number_of_new_members",     limit: 4
+    t.integer  "number_of_membership_ends", limit: 4
+    t.integer  "number_of_deaths",          limit: 4
+    t.integer  "number_of_events",          limit: 4
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+  end
+
+  create_table "terms", force: :cascade do |t|
+    t.integer  "year",       limit: 4
+    t.integer  "term",       limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "user_accounts", force: :cascade do |t|
     t.string   "encrypted_password",     limit: 255, default: "", null: false
