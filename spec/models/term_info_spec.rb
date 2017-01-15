@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe TermInfo do
   before do
-    @term = Term.create year: 2016, term: :winter_term
+    @term = Terms::Winter.create year: 2016
 
     @corporation = create :corporation_with_status_groups
     @semester_calendar = @corporation.semester_calendars.create year: 2016, term: :winter_term

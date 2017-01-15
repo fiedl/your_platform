@@ -5,7 +5,7 @@ class TermInfo < ActiveRecord::Base
   delegate :current_terms_time_range, to: :semester_calendar
 
   def semester_calendar
-    corporation.semester_calendars.find_by year: term.year, term: term.term
+    corporation.semester_calendars.find_by year: term.year, term: term.to_enum
   end
 
   def fill_info
