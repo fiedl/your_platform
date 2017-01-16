@@ -56,16 +56,23 @@ class Corporation < Group
     status_groups.select { |g| g.name == group_name }.first
   end
 
+  def sub_group(group_name)
+    descendant_groups.where(name: group_name).first
+  end
+
   # This method lists all former members of the corporation. This is not determined
   # by the user group membership validity range but by the membership in the
   # former_members sub group, since all members of subgroups are considered also
   # members of the group.
   #
   def former_members
-    child_groups.find_by_flag(:former_members_parent).try(:members) || []
+    former_members_parent.try(:members) || []
   end
   def former_members_memberships
-    child_groups.find_by_flag(:former_members_parent).try(:memberships) || []
+    former_members_parent.try(:memberships) || []
+  end
+  def former_members_parent
+    child_groups.find_by_flag(:former_members_parent)
   end
 
   # This method lists all deceased members of the corporation.
