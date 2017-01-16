@@ -39,33 +39,17 @@ describe TermInfo do
     end
   end
 
-  describe "after #fill_info" do
-    before { @term_info.fill_info }
+  describe "#fill_info" do
+    subject { @term_info.fill_info }
 
-    describe "#number_of_events" do
-      subject { @term_info.number_of_events }
-      it { should == @semester_calendar.events(true).count }
-      it { should == 1 }
-    end
-
-    describe "#number_of_members" do
-      subject { @term_info.number_of_members }
-      it { should == 1 }
-    end
-
-    describe "#number_of_new_members" do
-      subject { @term_info.number_of_new_members }
-      it { should == 1 }
-    end
-
-    describe "#number_of_membership_ends" do
-      subject { @term_info.number_of_membership_ends }
-      it { should == 1 }
-    end
-
-    describe "#number_of_deaths" do
-      subject { @term_info.number_of_deaths }
-      it { should == 1 }
+    it "should fill in the stats correctly" do
+      subject
+      @term_info.number_of_events.should == @semester_calendar.events(true).count
+      @term_info.number_of_events.should == 1
+      @term_info.number_of_members.should == 1
+      @term_info.number_of_new_members.should == 1
+      @term_info.number_of_membership_ends.should == 1
+      @term_info.number_of_deaths.should == 1
     end
   end
 end
