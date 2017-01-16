@@ -66,10 +66,10 @@ class Corporation < Group
   # members of the group.
   #
   def former_members
-    former_members_parent.try(:members) || []
+    former_members_parent.try(:members) || User.none
   end
   def former_members_memberships
-    former_members_parent.try(:memberships) || []
+    former_members_parent.try(:memberships) || UserGroupMembership.none
   end
   def former_members_parent
     child_groups.find_by_flag(:former_members_parent)

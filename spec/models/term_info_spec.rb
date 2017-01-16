@@ -13,7 +13,9 @@ describe TermInfo do
 
     @former_member = create :user
     @former_membership = @corporation.status_groups.first.assign_user(@former_member, at: "2012-01-01".to_date)
-    @former_membership.invalidate at: "2017-01-02".to_date
+    @former_members_group = @corporation.child_groups.create name: "Ehemalige"
+    @former_members_group.add_flag :former_members_parent
+    @former_membership.move_to @former_members_group, at: "2017-01-02".to_date
 
     @deceased_member = create :user
     @corporation.status_groups.first.assign_user(@deceased_member, at: "2010-01-01".to_date)
