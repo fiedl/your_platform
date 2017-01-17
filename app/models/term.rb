@@ -1,6 +1,8 @@
 class Term < ActiveRecord::Base
   has_many :term_infos
 
+  default_scope { order('year asc, type asc') }
+
   scope :current, -> {
     where(year: Time.zone.now.year..(Time.zone.now.year + 1)).select { |term|
       term.current?

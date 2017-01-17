@@ -1,12 +1,8 @@
-class TermInfos::ChartsController < ApplicationController
+class Charts::TermInfos::MembersController < ChartsController
 
-  def index
-    authorize! :index, :term_infos_charts
-
-    set_current_title "Semester-Info-Diagramme"
-  end
-
-  def members_per_corporation_and_term
+  # GET /charts/term_infos/members/per_corporation_and_term.json
+  #
+  def per_corporation_and_term
     authorize! :index, :term_infos_charts
 
     @members_series_for_each_corporation = Corporation.all.sort_by { |corporation|
@@ -17,10 +13,6 @@ class TermInfos::ChartsController < ApplicationController
         data: Hash[corporation.term_infos.collect { |term_info| [term_info.term.title, term_info.number_of_members] }]
       }
     }
-    #} + [{
-    #  name: "Alle Wingolfiten",
-    #  data: Hash[Term.all.collect { |term| [term.title, TermInfos::AlleWingolfiten.for_term(term).number_of_members] }]
-    #}]
 
     render json: @members_series_for_each_corporation.chart_json
   end

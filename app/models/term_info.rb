@@ -1,5 +1,5 @@
 class TermInfo < ActiveRecord::Base
-  default_scope { includes(:term).order('terms.year asc') }
+  default_scope { includes(:term).order('terms.year asc, terms.type asc') }
 
   belongs_to :term
   belongs_to :corporation

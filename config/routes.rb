@@ -111,12 +111,11 @@ Rails.application.routes.draw do
   end
   resources :activities
 
-  namespace :term_infos do
-    get :charts, to: 'charts#index'
-    get 'charts/members_per_corporation_and_term', to: 'charts#members_per_corporation_and_term'
   namespace :charts do
     get :activities, to: 'activities#index'
     get 'activities/per_corporation_and_time', to: 'activities#per_corporation_and_time'
+    get :term_infos, to: 'term_infos#index'
+    get 'term_infos/members/per_corporation_and_term', to: 'term_infos/members#per_corporation_and_term'
   end
 
   post :create_officers_group, to: 'officers#create_officers_group'
