@@ -112,6 +112,11 @@ Rails.application.routes.draw do
   end
   resources :activities
 
+  namespace :term_infos do
+    get :charts, to: 'charts#index'
+    get 'charts/members_per_corporation_and_term', to: 'charts#members_per_corporation_and_term'
+  end
+
   post :create_officers_group, to: 'officers#create_officers_group'
 
   resources :blogs
