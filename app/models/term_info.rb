@@ -16,6 +16,7 @@ class TermInfo < ActiveRecord::Base
     self.number_of_new_members = corporation.memberships.with_past.where(valid_from: term_time_range).count
     self.number_of_membership_ends = corporation.former_members_memberships.where(valid_from: term_time_range).count
     self.number_of_deaths = corporation.deceased.memberships.with_past.where(valid_from: term_time_range).count
+    self.balance = number_of_new_members - number_of_membership_ends - number_of_deaths
     self.save
   end
 
