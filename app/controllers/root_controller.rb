@@ -68,7 +68,7 @@ private
   end
 
   def self.default_view_setting
-    'timeline'
+    'social'
   end
 
 end
