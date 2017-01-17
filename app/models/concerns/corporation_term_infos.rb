@@ -1,7 +1,7 @@
 concern :CorporationTermInfos do
 
   included do
-    has_many :term_infos
+    has_many :term_infos, -> { where(type: "TermInfos::ForCorporation") }, foreign_key: 'group_id'
   end
 
   def generate_term_infos

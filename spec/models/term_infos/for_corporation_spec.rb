@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TermInfo do
+describe TermInfos::ForCorporation do
   before do
     @term = Terms::Winter.create year: 2016
 
@@ -23,7 +23,8 @@ describe TermInfo do
     @deceased_group.add_flag :deceased_parent
     @deceased_member.mark_as_deceased at: "2016-11-19".to_date
 
-    @term_info = @term.term_infos.create corporation_id: @corporation.id
+    @term_info = @corporation.term_infos.create term_id: @term.id
+    @term_info = TermInfo.find @term_info.id  # In order for it to have the proper sub class.
   end
 
   describe "#corporation" do

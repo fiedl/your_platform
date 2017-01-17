@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117082614) do
+ActiveRecord::Schema.define(version: 20170117103152) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -416,15 +416,16 @@ ActiveRecord::Schema.define(version: 20170117082614) do
 
   create_table "term_infos", force: :cascade do |t|
     t.integer  "term_id",                   limit: 4
-    t.integer  "corporation_id",            limit: 4
+    t.integer  "group_id",                  limit: 4
     t.integer  "number_of_members",         limit: 4
     t.integer  "number_of_new_members",     limit: 4
     t.integer  "number_of_membership_ends", limit: 4
     t.integer  "number_of_deaths",          limit: 4
     t.integer  "number_of_events",          limit: 4
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "balance",                   limit: 4
+    t.string   "type",                      limit: 255
   end
 
   create_table "terms", force: :cascade do |t|
