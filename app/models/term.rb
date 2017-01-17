@@ -19,4 +19,8 @@ class Term < ActiveRecord::Base
     title
   end
 
+  def self.by_year_and_type(year, type)
+    self.find_or_create_by(year: year, type: type)
+  end
+
 end
