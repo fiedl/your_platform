@@ -1,4 +1,4 @@
-class Activities::ChartsController < ApplicationController
+class Charts::ActivitiesController < ChartsController
 
   def index
     authorize! :index, :activity_charts
@@ -13,10 +13,12 @@ class Activities::ChartsController < ApplicationController
   end
 
 
-  # Charts end points: See: https://github.com/ankane/chartkick#say-goodbye-to-timeouts
-  # ----------------------------------------------------------------------------------------------
-
-  def activities_per_corporation_and_time
+  # GET /charts/activities/per_corporation_and_time.json
+  #
+  # For generating the charts, see:
+  # https://github.com/ankane/chartkick#say-goodbye-to-timeouts
+  #
+  def per_corporation_and_time
     authorize! :index, :activity_charts
 
     # The `groupdate` gem is used for date binning:
@@ -28,14 +30,7 @@ class Activities::ChartsController < ApplicationController
     to_days_ago = (params[:to_days_ago] || 0).to_i.days.ago
 
     # Filter Corporation
-    if params[:corporation] == 'none'
-      corporations = []
-    elsif filter_corporation = params[:corporation]
-      corporations = Corporation.where(token: filter_corporation)
-      corporations = Corporation.all if corporations.none?
-    else
-      corporations = Corporation.all
-    end
+    # `corporations` is now defined in the `ChartsController`.
 
     # Filter trackable type (Event, ...)
     trackable_type = params[:trackable_type]

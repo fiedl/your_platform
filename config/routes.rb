@@ -107,14 +107,16 @@ Rails.application.routes.draw do
   namespace :activities do
     get :exports, to: 'exports#index'
     #get :addresses, to: 'addresses#index'
-    get :charts, to: 'charts#index'
-    get 'charts/per_corporation_and_time', to: 'charts#activities_per_corporation_and_time'
+    get :charts, to: redirect('/charts/activities')
   end
   resources :activities
 
   namespace :term_infos do
     get :charts, to: 'charts#index'
     get 'charts/members_per_corporation_and_term', to: 'charts#members_per_corporation_and_term'
+  namespace :charts do
+    get :activities, to: 'activities#index'
+    get 'activities/per_corporation_and_time', to: 'activities#per_corporation_and_time'
   end
 
   post :create_officers_group, to: 'officers#create_officers_group'
