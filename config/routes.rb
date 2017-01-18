@@ -119,6 +119,7 @@ Rails.application.routes.draw do
     get 'term_infos/members/per_corporation_and_term', to: 'term_infos/members#per_corporation_and_term'
   end
 
+  get :term_info, to: 'term_infos#show'
   resources :term_infos
 
   post :create_officers_group, to: 'officers#create_officers_group'
