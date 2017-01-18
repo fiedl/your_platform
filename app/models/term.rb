@@ -1,6 +1,8 @@
 class Term < ActiveRecord::Base
   has_many :term_infos
 
+  validates :year, uniqueness: {scope: :type}
+
   default_scope { order('year asc, type asc') }
 
   scope :current, -> {
