@@ -86,6 +86,7 @@ Rails.application.routes.draw do
     get :memberships, to: 'user_group_memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
+    get 'terms/:year/:term_type/info', to: 'term_infos#show'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -117,6 +118,8 @@ Rails.application.routes.draw do
     get :term_infos, to: 'term_infos#index'
     get 'term_infos/members/per_corporation_and_term', to: 'term_infos/members#per_corporation_and_term'
   end
+
+  resources :term_infos
 
   post :create_officers_group, to: 'officers#create_officers_group'
 

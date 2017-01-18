@@ -1,5 +1,6 @@
 - #locals:
 - active ||= 'posts'
+- @group = group if defined?(group) and not @group
 
 %ul.nav.nav-tabs.group.group_tabs
   - if @group.group_of_groups?

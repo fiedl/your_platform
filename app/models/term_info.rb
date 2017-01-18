@@ -6,6 +6,10 @@ class TermInfo < ActiveRecord::Base
 
   after_create :fill_info
 
+  def title
+    "#{term.title}, #{group.title}"
+  end
+
   def fill_info
     self.number_of_members = group.memberships.at_time(end_of_term).count
     self.number_of_new_members = group.memberships.with_past.where(valid_from: term_time_range).count
@@ -21,6 +25,7 @@ class TermInfo < ActiveRecord::Base
   def term_time_range
     term.time_range
   end
+
 end
 
 
