@@ -226,6 +226,7 @@ Rails.application.routes.draw do
         get :change_status_button, to: 'users/change_status_button#show'
         get :titles, on: :collection, to: 'users/titles#index'
         get :avatar, to: '/avatars#show'
+        put :location, on: :collection, to: 'users/locations#update'
       end
       get :navigation, to: 'navigation#show'
     end

@@ -80,6 +80,7 @@ class User < ActiveRecord::Base
   include UserVcfExport
   include UserDocuments
   include UserGeoSearch
+  include UserLocation
 
   # General Properties
   # ==========================================================================================
