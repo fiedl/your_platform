@@ -4,6 +4,8 @@ class TermReport < ActiveRecord::Base
   belongs_to :term
   belongs_to :group
 
+  has_many :member_entries, class_name: 'TermReportMemberEntry', dependent: :destroy
+
   after_create :fill_info
 
   def title
