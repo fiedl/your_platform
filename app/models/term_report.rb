@@ -28,6 +28,26 @@ class TermReport < ActiveRecord::Base
     term.time_range
   end
 
+  def year
+    term.year
+  end
+
+  def submitted?
+    submitted_at
+  end
+
+  def due?
+    (Time.zone.now >= due_at)
+  end
+
+  def due_at
+    end_of_term.to_date
+  end
+
+  def too_old_to_submit?
+    year < (Time.zone.now.year - 1)
+  end
+
 end
 
 
