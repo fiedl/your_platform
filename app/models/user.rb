@@ -510,9 +510,18 @@ class User < ActiveRecord::Base
 
   # The primary corporation is the one the user is most associated with.
   #
-  def primary_corporation
-    # Temporary hack. This might not be correct for all cases.
-    first_corporation
+  #     user.primary_corporation
+  #     user.primary_corporation at: 2.years.ago
+  #
+  def primary_corporation(options = {})
+    if options[:at]
+      memberships.with_past.where(ancestor_id: Group.flagged(:full_members).pluck(:id))
+        .at_time(options[:at]).order(:valid_from)
+        .first.try(:group).try(:corporation)
+    else
+      # Temporary hack. This might not be correct for all cases.
+      first_corporation
+    end
   end
 
   # This returns the groups within the first corporation
