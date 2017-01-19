@@ -86,7 +86,7 @@ Rails.application.routes.draw do
     get :memberships, to: 'user_group_memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
-    get 'terms/:year/:term_type/info', to: 'term_infos#show'
+    get 'terms/:year/:term_type/report', to: 'term_reports#show'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -115,12 +115,12 @@ Rails.application.routes.draw do
   namespace :charts do
     get :activities, to: 'activities#index'
     get 'activities/per_corporation_and_time', to: 'activities#per_corporation_and_time'
-    get :term_infos, to: 'term_infos#index'
-    get 'term_infos/members/per_corporation_and_term', to: 'term_infos/members#per_corporation_and_term'
+    get :term_reports, to: 'term_reports#index'
+    get 'term_reports/members/per_corporation_and_term', to: 'term_reports/members#per_corporation_and_term'
   end
 
-  get :term_info, to: 'term_infos#show'
-  resources :term_infos
+  get :term_report, to: 'term_reports#show'
+  resources :term_reports
 
   post :create_officers_group, to: 'officers#create_officers_group'
 

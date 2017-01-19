@@ -1,5 +1,0 @@
-= form_tag term_info_path, method: 'get' do
-  = select_tag :group_id, options_for_select(Corporation.all.collect { |corporation| [corporation.title, corporation.id] }, term_info.group_id)
-  = select_tag :year, options_for_select((1900..Time.zone.now.year).collect { |year| [year, year] }, term_info.term.year)
-  = select_tag :term_type, options_for_select([["Sommmersemester", "Terms::Summer"], ["Wintersemester", "Terms::Winter"], ["Ganzes Jahr", "Terms::Year"]], term_info.term.type)
-  = submit_tag("OK")

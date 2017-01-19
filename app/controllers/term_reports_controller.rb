@@ -1,4 +1,4 @@
-class TermInfosController < ApplicationController
+class TermReportsController < ApplicationController
 
   # https://railscasts.com/episodes/259-decent-exposure
   #
@@ -11,18 +11,18 @@ class TermInfosController < ApplicationController
   }
   expose :group
   expose :corporation, -> { group if group.kind_of? Corporation }
-  expose :term_info, -> {
+  expose :term_report, -> {
     if term && corporation
-      TermInfos::ForCorporation.by_corporation_and_term corporation, term
+      TermReports::ForCorporation.by_corporation_and_term corporation, term
     elsif params[:id]
-      TermInfo.find params[:id]
+      TermReport.find params[:id]
     end
   }
 
   def show
-    authorize! :read, term_info
-    set_current_navable term_info.group
-    set_current_title term_info.title
+    authorize! :read, term_report
+    set_current_navable term_report.group
+    set_current_title term_report.title
   end
 
 end
