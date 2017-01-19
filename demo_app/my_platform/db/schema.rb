@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170117103152) do
+ActiveRecord::Schema.define(version: 20170119075934) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -423,7 +423,7 @@ ActiveRecord::Schema.define(version: 20170117103152) do
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
-  create_table "term_infos", force: :cascade do |t|
+  create_table "term_reports", force: :cascade do |t|
     t.integer  "term_id",                   limit: 4
     t.integer  "group_id",                  limit: 4
     t.integer  "number_of_members",         limit: 4

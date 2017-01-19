@@ -9,7 +9,7 @@
 class Corporation < Group
   after_save { Corporation.corporations_parent << self }
 
-  include CorporationTermInfos
+  include CorporationTermReports
   include CorporationLocation
 
   # This returns the group that has all Corporations as children.

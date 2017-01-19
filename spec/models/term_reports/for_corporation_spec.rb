@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TermInfos::ForCorporation do
+describe TermReports::ForCorporation do
   before do
     @term = Terms::Winter.create year: 2016
 
@@ -23,17 +23,17 @@ describe TermInfos::ForCorporation do
     @deceased_group.add_flag :deceased_parent
     @deceased_member.mark_as_deceased at: "2016-11-19".to_date
 
-    @term_info = @corporation.term_infos.create term_id: @term.id
-    @term_info = TermInfo.find @term_info.id  # In order for it to have the proper sub class.
+    @term_report = @corporation.term_reports.create term_id: @term.id
+    @term_report = TermReport.find @term_report.id  # In order for it to have the proper sub class.
   end
 
   describe "#corporation" do
-    subject { @term_info.corporation }
+    subject { @term_report.corporation }
     it { should == @corporation}
   end
 
   describe "#semester_calendar" do
-    subject { @term_info.semester_calendar }
+    subject { @term_report.semester_calendar }
     it "should refer to the term's semester calendar of the corporation" do
       subject.should == @semester_calendar
       @semester_calendar.group.should == @corporation
@@ -41,16 +41,16 @@ describe TermInfos::ForCorporation do
   end
 
   describe "#fill_info" do
-    subject { @term_info.fill_info }
+    subject { @term_report.fill_info }
 
     it "should fill in the stats correctly" do
       subject
-      @term_info.number_of_events.should == @semester_calendar.events(true).count
-      @term_info.number_of_events.should == 1
-      @term_info.number_of_members.should == 1
-      @term_info.number_of_new_members.should == 1
-      @term_info.number_of_membership_ends.should == 1
-      @term_info.number_of_deaths.should == 1
+      @term_report.number_of_events.should == @semester_calendar.events(true).count
+      @term_report.number_of_events.should == 1
+      @term_report.number_of_members.should == 1
+      @term_report.number_of_new_members.should == 1
+      @term_report.number_of_membership_ends.should == 1
+      @term_report.number_of_deaths.should == 1
     end
   end
 end

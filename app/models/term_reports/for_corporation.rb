@@ -1,4 +1,4 @@
-class TermInfos::ForCorporation < TermInfo
+class TermReports::ForCorporation < TermReport
 
   def corporation
     group

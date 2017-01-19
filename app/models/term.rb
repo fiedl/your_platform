@@ -1,5 +1,5 @@
 class Term < ActiveRecord::Base
-  has_many :term_infos
+  has_many :term_reports
 
   validates :year, uniqueness: {scope: :type}
 
