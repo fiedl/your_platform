@@ -69,7 +69,10 @@ concern :UserProfile do
     profile_fields.where(type: 'ProfileFieldTypes::Study')
   end
   def primary_study_field
-    study_fields.first
+    (study_fields_not_finished + study_fields).first
+  end
+  def study_fields_not_finished
+    study_fields.select { |study| study.to.blank? }
   end
 
   def name_surrounding_profile_field
