@@ -12,7 +12,12 @@ concern :CurrentUser do
   end
 
   def current_devise_user
-    current_user_account.try(:user)
+    begin
+      current_user_account.try(:user)
+    rescue => error
+      flash[:error] = t("errors.#{error.message}")
+      return nil
+    end
   end
 
   def current_user_by_auth_token
