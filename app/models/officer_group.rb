@@ -11,7 +11,7 @@ class OfficerGroup < Group
   end
 
   def parent
-    ancestor_groups.flagged(:officers_parent).first || raise('officers group has no officers_parent!')
+    ancestor_groups.flagged(:officers_parent).first || raise("officer group #{self.id} has no officers_parent!")
   end
 
   def extensive_name
