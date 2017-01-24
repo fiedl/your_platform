@@ -550,9 +550,9 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    Rails.cache.fetch([self, 'corporate_vita_memberships_in', corporation], expires_in: 1.week) do
+    Rails.cache.fetch([self.cache_key, 'corporate_vita_memberships_in_order_valid_from', corporation.cache_key], expires_in: 1.week) do
       group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group')
+      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
     end
   end
 
