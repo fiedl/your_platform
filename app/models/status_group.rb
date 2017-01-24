@@ -25,7 +25,7 @@ class StatusGroup < Group
 
   def self.find_by_user_and_corporation(user, corporation)
     status_groups = (StatusGroup.find_all_by_corporation(corporation) & StatusGroup.find_all_by_user(user))
-    raise "Selection algorithm not unique, yet, for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map(&:name).join(', ')}." if status_groups.count > 1
+    raise "Selection algorithm not unique, yet, for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map({|x| x.name + ' (' + x.id + ')' }).join(', ')}." if status_groups.count > 1
     status_groups.last
   end
 
