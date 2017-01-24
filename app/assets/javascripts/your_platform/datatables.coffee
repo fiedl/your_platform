@@ -143,6 +143,12 @@ $(document).ready ->
     "order": [[0, "asc"]]
   }, common_configuration))
 
+  $('.datatable.bv_mappings').dataTable(jQuery.extend({
+    "pageLength": 25,
+    "order": [[2, "asc"], [0, "asc"]]
+  }, common_configuration))
+
+
   # Insert above.
   # This modified the common_configuration:
   $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
