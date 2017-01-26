@@ -118,10 +118,12 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   #
   def recalculate_validity_range_from_direct_memberships
     unless direct?
-      write_attribute :valid_from, earliest_direct_membership.try(:valid_from)
-      write_attribute :valid_to, latest_direct_membership.try(:valid_to)
-      self.valid_from_will_change!
-      self.valid_to_will_change!
+      old_valid_from = read_attribute :valid_from
+      old_valid_to = read_attribute :valid_to
+      write_attribute :valid_from, (new_valid_from = earliest_direct_membership.try(:valid_from))
+      write_attribute :valid_to, (new_valid_to = latest_direct_membership.try(:valid_to))
+      self.valid_from_will_change! if old_valid_from != new_valid_from
+      self.valid_to_will_change! if old_valid_to != new_valid_to
     end
   end
 
