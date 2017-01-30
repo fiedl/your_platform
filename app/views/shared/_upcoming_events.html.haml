@@ -15,7 +15,7 @@
       - elsif current_user
         %a.btn.btn-default#ics_abo{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten. (Empfohlen.)", data: {placement: 'top'}}
           = icon :calendar
-          Kalender-Abo!
+          = "#{t(:calendar_abo)}!"
   %div
     %ul.upcoming_events
       = render partial: 'events/events_lis', locals: {events: events}
