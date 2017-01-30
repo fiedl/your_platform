@@ -49,8 +49,7 @@ add_read_more_links_to = (html)->
 move_first_post_to_special_position = (html)->
   if $('#top_post').size() == 1
     if $("#top_post").html() == ""
-      box = $(html).find('.box').first()
-      box.appendTo($("#top_post"))
+      $(html).find('.timeline_entry').first().appendTo($('#top_post'))
 
 $(document).ready ->
   last_loaded_day = 0
