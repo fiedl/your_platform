@@ -14,8 +14,7 @@ The application serves four main purposes: Centralized or decentralized member m
 
 ## Getting Started Developing
 
-1. Have a look at our demo application: *We are currently moving to another server. After that, the demo link will be provided here.*
-2. Check out the demo application locally:
+1. Check out the demo application locally:
 
   ```bash
   git clone git@github.com:fiedl/your_platform.git
@@ -30,7 +29,7 @@ The application serves four main purposes: Centralized or decentralized member m
   ```
 
   View the application at [http://localhost:3000](http://localhost:3000).
-3. If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
+1. If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
 If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
 
