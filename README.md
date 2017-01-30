@@ -10,23 +10,25 @@ YourPlatform is a [ruby on rails](http://rubyonrails.org) engine that provides t
 
 The application serves four main purposes: Centralized or decentralized member management, networking features for members, exchange of information and documents and communication.
 
+![screenshot](screenshots/2017-01-30_17.48.45_root-index.png)
+
 ## Getting Started Developing
 
 1. Have a look at our demo application: *We are currently moving to another server. After that, the demo link will be provided here.*
 2. Check out the demo application locally:
-  
+
   ```bash
   git clone git@github.com:fiedl/your_platform.git
   cd your_platform/demo_app/my_platform
-  
+
   # provide a config/database.yml according to your local mysql credentials
-  
+
   bundle install
   bundle exec rake db:create db:migrate
   bundle exec foreman start
   bundle exec rails server
   ```
-  
+
   View the application at [http://localhost:3000](http://localhost:3000).
 3. If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
@@ -40,7 +42,7 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 
 * Have a quick look at [rubygem's short explanation of semantic versioning](http://guides.rubygems.org/patterns/#semantic-versioning).
 * The version can be bumped using one of these:
-  
+
   ```
   rake version:bump:major
   rake version:bump:minor
@@ -58,7 +60,7 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 
 ## Authors and License
 
-**Copyright** (c) 2012-2015, Sebastian Fiedlschuster
+**Copyright** (c) 2012-2017, Sebastian Fiedlschuster
 
 **Contributors**: Jörg Reichardt, Manuel Zerpies, Joachim Back
 
