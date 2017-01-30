@@ -1,0 +1,25 @@
+ul.box_meta
+  margin: 5px -10px 5px 0
+  list-style: none
+  padding: 0px
+  display: flex
+  flex-wrap: wrap
+
+  li
+    font-size: 13px
+    line-height: 14px
+    margin: 0 10px 5px 0
+    color: #999
+    font-family: 'Crete Round', serif
+    font-style: italic
+
+  li:before
+    content: '/'
+    display: inline-block
+    margin-right: 10px
+    opacity: 0.5
+
+
+.col-md-3, .col-sm-3
+  ul.box_meta
+    display: none

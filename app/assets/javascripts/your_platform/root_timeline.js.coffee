@@ -30,6 +30,7 @@ load_next_news_for_n_days = (n)->
             .fadeIn()
             .process()
           add_read_more_links_to new_elements
+          move_first_post_to_special_position new_elements
         else
           current_day_interval = Math.pow(current_day_interval + 1, 1.2)
           load_next_page()
@@ -44,6 +45,12 @@ add_read_more_links_to = (html)->
     if box.height() > 250
       box.append('<div class="panel-footer"><a href="#" class="read-on">' + I18n.t('read_on') + '</a></div>')
       box.addClass 'collapsed'
+
+move_first_post_to_special_position = (html)->
+  if $('#top_post').size() == 1
+    if $("#top_post").html() == ""
+      box = $(html).find('.box').first()
+      box.appendTo($("#top_post"))
 
 $(document).ready ->
   last_loaded_day = 0

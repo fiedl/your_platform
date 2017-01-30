@@ -17,6 +17,8 @@
         = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
         -#= render partial: 'root/what_is_new'
 
+        #top_post
+
     .row
       .col-sm-12#social_stream
         -#- if can? :use, :new_post_in_social_stream
