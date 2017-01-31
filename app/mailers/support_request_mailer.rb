@@ -7,10 +7,18 @@ class SupportRequestMailer < BaseMailer
     @meta_data = meta_data
     @navable = navable
     @role = meta_data[:role]
-    @subject = (text.split("\n") - [nil, "", "Lieber Bundesbruder Kornder,"]).first.first(100)
     @from_email = sender_user.try(:email) || SupportRequestsController.support_email
-    
-    mail to: [receiver_email], from: @from_email, subject: @subject
+
+    mail to: [receiver_email], from: @from_email, subject: subject
   end
-  
+
+  private
+
+  def subject
+    (@text.split("\n") - [nil, ""] - support_request_form_default_text.split("\n")).first.first(100)
+  end
+
+  def support_request_form_default_text
+    render_to_string(partial: "support_requests/text_template", locals: {current_user: @sender_user})
+  end
 end
