@@ -142,6 +142,14 @@ $(document).ready ->
     "pageLength": 100,
     "order": [[0, "asc"]]
   }, common_configuration))
+  $('.datatable.mailing_lists').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "order": [[0, "asc"]],
+    "columnDefs": [
+      {"width": "40%", "targets": 0},
+      {"width": "20%", "targets": 2},
+    ]
+  }, common_configuration))
 
   $('.datatable.bv_mappings').dataTable(jQuery.extend({
     "pageLength": 25,

@@ -1,0 +1,22 @@
+%h1= current_title
+%div
+  %table.datatable.mailing_lists
+    %thead
+      %tr
+        %td= t :email
+        %td
+        %td= t :group
+        %td= t :members
+        %td= t :sender_policy
+        %td= t :posts
+    %tbody
+      - mailing_lists.each do |mailing_list|
+        %tr
+          %td= link_to mailing_list.email, "mailto:#{mailing_list.email}"
+          %td
+            - if can? :manage, mailing_list
+              = link_to settings_icon, group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-default btn-xs'
+          %td= link_to mailing_list.group_name, mailing_list.group
+          %td= mailing_list.members_count
+          %td= t mailing_list.sender_policy, scope: 'sender_filter_short'
+          %td= mailing_list.posts_count

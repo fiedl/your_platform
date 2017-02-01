@@ -103,6 +103,8 @@ Rails.application.routes.draw do
     get :settings, to: 'page_settings#index'
   end
 
+  resources :mailing_lists
+
   resources :projects
 
   namespace :activities do
