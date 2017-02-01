@@ -82,7 +82,7 @@ Rails.application.routes.draw do
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
-    get :mailing_lists, to: 'mailing_lists#index'
+    get :mailing_lists, to: 'group_mailing_lists#index'
     get :memberships, to: 'user_group_memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
