@@ -104,6 +104,7 @@ Rails.application.routes.draw do
   end
 
   resources :mailing_lists
+  get :lists, to: 'mailing_lists#index'
 
   resources :projects
 
