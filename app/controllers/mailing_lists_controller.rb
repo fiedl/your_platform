@@ -12,7 +12,8 @@ class MailingListsController < ApplicationController
       {title: current_title}
     ]
 
-    # TODO: Display access rights.
+    set_current_access :signed_in
+    set_current_access_text t :all_signed_in_users_can_read_this_content
   end
 
 end

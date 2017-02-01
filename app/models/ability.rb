@@ -281,6 +281,10 @@ class Ability
     can :read, User, id: User.find_all_non_hidden.pluck(:id)
     can :read, user
 
+    # Regular users can access the list of mailing lists.
+    #
+    can :index, MailingList
+
     if not read_only_mode?
       # Regular users can create, update or destroy own profile fields
       # that do not belong to the General section.
