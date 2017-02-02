@@ -147,7 +147,14 @@ $(document).ready ->
     "order": [[0, "asc"]],
     "columnDefs": [
       {"width": "40%", "targets": 0},
-      {"width": "20%", "targets": 2},
+      {"width": "20%", "targets": 2}
+    ]
+  }, common_configuration))
+  $('.datatable.term_reports').dataTable(jQuery.extend({
+    "pageLength": 50,
+    "order": [[0, "asc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 3 }
     ]
   }, common_configuration))
 

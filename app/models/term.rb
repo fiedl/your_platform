@@ -6,7 +6,7 @@ class Term < ActiveRecord::Base
   default_scope { order('year asc, type asc') }
 
   scope :current, -> {
-    where(year: Time.zone.now.year..(Time.zone.now.year + 1)).select { |term|
+    where(year: (Time.zone.now.year - 1)..(Time.zone.now.year + 1)).select { |term|
       term.current?
     }
   }

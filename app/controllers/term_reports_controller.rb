@@ -7,6 +7,8 @@ class TermReportsController < ApplicationController
       Term.by_year_and_type params[:year], params[:term_type]
     elsif params[:term_id]
       Term.find params[:term_id]
+    else
+      Term.current.first
     end
   }
   expose :group, -> {
@@ -35,6 +37,14 @@ class TermReportsController < ApplicationController
 
     set_current_navable term_report.group
     set_current_title term_report.title
+  end
+
+  expose :term_reports, -> { term.try(:term_reports) || TermReport.all }
+
+  def index
+    authorize! :index, TermReport
+
+    set_current_title t :term_reports
   end
 
 end
