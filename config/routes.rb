@@ -122,7 +122,12 @@ Rails.application.routes.draw do
     get 'term_reports/members/per_corporation_and_term', to: 'term_reports/members#per_corporation_and_term'
   end
 
-  resources :term_reports
+  resources :term_reports do
+    post :submit, to: 'term_reports#submit'
+    post :accept, to: 'term_reports#accept'
+    post :reject, to: 'term_reports#reject'
+  end
+
   get :term_report, to: 'term_reports#show', as: :search_term_report
 
   post :create_officers_group, to: 'officers#create_officers_group'

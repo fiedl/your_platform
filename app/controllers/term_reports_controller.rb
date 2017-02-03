@@ -20,10 +20,10 @@ class TermReportsController < ApplicationController
   }
   expose :corporation, -> { group if group.kind_of? Corporation }
   expose :term_report, -> {
-    if term && corporation
+    if params[:id] || params[:term_report_id]
+      TermReport.find (params[:id] || params[:term_report_id])
+    elsif term && corporation
       TermReports::ForCorporation.by_corporation_and_term corporation, term
-    elsif params[:id]
-      TermReport.find params[:id]
     end
   }
 
@@ -45,6 +45,15 @@ class TermReportsController < ApplicationController
     authorize! :index, TermReport
 
     set_current_title t :term_reports
+  end
+
+  # POST /term_reports/123/submit
+  #
+  def submit
+    authorize! :submit, term_report
+    term_report.states.create name: "submitted", author_user_id: current_user.id
+
+    redirect_to term_report_path(term_report)
   end
 
 end
