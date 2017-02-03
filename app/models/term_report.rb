@@ -5,6 +5,7 @@ class TermReport < ActiveRecord::Base
   belongs_to :group
 
   has_many :member_entries, class_name: 'TermReportMemberEntry', dependent: :destroy
+  has_many :states, as: :reference, dependent: :destroy
 
   after_create :fill_info
 
@@ -34,6 +35,10 @@ class TermReport < ActiveRecord::Base
 
   def submitted?
     submitted_at
+  end
+
+  def submitted_at
+    states.where(name: "submitted").last.try(:created_at)
   end
 
   def due?
