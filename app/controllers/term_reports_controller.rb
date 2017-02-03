@@ -51,6 +51,10 @@ class TermReportsController < ApplicationController
   #
   def submit
     authorize! :submit, term_report
+    raise "term report #{term_report.id} cannot be submitted because it has already been #{term_report.state.to_s}." if term_report.state
+    raise "term report #{term_report.id} is not due." unless term_report.due?
+    raise "term report #{term_report.id} is too old to submit." if term_report.too_old_to_submit?
+
     term_report.states.create name: "submitted", author_user_id: current_user.id
 
     redirect_to term_report_path(term_report)

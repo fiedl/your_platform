@@ -9,6 +9,7 @@ class TermReports::ForCorporation < TermReport
   end
 
   def fill_info
+    raise "term report has already been #{self.state.to_s}." if self.state
     self.delete_cache
     self.number_of_events = semester_calendar.try(:events).try(:count)
     self.number_of_members = corporation.memberships_for_member_list.at_time(end_of_term).count
