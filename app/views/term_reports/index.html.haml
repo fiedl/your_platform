@@ -12,6 +12,7 @@
       %tr
         %th= t :corporation
         %th= t :term
+        %th= t :contributors
         %th= t :status
         %th= t :status_changed_at
         - term_report_columns_to_show_on_index.each do |column|
@@ -21,6 +22,10 @@
         %tr
           %td= term_report.group.name
           %td= link_to term_report.term.to_s, term_report_path(term_report)
+          %td
+            - term_report.contributors.each do |user|
+              = link_to(user) do
+                = user_avatar user, size: 24, title: user.title
           %td
             - if term_report.accepted_at
               .label.label-success= t :accepted

@@ -41,6 +41,10 @@ class TermReport < ActiveRecord::Base
     states.where(name: "submitted").last.try(:created_at)
   end
 
+  def contributors
+    states.collect(&:author).uniq
+  end
+
   def due?
     (Time.zone.now >= due_at)
   end
