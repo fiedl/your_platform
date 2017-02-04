@@ -13,7 +13,6 @@ class UserGroupMembership < DagLink
 
   has_many :issues, as: :reference, dependent: :destroy
 
-
   # Validity Range
   # ====================================================================================================
 
