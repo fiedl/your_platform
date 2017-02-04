@@ -48,7 +48,7 @@ class Issue < ActiveRecord::Base
   def self.scan_all
     self.scan_objects(ProfileFieldTypes::Address.all) +
     self.scan_objects(ProfileFieldTypes::Email.all) +
-    self.scan_objects(UserGroupMembership.direct.all)
+    self.scan_objects(UserGroupMembership.find_all.direct)
   end
 
   def self.scan_address_field(address_field)

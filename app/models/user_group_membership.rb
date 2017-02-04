@@ -128,8 +128,8 @@ class UserGroupMembership < DagLink
     self.find_all_by( user: user, group: group )
   end
 
-  def self.all
-    super.where(ancestor_type: "Group", descendant_type: "User")
+  def self.find_all
+    self.where(ancestor_type: "Group", descendant_type: "User")
   end
 
 

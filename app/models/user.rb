@@ -465,11 +465,7 @@ class User < ActiveRecord::Base
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
   def corporations
-    cached do
-      my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
-      my_corporation_ids ||= []
-      Corporation.find my_corporation_ids
-    end
+    self.groups.where(type: "Corporation")
   end
 
   # This returns the corporations the user is currently member of.
