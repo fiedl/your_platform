@@ -35,3 +35,7 @@ de:
     could_not_deliver_to_email: "E-Mail-Adresse nicht erreichbar."
     please_enter_the_correct_email_address: "Bitte tragen Sie rechts die korrekte E-Mail-Adresse ein."
     email_needs_review: "Bitte E-Mail-Adresse überprüfen."
+    membership_valid_from_too_small: Anfangs-Zeitpunkt der Mitgliedschaft zu klein
+    membership_valid_to_too_small: End-Zeitpunkt der Mitgliedschaft zu klein
+    membership_valid_to_before_valid_from: Mitgliedschaft endet, bevor sie beginnt.
+    please_check_membership_validity_range: Bitte Mitgliedschafts-Zeitraum überprüfen.

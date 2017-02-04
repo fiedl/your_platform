@@ -5,5 +5,5 @@
     = t(:rescan)
 
 - @issues.each do |issue|
-  - if issue.reference.kind_of? ProfileField
+  - if issue.reference.kind_of?(ProfileField) or issue.reference.kind_of?(UserGroupMembership)
     = render partial: 'issues/issue', locals: {issue: issue}

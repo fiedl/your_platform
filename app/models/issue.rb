@@ -14,7 +14,7 @@
 #     issue.resecan         # Rescan a specific issue.
 #
 class Issue < ActiveRecord::Base
-  attr_accessible :title, :description, :resolved_at, :responsible_admin_id
+  attr_accessible :title, :description, :resolved_at, :responsible_admin_id, :reference_id, :reference_type
 
   belongs_to :reference, polymorphic: true
   belongs_to :responsible_admin, class_name: 'User'
@@ -43,10 +43,12 @@ class Issue < ActiveRecord::Base
   def self.scan_object(object)
     return self.scan_address_field(object) if object.kind_of? ProfileFieldTypes::Address
     return self.scan_email_field(object) if object.kind_of? ProfileFieldTypes::Email
+    return self.scan_membership(object) if object.kind_of? UserGroupMembership
   end
   def self.scan_all
     self.scan_objects(ProfileFieldTypes::Address.all) +
-    self.scan_objects(ProfileFieldTypes::Email.all)
+    self.scan_objects(ProfileFieldTypes::Email.all) +
+    self.scan_objects(UserGroupMembership.all)
   end
 
   def self.scan_address_field(address_field)
@@ -77,6 +79,17 @@ class Issue < ActiveRecord::Base
     return email_field.issues(true)
   end
 
+  def self.scan_membership(membership)
+    membership.issues.destroy_auto
+    if membership.valid_from && membership.valid_from.year < 1700
+      membership.issues.create title: 'issues.membership_valid_from_too_small', description: 'issues.please_check_membership_validity_range', responsible_admin_id: membership.user.try(:responsible_admin_id)
+    elsif membership.valid_to && membership.valid_to.year < 1700
+      membership.issues.create title: 'issues.membership_valid_to_too_small', description: 'issues.please_check_membership_validity_range', responsible_admin_id: membership.user.try(:responsible_admin_id)
+    elsif membership.valid_from && membership.valid_to && membership.valid_from > membership.valid_to
+      membership.issues.create title: 'issues.membership_valid_to_before_valid_from', description: 'issues.please_check_membership_validity_range', responsible_admin_id: membership.user.try(:responsible_admin_id)
+    end
+  end
+
   # Notify responsible admins if there are open issues.
   #
   def self.notify_admins
@@ -89,6 +102,19 @@ class Issue < ActiveRecord::Base
         text = I18n.t(:please_click_above_link_and_resolve_issues)
         notification = Notification.create recipient_id: admin_id, reference_url: issues_url, message: message, text: text
       end
+    end
+  end
+
+  def reference
+    ref = super
+    if ref.kind_of? DagLink
+      if ref.ancestor_type == "Group" and ref.descendant_type == "User"
+        ref.becomes(UserGroupMembership)
+      else
+        ref
+      end
+    else
+      ref
     end
   end
 
