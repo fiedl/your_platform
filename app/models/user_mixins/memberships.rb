@@ -74,8 +74,14 @@ module UserMixins::Memberships
   end
 
   def joined_at(group)
-    Rails.cache.fetch [self, 'joined_at', group] do
-      group.membership_of(self).valid_from
+    begin
+      Rails.cache.fetch [self.cache_key, 'joined_at', group.cache_key] do
+        group.membership_of(self).valid_from
+      end
+    rescue ArgumentError => e
+      membership = group.membership_of(self)
+      Issue.scan membership if membership
+      return membership.try(:valid_from)
     end
   end
 
