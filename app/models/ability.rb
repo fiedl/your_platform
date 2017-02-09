@@ -134,6 +134,8 @@ class Ability
 
   def rights_for_developers
     can :use, Rack::MiniProfiler
+
+    can :use, :term_reports
   end
 
   def rights_for_global_admins
