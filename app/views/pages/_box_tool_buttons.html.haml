@@ -1,0 +1,24 @@
+- page || raise('no page given')
+
+- if can? :manage, page
+  .activities_tool.tool
+    .do_not_show_in_edit_mode.shown_on_box_header_hover
+      = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)
+
+- if can? :destroy, page
+  .delete_page_tool.tool= destroy_page_button(page)
+
+.archive_tools.tool
+  = archived_label(page)
+  - if (page.type == 'BlogPost') && can?(:update, page)
+    .shown_on_box_header_hover.do_not_show_in_edit_mode= archive_button(page)
+
+- if can? :manage, page
+  .attachment_tools.tool
+    .shown_on_box_header_hover.do_not_show_in_edit_mode
+      = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
+
+- if can? :manage, page
+  .page_settings_tool.tool
+    .shown_on_box_header_hover.do_not_show_in_edit_mode
+      = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
