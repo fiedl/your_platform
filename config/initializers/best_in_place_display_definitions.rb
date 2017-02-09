@@ -22,11 +22,12 @@
 BestInPlace::DisplayMethods.add_model_method(ProfileField, :value, :display_html)
 
 # In order to use the helpers, make them available to ActionView::Base.
+ActionView::Base.send :include, EmailHelper
 ActionView::Base.send :include, TagHelper
 
 # This calls a helper method `markup(str)`.
 #
-BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup)
+BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup_and_email_scrambler)
 BestInPlace::DisplayMethods.add_helper_method(Group, :body, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :welcome_message, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)
