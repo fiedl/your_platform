@@ -74,7 +74,6 @@ $(document).ready ->
         $(this).removeClass('col-sm-9')
       $(this).css 'width', ''
       save_box_configuration()
-      App.adjust_box_heights()
   }
 
   $('.draggable_boxes .resizable_col .box').each ->
