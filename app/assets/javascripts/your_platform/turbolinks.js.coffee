@@ -2,8 +2,6 @@ $(document).ready ->
   Turbolinks.reload = ->
     Turbolinks.visit window.location
 
-  Turbolinks.enableTransitionCache() if $('body').data('env') != 'test'
-
 # If the layout changes, then turbolinks does not load the changed layout.
 # And if the navigational elements differ between the layouts, this can look
 # quite strange.
