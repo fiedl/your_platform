@@ -42,6 +42,22 @@ class TermReport < ActiveRecord::Base
     states.where(name: "submitted").last.try(:created_at)
   end
 
+  def accepted?
+    accepted_at
+  end
+
+  def accepted_at
+    states.where(name: "accepted").last.try(:created_at)
+  end
+
+  def rejected?
+    rejected_at
+  end
+
+  def rejected_at
+    states.where(name: "rejected").last.try(:rejected_at)
+  end
+
   def state
     states.last
   end
