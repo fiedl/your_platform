@@ -1,4 +1,5 @@
 class ContactMessage < MailForm::Base
+  attribute :subject
   attribute :name, validate: true
   attribute :email, validate: /\A([\w\.%\+\-]+)@([\w\-]+\.)+([\w]{2,})\z/i
   attribute :message
@@ -11,7 +12,7 @@ class ContactMessage < MailForm::Base
 
   def headers
     {
-      subject: AppVersion.app_name,
+      subject: (subject || AppVersion.app_name),
       to: Setting.support_email,
       cc: email,
       from: %("#{name}" <#{email}>)

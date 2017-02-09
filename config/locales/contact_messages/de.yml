@@ -7,6 +7,7 @@ de:
   mail_form:
     attributes:
       contact_message:
+        subject: Betreff
         name: Ihr Name
         email: Ihre E-Mail-Adresse
         message: Ihre Nachricht an uns
