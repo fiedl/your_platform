@@ -17,8 +17,8 @@ input.filter_news
   box-shadow: 1px 1px 1px #888888
   -moz-box-shadow: 1px 1px 1px #888888
   -webkit-box-shadow: 1px 1px 1px #888888
-  
-  
+
+
 .root_page_two_column_news
   .col-md-6.left_column
   .col-md-6.right_column
@@ -55,17 +55,17 @@ input.filter_news
   .timeline_entry
     width: 45%
     position: relative
-  
+
   .timeline_entry:nth-child(odd)
     clear: left
     float: left
-      
+
   .timeline_entry:nth-child(even)
     clear: right
     float: right
     margin-top: 100px
     margin-bottom: 50px
-  
+
   .timeline_entry:nth-child(odd)::after
     background: #DBAF26
     content: ""
@@ -74,7 +74,7 @@ input.filter_news
     right: -11.2%
     top: 30px
     width: 11.2%
-  
+
   .timeline_entry:nth-child(even)::before
     background: #DBAF26
     content: ""
@@ -86,20 +86,25 @@ input.filter_news
 
 .timeline_entry.already_read
   opacity: 0.2
-  height: 200px
-  overflow: hidden
 
+.box.news.collapsed
+  .panel-body
+    max-height: 200px
+    overflow: hidden
+  a.read-on
+    display: block
+    text-align: center
 
 .root_view_switcher
   margin-bottom: 16px
-  
+
 .last_seen_activities
   margin-bottom: 50px
-  
+
 .side-col .box.upcoming_events
   .head
     height: 70px
-    
+
 .box.new_post
   form
     margin: 10px

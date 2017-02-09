@@ -1,15 +1,19 @@
+- profileable = issue.reference.profileable if issue.reference.kind_of? ProfileField
+- profileable = issue.reference.user if issue.reference.kind_of? UserGroupMembership
+- profileable ||= issue.reference
+
 %h1
-  = issue.reference.profileable.title
+  = profileable.title
   .label.label-warning.scanning_issue=t :scanning_issue
   .label.label-success.thanks_for_fixing_issue=t :thanks
 %div
   .col-sm-6
     .context_container
       %p
-        = link_to issue.reference.profileable.title, issue.reference.profileable
-        - if issue.reference.profileable.phone_field.try(:value).present?
+        = link_to profileable.title, profileable
+        - if profileable.phone_field.try(:value).present?
           %br
-          = "#{issue.reference.profileable.phone_field.label}: #{issue.reference.profileable.phone_field.value}"
+          = "#{profileable.phone_field.label}: #{profileable.phone_field.value}"
     - if issue.author
       .author-container
         %p
@@ -20,7 +24,7 @@
             = "#{issue.author.phone_field.label}: #{issue.author.phone_field.value}"
           %br
           = localize issue.created_at
-          
+
     .description-container
       - if issue.resolved_at
         %p
@@ -38,7 +42,19 @@
     - if issue.author && issue.resolved_at.nil?
       .destroy-container
         = button_to t(:i_have_resolved_the_issue), issue_path(issue), method: 'delete', remote: true, class: 'btn btn-warning pull-right'
-  
+
     .reference_container
-      = render partial: 'profile_fields/profile_field_value', locals: {profile_field: issue.reference}
+      - if issue.reference.kind_of? ProfileField
+        = render partial: 'profile_fields/profile_field_value', locals: {profile_field: issue.reference}
+      - if issue.reference.kind_of? UserGroupMembership
+        - membership = issue.reference
+        %p
+          = "#{t(:group)}:"
+          = link_to membership.group.name, membership.group
+        %p
+          = "#{t(:valid_from)}:"
+          = best_in_place membership, :valid_from_localized_date
+        %p
+          = "#{t(:valid_to)}:"
+          = best_in_place membership, :valid_to_localized_date
 

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 
+#
 # This class represents the membership of a user in a status group, i.e. a subgroup of a corporation
 # representing a member status, e.g. the subgroup 'guests' or 'presidents'.
 #
@@ -9,12 +9,12 @@ class StatusGroupMembership < UserGroupMembership
   # those new properties are, e.g., shown in the corporate_vita.
   # Since rails apparently does not support Multi Table Inheritance,
   # this associated model takes the additional properties.
-  # 
+  #
   has_one :status_group_membership_info, foreign_key: 'membership_id', inverse_of: :membership #, autosave: true
 
   delegate( :promoted_by_workflow, :promoted_by_workflow=,
             :promoted_on_event, :promoted_on_event=,
-            :workflow, :workflow=, 
+            :workflow, :workflow=,
             :event, :event=,   # alias methods
             to: :find_or_create_status_group_membership_info )
 
@@ -29,7 +29,7 @@ class StatusGroupMembership < UserGroupMembership
 
   # Access the event (promoted_on_event) by its name, since this is the way
   # most likely done by a user interface.
-  # 
+  #
   # If a new event is created, assign the corporation associated with this status group
   # as the group of the event.
   #
@@ -56,24 +56,24 @@ class StatusGroupMembership < UserGroupMembership
   # ==========================================================================================
 
   def self.create( params )
-    super( params ).becomes StatusGroupMembership 
+    super( params ).becomes StatusGroupMembership
   end
-    
+
 
   # Finder Methods
   # ==========================================================================================
 
   # Returns all memberships in status groups that belong to the given corporation.
-  # 
+  #
   # corporation A
   #      |------------- status group 1
   #      |                      |-------- user 1
   #      |                      |-------- user 2
   #      |------------- status group 2
   #                             |-------- user 3
-  # 
+  #
   # The method therefore will return all memberships of subgroups of the corporation.
-  # 
+  #
   def self.find_all_by_corporation( corporation )
     raise 'Expect parameter to be a Corporation' unless corporation.kind_of? Corporation
     status_groups = corporation.status_groups
@@ -126,14 +126,14 @@ class StatusGroupMembership < UserGroupMembership
       .where(descendant_id: user.id, descendant_type: 'User')
       .limit(1)
       .first
-    
+
     # The #becomes method won't work here.
     #membership = super( user, group )
     #membership ? StatusGroupMembership.with_invalid.find(membership.id) : nil
   end
 
 
-  # Save Method 
+  # Save Method
   # ==========================================================================================
 
   # Since several important attributes of this model are delegated, it is likely to change
@@ -145,9 +145,9 @@ class StatusGroupMembership < UserGroupMembership
   #    membership.save
   #
   # The regular `save` method would fail, because there are `no changes` to the membership
-  # itself. 
+  # itself.
   #
-  # To circumvent this, this save method first saves the delegate model if necessary and 
+  # To circumvent this, this save method first saves the delegate model if necessary and
   # then calls the regular `save` method.
   #
   def save(*args)
@@ -168,14 +168,14 @@ class StatusGroupMembership < UserGroupMembership
   # Callback Methods for the Delegation to status_group_membership_info
   # ==========================================================================================
 
-  private 
-  
+  private
+
   def find_or_create_status_group_membership_info
     status_group_membership_info || create_status_group_membership_info
   end
-   
-  # When .save is called on this instance, but only the associated object has changed through 
-  # the delegated methods, this instance is not marked as changed. As a result, any call of 
+
+  # When .save is called on this instance, but only the associated object has changed through
+  # the delegated methods, this instance is not marked as changed. As a result, any call of
   # .save will fail.
   #
   # This method compensates for the missing automatism.

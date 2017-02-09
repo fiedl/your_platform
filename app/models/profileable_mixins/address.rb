@@ -3,8 +3,8 @@ module ProfileableMixins::Address
 
   # Scope for profile fields that are postal addresses.
   #
-  def address_fields
-    self.id ? profile_fields.where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
+  def address_fields(reload = false)
+    self.id ? profile_fields(reload).where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
   end
 
   def address_fields_json
@@ -19,13 +19,16 @@ module ProfileableMixins::Address
   # The postal address at the study location.
   #
   def study_address
-    address_fields.where(label: study_address_labels + work_or_study_address_labels).first.try(:value)
+    study_address_field.try(:value)
   end
   def study_address=(address_string)
-    field = address_fields.where(label: study_address_labels + work_or_study_address_labels).first || address_fields.build(label: study_address_labels.first)
+    field = study_address_field
     field.value = address_string
     field.label = study_address_labels.first if field.label.in? work_or_study_address_labels
     field.save
+  end
+  def study_address_field
+    address_fields.where(label: study_address_labels + work_or_study_address_labels).first || address_fields.build(label: study_address_labels.first)
   end
   def study_address_labels
     ["Semesteranschrift", "Studienanschrift", "Study Address"]
@@ -41,13 +44,16 @@ module ProfileableMixins::Address
   # The postal address of the work place.
   #
   def work_address
-    address_fields.where(label: work_address_labels + work_or_study_address_labels).first.try(:value)
+    work_address_field.try(:value)
   end
   def work_address=(address_string)
-    field = address_fields.where(label: work_address_labels + work_or_study_address_labels).first || address_fields.build(label: work_address_labels.first)
+    field = work_address_field
     field.label = work_address_labels.first if field.label.in? work_or_study_address_labels
     field.value = address_string
     field.save
+  end
+  def work_address_field
+    address_fields.where(label: work_address_labels + work_or_study_address_labels).first || address_fields.build(label: work_address_labels.first)
   end
   def work_address_labels
     ["Geschäftliche Anschrift", "Arbeitsanschrift", "Dienstanschrift", "Work Address"]
@@ -56,12 +62,16 @@ module ProfileableMixins::Address
   # The postal address of the user's home.
   #
   def home_address
-    address_fields.where(label: home_address_labels).first.try(:value)
+    home_address_field.try(:value)
+  end
+  def home_address_field
+    address_fields.where(label: home_address_labels).first
   end
   def home_address=(address_string)
-    field = address_fields.where(label: home_address_labels).first || address_fields.build(label: home_address_labels.first)
-    field.value = address_string
-    field.save
+    home_address_field.update_attributes value: address_string
+  end
+  def home_address_field
+    address_fields.where(label: home_address_labels).first || address_fields.build(label: home_address_labels.first)
   end
   def home_address_labels
     ["Heimatanschrift", "Private Anschrift", "Home Address"]

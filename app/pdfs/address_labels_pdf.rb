@@ -69,14 +69,25 @@ class AddressLabelsPdf < Prawn::Document
     ["dejavu", "times", 'kai']
   end
 
+  def font_directory
+    # We have copied the fonts from:
+    # https://github.com/prawnpdf/prawn/tree/master/data/fonts
+    #
+    # This way, we could list the font license here:
+    # https://github.com/fiedl/your_platform/tree/master/vendor/assets/fonts
+    #
+    # Formerly: `@font_directory ||= "#{Prawn::BASEDIR}/data/fonts"`
+    #
+    @font_directory ||= YourPlatform::Engine.root.join('vendor/assets/fonts').to_s
+  end
+
   def define_fonts
     # The idea to use fallback fonts to have chinese characters supported along
     # with other UTF-8 characters, was taken from:
     # http://stackoverflow.com/a/11097644/2066546
 
-    kai = "#{Prawn::BASEDIR}/data/fonts/gkai00mp.ttf"
-    # action_man_path = "#{Prawn::BASEDIR}/data/fonts/Action Man.dfont"
-    dejavu = "#{Prawn::BASEDIR}/data/fonts/DejaVuSans.ttf"
+    kai = "#{font_directory}/gkai00mp.ttf"
+    dejavu = "#{font_directory}/DejaVuSans.ttf"
 
     font_families.update("dejavu" => {
       :normal      => dejavu,
@@ -92,13 +103,6 @@ class AddressLabelsPdf < Prawn::Document
       :bold        => "Times-Bold",
       :bold_italic => "Times-BoldItalic"
     })
-
-    # font_families.update("action_man" => {
-    #   :normal      => { :file => action_man_path, :font => "ActionMan" },
-    #   :italic      => { :file => action_man_path, :font => "ActionMan-Italic" },
-    #   :bold        => { :file => action_man_path, :font => "ActionMan-Bold" },
-    #   :bold_italic => { :file => action_man_path, :font => "ActionMan-BoldItalic" }
-    # })
 
     font_families.update("kai" => {
       :normal => { :file => kai, :font => "Kai" },

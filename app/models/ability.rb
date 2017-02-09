@@ -134,6 +134,8 @@ class Ability
 
   def rights_for_developers
     can :use, Rack::MiniProfiler
+
+    can :use, :term_reports
   end
 
   def rights_for_global_admins
@@ -292,6 +294,10 @@ class Ability
     #
     can :read, User, id: User.find_all_non_hidden.pluck(:id)
     can :read, user
+
+    # Regular users can access the list of mailing lists.
+    #
+    can :index, MailingList
 
     if not read_only_mode?
       # Regular users can create, update or destroy own profile fields
@@ -493,6 +499,12 @@ class Ability
       attachment.id.in? Attachment.logos.pluck(:id)
     end
 
+    # All users can read the public bios of the users.
+    #
+    can :read_public_bio, User do |user|
+      user.account
+    end
+
     # All users can comment contents they can read.
     #
     can :create_comment_for, BlogPost do |blog_post|
@@ -580,6 +592,10 @@ class Ability
     # All users can use the blue help button.
     #
     can :create, :support_request
+
+    # All users can use the contact form.
+    #
+    can :create, ContactMessage
 
     # All users can load avatar images, since this is an api.
     # See AvatarsController.

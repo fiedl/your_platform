@@ -17,12 +17,19 @@ form.formtastic
   ol li
     list-style: none
 
-  label.label
-    min-width: 130px
+  label.label, legend.label
+    color: black
+    font-weight: bold
+    font-size: 100%
     display: inline-block
+    text-align: left
+    border-bottom: none
 
   textarea, input
     min-width: 6cm
+
+  fieldset.inputs fieldset.inputs li
+    margin-bottom: 0em
 
 input[type='checkbox']
   margin-right: 6px

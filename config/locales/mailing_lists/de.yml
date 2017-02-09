@@ -3,13 +3,15 @@ de:
   mailing_lists: E-Mail-Verteiler
   manage_mailing_lists: E-Mail-Verteiler verwalten
   install_mailing_list: E-Mail-Verteiler einrichten
-  
+
   what_are_mailing_lists: Was sind E-Mail-Verteiler?
   mailing_lists_forward_emails_to_all_group_members: E-Meil-Verteiler nehmen eingehende E-Mails an so genannte **Verteiler-Adressen** (z.B. erlanger-burschen@wingolf.org) entgegen und **leiten sie an alle Gruppen-Mitglieder weiter** (im Beispiel an alle Burschen des Erlanger Wingolfs).
   no_need_to_manage_list_members_separately: "Hierbei wird immer das aktuelle Mitglieder-Verzeichnis der Plattform verwendet, sodass die Adressaten der E-Mail-Verteiler nicht separat gepflegt werden müssen."
-  
+
   mailing_list_adresses: Verteiler-Adressen
-  
+
+  sender_policy: Absender-Einstellung
+
   mailing_list_sender_filter: Absender-Filter für E-Mail-Verteiler
   sender_filter:
     open:                     Offen (Standard für Amtsträger-Gruppen)
@@ -18,4 +20,13 @@ de:
     group_members:            Mitglieder der Gruppe (Standard für reguläre Gruppen)
     group_officers:           Amtsträger der Gruppe
     officers:                 Amtsträger
+    global_officers:          Bundesamtsträger
+
+  sender_filter_short:
+    open:                     Offen
+    users_with_account:       Plattform-Zugang
+    corporation_members:      Verbindung
+    group_members:            Gruppe
+    group_offiers:            Gruppen-Amtsträger
+    officers:                 Alle Amtsträger
     global_officers:          Bundesamtsträger

@@ -107,7 +107,7 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-  s.add_dependency 'rails-assets-Voog--wysihtml'
+  s.add_dependency 'rails-assets-Voog--wysihtml', '0.6.0.beta1'
 
   # Search
   s.add_dependency 'elasticsearch-model'
@@ -116,11 +116,12 @@ Gem::Specification.new do |s|
   s.add_dependency 'geocoder'                                                          # MIT License
   s.add_dependency 'biggs'
 
-  # Formtastic Form Helper
+  # Form Helper
   s.add_dependency 'formtastic'  # MIT License
+  s.add_dependency 'simple_form'
 
   # File Uploads
-  s.add_dependency 'carrierwave'                                                       # MIT License
+  s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick'
   s.add_dependency 'refile', '~> 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
@@ -176,6 +177,9 @@ Gem::Specification.new do |s|
 
   # Console
   s.add_dependency "table-formatter"
+
+  # Contact form
+  s.add_dependency 'mail_form'
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

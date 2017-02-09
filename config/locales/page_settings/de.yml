@@ -32,4 +32,6 @@ de:
   for_empty_field_show_page_officers: "Wenn das Feld leer ist, werden die Amtsträger angezeigt, die direkt dieser Inhaltsseite zugeordnet sind (siehe Kasten 'Amtsträger' weiter unten). Wenn hingegen eine Gruppen-ID angegeben ist, werden stattdessen die Amtsträger dieser Gruppe angezeigt."
   show_only_the_first_n_offices: "Nur die ersten N Ämter anzeigen:"
 
+  sub_pages: Unterseiten
+
   danger_zone_tm: Danger Zone™

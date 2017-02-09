@@ -1,0 +1,46 @@
+= render partial: 'statistics/tabs', locals: {active: 'term_reports'}
+
+.panel
+  .panel-body
+    = form_tag "#", method: 'get' do
+      = select_tag :year, options_for_select((1900..Time.zone.now.year).collect { |year| [year, year] }, term.year)
+      = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
+      = submit_tag("OK")
+
+%h1= current_title
+%div
+  %table.datatable.term_reports
+    %thead
+      %tr
+        %th= t :corporation
+        %th= t :term
+        %th= t :contributors
+        %th= t :status
+        %th= t :status_changed_at
+        - term_report_columns_to_show_on_index.each do |column|
+          %th= t column, scope: 'term_report_columns_short'
+    %tbody
+      - term_reports.each do |term_report|
+        %tr
+          %td= term_report.group.name
+          %td= link_to term_report.term.to_s, term_report_path(term_report)
+          %td
+            - term_report.contributors.each do |user|
+              = link_to(user) do
+                = user_avatar user, size: 24, title: user.title
+          %td
+            - if term_report.accepted_at
+              .label.label-success= t :accepted
+            - elsif term_report.rejected_at
+              .label.label-danger= t :rejected
+            - elsif term_report.submitted_at
+              .label.label-warning= t :submitted
+          %td
+            - if term_report.accepted_at
+              = l(term_report.accepted_at.to_date)
+            - elsif term_report.rejected_at
+              = l(term_report.rejected_at.to_date)
+            - elsif term_report.submitted_at
+              = l(term_report.submitted_at.to_date)
+          - term_report_columns_to_show_on_index.each do |column|
+            %td= term_report.send column

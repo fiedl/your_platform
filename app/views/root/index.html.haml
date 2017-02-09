@@ -3,13 +3,12 @@
 - @hide_vertical_nav = true
 - @hide_footer = true
 
-- if current_user.beta_tester?
-  .row
-    .root_view_switcher.pull-right
-      Ansicht wechseln:
-      %a{href: '?view_setting=timeline'} Timeline
-      |
-      %a{href: '?view_setting=social'} Social
+.row
+  .root_view_switcher.pull-right
+    = t :change_view
+    %a{href: '?view_setting=timeline'} Timeline
+    |
+    %a{href: '?view_setting=social'} Social
 
 = render partial: 'root/timeline_view' if @view_setting == 'timeline'
 = render partial: 'root/social_view' if @view_setting == 'social'

@@ -1,7 +1,7 @@
 class Blog < Page
 
   def blog_posts
-    child_pages.where(type: 'BlogPost')
+    descendant_blog_posts
   end
 
 end

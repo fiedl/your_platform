@@ -35,7 +35,7 @@ module ProfileFieldTypes
         end
 
         def default_country_code
-          'de'
+          self.class.default_country_code
         end
 
         def city
@@ -59,6 +59,10 @@ module ProfileFieldTypes
         def region
           self.get_field(:region) || geo_information(:state)
         end
+        def state_shortcut(str)
+          GeoLocation.usa_state_shortcuts.each { |k, v| str.sub!(k, v) } if str.present?
+          str
+        end
 
         def composed_address
           first_and_second_address_line = (get_field(:first_address_line).to_s + "\n" + get_field(:second_address_line).to_s).strip
@@ -67,7 +71,7 @@ module ProfileFieldTypes
             street: first_and_second_address_line,
             city: get_field(:city),
             zip: get_field(:postal_code),
-            state: get_field(:region)
+            state: state_shortcut(get_field(:region))
           ).strip
         end
 
@@ -133,6 +137,18 @@ module ProfileFieldTypes
           return self
         end
       end
+    end
+
+    def self.default_country_code
+      'DE'
+    end
+
+    def self.country_codes
+      [default_country_code] + GeoLocation.country_codes.sort
+    end
+
+    def self.country_codes_hash
+      Hash[*country_codes.zip(country_codes).flatten]
     end
 
     concerning :GoogleMapsIntegration do

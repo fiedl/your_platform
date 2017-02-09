@@ -73,6 +73,17 @@
 %div
   = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @page}
 
+%h1.teaser_image= t :teaser_image
+%div
+  %table.settings
+    %tr.teaser_image_url
+      %th= t :teaser_image_url
+      %td
+        #select_teaser_image
+          = best_in_place @page, :teaser_image_url
+          - @page.possible_teaser_image_urls.each do |image_url|
+            = image_tag image_url
+
 = render partial: 'officers/officers_box', locals: {structureable: @page}
 
 %h1.danger_zone= t :danger_zone_tm

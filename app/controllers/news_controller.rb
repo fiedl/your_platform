@@ -43,6 +43,7 @@ class NewsController < ApplicationController
     # Load Events
     @events = current_user.events.where(start_at: date_range)
     @events = @events.where('name like ?', '%' + query + '%') if query
+    @events = @events.where(id: @events.select { |event| event.attachments.any? }.map(&:id))
 
     # Sort Objects
     @posts = (@posts).uniq.sort_by { |obj| obj.updated_at }.reverse

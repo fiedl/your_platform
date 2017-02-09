@@ -11,6 +11,8 @@ class UserGroupMembership < DagLink
 
   before_validation :ensure_correct_ancestor_and_descendant_type
 
+  has_many :issues, as: :reference, dependent: :destroy
+
   # Validity Range
   # ====================================================================================================
 
@@ -124,6 +126,10 @@ class UserGroupMembership < DagLink
 
   def self.find_all_by_user_and_group( user, group )
     self.find_all_by( user: user, group: group )
+  end
+
+  def self.find_all
+    self.where(ancestor_type: "Group", descendant_type: "User")
   end
 
 

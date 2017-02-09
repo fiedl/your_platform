@@ -25,11 +25,16 @@ body.demo_mode
       dd
         +obscure
 
-  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle):not(.workflow_trigger)
+  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle):not(.workflow_trigger):not(.change_avatar):not(.user_settings)
     +obscure
 
-  .avatar
+  ul.nav .recent a.user
     +obscure
+
+  li.author, .post-author
+    a
+      +obscure
 
   .direct_officers
     +obscure
+

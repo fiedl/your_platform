@@ -1,0 +1,10 @@
+- # locals:
+- group_name || raise('no group_name given')
+- members ||= term_report.members(group_name)
+
+%h1
+  = group_name
+  = "(#{members.count})"
+%div
+  - members.each do |user|
+    %li= link_to user.title, user

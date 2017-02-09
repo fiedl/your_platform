@@ -4,6 +4,7 @@ class Page < ActiveRecord::Base
     attr_accessible :title, :content
     attr_accessible :author, :author_title, :author_user_id
     attr_accessible :teaser_text
+    attr_accessible :teaser_image_url
     attr_accessible :box_configuration
     attr_accessible :redirect_to
     attr_accessible :tag_list
@@ -59,6 +60,11 @@ class Page < ActiveRecord::Base
   end
 
 
+  def as_json(options = {})
+    super.as_json(options).merge({tag_list: tag_list})
+  end
+
+
   def child_teaser_boxes
     teaser_boxes
   end
@@ -75,30 +81,44 @@ class Page < ActiveRecord::Base
   end
   def teaser_text
     super || if content
-      paragraphs = content.gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
+      paragraphs = content
+        .gsub(teaser_youtube_url.to_s, '')
+        .gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
       teaser_content = paragraphs.first
       teaser_content += "\n\n" + paragraphs.second if teaser_content.start_with?("http") # For inline videos etc.
       teaser_content
     end
   end
   def teaser_image_url
-    if image_attachments.first
-      image_attachments.first.medium_url
-    elsif content.present?
-      URI.extract(content)
-        .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
-        .first
-        .try(:gsub, ")", "") # to fix markdown image urls
+    if self.settings.teaser_image_url
+      self.settings.teaser_image_url
+    else
+      possible_teaser_image_urls.first
     end
   end
+  def teaser_image_url=(new_url)
+    if new_url.present?
+      self.settings.teaser_image_url = new_url
+    else
+      self.settings.teaser_image_url = nil
+    end
+  end
+  def possible_teaser_image_urls
+    image_attachments.map(&:medium_url) + if content.present?
+      URI.extract(content)
+        .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
+        .collect { |url| url.gsub(")", "") } # to fix markdown image urls
+    else
+      []
+    end
+  end
+  def teaser_youtube_url
+    content.to_s.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/).try(:[], 0)
+  end
+
 
   def group_map_parent_group_id
     settings.group_map_parent_group_id || Group.corporations_parent.id
-  end
-
-
-  def as_json(options = {})
-    super.as_json(options).merge({tag_list: tag_list})
   end
 
   # This is the group the page belongs to, for example:
@@ -190,7 +210,10 @@ class Page < ActiveRecord::Base
     attachments.find_by_type type
   end
   def image_attachments
-    attachments.find_by_type('image').select do |attachment|
+    attachments.find_by_type('image')
+  end
+  def image_attachments_not_listed_in_content
+    image_attachments.select do |attachment|
       # Do not list images that are `![markdown-images](...)` within the
       # page content as attachments in order to avoid displaying them
       # twice.
@@ -203,17 +226,21 @@ class Page < ActiveRecord::Base
   # ----------------------------------------------------------------------------------------------------
 
   # This method returns all Page objects that can be regarded as blog entries of self.
-  # Blog entries are simply child pages of self that have the :blog_entry flag.
   # They won't show up in the vertical menu.
   #
   # Page: "My Blog"
-  #   |------------------ Page: "Entry 1"
-  #   |------------------ Page: "Entry 2"
+  #   |------------------ BlogPost: "Entry 1"
+  #   |------------------ BlogPost: "Entry 2"
   #
   def blog_entries
-    self.descendant_pages.where(type: "BlogPost").order('created_at DESC')
+    blog_posts
   end
-
+  def blog_posts
+    child_pages.where(type: "BlogPost").order('created_at DESC')
+  end
+  def descendant_blog_posts
+    descendant_pages.where(type: "BlogPost").order('created_at DESC')
+  end
 
   # Finder and Creator Methods
   # ----------------------------------------------------------------------------------------------------
@@ -313,7 +340,7 @@ class Page < ActiveRecord::Base
   end
 
   def self.types
-    [nil, Page, BlogPost, Pages::HomePage]
+    [nil, Page, BlogPost, Blog, Pages::HomePage]
   end
 
 end

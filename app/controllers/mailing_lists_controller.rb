@@ -1,14 +1,19 @@
 class MailingListsController < ApplicationController
-  skip_authorize_resource :only => :index
-  
+
+  # https://railscasts.com/episodes/259-decent-exposure
+  #
+  expose :mailing_lists, -> { MailingList.all }
+
   def index
-    @group = Group.find params[:group_id]
-    authorize! :manage, @group
-    
-    @email_address_fields = @group.profile_fields.where(type: 'ProfileFieldTypes::MailingListEmail')
-    
-    set_current_navable @group
-    set_current_title "#{t(:manage_mailing_lists)}: #{@group.name}"
+    authorize! :index, MailingList
+
+    set_current_title t :mailing_lists
+    set_current_breadcrumbs [
+      {title: current_title}
+    ]
+
+    set_current_access :signed_in
+    set_current_access_text t :all_signed_in_users_can_read_this_content
   end
-  
+
 end

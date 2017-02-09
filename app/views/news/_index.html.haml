@@ -10,4 +10,5 @@
   %div{class: view_class}
     - objects.each do |obj|
       - css = 'already_read' if obj.kind_of?(Post) && (not obj.unread_by?(current_user))
+      - css = 'already_read' if obj.kind_of?(Event) && (not obj.upcoming?)
       .timeline_entry{class: css}= render obj

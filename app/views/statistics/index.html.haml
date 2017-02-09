@@ -1,5 +1,7 @@
 - set_title t :statistics
 
+= render partial: 'statistics/tabs', locals: {active: 'statistics'}
+
 %h1.statistics=t :statistics
 %div
 
@@ -8,7 +10,7 @@
   %h1=t list_preset
   %div
     %p.explanation=t "#{list_preset}_explanation"
-    
+
     %p.buttons
       = link_to "#{t list_preset} anzeigen", statistics_path(list: list_preset), class: 'btn btn-primary'
       = link_to statistics_path(list: list_preset, format: 'csv'), class: 'btn btn-default' do

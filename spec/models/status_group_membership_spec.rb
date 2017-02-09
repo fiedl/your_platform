@@ -121,21 +121,21 @@ describe StatusGroupMembership do
     end
     describe "for an empty string" do
       before do
-        @membership.event_by_name = "some prefilled event" 
+        @membership.event_by_name = "some prefilled event"
       end
       subject { @membership.event_by_name = "" }
       it "should set the event to nil" do
         subject
-        @membership.event.should == nil 
+        @membership.event.should == nil
       end
     end
   end
-    
+
 
 
   # Finder Methods
   # ==========================================================================================
-  
+
   class SomeCorporationDerivative < Corporation
     # This is just a dummy. The main app could invent a class inherited from Corporation.
     # Some methods need to work with them as well as with the original Corporation class.
@@ -145,9 +145,9 @@ describe StatusGroupMembership do
   #        |------- @intermediate_group
   #                         |------------ @status_group
   #                         |                  |--------- @user
-  #                         | 
+  #                         |
   #                         |------------ @second_status_group
-  # 
+  #
   describe "Finder Methods: " do
     before do
       @corporation = create( :corporation )
@@ -163,13 +163,13 @@ describe StatusGroupMembership do
         .becomes( StatusGroupMembership )
       @intermediate_group_membership = UserGroupMembership
         .find_by_user_and_group( @user, @intermediate_group ).becomes StatusGroupMembership
-        
+
       @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
-      
+
       @other_corporation = create(:corporation_with_status_groups)
       @membership_in_other_corporation = @other_corporation.status_groups.first.assign_user(@user)
         .becomes(StatusGroupMembership)
-      
+
       @other_user = create(:user)
       @membership_of_other_user = @status_group.assign_user(@other_user).becomes(StatusGroupMembership)
     end
@@ -188,7 +188,7 @@ describe StatusGroupMembership do
           .not_to raise_error
       end
       it "should not return memberships in intermediate groups" do
-        # this behavior might be changed by the main app. 
+        # this behavior might be changed by the main app.
         subject.should_not include @intermediate_group_membership
       end
     end
@@ -207,7 +207,7 @@ describe StatusGroupMembership do
         subject.should_not include @non_status_membership
       end
       it "should not return memberships in intermediate groups" do
-        # this behavior might be changed by the main app. 
+        # this behavior might be changed by the main app.
         subject.should_not include @intermediate_group_membership
       end
       it "should return current memberships, but not expired memberships" do
@@ -258,12 +258,12 @@ describe StatusGroupMembership do
         subject.should_not include @membership_of_other_user
       end
     end
-    
+
     #   @corporation
     #        |------- @intermediate_group
     #                         |------------ @status_group
     #                         |                  |--------- (@user)
-    #                         | 
+    #                         |
     #                         |------------ @second_status_group
     #                                            |--------- @user
     #
@@ -291,12 +291,12 @@ describe StatusGroupMembership do
     end
 
   end
-  
+
   # Status Workflow in model layer (bug fix)
   # ==========================================================================================
 
   describe "(status workflow scenario)" do
-  
+
     before do
       @user = create(:user)
       @corporation = create(:corporation_with_status_groups)
@@ -312,7 +312,7 @@ describe StatusGroupMembership do
                                           :add_to_group_id => @second_status_group.id )
       @first_promotion_workflow.parent_groups << @first_status_group
     end
-    
+
     def status_groups_of_user_and_corporation
       StatusGroupMembership.now_and_in_the_past.find_all_by_user_and_corporation(@user, @corporation)
     end
@@ -322,7 +322,7 @@ describe StatusGroupMembership do
     def second_status_group_membership
       StatusGroupMembership.with_invalid.find_by_user_and_group(@user, @second_status_group)
     end
-    
+
     describe "prelims" do
       specify "first_status_group_membership should find the membership even if invalidated" do
         first_status_group_membership.should_not == nil
@@ -330,7 +330,7 @@ describe StatusGroupMembership do
         first_status_group_membership.should_not == nil
       end
     end
-    
+
     describe "executing the first promotion workflow" do
       subject { @first_promotion_workflow.execute(user_id: @user.id); @user.reload }
       it "should add the second status group to the user's status groups" do
@@ -345,6 +345,6 @@ describe StatusGroupMembership do
       end
     end
 
-  end 
-  
+  end
+
 end

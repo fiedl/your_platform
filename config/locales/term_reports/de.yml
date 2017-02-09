@@ -1,0 +1,20 @@
+de:
+  term_report: Semesterbericht
+  term_reports: Semesterberichte
+
+  status: Status
+  submitted: Übermittelt
+  accepted: Akzeptiert
+  rejected: Abgelehnt
+
+  submitted_at: Übermittelt am
+  accepted_at: Akzeptiert am
+  rejected_at: Abgelehnt am
+  status_changed_at: Wann
+  at: am
+
+  contributors: Mitwirkende
+
+  term_report_columns_short:
+    number_of_members: Mitglieder
+    number_of_new_members: Neue Mitglieder

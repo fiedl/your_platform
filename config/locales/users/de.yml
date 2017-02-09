@@ -88,6 +88,19 @@ de:
   uploading_avatar:              Profilbild wird hochgeladen. Bitte warten.
 
   formtastic:
+    labels:
+      first_address_line:        Erste Adresszeile
+      second_address_line:       Zweite Adresszeile
+      postal_code:               Postleitzahl (PLZ)
+      city:                      Stadt
+      region:                    Region/Bundesland
+      country_code:              Land
+      primary_study_field:
+        label:                   Art
+        from:                    Studienbeginn
+        university:              Universität
+        subject:                 Fach
+        specialization:          Spezialisierung
     hints:
       alias:                     Beliebige, kurze Anmelde-Kennung, z.B. 'm.mustermann'.
       create_account:            'Wenn ein Benutzerkonto angelegt wird, wird dem neuen Benutzer ein Passwort per E-Mail zugesandt.'

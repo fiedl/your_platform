@@ -107,18 +107,21 @@ module GroupMixins::Memberships
     # of the corporation are excluded, even though they still have
     # memberships.
     #
-    def memberships_for_member_list
+    def membership_ids_for_member_list
       cached do
         if corporation?
           (
             memberships_including_members -
-              becomes(Corporation).former_members_memberships -
-              becomes(Corporation).deceased_members_memberships
-          )
+              becomes(Corporation).former_members.map(&:memberships).flatten -
+              becomes(Corporation).deceased_members.map(&:memberships).flatten
+          ).map(&:id)
         else
-          memberships_including_members
+          memberships.map(&:id)
         end
       end
+    end
+    def memberships_for_member_list
+      memberships_including_members.where(id: membership_ids_for_member_list)
     end
     def memberships_for_member_list_count
       cached { memberships_for_member_list.count }

@@ -1,0 +1,11 @@
+- contact_message ||= ContactMessage.new
+
+= simple_form_for contact_message, html: {class: 'form-horizontal'} do |f|
+  = f.input :name, required: true
+  = f.input :email, required: true
+  = f.input :message, as: :text, required: true
+  = f.hidden_field :subject, value: current_title
+  %div.hidden
+    = f.input :nickname, hint: 'Leave this field blank!'
+  .email_notice= t(:this_message_will_be_sent_cc_to_your_email)
+  = f.button :submit, t(:send_message), class: "btn btn-primary"

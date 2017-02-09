@@ -21,14 +21,18 @@ class SessionsController < Devise::SessionsController
   # https://github.com/plataformatec/devise/wiki/OmniAuth:-Overview
   #
   def create
-    if params[:provider].present?
-      auth = request.env['omniauth.auth']
-      user = User.from_omniauth(auth) || raise("Omniauth user not found via email: #{auth.info.email}")
-      account = user.account || raise("User has no account.")
+    begin
+      if params[:provider].present?
+        auth = request.env['omniauth.auth']
+        user = User.from_omniauth(auth) || raise("Omniauth user not found via email: #{auth.info.email}")
+        account = user.account || raise("User has no account.")
 
-      sign_in_and_redirect account, event: :authentication
-    else
-      super
+        sign_in_and_redirect account, event: :authentication
+      else
+        super
+      end
+    rescue => error
+      flash[:error] = t("errors.#{error.message}")
     end
   end
 

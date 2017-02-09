@@ -150,6 +150,27 @@ $(document).ready ->
     "pageLength": 100,
     "order": [[0, "asc"]]
   }, common_configuration))
+  $('.datatable.mailing_lists').dataTable(jQuery.extend({
+    "pageLength": 100,
+    "order": [[0, "asc"]],
+    "columnDefs": [
+      {"width": "40%", "targets": 0},
+      {"width": "20%", "targets": 2}
+    ]
+  }, common_configuration))
+  $('.datatable.term_reports').dataTable(jQuery.extend({
+    "pageLength": 50,
+    "order": [[0, "asc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 3 }
+    ]
+  }, common_configuration))
+
+  $('.datatable.bv_mappings').dataTable(jQuery.extend({
+    "pageLength": 25,
+    "order": [[2, "asc"], [0, "asc"]]
+  }, common_configuration))
+
 
   # Insert above.
   # This modified the common_configuration:

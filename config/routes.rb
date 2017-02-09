@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     get :badges, to: 'user_badges#index'
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
+    get :posts, to: 'user_posts#index'
   end
 
   get :settings, to: 'user_settings#index'
@@ -82,10 +83,11 @@ Rails.application.routes.draw do
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
-    get :mailing_lists, to: 'mailing_lists#index'
+    get :mailing_lists, to: 'group_mailing_lists#index'
     get :memberships, to: 'user_group_memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
+    get 'terms/:year/:term_type/report', to: 'term_reports#show'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -100,20 +102,38 @@ Rails.application.routes.draw do
     get :settings, to: 'page_settings#index'
     get :attachments, to: 'attachments#index'
     get :permalinks, to: 'permalinks#index'
+    get :settings, to: 'page_settings#index'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
   post :home_pages, to: 'pages/home_pages#create'
+
+  resources :mailing_lists
+  get :lists, to: 'mailing_lists#index'
 
   resources :projects
 
   namespace :activities do
     get :exports, to: 'exports#index'
     #get :addresses, to: 'addresses#index'
-    get :charts, to: 'charts#index'
-    get 'charts/per_corporation_and_time', to: 'charts#activities_per_corporation_and_time'
+    get :charts, to: redirect('/charts/activities')
   end
   resources :activities
+
+  namespace :charts do
+    get :activities, to: 'activities#index'
+    get 'activities/per_corporation_and_time', to: 'activities#per_corporation_and_time'
+    get :term_reports, to: 'term_reports#index'
+    get 'term_reports/members/per_corporation_and_term', to: 'term_reports/members#per_corporation_and_term'
+  end
+
+  resources :term_reports do
+    post :submit, to: 'term_reports#submit'
+    post :accept, to: 'term_reports#accept'
+    post :reject, to: 'term_reports#reject'
+  end
+
+  get :term_report, to: 'term_reports#show', as: :search_term_report
 
   post :create_officers_group, to: 'officers#create_officers_group'
 
@@ -196,6 +216,8 @@ Rails.application.routes.draw do
   resources :tags
   resources :tags, path: :acts_as_taggable_on_tags, as: :acts_as_taggable_on_tags
 
+  resources :contact_messages, only: [:new, :create]
+
   get :feeds, to: 'feeds#index', as: :feeds
 
   # ATTENTION: Changing feed urls might break subscribed feeds!
@@ -221,6 +243,7 @@ Rails.application.routes.draw do
         get :change_status_button, to: 'users/change_status_button#show'
         get :titles, on: :collection, to: 'users/titles#index'
         get :avatar, to: '/avatars#show'
+        put :location, on: :collection, to: 'users/locations#update'
       end
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}

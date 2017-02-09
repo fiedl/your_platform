@@ -34,6 +34,9 @@ de:
   archive_page: Seite archivieren
   unarchive_page: Seite wiederherstellen
 
+  teaser_image: Vorschau-Bild
+  teaser_image_url: Vorschau-Bild-Url
+
   file: 'Datei'
   helpers:
     submit:

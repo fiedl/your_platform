@@ -26,8 +26,7 @@
 
 %h1= t :permalinks
 %div
-  .tag_permalinks_list
-    = best_in_place @tag, :permalinks_list, as: :textarea
+  = render partial: 'permalinks/editable_permalinks_list', locals: {reference: @tag}
 
 %h1= t :contents_tagged_with_str, str: @tag.name
 %div

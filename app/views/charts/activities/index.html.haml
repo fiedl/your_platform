@@ -1,0 +1,32 @@
+%h1= current_title
+%div
+  %p Verwaltungsaktivitäten pro Verbindung und Zeit:
+  = line_chart charts_activities_per_corporation_and_time_path(params), width: params[:width], height: params[:height]
+
+%h1 Darstellung anpassen
+%div
+  = form_tag("#", method: "get") do
+
+    = label_tag :corporation, "Verbindung ('E', ..., 'none', 'all')"
+    = text_field_tag :corporation, params[:corporation]
+
+    = label_tag :trackable_Type, "Typ ('Event', 'SemesterCalendar', 'Page', 'User', 'ProfileField', ...)"
+    = text_field_tag :trackable_type, params[:trackable_type]
+
+    = label_tag :from_days_ago, "Start: vor N Tagen"
+    = text_field_tag :from_days_ago, params[:from_days_ago]
+
+    = label_tag :to_days_ago, "Ende: vor N Tagen"
+    = text_field_tag :to_days_ago, params[:to_days_ago]
+
+    = label_tag :binning, "Binning ('day', 'week', 'hour', ...)"
+    = text_field_tag :binning, params[:binning]
+
+    = label_tag :sum, "Summe anzeigen"
+    = check_box_tag :sum, 'true', params[:sum]
+
+    = label_tag :height, "Höhe der Grafik, z.B. '800px'"
+    = text_field_tag :height, params[:height]
+
+    %br
+    = submit_tag "Aktualisieren"
