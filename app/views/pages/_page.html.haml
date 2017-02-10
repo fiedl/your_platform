@@ -26,6 +26,15 @@
       = wysiwyg_in_place_if can?(:update, page), page, :content, toolbar: true, multiline: true, activate: 'manual' do
         = page_markup page.content
 
+      - # We need another upload form for the image-drop into the
+      - # wysiwyg field to work.
+      - #
+      - if can? :update, page
+        = form_for page.attachments.build, html: {class: 'hidden new_wysiwyg_image_upload'} do |f|
+          = f.hidden_field :parent_id
+          = f.hidden_field :parent_type
+          = f.file_field :file, name: "attachment[file]"
+
     - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
       .hidden-print.show_only_in_edit_mode
         #attachments= render partial: 'attachments/drop_field', locals: {parent: page}

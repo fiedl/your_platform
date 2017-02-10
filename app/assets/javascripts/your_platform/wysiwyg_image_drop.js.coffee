@@ -10,7 +10,7 @@ $(document).on 'edit', '.page_body', ->
     selection = page_body.find('.wysihtml-editor')
       .data('editor').composer.selection
     cursor_position = {}
-    page_body.closest('.page').find('form.new_attachment').fileupload
+    page_body.find('form.new_wysiwyg_image_upload').fileupload
       dataType: "json"
       dropZone: page_body.find('.wysihtml-editor')
       add: (e, data) ->
