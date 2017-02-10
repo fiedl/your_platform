@@ -2,7 +2,8 @@
 # inserted in: app/helpers/email_helper.rb
 #
 unscramble = (text)->
-  text.replace("-without-spam@no-spam-", "@")
+  text.replace("-without-spam", "")
+    .replace("no-spam-", "")
 
 unscramble_email_tags = (html)->
   # http://stackoverflow.com/a/1770981/2066546
@@ -12,7 +13,7 @@ unscramble_email_tags = (html)->
     a_tag.attr 'href', unscramble(a_tag.attr('href'))
 
 $(document).ready ->
-  unscramble_email_tags $(this)
+  unscramble_email_tags $(document)
 
 $(document).on 'save', '.wysiwyg', ->
   wysiwyg = $(this)
