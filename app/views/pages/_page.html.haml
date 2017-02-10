@@ -1,18 +1,18 @@
 - # locals:
 - page || raise('no page given')
 - teaser_box ||= false
-- page_class = teaser_box ? 'teaser_box' : ''
+- raise('Please use the pages/teaser_box partial instead!') if teaser_box
 
 .page_with_attachments
-  %h1.page{class: page_class, id: "page-#{page.id}-box"}
+  %h1.page{id: "page-#{page.id}-box"}
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
       -#= best_in_place_if can?(:update, page), page, :title
       = wysiwyg_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-    = render partial: 'pages/box_tool_buttons', object: page, as: :page if not teaser_box
-  %div.page{class: page_class}
+    = render partial: 'pages/box_tool_buttons', object: page, as: :page
+  %div.page
     - if page.image_attachments_not_listed_in_content.any?
       #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
 
@@ -23,22 +23,13 @@
         = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, activator: 'manual'
 
     %div.page_body
-      - if teaser_box
-        = markup page.teaser_text
-      - else
-        = wysiwyg_in_place_if can?(:update, page), page, :content, toolbar: true, multiline: true, activate: 'manual' do
-          = markup page.content
+      = wysiwyg_in_place_if can?(:update, page), page, :content, toolbar: true, multiline: true, activate: 'manual' do
+        = page_markup page.content
 
-    - unless teaser_box
-      - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
-        .hidden-print.show_only_in_edit_mode
-          #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
+    - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
+      .hidden-print.show_only_in_edit_mode
+        #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
-    - if teaser_box
-      .panel-footer
-        = link_to t(:learn_more), page
-
-  - unless teaser_box
-    #attachments.attachments
-      = render(partial: 'pages/videos', locals: {page: page})
-      = render(partial: 'pages/attachments', locals: {page: page})
+  #attachments.attachments
+    = render(partial: 'pages/videos', locals: {page: page})
+    = render(partial: 'pages/attachments', locals: {page: page})
