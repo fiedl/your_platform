@@ -7,7 +7,7 @@
       %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{@group.name}' geführt wird.", data: {placement: 'left'}} Seit
   %tbody
     - if memberships
-      - members = memberships.collect { |m| u = m.user; u.member_since = membership.valid_from.try(:to_date); u }
+      - members = memberships.collect { |m| u = m.user; u.member_since = m.valid_from.try(:to_date); u }
     - if members
       - members.each do |member|
         %tr.member{data: {profile_fields: member.address_fields_json}}
