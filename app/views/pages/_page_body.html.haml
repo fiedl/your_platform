@@ -1,0 +1,22 @@
+.page_body.page_content{data: {upload_url: attachments_path(parent_id: page.id, parent_type: 'Page')}}
+
+  - if can? :use, :wysihtml
+
+    = wysiwyg_in_place_if can?(:update, page), page, :content, toolbar: true, multiline: true, activate: 'manual' do
+      = page_markup page.content
+
+    - # We need another upload form for the image-drop into the
+    - # wysiwyg field to work.
+    - #
+    - if can? :update, page
+      = form_for page.attachments.build, html: {class: 'hidden new_wysiwyg_image_upload'} do |f|
+        = f.hidden_field :parent_id
+        = f.hidden_field :parent_type
+        = f.file_field :file, name: "attachment[file]"
+
+  - else
+
+    = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
+
+    .show_only_in_edit_mode
+      = render partial: 'shared/markdown_help'
