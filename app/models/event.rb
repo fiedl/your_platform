@@ -44,7 +44,7 @@ class Event < ActiveRecord::Base
     self.description.blank?
   end
 
-  def emtpy_attendees?
+  def empty_attendees?
     not self.find_attendees_group.try(:members).try(:any?)
   end
 
