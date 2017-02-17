@@ -125,19 +125,19 @@ describe Ability do
       before { user.global_admin = true }
 
       he "should not be able to destroy events that are older than 10 minutes" do
-        @event = create :event, name: "Recent Event"
+        @event = create :event, name: "Recent Event", description: "This is an event with content!"
         @event.update_attribute :created_at, 11.minutes.ago
 
         the_user.should_not be_able_to :destroy, @event
       end
 
       he "should be able to destroy recently created pages" do
-        @page = create :page, title: "New Page"
+        @page = create :page, title: "This is a page", content: "with non-empty content!"
 
         the_user.should be_able_to :destroy, @page
       end
       he "should not be able to destroy pages that are older than 10 minutes" do
-        @page = create :page, title: "Old Page"
+        @page = create :page, title: "Old Page", content: "with non-empty content."
         @page.update_attribute :created_at, 11.minutes.ago
 
         the_user.should_not be_able_to :destroy, @page
@@ -215,13 +215,13 @@ describe Ability do
           the_user.should be_able_to :update, @event.contact_people_group
         end
         he "should be able to destroy just created events in his domain" do
-          @event = @group.child_events.create name: "Special Event"
+          @event = @group.child_events.create name: "Special Event", description: "non-empty"
 
           user.should be_in @group.officers_of_self_and_ancestors
           the_user.should be_able_to :destroy, @event
         end
         he "should not be able to destroy events that are older than 10 minutes" do
-          @event = @group.child_events.create name: "Recent Event"
+          @event = @group.child_events.create name: "Recent Event", description: "non-empty"
           @event.update_attribute :created_at, 11.minutes.ago
 
           the_user.should_not be_able_to :destroy, @event
@@ -240,17 +240,17 @@ describe Ability do
 
     describe "when the user is a page admin" do
       before do
-        @page = create :page
+        @page = create :page, title: "This is a page", content: "with non-empty content!"
         @page.assign_admin user
       end
 
       he { should be_able_to :create_page_for, @page }
       he "should be able to destroy the sub-page" do
-        @sub_page = @page.child_pages.create
+        @sub_page = @page.child_pages.create title: "This is a page", content: "with non-empty content!"
         the_user.should be_able_to :destroy, @sub_page
       end
       he "should not be able to destroy the sub-page after 10 minutes" do
-        @sub_page = @page.child_pages.create
+        @sub_page = @page.child_pages.create title: "This is a page", content: "with non-empty content!"
         @sub_page.update_attribute :created_at, 11.minutes.ago
         the_user.should_not be_able_to :destroy, @sub_page
       end
@@ -258,18 +258,18 @@ describe Ability do
 
     describe "when the user is a page officer" do
       before do
-        @page = create :page
+        @page = create :page, title: "This is a page", content: "with non-empty content!"
         @secretary = @page.officers_parent.child_groups.create name: 'Secretary'
         @secretary << user
       end
 
       he { should be_able_to :create_page_for, @page }
       he "should be able to destroy the sub-page" do
-        @sub_page = @page.child_pages.create
+        @sub_page = @page.child_pages.create title: "This is a page", content: "with non-empty content!"
         the_user.should be_able_to :destroy, @sub_page
       end
       he "should not be able to destroy the sub-page after 10 minutes" do
-        @sub_page = @page.child_pages.create
+        @sub_page = @page.child_pages.create title: "This is a page", content: "with non-empty content!"
         @sub_page.update_attribute :created_at, 11.minutes.ago
         the_user.should_not be_able_to :destroy, @sub_page
       end

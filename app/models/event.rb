@@ -28,6 +28,26 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def empty?
+    empty_title? && empty_description? && empty_attendees?
+  end
+
+  def non_empty?
+    (! empty_description?) || (! empty_title?) || (! empty_attendees?)
+  end
+
+  def empty_title?
+    self.name.in? [nil, "", I18n.t(:enter_name_of_event_here)]
+  end
+
+  def empty_description?
+    self.description.blank?
+  end
+
+  def emtpy_attendees?
+    not self.find_attendees_group.try(:members).try(:any?)
+  end
+
 
   # Groups
   # ==========================================================================================

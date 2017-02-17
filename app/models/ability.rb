@@ -523,16 +523,19 @@ class Ability
       can :read, :personal_feed
     end
 
-    # Nobody can destroy events and pages that are older than 10 minutes.
-    timestamp = 10.minutes.ago
-    cannot :destroy, [Event, Page], ["created_at >= ?", timestamp] do |obj|
-      # Please note: The ">=" above is the wrong way by intention.
-      # Apparently, cancan does not distinguish between `can` and `cannot` there.
-      # TODO: Fix this! Does upgrade to the cancancan project solve this?
-      #
-      # This block is to make sure, the above scope did work correctly.
-      # FIXME: Make this block unnecessary.
-      obj.created_at < timestamp
+    # Nobody can destroy non-empty pages that are older than 10 minutes.
+    # Pages that are no longer needed can be archived instead.
+    #
+    cannot :destroy, Page do |page|
+      (page.created_at < 10.minutes.ago) && page.not_empty?
+    end
+
+    # Nobody can destroy non-empty events that are older than 10 minutes.
+    # This kind of clean-up is not desired as this would delete events
+    # from the calendar subscriptions as well.
+    #
+    cannot :destroy, Event do |event|
+      (event.created_at < 10.minutes.ago) && event.non_empty?
     end
 
     # Nobody can destroy semester calendars with attachments.
