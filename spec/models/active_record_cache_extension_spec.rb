@@ -8,7 +8,7 @@ describe ActiveRecordCacheExtension do
   before do
     @user = create(:user)
   end
-  
+
   describe "#cached" do
     subject { @user.cached(:title) }
 
@@ -45,7 +45,7 @@ describe ActiveRecordCacheExtension do
         subject.should_not == @old_cached_title
       end
     end
-    
+
     describe "with method arguments" do
       before do
         @corporation = create(:corporation_with_status_groups)
@@ -80,7 +80,7 @@ describe ActiveRecordCacheExtension do
       end
     end
   end
-  
+
   describe "#cached { ... }" do
     before do
       class User
@@ -88,11 +88,11 @@ describe ActiveRecordCacheExtension do
           cached { Time.zone.now }
         end
       end
-      
+
       @user = create(:user)
     end
     subject { @user.foo }
-    
+
     describe "with no cached value stored" do
       it "should return the fresh value of the given method" do
         subject.should == Rails.cache.uncached { subject }
@@ -129,11 +129,11 @@ describe ActiveRecordCacheExtension do
       it { should == @user.foo }
     end
   end
-  
-  
+
+
   describe "#uncached" do
     subject { @user.uncached(:title) }
-    
+
     describe "with no cached value stored" do
       it "should return the fresh value of the given method" do
         subject.should == @user.reload.title
@@ -154,7 +154,7 @@ describe ActiveRecordCacheExtension do
       it "should not return the cached value" do
         subject.should_not == @cached_title
       end
-      
+
       it "should be the same as Rails.cache.uncached { ... }" do
         subject.should == Rails.cache.uncached { @user.reload.title }
       end
@@ -174,4 +174,65 @@ describe ActiveRecordCacheExtension do
       end
     end
   end
+
+  describe "#renew_cache" do
+    class User
+      def fill_cache
+        random_test_method
+        dependent_test_method
+      end
+      def random_test_method
+        cached { rand(1000) }
+      end
+      def dependent_test_method
+        cached { self.groups.first.try(:random_test_method) }
+      end
+    end
+
+    class Group
+      def random_test_method
+        cached { rand(1000) }
+      end
+    end
+
+    subject { @user.renew_cache }
+
+    specify "calling a cached method twice should read the second time from cache" do
+      # which is proved here since the uncached test method returns a random number.
+      @cached_value = @user.random_test_method
+      @user.random_test_method.should == @cached_value
+    end
+
+    it "should renew the cached methods of the object" do
+      @cached_value = @user.random_test_method
+      subject
+      @user.random_test_method.should_not == @cached_value
+    end
+
+    describe "when a cache depends on another active record object" do
+      before do
+        @group = create :group
+        @group.assign_user @user
+        @user.reload
+      end
+
+      specify "requirements" do
+        @user.groups.should include @group
+      end
+
+      specify "calling a cached method twice should read the second time from cache" do
+        # which is proved here since the uncached test method returns a random number.
+        @cached_value = @user.dependent_test_method
+        @user.dependent_test_method.should == @cached_value
+      end
+
+      it "should renew the cached methods of the object and the dependent methods of other objects as well" do
+        @cached_value = @user.dependent_test_method
+        subject
+        @user.dependent_test_method.should_not == @cached_value
+      end
+
+    end
+  end
+
 end

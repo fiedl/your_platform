@@ -9,7 +9,46 @@ module CacheStoreExtension
     @ignore_cache = false
     return result
   end
-  
+
+  # All caches called within this block will be renewed, i.e. fresh
+  # values calculated.
+  #
+  # To make sure each value is recalculated only
+  # once and to manage dependent values, only cached values older than
+  # the time of calling `renew` are recalculated, which is the key
+  # to our 2017 attempt of refactoring the caching system.
+  #
+  # Internal notes: https://trello.com/c/6dNTE3FL/1084-renew-cache
+  #
+  # Example:
+  #
+  #     Rails.cache.renew do
+  #       user.complicated_cached_method
+  #     end
+  #
+  # Another example:
+  #
+  #     class User < ApplicationRecord
+  #       def renew_cache
+  #         Rails.cache.renew do
+  #           complicated_cached_method
+  #         end
+  #       end
+  #     end
+  #
+  def renew
+    @renew = true
+    @renew_at = Time.zone.now
+    yield
+    @renew = false
+  end
+
+  def fetch(key, options = {}, &block)
+    renew_this_key = true if @renew && @renew_at && entry(key) && entry(key).created_at < @renew_at
+    renew_this_key = true if @ignore_cache
+    super(key, {force: renew_this_key}.merge(options), &block)
+  end
+
   #def fetch(key, options = {}, &block)
   #  rescue_from_undefined_class_or_module do
   #    rescue_from_other_errors(block) do
@@ -17,14 +56,14 @@ module CacheStoreExtension
   #    end
   #  end
   #end
-  
+
   def delete_regex(regex)
     if @data
       keys = @data.keys.select { |key| key =~ regex }
       @data.del(*keys) if keys.count > 0
     end
   end
-  
+
   # This autoloads classes or modules that are required to instanciate
   # the cached objects.
   #
@@ -44,7 +83,7 @@ module CacheStoreExtension
     end
   end
   private :rescue_from_undefined_class_or_module
-  
+
   # # This provides a solution to errors like
   # # "year too big to marshal: 16 UTC".
   # #
@@ -62,7 +101,7 @@ module CacheStoreExtension
   #     end
   #   end
   # end
-  
+
   def rescue_from_other_errors(block_without_fetch, &block_with_fetch)
     begin
       yield
@@ -72,7 +111,7 @@ module CacheStoreExtension
     end
   end
   private :rescue_from_other_errors
-  
+
 end
 
 ActiveSupport::Cache::Store.send(:prepend, CacheStoreExtension)

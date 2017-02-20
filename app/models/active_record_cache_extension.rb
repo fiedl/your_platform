@@ -1,5 +1,6 @@
 require 'colored'
-#
+require 'cache_additions'
+
 # To understand our caching conventions, have a look at our wiki page:
 # https://github.com/fiedl/wingolfsplattform/wiki/Caching
 #
@@ -116,8 +117,9 @@ module ActiveRecordCacheExtension
   end
 
   def renew_cache
-    delete_cache
-    fill_cache
+    Rails.cache.renew do
+      fill_cache
+    end
   end
 
   def cache_created_at(method_name, arguments = nil)
