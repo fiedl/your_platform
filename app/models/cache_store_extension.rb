@@ -38,9 +38,10 @@ module CacheStoreExtension
   #
   def renew
     @renew = true
-    @renew_at = Time.zone.now
+    @renew_at ||= Time.zone.now
     yield
     @renew = false
+    @renew_at = nil
   end
 
   def fetch(key, options = {}, &block)
