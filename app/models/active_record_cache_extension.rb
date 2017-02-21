@@ -122,6 +122,23 @@ module ActiveRecordCacheExtension
     end
   end
 
+  # The default way to fill the cache is to call all methods
+  # that are registered as methods to cache. But each class may
+  # override or extend this `fill_cache` method.
+  #
+  # The class method `cached_methods` is automatically populated
+  # when declaring a method as cached like this:
+  #
+  #     class User
+  #       cache :title
+  #     end
+  #
+  def fill_cache
+    self.class.cached_methods.try(:each) do |method_name|
+      self.send method_name
+    end
+  end
+
   def cache_created_at(method_name, arguments = nil)
     ::CacheAdditions
     Rails.cache.created_at [self, method_name, arguments]
@@ -156,5 +173,43 @@ module ActiveRecordCacheExtension
   end
 
   module ClassMethods
+    attr_accessor :cached_methods
+
+    # This class method provides a new way to cache methods.
+    #
+    # Example:
+    #
+    #     class User
+    #       def title
+    #         self.foo
+    #       end
+    #       cache :title
+    #     end
+    #
+    # This is a shortcut for:
+    #
+    #     class User
+    #       def title
+    #         cached { self.foo }
+    #       end
+    #       def fill_cache
+    #         title
+    #       end
+    #     end
+    #
+    def cache(method_name)
+      cache_method method_name
+    end
+
+    def cache_method(method_name)
+      alias_method "uncached_#{method_name}", method_name
+
+      define_method(method_name) {
+        cached_block(method_name: method_name) { self.send "uncached_#{method_name}" }
+      }
+
+      self.cached_methods ||= []
+      self.cached_methods << method_name
+    end
   end
 end
