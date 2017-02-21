@@ -58,12 +58,6 @@ class Group < ActiveRecord::Base
 
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
-  after_save       { self.delay.delete_cache }
-
-  def delete_cache
-    super
-    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
-  end
 
   # General Properties
   # ==========================================================================================
@@ -216,9 +210,7 @@ class Group < ActiveRecord::Base
   end
 
   def corporation
-    cached do
-      Corporation.find corporation_id if corporation_id
-    end
+    Corporation.find corporation_id if corporation_id
   end
   def corporation_id
     (([self.id] + ancestor_group_ids) & Corporation.pluck(:id)).first
@@ -262,5 +254,6 @@ class Group < ActiveRecord::Base
     self.corporations_parent
   end
 
+  include GroupCaching
 end
 
