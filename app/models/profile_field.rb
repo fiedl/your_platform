@@ -6,8 +6,6 @@ class ProfileField < ActiveRecord::Base
   belongs_to             :profileable, polymorphic: true
   has_many               :issues, as: :reference, dependent: :destroy
 
-  after_commit           :delete_cache
-
   include ProfileFieldMixins::HasChildProfileFields
 
   # Only allow the type column to be an existing class name.
@@ -49,6 +47,7 @@ class ProfileField < ActiveRecord::Base
   #
   has_many_flags
 
+
   # Often, profile_fields are to be displayed in a certain manner on a HTML page.
   # This method returns the profile_field's value as HTML code in the way
   # the profile_field should be displayed.
@@ -89,12 +88,6 @@ class ProfileField < ActiveRecord::Base
     else
       super
     end
-  end
-
-  def delete_cache
-    super
-    parent.try(:delete_cache)
-    profileable.delete_cache if profileable && profileable.respond_to?(:delete_cache)
   end
 
   def children_count
@@ -194,5 +187,6 @@ class ProfileField < ActiveRecord::Base
     # Subclasses need to override this. For example for phones: "TEL", emails: "EMAIL", ...
   end
 
+  include ProfileFieldCaching
 end
 
