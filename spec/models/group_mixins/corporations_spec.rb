@@ -40,8 +40,8 @@ describe GroupMixins::Corporations do
       it "should return an array containing the corporation groups" do
         subject.should == [ @corporation_group, @corporation_group_of_user ]
       end
-      
-      # FIXME: This does not work for some obscure reason. 
+
+      # FIXME: This does not work for some obscure reason.
       # Whenever the corporations are needed without the officers_parent group,
       # please use `Corporation.all`, which works.
       #
@@ -56,7 +56,7 @@ describe GroupMixins::Corporations do
       it "should be the same as .find_corporation_groups" do
         subject.should == Group.find_corporation_groups
       end
-      it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly? 
+      it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly?
         subject.to_a.should be_kind_of Array
         subject.first.should_not be_kind_of User
         subject.first.should be_kind_of Group
@@ -89,7 +89,7 @@ describe GroupMixins::Corporations do
         subject.should_not include( @corporations_parent_group )
       end
     end
-    
+
   end
 
 end
