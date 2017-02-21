@@ -265,7 +265,7 @@ describe User do
       it { should == nil }
     end
     describe "with date of birth" do
-      before { @user.date_of_birth = 24.years.ago }
+      before { @user.date_of_birth = 24.years.ago; @user.save }
       it "should return the correct age as number" do
         subject.should == 24
       end
@@ -278,7 +278,7 @@ describe User do
       it { should == nil }
     end
     describe "with date of birth" do
-      before { @user.date_of_birth = 24.years.ago }
+      before { @user.date_of_birth = 24.years.ago; @user.save }
       it "should return the correct date" do
         subject.should == Time.zone.now.to_date
       end
@@ -321,7 +321,7 @@ describe User do
       end
     end
     describe "#postal_address_with_name_surrounding" do
-      subject { @user.postal_address_with_name_surrounding }
+      subject { @user.reload.postal_address_with_name_surrounding }
       before do
         @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
         @name_surrounding.name_prefix = "Dr."
@@ -977,7 +977,7 @@ describe User do
       @another_group = create( :group )
       @another_group.assign_user @user
     end
-    subject { @user.status_groups }
+    subject { @user.reload.status_groups }
 
     it "should include the status groups of the user" do
       subject.should include @status_group
@@ -994,7 +994,7 @@ describe User do
       @status_group.assign_user @user
       @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
     end
-    subject { @user.current_status_membership_in(@corporation) }
+    subject { @user.reload.current_status_membership_in(@corporation) }
 
     it "should return the correct membership" do
       subject.should == @status_group_membership

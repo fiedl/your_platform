@@ -9,7 +9,7 @@ concern :UserDateOfBirth do
   end
   
   def date_of_birth
-    cached { date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field }
+    date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
   end
   def date_of_birth=( date_of_birth )
     @date_of_birth_will_change = true
@@ -43,14 +43,12 @@ concern :UserDateOfBirth do
   end
   
   def age
-    cached do
-      now = Time.now.utc.to_date
-      dob = self.date_of_birth
-      if dob
-        now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
-      else
-        nil
-      end
+    now = Time.now.utc.to_date
+    dob = self.date_of_birth
+    if dob
+      now.year - dob.year - ((now.month > dob.month || (now.month == dob.month && now.day >= dob.day)) ? 0 : 1)
+    else
+      nil
     end
   end
   
@@ -69,15 +67,13 @@ concern :UserDateOfBirth do
   end
   
   def birthday_this_year
-    cached do
-      begin
-        date_of_birth.change(:year => Time.zone.now.year)
-      rescue
-        if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
-          date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
-        else
-          nil
-        end
+    begin
+      date_of_birth.change(:year => Time.zone.now.year)
+    rescue
+      if date_of_birth.try(:month) == 2 && date_of_birth.try(:day) == 29
+        date_of_birth.change(year: Time.zone.now.year, month: 3, day: 1)
+      else
+        nil
       end
     end
   end

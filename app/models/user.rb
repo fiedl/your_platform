@@ -43,10 +43,6 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
-  after_save                { self.delay.delete_cache }
-
-  # after_commit     					:delete_cache, prepend: true
-  # before_destroy    				:delete_cache, prepend: true
 
 
   # Easy user settings: https://github.com/huacnlee/rails-settings-cached
@@ -231,7 +227,7 @@ class User < ActiveRecord::Base
   # Why?
   #
   def date_of_death
-    cached { profile_fields.where(label: 'date_of_death').first.try(:value) }
+    profile_fields.where(label: 'date_of_death').first.try(:value)
   end
 
   def set_date_of_death_if_unset(new_date_of_death)
@@ -279,20 +275,16 @@ class User < ActiveRecord::Base
   end
 
   def name_with_surrounding
-    cached {
-      (
-        name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
-        "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
-        name_surrounding_profile_field.try(:text_below_name).to_s
-      ).strip
-    }
+    (
+      name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
+      "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
+      name_surrounding_profile_field.try(:text_below_name).to_s
+    ).strip
   end
 
   def address_label
-    cached do
-      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field,
-        self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
-    end
+    AddressLabel.new(self.name, self.postal_address_field_or_first_address_field,
+      self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
   end
 
 
@@ -467,31 +459,25 @@ class User < ActiveRecord::Base
   def corporations
     # # TODO: Why does this shorter query not work?
     # self.groups.where(type: "Corporation")
-    cached do
-      my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
-      my_corporation_ids ||= []
-      Corporation.find my_corporation_ids
-    end
+    my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
+    my_corporation_ids ||= []
+    Corporation.find my_corporation_ids
   end
 
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    cached do
-      self.corporations.select do |corporation|
-        Role.of(self).in(corporation).current_member?
-      end || []
-    end
+    self.corporations.select do |corporation|
+      Role.of(self).in(corporation).current_member?
+    end || []
   end
 
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    cached do
-      current_corporations.sort_by do |corporation|
-        corporation.membership_of(self).valid_from || Time.zone.now - 100.years
-      end
+    current_corporations.sort_by do |corporation|
+      corporation.membership_of(self).valid_from || Time.zone.now - 100.years
     end
   end
 
@@ -530,16 +516,14 @@ class User < ActiveRecord::Base
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
   def my_groups_in_first_corporation
-    cached do
-      if first_corporation
-        self.groups.select do |group|
-          group.ancestor_groups.include?(self.first_corporation) and
-          not group.is_special_group? and
-          not self.guest_of?(group)
-        end
-      else
-        Group.none
+    if first_corporation
+      self.groups.select do |group|
+        group.ancestor_groups.include?(self.first_corporation) and
+        not group.is_special_group? and
+        not self.guest_of?(group)
       end
+    else
+      Group.none
     end
   end
 
@@ -552,10 +536,8 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    Rails.cache.fetch([self.cache_key, 'corporate_vita_memberships_in_order_valid_from', corporation.cache_key], expires_in: 1.week) do
-      group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
-    end
+    group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
+    self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
   end
 
 
@@ -593,19 +575,17 @@ class User < ActiveRecord::Base
     #   a former member of.
     # - Next, use all corporations, which applies to completely excluded members.
     #
-    cached { current_status_group_in(first_corporation || corporations.first) }
+    current_status_group_in(first_corporation || corporations.first)
   end
 
   def status_export_string
-    cached {
-      self.corporations.collect do |corporation|
-        if membership = self.current_status_membership_in(corporation)
-          "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.singularize} in #{corporation.name}"
-        else
-          ""
-        end
-      end.join("\n")
-    }
+    self.corporations.collect do |corporation|
+      if membership = self.current_status_membership_in(corporation)
+        "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.try(:singularize)} in #{corporation.name}"
+      else
+        ""
+      end
+    end.join("\n")
   end
   def status_string
     status_export_string
@@ -742,7 +722,7 @@ class User < ActiveRecord::Base
   end
 
   def hidden
-    cached { self.member_of? Group.hidden_users }
+    self.member_of? Group.hidden_users
   end
 
   def hidden=(hidden)
@@ -897,4 +877,5 @@ class User < ActiveRecord::Base
     "User: #{self.id} #{self.alias}"
   end
 
+  include UserCaching
 end
