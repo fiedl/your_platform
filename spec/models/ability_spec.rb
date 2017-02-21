@@ -153,7 +153,7 @@ describe Ability do
       before do
         @group = create :group
         @group.assign_admin user
-        @other_user = create :user_with_account; @group << @other_user
+        @other_user = create :user_with_account; @group.assign_user(@other_user)
         time_travel 2.seconds
       end
 
@@ -260,7 +260,7 @@ describe Ability do
       before do
         @page = create :page, title: "This is a page", content: "with non-empty content!"
         @secretary = @page.officers_parent.child_groups.create name: 'Secretary'
-        @secretary << user
+        @secretary.assign_user user
       end
 
       he { should be_able_to :create_page_for, @page }
@@ -348,7 +348,7 @@ describe Ability do
       describe "when he is contact person for an event" do
         before do
           @event = @any_group.child_events.create
-          @event.contact_people << user
+          @event.contact_people_group.assign_user user
         end
 
         he { should be_able_to :update, @event }
