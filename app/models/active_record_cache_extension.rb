@@ -208,6 +208,18 @@ module ActiveRecordCacheExtension
         cached_block(method_name: method_name) { self.send "uncached_#{method_name}" }
       }
 
+      # If a setter method exists as well, make the setter method
+      # also renew the cache.
+      #
+      if method_defined?("#{method_name}=")
+        alias_method "without_renew_cache_#{method_name}=", "#{method_name}="
+
+        define_method("#{method_name}=") { |new_value|
+          result = self.send "without_renew_cache_#{method_name}=", new_value
+          Rails.cache.renew { self.send method_name }
+        }
+      end
+
       self.cached_methods ||= []
       self.cached_methods << method_name
     end
