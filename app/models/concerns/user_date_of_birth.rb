@@ -1,13 +1,13 @@
 # This module contains all the methods of a user related to his
 # date of birth.
-# 
+#
 concern :UserDateOfBirth do
-  
+
   included do
     has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true
     after_save :save_date_of_birth_profile_field
   end
-  
+
   def date_of_birth
     date_of_birth_profile_field.value.to_date if date_of_birth_profile_field.value if date_of_birth_profile_field
   end
@@ -26,7 +26,7 @@ concern :UserDateOfBirth do
     date_of_birth_profile_field.try(:save) if @date_of_birth_will_change
   end
   private :save_date_of_birth_profile_field
-  
+
   def find_or_create_date_of_birth_profile_field
     date_of_birth_profile_field || ( build_date_of_birth_profile_field.save && date_of_birth_profile_field)
   end
@@ -41,7 +41,7 @@ concern :UserDateOfBirth do
       self.date_of_birth = nil
     end
   end
-  
+
   def age
     now = Time.now.utc.to_date
     dob = self.date_of_birth
@@ -51,11 +51,11 @@ concern :UserDateOfBirth do
       nil
     end
   end
-  
+
   def next_age
     age + 1 if age
   end
-  
+
   def next_birthday
     if birthday_this_year.nil?
       nil
@@ -65,7 +65,7 @@ concern :UserDateOfBirth do
       birthday_this_year + 1.year
     end
   end
-  
+
   def birthday_this_year
     begin
       date_of_birth.change(:year => Time.zone.now.year)
@@ -77,5 +77,5 @@ concern :UserDateOfBirth do
       end
     end
   end
-  
+
 end
