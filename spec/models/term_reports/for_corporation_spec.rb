@@ -21,7 +21,7 @@ describe TermReports::ForCorporation do
     @corporation.status_groups.first.assign_user(@deceased_member, at: "2010-01-01".to_date)
     @deceased_group = @corporation.child_groups.create name: "Verstorbene"
     @deceased_group.add_flag :deceased_parent
-    @deceased_member.mark_as_deceased at: "2016-11-19".to_date
+    @deceased_member.reload.mark_as_deceased at: "2016-11-19".to_date
 
     @term_report = @corporation.term_reports.create term_id: @term.id
     @term_report = TermReport.find @term_report.id  # In order for it to have the proper sub class.
