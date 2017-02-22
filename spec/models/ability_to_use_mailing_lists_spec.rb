@@ -62,7 +62,7 @@ describe Ability do
     end
 
     describe "for the @group being an OfficerGroup" do
-      before { @group.type = "OfficerGroup"; @group.save; @group = Group.find(@group.id) }
+      before { @scope = create :group; @group = @scope.create_officer_group }
 
       describe "sender filter" do
         describe '(empty)' do
@@ -158,8 +158,7 @@ describe Ability do
       end
 
       describe "for the @group being an OfficerGroup" do
-        before { @group.type = "OfficerGroup"; @group.save; @group = Group.find(@group.id) }
-      
+        before { @scope = create :group; @group = @scope.create_officer_group }
 
         describe "sender filter" do
           describe '(empty)' do
@@ -239,8 +238,8 @@ describe Ability do
       end
 
       describe "for the @group being an OfficerGroup" do
-        before { @group.type = "OfficerGroup"; @group.save; @group = Group.find(@group.id) }
-      
+        before { @scope = create :group; @group = @scope.create_officer_group }
+
         describe "sender filter" do
           describe '(empty)' do
             before { @group.mailing_list_sender_filter = ""; @group.save }
