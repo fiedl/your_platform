@@ -40,7 +40,9 @@ concern :StructureableRoleCaching do
     if kind_of?(OfficerGroup) && scope
       Rails.cache.renew do
         scope.descendants.each do |descendant|
-          descendant.fill_cache_concerning_roles
+          if descendant.respond_to? :fill_cache_concerning_roles
+            descendant.fill_cache_concerning_roles
+          end
         end
       end
     end
