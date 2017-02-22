@@ -195,7 +195,11 @@ module StructureableMixins::Roles
   end
 
   def local_admins
-    (admins_of_self_and_ancestors - Group.global_admins.members).uniq
+    (admins_of_self_and_ancestors - global_admins).uniq
+  end
+
+  def global_admins
+    Role.global_admins
   end
 
   def responsible_admins

@@ -95,7 +95,7 @@ describe GroupMixins::Memberships do
   # ==========================================================================================
 
   describe "#assign_user" do
-    before { @membership1.destroy }
+    before { @membership1.destroy! }
     it "should assign the user to the group" do
       @group.members.should_not include @user
       @group.assign_user @user
@@ -114,7 +114,7 @@ describe GroupMixins::Memberships do
   end
 
   describe "#unassign_user" do
-    before { @membership1.destroy }
+    before { @membership1.destroy! }
     describe "if the user is a member" do
       before { @group.direct_members << @user }
       it "should remove the membership" do

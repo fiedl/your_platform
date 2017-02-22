@@ -159,15 +159,19 @@ class Role
   # This finder method returns all global admins.
   #
   def self.global_admins
-    Group.global_admins.members
+    Group.find_global_admins_parent.try(:members) || []
+  end
+
+  # This finder method returns all developers.
+  #
+  def self.developers
+    Group.find_developers_group.try(:members) || []
   end
 
   # Global admins that are not technical staff, i.e. developers.
   #
   def self.non_technical_global_admins
-    Rails.cache.fetch [Group.global_admins, Group.developers, 'non_technical_global_admins'] do
-      Group.global_admins.members - Group.developers.members
-    end
+    global_admins - developers
   end
 
 end

@@ -53,6 +53,10 @@ module GroupMixins::Officers
       Group.everyone.admins_parent
     end
 
+    def find_global_admins_parent
+      Group.find_everyone_group.try(:find_admins_parent_group)
+    end
+
   end
 
 end
