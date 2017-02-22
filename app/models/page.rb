@@ -27,10 +27,6 @@ class Page < ActiveRecord::Base
     attachments.any? || (content && content.length > 5) || children.any?
   end
 
-  def fill_cache
-    group
-  end
-
 
   # This is the page title. If the title is not given in the
   # database, try to translate the flag of the page, e.g.
@@ -99,15 +95,16 @@ class Page < ActiveRecord::Base
   #       |--------------- page_1 : belongs to group_1
   #
   def group
+    Group.find group_id if group_id
+  end
+  def group_id
     # Do not use `ancestor_groups.last` here. Where this would work somethimes, it depends on the
     # order of creation of the links.
-    cached do
-      next_parent = parent_groups.first || parent_pages.first
-      until next_parent.nil? or next_parent.kind_of? Group
-        next_parent = next_parent.parent_groups.first || next_parent.parent_pages.first
-      end
-      next_parent
+    next_parent = parent_groups.first || parent_pages.first
+    until next_parent.nil? or next_parent.kind_of? Group
+      next_parent = next_parent.parent_groups.first || next_parent.parent_pages.first
     end
+    next_parent.try(:id)
   end
 
   # Url
@@ -299,4 +296,5 @@ class Page < ActiveRecord::Base
     [nil, Page, BlogPost, Blog]
   end
 
+  include PageCaching
 end
