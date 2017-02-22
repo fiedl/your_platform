@@ -1,44 +1,46 @@
 concern :StructureableRoleCaching do
 
   included do
-    cache :officers_of_self_and_parent_groups
-    cache :officers_groups_of_self_and_descendant_groups
-    cache :find_officers
-    cache :officers_of_ancestors
-    cache :officers_of_ancestor_groups
-    cache :officers_of_self_and_ancestors
-    cache :officers_of_self_and_ancestor_groups
-    cache :find_admins
-    cache :admins_of_ancestors
-    cache :admins_of_ancestor_groups
-    cache :admins_of_self_and_ancestors
-    cache :local_admins
-    cache :responsible_admins
+
+    def self.structureable_role_methods_to_cache
+      [
+        :officers_of_self_and_parent_groups,
+        :officers_groups_of_self_and_descendant_groups,
+        :find_officers,
+        :officers_of_ancestors,
+        :officers_of_ancestor_groups,
+        :officers_of_self_and_ancestors,
+        :officers_of_self_and_ancestor_groups,
+        :find_admins,
+        :admins_of_ancestors,
+        :admins_of_ancestor_groups,
+        :admins_of_self_and_ancestors,
+        :local_admins,
+        :responsible_admins
+      ]
+    end
+
+    self.structureable_role_methods_to_cache.each do |method|
+      cache method
+    end
   end
 
-  def delete_cache
+  def renew_cache
     super
-    delete_caches_concerning_roles
+    renew_caches_concerning_roles
   end
 
-  def delete_caches_concerning_roles
-    if self.class.base_class.name == 'Group'
-      # For an admins_parent, this is called recursively until the original group
-      # is reached.
-      #
-      #   group
-      #     |---- officers_parent
-      #                |------------ admins_parent
-      #                |------------ some officer group
-      #
-      if has_flag?(:officers_parent) || has_flag?(:admins_parent)
-        parent_groups.each do |group|
-          group.delete_cache
-          if group.descendants.count > 0
-            bulk_delete_cached :admins_of_ancestors, group.descendants
-            bulk_delete_cached :admins_of_self_and_ancestors, group.descendants
-            bulk_delete_cached "*officers*", group.descendants
-          end
+  def fill_cache_concerning_roles
+    self.class.structureable_role_methods_to_cache.each do |method|
+      self.send method
+    end
+  end
+
+  def renew_caches_concerning_roles
+    if kind_of?(OfficerGroup) && scope
+      Rails.cache.renew do
+        scope.descendants.each do |descendant|
+          descendant.fill_cache_concerning_roles
         end
       end
     end
