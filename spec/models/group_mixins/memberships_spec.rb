@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe GroupMixins::Memberships do
-  
+
   #   @indirect_group
   #        |------------ @group
   #        |                |------ @user1
@@ -25,7 +25,7 @@ describe GroupMixins::Memberships do
 
   # User Group Memberships
   # ==========================================================================================
-    
+
   describe "#memberships" do
     describe "for a group having direct members" do
       subject { @group.memberships }
@@ -47,7 +47,7 @@ describe GroupMixins::Memberships do
       end
     end
   end
-    
+
   describe "#direct_memberships" do
     describe "for a group having direct members" do
       subject { @group.direct_memberships }
@@ -58,9 +58,9 @@ describe GroupMixins::Memberships do
       subject { @indirect_group.direct_memberships }
       it { should_not include @indirect_membership1, @indirect_membership2 }
       it { should_not include @membership1, @membership2 }
-    end    
+    end
   end
-    
+
   describe "#indirect_memberships" do
     describe "for a group having direct members" do
       subject { @group.indirect_memberships }
@@ -71,9 +71,9 @@ describe GroupMixins::Memberships do
       subject { @indirect_group.indirect_memberships }
       it { should include @indirect_membership1, @indirect_membership2 }
       it { should_not include @membership1, @membership2 }
-    end    
+    end
   end
-  
+
   describe "#build_membership" do
     subject { @group.build_membership }
     it { should be_kind_of UserGroupMembership }
@@ -81,19 +81,19 @@ describe GroupMixins::Memberships do
     its(:ancestor_id) { should == @group.id }
     its(:descendant_type) { should == 'User' }
     its(:descendant_id) { should == nil }
-    its(:new_record?) { should == true }    
+    its(:new_record?) { should == true }
   end
-  
+
   describe "#membership_of( user )" do
     subject { @group.membership_of(@user1) }
     it { should be_kind_of UserGroupMembership }
     it { should == @membership1 }
   end
-  
-  
+
+
   # User Assignment
   # ==========================================================================================
-  
+
   describe "#assign_user" do
     before { @membership1.destroy }
     it "should assign the user to the group" do
@@ -203,7 +203,7 @@ describe GroupMixins::Memberships do
       end
     end
   end
-    
+
   describe "#direct_members" do
     describe "for a group having direct members" do
       subject { @group.direct_members }
@@ -247,7 +247,7 @@ describe GroupMixins::Memberships do
       it { should have(1).item }
     end
   end
-    
+
   describe "#indirect_members" do
     describe "for a group having direct members" do
       subject { @group.indirect_members }
@@ -286,7 +286,7 @@ describe GroupMixins::Memberships do
       it { should include @user_unique2 }
     end
   end
-  
+
   describe "#direct_member_titles_string" do
     subject { @group.direct_members_titles_string }
     it { should == "#{@user1.title}, #{@user2.title}" }
@@ -298,6 +298,6 @@ describe GroupMixins::Memberships do
       @group.reload.memberships.should_not include( @membership2 )
     end
   end
-  
-    
+
+
 end
