@@ -7,4 +7,5 @@ concern :PageCaching do
     cache :group_id
   end
 
+  include StructureableRoleCaching
 end
