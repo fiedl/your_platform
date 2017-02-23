@@ -8,17 +8,15 @@ module VerticalNavHelper
   # e.g. a Page or a User, is the currently active element.
   #
   def vertical_menu_for(navable)
-    Rails.cache.fetch([current_user, "vertical_menu_for", navable, current_tab, current_role_view]) do
-      if navable
-        @ancestor_navables = cached_ancestor_navables(navable)
-        @active_navable = navable
-        @active_navables = [@active_navable]
-        @child_navables = cached_child_navables(navable)
+    if navable
+      @ancestor_navables = ancestor_navables(navable)
+      @active_navable = navable
+      @active_navables = [@active_navable]
+      @child_navables = child_navables(navable)
 
-        menu_elements_html(@ancestor_navables, :ancestor) +
-        menu_element(@active_navable, :active) +
-        menu_elements_html(@child_navables, :child)
-      end
+      menu_elements_html(@ancestor_navables, :ancestor) +
+      menu_element(@active_navable, :active) +
+      menu_elements_html(@child_navables, :child)
     end
   end
 
@@ -37,18 +35,8 @@ module VerticalNavHelper
 
   private
 
-  def cached_ancestor_navables(navable)
-    NavNode
-    Rails.cache.fetch([navable, 'ancestor_navables', navable.ancestors_cache_key], expires_in: 1.week) { ancestor_navables(navable) }
-  end
   def ancestor_navables(navable)
     non_hidden_navables(navable.nav_node.ancestor_navables, :ancestor)
-  end
-
-  def cached_child_navables(navable)
-    #NavNode
-    #Rails.cache.fetch([navable, 'child_navables', navable.children_cache_key], expires_in: 1.week) { child_navables(navable) }
-    child_navables(navable)
   end
 
   def non_hidden_navables(navables, element_class)

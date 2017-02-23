@@ -5,9 +5,7 @@ module HorizontalNavHelper
   end
 
   def horizontal_nav_for(navable)
-    #Rails.cache.fetch([current_user, "horizontal_nav", navable]) do
-      present HorizontalNav.for_user(current_user, current_navable: navable, current_home_page: current_home_page)
-    #end
+    present HorizontalNav.for_user(current_user, current_navable: navable, current_home_page: current_home_page)
   end
 
   def horizontal_nav_lis

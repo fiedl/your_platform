@@ -18,7 +18,7 @@ module BreadcrumbsHelper
   end
 
   def breadcrumbs_for_navable(navable)
-    cached_breadcrumb_ul_for_navable(navable)
+    breadcrumb_ul_for_navable(navable)
   end
 
   def breadcrumbs_for_title(title)
@@ -35,23 +35,8 @@ module BreadcrumbsHelper
   # bread crumb elements.
   #
   def breadcrumb_ul
-    Rack::MiniProfiler.step("breadcrumb_ul") do
-      cached_breadcrumb_ul
-    end
-  end
-
-  def cached_breadcrumb_ul
-    return cached_breadcrumb_ul_for_navable @navable if @navable
-    return breadcrumb_ul_for_navables @navables if @navables
-  end
-
-  def uncached_breadcrumb_ul
     return breadcrumb_ul_for_navable @navable if @navable
     return breadcrumb_ul_for_navables @navables if @navables
-  end
-
-  def cached_breadcrumb_ul_for_navable(navable)
-    Rails.cache.fetch([navable, 'breadcrumb_ul_for_navable', navable.ancestors_cache_key, current_tab]) { breadcrumb_ul_for_navable(navable) }
   end
 
   def breadcrumb_ul_for_navable( navable )

@@ -33,15 +33,9 @@ module GroupsHelper
       end
     end.html_safe
   end
-  
-  def cached_groups_of_user_table(user)
-    Rails.cache.fetch([user, 'groups_of_user_table'], expires_in: 1.week) { groups_of_user_table(user) }
-  end
-  
+
   def post_recipient_groups_table
-    Rails.cache.fetch([current_user, 'post_recipient_groups_table'], expires_in: 1.week) do
-      groups_of_user_table(current_user, require_post_ability: true)
-    end
+    groups_of_user_table(current_user, require_post_ability: true)
   end
   
   private
