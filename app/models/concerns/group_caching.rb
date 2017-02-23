@@ -7,6 +7,7 @@ concern :GroupCaching do
     after_save { self.delay.renew_cache }
 
     cache :corporation_id
+    cache :leaf_groups
   end
 
   def delete_cache
