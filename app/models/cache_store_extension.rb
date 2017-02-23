@@ -45,7 +45,7 @@ module CacheStoreExtension
   end
 
   def fetch(key, options = {}, &block)
-    renew_this_key = true if @renew && @renew_at && entry(key) && entry(key).created_at < @renew_at
+    renew_this_key = true if @renew && (renew_at = @renew_at) && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
     renew_this_key = true if @ignore_cache
     super(key, {force: renew_this_key}.merge(options), &block)
   end
