@@ -75,9 +75,7 @@ module UserMixins::Memberships
 
   def joined_at(group)
     begin
-      Rails.cache.fetch [self.cache_key, 'joined_at', group.cache_key] do
-        group.membership_of(self).valid_from
-      end
+      group.membership_of(self).valid_from
     rescue ArgumentError => e
       membership = group.membership_of(self)
       Issue.scan membership if membership
@@ -86,8 +84,6 @@ module UserMixins::Memberships
   end
 
   def date_of_joining(group)
-    Rails.cache.fetch [self, 'date_of_joining', group] do
-      self.joined_at(group).try(:to_date)
-    end
+    self.joined_at(group).try(:to_date)
   end
 end
