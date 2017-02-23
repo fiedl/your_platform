@@ -34,6 +34,7 @@ BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)
 BestInPlace::DisplayMethods.add_helper_method(ActsAsTaggableOn::Tag, :body, :markup)
 
 BestInPlace::DisplayMethods.add_helper_method(Group, :direct_members_titles_string, :add_quick_links_to_comma_separated_list)
+BestInPlace::DisplayMethods.add_helper_method(OfficerGroup, :direct_members_titles_string, :add_quick_links_to_comma_separated_list)
 BestInPlace::DisplayMethods.add_helper_method(User, :corporation_name, :add_quick_link)
 BestInPlace::DisplayMethods.add_helper_method(Page, :tag_list, :insert_links_into_tag_list)
 BestInPlace::DisplayMethods.add_helper_method(BlogPost, :tag_list, :insert_links_into_tag_list)
