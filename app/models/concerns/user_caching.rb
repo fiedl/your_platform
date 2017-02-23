@@ -23,5 +23,12 @@ concern :UserCaching do
     cache :birthday_this_year
   end
 
-  include StructureableRoleCaching
+  # # Aparently, the `StructureableMixins::Roles` don't work correctly
+  # # for users, yet. Thus, it's harmful to try to cache those methods,
+  # # because they create lots of errors on `fill_cache`.
+  # #
+  # # TODO: Fix `StructureableMixins::Roles` before including the
+  # # `StructureableRoleCaching`.
+  # #
+  # include StructureableRoleCaching
 end
