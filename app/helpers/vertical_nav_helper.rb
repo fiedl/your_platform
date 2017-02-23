@@ -1,5 +1,5 @@
 module VerticalNavHelper
-  
+
   def vertical_nav_for(navable)
     vertical_menu_for(navable)
   end
