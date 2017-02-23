@@ -22,4 +22,5 @@ concern :GroupCaching do
     end
   end
 
+  include StructureableRoleCaching
 end
