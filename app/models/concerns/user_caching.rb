@@ -23,4 +23,5 @@ concern :UserCaching do
     cache :birthday_this_year
   end
 
+  include StructureableRoleCaching
 end
