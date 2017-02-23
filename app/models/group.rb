@@ -183,23 +183,22 @@ class Group < ActiveRecord::Base
   #
   def members_to_pdf(options = {sender: '', book_rate: false, type: "AddressLabelsPdf"})
     @filter = options[:filter]
-    timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    #timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    timestamp = Time.zone.now
     options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
-    #Rails.cache.fetch [self.cache_key, "members_postal_addresses", @filter] do
-      members
-        .apply_filter(@filter)
-        .collect { |user| user.address_label }
-        .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
-        # .collect { |address_label| address_label.to_s }
-    #end
+    members
+      .apply_filter(@filter)
+      .collect { |user| user.address_label }
+      .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
   end
-  def cached_members_postal_addresses_created_at
-    Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
-      members.apply_filter(@filter).collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
-    end
-  end
+
+  # def cached_members_postal_addresses_created_at
+  #   Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
+  #     members.apply_filter(@filter).collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+  #   end
+  # end
 
 
   # Groups
