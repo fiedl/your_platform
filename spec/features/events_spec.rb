@@ -362,6 +362,7 @@ feature "Events" do
       @event.id.should_not == @other_event.id
       @event.group.id.should == @corporation.id
       @event.contact_people.should include @user
+      sleep 1 # Give it some time. Otherwise the database is wiped before the tests are finished :(
     end
   end
 

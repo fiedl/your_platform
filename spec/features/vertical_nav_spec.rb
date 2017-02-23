@@ -15,8 +15,8 @@ feature 'Vertical Navigation' do
     @collection_group = create :group
     @collection_group.child_groups << @status_group
     @collection_group.child_groups << @another_status_group
-    @status_group.cached(:corporation).should == @corporation
 
+    @status_group.reload.corporation.should == @corporation
 
     visit group_path(@corporation)
     within('.vertical_menu') do
