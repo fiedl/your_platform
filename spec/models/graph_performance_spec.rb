@@ -8,7 +8,7 @@
 require 'spec_helper'
 require 'table-formatter'
 
-if ENV['CI'] != 'travis'
+if (ENV['CI'] != 'travis') && ENV['SLOW']
   describe "graph performance: " do
 
     $number_of_groups = 100
