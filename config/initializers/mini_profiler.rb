@@ -21,14 +21,22 @@
 # In addition, we have mini profiler started in hidden mode,
 # i.e. pressing Alt+P is required to show it.
 #
-##Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
-##  not Rails.env.test?
-##end
-##
-##Rack::MiniProfiler.config.start_hidden = false
-### Rack::MiniProfiler.config.skip_paths += ["/attachments/"]  # FIXME: this does not work, but we want to skip async entries for images and thumbs.
-##Rack::MiniProfiler.config.toggle_shortcut = 'Ctrl+P'
-##
-##if Rails.env.production? || Rails.env.test?
-##  Rack::MiniProfiler.config.authorization_mode = :whitelist
-##end
+Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
+  not Rails.env.test?
+end
+
+Rack::MiniProfiler.config.start_hidden = true if Rails.env.production?
+Rack::MiniProfiler.config.toggle_shortcut = 'Alt+P'
+
+# We want to skip async entries for images and thumbs.
+#
+Rack::MiniProfiler.config.skip_paths ||= []
+Rack::MiniProfiler.config.skip_paths << '/attachments'
+
+# Activate whitelisting in production, i.e. in the controller
+# `Rack::MiniProfiler.authorize_request` needs to be called in order
+# to be able to use the mini profiler.
+#
+if Rails.env.production? || Rails.env.test?
+  Rack::MiniProfiler.config.authorization_mode = :whitelist
+end

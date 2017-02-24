@@ -27,7 +27,7 @@ class GroupsController < ApplicationController
         return
 
       elsif request.format.xls? || request.format.csv? || request.format.json?
-        #Rack::MiniProfiler.step('groups#show controller: fetch memberships') do
+        Rack::MiniProfiler.step('groups#show controller: fetch memberships') do
           # If this is a collection group, e.g. the corporations_parent group,
           # do not list the single members.
           #
@@ -40,7 +40,7 @@ class GroupsController < ApplicationController
           else
             @memberships = @group.memberships_for_member_list
           end
-        #end
+        end
 
         # The user might provide a `valid_from` option as constraint on the validity range.
         #
@@ -48,15 +48,15 @@ class GroupsController < ApplicationController
           @memberships = @memberships.started_after(params[:valid_from].to_datetime)
         end
 
-        #Rack::MiniProfiler.step('groups#show controller: cancan') do
+        Rack::MiniProfiler.step('groups#show controller: cancan') do
           # Make sure only members that are allowed to be seen are in this array!
           #
           allowed_member_ids = @group.members.accessible_by(current_ability).pluck(:id)
           allowed_memberships = @group.memberships.where(descendant_id: allowed_member_ids)
           @memberships = @memberships & allowed_memberships
-        #end
+        end
 
-        #Rack::MiniProfiler.step('groups#show controller: fetch members') do
+        Rack::MiniProfiler.step('groups#show controller: fetch members') do
           # Fill also the members into a separate variable.
           #
           @members = @group.members.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)})
@@ -65,7 +65,7 @@ class GroupsController < ApplicationController
           # Fallback to these slower methods:
           @members = User.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)}) if @members.empty?
           @members = @memberships.collect { |membership| membership.user } if @members.empty?
-        #end
+        end
 
         # for performance reasons deactivated for the moment.
         # fill_map_address_fields

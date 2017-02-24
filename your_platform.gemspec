@@ -143,6 +143,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'judge'
 
   # Metrics
+  s.add_dependency 'rack-mini-profiler'
   s.add_dependency 'redis_analytics'
   s.add_dependency 'chartkick'
   s.add_dependency 'groupdate'

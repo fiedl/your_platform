@@ -12,10 +12,10 @@ module BoxHelper
   end
 
   def convert_to_content_box( html_code = nil )
-    #Rack::MiniProfiler.step("convert_to_content_box") do
+    Rack::MiniProfiler.step("convert_to_content_box") do
       html_code = yield unless html_code
       html_convert_h1_to_boxes( html_code )
-    #end
+    end
   end
 
   def html_convert_h1_to_boxes( html_code, options = {} )
