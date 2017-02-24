@@ -143,7 +143,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'judge'
 
   # Metrics
-  s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
   s.add_dependency 'redis_analytics'
   s.add_dependency 'chartkick'
   s.add_dependency 'groupdate'

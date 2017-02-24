@@ -1,7 +1,7 @@
 concern :CheckAuthorization do
 
   included do
-    before_action :authorize_miniprofiler
+    #before_action :authorize_miniprofiler
 
     # https://github.com/ryanb/cancan
     #
@@ -28,9 +28,9 @@ concern :CheckAuthorization do
   #
   # If the current_user can? :use the Rack::MiniProfiler, is defined in the Ability class.
   #
-  def authorize_miniprofiler
-    Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
-  end
+  #def authorize_miniprofiler
+  #  Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
+  #end
 
   def after_sign_in_path_for(resource)
     if cookies[:layout] == 'mobile'

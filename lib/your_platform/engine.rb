@@ -107,7 +107,6 @@ require 'will_paginate'
 require 'judge'
 
 # Metrics
-require 'rack-mini-profiler'
 require 'redis_analytics'
 require 'chartkick'
 require 'groupdate'

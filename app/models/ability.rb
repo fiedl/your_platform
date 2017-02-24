@@ -133,7 +133,7 @@ class Ability
   end
 
   def rights_for_developers
-    can :use, Rack::MiniProfiler
+    #can :use, Rack::MiniProfiler
 
     can :use, :term_reports
   end
