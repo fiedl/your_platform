@@ -1,0 +1,19 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    - Rack::MiniProfiler.step('modern layout head') do
+      %meta{:charset => 'utf-8'}/
+      %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
+      %title= current_title
+      = csrf_meta_tags
+      - Rack::MiniProfiler.step('stylesheets') do
+        = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+        = stylesheet_link_tag 'application', :media => 'all'
+      - Rack::MiniProfiler.step('scripts') do
+        = javascript_include_tag 'application'
+        = yield :scripts
+      = yield :head
+  = body_tag do
+    #content_area
+      = flash_area
+      = convert_to_content_box { yield }

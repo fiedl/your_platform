@@ -30,7 +30,7 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact iweb mobile)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile)).uniq
   end
 
   def default_layout
