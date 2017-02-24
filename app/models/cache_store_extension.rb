@@ -47,7 +47,23 @@ module CacheStoreExtension
   def fetch(key, options = {}, &block)
     renew_this_key = true if @renew && (renew_at = @renew_at) && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
     renew_this_key = true if @ignore_cache
-    super(key, {force: renew_this_key}.merge(options), &block)
+    renew_this_key = true if options[:force]
+
+    # Recalculate the value before calling the original `Rails.cache.fetch`
+    # in order not to lock the redis server while calculating the result
+    # of the expensive block.
+    #
+    # This fixes `Redis::TimeoutError` and the issues that arise from
+    # blocking the redis server: https://github.com/fiedl/wingolfsplattform/issues/72
+    #
+    # TODO: Maybe this is not needed after upgrading to redis 3.3.3.
+    # See https://github.com/redis/redis-rb/issues/650#issuecomment-278826491
+    #
+    if renew_this_key || read(key).nil?
+      new_value = yield
+    end
+
+    super(key, {force: renew_this_key}.merge(options)) { new_value }
   end
 
   #def fetch(key, options = {}, &block)
