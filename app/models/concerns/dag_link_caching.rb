@@ -11,8 +11,8 @@ concern :DagLinkCaching do
   end
 
   def delay_renew_cache_of_ancestor_and_descendant
-    ancestor.try(:delay).try(:renew_cache)
-    descendant.try(:delay).try(:renew_cache)
+    ancestor.delay.renew_cache if ancestor
+    descendant.delay.renew_cache if descendant
   end
 
 end
