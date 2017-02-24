@@ -1,7 +1,9 @@
 rvm:
   - "2.3.1"
 env:
-  - "RAILS_ENV=test DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=3"
+  - "RAILS_ENV=test CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RSPEC_RERUN_PATTERN=./spec/features/*_spec.rb"
+  - "RAILS_ENV=test CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RSPEC_RERUN_PATTERN=./spec/models/*_spec.rb"
+  - "RAILS_ENV=test CI_CATEGORY=uploaders DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RSPEC_RERUN_PATTERN=./spec/uploaders/*_spec.rb"
 cache: bundler
 sudo: false
 addons:
