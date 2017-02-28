@@ -24,7 +24,11 @@ module Flagable
     end
 
     scope :flagged, lambda { |flag| includes(:flags).where(flags: {key: flag}) }
-    scope :not_flagged, lambda { |flags| includes(:flags).where.not(flags: {key: flags}) }
+    scope :not_flagged, lambda { |flags|
+      group_ids_other_flags = includes(:flags).where.not(flags: {key: flags}).pluck(:id)
+      group_ids_no_flags = includes(:flags).where(flags: {flagable_id: nil})
+      where(id: group_ids_other_flags + group_ids_no_flags)
+    }
 
   end
 

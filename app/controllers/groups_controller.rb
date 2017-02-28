@@ -23,8 +23,13 @@ class GroupsController < ApplicationController
   def show
     if @group
       if request.format.html?
-        redirect_to_group_tab
-        return
+
+        if @group.kind_of? Groups::GroupOfGroups
+          return
+        else
+          redirect_to_group_tab
+          return
+        end
 
       elsif request.format.xls? || request.format.csv? || request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do

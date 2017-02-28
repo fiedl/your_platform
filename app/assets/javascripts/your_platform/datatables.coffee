@@ -101,6 +101,9 @@ $(document).ready ->
     "order": [[0, "asc"]],
     "pageLength": 100
   }, common_configuration))
+  $('.datatable.group_of_groups').dataTable(jQuery.extend({
+    "pageLength": 100
+  }, common_configuration))
   $('.datatable.events').dataTable(jQuery.extend({
     "order": [[1, "desc"]],
     "pageLength": 100,

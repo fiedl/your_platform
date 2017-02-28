@@ -10,7 +10,7 @@ concern :CurrentTab do
   def current_tab_path(object)
     if object.kind_of?(Group)
       case current_tab(object)
-      when "subgroups"; group_subgroups_path(object)
+      when "subgroups"; group_path(object)
       when "posts"
         if can? :index_posts, object
           group_posts_path(object)
@@ -37,7 +37,7 @@ concern :CurrentTab do
   def current_tab(object = nil)
     object ||= current_navable
     if object.kind_of?(Group)
-      if object.group_of_groups?
+      if object.kind_of?(Groups::GroupOfGroups)
         "subgroups"
       else
         cookies[:group_tab]
