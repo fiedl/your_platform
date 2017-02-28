@@ -1,10 +1,10 @@
 concern :CurrentBreadcrumbs do
 
   included do
-    helper_method :current_breadcrumbs
+    helper_method :manual_current_breadcrumbs
   end
 
-  def current_breadcrumbs
+  def manual_current_breadcrumbs
     @current_breadcrumbs
   end
 

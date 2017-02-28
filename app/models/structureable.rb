@@ -76,6 +76,10 @@ module Structureable
     #
     include StructureableMixins::Roles
 
+    def parent
+      parents.first
+    end
+
     # When a dag node is destroyed, also destroy the corresponding dag links.
     # Otherwise, there would remain ghost dag links in the database that would
     # corrupt the integrity of the database.

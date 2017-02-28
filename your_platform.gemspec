@@ -132,9 +132,6 @@ Gem::Specification.new do |s|
   # Edit Mode
   s.add_dependency 'edit_mode', '>= 1.0.2'                                             # MIT License
 
-  # Hide slim breadcrumb elements until user hovers the separator
-  s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
-
   # View Helpers
   s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'

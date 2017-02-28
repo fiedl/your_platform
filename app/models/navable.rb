@@ -12,6 +12,8 @@ module Navable
     has_one                :nav_node, as: :navable, dependent: :destroy, autosave: true
 
     include InstanceMethodsForNavables
+    include NavableBreadcrumbs
+    include NavableCaching
   end
   module InstanceMethodsForNavables
     def is_navable?

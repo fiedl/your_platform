@@ -878,5 +878,12 @@ class User < ActiveRecord::Base
     "User: #{self.id} #{self.alias}"
   end
 
+  # ==========================================================================================
+
+
+  def parent
+    status_group_in_primary_corporation || parent_groups.first
+  end
+
   include UserCaching
 end

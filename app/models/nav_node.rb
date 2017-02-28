@@ -56,6 +56,9 @@ class NavNode < ActiveRecord::Base
   def breadcrumb_item
     super || self.navable.title
   end
+  def breadcrumb_title
+    breadcrumb_item
+  end
 
   # The +menu_item+ is the string representing the Navable in the vertical menu.
   # It defaults to the Navable's title and can be customized using the setter method
@@ -117,53 +120,6 @@ class NavNode < ActiveRecord::Base
     end.join.gsub( /(\/)$/, '' ) # The gsub call removes the trailing slash.
   end
 
-  # +breadcrumbs+ returns an Array of breadcrumb Hashes representing the route to the
-  # Navable associated with this NavNode.
-  #
-  # Example:
-  #   Breadcrumb:  Example.com  >  Products  >  Phones
-  #   Url:         http://example.com/products/phones
-  #
-  #     @phones_page.nav_node.breadcrumbs
-  #       # => [ {title: "Example.com", navable: @root_page, slim: false},
-  #              {title: "Products", navable: @products_page, slim: false},
-  #              {title: "Phones", navable: @phones_page, slim: false} ]
-  #
-  def breadcrumbs
-    breadcrumbs_to_return = []
-    navables = self.ancestor_navables_and_own
-    for navable in navables do
-      breadcrumbs_to_return << { title: navable.nav_node.breadcrumb_item,
-                                 navable: navable,
-                                 slim: navable.nav_node.slim_breadcrumb }
-    end
-    return breadcrumbs_to_return
-  end
-
-  # This returns the Navable ancestors of the Navable associated with this NavNode as an Array.
-  #
-  def ancestor_navables
-    path = []
-    current_navable = self.navable
-    until current_navable.nil?
-      new_navable = nil
-      new_navable ||= current_navable.status_group_in_primary_corporation if current_navable.kind_of? User
-      new_navable ||= current_navable.parents.select do |parent|
-        parent.respond_to? :nav_node
-      end.first
-      path << new_navable if new_navable
-      current_navable = new_navable
-    end
-    path.reverse
-  end
-
-  # This returns the Navable ancestors of the Navable associated with this NavNode as an Array
-  # plus this NavNode's Navable as last element.
-  #
-  def ancestor_navables_and_own
-    ancestor_navables + [ self.navable ]
-  end
-
   # The breadcrumb_root is the navable that is the left-most of the breadcrums
   # of the navable.
   #
@@ -171,15 +127,17 @@ class NavNode < ActiveRecord::Base
   #    ~~~~~~~~~~~
   #
   def breadcrumb_root
-    cached { ancestor_navables_and_own.first }
+    ancestor_nodes_and_self.first.navable
   end
 
   # +ancestor_nodes+ returns an Array of the NavNodes of the ancestors of the Navable
   # associated with this NavNode.
   #
   def ancestor_nodes
-    @ancestor_nodes ||= self.ancestor_navables.collect do |ancestor|
-      ancestor.nav_node
+    if parent
+      parent.ancestor_nodes + [parent]
+    else
+      []
     end
   end
 
@@ -187,7 +145,11 @@ class NavNode < ActiveRecord::Base
   # Navable associated with this NavNode  plus  this NavNode as last element.
   #
   def ancestor_nodes_and_self
-    ancestor_nodes + [ self ]
+    ancestor_nodes + [self]
+  end
+
+  def parent
+    navable.parent.try(:nav_node)
   end
 
 end

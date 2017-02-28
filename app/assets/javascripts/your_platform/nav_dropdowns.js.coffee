@@ -1,4 +1,4 @@
-trigger_selector = "#horizontal_nav ul.nav > li > a, a.breadcrumb_link"
+trigger_selector = "#horizontal_nav ul.nav > li > a, ul.breadcrumbs > li > a"
 
 $(document).on 'mouseenter', trigger_selector, (event)->
   trigger_link = $(this)
@@ -6,9 +6,9 @@ $(document).on 'mouseenter', trigger_selector, (event)->
 
   if vertical_nav_path and trigger_link.closest('.dropdown-menu').size() == 0 and trigger_link.find('.dropdown-menu').size() == 0
     trigger_link.addClass('hover')
-  
+
     $.get vertical_nav_path, (result)->
-    
+
       if trigger_link.hasClass('hover')
         $('ul#nav_dropdown').remove()
         trigger_link.append('<ul id="nav_dropdown" class="dropdown-menu" role="menu"></ul>')
