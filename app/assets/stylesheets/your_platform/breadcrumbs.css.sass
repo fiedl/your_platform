@@ -3,17 +3,17 @@ ul.breadcrumbs
   display: inline-block
   padding-left: 0px
   margin-right: 10px
-  li
+  > li
     display: inline-block
-  li:before
+  > li:before
     content: "/"
     color: grey
     padding-left: 2px
     padding-right: 2px
-  li:first-child:before
+  > li:first-child:before
     content: " "
     padding-left: 0px
-  li.slim
+  > li.slim
     font-weight: normal
-  li:last-child a
+  > li:last-child a
     color: black

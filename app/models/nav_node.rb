@@ -67,6 +67,9 @@ class NavNode < ActiveRecord::Base
   def menu_item
     super || self.navable.title
   end
+  def nav_title
+    menu_item
+  end
 
   # The +hidden_menu+ attribute says if the Navable should be hidden from
   # the vertical menu.

@@ -14,4 +14,12 @@ concern :NavableBreadcrumbs do
     nav_node.ancestor_nodes_and_self
   end
 
+  def ancestor_nav_nodes
+    nav_node.ancestor_nodes
+  end
+
+  def ancestor_navables
+    ancestor_nav_nodes.map(&:navable)
+  end
+
 end

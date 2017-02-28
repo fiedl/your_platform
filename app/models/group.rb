@@ -31,7 +31,7 @@ class Group < ActiveRecord::Base
 
   default_scope { includes(:flags) }
 
-  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent]) }
+  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups]) }
 
   include GroupMixins::Memberships
   include GroupMixins::Everyone
@@ -99,7 +99,7 @@ class Group < ActiveRecord::Base
   end
 
   def name_with_corporation
-    if self.corporation && self.corporation.id != self.id
+    if self.corporation_id != self.id
       "#{self.name} (#{self.corporation.name})"
     else
       self.name

@@ -3,8 +3,7 @@
     %li{class: "#{'slim' if breadcrumb.respond_to?(:slim_breadcrumb) && breadcrumb.slim_breadcrumb}"}
 
       - if breadcrumb.kind_of? NavNode
-        = link_to current_tab_path(breadcrumb.navable) || breadcrumb.navable, 'data-vertical-nav-path' => vertical_nav_path(navable_type: breadcrumb.navable.class.base_class.name, navable_id: breadcrumb.navable.id) do
-          = breadcrumb.breadcrumb_item
+        = link_to_navable breadcrumb.breadcrumb_title, breadcrumb.navable
 
       - if breadcrumb.kind_of? Hash
         - if breadcrumb[:path]

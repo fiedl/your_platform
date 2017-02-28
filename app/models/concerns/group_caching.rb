@@ -8,6 +8,9 @@ concern :GroupCaching do
 
     cache :corporation_id
     cache :leaf_groups
+
+    cache :group_of_groups?
+    cache :name_with_corporation
   end
 
   def delete_cache
