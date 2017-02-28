@@ -62,6 +62,7 @@ class User < ActiveRecord::Base
   include UserMixins::Identification
   include ProfileableMixins::Address
   include UserCorporations
+  include UserGroups
   include UserProfile
   include UserDateOfBirth
   include UserAvatar

@@ -21,6 +21,8 @@ concern :UserCaching do
     cache :date_of_birth
     cache :age
     cache :birthday_this_year
+
+    cache :group_ids_by_category
   end
 
   # # Aparently, the `StructureableMixins::Roles` don't work correctly

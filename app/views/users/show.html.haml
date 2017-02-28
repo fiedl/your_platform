@@ -85,7 +85,7 @@
       - if can? :manage, @user
         .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
     %div
-      = groups_of_user_table @user
+      = render partial: 'users/groups', object: @user, as: :user
 
     -#   / Events
     -#   - if @user.upcoming_events.present?
