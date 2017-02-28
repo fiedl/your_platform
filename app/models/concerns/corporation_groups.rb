@@ -1,5 +1,14 @@
 concern :CorporationGroups do
 
+  # Returns all regular groups. This excludes:
+  #
+  # - officers_parent
+  # - attendees, contact_people
+  #
+  def groups
+    descendant_groups.regular
+  end
+
   # This method returns all status groups of the corporation.
   # In this general context, each leaf group of the corporation is a status group.
   # But this is likely to be overridden by the main application.

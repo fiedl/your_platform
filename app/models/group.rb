@@ -31,6 +31,8 @@ class Group < ActiveRecord::Base
 
   default_scope { includes(:flags) }
 
+  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent]) }
+
   include GroupMixins::Memberships
   include GroupMixins::Everyone
   include GroupMixins::Corporations

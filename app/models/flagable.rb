@@ -24,6 +24,7 @@ module Flagable
     end
 
     scope :flagged, lambda { |flag| includes(:flags).where(flags: {key: flag}) }
+    scope :not_flagged, lambda { |flags| includes(:flags).where.not(flags: {key: flags}) }
 
   end
 
