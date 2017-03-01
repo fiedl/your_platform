@@ -12,19 +12,19 @@ FactoryGirl.define do
         status2 = corporation.child_groups.create(name: "Member Status 2")
         status3 = corporation.child_groups.create(name: "Member Status 3")
         [status1, status2, status3].each { |g| g.add_flag :full_members } # in contrast to deceased
-        
+
         status_workflow = Workflow.create name: 'First Promotion', description: "Promotes the user from the first to the second status group."
-      
+
         # # Does not work:
         # status_workflow.steps.create(brick_name: "RemoveFromGroupBrick", parameters: { :group_id => corporation.status_groups.first.id })
         # status_workflow.steps.create(brick_name: "AddToGroupBrick", parameters: { :group_id => corporation.status_groups.second.id })
-      
+
         step = status_workflow.steps.create
         step.brick_name = 'RemoveFromGroupBrick'
         step.save
         param = step.parameters.create
         param.key = :group_id
-        param.value = corporation.status_groups.first.id
+        param.value = corporation.reload.status_groups.first.id
         param.save
 
         step = status_workflow.steps.create
@@ -34,9 +34,9 @@ FactoryGirl.define do
         param.key = :group_id
         param.value = corporation.status_groups.second.id
         param.save
-      
+
         status_workflow.parent_groups << corporation.status_groups.first
-        
+
       end
     end
   end

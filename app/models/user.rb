@@ -736,8 +736,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_all_non_hidden
-    non_hidden_user_ids = User.pluck(:id) - Group.hidden_users.member_ids
-    self.where(id: non_hidden_user_ids)  # in order to make it work with cancan.
+    self.where.not(id: Group.hidden_users.member_ids)
   end
 
 

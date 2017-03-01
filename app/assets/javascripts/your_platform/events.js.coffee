@@ -16,8 +16,8 @@ ready = ->
   # https://github.com/trentrichardson/jQuery-Timepicker-Addon
   #
   $.timepicker.setDefaults
-    dateFormat: "DD, dd. MM yy,",
-    timeFormat: "HH:mm 'Uhr'",
+    dateFormat: "D, dd.mm.yy,",
+    timeFormat: "HH:mm",
     parse: 'loose',
     showHour: true,
     showMinute: true,
