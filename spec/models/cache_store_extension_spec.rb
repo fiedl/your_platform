@@ -6,10 +6,12 @@ describe CacheStoreExtension do
     # This spec tests the renew-cache mechanism.
     # Thus, do not block it here.
     ENV['NO_RENEW_CACHE'] = nil
+    ENV['NO_CACHING'] = nil
   end
   after do
     # Reset to the value read out in the spec_helper.rb.
     ENV['NO_RENEW_CACHE'] = ENV_NO_RENEW_CACHE
+    ENV['NO_CACHING'] = ENV_NO_CACHING
   end
 
   describe "#renew" do

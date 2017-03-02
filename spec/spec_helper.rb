@@ -104,6 +104,7 @@ Spork.prefork do
   # of eagerly filling every cache.
   #
   ENV_NO_RENEW_CACHE = ENV['NO_RENEW_CACHE']
+  ENV_NO_CACHING = ENV['NO_CACHING']
 
 
   # Required Libraries
