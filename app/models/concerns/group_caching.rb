@@ -15,7 +15,7 @@ concern :GroupCaching do
 
   def fill_cache
     super
-    ancestor_groups(true).each { |g| g.status_groups; g.leaf_groups }
+    ancestor_groups(true).each { |g| g.leaf_groups } # TODO: WHAT IF WE CACHE LEAF_GROUP_IDS. DO WE NEED THIS LOOP THEN AS THE LEAFS ATTRIBUTES WOULD NOT BE CACHED?
   end
 
   include StructureableRoleCaching
