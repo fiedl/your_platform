@@ -2,6 +2,16 @@ require 'spec_helper'
 
 describe CacheStoreExtension do
 
+  before do
+    # This spec tests the renew-cache mechanism.
+    # Thus, do not block it here.
+    ENV['NO_RENEW_CACHE'] = nil
+  end
+  after do
+    # Reset to the value read out in the spec_helper.rb.
+    ENV['NO_RENEW_CACHE'] = ENV_NO_RENEW_CACHE
+  end
+
   describe "#renew" do
     before do
       Rails.cache.clear
