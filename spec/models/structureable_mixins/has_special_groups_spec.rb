@@ -16,6 +16,10 @@ describe StructureableMixins::HasSpecialGroups do
     end
 
     @my_structureable = MyStructureable.create( name: "My Structureable" )
+
+    def title
+      name
+    end
   end
 
 
