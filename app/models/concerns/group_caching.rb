@@ -13,16 +13,9 @@ concern :GroupCaching do
     cache :name_with_corporation
   end
 
-  def delete_cache
+  def fill_cache
     super
-    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
-  end
-
-  def renew_cache
-    super
-    Rails.cache.renew do
-      ancestor_groups(true).each { |g| g.leaf_groups; g.status_groups }
-    end
+    ancestor_groups(true).each { |g| g.status_groups; g.leaf_groups }
   end
 
   include StructureableRoleCaching

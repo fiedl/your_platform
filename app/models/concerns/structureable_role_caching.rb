@@ -25,26 +25,21 @@ concern :StructureableRoleCaching do
     end
   end
 
-  def renew_cache
+  def fill_cache
     super
-    renew_caches_concerning_roles
+
+    if kind_of?(OfficerGroup) && scope
+      scope.descendants.each do |descendant|
+        if descendant.respond_to? :fill_cache_concerning_roles
+          descendant.fill_cache_concerning_roles
+        end
+      end
+    end
   end
 
   def fill_cache_concerning_roles
     self.class.structureable_role_methods_to_cache.each do |method|
       self.send method
-    end
-  end
-
-  def renew_caches_concerning_roles
-    if kind_of?(OfficerGroup) && scope
-      Rails.cache.renew do
-        scope.descendants.each do |descendant|
-          if descendant.respond_to? :fill_cache_concerning_roles
-            descendant.fill_cache_concerning_roles
-          end
-        end
-      end
     end
   end
 

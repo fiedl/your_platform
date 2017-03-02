@@ -5,9 +5,10 @@ concern :DagLinkCaching do
     after_commit :delay_renew_cache_of_ancestor_and_descendant, on: :destroy
   end
 
-  def renew_cache
+  def fill_cache
     super
-    delay_renew_cache_of_ancestor_and_descendant
+    ancestor.try(:fill_cache)
+    descendant.try(:fill_cache)
   end
 
   def delay_renew_cache_of_ancestor_and_descendant

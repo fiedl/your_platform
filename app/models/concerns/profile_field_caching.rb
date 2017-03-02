@@ -7,10 +7,10 @@ concern :ProfileFieldCaching do
     after_save :renew_cache
   end
 
-  def renew_cache
+  def fill_cache
     super
-    parent.try(:renew_cache)
-    profileable.renew_cache if profileable && profileable.respond_to?(:renew_cache)
+    parent.try(:fill_cache)
+    profileable.fill_cache if profileable && profileable.respond_to?(:fill_cache)
   end
 
   def destroy
