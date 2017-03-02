@@ -1,0 +1,29 @@
+%h2= t :my_corporations
+%ul
+  - horizontal_nav.navables.each do |navable|
+    %li= link_to navable.title, navable
+
+%h2= t :pages
+%ul
+  - current_pages.each do |page|
+    %li= link_to page.title, page
+
+- if current_navable && current_navable.child_groups.any?
+  %h2= current_navable.title
+  %ul
+    - current_navable.child_groups.each do |group|
+      %li= link_to group.title, group
+
+%h2= t :my_groups
+- current_user.group_ids_by_category.each do |category, group_ids|
+  - groups = Group.find(group_ids)
+  %ul
+    - groups.each do |group|
+      %li= link_to group.title, group
+
+%h2= t :documents
+%ul
+  - current_user.documents_of_interest.each do |document|
+    %li= link_to document.title, document
+
+= yield :nav_col
