@@ -4,7 +4,7 @@ concern :GroupCaching do
   # Otherwise, the methods to be cached are not declared, yet.
   #
   included do
-    after_commit(on: [:create, :update]) { self.delay.renew_cache }
+    after_save { self.delay.renew_cache }
 
     cache :corporation_id
     cache :leaf_groups

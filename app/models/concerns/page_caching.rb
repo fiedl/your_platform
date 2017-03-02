@@ -4,7 +4,7 @@ concern :PageCaching do
   # Otherwise the methods to cache are not defined, yet.
   #
   included do
-    after_commit(on: [:create, :update]) { self.delay.renew_cache }
+    after_save { self.delay.renew_cache }
 
     cache :group_id
   end
