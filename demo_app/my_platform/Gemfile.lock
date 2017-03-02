@@ -540,8 +540,6 @@ GEM
       rspec-mocks (~> 2.14.0)
     rspec-rerun (0.3.1)
       rspec
-    rspec-retry (0.4.6)
-      rspec-core
     ruby-ole (1.2.12)
     ruby-progressbar (1.7.5)
     ruby2ruby (2.2.0)
@@ -694,7 +692,6 @@ DEPENDENCIES
   rspec-instafail!
   rspec-rails (= 2.14.1)!
   rspec-rerun!
-  rspec-retry!
   sass-rails (~> 4.0.3)!
   sdoc (~> 0.4.0)!
   selenium-webdriver!
