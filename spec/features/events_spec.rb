@@ -353,6 +353,7 @@ feature "Events" do
       within('#create_event') { page.should have_text @corporation.name }
 
       find('#create_event').click
+      wait_until { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
       within '.contact_people' do
         page.should have_text @user.title
