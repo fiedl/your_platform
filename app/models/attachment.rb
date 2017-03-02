@@ -15,7 +15,7 @@ class Attachment < ActiveRecord::Base
   # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
 
   def title
-    super || filename
+    super || filename.gsub("_", " ")
   end
 
   def scope

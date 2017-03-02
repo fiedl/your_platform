@@ -65,7 +65,7 @@ class NavNode < ActiveRecord::Base
   # +menu_item=+.
   #
   def menu_item
-    super || self.navable.title
+    (super if defined?(super)) || self.navable.title
   end
   def nav_title
     menu_item

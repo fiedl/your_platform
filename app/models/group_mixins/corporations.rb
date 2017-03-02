@@ -2,7 +2,7 @@
 # There are certain gloabl special groups, for example the `corporations_parent` group, which contains
 # all corporations.
 #
-# The global accessors for these groups, e.g. `Group.corporations_parent` 
+# The global accessors for these groups, e.g. `Group.corporations_parent`
 # are defined in this mixin.
 #
 # The mechanism used by this mixin is defined in `StructureableMixins::HasSpecialGroups`.
@@ -34,21 +34,21 @@ module GroupMixins::Corporations
     def find_corporations_parent_group
       find_special_group(:corporations_parent)
     end
-    
+
     def create_corporations_parent_group
-      g = create_special_group(:corporations_parent)
+      g = create_special_group(:corporations_parent, type: 'Groups::CorporationsParent')
       g.add_flag :group_of_groups
       return g
     end
-    
+
     def find_or_create_corporations_parent_group
       find_corporations_parent_group || create_corporations_parent_group
     end
-    
+
     def corporations_parent
       find_or_create_corporations_parent_group
     end
-    
+
     def corporations_parent!
       find_corporations_parent_group || raise('special group :corporations_parent does not exist.')
     end
@@ -56,7 +56,7 @@ module GroupMixins::Corporations
     # Find all corporation groups, i.e. the children of `corporations_parent`.
     #
     # FIXME: This method does not filter out the officers_parent child_group.
-    # For some reason this would cause several specs to fail. 
+    # For some reason this would cause several specs to fail.
     #
     # For the moment, if you want just the corporations, i.e. without the
     # officers_parent, please use `Corporation.all`.
@@ -130,8 +130,8 @@ module GroupMixins::Corporations
       ancestor_groups = user.groups
       corporations_branch = self.find_corporations_branch_groups
       corporations_branch = [] unless corporations_branch
-      return ancestor_groups - 
-        corporations_branch - 
+      return ancestor_groups -
+        corporations_branch -
         Group.find_all_by_flag(:attendees) -
         Group.find_all_by_flag(:contact_people) -
         Group.find_all_by_flag(:officers_parent)

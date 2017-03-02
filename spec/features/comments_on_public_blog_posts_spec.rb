@@ -4,7 +4,7 @@ feature "Comments on public blog posts", js: true do
   background do
     Page.root.update_attribute :type, "Blog"
     @blog = Page.root
-    @blog_post = @blog.blog_posts.create(title: "Great blog post").becomes(BlogPost)
+    @blog_post = @blog.create_blog_post title: "Great blog post"
   end
 
   scenario "A guest user posts a comment on a public blog post" do

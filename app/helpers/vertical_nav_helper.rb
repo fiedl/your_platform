@@ -1,11 +1,5 @@
 module VerticalNavHelper
 
-  def vertical_nav_for(navable)
-    Rack::MiniProfiler.step('vertical nav') do
-      vertical_menu_for(navable)
-    end
-  end
-
   def show_vertical_nav?
     (not @hide_vertical_nav) && @navable && Rails.cache.fetch([@navable, "show_vertical_nav?"]) do
       @navable.present? && (@navable != Page.find_root) && (@navable.children.count + @navable.ancestors.count > 1)

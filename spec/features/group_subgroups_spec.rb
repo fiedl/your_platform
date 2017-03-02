@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature "Group of Groups Page" do
+feature "Group Subgroups" do
   include SessionSteps
 
   background do
@@ -21,19 +21,19 @@ feature "Group of Groups Page" do
   end
 
   scenario 'viewing the corporations list and looking up the officers' do
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
   end
 
   scenario 'adding an officers group and re-visiting the corporations list' do
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
 
     # This should invalidate the cache:
     @another_officers_group = @corporation.create_officer_group name: "Executing Officer"
     @another_officers_group << @user
 
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
     page.should have_text @another_officers_group.name
   end
@@ -43,13 +43,13 @@ feature "Group of Groups Page" do
     @another_officers_group = @subgroup.create_officer_group name: "Executing Officer"
     @another_officers_group << @user
 
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
     page.should have_text @another_officers_group.name
   end
 
   scenario 'adding an officer to a subgroup and re-visiting the coporations list' do
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
 
     @subgroup = @corporation.child_groups.create name: "Subgroup"
@@ -58,7 +58,7 @@ feature "Group of Groups Page" do
     @another_officers_group = @subgroup.create_officer_group name: "Executing Officer"
     @another_officers_group << @user
 
-    visit group_path(@corporations_parent)
+    visit group_subgroups_path(@corporations_parent)
     page.should have_text @officer_group.name
     page.should have_text @another_officers_group.name
   end
