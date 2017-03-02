@@ -33,6 +33,7 @@ before_script:
   - mkdir -p public/uploads
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate
+  - bundle exec rake assets:precompile 2>/dev/null
   - cd ../..
 script:
   - bundle exec rake rspec-rerun:spec
