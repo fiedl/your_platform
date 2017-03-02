@@ -21,8 +21,9 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
+  #
   # Dependencies
-  # --------------------------------------------------------------------------------
+  #
 
   # Rails and Rails Additions
   s.add_dependency "rails", ">= 4.2.5.1"
@@ -182,8 +183,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
 
+  #
   # Development Dependencies
-  # --------------------------------------------------------------------------------
+  #
 
   s.add_development_dependency "rspec-rails", "2.10.0"
   s.add_development_dependency "guard", "1.0.1"

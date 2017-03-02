@@ -9,6 +9,9 @@
 # rspec-rails       Integration of RSpec into Rails, providing generators, et cetera.
 #                   https://github.com/rspec/rspec-rails
 #
+# RSpec Retry       Retry failing specs
+#                   https://github.com/NoRedInk/rspec-retry
+#
 # Guard             Detecting changed files and running corresponding tests in the
 #                   background during development.
 #                   https://github.com/guard/guard
@@ -99,6 +102,7 @@ Spork.prefork do
 
   require 'rspec/rails'
   require 'rspec/autorun'
+  #require 'rspec/retry'
   require 'nokogiri'
   require 'capybara/poltergeist'
   require 'rspec/expectations'
@@ -298,6 +302,16 @@ Spork.prefork do
     config.after(:suite) do
       DatabaseCleaner.clean
     end
+
+    # Rspec Retry
+    # ......................................................................................
+
+    # # TODO: Activate this when migrating to rspec 3.
+    # #
+    # # Retry failed feature specs.
+    # config.around :each, :js do |ex|
+    #   ex.run_with_retry retry: 3
+    # end
 
 
     # Spec Filtering: Focus on Current Specs

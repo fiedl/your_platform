@@ -1,2 +1,4 @@
---format Fuubar
 --colour
+--require rspec/instafail
+--format RSpec::Instafail
+--format progress

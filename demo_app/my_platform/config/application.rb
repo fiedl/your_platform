@@ -39,7 +39,7 @@ end
 if __FILE__.start_with?('/var/')
   ::STAGE = __FILE__.split('/')[2] # ['my_platform', 'my_platform-master', 'my_platform-sandbox']
 else
-  ::STAGE = "my_platform-#{Rails.env.to_s}"
+  ::STAGE = "my_platform-#{Rails.env.to_s}#{ENV['TEST_ENV_NUMBER']}"
 end
 
 module MyPlatform
@@ -55,9 +55,9 @@ module MyPlatform
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    
+
     config.active_record.raise_in_transactional_callbacks = true
-    
+
     config.active_record.whitelist_attributes = false
     #config.active_record.mass_assignment_sanitizer = :strict
   end
@@ -65,12 +65,12 @@ end
 
 # $enable_tracing = false
 # $trace_out = open('trace.txt', 'w')
-# 
+#
 # set_trace_func proc { |event, file, line, id, binding, classname|
 #   if $enable_tracing && event == 'call'
 #     $trace_out.puts "#{file}:#{line} #{classname}##{id}"
 #   end
 # }
-# 
+#
 # $enable_tracing = true
-# 
+#
