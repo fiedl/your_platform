@@ -187,6 +187,6 @@ class ProfileField < ActiveRecord::Base
     # Subclasses need to override this. For example for phones: "TEL", emails: "EMAIL", ...
   end
 
-  include ProfileFieldCaching
+  include ProfileFieldCaching if use_caching?
 end
 

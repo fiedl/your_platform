@@ -296,5 +296,5 @@ class Page < ActiveRecord::Base
     [nil, Page, BlogPost, Blog]
   end
 
-  include PageCaching
+  include PageCaching if use_caching?
 end

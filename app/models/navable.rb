@@ -14,7 +14,7 @@ module Navable
     include InstanceMethodsForNavables
     include NavableBreadcrumbs
     include NavableVerticalNavs
-    include NavableCaching
+    include NavableCaching if use_caching?
   end
   module InstanceMethodsForNavables
     def is_navable?

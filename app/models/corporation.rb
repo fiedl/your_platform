@@ -76,5 +76,5 @@ class Corporation < Group
     true
   end
 
-  include CorporationCaching
+  include CorporationCaching if use_caching?
 end

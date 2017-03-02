@@ -253,6 +253,6 @@ class Group < ActiveRecord::Base
     self.corporations_parent
   end
 
-  include GroupCaching
+  include GroupCaching if use_caching?
 end
 

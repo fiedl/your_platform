@@ -5,6 +5,6 @@ class DagLink < ActiveRecord::Base
   acts_as_dag_links polymorphic: true
 
   include DagLinkRepair
-  include DagLinkCaching
+  include DagLinkCaching if use_caching?
 
 end

@@ -884,5 +884,5 @@ class User < ActiveRecord::Base
     status_group_in_primary_corporation || parent_groups.first
   end
 
-  include UserCaching
+  include UserCaching if use_caching?
 end
