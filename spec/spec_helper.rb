@@ -331,6 +331,16 @@ Spork.prefork do
       DatabaseCleaner.clean
     end
 
+
+    # Memory management
+    # ......................................................................................
+
+    # In order to free phantomjs memory, reset it after each spec.
+    # This tries to avoid "failed to reach server".
+    # https://github.com/fiedl/your_platform/pull/19#issuecomment-283803871
+    #
+    config.after(:each) { page.driver.reset! if defined?(page) && page.driver.respond_to?(:reset!) }
+
     # Rspec Retry
     # ......................................................................................
 
