@@ -10,7 +10,6 @@ concern :UserCaching do
     cache :date_of_death
     cache :name_with_surrounding
     cache :address_label
-    cache :corporations
     cache :current_corporations
     cache :sorted_current_corporations
     cache :my_groups_in_first_corporation

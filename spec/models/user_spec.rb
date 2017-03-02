@@ -753,8 +753,8 @@ describe User do
     it "should return an array of the user's corporations" do
       subject.should == [ @corporation ]
     end
-    it "should return an array of Corporation-type objects" do
-      subject.should be_kind_of Array
+    it "should return a relation of Corporation-type objects" do
+      subject.should be_kind_of ActiveRecord::Relation
       subject.first.should be_kind_of Corporation
     end
   end

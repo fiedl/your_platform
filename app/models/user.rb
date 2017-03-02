@@ -458,12 +458,12 @@ class User < ActiveRecord::Base
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
   def corporations(options = {})
-    # # TODO: Why does this shorter query not work?
-    # self.groups.where(type: "Corporation")
-    my_group_ids = options[:with_invalid] ? self.ancestor_group_ids : self.group_ids
-    my_corporation_ids = (my_group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
-    my_corporation_ids ||= []
-    Corporation.find my_corporation_ids
+    return corporations_with_past if options[:with_invalid]
+    groups.where(type: 'Corporation')
+  end
+
+  def corporations_with_past
+    ancestor_groups.where(type: 'Corporation')
   end
 
   # This returns the corporations the user is currently member of.
