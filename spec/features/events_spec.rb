@@ -112,7 +112,7 @@ feature "Events" do
         page.should have_selector '.upcoming_events'
         within '.box.upcoming_events' do
           page.should have_text @event.name
-          page.should have_text I18n.localize(@event.start_at.to_date, format: :long)
+          page.should have_text I18n.localize(@event.start_at.in_time_zone(@user.time_zone).to_date, format: :long)
           page.should have_text @event.group.name
           page.should have_no_text @other_event.name
           page.should have_text I18n.t(:show_all_events)
@@ -134,7 +134,7 @@ feature "Events" do
           page.should have_text @event.name
           page.should have_text I18n.t('date.to')
           page.should have_text @event.start_at.day.to_s
-          page.should have_text I18n.localize(@event.end_at.to_date, format: :long)
+          page.should have_text I18n.localize(@event.end_at.in_time_zone(@user.time_zone).to_date, format: :long)
           page.should have_text @event.group.name
           page.should have_no_text @other_event.name
         end

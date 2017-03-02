@@ -90,7 +90,7 @@ feature 'Corporate Vita', js: true do
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
 
           page.should have_content @valid_from_formatted
 
@@ -160,7 +160,7 @@ feature 'Corporate Vita', js: true do
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
 
           page.should have_content @valid_from_formatted
 
