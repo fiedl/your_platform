@@ -37,6 +37,7 @@ module CacheStoreExtension
   #     end
   #
   def renew
+    @use_renew_cache = self.use_renew_cache?
     @renew = true
     @renew_at ||= Time.zone.now
     yield
@@ -48,6 +49,19 @@ module CacheStoreExtension
     renew_this_key = true if @renew && (renew_at = @renew_at) && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
     renew_this_key = true if @ignore_cache
     renew_this_key = true if options[:force]
+
+    # If the renew_cache mechanism is not to be used, which can be the case
+    # in specs or as the mechanism is turned off globally, then just delete
+    # the cache rather than renewing it.
+    #
+    # Then, the cache is fetched on demand. Note that this method does not
+    # need to return the calculated result as this code is only executed
+    # within `Rails.cache.renew` statements.
+    #
+    if (not @use_renew_cache) && @renew
+      delete(key) if renew_this_key
+      return
+    end
 
     # Recalculate the value before calling the original `Rails.cache.fetch`
     # in order not to lock the redis server while calculating the result
@@ -128,6 +142,20 @@ module CacheStoreExtension
     end
   end
   private :rescue_from_other_errors
+
+
+  # In model specs, it's more efficient to fill the cache when it is needed rather than
+  # renewing all caches.
+  #
+  # If not using renew_cache, the cache is just deleted, not renewed. Filling the cache
+  # is on demand then.
+  #
+  # Note that this won't introduce any bulk deletions. Thus, in terms of testability,
+  # this is the same behaviour as when using renew_cache.
+  #
+  def use_renew_cache?
+    not ENV['NO_RENEW_CACHE']
+  end
 
 end
 
