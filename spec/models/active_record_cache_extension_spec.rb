@@ -2,6 +2,19 @@ require 'spec_helper'
 
 describe ActiveRecordCacheExtension do
 
+  before do
+    # This spec tests the caching mechanism.
+    # Thus, do not block it here.
+    ENV['NO_RENEW_CACHE'] = nil
+    ENV['NO_CACHING'] = nil
+  end
+  after do
+    # Reset to the value read out in the spec_helper.rb.
+    ENV['NO_RENEW_CACHE'] = ENV_NO_RENEW_CACHE
+    ENV['NO_CACHING'] = ENV_NO_CACHING
+  end
+
+
   # All ActiveRecord::Base classes are extended by this mechanism.
   # We'll take the User model as example here.
   #
