@@ -457,10 +457,11 @@ class User < ActiveRecord::Base
   # This method does not distinguish between regular members and guest members.
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
-  def corporations
+  def corporations(options = {})
     # # TODO: Why does this shorter query not work?
     # self.groups.where(type: "Corporation")
-    my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
+    my_group_ids = options[:with_invalid] ? self.ancestor_group_ids : self.group_ids
+    my_corporation_ids = (my_group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
     my_corporation_ids ||= []
     Corporation.find my_corporation_ids
   end
