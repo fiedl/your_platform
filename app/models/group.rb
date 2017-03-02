@@ -226,9 +226,12 @@ class Group < ActiveRecord::Base
   # This is needed for the selection of status groups.
   #
   def leaf_groups
-    self.descendant_groups.order('id').includes(:flags).select do |group|
+    Group.find(leaf_group_ids)
+  end
+  def leaf_group_ids
+    self.descendant_groups.order('id').includes(:flags).select { |group|
       group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-    end
+    }.map(&:id)
   end
 
   def status_groups

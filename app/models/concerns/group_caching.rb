@@ -7,15 +7,10 @@ concern :GroupCaching do
     after_save { self.delay.renew_cache }
 
     cache :corporation_id
-    cache :leaf_groups
+    cache :leaf_group_ids
 
     cache :group_of_groups?
     cache :name_with_corporation
-  end
-
-  def fill_cache
-    super
-    ancestor_groups(true).each { |g| g.leaf_groups } # TODO: WHAT IF WE CACHE LEAF_GROUP_IDS. DO WE NEED THIS LOOP THEN AS THE LEAFS ATTRIBUTES WOULD NOT BE CACHED?
   end
 
   include StructureableRoleCaching
