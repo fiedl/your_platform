@@ -2,7 +2,6 @@ rvm:
   - "2.3.1"
 env:
   - "RSPEC_RERUN_PATTERN=./spec/features/*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RAILS_ENV=test"
-  - "NO_RENEW_CACHE=true RSPEC_RERUN_PATTERN=./spec/models CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RAILS_ENV=test"
   - "NO_CACHING=true RSPEC_RERUN_PATTERN=./spec/models CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/models/[a-g]* CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/models/[h-r]* CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=4 RAILS_ENV=test"

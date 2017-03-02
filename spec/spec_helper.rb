@@ -96,6 +96,15 @@ Spork.prefork do
   ENV['RAILS_ENV'] ||= 'test'
   require File.expand_path('../../demo_app/my_platform/config/environment', __FILE__)
 
+  # The original setting whether the renew-cache mechanism should be skipped
+  # falling back to the delete-cache mechanism.
+  #
+  # This is default for model specs, since it makes no difference to them and the
+  # delete-cache mechanism is faster as caches are only filled when needed instead
+  # of eagerly filling every cache.
+  #
+  ENV_NO_RENEW_CACHE = ENV['NO_RENEW_CACHE']
+
 
   # Required Libraries
   # ----------------------------------------------------------------------------------------
@@ -254,6 +263,20 @@ Spork.prefork do
     end
 
     config.before(:each) do
+
+      # Do not use the renew_cache mechanism but fall back to delete_cache
+      # in the model layer. This means that caches are created on the fly
+      # when needed and not eagerly, which is faster.
+      #
+      if Capybara.current_driver == :rack_test # no integration test
+        unless ENV_NO_RENEW_CACHE
+          ENV['NO_RENEW_CACHE'] = "true"
+        end
+      else # integration test
+        unless ENV_NO_RENEW_CACHE
+          ENV['NO_RENEW_CACHE'] = nil
+        end
+      end
 
       # This distinction reduces the run time of the test suite by over a factor of 4:
       # From 40 to a couple of minutes, since the truncation method, which is slower,
