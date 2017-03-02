@@ -152,7 +152,11 @@ Spork.prefork do
       # inspector in the browser that allows you to see the current DOM structure and
       # other information useful for debugging tests.
       #
-      Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: (not ENV['NO_JS_ERRORS'].present?))
+      Capybara::Poltergeist::Driver.new(app, {
+        port: 51674 + ENV['TEST_ENV_NUMBER'].to_i,
+        inspector: true,
+        js_errors: (not ENV['NO_JS_ERRORS'].present?)
+      })
     end
     Capybara.javascript_driver = :poltergeist
   end
