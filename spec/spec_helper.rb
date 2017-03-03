@@ -340,7 +340,7 @@ Spork.prefork do
     # This tries to avoid "failed to reach server".
     # https://github.com/fiedl/your_platform/pull/19#issuecomment-283803871
     #
-    config.after(:each) { page.driver.reset! if defined?(page) && page.driver.respond_to?(:reset!) }
+    config.after(:each) { page.driver.reset! if defined?(page) && page.respond_to?(:driver) && page.driver.respond_to?(:reset!) }
 
     # Rspec Retry
     # ......................................................................................
