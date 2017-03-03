@@ -155,7 +155,8 @@ Spork.prefork do
       Capybara::Poltergeist::Driver.new(app, {
         port: 51674 + ENV['TEST_ENV_NUMBER'].to_i,
         inspector: true,
-        js_errors: (not ENV['NO_JS_ERRORS'].present?)
+        js_errors: (not ENV['NO_JS_ERRORS'].present?),
+        timeout: 120
       })
     end
     Capybara.javascript_driver = :poltergeist
