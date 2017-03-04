@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GroupMixins::Memberships do
+describe GroupMemberships do
 
   #   @indirect_group
   #        |------------ @group
