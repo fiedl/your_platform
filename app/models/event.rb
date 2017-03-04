@@ -15,6 +15,12 @@ class Event < ActiveRecord::Base
   # General Properties
   # ==========================================================================================
 
+  def as_json(options = {})
+    super(options).merge({
+      group_id: group_id
+    })
+  end
+
   # The title, i.e. the caption of the event is its name.
   def title
     name
@@ -142,6 +148,10 @@ class Event < ActiveRecord::Base
 
   def self.assign_contact_person_to_event(event_id, contact_person_id)
     Event.find(event_id).contact_people_group << User.find(contact_person_id)
+  end
+
+  def self.move_event_to_group(event_id, group_id)
+    Event.find(event_id).move_to Group.find(group_id)
   end
 
   # Scopes

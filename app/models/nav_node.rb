@@ -54,7 +54,7 @@ class NavNode < ActiveRecord::Base
   # +breadcrumb_item=+.
   #
   def breadcrumb_item
-    super || self.navable.title
+    (super if defined?(super)) || self.navable.title
   end
   def breadcrumb_title
     breadcrumb_item
@@ -104,7 +104,7 @@ class NavNode < ActiveRecord::Base
   #   @some_page.nav_node.update_attribute(:slim_breadcrumb, true)
   #
   def slim_breadcrumb
-    super || false
+    (super if defined?(super)) || false
   end
 
   # +url+ returns the joined url_components of this NavNode's Navable and its ancestors

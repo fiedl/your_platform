@@ -146,18 +146,18 @@ class EventsController < ApplicationController
         # The transaction_retry gem has been updated last in 2012!
         #
         @event.reload
-        @event.parent_groups << @group if @group
         @event.create_attendees_group
         @event.create_contact_people_group
         @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
 
-        # To avoid `ActiveRecord::RecordNotFound` after the redirect, we have to
-        # make sure the record can be found.
+        # Add the event to the group asynchronously.
+        # Otherwise, it would take quite some time until the POST
+        # request would finish.
         #
-        # This still exists in Rails 4.
-        # TODO: Check again, when migrating to Rails 5.
+        # TODO: Give the user feedback when it's ready.
         #
-        @event.wait_for_me_to_exist
+        Event.delay_for(15.seconds).move_event_to_group @event.id, @group.id
+
         set_current_activity :is_adding_an_event, @event
 
         format.html { redirect_to event_path(@event) }
