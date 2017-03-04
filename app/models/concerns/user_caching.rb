@@ -17,11 +17,21 @@ concern :UserCaching do
     cache :status_export_string
     cache :hidden
 
+    # UserDateOfBirth
     cache :date_of_birth
     cache :age
     cache :birthday_this_year
 
     cache :group_ids_by_category
+
+    # UserRoles
+    cache :admin_of_anything?
+    cache :former_member?
+    cache :localized_date_of_org_membership_end
+    cache :developer?
+    cache :beta_tester?
+    cache :global_admin?
+    cache :global_officer?
   end
 
   # # Aparently, the `StructureableMixins::Roles` don't work correctly
