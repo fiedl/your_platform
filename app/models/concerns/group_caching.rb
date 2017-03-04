@@ -11,6 +11,12 @@ concern :GroupCaching do
 
     cache :group_of_groups?
     cache :name_with_corporation
+
+    # GroupMemberships
+    cache :membership_ids_for_member_list
+    cache :memberships_for_member_list_count
+    cache :latest_memberships
+    cache :memberships_this_year
   end
 
   include StructureableRoleCaching

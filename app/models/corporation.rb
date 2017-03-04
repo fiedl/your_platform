@@ -46,6 +46,19 @@ class Corporation < Group
     return true
   end
 
+  # This returns the memberships that appear in the member list
+  # of the group.
+  #
+  # For a regular group, these are just the usual memberships.
+  # For a corporation, the members of the 'former members' subgroup
+  # of the corporation are excluded, even though they still have
+  # memberships.
+  #
+  def membership_ids_for_member_list
+    memberships.where.not(
+      descendant_id: former_members.pluck(:id) + deceased_members.pluck(:id)
+    ).pluck(:id)
+  end
 
   # This method lists all former members of the corporation. This is not determined
   # by the user group membership validity range but by the membership in the

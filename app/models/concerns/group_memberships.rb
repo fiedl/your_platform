@@ -106,35 +106,21 @@ concern :GroupMemberships do
     # memberships.
     #
     def membership_ids_for_member_list
-      cached do
-        if corporation?
-          (
-            memberships_including_members -
-              becomes(Corporation).former_members.map(&:memberships).flatten -
-              becomes(Corporation).deceased_members.map(&:memberships).flatten
-          ).map(&:id)
-        else
-          memberships.map(&:id)
-        end
-      end
+      membership_ids
     end
     def memberships_for_member_list
       memberships_including_members.where(id: membership_ids_for_member_list)
     end
     def memberships_for_member_list_count
-      cached { memberships_for_member_list.count }
+      memberships_for_member_list.count
     end
 
     def latest_memberships
-      cached do
-        self.memberships.with_invalid.reorder('valid_from DESC').limit(10).includes(:descendant)
-      end
+      self.memberships.with_invalid.reorder('valid_from DESC').limit(10).includes(:descendant)
     end
 
     def memberships_this_year
-      cached do
-        self.memberships.this_year
-      end
+      self.memberships.this_year
     end
 
     # User Assignment
