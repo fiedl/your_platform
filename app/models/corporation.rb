@@ -56,7 +56,7 @@ class Corporation < Group
   #
   def membership_ids_for_member_list
     memberships.where.not(
-      descendant_id: former_members.pluck(:id) + deceased_members.pluck(:id)
+      descendant_id: former_members.map(&:id) + deceased_members.map(&:id)
     ).pluck(:id)
   end
 
