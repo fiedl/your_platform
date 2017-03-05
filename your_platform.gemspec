@@ -184,6 +184,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'nokogiri', '>= 1.6.8' # CVE-2015-8806, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_392
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
+  s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
 
   # Development Dependencies
   # --------------------------------------------------------------------------------
