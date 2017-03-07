@@ -53,12 +53,19 @@ module WaitForAjax
   #
   #     wait_until { page.text.include? "Foo" }
   #
-  def wait_until
+  #     wait_until(timeout: 20.seconds ) { page.text.include? "Foo" }
+  #
+  def wait_until(options = {})
     counter = 0
+    started_at = Time.zone.now
     until yield
       wait_for_ajax
       counter += 1
-      raise 'Not happening, dude.' if counter >= 10
+      if options[:timeout]
+        raise "Not happening, dude. Waited for #{options[:timeout].to_s} seconds." if Time.zone.now > started_at + options[:timeout]
+      else
+        raise "Not happening, dude. Tried #{counter} times." if counter >= 10
+      end
     end
   end
 
