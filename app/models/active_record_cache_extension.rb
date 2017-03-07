@@ -212,11 +212,12 @@ module ActiveRecordCacheExtension
         # If a setter method exists as well, make the setter method
         # also renew the cache.
         #
-        if method_defined?("#{method_name}=")
-          alias_method "without_renew_cache_#{method_name}=", "#{method_name}="
+        setter_method_name = "#{method_name.to_s.gsub('?', '')}="
+        if method_defined?(setter_method_name)
+          alias_method "without_renew_cache_#{setter_method_name}", setter_method_name
 
-          define_method("#{method_name}=") { |new_value|
-            result = self.send "without_renew_cache_#{method_name}=", new_value
+          define_method(setter_method_name) { |new_value|
+            result = self.send "without_renew_cache_#{setter_method_name}", new_value
             Rails.cache.renew { self.send method_name }
           }
         end
