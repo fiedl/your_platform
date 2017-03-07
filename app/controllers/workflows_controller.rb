@@ -1,5 +1,5 @@
 class WorkflowsController < ApplicationController
-  
+
   # Exclude `execute` from standard `cancan` authorization,
   # since the needed authorization is checked by the method below.
   #
@@ -13,19 +13,19 @@ class WorkflowsController < ApplicationController
     authorize! :change_status, User.find(params[:user_id]) if params[:user_id]
 
     @workflow.execute( params )
-    
+
     flash[ :notice ] = "#{I18n.t(:executed_workflow)}: #{@workflow.name}"
     redirect_to :back
   end
 
-  
+
   # GET /workflows
   # GET /workflows.json
   def index
     @group = Group.find params[:group_id] if params[:group_id]
     if @group
       @workflows = @group.child_workflows
-      
+
       authorize! :read, @group
       authorize! :read, @workflows
       set_current_navable @group
