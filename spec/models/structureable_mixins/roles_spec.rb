@@ -142,8 +142,7 @@ describe StructureableMixins::Roles do
       describe "after changing an ancestor's admins" do
         before do
           @my_structureable.admins_of_self_and_ancestors  # creates the cache
-          @ancestor1.admins.destroy(@admin1)
-          wait_for_cache
+          @ancestor1.unassign_admin @admin1
           @my_structureable.reload
         end
         it "should refresh the cached value" do
@@ -179,56 +178,56 @@ describe StructureableMixins::Roles do
     end
   end
 
-  describe "#cached(:find_admins)" do
+  describe "#find_admins" do
     before do
       @group = create(:group)
     end
-    subject { @group.cached(:find_admins) }
+    subject { @group.find_admins }
     context "if the admins-parent group does not exist" do
       before do
-        @group.cached(:find_admins)
+        @group.find_admins
       end
-      it { should == @group.find_admins }
+      it { should == Rails.cache.uncached { @group.find_admins } }
     end
     context "if the admins_parent_group exists" do
       before do
         @group.find_or_create_admins_parent_group
-        @group.cached(:find_admins)
+        @group.find_admins
       end
-      it { should == @group.find_admins }
+      it { should == Rails.cache.uncached { @group.find_admins } }
     end
     context "if an admin users exists" do
       before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
         @group.admins_parent << admin_user
-        @group.cached(:find_admins)
+        @group.find_admins
       end
-      it { should == @group.find_admins }
+      it { should == Rails.cache.uncached { @group.find_admins } }
     end
     context "if new admin is added via group" do
       before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
-        @group.cached(:find_admins)
+        @group.find_admins
         wait_for_cache
 
         @group.admins_parent << admin_user
         @group.reload
       end
-      it { should == @group.find_admins }
+      it { should == Rails.cache.uncached { @group.find_admins } }
     end
     context "if new admin is added via child_users" do
       before do
         @group.find_or_create_admins_parent_group
         admin_user = create(:user)
-        @group.cached(:find_admins)
+        @group.find_admins
         wait_for_cache
 
         @group.admins_parent.child_users << admin_user
         @group.reload
       end
-      it { should == @group.find_admins }
+      it { should == Rails.cache.uncached { @group.find_admins } }
     end
   end
 

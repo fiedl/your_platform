@@ -2,10 +2,9 @@ concern :StructureableRoleCaching do
 
   included do
 
-    def self.structureable_role_methods_to_cache
+    def self.structureable_role_methods_depending_on_ancestors
       [
         :officers_of_self_and_parent_groups,
-        :officers_groups_of_self_and_descendant_groups,
         :find_officers,
         :officers_of_ancestors,
         :officers_of_ancestor_groups,
@@ -20,6 +19,17 @@ concern :StructureableRoleCaching do
       ]
     end
 
+    def self.structureable_role_methods_depending_on_descendants
+      [
+        :officers_groups_of_self_and_descendant_groups
+      ]
+    end
+
+    def self.structureable_role_methods_to_cache
+      structureable_role_methods_depending_on_ancestors +
+      structureable_role_methods_depending_on_descendants
+    end
+
     self.structureable_role_methods_to_cache.each do |method|
       cache method
     end
@@ -29,16 +39,20 @@ concern :StructureableRoleCaching do
     super
 
     if kind_of?(OfficerGroup) && scope
+      scope.fill_cache_concerning_roles_for(self.class.structureable_role_methods_to_cache) if scope.respond_to?(:fill_cache_concerning_roles_for)
+
       scope.descendants.each do |descendant|
-        if descendant.respond_to? :fill_cache_concerning_roles
-          descendant.fill_cache_concerning_roles
-        end
+        descendant.fill_cache_concerning_roles_for(self.class.structureable_role_methods_depending_on_ancestors) if descendant.respond_to?(:fill_cache_concerning_roles_for)
+      end
+
+      scope.ancestors.each do |ancestor|
+        ancestor.fill_cache_concerning_roles_for(self.class.structureable_role_methods_depending_on_descendants) if ancestor.respond_to?(:fill_cache_concerning_roles_for)
       end
     end
   end
 
-  def fill_cache_concerning_roles
-    self.class.structureable_role_methods_to_cache.each do |method|
+  def fill_cache_concerning_roles_for(methods)
+    methods.each do |method|
       self.send method
     end
   end

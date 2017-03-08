@@ -176,6 +176,10 @@ module StructureableMixins::Roles
     admins_parent.assign_user user, options
   end
 
+  def unassign_admin(user, options = {})
+    admins_parent.unassign_user user, options
+  end
+
   def find_admins
     if respond_to? :child_groups
       find_admins_parent_group.try(:members)
