@@ -593,6 +593,10 @@ class User < ActiveRecord::Base
     status_export_string
   end
 
+  def status
+    status_string
+  end
+
 
   # Relationships
   # ------------------------------------------------------------------------------------------
