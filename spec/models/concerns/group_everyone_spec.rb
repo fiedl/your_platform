@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
-describe GroupMixins::Everyone do
+describe GroupEveryone do
 
 
   # Everyone Group
@@ -19,7 +18,7 @@ describe GroupMixins::Everyone do
         @everyone_group.has_flag?( :everyone ).should == true
       end
     end
-    
+
     describe ".find_everyone_group" do
       subject { Group.find_everyone_group }
       it "should return the everyone_group" do
@@ -28,8 +27,8 @@ describe GroupMixins::Everyone do
       end
     end
   end
-  
-  
+
+
   # Members
   # ==========================================================================================
 
@@ -49,7 +48,7 @@ describe GroupMixins::Everyone do
       subject.should include @user
     end
   end
-  
+
   describe "#direct_members" do
     subject { @everyone_group.direct_members }
     it "should include users that are in no group at all" do

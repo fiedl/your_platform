@@ -34,7 +34,7 @@ class Group < ActiveRecord::Base
   scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
 
   include GroupMemberships
-  include GroupMixins::Everyone
+  include GroupEveryone
   include GroupMixins::Corporations
   include GroupMixins::Roles
   include GroupMixins::Guests
