@@ -886,7 +886,7 @@ class User < ActiveRecord::Base
 
 
   def parent
-    status_group_in_primary_corporation || parent_groups.first
+    status_group_in_primary_corporation || direct_groups.first
   end
 
   include UserCaching if use_caching?

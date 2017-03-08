@@ -64,10 +64,7 @@ module Structureable
     #
     include StructureableMixins::HasSpecialGroups
 
-    # To use `prepend` here allows to call `super` in the methods
-    # defined in the module `StructureableInstanceMethods`.
-    #
-    prepend StructureableInstanceMethods
+    include StructureableInstanceMethods
   end
 
   module StructureableInstanceMethods
