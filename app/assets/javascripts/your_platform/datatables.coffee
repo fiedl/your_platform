@@ -71,7 +71,7 @@ $(document).ready ->
 
   common_configuration = {
     "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-    "sPaginationType": "full_numbers",
+    "sPaginationType": "full", # https://datatables.net/reference/option/pagingType
     "bJQueryUI": true,
     "lengthMenu": [ 10, 20, 50, 100, 1000 ],
     "language": language_options(),
@@ -94,7 +94,7 @@ $(document).ready ->
     "pageLength": 20,
     "order": [[3, "desc"]],
     columnDefs: [
-      { type: 'de_date', targets: 3}
+      {width: "15%", type: 'de_date', targets: 3}
     ]
   }, common_configuration))
   $('.datatable.groups').dataTable(jQuery.extend({
