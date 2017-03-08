@@ -7,7 +7,7 @@
 #   users' "corporate vitae".
 #
 class Corporation < Group
-  after_save { Corporation.corporations_parent << self }
+  after_create { self.parent_groups << Corporation.corporations_parent }
 
   include CorporationGroups
   include CorporationTermReports
@@ -17,19 +17,15 @@ class Corporation < Group
   # The corporations_parent itself is a Group, no Corporation.
   #
   def self.corporations_parent
-    self.find_corporations_parent_group || self.create_corporations_parent_group
+    Groups::CorporationsParent.find_or_create
   end
 
   def self.find_corporations_parent_group
-    Group.find_by_flag :corporations_parent
+    Groups::CorporationsParent.find_or_create
   end
 
   def self.create_corporations_parent_group
-    new_group = Group.create name: 'all_corporations'
-    new_group.add_flag :corporations_parent
-    new_group.add_flag :group_of_groups
-    Group.everyone << new_group
-    return new_group
+    Groups::CorporationsParent.create name: "All Corporations"
   end
 
   # This method returns true if this (self) is the one corporation

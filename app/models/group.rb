@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-#
 # This class represents a user group. Besides users, groups may have sub-groups as children.
 # One group may have several parent-groups. Therefore, the relations between groups, users,
 # etc. is stored using the DAG model, which is implemented by the `is_structureable` method.
 #
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
 
   if defined? attr_accessible
     attr_accessible( :name, # just the name of the group; example: 'Corporation A'
