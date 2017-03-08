@@ -1,4 +1,29 @@
 concern :GroupMemberList do
+
+  # This table is used when listing the members of the group
+  # together with additional information:
+  #
+  # - first name
+  # - last name
+  # - name affix
+  # - joined at
+  #
+  def member_table_rows
+    memberships_for_member_list.reorder('valid_from ASC').collect do |membership|
+      if user = membership.user
+        hash = {
+          user_id: user.id,
+          first_name: user.first_name,
+          last_name: user.last_name,
+          name_affix: user.name_affix,
+          joined_at: membership.valid_from
+        }
+        hash
+      end
+    end - [nil]
+  end
+
+
   # This returns the memberships that appear in the member list
   # of the group.
   #

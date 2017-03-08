@@ -17,6 +17,9 @@ concern :GroupCaching do
     cache :memberships_for_member_list_count
     cache :latest_memberships
     cache :memberships_this_year
+
+    # GroupMemberList
+    cache :member_table_rows
   end
 
   include StructureableRoleCaching

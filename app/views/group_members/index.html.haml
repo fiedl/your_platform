@@ -14,28 +14,27 @@
 
 #members
   %h1.section.members
-    = @title
-    %span.members_count (#{@members.count})
+    = current_title
+    %span.members_count (#{member_table_rows.count})
   %div
     .alert.alert-success.updating_member_list.hidden=t :updating_member_list
     = render partial: 'groups/export_button'
-    - if can? :update_members, @group
-      = link_to group_member_data_summaries_path(@group), class: 'btn btn-default right' do
+    - if can? :update_members, group
+      = link_to group_member_data_summaries_path(group), class: 'btn btn-default right' do
         = icon 'folder-open'
         = t(:data_administration)
-    - if can? :manage_memberships_manually, @group
-      = link_to t(:user_group_memberships), group_memberships_path(@group), class: 'btn btn-default right'
+    - if can? :manage_memberships_manually, group
+      = link_to t(:user_group_memberships), group_memberships_path(group), class: 'btn btn-default right'
     %br{clear: 'all'}
     %span#group_members
       .child_users
-        - if @members.count > 0
-          = render partial: 'groups/member_list', locals: {members: @members, memberships: @memberships, group: @group}
+        - if member_table_rows.count > 0
+          = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
 
--# - if can? :create_memberships, @group
-- if can? :manage_memberships_manually, @group
+- if can? :manage_memberships_manually, group
   %h1 Mitglieder manuell eintragen
   %div.add_group_members
-    = form_for @new_user_group_membership, remote: true do |form|
+    = form_for new_user_group_membership, remote: true do |form|
       = form.hidden_field :group_id
       %span.add_group_member_name_field.left
         = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)

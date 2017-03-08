@@ -6,7 +6,7 @@
     %strong Besondere Sorgfalt geboten:
     Die Mitgliedschaftszeiträume der direkten Mitgliedschaften können durch Klick auf das Datum bearbeitet werden. Hierbei wird allerdings keinerlei Prüfung der Plausibilität vorgenommen, sondern direkt die Datenbank bearbeitet. Bitte äußerste Vorsicht walten lassen.
   %p
-    Abgeleitete Informationen werden erst nach einem Neuladen angezeigt. Abgeleitete Informationen, z.B. Aktivitätszahlen, können mit (wenigen Minuten) Verzögerung angezeigt werden.  
+    Abgeleitete Informationen werden erst nach einem Neuladen angezeigt. Abgeleitete Informationen, z.B. Aktivitätszahlen, können mit (wenigen Minuten) Verzögerung angezeigt werden.
 
 %table.datatable.memberships
   %thead
@@ -44,7 +44,7 @@
         %td
           - if membership.group && @user
             %ul
-              - membership.group.nav_node.ancestor_navables.each do |ancestor|
+              - membership.group.ancestor_navables.each do |ancestor|
                 %li= link_to ancestor.title, ancestor
         %td
           - if membership.group
