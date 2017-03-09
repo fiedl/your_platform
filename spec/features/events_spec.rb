@@ -230,7 +230,7 @@ feature "Events" do
 
   context "for officers", js: true do
     background do
-      @group.officers_parent.child_groups.create(name: 'President').assign_user @user, at: 1.hour.ago
+      @group.create_officer_group(name: 'President').assign_user @user, at: 1.hour.ago
       login @user
     end
 
