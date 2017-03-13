@@ -6,7 +6,7 @@ describe Event do
     @group = create( :group )
     @another_group = create( :group )
     @event = create( :event )
-    @event.group = @group
+    @event.group = @group; @event.save
     @event.reload # otherwise some associations are apparently missing
   end
 
@@ -17,10 +17,6 @@ describe Event do
     subject { @event.group }
     it "should return the associated group" do
       subject.should == @group
-      @event.parent_groups.should == [ @group ]
-      @event.links_as_child.count.should == 1
-      @group.links_as_parent.count.should == 1
-      @event.links_as_child.first.should == @group.links_as_parent.first
     end
   end
 
@@ -28,35 +24,12 @@ describe Event do
     subject { @event.group = @another_group }
     it "should associate the new group and remove previous group associations" do
       @event.group.should == @group
-      @event.parent_groups.count.should == 1
       subject
       @event.group.should == @another_group
-      @event.parent_groups.count.should == 1
-      @event.parent_groups.should include @another_group
-      @event.parent_groups.should_not include @group
     end
   end
 
-  describe "#groups" do
-    subject { @event.groups }
-    it "should be a shortcut for #parent_groups" do
-      subject.should == @event.parent_groups
-    end
-    it "should return an array of the associated groups" do
-      subject.to_a.should be_kind_of Array
-      subject.should include @group
-    end
-  end
-  describe "#groups <<" do
-    subject { @event.groups << @another_group }
-    it "should add the given group" do
-      @event.groups.should == [ @group ]
-      subject
-      @event.groups.should include @group, @another_group
-    end
-  end
-  
-  
+
   # Contact People and Attendees
   # ==========================================================================================
 
@@ -76,7 +49,7 @@ describe Event do
       @event.contact_people.should_not include @user
     end
   end
-  
+
   describe "#attendees" do
     subject { @event.attendees }
     before { @user = create :user }
@@ -105,11 +78,10 @@ describe Event do
   # ==========================================================================================
 
   describe ".upcoming" do
-    before do 
-      @upcoming_event = create( :event, start_at: 5.hours.from_now )
-      @recent_event = create(:event, start_at: 2.days.ago, end_at: 2.days.ago + 2.hours)
+    before do
+      @upcoming_event = create(:event, start_at: 5.hours.from_now, group_id: @group.id)
+      @recent_event = create(:event, start_at: 2.days.ago, end_at: 2.days.ago + 2.hours, group_id: @group.id)
       @recent_event_today = create(:event, start_at: Date.today.to_datetime.change(hour: 0, min: 5))
-      @group.child_events << @upcoming_event << @recent_event
       @unrelated_event = create( :event, start_at: 5.hours.from_now )
     end
     subject { Event.upcoming }
@@ -140,8 +112,8 @@ describe Event do
     end
   end
 
-  describe ".direct" do
-    # group_a 
+  describe "Group#direct_events" do
+    # group_a
     #   |----- event_0
     #   |----- group_b
     #   |        |------ event_1
@@ -151,23 +123,19 @@ describe Event do
     #            |------ event_2
     before do
       @group_a = create( :group )
-      @event_0 = @group_a.child_events.create
+      @event_0 = @group_a.events.create
       @group_b = @group_a.child_groups.create
-      @event_1 = @group_b.child_events.create
+      @event_1 = @group_b.events.create
       @group_c = @group_a.child_groups.create
-      @event_2 = @group_c.child_events.create
+      @event_2 = @group_c.events.create
     end
     it "should list direct events" do
-      @group_a.events.should include @event_0, @event_1, @event_2
-      @group_a.events.direct.should include @event_0
-      @group_a.events.direct.should_not include @event_1
-    end
-    it "should commute with .find_all_by_group" do
-      Event.find_all_by_group( @group_a ).direct.to_a.should ==
-        Event.direct.find_all_by_group( @group_a ).to_a
+      @group_a.events_with_subgroups.should include @event_0, @event_1, @event_2
+      @group_a.direct_events.should include @event_0
+      @group_a.direct_events.should_not include @event_1
     end
   end
-  
+
 
   # Finder Methods
   # ==========================================================================================
@@ -176,8 +144,7 @@ describe Event do
     before do
       @sub_group = create( :group )
       @sub_group.parent_groups << @group
-      @sub_group_event = create( :event )
-      @sub_group_event.parent_groups << @sub_group
+      @sub_group_event = create(:event, group_id: @sub_group.id)
       @another_group = create( :group )
       @unrelated_event = @another_group.events.create
     end
@@ -187,7 +154,6 @@ describe Event do
     end
     it "should return events of the sub groups as well" do
       subject.should include @sub_group_event
-      @sub_group_event.ancestors.should include @group, @sub_group
     end
     it "should not return unrelated events" do
       subject.should_not include @unrelated_event
@@ -214,11 +180,11 @@ describe Event do
       subject.first.start_at.should < subject.last.start_at
     end
   end
-  
-  
+
+
   # Structure
   # ==========================================================================================
-  
+
   # The following DAG structure should be possible in the model layer (bug fix).
   #
   #   @corporation
@@ -241,7 +207,7 @@ describe Event do
     @user = create :user
     @group = create :group
     @group.assign_user @user
-    
+
     @event = Event.new
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
@@ -249,19 +215,19 @@ describe Event do
     @event.parent_groups << @group
     @event.contact_people_group.assign_user @user
   end
-  
-  
+
+
   describe "#destroy" do
     subject { @event.destroy }
-    
+
     it "should destroy the contact people and attendees groups as well" do
       @contact_people_group = @event.contact_people_group
       @attendees_group = @event.attendees_group
-      
+
       subject
       Group.exists?(id: @contact_people_group.id).should == false
       Group.exists?(id: @attendees_group.id).should == false
     end
   end
-  
+
 end

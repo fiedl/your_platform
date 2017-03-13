@@ -46,6 +46,7 @@ class Group < ApplicationRecord
   include GroupDummyUsers
   include GroupWelcomeMessage
   include GroupSemesterCalendars
+  include GroupEvents
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -160,18 +161,6 @@ class Group < ApplicationRecord
 
   def child_workflows
    self.descendant_workflows.where( :dag_links => { direct: true } )
-  end
-
-
-  # Events
-  # ------------------------------------------------------------------------------------------
-
-  def events
-    self.descendant_events
-  end
-
-  def upcoming_events
-    self.events.upcoming.order('start_at')
   end
 
 
