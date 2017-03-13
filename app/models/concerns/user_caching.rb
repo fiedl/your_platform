@@ -32,6 +32,9 @@ concern :UserCaching do
     cache :beta_tester?
     cache :global_admin?
     cache :global_officer?
+
+    # ProfileFields
+    cache :email
   end
 
   # # Aparently, the `StructureableMixins::Roles` don't work correctly

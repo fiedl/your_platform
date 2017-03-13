@@ -98,7 +98,7 @@ module ProfileableMixins::Address
   # Otherwise, the first address of the user is used.
   #
   def postal_address
-    cached { postal_address_field_or_first_address_field.try(:value) }
+    postal_address_field_or_first_address_field.try(:value)
   end
 
   def postal_address_in_one_line
@@ -108,13 +108,11 @@ module ProfileableMixins::Address
   # Returns when the postal address has been updated last.
   #
   def postal_address_updated_at
-    cached do
-      # if the date is earlier, the date is actually the date
-      # of the data migration and should not be shown.
-      #
-      if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date
-        postal_address_field_or_first_address_field.updated_at.to_date
-      end
+    # if the date is earlier, the date is actually the date
+    # of the data migration and should not be shown.
+    #
+    if postal_address_field_or_first_address_field && postal_address_field_or_first_address_field.updated_at.to_date > "2014-02-28".to_date
+      postal_address_field_or_first_address_field.updated_at.to_date
     end
   end
 

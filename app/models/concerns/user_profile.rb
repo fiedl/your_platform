@@ -48,7 +48,7 @@ concern :UserProfile do
     profile_field_by_label 'personal_title'
   end
   def personal_title
-    cached { personal_title_field.try(:value).try(:strip) }
+    personal_title_field.try(:value).try(:strip)
   end
   def personal_title=(new_value)
     profile_fields.where(label: 'personal_title').first_or_create.update_attributes value: new_value
@@ -58,7 +58,7 @@ concern :UserProfile do
     profile_field_by_label 'academic_degree'
   end
   def academic_degree
-    cached { academic_degree_field.try(:value).try(:strip) }
+    academic_degree_field.try(:value).try(:strip)
   end
   def academic_degree=(new_value)
     profile_fields.where(label: 'academic_degree').first_or_create.update_attributes value: new_value

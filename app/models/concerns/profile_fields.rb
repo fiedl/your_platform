@@ -1,7 +1,7 @@
 concern :ProfileFields do
-  
+
   def email
-    @email ||= cached { profile_fields.where(type: ['ProfileFieldTypes::Email', 'ProfileFieldTypes::MailingListEmail']).first.try(:value) }
+    @email ||= profile_fields.where(type: ['ProfileFieldTypes::Email', 'ProfileFieldTypes::MailingListEmail']).first.try(:value)
   end
   def email=( email )
     @email = nil
@@ -18,18 +18,18 @@ concern :ProfileFields do
   def email_empty?
     not email.present?
   end
-  
+
   def email_fields
     profile_fields.where type: 'ProfileFieldTypes::Email'
   end
   def primary_email_field
     email_fields.first
   end
-  
+
   def phone_profile_fields
     profile_fields.where(type: 'ProfileFieldTypes::Phone').select do |field|
       not field.label.downcase.include? 'fax'
     end
   end
-  
+
 end
