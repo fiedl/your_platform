@@ -7,7 +7,7 @@
 #   users' "corporate vitae".
 #
 class Corporation < Group
-  after_create { self.parent_groups << Corporation.corporations_parent }
+  after_create { self.parent_groups << Groups::CorporationsParent.find_or_create }
 
   include CorporationGroups
   include CorporationTermReports

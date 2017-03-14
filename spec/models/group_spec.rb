@@ -48,7 +48,7 @@ describe Group do
 
   # Associated Objects
   # ==========================================================================================
-  
+
   # Workflows
   # ------------------------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ describe Group do
       @group = create( :group )
       @subgroup = create( :group )
       @subgroup.parent_groups << @group
-      
+
       @workflow = create( :workflow )
       @workflow.parent_groups << @group
       @subworkflow = create( :workflow )
@@ -90,10 +90,10 @@ describe Group do
   # ------------------------------------------------------------------------------------------
 
   describe "(Events)" do
-    before do 
+    before do
       @group = create( :group )
       @subgroup = @group.child_groups.create
-      @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ), 
+      @upcoming_events = [ @group.events.create( start_at: 5.hours.from_now ),
                            @subgroup.events.create( start_at: 5.hours.from_now ) ]
       @recent_events = [ @group.events.create( start_at: 2.days.ago ) ]
       @unrelated_events = [ create( :event ) ]
@@ -106,9 +106,17 @@ describe Group do
       it { should_not include *@unrelated_events }
     end
 
+    describe "#events_with_subgroups" do
+      subject { @group.events_with_subgroups }
+      it { should include *@upcoming_events }
+      it { should include *@recent_events }
+      it { should_not include *@unrelated_events }
+    end
+
     describe "#events" do
       subject { @group.events }
-      it { should include *@upcoming_events }
+      it { should include @upcoming_events.first }
+      it { should_not include @upcoming_events.last }
       it { should include *@recent_events }
       it { should_not include *@unrelated_events }
     end
@@ -160,7 +168,7 @@ describe Group do
         @name_match = "Group Name"
         @group = create( :group )
         @group1 = create( :group, :name => @name_match ); @group1.parent_groups << @group
-        @group2 = create( :group, :name => "Other #{@name_match}" ); @group2.parent_groups << @group1        
+        @group2 = create( :group, :name => "Other #{@name_match}" ); @group2.parent_groups << @group1
         @group3 = create( :group, :name => @name_match ); @group3.parent_groups << @group2
         @matching_groups = [ @group1, @group3 ]
         @not_matching_groups = [ @group2 ]
@@ -187,7 +195,7 @@ describe Group do
       describe "for the group being a child of a corporation" do
         before { @group.parent_groups << @corporation }
         it "should return the parent" do
-          subject.should == @corporation 
+          subject.should == @corporation
         end
       end
       describe "for the group being a descendant of a corporation" do
@@ -205,7 +213,7 @@ describe Group do
         end
       end
     end
-    
+
     describe "#corporation?" do
       subject { @group.corporation? }
       describe "for the group being a corporation" do
@@ -224,7 +232,7 @@ describe Group do
         it { should == false }
       end
     end
-    
+
     describe '#leaf_groups' do
       subject { @group.leaf_groups }
       describe 'for the group being a corporation' do
@@ -248,7 +256,7 @@ describe Group do
         @group_b = @group.child_groups.create
         @status_3 = @group_b.child_groups.create
         end
-        it 'should contain all status groups' do 
+        it 'should contain all status groups' do
           should include(@status_1)
           should include(@status_2)
           should include(@status_3)
@@ -288,7 +296,7 @@ describe Group do
           @group = create(:corporation)
           @group.cached(:leaf_groups)
           wait_for_cache
-          
+
           # The creation of this group structure should reset the cache.
           @status_1 = @group.child_groups.create
           @group_a = @group.child_groups.create
@@ -308,7 +316,7 @@ describe Group do
   describe "#<<" do
     before { @group = create(:group) }
     subject { @group << @object_to_add }
-    
+
     describe "(user)" do
       before do
         @user = create(:user)
@@ -324,7 +332,7 @@ describe Group do
         UserGroupMembership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
       end
     end
-    
+
     describe "(group)" do
       before do
         @subgroup = create(:group)

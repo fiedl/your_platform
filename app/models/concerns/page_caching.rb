@@ -4,7 +4,7 @@ concern :PageCaching do
   # Otherwise the methods to cache are not defined, yet.
   #
   included do
-    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
+    after_save { RenewCacheJob.perform_later(self, time: Time.zone.now) }
 
     cache :group_id
   end

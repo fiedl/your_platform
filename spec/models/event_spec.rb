@@ -211,8 +211,8 @@ describe Event do
     @event = Event.new
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
+    @event.group = @group
     @event.save!
-    @event.parent_groups << @group
     @event.contact_people_group.assign_user @user
   end
 

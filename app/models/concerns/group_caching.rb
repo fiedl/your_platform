@@ -4,7 +4,7 @@ concern :GroupCaching do
   # Otherwise, the methods to be cached are not declared, yet.
   #
   included do
-    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
+    after_save { RenewCacheJob.perform_later(self, time: Time.zone.now) }
 
     cache :corporation_id
     cache :leaf_group_ids
@@ -20,6 +20,9 @@ concern :GroupCaching do
 
     # GroupMemberList
     cache :member_table_rows
+
+    # GroupEvents
+    cache :event_ids_of_self_and_subgroups
   end
 
   include StructureableRoleCaching

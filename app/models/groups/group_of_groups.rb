@@ -20,5 +20,5 @@ class Groups::GroupOfGroups < Group
     Group.model_name
   end
 
-  cache :child_groups_table_rows
+  cache :child_groups_table_rows if use_caching?
 end

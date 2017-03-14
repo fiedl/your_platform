@@ -39,6 +39,9 @@ class Event < ActiveRecord::Base
   def parent
     self.group
   end
+  def parents
+    parent ? [parent] : []
+  end
 
   def empty?
     empty_title? && empty_description? && empty_attendees?
@@ -200,4 +203,5 @@ class Event < ActiveRecord::Base
     end
   end
 
+  include EventCaching if use_caching?
 end

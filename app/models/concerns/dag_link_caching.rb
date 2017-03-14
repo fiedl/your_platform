@@ -1,7 +1,7 @@
 concern :DagLinkCaching do
 
   included do
-    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
+    after_save { RenewCacheJob.perform_later(self, time: Time.zone.now) }
     after_commit :delay_renew_cache_of_ancestor_and_descendant, on: :destroy
   end
 
@@ -12,7 +12,7 @@ concern :DagLinkCaching do
   end
 
   def delay_renew_cache_of_ancestor_and_descendant
-    RenewCacheJob.perform_later [ancestor, descendant], Time.zone.now
+    RenewCacheJob.perform_later [ancestor, descendant], time: Time.zone.now
   end
 
 end

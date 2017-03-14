@@ -13,8 +13,9 @@ class Group < ApplicationRecord
                                        # members of the group; example: 'AC'
                       :extensive_name, # (optional) a long version of the group's name;
                                        # example: 'The Corporation of A'
-                      :direct_members_titles_string # Used for inline-editing: The comma-separated
-                                                    # titles of the child users of the group.
+                      :direct_members_titles_string, # Used for inline-editing: The comma-separated
+                                                     # titles of the child users of the group.
+                      :type
                       )
   end
 

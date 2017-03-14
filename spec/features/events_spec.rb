@@ -344,8 +344,7 @@ feature "Events" do
       @corporation.status_groups.first.assign_user @user, at: 1.month.ago
       @president = @corporation.officers_parent.child_groups.create name: 'President'
       @president.assign_user @user, at: 5.days.ago
-      @other_event = create :event
-      @other_event.parent_groups << @corporation
+      @other_event = create :event, group_id: @corporation.id
     end
     scenario "creating an event as officer of a local corporation (bug fix)" do
       login @user

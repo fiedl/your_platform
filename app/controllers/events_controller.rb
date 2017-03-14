@@ -131,6 +131,7 @@ class EventsController < ApplicationController
     @event = Event.new(params[:event])
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
+    @event.group = @group
 
     respond_to do |format|
       if @event.save
@@ -149,14 +150,6 @@ class EventsController < ApplicationController
         @event.create_attendees_group
         @event.create_contact_people_group
         @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
-
-        # Add the event to the group asynchronously.
-        # Otherwise, it would take quite some time until the POST
-        # request would finish.
-        #
-        # TODO: Give the user feedback when it's ready.
-        #
-        Event.delay_for(15.seconds).move_event_to_group @event.id, @group.id
 
         set_current_activity :is_adding_an_event, @event
 
