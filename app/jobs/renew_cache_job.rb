@@ -15,10 +15,12 @@ class RenewCacheJob < ApplicationJob
   end
 
   def renew_cache(record, options)
-    if options[:method]
-      Rails.cache.renew(options[:time]) { record.send(options[:method]) }
-    else
-      record.renew_cache
+    if record
+      if options[:method]
+        Rails.cache.renew(options[:time]) { record.send(options[:method]) }
+      else
+        record.renew_cache
+      end
     end
   end
 
