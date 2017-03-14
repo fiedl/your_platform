@@ -222,7 +222,9 @@ module ActiveRecordCacheExtension
           }
         end
 
-        self.cached_methods ||= []
+        self.cached_methods ||= self.ancestors.collect { |ancestor_class|
+          ancestor_class.cached_methods if ancestor_class.respond_to?(:cached_methods)
+        }.flatten.uniq - [nil]
         self.cached_methods << method_name
       end
     end
