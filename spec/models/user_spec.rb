@@ -858,7 +858,7 @@ describe User do
     end
     context "when joining an event of a corporation" do
       before do
-        @event = @corporationH.child_events.create
+        @event = @corporationH.events.create
         @user.join @event
         time_travel 2.seconds; @user.reload
       end
@@ -1066,9 +1066,9 @@ describe User do
       before do
         @group1 = @user.parent_groups.create
         @group2 = @group1.parent_groups.create
-        @upcoming_events = [ @group1.child_events.create( start_at: 5.hours.from_now ),
-                             @group2.child_events.create( start_at: 6.hours.from_now ) ]
-        @recent_events = [ @group1.child_events.create( start_at: 2.days.ago ) ]
+        @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
+                             @group2.events.create( start_at: 6.hours.from_now ) ]
+        @recent_events = [ @group1.events.create( start_at: 2.days.ago ) ]
         @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
       end
       it { should include *@upcoming_events }
@@ -1089,12 +1089,12 @@ describe User do
       #            |------ event_2
       before do
         @group_a = create( :group )
-        @event_0 = @group_a.child_events.create( start_at: 5.hours.from_now )
+        @event_0 = @group_a.events.create( start_at: 5.hours.from_now )
         @group_b = @group_a.child_groups.create
         @group_b.child_users << @user
-        @event_1 = @group_b.child_events.create( start_at: 5.hours.from_now )
+        @event_1 = @group_b.events.create( start_at: 5.hours.from_now )
         @group_c = @group_a.child_groups.create
-        @event_2 = @group_c.child_events.create( start_at: 5.hours.from_now )
+        @event_2 = @group_c.events.create( start_at: 5.hours.from_now )
         @user.reload
       end
       it "should list direct events of the user's groups" do # "<<===" above

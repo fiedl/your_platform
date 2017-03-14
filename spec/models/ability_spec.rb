@@ -213,43 +213,43 @@ describe Ability do
           the_user.should be_able_to :create_event, @group
         end
         he "should be able to update events in his group" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to create events in subgroups of his group" do
           the_user.should be_able_to :create_event, @sub_group
         end
         he "should be able to update events in subgroups of his group" do
-          @event = @sub_group.child_events.create
+          @event = @sub_group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to update events in sub sub groups of his group" do
-          @event = @sub_sub_group.child_events.create
+          @event = @sub_sub_group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to update the contact people of an event" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :update, @event.contact_people_group
         end
         he "should be able to destroy just created events in his domain" do
-          @event = @group.child_events.create name: "Special Event", description: "non-empty"
+          @event = @group.events.create name: "Special Event", description: "non-empty"
 
           user.should be_in @group.officers_of_self_and_ancestors
           the_user.should be_able_to :destroy, @event
         end
         he "should not be able to destroy events that are older than 10 minutes" do
-          @event = @group.child_events.create name: "Recent Event", description: "non-empty"
+          @event = @group.events.create name: "Recent Event", description: "non-empty"
           @event.update_attribute :created_at, 11.minutes.ago
 
           the_user.should_not be_able_to :destroy, @event
         end
         he "should be able to invite users to an event" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :invite_to, @event
         end
         he { should_not be_able_to :create_event_for, @unrelated_group }
         he "should not be able to invite users to an event of an unrelated group" do
-          @event = @unrelated_group.child_events.create
+          @event = @unrelated_group.events.create
           the_user.should_not be_able_to :invite_to, @event
         end
       end
@@ -364,7 +364,7 @@ describe Ability do
 
       describe "when he is contact person for an event" do
         before do
-          @event = @any_group.child_events.create
+          @event = @any_group.events.create
           @event.contact_people_group.assign_user user
         end
 

@@ -27,7 +27,7 @@ describe StatusGroup do
     @status_a_2 = @intermediate_group.child_groups.create(name: "Status a 2")
     @officers_parent = @corporation_a.create_officers_parent_group
     @admins_parent = @corporation_a.find_or_create_admins_parent_group
-    @event = @corporation_a.child_events.create(name: 'Event')
+    @event = @corporation_a.events.create(name: 'Event')
     @attendees = @event.attendees_group
     @contact_people = @event.contact_people_group
     

@@ -6,7 +6,7 @@ describe TermReports::ForCorporation do
 
     @corporation = create :corporation_with_status_groups
     @semester_calendar = @corporation.semester_calendars.create year: 2016, term: :winter_term
-    @event = @corporation.child_events.create title: "Winter party", start_at: "2016-12-01".to_datetime
+    @event = @corporation.events.create title: "Winter party", start_at: "2016-12-01".to_datetime
 
     @new_member = create :user
     @corporation.status_groups.first.assign_user @new_member, at: "2016-12-01".to_date

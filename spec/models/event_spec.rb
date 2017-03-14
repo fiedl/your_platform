@@ -199,7 +199,7 @@ describe Event do
     @user = create :user
     @corporation = create :corporation_with_status_groups
     @status_group = @corporation.status_groups.first
-    @event = @corporation.child_events.create
+    @event = @corporation.events.create
     @contact_people = @event.contact_people_group
     @contact_people.assign_user @user
   end

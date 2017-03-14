@@ -76,7 +76,7 @@
 # 
 #   context "for an existing event:" do
 #     given(:event) { Event.create(name: "Fancy Event", start_at: 1.hour.from_now) }
-#     before { corporation.child_events << event }
+#     before { corporation.events << event }
 # 
 #     scenario "assigning the existing event" do
 #       login(:admin)

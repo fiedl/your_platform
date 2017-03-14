@@ -21,7 +21,7 @@ class Group < ApplicationRecord
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
   is_structureable(ancestor_class_names: %w(Group Page Event),
-                   descendant_class_names: %w(Group User Page Workflow Event Project))
+                   descendant_class_names: %w(Group User Page Workflow Project))
   is_navable
   has_profile_fields
 
