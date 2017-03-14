@@ -21,7 +21,7 @@ class GroupMembersController < ApplicationController
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_member_list
 
-    cookies[:group_tab] = "members"
+    set_current_tab :members
   end
 
 end

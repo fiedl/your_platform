@@ -25,8 +25,6 @@ class Group < ApplicationRecord
   is_navable
   has_profile_fields
 
-  has_many :posts
-
   default_scope { includes(:flags) }
 
   scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
@@ -41,6 +39,7 @@ class Group < ApplicationRecord
   include GroupMixins::Developers
   include GroupMixins::Officers
   include GroupMixins::Import
+  include GroupPosts
   include GroupProfile
   include GroupMailingLists
   include GroupDummyUsers

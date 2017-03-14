@@ -1,12 +1,12 @@
 %div.export_modal.modal.fade
   .modal-dialog
     .modal-content
-      = form_tag(group_path(@group, :format => :pdf), {:method => :get, id: 'address_label_export_form'}) do
-                
+      = form_tag(group_path(group, :format => :pdf), {:method => :get, id: 'address_label_export_form'}) do
+
         %div.modal-header
           %a.close{data: {dismiss: 'modal'}, 'aria-label' => 'Close'}
             %span{'aria-hidden' => true} &times;
-          %h4= "#{I18n.t(:address_labels)}: #{@group.name}"
+          %h4= "#{I18n.t(:address_labels)}: #{group.name}"
         %div.modal-body
           %table
             %tr
@@ -22,6 +22,6 @@
               %td
                 - sender_text = session[:address_labels_pdf_sender] || "#{current_user.name}, #{current_user.postal_address_in_one_line}"
                 %input.address_label_sender_field{name: 'sender', value: sender_text}
-        
+
         %div.modal-footer
           = submit_tag(I18n.t(:create_address_labels_pdf), class: 'btn btn-primary confirm_address_labels_pdf_export')

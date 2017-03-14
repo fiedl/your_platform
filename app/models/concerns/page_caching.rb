@@ -7,6 +7,7 @@ concern :PageCaching do
     after_save { self.delay.renew_cache }
 
     cache :group_id
+    cache :sub_page_ids
   end
 
   include StructureableRoleCaching

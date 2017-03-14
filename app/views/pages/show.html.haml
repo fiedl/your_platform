@@ -1,3 +1,5 @@
+= render partial: 'pages/tabs'
+
 %div.col-md-12
   = render @page
 
@@ -15,12 +17,12 @@
     - # The user might suspect to create a sibling, but really would create a nested blog post.
     - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
     - #
-    - if (Page.find(@page.id).type != 'BlogPost')  
+    - if (Page.find(@page.id).type != 'BlogPost')
       %div.blog_tools.box
         = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success add_blog_post", :method => :post, :remote => :true do
           = icon :plus
           = I18n.t(:add_blog_entry)
-  
+
   #blog_entries
     - if @blog_entries.count > 0
       - for blog_entry_page in @blog_entries

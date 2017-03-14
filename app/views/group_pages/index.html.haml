@@ -1,0 +1,6 @@
+= render partial: 'pages/tabs'
+
+- group.descendant_groups.each do |subgroup|
+  - if subgroup.members.include?(current_user) && subgroup.child_pages.any?
+    %h4= subgroup.title
+    = render partial: 'shared/horizontal_child_pages_nav', object: subgroup, as: :navable

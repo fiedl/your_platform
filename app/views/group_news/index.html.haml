@@ -1,0 +1,22 @@
+- content_for :side_bar do
+
+  %h1= t :contact_people
+  %div
+    %ul
+      %li Senior
+      %li Fuxmajor
+      %li Kneipwart
+      %li Philister-x
+
+  = render partial: 'shared/upcoming_events', locals: {events: group.events_with_subgroups.upcoming.limit(3), group: group}
+
+  %h1 Inhalte und Blog-Posts
+  %div
+    %ul
+      - group.descendant_pages.order('updated_at desc').limit(5).each do |page|
+        %li= link_to page.title, page
+
+  %h1 Dokumente
+  %div
+
+= render (([group] + group.descendant_groups) & current_user.groups).collect { |g| g.posts.order('created_at desc').limit(10) }.flatten.sort_by { |post| -post.created_at.to_i }

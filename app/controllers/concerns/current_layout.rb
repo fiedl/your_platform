@@ -6,6 +6,7 @@ concern :CurrentLayout do
     before_action :prepend_layout_view_path
 
     helper_method :current_layout
+    helper_method :resource_centred_layout?
 
     helper_method :current_logo_url
     helper_method :current_logo
@@ -32,7 +33,7 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017)).uniq
   end
 
   def default_layout
@@ -49,6 +50,14 @@ concern :CurrentLayout do
 
   def default_logo
     'logo.png'
+  end
+
+  def resource_centred_layouts
+    %w(resource_2017)
+  end
+
+  def resource_centred_layout?
+    current_layout.in? resource_centred_layouts
   end
 
   # The mobile app appends the parameter `?layout=mobile` once.
