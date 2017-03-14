@@ -217,7 +217,7 @@ module ProfileFieldTypes
           else
             self.remove_flag :postal_address
           end
-          self.renew_cache
+          RenewCacheJob.perform_later(self, Time.zone.now)
         end
       end
       def postal_address?

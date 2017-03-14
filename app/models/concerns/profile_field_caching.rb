@@ -4,7 +4,7 @@ concern :ProfileFieldCaching do
   # Otherwise the methods to cache are not yet defiend.
   #
   included do
-    after_save :renew_cache
+    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
   end
 
   def fill_cache
@@ -24,7 +24,7 @@ concern :ProfileFieldCaching do
       self.profileable = nil
       self.save
       if former_profileable && former_profileable.respond_to?(:renew_cache)
-        former_profileable.delay.renew_cache
+        RenewCacheJob.perform_later(former_profileable, Time.zone.now)
       end
     end
   end

@@ -5,7 +5,7 @@ concern :UserCaching do
   # are not defined, yet.
   #
   included do
-    after_save { self.delay.renew_cache }
+    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
 
     cache :date_of_death
     cache :name_with_surrounding

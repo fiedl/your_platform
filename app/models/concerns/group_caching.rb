@@ -4,7 +4,7 @@ concern :GroupCaching do
   # Otherwise, the methods to be cached are not declared, yet.
   #
   included do
-    after_save { self.delay.renew_cache }
+    after_save { RenewCacheJob.perform_later(self, Time.zone.now) }
 
     cache :corporation_id
     cache :leaf_group_ids

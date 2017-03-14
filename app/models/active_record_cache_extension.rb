@@ -116,8 +116,8 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
 
-  def renew_cache
-    Rails.cache.renew do
+  def renew_cache(time = Time.zone.now)
+    Rails.cache.renew(time) do
       fill_cache
     end
   end
