@@ -28,8 +28,12 @@ concern :EventContactPeople do
     Event.delay.assign_contact_person_to_event self.id, contact_person_id if contact_person_id
   end
 
-  def self.assign_contact_person_to_event(event_id, contact_person_id)
-    Event.find(event_id).contact_people_group << User.find(contact_person_id)
+  class_methods do
+
+    def assign_contact_person_to_event(event_id, contact_person_id)
+      Event.find(event_id).contact_people_group << User.find(contact_person_id)
+    end
+
   end
 
 end
