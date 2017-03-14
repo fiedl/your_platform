@@ -29,10 +29,6 @@ concern :ProfileFieldCaching do
     end
   end
 
-  def fill_cache
-    # Nothing to do here in the base class.
-  end
-
   def delete_cache
     super
     parent.try(:delete_cache)
