@@ -342,7 +342,7 @@ feature "Events" do
     background do
       @corporation = create :corporation_with_status_groups
       @corporation.status_groups.first.assign_user @user, at: 1.month.ago
-      @president = @corporation.officers_parent.child_groups.create name: 'President'
+      @president = @corporation.create_officer_group name: 'President'
       @president.assign_user @user, at: 5.days.ago
       @other_event = create :event, group_id: @corporation.id
     end
