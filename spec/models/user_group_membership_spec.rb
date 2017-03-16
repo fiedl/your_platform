@@ -41,11 +41,11 @@ describe UserGroupMembership do
   def create_other_membership
     UserGroupMembership.create( user: @user, group: @other_group )
   end
-  
+
   def create_another_membership
     UserGroupMembership.create( user: @other_user, group: @group )
   end
-  
+
   def find_other_membership
     UserGroupMembership.find_by( user: @user, group: @other_group )
   end
@@ -286,11 +286,11 @@ describe UserGroupMembership do
       end
     end
   end
-  
+
 
   # Access Methods to Associated Indirect Memberships
-  # ====================================================================================================  
-  
+  # ====================================================================================================
+
   describe "#indirect_memberships" do
     before do
       @membership = UserGroupMembership.create(user: @user, group: @group)
@@ -300,7 +300,7 @@ describe UserGroupMembership do
     it { should include find_indirect_membership }
     it { should_not include find_membership }
     describe "for invalidated memberships" do
-      before do 
+      before do
         @membership.update_attribute(:valid_from, 2.hours.ago)
         @membership.update_attribute(:valid_to, 1.hour.ago)
       end
@@ -333,44 +333,10 @@ describe UserGroupMembership do
     it "should have the same validity range (valid_to) as the direct membership" do
       @indirect_membership.valid_to.should == @membership.valid_to
     end
-
-    it "should also effect the direct membership on change of the valid_from date" do
-      new_time = 1.hour.ago
-      @membership.valid_from = new_time
-      @membership.save
-      @indirect_membership.valid_from.to_i.should == new_time.to_i
-    end
-
-    it "should also effect the direct membership on change of the valid_to date" do
-      new_time = Time.current + 1.hour
-      @membership.invalidate
-      @membership.valid_to = new_time
-      @membership.save
-      @indirect_membership.reload
-      @indirect_membership.valid_to.to_i.should == new_time.to_i
-    end
-
-    it "should be effected by the direct membership on change of the valid_from date" do
-      new_time = 1.hour.ago
-      @indirect_membership.valid_from = new_time
-      @indirect_membership.save
-      @membership.reload
-      @membership.valid_from.to_i.should == new_time.to_i
-    end
-
-    it "should be effected by the direct membership on change of the valid_to date" do
-      new_time = Time.current + 1.hour
-      @membership.invalidate # need to archive the *direct* membership, ...
-      @indirect_membership.reload
-      @indirect_membership.valid_to = new_time # but can change the time of the *indirect*.
-      @indirect_membership.save
-      @membership.reload
-      @membership.valid_to.to_i.should == new_time.to_i
-    end
   end
 
   # Methods to Change the Membership
-  # ====================================================================================================       
+  # ====================================================================================================
 
   describe "#move_to_group( group )" do
     before do
@@ -385,14 +351,14 @@ describe UserGroupMembership do
       find_other_membership.should_not == nil
     end
   end
-  
-  
+
+
   # Destroy
   # ==========================================================================================
-  
+
   describe "#destroy" do
     describe "for nested structures   (bug fix)" do
-      # 
+      #
       # @corporation
       #      |-------- @status_1 ---------------- @user  | p
       #      |-------- @group_a                          | r
@@ -423,6 +389,6 @@ describe UserGroupMembership do
       end
     end
   end
-  
-  
+
+
 end

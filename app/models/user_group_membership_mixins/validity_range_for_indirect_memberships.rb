@@ -64,42 +64,6 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
     @latest_direct_membership ||= direct_memberships(with_invalid: true).reorder('valid_to').last
   end
 
-  def valid_from
-    self.direct? ? super : (@valid_from ||= earliest_direct_membership.try(:valid_from))
-  end
-  def valid_from=( valid_from )
-    if self.direct?
-      super(valid_from)
-      @need_to_recalculate_indirect_memberships = true
-    else
-      @valid_from = valid_from
-      earliest_direct_membership.try(:valid_from=, valid_from)
-    end
-  end
-
-  def valid_to
-    self.direct? ? super : (@valid_to ||= latest_direct_membership.try(:valid_to))
-  end
-  def valid_to=( valid_to )
-    if self.direct?
-      super(valid_to)
-      @need_to_recalculate_indirect_memberships = true
-    else
-      @valid_to = valid_to
-      latest_direct_membership.try(:valid_to=, valid_to)
-    end
-  end
-
-  # Save the current membership and auto-save also the direct memberships
-  # associated with the current (maybe indirect) membership.
-  #
-  def save(*args)
-    super(*args)
-    unless self.direct?
-      earliest_direct_membership.try(:save)
-      latest_direct_membership.try(:save)
-    end
-  end
 
   # This method recalculates the validity range for an indirect membership.
   # This becomes necessary whenever the validity range of a direct membership is changed, so that
@@ -118,30 +82,13 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   #
   def recalculate_validity_range_from_direct_memberships
     unless direct?
-      old_valid_from = read_attribute :valid_from
-      old_valid_to = read_attribute :valid_to
-      write_attribute :valid_from, (new_valid_from = earliest_direct_membership.try(:valid_from))
-      write_attribute :valid_to, (new_valid_to = latest_direct_membership.try(:valid_to))
-      self.valid_from_will_change! if old_valid_from != new_valid_from
-      self.valid_to_will_change! if old_valid_to != new_valid_to
-    end
-  end
-
-  def recalculate_validity_range_from_direct_memberships!
-    unless direct?
-      self.valid_from_will_change!
-      self.valid_to_will_change!
-      recalculate_validity_range_from_direct_memberships
-      self.valid_from_will_change!
-      self.valid_to_will_change!
-      save!
-    else
-      raise "Recalculating the validity range makes only sense for indirect memberships. This is a direct one. Membership id: #{self.id}."
+      self.valid_from = earliest_direct_membership.try(:valid_from)
+      self.valid_to = latest_direct_membership.try(:valid_to)
     end
   end
 
   def recalculate_indirect_validity_ranges_if_needed
-    if self.direct? and @need_to_recalculate_indirect_memberships == true
+    if self.direct?
       self.indirect_memberships.each do |indirect_membership|
         indirect_membership.recalculate_validity_range_from_direct_memberships
         indirect_membership.save
