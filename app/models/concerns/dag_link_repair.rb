@@ -43,7 +43,6 @@ concern :DagLinkRepair do
 
       def scan_and_repair
         mute_sql_log
-        delete_links_without_edges
         scan
         delete_redundant_links
         recalculate_links
