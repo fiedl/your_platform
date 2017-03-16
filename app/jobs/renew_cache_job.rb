@@ -18,6 +18,12 @@ class RenewCacheJob < ApplicationJob
     if record
       if options[:method]
         Rails.cache.renew(options[:time]) { record.send(options[:method]) }
+      elsif options[:methods]
+        Rails.cache.renew(options[:time]) do
+          options[:methods].each do |method|
+            record.send(method)
+          end
+        end
       else
         record.renew_cache
       end
