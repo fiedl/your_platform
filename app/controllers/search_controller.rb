@@ -83,7 +83,7 @@ class SearchController < ApplicationController
 
       if @results.count < 100
         @large_map_address_fields = @results.collect do |result|
-          result.profile_fields.where(type: "ProfileFieldTypes::Address") if result.respond_to? :profile_fields
+          result.profile_fields.where(type: "ProfileFields::Address") if result.respond_to? :profile_fields
         end.flatten - [nil]
       end
 

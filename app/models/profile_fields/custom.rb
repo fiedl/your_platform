@@ -1,4 +1,4 @@
-module ProfileFieldTypes
+module ProfileFields
 
   # Custom Contact Information
   #
@@ -8,5 +8,5 @@ module ProfileFieldTypes
   class Custom < ProfileField
     def self.model_name; ProfileField.model_name; end
   end
-  
+
 end

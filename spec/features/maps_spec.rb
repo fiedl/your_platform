@@ -5,7 +5,7 @@ feature "Maps", js: true do
 
   background do
     @user = create(:user_with_account)
-    @user.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Pariser Platz 1\n 10117 Berlin")
+    @user.profile_fields.create(type: "ProfileFields::Address", value: "Pariser Platz 1\n 10117 Berlin")
   end
 
   scenario "visiting a user page and looking at the map" do
@@ -39,7 +39,7 @@ feature "Maps", js: true do
   #   # one address field.
   #   #
   #   @another_user = create(:user)
-  #   @another_user.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Pariser Platz 1\n 10117 Berlin")
+  #   @another_user.profile_fields.create(type: "ProfileFields::Address", value: "Pariser Platz 1\n 10117 Berlin")
   #   @group.assign_user @another_user
   #
   #   login(:user)

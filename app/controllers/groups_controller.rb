@@ -318,16 +318,16 @@ class GroupsController < ApplicationController
   # https://github.com/apneadiving/Google-Maps-for-Rails/wiki/Controller
   #
   def descendant_groups_map_profile_fields
-    @descendant_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.descendant_group_ids )
+    @descendant_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFields::Address", profileable_type: "Group", profileable_id: @group.descendant_group_ids )
   end
   def child_groups_map_profile_fields
-    @child_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.child_group_ids )
+    @child_groups_map_profile_fields ||= ProfileField.where( type: "ProfileFields::Address", profileable_type: "Group", profileable_id: @group.child_group_ids )
   end
   def own_map_profile_fields
-    @own_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "Group", profileable_id: @group.id )
+    @own_map_profile_fields ||= ProfileField.where( type: "ProfileFields::Address", profileable_type: "Group", profileable_id: @group.id )
   end
   def users_map_profile_fields
-    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFieldTypes::Address", profileable_type: "User", profileable_id: @members.collect { |member| member.id } ).includes(:profileable)
+    @users_map_profile_fields ||= ProfileField.where( type: "ProfileFields::Address", profileable_type: "User", profileable_id: @members.collect { |member| member.id } ).includes(:profileable)
   end
 
 

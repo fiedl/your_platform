@@ -93,7 +93,7 @@ class ReceivedMail
     sender if sender.kind_of?(User)
   end
   def sender_by_email
-    ProfileFieldTypes::Email.where(value: sender_email).first.try(:profileable)
+    ProfileFields::Email.where(value: sender_email).first.try(:profileable)
   end
   def sender_by_name
     User.find_by_name sender_name
@@ -111,10 +111,10 @@ class ReceivedMail
     end.uniq - [nil]
   end
   def recipient_by_email(email)
-    ProfileFieldTypes::Email.where(value: email).first.try(:profileable)
+    ProfileFields::Email.where(value: email).first.try(:profileable)
   end
   def recipient_group_by_email(email)
-    ProfileFieldTypes::MailingListEmail.where(value: email).first.try(:profileable)
+    ProfileFields::MailingListEmail.where(value: email).first.try(:profileable)
   end
   def recipient_groups
     recipient_emails.collect do |email|

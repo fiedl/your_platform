@@ -5,7 +5,7 @@
 -#
 - large_map = @large_map_address_fields.try(:any?)
 - if section.title.to_sym == :contact_information
-  - small_map_address_fields = section.profileable.profile_fields_by_type("ProfileFieldTypes::Address")
+  - small_map_address_fields = section.profileable.profile_fields_by_type("ProfileFields::Address")
   - small_map = (small_map_address_fields.any? and not large_map)
 - with_small_map_class = small_map ? 'with_small_map' : ''
 

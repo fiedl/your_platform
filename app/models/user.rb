@@ -234,7 +234,7 @@ class User < ActiveRecord::Base
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
-      profile_fields.create(type: "ProfileFieldTypes::General", label: 'date_of_death', value: new_date_of_death)
+      profile_fields.create(type: "ProfileFields::General", label: 'date_of_death', value: new_date_of_death)
     end
   end
   def dead?
@@ -792,7 +792,7 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    email_fields = ProfileField.where( type: "ProfileFieldTypes::Email", value: email )
+    email_fields = ProfileField.where( type: "ProfileFields::Email", value: email )
     matching_users = email_fields
       .select{ |ef| ef.profileable_type == "User" }
       .collect { |ef| ef.profileable }
@@ -836,7 +836,7 @@ class User < ActiveRecord::Base
   end
 
   def self.with_email
-    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFieldTypes::Email', '')
+    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFields::Email', '')
   end
 
   def self.applicable_for_new_account

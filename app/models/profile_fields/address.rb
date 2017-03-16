@@ -1,4 +1,4 @@
-module ProfileFieldTypes
+module ProfileFields
 
   # Address Information
   #
@@ -225,13 +225,13 @@ module ProfileFieldTypes
       end
       def clear_postal_address
         if self.profileable
-          self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").each do |address_field|
+          self.profileable.profile_fields.where(type: "ProfileFields::Address").each do |address_field|
             address_field.remove_flag :postal_address
           end
         end
       end
       def postal_or_first_address?
-        postal_address? or (self.profileable && self.profileable.profile_fields.where(type: "ProfileFieldTypes::Address").order(:id).limit(1).pluck(:id).first == self.id)
+        postal_address? or (self.profileable && self.profileable.profile_fields.where(type: "ProfileFields::Address").order(:id).limit(1).pluck(:id).first == self.id)
       end
     end
 

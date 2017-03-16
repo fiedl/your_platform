@@ -293,7 +293,7 @@ class Ability
       #
       can [:create, :read, :update, :destroy], ProfileField do |field|
         field.profileable.nil? or # to allow creating fields
-        ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General') and (field.key != 'date_of_birth'))
+        ((field.profileable == user) and (field.type != 'ProfileFields::General') and (field.key != 'date_of_birth'))
       end
 
       # Regular users can update their personal title and academic degree.

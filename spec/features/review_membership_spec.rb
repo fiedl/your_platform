@@ -6,7 +6,7 @@ feature "review membership" do
   background do
     @user = create(:user)
     
-    @profile_field = @user.profile_fields.create(type: 'ProfileFieldTypes::Phone', label: 'My Phone', value: '0123 456 789')
+    @profile_field = @user.profile_fields.create(type: 'ProfileFields::Phone', label: 'My Phone', value: '0123 456 789')
     @profile_field.needs_review!
     
     @corporation = create(:corporation_with_status_groups)

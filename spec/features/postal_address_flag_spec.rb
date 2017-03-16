@@ -6,11 +6,11 @@ feature "Postal Address Flag" do
   background do
     @user = create(:user_with_account)
     @home_address = @user.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin",
-                                                 type: "ProfileFieldTypes::Address" )
-      .becomes(ProfileFieldTypes::Address)
+                                                 type: "ProfileFields::Address" )
+      .becomes(ProfileFields::Address)
     @study_address = @user.profile_fields.create( label: "Study Address", value: "Pariser Platz 1\n 10117 Berlin",
-                                                  type: "ProfileFieldTypes::Address" )
-      .becomes(ProfileFieldTypes::Address)
+                                                  type: "ProfileFields::Address" )
+      .becomes(ProfileFields::Address)
   end
   scenario "Selecting a postal address in the own user profile.", js: true do
 

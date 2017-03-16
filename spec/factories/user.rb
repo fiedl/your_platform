@@ -12,26 +12,26 @@ FactoryGirl.define do
 
     trait :with_profile_fields do
       after :create do |user|
-        user.profile_fields.create(type: ProfileFieldTypes::Employment.name)
+        user.profile_fields.create(type: ProfileFields::Employment.name)
       end
     end
 
     trait :with_address do
       after :create do |user|
-        user.profile_fields.create(type: ProfileFieldTypes::Address.name)
+        user.profile_fields.create(type: ProfileFields::Address.name)
       end
     end
 
     trait :with_postal_address do
       after :create do |user|
-        address_field = user.profile_fields.create(type: ProfileFieldTypes::Address.name)
+        address_field = user.profile_fields.create(type: ProfileFields::Address.name)
         address_field.postal_address = true
       end
     end
 
     trait :with_bank_account do
       after :create do |user|
-        user.profile_fields.create(type: ProfileFieldTypes::BankAccount.name)
+        user.profile_fields.create(type: ProfileFields::BankAccount.name)
       end
     end
 

@@ -20,14 +20,14 @@ describe ProfileField do
     describe "for un-structured or parent profile fields" do
       it "should return just the assigned profileable" do
         @user = create(:user)
-        @profile_field = @user.profile_fields.create(label: "Address", type: "ProfileFieldTypes::Address")
+        @profile_field = @user.profile_fields.create(label: "Address", type: "ProfileFields::Address")
         @profile_field.profileable.should == @user
       end
     end
     describe "for child profile fields" do
       it "should return the parent's profileable" do
         @user = create(:user)
-        @profile_field = @user.profile_fields.create(label: "Bank Account", type: 'ProfileFieldTypes::BankAccount').becomes(ProfileFieldTypes::BankAccount)
+        @profile_field = @user.profile_fields.create(label: "Bank Account", type: 'ProfileFields::BankAccount').becomes(ProfileFields::BankAccount)
         @profile_field.account_holder = "John Doe"
         @child_profile_field = @profile_field.children.first
         @child_profile_field.profileable.should == @user
@@ -49,9 +49,9 @@ end
 # Custom Contact Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::Custom do
+describe ProfileFields::Custom do
   describe ".create" do
-    subject { ProfileFieldTypes::Custom.create( label: "Custom Contact Information" ) }
+    subject { ProfileFields::Custom.create( label: "Custom Contact Information" ) }
     its( 'children.count' ) { should == 0 }
   end
 end
@@ -60,9 +60,9 @@ end
 # Organisation Membership Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::Organization do
+describe ProfileFields::Organization do
   before do
-    @organization = ProfileFieldTypes::Organization.create()
+    @organization = ProfileFields::Organization.create()
   end
 
   subject { @organization }
@@ -87,9 +87,9 @@ end
 # Email Contact Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::Email do
+describe ProfileFields::Email do
   before do
-    @email = ProfileFieldTypes::Email.create( label: "Email" )
+    @email = ProfileFields::Email.create( label: "Email" )
   end
 
   describe "#children.count" do
@@ -108,10 +108,10 @@ end
 # Address Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::Address do
+describe ProfileFields::Address do
 
   before do
-    @address_field = ProfileFieldTypes::Address.new( label: "Address of the Brandenburg Gate",
+    @address_field = ProfileFields::Address.new( label: "Address of the Brandenburg Gate",
                                                      value: "Pariser Platz 1\n 10117 Berlin" )
   end
   subject { @address_field }
@@ -230,8 +230,8 @@ describe ProfileFieldTypes::Address do
   describe "postal address: " do
     before do
       @user = create(:user)
-      @profile_field = @user.profile_fields.create(type: "ProfileFieldTypes::Address").becomes ProfileFieldTypes::Address
-      @another_profile_field = @user.profile_fields.create(type: "ProfileFieldTypes::Address").becomes ProfileFieldTypes::Address
+      @profile_field = @user.profile_fields.create(type: "ProfileFields::Address").becomes ProfileFields::Address
+      @another_profile_field = @user.profile_fields.create(type: "ProfileFields::Address").becomes ProfileFields::Address
     end
     describe "#postal_address" do
       subject { @profile_field.postal_address }
@@ -302,8 +302,8 @@ end
 # Employment Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::Employment do
-  before { @profile_field = ProfileFieldTypes::Employment.new }
+describe ProfileFields::Employment do
+  before { @profile_field = ProfileFields::Employment.new }
   subject { @profile_field }
 
   it { should respond_to :from, :to, :organization, :position, :task }
@@ -337,15 +337,15 @@ end
 # Bank Account Information
 # ==========================================================================================
 
-describe ProfileFieldTypes::BankAccount do
+describe ProfileFields::BankAccount do
 
   before do
-    @bank_account = ProfileFieldTypes::BankAccount.create( label: "Bank Account" )
+    @bank_account = ProfileFields::BankAccount.create( label: "Bank Account" )
   end
   subject { @bank_account }
 
   describe ".create" do
-    subject { ProfileFieldTypes::BankAccount.create( label: "Bank Account" ) }
+    subject { ProfileFields::BankAccount.create( label: "Bank Account" ) }
 
     it "should create 6 children" do
       subject.children.count.should == 6
@@ -409,8 +409,8 @@ end
 # Description Field
 # ==========================================================================================
 
-describe ProfileFieldTypes::Description do
-  before { @description_field = ProfileFieldTypes::Description.create( label: "Heraldic Animal", 
+describe ProfileFields::Description do
+  before { @description_field = ProfileFields::Description.create( label: "Heraldic Animal", 
                                                                        value: "The heraldic animal of the organisation is a fox." ) }
   subject { @description_field }
   its( :display_html ) { should include( @description_field.value ) }
@@ -420,20 +420,20 @@ end
 # Phone Number Field
 # ==========================================================================================
 
-describe ProfileFieldTypes::Phone do
+describe ProfileFields::Phone do
   
   describe "international number with leading 00" do
-    subject { ProfileFieldTypes::Phone.create( value: "0049800123456789" ) }
+    subject { ProfileFields::Phone.create( value: "0049800123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
   
   describe "international number with leading +" do
-    subject { ProfileFieldTypes::Phone.create( value: "+49 800 123456789" ) }
+    subject { ProfileFields::Phone.create( value: "+49 800 123456789" ) }
     its( :value ) { should == "+49 800 123 456789" } # on the basis of E164
   end
   
   describe "national number" do
-    subject { ProfileFieldTypes::Phone.create( value: "0800123456789" ) }
+    subject { ProfileFields::Phone.create( value: "0800123456789" ) }
     it "should not be formatted, since the country is not unique" do
       subject.value.should == "0800123456789"
     end
@@ -445,9 +445,9 @@ end
 # Homepage Field
 # ==========================================================================================
 
-describe ProfileFieldTypes::Homepage do
+describe ProfileFields::Homepage do
 
-  subject { ProfileFieldTypes::Homepage.create( value: "example.com" ) }
+  subject { ProfileFields::Homepage.create( value: "example.com" ) }
 
   its( :display_html ) { should == "<a href=\"http://example.com\">http://example.com</a>" }
 
@@ -457,8 +457,8 @@ end
 # Date Field
 # ==========================================================================================
 
-describe ProfileFieldTypes::Date do
-  before { @date_field = ProfileFieldTypes::Date.create }
+describe ProfileFields::Date do
+  before { @date_field = ProfileFields::Date.create }
   describe "#value" do
     subject { @date_field.value }
     describe "if unset" do

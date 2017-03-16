@@ -24,7 +24,7 @@ class Issue < ActiveRecord::Base
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
   scope :automatically_created, -> { where author_id: nil }
   scope :concerning_postal_addresses, -> {
-    ids = all.select { |issue| issue.reference.kind_of? ProfileFieldTypes::Address }.map(&:id)
+    ids = all.select { |issue| issue.reference.kind_of? ProfileFields::Address }.map(&:id)
     where(id: ids)
   }
 
@@ -41,13 +41,13 @@ class Issue < ActiveRecord::Base
     objects.collect { |obj| self.scan_object(obj) }.flatten - [nil]
   end
   def self.scan_object(object)
-    return self.scan_address_field(object) if object.kind_of? ProfileFieldTypes::Address
-    return self.scan_email_field(object) if object.kind_of? ProfileFieldTypes::Email
+    return self.scan_address_field(object) if object.kind_of? ProfileFields::Address
+    return self.scan_email_field(object) if object.kind_of? ProfileFields::Email
     return self.scan_membership(object) if object.kind_of? UserGroupMembership
   end
   def self.scan_all
-    self.scan_objects(ProfileFieldTypes::Address.all) +
-    self.scan_objects(ProfileFieldTypes::Email.all) +
+    self.scan_objects(ProfileFields::Address.all) +
+    self.scan_objects(ProfileFields::Email.all) +
     self.scan_objects(UserGroupMembership.find_all.direct)
   end
 

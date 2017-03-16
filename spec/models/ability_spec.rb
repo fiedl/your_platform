@@ -175,7 +175,7 @@ describe Ability do
       end
 
       he "should be able to update its profile fields" do
-        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        @profile_field = @group.profile_fields.create(type: 'ProfileFields::Phone', value: '123')
         the_user.should be_able_to :update, @profile_field
       end
 
@@ -204,7 +204,7 @@ describe Ability do
       end
 
       he "should not be able to update its profile fields" do
-        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        @profile_field = @group.profile_fields.create(type: 'ProfileFields::Phone', value: '123')
         the_user.should_not be_able_to :update, @profile_field
       end
 

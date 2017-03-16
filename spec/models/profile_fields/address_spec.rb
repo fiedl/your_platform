@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe ProfileFieldTypes::Address do
-  before { @profile_field = ProfileFieldTypes::Address.create label: 'Address' }
+describe ProfileFields::Address do
+  before { @profile_field = ProfileFields::Address.create label: 'Address' }
   subject { @profile_field }
 
   describe "when a free-text address is stored that can be geocoded" do

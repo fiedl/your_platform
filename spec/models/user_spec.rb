@@ -204,7 +204,7 @@ describe User do
     describe "for an existing date of birth" do
       before { @user.date_of_birth = "1900-01-01".to_date }
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
     end
     it "should be autosaved" do
       @field = @user.build_date_of_birth_profile_field
@@ -218,13 +218,13 @@ describe User do
     subject { @user.find_or_build_date_of_birth_profile_field }
     describe "for no date of birth field created" do
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its(:new_record?) { should == true }
     end
     describe "for an existing date of birth" do
       before { @user.date_of_birth = "1900-01-01".to_date }
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
     end
     describe "for a date of birth existing in the database" do
       before do
@@ -233,7 +233,7 @@ describe User do
         @user = User.find(@user.id)
       end
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its('value.to_date') { should == "1900-01-01".to_date }
       its(:new_record?) { should == false }
     end
@@ -242,7 +242,7 @@ describe User do
     subject { @user.find_or_create_date_of_birth_profile_field }
     describe "for no date of birth field existing" do
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its(:new_record?) { should == false }
       its(:id) { should be_kind_of Integer }
      end
@@ -253,7 +253,7 @@ describe User do
          @user = User.find(@user.id)
        end
        it { should be_kind_of ProfileField }
-       its(:type) { should == "ProfileFieldTypes::Date" }
+       its(:type) { should == "ProfileFields::Date" }
        its('value.to_date') { should == "1900-01-01".to_date }
        its(:new_record?) { should == false }
      end
@@ -287,8 +287,8 @@ describe User do
 
   describe "postal address: " do
     before do
-      @other_field = ProfileFieldTypes::Address.create(label: "My Work", value: "Some Other Address")
-      @profile_field = ProfileFieldTypes::Address.create(label: "My Home", value: "Some Address")
+      @other_field = ProfileFields::Address.create(label: "My Work", value: "Some Other Address")
+      @profile_field = ProfileFields::Address.create(label: "My Home", value: "Some Address")
       @user.profile_fields << @other_field
       @user.profile_fields << @profile_field
     end
@@ -323,7 +323,7 @@ describe User do
     describe "#postal_address_with_name_surrounding" do
       subject { @user.reload.postal_address_with_name_surrounding }
       before do
-        @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+        @name_surrounding = @user.profile_fields.create(type: 'ProfileFields::NameSurrounding').becomes(ProfileFields::NameSurrounding)
         @name_surrounding.name_prefix = "Dr."
         @name_surrounding.name_suffix = "M.Sc."
         @name_surrounding.text_above_name = "Herrn"
@@ -348,7 +348,7 @@ describe User do
       end
       describe "when the user has the same personal title as given in the name prefix" do
         before do
-          @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+          @user.profile_fields.create(type: 'ProfileFields::General', label: 'personal_title', value: "Dr.")
           @user.save
         end
         it "should not print it twice" do
@@ -403,9 +403,9 @@ describe User do
   describe "#phone_profile_fields" do
     subject { @user.phone_profile_fields }
     before do
-      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '123456').becomes(ProfileFieldTypes::Phone)
-      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFieldTypes::Phone', value: '123457').becomes(ProfileFieldTypes::Phone)
-      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '01234').becomes(ProfileFieldTypes::Phone)
+      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '123456').becomes(ProfileFields::Phone)
+      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFields::Phone', value: '123457').becomes(ProfileFields::Phone)
+      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '01234').becomes(ProfileFields::Phone)
       @user.reload
     end
     it { should include @phone_field }
@@ -416,13 +416,13 @@ describe User do
   describe "#phone" do
     subject { @user.phone }
     describe "for a phone number given" do
-      before { @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      before { @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone) }
       it { should == @phone_field.value }
     end
     describe "for a phone and a mobile number given" do
       before do
-        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
-        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
       end
       it { should == @phone_field.value }
     end
@@ -443,7 +443,7 @@ describe User do
       end
     end
     describe "if a phone field is present" do
-      before { @phone_field = @user.profile_fields.create(label: 'Telefon', value: '09131 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      before { @phone_field = @user.profile_fields.create(label: 'Telefon', value: '09131 123 45 56', type: 'ProfileFields::Phone') }
       it "should modify the existing one" do
         subject
         @phone_field.reload.value.should == @new_phone_number
@@ -454,13 +454,13 @@ describe User do
   describe "#mobile" do
     subject { @user.mobile }
     describe "for a mobile phone number given" do
-      before { @phone_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '0161 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      before { @phone_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '0161 123 45 67').becomes(ProfileFields::Phone) }
       it { should == @phone_field.value }
     end
     describe "for a phone and a mobile number given" do
       before do
-        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
-        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
       end
       it { should == @mobile_field.value }
     end
@@ -480,7 +480,7 @@ describe User do
       end
     end
     describe "if a phone field is present" do
-      before { @phone_field = @user.profile_fields.create(label: 'Mobil', value: '0161 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      before { @phone_field = @user.profile_fields.create(label: 'Mobil', value: '0161 123 45 56', type: 'ProfileFields::Phone') }
       it "should modify the existing one" do
         subject
         @phone_field.reload.value.should == @new_phone_number
@@ -1521,7 +1521,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => nil)  # to circumvent validation
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFields::Email').first.update_attributes(:value => nil)  # to circumvent validation
     end
     subject { User.with_email }
     specify "prelims" do
@@ -1548,7 +1548,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attribute(:value, '')
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFields::Email').first.update_attribute(:value, '')
     end
     subject { User.applicable_for_new_account }
     it { should be_kind_of ActiveRecord::Relation }
@@ -1566,10 +1566,10 @@ describe User do
   describe "(postal address finder methods)" do
     before do
       @user_with_address = create(:user)
-      @user_with_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
+      @user_with_address.profile_fields.create(type: 'ProfileFields::Address', value: "Pariser Platz 1\n 10117 Berlin")
       @user_without_address = create(:user)
       @user_with_empty_address = create(:user)
-      @user_with_empty_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "")
+      @user_with_empty_address.profile_fields.create(type: 'ProfileFields::Address', value: "")
     end
 
     describe ".with_postal_address" do

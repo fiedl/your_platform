@@ -1,4 +1,4 @@
-module ProfileFieldTypes
+module ProfileFields
 
   # Email List Contact Information
   #

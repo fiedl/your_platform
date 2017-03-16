@@ -42,8 +42,8 @@ feature "Search Field", js: true do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "blarzfoo" )
         @user3 = create( :user, last_name: "cannonfoo" )
-        @user3.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin", type: "ProfileFieldTypes::Address" )
-        @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
+        @user3.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin", type: "ProfileFields::Address" )
+        @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFields::General")
 
         within('.navbar-search') { fill_in 'query', with: "foo" }
         press_enter in: 'query'
@@ -65,7 +65,7 @@ feature "Search Field", js: true do
     describe "by profile field" do
       before do
         @user1 = create :user
-        @user1.profile_fields.create(type: 'ProfileFieldTypes::Address', value: 'Pariser Platz 1\n 10117 Berlin')
+        @user1.profile_fields.create(type: 'ProfileFields::Address', value: 'Pariser Platz 1\n 10117 Berlin')
       end
       specify "searching for a string in a profile field should result in the corresponding user" do
         within('.navbar-search') { fill_in 'query', with: "Berlin" }

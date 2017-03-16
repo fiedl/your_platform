@@ -17,7 +17,7 @@ describe Profile do
     end
 
     @profileable = MyStructureable.create(name: "My Profileable")
-    @address_field = @profileable.profile_fields.create( label: "Home Address", value: "Berliner Platz 1, Erlangen", type: "ProfileFieldTypes::Address" )
+    @address_field = @profileable.profile_fields.create( label: "Home Address", value: "Berliner Platz 1, Erlangen", type: "ProfileFields::Address" )
     
     @profile = Profile.new(@profileable)
   end

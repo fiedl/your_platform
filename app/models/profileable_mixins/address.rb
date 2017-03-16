@@ -4,7 +4,7 @@ module ProfileableMixins::Address
   # Scope for profile fields that are postal addresses.
   #
   def address_fields(reload = false)
-    self.id ? profile_fields(reload).where(type: 'ProfileFieldTypes::Address') : profile_fields.where('false')
+    self.id ? profile_fields(reload).where(type: 'ProfileFields::Address') : profile_fields.where('false')
   end
 
 

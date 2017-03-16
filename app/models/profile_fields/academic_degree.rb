@@ -1,4 +1,4 @@
-module ProfileFieldTypes
+module ProfileFields
 
   # Academic Degree 
   #

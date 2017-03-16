@@ -1,13 +1,13 @@
 - collection = nil
 - if profile_field.parent.present? and profile_field.key.to_s == 'country_code'
   - input_type = :select
-  - collection = ProfileFieldTypes::Address.country_codes_hash
+  - collection = ProfileFields::Address.country_codes_hash
 
 - if profile_field.children_count == 0
   = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value', collection: collection}
 
 - if profile_field.children_count > 0
-  - if profile_field.type == 'ProfileFieldTypes::Address'
+  - if profile_field.type == 'ProfileFields::Address'
     #address_profile_field
       .do_not_show_in_edit_mode.address_profile_field.editable.value{class: (can?(:update, profile_field) ? 'can_edit' : ''), data: {profile_field_id: profile_field.id, profile_field_url: profile_field.url, profile_field_json_path: profile_field_path(profile_field, format: :json)}}
         %p.name_and_surrounding= simple_format profile_field.profileable.name_with_surrounding

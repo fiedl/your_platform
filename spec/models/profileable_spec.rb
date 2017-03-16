@@ -58,14 +58,14 @@ describe Profileable do
       it "should create an email profile field" do
         subject
         @profileable.profile_fields.last.should be_kind_of ProfileField
-        @profileable.profile_fields.last.type.should == "ProfileFieldTypes::Email"
+        @profileable.profile_fields.last.type.should == "ProfileFields::Email"
         @profileable.profile_fields.last.value.should == "foo@example.com"
       end
     end
     describe "#email" do
       before do
-        @profileable.profile_fields.create(label: "Email", value: "bar@example.com", type: "ProfileFieldTypes::Email")
-        @profileable.profile_fields.create(label: "Email 2", value: "baz@example.com", type: "ProfileFieldTypes::Email")
+        @profileable.profile_fields.create(label: "Email", value: "bar@example.com", type: "ProfileFields::Email")
+        @profileable.profile_fields.create(label: "Email 2", value: "baz@example.com", type: "ProfileFields::Email")
       end
       subject { @profileable.email }
       it "should return the value of the first email profile field" do
@@ -103,20 +103,20 @@ describe Profileable do
     
     describe "#profile_fields_by_type" do
       before do
-        @address_field = @profileable.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Berliner Platz 1, Erlangen")
-        @phone_field = @profileable.profile_fields.create(type: "ProfileFieldTypes::Phone", value: "123-456789")
+        @address_field = @profileable.profile_fields.create(type: "ProfileFields::Address", value: "Berliner Platz 1, Erlangen")
+        @phone_field = @profileable.profile_fields.create(type: "ProfileFields::Phone", value: "123-456789")
       end
       describe "providing the exact type" do
-        subject { @profileable.profile_fields_by_type("ProfileFieldTypes::Address") }
+        subject { @profileable.profile_fields_by_type("ProfileFields::Address") }
         it "should return the matching profile fields" do
-          subject.should == [ @address_field.becomes(ProfileFieldTypes::Address) ]
+          subject.should == [ @address_field.becomes(ProfileFields::Address) ]
         end
       end
     end
     
     describe "#profile_fields" do
       before do
-        @profileable.profile_fields.create(type: "ProfileFieldTypes::Address", value: "Berliner Platz 1, Erlangen")
+        @profileable.profile_fields.create(type: "ProfileFields::Address", value: "Berliner Platz 1, Erlangen")
       end
       subject { @profileable.profile_fields }
       it "should be an Array of ProfileFields" do
@@ -137,13 +137,13 @@ describe Profileable do
       @profileable = create(:user)
     end
     specify "simple profile fields" do
-      @profileable.profile_fields.create( type: "ProfileFieldTypes::Custom", label: "ICQ", value: "12345678" )
-      @profileable.profile_fields.create( type: "ProfileFieldTypes::Phone", label: "Phone", value: "123-45678" )
+      @profileable.profile_fields.create( type: "ProfileFields::Custom", label: "ICQ", value: "12345678" )
+      @profileable.profile_fields.create( type: "ProfileFields::Phone", label: "Phone", value: "123-45678" )
       @profileable.profile_fields.count.should == 3  # one is email
     end
     specify "complex profile fields (with child fields)" do
-      bank_account = @profileable.profile_fields.create( type: "ProfileFieldTypes::BankAccount", label: "Account" )
-        .becomes ProfileFieldTypes::BankAccount
+      bank_account = @profileable.profile_fields.create( type: "ProfileFields::BankAccount", label: "Account" )
+        .becomes ProfileFields::BankAccount
       bank_account.account_holder = "John Doe"
       bank_account.save
       @profileable.profile_fields.should include bank_account

@@ -7,16 +7,16 @@ describe ListExports::EmailList do
     @user = create :user, :with_address, first_name: "Jonathan", last_name: "Doe"
     @user.address_profile_fields.first.update_attributes value: "Pariser Platz 1\n 10117 Berlin"
     @user.profile_fields.create label: 'personal_title', value: "Dr."
-    @name_surrounding = @user.profile_fields.create type: "ProfileFieldTypes::NameSurrounding"
-    @name_surrounding = @user.profile_fields.where(type: "ProfileFieldTypes::NameSurrounding").first
+    @name_surrounding = @user.profile_fields.create type: "ProfileFields::NameSurrounding"
+    @name_surrounding = @user.profile_fields.where(type: "ProfileFields::NameSurrounding").first
     @name_surrounding.text_below_name = "c./o. Foo Bar"
     @name_surrounding.save
     @user.localized_date_of_birth = "13.11.1986"; @user.save
     @group << @user
 
-    @user.profile_fields.where(type: 'ProfileFieldTypes::Email').each { |field| field.destroy }
-    @email_field_1 = @user.profile_fields.create(label: 'Email', type: 'ProfileFieldTypes::Email', value: 'foo@example.com').becomes(ProfileFieldTypes::Email)
-    @email_field_2 = @user.profile_fields.create(label: 'Work Email', type: 'ProfileFieldTypes::Email', value: 'bar@example.com').becomes(ProfileFieldTypes::Email)
+    @user.profile_fields.where(type: 'ProfileFields::Email').each { |field| field.destroy }
+    @email_field_1 = @user.profile_fields.create(label: 'Email', type: 'ProfileFields::Email', value: 'foo@example.com').becomes(ProfileFields::Email)
+    @email_field_2 = @user.profile_fields.create(label: 'Work Email', type: 'ProfileFields::Email', value: 'bar@example.com').becomes(ProfileFields::Email)
     @user.reload
 
     @list_export = ListExports::EmailList.from_group(@group)

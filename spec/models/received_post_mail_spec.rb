@@ -5,7 +5,7 @@ describe ReceivedPostMail do
   let(:sender_user) { create :user }
   let(:recipient_group) {
     group = create :group
-    group.profile_fields.create(type: 'ProfileFieldTypes::MailingListEmail', value: 'example-group@example.com')
+    group.profile_fields.create(type: 'ProfileFields::MailingListEmail', value: 'example-group@example.com')
     group
   }
   let(:message) { 
@@ -148,8 +148,8 @@ describe ReceivedPostMail do
       end
       
       it "should not import the post if the recipient email is not a mailing list" do
-        recipient_group.profile_fields.where(type: 'ProfileFieldTypes::MailingListEmail').destroy_all
-        recipient_group.profile_fields.create(type: 'ProfileFieldTypes::Email', value: 'example-group@example.com')
+        recipient_group.profile_fields.where(type: 'ProfileFields::MailingListEmail').destroy_all
+        recipient_group.profile_fields.create(type: 'ProfileFields::Email', value: 'example-group@example.com')
         
         Post.destroy_all
         subject

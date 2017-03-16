@@ -1,4 +1,4 @@
-module ProfileFieldTypes
+module ProfileFields
 
   # Email Contact Information
   #
@@ -19,6 +19,11 @@ module ProfileFieldTypes
 
     def vcard_property_type
       "EMAIL"
+    end
+
+    def fill_cache
+      super
+      profileable.email
     end
   end
 
