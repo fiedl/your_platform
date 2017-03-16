@@ -10,6 +10,11 @@ concern :ProfileFieldCaching do
   def fill_cache
     super
     parent.fill_cache if parent && parent.children.first.id == self.id
+    if !parent && profileable && profileable.respond_to?(:renew_cache)
+      self.class.cached_profileable_methods_depending_on_profile_fields.each do |method|
+        profileable.send method
+      end
+    end
   end
 
   def destroy
