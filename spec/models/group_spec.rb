@@ -329,7 +329,7 @@ describe Group do
       end
       it "should set the valid_from attribute on the membership" do
         subject
-        UserGroupMembership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
+        Membership.with_invalid.find_by_user_and_group(@user, @group).valid_from.should > 1.second.ago
       end
     end
 

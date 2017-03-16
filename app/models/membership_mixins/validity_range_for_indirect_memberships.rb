@@ -11,16 +11,16 @@
 #
 # Scopes:
 #
-#     UserGroupMembership.with_invalid
-#     UserGroupMembership.only_valid
-#     UserGroupMembership.only_invalid
-#     UserGroupMembership.at_time(time)
+#     Membership.with_invalid
+#     Membership.only_valid
+#     Membership.only_invalid
+#     Membership.at_time(time)
 #
 # By default, the `only_valid` scope is applied, i.e. only memberships are
 # found that are valid at present time. To override this scope, use either
 # `with_invalid` or `unscoped`.
 #
-module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
+module MembershipMixins::ValidityRangeForIndirectMemberships
 
   extend ActiveSupport::Concern
 
@@ -53,7 +53,7 @@ module UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
   # latest direct membership.
   #
   def earliest_direct_membership
-    @earliest_direct_membership ||= UserGroupMembership.with_invalid.find(earliest_direct_membership_id) if earliest_direct_membership_id
+    @earliest_direct_membership ||= Membership.with_invalid.find(earliest_direct_membership_id) if earliest_direct_membership_id
   end
   def earliest_direct_membership_id
     direct_memberships(with_invalid: true).reorder('valid_from').pluck(:id).first

@@ -1,18 +1,18 @@
 require 'spec_helper'
 
-describe UserGroupMembershipMixins::ValidityRange do
+describe MembershipMixins::ValidityRange do
   
   before do
     @user = create(:user)
     @group = create(:group)
-    @membership = UserGroupMembership.create(user: @user, group: @group)
+    @membership = Membership.create(user: @user, group: @group)
     @membership.reload
   end
   
   specify "preliminaries" do
     @membership.should_not be_changed
     @membership.id.should be_kind_of Integer
-    @membership.should be_kind_of UserGroupMembership
+    @membership.should be_kind_of Membership
   end
   
   describe "#valid_from" do
@@ -171,10 +171,10 @@ describe UserGroupMembershipMixins::ValidityRange do
       @valid_membership.update_attribute(:valid_from, 2.hours.ago)
       @group2 = create(:group)
       @time = 1.hour.ago
-      @invalid_membership = UserGroupMembership.create(user: @user, group: @group2)
+      @invalid_membership = Membership.create(user: @user, group: @group2)
       @invalid_membership.valid_from = 2.hours.ago
       @invalid_membership.invalidate(@time)
-      @query = UserGroupMembership.find_all_by_user(@user)
+      @query = Membership.find_all_by_user(@user)
     end
     
     describe "#at_time" do

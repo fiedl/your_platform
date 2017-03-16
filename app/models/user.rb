@@ -267,7 +267,7 @@ class User < ActiveRecord::Base
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
-      UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
+      Membership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
 
@@ -419,7 +419,7 @@ class User < ActiveRecord::Base
     if self.add_to_group
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
-      UserGroupMembership.create( user: self, group: group ) if group
+      Membership.create( user: self, group: group ) if group
       self.add_to_group = nil
     end
     if self.add_to_corporation.present?

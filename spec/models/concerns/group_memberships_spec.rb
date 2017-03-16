@@ -14,11 +14,11 @@ describe GroupMemberships do
     @user1 = create(:user); @group.assign_user(@user1)
     @user2 = create(:user); @group.assign_user(@user2)
     @user = @user1
-    @membership1 = UserGroupMembership.find_by(user: @user1, group: @group)
-    @membership2 = UserGroupMembership.find_by(user: @user2, group: @group)
+    @membership1 = Membership.find_by(user: @user1, group: @group)
+    @membership2 = Membership.find_by(user: @user2, group: @group)
     @indirect_group = @group.parent_groups.create
-    @indirect_membership1 = UserGroupMembership.find_by(user: @user1, group: @indirect_group)
-    @indirect_membership2 = UserGroupMembership.find_by(user: @user2, group: @indirect_group)
+    @indirect_membership1 = Membership.find_by(user: @user1, group: @indirect_group)
+    @indirect_membership2 = Membership.find_by(user: @user2, group: @indirect_group)
     @group2 = @indirect_group.child_groups.create
   end
 
@@ -76,7 +76,7 @@ describe GroupMemberships do
 
   describe "#build_membership" do
     subject { @group.build_membership }
-    it { should be_kind_of UserGroupMembership }
+    it { should be_kind_of Membership }
     its(:ancestor_type) { should == 'Group' }
     its(:ancestor_id) { should == @group.id }
     its(:descendant_type) { should == 'User' }
@@ -86,7 +86,7 @@ describe GroupMemberships do
 
   describe "#membership_of( user )" do
     subject { @group.membership_of(@user1) }
-    it { should be_kind_of UserGroupMembership }
+    it { should be_kind_of Membership }
     it { should == @membership1 }
   end
 
@@ -193,7 +193,7 @@ describe GroupMemberships do
       end
       it "should remove the membership permanently" do
         subject
-        UserGroupMembership.with_invalid.find_by_user_and_group(@user1, @group).should == nil
+        Membership.with_invalid.find_by_user_and_group(@user1, @group).should == nil
       end
     end
     describe "for the membership being indirect" do

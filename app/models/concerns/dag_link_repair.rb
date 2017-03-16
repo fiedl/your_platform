@@ -104,7 +104,7 @@ concern :DagLinkRepair do
       def recalculate_links
         print "\n\nRecalculating affected indirect validity ranges.\n".blue
         @occurances.each do |redundant_links|
-          original_link = redundant_links[0].becomes UserGroupMembership
+          original_link = redundant_links[0].becomes Membership
           original_link.recalculate_validity_range_from_direct_memberships
           original_link.save
           print ".".blue

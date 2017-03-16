@@ -4,10 +4,10 @@
 # to minimize the number of database queries that are necessary to find out
 # whether a user is member in a certain group through an indirect membership.
 #
-# This class allows abstract access to the UserGroupMemberships themselves,
+# This class allows abstract access to the Memberships themselves,
 # and to their properties like since when the membership exists.
 #
-class UserGroupMembership < DagLink
+class Membership < DagLink
 
   before_validation :ensure_correct_ancestor_and_descendant_type
 
@@ -16,8 +16,8 @@ class UserGroupMembership < DagLink
   # Validity Range
   # ====================================================================================================
 
-  include UserGroupMembershipMixins::ValidityRange
-  include UserGroupMembershipMixins::ValidityRangeForIndirectMemberships
+  include MembershipMixins::ValidityRange
+  include MembershipMixins::ValidityRangeForIndirectMemberships
 
 
   # May Need Review Flag
@@ -47,24 +47,24 @@ class UserGroupMembership < DagLink
 
   # Create a membership of the `u` in the group `g`.
   #
-  #    membership = UserGroupMembership.create( user: u, group: g )
+  #    membership = Membership.create( user: u, group: g )
   #
   def self.create( params )
-    if UserGroupMembership.find_by( params ).present?
-      raise 'Membership already exists: id = ' + UserGroupMembership.find_by( params ).id.to_s
+    if Membership.find_by( params ).present?
+      raise 'Membership already exists: id = ' + Membership.find_by( params ).id.to_s
     else
       user = params[:user]
       user ||= User.find params[:user_id] if params[:user_id]
       user ||= User.find_by_title params[:user_title] if params[:user_title]
-      raise "Could not create UserGroupMembership without user." unless user
+      raise "Could not create Membership without user." unless user
 
       group = params[ :group ]
       group ||= Group.find params[:group_id] if params[:group_id]
-      raise "Could not create UserGroupMembership without group." unless group
+      raise "Could not create Membership without group." unless group
 
       new_membership = DagLink
         .create(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
-        .becomes(UserGroupMembership)
+        .becomes(Membership)
 
       # This needs to be called manually, since DagLink won't call the proper callback.
       #
@@ -83,11 +83,11 @@ class UserGroupMembership < DagLink
   # This method returns an ActiveRecord::Relation object, which means that the result can
   # be chained with scope methods.
   #
-  #     memberships = UserGroupMembership.find_all_by( user: u )
-  #     memberships = UserGroupMembership.find_all_by( group: g )
-  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).now
-  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).in_the_past
-  #     memberships = UserGroupMembership.find_all_by( user: u, group: g ).now_and_in_the_past
+  #     memberships = Membership.find_all_by( user: u )
+  #     memberships = Membership.find_all_by( group: g )
+  #     memberships = Membership.find_all_by( user: u, group: g ).now
+  #     memberships = Membership.find_all_by( user: u, group: g ).in_the_past
+  #     memberships = Membership.find_all_by( user: u, group: g ).now_and_in_the_past
   #
   def self.find_all_by( params )
     user = params[ :user ]
@@ -95,7 +95,7 @@ class UserGroupMembership < DagLink
     user ||= User.find_by_title params[:user_title] if params[:user_title]
     group = params[ :group ]
     group ||= Group.find params[:group_id] if params[:group_id]
-    links = UserGroupMembership
+    links = Membership
       .where( :descendant_type => "User" )
       .where( :ancestor_type => "Group" )
     links = links.where( :descendant_id => user.id ) if user
@@ -181,7 +181,7 @@ class UserGroupMembership < DagLink
   #     |-------- group
   #                 |---( membership )---- user
   #
-  #     membership = UserGroupMembership.find_by_user_and_group( user, group )
+  #     membership = Membership.find_by_user_and_group( user, group )
   #     membership.corporation == corporation
   #
   def corporation
@@ -205,8 +205,8 @@ class UserGroupMembership < DagLink
   # Thus, this method, called on a membership of user and group1 will return the membership between
   # user and group2.
   #
-  #     UserGroupMembership.find_by( user: user, group: group1 ).direct_memberships.should
-  #       include( UserGroupMembership.find_by( user: user, group: group2 ) )
+  #     Membership.find_by( user: user, group: group1 ).direct_memberships.should
+  #       include( Membership.find_by( user: user, group: group2 ) )
   #
   # An indirect membership can also have several direct memberships, as shown in this figure:
   #
@@ -224,7 +224,7 @@ class UserGroupMembership < DagLink
     descendant_group_ids_of_self_group = descendant_groups_of_self_group.pluck(:id)
     group_ids = descendant_group_ids_of_self_group + [ self.group.id ]
 
-    memberships = UserGroupMembership
+    memberships = Membership
     if options[:with_invalid] || self.read_attribute( :valid_to )
       # If the membership itself is invalidated, also consider the invalidated direct memberships.
       # Otherwise, one has to call `direct_memberships_now_and_in_the_past` rather than
@@ -258,7 +258,7 @@ class UserGroupMembership < DagLink
 
   def indirect_memberships
     self.group.ancestor_groups.collect do |ancestor_group|
-      UserGroupMembership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
+      Membership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
     end.select do |item|
       item != nil
     end

@@ -159,9 +159,9 @@ describe StatusGroupMembership do
       @user = create( :user )
       @status_group.assign_user @user
 
-      @membership = UserGroupMembership.find_by_user_and_group( @user, @status_group )
+      @membership = Membership.find_by_user_and_group( @user, @status_group )
         .becomes( StatusGroupMembership )
-      @intermediate_group_membership = UserGroupMembership
+      @intermediate_group_membership = Membership
         .find_by_user_and_group( @user, @intermediate_group ).becomes StatusGroupMembership
 
       @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
@@ -202,7 +202,7 @@ describe StatusGroupMembership do
         subject.should include @membership
       end
       it "should not list memberships of the user in non-status groups" do
-        @non_status_membership = UserGroupMembership
+        @non_status_membership = Membership
           .find_by_user_and_group( @user, @corporation )
         subject.should_not include @non_status_membership
       end

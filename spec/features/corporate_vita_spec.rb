@@ -83,7 +83,7 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 
@@ -107,8 +107,8 @@ feature 'Corporate Vita', js: true do
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
 
-          wait_until { UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+          wait_until { Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
+          Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
         end
       end
     end
@@ -153,7 +153,7 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 
@@ -177,8 +177,8 @@ feature 'Corporate Vita', js: true do
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
 
-          wait_until { UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+          wait_until { Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
+          Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end
@@ -187,7 +187,7 @@ feature 'Corporate Vita', js: true do
     describe 'if the date of the promotion was erroneously changed to a date in the future' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         @membership.valid_from = 1.day.from_now
         visit user_path( @user )
       end
@@ -240,7 +240,7 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 

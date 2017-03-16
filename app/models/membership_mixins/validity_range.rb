@@ -26,17 +26,17 @@
 #
 #   Validity Perspective:
 #
-#       UserGroupMembership.valid
-#       UserGroupMembership.invalid
-#       UserGroupMembership.with_invalid
+#       Membership.valid
+#       Membership.invalid
+#       Membership.with_invalid
 #
 #   Time Perspective:
 #
-#       UserGroupMembership.now
-#       UserGroupMembership.past
-#       UserGroupMembership.now_and_past
-#       UserGroupMembership.now_and_in_the_past
-#       UserGroupMembership.at_time(time)
+#       Membership.now
+#       Membership.past
+#       Membership.now_and_past
+#       Membership.now_and_in_the_past
+#       Membership.at_time(time)
 #
 #   Default Scope:
 #
@@ -65,7 +65,7 @@
 #     https://github.com/rails/rails/pull/16052
 #     TODO: Refactor the queries in the scopes when migrating to Rails 5.
 #
-module UserGroupMembershipMixins::ValidityRange
+module MembershipMixins::ValidityRange
 
   extend ActiveSupport::Concern
 

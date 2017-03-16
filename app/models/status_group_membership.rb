@@ -3,7 +3,7 @@
 # This class represents the membership of a user in a status group, i.e. a subgroup of a corporation
 # representing a member status, e.g. the subgroup 'guests' or 'presidents'.
 #
-class StatusGroupMembership < UserGroupMembership
+class StatusGroupMembership < Membership
 
   # Status Group Memberships do have more properties than regular memberships;
   # those new properties are, e.g., shown in the corporate_vita.

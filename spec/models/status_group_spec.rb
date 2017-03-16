@@ -66,7 +66,7 @@ describe StatusGroup do
     it { should_not include @admins_parent }
 
     describe "after a promotion" do
-      before { UserGroupMembership.find_by_user_and_group(@user, @status_a_1).move_to @status_a_2, at: 10.minutes.ago }
+      before { Membership.find_by_user_and_group(@user, @status_a_1).move_to @status_a_2, at: 10.minutes.ago }
       it { should include @status_a_2 }
       it { should_not include @status_a_1 }
       

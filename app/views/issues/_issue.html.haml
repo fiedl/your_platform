@@ -1,5 +1,5 @@
 - profileable = issue.reference.profileable if issue.reference.kind_of? ProfileField
-- profileable = issue.reference.user if issue.reference.kind_of? UserGroupMembership
+- profileable = issue.reference.user if issue.reference.kind_of? Membership
 - profileable ||= issue.reference
 
 %h1
@@ -46,7 +46,7 @@
     .reference_container
       - if issue.reference.kind_of? ProfileField
         = render partial: 'profile_fields/profile_field_value', locals: {profile_field: issue.reference}
-      - if issue.reference.kind_of? UserGroupMembership
+      - if issue.reference.kind_of? Membership
         - membership = issue.reference
         %p
           = "#{t(:group)}:"

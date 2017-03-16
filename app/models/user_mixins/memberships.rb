@@ -11,12 +11,12 @@ module UserMixins::Memberships
     # User Group Memberships
     # ==========================================================================================
 
-    # This associates all UserGroupMembership objects of the group, including indirect
+    # This associates all Membership objects of the group, including indirect
     # memberships.
     #
     has_many( :memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User' },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :descendant_id )
 
     # This associates all memberships of the group that are direct, i.e. direct
@@ -24,7 +24,7 @@ module UserMixins::Memberships
     #
     has_many( :direct_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :descendant_id )
 
     # This associates all memberships of the group that are indirect, i.e.
@@ -33,7 +33,7 @@ module UserMixins::Memberships
     #
     has_many( :indirect_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :descendant_id )
 
 

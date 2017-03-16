@@ -25,7 +25,7 @@
   %tbody
     - memberships.each do |membership|
       %tr{class: ((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid")}
-        %td.copy-to-clipboard{title: "UserGroupMembership.now_and_in_the_past.find(#{membership.id})"}= membership.id
+        %td.copy-to-clipboard{title: "Membership.now_and_in_the_past.find(#{membership.id})"}= membership.id
         %td
           - if @user
             - if membership.group

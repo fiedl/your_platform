@@ -1009,14 +1009,14 @@ describe User do
     before do
       @group = create( :group )
       @group.child_users << @user
-      @membership = UserGroupMembership.find_by( user: @user, group: @group )
+      @membership = Membership.find_by( user: @user, group: @group )
     end
     subject { @user.memberships }
     it "should return an array of the user's memberships" do
       subject.should == [ @membership ]
     end
-    it "should be the same as UserGroupMembership.find_all_by_user" do
-      subject.should == UserGroupMembership.find_all_by_user( @user )
+    it "should be the same as Membership.find_all_by_user" do
+      subject.should == Membership.find_all_by_user( @user )
     end
     it "should allow to chain other ActiveRelation scopes, like `only_valid`" do
       subject.only_valid.should == [ @membership ]

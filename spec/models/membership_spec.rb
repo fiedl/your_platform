@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserGroupMembership do
+describe Membership do
 
   before do
     @group = Group.create( name: "Group 1" )
@@ -19,39 +19,39 @@ describe UserGroupMembership do
   end
 
   def create_membership
-    UserGroupMembership.create( user: @user, group: @group )
+    Membership.create( user: @user, group: @group )
   end
 
   def find_membership
-    UserGroupMembership.find_by( user: @user, group: @group )
+    Membership.find_by( user: @user, group: @group )
   end
 
   def find_membership_now_and_in_the_past
-    UserGroupMembership.find_all_by( user: @user, group: @group ).now_and_in_the_past.first
+    Membership.find_all_by( user: @user, group: @group ).now_and_in_the_past.first
   end
 
   def find_indirect_membership
-    UserGroupMembership.find_by( user: @user, group: @super_group )
+    Membership.find_by( user: @user, group: @super_group )
   end
 
   def find_indirect_membership_now_and_in_the_past
-    UserGroupMembership.find_all_by( user: @user, group: @super_group ).now_and_in_the_past.first
+    Membership.find_all_by( user: @user, group: @super_group ).now_and_in_the_past.first
   end
 
   def create_other_membership
-    UserGroupMembership.create( user: @user, group: @other_group )
+    Membership.create( user: @user, group: @other_group )
   end
 
   def create_another_membership
-    UserGroupMembership.create( user: @other_user, group: @group )
+    Membership.create( user: @other_user, group: @group )
   end
 
   def find_other_membership
-    UserGroupMembership.find_by( user: @user, group: @other_group )
+    Membership.find_by( user: @user, group: @other_group )
   end
 
   def find_other_membership_now_and_in_the_past
-    UserGroupMembership.find_all_by( user: @user, group: @other_group).now_and_in_the_past.first
+    Membership.find_all_by( user: @user, group: @other_group).now_and_in_the_past.first
   end
 
   def create_memberships
@@ -66,15 +66,15 @@ describe UserGroupMembership do
 
   describe ".create" do
     it "should create a link between parent and child" do
-      UserGroupMembership.create( user: @user, group: @group )
+      Membership.create( user: @user, group: @group )
       @user.parents.should include( @group )
     end
     it "should raise an error if argument is missing" do
-      expect { UserGroupMembership.create( user: @user ) }.to raise_error RuntimeError
-      expect { UserGroupMembership.create( group: @group ) }.to raise_error RuntimeError
+      expect { Membership.create( user: @user ) }.to raise_error RuntimeError
+      expect { Membership.create( group: @group ) }.to raise_error RuntimeError
     end
     it "should be able to identify a user by its 'user_title'" do
-      UserGroupMembership.create( user_title: @user.title, group_id: @group.id )
+      Membership.create( user_title: @user.title, group_id: @group.id )
       @user.parents.should include @group
     end
   end
@@ -87,21 +87,21 @@ describe UserGroupMembership do
 
     describe ".find_all_by" do
       it "should find all memberships for a user" do
-        UserGroupMembership.find_all_by( user: @user ).should include( find_membership )
-        UserGroupMembership.find_all_by( user: @user ).should include( find_indirect_membership )
+        Membership.find_all_by( user: @user ).should include( find_membership )
+        Membership.find_all_by( user: @user ).should include( find_indirect_membership )
       end
       it "should find all memberships for a group" do
-        UserGroupMembership.find_all_by( group: @group ).should include( find_membership )
+        Membership.find_all_by( group: @group ).should include( find_membership )
       end
       it "should not find memberships that are invalid at the present time" do
         find_membership.update_attribute(:valid_to, 1.hour.ago)
-        UserGroupMembership.find_all_by( user: @user )
+        Membership.find_all_by( user: @user )
           .should_not include( find_membership_now_and_in_the_past )
-        UserGroupMembership.find_all_by( user: @user )
+        Membership.find_all_by( user: @user )
           .should include find_other_membership
       end
       it "should be able to identify users by 'user_title'" do
-        UserGroupMembership.find_all_by( user_title: @user.title ).each do |membership|
+        Membership.find_all_by( user_title: @user.title ).each do |membership|
           membership.user_id.should == @user.id
         end
       end
@@ -109,33 +109,33 @@ describe UserGroupMembership do
     describe ".find_all_by.now_and_in_the_past" do
       before { find_membership.make_invalid }
       it "should find all memberships, including the ones that are invalid at the present time" do
-        UserGroupMembership.find_all_by( user: @user ).now_and_in_the_past
+        Membership.find_all_by( user: @user ).now_and_in_the_past
           .should include( find_membership_now_and_in_the_past, find_indirect_membership, find_other_membership )
       end
     end
 
     describe ".find_by" do
       it "should be the same as .find_by_all.first" do
-        UserGroupMembership.find_by( user: @user, group: @group ).should ==
-          UserGroupMembership.find_all_by( user: @user, group: @group ).first
+        Membership.find_by( user: @user, group: @group ).should ==
+          Membership.find_all_by( user: @user, group: @group ).first
       end
     end
 
     describe ".find_by_user_and_group" do
       it "should find the right membership" do
-        UserGroupMembership.find_by_user_and_group( @user, @group ).should == find_membership
+        Membership.find_by_user_and_group( @user, @group ).should == find_membership
       end
     end
 
     describe ".find_all_by_user" do
       it "should find the right memberships" do
-        UserGroupMembership.find_all_by_user( @user ).should include( find_membership )
+        Membership.find_all_by_user( @user ).should include( find_membership )
       end
     end
 
     describe ".find_all_by_group" do
       it "should find the right memberships" do
-        UserGroupMembership.find_all_by_group( @group ).should include( find_membership )
+        Membership.find_all_by_group( @group ).should include( find_membership )
       end
     end
   end
@@ -208,7 +208,7 @@ describe UserGroupMembership do
         @user = create( :user )
         @group.assign_user @user
       end
-      subject { UserGroupMembership.find_by_user_and_group( @user, @group ).corporation }
+      subject { Membership.find_by_user_and_group( @user, @group ).corporation }
       it { should == @corporation }
     end
     describe "for the group not having a corporation" do
@@ -217,7 +217,7 @@ describe UserGroupMembership do
         @user = create( :user )
         @group.assign_user @user
       end
-      subject { UserGroupMembership.find_by_user_and_group( @user, @group ).corporation }
+      subject { Membership.find_by_user_and_group( @user, @group ).corporation }
       it { should == nil }
     end
     describe "for the group being a corporation" do
@@ -226,7 +226,7 @@ describe UserGroupMembership do
         @user = create( :user )
         @corporation.assign_user @user
       end
-      subject { UserGroupMembership.find_by_user_and_group( @user, @corporation ).corporation }
+      subject { Membership.find_by_user_and_group( @user, @corporation ).corporation }
       it { should == @corporation }
     end
   end
@@ -293,7 +293,7 @@ describe UserGroupMembership do
 
   describe "#indirect_memberships" do
     before do
-      @membership = UserGroupMembership.create(user: @user, group: @group)
+      @membership = Membership.create(user: @user, group: @group)
       @indirect_membership = find_indirect_membership
     end
     subject { @membership.indirect_memberships }
@@ -320,8 +320,8 @@ describe UserGroupMembership do
       @sub_group = Group.create( name: "Sub Group" )
       @sub_group.parent_groups << @group
       @user.parent_groups << @sub_group
-      @membership = UserGroupMembership.find_by_user_and_group( @user, @sub_group )
-      @indirect_membership = UserGroupMembership.find_by_user_and_group( @user, @group )
+      @membership = Membership.find_by_user_and_group( @user, @sub_group )
+      @indirect_membership = Membership.find_by_user_and_group( @user, @group )
     end
 
     subject { @indirect_membership }
@@ -381,7 +381,7 @@ describe UserGroupMembership do
       end
       subject do
         @user.parent_groups.each do |group|
-          UserGroupMembership.with_invalid.find_by_user_and_group(@user, group).destroy
+          Membership.with_invalid.find_by_user_and_group(@user, group).destroy
         end
       end
       it "should not raise an error (bug fix)" do

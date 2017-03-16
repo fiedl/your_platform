@@ -9,12 +9,12 @@ concern :GroupMemberships do
     # User Group Memberships
     # ==========================================================================================
 
-    # This associates all UserGroupMembership objects of the group, including indirect
+    # This associates all Membership objects of the group, including indirect
     # memberships.
     #
     has_many( :memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User' },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :ancestor_id )
 
     # This associates all memberships of the group that are direct, i.e. direct
@@ -22,7 +22,7 @@ concern :GroupMemberships do
     #
     has_many( :direct_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :ancestor_id )
 
     # This associates all memberships of the group that are indirect, i.e.
@@ -31,7 +31,7 @@ concern :GroupMemberships do
     #
     has_many( :indirect_memberships,
               -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
-              class_name: 'UserGroupMembership',
+              class_name: 'Membership',
               foreign_key: :ancestor_id )
 
 
@@ -41,7 +41,7 @@ concern :GroupMemberships do
       direct_memberships.build(descendant_type: 'User')
     end
 
-    # This returns the UserGroupMembership object that represents the membership of the
+    # This returns the Membership object that represents the membership of the
     # given user in this group.
     #
     # options:
@@ -49,9 +49,9 @@ concern :GroupMemberships do
     #
     def membership_of(user, options = {})
       if options[:also_in_the_past]
-        base = UserGroupMembership.with_invalid
+        base = Membership.with_invalid
       else
-        base = UserGroupMembership
+        base = Membership
       end
       base.find_by_user_and_group(user, self)
     end
@@ -98,24 +98,24 @@ concern :GroupMemberships do
     # ==========================================================================================
 
     # This assings the given user as a member to the group, i.e. this will
-    # create a UserGroupMembership.
+    # create a Membership.
     #
     def assign_user( user, options = {} )
       if user and not user.in?(self.direct_members)
-        membership = UserGroupMembership.create(user: user, group: self)
+        membership = Membership.create(user: user, group: self)
         time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
         membership.update_attribute(:valid_from, time_of_joining)
         return membership
       end
     end
 
-    # This method will remove a UserGroupMembership, i.e. terminate the membership
+    # This method will remove a Membership, i.e. terminate the membership
     # of the given user in this group.
     #
     def unassign_user( user, options = {} )
       if user and user.in?(self.members)
         time_of_unassignment = options[:at] || options[:time] || Time.zone.now
-        UserGroupMembership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
+        Membership.find_by(user: user, group: self).invalidate(at: time_of_unassignment)
       end
     end
 

@@ -313,7 +313,7 @@ class Ability
       # Regular users can update their own validity ranges of memberships
       # in order to update their corporate vita.
       #
-      can :update, UserGroupMembership, :descendant_id => user.id
+      can :update, Membership, :descendant_id => user.id
 
       # Everyone who can join an event, can add images to this event.
       # Then, he will automatically join the event.

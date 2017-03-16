@@ -1,4 +1,4 @@
-class UserGroupMembershipsController < ApplicationController
+class MembershipsController < ApplicationController
 
   before_action :find_membership
   authorize_resource
@@ -10,12 +10,12 @@ class UserGroupMembershipsController < ApplicationController
       @object = @user = User.find(params[:user_id])
       authorize! :manage, @user
       
-      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_user(@user)
+      @memberships = Membership.now_and_in_the_past.find_all_by_user(@user)
     elsif params[:group_id]
       @object = @group = Group.find(params[:group_id])
       authorize! :manage, @group
       
-      @memberships = UserGroupMembership.now_and_in_the_past.find_all_by_group(@group)
+      @memberships = Membership.now_and_in_the_past.find_all_by_group(@group)
     end
     
     set_current_navable @object
@@ -29,7 +29,7 @@ class UserGroupMembershipsController < ApplicationController
       @group = Group.find membership_params[:group_id]
       @user_group_membership = true
       begin 
-        @user_group_membership = UserGroupMembership.create(membership_params.merge({user_id: @user_id}))
+        @user_group_membership = Membership.create(membership_params.merge({user_id: @user_id}))
         @user_group_membership.valid_from = Date.new(membership_params["valid_from(1i)"].to_i, 
                                                      membership_params["valid_from(2i)"].to_i,
                                                      membership_params["valid_from(3i)"].to_i)
@@ -84,12 +84,12 @@ class UserGroupMembershipsController < ApplicationController
 
   def find_membership
     if params[ :id ].present?
-      @user_group_membership = UserGroupMembership.with_invalid.find( params[ :id ] )
+      @user_group_membership = Membership.with_invalid.find( params[ :id ] )
     else
       user = User.find params[ :user_id ] if params[ :user_id ]
       group = Group.find params[ :group_id ] if params[ :group_id ]
       if user && group
-        @user_group_membership = UserGroupMembership.with_invalid.find_by_user_and_group user, group
+        @user_group_membership = Membership.with_invalid.find_by_user_and_group user, group
       end
     end
   end
