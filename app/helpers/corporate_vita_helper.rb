@@ -9,7 +9,7 @@ module CorporateVitaHelper
     best_in_place( membership,
                    :valid_from_localized_date,  # type: :date,
                    url: membership_path( id: membership.id,
-                                                     controller: :user_group_memberships,
+                                                     controller: :memberships,
                                                      action: :update,
                                                      format: :json
                                                      ),

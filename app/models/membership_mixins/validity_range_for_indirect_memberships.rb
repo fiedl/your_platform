@@ -25,7 +25,7 @@ module MembershipMixins::ValidityRangeForIndirectMemberships
   extend ActiveSupport::Concern
 
   included do
-    after_save :recalculate_indirect_validity_ranges_if_needed
+    after_save { RecalculateIndirectMembershipsJob.perform_later(self) if self.direct? }
   end
 
 
@@ -87,7 +87,7 @@ module MembershipMixins::ValidityRangeForIndirectMemberships
     end
   end
 
-  def recalculate_indirect_validity_ranges_if_needed
+  def recalculate_indirect_validity_ranges
     if self.direct?
       self.indirect_memberships.each do |indirect_membership|
         indirect_membership.recalculate_validity_range_from_direct_memberships
@@ -95,8 +95,6 @@ module MembershipMixins::ValidityRangeForIndirectMemberships
       end
     end
   end
-  private :recalculate_indirect_validity_ranges_if_needed
-
 
 
   # Invalidation

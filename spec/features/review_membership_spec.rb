@@ -33,8 +33,6 @@ feature "review membership" do
       page.should have_no_selector ".confirm-review-button", visible: true
       page.should have_text @group.name
 
-      binding.pry
-
       # in the database, the membership should not be marked as to be reviewed, now.
       @membership.reload.needs_review?.should == false
 
