@@ -82,15 +82,12 @@ describe Corporation do
 
   describe "#status_groups" do
     before do
-      @corporation = create( :corporation )
-
-      # status groups are leaf groups of corporations
-      @status_group = create( :group )
-      @intermediate_group = create( :group )
+      @corporation = create(:corporation)
+      @status_group = create(:group, type: "StatusGroup").becomes(StatusGroup)
+      @intermediate_group = create(:group)
       @corporation.child_groups << @intermediate_group
       @intermediate_group.child_groups << @status_group
-
-      @another_group = create( :group )
+      @another_group = create(:group)
     end
     subject { @corporation.status_groups }
 

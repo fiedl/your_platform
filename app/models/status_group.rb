@@ -6,25 +6,12 @@
 #
 class StatusGroup < Group
 
-  def self.find_all_by_corporation(corporation)
-    self.find_all_by_group(corporation)
-  end
-
   def self.find_all_by_group(group)
-    group.leaf_groups.select do |leaf_group|
-      leaf_group.ancestor_events.count == 0
-    end
-  end
-
-  def self.find_all_by_user(user, options = {})
-    user_groups = options[:with_invalid] ? user.parent_groups : user.direct_groups
-    user.corporations(options).collect do |corporation|
-      StatusGroup.find_all_by_corporation(corporation)
-    end.flatten & user_groups
+    group.descendant_groups.where(type: "StatusGroup")
   end
 
   def self.find_by_user_and_corporation(user, corporation)
-    status_groups = (StatusGroup.find_all_by_corporation(corporation) & StatusGroup.find_all_by_user(user))
+    status_groups = corporation.status_groups & user.status_groups
 
     # Send this error to our support address using the `ExceptionNotifier`
     # but continue to execute the code. Otherwise, the user interface

@@ -224,7 +224,10 @@ class Group < ApplicationRecord
   end
 
   def status_groups
-    StatusGroup.find_all_by_group(self)
+    descendant_groups.where(type: "StatusGroup")
+  end
+  def status_group_ids
+    status_groups.pluck(:id)
   end
 
   def find_deceased_members_parent_group

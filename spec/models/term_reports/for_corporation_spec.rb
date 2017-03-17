@@ -13,13 +13,13 @@ describe TermReports::ForCorporation do
 
     @former_member = create :user
     @former_membership = @corporation.status_groups.first.assign_user(@former_member, at: "2012-01-01".to_date)
-    @former_members_group = @corporation.child_groups.create name: "Ehemalige"
+    @former_members_group = @corporation.child_groups.create(name: "Ehemalige", type: "StatusGroup").becomes(StatusGroup)
     @former_members_group.add_flag :former_members_parent
     @former_membership.move_to @former_members_group, at: "2017-01-02".to_date
 
     @deceased_member = create :user
     @corporation.status_groups.first.assign_user(@deceased_member, at: "2010-01-01".to_date)
-    @deceased_group = @corporation.child_groups.create name: "Verstorbene"
+    @deceased_group = @corporation.child_groups.create(name: "Verstorbene", type: "StatusGroup").becomes(StatusGroup)
     @deceased_group.add_flag :deceased_parent
     @deceased_member.reload.mark_as_deceased at: "2016-11-19".to_date
 
@@ -29,7 +29,7 @@ describe TermReports::ForCorporation do
 
   describe "#corporation" do
     subject { @term_report.corporation }
-    it { should == @corporation}
+    it { should == @corporation }
   end
 
   describe "#semester_calendar" do

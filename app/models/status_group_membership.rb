@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # This class represents the membership of a user in a status group, i.e. a subgroup of a corporation
 # representing a member status, e.g. the subgroup 'guests' or 'presidents'.
 #
@@ -52,14 +50,6 @@ class StatusGroupMembership < Membership
   end
 
 
-  # Creator
-  # ==========================================================================================
-
-  def self.create( params )
-    super( params ).becomes StatusGroupMembership
-  end
-
-
   # Finder Methods
   # ==========================================================================================
 
@@ -74,7 +64,7 @@ class StatusGroupMembership < Membership
   #
   # The method therefore will return all memberships of subgroups of the corporation.
   #
-  def self.find_all_by_corporation( corporation )
+  def self.find_all_by_corporation(corporation)
     raise 'Expect parameter to be a Corporation' unless corporation.kind_of? Corporation
     status_groups = corporation.status_groups
     status_group_ids = status_groups.collect { |group| group.id }

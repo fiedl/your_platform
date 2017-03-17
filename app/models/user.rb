@@ -553,7 +553,11 @@ class User < ActiveRecord::Base
   #   :with_invalid  =>  true, false
   #
   def status_groups(options = {})
-    StatusGroup.find_all_by_user(self, options)
+    if options[:with_invalid]
+      self.parent_groups.where(type: "StatusGroup")
+    else
+      self.direct_groups.where(type: "StatusGroup")
+    end
   end
 
   def status_group_memberships
