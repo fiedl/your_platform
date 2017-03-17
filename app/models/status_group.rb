@@ -6,6 +6,10 @@
 #
 class StatusGroup < Group
 
+  def assign_user(user, options = {})
+    super(user, options).becomes(Memberships::Status)
+  end
+
   def self.find_all_by_group(group)
     group.descendant_groups.where(type: "StatusGroup")
   end

@@ -22,6 +22,7 @@ concern :DagLinkRepair do
 
     def fix_types
       DagLink.where(ancestor_type: "Group", descendant_type: "User").update_all type: "Membership"
+      DagLink.where(ancestor_type: "Group", descendant_type: "User", ancestor_id: Group.where(type: "StatusGroup").pluck(:id)).update_all type: "Memberships::Status"
     end
 
     def delete_links_without_edges

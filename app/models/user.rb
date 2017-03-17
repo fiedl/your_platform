@@ -63,6 +63,7 @@ class User < ActiveRecord::Base
   include ProfileableMixins::Address
   include UserCorporations
   include UserGroups
+  include UserStatus
   include UserProfile
   include UserDateOfBirth
   include UserAvatar
@@ -540,65 +541,6 @@ class User < ActiveRecord::Base
   def corporate_vita_memberships_in(corporation)
     group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
     self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
-  end
-
-
-  # Status Groups
-  # ------------------------------------------------------------------------------------------
-
-  # This returns all status groups of the user, i.e. groups that represent the member
-  # status of the user in a corporation.
-  #
-  # options:
-  #   :with_invalid  =>  true, false
-  #
-  def status_groups(options = {})
-    if options[:with_invalid]
-      self.parent_groups.where(type: "StatusGroup")
-    else
-      self.direct_groups.where(type: "StatusGroup")
-    end
-  end
-
-  def status_group_memberships
-    self.status_groups.collect do |group|
-      StatusGroupMembership.find_by_user_and_group( self, group )
-    end
-  end
-
-  def current_status_membership_in( corporation )
-    if status_group = current_status_group_in(corporation)
-      StatusGroupMembership.find_by_user_and_group(self, status_group)
-    end
-  end
-
-  def current_status_group_in(corporation)
-    StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
-  end
-
-  def status_group_in_primary_corporation
-    # - First try the `first_corporation`,  which does not consider corporations the user is
-    #   a former member of.
-    # - Next, use all corporations, which applies to completely excluded members.
-    #
-    current_status_group_in(first_corporation || corporations.first)
-  end
-
-  def status_export_string
-    self.corporations.collect do |corporation|
-      if membership = self.current_status_membership_in(corporation)
-        "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.try(:singularize)} in #{corporation.name}"
-      else
-        ""
-      end
-    end.join("\n")
-  end
-  def status_string
-    status_export_string
-  end
-
-  def status
-    status_string
   end
 
 

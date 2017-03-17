@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe User do
@@ -767,7 +766,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -780,7 +779,7 @@ describe User do
         @user.corporations
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -791,7 +790,7 @@ describe User do
         @user.corporations
         wait_for_cache
 
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -802,7 +801,7 @@ describe User do
         @user.corporations
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -819,7 +818,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -831,7 +830,7 @@ describe User do
     end
     context "when user entered corporation S" do
       before do
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -839,7 +838,7 @@ describe User do
     end
     context "when user entered corporation H as guest" do
       before do
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -849,7 +848,7 @@ describe User do
       before do
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -874,7 +873,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -887,7 +886,7 @@ describe User do
         @user.current_corporations
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -896,7 +895,7 @@ describe User do
     context "when user entered corporation H as guest" do
       before do
         @user.current_corporations
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -909,7 +908,7 @@ describe User do
 
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -963,41 +962,6 @@ describe User do
     it "should return the last non special group of user's first corporation" do
       subject.should == @corporation1.status_groups.last
       subject.should_not == @corporation1.admins_parent
-    end
-  end
-
-  # Status Groups
-  # ------------------------------------------------------------------------------------------
-
-  describe "#status_groups" do
-    before do
-      @corporation = create( :corporation_with_status_groups )
-      @status_group = @corporation.status_groups.first
-      @status_group.assign_user @user
-      @another_group = create( :group )
-      @another_group.assign_user @user
-    end
-    subject { @user.reload.status_groups }
-
-    it "should include the status groups of the user" do
-      subject.should include @status_group
-    end
-    it "should not include the non-status groups of the user" do
-      subject.should_not include @another_group
-    end
-  end
-
-  describe "#current_status_membership_in(corporation)" do
-    before do
-      @corporation = create( :corporation_with_status_groups )
-      @status_group = @corporation.status_groups.first
-      @status_group.assign_user @user
-      @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
-    end
-    subject { @user.reload.current_status_membership_in(@corporation) }
-
-    it "should return the correct membership" do
-      subject.should == @status_group_membership
     end
   end
 
