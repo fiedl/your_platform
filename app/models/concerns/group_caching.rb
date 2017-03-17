@@ -15,8 +15,8 @@ concern :GroupCaching do
     # GroupMemberships
     cache :membership_ids_for_member_list
     cache :memberships_for_member_list_count
-    cache :latest_memberships
-    cache :memberships_this_year
+    cache :latest_membership_ids
+    cache :membership_ids_this_year
 
     # GroupMemberList
     cache :member_table_rows
