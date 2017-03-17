@@ -17,6 +17,11 @@ concern :DagLinkRepair do
       delete_links_without_edges
       delete_redundant_indirect_links
       recalculate_indirect_counts
+      fix_types
+    end
+
+    def fix_types
+      DagLink.where(ancestor_type: "Group", descendant_type: "User").update_all type: "Membership"
     end
 
     def delete_links_without_edges

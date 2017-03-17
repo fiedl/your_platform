@@ -14,27 +14,21 @@ module UserMixins::Memberships
     # This associates all Membership objects of the group, including indirect
     # memberships.
     #
-    has_many( :memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User' },
-              class_name: 'Membership',
-              foreign_key: :descendant_id )
+    has_many :memberships, -> { where ancestor_type: 'Group', descendant_type: 'User' },
+         foreign_key: :descendant_id
 
     # This associates all memberships of the group that are direct, i.e. direct
     # parent_group-child_user memberships.
     #
-    has_many( :direct_memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
-              class_name: 'Membership',
-              foreign_key: :descendant_id )
+    has_many :direct_memberships, -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
+         foreign_key: :descendant_id, class_name: "Membership"
 
     # This associates all memberships of the group that are indirect, i.e.
     # ancestor_group-descendant_user memberships, where groups are between the
     # ancestor_group and the descendant_user.
     #
-    has_many( :indirect_memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
-              class_name: 'Membership',
-              foreign_key: :descendant_id )
+    has_many :indirect_memberships, -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
+        foreign_key: :descendant_id, class_name: "Membership"
 
 
     # This returns the membership of the user in the given group if existant.

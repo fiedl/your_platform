@@ -12,27 +12,21 @@ concern :GroupMemberships do
     # This associates all Membership objects of the group, including indirect
     # memberships.
     #
-    has_many( :memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User' },
-              class_name: 'Membership',
-              foreign_key: :ancestor_id )
+    has_many :memberships, -> { where ancestor_type: 'Group', descendant_type: 'User' },
+        foreign_key: :ancestor_id
 
     # This associates all memberships of the group that are direct, i.e. direct
     # parent_group-child_user memberships.
     #
-    has_many( :direct_memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
-              class_name: 'Membership',
-              foreign_key: :ancestor_id )
+    has_many :direct_memberships, -> { where ancestor_type: 'Group', descendant_type: 'User', direct: true },
+        foreign_key: :ancestor_id, class_name: "Membership"
 
     # This associates all memberships of the group that are indirect, i.e.
     # ancestor_group-descendant_user memberships, where groups are between the
     # ancestor_group and the descendant_user.
     #
-    has_many( :indirect_memberships,
-              -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
-              class_name: 'Membership',
-              foreign_key: :ancestor_id )
+    has_many :indirect_memberships, -> { where ancestor_type: 'Group', descendant_type: 'User', direct: false },
+        foreign_key: :ancestor_id, class_name: "Membership"
 
 
     #  This method builds a new membership having this group (self) as group associated.
@@ -102,10 +96,10 @@ concern :GroupMemberships do
     #
     def assign_user( user, options = {} )
       if user and not user.in?(self.direct_members)
-        membership = Membership.create(user: user, group: self)
         time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
-        membership.update_attribute(:valid_from, time_of_joining)
-        return membership
+        m = Membership.create user_id: user.id, group_id: self.id
+        m.update_attributes valid_from: time_of_joining # It does not work when added in `create`.
+        m
       end
     end
 

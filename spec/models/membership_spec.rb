@@ -61,23 +61,6 @@ describe Membership do
     # the indirect membership is created implicitly, becuase @group and @super_group are already connected.
   end
 
-  # Creation Class Method
-  # ====================================================================================================
-
-  describe ".create" do
-    it "should create a link between parent and child" do
-      Membership.create( user: @user, group: @group )
-      @user.parents.should include( @group )
-    end
-    it "should raise an error if argument is missing" do
-      expect { Membership.create( user: @user ) }.to raise_error RuntimeError
-      expect { Membership.create( group: @group ) }.to raise_error RuntimeError
-    end
-    it "should be able to identify a user by its 'user_title'" do
-      Membership.create( user_title: @user.title, group_id: @group.id )
-      @user.parents.should include @group
-    end
-  end
 
   # Finder Class Methods
   # ====================================================================================================

@@ -9,9 +9,20 @@
 #
 class Membership < DagLink
 
+  alias_attribute :user_id, :descendant_id
+  alias_attribute :user, :descendant
+  alias_attribute :group_id, :ancestor_id
+  alias_attribute :group, :ancestor
+
+  attr_accessible :user_id, :group_id if defined? attr_accessible
+
   before_validation :ensure_correct_ancestor_and_descendant_type
 
   has_many :issues, as: :reference, dependent: :destroy
+
+
+  include MembershipCreator
+
 
   # Validity Range
   # ====================================================================================================
@@ -42,38 +53,6 @@ class Membership < DagLink
     I18n.translate( :membership_of_user_in_group, user_name: self.user.title, group_name: self.group.name )
   end
 
-  # Creation Class Method
-  # ====================================================================================================
-
-  # Create a membership of the `u` in the group `g`.
-  #
-  #    membership = Membership.create( user: u, group: g )
-  #
-  def self.create( params )
-    if Membership.find_by( params ).present?
-      raise 'Membership already exists: id = ' + Membership.find_by( params ).id.to_s
-    else
-      user = params[:user]
-      user ||= User.find params[:user_id] if params[:user_id]
-      user ||= User.find_by_title params[:user_title] if params[:user_title]
-      raise "Could not create Membership without user." unless user
-
-      group = params[ :group ]
-      group ||= Group.find params[:group_id] if params[:group_id]
-      raise "Could not create Membership without group." unless group
-
-      new_membership = DagLink
-        .create(ancestor_id: group.id, ancestor_type: 'Group', descendant_id: user.id, descendant_type: 'User')
-        .becomes(Membership)
-
-      # This needs to be called manually, since DagLink won't call the proper callback.
-      #
-      new_membership.set_valid_from_to_now(true)
-      new_membership.save
-
-      return new_membership
-    end
-  end
 
 
   # Finder Class Methods
@@ -136,19 +115,6 @@ class Membership < DagLink
   # Access Methods to Associated User and Group
   # ====================================================================================================
 
-  def user
-    self.descendant
-  end
-
-  def user=(new_user)
-    self.descendant_id = new_user.id
-    self.descendant_type = 'User'
-  end
-
-  def user_id
-    self.descendant_id
-  end
-
   def user_title
     user.try(:title)
   end
@@ -156,19 +122,10 @@ class Membership < DagLink
     self.user = User.find_by_title(new_user_title)
   end
 
-  def group
-    self.ancestor
-  end
-
-  def group_id
-    self.ancestor_id
-  end
-
   def ensure_correct_ancestor_and_descendant_type
     self.ancestor_type = 'Group'
     self.descendant_type = 'User'
   end
-  private :ensure_correct_ancestor_and_descendant_type
 
 
   # Associated Corporation
@@ -272,7 +229,7 @@ class Membership < DagLink
   #    group1                       group2
   #      |---- user       =>          |---- user
   #
-  def move_to_group( group_to_move_in, options = {} )
+  def move_to_group(group_to_move_in, options = {})
     time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
     invalidate at: time
     group_to_move_in.assign_user self.user, at: time
@@ -283,19 +240,6 @@ class Membership < DagLink
 
   def promote_to( new_group, options = {} )
     self.move_to_group( new_group, options )
-  end
-
-
-  # Destroy
-  # ==========================================================================================
-
-  # The regular destroy method won't trigger DagLink's callbacks properly,
-  # causing the former dag link bug. By calling the DagLink's destroy method
-  # we'll ensure the callbacks are called and indirect memberships are destroyed
-  # correctly.
-  #
-  def destroy
-    DagLink.where(id: self.id).first.destroy
   end
 
 

@@ -1,20 +1,20 @@
 require 'spec_helper'
 
 describe MembershipMixins::ValidityRange do
-  
+
   before do
     @user = create(:user)
     @group = create(:group)
     @membership = Membership.create(user: @user, group: @group)
     @membership.reload
   end
-  
+
   specify "preliminaries" do
     @membership.should_not be_changed
     @membership.id.should be_kind_of Integer
     @membership.should be_kind_of Membership
   end
-  
+
   describe "#valid_from" do
     subject { @membership.valid_from }
     it { should be_kind_of Time }
@@ -33,7 +33,7 @@ describe MembershipMixins::ValidityRange do
       it { should be_kind_of Time }
     end
   end
-  
+
   describe "#valid_from_localized_date" do
     subject { @membership.valid_from_localized_date }
     describe "if no valid_from given" do
@@ -43,7 +43,7 @@ describe MembershipMixins::ValidityRange do
     describe "if a datetime given" do
       before do
         @time = "1.1.2013 12:30 UTC".to_datetime
-        @membership.valid_from = @time 
+        @membership.valid_from = @time
       end
       it { should == "01.01.2013" }
     end
@@ -70,7 +70,7 @@ describe MembershipMixins::ValidityRange do
       end
     end
   end
-  
+
   describe "#make_invalid" do
     describe "with time argument" do
       before { @time = 1.hour.ago }
@@ -107,7 +107,7 @@ describe MembershipMixins::ValidityRange do
       end
     end
   end
-  
+
   describe "#invalidate" do
     describe "with time argument" do
       before { @time = 1.hour.ago }
@@ -143,7 +143,7 @@ describe MembershipMixins::ValidityRange do
       end
     end
   end
-  
+
   describe "#currently_valid?" do
     subject { @membership.currently_valid? }
     it "should check whether the membership is valid in terms of the validity range at present time" do
@@ -164,7 +164,7 @@ describe MembershipMixins::ValidityRange do
       @membership.valid_at?(@time).should == false
     end
   end
-  
+
   describe "(temporal scopes)" do
     before do
       @valid_membership = @membership
@@ -176,7 +176,7 @@ describe MembershipMixins::ValidityRange do
       @invalid_membership.invalidate(@time)
       @query = Membership.find_all_by_user(@user)
     end
-    
+
     describe "#at_time" do
       subject { @query.at_time(@time + 1.minute) }
       it "should limit the search to match the validity range" do
@@ -184,7 +184,7 @@ describe MembershipMixins::ValidityRange do
         subject.should_not include @invalid_membership
       end
     end
-    
+
     describe "#only_valid" do
       subject { @query.only_valid }
       it "should return only memberships that are currently valid" do
@@ -192,7 +192,7 @@ describe MembershipMixins::ValidityRange do
         subject.should_not include @invalid_membership
       end
     end
-    
+
     describe "#only_invalid" do
       subject { @query.only_invalid }
       it "should return only memberships that are currently invalid" do
@@ -200,15 +200,15 @@ describe MembershipMixins::ValidityRange do
         subject.should include @invalid_membership
       end
     end
-    
+
     describe "#with_invalid" do
-      subject { @query.with_invalid } 
+      subject { @query.with_invalid }
       it "should return both valid and invalid memberships" do
         subject.should include @valid_membership
         subject.should include @invalid_membership
       end
     end
-    
+
     describe "(by default)" do
       subject { @query }
       it "should return only currently valid memberships" do
@@ -216,7 +216,7 @@ describe MembershipMixins::ValidityRange do
         subject.should_not include @invalid_membership
       end
     end
-    
+
     describe "#now" do
       subject { @query.now }
       it "should return only memberships that are currently valid" do
@@ -239,7 +239,7 @@ describe MembershipMixins::ValidityRange do
       end
     end
   end
-  
+
   describe "(validity range constraints)" do
     #
     #                     @time                   @now
