@@ -5,7 +5,7 @@ module CorporateVitaHelper
     }
   end
 
-  def status_group_membership_valid_from_best_in_place( membership )
+  def status_membership_valid_from_best_in_place( membership )
     best_in_place( membership,
                    :valid_from_localized_date,  # type: :date,
                    url: membership_path( id: membership.id,
@@ -17,11 +17,11 @@ module CorporateVitaHelper
                    )
   end
 
-  def status_group_membership_promoted_on_event( membership )
+  def status_membership_promoted_on_event( membership )
     event = membership.event
     best_in_place( membership,
                    :event_by_name,
-                   url: status_group_membership_path(membership),
+                   url: status_membership_path(membership),
                    class: 'status_event_by_name',
 #                   display_with: lambda do |v|
 #                     link_to membership.event.name, membership.event, :class => 'status_event_label'

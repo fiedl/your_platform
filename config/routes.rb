@@ -139,7 +139,7 @@ Rails.application.routes.draw do
   end
   resources :profile_fields
   resources :memberships
-  resources :status_group_memberships
+  resources :status_memberships
   resources :relationships
 
   get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'

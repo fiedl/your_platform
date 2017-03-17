@@ -1,6 +1,6 @@
 class StatusGroupMembershipInfo < ActiveRecord::Base
-  
-  belongs_to :membership, touch: true, class_name: "StatusGroupMembership", inverse_of: :status_group_membership_info 
+
+  belongs_to :membership, touch: true, class_name: "Memberships::Status", inverse_of: :status_membership_info
 
   belongs_to :promoted_by_workflow, foreign_key: 'promoted_by_workflow_id', class_name: "Workflow"
   belongs_to :promoted_on_event, foreign_key: 'promoted_on_event_id', class_name: "Event"
@@ -15,7 +15,7 @@ class StatusGroupMembershipInfo < ActiveRecord::Base
   # Status Group Memberships can store the workflow that has promoted the user to this
   # status. This is used, for example, in the corporate vita, since the title of the
   # promotion workflow is to be shown there, rather than the title of the new status group.
-  # 
+  #
   # Example:
   #     membership.promoted_by_workflow = workflow   # long form
   #     membership.workflow = workflow               # short form
@@ -31,7 +31,7 @@ class StatusGroupMembershipInfo < ActiveRecord::Base
 
   # Promoted On Event
   # ------------------------------------------------------------------------------------------
-  # 
+  #
   # This stores the event on which the promotion took place that caused the user to be
   # in this status group.
   #
@@ -40,7 +40,7 @@ class StatusGroupMembershipInfo < ActiveRecord::Base
   #     membership.event = event                     # short form
   #     membership.promoted_on_event.name            # long form
   #     membership.event.title                       # short form
-  # 
+  #
   def event
     self.promoted_on_event
   end
