@@ -11,7 +11,7 @@ class StatusGroupMembershipsController < ApplicationController
     if @status_group_membership.update_attributes( attributes )
       respond_with @status_group_membership
     else
-      raise "updating attributes of user_group_membership has failed: " + @status_group_membership.errors.full_messages.first
+      raise "updating attributes of membership has failed: " + @status_group_membership.errors.full_messages.first
     end
   end
 

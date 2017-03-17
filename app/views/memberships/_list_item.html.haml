@@ -1,6 +1,6 @@
-- # locals: (user_group_membership)  or  (user, group)
-- user ||= user_group_membership.user
-- group ||= user_group_membership.group
+- # locals: (membership)  or  (user, group)
+- user ||= membership.user
+- group ||= membership.group
 %li
   = link_to user do
     = render partial: 'users/user_title', locals: {user: user}

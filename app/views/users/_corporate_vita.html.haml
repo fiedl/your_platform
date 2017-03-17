@@ -12,7 +12,7 @@
               %tr{ class: "membership #{needs_review_class}" }
                 %td
                   - if needs_review
-                    = link_to(user_group_membership_path(membership, 'user_group_membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
+                    = link_to(membership_path(membership, 'membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
                       = icon 'ok'
                 %td.membership_valid_from
                   - if can? :update, membership

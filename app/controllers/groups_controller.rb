@@ -78,7 +78,7 @@ class GroupsController < ApplicationController
 
         # @posts = @group.posts.order("sent_at DESC").limit(10)
 
-        @new_user_group_membership = @group.build_membership
+        @new_membership = @group.build_membership
       end
     end
 

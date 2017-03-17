@@ -9,7 +9,7 @@ class GroupMembersController < ApplicationController
       .select { |member_row| member_row[:user_id].in? accessible_user_ids }
       .select { |member_row| params[:valid_from].nil? || member_row[:joined_at] > params[:valid_from].to_datetime }
   }
-  expose :new_user_group_membership, -> { group.build_membership }
+  expose :new_membership, -> { group.build_membership }
   expose :own_memberships, -> { Membership.with_past.find_all_by_user_and_group(current_user, group) }
 
   def index

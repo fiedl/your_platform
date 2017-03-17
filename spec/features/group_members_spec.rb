@@ -21,7 +21,7 @@ feature "Group Members Page" do
     # scenario "adding a user as a direct member of the group", :js do
     #   visit group_members_path(@group)
     # 
-    #   fill_autocomplete :user_group_membership_user_title, with: "Max", select: @user.title
+    #   fill_autocomplete :membership_user_title, with: "Max", select: @user.title
     #   find('.user-select-input').value.should == @user.title
     #     
     #   within('.add_group_members') do
@@ -48,11 +48,11 @@ feature "Group Members Page" do
     # scenario "adding a user as a direct member of the group with a date", :js do
     #   visit group_members_path(@group)
     # 
-    #   fill_autocomplete :user_group_membership_user_title, with: "Max", select: @user.title
+    #   fill_autocomplete :membership_user_title, with: "Max", select: @user.title
     #   find('.user-select-input').value.should == @user.title
     #     
     #   within('.add_group_members') do
-    #     fill_in 'user_group_membership[valid_from]', with: '2015-05-08'
+    #     fill_in 'membership[valid_from]', with: '2015-05-08'
     #     click_on I18n.t(:add)
     #   end
     # 
