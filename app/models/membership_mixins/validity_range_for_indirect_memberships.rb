@@ -25,7 +25,9 @@ module MembershipMixins::ValidityRangeForIndirectMemberships
   extend ActiveSupport::Concern
 
   included do
-    after_save { RecalculateIndirectMembershipsJob.perform_later(self) if self.direct? }
+    # The `becomes` part is needed for serialization, because this is also
+    # executed for subclasses like `Memberships::Status`.
+    after_save { RecalculateIndirectMembershipsJob.perform_later(self.becomes(self.type.constantize)) if self.direct? }
   end
 
 

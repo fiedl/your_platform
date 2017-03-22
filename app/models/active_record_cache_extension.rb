@@ -173,7 +173,6 @@ module ActiveRecordCacheExtension
   end
 
   module ClassMethods
-    attr_accessor :cached_methods
 
     # This class method provides a new way to cache methods.
     #
@@ -222,15 +221,21 @@ module ActiveRecordCacheExtension
           }
         end
 
-        self.cached_methods ||= self.ancestors.collect { |ancestor_class|
-          ancestor_class.cached_methods if ancestor_class.respond_to?(:cached_methods)
-        }.flatten.uniq - [nil]
-        self.cached_methods << method_name
+        self.cached_methods += [method_name]
       end
     end
 
     def use_caching?
       not ENV['NO_CACHING']
+    end
+
+    def cached_methods=(methods)
+      @cached_methods = methods
+    end
+    def cached_methods
+      @cached_methods ||= self.ancestors.collect { |ancestor_class|
+        ancestor_class.cached_methods if (ancestor_class.name != self.name) && ancestor_class.respond_to?(:cached_methods)
+      }.flatten.uniq - [nil]
     end
 
   end
