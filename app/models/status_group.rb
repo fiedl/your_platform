@@ -34,4 +34,8 @@ class StatusGroup < Group
     status_groups.last
   end
 
+  def self.model_name
+    Attachment.model_name
+  end
+
 end

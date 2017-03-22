@@ -8,6 +8,7 @@ concern :MembershipCreator do
       attributes[:descendant_id] ||= attributes[:user_id] || attributes[:user].try(:id)
       attributes[:ancestor_type] = "Group"
       attributes[:descendant_type] = "User"
+      attributes = attributes.except(:group_id, :user_id)
       membership = DagLink.create(attributes).becomes(Membership)
 
       membership.valid_from ||= Time.zone.now
