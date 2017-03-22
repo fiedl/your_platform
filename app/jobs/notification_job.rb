@@ -1,10 +1,10 @@
-class NotificationJob < ActiveJob::Base
+class NotificationJob < ApplicationJob
   queue_as :notification
-  
+
   def perform(*args)
     # # Deliver all notifications that are due to be sent.
     # Notification.due.deliver
-    
+
     # 2015-05-28
     # For the moment, this job is deactivated.
     # We are experimenting with a rake task that runs `Notification.due.deliver`
