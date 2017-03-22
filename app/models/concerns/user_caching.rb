@@ -16,6 +16,7 @@ concern :UserCaching do
     cache :status_group_in_primary_corporation
     cache :status_export_string
     cache :hidden
+    cache :workflows_by_corporation
 
     # UserDateOfBirth
     cache :date_of_birth

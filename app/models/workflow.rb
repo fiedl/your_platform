@@ -67,6 +67,9 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
   def self.find_mark_as_deceased_workflow
     Workflow.where(name: "Todesfall").first
   end
+  def self.find_mark_as_deceased_workflow_id
+    @find_mark_as_deceased_workflow_id ||= Workflow.where(name: "Todesfall").pluck(:id).first
+  end
 
   def self.create_mark_as_deceased_workflow
     raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
@@ -77,4 +80,6 @@ class Workflow < WorkflowKit::Workflow  #< ActiveRecord::Base
     step.save
     return workflow
   end
+
+  include WorkflowCaching if use_caching?
 end
