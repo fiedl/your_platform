@@ -7,4 +7,8 @@ class Memberships::Status < Membership
 
   include ::StatusMembershipFinders
 
+  def model_name
+    Membership.model_name
+  end
+
 end

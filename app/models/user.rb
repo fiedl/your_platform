@@ -539,8 +539,7 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-    self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
+    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past
   end
 
 
