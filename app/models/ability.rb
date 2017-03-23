@@ -144,7 +144,7 @@ class Ability
       can :index, :all
     else
       can :manage, :all
-      can :execute, Workflow
+      can :execute, [Workflow, WorkflowKit::Workflow]
 
       # There are features for developers and beta testers.
       cannot :use, :all
@@ -168,7 +168,7 @@ class Ability
           can?(:update, profile_field.profileable)
       end
 
-      can :execute, Workflow do |workflow|
+      can :execute, [Workflow, WorkflowKit::Workflow] do |workflow|
         # Local admins can execute workflows of groups they're admins of.
         # And they can execute the mark_as_deceased workflow, which is a global workflow.
         #
