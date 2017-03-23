@@ -37,6 +37,14 @@ feature 'Corporate Vita', js: true do
       visit user_path( @user )
     end
 
+    specify "prelims" do
+      @user.workflows_by_corporation.should == {
+        @corporation.name => [@first_promotion_workflow]
+      }
+      User.last.should be_global_admin
+      User.last.can?(:execute, @first_promotion_workflow).should be_true
+    end
+
     describe 'viewing the user page' do
       subject { page } # user profile page
       it 'should list the status group the user is a member of' do

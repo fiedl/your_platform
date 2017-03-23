@@ -144,6 +144,7 @@ class Ability
       can :index, :all
     else
       can :manage, :all
+      can :execute, Workflow
 
       # There are features for developers and beta testers.
       cannot :use, :all
