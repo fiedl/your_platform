@@ -204,8 +204,8 @@ module ActiveRecordCacheExtension
       if use_caching?
         alias_method "uncached_#{method_name}", method_name
 
-        define_method(method_name) {
-          cached_block(method_name: method_name) { self.send "uncached_#{method_name}" }
+        define_method(method_name) { |*args|
+          cached_block(method_name: method_name, arguments: args) { self.send "uncached_#{method_name}", *args }
         }
 
         # If a setter method exists as well, make the setter method
