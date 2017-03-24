@@ -42,12 +42,18 @@ concern :GroupMemberList do
     memberships_for_member_list.count
   end
 
+  def latest_membership_ids
+    self.memberships.with_invalid.reorder('valid_from DESC').limit(10).pluck(:id)
+  end
   def latest_memberships
-    self.memberships.with_invalid.reorder('valid_from DESC').limit(10).includes(:descendant)
+    Membership.where(id: latest_membership_ids).includes(:descendant)
   end
 
+  def membership_ids_this_year
+    self.memberships.this_year.pluck(:id)
+  end
   def memberships_this_year
-    self.memberships.this_year
+    Membership.where(id: membership_ids_this_year)
   end
 
   def memberships_including_members

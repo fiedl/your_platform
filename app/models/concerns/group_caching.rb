@@ -4,7 +4,7 @@ concern :GroupCaching do
   # Otherwise, the methods to be cached are not declared, yet.
   #
   included do
-    after_save { self.delay.renew_cache }
+    after_save { RenewCacheJob.perform_later(self, time: Time.zone.now) }
 
     cache :corporation_id
     cache :leaf_group_ids
@@ -15,11 +15,30 @@ concern :GroupCaching do
     # GroupMemberships
     cache :membership_ids_for_member_list
     cache :memberships_for_member_list_count
-    cache :latest_memberships
-    cache :memberships_this_year
+    cache :latest_membership_ids
+    cache :membership_ids_this_year
 
     # GroupMemberList
     cache :member_table_rows
+
+    # GroupEvents
+    cache :event_ids_of_self_and_subgroups
+
+    # GroupListExports
+    cache :export_list
+  end
+
+  def fill_cache
+    super
+    fill_cache_for_export_lists
+  end
+
+  def fill_cache_for_export_lists
+    Group.export_list_presets.each do |preset|
+      [:csv, :xls].each do |format|
+        self.export_list preset: preset, format: format
+      end
+    end
   end
 
   include StructureableRoleCaching

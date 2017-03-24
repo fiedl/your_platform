@@ -13,7 +13,7 @@ module SemesterCalendarsHelper
     # http://railscasts.com/episodes/196-nested-model-form-revised
     form = options[:form] || raise('no form given')
     semester_calendar = form.object
-    new_event = semester_calendar.group.child_events.new
+    new_event = semester_calendar.group.events.new
     new_event.contact_person_id = semester_calendar_default_contact_person(semester_calendar).try(:id)
     uniq_id = new_event.object_id
     fields = form.fields_for :events, new_event, child_index: uniq_id do |builder|

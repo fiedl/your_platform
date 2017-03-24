@@ -43,7 +43,7 @@ describe SemesterCalendar do
       end
       it "should add the new event to the calendars corporation" do
         subject
-        Event.last.ancestor_groups.should include @corporation
+        Event.last.group.should == @corporation
       end
     end
   end

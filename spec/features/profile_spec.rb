@@ -13,7 +13,7 @@ feature "Profile", :js do
     end
     
     scenario "editing the group profile" do
-      @profile_field = @group.profile_fields.create(label: 'Group Phone', type: 'ProfileFieldTypes::Phone', value: "123-4")
+      @profile_field = @group.profile_fields.create(label: 'Group Phone', type: 'ProfileFields::Phone', value: "123-4")
       
       visit group_profile_path(@group)
       within('.box.contact_information') do

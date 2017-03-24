@@ -12,7 +12,7 @@ class ProfileField < ActiveRecord::Base
   #
   validates_each :type do |record, attr, value|
     if value
-      if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFieldTypes::" ) )
+      if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFields::" ) )
         record.errors.add "#{value} is not a ProfileFieldTypes class."
       end
     end
@@ -95,7 +95,7 @@ class ProfileField < ActiveRecord::Base
   end
 
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
-  # Example: For a ProfileFieldTypes::FooBar-type profile field, this method returns 'foo_bar'.
+  # Example: For a ProfileFields::FooBar-type profile field, this method returns 'foo_bar'.
   #
   def underscored_type
     self.type.demodulize.underscore
@@ -154,7 +154,7 @@ class ProfileField < ActiveRecord::Base
   #
   before_save :include_module_in_type_column
   def include_module_in_type_column
-    type = "ProfileFieldTypes::#{type}" if not type.include?( "::" ) if type
+    type = "ProfileFields::#{type}" if not type.include?( "::" ) if type
   end
   private :include_module_in_type_column
 
@@ -162,16 +162,16 @@ class ProfileField < ActiveRecord::Base
   # List all possible types. This is needed for code injection security checks.
   #
   def self.possible_types
-    [ProfileFieldTypes::General, ProfileFieldTypes::Custom,
-      ProfileFieldTypes::Organization, ProfileFieldTypes::Email,
-      ProfileFieldTypes::MailingListEmail,
-      ProfileFieldTypes::Address, ProfileFieldTypes::About,
-      ProfileFieldTypes::Employment, ProfileFieldTypes::ProfessionalCategory,
-      ProfileFieldTypes::Competence, ProfileFieldTypes::BankAccount,
-      ProfileFieldTypes::Description, ProfileFieldTypes::Phone,
-      ProfileFieldTypes::NameSurrounding, ProfileFieldTypes::Homepage,
-      ProfileFieldTypes::Date, ProfileFieldTypes::AcademicDegree,
-      ProfileFieldTypes::Study
+    [ProfileFields::General, ProfileFields::Custom,
+      ProfileFields::Organization, ProfileFields::Email,
+      ProfileFields::MailingListEmail,
+      ProfileFields::Address, ProfileFields::About,
+      ProfileFields::Employment, ProfileFields::ProfessionalCategory,
+      ProfileFields::Competence, ProfileFields::BankAccount,
+      ProfileFields::Description, ProfileFields::Phone,
+      ProfileFields::NameSurrounding, ProfileFields::Homepage,
+      ProfileFields::Date, ProfileFields::AcademicDegree,
+      ProfileFields::Study
     ]
   end
 

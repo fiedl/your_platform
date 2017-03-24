@@ -31,7 +31,7 @@ concern :UserRoles do
   def member_of?( object, options = {} )
     if object.kind_of? Group
       if options[:at]
-        UserGroupMembership.find_all_by(user: self, group: object).at_time(options[:at]).any?
+        Membership.find_all_by(user: self, group: object).at_time(options[:at]).any?
       elsif options[:with_invalid] or options[:also_in_the_past]
         self.ancestor_group_ids.include? object.id
       else  # only current memberships:
@@ -169,8 +169,8 @@ concern :UserRoles do
     if new_setting == true
       Group.everyone.assign_admin self
     else
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
+      Membership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
+      Membership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
 

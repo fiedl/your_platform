@@ -6,10 +6,10 @@ feature "Events" do
   before do
     @user = create(:user_with_account)
     @group = create(:group)
-    @event = @group.child_events.create name: "Graduation Celebration", start_at: 1.day.from_now
+    @event = @group.events.create name: "Graduation Celebration", start_at: 1.day.from_now
 
     @other_group = create(:group)
-    @other_event = @other_group.child_events.create name: "Other Event", start_at: 2.days.from_now
+    @other_event = @other_group.events.create name: "Other Event", start_at: 2.days.from_now
 
     # Apparently, the callbacks need time. If we don't sleep here, `ActiveRecord::RecordNotFound`
     # is raised. In practice, we use an error handler in the EventsController due to this inconvenience.
@@ -34,10 +34,10 @@ feature "Events" do
 
     specify "the public feed should allow to limit the number of events" do
       Event.destroy_all
-      @event1 = @group.child_events.create name: 'event 1', publish_on_global_website: true, start_at: 1.day.from_now
-      @event2 = @group.child_events.create name: 'event 2', publish_on_global_website: true, start_at: 2.day.from_now
-      @event3 = @group.child_events.create name: 'event 3', publish_on_global_website: true, start_at: 3.day.from_now
-      @event4 = @group.child_events.create name: 'event 4', publish_on_global_website: true, start_at: 4.day.from_now
+      @event1 = @group.events.create name: 'event 1', publish_on_global_website: true, start_at: 1.day.from_now
+      @event2 = @group.events.create name: 'event 2', publish_on_global_website: true, start_at: 2.day.from_now
+      @event3 = @group.events.create name: 'event 3', publish_on_global_website: true, start_at: 3.day.from_now
+      @event4 = @group.events.create name: 'event 4', publish_on_global_website: true, start_at: 4.day.from_now
 
       visit public_events_path(limit: 3)
       page.should have_text @event1.name
@@ -48,10 +48,10 @@ feature "Events" do
 
     specify "the public feed should display the events ordered by the start time" do
       Event.destroy_all
-      @event4 = @group.child_events.create name: 'event 4', publish_on_global_website: true, start_at: 4.day.from_now
-      @event2 = @group.child_events.create name: 'event 2', publish_on_global_website: true, start_at: 2.day.from_now
-      @event3 = @group.child_events.create name: 'event 3', publish_on_global_website: true, start_at: 3.day.from_now
-      @event1 = @group.child_events.create name: 'event 1', publish_on_global_website: true, start_at: 1.day.from_now
+      @event4 = @group.events.create name: 'event 4', publish_on_global_website: true, start_at: 4.day.from_now
+      @event2 = @group.events.create name: 'event 2', publish_on_global_website: true, start_at: 2.day.from_now
+      @event3 = @group.events.create name: 'event 3', publish_on_global_website: true, start_at: 3.day.from_now
+      @event1 = @group.events.create name: 'event 1', publish_on_global_website: true, start_at: 1.day.from_now
 
       visit public_events_path(limit: 3)
       page.body.should =~ /#{@event1.name}.*#{@event2.name}.*#{@event3.name}/m  # `/m` allowes newlines.
@@ -65,10 +65,10 @@ feature "Events" do
 
     specify "the local feed should allow to limit the number of events" do
       Event.destroy_all
-      @event1 = @group.child_events.create name: 'event 1', publish_on_local_website: true, start_at: 1.day.from_now
-      @event2 = @group.child_events.create name: 'event 2', publish_on_local_website: true, start_at: 2.day.from_now
-      @event3 = @group.child_events.create name: 'event 3', publish_on_local_website: true, start_at: 3.day.from_now
-      @event4 = @group.child_events.create name: 'event 4', publish_on_local_website: true, start_at: 4.day.from_now
+      @event1 = @group.events.create name: 'event 1', publish_on_local_website: true, start_at: 1.day.from_now
+      @event2 = @group.events.create name: 'event 2', publish_on_local_website: true, start_at: 2.day.from_now
+      @event3 = @group.events.create name: 'event 3', publish_on_local_website: true, start_at: 3.day.from_now
+      @event4 = @group.events.create name: 'event 4', publish_on_local_website: true, start_at: 4.day.from_now
 
       visit group_events_public_path(@group, limit: 3)
       page.should have_text @event1.name
@@ -342,10 +342,9 @@ feature "Events" do
     background do
       @corporation = create :corporation_with_status_groups
       @corporation.status_groups.first.assign_user @user, at: 1.month.ago
-      @president = @corporation.officers_parent.child_groups.create name: 'President'
+      @president = @corporation.create_officer_group name: 'President'
       @president.assign_user @user, at: 5.days.ago
-      @other_event = create :event
-      @other_event.parent_groups << @corporation
+      @other_event = create :event, group_id: @corporation.id
     end
     scenario "creating an event as officer of a local corporation (bug fix)" do
       login @user

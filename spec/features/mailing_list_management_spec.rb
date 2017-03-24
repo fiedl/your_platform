@@ -20,7 +20,7 @@ feature "Mailing list management" do
     end
 
     wait_for_ajax
-    @profile_fields = @group.profile_fields.where(type: 'ProfileFieldTypes::MailingListEmail')
+    @profile_fields = @group.profile_fields.where(type: 'ProfileFields::MailingListEmail')
     @profile_fields.count.should == 1
     @profile_fields.first.label.should == 'New Mailing List'
     @profile_fields.first.value.should == 'mailinglist@example.com'

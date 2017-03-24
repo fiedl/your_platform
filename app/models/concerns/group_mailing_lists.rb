@@ -8,7 +8,7 @@ concern :GroupMailingLists do
   # are used as mailing list for that group.
   #
   def mailing_lists
-    self.profile_fields.where(type: 'ProfileFieldTypes::MailingListEmail')
+    self.profile_fields.where(type: 'ProfileFields::MailingListEmail')
   end
   
   # Possible settings for the sender filter, i.e. the group attribute that determines

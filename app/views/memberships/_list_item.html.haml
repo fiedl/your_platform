@@ -1,0 +1,9 @@
+- # locals: (membership)  or  (user, group)
+- user ||= membership.user
+- group ||= membership.group
+%li
+  = link_to user do
+    = render partial: 'users/user_title', locals: {user: user}
+  -# - if can? :manage, user
+  -#   %span.show_only_in_edit_mode
+  -#     = workflow_execution_links_for( group: group, user: user )

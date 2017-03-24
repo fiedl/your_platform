@@ -13,15 +13,16 @@ class Group < ApplicationRecord
                                        # members of the group; example: 'AC'
                       :extensive_name, # (optional) a long version of the group's name;
                                        # example: 'The Corporation of A'
-                      :direct_members_titles_string # Used for inline-editing: The comma-separated
-                                                    # titles of the child users of the group.
+                      :direct_members_titles_string, # Used for inline-editing: The comma-separated
+                                                     # titles of the child users of the group.
+                      :type
                       )
   end
 
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
   is_structureable(ancestor_class_names: %w(Group Page Event),
-                   descendant_class_names: %w(Group User Page Workflow Event Project))
+                   descendant_class_names: %w(Group User Page Workflow Project))
   is_navable
   has_profile_fields
 
@@ -46,6 +47,7 @@ class Group < ApplicationRecord
   include GroupWelcomeMessage
   include GroupSemesterCalendars
   include GroupEvents
+  include GroupListExports
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -222,7 +224,10 @@ class Group < ApplicationRecord
   end
 
   def status_groups
-    StatusGroup.find_all_by_group(self)
+    descendant_groups.where(type: "StatusGroup")
+  end
+  def status_group_ids
+    status_groups.pluck(:id)
   end
 
   def find_deceased_members_parent_group

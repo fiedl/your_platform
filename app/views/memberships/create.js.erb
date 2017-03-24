@@ -1,0 +1,9 @@
+
+$('.new_users_waiting i:last').remove();
+
+$('.members_count').text("(<%=j @membership.group.members.count.to_s %>)");
+
+new_list_item = $("<%=j render partial: 'memberships/list_item', locals: {membership: @membership} %>");
+new_list_item.appendTo('ul.new_memberships').hide().show('scale', {}, 900);
+
+$('.new_users_please_reload').removeClass('hidden').show()

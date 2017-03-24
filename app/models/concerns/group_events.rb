@@ -33,7 +33,7 @@ concern :GroupEvents do
   end
 
   def upcoming_events
-    self.events.upcoming.order('start_at')
+    self.events_with_subgroups.upcoming.order('start_at')
   end
 
 end

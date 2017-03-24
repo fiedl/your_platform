@@ -15,24 +15,24 @@ class ProfileSection < Struct.new(:title, :profileable)
   def profile_field_types
     case(self.title.to_sym)
       when :general
-        [ "ProfileFieldTypes::AcademicDegree", "ProfileFieldTypes::General" ]
+        [ "ProfileFields::AcademicDegree", "ProfileFields::General" ]
       when :contact_information
-        [ "ProfileFieldTypes::Address", "ProfileFieldTypes::Email", "ProfileFieldTypes::MailingListEmail",
-          "ProfileFieldTypes::Phone", "ProfileFieldTypes::Homepage", "ProfileFieldTypes::Custom" ]
+        [ "ProfileFields::Address", "ProfileFields::Email", "ProfileFields::MailingListEmail",
+          "ProfileFields::Phone", "ProfileFields::Homepage", "ProfileFields::Custom" ]
       when :about_myself
-        [ "ProfileFieldTypes::About" ]
+        [ "ProfileFields::About" ]
       when :study_information
-        [ "ProfileFieldTypes::Study" ]
+        [ "ProfileFields::Study" ]
       when :career_information
-        [ "ProfileFieldTypes::Employment", "ProfileFieldTypes::ProfessionalCategory", "ProfileFieldTypes::Competence" ]
+        [ "ProfileFields::Employment", "ProfileFields::ProfessionalCategory", "ProfileFields::Competence" ]
       when :organizations
-        [ "ProfileFieldTypes::Organization" ]
+        [ "ProfileFields::Organization" ]
       when :bank_account_information
-        [ "ProfileFieldTypes::BankAccount" ]
+        [ "ProfileFields::BankAccount" ]
       when :description
-        [ "ProfileFieldTypes::Description" ]
+        [ "ProfileFields::Description" ]
       when :communication
-        [ "ProfileFieldTypes::NameSurrounding" ]
+        [ "ProfileFields::NameSurrounding" ]
       else
         []
     end

@@ -1,47 +1,5 @@
-$(document).ready ->
-
-  # Sorting by date in German:
-  # http://datatables.net/plug-ins/sorting/date-de
-  #
-  jQuery.extend jQuery.fn.dataTableExt.oSort,
-    "de_date-asc": (a, b) ->
-      x = undefined
-      y = undefined
-      if $.trim(a) isnt ""
-        deDatea = $.trim(a).split(" ")
-        deDatea2 = deDatea[0].split(".")
-        x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
-      else
-        x = Infinity # = l'an 1000 ...
-      if $.trim(b) isnt ""
-        deDateb = $.trim(b).split(" ")
-        deDateb = deDateb[0].split(".")
-        y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
-      else
-        y = Infinity
-      z = ((if (x < y) then -1 else ((if (x > y) then 1 else 0))))
-      z
-
-    "de_date-desc": (a, b) ->
-      x = undefined
-      y = undefined
-      if $.trim(a) isnt ""
-        deDatea = $.trim(a).split(" ")
-        deDatea2 = deDatea[0].split(".")
-        x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
-      else
-        x = Infinity
-      if $.trim(b) isnt ""
-        deDateb = $.trim(b).split(" ")
-        deDateb = deDateb[0].split(".")
-        y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
-      else
-        y = Infinity
-      z = ((if (x < y) then 1 else ((if (x > y) then -1 else 0))))
-      z
-
-
-  language_options = ->
+App.datatables = {
+  language_options: ->
     if $('body').data('locale') == 'de'
       {
         "sEmptyTable":     "Keine Daten in der Tabelle vorhanden.",
@@ -69,107 +27,180 @@ $(document).ready ->
     else
       {}
 
-  common_configuration = {
-    "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
-    "sPaginationType": "full", # https://datatables.net/reference/option/pagingType
-    "bJQueryUI": true,
-    "lengthMenu": [ 10, 20, 50, 100, 1000 ],
-    "language": language_options(),
-    "drawCallback": (settings)->
-      # Hide the pagination elements if there is only one page.
-      if (settings._iDisplayLength > settings.fnRecordsDisplay())
-        $(settings.nTableWrapper).find('.dataTables_paginate').hide()
-      else
-        $(settings.nTableWrapper).find('.dataTables_paginate').show()
-  }
+  common_configuration: ->
+    {
+      "sDom": "<'row'<'span6'l><'span6'f>r>t<'row'<'span6'i><'span6'p>>",
+      "sPaginationType": "full", # https://datatables.net/reference/option/pagingType
+      "bJQueryUI": true,
+      "lengthMenu": [ 10, 20, 50, 100, 1000 ],
+      "language": App.datatables.language_options(),
+      "drawCallback": (settings)->
+        # Hide the pagination elements if there is only one page.
+        if (settings._iDisplayLength > settings.fnRecordsDisplay())
+          $(settings.nTableWrapper).find('.dataTables_paginate').hide()
+        else
+          $(settings.nTableWrapper).find('.dataTables_paginate').show()
+    }
 
-  $('.datatable.activities').dataTable(jQuery.extend({
-    "pageLength": 100,
-    "order": [[0, "desc"]],
-    "columnDefs": [
-      {width: "50%", targets: 4}
-    ]
-  }, common_configuration))
-  $('.datatable.members').dataTable(jQuery.extend({
+  extend_sort: ->
+    # Sorting by date in German:
+    # http://datatables.net/plug-ins/sorting/date-de
+    #
+    jQuery.extend jQuery.fn.dataTableExt.oSort,
+      "de_date-asc": (a, b) ->
+        x = undefined
+        y = undefined
+        if $.trim(a) isnt ""
+          deDatea = $.trim(a).split(" ")
+          deDatea2 = deDatea[0].split(".")
+          x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
+        else
+          x = Infinity # = l'an 1000 ...
+        if $.trim(b) isnt ""
+          deDateb = $.trim(b).split(" ")
+          deDateb = deDateb[0].split(".")
+          y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
+        else
+          y = Infinity
+        z = ((if (x < y) then -1 else ((if (x > y) then 1 else 0))))
+        z
+
+      "de_date-desc": (a, b) ->
+        x = undefined
+        y = undefined
+        if $.trim(a) isnt ""
+          deDatea = $.trim(a).split(" ")
+          deDatea2 = deDatea[0].split(".")
+          x = (deDatea2[2] + deDatea2[1] + deDatea2[0]) * 1
+        else
+          x = Infinity
+        if $.trim(b) isnt ""
+          deDateb = $.trim(b).split(" ")
+          deDateb = deDateb[0].split(".")
+          y = (deDateb[2] + deDateb[1] + deDateb[0]) * 1
+        else
+          y = Infinity
+        z = ((if (x < y) then 1 else ((if (x > y) then -1 else 0))))
+        z
+
+  adjust_css: ->
+    # Modify the datatable filter bar.
+    $('.dataTables_filter label input')
+     .attr('placeholder', I18n.t('type_to_filter_table'))
+     .addClass('form-control')
+
+  create: (selector, options)->
+    if $(selector).size() > 0
+      unless $.fn.dataTable.isDataTable(selector)
+        configuration = {}
+        $.extend configuration, App.datatables.common_configuration()
+        $.extend configuration, options
+        $(selector).dataTable(configuration)
+        App.datatables.adjust_css()
+}
+
+$(document).ready ->
+  App.datatables.extend_sort()
+
+  App.datatables.create '.datatable.members', {
     "pageLength": 20,
     "order": [[3, "desc"]],
     columnDefs: [
       {width: "15%", type: 'de_date', targets: 3}
     ]
-  }, common_configuration))
-  $('.datatable.groups').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.activities', {
+    "pageLength": 100,
+    "order": [[0, "desc"]],
+    "columnDefs": [
+      {width: "50%", targets: 4}
+    ]
+  }
+
+  App.datatables.create '.datatable.members', {
+    "pageLength": 20,
+    "order": [[3, "desc"]],
+    columnDefs: [
+      {width: "15%", type: 'de_date', targets: 3}
+    ]
+  }
+
+  App.datatables.create '.datatable.groups', {
     "order": [[0, "asc"]],
     "pageLength": 100
-  }, common_configuration))
-  $('.datatable.group_of_groups').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.group_of_groups', {
     "pageLength": 100
-  }, common_configuration))
-  $('.datatable.events').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.events', {
     "order": [[1, "desc"]],
     "pageLength": 100,
     columnDefs: [
       { type: 'de_date', targets: 1}
     ]
-  }, common_configuration))
-  $('.datatable.statistics').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.statistics', {
     "pageLength": 100,
     "order": [[0, "asc"]]
-  }, common_configuration))
-  $('.datatable.memberships').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.memberships', {
     "pageLength": 100,
     columnDefs: [
       { type: 'de_date', targets: 3 },
       { type: 'de_date', targets: 4 }
     ]
-  }, common_configuration))
-  $('.datatable.officers').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.officers', {
     "pageLength": 100,
-  }, common_configuration))
-  $('.datatable.issues').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.issues', {
     "pageLength": 100,
     "columnDefs": [
       {"width": "20%", "targets": 0},
       {"width": "20%", "targets": 1},
       {"width": "20%", "targets": 3}
     ]
-  }, common_configuration))
-  $('.datatable.projects').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.projects', {
     "pageLength": 100,
     "order": [[3, "desc"]]
     columnDefs: [
       { type: 'de_date', targets: 2 },
       { type: 'de_date', targets: 3 }
     ]
-  }, common_configuration))
-  $('.datatable.profile_fields').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.profile_fields', {
     "pageLength": 100,
     "order": [[0, "asc"]]
-  }, common_configuration))
-  $('.datatable.mailing_lists').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.mailing_lists', {
     "pageLength": 100,
     "order": [[0, "asc"]],
     "columnDefs": [
       {"width": "40%", "targets": 0},
       {"width": "20%", "targets": 2}
     ]
-  }, common_configuration))
-  $('.datatable.term_reports').dataTable(jQuery.extend({
+  }
+
+  App.datatables.create '.datatable.term_reports', {
     "pageLength": 50,
     "order": [[0, "asc"]],
     columnDefs: [
       { type: 'de_date', targets: 3 }
     ]
-  }, common_configuration))
+  }
 
-  $('.datatable.bv_mappings').dataTable(jQuery.extend({
-    "pageLength": 25,
-    "order": [[2, "asc"], [0, "asc"]]
-  }, common_configuration))
-
-
-  # Insert above.
-  # This modified the common_configuration:
-  $('.datatable.officers_by_scope').dataTable(jQuery.extend(common_configuration, {
+  App.datatables.create '.datatable.officers_by_scope', {
     "pageLength": 100,
     "columnDefs": [
       {visible: false, targets: 0},
@@ -195,11 +226,9 @@ $(document).ready ->
           $(rows).eq(i).before '<tr class="group scope"><td colspan="5"><div class="group-wrapper">' + group + '</div></td></tr>'
           last = group
         return
-  }))
+  }
 
-
-
-  # Modify the datatable filter bar.
-  $('.dataTables_filter label input')
-    .attr('placeholder', I18n.t('type_to_filter_table'))
-    .addClass('form-control')
+  App.datatables.create '.datatable.bv_mappings', {
+    "pageLength": 25,
+    "order": [[2, "asc"], [0, "asc"]]
+  }

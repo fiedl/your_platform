@@ -37,9 +37,9 @@ class ListExport
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
     when 'member_development'
-      [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
+      [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + (@leaf_group_names - [nil])
     when 'join_statistics', 'join_and_persist_statistics'
-      [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse
+      [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse.map(&:to_s)
     else
       raise "The list '#{preset.to_s}' is not defined."
     end
@@ -134,7 +134,7 @@ class ListExport
       #   ...
       #
       if @data.kind_of? Group
-        @groups = @data.child_groups
+        @groups = [@data] + @data.child_groups
         if preset.to_s == 'join_and_persist_statistics'
           @groups = @groups.select { |g| g.members.count > 0 }
         end
@@ -144,8 +144,8 @@ class ListExport
       @groups.collect do |group|
         row = {}
         columns.each do |column|
-          row[column] = if column.kind_of? Integer
-            year = column
+          row[column] = if column.to_s.to_i.to_s.length == 4
+            year = column.to_i
             memberships = []
             if preset.to_s == 'join_statistics'
               memberships = group.memberships.with_past
@@ -176,10 +176,6 @@ class ListExport
     when 'phone_list', 'email_list'
       data.sort_by do |user_hash|
         user_hash[:last_name] + user_hash[:first_name]
-      end
-    when 'join_statistics', 'join_and_persist_statistics'
-      data.sort_by do |row|
-        row.first
       end
     else
       data

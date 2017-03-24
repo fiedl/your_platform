@@ -15,6 +15,7 @@ module CacheStoreExtension
   #
   # To make sure each value is recalculated only
   # once and to manage dependent values, only cached values older than
+  # the given `time` or, by default,
   # the time of calling `renew` are recalculated, which is the key
   # to our 2017 attempt of refactoring the caching system.
   #
@@ -36,10 +37,10 @@ module CacheStoreExtension
   #       end
   #     end
   #
-  def renew
+  def renew(time = Time.zone.now)
     @use_renew_cache = self.use_renew_cache?
     @renew = true
-    @renew_at ||= Time.zone.now
+    @renew_at ||= time
     yield
     @renew = false
     @renew_at = nil

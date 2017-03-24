@@ -15,7 +15,7 @@
 
   = add_button(profile_fields_path(:profileable_id => @group.id,
                                    :profileable_type => 'Group',
-                                   :profile_field => {:type => 'ProfileFieldTypes::MailingListEmail', :label => t(:mailing_list)},
+                                   :profile_field => {:type => 'ProfileFields::MailingListEmail', :label => t(:mailing_list)},
                                    :section => 'mailing_list_adresses'), :method => 'post')
 
 %h1.sender_filter= t :mailing_list_sender_filter

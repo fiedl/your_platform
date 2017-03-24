@@ -2,7 +2,7 @@ module AutoComplete
   
   # Example:
   #
-  #     fill_autocomplete :user_group_membership_user_title, with: "Max", select: @user.title
+  #     fill_autocomplete :membership_user_title, with: "Max", select: @user.title
   #     find('.user-select-input').value.should == @user.title
   #
   def fill_autocomplete(field, options = {})

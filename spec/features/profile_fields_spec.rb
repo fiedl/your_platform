@@ -5,7 +5,7 @@ feature "Profile fields maintenance view", :js do
 
   before do
     @user = create :user
-    @phone_field = @user.profile_fields.create label: "Phone", value: "1234", type: "ProfileFieldTypes::Phone"
+    @phone_field = @user.profile_fields.create label: "Phone", value: "1234", type: "ProfileFields::Phone"
   end
 
   scenario "listing the profile fields" do

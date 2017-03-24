@@ -17,6 +17,12 @@ concern :DagLinkRepair do
       delete_links_without_edges
       delete_redundant_indirect_links
       recalculate_indirect_counts
+      fix_types
+    end
+
+    def fix_types
+      DagLink.where(ancestor_type: "Group", descendant_type: "User").update_all type: "Membership"
+      DagLink.where(ancestor_type: "Group", descendant_type: "User", ancestor_id: Group.where(type: "StatusGroup").pluck(:id)).update_all type: "Memberships::Status"
     end
 
     def delete_links_without_edges
@@ -43,7 +49,6 @@ concern :DagLinkRepair do
 
       def scan_and_repair
         mute_sql_log
-        delete_links_without_edges
         scan
         delete_redundant_links
         recalculate_links
@@ -105,7 +110,7 @@ concern :DagLinkRepair do
       def recalculate_links
         print "\n\nRecalculating affected indirect validity ranges.\n".blue
         @occurances.each do |redundant_links|
-          original_link = redundant_links[0].becomes UserGroupMembership
+          original_link = redundant_links[0].becomes Membership
           original_link.recalculate_validity_range_from_direct_memberships
           original_link.save
           print ".".blue

@@ -13,7 +13,7 @@ module Profileable
   def is_profileable( options = {} )
     @profile_section_titles = options[:profile_sections] || default_profile_section_titles
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
-    has_many :address_profile_fields, -> { where type: 'ProfileFieldTypes::Address' }, class_name: 'ProfileFieldTypes::Address', as: :profileable, dependent: :destroy, autosave: true
+    has_many :address_profile_fields, -> { where type: 'ProfileFields::Address' }, class_name: 'ProfileFields::Address', as: :profileable, dependent: :destroy, autosave: true
     
     include InstanceMethodsForProfileables
     include ProfileFields

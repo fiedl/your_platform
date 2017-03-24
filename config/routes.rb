@@ -52,7 +52,7 @@ Rails.application.routes.draw do
     get :profile_fields, to: 'profile_fields#index'
     get :settings, to: 'user_settings#show'
     put :settings, to: 'user_settings#update'
-    get :memberships, to: 'user_group_memberships#index'
+    get :memberships, to: 'memberships#index'
     get :badges, to: 'user_badges#index'
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
@@ -85,10 +85,11 @@ Rails.application.routes.draw do
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'group_mailing_lists#index'
-    get :memberships, to: 'user_group_memberships#index'
+    get :memberships, to: 'memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
+    get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -140,8 +141,8 @@ Rails.application.routes.draw do
     get 'description(.:format)', to: 'attachments#description'
   end
   resources :profile_fields
-  resources :user_group_memberships
-  resources :status_group_memberships
+  resources :memberships
+  resources :status_memberships
   resources :relationships
 
   get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'

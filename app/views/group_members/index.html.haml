@@ -24,7 +24,7 @@
         = icon 'folder-open'
         = t(:data_administration)
     - if can? :manage_memberships_manually, group
-      = link_to t(:user_group_memberships), group_memberships_path(group), class: 'btn btn-default right'
+      = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-default right'
     %br{clear: 'all'}
     %span#group_members
       .child_users
@@ -34,7 +34,7 @@
 - if can? :manage_memberships_manually, group
   %h1 Mitglieder manuell eintragen
   %div.add_group_members
-    = form_for new_user_group_membership, remote: true do |form|
+    = form_for new_membership, remote: true do |form|
       = form.hidden_field :group_id
       %span.add_group_member_name_field.left
         = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)

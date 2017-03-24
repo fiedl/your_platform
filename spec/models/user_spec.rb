@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe User do
@@ -204,7 +203,7 @@ describe User do
     describe "for an existing date of birth" do
       before { @user.date_of_birth = "1900-01-01".to_date }
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
     end
     it "should be autosaved" do
       @field = @user.build_date_of_birth_profile_field
@@ -218,13 +217,13 @@ describe User do
     subject { @user.find_or_build_date_of_birth_profile_field }
     describe "for no date of birth field created" do
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its(:new_record?) { should == true }
     end
     describe "for an existing date of birth" do
       before { @user.date_of_birth = "1900-01-01".to_date }
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
     end
     describe "for a date of birth existing in the database" do
       before do
@@ -233,7 +232,7 @@ describe User do
         @user = User.find(@user.id)
       end
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its('value.to_date') { should == "1900-01-01".to_date }
       its(:new_record?) { should == false }
     end
@@ -242,7 +241,7 @@ describe User do
     subject { @user.find_or_create_date_of_birth_profile_field }
     describe "for no date of birth field existing" do
       it { should be_kind_of ProfileField }
-      its(:type) { should == "ProfileFieldTypes::Date" }
+      its(:type) { should == "ProfileFields::Date" }
       its(:new_record?) { should == false }
       its(:id) { should be_kind_of Integer }
      end
@@ -253,7 +252,7 @@ describe User do
          @user = User.find(@user.id)
        end
        it { should be_kind_of ProfileField }
-       its(:type) { should == "ProfileFieldTypes::Date" }
+       its(:type) { should == "ProfileFields::Date" }
        its('value.to_date') { should == "1900-01-01".to_date }
        its(:new_record?) { should == false }
      end
@@ -287,8 +286,8 @@ describe User do
 
   describe "postal address: " do
     before do
-      @other_field = ProfileFieldTypes::Address.create(label: "My Work", value: "Some Other Address")
-      @profile_field = ProfileFieldTypes::Address.create(label: "My Home", value: "Some Address")
+      @other_field = ProfileFields::Address.create(label: "My Work", value: "Some Other Address")
+      @profile_field = ProfileFields::Address.create(label: "My Home", value: "Some Address")
       @user.profile_fields << @other_field
       @user.profile_fields << @profile_field
     end
@@ -323,7 +322,7 @@ describe User do
     describe "#postal_address_with_name_surrounding" do
       subject { @user.reload.postal_address_with_name_surrounding }
       before do
-        @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+        @name_surrounding = @user.profile_fields.create(type: 'ProfileFields::NameSurrounding').becomes(ProfileFields::NameSurrounding)
         @name_surrounding.name_prefix = "Dr."
         @name_surrounding.name_suffix = "M.Sc."
         @name_surrounding.text_above_name = "Herrn"
@@ -348,7 +347,7 @@ describe User do
       end
       describe "when the user has the same personal title as given in the name prefix" do
         before do
-          @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+          @user.profile_fields.create(type: 'ProfileFields::General', label: 'personal_title', value: "Dr.")
           @user.save
         end
         it "should not print it twice" do
@@ -403,9 +402,9 @@ describe User do
   describe "#phone_profile_fields" do
     subject { @user.phone_profile_fields }
     before do
-      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '123456').becomes(ProfileFieldTypes::Phone)
-      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFieldTypes::Phone', value: '123457').becomes(ProfileFieldTypes::Phone)
-      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '01234').becomes(ProfileFieldTypes::Phone)
+      @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '123456').becomes(ProfileFields::Phone)
+      @fax_field = @user.profile_fields.create(label: 'Fax', type: 'ProfileFields::Phone', value: '123457').becomes(ProfileFields::Phone)
+      @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '01234').becomes(ProfileFields::Phone)
       @user.reload
     end
     it { should include @phone_field }
@@ -416,13 +415,13 @@ describe User do
   describe "#phone" do
     subject { @user.phone }
     describe "for a phone number given" do
-      before { @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      before { @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone) }
       it { should == @phone_field.value }
     end
     describe "for a phone and a mobile number given" do
       before do
-        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
-        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
       end
       it { should == @phone_field.value }
     end
@@ -443,7 +442,7 @@ describe User do
       end
     end
     describe "if a phone field is present" do
-      before { @phone_field = @user.profile_fields.create(label: 'Telefon', value: '09131 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      before { @phone_field = @user.profile_fields.create(label: 'Telefon', value: '09131 123 45 56', type: 'ProfileFields::Phone') }
       it "should modify the existing one" do
         subject
         @phone_field.reload.value.should == @new_phone_number
@@ -454,13 +453,13 @@ describe User do
   describe "#mobile" do
     subject { @user.mobile }
     describe "for a mobile phone number given" do
-      before { @phone_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '0161 123 45 67').becomes(ProfileFieldTypes::Phone) }
+      before { @phone_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '0161 123 45 67').becomes(ProfileFields::Phone) }
       it { should == @phone_field.value }
     end
     describe "for a phone and a mobile number given" do
       before do
-        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFieldTypes::Phone', value: '0171 123 45 67').becomes(ProfileFieldTypes::Phone)
-        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFieldTypes::Phone', value: '09131 123 45 67').becomes(ProfileFieldTypes::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
       end
       it { should == @mobile_field.value }
     end
@@ -480,7 +479,7 @@ describe User do
       end
     end
     describe "if a phone field is present" do
-      before { @phone_field = @user.profile_fields.create(label: 'Mobil', value: '0161 123 45 56', type: 'ProfileFieldTypes::Phone') }
+      before { @phone_field = @user.profile_fields.create(label: 'Mobil', value: '0161 123 45 56', type: 'ProfileFields::Phone') }
       it "should modify the existing one" do
         subject
         @phone_field.reload.value.should == @new_phone_number
@@ -767,7 +766,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -780,7 +779,7 @@ describe User do
         @user.corporations
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -791,7 +790,7 @@ describe User do
         @user.corporations
         wait_for_cache
 
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -802,7 +801,7 @@ describe User do
         @user.corporations
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -819,7 +818,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -831,7 +830,7 @@ describe User do
     end
     context "when user entered corporation S" do
       before do
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -839,7 +838,7 @@ describe User do
     end
     context "when user entered corporation H as guest" do
       before do
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -849,7 +848,7 @@ describe User do
       before do
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -858,7 +857,7 @@ describe User do
     end
     context "when joining an event of a corporation" do
       before do
-        @event = @corporationH.child_events.create
+        @event = @corporationH.events.create
         @user.join @event
         time_travel 2.seconds; @user.reload
       end
@@ -874,7 +873,7 @@ describe User do
       @subgroup = create( :group );
       @subgroup.parent_groups << @corporationE
       @user.save
-      @first_membership_E = StatusGroupMembership.create( user: @user, group: @corporationE.status_groups.first )
+      @first_membership_E = Memberships::Status.create(user: @user, group: @corporationE.status_groups.first)
       @user.parent_groups << @subgroup
       @user.reload
     end
@@ -887,7 +886,7 @@ describe User do
         @user.current_corporations
         wait_for_cache
 
-        first_membership_S = StatusGroupMembership.create( user: @user, group: @corporationS.status_groups.first )
+        first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -896,7 +895,7 @@ describe User do
     context "when user entered corporation H as guest" do
       before do
         @user.current_corporations
-        first_membership_H = StatusGroupMembership.create( user: @user, group: @corporationH.guests_parent )
+        first_membership_H = Memberships::Status.create(user: @user, group: @corporationH.guests_parent)
         first_membership_H.update_attributes(valid_from: "2010-05-01".to_datetime)
         @user.reload
       end
@@ -909,7 +908,7 @@ describe User do
 
         former_group = @corporationE.child_groups.create
         former_group.add_flag :former_members_parent
-        second_membership_E = StatusGroupMembership.create( user: @user, group: former_group )
+        second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
         @user.reload
@@ -966,41 +965,6 @@ describe User do
     end
   end
 
-  # Status Groups
-  # ------------------------------------------------------------------------------------------
-
-  describe "#status_groups" do
-    before do
-      @corporation = create( :corporation_with_status_groups )
-      @status_group = @corporation.status_groups.first
-      @status_group.assign_user @user
-      @another_group = create( :group )
-      @another_group.assign_user @user
-    end
-    subject { @user.reload.status_groups }
-
-    it "should include the status groups of the user" do
-      subject.should include @status_group
-    end
-    it "should not include the non-status groups of the user" do
-      subject.should_not include @another_group
-    end
-  end
-
-  describe "#current_status_membership_in(corporation)" do
-    before do
-      @corporation = create( :corporation_with_status_groups )
-      @status_group = @corporation.status_groups.first
-      @status_group.assign_user @user
-      @status_group_membership = StatusGroupMembership.find_by_user_and_group(@user, @status_group)
-    end
-    subject { @user.reload.current_status_membership_in(@corporation) }
-
-    it "should return the correct membership" do
-      subject.should == @status_group_membership
-    end
-  end
-
 
   # Memberships
   # ------------------------------------------------------------------------------------------
@@ -1009,14 +973,14 @@ describe User do
     before do
       @group = create( :group )
       @group.child_users << @user
-      @membership = UserGroupMembership.find_by( user: @user, group: @group )
+      @membership = Membership.find_by( user: @user, group: @group )
     end
     subject { @user.memberships }
     it "should return an array of the user's memberships" do
       subject.should == [ @membership ]
     end
-    it "should be the same as UserGroupMembership.find_all_by_user" do
-      subject.should == UserGroupMembership.find_all_by_user( @user )
+    it "should be the same as Membership.find_all_by_user" do
+      subject.should == Membership.find_all_by_user( @user )
     end
     it "should allow to chain other ActiveRelation scopes, like `only_valid`" do
       subject.only_valid.should == [ @membership ]
@@ -1066,9 +1030,9 @@ describe User do
       before do
         @group1 = @user.parent_groups.create
         @group2 = @group1.parent_groups.create
-        @upcoming_events = [ @group1.child_events.create( start_at: 5.hours.from_now ),
-                             @group2.child_events.create( start_at: 6.hours.from_now ) ]
-        @recent_events = [ @group1.child_events.create( start_at: 2.days.ago ) ]
+        @upcoming_events = [ @group1.events.create( start_at: 5.hours.from_now ),
+                             @group2.events.create( start_at: 6.hours.from_now ) ]
+        @recent_events = [ @group1.events.create( start_at: 2.days.ago ) ]
         @unrelated_events = [ Event.create( start_at: 4.hours.from_now ) ]
       end
       it { should include *@upcoming_events }
@@ -1089,12 +1053,12 @@ describe User do
       #            |------ event_2
       before do
         @group_a = create( :group )
-        @event_0 = @group_a.child_events.create( start_at: 5.hours.from_now )
+        @event_0 = @group_a.events.create( start_at: 5.hours.from_now )
         @group_b = @group_a.child_groups.create
         @group_b.child_users << @user
-        @event_1 = @group_b.child_events.create( start_at: 5.hours.from_now )
+        @event_1 = @group_b.events.create( start_at: 5.hours.from_now )
         @group_c = @group_a.child_groups.create
-        @event_2 = @group_c.child_events.create( start_at: 5.hours.from_now )
+        @event_2 = @group_c.events.create( start_at: 5.hours.from_now )
         @user.reload
       end
       it "should list direct events of the user's groups" do # "<<===" above
@@ -1521,7 +1485,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attributes(:value => nil)  # to circumvent validation
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFields::Email').first.update_attributes(:value => nil)  # to circumvent validation
     end
     subject { User.with_email }
     specify "prelims" do
@@ -1548,7 +1512,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFieldTypes::Email').first.update_attribute(:value, '')
+      @user_with_empty_email.profile_fields.where(type: 'ProfileFields::Email').first.update_attribute(:value, '')
     end
     subject { User.applicable_for_new_account }
     it { should be_kind_of ActiveRecord::Relation }
@@ -1566,10 +1530,10 @@ describe User do
   describe "(postal address finder methods)" do
     before do
       @user_with_address = create(:user)
-      @user_with_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin")
+      @user_with_address.profile_fields.create(type: 'ProfileFields::Address', value: "Pariser Platz 1\n 10117 Berlin")
       @user_without_address = create(:user)
       @user_with_empty_address = create(:user)
-      @user_with_empty_address.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "")
+      @user_with_empty_address.profile_fields.create(type: 'ProfileFields::Address', value: "")
     end
 
     describe ".with_postal_address" do

@@ -4,7 +4,7 @@
 concern :UserDateOfBirth do
 
   included do
-    has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFieldTypes::Date", as: :profileable, autosave: true
+    has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFields::Date", as: :profileable, autosave: true
     after_save :save_date_of_birth_profile_field
   end
 

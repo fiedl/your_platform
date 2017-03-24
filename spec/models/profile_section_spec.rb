@@ -17,8 +17,8 @@ describe ProfileSection do
     end
 
     @profileable = MyStructureable.create(name: "My Profileable")
-    @general_field = @profileable.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
-    @address_field = @profileable.profile_fields.create( label: "Home Address", value: "Berliner Platz 1, Erlangen", type: "ProfileFieldTypes::Address" )
+    @general_field = @profileable.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFields::General")
+    @address_field = @profileable.profile_fields.create( label: "Home Address", value: "Berliner Platz 1, Erlangen", type: "ProfileFields::Address" )
 
     @profile = Profile.new(@profileable)
     @section_title = :contact_information
@@ -46,8 +46,8 @@ describe ProfileSection do
     it "should return the profile fields of the profileable object which belong to this profile section" do
       subject.should be_kind_of ActiveRecord::Relation
       subject.first.should be_kind_of ProfileField
-      subject.should include @address_field.becomes(ProfileFieldTypes::Address)
-      subject.should_not include @general_field.becomes(ProfileFieldTypes::General)
+      subject.should include @address_field.becomes(ProfileFields::Address)
+      subject.should_not include @general_field.becomes(ProfileFields::General)
     end
     it "should NOT just return all profile fields of the Profileable" do
       subject.should_not == @profileable.profile_fields
@@ -69,7 +69,7 @@ describe ProfileSection do
     end
     it "should include the corresponding field types" do
       @profile_section.title.to_sym.should == :contact_information
-      subject.should include "ProfileFieldTypes::Address"
+      subject.should include "ProfileFields::Address"
     end
   end
 

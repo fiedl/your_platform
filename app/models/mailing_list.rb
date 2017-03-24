@@ -1,10 +1,10 @@
 # This is a conveniance class to access the properties of "mailing lists".
 #
-# The persistent data is stored in the `ProfileFieldTypes::MailingListEmail`, which
+# The persistent data is stored in the `ProfileFields::MailingListEmail`, which
 # represents the email address, which is associated with a `Group`,
 # and in the `Group` and its memberships.
 #
-class MailingList < ProfileFieldTypes::MailingListEmail
+class MailingList < ProfileFields::MailingListEmail
 
   def email
     self.value
@@ -43,11 +43,11 @@ class MailingList < ProfileFieldTypes::MailingListEmail
   end
 
   def self.all
-    ProfileFieldTypes::MailingListEmail.all.collect { |profile_field| profile_field.becomes(MailingList) }
+    ProfileFields::MailingListEmail.all.collect { |profile_field| profile_field.becomes(MailingList) }
   end
 
   def self.sti_name
-    "ProfileFieldTypes::MailingListEmail"
+    "ProfileFields::MailingListEmail"
   end
 
 end

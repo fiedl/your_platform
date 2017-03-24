@@ -63,6 +63,7 @@ class User < ActiveRecord::Base
   include ProfileableMixins::Address
   include UserCorporations
   include UserGroups
+  include UserStatus
   include UserProfile
   include UserDateOfBirth
   include UserAvatar
@@ -234,7 +235,7 @@ class User < ActiveRecord::Base
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
-      profile_fields.create(type: "ProfileFieldTypes::General", label: 'date_of_death', value: new_date_of_death)
+      profile_fields.create(type: "ProfileFields::General", label: 'date_of_death', value: new_date_of_death)
     end
   end
   def dead?
@@ -267,7 +268,7 @@ class User < ActiveRecord::Base
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
-      UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
+      Membership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
 
@@ -419,7 +420,7 @@ class User < ActiveRecord::Base
     if self.add_to_group
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
-      UserGroupMembership.create( user: self, group: group ) if group
+      Membership.create( user: self, group: group ) if group
       self.add_to_group = nil
     end
     if self.add_to_corporation.present?
@@ -538,63 +539,7 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-    self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
-  end
-
-
-  # Status Groups
-  # ------------------------------------------------------------------------------------------
-
-  # This returns all status groups of the user, i.e. groups that represent the member
-  # status of the user in a corporation.
-  #
-  # options:
-  #   :with_invalid  =>  true, false
-  #
-  def status_groups(options = {})
-    StatusGroup.find_all_by_user(self, options)
-  end
-
-  def status_group_memberships
-    self.status_groups.collect do |group|
-      StatusGroupMembership.find_by_user_and_group( self, group )
-    end
-  end
-
-  def current_status_membership_in( corporation )
-    if status_group = current_status_group_in(corporation)
-      StatusGroupMembership.find_by_user_and_group(self, status_group)
-    end
-  end
-
-  def current_status_group_in(corporation)
-    StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
-  end
-
-  def status_group_in_primary_corporation
-    # - First try the `first_corporation`,  which does not consider corporations the user is
-    #   a former member of.
-    # - Next, use all corporations, which applies to completely excluded members.
-    #
-    current_status_group_in(first_corporation || corporations.first)
-  end
-
-  def status_export_string
-    self.corporations.collect do |corporation|
-      if membership = self.current_status_membership_in(corporation)
-        "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.try(:singularize)} in #{corporation.name}"
-      else
-        ""
-      end
-    end.join("\n")
-  end
-  def status_string
-    status_export_string
-  end
-
-  def status
-    status_string
+    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past
   end
 
 
@@ -792,7 +737,7 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    email_fields = ProfileField.where( type: "ProfileFieldTypes::Email", value: email )
+    email_fields = ProfileField.where( type: "ProfileFields::Email", value: email )
     matching_users = email_fields
       .select{ |ef| ef.profileable_type == "User" }
       .collect { |ef| ef.profileable }
@@ -836,7 +781,7 @@ class User < ActiveRecord::Base
   end
 
   def self.with_email
-    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFieldTypes::Email', '')
+    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFields::Email', '')
   end
 
   def self.applicable_for_new_account

@@ -14,11 +14,11 @@ describe UserMixins::Memberships do
     @user1 = create(:user); @group.assign_user(@user1)
     @user2 = create(:user); @group.assign_user(@user2)
     @user = @user1
-    @membership1 = UserGroupMembership.find_by(user: @user1, group: @group)
-    @membership2 = UserGroupMembership.find_by(user: @user2, group: @group)
+    @membership1 = Membership.find_by(user: @user1, group: @group)
+    @membership2 = Membership.find_by(user: @user2, group: @group)
     @indirect_group = @group.parent_groups.create
-    @indirect_membership1 = UserGroupMembership.find_by(user: @user1, group: @indirect_group)
-    @indirect_membership2 = UserGroupMembership.find_by(user: @user2, group: @indirect_group)
+    @indirect_membership1 = Membership.find_by(user: @user1, group: @indirect_group)
+    @indirect_membership2 = Membership.find_by(user: @user2, group: @indirect_group)
     @group2 = @indirect_group.child_groups.create
   end
 
@@ -112,7 +112,7 @@ describe UserMixins::Memberships do
       end
       it "should remove the membership permanently" do
         subject
-        UserGroupMembership.with_invalid.find_by_user_and_group(@user1, @group).should == nil
+        Membership.with_invalid.find_by_user_and_group(@user1, @group).should == nil
       end
     end
     describe "for the membership being indirect" do

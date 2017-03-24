@@ -116,8 +116,9 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
 
-  def renew_cache
-    Rails.cache.renew do
+  def renew_cache(time = Time.zone.now)
+    print "~" if ENV['CI'] == 'travis' # in order to keep tests alive
+    Rails.cache.renew(time) do
       fill_cache
     end
   end
@@ -173,7 +174,6 @@ module ActiveRecordCacheExtension
   end
 
   module ClassMethods
-    attr_accessor :cached_methods
 
     # This class method provides a new way to cache methods.
     #
@@ -205,8 +205,8 @@ module ActiveRecordCacheExtension
       if use_caching?
         alias_method "uncached_#{method_name}", method_name
 
-        define_method(method_name) {
-          cached_block(method_name: method_name) { self.send "uncached_#{method_name}" }
+        define_method(method_name) { |*args|
+          cached_block(method_name: method_name, arguments: args) { self.send "uncached_#{method_name}", *args }
         }
 
         # If a setter method exists as well, make the setter method
@@ -222,13 +222,21 @@ module ActiveRecordCacheExtension
           }
         end
 
-        self.cached_methods ||= []
-        self.cached_methods << method_name
+        self.cached_methods += [method_name]
       end
     end
 
     def use_caching?
       not ENV['NO_CACHING']
+    end
+
+    def cached_methods=(methods)
+      @cached_methods = methods
+    end
+    def cached_methods
+      @cached_methods ||= self.ancestors.collect { |ancestor_class|
+        ancestor_class.cached_methods if (ancestor_class.name != self.name) && ancestor_class.respond_to?(:cached_methods)
+      }.flatten.uniq - [nil]
     end
 
   end

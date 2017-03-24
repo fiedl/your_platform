@@ -8,9 +8,9 @@ FactoryGirl.define do
 
     factory :corporation_with_status_groups do
       after :create do |corporation|
-        status1 = corporation.child_groups.create(name: "Member Status 1")
-        status2 = corporation.child_groups.create(name: "Member Status 2")
-        status3 = corporation.child_groups.create(name: "Member Status 3")
+        status1 = corporation.child_groups.create(name: "Member Status 1", type: "StatusGroup")
+        status2 = corporation.child_groups.create(name: "Member Status 2", type: "StatusGroup")
+        status3 = corporation.child_groups.create(name: "Member Status 3", type: "StatusGroup")
         [status1, status2, status3].each { |g| g.add_flag :full_members } # in contrast to deceased
 
         status_workflow = Workflow.create name: 'First Promotion', description: "Promotes the user from the first to the second status group."

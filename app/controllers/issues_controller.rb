@@ -22,7 +22,7 @@ class IssuesController < ApplicationController
 
   def create
     if params[:invalid_email].present?
-      email_field = ProfileFieldTypes::Email.where(value: params[:invalid_email]).first
+      email_field = ProfileFields::Email.where(value: params[:invalid_email]).first
       if email_field
         email_field.needs_review!
         issue = Issue.scan_object(email_field).first
