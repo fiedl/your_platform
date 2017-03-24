@@ -35,7 +35,7 @@ feature 'Change Status' do
     page.should have_text @user_to_promote.name
     page.should have_selector '.workflow_triggers'
 
-    wait_for_ajax; wait_for_ajax; wait_for_ajax;
+    wait_until(timeout: 45.seconds) { within("#corporate_vita") { page.has_text? @corporation.status_groups.second.name } }
 
     within("#corporate_vita") { page.should have_text @corporation.status_groups.second.name }
 

@@ -22,7 +22,8 @@ feature "Comments on public blog posts", js: true do
       page.should have_no_text "This is a great post"
     end
 
-    wait_until { @blog_post.comments(true).count > 0 }
+    wait_until(timeout: 30.seconds) { @blog_post.comments(true).count > 0 }
+
     @blog_post = BlogPost.find @blog_post.id
     @blog_post.comments.count.should == 1
     @blog_post.comments.first.author.name.should == "John Doe"
