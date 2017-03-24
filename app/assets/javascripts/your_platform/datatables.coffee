@@ -92,7 +92,7 @@ App.datatables = {
   create: (selector, options)->
     if $(selector).size() > 0
       unless $.fn.dataTable.isDataTable(selector)
-        unless $(selector).parents('.dataTables_wrapper').size() == 0
+        if $(selector).parents('.dataTables_wrapper').size() == 0
           configuration = {}
           $.extend configuration, App.datatables.common_configuration()
           $.extend configuration, options
