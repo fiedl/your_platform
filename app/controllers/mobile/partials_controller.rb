@@ -6,7 +6,7 @@ class Mobile::PartialsController < ApplicationController
   #
   def show
     authorize! :read, :mobile_dashboard
-    @partial_key = params[:partial_key]
+    @partial_key = (%w(documents events people_search_results recent_contacts) & [params[:partial_key]]).first
     load_resources
   end
 
