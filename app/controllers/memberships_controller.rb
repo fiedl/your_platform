@@ -2,8 +2,8 @@ class MembershipsController < ApplicationController
 
   authorize_resource
 
-  expose :user
-  expose :group
+  expose :user, -> { User.find params[:user_id] if params[:user_id] }
+  expose :group, -> { Group.find params[:group_id] if params[:group_id] }
   expose :membership, -> {
     DagLink.find(params[:id]) || Membership.find_by_user_and_group(user, group).with_past
   }
@@ -24,6 +24,8 @@ class MembershipsController < ApplicationController
     elsif group
       authorize! :manage, group
       @object = group
+    else
+      raise 'neither group nor user are given'
     end
 
     set_current_navable @object

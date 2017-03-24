@@ -1,5 +1,5 @@
-= render partial: 'groups/tabs', locals: {active: 'members'} if @group
+= render partial: 'groups/tabs', locals: {active: 'members'} if group
 
-%h1.memberships= @title
+%h1.memberships= current_title
 %div
-  = render partial: 'memberships_table', locals: {memberships: @memberships}
+  = render partial: 'memberships_table', locals: {memberships: memberships}
