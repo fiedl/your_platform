@@ -177,10 +177,6 @@ class ListExport
       data.sort_by do |user_hash|
         user_hash[:last_name] + user_hash[:first_name]
       end
-    when 'join_statistics', 'join_and_persist_statistics'
-      data.sort_by do |row|
-        row.first
-      end
     else
       data
     end
