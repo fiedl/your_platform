@@ -134,7 +134,7 @@ class ListExport
       #   ...
       #
       if @data.kind_of? Group
-        @groups = @data.child_groups
+        @groups = [@data] + @data.child_groups
         if preset.to_s == 'join_and_persist_statistics'
           @groups = @groups.select { |g| g.members.count > 0 }
         end
@@ -144,8 +144,8 @@ class ListExport
       @groups.collect do |group|
         row = {}
         columns.each do |column|
-          row[column] = if column.kind_of? Integer
-            year = column
+          row[column] = if column.to_s.to_i.to_s.length == 4
+            year = column.to_i
             memberships = []
             if preset.to_s == 'join_statistics'
               memberships = group.memberships.with_past
