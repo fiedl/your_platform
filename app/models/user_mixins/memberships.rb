@@ -69,7 +69,7 @@ module UserMixins::Memberships
 
   def joined_at(group)
     begin
-      group.membership_of(self).valid_from
+      group.membership_of(self).try(:valid_from)
     rescue ArgumentError => e
       membership = group.membership_of(self)
       Issue.scan membership if membership

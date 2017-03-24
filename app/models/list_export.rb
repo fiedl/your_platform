@@ -37,7 +37,7 @@ class ListExport
       [:last_name, :first_name, :name_affix, :phone_label, :phone_number]
       # One row per phone number, not per user. See `#processed_data`.
     when 'member_development'
-      [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
+      [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + (@leaf_group_names - [nil])
     when 'join_statistics', 'join_and_persist_statistics'
       [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse.map(&:to_s)
     else

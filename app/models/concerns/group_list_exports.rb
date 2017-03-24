@@ -94,7 +94,7 @@ concern :GroupListExports do
   end
 
   def export_phone_list
-    ListExport.new(self.members, :phone_list)
+    ListExport.new(self, :phone_list)
   end
 
   class_methods do
