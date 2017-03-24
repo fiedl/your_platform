@@ -62,6 +62,8 @@ feature 'Corporate Vita', js: true do
           click_on @first_promotion_workflow.name
         end
 
+        wait_for_ajax; wait_for_ajax; wait_for_ajax;
+
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -77,6 +79,8 @@ feature 'Corporate Vita', js: true do
           click_on I18n.t(:change_status)
           click_on @second_promotion_workflow.name
         end
+
+        wait_for_ajax; wait_for_ajax; wait_for_ajax;
 
         within first '.section.corporate_vita' do
           page.should have_content @status_groups.first.name
