@@ -10,8 +10,8 @@
 #       ...
 #     end
 #
-# one would want to access the `officers_parent` group, which contains all officers of the 
-# structureable object. 
+# one would want to access the `officers_parent` group, which contains all officers of the
+# structureable object.
 #
 #     some_page.find_officers_parent_group
 #     some_page.create_officers_parent_group
@@ -59,33 +59,32 @@ module StructureableMixins::HasSpecialGroups
   #         self.find_or_create_special_group(:everyone)
   #       end
   #     end
-  # 
+  #
   # The `options` hash allows to specify a `parent element`, which is a structureable element
   # that is expected to be the parent element of the special group. Example:
-  # 
-  #     find_or_create_special_group( :corporations, parent_element: 
+  #
+  #     find_or_create_special_group( :corporations, parent_element:
   #       find_or_create_special_group(:everyone) )
   #
   module ClassMethods
 
     def find_special_group( group_flag, options = {} )
-      object_to_search = options[:parent_element].try(:child_groups) 
+      object_to_search = options[:parent_element].try(:child_groups)
       object_to_search ||= Group unless options[:local]
-      object_to_search.find_by_flag( group_flag.to_sym ) if object_to_search && object_to_search != [] 
+      object_to_search.find_by_flag( group_flag.to_sym ) if object_to_search && object_to_search != []
     end
 
     def create_special_group( group_flag, options = {} )
       if find_special_group( group_flag, options )
         raise "special group :#{group_flag} already exists."
       end
-      object_to_create = options[:parent_element].try(:child_groups) 
+      object_to_create = options[:parent_element].try(:child_groups)
       object_to_create ||= Group unless options[:local]
 
       new_special_group = object_to_create.create
       new_special_group.add_flag( group_flag.to_sym )
       new_special_group.update_attribute( :name, group_flag.to_s.gsub(/_parent$/, "" ) )
       new_special_group.update_attribute :type, options[:type] if options[:type].present?
-      
       return Group.find(new_special_group.id) # for it to have the correct sti class
     end
 
@@ -104,7 +103,7 @@ module StructureableMixins::HasSpecialGroups
   # Local Special Groups
   # i.e. descendants of structureables, e.g. officers groups: `group_xy.officers_parent`
   # ==========================================================================================
-  # 
+  #
   # These instance methods may be called on each structureable model instance.
   # For example, one may call `my_group.find_or_create_special_group(:officers_parent)`.
   #
@@ -121,7 +120,7 @@ module StructureableMixins::HasSpecialGroups
   end
 
   def find_or_create_special_group( group_flag, options = {} )
-    self.class.find_or_create_special_group( group_flag, { parent_element: self, local: true }.merge(options) ) 
+    self.class.find_or_create_special_group( group_flag, { parent_element: self, local: true }.merge(options) )
   end
 
 end

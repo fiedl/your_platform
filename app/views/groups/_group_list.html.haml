@@ -5,7 +5,7 @@
       -#%th.has_tooltip{title: I18n.t(:number_of_members)}=t :members
       %th=t :members
       %th=t :officers
-      
+
   %tbody
     - for group in groups do
       %tr
@@ -13,13 +13,10 @@
           %strong= link_to group.name, group
         %td= group.memberships_for_member_list_count
         %td
-          = Rails.cache.fetch([group, 'group_of_groups_table', 'officers'], expires_in: 1.week) do
-            - capture_haml do
-              - sort_officer_groups(group.officers_groups_of_self_and_descendant_groups).first(10).each do |officer_group|
-                - if officer_group.members.count > 0
-                  %p
-                    %span>= officer_group.name
-                    = ':'
-                    - officer_group.members.each do |officer|
-                      = link_to officer.title, officer
-            
+          - sort_officer_groups(group.officers_groups_of_self_and_descendant_groups).first(10).each do |officer_group|
+            - if officer_group.members.count > 0
+              %p
+                %span>= officer_group.name
+                = ':'
+                - officer_group.members.each do |officer|
+                  = link_to officer.title, officer

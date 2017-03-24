@@ -1,0 +1,12 @@
+%ul.breadcrumbs
+  - current_breadcrumbs.each do |breadcrumb|
+    %li{class: "#{'slim' if breadcrumb.respond_to?(:slim_breadcrumb) && breadcrumb.slim_breadcrumb}"}
+
+      - if breadcrumb.kind_of? NavNode
+        = link_to_navable breadcrumb.breadcrumb_title, breadcrumb.navable
+
+      - if breadcrumb.kind_of? Hash
+        - if breadcrumb[:path]
+          = link_to breadcrumb[:title], breadcrumb[:path]
+        - else
+          = link_to breadcrumb[:title], request.fullpath

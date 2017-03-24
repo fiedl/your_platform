@@ -9,7 +9,8 @@ class Workflows::StatusWorkflowsController < ApplicationController
     authorize! :change_status, @user
 
     @workflow.execute(params)
-    @user.renew_cache
+
+    Rails.cache.renew { @user.status }
 
     activity = log_public_activity_for_user
     Notification.create_from_status_workflow(@workflow, @user, current_user)

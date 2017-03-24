@@ -57,7 +57,12 @@ feature "Officers Management" do
       find(".save_button").click
     end
 
-    wait_for_ajax; wait_for_ajax
+    wait_until(timeout: 45.seconds) { @president_group.members(true).include? @new_user }
+
+    within(".officer_group_members .direct_officers .best_in_place") do
+      page.should have_selector "a", text: @new_user.title
+    end
+
     @group.officers_parent.child_groups.where(name: "President").first.members.should include @new_user
     @group.officers_parent.child_groups.where(name: "President").first.members.should_not include @user
   end

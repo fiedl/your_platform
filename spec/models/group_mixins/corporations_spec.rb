@@ -12,12 +12,11 @@ describe GroupMixins::Corporations do
       Group.destroy_all
       @everyone_group = Group.create_everyone_group
       @corporations_parent_group = Group.create_corporations_parent_group
-      @corporation_group = create( :group ); @corporation_group.parent_groups << @corporations_parent_group
+      @corporation_group = create(:corporation)
 
-      @corporation_group_of_user = create( :group )
-      @corporation_group_of_user.parent_groups << @corporations_parent_group
-      @subgroup = create( :group ); @subgroup.parent_groups << @corporation_group_of_user
-      @user = create( :user ); @user.parent_groups << @subgroup
+      @corporation_group_of_user = create(:corporation)
+      @subgroup = @corporation_group_of_user.child_groups.create
+      @user = create(:user); @subgroup.assign_user(@user); @user.reload
       @non_corporations_branch_group = create( :group ); @non_corporations_branch_group.child_users << @user
     end
 
@@ -40,8 +39,8 @@ describe GroupMixins::Corporations do
       it "should return an array containing the corporation groups" do
         subject.should == [ @corporation_group, @corporation_group_of_user ]
       end
-      
-      # FIXME: This does not work for some obscure reason. 
+
+      # FIXME: This does not work for some obscure reason.
       # Whenever the corporations are needed without the officers_parent group,
       # please use `Corporation.all`, which works.
       #
@@ -56,7 +55,7 @@ describe GroupMixins::Corporations do
       it "should be the same as .find_corporation_groups" do
         subject.should == Group.find_corporation_groups
       end
-      it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly? 
+      it "should be of the proper type" do  # bug test: is the `corporations` method overridden correctly?
         subject.to_a.should be_kind_of Array
         subject.first.should_not be_kind_of User
         subject.first.should be_kind_of Group
@@ -89,7 +88,7 @@ describe GroupMixins::Corporations do
         subject.should_not include( @corporations_parent_group )
       end
     end
-    
+
   end
 
 end

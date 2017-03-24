@@ -7,8 +7,9 @@
 #   users' "corporate vitae".
 #
 class Corporation < Group
-  after_save { Corporation.corporations_parent << self }
+  after_create { self.parent_groups << Groups::CorporationsParent.find_or_create }
 
+  include CorporationGroups
   include CorporationTermReports
   include CorporationLocation
 
@@ -16,19 +17,15 @@ class Corporation < Group
   # The corporations_parent itself is a Group, no Corporation.
   #
   def self.corporations_parent
-    self.find_corporations_parent_group || self.create_corporations_parent_group
+    Groups::CorporationsParent.find_or_create
   end
 
   def self.find_corporations_parent_group
-    Group.find_by_flag :corporations_parent
+    Groups::CorporationsParent.find_or_create
   end
 
   def self.create_corporations_parent_group
-    new_group = Group.create name: 'all_corporations'
-    new_group.add_flag :corporations_parent
-    new_group.add_flag :group_of_groups
-    Group.everyone << new_group
-    return new_group
+    Groups::CorporationsParent.create name: "All Corporations"
   end
 
   # This method returns true if this (self) is the one corporation
@@ -38,29 +35,25 @@ class Corporation < Group
   def is_first_corporation_this_user_has_joined?( user )
     return false if not user.groups.include? self
     return true if user.corporations.count == 1
-    this_membership_valid_from = UserGroupMembership.find_by_user_and_group( user, self ).valid_from
+    this_membership_valid_from = Membership.find_by_user_and_group( user, self ).valid_from
     user.memberships.each do |membership|
       return false if membership.valid_from.to_i < this_membership_valid_from.to_i
     end
     return true
   end
 
-  # This method returns all status groups of the corporation.
-  # In this general context, each leaf group of the corporation is a status group.
-  # But this is likely to be overridden by the main application.
+  # This returns the memberships that appear in the member list
+  # of the group.
   #
-  def status_groups
-    cached { StatusGroup.find_all_by_corporation(self) }
-  end
-
-  # This method returns the status group with the given name.
+  # For a regular group, these are just the usual memberships.
+  # For a corporation, the members of the 'former members' subgroup
+  # of the corporation are excluded, even though they still have
+  # memberships.
   #
-  def status_group(group_name)
-    status_groups.select { |g| g.name == group_name }.first
-  end
-
-  def sub_group(group_name)
-    descendant_groups.where(name: group_name).first
+  def membership_ids_for_member_list
+    memberships.where.not(
+      descendant_id: former_members.map(&:id) + deceased_members.map(&:id)
+    ).pluck(:id)
   end
 
   # This method lists all former members of the corporation. This is not determined
@@ -72,7 +65,7 @@ class Corporation < Group
     former_members_parent.try(:members) || User.none
   end
   def former_members_memberships
-    former_members_parent.try(:memberships) || UserGroupMembership.none
+    former_members_parent.try(:memberships) || Membership.none
   end
   def former_members_parent
     child_groups.find_by_flag(:former_members_parent)
@@ -92,4 +85,5 @@ class Corporation < Group
     true
   end
 
+  include CorporationCaching if use_caching?
 end

@@ -24,7 +24,6 @@ class ApplicationController < ActionController::Base
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
 
-  private
 
   # We use this custom method to render a partial to a json string.
   #

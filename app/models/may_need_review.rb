@@ -9,7 +9,7 @@ module MayNeedReview
     # Use this scope, for example, to find all emails that do not reed review.
     # Those are usable in email notifications.
     # 
-    #     ProfileFieldTypes::Email.no_review_needed
+    #     ProfileFields::Email.no_review_needed
     # 
     scope :no_review_needed, -> { where.not(id: self.review_needed.pluck(:id)) }
     

@@ -43,10 +43,6 @@ class User < ActiveRecord::Base
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
   after_save                :add_to_group_if_requested
-  after_save                { self.delay.delete_cache }
-
-  # after_commit     					:delete_cache, prepend: true
-  # before_destroy    				:delete_cache, prepend: true
 
 
   # Easy user settings: https://github.com/huacnlee/rails-settings-cached
@@ -66,6 +62,8 @@ class User < ActiveRecord::Base
   include UserMixins::Identification
   include ProfileableMixins::Address
   include UserCorporations
+  include UserGroups
+  include UserStatus
   include UserProfile
   include UserDateOfBirth
   include UserAvatar
@@ -231,13 +229,13 @@ class User < ActiveRecord::Base
   # Why?
   #
   def date_of_death
-    cached { profile_fields.where(label: 'date_of_death').first.try(:value) }
+    profile_fields.where(label: 'date_of_death').first.try(:value)
   end
 
   def set_date_of_death_if_unset(new_date_of_death)
     new_date_of_death = I18n.localize(new_date_of_death.to_date)
     unless self.date_of_death
-      profile_fields.create(type: "ProfileFieldTypes::General", label: 'date_of_death', value: new_date_of_death)
+      profile_fields.create(type: "ProfileFields::General", label: 'date_of_death', value: new_date_of_death)
     end
   end
   def dead?
@@ -270,7 +268,7 @@ class User < ActiveRecord::Base
   def end_all_non_corporation_memberships(options = {})
     date = options[:at] || Time.zone.now
     for group in (self.direct_groups - Group.corporations_parent.descendant_groups)
-      UserGroupMembership.find_by_user_and_group(self, group).invalidate at: date
+      Membership.find_by_user_and_group(self, group).invalidate at: date
     end
   end
 
@@ -279,20 +277,16 @@ class User < ActiveRecord::Base
   end
 
   def name_with_surrounding
-    cached {
-      (
-        name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
-        "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
-        name_surrounding_profile_field.try(:text_below_name).to_s
-      ).strip
-    }
+    (
+      name_surrounding_profile_field.try(:text_above_name).to_s + "\n" +
+      "#{name_surrounding_profile_field.try(:name_prefix)} #{name} #{name_surrounding_profile_field.try(:name_suffix)}".strip + "\n" +
+      name_surrounding_profile_field.try(:text_below_name).to_s
+    ).strip
   end
 
   def address_label
-    cached do
-      AddressLabel.new(self.name, self.postal_address_field_or_first_address_field,
-        self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
-    end
+    AddressLabel.new(self.name, self.postal_address_field_or_first_address_field,
+      self.name_surrounding_profile_field, self.personal_title, self.corporation_name)
   end
 
 
@@ -426,7 +420,7 @@ class User < ActiveRecord::Base
     if self.add_to_group
       group = add_to_group if add_to_group.kind_of? Group
       group = Group.find( add_to_group ) if add_to_group.to_i unless group
-      UserGroupMembership.create( user: self, group: group ) if group
+      Membership.create( user: self, group: group ) if group
       self.add_to_group = nil
     end
     if self.add_to_corporation.present?
@@ -464,34 +458,29 @@ class User < ActiveRecord::Base
   # This method does not distinguish between regular members and guest members.
   # If a user is only guest in a corporation, `user.corporations` WILL list this corporation.
   #
-  def corporations
-    # # TODO: Why does this shorter query not work?
-    # self.groups.where(type: "Corporation")
-    cached do
-      my_corporation_ids = (self.group_ids & Group.corporations.pluck(:id) ) if Group.corporations_parent
-      my_corporation_ids ||= []
-      Corporation.find my_corporation_ids
-    end
+  def corporations(options = {})
+    return corporations_with_past if options[:with_invalid]
+    groups.where(type: 'Corporation')
+  end
+
+  def corporations_with_past
+    ancestor_groups.where(type: 'Corporation')
   end
 
   # This returns the corporations the user is currently member of.
   #
   def current_corporations
-    cached do
-      self.corporations.select do |corporation|
-        Role.of(self).in(corporation).current_member?
-      end || []
-    end
+    self.corporations.select do |corporation|
+      Role.of(self).in(corporation).current_member?
+    end || []
   end
 
   # This returns the same as `current_corporations`, but sorted by the
   # date of joining the corporations, earliest joining first.
   #
   def sorted_current_corporations
-    cached do
-      current_corporations.sort_by do |corporation|
-        corporation.membership_of(self).valid_from || Time.zone.now - 100.years
-      end
+    current_corporations.sort_by do |corporation|
+      corporation.membership_of(self).valid_from || Time.zone.now - 100.years
     end
   end
 
@@ -530,16 +519,14 @@ class User < ActiveRecord::Base
   # where the user is still member of in the order of entering the group.
   # The groups must not be special and the user most not be a special member.
   def my_groups_in_first_corporation
-    cached do
-      if first_corporation
-        self.groups.select do |group|
-          group.ancestor_groups.include?(self.first_corporation) and
-          not group.is_special_group? and
-          not self.guest_of?(group)
-        end
-      else
-        Group.none
+    if first_corporation
+      self.groups.select do |group|
+        group.ancestor_groups.include?(self.first_corporation) and
+        not group.is_special_group? and
+        not self.guest_of?(group)
       end
+    else
+      Group.none
     end
   end
 
@@ -552,63 +539,7 @@ class User < ActiveRecord::Base
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    Rails.cache.fetch([self.cache_key, 'corporate_vita_memberships_in_order_valid_from', corporation.cache_key], expires_in: 1.week) do
-      group_ids = corporation.status_groups.map(&:id) & self.parent_group_ids
-      self.memberships.with_past.where(ancestor_id: group_ids, ancestor_type: 'Group').order(valid_from: :asc)
-    end
-  end
-
-
-  # Status Groups
-  # ------------------------------------------------------------------------------------------
-
-  # This returns all status groups of the user, i.e. groups that represent the member
-  # status of the user in a corporation.
-  #
-  # options:
-  #   :with_invalid  =>  true, false
-  #
-  def status_groups(options = {})
-    StatusGroup.find_all_by_user(self, options)
-  end
-
-  def status_group_memberships
-    self.status_groups.collect do |group|
-      StatusGroupMembership.find_by_user_and_group( self, group )
-    end
-  end
-
-  def current_status_membership_in( corporation )
-    if status_group = current_status_group_in(corporation)
-      StatusGroupMembership.find_by_user_and_group(self, status_group)
-    end
-  end
-
-  def current_status_group_in(corporation)
-    StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
-  end
-
-  def status_group_in_primary_corporation
-    # - First try the `first_corporation`,  which does not consider corporations the user is
-    #   a former member of.
-    # - Next, use all corporations, which applies to completely excluded members.
-    #
-    cached { current_status_group_in(first_corporation || corporations.first) }
-  end
-
-  def status_export_string
-    cached {
-      self.corporations.collect do |corporation|
-        if membership = self.current_status_membership_in(corporation)
-          "#{I18n.localize(membership.valid_from.to_date) if membership.valid_from}: #{membership.group.name.singularize} in #{corporation.name}"
-        else
-          ""
-        end
-      end.join("\n")
-    }
-  end
-  def status_string
-    status_export_string
+    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past
   end
 
 
@@ -742,7 +673,7 @@ class User < ActiveRecord::Base
   end
 
   def hidden
-    cached { self.member_of? Group.hidden_users }
+    self.member_of? Group.hidden_users
   end
 
   def hidden=(hidden)
@@ -755,8 +686,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_all_non_hidden
-    non_hidden_user_ids = User.pluck(:id) - Group.hidden_users.member_ids
-    self.where(id: non_hidden_user_ids)  # in order to make it work with cancan.
+    self.where.not(id: Group.hidden_users.member_ids)
   end
 
 
@@ -807,7 +737,7 @@ class User < ActiveRecord::Base
   # notice: case insensitive
   #
   def self.find_all_by_email( email ) # TODO: Test this; # TODO: optimize using where
-    email_fields = ProfileField.where( type: "ProfileFieldTypes::Email", value: email )
+    email_fields = ProfileField.where( type: "ProfileFields::Email", value: email )
     matching_users = email_fields
       .select{ |ef| ef.profileable_type == "User" }
       .collect { |ef| ef.profileable }
@@ -851,7 +781,7 @@ class User < ActiveRecord::Base
   end
 
   def self.with_email
-    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFieldTypes::Email', '')
+    self.joins(:profile_fields).where('profile_fields.type = ? AND profile_fields.value != ?', 'ProfileFields::Email', '')
   end
 
   def self.applicable_for_new_account
@@ -897,4 +827,12 @@ class User < ActiveRecord::Base
     "User: #{self.id} #{self.alias}"
   end
 
+  # ==========================================================================================
+
+
+  def parent
+    status_group_in_primary_corporation || direct_groups.first
+  end
+
+  include UserCaching if use_caching?
 end

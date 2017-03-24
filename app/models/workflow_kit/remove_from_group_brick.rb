@@ -14,7 +14,7 @@ module WorkflowKit
       user = User.find( params[ :user_id ] ) 
       group = Group.find( params[ :group_id ] )
 
-      membership = UserGroupMembership.find_by( user: user, group: group )
+      membership = Membership.find_by( user: user, group: group )
       if membership
         if membership.direct?
           membership.invalidate at: 2.seconds.ago

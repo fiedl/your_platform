@@ -55,19 +55,21 @@ module ProfileSteps
     }.to change{ all('.profile_field_parent').count }.by 1
 
     expect {
+      num_of_fields_before_destroy = all('.profile_field_parent').count
       within (all('.profile_field_parent').last) do
         page.should have_selector('.remove_button', visible: true)
         page.find('.remove_button').trigger :click  # the button has no size in the spec
       end
-    
+
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       page.should have_selector('ul.profile_fields')
-      
+
+      wait_until { all('.profile_field_parent').count == num_of_fields_before_destroy - 1 }
+
       # p "============================================================================", type
-      wait_for_ajax
       # puts all('.remove_button').count.to_s + ' remove buttons'
       # puts all('.profile_field_parent', visible: true).count.to_s + ' profile fields'
-    }.to change{ all('.profile_field_parent').count }.by -1 
+    }.to change{ all('.profile_field_parent').count }.by -1
   end
-  
+
 end

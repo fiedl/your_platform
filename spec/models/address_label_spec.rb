@@ -4,9 +4,9 @@ describe AddressLabel do
   before do
     @user = create :user
     
-    @address_field = @user.profile_fields.create(type: 'ProfileFieldTypes::Address', value: "Pariser Platz 1\n 10117 Berlin").becomes(ProfileFieldTypes::Address)
+    @address_field = @user.profile_fields.create(type: 'ProfileFields::Address', value: "Pariser Platz 1\n 10117 Berlin").becomes(ProfileFields::Address)
     
-    @name_surrounding = @user.profile_fields.create(type: 'ProfileFieldTypes::NameSurrounding').becomes(ProfileFieldTypes::NameSurrounding)
+    @name_surrounding = @user.profile_fields.create(type: 'ProfileFields::NameSurrounding').becomes(ProfileFields::NameSurrounding)
     @name_surrounding.name_prefix = "Dr."
     @name_surrounding.name_suffix = "M.Sc."
     @name_surrounding.text_above_name = "Herrn"
@@ -64,7 +64,7 @@ describe AddressLabel do
   describe "#personal_title" do
     subject { address_label.personal_title }
     before do
-      @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+      @user.profile_fields.create(type: 'ProfileFields::General', label: 'personal_title', value: "Dr.")
       @user.save
     end
     it { should == @user.personal_title }
@@ -86,7 +86,7 @@ describe AddressLabel do
     end
     describe "when the user has the same personal title as given in the name prefix" do
       before do
-        @user.profile_fields.create(type: 'ProfileFieldTypes::General', label: 'personal_title', value: "Dr.")
+        @user.profile_fields.create(type: 'ProfileFields::General', label: 'personal_title', value: "Dr.")
         @user.save
       end
       it "should not print it twice" do

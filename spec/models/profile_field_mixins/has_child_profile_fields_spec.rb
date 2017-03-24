@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module ProfileFieldTypes
+module ProfileFields
   class TestProfileField < ProfileField
 
     has_child_profile_fields :field_a, :field_b
@@ -10,7 +10,7 @@ end
 describe ProfileFieldMixins::HasChildProfileFields do
 
   before do
-    @profile_field = ProfileFieldTypes::TestProfileField.new
+    @profile_field = ProfileFields::TestProfileField.new
   end
 
   subject { @profile_field }
@@ -62,7 +62,7 @@ describe ProfileFieldMixins::HasChildProfileFields do
   end
 
   describe ".create" do
-    subject { @profile_field = ProfileFieldTypes::TestProfileField.create }
+    subject { @profile_field = ProfileFields::TestProfileField.create }
     it "should create the children as well" do
       subject
       @profile_field.children.count.should == 2

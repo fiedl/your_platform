@@ -21,7 +21,7 @@ class ProfileFieldsController < ApplicationController
   end
 
   def create
-    type = secure_profile_field_type || 'ProfileFieldTypes::Custom'
+    type = secure_profile_field_type || 'ProfileFields::Custom'
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?

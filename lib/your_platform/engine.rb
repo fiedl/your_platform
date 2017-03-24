@@ -96,9 +96,6 @@ require 'gravatar_image_tag'
 # Edit Mode
 require 'edit_mode'
 
-# Hide slim breadcrumb elements until user hovers the separator
-require 'slim_breadcrumb'
-
 # View Helpers
 require 'phony'
 require 'will_paginate'

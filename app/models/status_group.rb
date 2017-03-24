@@ -6,27 +6,36 @@
 #
 class StatusGroup < Group
 
-  def self.find_all_by_corporation(corporation)
-    self.find_all_by_group(corporation)
+  def assign_user(user, options = {})
+    super(user, options).becomes(Memberships::Status)
   end
 
   def self.find_all_by_group(group)
-    group.leaf_groups.select do |leaf_group|
-      leaf_group.ancestor_events.count == 0
-    end
-  end
-
-  def self.find_all_by_user(user, options = {})
-    user_groups = options[:with_invalid] ? user.parent_groups : user.direct_groups
-    user.corporations.collect do |corporation|
-      StatusGroup.find_all_by_corporation(corporation)
-    end.flatten & user_groups
+    group.descendant_groups.where(type: "StatusGroup")
   end
 
   def self.find_by_user_and_corporation(user, corporation)
-    status_groups = (StatusGroup.find_all_by_corporation(corporation) & StatusGroup.find_all_by_user(user))
-    raise "Selection algorithm not unique, yet, for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map{ |x| x.name + ' (' + x.id.to_s + ')' }.join(', ') }." if status_groups.count > 1
+    status_groups = corporation.status_groups & user.status_groups
+
+    # Send this error to our support address using the `ExceptionNotifier`
+    # but continue to execute the code. Otherwise, the user interface
+    # to fix the issue cannot be used.
+    #
+    begin
+      raise "Status not unique for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map{ |x| x.name + ' (' + x.id.to_s + ')' }.join(', ') }." if status_groups.count > 1
+    rescue => exception
+      if Rails.env.test?
+        Rails.logger.warn exception
+      else
+        ExceptionNotifier.notify_exeption(exception)
+      end
+    end
+
     status_groups.last
+  end
+
+  def self.model_name
+    Attachment.model_name
   end
 
 end

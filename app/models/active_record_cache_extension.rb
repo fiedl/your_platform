@@ -1,5 +1,6 @@
 require 'colored'
-#
+require 'cache_additions'
+
 # To understand our caching conventions, have a look at our wiki page:
 # https://github.com/fiedl/wingolfsplattform/wiki/Caching
 #
@@ -115,9 +116,28 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
 
-  def renew_cache
-    delete_cache
-    fill_cache
+  def renew_cache(time = Time.zone.now)
+    print "~" if ENV['CI'] == 'travis' # in order to keep tests alive
+    Rails.cache.renew(time) do
+      fill_cache
+    end
+  end
+
+  # The default way to fill the cache is to call all methods
+  # that are registered as methods to cache. But each class may
+  # override or extend this `fill_cache` method.
+  #
+  # The class method `cached_methods` is automatically populated
+  # when declaring a method as cached like this:
+  #
+  #     class User
+  #       cache :title
+  #     end
+  #
+  def fill_cache
+    self.class.cached_methods.try(:each) do |method_name|
+      self.send method_name
+    end
   end
 
   def cache_created_at(method_name, arguments = nil)
@@ -154,5 +174,70 @@ module ActiveRecordCacheExtension
   end
 
   module ClassMethods
+
+    # This class method provides a new way to cache methods.
+    #
+    # Example:
+    #
+    #     class User
+    #       def title
+    #         self.foo
+    #       end
+    #       cache :title
+    #     end
+    #
+    # This is a shortcut for:
+    #
+    #     class User
+    #       def title
+    #         cached { self.foo }
+    #       end
+    #       def fill_cache
+    #         title
+    #       end
+    #     end
+    #
+    def cache(method_name)
+      cache_method method_name
+    end
+
+    def cache_method(method_name)
+      if use_caching?
+        alias_method "uncached_#{method_name}", method_name
+
+        define_method(method_name) { |*args|
+          cached_block(method_name: method_name, arguments: args) { self.send "uncached_#{method_name}", *args }
+        }
+
+        # If a setter method exists as well, make the setter method
+        # also renew the cache.
+        #
+        setter_method_name = "#{method_name.to_s.gsub('?', '')}="
+        if method_defined?(setter_method_name)
+          alias_method "without_renew_cache_#{setter_method_name}", setter_method_name
+
+          define_method(setter_method_name) { |new_value|
+            result = self.send "without_renew_cache_#{setter_method_name}", new_value
+            Rails.cache.renew { self.send method_name }
+          }
+        end
+
+        self.cached_methods += [method_name]
+      end
+    end
+
+    def use_caching?
+      not ENV['NO_CACHING']
+    end
+
+    def cached_methods=(methods)
+      @cached_methods = methods
+    end
+    def cached_methods
+      @cached_methods ||= self.ancestors.collect { |ancestor_class|
+        ancestor_class.cached_methods if (ancestor_class.name != self.name) && ancestor_class.respond_to?(:cached_methods)
+      }.flatten.uniq - [nil]
+    end
+
   end
 end

@@ -29,7 +29,11 @@ describe Ability do
     let(:user) { create(:user_with_account) }
     let(:ability) { Ability.new(user) }
     subject { ability }
-    let(:the_user) { subject }
+
+    def the_user(reload = false)
+      @the_user_ability = nil if reload
+      @the_user_ability ||= Ability.new(user.reload)
+    end
 
     context "(posts and comments)" do
       context "when the user is a member of a group" do
@@ -147,18 +151,31 @@ describe Ability do
         @other_user = create :user
         the_user.should be_able_to :change_hidden, @other_user
       end
+
+      specify "turning the switch on and off should change the abilities accordingly and not cause caching issues" do
+        @page = create(:page)
+        the_user.should be_able_to :manage, @page
+
+        user.global_admin = false
+        wait_for_cache
+        the_user(true).should_not be_able_to :manage, @page
+
+        user.global_admin = true
+        wait_for_cache
+        the_user(true).should be_able_to :manage, @page
+      end
     end
 
     context "when the user is a group admin" do
       before do
         @group = create :group
         @group.assign_admin user
-        @other_user = create :user_with_account; @group << @other_user
+        @other_user = create :user_with_account; @group.assign_user(@other_user)
         time_travel 2.seconds
       end
 
       he "should be able to update its profile fields" do
-        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        @profile_field = @group.profile_fields.create(type: 'ProfileFields::Phone', value: '123')
         the_user.should be_able_to :update, @profile_field
       end
 
@@ -187,7 +204,7 @@ describe Ability do
       end
 
       he "should not be able to update its profile fields" do
-        @profile_field = @group.profile_fields.create(type: 'ProfileFieldTypes::Phone', value: '123')
+        @profile_field = @group.profile_fields.create(type: 'ProfileFields::Phone', value: '123')
         the_user.should_not be_able_to :update, @profile_field
       end
 
@@ -196,43 +213,43 @@ describe Ability do
           the_user.should be_able_to :create_event, @group
         end
         he "should be able to update events in his group" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to create events in subgroups of his group" do
           the_user.should be_able_to :create_event, @sub_group
         end
         he "should be able to update events in subgroups of his group" do
-          @event = @sub_group.child_events.create
+          @event = @sub_group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to update events in sub sub groups of his group" do
-          @event = @sub_sub_group.child_events.create
+          @event = @sub_sub_group.events.create
           the_user.should be_able_to :update, @event
         end
         he "should be able to update the contact people of an event" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :update, @event.contact_people_group
         end
         he "should be able to destroy just created events in his domain" do
-          @event = @group.child_events.create name: "Special Event", description: "non-empty"
+          @event = @group.events.create name: "Special Event", description: "non-empty"
 
           user.should be_in @group.officers_of_self_and_ancestors
           the_user.should be_able_to :destroy, @event
         end
         he "should not be able to destroy events that are older than 10 minutes" do
-          @event = @group.child_events.create name: "Recent Event", description: "non-empty"
+          @event = @group.events.create name: "Recent Event", description: "non-empty"
           @event.update_attribute :created_at, 11.minutes.ago
 
           the_user.should_not be_able_to :destroy, @event
         end
         he "should be able to invite users to an event" do
-          @event = @group.child_events.create
+          @event = @group.events.create
           the_user.should be_able_to :invite_to, @event
         end
         he { should_not be_able_to :create_event_for, @unrelated_group }
         he "should not be able to invite users to an event of an unrelated group" do
-          @event = @unrelated_group.child_events.create
+          @event = @unrelated_group.events.create
           the_user.should_not be_able_to :invite_to, @event
         end
       end
@@ -260,7 +277,7 @@ describe Ability do
       before do
         @page = create :page, title: "This is a page", content: "with non-empty content!"
         @secretary = @page.officers_parent.child_groups.create name: 'Secretary'
-        @secretary << user
+        @secretary.assign_user user
       end
 
       he { should be_able_to :create_page_for, @page }
@@ -347,8 +364,8 @@ describe Ability do
 
       describe "when he is contact person for an event" do
         before do
-          @event = @any_group.child_events.create
-          @event.contact_people << user
+          @event = @any_group.events.create
+          @event.contact_people_group.assign_user user
         end
 
         he { should be_able_to :update, @event }

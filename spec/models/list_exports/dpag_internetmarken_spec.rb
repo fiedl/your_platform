@@ -7,8 +7,8 @@ describe ListExports::DpagInternetmarken do
     @user = create :user, :with_address, first_name: "Jonathan", last_name: "Doe"
     @user.address_profile_fields.first.update_attributes value: "Pariser Platz 1\n 10117 Berlin"
     @user.profile_fields.create label: 'personal_title', value: "Dr."
-    @name_surrounding = @user.profile_fields.create type: "ProfileFieldTypes::NameSurrounding"
-    @name_surrounding = @user.profile_fields.where(type: "ProfileFieldTypes::NameSurrounding").first
+    @name_surrounding = @user.profile_fields.create type: "ProfileFields::NameSurrounding"
+    @name_surrounding = @user.profile_fields.where(type: "ProfileFields::NameSurrounding").first
     @name_surrounding.text_below_name = "c./o. Foo Bar"
     @name_surrounding.save
     @group << @user

@@ -31,7 +31,7 @@ concern :UserRoles do
   def member_of?( object, options = {} )
     if object.kind_of? Group
       if options[:at]
-        UserGroupMembership.find_all_by(user: self, group: object).at_time(options[:at]).any?
+        Membership.find_all_by(user: self, group: object).at_time(options[:at]).any?
       elsif options[:with_invalid] or options[:also_in_the_past]
         self.ancestor_group_ids.include? object.id
       else  # only current memberships:
@@ -46,7 +46,7 @@ concern :UserRoles do
   # ------------------------------------------------------------------------------------------
 
   def admin_of_anything?
-    cached { groups.find_all_by_flag(:admins_parent).count > 0 }
+    groups.find_all_by_flag(:admins_parent).count > 0
   end
 
   # This method finds all objects the user is an administrator of.
@@ -95,7 +95,7 @@ concern :UserRoles do
   # ==========================================================================================
 
   def former_member?
-    cached { current_corporations.none? && corporations.any? }
+    current_corporations.none? && corporations.any?
   end
 
   def former_member_of_corporation?( corporation )
@@ -107,7 +107,7 @@ concern :UserRoles do
   end
 
   def localized_date_of_org_membership_end
-    cached { I18n.localize date_of_org_membership_end if date_of_org_membership_end }
+    I18n.localize date_of_org_membership_end if date_of_org_membership_end
   end
 
   def reason_for_membership_end
@@ -126,7 +126,7 @@ concern :UserRoles do
   # to determine if some features are presented to the current_user.
   #
   def developer?
-    cached { self.developer }
+    self.developer
   end
   def developer
     self.member_of? Group.developers
@@ -146,7 +146,7 @@ concern :UserRoles do
     @beta_tester ||= self.beta_tester
   end
   def beta_tester
-    cached { self.member_of? Group.find_or_create_by_flag :beta_testers }
+    self.member_of? Group.find_or_create_by_flag :beta_testers
   end
   def beta_tester=(mark_as_beta_tester)
     if mark_as_beta_tester
@@ -163,14 +163,14 @@ concern :UserRoles do
     self.in? Group.everyone.admins
   end
   def global_admin?
-    cached { self.global_admin }
+    self.global_admin
   end
   def global_admin=(new_setting)
     if new_setting == true
       Group.everyone.assign_admin self
     else
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
-      UserGroupMembership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
+      Membership.find_by_user_and_group(self, Group.everyone.main_admins_parent).try(:destroy)
+      Membership.find_by_user_and_group(self, Group.everyone.admins_parent).try(:destroy)
     end
   end
 
@@ -199,11 +199,11 @@ concern :UserRoles do
   # ==========================================================================================
 
   def global_officer?
-    is_global_officer?
+    global_admin? || ancestor_groups.flagged(:global_officer).exists?
   end
 
   def is_global_officer?
-    cached { global_admin? || ancestor_groups.flagged(:global_officer).exists? }
+    global_officer?
   end
 
   def administrated_user_ids

@@ -1,10 +1,8 @@
-# -*- coding: utf-8 -*-
-#
 # This class represents a user group. Besides users, groups may have sub-groups as children.
 # One group may have several parent-groups. Therefore, the relations between groups, users,
 # etc. is stored using the DAG model, which is implemented by the `is_structureable` method.
 #
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
 
   if defined? attr_accessible
     attr_accessible( :name, # just the name of the group; example: 'Corporation A'
@@ -15,15 +13,16 @@ class Group < ActiveRecord::Base
                                        # members of the group; example: 'AC'
                       :extensive_name, # (optional) a long version of the group's name;
                                        # example: 'The Corporation of A'
-                      :direct_members_titles_string # Used for inline-editing: The comma-separated
-                                                    # titles of the child users of the group.
+                      :direct_members_titles_string, # Used for inline-editing: The comma-separated
+                                                     # titles of the child users of the group.
+                      :type
                       )
   end
 
   include ActiveModel::ForbiddenAttributesProtection  # TODO: Move into initializer
 
   is_structureable(ancestor_class_names: %w(Group Page Event),
-                   descendant_class_names: %w(Group User Page Workflow Event Project))
+                   descendant_class_names: %w(Group User Page Workflow Project))
   is_navable
   has_profile_fields
 
@@ -31,8 +30,11 @@ class Group < ActiveRecord::Base
 
   default_scope { includes(:flags) }
 
-  include GroupMixins::Memberships
-  include GroupMixins::Everyone
+  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
+
+  include GroupMemberships
+  include GroupMemberList
+  include GroupEveryone
   include GroupMixins::Corporations
   include GroupMixins::Roles
   include GroupMixins::Guests
@@ -45,6 +47,8 @@ class Group < ActiveRecord::Base
   include GroupDummyUsers
   include GroupWelcomeMessage
   include GroupSemesterCalendars
+  include GroupEvents
+  include GroupListExports
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -58,12 +62,6 @@ class Group < ActiveRecord::Base
 
 
   after_create     :import_default_group_structure  # from GroupMixins::Import
-  after_save       { self.delay.delete_cache }
-
-  def delete_cache
-    super
-    ancestor_groups(true).each { |g| g.delete_cached(:leaf_groups); g.delete_cached(:status_groups) }
-  end
 
   # General Properties
   # ==========================================================================================
@@ -103,7 +101,7 @@ class Group < ActiveRecord::Base
   end
 
   def name_with_corporation
-    if self.corporation && self.corporation.id != self.id
+    if self.corporation_id && (self.corporation_id != self.id)
       "#{self.name} (#{self.corporation.name})"
     else
       self.name
@@ -168,18 +166,6 @@ class Group < ActiveRecord::Base
   end
 
 
-  # Events
-  # ------------------------------------------------------------------------------------------
-
-  def events
-    self.descendant_events
-  end
-
-  def upcoming_events
-    self.events.upcoming.order('start_at')
-  end
-
-
   # Adress Labels (PDF)
   # options:
   #   - sender:      Sender line including sender address.
@@ -189,23 +175,22 @@ class Group < ActiveRecord::Base
   #
   def members_to_pdf(options = {sender: '', book_rate: false, type: "AddressLabelsPdf"})
     @filter = options[:filter]
-    timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    #timestamp = cached_members_postal_addresses_created_at || Time.zone.now
+    timestamp = Time.zone.now
     options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
-    #Rails.cache.fetch [self.cache_key, "members_postal_addresses", @filter] do
-      members
-        .apply_filter(@filter)
-        .collect { |user| user.address_label }
-        .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
-        # .collect { |address_label| address_label.to_s }
-    #end
+    members
+      .apply_filter(@filter)
+      .collect { |user| user.address_label }
+      .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
   end
-  def cached_members_postal_addresses_created_at
-    Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
-      members.apply_filter(@filter).collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
-    end
-  end
+
+  # def cached_members_postal_addresses_created_at
+  #   Rails.cache.fetch [self.cache_key, "cached_members_postal_addresses_created_at", @filter] do
+  #     members.apply_filter(@filter).collect { |user| user.cache_created_at(:address_label) || Time.zone.now }.min
+  #   end
+  # end
 
 
   # Groups
@@ -216,9 +201,7 @@ class Group < ActiveRecord::Base
   end
 
   def corporation
-    cached do
-      Corporation.find corporation_id if corporation_id
-    end
+    Corporation.find corporation_id if corporation_id
   end
   def corporation_id
     (([self.id] + ancestor_group_ids) & Corporation.pluck(:id)).first
@@ -233,15 +216,19 @@ class Group < ActiveRecord::Base
   # This is needed for the selection of status groups.
   #
   def leaf_groups
-    cached do
-      self.descendant_groups.order('id').includes(:flags).select do |group|
-        group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-      end
-    end
+    Group.find(leaf_group_ids)
+  end
+  def leaf_group_ids
+    self.descendant_groups.order('id').includes(:flags).select { |group|
+      group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
+    }.map(&:id)
   end
 
   def status_groups
-    StatusGroup.find_all_by_group(self)
+    descendant_groups.where(type: "StatusGroup")
+  end
+  def status_group_ids
+    status_groups.pluck(:id)
   end
 
   def find_deceased_members_parent_group
@@ -262,5 +249,6 @@ class Group < ActiveRecord::Base
     self.corporations_parent
   end
 
+  include GroupCaching if use_caching?
 end
 

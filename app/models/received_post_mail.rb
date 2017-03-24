@@ -31,7 +31,7 @@ class ReceivedPostMail < ReceivedMail
   
   def store_as_posts_when_authorized
     recipient_emails.collect do |recipient_email|
-      if group = ProfileFieldTypes::MailingListEmail.where(value: recipient_email).first.try(:profileable)
+      if group = ProfileFields::MailingListEmail.where(value: recipient_email).first.try(:profileable)
         if no_duplicates_exist?(group) || Rails.env.development?
           if Ability.new(self.sender_user).can? :create_post_for, group
             post = Post.new

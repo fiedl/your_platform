@@ -74,6 +74,9 @@ source 'https://rubygems.org' do
     gem 'guard'
     gem 'rspec-rails', '2.14.1'
     gem 'guard-rspec'
+    gem 'parallel_tests'
+    gem 'rspec-instafail'
+    #gem 'rspec-retry'  # TODO: activate when migrating to rspec 3
     gem 'capybara'
     gem 'poltergeist'
     gem 'selenium-webdriver'

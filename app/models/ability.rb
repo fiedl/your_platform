@@ -144,6 +144,7 @@ class Ability
       can :index, :all
     else
       can :manage, :all
+      can :execute, [Workflow, WorkflowKit::Workflow]
 
       # There are features for developers and beta testers.
       cannot :use, :all
@@ -167,11 +168,11 @@ class Ability
           can?(:update, profile_field.profileable)
       end
 
-      can :execute, Workflow do |workflow|
+      can :execute, [Workflow, WorkflowKit::Workflow] do |workflow|
         # Local admins can execute workflows of groups they're admins of.
         # And they can execute the mark_as_deceased workflow, which is a global workflow.
         #
-        (workflow == Workflow.find_mark_as_deceased_workflow) or
+        (workflow.id == Workflow.find_mark_as_deceased_workflow_id) ||
         (workflow.admins_of_ancestors.include?(user))
       end
     end
@@ -293,7 +294,7 @@ class Ability
       #
       can [:create, :read, :update, :destroy], ProfileField do |field|
         field.profileable.nil? or # to allow creating fields
-        ((field.profileable == user) and (field.type != 'ProfileFieldTypes::General') and (field.key != 'date_of_birth'))
+        ((field.profileable == user) and (field.type != 'ProfileFields::General') and (field.key != 'date_of_birth'))
       end
 
       # Regular users can update their personal title and academic degree.
@@ -313,7 +314,7 @@ class Ability
       # Regular users can update their own validity ranges of memberships
       # in order to update their corporate vita.
       #
-      can :update, UserGroupMembership, :descendant_id => user.id
+      can :update, Membership, :descendant_id => user.id
 
       # Everyone who can join an event, can add images to this event.
       # Then, he will automatically join the event.

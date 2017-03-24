@@ -4,12 +4,13 @@ feature "Comments on public blog posts", js: true do
   background do
     Page.root.update_attribute :type, "Blog"
     @blog = Page.root
-    @blog_post = @blog.blog_posts.create(title: "Great blog post").becomes(BlogPost)
+    @blog_post = @blog.create_blog_post title: "Great blog post"
   end
 
   scenario "A guest user posts a comment on a public blog post" do
     visit blog_post_path(@blog_post)
 
+    wait_until { page.has_selector? '.blog_post_comments' }
     within '.blog_post_comments' do
       fill_in :guest_user_name, with: "John Doe"
       fill_in :guest_user_email, with: "j.doe@example.com"
@@ -21,7 +22,7 @@ feature "Comments on public blog posts", js: true do
       page.should have_no_text "This is a great post"
     end
 
-    sleep 2  # don't know why it does not work without it :(
+    wait_until(timeout: 30.seconds) { @blog_post.comments(true).count > 0 }
 
     @blog_post = BlogPost.find @blog_post.id
     @blog_post.comments.count.should == 1

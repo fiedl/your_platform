@@ -49,4 +49,24 @@ module WaitForAjax
   rescue Timeout::Error
   end
 
+  # Wait for the condition in the block to be true:
+  #
+  #     wait_until { page.text.include? "Foo" }
+  #
+  #     wait_until(timeout: 20.seconds ) { page.text.include? "Foo" }
+  #
+  def wait_until(options = {})
+    counter = 0
+    started_at = Time.zone.now
+    until yield
+      wait_for_ajax
+      counter += 1
+      if options[:timeout]
+        raise "Not happening, dude. Waited for #{options[:timeout].to_s} seconds." if Time.zone.now > started_at + options[:timeout]
+      else
+        raise "Not happening, dude. Tried #{counter} times." if counter >= 10
+      end
+    end
+  end
+
 end

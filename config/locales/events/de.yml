@@ -28,6 +28,14 @@ de:
   is_looking_at_the_calendar_of: "sieht sich den Kalender von '%{group_name}' an"
   is_looking_at_the_group_calendar: "sieht sich den Gruppen-Kalender an"
 
+  creating_event_please_wait: Erstelle neue Veranstaltung. Bitte warten.
+  event_is_being_destroyed_again: Veranstaltung wird wieder gelöscht. Bitte warten.
+  event_has_been_destroyed_redirecting_to_start_page: Veranstaltung wurde gelöscht. Weiterleitung zur Startseite ...
+  something_went_wrong_please_reload: Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.
+  send_test_to_my_email_again: Erneut zum Testen an meine eigene Adresse senden.
+  event_has_been_added_to_group: Die Veranstaltung wurde in ihre Gruppe eingetragen.
+  reload_event: Neu laden.
+
   good_day: 'Guten Tag,'
   i_would_like_to_announce_the_following_event: 'ich möchte Sie gerne auf folgende Veranstaltung aufmerksam machen.'
   event_information_will_be_inserted_here: '[ Informationen zur Veranstaltung werden vom System hier eingefügt. ]'

@@ -9,19 +9,19 @@ describe ProfileableMixins::Address do
     subject { user.address_fields }
     describe "for a regular user with address and phone field" do
       before do
-        @address_field = user.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Study Address', value: ''
-        @phone_field = user.profile_fields.create type: 'ProfileFieldTypes::Phone', label: 'Phone', value: '1234'
+        @address_field = user.profile_fields.create type: 'ProfileFields::Address', label: 'Study Address', value: ''
+        @phone_field = user.profile_fields.create type: 'ProfileFields::Phone', label: 'Phone', value: '1234'
       end
-      it { should include @address_field.becomes(ProfileFieldTypes::Address) }
+      it { should include @address_field.becomes(ProfileFields::Address) }
       it { should_not include @phone_field }
-      it { should_not include @phone_field.becomes(ProfileFieldTypes::Address) }
-      it { should_not include @phone_field.becomes(ProfileFieldTypes::Phone) }
+      it { should_not include @phone_field.becomes(ProfileFields::Address) }
+      it { should_not include @phone_field.becomes(ProfileFields::Phone) }
     end
 
     describe "when unsaved user without id" do
       let(:user) { User.new }
       describe "when address fields without profileable_id exist (bug fix)" do
-        before { ProfileField.create(type: 'ProfileFieldTypes::Address', profileable_type: 'User', label: 'Test', value: 'Test') }
+        before { ProfileField.create(type: 'ProfileFields::Address', profileable_type: 'User', label: 'Test', value: 'Test') }
         specify { user.id.should == nil }
         it { should == [] }
         it { should be_kind_of ActiveRecord::Relation }
@@ -56,7 +56,7 @@ describe ProfileableMixins::Address do
       end
     end
     describe "when already present" do
-      before { @address_field = user.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Study Address', value: '' }
+      before { @address_field = user.profile_fields.create type: 'ProfileFields::Address', label: 'Study Address', value: '' }
       it "should update the existing field" do
         subject
         @address_field.reload.value.should == "My New Study Address"
@@ -67,7 +67,7 @@ describe ProfileableMixins::Address do
       end
     end
     describe "when study-or-work address present" do
-      before { @address_field = user.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Arbeits- oder Studienanschrift', value: '' }
+      before { @address_field = user.profile_fields.create type: 'ProfileFields::Address', label: 'Arbeits- oder Studienanschrift', value: '' }
       it "should update the existing field" do
         subject
         @address_field.reload.value.should == "My New Study Address"

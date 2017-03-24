@@ -1,0 +1,10 @@
+- # locals:
+- user || raise('no user given')
+
+%ul.user_groups_by_category
+  - user.group_ids_by_category.each do |category, group_ids|
+    %li
+      %ul.groups
+        - Group.find(group_ids).each do |group|
+          %li
+            = link_to group.title, group

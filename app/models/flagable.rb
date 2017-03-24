@@ -8,15 +8,15 @@ module Flagable
     def find_all_by_flag( flag )
       self.joins( :flags ).where( :flags => { :key => flag } )
     end
-    
+
     def find_by_flag( flag )
       find_all_by_flag( flag ).limit( 1 ).readonly( false ).first
     end
-    
+
     def find_or_create_by_flag(flag)
       find_by_flag(flag) || create_by_flag(flag)
     end
-    
+
     def create_by_flag(flag)
       obj = self.create
       obj.add_flag flag
@@ -24,15 +24,20 @@ module Flagable
     end
 
     scope :flagged, lambda { |flag| includes(:flags).where(flags: {key: flag}) }
+    scope :not_flagged, lambda { |flags|
+      group_ids_other_flags = includes(:flags).where.not(flags: {key: flags}).pluck(:id)
+      group_ids_no_flags = includes(:flags).where(flags: {flagable_id: nil})
+      where(id: group_ids_other_flags + group_ids_no_flags)
+    }
 
   end
 
   module FlagableInstanceMethods
-    
+
     def add_flags( *new_flags )
       if new_flags.kind_of? Array
         for new_flag in new_flags
-          if new_flag.kind_of? String or new_flag.kind_of? Symbol 
+          if new_flag.kind_of? String or new_flag.kind_of? Symbol
             if not self.has_flag? new_flag
               self.flags.create( key: new_flag.to_sym )
             end

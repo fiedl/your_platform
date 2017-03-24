@@ -106,8 +106,8 @@ describe "MayNeedReview: " do
     end
   end
   
-  describe "UserGroupMembership" do
-    subject { UserGroupMembership.new }
+  describe "Membership" do
+    subject { Membership.new }
     it { should respond_to :needs_review?, :needs_review!, :needs_review, :needs_review= }
   end
   

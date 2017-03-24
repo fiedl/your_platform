@@ -9,7 +9,7 @@ describe NavNode do
     @nav_node.save
   end
   subject { @nav_node }
-  
+
   describe "#url_component" do
     subject { @nav_node.url_component }
     describe "for no url_component set" do
@@ -41,7 +41,7 @@ describe NavNode do
       @reloaded_nav_node.url_component.should == "foo/"
     end
   end
-  
+
   describe "#breadcrumb_item" do
     subject { @nav_node.breadcrumb_item }
     describe "for no breadcrumb_item set" do
@@ -73,7 +73,7 @@ describe NavNode do
       @reloaded_nav_node.breadcrumb_item.should == "Foo"
     end
   end
-  
+
   describe "#menu_item" do
     subject { @nav_node.menu_item }
     describe "for no menu_item set" do
@@ -105,7 +105,7 @@ describe NavNode do
       @reloaded_nav_node.menu_item.should == "Foo"
     end
   end
-    
+
   describe "#hidden_menu" do
     subject { @nav_node.hidden_menu }
     describe "for the setting being overridden" do
@@ -136,14 +136,14 @@ describe NavNode do
       before { @nav_node = create(:event).nav_node }
       it { should == true }
     end
-    # 
+    #
     # TODO: Later, when Workflows are Navables, use this:
     #
     # describe "for Workflows, by default" do
     #   before { @nav_node = create(:workflow).nav_node }
     #   it { should == true }
     # end
-    # 
+    #
     # For the moment:
     #
     describe "for Workflows, by default" do
@@ -152,7 +152,7 @@ describe NavNode do
       end
     end
   end
-  
+
   describe "#slim_breadcrumb" do
     subject { @nav_node.slim_breadcrumb }
     describe "for being set to true" do
@@ -167,7 +167,7 @@ describe NavNode do
       it { should == false }
     end
   end
-  
+
   describe "(route methods)" do
     before do
       @root_page = create(:page, title: "Example.com")
@@ -176,10 +176,10 @@ describe NavNode do
       @products_page.parent_pages << @root_page
       @phones_page = create(:page, title: "Phones")
       @phones_page.parent_pages << @products_page
-      
+
       @nav_node = @phones_page.nav_node
     end
-  
+
     describe "#url" do
       subject { @nav_node.url }
       it "should return the joined url" do
@@ -189,70 +189,10 @@ describe NavNode do
         subject.should_not end_with "/"
       end
     end
-  
-    describe "#breadcrumbs" do
-      subject { @nav_node.breadcrumbs }
-      it "should return an Array of Hashes" do
-        subject.should be_kind_of Array
-        subject.first.should be_kind_of Hash
-      end
-      specify "the Hash's attributes :title, :navable and :slim should be set" do
-        subject.first[:title].should_not == nil
-        subject.first[:navable].should_not == nil
-        subject.first[:slim].should_not == nil        
-      end
-      it { should == [ {title: "Example.com", navable: @root_page, slim: false},
-                       {title: "Products", navable: @products_page, slim: false},
-                       {title: "Phones", navable: @phones_page, slim: false} ] }
-    end
-  
-    describe "#ancestor_navables" do
-      subject { @nav_node.ancestor_navables }
-      it "should return the navable ancestors of the NavNode's Navable" do
-        subject.should == [ @root_page, @products_page ]
-      end
-      describe "for the ancestors' ids not being in an ascending order matching the hierarchy" do
-        before do
-          
-          # The @products_page is created before the @root_page on purpose.
-          #
-          @products_page = create(:page, title: "Products") 
-          @root_page = create(:page, title: "Example.com")
-          @root_page.nav_node.update_attribute(:url_component, "http://example.com/")
-          @products_page.parent_pages << @root_page
-          @phones_page = create(:page, title: "Phones")
-          @phones_page.parent_pages << @products_page
-      
-          @nav_node = @phones_page.nav_node
-        end
-        it "should return the navable ancestors of the NavNode's Navable" do
-          subject.should == [ @root_page, @products_page ]
-        end
-        describe "for ambiguous routes" do
-          before do
-            @other_ancestor_page = create(:page)
-            @phones_page.parent_pages << @other_ancestor_page
-            @nav_node = @phones_page.nav_node
-          end
-          it "should list only the first route" do
-            #
-            #   @root_page
-            #       |
-            #   @products_page   @other_ancestor_page
-            #              |       |
-            #             @phones_page
-            #
-            @phones_page.ancestors.should include @root_page, @products_page, @other_ancestor_page
-            subject.should include @root_page, @products_page
-            subject.should_not include @other_ancestor_page
-          end
-        end
-      end
-    end
 
     describe "#ancestor_navables_and_own" do
       it { should = [ @root_page, @products_page, @phone_page ] }
-    end 
+    end
 
     describe "#ancestor_nodes" do
       subject { @nav_node.ancestor_nodes }
@@ -265,13 +205,13 @@ describe NavNode do
         subject.to_s.should == [ @root_page.nav_node, @products_page.nav_node ].to_s
       end
     end
-    
+
     describe "#ancestor_nodes_and_self" do
       subject { @nav_node.ancestor_nodes_and_self }
       it "should return an Array of the ancestor_nodes plus this NavNode as the last element" do
         subject.to_s.should == [ @root_page.nav_node, @products_page.nav_node, @nav_node ].to_s
       end
     end
-    
+
   end
 end

@@ -20,7 +20,7 @@ feature 'Corporate Vita', js: true do
 
     background do
       @status_groups.first.assign_user @user
-      
+
       @first_promotion_workflow = create( :promotion_workflow, name: 'First Promotion',
                                           :remove_from_group_id => @status_groups.first.id,
                                           :add_to_group_id => @status_groups.second.id )
@@ -33,8 +33,16 @@ feature 'Corporate Vita', js: true do
 
       #login(:local_admin, of: @corporation)
       login :global_admin
-      
+
       visit user_path( @user )
+    end
+
+    specify "prelims" do
+      @user.workflows_by_corporation.should == {
+        @corporation.name => [@first_promotion_workflow]
+      }
+      User.last.should be_global_admin
+      User.last.can?(:execute, @first_promotion_workflow).should be_true
     end
 
     describe 'viewing the user page' do
@@ -53,7 +61,9 @@ feature 'Corporate Vita', js: true do
           click_on I18n.t(:change_status)
           click_on @first_promotion_workflow.name
         end
-        
+
+        wait_for_ajax; wait_for_ajax; wait_for_ajax;
+
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -70,6 +80,8 @@ feature 'Corporate Vita', js: true do
           click_on @second_promotion_workflow.name
         end
 
+        wait_for_ajax; wait_for_ajax; wait_for_ajax;
+
         within first '.section.corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -83,14 +95,14 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
 
           page.should have_content @valid_from_formatted
 
@@ -103,13 +115,12 @@ feature 'Corporate Vita', js: true do
 
           @new_date = 10.days.ago.to_date
           fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
-          
+
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
-          
-          wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
+          wait_until { Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
+          Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
         end
       end
     end
@@ -154,14 +165,14 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 
       it 'should be possible to change the date' do
         within('#corporate_vita') do
 
-          @valid_from_formatted = I18n.localize @membership.valid_from.to_date
+          @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
 
           page.should have_content @valid_from_formatted
 
@@ -178,8 +189,8 @@ feature 'Corporate Vita', js: true do
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
 
-          wait_for_ajax; wait_for_ajax  # apparently, it needs two in order not to fail
-          UserGroupMembership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
+          wait_until { Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date != Time.zone.now.to_date }
+          Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
 
         end
       end
@@ -188,7 +199,7 @@ feature 'Corporate Vita', js: true do
     describe 'if the date of the promotion was erroneously changed to a date in the future' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         @membership.valid_from = 1.day.from_now
         visit user_path( @user )
       end
@@ -241,7 +252,7 @@ feature 'Corporate Vita', js: true do
     describe 'change the date of promotion afterwards' do
       before do
         @first_promotion_workflow.execute( user_id: @user.id )
-        @membership = UserGroupMembership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
+        @membership = Membership.now_and_in_the_past.find_by_user_and_group( @user, @status_groups.first )
         visit user_path( @user )
       end
 

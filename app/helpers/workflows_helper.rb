@@ -1,5 +1,20 @@
 module WorkflowsHelper
 
+  def executable_workflows_by_corporation(user)
+    if @executable_workflows_by_corporation && @executable_workflows_by_corporation[user.id]
+      @executable_workflows_by_corporation[user.id]
+    else
+      @executable_workflows_by_corporation ||= {}
+      @executable_workflows_by_corporation[user.id] ||= {}
+      user.workflows_by_corporation.each do |corporation_title, workflows|
+        executable_workflows = workflows.select { |workflow| can? :execute, workflow }
+        @executable_workflows_by_corporation[user.id][corporation_title] = executable_workflows if executable_workflows.any?
+      end
+      @executable_workflows_by_corporation[user.id]
+    end
+  end
+
+
   def link_to_workflow( workflow, context_infos = {} )
     user = context_infos[ :user ]
     title = user.name + " " if user

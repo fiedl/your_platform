@@ -9,6 +9,9 @@
 # rspec-rails       Integration of RSpec into Rails, providing generators, et cetera.
 #                   https://github.com/rspec/rspec-rails
 #
+# RSpec Retry       Retry failing specs
+#                   https://github.com/NoRedInk/rspec-retry
+#
 # Guard             Detecting changed files and running corresponding tests in the
 #                   background during development.
 #                   https://github.com/guard/guard
@@ -93,12 +96,23 @@ Spork.prefork do
   ENV['RAILS_ENV'] ||= 'test'
   require File.expand_path('../../demo_app/my_platform/config/environment', __FILE__)
 
+  # The original setting whether the renew-cache mechanism should be skipped
+  # falling back to the delete-cache mechanism.
+  #
+  # This is default for model specs, since it makes no difference to them and the
+  # delete-cache mechanism is faster as caches are only filled when needed instead
+  # of eagerly filling every cache.
+  #
+  ENV_NO_RENEW_CACHE = ENV['NO_RENEW_CACHE']
+  ENV_NO_CACHING = ENV['NO_CACHING']
+
 
   # Required Libraries
   # ----------------------------------------------------------------------------------------
 
   require 'rspec/rails'
   require 'rspec/autorun'
+  #require 'rspec/retry'
   require 'nokogiri'
   require 'capybara/poltergeist'
   require 'rspec/expectations'
@@ -138,7 +152,12 @@ Spork.prefork do
       # inspector in the browser that allows you to see the current DOM structure and
       # other information useful for debugging tests.
       #
-      Capybara::Poltergeist::Driver.new(app, inspector: true, js_errors: (not ENV['NO_JS_ERRORS'].present?))
+      Capybara::Poltergeist::Driver.new(app, {
+        port: 51674 + ENV['TEST_ENV_NUMBER'].to_i,
+        inspector: true,
+        js_errors: (not ENV['NO_JS_ERRORS'].present?),
+        timeout: 120
+      })
     end
     Capybara.javascript_driver = :poltergeist
   end
@@ -251,6 +270,20 @@ Spork.prefork do
 
     config.before(:each) do
 
+      # Do not use the renew_cache mechanism but fall back to delete_cache
+      # in the model layer. This means that caches are created on the fly
+      # when needed and not eagerly, which is faster.
+      #
+      if Capybara.current_driver == :rack_test # no integration test
+        unless ENV_NO_RENEW_CACHE
+          ENV['NO_RENEW_CACHE'] = "true"
+        end
+      else # integration test
+        unless ENV_NO_RENEW_CACHE
+          ENV['NO_RENEW_CACHE'] = nil
+        end
+      end
+
       # This distinction reduces the run time of the test suite by over a factor of 4:
       # From 40 to a couple of minutes, since the truncation method, which is slower,
       # is only used when needed by Capybara, i.e. when running integration tests,
@@ -298,6 +331,26 @@ Spork.prefork do
     config.after(:suite) do
       DatabaseCleaner.clean
     end
+
+
+    # Memory management
+    # ......................................................................................
+
+    # In order to free phantomjs memory, reset it after each spec.
+    # This tries to avoid "failed to reach server".
+    # https://github.com/fiedl/your_platform/pull/19#issuecomment-283803871
+    #
+    config.after(:each) { page.driver.reset! if defined?(page) && page.respond_to?(:driver) && page.driver.respond_to?(:reset!) }
+
+    # Rspec Retry
+    # ......................................................................................
+
+    # # TODO: Activate this when migrating to rspec 3.
+    # #
+    # # Retry failed feature specs.
+    # config.around :each, :js do |ex|
+    #   ex.run_with_retry retry: 3
+    # end
 
 
     # Spec Filtering: Focus on Current Specs

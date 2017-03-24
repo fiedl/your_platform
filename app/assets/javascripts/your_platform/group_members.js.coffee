@@ -7,7 +7,7 @@ $(document).on 'change keyup paste', '.add_group_members .user-select-input', ->
   else
     $('.add_group_member_tools').hide()
     
-$(document).on 'submit', '.add_group_members form.new_user_group_membership', (event)->
+$(document).on 'submit', '.add_group_members form.new_membership', (event)->
   setTimeout ->
     name_field = $('.user-select-input.new-membership')
     name_field.val('')

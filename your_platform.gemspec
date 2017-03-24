@@ -21,8 +21,9 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*"] + ["Rakefile", "README.md"]
   s.test_files = Dir["spec/**/*"]
 
+  #
   # Dependencies
-  # --------------------------------------------------------------------------------
+  #
 
   # Rails and Rails Additions
   s.add_dependency "rails", ">= 4.2.5.1"
@@ -132,9 +133,6 @@ Gem::Specification.new do |s|
   # Edit Mode
   s.add_dependency 'edit_mode', '>= 1.0.2'                                             # MIT License
 
-  # Hide slim breadcrumb elements until user hovers the separator
-  s.add_dependency 'slim_breadcrumb', '>= 0.0.3'                                       # MIT License
-
   # View Helpers
   s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
@@ -143,7 +141,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'judge'
 
   # Metrics
-  s.add_dependency 'rack-mini-profiler', '>= 0.9.0.pre'                                # MIT License
+  s.add_dependency 'rack-mini-profiler'
   s.add_dependency 'redis_analytics'
   s.add_dependency 'chartkick'
   s.add_dependency 'groupdate'
@@ -186,8 +184,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
   s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
 
+  #
   # Development Dependencies
-  # --------------------------------------------------------------------------------
+  #
 
   s.add_development_dependency "rspec-rails", "2.10.0"
   s.add_development_dependency "guard", "1.0.1"

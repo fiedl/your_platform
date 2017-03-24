@@ -15,7 +15,7 @@ feature "Search Field", js: true do
       before do
         @user1 = create( :user, last_name: "foo" )
         within('.navbar-search') { fill_in 'query', with: "foo" }
-        
+
         press_enter in: 'query'
       end
       specify "searching for foo should redirect to the user page" do
@@ -42,8 +42,8 @@ feature "Search Field", js: true do
         @user1 = create( :user, last_name: "foo" )
         @user2 = create( :user, last_name: "blarzfoo" )
         @user3 = create( :user, last_name: "cannonfoo" )
-        @user3.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin", type: "ProfileFieldTypes::Address" )
-        @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFieldTypes::General")
+        @user3.profile_fields.create( label: "Home Address", value: "Pariser Platz 1\n 10117 Berlin", type: "ProfileFields::Address" )
+        @user3.profile_fields.create( label: "General Info", value: "Foo Bar", type: "ProfileFields::General")
 
         within('.navbar-search') { fill_in 'query', with: "foo" }
         press_enter in: 'query'
@@ -61,16 +61,16 @@ feature "Search Field", js: true do
         u3.size.should == 1
       end
     end
-    
+
     describe "by profile field" do
       before do
         @user1 = create :user
-        @user1.profile_fields.create(type: 'ProfileFieldTypes::Address', value: 'Pariser Platz 1\n 10117 Berlin')
+        @user1.profile_fields.create(type: 'ProfileFields::Address', value: 'Pariser Platz 1\n 10117 Berlin')
       end
       specify "searching for a string in a profile field should result in the corresponding user" do
         within('.navbar-search') { fill_in 'query', with: "Berlin" }
         press_enter in: 'query'
-        
+
         page.should have_text @user1.title
       end
     end
@@ -91,7 +91,7 @@ feature "Search Field", js: true do
       page.should have_content @page.title
     end
   end
-  
+
   describe "finding attachments" do
     before do
       @page = create(:page, title: "foo page")

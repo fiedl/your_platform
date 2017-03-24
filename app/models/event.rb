@@ -6,14 +6,20 @@ class Event < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-  attr_accessor :group_id
-  after_save :assign_to_group_given_by_group_id
 
-  attr_accessor :contact_person_id
-  after_save :assign_contact_person_given_by_contact_person_id
+  include EventGroups
+  include EventContactPeople
+  include EventAttendees
+
 
   # General Properties
   # ==========================================================================================
+
+  def as_json(options = {})
+    super(options).merge({
+      group_id: group_id
+    })
+  end
 
   # The title, i.e. the caption of the event is its name.
   def title
@@ -26,6 +32,15 @@ class Event < ActiveRecord::Base
     else
       "#{id} #{name}".parameterize
     end
+  end
+
+  # This is used to find the event's place in the navigational structure.
+  #
+  def parent
+    self.group
+  end
+  def parents
+    parent ? [parent] : []
   end
 
   def empty?
@@ -49,36 +64,6 @@ class Event < ActiveRecord::Base
   end
 
 
-  # Groups
-  # ==========================================================================================
-
-  # Eeach event is assigned to zero,  one or several groups.
-  # Internally, this is modelled using the DAG structure, i.e. one can use
-  # the `event.parent_groups` association.
-  # But for convenience, here are a few more accessor methods:
-
-  def group
-    @group ||= self.parent_groups.first
-  end
-  def group=(new_group)
-    if @group != new_group
-      @group = new_group
-      self.destroy_dag_links
-      self.parent_groups << new_group
-    end
-  end
-  def groups
-    self.parent_groups
-  end
-  def group_id
-    @group_id ||= group.try(:id)
-  end
-
-  def assign_to_group_given_by_group_id
-    self.group = Group.find(group_id) if group_id
-  end
-
-
   # Times
   # ==========================================================================================
 
@@ -98,51 +83,6 @@ class Event < ActiveRecord::Base
     self.end_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
   end
 
-
-
-  # Contact People and Attendees
-  # ==========================================================================================
-
-  def find_contact_people_group
-    find_special_group :contact_people
-  end
-  def create_contact_people_group
-    create_special_group :contact_people
-  end
-  def contact_people_group
-    cached { find_contact_people_group || create_contact_people_group }
-  end
-  def contact_people
-    contact_people_group.members
-  end
-
-  def find_attendees_group
-    find_special_group :attendees
-  end
-  def create_attendees_group
-    create_special_group :attendees
-  end
-  def attendees_group
-    cached { find_attendees_group || create_attendees_group }
-  end
-  def attendees
-    attendees_group.members
-  end
-
-  def destroy
-    find_attendees_group.try(:destroy)
-    find_contact_people_group.try(:destroy)
-    super
-  end
-
-  def assign_contact_person_given_by_contact_person_id
-    # Assign the contact person in a background job to save some time here.
-    Event.delay.assign_contact_person_to_event self.id, contact_person_id if contact_person_id
-  end
-
-  def self.assign_contact_person_to_event(event_id, contact_person_id)
-    Event.find(event_id).contact_people_group << User.find(contact_person_id)
-  end
 
   # Scopes
   # ==========================================================================================
@@ -170,32 +110,12 @@ class Event < ActiveRecord::Base
     Event.upcoming.pluck(:id).include? self.id
   end
 
-  scope :direct, lambda { includes( :links_as_descendant ).where( :dag_links => { :direct => true } ) }
-
 
   # Finder Methods
   # ==========================================================================================
 
-  def self.find_all_by_group( group )
-    ancestor_id = group.id if group
-    self.includes( :links_as_descendant )
-      .where( :dag_links => {
-                :ancestor_type => "Group", :ancestor_id => ancestor_id
-              } )
-      .order('start_at')
-  end
-
-  def self.find_all_by_groups( groups )
-    group_ids = groups.collect { |g| g.id }
-    self.includes( :links_as_descendant )
-      .where( :dag_links => {
-                :ancestor_type => "Group", :ancestor_id => group_ids
-              } )
-      .order('start_at')
-  end
-
   def self.find_all_by_user(user)
-    ids = find_all_by_groups(user.groups).direct.pluck(:id)
+    ids = user.groups.collect { |g| g.events.pluck(:id) }.flatten
     ids += user.ancestor_event_ids
     self.where(id: ids.uniq).order(:start_at)
   end
@@ -283,4 +203,5 @@ class Event < ActiveRecord::Base
     end
   end
 
+  include EventCaching if use_caching?
 end

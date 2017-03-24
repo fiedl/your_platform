@@ -28,6 +28,9 @@ feature "Semester Calendars", :js do
     find('.event_location input').set "adH"
 
     click_on :save
+    page.should have_text 'Das Semesterprogramm wird nun gespeichert. Das kann bei typischen Semesterprogrammen fünf Minuten dauern.'
+
+    wait_until { page.has_no_text? 'Das Semesterprogramm wird nun gespeichert. Das kann bei typischen Semesterprogrammen fünf Minuten dauern.' }
     page.should have_no_text t(:add_event_to_semester_calendar)
 
     @event = Event.last

@@ -69,9 +69,10 @@ $(document).ready ->
     # loading on scroll
     #
     $(window).scroll ->
-      if $(window).scrollTop() > $(document).height() - $(window).height() - 800
-        if $('#filter_news_query').val() == "" or $('#filter_news_query').size() == 0
-          load_next_page()
+      if $('.scroll-indicator').size() > 0
+        if $(window).scrollTop() > $(document).height() - $(window).height() - 800
+          if $('#filter_news_query').val() == "" or $('#filter_news_query').size() == 0
+            load_next_page()
 
 $(document).on 'click', '.scroll-indicator', ->
   load_next_page()

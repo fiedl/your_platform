@@ -7,12 +7,12 @@ describe ListExports::NameList do
     @user = create :user, :with_address, first_name: "Jonathan", last_name: "Doe"
     @user.address_profile_fields.first.update_attributes value: "Pariser Platz 1\n 10117 Berlin"
     @user.profile_fields.create label: 'personal_title', value: "Dr."
-    @name_surrounding = @user.profile_fields.create type: "ProfileFieldTypes::NameSurrounding"
-    @name_surrounding = @user.profile_fields.where(type: "ProfileFieldTypes::NameSurrounding").first
+    @name_surrounding = @user.profile_fields.create type: "ProfileFields::NameSurrounding"
+    @name_surrounding = @user.profile_fields.where(type: "ProfileFields::NameSurrounding").first
     @name_surrounding.text_below_name = "c./o. Foo Bar"
     @name_surrounding.save
-    @user.profile_fields.create(type: 'ProfileFieldTypes::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)
-    @user.profile_fields.create(type: 'ProfileFieldTypes::General', value: "Dr.", label: :personal_title)
+    @user.profile_fields.create(type: 'ProfileFields::AcademicDegree', value: "Dr. rer. nat.", label: :academic_degree)
+    @user.profile_fields.create(type: 'ProfileFields::General', value: "Dr.", label: :personal_title)
     @user_title_without_name = @user.title.gsub(@user.name, '').strip
     @user_title_without_name = '""' if @user_title_without_name.blank? # to match the csv format
     @group << @user

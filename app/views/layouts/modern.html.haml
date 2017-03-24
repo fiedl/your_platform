@@ -1,0 +1,29 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    - Rack::MiniProfiler.step('modern layout head') do
+      %meta{:charset => 'utf-8'}/
+      %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
+      %title= current_title
+      = csrf_meta_tags
+      - Rack::MiniProfiler.step('stylesheets') do
+        = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+        = stylesheet_link_tag 'modern_layout', :media => 'all'
+        = stylesheet_link_tag 'application', :media => 'all'
+      - Rack::MiniProfiler.step('scripts') do
+        = javascript_include_tag 'application'
+        = yield :scripts
+      = yield :head
+  = body_tag do
+    %nav.navbar.navbar-default.navbar-static-top
+      .container
+        #logo= link_to image_tag(logo_url), root_path, class: 'navbar-brand'
+    .row
+      .col-md-3.nav_col
+        = render partial: 'shared/nav_col'
+      .col-md-6
+        #content_area
+          = flash_area
+          = convert_to_content_box { yield }
+      .col-md-3.side_col
+        = render partial: 'shared/side_col'

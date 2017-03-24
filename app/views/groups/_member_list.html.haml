@@ -4,22 +4,12 @@
       %th=t :last_name
       %th=t :first_name
       %th=t :name_affix
-      %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{@group.name}' geführt wird.", data: {placement: 'left'}} Seit
+      %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{group.name}' geführt wird.", data: {placement: 'left'}} Seit
   %tbody
-    - if memberships
-      - for membership in memberships do
-        %tr
-          %td
-            %strong= link_to membership.user.last_name, membership.user
-          %td= membership.user.first_name
-          %td= membership.user.name_affix
-          %td= localize(membership.valid_from.to_date) if membership.valid_from
-    - elsif members
-      - members.each do |member|
-        %tr
-          %td
-            %strong= link_to member.last_name, member
-          %td= member.first_name
-          %td= member.name_affix
-          %td
-
+    - member_table_rows.each do |row|
+      %tr
+        %td
+          %strong= link_to row[:last_name], user_path(id: row[:user_id])
+        %td= row[:first_name]
+        %td= row[:name_affix]
+        %td= localize row[:joined_at].to_date if row[:joined_at]

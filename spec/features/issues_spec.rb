@@ -5,10 +5,10 @@ feature "Issues", :js do
 
   scenario "Fixing an issue where a postal address has too many lines" do
     @person = create :user
-    @name_surrounding_field = @person.profile_fields.create type: 'ProfileFieldTypes::NameSurrounding'
+    @name_surrounding_field = @person.profile_fields.create type: 'ProfileFields::NameSurrounding'
     @name_surrounding_field.text_below_name = "Student"
     @name_surrounding_field.save
-    @address_field = @person.profile_fields.create type: 'ProfileFieldTypes::Address', label: 'Study address'
+    @address_field = @person.profile_fields.create type: 'ProfileFields::Address', label: 'Study address'
     @address_field.first_address_line = "King's Parade"
     @address_field.second_address_line = "King's College"
     @address_field.postal_code = "CB2 1ST"

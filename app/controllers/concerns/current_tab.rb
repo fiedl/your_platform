@@ -1,16 +1,16 @@
 concern :CurrentTab do
-  
+
   included do
     helper_method :current_tab, :current_tab_path
   end
-  
+
   # This method returns the correct path for the given object
   # considering the current tab the user has used last.
   #
   def current_tab_path(object)
     if object.kind_of?(Group)
       case current_tab(object)
-      when "subgroups"; group_subgroups_path(object)
+      when "subgroups"; group_path(object)
       when "posts"
         if can? :index_posts, object
           group_posts_path(object)
@@ -33,16 +33,16 @@ concern :CurrentTab do
       object
     end
   end
-  
+
   def current_tab(object = nil)
     object ||= current_navable
     if object.kind_of?(Group)
-      if object.group_of_groups?
+      if object.kind_of?(Groups::GroupOfGroups)
         "subgroups"
       else
         cookies[:group_tab]
       end
     end
   end
-  
+
 end

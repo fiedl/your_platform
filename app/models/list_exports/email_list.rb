@@ -21,7 +21,7 @@ module ListExports
     #
     def data
       super.collect { |user|
-        user.profile_fields.where(type: 'ProfileFieldTypes::Email').collect { |email_field| {
+        user.profile_fields.where(type: 'ProfileFields::Email').collect { |email_field| {
           :last_name          => user.last_name,
           :first_name         => user.first_name,
           :name_affix         => user.name_affix,

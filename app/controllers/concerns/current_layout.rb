@@ -3,6 +3,8 @@ concern :CurrentLayout do
   included do
     layout :current_layout
 
+    before_action :prepend_layout_view_path
+
     helper_method :current_layout
 
     helper_method :current_logo_url
@@ -30,7 +32,7 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact iweb mobile)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile)).uniq
   end
 
   def default_layout
@@ -61,6 +63,19 @@ concern :CurrentLayout do
     else
       nil
     end
+  end
+
+  # Each layout may define override views.
+  # When using the layout `foo`, the view
+  #
+  #     app/views/foo/pages/show.html.haml
+  #
+  # takes precedence over the usual:
+  #
+  #     app/views/pages/show.html.haml
+  #
+  def prepend_layout_view_path
+    prepend_view_path YourPlatform::Engine.root.join("app/views/#{current_layout}").to_s
   end
 
 end

@@ -1,6 +1,6 @@
 $(document).ready ->
   
-  # In the user_group_memberships#index table,
+  # In the memberships#index table,
   # this removes the tr when confirming membership deletion.
   #
   # The deletion itself is handled by rails:
