@@ -9,7 +9,7 @@
 - if profile_field.children_count > 0
   - if profile_field.type == 'ProfileFields::Address'
     #address_profile_field
-      .do_not_show_in_edit_mode.address_profile_field.editable.value{class: (can?(:update, profile_field) ? 'can_edit' : ''), data: {profile_field_id: profile_field.id, profile_field_url: profile_field.url, profile_field_json_path: profile_field_path(profile_field, format: :json)}}
+      .do_not_show_in_edit_mode.address_profile_field.editable.value{class: (can?(:update, profile_field) ? 'can_edit' : ''), data: {profile_field_id: profile_field.id, profile_field_url: profile_field_path(profile_field), profile_field_json_path: profile_field_path(profile_field, format: :json)}}
         %p.name_and_surrounding= simple_format profile_field.profileable.name_with_surrounding
         .display_html= profile_field.display_html
       - if can?(:update, profile_field)
