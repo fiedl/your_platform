@@ -117,6 +117,7 @@ module ActiveRecordCacheExtension
   end
 
   def renew_cache(time = Time.zone.now)
+    print "~" if ENV['CI'] == 'travis' # in order to keep tests alive
     Rails.cache.renew(time) do
       fill_cache
     end
