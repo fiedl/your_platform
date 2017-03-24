@@ -39,7 +39,7 @@ class ListExport
     when 'member_development'
       [:last_name, :first_name, :name_affix, :localized_date_of_birth, :date_of_death] + @leaf_group_names
     when 'join_statistics', 'join_and_persist_statistics'
-      [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse
+      [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse.map(&:to_s)
     else
       raise "The list '#{preset.to_s}' is not defined."
     end

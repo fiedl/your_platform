@@ -23,6 +23,22 @@ concern :GroupCaching do
 
     # GroupEvents
     cache :event_ids_of_self_and_subgroups
+
+    # GroupListExports
+    cache :export_list
+  end
+
+  def fill_cache
+    super
+    fill_cache_for_export_lists
+  end
+
+  def fill_cache_for_export_lists
+    Group.export_list_presets.each do |preset|
+      [:csv, :xls].each do |format|
+        self.export_list preset: preset, format: format
+      end
+    end
   end
 
   include StructureableRoleCaching

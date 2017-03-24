@@ -87,6 +87,7 @@ Rails.application.routes.draw do
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
+    get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
   end
   get :my_groups, to: 'groups#index_mine'
 

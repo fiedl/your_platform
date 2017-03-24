@@ -31,7 +31,7 @@ class GroupsController < ApplicationController
           return
         end
 
-      elsif request.format.xls? || request.format.csv? || request.format.json?
+      elsif request.format.json?
         Rack::MiniProfiler.step('groups#show controller: fetch memberships') do
           # If this is a collection group, e.g. the corporations_parent group,
           # do not list the single members.
@@ -82,12 +82,6 @@ class GroupsController < ApplicationController
       end
     end
 
-    if request.format.csv? || request.format.xls?
-      list_preset = params[:list]
-      list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
-      @file_title = "#{@group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
-      @list_export = list_export_by_preset(list_preset)
-    end
 
     # Log exports.
     #
@@ -105,31 +99,6 @@ class GroupsController < ApplicationController
       format.json do
         authorize! :read, @group
         render json: @group.serializable_hash.merge({member_count: @memberships.count})
-      end
-      format.csv do
-        authorize! :read, @group
-        authorize! :export_member_list, @group
-
-        # The export for "DPAG Internetmarke" requires an "latin western 1" encoding.
-        # Everything else, we encode as UTF-8.
-        #
-        csv_data = @list_export.to_csv
-        if list_preset.try(:include?, 'dpag_internetmarke')
-          csv_data = csv_data.encode('ISO-8859-1')
-        else
-          # See: http://railscasts.com/episodes/362-exporting-csv-and-excel
-          #bom = "\377\376".force_encoding('utf-16le')
-          bom = "\xEF\xBB\xBF".force_encoding('utf-8') # UTF-8
-          csv_data = bom + csv_data
-        end
-
-        send_data csv_data, filename: "#{@file_title}.csv"
-      end
-      format.xls do
-        authorize! :read, @group
-        authorize! :export_member_list, @group
-
-        send_data(@list_export.to_xls, type: 'application/xls; charset=utf-8; header=present', filename: "#{@file_title}.xls")
       end
       format.pdf do
         authorize! :read, @group
@@ -201,35 +170,6 @@ class GroupsController < ApplicationController
   end
 
   private
-
-  def list_export_by_preset(list_preset)
-    case list_preset
-    when 'name_list', '', nil
-      ListExports::NameList.from_group(@group)
-    when 'address_list'
-      ListExports::AddressList.from_group(@group)
-    when 'member_development', 'join_statistics'
-      ListExport.new(@group, list_preset)
-    when 'dpag_internetmarken'
-      ListExports::DpagInternetmarken.from_group(@group)
-    when 'dpag_internetmarken_in_germany'
-      ListExports::DpagInternetmarkenInGermany.from_group(@group)
-    when 'dpag_internetmarken_not_in_germany'
-      ListExports::DpagInternetmarkenNotInGermany.from_group(@group)
-    when 'birthday_list'
-      ListExports::BirthdayList.from_group(@group, quater: params[:quater])
-    when 'email_list'
-      ListExports::EmailList.from_group(@group)
-    when 'special_birthdays'
-      ListExports::SpecialBirthdays.from_group(@group, quater: params[:quater])
-    when 'deceased_members'
-      ListExports::DeceasedMembers.from_group(@group)
-    when 'former_and_deceased_members'
-      ListExports::FormerAndDeceasedMembers.from_group(@group)
-    else
-      ListExport.new(@members, list_preset)
-    end
-  end
 
   def load_resource
     @group = Group.find params[:id]

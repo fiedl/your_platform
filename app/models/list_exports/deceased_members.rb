@@ -1,5 +1,5 @@
 module ListExports
-  
+
   # This class produces a list export for deceased members that looks like this
   # in csv format with German locale:
   #
@@ -7,7 +7,7 @@ module ListExports
   #     Doe;Jonathan;\"\";Dipl.-Ing.;13.11.1916;12.01.2016;Musterstadt
   #
   class DeceasedMembers < Base
-    
+
     def columns
       [
         :last_name,
@@ -20,16 +20,16 @@ module ListExports
         :postal_address_town
       ]
     end
-    
+
     # Sort the listed users by date of death reversed.
     #
     def data
-      super.sort_by { |user|
+      super.select { |user|
+        user.date_of_death && (user.date_of_death.to_date >= 1.year.ago)
+      }.sort_by { |user|
         user.date_of_death.to_date
-      }.select { |user|
-        user.date_of_death.to_date >= 1.year.ago
       }.reverse
     end
-    
+
   end
 end
