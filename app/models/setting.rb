@@ -15,7 +15,3 @@ class Setting < RailsSettings::Base
     super
   end
 end
-
-class RailsSettings::Base
-  attr_accessible :var if defined? attr_accessible
-end

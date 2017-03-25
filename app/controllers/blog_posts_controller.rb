@@ -37,14 +37,21 @@ class BlogPostsController < PagesController
 
   def update
     @blog_post ||= @page
+    authorize! :update, @blog_post
+
     params[:blog_post] ||= {}
     params[:blog_post][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     set_inheritance_instance_variable
-    @blog_post.update_attributes params[ :blog_post ].select { |k,v| v.present? && (v != "—")}
+
+    @blog_post.update_attributes(blog_post_params)
     respond_with_bip(@blog_post)
   end
 
   private
+
+  def blog_post_params
+    params.require(:blog_post).permit(:content, :title, :teaser_text, :author, :tag_list, :teaser_image_url, :archived)
+  end
 
   def set_inheritance_instance_variable
     @page = @blog_post

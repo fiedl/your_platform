@@ -10,10 +10,6 @@
 #
 concern :UserCorporations do
 
-  included do
-    attr_accessible :corporation_name if defined? attr_accessible
-  end
-
   def corporation_id
     (Corporation.pluck(:id) & self.ancestor_group_ids).first
   end

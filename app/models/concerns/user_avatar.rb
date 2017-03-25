@@ -12,7 +12,6 @@ concern :UserAvatar do
 
   included do
     attachment :avatar, type: :image
-    attr_accessible :avatar, :remove_avatar if defined? attr_accessible
   end
 
   def avatar_base64

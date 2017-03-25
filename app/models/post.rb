@@ -1,12 +1,10 @@
 class Post < ActiveRecord::Base
-  attr_accessible :author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text, :sent_via if defined? attr_accessible
 
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
   has_many :attachments, as: :parent, dependent: :destroy
   accepts_nested_attributes_for :attachments
-  attr_accessible :attachments_attributes
 
   has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'

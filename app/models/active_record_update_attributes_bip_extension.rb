@@ -20,7 +20,7 @@ module ActiveRecordUpdateAttributesBipExtension
       non_empty_attributes[key] = nil if value == "-"
     end
 
-    super(non_empty_attributes, options)
+    super(non_empty_attributes)
   end
 
   module ClassMethods

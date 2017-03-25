@@ -45,7 +45,7 @@ class ProfileFieldsController < ApplicationController
       raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
     end
     @profile_field = @profile_field.becomes(profile_field_class)
-    updated = @profile_field.update_attributes(params[:profile_field])
+    updated = @profile_field.update_attributes(profile_field_params)
 
     # Mark issues to be resolved. Then, they will be rechecked later.
     @profile_field.issues.update_all resolved_at: Time.zone.now
@@ -67,6 +67,13 @@ class ProfileFieldsController < ApplicationController
   end
 
   private
+
+  def profile_field_params
+    params
+      .require(:profile_field)
+      .permit(:label, :type, :value, :key, :profileable_id, :profileable_type, :needs_review)
+      .permit(:postal_address)
+  end
 
   def load_profileable
     @profileable ||= @group = Group.find(params[:group_id]) if params[:group_id]

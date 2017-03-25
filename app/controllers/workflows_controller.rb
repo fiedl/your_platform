@@ -66,7 +66,7 @@ class WorkflowsController < ApplicationController
   # POST /workflows
   # POST /workflows.json
   def create
-    @workflow = Workflow.new(params[:workflow])
+    @workflow = Workflow.new(workflow_params)
 
     respond_to do |format|
       if @workflow.save
@@ -83,7 +83,7 @@ class WorkflowsController < ApplicationController
   # PUT /workflows/1.json
   def update
     respond_to do |format|
-      if @workflow.update_attributes(params[:workflow])
+      if @workflow.update_attributes(workflow_params)
         format.html { redirect_to @workflow, notice: 'Workflow was successfully updated.' }
         format.json { head :no_content }
       else
@@ -102,6 +102,12 @@ class WorkflowsController < ApplicationController
       format.html { redirect_to workflows_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def workflow_params
+    params.require(:workflow).permit(:description, :name, :parameters)
   end
 
 end

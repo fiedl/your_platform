@@ -14,10 +14,6 @@ class Membership < DagLink
   alias_attribute :group_id, :ancestor_id
   alias_attribute :group, :ancestor
 
-  attr_accessible :user_id, :group_id if defined? attr_accessible
-
-  before_validation :ensure_correct_ancestor_and_descendant_type
-
   has_many :issues, as: :reference, dependent: :destroy
 
 
@@ -41,7 +37,6 @@ class Membership < DagLink
   #
   has_many_flags
   may_need_review
-  attr_accessible :needs_review if defined? attr_accessible
 
 
   # General Properties

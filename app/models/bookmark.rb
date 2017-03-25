@@ -2,11 +2,10 @@
 # This model represents bookmarks. User can bookmark objects by clicking on a star beside
 # the object's title. Their bookmarks are listed for them in a quick menu, thus
 # users have quick access to bookmarked objects.
-# 
+#
 # Such bookmarkable objects may be other users, or pages, groups, et cetera.
 #
 class Bookmark < ActiveRecord::Base
-  attr_accessible :bookmarkable_id, :bookmarkable_type, :user_id, :user, :bookmarkable if defined? attr_accessible
 
   belongs_to :bookmarkable, polymorphic: true
   belongs_to :user

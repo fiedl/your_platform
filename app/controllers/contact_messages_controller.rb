@@ -16,9 +16,15 @@ class ContactMessagesController < ApplicationController
   def create
     authorize! :create, ContactMessage
 
-    ContactMessage.new(params[:contact_message]).deliver
+    ContactMessage.new(contact_message_params).deliver
 
     redirect_to public_root_path, notice: t(:contact_message_has_been_sent)
+  end
+
+  private
+
+  def contact_message_params
+    params.require(:contact_message).permit(:subject, :name, :email, :message, :nickname)
   end
 
 end

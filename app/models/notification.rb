@@ -18,7 +18,6 @@
 #     end
 #
 class Notification < ActiveRecord::Base
-  attr_accessible :recipient_id, :author_id, :reference_url, :reference_type, :reference_id, :message, :text, :sent_at, :read_at, :failed_at
 
   belongs_to :recipient, class_name: 'User'
   belongs_to :author, class_name: 'User'

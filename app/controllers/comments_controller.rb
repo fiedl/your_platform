@@ -5,7 +5,7 @@ class CommentsController < ApplicationController
   def create
     authorize! :create_comment_for, @commentable
 
-    @comment = @commentable.comments.build(comment_params)
+    @comment = @commentable.comments.build(text: comment_params[:text])
     @comment.author = current_user
     @comment.save!
 
@@ -30,7 +30,7 @@ class CommentsController < ApplicationController
   private
 
   def comment_params
-    params.require(:comment).permit(:text)
+    params.require(:comment).permit(:text, :commentable_id, :commentable_type)
   end
 
   def find_secure_commentable

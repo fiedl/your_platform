@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 class ProfileField < ActiveRecord::Base
 
-  attr_accessible        :label, :type, :value, :key, :profileable_id, :profileable_type, :needs_review if defined? attr_accessible
-
   belongs_to             :profileable, polymorphic: true
   has_many               :issues, as: :reference, dependent: :destroy
 

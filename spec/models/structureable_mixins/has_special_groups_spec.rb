@@ -10,7 +10,6 @@ describe StructureableMixins::HasSpecialGroups do
 
   before do
     class MyStructureable < ActiveRecord::Base
-      attr_accessible :name
       is_structureable( ancestor_class_names: %w(MyStructureable),
                         descendant_class_names: %w(MyStructureable Group User) )
     end
@@ -216,7 +215,6 @@ describe StructureableMixins::HasSpecialGroups do
     before do
 
       class MyStructureable < ActiveRecord::Base
-        attr_accessible :name
         is_structureable( ancestor_class_names: %w(MyStructureable),
                           descendant_class_names: %w(MyStructureable Group User) )
 
@@ -433,7 +431,6 @@ describe StructureableMixins::HasSpecialGroups do
 
     before do
       class MyStructureable < ActiveRecord::Base
-        attr_accessible :name
         is_structureable( ancestor_class_names: %w(MyStructureable),
                           descendant_class_names: %w(MyStructureable Group User) )
 

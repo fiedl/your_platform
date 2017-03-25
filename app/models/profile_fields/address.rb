@@ -204,7 +204,6 @@ module ProfileFields
 
     # Allow to mark one address as primary postal address.
     #
-    attr_accessible :postal_address if defined? attr_accessible
     concerning :PostalAddressFlag do
       def postal_address
         self.has_flag? :postal_address
