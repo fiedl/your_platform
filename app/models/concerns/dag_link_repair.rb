@@ -43,15 +43,18 @@ concern :DagLinkRepair do
     end
 
     def recalculate_indirect_validity_ranges
-      print "\n\nRecalculate validity ranges of indirect memberships.\n".blue
-      DagLink.where(anestor_type: "Group", descendant_type: "User", direct: false).each do |membership|
-        membership.recalculate_validity_range_from_direct_memberships
-        if membership.save
-          print "*".blue
-        else
-          print ".".green
-        end
-      end
+      # # We don't need this as this is already done in `after_save`
+      # # when doing `recalculate_indirect_counts`.
+      #
+      # print "\n\nRecalculate validity ranges of indirect memberships.\n".blue
+      # DagLink.where(ancestor_type: "Group", descendant_type: "User", direct: false).each do |membership|
+      #   membership.recalculate_validity_range_from_direct_memberships
+      #   if membership.save
+      #     print "*".blue
+      #   else
+      #     print ".".green
+      #   end
+      # end
     end
 
     class RedundantLinkRepairer
