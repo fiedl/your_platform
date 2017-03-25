@@ -13,9 +13,9 @@
     %tr
       %th Id
       %th
-        - if @user  # All memberships belong to this user. This column specifies the group then.
+        - if user  # All memberships belong to this user. This column specifies the group then.
           Gruppe
-        - if @group
+        - if group
           Benutzer
       %th Pfad
       %th Mitglied seit
@@ -27,14 +27,14 @@
       %tr{class: ((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid")}
         %td.copy-to-clipboard{title: "Membership.now_and_in_the_past.find(#{membership.id})"}= membership.id
         %td
-          - if @user
+          - if user
             - if membership.group
               = link_to membership.group.name, membership.group
             - else
               .alert.alert-danger
                 %strong GRUPPE FEHLT!
                 (Datenfehler)
-          - if @group
+          - if group
             - if membership.user
               = link_to membership.user.title, membership.user
             - else
@@ -42,7 +42,7 @@
                 %strong BENUTZER FEHLT!
                 (Datenfehler)
         %td
-          - if membership.group && @user
+          - if membership.group && user
             %ul
               - membership.group.ancestor_navables.each do |ancestor|
                 %li= link_to ancestor.title, ancestor

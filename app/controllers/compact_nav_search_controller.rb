@@ -2,13 +2,13 @@
 # which is used by the "compact" layout.
 #
 class CompactNavSearchController < ApplicationController
-  
+
   before_action :find_object
-  
+
   def show
     find_object
     authorize! :read, @object
-    
+
     respond_to do |format|
       format.json do
         if @object
@@ -30,22 +30,22 @@ class CompactNavSearchController < ApplicationController
       end
     end
   end
-  
+
   def index
     @query = query
     @base_object = find_base_object
     @results = find_objects.select { |obj| can? :read, obj }
   end
-  
+
   private
-  
+
   def query
     params[:query]
   end
   def like_query
     "%#{query}%"
   end
-  
+
   def find_object
     @object = base.descendant_groups.find_by token: query if base.respond_to? :descendant_groups
     @object ||= NavNode.where('url_component like ?', like_query).limit(1).first.try(:navable) if not params[:search_base].present?  # for example "erlangen/" -- as entry point for navigation
@@ -55,7 +55,7 @@ class CompactNavSearchController < ApplicationController
     @object ||= base.descendant_events.where('name like ?', like_query).limit(1).first if base.respond_to? :descendant_events
     return @object
   end
-  
+
   def find_objects
     @objects = []
     @objects += base.descendant_groups.where('name like ?', like_query) if base.respond_to? :descendant_groups
@@ -65,7 +65,7 @@ class CompactNavSearchController < ApplicationController
 
     return @objects
   end
-  
+
   def base
     find_base_object
   end
@@ -79,5 +79,5 @@ class CompactNavSearchController < ApplicationController
   def secure_base_object_class
     (%w(Group Corporation Page User Event) & [params[:search_base][:type]]).first.constantize
   end
-    
+
 end

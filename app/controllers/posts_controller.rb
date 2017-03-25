@@ -1,9 +1,9 @@
 class PostsController < ApplicationController
-  
+
   authorize_resource
   skip_authorize_resource only: [:new, :create, :preview, :deliver, :index]
   skip_authorization_check only: [:preview]
-  
+
   # This will skip the cross-site-forgery protection for POST /posts.json,
   # since incoming emails are not sent via a form in this web app,
   # nor is the incoming email signed in.
@@ -14,29 +14,29 @@ class PostsController < ApplicationController
   # TODO: Is there a better way to do this?
   #
   skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
-  
+
   def index
     if params[:group_id].present?
       @group = Group.find(params[:group_id])
       @posts = @group.posts.order('sent_at DESC') if @group
-      
+
       authorize! :index_posts, @group
-      
+
       @new_post = Post.new
       @new_post.group = @group
       @new_post.author = current_user
-      
+
       set_current_title "#{t(:posts)} - #{@group.name}"
       set_current_navable @group
       set_current_activity :looks_at_posts, @group
       set_current_access :group
       set_current_access_text I18n.t(:all_members_of_group_name_can_read_these_posts, group_name: @group.name)
-          
+
       cookies[:group_tab] = "posts"
     else
       @posts = Post.from_or_to_user(current_user).select { |post| can? :read, post }.reverse
       @posts.each { |post| authorize! :read, post }
-      
+
       set_current_title t(:my_posts)
     end
   end
@@ -44,42 +44,42 @@ class PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     @group = @post.group
-    
+
     @show_all_comments = true
     @keep_polling_delivery_counters = (@post.created_at >= 5.minutes.ago)
     @show_delivery_report = params[:show_delivery_report].present?
-    
+
     set_current_title @post.subject
     set_current_navable @group
     set_current_activity :looks_at_posts, @group
     set_current_access :group
     set_current_access_text I18n.t(:author_of_post_members_of_group_name_and_mentioned_users_can_read_and_comment_this_post, group_name: @group.name)
   end
-  
+
   def new
     @group = Group.find params[:group_id] if params[:group_id].present?
     authorize! :create_post_for, @group
-    
+
     @new_post = Post.new
     @new_post.group = @group
     @new_post.author = current_user
-        
+
     set_current_navable @group
     set_current_activity :writes_a_message_to_group, @group
     set_current_access :group
     set_current_access_text I18n.t(:members_of_group_and_global_officers_can_write_posts, group_name: @group.name)
   end
-  
+
   def create
     return create_via_email if params[:message].present?
-    
+
     @group = Group.find(params[:group_id] || params[:post][:group_id] || raise('no group given'))
     authorize! :create_post_for, @group
 
     @text = params[:text] || params[:post][:text]
     @subject = params[:subject] || params[:post][:text].split("\n").first.first(100)
     @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
-    
+
     if params[:recipient] == 'me'
       @recipients = [current_user]
     else
@@ -91,10 +91,10 @@ class PostsController < ApplicationController
         @recipients = @group.members
       end
     end
-    
+
     @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
     @post.save!
-  
+
     if params[:notification] == "instantly"
       @send_counter = @post.send_as_email_to_recipients @recipients
       Notification.create_from_post(@post, sent_at: Time.zone.now) unless params[:recipient] == 'me'
@@ -103,11 +103,11 @@ class PostsController < ApplicationController
       Notification.create_from_post(@post) unless params[:recipient] == 'me'
       flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
     end
-    
+
     Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text) unless params[:recipient] == 'me'
-    
+
     @post.destroy if params[:recipient] == 'me'
-    
+
     respond_to do |format|
       format.html do
         if params[:post][:sent_from_root_page]
@@ -118,9 +118,9 @@ class PostsController < ApplicationController
       end
       format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
     end
-    
+
   end
-  
+
   def preview
     respond_to do |format|
       format.json do
@@ -134,7 +134,7 @@ class PostsController < ApplicationController
       end
     end
   end
-  
+
   # PUT posts/123/deliver
   #
   # This forces a post delivery, which is useful when the user decides
@@ -148,11 +148,15 @@ class PostsController < ApplicationController
     @post.notify_recipients
     respond_to do |format|
       format.json { render json: @post }
-    end    
+    end
   end
-  
+
   private
-  
+
+  def post_params
+    params.require(:post).permit(:author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text, :sent_via, :attachments => [:description, :file, :parent_id, :parent_type, :title, :author])
+  end
+
   # This methods processes incoming email messages that can be sent through
   #
   #     POST /posts.json
@@ -168,7 +172,7 @@ class PostsController < ApplicationController
   def create_via_email
     #
     # ## Authorization
-    # 
+    #
     # In case of comments, the user is authenticated by his user token that is included in the
     # reply-to email address, e.g. user-aeng9iLe...oi2iSh7Hahr.post-345.create-comment.plattform@example.com.
     # We do not check authorization for comments at the moment. TODO
@@ -182,7 +186,7 @@ class PostsController < ApplicationController
     # should be used. This way, the mailgate can be switched off in the Ability class.
     #
     authorize! :use, :platform_mailgate
-    
+
     if params[:message]
       if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
         # Then this responds to a conversation and should not create a new post but a comment instead.
@@ -205,5 +209,5 @@ class PostsController < ApplicationController
     end
     render json: (@posts || [])
   end
-  
+
 end

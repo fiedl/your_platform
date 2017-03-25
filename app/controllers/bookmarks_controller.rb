@@ -23,7 +23,11 @@ class BookmarksController < ApplicationController
     respond_with Bookmark.find( params[ :id ] ).destroy
   end
 
-  private 
+  private
+
+  def bookmark_params
+    params.require(:bookmark).permit(:bookmarkable_id, :bookmarkable_type, :user_id, :user, :bookmarkable)
+  end
 
   def find_bookmarks
     user = User.find params[ :user_id ] if params[ :user_id ].present?

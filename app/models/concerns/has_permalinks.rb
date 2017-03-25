@@ -2,8 +2,6 @@ concern :HasPermalinks do
 
   included do
     has_many :permalinks, as: :reference, dependent: :destroy
-
-    attr_accessible :permalinks_list if defined? attr_accessible
   end
 
   def permalink_path

@@ -16,8 +16,12 @@ concern :DagLinkRepair do
     def repair
       delete_links_without_edges
       delete_redundant_indirect_links
-      recalculate_indirect_counts
       fix_types
+      recalculate_indirect_counts
+      # # We don't need this as this is already done in `after_save`
+      # # when doing `recalculate_indirect_counts`.
+      #
+      # recalculate_indirect_validity_ranges
     end
 
     def fix_types
@@ -41,6 +45,18 @@ concern :DagLinkRepair do
       LinkCountRepairer.repair
     end
 
+    def recalculate_indirect_validity_ranges
+      print "\n\nRecalculate validity ranges of indirect memberships.\n".blue
+      DagLink.where(ancestor_type: "Group", descendant_type: "User", direct: false).each do |membership|
+        membership.recalculate_validity_range_from_direct_memberships
+        if membership.save
+          print "*".blue
+        else
+          print ".".green
+        end
+      end
+    end
+
     class RedundantLinkRepairer
 
       def self.scan_and_repair
@@ -51,7 +67,6 @@ concern :DagLinkRepair do
         mute_sql_log
         scan
         delete_redundant_links
-        recalculate_links
         print "\n\nFinished.\n".blue
         unmute_sql_log
       end
@@ -104,16 +119,6 @@ concern :DagLinkRepair do
             redundant_link.delete
             print ".".blue
           end
-        end
-      end
-
-      def recalculate_links
-        print "\n\nRecalculating affected indirect validity ranges.\n".blue
-        @occurances.each do |redundant_links|
-          original_link = redundant_links[0].becomes Membership
-          original_link.recalculate_validity_range_from_direct_memberships
-          original_link.save
-          print ".".blue
         end
       end
     end

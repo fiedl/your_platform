@@ -1,24 +1,20 @@
 concern :GroupMailingLists do
-  
-  included do
-    attr_accessible :mailing_list_sender_filter
-  end
-  
+
   # Returns all mailing list profile fields, i.e. email addresses that
   # are used as mailing list for that group.
   #
   def mailing_lists
     self.profile_fields.where(type: 'ProfileFields::MailingListEmail')
   end
-  
+
   # Possible settings for the sender filter, i.e. the group attribute that determines
   # whether an incoming post is accepted or rejected.
   #
   def mailing_list_sender_filter_settings
     %w(open users_with_account corporation_members group_members officers group_officers global_officers)
   end
-  
-  # Checks whether the given user is allowed to send an email to the mailing lists 
+
+  # Checks whether the given user is allowed to send an email to the mailing lists
   # of this group.
   #
   def user_matches_mailing_list_sender_filter?(user)
@@ -53,5 +49,5 @@ concern :GroupMailingLists do
       false
     end
   end
-  
+
 end

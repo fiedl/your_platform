@@ -34,7 +34,7 @@ require 'omniauth-google-oauth2'
 require 'omniauth-facebook'
 
 # Authorization
-require 'cancan'
+require 'cancancan'
 
 # Encryption
 require 'has_secure_token'

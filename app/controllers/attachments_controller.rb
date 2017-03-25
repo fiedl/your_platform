@@ -35,7 +35,7 @@ class AttachmentsController < ApplicationController
     end
 
     @attachment = Attachment.create! author: current_user
-    @attachment.update_attributes(params[:attachment])
+    @attachment.update_attributes(attachment_params)
 
     respond_to do |format|
       format.json { render json: Attachment.find(@attachment.id) } # reload does not reload the filename, thus use `find`.
@@ -47,9 +47,10 @@ class AttachmentsController < ApplicationController
   # PUT /attachments/1.json
   def update
     @attachment = Attachment.find(params[:id])
+    authorize! :update, @attachment
 
     respond_to do |format|
-      if @attachment.update_attributes(params[:attachment])
+      if @attachment.update_attributes(attachment_params)
         format.html { redirect_to @attachment, notice: 'Attachment was successfully updated.' }
         format.json { head :no_content }
       else
@@ -107,6 +108,10 @@ class AttachmentsController < ApplicationController
   end
 
 private
+
+  def attachment_params
+    params.require(:attachment).permit(:description, :file, :parent_id, :parent_type, :title, :author, :type)
+  end
 
   # This method secures the version parameter from a DoS attack.
   # See: http://brakemanscanner.org/docs/warning_types/denial_of_service/

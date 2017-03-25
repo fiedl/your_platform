@@ -56,7 +56,7 @@ class PagesController < ApplicationController
     params[:page] ||= {}
     params[:page][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
     params[:blog_post] ||= params[:page]  # required for blog posts in respond_with_bip
-    @page.update_attributes params[ :page ]
+    @page.update_attributes!(page_params)
     respond_with_bip(@page)
   end
 
@@ -86,6 +86,10 @@ class PagesController < ApplicationController
 
 
 private
+
+  def page_params
+    params.require(:page).permit(:content, :title, :teaser_text, :redirect_to, :author, :tag_list, :teaser_image_url, :archived)
+  end
 
   def find_resource_by_permalink
     page_id = Permalink.find_by(path: params[:permalink], reference_type: 'Page').try(:reference_id)
