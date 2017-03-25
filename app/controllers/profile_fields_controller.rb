@@ -1,7 +1,7 @@
 class ProfileFieldsController < ApplicationController
 
   before_action :load_profileable, :only => [:create, :index]
-  load_and_authorize_resource except: :index
+  load_and_authorize_resource except: :index, param_method: :profile_field_params
   skip_authorization_check only: :index
 
   before_action :log_public_activity_for_profileable, only: [:destroy]
@@ -22,6 +22,7 @@ class ProfileFieldsController < ApplicationController
 
   def create
     type = secure_profile_field_type || 'ProfileFields::Custom'
+    @profile_field.type = type
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
@@ -71,8 +72,8 @@ class ProfileFieldsController < ApplicationController
   def profile_field_params
     params
       .require(:profile_field)
-      .permit(:label, :type, :value, :key, :profileable_id, :profileable_type, :needs_review)
-      .permit(:postal_address)
+      .permit(:label, :type, :value, :key, :profileable_id, :profileable_type, :needs_review,
+          :postal_address)
   end
 
   def load_profileable

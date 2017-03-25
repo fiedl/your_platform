@@ -97,7 +97,7 @@ concern :GroupMemberships do
     def assign_user( user, options = {} )
       if user and not user.in?(self.direct_members)
         time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
-        m = Membership.create user_id: user.id, group_id: self.id
+        m = Membership.create descendant_id: user.id, ancestor_id: self.id
         m.update_attributes valid_from: time_of_joining # It does not work when added in `create`.
         m
       end
