@@ -1,0 +1,8 @@
+#horizontal_child_group_nav.horizontal_structure_nav
+  %ul.nav.nav-pills.groups
+    - navable.nav_child_groups.each do |group|
+      %li.child.group
+        -#- if show_corporation_names_in_vertical_nav?(navable)
+        -#  = link_to_navable group.name_with_corporation, group
+        -#- else
+        = link_to_navable group.nav_title, group

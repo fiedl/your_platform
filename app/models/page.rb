@@ -21,6 +21,10 @@ class Page < ActiveRecord::Base
     :ancestor_events, :author, :parent_pages,
     :parent_users, :parent_groups, :parent_events) }
 
+  scope :regular, -> {
+    where(type: nil)
+  }
+
   def not_empty?
     attachments.any? || (content && content.length > 5) || children.any?
   end
@@ -103,6 +107,17 @@ class Page < ActiveRecord::Base
       next_parent = next_parent.parent_groups.first || next_parent.parent_pages.first
     end
     next_parent.try(:id)
+  end
+
+  # A sub_page is a descendant_page of the page
+  # that is of the same group, i.e. not a page of
+  # one of the sub groups.
+  #
+  def sub_page_ids
+    (child_page_ids + child_pages.map(&:child_page_ids)).flatten
+  end
+  def sub_pages
+    Page.regular.where(id: sub_page_ids)
   end
 
   # Url

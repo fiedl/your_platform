@@ -1,0 +1,9 @@
+#horizontal_child_pages_nav.horizontal_structure_nav
+  %ul.nav.nav-pills.pages
+    - navable.nav_child_pages.each do |page|
+      - if can? :read, page
+        %li.child.page
+          = link_to_navable page.nav_node.nav_title, page
+        - page.sub_pages.each do |sub_page|
+          %li.child.page.sub_page
+            = link_to_navable sub_page.nav_node.nav_title, sub_page

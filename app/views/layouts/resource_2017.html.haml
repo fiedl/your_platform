@@ -1,0 +1,110 @@
+!!!
+
+- @hide_vertical_nav = true
+
+%html{:lang => 'en'}
+  %head
+    %meta{:charset => 'utf-8'}/
+    %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
+    %meta{:content => 'width=device-width, initial-scale=1.0', :name => 'viewport'}/
+    %title= website_title_with_app_name
+    = csrf_meta_tags
+    / Le HTML5 shim, for IE6-8 support of HTML elements
+    /[if lt IE 9]
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+
+
+    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+    = stylesheet_link_tag 'bootstrap_layout', :media => 'all'
+    = stylesheet_link_tag 'application', :media => 'all'
+
+    / For third-generation iPad with high-resolution Retina display:
+    / Size should be 144 x 144 pixels
+    = favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
+    / For iPhone with high-resolution Retina display:
+    / Size should be 114 x 114 pixels
+    = favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
+    / For first- and second-generation iPad:
+    / Size should be 72 x 72 pixels
+    = favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
+    / For non-Retina iPhone, iPod Touch, and Android 2.1+ devices:
+    / Size should be 57 x 57 pixels
+    = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
+    / For all other devices
+    / Size should be 32 x 32 pixels
+    = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+
+    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
+
+    = javascript_include_tag 'application'
+    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js"
+    = gmaps4rails_api_script_tags
+    = yield :scripts
+    = yield :head
+
+  = body_tag do
+    - if user_account_signed_in?
+      %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
+        .container-fluid
+          .navbar-header
+            %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
+              %span.sr-only Toggle Navigation
+              %span.icon-bar
+              %span.icon-bar
+              %span.icon-bar
+            %a.navbar-brand{:href => '#'}= app_name
+
+          .collapse.navbar-collapse#logged-in-bar-collapse
+            %ul.nav.navbar-nav
+              - if not show_role_preview_menu?
+                %li
+                  = link_to t(:my_profile), current_user, :class => 'my_profile'
+              %li.dropdown.my_groups
+                %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
+                  = t :my_groups
+                  %b.caret= ''
+                %ul.dropdown-menu
+                  = render partial: 'users/groups', object: current_user, as: :user
+
+              - # role indicator and preview menu
+              = render partial: 'layouts/role_preview_switcher'
+
+            %ul.nav.navbar-nav.navbar-right
+              %li.last.dropdown
+                %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
+                  = render 'layouts/session_bar_avatar'
+                  %b.caret
+                = render partial: 'layouts/current_user_dropdown'
+
+    .row#header-bar
+      .col-sm-7.col-xs-12
+        %span#logo
+          = link_to image_tag(logo_url), root_path, class: 'navbar-brand'
+
+      .col-sm-5.col-xs-12
+        #header_help= render partial: 'support_requests/help_button'
+        #header_search
+          %span#search_box= render partial: 'shared/search_box'
+
+    .row#horizontal-nav-bar.hidden-xs
+      -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
+      %span#category_indicator.right
+        = render partial: 'layouts/horizontal_nav'
+
+    .row#breadcrumb-bar
+      %nav#breadcrumb.navbar
+        .container-fluid
+          .breadcrumbs_current_page= "#{t(:current_page)}:"
+          = render partial: 'layouts/breadcrumbs'
+
+          %span#access_indicator
+            = access_indicator if current_user
+
+    .container-fluid
+      .row
+        = render partial: 'layouts/horizontal_structure_nav'
+      .row
+        #content
+          = render partial: 'layouts/multi_column_content_area'
+
+    .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer

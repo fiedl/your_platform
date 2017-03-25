@@ -69,6 +69,7 @@ Rails.application.routes.draw do
   get 'groups/:id/address_labels/(:filter)/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
   resources :groups do
+    get :news, to: 'group_news#index'
     get :subgroups, to: 'groups#index'
     get :mine, on: :collection, to: 'groups#index_mine'
     get 'events/public', to: 'events#index', published_on_local_website: true
@@ -76,6 +77,7 @@ Rails.application.routes.draw do
     resources :semester_calendars
     get :semester_calendar, to: 'semester_calendars#show_current', as: 'current_semester_calendar'
     resources :posts
+    get :pages, to: 'group_pages#index'
     get :profile, to: 'profiles#show'
     get :profile_fields, to: 'profile_fields#index'
     get :members, to: 'group_members#index'

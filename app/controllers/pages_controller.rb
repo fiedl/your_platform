@@ -33,6 +33,7 @@ class PagesController < ApplicationController
       set_current_title @page.title
       set_current_navable @page
       set_current_activity :looks_up_information, @page
+      set_current_tab :pages
 
       if @page.group
         set_current_access :group
