@@ -2,7 +2,6 @@ concern :GroupWelcomeMessage do
 
   included do
     delegate :welcome_message, :welcome_message=, to: :settings
-    attr_accessible :welcome_message
 
     alias_method :assign_user_before_welcome_message, :assign_user
     def assign_user(user, options = {})

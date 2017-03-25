@@ -82,7 +82,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-facebook', '~> 3.0.0'
 
   # Authorization
-  s.add_dependency 'cancan'                                                            # MIT License
+  s.add_dependency 'cancancan'
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
@@ -179,9 +179,10 @@ Gem::Specification.new do |s|
   # https://github.com/lautis/uglifier/pull/86
   s.add_dependency 'uglifier', '>= 2.7.2'
   s.add_dependency 'mail', '>= 2.6.0' # https://gemnasium.com/fiedl/your_platform/alerts#advisory_309
-  s.add_dependency 'nokogiri', '>= 1.6.8' # CVE-2015-8806, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_392
+  s.add_dependency 'nokogiri', '>= 1.7.1' # CVE-2016-4658, CVE-2016-5131, https://hakiri.io/github/fiedl/wingolfsplattform/master/6541cea428e4b4e6d94ef8070ed9b5da8eedb770/warnings/0991529a69e93e
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
+  s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
 
   #
   # Development Dependencies

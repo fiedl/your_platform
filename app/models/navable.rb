@@ -39,5 +39,9 @@ module Navable
       nav_node
     end
 
+    def in_intranet?
+      ancestor_navables.include? Page.intranet_root
+    end
+
   end
 end

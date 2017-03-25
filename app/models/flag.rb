@@ -1,5 +1,4 @@
 class Flag < ActiveRecord::Base
-  attr_accessible :flagable_id, :flagable_type, :key if defined? attr_accessible
 
   belongs_to :flagable, polymorphic: true
 

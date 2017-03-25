@@ -1,4 +1,4 @@
-- if can? :export_member_list, @group
+- if can? :export_member_list, group
   %div.btn-group.group_export.pull-right
     %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
       = icon 'list-alt'
@@ -17,12 +17,12 @@
       %li.nav-header=t :pdf_files
       - trigger_class = (params[:trigger_export] == 'pdf') ? 'auto_trigger' : ''
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
-        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'zweckform'), :class => "address_labels_export_button #{trigger_class}" do
+        = link_to group_address_labels_path(group, :format => :pdf, pdf_type: 'zweckform'), :class => "address_labels_export_button #{trigger_class}" do
           = icon :th
           =t :address_labels
           (Zweckform 3475)
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
-        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'zweckform', filter: 'without_email'), :class => "address_labels_export_button #{trigger_class}" do
+        = link_to group_address_labels_path(group, :format => :pdf, pdf_type: 'zweckform', filter: 'without_email'), :class => "address_labels_export_button #{trigger_class}" do
           = icon :th
           Etiketten (Zweckform 3475) für Mitglieder ohne E-Mail-Adresse
       - if current_locale.to_s == 'de'
@@ -31,7 +31,7 @@
             = fa_icon :amazon
             Passende Zweckform-3475-Etiketten 70x36 online bestellen
       %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
-        = link_to group_address_labels_path(@group, :format => :pdf, pdf_type: 'dpag'), :class => "address_labels_export_button" do
+        = link_to group_address_labels_path(group, :format => :pdf, pdf_type: 'dpag'), :class => "address_labels_export_button" do
           = icon :th
           =t :address_labels
           (DPAG 70x37)
@@ -42,68 +42,68 @@
             Passende Zweckform-3474-Etiketten 70x37 online bestellen
       %li.nav-header= "#{I18n.t(:excel_tables)} (XLS)"
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :name_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :name_list) do
           = excel_icon
           = t :name_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :birthday_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :birthday_list) do
           = excel_icon
           = t :birthday_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :special_birthdays) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :special_birthdays) do
           = excel_icon
           = t :special_birthdays
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :address_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :address_list) do
           = excel_icon
           = t :address_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :phone_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :phone_list) do
           = excel_icon
           = t :phone_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :member_development) do
+        = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :member_development) do
           = excel_icon
           = t :member_development
-      - if can? :export_stammdaten_for, @group
+      - if can? :export_stammdaten_for, group
         %li
-          = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :stammdaten) do
+          = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :stammdaten) do
             = excel_icon
             = t :stammdaten
       - if can? :export, :wingolfsblaetter_export_format
         %li
-          = link_to group_list_export_path(group_id: @group.id, :format => :xls, :list => :wingolfsblaetter) do
+          = link_to group_list_export_path(group_id: group.id, :format => :xls, :list => :wingolfsblaetter) do
             = excel_icon
             = t :wingolfsblaetter
 
       %li.nav-header= "#{I18n.t(:tables)} (CSV, UTF-8)"
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :name_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :name_list) do
           = csv_icon
           = t :name_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :birthday_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :birthday_list) do
           = csv_icon
           = t :birthday_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :special_birthdays) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :special_birthdays) do
           = csv_icon
           = t :special_birthdays
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :address_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :address_list) do
           = csv_icon
           = t :address_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :dpag_internetmarken) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :dpag_internetmarken) do
           = csv_icon
           = t :address_list_for_dpag_internetmarke
           %small (ISO 8859-1)
       %li.indent
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :dpag_internetmarken_in_germany) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :dpag_internetmarken_in_germany) do
           = csv_icon
           nur Inland (DE)
       %li.indent
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :dpag_internetmarken_not_in_germany) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :dpag_internetmarken_not_in_germany) do
           = csv_icon
           nur Ausland
       %li.indent
@@ -111,39 +111,39 @@
           = awesome_icon 'question-circle'
           Hilfe zur DPAG-Internetmarke
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :phone_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :phone_list) do
           = csv_icon
           = t :phone_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :email_list) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :email_list) do
           = csv_icon
           = t :email_list
-      - @group.mailing_lists.each do |mailing_list|
+      - group.mailing_lists.each do |mailing_list|
         %li.indent
           = link_to "mailto:#{mailing_list.value}" do
             = icon :envelope
             = "#{t(:mailing_list)}: #{mailing_list.value}"
-      - if can? :create_post_for, @group
+      - if can? :create_post_for, group
         %li.indent
-          = link_to group_posts_path(@group) do
+          = link_to group_posts_path(group) do
             = icon :envelope
-            = t :write_new_post_to_str, str: @group.name
-      - if can? :manage, @group
+            = t :write_new_post_to_str, str: group.name
+      - if can? :manage, group
         %li.indent
-          = link_to group_mailing_lists_path(@group) do
+          = link_to group_mailing_lists_path(group) do
             = icon :envelope
             = t :install_mailing_list
       %li
-        = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :member_development) do
+        = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :member_development) do
           = csv_icon
           = t :member_development
-      - if can? :export_stammdaten_for, @group
+      - if can? :export_stammdaten_for, group
         %li
-          = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :stammdaten) do
+          = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :stammdaten) do
             = csv_icon
             = t :stammdaten
       - if can? :export, :wingolfsblaetter_export_format
         %li
-          = link_to group_list_export_path(group_id: @group.id, :format => :csv, :list => :wingolfsblaetter) do
+          = link_to group_list_export_path(group_id: group.id, :format => :csv, :list => :wingolfsblaetter) do
             = csv_icon
             = t :wingolfsblaetter

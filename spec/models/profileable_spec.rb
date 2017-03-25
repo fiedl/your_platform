@@ -10,12 +10,11 @@ describe Profileable do
 
   before do
     class MyStructureable < ActiveRecord::Base
-      attr_accessible :name
       is_structureable( ancestor_class_names: %w(MyStructureable),
                         descendant_class_names: %w(MyStructureable Group User Workflow Page) )
     end
   end
-  
+
   describe ".is_profileable" do
     before do
       class MyStructureable
@@ -52,7 +51,7 @@ describe Profileable do
       end
       @profileable = MyStructureable.create
     end
-    
+
     describe "#email=" do
       subject { @profileable.email = "foo@example.com" }
       it "should create an email profile field" do
@@ -72,13 +71,13 @@ describe Profileable do
         subject.should == "bar@example.com"
       end
     end
-    
+
     describe "#profile" do
       subject { @profileable.profile }
       it { should be_kind_of Profile }
       its(:profileable) { should == @profileable }
     end
-    
+
     describe "#profile_section_titles" do
       subject { @profileable.profile_section_titles }
       it "should be an array of titles" do
@@ -86,10 +85,10 @@ describe Profileable do
         subject.first.should be_kind_of Symbol
       end
       it "should include the proper sections for default" do
-        subject.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description 
+        subject.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description
       end
     end
-    
+
     describe "#profile_sections" do
       subject { @profileable.profile_sections }
       it "should be an array of ProfileSection objects" do
@@ -97,10 +96,10 @@ describe Profileable do
         subject.first.should be_kind_of ProfileSection
       end
       it "should include the proper sections for default" do
-        subject.collect { |section| section.title }.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description 
+        subject.collect { |section| section.title }.should include :contact_information, :about_myself, :study_information, :career_information, :organizations, :bank_account_information, :description
       end
     end
-    
+
     describe "#profile_fields_by_type" do
       before do
         @address_field = @profileable.profile_fields.create(type: "ProfileFields::Address", value: "Berliner Platz 1, Erlangen")
@@ -113,7 +112,7 @@ describe Profileable do
         end
       end
     end
-    
+
     describe "#profile_fields" do
       before do
         @profileable.profile_fields.create(type: "ProfileFields::Address", value: "Berliner Platz 1, Erlangen")
@@ -131,7 +130,7 @@ describe Profileable do
       end
     end
   end
-  
+
   describe "creating profile fields for a User: " do
     before do
       @profileable = create(:user)

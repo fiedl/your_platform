@@ -41,9 +41,6 @@ source 'https://rubygems.org' do
   # Use unicorn as the app server
   gem 'unicorn'
 
-  # RAILS-3-MIGRATION TEMPORARY GEMS
-  gem 'protected_attributes', require: 'protected_attributes'
-
   # Use Capistrano for deployment
   # gem 'capistrano-rails', group: :development
 
@@ -103,6 +100,7 @@ source 'https://rubygems.org' do
     # see: http://stackoverflow.com/questions/13807686
   gem 'json'
   gem 'colored'
+  gem 'rake', '< 11.0' # http://stackoverflow.com/a/35893625/2066546, Gem Load Error is: undefined method `last_comment', TODO: Remove after updating rspec.
 end
 
 source 'https://rails-assets.org'

@@ -14,7 +14,8 @@ module BodyHelper
         locale: I18n.locale,
         env: Rails.env.to_s,
         layout: current_layout,
-        navable: @navable.try(:to_global_id).try(:to_s)
+        navable: @navable.try(:to_global_id).try(:to_s),
+        tab: current_tab
       } do
       yield
     end

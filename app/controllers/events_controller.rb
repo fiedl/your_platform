@@ -128,7 +128,7 @@ class EventsController < ApplicationController
     @group = Group.find(params[:group_id])
     authorize! :create_event, @group
 
-    @event = Event.new(params[:event])
+    @event = Event.new(event_params)
     @event.name ||= I18n.t(:enter_name_of_event_here)
     @event.start_at ||= Time.zone.now.change(hour: 20, min: 15)
     @event.group = @group
@@ -166,7 +166,7 @@ class EventsController < ApplicationController
   # PUT /events/1.json
   def update
     respond_to do |format|
-      if @event.update_attributes!(params[:event])
+      if @event.update_attributes!(event_params)
         format.html { redirect_to @event, notice: 'Event was successfully updated.' }
         format.json { respond_with_bip(@event) }
       else
@@ -266,6 +266,10 @@ class EventsController < ApplicationController
   end
 
 private
+
+  def event_params
+    params[:event].try(:permit, :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id, :contact_person_id) || {}
+  end
 
   # For some strange reason, some ajax calls fail since the object is not yet
   # available to the other server instance. So, try a few times before giving up.

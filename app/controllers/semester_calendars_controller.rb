@@ -23,6 +23,7 @@ class SemesterCalendarsController < ApplicationController
 
     set_current_navable @group
     set_current_title "#{@group.title}: #{t(:semester_calendar)}"
+    set_current_tab :events
     set_current_activity :is_looking_at_semester_calendar, @semester_calendar
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_content
@@ -95,6 +96,7 @@ class SemesterCalendarsController < ApplicationController
 
       set_current_navable @group
       set_current_title "#{I18n.t(:semester_calendars)} #{@group.title}"
+      set_current_tab :events
     else
       authorize! :index, SemesterCalendar
 
@@ -116,6 +118,7 @@ class SemesterCalendarsController < ApplicationController
       set_current_breadcrumbs [
         {title: current_title}
       ]
+      set_current_tab :events
       set_current_activity :is_looking_at_semester_calendars
       set_current_access :signed_in
       set_current_access_text :all_signed_in_users_can_read_this_content

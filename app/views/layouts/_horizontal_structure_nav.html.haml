@@ -1,0 +1,5 @@
+#horizontal_structure_nav
+  - if current_tab.to_s.in? %w(members)
+    = render partial: 'shared/horizontal_child_groups_nav', object: current_navable, as: :navable
+  - elsif current_tab.to_s.in? %w(pages)
+    = render partial: 'shared/horizontal_child_pages_nav', object: current_navable, as: :navable

@@ -1,0 +1,13 @@
+#resource_nav
+  %ul.horizontal_nav.resource_nav.nav.navbar-nav.nav-pills
+    %li.news
+      = link_to t(:news), tab_path(current_navable, :news)
+    %li.contact
+      = link_to t(:contact_people), tab_path(current_navable, :contact)
+    %li.events
+      = link_to t(:events), tab_path(current_navable, :events)
+    %li.pages
+      = link_to t(:documents), tab_path(current_navable, :pages)
+    %li.members
+      = link_to t(:members), tab_path(current_navable, :members)
+

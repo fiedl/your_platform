@@ -2,15 +2,13 @@
 #
 # This class models a relationship between two users.
 #
-# For example, John is the brother of Sue. 
+# For example, John is the brother of Sue.
 #
 #   who: John        relationship.user1    relationship.who
 #   is:  Brother     relationship.is       relationship.name
 #   of:  Sue         relationship.user2    relationship.of
 #
 class Relationship < ActiveRecord::Base
-
-  attr_accessible :user1, :user2, :name, :who, :is, :of, :who_by_title, :of_by_title if defined? attr_accessible
 
   belongs_to :user1, class_name: "User", inverse_of: :relationships_as_first_user
   belongs_to :user2, class_name: "User", inverse_of: :relationships_as_second_user
@@ -38,7 +36,7 @@ class Relationship < ActiveRecord::Base
   # John is the brother of Sue.
   #                        ---    of: Sue
   #
-  def of 
+  def of
     self.user2
   end
   def of=( user )
@@ -46,7 +44,7 @@ class Relationship < ActiveRecord::Base
   end
 
   # Adding new relationships:
-  # 
+  #
   #     Relationship.add( who: john_user, is: :brother, of: :sue_user )
   #
   # which is the same as:
@@ -65,7 +63,7 @@ class Relationship < ActiveRecord::Base
   def who_by_title=( title )
     self.who = User.find_by_title( title )
   end
-  
+
   # Access method for the second user being given by his title.
   #
   def of_by_title

@@ -47,6 +47,10 @@ concern :CurrentNavable do
     # See: app/controllers/concerns/confirm_admins_only_access.rb
     #
     confirm_admins_only_access_if_needed
+
+    # Load layout overrides needed for this navable.
+    #
+    prepend_layout_view_path
   end
 
 end

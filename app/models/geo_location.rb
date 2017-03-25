@@ -1,6 +1,4 @@
 class GeoLocation < ActiveRecord::Base
-  attr_accessible :address if defined? attr_accessible
-
 
   # When to perform geocoding queries (to google)
   # ==========================================================================================

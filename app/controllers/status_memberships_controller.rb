@@ -21,6 +21,10 @@ class StatusMembershipsController < ApplicationController
 
   private
 
+  def status_membership_params
+    params.require(:status_membership).permit(:valid_from, :valid_to, :valid_from_localized_date, :valid_to_localized_date, :needs_review)
+  end
+
   def find_membership
     @status_membership = Memberships::Status.with_invalid.find(params[:id]) if params[:id].present?
   end

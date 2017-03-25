@@ -1,13 +1,11 @@
 module WorkflowKit
 
   require 'workflow_kit/brick'
-  
+
   class Step < ActiveRecord::Base
     self.table_name = "workflow_kit_steps"
-    
-    default_scope { order(:sequence_index) }
 
-    attr_accessible :sequence_index, :brick_name, :parameters
+    default_scope { order(:sequence_index) }
 
     belongs_to :workflow
 

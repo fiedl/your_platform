@@ -14,7 +14,6 @@
 #     issue.resecan         # Rescan a specific issue.
 #
 class Issue < ActiveRecord::Base
-  attr_accessible :title, :description, :resolved_at, :responsible_admin_id, :reference_id, :reference_type
 
   belongs_to :reference, polymorphic: true
   belongs_to :responsible_admin, class_name: 'User'

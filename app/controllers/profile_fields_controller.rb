@@ -1,7 +1,7 @@
 class ProfileFieldsController < ApplicationController
 
   before_action :load_profileable, :only => [:create, :index]
-  load_and_authorize_resource except: :index
+  load_and_authorize_resource except: :index, param_method: :profile_field_params
   skip_authorization_check only: :index
 
   before_action :log_public_activity_for_profileable, only: [:destroy]
@@ -22,6 +22,7 @@ class ProfileFieldsController < ApplicationController
 
   def create
     type = secure_profile_field_type || 'ProfileFields::Custom'
+    @profile_field.type = type
     @profile_field = @profile_field.becomes(type.constantize)
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
@@ -45,7 +46,7 @@ class ProfileFieldsController < ApplicationController
       raise "security interrupt: '#{@profile_field.type}' is no permitted profileable object type."
     end
     @profile_field = @profile_field.becomes(profile_field_class)
-    updated = @profile_field.update_attributes(params[:profile_field])
+    updated = @profile_field.update_attributes(profile_field_params)
 
     # Mark issues to be resolved. Then, they will be rechecked later.
     @profile_field.issues.update_all resolved_at: Time.zone.now
@@ -67,6 +68,13 @@ class ProfileFieldsController < ApplicationController
   end
 
   private
+
+  def profile_field_params
+    params
+      .require(:profile_field)
+      .permit(:label, :type, :value, :key, :profileable_id, :profileable_type, :needs_review,
+          :postal_address)
+  end
 
   def load_profileable
     @profileable ||= @group = Group.find(params[:group_id]) if params[:group_id]
