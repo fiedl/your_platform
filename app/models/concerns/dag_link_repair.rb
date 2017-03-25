@@ -18,6 +18,7 @@ concern :DagLinkRepair do
       delete_redundant_indirect_links
       fix_types
       recalculate_indirect_counts
+      recalculate_indirect_validity_ranges
     end
 
     def fix_types
@@ -39,6 +40,18 @@ concern :DagLinkRepair do
 
     def recalculate_indirect_counts
       LinkCountRepairer.repair
+    end
+
+    def recalculate_indirect_validity_ranges
+      print "\n\nRecalculate validity ranges of indirect memberships.\n".blue
+      DagLink.where(anestor_type: "Group", descendant_type: "User", direct: false).each do |membership|
+        membership.recalculate_validity_range_from_direct_memberships
+        if membership.save
+          print "*".blue
+        else
+          print ".".green
+        end
+      end
     end
 
     class RedundantLinkRepairer
