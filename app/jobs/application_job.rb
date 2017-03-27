@@ -12,7 +12,7 @@ class ApplicationJob < ActiveJob::Base
     super
   end
 
-  rescue_from ActiveJob::DeserializationError do |exception|
+  rescue_from StandardError do |exception|
     # There are cases where sidekiq is too fast, i.e. the background worker
     # begins to process before the record is accessible through the database.
     # Just retry in a couple of seconds.
