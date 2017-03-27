@@ -3,12 +3,13 @@ class ApplicationJob < ActiveJob::Base
 
   def serialize
     # http://stackoverflow.com/a/38592564/2066546
+    # http://edgeapi.rubyonrails.org/classes/ActiveJob/Core.html
     super.merge('attempt_number' => (@attempt_number || 0) + 1)
   end
 
   def deserialize(job_data)
-    super
     @attempt_number = job_data['attempt_number']
+    super
   end
 
   rescue_from ActiveJob::DeserializationError do |exception|
