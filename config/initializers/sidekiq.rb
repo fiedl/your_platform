@@ -9,7 +9,7 @@ Sidekiq.options[:queues] ||= ['default', 'mailgate', 'mailers', 'cache', 'dag_li
 
 # https://github.com/brainopia/sidekiq-limit_fetch
 #
-Sidekiq.options[:limits] = {default: 25, mailgate: 1}
+Sidekiq.options[:limits] = {default: 25, mailgate: 1, mailers: 5, cache: 15, dag_links: 5, retry: 1}
 
 # http://stackoverflow.com/questions/14825565/sidekiq-deploy-to-multiple-environments
 #
