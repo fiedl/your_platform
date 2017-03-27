@@ -17,7 +17,12 @@ concern :CurrentTab do
     elsif object.kind_of?(Group)
       case tab.to_s
       when "subgroups"; group_path(object)
-      when "news"; group_news_path(object)
+      when "news"
+        if resource_centred_layout?
+          group_news_path(object)
+        else
+          group_members_path(object)
+        end
       when "posts"
         if can? :index_posts, object
           group_posts_path(object)
