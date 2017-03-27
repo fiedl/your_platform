@@ -59,12 +59,16 @@ module ActiveRecordCacheExtension
       key = caller_method_name
     end
     rescue_from_too_big_to_marshal(block) do
-      Rails.cache.fetch([self.cache_key, key], expires_in: 1.week) do
+      Rails.cache.fetch([self.cache_key, key], expires_in: new_caches_expire_in) do
         process_result_for_caching(yield)
       end
     end
   end
   private :cached_block
+
+  def new_caches_expire_in
+    1.year
+  end
 
   def process_result_for_caching(result)
     # Not all ActiveRecord::Relation objects can be stored in cache.
