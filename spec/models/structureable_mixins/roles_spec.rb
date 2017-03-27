@@ -143,6 +143,7 @@ describe StructureableMixins::Roles do
           @my_structureable.admins_of_self_and_ancestors  # creates the cache
           @ancestor1.unassign_admin @admin1
           @my_structureable.reload
+          wait_for_cache # try to get it to work on travis.
         end
         it "should refresh the cached value" do
           subject.should_not include @admin1
