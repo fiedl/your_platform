@@ -40,7 +40,7 @@ module Navable
     end
 
     def in_intranet?
-      ancestor_navables.include? Page.intranet_root
+      ancestor_navables.include?(Page.intranet_root) || (self.id == Page.intranet_root.id)
     end
 
   end

@@ -1,0 +1,7 @@
+%ul.dropdown-menu{role: 'menu'}
+
+  - current_user.main_groups.each do |group|
+    %li= link_to group.title, group_officers_path(group)
+
+  - flagged_navables(:contact_resource).each do |obj|
+    %li= link_to obj.title, tab_path(obj, :contact)

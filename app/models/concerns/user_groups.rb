@@ -19,4 +19,8 @@ concern :UserGroups do
     return hash
   end
 
+  def main_groups
+    current_corporations
+  end
+
 end

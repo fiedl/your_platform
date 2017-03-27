@@ -12,7 +12,9 @@ concern :CurrentTab do
   end
 
   def tab_path(object, tab)
-    if object.kind_of?(Group)
+    if object.kind_of?(Groups::GroupOfGroups)
+      group_path(object)
+    elsif object.kind_of?(Group)
       case tab.to_s
       when "subgroups"; group_path(object)
       when "news"; group_news_path(object)
@@ -48,6 +50,8 @@ concern :CurrentTab do
       else
         cookies[:current_tab] || cookies[:group_tab]
       end
+    else
+      cookies[:current_tab]
     end
   end
 

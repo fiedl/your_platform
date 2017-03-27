@@ -2,12 +2,21 @@
   %ul.horizontal_nav.resource_nav.nav.navbar-nav.nav-pills
     %li.news
       = link_to t(:news), tab_path(current_navable, :news)
+      %ul.dropdown-menu{role: 'menu'}
+        - current_user.main_groups.each do |group|
+          %li= link_to group.title, group_news_path(group)
+        - flagged_navables(:news_resource).each do |obj|
+          %li= link_to obj.title, tab_path(obj, :news)
     %li.contact
       = link_to t(:contact_people), tab_path(current_navable, :contact)
+      = render partial: 'layouts/resource_nav_contact_dropdown'
     %li.events
       = link_to t(:events), tab_path(current_navable, :events)
     %li.pages
       = link_to t(:documents), tab_path(current_navable, :pages)
     %li.members
       = link_to t(:members), tab_path(current_navable, :members)
+      %ul.dropdown-menu{role: 'menu'}
+        - flagged_navables(:members_resource).each do |obj|
+          %li= link_to obj.title, tab_path(obj, :contact)
 
