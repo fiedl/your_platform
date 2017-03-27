@@ -8,7 +8,8 @@ module VerticalNavHelper
 
   def link_to_navable(title, navable)
     link_to(title, current_tab_path(navable), data: {
-      vertical_nav_path: vertical_nav_path(navable_type: navable.class.base_class.name, navable_id: navable.id)
+      vertical_nav_path: vertical_nav_path(navable_type: navable.class.base_class.name, navable_id: navable.id),
+      # corporation_name: (navable.corporation.try(:name) if navable.respond_to?(:corporation))
     })
   end
 
