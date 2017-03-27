@@ -16,7 +16,7 @@ class ApplicationJob < ActiveJob::Base
     # There are cases where sidekiq is too fast, i.e. the background worker
     # begins to process before the record is accessible through the database.
     # Just retry in a couple of seconds.
-    retry_job(wait: 30) if @attempt_number < 5
+    retry_job(wait: 30, queue: :retry) if @attempt_number < 5
   end
 
 end
