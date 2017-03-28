@@ -136,6 +136,7 @@ class Ability
     can :use, Rack::MiniProfiler
 
     can :use, :term_reports
+    can :use, :requests_index
   end
 
   def rights_for_global_admins

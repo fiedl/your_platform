@@ -1,14 +1,37 @@
 concern :GenericMetricLogging do
-  
+
   included do
     helper_method :metric_logger
-    
+
     # before_action :log_generic_metric_event
+    after_action :log_request
     after_action  :log_activity
   end
-  
+
   private
-  
+
+  # As we have deactivated the who-is-online feature,
+  # we'll need a way to determine if we can safely
+  # restart services.
+  #
+  # This model keeps track of user requests.
+  # But we delete the user id later.
+  #
+  # Using the ip, which is stored, we try to identify
+  # if several requests belong to a single visit.
+  #
+  def log_request
+    if current_user
+      Request.create user_id: current_user.id,
+          ip: request.remote_ip,
+          method: request.method,
+          request_url: request.url,
+          referer: request.referer,
+          navable_id: current_navable.try(:id),
+          navable_type: current_navable.try(:class).try(:name)
+    end
+  end
+
   # This logs the event using a metric storage.
   # Here, we use fnordmetric. The metrics can be viewed via
   #
@@ -28,8 +51,8 @@ concern :GenericMetricLogging do
   def metric_logger
     @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
   end
-  
-    
+
+
   # Generic Activity Logger
   #
   def log_activity
@@ -41,7 +64,7 @@ concern :GenericMetricLogging do
       rescue
         # there is no object associated, e.g. for the RootController
       end
-      
+
       PublicActivity::Activity.create!(
         trackable: object,
         key: action_name,
@@ -53,5 +76,5 @@ concern :GenericMetricLogging do
       )
     end
   end
-  
+
 end

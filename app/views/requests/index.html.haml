@@ -1,0 +1,34 @@
+%h1 Requests
+%div
+  #requests_chart
+    = line_chart requests.group_by_minute(:created_at).count
+
+%h1 Current users
+%div
+  #current_users
+    = user_avatars(current_users)
+
+%h1 Latest requests
+%div
+  #latest_requests
+    %table.requests.datatable
+      %thead
+        %tr
+          %td User
+          %td Location
+          %td Time
+      %tbody
+        - latest_requests.each do |request|
+          %tr
+            %td
+              - if request.user
+                = link_to request.user.title, request.user
+              - else
+                = request.ip
+            %td
+              - if request.navable
+                = link_to request.navable.title, request.navable
+              - else
+                = request.request_url
+            %td
+              = localize request.created_at

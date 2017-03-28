@@ -229,6 +229,15 @@ $(document).ready ->
         return
   }
 
+  App.datatables.create '.datatable.requests', {
+    "pageLength": 100,
+    "order": [[2, "desc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 2 }
+    ]
+  }
+
+
   App.datatables.create '.datatable.bv_mappings', {
     "pageLength": 25,
     "order": [[2, "asc"], [0, "asc"]]

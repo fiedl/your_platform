@@ -117,6 +117,7 @@ Rails.application.routes.draw do
     get :charts, to: redirect('/charts/activities')
   end
   resources :activities
+  resources :requests
 
   namespace :charts do
     get :activities, to: 'activities#index'

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170317105715) do
+ActiveRecord::Schema.define(version: 20170327234550) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -362,6 +362,18 @@ ActiveRecord::Schema.define(version: 20170317105715) do
 
   add_index "relationships", ["user1_id"], name: "relationships_user1_id_fk", using: :btree
   add_index "relationships", ["user2_id"], name: "relationships_user2_id_fk", using: :btree
+
+  create_table "requests", force: :cascade do |t|
+    t.integer  "user_id",      limit: 4
+    t.string   "ip",           limit: 255
+    t.string   "method",       limit: 255
+    t.string   "request_url",  limit: 255
+    t.string   "referer",      limit: 255
+    t.integer  "navable_id",   limit: 4
+    t.string   "navable_type", limit: 255
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+  end
 
   create_table "sashes", force: :cascade do |t|
     t.datetime "created_at"
