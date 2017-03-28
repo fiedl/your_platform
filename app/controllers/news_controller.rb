@@ -64,4 +64,10 @@ class NewsController < ApplicationController
     #@events_by_date
   end
 
+  def log_request
+    # No request logging for polling news.
+    # This would create an undesired peak in the graph.
+    # The user does not click anything etc.
+  end
+
 end
