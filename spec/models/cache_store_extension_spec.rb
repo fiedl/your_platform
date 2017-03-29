@@ -47,6 +47,37 @@ describe CacheStoreExtension do
       end
     end
 
+    describe "when the value has been cached at a later time than requested" do
+      before {
+        @value_cached_with_later_timestamp = "later"
+        @value_cached_with_earlier_timestamp = "earlier"
+        Rails.cache.renew(1.minute.ago) { Rails.cache.fetch(@cache_key) { @value_cached_with_later_timestamp } }
+      }
+      subject { Rails.cache.renew(10.minutes.ago) { Rails.cache.fetch(@cache_key) { @value_cached_with_earlier_timestamp } } }
+      specify "prelims" do
+        Rails.cache.read(@cache_key).should == @value_cached_with_later_timestamp
+      end
+      it "should not override the already newer value" do
+        subject
+        Rails.cache.read(@cache_key).should == @value_cached_with_later_timestamp
+      end
+    end
+
+    describe "when the value has been cached for the same time as requested already" do
+      before {
+        @time = 10.minutes.ago
+        Rails.cache.renew(@time) { Rails.cache.fetch(@cache_key) { @old_value } }
+      }
+      subject { Rails.cache.renew(@time) { Rails.cache.fetch(@cache_key) { @new_value } } }
+      specify "prelims" do
+        Rails.cache.read(@cache_key).should == @old_value
+      end
+      it "should not override the already newer value" do
+        subject
+        Rails.cache.read(@cache_key).should == @old_value
+      end
+    end
+
     describe "for dependent values" do
       before { @helper_cache_key = "#{@cache_key}-helper" }
       subject {
