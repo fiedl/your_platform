@@ -1,5 +1,7 @@
+require 'celluloid'
 require 'sidekiq'
 require 'sidekiq/fetch'
+require 'sidekiq/actor'
 
 module Sidekiq
 
