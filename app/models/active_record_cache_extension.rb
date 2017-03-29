@@ -120,11 +120,18 @@ module ActiveRecordCacheExtension
     Rails.cache.delete_matched "#{self.cache_key}/*"
   end
 
+  attr_accessor :cache_at
   def renew_cache(time = Time.zone.now)
+    self.cache_at = time
     print "~" if ENV['CI'] == 'travis' # in order to keep tests alive
     Rails.cache.renew(time) do
       fill_cache
     end
+  end
+
+  attr_accessor :running_from_background_job
+  def renew_cache_later(time = Time.zone.now, options = {})
+    RenewCacheJob.perform_later(self, time: time, method: options[:method])
   end
 
   # The default way to fill the cache is to call all methods
@@ -140,7 +147,16 @@ module ActiveRecordCacheExtension
   #
   def fill_cache
     self.class.cached_methods.try(:each) do |method_name|
-      self.send method_name
+      self.fill_cached_method method_name
+    end
+  end
+
+  def fill_cached_method(method)
+    if self.running_from_background_job && self.cache_at
+      # When running from a background job, split it into sub-tasks.
+      self.renew_cache_later self.cache_at, method: method
+    else
+      self.send method
     end
   end
 

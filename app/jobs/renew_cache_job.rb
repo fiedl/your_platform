@@ -8,10 +8,17 @@ class RenewCacheJob < ApplicationJob
     options[:time] = Time.at(options[:time])
 
     if record_or_records.respond_to? :each
-      record_or_records.each { |record| renew_cache(record, options) }
+      record_or_records.each { |record| perform_on_record(record, options) }
     else
-      renew_cache(record_or_records, options)
+      perform_on_record(record_or_records, options)
     end
+  end
+
+  def perform_on_record(record, options)
+    record.running_from_background_job = true
+    record.cache_at = options[:time]
+    renew_cache(record, options)
+    record.running_from_background_job = false
   end
 
   def renew_cache(record, options)
@@ -32,6 +39,7 @@ class RenewCacheJob < ApplicationJob
 
   def self.perform_later(record_or_records, options = {})
     options[:time] = (options[:time] || Time.zone.now).to_i
+    options[:method] = options[:method].to_s
     super(record_or_records, options)
   end
 
