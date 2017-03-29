@@ -1,4 +1,5 @@
 require_relative './redis'
+require_relative "../../app/models/sidekiq/fetch_newest_first"
 
 Sidekiq.default_worker_options = { 'backtrace' => true, retry: false }
 
