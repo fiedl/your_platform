@@ -83,7 +83,6 @@ PATH
       rubyzip (>= 1.2.1)
       sass-rails (>= 3.2)
       sidekiq (>= 3.4.2)
-      sidekiq-limit_fetch
       simple_form
       sprockets-rails (~> 2.3)
       sugar-rails
@@ -181,7 +180,7 @@ GEM
       terminal-table (~> 1.4)
     browser (2.3.0)
     builder (3.2.3)
-    cancancan (1.15.0)
+    cancancan (1.16.0)
     capybara (2.13.0)
       addressable
       mime-types (>= 1.16)
@@ -570,8 +569,6 @@ GEM
       connection_pool (~> 2.2, >= 2.2.0)
       rack-protection (>= 1.5.0)
       redis (~> 3.2, >= 3.2.1)
-    sidekiq-limit_fetch (3.4.0)
-      sidekiq (>= 4)
     simple_form (3.4.0)
       actionpack (> 4, < 5.1)
       activemodel (> 4, < 5.1)

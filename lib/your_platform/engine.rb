@@ -23,7 +23,6 @@ require 'redis-namespace'
 
 # Workers
 require 'sidekiq'
-require 'sidekiq-limit_fetch'
 
 # Authentification
 require 'devise'
