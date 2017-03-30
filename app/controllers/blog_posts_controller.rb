@@ -17,13 +17,9 @@ class BlogPostsController < PagesController
     secure_parent.present? || raise('A blog post requires a parent_id to identify the parent page.')
     authorize! :create_page_for, secure_parent
 
-    @blog_post || raise('No @blog_post created by cancan.')
-    @blog_post.title = I18n.t(:new_blog_post)
-    @blog_post.author = current_user
-    @blog_post.content = "—"
-    @blog_post.save!
-    @blog_post.parent_pages << secure_parent
-    @page = @blog_post
+    @page = @blog_post = BlogPost.create title: I18n.t(:new_blog_post), author_user_id: current_user.id, content: "—"
+    secure_parent << @blog_post
+
     set_current_navable @blog_post   # this is needed in the BoxHelper in order to show the edit button.
     @blog_entries = [@blog_post]     # this is needed in the BoxHelper in order to hide the attachment box.
     @this_is_a_new_blog_post = true  # in to make the header a link.

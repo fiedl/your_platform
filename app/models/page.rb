@@ -217,6 +217,9 @@ class Page < ActiveRecord::Base
   def blog_posts
     child_pages.where(type: "BlogPost").order('created_at DESC')
   end
+  def child_blog_posts
+    child_pages.where(type: "BlogPost").order('created_at DESC')
+  end
   def descendant_blog_posts
     descendant_pages.where(type: "BlogPost").order('created_at DESC')
   end
