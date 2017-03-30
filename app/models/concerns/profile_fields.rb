@@ -1,7 +1,7 @@
 concern :ProfileFields do
 
   def email
-    @email ||= @email_profile_field.try(:value) || profile_fields.where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']).first.try(:value)
+    @email ||= profile_fields.where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']).first.try(:value)
   end
   def email=( email )
     @email = nil
