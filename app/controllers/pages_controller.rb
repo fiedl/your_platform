@@ -2,7 +2,7 @@ class PagesController < ApplicationController
 
   before_action :find_resource_by_permalink, only: [:show, :update]
   before_action :find_resource_by_id, only: [:show, :update]
-  load_resource except: [:show, :update]
+  load_resource only: [:destroy]
   authorize_resource
   skip_authorize_resource only: [:create]
 
