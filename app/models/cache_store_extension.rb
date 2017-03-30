@@ -57,7 +57,7 @@ module CacheStoreExtension
   end
 
   def renew?
-    @renew_at_times.any?
+    @renew_at_times.try(:any?)
   end
 
   def fetch(key, options = {}, &block)
