@@ -374,7 +374,7 @@ class User < ActiveRecord::Base
     if self.create_account == true
       self.account.destroy if self.has_account?
       self.account = self.build_account
-      create_account = false # to make sure that this code is nut run twice.
+      self.create_account = false # to make sure that this code is nut run twice.
       return self.account
     end
 

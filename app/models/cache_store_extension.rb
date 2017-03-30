@@ -40,20 +40,29 @@ module CacheStoreExtension
   def renew(time = Time.zone.now)
     time = Time.at(time) unless time.kind_of? Time
     @use_renew_cache = self.use_renew_cache?
-    @renew ||= 0
-    @renew += 1 # For nested calls.
-    @renew_at ||= time
+    store_renew_at_time_for_nested_calls(time)
     yield
-    @renew -= 1
-    @renew_at = nil if @renew == 0
+    remove_renew_at_time_for_nested_calls
+  end
+
+  def store_renew_at_time_for_nested_calls(time)
+    (@renew_at_times ||= []) << time
+  end
+  def remove_renew_at_time_for_nested_calls
+    @renew_at_times.pop(1)
   end
 
   def renew_at
-    @renew_at
+    @renew_at_times.try(:last)
+  end
+
+  def renew?
+    @renew_at_times.any?
   end
 
   def fetch(key, options = {}, &block)
-    renew_this_key = true if @renew && (@renew > 0) && @renew_at && (e = entry(key)) && e.created_at && (e.created_at < @renew_at)
+    renew_this_key = true if renew_at && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
+    #renew_this_key = true if @renew && renew_at && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
     renew_this_key = true if @ignore_cache
     renew_this_key = true if options[:force]
 
@@ -65,7 +74,7 @@ module CacheStoreExtension
     # need to return the calculated result as this code is only executed
     # within `Rails.cache.renew` statements.
     #
-    if (not @use_renew_cache) && @renew
+    if (not @use_renew_cache) && renew?
       delete(key) if renew_this_key
       return
     end

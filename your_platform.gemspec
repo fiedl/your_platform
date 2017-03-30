@@ -80,7 +80,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-facebook', '~> 3.0.0'
 
   # Authorization
-  s.add_dependency 'cancancan'
+  s.add_dependency 'cancancan', '~> 1.15.0'
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License

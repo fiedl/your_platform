@@ -21,7 +21,7 @@ PATH
       bootstrap-sass (= 3.3.3)
       bootstrap_tokenfield_rails
       bundler (>= 1.9.4)
-      cancancan
+      cancancan (~> 1.15.0)
       carrierwave (~> 0.11)
       chartkick
       coffee-rails (>= 4.1.0)
@@ -179,7 +179,7 @@ GEM
       terminal-table (~> 1.4)
     browser (2.3.0)
     builder (3.2.3)
-    cancancan (1.16.0)
+    cancancan (1.15.0)
     capybara (2.13.0)
       addressable
       mime-types (>= 1.16)

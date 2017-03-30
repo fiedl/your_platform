@@ -58,10 +58,14 @@ module ActiveRecordCacheExtension
       caller_method_name = caller_locations(2,1)[0].label
       key = caller_method_name
     end
-    rescue_from_too_big_to_marshal(block) do
-      Rails.cache.fetch([self.cache_key, key], expires_in: new_caches_expire_in) do
-        process_result_for_caching(yield)
+    if self.id
+      rescue_from_too_big_to_marshal(block) do
+        Rails.cache.fetch([self.cache_key, key], expires_in: new_caches_expire_in) do
+          process_result_for_caching(yield)
+        end
       end
+    else
+      yield
     end
   end
   private :cached_block
@@ -236,7 +240,7 @@ module ActiveRecordCacheExtension
 
           define_method(setter_method_name) { |new_value|
             result = self.send "without_renew_cache_#{setter_method_name}", new_value
-            Rails.cache.renew { self.send method_name }
+            Rails.cache.renew { self.send method_name } if self.id
           }
         end
 

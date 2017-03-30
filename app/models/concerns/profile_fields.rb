@@ -1,12 +1,12 @@
 concern :ProfileFields do
 
   def email
-    @email ||= profile_fields.where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']).first.try(:value)
+    @email ||= @email_profile_field.try(:value) || profile_fields.where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']).first.try(:value)
   end
   def email=( email )
     @email = nil
-    @email_profile_field = profile_fields_by_type( "ProfileFields::Email" ).first unless @email_profile_field
-    @email_profile_field = profile_fields.build( type: "ProfileFields::Email", label: "email" ) unless @email_profile_field
+    @email_profile_field ||= profile_fields_by_type("ProfileFields::Email").first
+    @email_profile_field ||= profile_fields.build(type: "ProfileFields::Email", label: "email")
     @email_profile_field.value = email
   end
   def email_does_not_work?

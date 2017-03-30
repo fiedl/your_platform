@@ -1,13 +1,13 @@
 concern :UserNotifications do
-  
+
   included do
     has_many :notifications, foreign_key: 'recipient_id'
-    
+
     after_create { self.update_attribute :notification_policy, :letter_bundle }
   end
-  
+
   # Notification Policy of the user:
-  # 
+  #
   #    * :daily                         Deliver the notifications once a day.
   #    * :letter_bundle                 Deliver as letter bundle, i.e. when some
   #                                       notifications are collected and nobody
@@ -20,7 +20,7 @@ concern :UserNotifications do
   def notification_policy_possible_settings
     [:daily, :letter_bundle, :instantly]
   end
-  
+
   # Later, we can use this for a personal greeting.
   #
   def greeting
@@ -32,5 +32,5 @@ concern :UserNotifications do
       I18n.t(:good_evening, locale: locale)
     end
   end
-  
+
 end
