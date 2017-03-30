@@ -38,16 +38,22 @@ module CacheStoreExtension
   #     end
   #
   def renew(time = Time.zone.now)
+    time = Time.at(time) unless time.kind_of? Time
     @use_renew_cache = self.use_renew_cache?
-    @renew = true
+    @renew ||= 0
+    @renew += 1 # For nested calls.
     @renew_at ||= time
     yield
-    @renew = false
-    @renew_at = nil
+    @renew -= 1
+    @renew_at = nil if @renew == 0
+  end
+
+  def renew_at
+    @renew_at
   end
 
   def fetch(key, options = {}, &block)
-    renew_this_key = true if @renew && (renew_at = @renew_at) && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
+    renew_this_key = true if @renew && (@renew > 0) && @renew_at && (e = entry(key)) && e.created_at && (e.created_at < @renew_at)
     renew_this_key = true if @ignore_cache
     renew_this_key = true if options[:force]
 

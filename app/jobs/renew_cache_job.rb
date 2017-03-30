@@ -4,8 +4,13 @@
 class RenewCacheJob < ApplicationJob
   queue_as :cache
 
+  def serialize
+    arguments.last[:time] = arguments.last[:time].to_i if arguments.last && arguments.last[:time]
+    super
+  end
+
   def perform(record_or_records, options)
-    options[:time] = Time.at(options[:time])
+    options[:time] = Time.at(options[:time]) unless options[:time].kind_of? Time
 
     if record_or_records.respond_to? :each
       record_or_records.each { |record| perform_on_record(record, options) }
@@ -16,14 +21,13 @@ class RenewCacheJob < ApplicationJob
 
   def perform_on_record(record, options)
     record.running_from_background_job = true
-    record.cache_at = options[:time]
     renew_cache(record, options)
     record.running_from_background_job = false
   end
 
   def renew_cache(record, options)
     if record
-      if options[:method]
+      if options[:method].present?
         Rails.cache.renew(options[:time]) { record.send(options[:method]) if record.respond_to?(options[:method]) }
       elsif options[:methods]
         Rails.cache.renew(options[:time]) do

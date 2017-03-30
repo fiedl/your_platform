@@ -12,7 +12,7 @@ concern :DagLinkCaching do
   end
 
   def delay_renew_cache_of_ancestor_and_descendant
-    RenewCacheJob.perform_later [ancestor, descendant], time: Time.zone.now
+    RenewCacheJob.perform_later [ancestor, descendant] - [nil], time: Time.zone.now
   end
 
 end
