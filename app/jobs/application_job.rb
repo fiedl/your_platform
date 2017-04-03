@@ -38,8 +38,12 @@ else
   class ActiveJob::Base
     def self.deserialize(job_data)
       job = job_data['job_class'].constantize.new
-      job.deserialize(job_data)
-      job
+      if job.respond_to? :deserialize
+        job.deserialize(job_data)
+        job
+      else
+        super
+      end
     end
   end
 end
