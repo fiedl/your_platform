@@ -11,6 +11,6 @@ class BaseMailer < ActionMailer::Base
   helper ActionView::Helpers::SanitizeHelper
 
   helper ApplicationHelper
-  default from: SupportRequestsController.support_email
+  default from: Setting.support_email
 
 end

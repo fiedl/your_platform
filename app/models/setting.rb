@@ -14,4 +14,13 @@ class Setting < RailsSettings::Base
     return nil if super == ""
     super
   end
+
+  def self.support_email
+    if super.present?
+      super
+    else
+      logger.warn('No support email address (support@example.com) set. Please set it using the Setting.support_email accessor.')
+      return "support@example.com"
+    end
+  end
 end
