@@ -8,10 +8,12 @@ class ApplicationJob < ActiveJob::Base
     super.merge('attempt_number' => (attempt_number || 0) + 1)
   end
 
-  # This method is for rails 5.
   def deserialize(job_data)
-    attempt_number = job_data['attempt_number']
-    super
+    self.attempt_number = job_data['attempt_number'] if self.respond_to? :attempt_number
+    self.job_id = job_data['job_id']
+    self.queue_name = job_data['queue_name']
+    self.serialized_arguments = job_data['arguments']
+    super if defined? super
   end
 
   rescue_from StandardError do |exception|
@@ -27,13 +29,17 @@ class ApplicationJob < ActiveJob::Base
 
 end
 
-class ActiveJob::Base
-
-  # This method is for rails 4.
-  def self.deserialize(job_data)
-    job = super
-    job.attempt_number = job_data['attempt_number'] if job.respond_to? :attempt_number
-    job
+# This is for rails 4. TODO: Remove when migrating to rails 5.
+# http://blog.rstankov.com/activejobretry/
+#
+if ActiveJob::Base.method_defined?(:deserialize)
+  fail 'This is no longer needed.'
+else
+  class ActiveJob::Base
+    def self.deserialize(job_data)
+      job = job_data['job_class'].constantize.new
+      job.deserialize(job_data)
+      job
+    end
   end
-
 end

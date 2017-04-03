@@ -20,6 +20,9 @@ class RenewCacheJob < ApplicationJob
   end
 
   def perform_on_record(record, options)
+
+    raise "TODO REMOVE THIS LINE"
+
     record.running_from_background_job = true
     renew_cache(record, options)
     record.running_from_background_job = false
