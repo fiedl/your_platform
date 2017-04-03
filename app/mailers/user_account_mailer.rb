@@ -5,11 +5,12 @@ class UserAccountMailer < BaseMailer
     @mr_or_mrs = @user.female? ? t(:mrs) : t(:mr)
 
     @subject = I18n.t :welcome_to_app_name, app_name: AppVersion.app_name
+    @from = Setting.support_email
 
     to = "#{@user.title} <#{@user.email}>"
 
     I18n.with_locale(@user.locale) do
-      mail to: [to], subject: @subject
+      mail to: [to], subject: @subject, from: @from
     end
 
   end

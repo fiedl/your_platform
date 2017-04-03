@@ -1,6 +1,6 @@
 class EventMailer < ActionMailer::Base
   helper MailerHelper
-  default from: 'wingolfsplattform@wingolf.org'
+  default from: Setting.support_email
 
   def invitation_email(text, recipients, event, current_user)
     @text_before_event_table, @text_after_event_table = text.split('[ Informationen zur Veranstaltung werden vom System hier eingefügt. ]')
