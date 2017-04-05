@@ -130,13 +130,6 @@ $(document).ready ->
     minute: 15,
     timeInput: true
 
-  # Deactivate webcal:// links for android and windows, since they don't support it, apparently.
-  #
-  user_os = navigator.userAgent.toLowerCase()
-  if (user_os.indexOf("android") > -1) or (user_os.indexOf("windows") > -1)
-    if $('#ics_abo').count > 0
-      $('#ics_abo').attr('href', $('#ics_abo').attr('href').replace('webcal://', 'https://'))
-
   # Select the text field for the event title if it shows the default title.
   if $('.box.first * h1 .best_in_place').text() == I18n.t('enter_name_of_event_here')
     $('.box.first * h1 .best_in_place').trigger('click') # to edit it
