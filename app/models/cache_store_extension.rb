@@ -61,8 +61,11 @@ module CacheStoreExtension
   end
 
   def fetch(key, options = {}, &block)
-    renew_this_key = true if renew_at && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
-    #renew_this_key = true if @renew && renew_at && (e = entry(key)) && e.created_at && (e.created_at < renew_at)
+    # We need to have this in local memory. Otherwise, the value might change until
+    # we compare the timestamps.
+    r = renew_at
+
+    renew_this_key = true if r && (e = entry(key)) && e.created_at && (e.created_at < r)
     renew_this_key = true if @ignore_cache
     renew_this_key = true if options[:force]
 
