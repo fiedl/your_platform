@@ -15,10 +15,10 @@ describe ActiveJob do
       expect { subject }.to raise_error
     end
 
-    it "should run 5 times" do
+    it "should run 2 times" do
       $failing_job_count = 0
       expect { subject }.to raise_error
-      $failing_job_count.should == 5
+      $failing_job_count.should == 2
     end
 
   end
