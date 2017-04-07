@@ -26,4 +26,8 @@ class AvatarsController < ApplicationController
     end
   end
 
+  def log_request
+    # Do not log these requests.
+  end
+
 end
