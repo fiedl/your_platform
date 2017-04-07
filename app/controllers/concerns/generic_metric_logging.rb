@@ -25,8 +25,8 @@ concern :GenericMetricLogging do
       Request.create user_id: current_user.id,
           ip: request.remote_ip,
           method: request.method,
-          request_url: request.url,
-          referer: request.referer,
+          request_url: request.url.to_s.first(250),
+          referer: request.referer.to_s.first(250),
           navable_id: current_navable.try(:id),
           navable_type: current_navable.try(:class).try(:name)
     end
