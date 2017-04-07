@@ -6,9 +6,5 @@ Rails.application.config.active_job.queue_adapter = :sidekiq
 # inline.
 require 'sidekiq/fetch_newest_first' unless Rails.env.test?
 
-# In order to support several attempts for jobs,
-# we need to patch job serialization.
-require 'active_job/base_additions'
-
 # redis is already namspaced
 Rails.application.config.active_job.queue_name_prefix = ""
