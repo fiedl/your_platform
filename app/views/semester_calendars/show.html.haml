@@ -59,3 +59,5 @@
         %a.btn.btn-default{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
           = icon :calendar
           = t :ical_events_from_the_homepage
+
+  = render partial: 'semester_calendars/calendar_feed_box'

@@ -196,6 +196,9 @@ class Ability
       can :update, Group do |group|
         group.has_flag?(:contact_people) && can?(:update, group.parent_events.first)
       end
+      can :export_calendar_feed_url_for_local_homepage, Group do |group|
+        can? :update, group
+      end
 
       can :update, SemesterCalendar do |semester_calendar|
         semester_calendar.group && user.in?(semester_calendar.group.officers_of_self_and_ancestor_groups)

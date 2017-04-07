@@ -41,5 +41,8 @@ de:
   event_information_will_be_inserted_here: '[ Informationen zur Veranstaltung werden vom System hier eingefügt. ]'
   kind_regards: 'Mit freundlichen Grüßen'
 
+  calendar_feed: Kalender-Feed
+  calendar_feed_for_local_homepage: Kalender-Feed für lokale öffentliche Homepage
+
   date:
     to: 'bis'

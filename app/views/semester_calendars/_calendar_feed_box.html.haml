@@ -1,0 +1,11 @@
+- if can? :export_calendar_feed_url_for_local_homepage, @group
+  %h1= t :calendar_feed
+  %div
+    %p
+      %small= t :calendar_feed_for_local_homepage
+    %p
+      HTML:
+      = text_field_tag 'calendar_feed_for_local_homepage', group_events_public_url(group_id: @group, limit: 3)
+    %p
+      iCal:
+      = text_field_tag 'calendar_feed_for_local_homepage_ics', group_events_public_url(group_id: @group, format: 'ics', protocol: 'webcal')
