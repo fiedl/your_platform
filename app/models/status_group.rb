@@ -27,7 +27,7 @@ class StatusGroup < Group
       if Rails.env.test?
         Rails.logger.warn exception
       else
-        ExceptionNotifier.notify_exeption(exception)
+        ExceptionNotifier.notify_exception(exception)
       end
     end
 
