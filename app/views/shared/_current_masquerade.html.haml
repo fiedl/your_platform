@@ -1,0 +1,6 @@
+- if user_account_masquerade? && !demo_mode?
+  #masquerade
+    = icon :admin
+    = t(:you_are_masquerading_as_str, str: current_user.title)
+    = link_to t(:reverse_masquerade), back_masquerade_path(current_user.account)
+

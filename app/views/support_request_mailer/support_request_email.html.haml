@@ -1,8 +1,8 @@
 %div{style: "font-family: Helvetica"}
   %p= markup @text
-  
+
   %hr
-  
+
   - if @sender_user
     %h2 Profile info
     %ul
@@ -10,12 +10,13 @@
       %li
         Mobile:
         = @sender_user.mobile
-  
+      %li= link_to "Masquerade", user_masquerade_url(user_id: @sender_user.id)
+
   - if @navable
     %h2 Object info
     %ul
       %li= link_to @navable.title, polymorphic_url(@navable, preview_as: @role)
-  
+
   %h2 Meta data
   %ul
     - @meta_data.each do |key, value|

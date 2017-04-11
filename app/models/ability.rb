@@ -137,6 +137,15 @@ class Ability
 
     can :use, :term_reports
     can :use, :requests_index
+
+    can :use, :masquerade do
+      # Only global admins that are developers are allowed
+      # to masquerade as other users. This is used for debugging.
+      user.global_admin?
+    end
+    can :masquerade_as, User do
+      can? :use, :masquerade
+    end
   end
 
   def rights_for_global_admins

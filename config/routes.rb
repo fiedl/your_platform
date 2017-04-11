@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
     get :posts, to: 'user_posts#index'
+    get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
   end
 
   get :settings, to: 'user_settings#index'

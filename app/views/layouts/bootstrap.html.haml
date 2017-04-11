@@ -41,6 +41,7 @@
     = yield :head
 
   = body_tag do
+    = render partial: 'shared/current_masquerade'
     - if user_account_signed_in?
       %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
         .container-fluid
