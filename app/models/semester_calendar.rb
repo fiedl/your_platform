@@ -58,7 +58,7 @@ class SemesterCalendar < ActiveRecord::Base
 
   def events(reload = false)
     @events = nil if reload
-    @events ||= group.events.where(start_at: current_terms_time_range).order(:start_at).to_a
+    @events ||= group.events_with_subgroups.where(start_at: current_terms_time_range).order(:start_at).to_a
   end
 
   def reload

@@ -19,6 +19,16 @@ describe SemesterCalendar do
     it "should not include the events of other terms" do
       subject.should_not include @event_in_another_term
     end
+    describe "for corporations with subgroups" do
+      before do
+        @subgroup = @corporation.child_groups.create name: "Subgroup"
+        @sub_event = @subgroup.events.create name: "Clean-up after BBQ", start_at: @event.start_at + 6.hours
+        @semester_calendar.reload.events(true)
+      end
+      it "should include the events of subgroups" do
+        subject.should include @sub_event
+      end
+    end
   end
 
   describe "#update" do
