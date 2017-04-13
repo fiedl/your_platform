@@ -8,7 +8,7 @@ class Memberships::FromMembersIndexController < ApplicationController
     authorize! :manage_memberships_manually, group
     raise 'No user title given' unless membership_params[:user_title].present?
 
-    if (membership = group.memberships.create(processed_membership_params)) && membership.errors.none?
+    if (membership = group.assign_user(user, at: processed_membership_params[:valid_from])) && membership.errors.none?
       redirect_to group_members_path(group)
     else
       redirect_to group_members_path(group), alert: "#{t(:adding_member_did_not_work)} #{membership.errors.messages.to_s}"

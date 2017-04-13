@@ -4,7 +4,8 @@ feature "memberships#create" do
   include SessionSteps
 
   scenario "Adding a member manually to a group" do
-    @group = create :group
+    @parent_group = create :group
+    @group = @parent_group.child_groups.create
     @user = create :user
 
     login :admin
@@ -21,6 +22,7 @@ feature "memberships#create" do
     end
 
     @user.should be_member_of @group
+    @user.should be_member_of @parent_group
     Membership.with_past.find_by_user_and_group(@user, @group).valid_from.to_date.should == Time.zone.now.to_date
   end
 
