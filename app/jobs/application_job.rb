@@ -9,6 +9,15 @@ class ApplicationJob < ActiveJob::Base
     end
   end
 
+  rescue_from ActiveJob::DeserializationError do |exception|
+    if self.queue_name.to_s == 'retry'
+      # Skip this job. The record has been deleted in the meantime.
+    else
+      retry_job(wait: 30, queue: :retry)
+    end
+  end
+
+
   # This patch tries to fix "(ArgumentError) "wrong number of arguments (given 0, expected 2)".
   #
   # @see https://github.com/rails/rails/issues/22044

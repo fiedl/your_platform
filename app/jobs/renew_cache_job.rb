@@ -21,7 +21,7 @@ class RenewCacheJob < ApplicationJob
 
   def perform_on_record(record, options)
     Rails.cache.running_from_background_job = true
-    print "Running RenewCacheJob for #{record.title if record.respond_to?(:title)} with #{options.to_s}."
+    print "Running RenewCacheJob for #{record.title if record.respond_to?(:title)} with #{options.to_s}.\n" unless Rails.env.test?
     renew_cache(record, options)
     Rails.cache.running_from_background_job = false
   end
