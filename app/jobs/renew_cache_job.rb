@@ -20,9 +20,10 @@ class RenewCacheJob < ApplicationJob
   end
 
   def perform_on_record(record, options)
-    record.running_from_background_job = true
+    Rails.cache.running_from_background_job = true
+    print "Running RenewCacheJob for #{record.title if record.respond_to?(:title)} with #{options.to_s}."
     renew_cache(record, options)
-    record.running_from_background_job = false
+    Rails.cache.running_from_background_job = false
   end
 
   def renew_cache(record, options)
@@ -36,7 +37,7 @@ class RenewCacheJob < ApplicationJob
           end
         end
       else
-        record.renew_cache
+        record.renew_cache(options[:time])
       end
     end
   end

@@ -2,6 +2,7 @@
 # This file is required by the cache_store_extension initializer.
 #
 module CacheStoreExtension
+  attr_accessor :running_from_background_job
 
   def uncached
     @ignore_cache = true

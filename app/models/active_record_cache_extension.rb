@@ -131,7 +131,6 @@ module ActiveRecordCacheExtension
     end
   end
 
-  attr_accessor :running_from_background_job
   def renew_cache_later(time = Time.zone.now, options = {})
     RenewCacheJob.perform_later(self, time: time, method: options[:method])
   end
@@ -154,7 +153,7 @@ module ActiveRecordCacheExtension
   end
 
   def fill_cached_method(method)
-    if self.running_from_background_job && Rails.cache.renew_at
+    if Rails.cache.running_from_background_job && Rails.cache.renew_at
       # When running from a background job, split it into sub-tasks.
       self.renew_cache_later Rails.cache.renew_at, method: method
     else
