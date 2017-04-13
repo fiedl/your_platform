@@ -69,7 +69,7 @@ Gem::Specification.new do |s|
 
   # Workers
   s.add_dependency 'foreman'
-  s.add_dependency 'sidekiq', '>= 3.4.2'
+  s.add_dependency 'sidekiq', '>= 3.5.1'
 
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329

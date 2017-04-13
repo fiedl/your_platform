@@ -95,6 +95,8 @@ source 'https://rubygems.org' do
   gem 'execjs'
   gem 'therubyracer', :platform => :ruby
 
+  gem 'sidekiq', '~> 3.5.1'
+
   # Temporary Forks and Overrides
   gem 'gmaps4rails', '~> 2.0.2', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
     # see: http://stackoverflow.com/questions/13807686

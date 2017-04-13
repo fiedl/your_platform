@@ -34,8 +34,7 @@
 - if can? :manage_memberships_manually, group
   %h1 Mitglieder manuell eintragen
   %div.add_group_members
-    = form_for new_membership, remote: true do |form|
-      = form.hidden_field :group_id
+    = form_for new_membership, url: group_members_memberships_path, remote: true do |form|
       %span.add_group_member_name_field.left
         = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
       %span.add_group_member_tools.right

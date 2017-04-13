@@ -82,6 +82,7 @@ Rails.application.routes.draw do
     get :profile, to: 'profiles#show'
     get :profile_fields, to: 'profile_fields#index'
     get :members, to: 'group_members#index'
+    post 'members/memberships', to: 'memberships/from_members_index#create'
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
     get :settings, to: 'group_settings#index'

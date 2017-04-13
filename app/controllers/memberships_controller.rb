@@ -33,27 +33,6 @@ class MembershipsController < ApplicationController
     set_current_activity :is_managing_member_lists, @object
   end
 
-  def create
-    if membership_params[:user_title].present?
-      @user_id = User.find_by_title(membership_params[:user_title]).id
-      @group = Group.find membership_params[:group_id]
-      membership = true
-      begin
-        membership = Membership.create(membership_params.merge({user_id: @user_id}))
-        membership.valid_from = Date.new(membership_params["valid_from(1i)"].to_i,
-                                                     membership_params["valid_from(2i)"].to_i,
-                                                     membership_params["valid_from(3i)"].to_i)
-        membership.valid_from_will_change!
-        membership.save!
-        redirect_to group_members_path(membership.group), change: 'members'
-      rescue => error
-        redirect_to group_members_path(@group), change: 'members', alert: "#{t(:adding_member_did_not_work)} #{error.message}"
-      end
-    else
-      head :no_content
-    end
-  end
-
   def show
   end
 

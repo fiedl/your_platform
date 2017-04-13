@@ -83,7 +83,7 @@ PATH
       rest-client (>= 1.8)
       rubyzip (>= 1.2.1)
       sass-rails (>= 3.2)
-      sidekiq (>= 3.4.2)
+      sidekiq (>= 3.5.1)
       simple_form
       sprockets-rails (~> 2.3)
       sugar-rails
@@ -194,6 +194,23 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
+    celluloid (0.17.3)
+      celluloid-essentials
+      celluloid-extras
+      celluloid-fsm
+      celluloid-pool
+      celluloid-supervision
+      timers (>= 4.1.1)
+    celluloid-essentials (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-extras (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-fsm (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-pool (0.20.5)
+      timers (>= 4.1.1)
+    celluloid-supervision (0.20.6)
+      timers (>= 4.1.1)
     chartkick (2.2.3)
     childprocess (0.6.2)
       ffi (~> 1.0, >= 1.0.11)
@@ -209,7 +226,6 @@ GEM
       execjs
     coffee-script-source (1.10.0)
     colored (1.2)
-    concurrent-ruby (1.0.5)
     connection_pool (2.2.1)
     coveralls (0.8.10)
       json (~> 1.8)
@@ -311,6 +327,7 @@ GEM
     hashie (3.5.5)
     highline (1.7.8)
     hike (1.2.3)
+    hitimes (1.2.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.8.1)
@@ -567,11 +584,12 @@ GEM
       websocket (~> 1.0)
     sexp_processor (4.6.0)
     shellany (0.0.1)
-    sidekiq (4.2.10)
-      concurrent-ruby (~> 1.0)
+    sidekiq (3.5.4)
+      celluloid (~> 0.17.2)
       connection_pool (~> 2.2, >= 2.2.0)
-      rack-protection (>= 1.5.0)
+      json (~> 1.0)
       redis (~> 3.2, >= 3.2.1)
+      redis-namespace (~> 1.5, >= 1.5.2)
     simple_form (3.4.0)
       actionpack (> 4, < 5.1)
       activemodel (> 4, < 5.1)
@@ -615,6 +633,8 @@ GEM
     thread_safe (0.3.6)
     tilt (1.4.1)
     timecop (0.8.0)
+    timers (4.1.2)
+      hitimes
     tins (1.6.0)
     to_xls (1.5.3)
       spreadsheet
@@ -696,6 +716,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.3)!
   sdoc (~> 0.4.0)!
   selenium-webdriver!
+  sidekiq (~> 3.5.1)!
   simplecov!
   spork!
   spring!
