@@ -10,6 +10,11 @@ feature "Attachments" do
     @attachment = create :attachment, parent_id: @page.id, parent_type: 'Page'
   end
 
+  specify "requirements" do
+    @attachment.parent.should == @page
+    @attachment.parent.group.should == @group
+  end
+
   context "when the user has the right to download the attachment" do
     before do
       @group << @user
