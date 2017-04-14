@@ -222,26 +222,83 @@ module ActiveRecordCacheExtension
       cache_method method_name
     end
 
+    # This is really cool! This method re-defines the given method
+    # and wraps the original method in a cached block.
+    #
+    #     class Foo
+    #       def bar
+    #         "bar"
+    #       end
+    #       cache :bar
+    #     end
+    #
+    # ## With subclassing
+    #
+    #     class MegaFoo < Foo
+    #       def bar
+    #         "mega #{super}"
+    #       end
+    #       cache :bar
+    #     end
+    #
+    # ## How does this work?
+    #
+    # Previously, we've used `alias_method` to reference the
+    # original method. But we ran into issues with that when using
+    # class inheritance.
+    #
+    # Ruby's `prepend` and its cool meta programming came to the
+    # rescue!
+    #
+    # Inhale this:
+    #
+    #     class Cachable
+    #
+    #       def self.cache(method_name)
+    #         caching_module = Module.new
+    #         caching_module.module_eval do
+    #           define_method method_name do |*args|
+    #             "cached " + super(*args)
+    #           end
+    #         end
+    #
+    #         self.prepend caching_module
+    #       end
+    #
+    #     end
+    #
+    #     class Foo < Cachable
+    #
+    #       def foo
+    #         "foo"
+    #       end
+    #
+    #       cache :foo
+    #     end
+    #
+    #     p Foo.new.foo  # => "cached foo"
+    #
     def cache_method(method_name)
       if use_caching?
-        uncached_method = instance_method(method_name)
-
-        define_method(method_name) { |*args|
-          cached_block(method_name: method_name, arguments: args) { uncached_method.bind(self).(*args) }
-        }
-
-        # If a setter method exists as well, make the setter method
-        # also renew the cache.
-        #
-        setter_method_name = "#{method_name.to_s.gsub('?', '')}="
-        if method_defined?(setter_method_name)
-          setter_method_without_renew_cache = instance_method(setter_method_name)
-
-          define_method(setter_method_name) { |new_value|
-            result = setter_method_without_renew_cache.bind(self).(new_value)
-            Rails.cache.renew { self.send method_name } if self.id
+        caching_module = Module.new
+        caching_module.module_eval do
+          define_method(method_name) { |*args|
+            cached_block(method_name: method_name, arguments: args) { super(*args) }
           }
+
+          # If a setter method exists as well, make the setter method
+          # also renew the cache.
+          #
+          setter_method_name = "#{method_name.to_s.gsub('?', '')}="
+          if method_defined?(setter_method_name)
+            define_method(setter_method_name) { |new_value|
+              result = super(new_value)
+              Rails.cache.renew { self.send method_name } if self.id
+            }
+          end
         end
+
+        self.prepend caching_module
 
         self.cached_methods += [method_name]
       end
