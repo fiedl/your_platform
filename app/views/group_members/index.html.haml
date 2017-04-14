@@ -17,7 +17,6 @@
     = current_title
     %span.members_count (#{member_table_rows.count})
   %div
-    .alert.alert-success.updating_member_list.hidden=t :updating_member_list
     = render partial: 'groups/export_button'
     - if can? :update_members, group
       = link_to group_member_data_summaries_path(group), class: 'btn btn-default right' do
@@ -28,13 +27,12 @@
     %br{clear: 'all'}
     %span#group_members
       .child_users
-        - if member_table_rows.count > 0
-          = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
+        = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
 
 - if can? :manage_memberships_manually, group
-  %h1 Mitglieder manuell eintragen
+  %h1= t :add_members_manually
   %div.add_group_members
-    = form_for new_membership, url: group_members_memberships_path, remote: true do |form|
+    = form_for new_membership, url: group_members_memberships_path(format: 'json') do |form|
       %span.add_group_member_name_field.left
         = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
       %span.add_group_member_tools.right

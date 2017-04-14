@@ -3,7 +3,7 @@ require 'spec_helper'
 feature "memberships#create" do
   include SessionSteps
 
-  scenario "Adding a member manually to a group" do
+  scenario "Adding a member manually to a group", :js do
     @parent_group = create :group
     @group = @parent_group.child_groups.create
     @user = create :user
