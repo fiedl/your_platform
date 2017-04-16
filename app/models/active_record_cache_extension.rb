@@ -280,17 +280,20 @@ module ActiveRecordCacheExtension
     #
     def cache_method(method_name)
       if use_caching?
+
+        # If a setter method exists as well, make the setter method
+        # also renew the cache.
+        #
+        setter_method_name = "#{method_name.to_s.gsub('?', '')}="
+        need_to_patch_setter_method = method_defined?(setter_method_name)
+
         caching_module = Module.new
         caching_module.module_eval do
           define_method(method_name) { |*args|
             cached_block(method_name: method_name, arguments: args) { super(*args) }
           }
 
-          # If a setter method exists as well, make the setter method
-          # also renew the cache.
-          #
-          setter_method_name = "#{method_name.to_s.gsub('?', '')}="
-          if method_defined?(setter_method_name)
+          if need_to_patch_setter_method
             define_method(setter_method_name) { |new_value|
               result = super(new_value)
               Rails.cache.renew { self.send method_name } if self.id
