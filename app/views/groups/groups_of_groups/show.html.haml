@@ -1,0 +1,18 @@
+- @hide_vertical_nav = true
+
+%h1.group_of_groups
+  = group.name
+  .download.tool.btn-group
+    %button.btn.btn-default.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}}
+      = t :download
+      %span.caret
+    %ul.dropdown-menu
+      %li
+        = link_to groups_groups_of_group_path(group, format: 'xls') do
+          = xls_icon
+          = t(:excel_list)
+        = link_to groups_groups_of_group_path(group, format: 'csv') do
+          = csv_icon
+          = t(:excel_list)
+%div
+  = render group

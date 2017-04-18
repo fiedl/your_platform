@@ -36,6 +36,10 @@ module IconHelper
     image_tag 'img/excel2013_file_bw_semitransparent_107.png', height: 16
   end
 
+  def xls_icon
+    excel_icon
+  end
+
   def csv_icon
     icon 'list-alt'
   end

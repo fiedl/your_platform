@@ -14,11 +14,5 @@ class Groups::GroupOfGroups < Group
     Flag.where(flagable_type: "Group", flagable_id: descendant_groups.where(type: "OfficerGroup").pluck(:id)).pluck(:key).uniq
   end
 
-  # This is used to determine the routes for this resource.
-  # http://stackoverflow.com/a/9463495/2066546
-  def self.model_name
-    Group.model_name
-  end
-
   cache :child_groups_table_rows if use_caching?
 end

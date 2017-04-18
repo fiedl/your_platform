@@ -95,6 +95,11 @@ Rails.application.routes.draw do
   end
   get :my_groups, to: 'groups#index_mine'
 
+  namespace :groups, path: "" do
+    resources :groups_of_groups do
+      get 'exports/table.:format', to: 'groups_of_groups/table_exports#show', as: 'table_export'
+    end
+  end
 
   get :corporations, to: 'corporations#index'
   resources :corporations, controller: 'groups'
