@@ -94,6 +94,11 @@ module ListExports
       end
     end
 
+    def byte_order_mark
+      # http://railscasts.com/episodes/362-exporting-csv-and-excel
+      "\xEF\xBB\xBF".force_encoding('utf-8')
+    end
+
     def csv_options
       {col_sep: ';', quote_char: '"'}
     end
