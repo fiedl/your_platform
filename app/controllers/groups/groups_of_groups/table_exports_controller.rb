@@ -27,23 +27,10 @@ class Groups::GroupsOfGroups::TableExportsController < ApplicationController
     @html_data ||= render_partial(group.to_partial_path, group: group)
   end
 
-  def table_header_rows
+  def table_rows
     rows = []
     doc = Nokogiri::HTML(html_data)
-    doc.xpath('//table/thead/tr').each do |row|
-      tarray = []
-      row.xpath('th', 'td').each do |cell|
-        tarray << cell.text
-      end
-      rows << tarray
-    end
-    rows
-  end
-
-  def table_body_rows
-    rows = []
-    doc = Nokogiri::HTML(html_data)
-    doc.xpath('//table/tbody/tr').each do |row|
+    doc.xpath('//table/*/tr').each do |row|
       tarray = []
       row.xpath('th', 'td').each do |cell|
         tarray << cell.text
@@ -56,14 +43,14 @@ class Groups::GroupsOfGroups::TableExportsController < ApplicationController
   def csv_data
     doc = Nokogiri::HTML(html_data)
     CSV.generate do |csv|
-      (table_header_rows + table_body_rows).each do |row|
+      table_rows.each do |row|
         csv << row
       end
     end
   end
 
   def xls_data
-    # TODO
+    Excelinator.csv_to_xls(csv_data)
   end
 
 end

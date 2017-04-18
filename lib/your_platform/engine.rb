@@ -117,6 +117,7 @@ require 'prawn'
 
 # XLS Export
 require 'to_xls'
+require 'excelinator'
 
 # ICS Export (iCal)
 require 'icalendar'

@@ -150,6 +150,7 @@ Gem::Specification.new do |s|
 
   # XLS Export
   s.add_dependency 'to_xls'
+  s.add_dependency 'excelinator'
 
   # PDF Export
   s.add_dependency 'prawn', '2.0.2' # 2.1.0 breaks layout margins
