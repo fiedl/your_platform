@@ -25,6 +25,7 @@ class GroupsController < ApplicationController
       if request.format.html?
 
         if @group.kind_of? Groups::GroupOfGroups
+          redirect_to groups_groups_of_group_path(@group)
           return
         else
           redirect_to_group_tab
