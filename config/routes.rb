@@ -99,6 +99,7 @@ Rails.application.routes.draw do
     resources :groups_of_groups do
       get 'exports/table.:format', to: 'groups_of_groups/table_exports#show', as: 'table_export'
     end
+    resources :corporations_parents, controller: 'groups_of_groups'
   end
 
   get :corporations, to: 'corporations#index'
