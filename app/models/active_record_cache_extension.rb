@@ -148,12 +148,15 @@ module ActiveRecordCacheExtension
   #     end
   #
   def fill_cache
+    Sidekiq::Logging.logger.info "#{title} # fill_cache" if Sidekiq::Logging.logger && (! Rails.env.test?)
+
     self.class.cached_methods.try(:each) do |method_name|
       self.fill_cached_method method_name
     end
   end
 
   def fill_cached_method(method)
+    Sidekiq::Logging.logger.info "#{title} # fill_cached_method #{method}" if Sidekiq::Logging.logger && (! Rails.env.test?)
     if Rails.cache.running_from_background_job && Rails.cache.renew_at
       # When running from a background job, split it into sub-tasks.
       self.renew_cache_later method: method

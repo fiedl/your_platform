@@ -4,7 +4,7 @@ concern :GroupCaching do
   # Otherwise, the methods to be cached are not declared, yet.
   #
   included do
-    after_save { RenewCacheJob.perform_later(self, time: Time.zone.now) }
+    after_save { self.renew_cache_later }
 
     cache :corporation_id
     cache :leaf_group_ids
@@ -31,18 +31,12 @@ concern :GroupCaching do
   def fill_cache
     super
 
-    # Using `fill_cached_method`, this is delegated to
-    # its own background job.
-    self.fill_cached_method :fill_cache_for_export_lists
-
-    # Also renew the member's titles in separate
-    # background jobs to avoid timeouts.
-    self.members.each do |user|
-      user.renew_cache_later method: :title
-    end
+    self.fill_cache_for_export_lists
   end
 
   def fill_cache_for_export_lists
+    Sidekiq::Logging.logger.info "#{self.title} # fill_cache_for_export_lists" if Sidekiq::Logging.logger && (! Rails.env.test?)
+
     Group.export_list_presets.each do |preset|
       [:csv, :xls].each do |format|
         self.export_list preset: preset, format: format

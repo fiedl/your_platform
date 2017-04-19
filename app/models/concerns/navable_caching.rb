@@ -17,9 +17,11 @@ concern :NavableCaching do
     # the navigation of the descendants.
     self.descendants.each do |descendant|
       if descendant.respond_to? :ancestor_nav_nodes
-        descendant.fill_cached_method :ancestor_nav_nodes
-        descendant.fill_cached_method :ancestor_navables
-        descendant.fill_cached_method :breadcrumbs
+        Sidekiq::Logging.logger.info "#{self.title} # navable caching for #{descendant.title}" if Sidekiq::Logging.logger && (! Rails.env.test?)
+
+        descendant.ancestor_nav_nodes
+        descendant.ancestor_navables
+        descendant.breadcrumbs
       end
     end
   end

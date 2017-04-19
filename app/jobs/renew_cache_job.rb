@@ -10,8 +10,6 @@ class RenewCacheJob < ApplicationJob
   end
 
   def perform(record_or_records, options)
-    options[:time] = Time.at(options[:time]) unless options[:time].kind_of? Time
-
     if record_or_records.respond_to? :each
       record_or_records.each { |record| perform_on_record(record, options) }
     else
@@ -21,7 +19,7 @@ class RenewCacheJob < ApplicationJob
 
   def perform_on_record(record, options)
     Rails.cache.running_from_background_job = true
-    print "Running RenewCacheJob for #{record.title if record.respond_to?(:title)} with #{options.to_s}.\n" unless Rails.env.test?
+    Sidekiq::Logging.logger.info "Running RenewCacheJob for #{record.title} with #{options.to_s}.\n" if Sidekiq::Logging.logger && (! Rails.env.test?)
     renew_cache(record, options)
     Rails.cache.running_from_background_job = false
   end
@@ -43,7 +41,7 @@ class RenewCacheJob < ApplicationJob
   end
 
   def self.perform_later(record_or_records, options = {})
-    options[:time] = (options[:time] || Time.zone.now).to_i
+    options[:time] ||= Time.zone.now
     options[:method] = options[:method].to_s
     super(record_or_records, options)
   end

@@ -1,3 +1,4 @@
+#Rails.application.config.active_job.queue_adapter = :inline
 Rails.application.config.active_job.queue_adapter = :sidekiq
 
 # We use a custom fetcher to process cache jobs in reverse order,
