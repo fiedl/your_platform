@@ -304,7 +304,7 @@ module ActiveRecordCacheExtension
 
         self.prepend caching_module
 
-        self.cached_methods += [method_name]
+        self.cached_methods = (self.cached_methods + [method_name]).uniq
       end
     end
 
