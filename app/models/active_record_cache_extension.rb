@@ -50,7 +50,7 @@ module ActiveRecordCacheExtension
     # This gives the method name that called the #cached method.
     # See: http://www.ruby-doc.org/core-2.1.2/Kernel.html
     #
-    if options[:method_name] && options[:arguments]
+    if options[:method_name] && options[:arguments] && options[:arguments].any?
       key = [options[:method_name], options[:arguments]]
     elsif options[:method_name]
       key = options[:method_name]
@@ -69,6 +69,10 @@ module ActiveRecordCacheExtension
     end
   end
   private :cached_block
+
+  def read_cached(method)
+    Rails.cache.read([self.cache_key, method])
+  end
 
   def new_caches_expire_in
     1.year

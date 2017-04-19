@@ -15,13 +15,24 @@ concern :NavableCaching do
 
     # If we change the title of the current navable, it will affect
     # the navigation of the descendants.
-    self.descendants.each do |descendant|
-      if descendant.respond_to? :ancestor_nav_nodes
-        Sidekiq::Logging.logger.info "#{self.title} # navable caching for #{descendant.title}" if Sidekiq::Logging.logger && (! Rails.env.test?)
+    #
+    # Check if the ancestor_navables of the first descendant change.
+    # If they don't, we can skip this part.
+    #
+    if self.descendants.first
+      ancestor_navables_from_cache = self.descendants.first.read_cached :ancestor_navables
+      new_ancestor_navables = self.descendants.first.ancestor_navables
 
-        descendant.ancestor_nav_nodes
-        descendant.ancestor_navables
-        descendant.breadcrumbs
+      if ancestor_navables_from_cache != new_ancestor_navables
+        self.descendants.each do |descendant|
+          if descendant.respond_to? :ancestor_nav_nodes
+            Sidekiq::Logging.logger.info "#{self.title} # navable caching for #{descendant.title}" if Sidekiq::Logging.logger && (! Rails.env.test?)
+
+            descendant.ancestor_nav_nodes
+            descendant.ancestor_navables
+            descendant.breadcrumbs
+          end
+        end
       end
     end
   end
