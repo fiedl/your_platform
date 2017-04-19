@@ -17,9 +17,9 @@ concern :NavableCaching do
     # the navigation of the descendants.
     self.descendants.each do |descendant|
       if descendant.respond_to? :ancestor_nav_nodes
-        descendant.ancestor_nav_nodes
-        descendant.ancestor_navables
-        descendant.breadcrumbs
+        descendant.fill_cached_method :ancestor_nav_nodes
+        descendant.fill_cached_method :ancestor_navables
+        descendant.fill_cached_method :breadcrumbs
       end
     end
   end

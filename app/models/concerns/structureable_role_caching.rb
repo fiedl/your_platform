@@ -53,7 +53,7 @@ concern :StructureableRoleCaching do
 
   def fill_cache_concerning_roles_for(methods)
     methods.each do |method|
-      self.send method
+      self.fill_cached_method method
     end
   end
 

@@ -131,8 +131,9 @@ module ActiveRecordCacheExtension
     end
   end
 
-  def renew_cache_later(time = Time.zone.now, options = {})
-    RenewCacheJob.perform_later(self, time: time, method: options[:method])
+  def renew_cache_later(options = {})
+    options[:time] ||= Rails.cache.renew_at || Time.zone.now
+    RenewCacheJob.perform_later(self, time: options[:time], method: options[:method])
   end
 
   # The default way to fill the cache is to call all methods
@@ -155,7 +156,7 @@ module ActiveRecordCacheExtension
   def fill_cached_method(method)
     if Rails.cache.running_from_background_job && Rails.cache.renew_at
       # When running from a background job, split it into sub-tasks.
-      self.renew_cache_later Rails.cache.renew_at, method: method
+      self.renew_cache_later method: method
     else
       self.send method
     end

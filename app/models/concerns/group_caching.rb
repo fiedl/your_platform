@@ -30,7 +30,16 @@ concern :GroupCaching do
 
   def fill_cache
     super
-    fill_cache_for_export_lists
+
+    # Using `fill_cached_method`, this is delegated to
+    # its own background job.
+    self.fill_cached_method :fill_cache_for_export_lists
+
+    # Also renew the member's titles in separate
+    # background jobs to avoid timeouts.
+    self.members.each do |user|
+      user.renew_cache_later method: :title
+    end
   end
 
   def fill_cache_for_export_lists
