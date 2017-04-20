@@ -1,6 +1,7 @@
 class RequestsController < ApplicationController
 
-  expose :requests, -> { Request.where(created_at: 1.month.ago..Time.zone.now) }
+  expose :requests, -> { Request.all }
+  expose :requests_of_last_24h, -> { Request.where(created_at: 1.day.ago..Time.zone.now) }
   expose :current_users, -> {
     User.find(Request.where(created_at: 5.minutes.ago..Time.zone.now).map(&:user_id).uniq)
   }

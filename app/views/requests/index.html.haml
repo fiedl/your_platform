@@ -1,7 +1,8 @@
 %h1 Requests
 %div
   #requests_chart
-    = line_chart requests.group_by_minute(:created_at).count
+    = line_chart requests_of_last_24h.group_by_minute(:created_at).count
+    = line_chart requests.group_by_day(:created_at).count
 
 %h1 Current users
 %div
