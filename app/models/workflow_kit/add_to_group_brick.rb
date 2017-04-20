@@ -15,7 +15,17 @@ module WorkflowKit
       user = User.find( params[ :user_id ] )
       group = Group.find( params[ :group_id ] )
 
-      group.assign_user user
+      membership = group.assign_user(user)
+
+      unless membership
+        # We don't want to stop the workflow here as other important steps
+        # would be skipped. But notify our ticket system.
+        begin
+          raise "Workflow brick AddToGroup for user #{params[:user_id]} and group #{params[:group_id]} has failed. No membership has been created."
+        rescue => exception
+          ExceptionNotifier.notify_exception(exception)
+        end
+      end
     end
   end
 end
