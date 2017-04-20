@@ -87,6 +87,7 @@ class NavNode < ActiveRecord::Base
     hidden = true if self.navable.kind_of? Event if hidden.nil?
     hidden = true if self.navable.title == I18n.t(:officers_parent) if hidden.nil?
     hidden = true if self.navable.kind_of?(Page) && (self.navable.type == "BlogPost")
+    hidden = true if self.navable.kind_of?(WorkflowKit::Workflow)
     hidden = false if hidden.nil?
     return hidden
   end

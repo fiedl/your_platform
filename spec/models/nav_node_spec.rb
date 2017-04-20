@@ -136,20 +136,9 @@ describe NavNode do
       before { @nav_node = create(:event).nav_node }
       it { should == true }
     end
-    #
-    # TODO: Later, when Workflows are Navables, use this:
-    #
-    # describe "for Workflows, by default" do
-    #   before { @nav_node = create(:workflow).nav_node }
-    #   it { should == true }
-    # end
-    #
-    # For the moment:
-    #
     describe "for Workflows, by default" do
-      specify "Workflows are not Navable at the moment, thus do not respond to #nav_node" do
-        create(:workflow).should_not respond_to :nav_node
-      end
+      before { @nav_node = create(:workflow).nav_node }
+      it { should == true }
     end
   end
 
