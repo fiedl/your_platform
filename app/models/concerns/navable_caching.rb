@@ -23,7 +23,7 @@ concern :NavableCaching do
       ancestor_navables_from_cache = self.descendants.first.read_cached :ancestor_navables
       new_ancestor_navables = self.descendants.first.ancestor_navables
 
-      if ancestor_navables_from_cache != new_ancestor_navables
+      if ancestor_navables_from_cache.try(:map, &:title) != new_ancestor_navables.try(:map, &:title)
         self.descendants.each do |descendant|
           if descendant.respond_to? :ancestor_nav_nodes
             Sidekiq::Logging.logger.info "#{self.title} # navable caching for #{descendant.title}" if Sidekiq::Logging.logger && (! Rails.env.test?)
