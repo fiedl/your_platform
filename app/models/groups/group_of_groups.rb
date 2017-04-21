@@ -14,5 +14,9 @@ class Groups::GroupOfGroups < Group
     Flag.where(flagable_type: "Group", flagable_id: descendant_groups.where(type: "OfficerGroup").pluck(:id)).pluck(:key).uniq
   end
 
+  def member_table_rows
+    []
+  end
+
   cache :child_groups_table_rows if use_caching?
 end
