@@ -135,6 +135,9 @@ require 'faker'
 # Contact form
 require 'mail_form'
 
+# API
+require 'apipie-rails'
+
 ::STAGE = "development" unless defined? ::STAGE
 
 module YourPlatform

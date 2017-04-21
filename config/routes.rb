@@ -242,6 +242,8 @@ Rails.application.routes.draw do
   end
 
 
+  apipie
+  get :api, to: 'apipie/apipies#index'
   namespace :api do
     namespace :v1 do
       get :sso, to: 'single_sign_on#sign_in'

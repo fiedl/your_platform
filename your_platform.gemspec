@@ -173,6 +173,9 @@ Gem::Specification.new do |s|
   # Contact form
   s.add_dependency 'mail_form'
 
+  # API
+  s.add_dependency 'apipie-rails', '~> 0.4.0'
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'

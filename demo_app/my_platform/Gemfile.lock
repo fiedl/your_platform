@@ -13,6 +13,7 @@ PATH
       acts-as-dag (>= 2.5.7)
       acts-as-taggable-on (~> 4.0)
       acts_as_tree
+      apipie-rails
       auto_html (~> 1.6.4)
       autosize-rails
       bcrypt (>= 3.0.1)
@@ -147,6 +148,8 @@ GEM
       activerecord (>= 3.0.0)
     addressable (2.4.0)
     ambry (1.0.0)
+    apipie-rails (0.5.0)
+      rails (>= 4.1)
     arel (6.0.3)
     auto_html (1.6.4)
       redcarpet (~> 3.1)
@@ -470,7 +473,7 @@ GEM
     rails-assets-bootstrap-social (5.1.1)
       rails-assets-bootstrap (~> 3)
       rails-assets-font-awesome (~> 4.7)
-    rails-assets-datatables (1.10.13)
+    rails-assets-datatables (1.10.15)
       rails-assets-jquery (>= 1.7.0)
     rails-assets-font-awesome (4.7.0)
     rails-assets-inline-attachment (2.0.3)
