@@ -248,6 +248,10 @@ Rails.application.routes.draw do
     namespace :v1 do
       get :sso, to: 'single_sign_on#sign_in'
       namespace :public do
+        resources :groups do
+          resources :events
+        end
+        resources :events
       end
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
