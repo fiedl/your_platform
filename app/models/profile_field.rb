@@ -46,6 +46,11 @@ class ProfileField < ActiveRecord::Base
   has_many_flags
 
 
+  def title
+    "#{profileable.try(:title)}: #{label} = #{value}"
+  end
+
+
   # Often, profile_fields are to be displayed in a certain manner on a HTML page.
   # This method returns the profile_field's value as HTML code in the way
   # the profile_field should be displayed.
