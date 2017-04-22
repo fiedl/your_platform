@@ -89,7 +89,7 @@ class PagesController < ApplicationController
 private
 
   def page_params
-    params.require(:page).permit(:content, :title, :teaser_text, :redirect_to, :author, :author_title, :tag_list, :teaser_image_url, :archived, :type)
+    params.require(:page).permit(:content, :title, :teaser_text, :redirect_to, :author, :author_title, :tag_list, :teaser_image_url, :archived, :type, :permalinks_list)
   end
 
   def find_resource_by_permalink
