@@ -10,6 +10,16 @@ class ApplicationJob < ActiveJob::Base
     end
   end
 
+  rescue_from Timeout::Error do |exception|
+    if self.queue_name.to_s == 'cache'
+      retry_job(wait: 1, queue: :slow)
+    elsif self.queue_name.to_s == 'slow'
+      retry_job(wait: 1, queue: :retry)
+    else
+      raise exception
+    end
+  end
+
   rescue_from ActiveJob::DeserializationError do |exception|
     if self.queue_name.to_s == 'retry'
       # Skip this job. The record has been deleted in the meantime.
@@ -20,6 +30,15 @@ class ApplicationJob < ActiveJob::Base
     end
   end
 
+  def with_timeout
+    if self.queue_name.to_s == "cache"
+      Timeout::timeout(15.seconds) { yield }
+    elsif self.queue_name.to_s == "slow"
+      Timeout::timeout(15.minutes) { yield }
+    else
+      yield
+    end
+  end
 
   # This patch tries to fix "(ArgumentError) "wrong number of arguments (given 0, expected 2)".
   #

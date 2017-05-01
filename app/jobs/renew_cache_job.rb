@@ -25,17 +25,19 @@ class RenewCacheJob < ApplicationJob
   end
 
   def renew_cache(record, options)
-    if record
-      if options[:method].present?
-        Rails.cache.renew(options[:time]) { record.send(options[:method]) if record.respond_to?(options[:method]) }
-      elsif options[:methods]
-        Rails.cache.renew(options[:time]) do
-          options[:methods].each do |method|
-            record.send(method) if record.respond_to?(method)
+    with_timeout do
+      if record
+        if options[:method].present?
+          Rails.cache.renew(options[:time]) { record.send(options[:method]) if record.respond_to?(options[:method]) }
+        elsif options[:methods]
+          Rails.cache.renew(options[:time]) do
+            options[:methods].each do |method|
+              record.send(method) if record.respond_to?(method)
+            end
           end
+        else
+          record.renew_cache #(options[:time])
         end
-      else
-        record.renew_cache #(options[:time])
       end
     end
   end
