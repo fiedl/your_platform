@@ -20,8 +20,10 @@ concern :DagLinkRepair do
       recalculate_indirect_counts
       # # We don't need this as this is already done in `after_save`
       # # when doing `recalculate_indirect_counts`.
-      #
-      # recalculate_indirect_validity_ranges
+      # #
+      # # Yes, we do; or only the memberships with wrong count will also
+      # # be fixed in regard for the validity range.
+      recalculate_indirect_validity_ranges
     end
 
     def fix_types
