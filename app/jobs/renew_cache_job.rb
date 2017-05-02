@@ -36,7 +36,7 @@ class RenewCacheJob < ApplicationJob
             end
           end
         else
-          record.renew_cache #(options[:time])
+          record.renew_cache (options[:time])
         end
       end
     end

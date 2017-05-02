@@ -35,6 +35,10 @@ feature "Attachments" do
       login @user
     end
     scenario "download the attachment", :js do
+
+      # FIXME: This should not be neccessary. Above (requirements), this succeeds.
+      wait_until { @attachment.parent.uncached(:group); @attachment.parent.group == @group }
+
       visit @attachment.file.url
       page.should have_content I18n.t(:access_denied)
     end

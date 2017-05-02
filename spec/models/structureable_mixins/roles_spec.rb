@@ -141,6 +141,7 @@ describe StructureableMixins::Roles do
       describe "after changing an ancestor's admins" do
         before do
           @my_structureable.admins_of_self_and_ancestors  # creates the cache
+          wait_for_cache # otherwise, the time stamps are the same and the cache won't be changed
           @ancestor1.unassign_admin @admin1
           @my_structureable.reload
           wait_for_cache # try to get it to work on travis.
