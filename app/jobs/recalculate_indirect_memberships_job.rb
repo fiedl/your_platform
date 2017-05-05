@@ -10,7 +10,7 @@
 class RecalculateIndirectMembershipsJob < ApplicationJob
   queue_as :dag_links
 
-  def perform(direct_membership)
-    direct_membership.recalculate_indirect_validity_ranges
+  def perform(membership)
+    membership.recalculate_validity_range
   end
 end
