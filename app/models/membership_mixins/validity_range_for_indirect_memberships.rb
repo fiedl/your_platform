@@ -98,6 +98,14 @@ module MembershipMixins::ValidityRangeForIndirectMemberships
     end
   end
 
+  def recalculate_validity_range
+    if self.direct?
+      self.recalculate_indirect_validity_ranges
+    else
+      self.recalculate_validity_range_from_direct_memberships
+    end
+  end
+
 
   # Invalidation
   # ====================================================================================================
