@@ -251,7 +251,21 @@ class Membership < DagLink
     self.move_to_group( new_group, options )
   end
 
-
 end
 
-
+# In order to have auto-loading of sti classes work correctly,
+# we need to require the descendant classes of `Membership` here.
+# Otherwise, calls like `Membership.all` won't include instances
+# of the subclasses like `Memberships::Status` if they haven't
+# been used previously.
+#
+# This has caused a serious bug previously, which is discussed in:
+# https://trello.com/c/VvY1q6Cs/1127-strange-validity-ranges
+#
+# See also:
+#
+# - http://guides.rubyonrails.org/autoloading_and_reloading_constants.html#autoloading-and-sti
+# - http://stackoverflow.com/q/3245838/2066546
+# - http://stackoverflow.com/q/18506933/2066546
+#
+require 'memberships/status'
