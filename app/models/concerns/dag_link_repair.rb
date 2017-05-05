@@ -59,6 +59,15 @@ concern :DagLinkRepair do
       end
     end
 
+    def recalculate_indirect_validity_ranges_later
+      dag_links = DagLink.where(ancestor_type: "Group", descendant_type: "User", direct: false)
+      print "\nCreating #{dag_links.count} background jobs ...\n".blue
+      dag_links.each do |membership|
+        RecalculateIndirectMembershipsJob.perform_later(membership)
+      end
+      print "Done.\n".green
+    end
+
     class RedundantLinkRepairer
 
       def self.scan_and_repair
