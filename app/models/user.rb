@@ -563,7 +563,7 @@ class User < ActiveRecord::Base
 
   def workflows_for(group)
     (([group.becomes(Group)] + group.descendant_groups) & self.groups)
-      .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten
+      .collect { |g| g.child_workflows }.select { |w| not w.nil? }.flatten.uniq
   end
 
   def workflows_by_corporation

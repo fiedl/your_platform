@@ -10,6 +10,12 @@ class Workflows::StatusWorkflowsController < ApplicationController
 
     @workflow.execute(params)
 
+    # Recalculating the validity range is usually done by a background
+    # worker later. But, we need this here in order to determine the
+    # correct available workflows before returning the result.
+    # See: https://trello.com/c/yDbXjQMD/1118
+    @user.memberships(true).direct.with_past.order(:valid_to).last.recalculate_validity_range
+
     Rails.cache.renew do
       @user.status
       @user.workflows_by_corporation

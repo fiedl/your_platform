@@ -144,7 +144,7 @@ class Group < ApplicationRecord
   end
 
   def child_workflows
-   self.descendant_workflows.where( :dag_links => { direct: true } )
+    self.descendant_workflows.where( :dag_links => { direct: true } )
   end
 
 

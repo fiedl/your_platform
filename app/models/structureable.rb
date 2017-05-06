@@ -158,6 +158,10 @@ module Structureable
           self.events << object unless self.events.include? object
         elsif object.kind_of? Project
           self.child_projects << object unless self.child_projects.include? object
+        elsif object.kind_of? WorkflowKit::Workflow
+          # # This does not work since `child_workflows` is no real association:
+          # self.child_workflows << object unless self.child_workflows.include? object
+          object.parent_groups << self unless object.parent_groups.include? self
         elsif object.nil?
           raise "Something is wrong! You've tried to add nil."
         else
