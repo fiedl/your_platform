@@ -35,7 +35,11 @@ class Page < ActiveRecord::Base
   # for the 'imprint' page.
   #
   def title
-    super.present? ? super : I18n.translate(self.flags.first, default: '')
+    if defined?(super) && super.present?
+      super
+    else
+      I18n.translate(self.flags.first, default: '')
+    end
   end
   def to_s
     title
