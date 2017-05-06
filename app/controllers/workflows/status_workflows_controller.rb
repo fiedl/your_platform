@@ -10,7 +10,10 @@ class Workflows::StatusWorkflowsController < ApplicationController
 
     @workflow.execute(params)
 
-    Rails.cache.renew { @user.status }
+    Rails.cache.renew do
+      @user.status
+      @user.workflows_by_corporation
+    end
 
     activity = log_public_activity_for_user
     Notification.create_from_status_workflow(@workflow, @user, current_user)
