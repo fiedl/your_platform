@@ -2,7 +2,7 @@
 %div
   %ul
     - if group
-      - for membership in group.latest_memberships.first(3)
+      - for membership in group.latest_memberships.order(valid_from: :desc).first(3)
         %li
           = "#{link_to(membership.user.title, membership.user)},".html_safe
           - if membership.valid_from
