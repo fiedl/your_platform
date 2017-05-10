@@ -64,6 +64,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'acts-as-taggable-on', '~> 4.0'
 
   # Caching
+  s.add_dependency 'redis', '>= 3.3.3'
   s.add_dependency 'redis-rails'
   s.add_dependency 'redis-namespace'
 
