@@ -73,6 +73,7 @@ class User < ActiveRecord::Base
   include UserDocuments
   include UserGeoSearch
   include UserLocation
+  include UserPostalSubscriptions
 
   # General Properties
   # ==========================================================================================
