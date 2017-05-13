@@ -5,11 +5,11 @@ concern :UserPostalSubscriptions do
   end
 
   def local_postal_mail_subscription
-    local_postal_mail_subscribed_at
+    local_postal_mail_subscribed_at && true || false
   end
 
   def local_postal_mail_subscription=(activate_subscription)
-    if activate_subscription
+    if activate_subscription == true || activate_subscription == "true"
       self.local_postal_mail_subscribed_at = Time.zone.now
     else
       self.local_postal_mail_subscribed_at = nil

@@ -81,6 +81,8 @@ de:
   remove_avatar:                 Hochgeladenes Profilbild entfernen
   uploading_avatar:              Profilbild wird hochgeladen. Bitte warten.
 
+  local_postal_mail_subscription: Ich möchte Sendungen meiner Ortsgruppen per Post erhalten
+
   formtastic:
     labels:
       first_address_line:        Erste Adresszeile

@@ -1,0 +1,8 @@
+%span.label-wrapper
+  %span.attribute-label= t :local_postal_mail_subscription
+%span.value-wrapper
+  %span.attribute-value
+    - if can? :update, @user
+      = best_in_place @user, :local_postal_mail_subscription, as: :select, collection: [[false, I18n.t("no")], [true, I18n.t("yes")]]
+    - else
+      = @user.local_postal_mail_subscription ? t(:yes) : t(:no)
