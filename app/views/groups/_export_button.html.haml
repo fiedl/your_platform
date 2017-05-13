@@ -25,6 +25,11 @@
         = link_to group_address_labels_path(group, :format => :pdf, pdf_type: 'zweckform', filter: 'without_email'), :class => "address_labels_export_button #{trigger_class}" do
           = icon :th
           Etiketten (Zweckform 3475) für Mitglieder ohne E-Mail-Adresse
+      %li.export_address_labels{data: {modal_body: render(partial: 'groups/address_labels_modal')}}
+        = link_to group_address_labels_path(group, :format => :pdf, pdf_type: 'zweckform', filter: 'with_local_postal_mail_subscription'), :class => "address_labels_export_button #{trigger_class}" do
+          = icon :th
+          Etiketten (Zweckform 3475)
+          = t :for_users_with_local_postal_mail_subscription
       - if current_locale.to_s == 'de'
         %li.indent
           %a{href: "https://amzn.to/2gPzBmu"}

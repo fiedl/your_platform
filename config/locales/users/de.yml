@@ -82,6 +82,7 @@ de:
   uploading_avatar:              Profilbild wird hochgeladen. Bitte warten.
 
   local_postal_mail_subscription: Ich möchte Sendungen meiner Ortsgruppen per Post erhalten
+  for_users_with_local_postal_mail_subscription: für Personen, die Sendungen der Ortsgruppen per Post erhalten möchten
 
   formtastic:
     labels:

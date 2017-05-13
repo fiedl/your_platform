@@ -799,6 +799,8 @@ class User < ActiveRecord::Base
   def self.apply_filter(filter)
     if filter && filter.include?("without_email")
       self.without_email
+    elsif filter && filter.include?("with_local_postal_mail_subscription")
+      self.with_local_postal_mail_subscription
     else
       self.all
     end

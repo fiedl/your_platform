@@ -153,7 +153,7 @@ class Group < ApplicationRecord
   #   - sender:      Sender line including sender address.
   #   - book_rate:   Whether the "Büchersendung"/"Envois à taxe réduite" badge
   #                  is to be printed.
-  #   - filter:      ["without_email"]
+  #   - filter:      ["without_email", "with_local_postal_mail_subscription"]
   #
   def members_to_pdf(options = {sender: '', book_rate: false, type: "AddressLabelsPdf"})
     @filter = options[:filter]
