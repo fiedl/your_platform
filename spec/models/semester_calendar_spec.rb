@@ -22,6 +22,7 @@ describe SemesterCalendar do
     describe "for corporations with subgroups" do
       before do
         @subgroup = @corporation.child_groups.create name: "Subgroup"
+        wait_for_cache
         @sub_event = @subgroup.events.create name: "Clean-up after BBQ", start_at: @event.start_at + 6.hours
         @semester_calendar.reload.events(true)
       end
