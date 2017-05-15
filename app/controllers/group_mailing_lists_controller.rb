@@ -3,7 +3,7 @@ class GroupMailingListsController < ApplicationController
 
   def index
     @group = Group.find params[:group_id]
-    authorize! :manage, @group
+    authorize! :manage_mailing_lists_for, @group
 
     @email_address_fields = @group.profile_fields.where(type: 'ProfileFields::MailingListEmail')
 
