@@ -92,8 +92,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-settings-cached', '>= 0.6.5'
 
   # Template Engines
-  # haml template language, http://haml.info
-  s.add_dependency 'haml'                                                              # MIT License
+  s.add_dependency 'haml', '~> 4.0' # NameError: undefined method `precompiled_method_return_value' for class `Haml::Compiler', https://github.com/fiedl/wingolfsplattform/commit/bad4932ce2e611b2a8d7015e20dcfd18e0a376d4
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   s.add_dependency 'auto_html', '~> 1.6.4'

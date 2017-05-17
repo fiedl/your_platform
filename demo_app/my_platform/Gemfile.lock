@@ -43,7 +43,7 @@ PATH
       gmaps4rails (= 2.0.2)
       gravatar_image_tag
       groupdate
-      haml
+      haml (~> 4.0)
       has_secure_token
       i18n-js (>= 3.0.0.rc8)
       icalendar
