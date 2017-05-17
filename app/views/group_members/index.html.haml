@@ -16,6 +16,11 @@
   %h1.section.members
     = current_title
     %span.members_count (#{member_table_rows.count})
+    - if can? :use, :term_reports
+      .tool.term_reports
+        = link_to group_term_report_path(group), class: 'btn btn-default' do
+          = fa_icon 'bar-chart'
+          = t(:term_report)
   %div
     = render partial: 'groups/export_button'
     - if can? :update_members, group

@@ -237,6 +237,10 @@ $(document).ready ->
     ]
   }
 
+  App.datatables.create '.datatable.corporation_score', {
+    "pageLength": 10,
+    "order": [[$('.datatable.corporation_score tbody tr:first td').size() - 1, "desc"]],
+  }
 
   App.datatables.create '.datatable.bv_mappings', {
     "pageLength": 25,

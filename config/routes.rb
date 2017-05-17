@@ -90,6 +90,7 @@ Rails.application.routes.draw do
     get :memberships, to: 'memberships#index'
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
+    get :term_report, to: 'term_reports#show'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
   end
@@ -141,6 +142,8 @@ Rails.application.routes.draw do
   end
 
   get :term_report, to: 'term_reports#show', as: :search_term_report
+
+  get :scores, to: 'corporation_scores#index', as: :corporation_scores
 
   post :create_officers_group, to: 'officers#create_officers_group'
 

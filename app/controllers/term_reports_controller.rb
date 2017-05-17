@@ -24,6 +24,8 @@ class TermReportsController < ApplicationController
       TermReport.find (params[:id] || params[:term_report_id])
     elsif term && corporation
       TermReports::ForCorporation.by_corporation_and_term corporation, term
+    elsif corporation
+      TermReports::ForCorporation.by_corporation_and_term corporation, Term.current.first
     end
   }
 
@@ -35,8 +37,13 @@ class TermReportsController < ApplicationController
     #
     redirect_to(term_report_path(id: term_report.id)) unless params[:id]
 
-    set_current_navable term_report.group
     set_current_title term_report.title
+    set_current_breadcrumbs [
+      {title: Page.intranet_root.title, path: root_path},
+      {title: t(:term_reports), path: term_reports_path},
+      {title: term_report.group.name, path: group_members_path(term_report.group)},
+      {title: term_report.term.title}
+    ]
   end
 
   expose :term_reports, -> { term.try(:term_reports) || TermReport.all }

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170327234550) do
+ActiveRecord::Schema.define(version: 20170517204057) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -464,17 +464,27 @@ ActiveRecord::Schema.define(version: 20170327234550) do
   end
 
   create_table "term_reports", force: :cascade do |t|
-    t.integer  "term_id",                   limit: 4
-    t.integer  "group_id",                  limit: 4
-    t.integer  "number_of_members",         limit: 4
-    t.integer  "number_of_new_members",     limit: 4
-    t.integer  "number_of_membership_ends", limit: 4
-    t.integer  "number_of_deaths",          limit: 4
-    t.integer  "number_of_events",          limit: 4
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.integer  "balance",                   limit: 4
-    t.string   "type",                      limit: 255
+    t.integer  "term_id",                           limit: 4
+    t.integer  "group_id",                          limit: 4
+    t.integer  "number_of_members",                 limit: 4
+    t.integer  "number_of_new_members",             limit: 4
+    t.integer  "number_of_membership_ends",         limit: 4
+    t.integer  "number_of_deaths",                  limit: 4
+    t.integer  "number_of_events",                  limit: 4
+    t.datetime "created_at",                                                   null: false
+    t.datetime "updated_at",                                                   null: false
+    t.integer  "balance",                           limit: 4
+    t.string   "type",                              limit: 255
+    t.integer  "number_of_status_changes",          limit: 4
+    t.integer  "number_of_good_events",             limit: 4
+    t.integer  "number_of_events_with_pictures",    limit: 4
+    t.integer  "number_of_semester_calendars",      limit: 4
+    t.integer  "number_of_semester_calendar_pdfs",  limit: 4
+    t.integer  "number_of_current_officers",        limit: 4
+    t.integer  "number_of_documents",               limit: 4
+    t.integer  "number_of_good_member_profiles",    limit: 4
+    t.integer  "number_of_current_member_profiles", limit: 4
+    t.decimal  "score",                                         precision: 10
   end
 
   create_table "terms", force: :cascade do |t|

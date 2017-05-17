@@ -33,6 +33,10 @@ class Event < ActiveRecord::Base
     end
   end
 
+  def public?
+    publish_on_local_website || publish_on_global_website
+  end
+
   # This is used to find the event's place in the navigational structure.
   #
   def parent

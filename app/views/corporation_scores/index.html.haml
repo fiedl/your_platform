@@ -1,0 +1,20 @@
+%h1= current_title
+%div
+  .term
+    = "#{t(:term)}: "
+    = term.title
+
+  %table.datatable.corporation_score
+    %thead
+      %tr
+        %th{rowspan: 2}= t :corporation
+        %th{colspan: CorporationScore.score_columns.count}= t :score_for
+      %tr
+        - CorporationScore.score_columns.each do |column|
+          %th= t column
+    %tbody
+      - corporation_scores.each do |corporation_score|
+        %tr
+          %td= corporation_score.title
+          - CorporationScore.score_columns.each do |column|
+            %td= corporation_score.send column
