@@ -109,7 +109,7 @@ $(document).ready ->
   # The fields can be edited separately by clicking on them
   # (best_in_place).
   #
-  $('body.events * .edit_button').hide()
+  $('body.events .box.first .edit_button').hide()
   $('.box.upcoming_events * .edit_button').hide()
 
   #$('body.events * .start_at * input').lock()

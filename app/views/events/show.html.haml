@@ -13,7 +13,7 @@
   = render partial: 'events/event_details'
 
 .hidden-xs
-  = render partial: 'events/pictures'
+  = render partial: 'events/attachments', locals: {event: @event}
 
 %h1=t :attendees
 %div#attendees
