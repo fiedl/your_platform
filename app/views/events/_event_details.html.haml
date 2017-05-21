@@ -22,7 +22,7 @@
   - if @event && current_navable == @event
     %tr.contact_people
       %th=t :contact_people
-      %td
+      %td.obscure-in-demo
         - if can? :update, event
           = multiple_users_best_in_place event.contact_people_group, :direct_members_titles_string, activator: true
         - else
