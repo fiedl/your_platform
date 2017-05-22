@@ -53,6 +53,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-trentrichardson--jQuery-Timepicker-Addon', '>= 1.6.3'
   s.add_dependency 'bootstrap_tokenfield_rails'
   s.add_dependency 'rails-assets-inline-attachment'
+  s.add_dependency 'webpacker'
 
   # Data Structures
   # Retry transactions: Rescue from deadlocks.

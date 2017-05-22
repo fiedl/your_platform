@@ -62,6 +62,7 @@ require 'rails-assets-datatables'
 require 'rails-assets-trentrichardson--jQuery-Timepicker-Addon'
 require 'bootstrap_tokenfield_rails'
 require 'rails-assets-inline-attachment'
+require 'webpacker'
 
 # Layout: Twitter Bootstrap
 require 'font-awesome-rails'

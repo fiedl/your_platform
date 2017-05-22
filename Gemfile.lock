@@ -99,6 +99,7 @@ PATH
       vcardigan
       wannabe_bool
       web-console (>= 2.1.3)
+      webpacker
       will_paginate (> 3.0)
 
 GEM
@@ -680,6 +681,10 @@ GEM
     web-console (3.1.1)
       activemodel (>= 4.2)
       debug_inspector
+      railties (>= 4.2)
+    webpacker (1.2)
+      activesupport (>= 4.2)
+      multi_json (~> 1.2)
       railties (>= 4.2)
     websocket (1.2.4)
     websocket-driver (0.6.4)
