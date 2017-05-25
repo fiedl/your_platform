@@ -1,0 +1,9 @@
+{
+  "name": "your_platform",
+  "version": "1.0.1",
+  "description": "Administrative and social network platform for closed user groups.",
+  "main": "index.js",
+  "repository": "git@github.com:fiedl/your_platform.git",
+  "author": "Sebastian Fiedlschuster <github@fiedlschuster.de>",
+  "license": "AGPL"
+}
