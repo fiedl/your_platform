@@ -49,7 +49,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'turbolinks', '>= 5.0'
   s.add_dependency 'jquery-turbolinks'
   s.add_dependency 'turboboost'
-  s.add_dependency 'rails-assets-datatables', '>= 1.10.10'
   s.add_dependency 'rails-assets-trentrichardson--jQuery-Timepicker-Addon', '>= 1.6.3'
   s.add_dependency 'bootstrap_tokenfield_rails'
   s.add_dependency 'rails-assets-inline-attachment'

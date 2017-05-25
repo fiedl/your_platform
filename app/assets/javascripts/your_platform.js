@@ -15,7 +15,7 @@
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
 //= require refile
-//= require datatables
+//= require datatables/media/js/jquery.dataTables
 //= require galleria
 //= require galleria-classic
 //= require underscore

@@ -5,5 +5,8 @@
   "main": "index.js",
   "repository": "git@github.com:fiedl/your_platform.git",
   "author": "Sebastian Fiedlschuster <github@fiedlschuster.de>",
-  "license": "AGPL"
+  "license": "AGPL",
+  "dependencies": {
+    "datatables": "^1.10.13"
+  }
 }
