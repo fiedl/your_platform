@@ -17,12 +17,17 @@ env:
 cache:
   - bundler
   - yarn
+dist: trusty
 sudo: false
 addons:
   apt:
+    sources:
+      - sourceline: 'deb https://dl.yarnpkg.com/debian/ stable main'
+        key_url: 'https://dl.yarnpkg.com/debian/pubkey.gpg'
     packages:
       - pwgen
       - libicu-dev
+      - yarn
 services:
   - redis-server
   - elasticsearch
