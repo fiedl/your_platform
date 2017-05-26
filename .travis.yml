@@ -15,19 +15,17 @@ env:
   - "RSPEC_RERUN_PATTERN=./spec/models/[tvwxyz]* CI_CATEGORY=models DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/uploaders/*_spec.rb CI_CATEGORY=uploaders DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
 cache:
-  - bundler
-  - yarn
+  bundler: true
+  directories:
+    - node_modules
+  yarn: true
 dist: precise
 sudo: false
 addons:
   apt:
-    sources:
-      - sourceline: 'deb https://dl.yarnpkg.com/debian/ stable main'
-        key_url: 'https://dl.yarnpkg.com/debian/pubkey.gpg'
     packages:
       - pwgen
       - libicu-dev
-      - yarn
 services:
   - redis-server
   - elasticsearch
@@ -36,6 +34,11 @@ before_install:
   - travis_retry gem install bundler
 install:
   - travis_retry bundle install
+  - bundle install
+  - nvm install node
+  - node -v
+  - npm i -g yarn
+  - yarn
 before_script:
   - sleep 10
   - cd demo_app/my_platform
