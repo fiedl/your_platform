@@ -17,7 +17,7 @@ env:
 cache:
   - bundler
   - yarn
-dist: trusty
+dist: precise
 sudo: false
 addons:
   apt:
