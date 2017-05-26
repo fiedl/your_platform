@@ -31,7 +31,6 @@ before_install:
   - travis_retry gem install bundler
 install:
   - travis_retry bundle install
-  - cd demo_app/my_platform && rake your_platform:install:node_modules || echo 'task not found'
 before_script:
   - sleep 10
   - cd demo_app/my_platform
@@ -40,6 +39,7 @@ before_script:
   - mkdir -p public/uploads
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate
+  - rake your_platform:install:node_modules || echo 'task not found'
   - bundle exec rake assets:precompile 2>/dev/null
   - cd ../..
 script:
