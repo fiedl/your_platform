@@ -2,7 +2,7 @@ class CorporationScoresController < ApplicationController
 
   expose :term, -> { Term.current.first }
   expose :term_reports, -> { term.term_reports }
-  expose :corporation_scores, -> { term_reports.where('score > 0').collect { |report| report.becomes(CorporationScore) } }
+  expose :corporation_scores, -> { term_reports.where('score > 0').order('score desc').collect { |report| report.becomes(CorporationScore) } }
 
   def index
     authorize! :index, :corporation_scores
