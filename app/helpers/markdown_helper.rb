@@ -6,7 +6,7 @@ module MarkdownHelper
   #   * http://daringfireball.net/projects/markdown/syntax
   #
   def markdown(text, options = nil)
-    markdown_options = options || {autolink: true, no_intra_emphasis: true, fenced_code: true, gh_blockcode: true}
+    markdown_options = options || {autolink: true, no_intra_emphasis: true, fenced_code_blocks: true}
     renderer_options = options || {hard_wrap: true, filter_html: false}
     rendered_html = Redcarpet::Markdown.new(Redcarpet::Render::HTML.new(renderer_options), markdown_options).render(text || "").html_safe
 

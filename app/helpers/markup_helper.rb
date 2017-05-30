@@ -12,7 +12,7 @@ module MarkupHelper
   def markup(text)
     if text
       unless text.downcase.include?("<html>") or text.downcase.include?("<html ")
-        emojify markdown replace_quick_link_tags mentionify youtubify sanitize text
+        emojify markdown replace_quick_link_tags mentionify youtubify text
       else
         strip_escaped_comments sanitize text
       end

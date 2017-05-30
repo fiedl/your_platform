@@ -13,3 +13,5 @@ $(document).ready ->
     App.galleries.process($(this))
 
     afterglow.init() if afterglow?
+
+    App.code_highlighting.process($(this))
