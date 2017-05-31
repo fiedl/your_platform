@@ -15,5 +15,7 @@ Rails.application.config.assets.precompile += %w( aiga_immigration.png )
 # Include node modules where javascript stuff lives.
 # http://nithinbekal.com/posts/yarn-rails/
 #
-Rails.application.config.assets.paths << YourPlatform::Engine.root.join('node_modules')
 Rails.application.config.assets.paths << YourPlatform::Engine.root.join('app/javascripts')
+Rails.application.config.assets.paths << YourPlatform::Engine.root.join('vendor/packs')
+Rails.application.config.assets.paths << YourPlatform::Engine.root.join('node_modules')
+

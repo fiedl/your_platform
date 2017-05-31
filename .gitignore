@@ -97,3 +97,4 @@ rspec.failures
 
 /node_modules
 /public/packs
+/vendor/packs

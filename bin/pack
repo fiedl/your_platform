@@ -1,0 +1,12 @@
+#!/bin/bash
+
+echo "This installs packaes with yarn and packs them with webpack."
+echo "Run this script after adding something with yarn."
+echo "Expose something to the global namespace in app/javascripts/your_platform_node_modules.js."
+echo "Webpack configuration is in config/webpack.config.js."
+echo ""
+
+yarn install
+./node_modules/.bin/webpack --config config/webpack.config.js
+
+echo "Done."

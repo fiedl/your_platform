@@ -17,8 +17,6 @@
 //= require refile
 //= require datatables/media/js/jquery.dataTables
 //= require pretty_pre
-//= require highlight.js/lib/highlight
-//= require_tree ../../../node_modules/highlight.js/lib/languages
 //= require galleria
 //= require galleria-classic
 //= require underscore
@@ -33,6 +31,8 @@
 //= require bootstrap-tokenfield
 //= require inline-attachment/inline-attachment
 //= require inline-attachment/jquery.inline-attachment
+//
+//= require your_platform_node_modules.pack
 //= require_tree ./your_platform
 //
 //= require turbolinks
