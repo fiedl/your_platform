@@ -11,7 +11,8 @@ class RootController < ApplicationController
     set_current_access_text :the_content_of_the_start_page_is_personalized
     set_current_tab :news
 
-    @announcement_page = Page.find_or_create_by_flag :site_announcement
+    @pinned_objects = Event.flagged(:pinned) + Page.flagged(:pinned)
+
     @hide_attachment_drop_fields = true
 
     @view_setting = view_setting

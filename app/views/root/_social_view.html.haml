@@ -1,7 +1,5 @@
 .row
   .col-sm-3.pull-right.side-col
-    - if (@announcement_page.content && @announcement_page.content.length > 5) or can?(:update, @announcement_page)
-      = render @announcement_page
     = render partial: 'root/start_page_elements'
     = render @page
     %h1= app_name
