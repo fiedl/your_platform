@@ -17,7 +17,8 @@
 //= require refile
 //= require datatables/media/js/jquery.dataTables
 //= require pretty_pre
-//= require highlight/highlight.pack
+//= require highlight.js/lib/highlight
+//= require_tree ../../../node_modules/highlight.js/lib/languages
 //= require galleria
 //= require galleria-classic
 //= require underscore

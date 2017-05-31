@@ -7,6 +7,7 @@
   "author": "Sebastian Fiedlschuster <github@fiedlschuster.de>",
   "license": "AGPL",
   "dependencies": {
-    "datatables": "^1.10.13"
+    "datatables": "^1.10.13",
+    "highlight.js": "^9.12.0"
   }
 }
