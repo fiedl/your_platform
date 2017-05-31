@@ -4,7 +4,7 @@ class App.CodeHighlighting
     root_element.find('pre code').each (i, block)->
       unless $(block).hasClass('')
         $(block).prettyPre()
-        hljs.highlightBlock(block)
+        App.hljs.highlightBlock(block)
 
 App.code_highlighting = new App.CodeHighlighting()
 
