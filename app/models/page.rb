@@ -16,6 +16,7 @@ class Page < ActiveRecord::Base
   include PagePublicWebsite
   include Archivable
   include HasPermalinks
+  include RelatedPages
 
   scope :for_display, -> { not_archived.includes(:ancestor_users,
     :ancestor_events, :author, :parent_pages,

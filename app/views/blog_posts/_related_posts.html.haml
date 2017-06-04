@@ -1,0 +1,10 @@
+- related_posts ||= blog_post.related_blog_posts.limit(4)
+- if related_posts.to_a.any?
+  %h4=t :related_posts
+  .related-posts
+    .col_half
+      = render partial: 'blog_posts/related_post', object: related_posts[0], as: :related_post
+      = render partial: 'blog_posts/related_post', object: related_posts[2], as: :related_post if related_posts[2]
+    .col_half.col_last
+      = render partial: 'blog_posts/related_post', object: related_posts[1], as: :related_post if related_posts[1]
+      = render partial: 'blog_posts/related_post', object: related_posts[3], as: :related_post if related_posts[3]

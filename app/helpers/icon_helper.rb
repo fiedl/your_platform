@@ -64,4 +64,8 @@ module IconHelper
     awesome_icon(:paperclip)
   end
 
+  def calendar_icon
+    fa_icon(:calendar)
+  end
+
 end

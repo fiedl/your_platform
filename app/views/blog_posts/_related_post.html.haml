@@ -1,0 +1,11 @@
+.mpost
+  .entry-image= render partial: 'blog_posts/image', object: related_post, as: :blog_post
+  .entry-c
+    .entry-title
+      %h4= link_to related_post.title, related_post
+    %ul.entry-meta.clearfix
+      %li
+        = calendar_icon
+        = localize related_post.created_at.to_date
+    .entry-content
+      = related_post.teaser_text
