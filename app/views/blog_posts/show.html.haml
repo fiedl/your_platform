@@ -1,7 +1,9 @@
 .single-post
   = render @blog_post
 
+  = render partial: 'blog_posts/tag_cloud', locals: {blog_post: @blog_post}
+  = render partial: 'blog_posts/related_posts', locals: {blog_post: @blog_post}
+
   #comments.blog_post_comments
     = render partial: 'comments/comments', locals: {commentable: @blog_post}
 
-  = render partial: 'blog_posts/related_posts', locals: {blog_post: @blog_post}

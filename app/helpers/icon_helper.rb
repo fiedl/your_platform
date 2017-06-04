@@ -68,4 +68,8 @@ module IconHelper
     fa_icon(:calendar)
   end
 
+  def edit_icon
+    icon :edit
+  end
+
 end
