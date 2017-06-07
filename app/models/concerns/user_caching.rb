@@ -36,6 +36,9 @@ concern :UserCaching do
 
     # ProfileFields
     cache :email
+
+    # UserGender
+    cache :female?
   end
 
   # # Aparently, the `StructureableMixins::Roles` don't work correctly
