@@ -48,7 +48,7 @@ module AvatarHelper
     # locally as well. Otherwise a 'http://localhost/...' would be
     # submitted to gravatar as source of the default image.
     #
-    options[:gravatar][:default] ||= user_avatar_default_url
+    options[:gravatar][:default] ||= user_avatar_default_url(user, options)
 
     # Fixing "undefined method `gsub' for 36:Fixnum"
     options[:size] = options[:size].to_s
@@ -67,14 +67,18 @@ module AvatarHelper
   end
 
   def user_gravatar_url(user, options = {})
-    options[:default] ||= user_avatar_default_url
+    options[:default] ||= user_avatar_default_url(user, options)
     options[:size] ||= 36
     options[:secure] = true
     gravatar_image_url(user.email, options)
   end
 
-  def user_avatar_default_url
-    "https://wingolfsplattform.org/assets/avatar_128.png"
+  def user_avatar_default_url(user = nil, options = {})
+    if (options[:gender].to_s == "female") || user.try(:female?)
+      "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_female_480.png"
+    else
+      "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_male_480.png"
+    end
   end
 
 end
