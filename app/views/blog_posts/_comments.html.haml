@@ -1,0 +1,12 @@
+#comments.clearfix
+  .comments-title
+    %h3
+      -#%span= number_of_comments_string(blog_post.comments.count)
+      %span= blog_post.comments.count
+      = t :comments
+
+  %ol.commentlist.clearfix{class: "comments-for-#{blog_post.id}"}
+    = render blog_post.comments
+  .clear
+
+  = render partial: 'comments/new_comment', locals: {commentable: blog_post}
