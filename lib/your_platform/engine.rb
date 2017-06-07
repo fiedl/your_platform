@@ -32,6 +32,7 @@ require 'omniauth-twitter'
 require 'omniauth-google-oauth2'
 require 'omniauth-facebook'
 require 'devise_masquerade'
+require 'gender_detector'
 
 # Authorization
 require 'cancancan'
