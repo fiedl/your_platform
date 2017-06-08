@@ -15,6 +15,7 @@ App.spinner = {
 }
 
 $(document).on 'turbolinks:click', (event)->
-  button = $(event.target)
-  App.spinner.hide()
-  App.spinner.show(button)
+  unless $('body').hasClass('mobile')
+    button = $(event.target)
+    App.spinner.hide()
+    App.spinner.show(button)
