@@ -16,7 +16,7 @@
     %h2 Jemanden einladen
     - if invitations_sent_by_me.count < beta.max_invitations_per_inviter
       %p
-        = form_for :beta_invitation, method: :post, url: beta_invitations_path do |f|
+        = form_for :beta_invitation, method: :post, url: beta_invitations_path, remote: true do |f|
           = f.hidden_field :beta_id, value: beta.id
           = f.text_field :invitee_title, class: 'user-select-input', data: {autocomplete_url: titles_api_v1_users_path}
           = f.submit t(:send_invitation)
