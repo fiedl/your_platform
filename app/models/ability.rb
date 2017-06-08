@@ -440,7 +440,19 @@ class Ability
       project.group.members.include? user
     end
 
+    # Betas
+    # All users can see what betas we have.
+    can :read, Beta
+    can :index, Beta
+    # Only beta members can create invitations.
+    can :create_beta_invitation_for, Beta do |beta|
+      beta.invitees.include? user
+    end
+
     # Mobile app
+    can :use, :mobile_app do
+      Mobile::BaseController.mobile_beta.invitees.include?(user)
+    end
     can :read, :mobile_welcome
     can :read, :mobile_dashboard
     can :read, :mobile_app_info

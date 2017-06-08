@@ -1,0 +1,21 @@
+%h1
+  = current_title
+  - if can? :create, Beta
+    .tool.new_beta
+      = link_to 'New Beta', new_beta_path, class: 'btn btn-default'
+%div
+  %table
+    %thead
+      %tr
+        %th Title
+        %th{:colspan => "2"}
+    %tbody
+      - @betas.each do |beta|
+        %tr
+          %td= link_to beta.title, beta
+          %td
+            - if can? :edit, beta
+              = link_to 'Edit', edit_beta_path(beta)
+          %td
+            - if can? :destroy, beta
+              = link_to 'Destroy', beta, method: :delete, data: { confirm: 'Are you sure?' }

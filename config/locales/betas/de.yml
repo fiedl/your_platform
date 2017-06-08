@@ -1,0 +1,5 @@
+de:
+  beta: Beta
+  betas: Betas
+  send_invitation: Einladung abschicken
+  foo_has_invited_you_to_the_beta_bar: "%{foo} hat Sie zur Beta '%{bar}' eingeladen."

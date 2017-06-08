@@ -1,0 +1,15 @@
+%h1.beta_invitations= current_title
+%div
+  %table
+    %thead
+      %tr
+        %th Inviter
+        %th Invitee
+        %th Created at
+    %tbody
+      - beta_invitations.each do |invitation|
+        %tr
+          %td= link_to_user invitation.inviter if invitation.inviter
+          %td= link_to_user invitation.invitee
+          %td= l invitation.created_at
+

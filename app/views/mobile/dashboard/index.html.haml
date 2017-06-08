@@ -24,4 +24,6 @@
 .row.sign_out
   = link_to "App-Info", mobile_app_info_path
   %span.separator •
+  = link_to "Beta", mobile_beta_path
+  %span.separator •
   = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'

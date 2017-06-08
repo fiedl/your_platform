@@ -1,0 +1,33 @@
+<%= form_for(@beta) do |f| %>
+  <% if @beta.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@beta.errors.count, "error") %> prohibited this beta from being saved:</h2>
+
+      <ul>
+      <% @beta.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :key %><br>
+    <%= f.text_field :key %>
+  </div>
+  <div class="field">
+    <%= f.label :max_invitations_per_inviter %><br>
+    <%= f.text_field :max_invitations_per_inviter %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

@@ -140,6 +140,8 @@ require 'apipie-rails'
 
 ::STAGE = "development" unless defined? ::STAGE
 
+require_relative '../../config/initializers/inflections'
+
 module YourPlatform
   class Engine < ::Rails::Engine
 
