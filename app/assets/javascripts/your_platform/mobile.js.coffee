@@ -28,16 +28,21 @@ load_from_partial = (selector, partial)->
         console.log result
     }
 
+perform_people_search = (url, query)->
+  if query.length > 3
+    $.ajax
+      type: 'GET',
+      url: url,
+      data:
+        query: query
+      success: (result)->
+        $('.people_search_results').fadeIn()
+        $('.people_search_results_partial').replaceWith result
+        bind_links_to_vcf_files_within '.people_search_results_partial'
+
 bind_people_search_to = (target)->
   $(target).on 'keyup paste change', ->
-    if $(target).val().length > 3
-      url = $(target).closest('form').attr('action')
-      $.ajax
-        type: 'GET',
-        url: url,
-        data:
-          query: $(target).val()
-        success: (result)->
-          $('.people_search_results').fadeIn()
-          $('.people_search_results_partial').replaceWith result
-          bind_links_to_vcf_files_within '.people_search_results_partial'
+    url = $(target).closest('form').attr('action')
+    perform_people_search(url, $(target).val())
+
+App.mobile_perform_people_search = perform_people_search
