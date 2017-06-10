@@ -31,7 +31,9 @@ class ApplicationJob < ActiveJob::Base
   end
 
   def with_timeout
-    if self.queue_name.to_s == "cache"
+    if Rails.env.test?
+      yield  # No timeouts in testing.
+    elsif self.queue_name.to_s == "cache"
       Timeout::timeout(15.seconds) { yield }
     elsif self.queue_name.to_s == "slow"
       Timeout::timeout(15.minutes) { yield }
