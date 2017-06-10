@@ -2,7 +2,8 @@ rvm:
   - "2.3.1"
 env:
   - "RSPEC_RERUN_PATTERN=./spec/features/[a-b]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
-  - "RSPEC_RERUN_PATTERN=./spec/features/[c]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
+  - "RSPEC_RERUN_PATTERN=./spec/features/c[a-n]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
+  - "RSPEC_RERUN_PATTERN=./spec/features/c[o-z]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/features/[d-e]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/features/[f-m]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
   - "RSPEC_RERUN_PATTERN=./spec/features/[o-z]*_spec.rb CI_CATEGORY=features DB=mysql COVERALLS_SILENT=true CI=travis RSPEC_RERUN_RETRY_COUNT=6 RAILS_ENV=test"
