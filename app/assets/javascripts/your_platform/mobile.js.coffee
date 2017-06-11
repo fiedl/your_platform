@@ -2,12 +2,20 @@
 # See: https://github.com/fiedl/Vademecum
 
 $(document).ready ->
+  transmit_json_response_to_native_app()
+
   load_from_partial 'body.mobile.contacts .recent_contacts_partial', 'recent_contacts'
 
   $('body.mobile.contacts .people_search_results').hide()
 
   bind_people_search_to 'body.mobile.contacts input.people_search'
 
+
+transmit_json_response_to_native_app = ->
+  if $('.json_response').size() > 0
+    # See: https://github.com/turbolinks/turbolinks-ios#passing-messages-from-javascript-to-your-application
+    webkit.messageHandlers.handle_json_response
+      .postMessage $('.json_response').text()
 
 load_from_partial = (selector, partial)->
   if $(selector).size() > 0
