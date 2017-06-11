@@ -7,6 +7,10 @@
     = link_to mobile_contacts_path, class: 'btn btn-default btn-large nav' do
       = fa_icon 'users'
       Adressbuch
+  - if can? :read, :mobile_near_locations
+    = link_to mobile_nearby_locations_path, class: 'btn btn-default btn-large nav' do
+      = icon 'map-marker'
+      In meiner Nähe
   - if can? :read, :mobile_documents
     = link_to mobile_documents_path, class: 'btn btn-default btn-large nav' do
       = fa_icon 'file-text-o'

@@ -14,4 +14,8 @@ concern :UserLocation do
     self.location.nearby_users(options)
   end
 
+  def nearby_addresses(options = {})
+    self.location.nearby_addresses(options)
+  end
+
 end

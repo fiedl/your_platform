@@ -9,6 +9,16 @@ module ProfileFields
     #   ActionController::Base.helpers.simple_format self.value
     # end
 
+    def as_json(*args)
+      super.merge({
+        profileable_title: profileable_title,
+        longitude: longitude,
+        latitude: latitude,
+        value: value,
+        profileable_vcard_path: profileable_vcard_path
+      })
+    end
+
     def vcard_property_type
       "ADR"
     end
@@ -241,6 +251,15 @@ module ProfileFields
           address_field.save
         end
       end
+    end
+
+    if use_caching?
+      cache :longitude
+      cache :latitude
+      cache :value
+      cache :profileable_title
+      cache :profileable_vcard_path
+      cache :profileable_alive_and_member?
     end
 
   end

@@ -20,6 +20,10 @@ concern :UserVcfExport do
     vcard.to_s
   end
 
+  def vcard_path
+    Rails.application.routes.url_helpers.user_path(self, format: 'vcf')
+  end
+
   private
 
   def vcard
