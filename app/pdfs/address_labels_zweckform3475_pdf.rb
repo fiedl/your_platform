@@ -33,7 +33,12 @@ class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
            book_rate_line(address_label) if @book_rate and address_label
            sender_line if @sender and address.to_s.present?
            address.gsub!("\nDeutschland", "") if I18n.locale == :de # in order to save space for in-country deliveries.
-           text address.to_s, size: text_size(address.to_s, @book_rate), fallback_fonts: fallback_fonts
+
+           begin
+             text address.to_s, size: text_size(address.to_s, @book_rate), fallback_fonts: fallback_fonts
+           rescue Prawn::Errors::IncompatibleStringEncoding => e
+             text "Die Adresse von #{address_label.name} enthält nicht-darstellbare Zeichen."
+           end
          end
        end
       end
