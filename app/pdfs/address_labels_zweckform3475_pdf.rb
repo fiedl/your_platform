@@ -37,7 +37,7 @@ class AddressLabelsZweckform3475Pdf < AddressLabelsPdf
            begin
              text address.to_s, size: text_size(address.to_s, @book_rate), fallback_fonts: fallback_fonts
            rescue Prawn::Errors::IncompatibleStringEncoding => e
-             text "Die Adresse von #{address_label.name} enthält nicht-darstellbare Zeichen."
+             text "Die Adresse von #{address_label.name} enthält nicht-darstellbare Zeichen.", color: "ff0000"
            end
          end
        end
