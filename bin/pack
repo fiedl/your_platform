@@ -6,7 +6,10 @@ echo "Expose something to the global namespace in app/javascripts/your_platform_
 echo "Webpack configuration is in config/webpack.config.js."
 echo ""
 
-yarn install
+YARN="yarn"
+[ -f /usr/local/bin/yarn ] && YARN="/usr/local/bin/yarn"
+
+$YARN install
 ./node_modules/.bin/webpack --config config/webpack.config.js
 
 echo "Done."
