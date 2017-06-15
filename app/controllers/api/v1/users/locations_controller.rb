@@ -1,6 +1,14 @@
 module Api::V1::Users
   class LocationsController < ApplicationController
 
+    # POST /api/v1/users/location
+    #
+    #     {longitude: 10.0018, latitude: 50.605}
+    #
+    def create
+      update
+    end
+
     # PUT /api/v1/users/location
     #
     #     {longitude: 10.0018, latitude: 50.605}
