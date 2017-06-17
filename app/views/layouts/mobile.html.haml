@@ -13,6 +13,7 @@
     = yield :scripts
     = yield :head
   %body.mobile{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'mobile', navable: @navable.try(:to_global_id)}}
+    #blackscreen
     #content_area
       = flash_area
       = convert_to_content_box { yield }

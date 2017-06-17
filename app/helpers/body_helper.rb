@@ -8,6 +8,7 @@ module BodyHelper
         "#{current_layout}_layout",
         @navable.try(:class).try(:name).try(:parameterize),
         ("demo_mode" if demo_mode?),
+        ("ios" if params[:app] == "ios"),
         options[:class]
       ].join(" "),
       data: {

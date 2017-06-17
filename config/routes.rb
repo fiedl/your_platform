@@ -249,6 +249,7 @@ Rails.application.routes.draw do
     get 'events/:id', to: 'events#show', as: 'event'
     get :nearby_locations, to: 'nearby_locations#index'
     get 'partials/:partial_key', to: 'partials#show'
+    resources :photos, only: [:show, :index, :create]
   end
 
 

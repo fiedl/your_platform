@@ -31,6 +31,8 @@
 //= require bootstrap-tokenfield
 //= require inline-attachment/inline-attachment
 //= require inline-attachment/jquery.inline-attachment
+//= require photoswipe/dist/photoswipe
+//= require photoswipe/dist/photoswipe-ui-default
 //
 //= require your_platform_node_modules.pack
 //= require_tree ./your_platform

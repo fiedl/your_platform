@@ -26,6 +26,7 @@ Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
 end
 
 Rack::MiniProfiler.config.start_hidden = true if Rails.env.production?
+Rack::MiniProfiler.config.position = 'top-right'
 Rack::MiniProfiler.config.toggle_shortcut = 'Alt+P'
 
 # We want to skip async entries for images and thumbs.
@@ -37,6 +38,4 @@ Rack::MiniProfiler.config.skip_paths << '/attachments'
 # `Rack::MiniProfiler.authorize_request` needs to be called in order
 # to be able to use the mini profiler.
 #
-if Rails.env.production? || Rails.env.test?
-  Rack::MiniProfiler.config.authorization_mode = :whitelist
-end
+Rack::MiniProfiler.config.authorization_mode = :whitelist

@@ -92,7 +92,9 @@ class Attachment < ActiveRecord::Base
 
   def as_json(*args)
     super.merge({
-      file_path: file_path
+      file_path: file_path,
+      author_title: author.try(:title),
+      parent_title: parent.try(:title)
     })
   end
 

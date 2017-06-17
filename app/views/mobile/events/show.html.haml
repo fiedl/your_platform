@@ -1,5 +1,3 @@
-= inline_pictures_for(@event)
-
 %h1= @event.title
 %div
   = markup @event.description
@@ -19,5 +17,14 @@
   - @event.contact_people.each do |user|
     %p= mobile_user_link user
 
+.upload_photos
+  %h2 Fotos hochladen
+  = form_for :photos, url: mobile_photos_path(event_id: @event.id), html: {multipart: true} do |f|
+    = file_field_tag :files, label: false, multiple: true, name: 'files[]', accepts: 'image/*'
+    = f.submit "Upload!"
+
 .event-documents
   = render partial: 'mobile/partials/documents'
+
+.event-photos
+  = render partial: 'mobile/photos/photos', locals: {photos: @event.attachments.by_type("image"), thumbs: @event.attachments.by_type("image")}

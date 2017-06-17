@@ -1,5 +1,6 @@
 body.mobile
   font-family: "San Francisco", "Helvetica Neue"
+  color: white
   background: #337ab7
   padding: 10px
   .avatar
@@ -67,6 +68,7 @@ body.mobile
   .alert.alert-info
     display: none
   a.btn-mobile
+    color: white
     display: block
     margin-top: 25px
     background: none
@@ -103,11 +105,23 @@ body.mobile.dashboard
     width: 100%
     margin-bottom: 15px
 
+  #ics_abo
+    color: white
+    position: relative
+    top: -20px
+    margin-bottom: -25px
+    float: right
+    font-size: 16px
+    font-weight: normal
+
   .row.sign_out
+    clear: both
     text-align: center
+    padding-top: 20px
     a
       font-size: 120%
       color: white
+
 
 body.mobile.contacts
   .btn-default
@@ -127,6 +141,10 @@ body.mobile.contacts
     width: 100%
     font-size: 14pt
     border: grey
+
+body.mobile.ios.contacts
+  .people_search
+    visibility: hidden
 
 body.mobile.documents
   ul
@@ -165,3 +183,40 @@ body.mobile.documents
 body.mobile.events
   padding-top: 20px
 
+  .upload_photos
+    input[type="submit"]
+      display: none
+
+body.mobile
+  ul.thumbs
+    padding: 0px
+    margin-top: 20px
+    text-align: center
+    li
+      list-style: none
+      display: block
+      float: left
+      width: 18%
+      img
+        width: auto
+        height: auto
+        display: block
+        max-width: 100%
+
+body.mobile
+  .clear
+    clear: both
+    padding-top: 1px
+
+body.mobile
+  #blackscreen
+    position: fixed
+    top: 0px
+    left: 0px
+    width: 100%
+    height: 100%
+    background: black
+    z-index: 999
+
+body.mobile.fullscreen
+  background: black

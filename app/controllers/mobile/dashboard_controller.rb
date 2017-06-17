@@ -9,6 +9,8 @@ class Mobile::DashboardController < Mobile::BaseController
 
     set_current_title "Vademecum"
     @events = current_user.upcoming_events.limit(5)
+    @all_event_images = current_user.event_images
+    @latest_event_images = current_user.event_images.last(5)
   end
 
 

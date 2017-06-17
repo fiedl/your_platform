@@ -6,4 +6,9 @@ class Mobile::BaseController < ApplicationController
     Beta.find_by key: 'vademecum-app'
   end
 
+  def authorize_miniprofiler
+    # Do not use mini profiler in mobile view for now.
+    # Rack::MiniProfiler.authorize_request if can? :use, Rack::MiniProfiler
+  end
+
 end
