@@ -1,3 +1,11 @@
+/*
+ *=require 'jquery-ui'
+ *=require 'font-awesome'
+ *=require 'photoswipe/dist/photoswipe'
+ *=require 'photoswipe/dist/default-skin/default-skin'
+ *=require 'your_platform/events'
+ */
+
 body.mobile
   font-family: "San Francisco", "Helvetica Neue"
   color: white
@@ -159,7 +167,9 @@ body.mobile.documents
       display: flex
       padding: 5px
       .thumb
-        width: 110px
+        width: 8px
+        min-width: 80px
+        max-width: 80px
       .title
         font-weight: bold
         font-size: 110%
@@ -220,3 +230,7 @@ body.mobile
 
 body.mobile.fullscreen
   background: black
+
+body.mobile
+  .turbolinks-progress-bar
+    visibility: hidden

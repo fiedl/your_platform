@@ -8,8 +8,7 @@
     = csrf_meta_tags
     = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
     = stylesheet_link_tag 'mobile_layout', :media => 'all'
-    = stylesheet_link_tag 'application', :media => 'all'
-    = javascript_include_tag 'application'
+    = javascript_include_tag 'mobile'
     = yield :scripts
     = yield :head
   %body.mobile{:class => controller.controller_name, data: {locale: I18n.locale, env: Rails.env.to_s, layout: 'mobile', navable: @navable.try(:to_global_id)}}

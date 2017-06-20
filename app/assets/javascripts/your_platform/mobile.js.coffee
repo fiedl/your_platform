@@ -1,6 +1,8 @@
 # This acts as a helper for our mobile apps.
 # See: https://github.com/fiedl/Vademecum
 
+window.App = {} unless App?
+
 $(document).ready ->
   transmit_json_response_to_native_app()
 
