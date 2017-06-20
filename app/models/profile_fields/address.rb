@@ -86,10 +86,10 @@ module ProfileFields
         end
 
         def original_value
-          read_attribute :value
+          value
         end
 
-        def value
+        def composed_value
           if first_address_line.present?
             composed_address
           else
@@ -131,6 +131,8 @@ module ProfileFields
             self.region = self.geo_information(:state)
           end
 
+          self.save
+
           if old_value && self.value && [old_value, self.value].collect { |v|
               v.gsub("traße", "tr.").gsub("\n", "").gsub(",", "").gsub(" ", "")
             }.uniq.count == 2
@@ -141,8 +143,6 @@ module ProfileFields
             #
             self.add_flag :needs_review
           end
-
-          self.save
 
           return self
         end
@@ -256,7 +256,6 @@ module ProfileFields
     if use_caching?
       cache :longitude
       cache :latitude
-      cache :value
       cache :profileable_title
       cache :profileable_vcard_path
       cache :profileable_alive_and_member?

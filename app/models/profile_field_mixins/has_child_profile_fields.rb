@@ -88,8 +88,9 @@ module ProfileFieldMixins::HasChildProfileFields
     # autosave option for the association.
     #
     def save_child_profile_fields
-      children.each do |child_field|
-        child_field.save
+      @accessors_for_saving.try(:each) do |accessor|
+        find_child_by_key(accessor).do_not_save_parent
+        find_child_by_key(accessor).save
       end
     end
     private :save_child_profile_fields
@@ -100,11 +101,17 @@ module ProfileFieldMixins::HasChildProfileFields
 
     def set_field( accessor, value )
       build_child_fields_if_absent
+      mark_accessor_for_saving(accessor)
       find_child_by_key(accessor).value = value
     end
 
     def build_child( key )
       children.build( label: key )
+    end
+
+    def mark_accessor_for_saving(accessor)
+      @accessors_for_saving ||= []
+      @accessors_for_saving << accessor
     end
 
   end

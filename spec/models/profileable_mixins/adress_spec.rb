@@ -1,10 +1,10 @@
 require 'spec_helper'
 
 describe ProfileableMixins::Address do
-  
+
   # We use a User as an example Profileable.
   let(:user) { create :user }
-  
+
   describe "#address_fields" do
     subject { user.address_fields }
     describe "for a regular user with address and phone field" do
@@ -28,7 +28,7 @@ describe ProfileableMixins::Address do
       end
     end
   end
-  
+
   describe "#study_address" do
     subject { user.study_address }
     it "should return the value of a given study address field" do
@@ -78,16 +78,16 @@ describe ProfileableMixins::Address do
       end
     end
   end
-  
+
   describe "#work_address" do
     specify { user.should respond_to :work_address }
     specify { user.should respond_to :work_address= }
   end
-  
+
   describe "#home_address" do
     specify { user.should respond_to :home_address }
     specify { user.should respond_to :home_address= }
   end
-  
-  
+
+
 end

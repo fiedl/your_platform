@@ -40,6 +40,8 @@ class ProfileField < ActiveRecord::Base
   #    account = BankAccount.create( label: "Bank Account" )
   #
   acts_as_tree
+  before_save :adapt_composed_value
+  after_save :save_parent_composed_value
 
   # Profile fields may have flags, e.g. :preferred_address.
   #
@@ -85,16 +87,30 @@ class ProfileField < ActiveRecord::Base
   # If the field has children, their values are included in the main field's value.
   # Attention! Probably, you want to display only one in the view: The main value or the child fields.
   #
-  def value
+  def composed_value
     if children_count > 0
-      ( [ super ] + children.collect { |child| child.value } ).join(", ")
+      ([value] + children.collect { |child| child.value }).join(", ")
     else
-      super
+      value
     end
+  end
+
+  def save_parent_composed_value
+    if self.value_changed? && (! @do_not_save_parent) && self.parent && (self.parent.value != (composed_value = self.parent.composed_value))
+      self.parent.update_attributes value: composed_value
+      @do_not_save_parent = false
+    end
+  end
+  def do_not_save_parent
+    @do_not_save_parent = true
   end
 
   def children_count
     children.count
+  end
+
+  def adapt_composed_value
+    self.value = self.composed_value if children.any?
   end
 
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
