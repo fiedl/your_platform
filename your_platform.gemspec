@@ -175,6 +175,7 @@ Gem::Specification.new do |s|
 
   # API
   s.add_dependency 'apipie-rails', '~> 0.4.0'
+  s.add_dependency 'discourse_api'
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

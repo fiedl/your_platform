@@ -137,6 +137,7 @@ require 'mail_form'
 
 # API
 require 'apipie-rails'
+require 'discourse_api'
 
 ::STAGE = "development" unless defined? ::STAGE
 
