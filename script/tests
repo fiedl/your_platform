@@ -1,0 +1,89 @@
+#!/usr/bin/env ruby
+
+# This script is a wrapper to run the specs in parallel.
+# The following parameters determine which tests will be run
+# by this worker.
+#
+# Parameters:
+#
+#     WORKER_ID             0, 1, 2, 3, 4, ...
+#     NUMBER_OF_WORKERS     10
+#     CI_CATEGORY           features, models, others
+
+#
+# Example workers:
+#
+#     CI_CATEGORY=features WORKER_ID=0 NUMBER_OF_WORKERS=10   bundle exec ruby script/tests
+#     CI_CATEGORY=features WORKER_ID=1 NUMBER_OF_WORKERS=10   bundle exec ruby script/tests
+#     CI_CATEGORY=features ...
+#     CI_CATEGORY=models WORKER_ID=0 NUMBER_OF_WORKERS=10     bundle exec ruby script/tests
+#     CI_CATEGORY=models WORKER_ID=1 NUMBER_OF_WORKERS=10     bundle exec ruby script/tests
+#     CI_CATEGORY=models ...
+#     CI_CATEGORY=others WORKER_ID=0 NUMBER_OF_WORKERS=1      bundle exec ruby script/tests
+
+rspec_args = ARGV.to_a.join(" ")
+
+json_list_of_specs = `rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}`
+
+require 'json'
+data = JSON.parse(File.read("tmp/specs.json"))
+examples = data['examples'].map do |example|
+  "#{example['file_path']}:#{example['line_number']}"
+end
+
+feature_specs = examples.select { |example| example.include? "spec/features/" }
+model_specs = examples.select { |example| example.include? "spec/models/" }
+other_specs = examples - feature_specs - model_specs
+
+category = ENV['CI_CATEGORY']
+
+specs_to_run = if category == "features"
+  feature_specs
+elsif category == "models"
+  model_specs
+else
+  other_specs
+end
+
+worker_id = ENV['WORKER_ID'].to_i
+number_of_workers = ENV['NUMBER_OF_WORKERS'].to_i
+number_of_specs_to_run_by_each_worker = (1.0 * specs_to_run.count / number_of_workers).ceil # rounds up
+
+specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
+
+print "\n\n\nTHIS WORKER #{worker_id} OF #{number_of_workers} RUNS:\n"
+specs_to_run_by_this_worker.each { |spec| print "#{spec}\n" }
+print "\n\n\n"
+
+
+require 'colored'
+def shell(command)
+  print "#{command}\n".white.bold
+
+  output = ""
+  r, io = IO.pipe
+  fork do
+    system(command, out: io, err: :out)
+  end
+  io.close
+  r.each_char{|c| print c; output += c}
+
+  return output
+end
+
+result = shell "bin/rspec #{specs_to_run_by_this_worker.join(' ')}"
+
+failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
+
+print "\nRerunning failed specs ...\n\n".blue
+
+finally_failing_specs = []
+failed_specs.each do |spec|
+  result = shell "bin/rspec #{spec}"
+  number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
+  finally_failing_specs << spec if number_of_failing_specs != 0
+end
+
+print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
+
+exit(finally_failing_specs.count)
