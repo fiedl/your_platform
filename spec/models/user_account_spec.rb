@@ -9,12 +9,12 @@ describe UserAccount do
   end
 
   specify "the account should exist at this point" do
-    @account.should be 
+    @account.should be
   end
 
   describe "#user" do
     subject { @account.user }
-    it { should == @user } 
+    it { should == @user }
   end
 
   describe "#id" do
@@ -92,16 +92,16 @@ describe UserAccount do
       token1.should == token2
     end
   end
-  
+
   describe ".identify" do
     before do
       @user1 = create :user_with_account, first_name: "John", last_name: "Doe", email: "john.doe@example.com", :alias => "doe"
       @user2 = create :user_with_account, first_name: "James", last_name: "Doe", email: "james.doe@example.com", :alias => "james.doe"
     end
-    
+
     context "for an empty login string" do
       it "should return nil" do
-        expect { UserAccount.identify('') == nil }.to be true
+        UserAccount.identify('').should == nil
       end
     end
     context "if only one user is matching" do
@@ -119,7 +119,7 @@ describe UserAccount do
     end
     context "if the last name is identical to the alias (bug fix)" do
       before do
-        @user1.destroy # since only @user2 should be present for this test 
+        @user1.destroy # since only @user2 should be present for this test
         @user2.update_attribute(:alias, 'doe')
       end
       specify "prerequisites" do
