@@ -35,18 +35,20 @@ feature_specs = examples.select { |example| example.include? "spec/features/" }
 model_specs = examples.select { |example| example.include? "spec/models/" }
 other_specs = examples - feature_specs - model_specs
 
-category = ENV['CI_CATEGORY']
+category = ENV['CI_CATEGORY'] || 'all'
 
 specs_to_run = if category == "features"
   feature_specs
 elsif category == "models"
   model_specs
+elsif category == "all"
+  feature_specs + model_specs + other_specs
 else
   other_specs
 end
 
-worker_id = ENV['WORKER_ID'].to_i
-number_of_workers = ENV['NUMBER_OF_WORKERS'].to_i
+worker_id = (ENV['WORKER_ID'] || 0).to_i
+number_of_workers = (ENV['NUMBER_OF_WORKERS'] || 1).to_i
 number_of_specs_to_run_by_each_worker = (1.0 * specs_to_run.count / number_of_workers).ceil # rounds up
 
 specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
@@ -75,15 +77,21 @@ result = shell "bin/rspec #{specs_to_run_by_this_worker.join(' ')}"
 
 failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
 
-print "\nRerunning failed specs ...\n\n".blue
+if failed_specs.any?
+  print "\nRerunning failed specs ...\n\n".blue
 
-finally_failing_specs = []
-failed_specs.each do |spec|
-  result = shell "bin/rspec #{spec}"
-  number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
-  finally_failing_specs << spec if number_of_failing_specs != 0
+  finally_failing_specs = []
+  failed_specs.each do |spec|
+    result = shell "bin/rspec #{spec}"
+    number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
+    finally_failing_specs << spec if number_of_failing_specs != 0
+  end
+
+  print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
+
+  exit(finally_failing_specs.count)
+else
+  exit 0
 end
 
-print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
 
-exit(finally_failing_specs.count)

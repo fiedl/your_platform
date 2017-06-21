@@ -192,8 +192,6 @@ Gem::Specification.new do |s|
   # Development Dependencies
   #
 
-  s.add_development_dependency "rspec-rails", "2.10.0"
-  s.add_development_dependency "guard", "1.0.1"
-  s.add_development_dependency "guard-rspec", "0.5.5"
+  s.add_development_dependency "rspec-rails"
 
 end

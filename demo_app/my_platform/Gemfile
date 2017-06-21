@@ -69,7 +69,9 @@ source 'https://rubygems.org' do
   # Testing Environment
   group :test, :development do
     gem 'guard'
-    gem 'rspec-rails', '2.14.1'
+    gem 'rspec-rails'
+    gem 'rspec-legacy_formatters'
+    gem 'rspec-its'
     gem 'guard-rspec'
     gem 'parallel_tests'
     gem 'rspec-instafail'
@@ -86,7 +88,6 @@ source 'https://rubygems.org' do
     gem 'email_spec'
     gem 'timecop'  # time_travel
     gem 'fuubar'
-    gem 'rspec-rerun'
     gem "codeclimate-test-reporter", require: nil
     gem 'pry'
   end
