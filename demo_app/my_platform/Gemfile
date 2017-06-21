@@ -71,6 +71,7 @@ source 'https://rubygems.org' do
     gem 'guard'
     gem 'rspec-rails'
     gem 'rspec-legacy_formatters'
+    gem 'rspec-collection_matchers'
     gem 'rspec-its'
     gem 'guard-rspec'
     gem 'parallel_tests'
