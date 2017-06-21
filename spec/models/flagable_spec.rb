@@ -6,11 +6,11 @@ describe "Flagable" do
 
   before { @flagable = Page.create( title: "Flagable Page" ) }
   subject { @flagable }
-  
+
   describe "#add_flags( :flag1, :flag2, ... )" do
     it "should add the given flags" do
       subject.add_flags( :flag1, :flag2, :flag3 )
-      subject.has_flag?( :flag1 ).should be_true
+      subject.has_flag?( :flag1 ).should be true
     end
     it "should ignore flags that are already set" do
       subject.add_flags( :flag1, :flag2 )
@@ -22,7 +22,7 @@ describe "Flagable" do
   describe "#add_flag :flag1" do
     it "should add the given flag" do
       subject.add_flag( :flag1 )
-      subject.has_flag?( :flag1 ).should be_true
+      subject.has_flag?( :flag1 ).should be true
     end
   end
 
@@ -45,10 +45,10 @@ describe "Flagable" do
   describe "#has_flag?" do
     it "should return true if the Flagable has the flag" do
       subject.add_flags( :flag1 )
-      subject.has_flag?( :flag1 ).should be_true
+      subject.has_flag?( :flag1 ).should be true
     end
     it "should return false if the Flagbale doesn't have the flag" do
-      subject.has_flag?( :flag4 ).should be_false
+      subject.has_flag?( :flag4 ).should be false
     end
   end
 

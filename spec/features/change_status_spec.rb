@@ -15,8 +15,8 @@ feature 'Change Status' do
 
   specify 'prelims' do
     @workflow.should be_kind_of Workflow
-    Ability.new(@local_admin).can?(:execute, @workflow).should be_true
-    Ability.new(@local_admin).can?(:change_status, @user_to_promote).should be_true
+    Ability.new(@local_admin).can?(:execute, @workflow).should be true
+    Ability.new(@local_admin).can?(:change_status, @user_to_promote).should be true
 
     @workflow.steps.first.brick_name.should be_present
     expect { @workflow.execute(user_id: @user_to_promote.id) }.not_to raise_error

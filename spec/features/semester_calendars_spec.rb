@@ -60,7 +60,7 @@ feature "Semester Calendars", :js do
         # # sleep 15 # as backend processing takes some time.
         # # page.should have_text I18n.t(:uploaded_at)
       end
-      @semester_calendar.attachments.first.pdf?.should be_true
+      @semester_calendar.attachments.first.pdf?.should be true
     end
   end
 end

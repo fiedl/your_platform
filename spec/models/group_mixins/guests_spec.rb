@@ -26,7 +26,7 @@ describe GroupMixins::Guests do
 
     describe "#create_guests_parent_group" do
       it "should create the guests_parent_group" do
-        @guests_parent.has_flag?( :guests_parent ).should be_true
+        @guests_parent.has_flag?( :guests_parent ).should be true
         @guests_parent.parent_groups.should include( @container_group )
       end
     end
@@ -35,7 +35,7 @@ describe GroupMixins::Guests do
       subject { @container_group.find_guests_parent_group }
       it "should find the guests_parent_group" do
         subject.should == @guests_parent
-        subject.has_flag?( :guests_parent ).should be_true
+        subject.has_flag?( :guests_parent ).should be true
       end
     end
 

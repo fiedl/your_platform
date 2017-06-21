@@ -42,7 +42,7 @@ feature 'Corporate Vita', js: true do
         @corporation.name => [@first_promotion_workflow]
       }
       User.last.should be_global_admin
-      User.last.can?(:execute, @first_promotion_workflow).should be_true
+      User.last.can?(:execute, @first_promotion_workflow).should be true
     end
 
     describe 'viewing the user page' do

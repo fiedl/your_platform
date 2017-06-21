@@ -22,7 +22,7 @@ describe GroupMixins::Corporations do
 
     describe ".create_corporations_parent_group" do
       it "should create the group 'corporations_parent' and return it" do
-        @corporations_parent_group.has_flag?( :corporations_parent ).should be_true
+        @corporations_parent_group.has_flag?( :corporations_parent ).should be true
       end
     end
 
@@ -30,7 +30,7 @@ describe GroupMixins::Corporations do
       subject { Group.find_corporations_parent_group }
       it "should return the corporations_parent_group" do
         subject.should == @corporations_parent_group
-        subject.has_flag?( :corporations_parent ).should be_true
+        subject.has_flag?( :corporations_parent ).should be true
       end
     end
 

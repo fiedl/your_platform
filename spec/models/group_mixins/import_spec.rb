@@ -64,28 +64,28 @@ describe GroupMixins::Import do
       before { @group.name = "Officers" }
       it "should set the :officers_parent flag" do
         subject
-        @group.has_flag?( :officers_parent ).should be_true
+        @group.has_flag?( :officers_parent ).should be true
       end
     end
     context "for group name 'Amtsträger'" do
       before { @group.name = "Amtsträger" }
       it "should set the :officers_parent flag" do
         subject
-        @group.has_flag?( :officers_parent ).should be_true
+        @group.has_flag?( :officers_parent ).should be true
       end
     end
     context "for group name 'Gäste'" do
       before { @group.name = "Gäste" }
       it "should set the :guests_parent flag" do
         subject
-        @group.has_flag?( :guests_parent ).should be_true
+        @group.has_flag?( :guests_parent ).should be true
       end
     end
     context "for group name 'Guests'" do
       before { @group.name = "Guests" }
       it "should set the :guests_parent flag" do
         subject
-        @group.has_flag?( :guests_parent ).should be_true
+        @group.has_flag?( :guests_parent ).should be true
       end
     end
   end

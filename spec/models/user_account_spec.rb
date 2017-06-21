@@ -101,7 +101,7 @@ describe UserAccount do
     
     context "for an empty login string" do
       it "should return nil" do
-        expect { UserAccount.identify('') == nil }.to be_true
+        expect { UserAccount.identify('') == nil }.to be true
       end
     end
     context "if only one user is matching" do

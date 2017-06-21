@@ -171,7 +171,7 @@ describe User do
   #         @page.child_groups << @group
   #       end
   #       it "should be false" do
-  #         @user.member_of?( @page ).should be_true # just to make sure
+  #         @user.member_of?( @page ).should be true # just to make sure
   #         subject.should == false
   #       end
   #     end

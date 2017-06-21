@@ -238,7 +238,7 @@ describe Membership do
   describe "#direct_memberships_now_and_in_the_past" do
     before { create_memberships }
     it "should return an ActiveRecord::Relation, i.e. be chainable" do
-      find_membership.direct_memberships_now_and_in_the_past.kind_of?( ActiveRecord::Relation ).should be_true
+      find_membership.direct_memberships_now_and_in_the_past.kind_of?( ActiveRecord::Relation ).should be true
     end
     # it "should be the same as #direct_memberships.now_and_in_the_past" do
     #   find_indirect_membership.direct_memberships_now_and_in_the_past.should ==

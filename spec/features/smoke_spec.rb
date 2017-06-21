@@ -20,7 +20,7 @@ feature "Smoke test" do
   end
 
   scenario "Testing the sidekiq connection" do
-    Sidekiq.reachable?.should be_true
+    Sidekiq.reachable?.should be true
   end
 
 end

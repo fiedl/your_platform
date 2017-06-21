@@ -5,11 +5,11 @@ describe UserAlias do
   describe ".taken?(alias)" do
     subject { UserAlias.taken?("j.doe") }
     describe "for the alias not being taken" do
-      it { should be_false }
+      it { should be false }
     end
     describe "for the alias being taken" do
       before { @user = create(:user, :alias => "j.doe" ) }
-      it { should_not be_false }
+      it { should_not be false }
       it { should == @user }
     end
   end
@@ -21,7 +21,7 @@ describe UserAlias do
     end
     describe "for the alias being taken" do
       before { @user = create(:user, :alias => "foo") }
-      it { should_not be_false }
+      it { should_not be false }
       it { should == @user }
     end
   end

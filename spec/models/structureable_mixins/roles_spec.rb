@@ -481,7 +481,7 @@ describe StructureableMixins::Roles do
 
     describe "#create_officers_parent_group" do
       it "should create the officers_parent_group" do
-        @officers_parent.has_flag?( :officers_parent ).should be_true
+        @officers_parent.has_flag?( :officers_parent ).should be true
         @officers_parent.parent_groups.should include( @container_group )
       end
     end
@@ -490,7 +490,7 @@ describe StructureableMixins::Roles do
       subject { @container_group.find_officers_parent_group }
       it "should find the officers_parent_group" do
         subject.should == @officers_parent
-        subject.has_flag?( :officers_parent ).should be_true
+        subject.has_flag?( :officers_parent ).should be true
       end
     end
 
