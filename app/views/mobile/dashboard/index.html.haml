@@ -1,41 +1,43 @@
-.app_logo
-  .logo= image_tag 'logo.png'
-  .app_name= AppVersion.mobile_app_name
+= Rails.cache.fetch([current_user, 'mobile_dashboard'], expires_in: 15.minutes) do
+  - capture_haml do
+    .app_logo
+      .logo= image_tag 'logo.png'
+      .app_name= AppVersion.mobile_app_name
 
-.col-xs-12.col-sm-6
-  - if can? :read, :mobile_contacts
-    = link_to mobile_contacts_path, class: 'btn btn-default btn-large nav' do
-      = fa_icon 'users'
-      Adressbuch
-  - if can? :read, :mobile_near_locations
-    = link_to mobile_nearby_locations_path, class: 'btn btn-default btn-large nav' do
-      = icon 'map-marker'
-      In meiner Nähe
-  - if can? :read, :mobile_documents
-    = link_to mobile_documents_path, class: 'btn btn-default btn-large nav' do
-      = fa_icon 'file-text-o'
-      Aktuelle Dokumente
+    .col-xs-12.col-sm-6
+      - if can? :read, :mobile_contacts
+        = link_to mobile_contacts_path, class: 'btn btn-default btn-large nav' do
+          = fa_icon 'users'
+          Adressbuch
+      - if can? :read, :mobile_near_locations
+        = link_to mobile_nearby_locations_path, class: 'btn btn-default btn-large nav' do
+          = icon 'map-marker'
+          In meiner Nähe
+      - if can? :read, :mobile_documents
+        = link_to mobile_documents_path, class: 'btn btn-default btn-large nav' do
+          = fa_icon 'file-text-o'
+          Aktuelle Dokumente
 
-- if can? :read, :mobile_events
-  -#= Rails.cache.fetch([current_user, 'mobile_envets'], expires_in: 15.seconds) do
-  -#  - capture_haml do
-  .col-xs-12.col-sm-6
-    %h1.events
-      Veranstaltungen
-      %a.btn-mobile#ics_abo{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-        Abo
-    %div
-      = render partial: 'mobile/partials/events'
-      -#.events_list_partial
+    - if can? :read, :mobile_events
+      -#= Rails.cache.fetch([current_user, 'mobile_envets'], expires_in: 15.seconds) do
+      -#  - capture_haml do
+      .col-xs-12.col-sm-6
+        %h1.events
+          Veranstaltungen
+          %a.btn-mobile#ics_abo{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+            Abo
+        %div
+          = render partial: 'mobile/partials/events'
+          -#.events_list_partial
 
-  - if can? :read, :mobile_photos
-    -#= render partial: 'mobile/photos/thumbs', locals: {thumbs: @latest_event_images.reverse}
-    = render partial: 'mobile/photos/photos', locals: {photos: @all_event_images.reverse, thumbs: @latest_event_images.reverse}
-    .more_photos.clear= link_to "Mehr Fotos", mobile_photos_path, class: 'btn-mobile center'
+      - if can? :read, :mobile_photos
+        -#= render partial: 'mobile/photos/thumbs', locals: {thumbs: @latest_event_images.reverse}
+        = render partial: 'mobile/photos/photos', locals: {photos: @all_event_images.reverse, thumbs: @latest_event_images.reverse}
+        .more_photos.clear= link_to "Mehr Fotos", mobile_photos_path, class: 'btn-mobile center'
 
-.row.sign_out
-  = link_to "App-Info", mobile_app_info_path
-  %span.separator •
-  = link_to "Beta", mobile_beta_path
-  %span.separator •
-  = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'
+    .row.sign_out
+      = link_to "App-Info", mobile_app_info_path
+      %span.separator •
+      = link_to "Beta", mobile_beta_path
+      %span.separator •
+      = link_to "Abmelden", sign_out_path, remote: true, method: :delete, class: 'sign_out_button'

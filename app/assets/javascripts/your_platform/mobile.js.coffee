@@ -31,17 +31,6 @@ $(document).on 'change', 'body.mobile form input[type="file"]', ->
   }
   $(this).closest('form')[0].reset()
 
-$(document).on 'click', 'body.mobile ul.thumbs > li > img', ->
-  Turbolinks.visit $(this).data('mobile-photo-path')
-
-$(document).ready ->
-  $('body.mobile ul.thumbs > li > img').each ->
-    img = $(this)
-    img.hide()
-    img.attr 'src', img.data('src')
-    img.on 'load', ->
-      img.fadeIn(500)
-
 transmit_json_response_to_native_app = ->
   if $('.json_response').size() > 0
     # See: https://github.com/turbolinks/turbolinks-ios#passing-messages-from-javascript-to-your-application
@@ -86,6 +75,16 @@ bind_people_search_to = (target)->
 
 App.mobile_perform_people_search = perform_people_search
 
+#$(document).on 'click', 'body.mobile ul.thumbs > li > img', ->
+#  Turbolinks.visit $(this).data('mobile-photo-path')
+
+$(document).ready ->
+  $('body.mobile ul.thumbs > li > img').each ->
+    img = $(this)
+    img.hide()
+    img.attr 'src', img.data('src')
+    img.on 'load', ->
+      img.fadeIn(500)
 
 $(document).on 'click', 'body.mobile .photoswipe > ul.thumbs > li > img', ->
 
@@ -145,3 +144,12 @@ $(document).ready ->
 
 $(document).on 'click', 'body.mobile .profiler-output', ->
   $('profiler-results').hide()
+
+$(document).ready ->
+  $('body.mobile .box .edit_button').remove()
+  $('body.mobile .box .save_button').remove()
+
+$(document).on "turbolinks:before-cache", ->
+  $('body.mobile .btn').css('visibility', 'hidden')
+  $('body.mobile .btn-mobile').css('visibility', 'hidden')
+  $('body.mobile ul.thumbs').css('visibility', 'hidden')
