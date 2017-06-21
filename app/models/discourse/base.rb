@@ -21,7 +21,7 @@ class Discourse::Base
   end
 
   def self.api_key
-    Rails.application.secrets.discourse_master_api_key || raise('secret discourse_master_api_key missing')
+    Rails.application.secrets.discourse_master_api_key
   end
 
   def self.api_username

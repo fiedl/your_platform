@@ -1,21 +1,22 @@
-= Rails.cache.fetch(["latest_discourse_topics", "v3"], expires_in: 15.seconds) do
-  - capture_haml do
+- if Discourse::Base.api_key.present?
+  = Rails.cache.fetch(["latest_discourse_topics", "v3"], expires_in: 15.seconds) do
+    - capture_haml do
 
-    - topics ||= Discourse::Topic.latest(3)
+      - topics ||= Discourse::Topic.latest(3)
 
-    %h1= link_to t(:discourse_topics), Discourse::Base.discourse_url
-    %div
-      %ul.discourse_topics
-        - topics.each do |topic|
-          %li
-            .title= link_to topic.title, topic.url
-            .last_poster
-              = link_to topic.last_poster do
-                = user_avatar(topic.last_poster, size: 16)
-                = topic.last_poster_username
-            .separator •
-            .last_posted_at= l topic.last_posted_at.to_date
-        %li.more_topics
-          = link_to t(:more_topics), Discourse::Base.discourse_url
-        -#%li.new_topic
-        -#  = link_to t(:begin_new_topic), Discourse::Base.new_topic_url, class: 'btn btn-default btn-xs'
+      %h1= link_to t(:discourse_topics), Discourse::Base.discourse_url
+      %div
+        %ul.discourse_topics
+          - topics.each do |topic|
+            %li
+              .title= link_to topic.title, topic.url
+              .last_poster
+                = link_to topic.last_poster do
+                  = user_avatar(topic.last_poster, size: 16)
+                  = topic.last_poster_username
+              .separator •
+              .last_posted_at= l topic.last_posted_at.to_date
+          %li.more_topics
+            = link_to t(:more_topics), Discourse::Base.discourse_url
+          -#%li.new_topic
+          -#  = link_to t(:begin_new_topic), Discourse::Base.new_topic_url, class: 'btn btn-default btn-xs'
