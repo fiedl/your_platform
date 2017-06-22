@@ -22,7 +22,7 @@ feature "Maps", js: true do
     login(@user)
     visit root_path
 
-    defined?(Turbolinks).should be true
+    defined?(Turbolinks).should be_truthy
     find("a.my_profile").click
 
     within(".box.section.contact_information") do

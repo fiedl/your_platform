@@ -166,8 +166,13 @@ Spork.prefork do
   # The default is 2 seconds.
   #
   # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
+  # https://docs.travis-ci.com/user/common-build-problems/#Capybara%3A-I’m-getting-errors-about-elements-not-being-found
   #
-  Capybara.default_max_wait_time = 15
+  Capybara.default_max_wait_time = if ENV['CI'] == 'travis'
+    90 # travis is much slower and might take longer to process stuff
+  else
+    15
+  end
 
 
   # Background Jobs:

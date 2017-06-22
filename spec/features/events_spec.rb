@@ -237,6 +237,7 @@ feature "Events" do
     scenario "creating an event from the root page" do
       visit root_path
       find('#create_event').click
+      wait_until(timeout: 90.seconds) { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
     end
 
