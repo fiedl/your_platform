@@ -62,7 +62,9 @@ feature 'Corporate Vita', js: true do
           click_on @first_promotion_workflow.name
         end
 
-        wait_for_ajax; wait_for_ajax; wait_for_ajax;
+        within '#corporate_vita' do
+          wait_until { page.has_content? @status_groups.second.name }
+        end
 
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
@@ -71,7 +73,6 @@ feature 'Corporate Vita', js: true do
 
           # check this to avoid the double listing bug (sf 2013-01-24)
           page.should have_selector( 'a', count: 2 )
-
         end
 
         # run the second workflow
@@ -80,7 +81,9 @@ feature 'Corporate Vita', js: true do
           click_on @second_promotion_workflow.name
         end
 
-        wait_for_ajax; wait_for_ajax; wait_for_ajax;
+        within '#corporate_vita' do
+          wait_until { page.has_content? @status_groups.last.name }
+        end
 
         within first '.section.corporate_vita' do
           page.should have_content @status_groups.first.name

@@ -244,6 +244,7 @@ feature "Events" do
       visit group_path(@group)
       within('.group_tabs') { click_on I18n.t(:events) }
       find('#create_event').click
+      wait_until(timeout: 90.seconds) { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
     end
 
