@@ -194,6 +194,14 @@ concern :UserRoles do
     end
   end
 
+  def corporations_the_user_can_represent
+    if global_admin?
+      Corporation.all
+    else
+      corporations_the_user_is_officer_in
+    end
+  end
+
 
   # Methods transferred from former Role class
   # ==========================================================================================

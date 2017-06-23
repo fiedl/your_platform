@@ -1,0 +1,21 @@
+de:
+  decision_making: Entscheidungsfindung
+
+  federal_ballot: Bundesantrag
+  federal_ballots: Bundesanträge
+  new_federal_ballot: Neuer Bundesantrag
+
+  proposer: Antragsteller
+  signed: Gezeichnet
+  proposed_at: Antragsdatum
+  wording: Wortlaut
+  rationale: Begründung
+  are_you_sure_to_delete_this_ballot: Soll dieser Antrag wieder gelöscht werden?
+  sign: Unterschreiben
+  sign_dots: Unterschreiben ...
+  sign_str: "\"%{str}\" unterschreiben"
+  enter_password_to_sign_document: "Geben Sie Ihr Passwort ein und klicken Sie danach den Bestätigungsknopf, um das Dokument verbindlich zu unterschreiben."
+  sign_legally_binding: Verbindlich unterschreiben
+  could_not_sign_document_because_of_wrong_password: "Das Dokument wurde noch nicht unterschrieben, da das eingegebene Passwort falsch war."
+  after_signing_the_document_cannot_be_changed: "Nachdem Sie unterschrieben haben, kann das Dokument nicht mehr verändert werden."
+  draft: Entwurf

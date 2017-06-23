@@ -1,0 +1,21 @@
+%h1= current_title
+%div
+  %table
+    %tr
+      %th= t :title
+      %td
+        %strong= signable.title
+    %tr
+      %th= t :proposed_at
+      %th= l signable.proposed_at.to_date if signable.proposed_at
+    %tr
+      %th= t :wording
+      %td= markup signable.wording
+    %tr
+      %th= t :sign
+      %td
+        %p= t :enter_password_to_sign_document
+        %p= t :after_signing_the_document_cannot_be_changed
+        = form_tag decision_making_ballot_signatures_path(ballot_id: signable.id), method: 'post' do
+          = password_field_tag :password
+          = submit_tag t(:sign_legally_binding), class: 'btn btn-primary'

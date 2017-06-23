@@ -1,0 +1,19 @@
+%h1
+  = current_title
+  .create_ballot.tool= link_to t(:new_federal_ballot), decision_making_federal_ballots_path, method: :post, class: 'btn btn-default'
+%div
+
+  %table.ballots.federal_ballots.datatable
+    %thead
+      %tr
+        %th= t :proposed_at
+        %th= t :proposer
+        %th= t :title
+        %th= t :status
+    %tbody
+      - federal_ballots.each do |ballot|
+        %tr
+          %td= l ballot.proposed_at.to_date if ballot.proposed_at
+          %td= link_to ballot.proposer_group.title, ballot.proposer_group if ballot.proposer_group
+          %td= link_to ballot.title, ballot
+          %td{class: ballot.status_key}= ballot.status_string

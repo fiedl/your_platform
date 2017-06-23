@@ -72,4 +72,12 @@ module IconHelper
     icon :edit
   end
 
+  def trash_icon
+    icon :trash
+  end
+
+  def signature_icon
+    fa_icon 'pencil-square-o'
+  end
+
 end

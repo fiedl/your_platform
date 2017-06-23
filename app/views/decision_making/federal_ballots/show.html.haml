@@ -1,0 +1,31 @@
+%h1
+  = current_title
+  - if can? :destroy, federal_ballot
+    = remove_button federal_ballot, confirm: t(:are_you_sure_to_delete_this_ballot), show_only_in_edit_mode: false
+%div
+  %table
+    %tr
+      %th= t :title
+      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :title
+    %tr
+      %th= t :proposed_at
+      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :localized_proposed_at
+    %tr
+      %th= t :proposer
+      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :proposer_group_id, as: :select, collection: Hash[current_user.corporations_the_user_can_represent.collect { |corporation| [corporation.id, corporation.title]}]
+    %tr
+      %th= t :wording
+      %td
+        %strong= best_in_place_if can?(:update, federal_ballot), federal_ballot, :wording, as: :textarea
+    %tr
+      %th= t :rationale
+      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :rationale, as: :textarea
+    %tr
+      %th= t :signed
+      %td
+        - federal_ballot.signatures.each do |signature|
+          = "#{link_to_user(signature.user)}, #{l(signature.created_at.to_date)}".html_safe
+        - if can?(:sign, federal_ballot) && !federal_ballot.signatures.pluck(:user_id).include?(current_user.id)
+          = link_to new_decision_making_ballot_signature_path(ballot_id: federal_ballot.id), class: 'btn btn-default' do
+            = signature_icon
+            = t :sign_dots

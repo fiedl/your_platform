@@ -570,6 +570,10 @@ class Ability
       semester_calendar.attachments.count > 0
     end
 
+    # Nobody can destroy or update a ballot that is signed.
+    cannot [:update, :destroy], DecisionMaking::Ballot do |ballot|
+      ballot.signatures.any?
+    end
 
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
