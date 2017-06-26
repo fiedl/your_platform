@@ -207,6 +207,7 @@ Rails.application.routes.draw do
     resources :federal_ballots
     resources :ballots do
       resources :signatures
+      resources :submissions
     end
   end
 

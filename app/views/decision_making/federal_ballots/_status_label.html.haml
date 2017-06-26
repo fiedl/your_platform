@@ -1,0 +1,7 @@
+- if federal_ballot.draft?
+  .label.label-default= t :draft
+- elsif federal_ballot.waiting_for_approval?
+  - if current_user.in? federal_ballot.class.global_officers_that_can_approve_proposal
+    .label.label-danger= t :federal_ballot_waiting_for_approval
+  - else
+    .label.label-default= t :federal_ballot_waiting_for_approval

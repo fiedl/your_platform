@@ -246,3 +246,11 @@ $(document).ready ->
     "pageLength": 25,
     "order": [[2, "asc"], [0, "asc"]]
   }
+
+  App.datatables.create '.datatable.ballots', {
+    "pageLength": 50,
+    "order": [[0, "desc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 0 }
+    ]
+  }

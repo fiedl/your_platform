@@ -1,0 +1,45 @@
+-#%h1= t :next_steps
+-#%div
+-#  %ol.next_steps
+-#    %li= t :fill_out_title_wording_and_rationale_of_the_proposition
+-#    %li= t :upload_proposition_documents
+-#    %li= t :finalize_proposition_which_cannot_be_changed_after_signing
+-#    %li
+-#      = t :sign_the_proposition
+-#      .additional_info= t :send_the_url_for_other_officers_for_signing
+
+%h1= t :submit_federal_ballot
+%div
+  - if federal_ballot.ready_for_submission?
+    - if can? :submit, federal_ballot
+      %p= link_to t(:submit_federal_ballot_to_global_officers), decision_making_ballot_submissions_path(ballot_id: federal_ballot.id), class: 'btn btn-primary', method: 'post'
+    - else
+      %p= t :the_federal_ballot_needs_to_be_submitted_by_an_authorized_officer
+  - elsif federal_ballot.waiting_for_approval?
+    %p= t :ballot_has_been_submitted_to_global_officers
+  - else
+    %p= t :the_proposal_needs_to_be_complete_and_signed_before_it_can_be_submitted
+
+- if current_user.in? federal_ballot.class.global_officers_that_can_approve_proposal
+  %h1= t :publish_federal_ballot_for_voting
+  %div
+    %table.properties
+      %tr
+        %th= t :next_steps
+        %td
+          %ol.next_steps
+            %li Der Titel sollte "Bundesantrag Halle 01/2017: Verkürzung der Vorortszeit" o.ä. lauten.
+            %li Die Abstimmungsfrist (Format: "01.12.2017") muss entsprechend der Bundessatzung festgelegt werden.
+            %li Die erforerliche Mehrheit muss entsprechend der Bundessatzung festgelegt werden.
+            %li Übermittlung des Antrages zur Abstimmung.
+      %tr
+        %th= t :title
+        %td= best_in_place federal_ballot, :title
+      %tr
+        %th= t :deadline_for_votes
+        %td= best_in_place federal_ballot, :localized_deadline
+      %tr
+        %th= t :required_majority
+        %td= best_in_place federal_ballot, :required_majority, as: :select, collection: ["1/2", "2/3", "3/4"]
+
+    = link_to t(:publish_federal_ballot_for_voting), "#", class: 'btn btn-primary'

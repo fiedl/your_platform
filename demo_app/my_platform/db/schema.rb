@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170608210329) do
+ActiveRecord::Schema.define(version: 20170626143909) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -123,6 +123,49 @@ ActiveRecord::Schema.define(version: 20170608210329) do
 
   add_index "dag_links", ["ancestor_id", "ancestor_type", "direct"], name: "dag_ancestor", using: :btree
   add_index "dag_links", ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
+
+  create_table "decision_making_options", force: :cascade do |t|
+    t.string   "title",       limit: 255
+    t.text     "description", limit: 65535
+    t.integer  "process_id",  limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "decision_making_processes", force: :cascade do |t|
+    t.string   "title",                limit: 255
+    t.string   "type",                 limit: 255
+    t.text     "wording",              limit: 65535
+    t.text     "rationale",            limit: 65535
+    t.integer  "proposer_group_id",    limit: 4
+    t.integer  "scope_group_id",       limit: 4
+    t.integer  "creator_user_id",      limit: 4
+    t.string   "required_majority",    limit: 255
+    t.datetime "proposed_at"
+    t.datetime "opened_for_voting_at"
+    t.datetime "deadline"
+    t.datetime "decided_at"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+  end
+
+  create_table "decision_making_signatures", force: :cascade do |t|
+    t.integer  "user_id",       limit: 4
+    t.string   "signable_type", limit: 255
+    t.string   "signable_id",   limit: 255
+    t.string   "verified_by",   limit: 255
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
+  create_table "decision_making_votes", force: :cascade do |t|
+    t.integer  "process_id", limit: 4
+    t.integer  "option_id",  limit: 4
+    t.integer  "user_id",    limit: 4
+    t.integer  "group_id",   limit: 4
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
 
   create_table "events", force: :cascade do |t|
     t.string   "name",                      limit: 255

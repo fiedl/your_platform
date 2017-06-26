@@ -5,6 +5,7 @@ de:
   federal_ballots: Bundesanträge
   new_federal_ballot: Neuer Bundesantrag
 
+  proposal: Antrag
   proposer: Antragsteller
   signed: Gezeichnet
   proposed_at: Antragsdatum
@@ -18,4 +19,19 @@ de:
   sign_legally_binding: Verbindlich unterschreiben
   could_not_sign_document_because_of_wrong_password: "Das Dokument wurde noch nicht unterschrieben, da das eingegebene Passwort falsch war."
   after_signing_the_document_cannot_be_changed: "Nachdem Sie unterschrieben haben, kann das Dokument nicht mehr verändert werden."
+  deadline_for_votes: Abstimmungsfrist
+  required_majority: Erforderliche Mehrheit
+
+  next_steps: Nächste Schritte
+  fill_out_title_wording_and_rationale_of_the_proposition: "Der Antragsteller trägt Titel, Wortlaut und Begründung des Antrages ein."
+  upload_proposition_documents: Der Antragsteller lädt ggf. weitere Unterlagen und Anhänge hoch.
+  sign_the_proposition: Der Antragsteller unterschreibt den Antrag.
+  submit_federal_ballot: Bundesantrag übermitteln
+  the_proposal_needs_to_be_signed_before_it_can_be_submitted: Der Antrag muss unterschrieben werden, bevor er übermittelt werden kann.
+  the_proposal_needs_to_be_complete_and_signed_before_it_can_be_submitted: Der Antrag muss ausgefüllt und unterschrieben werden, bevor er übermittelt werden kann.
+  enter_password_for_signing: Passwort eingeben ...
+
   draft: Entwurf
+  federal_ballot_waiting_for_approval: Warte auf Freigabe
+
+  publish_federal_ballot_for_voting: Antrag zur Abstimmung veröffentlichen

@@ -1,7 +1,7 @@
 module DecisionMaking
   class FederalBallotsController < ApplicationController
 
-    expose :federal_ballots, -> { FederalBallot.all }
+    expose :federal_ballots, -> { (FederalBallot.for_approval(current_user) + FederalBallot.my_drafts(current_user) + FederalBallot.published).uniq }
     expose :federal_ballot, -> { FederalBallot.find params[:id] if params[:id] }
 
     def index

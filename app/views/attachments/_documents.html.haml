@@ -3,6 +3,7 @@
 -#  - parent
 
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
+- show_drop_field ||= false
 
 %h1.attachments.documents= t :documents
 %div
@@ -15,3 +16,6 @@
       Um eine Datei hochzuladen, bitte zur Seite
       = link_to parent.title, parent
       wechseln.
+
+  - if show_drop_field && can?(:create_attachment_for, parent)
+    = render partial: 'attachments/drop_field', locals: {type: :pdf, parent: parent}

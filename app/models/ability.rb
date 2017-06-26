@@ -571,8 +571,8 @@ class Ability
     end
 
     # Nobody can destroy or update a ballot that is signed.
-    cannot [:update, :destroy], DecisionMaking::Ballot do |ballot|
-      ballot.signatures.any?
+    cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
+      ballot.signed?
     end
 
     # Send messages to a group, either via web ui or via email:

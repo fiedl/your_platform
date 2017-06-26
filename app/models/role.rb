@@ -162,6 +162,10 @@ class Role
     Group.find_global_admins_parent.try(:members) || []
   end
 
+  def self.global_officers
+    Group.flagged(:global_officer).map(&:members).flatten
+  end
+
   # This finder method returns all developers.
   #
   def self.developers

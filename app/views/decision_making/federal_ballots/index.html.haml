@@ -14,6 +14,6 @@
       - federal_ballots.each do |ballot|
         %tr
           %td= l ballot.proposed_at.to_date if ballot.proposed_at
-          %td= link_to ballot.proposer_group.title, ballot.proposer_group if ballot.proposer_group
+          %td= ballot.proposer_group.try(:title)
           %td= link_to ballot.title, ballot
-          %td{class: ballot.status_key}= ballot.status_string
+          %td{class: ballot.status_key}= render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: ballot}

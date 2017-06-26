@@ -2,17 +2,27 @@
   = current_title
   - if can? :destroy, federal_ballot
     = remove_button federal_ballot, confirm: t(:are_you_sure_to_delete_this_ballot), show_only_in_edit_mode: false
+  .tool= render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: federal_ballot}
 %div
-  %table
+  %table.properties
     %tr
       %th= t :title
       %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :title
-    %tr
-      %th= t :proposed_at
-      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :localized_proposed_at
+    - if federal_ballot.proposed_at
+      %tr
+        %th= t :proposed_at
+        %td= l federal_ballot.proposed_at.to_date
+    - if federal_ballot.deadline
+      %tr
+        %th= t :deadline_for_votes
+        %td= l federal_ballot.deadline.to_date
     %tr
       %th= t :proposer
-      %td= best_in_place_if can?(:update, federal_ballot), federal_ballot, :proposer_group_id, as: :select, collection: Hash[current_user.corporations_the_user_can_represent.collect { |corporation| [corporation.id, corporation.title]}]
+      %td
+        - if can? :update, federal_ballot
+          = best_in_place federal_ballot, :proposer_group_id, as: :select, collection: Hash[current_user.corporations_the_user_can_represent.collect { |corporation| [corporation.id, corporation.title]}]
+        - else
+          = federal_ballot.proposer_group.title
     %tr
       %th= t :wording
       %td
@@ -26,6 +36,13 @@
         - federal_ballot.signatures.each do |signature|
           = "#{link_to_user(signature.user)}, #{l(signature.created_at.to_date)}".html_safe
         - if can?(:sign, federal_ballot) && !federal_ballot.signatures.pluck(:user_id).include?(current_user.id)
+          %p= t :after_signing_the_document_cannot_be_changed
           = link_to new_decision_making_ballot_signature_path(ballot_id: federal_ballot.id), class: 'btn btn-default' do
             = signature_icon
             = t :sign_dots
+
+- if federal_ballot.attachments.any? || can?(:create_attachment_for, federal_ballot)
+  #attachments
+    = render partial: 'attachments/documents', locals: {attachments: federal_ballot.attachments, parent: federal_ballot, show_drop_field: true}
+
+= render partial: 'decision_making/federal_ballots/next_steps', object: federal_ballot, as: :federal_ballot
