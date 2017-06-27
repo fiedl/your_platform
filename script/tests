@@ -23,7 +23,7 @@
 
 rspec_args = ARGV.to_a.join(" ")
 
-json_list_of_specs = `rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}`
+json_list_of_specs = `bin/rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}`
 
 require 'json'
 data = JSON.parse(File.read("tmp/specs.json"))
