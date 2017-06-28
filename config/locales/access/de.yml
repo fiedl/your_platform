@@ -16,6 +16,9 @@ de:
   you_have_used_your_admin_rights_to_override: "Sie haben Ihre Admin-Rechte verwendet, um den Inhaltsschutz zu übergehen. Der Vorgang wurde geloggt."
   this_is_the_public_website_and_can_be_read_by_all_internet_users: "Diese Seite gehört zur öffentlichen Homepage und kann von jedem im Internet gelesen werden."
   this_log_can_be_seen_by_global_admins: "Dieses Logbuch kann von globalen Administratoren gelesen werden."
+  only_page_admins_can_view_or_change_these_settings: "Nur Seiten-Administratoren können diese Seiten-Einstellungen sehen und ändern."
+  only_admins_can_access_this: "Nur Administratoren haben hierauf Zugriff."
   only_global_admins_can_access_this: "Nur globale Administratoren haben hierauf Zugriff."
   only_officers_can_edit_this_content: "Nur zuständige Amtsträger können diesen Inhalt bearbeiten."
   only_developers_can_access_this: "Nur Entwickler haben hierauf Zugriff."
+  this_feature_has_been_deactivated: Dieses Feature wurde deaktiviert.

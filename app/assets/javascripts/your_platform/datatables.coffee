@@ -179,6 +179,15 @@ $(document).ready ->
     ]
   }
 
+  App.datatables.create '.datatable.home_pages', {
+    "pageLength": 50,
+    "order": [[3, "desc"]],
+    columnDefs: [
+      { type: 'de_date', targets: 2 },
+      { type: 'de_date', targets: 3 }
+    ]
+  }
+
   App.datatables.create '.datatable.profile_fields', {
     "pageLength": 100,
     "order": [[0, "asc"]]

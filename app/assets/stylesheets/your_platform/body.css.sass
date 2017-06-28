@@ -1,0 +1,16 @@
+// For nested rows without cols in between, do not make them
+// wider than usual.
+//
+// This is needed because it's not planned by bootstrap to have
+// nested rows without cols inbetween.
+//
+#content > .row > #content_area > .row
+  margin: 0px
+
+// But if there is a col inbetween, make them wider to
+// take the padding of the col into account, which is the
+// bootstrap default.
+//
+#content > .row > #content_area.col-sm-9 > .row
+  margin-left: -15px
+  margin-right: -15px

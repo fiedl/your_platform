@@ -1,0 +1,90 @@
+body.iweb-layout
+  font-family: 'ArialMT', Arial, sans-serif
+  color: rgb(88, 77, 77)
+  font-size: 15px
+  h2
+    font-size: 20px
+  h1, h2, h3, h4
+    margin-top: 20px
+    margin-bottom: 10px
+  h1.panel-title
+    margin-top: 5px
+    margin-bottom: 10px
+
+  > .container-fluid
+    max-width: 650px
+    margin-left: auto
+    margin-right: auto
+  #horizontal-nav-bar
+    text-align: center
+    border-bottom: solid 1px #666
+    margin-bottom: 1px
+    > ul
+      display: inline-block
+      float: none
+      font-size: 105%
+      font-family: Arial, sans-serif
+      li.horizontal-nav-link > a
+        color: #666
+      li.horizontal-nav-link.active > a
+        color: #463C3C
+        font-weight: bold
+        background: none
+  #header
+    padding-top: 10px
+    margin-bottom: 15px
+    > img
+      width: 100%
+    #logo
+      text-align: center
+    #home_page_title
+      text-align: center
+      font-family: 'Garamond-Bold', 'Garamond', serif
+      font-weight: 700
+      font-size: 30px
+      color: rgb(167, 167, 167)
+      .home_page_sub_title
+        font-size: 19px
+        font-family: 'Garamond', serif
+        font-weight: normal
+        letter-spacing: 0.24em
+  #toolbar
+    margin-top: -40px
+    margin-bottom: 20px
+
+  .panel-default
+    .panel-heading
+      background-color: white
+      border-color: white
+      padding-top: 3px
+      padding-bottom: 0px
+    .panel-body
+      padding-top: 2px
+    .panel-footer
+      background-color: white
+      border-color: white
+  .page_footer
+    display: none
+
+  #inline-pictures
+    margin-bottom: 65px
+
+  .galleria-container
+    -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
+
+
+// No box header for the home page.
+body.pages-homepage.iweb-layout
+  .box.page.first
+    border: none
+    .panel-heading
+      margin-top: -40px
+      height: 40px
+      background: none
+    .panel-title
+      display: none
+
+// No global page settings button for this compact layout.
+body.iweb-layout
+  .row.for_settings_button
+    display: none

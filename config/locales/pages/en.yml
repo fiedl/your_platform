@@ -1,7 +1,7 @@
 en:
   add_blog_entry: Add blog entry
   new_blog_post: New blog post
-  
+
   attachment: 'Attachment'
   attachments: 'Attachments'
   add_attachment: 'Add attachment'
@@ -10,6 +10,21 @@ en:
   a_new_page_can_be_destroyed_within_ten_minutes: 'The new contant can be removed within ten minutes after creation in case it has been created mistakenly.'
   destroying_page: Destroying entry.
   please_wait: Please wait.
+
+  new_page: New page
+  this_will_create_a_new_page_on_the_page_str: "This will create a new page under the parent page %{str}."
+  page_headline: Headline
+  options: Options
+  display_the_new_page_as_blog_post: Display the new page as blog post.
+  blog_posts_will_be_displayed_on_the_parent_page: "Blog posts will be shown on the parent page chronologically. Older posts are shown below the newer ones. Blog posts are most suited for news."
+  display_the_new_page_as_regular_page: Display the new page as regular content.
+  regular_pages_are_used_for_permanent_information: Regular pages are most suited for permanent information or overview information.
+  display_the_new_page_as_teaser_box: Show as teaser box on the parent page.
+  display_the_new_page_in_the_nav: Show in the navigation menu.
+  hide_the_new_page: Hide the new page.
+  for_example_for_special_pages_like_the_imprint: "The new page won't be shown as teaser or on the parent page and is only accessible via a direct link or the search. This is most suited for special pages like the imprint."
+  the_page_options_may_be_changed_later_on_the_page_settings_page: The options can be changed later on the settings page.
+  decision_help: Help me decide.
 
   file: 'File'
   helpers:

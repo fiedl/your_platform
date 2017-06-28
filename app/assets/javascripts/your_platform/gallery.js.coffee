@@ -21,10 +21,13 @@ class App.Gallery
   find: (selector)->
     @root_element.find(selector)
 
+  closest: (selector)->
+    @root_element.closest(selector)
+
   # Basic galleria configuration.
   # See: http://galleria.io/docs/options/
   #
-  default_galleria_options: {
+  default_galleria_options: -> {
     imageCrop: 'landscape',
     transition: 'slide',
     initialTransition: 'fade',
@@ -38,16 +41,24 @@ class App.Gallery
     thumbnails: false,
     #swipe: 'auto',
     responsive: true,
-    #height: 0.625, # 16:10
-    height: 0.5629, # 16:9
+    height: @default_height(),
     debug: false,
     ## height: $(this).find('img').attr('height')
-    lightbox: true
+    lightbox: true,
+    thumbnails: false,
+    imageMargin: 0,
   }
+
+  default_height: ->
+    if @closest('.box').width() > 250
+      # return 0.5629, # 16:9
+      return 0.5 # 16:9 aspect ratio with border correction
+    else
+      return 0.625 # 16:10
 
   initSettings: ->
     self = this
-    Galleria.configure(self.default_galleria_options)
+    Galleria.configure(self.default_galleria_options())
 
   initTheme: ->
     # Initialize galleria. One has to load a theme here,
@@ -58,7 +69,7 @@ class App.Gallery
 
   runGalleria: ->
     self = this
-    Galleria.run(self.unique_id(), self.default_galleria_options)
+    Galleria.run(self.unique_id(), self.default_galleria_options())
 
   store_gallery_instance_in_data_attribute: ->
     @root_element.data('gallery', this)
@@ -79,9 +90,16 @@ class App.Gallery
         # shown below the image.
         #
         self.galleria_instance.bind 'loadfinish', (e)->
+          self.add_magnification_glass() # needs to be in loadfinish to detect video
+          self.active_video_on_mobile()
           if e.galleriaData
             self.current_image_data = e.galleriaData
+            self.find('.galleria-image').removeClass('active')
+            $(e.imageTarget).closest('.galleria-image').addClass('active')
             self.show_description()
+
+        if self.root_element.hasClass('deactivate-auto-lightbox')
+          self.galleria_instance.setOptions 'lightbox', false
 
         self.hide_thumbs_or_slideshow()
         self.hide_errors_container()
@@ -99,19 +117,28 @@ class App.Gallery
 
   show_description: ->
     self = this
-    $.ajax({
-      type: 'GET',
-      url: self.description_path(),
-      success: (result) ->
-        self.picture_info_element()
-          .hide()
-          .replaceWith(result.html).show()
-        self.picture_info_element()
-          .find('.best_in_place').best_in_place()
-        self.picture_info_element().find('.remove_button')
-          .removeClass('show_only_in_edit_mode')
-          .hide()
-    })
+    if self.is_video_gallery()
+      self.picture_info_element().hide()
+    else
+      $.ajax({
+        type: 'GET',
+        url: self.description_path(),
+        success: (result) ->
+          self.picture_info_element()
+            .hide()
+            .replaceWith(result.html).show()
+          self.picture_info_element().find('.remove_button')
+            .removeClass('show_only_in_edit_mode')
+            .hide()
+          self.picture_info_element().apply_edit_mode()
+          self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
+          ## When the user enters a title, it should stay visible when
+          ## exiting edit mode.
+          #self.picture_info_element().on 'change paste keydown', 'input', ->
+          #  self.picture_info_element().find('.show_only_in_edit_mode')
+          #    .removeClass('show_only_in_edit_mode')
+
+      })
 
   # /attachments/123/filename.png
   image_path: ->
@@ -125,6 +152,9 @@ class App.Gallery
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
 
+  currently_in_edit_mode: ->
+    @root_element.closest('.edit_mode_group').hasClass('currently_in_edit_mode')
+
   # Hide thumbnail collections. Thumbnails are handled by YourPlatform
   # separately.
   #
@@ -132,8 +162,6 @@ class App.Gallery
   #
   hide_thumbs_or_slideshow: ->
     @find('.galleria-thumbnails').hide()
-    @find('.galleria-stage').css('bottom', '10px')
-    @find('.galleria-container').height (index, height)-> height - 50
 
   # Do not show galleria errors. These are not useful
   # in production.
@@ -144,10 +172,11 @@ class App.Gallery
   bind_fullscreen_events: ->
     self = this
 
-    # Clicking on the thumbnail activates the lightbox.
-    #
-    @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
-      self.open_lightbox()
+    # We've removed the galleria thumbnails and handle them manually below galleria.
+    # # Clicking on the thumbnail activates the lightbox.
+    # #
+    # @root_element.on 'click', '.galleria-thumbnails .galleria-image img', (e)->
+    #   self.open_lightbox()
 
     # # Clicking on an gallery image switches to fullscreen mode,
     # # i.e. covers the full browser window.
@@ -186,6 +215,47 @@ class App.Gallery
     #
     # $(document).on 'click', '.galleria-container:not(.fullscreen) .galleria-stage img', ->
     #   $(this).closest('.galleria').data('galleria').enterFullscreen()
+
+  add_magnification_glass: ->
+    self = this
+    # TODO: if link exists
+    unless self.is_ios()
+      self.find('.galleria-container').append('<span class="galleria-magnification-glass"><i class="fa fa-search-plus"></i></span>')
+      self.find('.galleria-magnification-glass').bind 'click', ->
+        self.open_lightbox()
+        setTimeout (-> self.play_lightbox_video()), 500
+      ## The idea is to open the video in a lightbox for small boxes.
+      ## But this prevents the user from further exploring the site.
+      #if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').size() > 0
+      #  self.find('.galleria-magnification-glass').addClass('for-small-video')
+      #
+      # And hide the small magnification class if the video starts playing.
+      if self.is_video_gallery()
+        self.find('.galleria-image img').bind 'mouseup', ->
+          self.find('.galleria-magnification-glass').hide()
+
+  active_video_on_mobile: ->
+    self = this
+    # On iOS, the autoplay is suppressed on the iframe-embedded video.
+    # Therefore, the user would have to click twice to start the video,
+    # one click to replace the image by the iframe, one click to start
+    # the video. This is annoying! Therefore, insert the iframe
+    # without the first click.
+    if self.is_ios()
+      if self.is_video_gallery()
+        self.find('.galleria-magnification-glass').hide()
+        self.find('.galleria-image-nav').hide()
+        self.find('.galleria-counter').hide()
+        self.find('.galleria-videoicon').click()
+
+  play_lightbox_video: ->
+    $('.galleria-lightbox-image .galleria-image img').mouseup()
+
+  is_video_gallery: ->
+    @root_element.hasClass('video-gallery')
+
+  is_ios: ->
+    navigator.userAgent.match(/(iPod|iPhone|iPad)/i)
 
   open_lightbox: ->
     @galleria_instance.openLightbox()

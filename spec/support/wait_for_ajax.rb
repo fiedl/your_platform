@@ -13,7 +13,7 @@ module WaitForAjax
   # end
 
   def wait_for_ajax
-    sleep(wait_time)
+    sleep(wait_time * 1.5)
   end
 
   # def wait_for_ajax

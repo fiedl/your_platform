@@ -1,15 +1,15 @@
 module AutoCompletionHelper
 
-  # options: 
+  # options:
   #   - activator: places a pen next to the field that activates it (for boxes without edit button)
   #
   def multiple_users_best_in_place(object, attribute, options = {})
     # autocomplete_field_tag :user_title, '', autocomplete_title_users_path %>
-    
+
     activator_id = options[:activator] ? "#{object.cache_key} #{attribute} multi user selector activator".parameterize : ''
-    
-    html = best_in_place( object, attribute, 
-                   html_attrs: { 
+
+    html = best_in_place( object, attribute,
+                   html_attrs: {
                      'data-autocomplete-url' => titles_api_v1_users_path,
                      :class => 'multiple-users-select-input'
                    },
@@ -27,7 +27,7 @@ module AutoCompletionHelper
                      'data-autocomplete-url' => titles_api_v1_users_path,
                      :class => "user-select-input #{attribute}"
                    },
-                   classes: "relationships #{attribute}" )
+                   class: "relationships #{attribute}" )
   end
 
 end

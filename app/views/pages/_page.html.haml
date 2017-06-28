@@ -1,26 +1,17 @@
+- # locals:
+- page || raise('no page given')
+- teaser_box ||= false
+- raise('Please use the pages/teaser_box partial instead!') if teaser_box
+
 .page_with_attachments
-  %h1
+  %h1.page{id: "page-#{page.id}-box"}
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
-      = best_in_place_if can?(:update, page), page, :title
+      -#= best_in_place_if can?(:update, page), page, :title
+      = wysiwyg_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-    - if can? :manage, page
-      .activities_tool.tool.do_not_show_in_edit_mode
-        = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)
-    - if can? :destroy, page
-      .delete_page_tool.tool
-        = link_to icon(:trash), page_path(page, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_page', title: I18n.t(:a_new_page_can_be_destroyed_within_ten_minutes), remote: true
-    - if can? :manage, page
-      .attachment_tools.tool
-        = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
-    .archive_tools.tool
-      = archived_label(page)
-      = archive_button(page) if (page.type == 'BlogPost') && can?(:update, page)
-    - if can? :manage, page
-      .page_settings_tool.tool
-        .shown_on_box_header_hover
-          = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
+    = render partial: 'pages/box_tool_buttons', object: page, as: :page
   %div.page
     - if page.image_attachments_not_listed_in_content.any?
       #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
@@ -31,11 +22,11 @@
       .page_teaser{class: ('show_only_in_edit_mode' if page.content.try(:include?, page.teaser_text.to_s))}
         = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, activator: 'manual'
 
-    %div.page_body{data: {upload_url: attachments_path(parent_id: page.id, parent_type: 'Page')}}
-      %div{ id: 'page_content', data: { mercury: 'full' } }
-        = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
-      .show_only_in_edit_mode
-        = render partial: 'shared/markdown_help'
+    = render partial: 'pages/page_body', object: page, as: :page
+
+    - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
+      .hidden-print.show_only_in_edit_mode
+        #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
   #attachments.attachments
     = render(partial: 'pages/videos', locals: {page: page})

@@ -36,7 +36,7 @@ feature 'Setup' do
 
       within('#content_area') { page.should have_text Page.find_intranet_root.title }
       page.should have_text @user.title
-      within '#category_indicator' do
+      within '#horizontal-nav-bar' do
         page.should have_text 'London'
         page.should have_no_text 'Berlin'
       end

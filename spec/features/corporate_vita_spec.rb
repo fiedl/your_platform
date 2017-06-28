@@ -62,10 +62,7 @@ feature 'Corporate Vita', js: true do
           click_on @first_promotion_workflow.name
         end
 
-        within '#corporate_vita' do
-          wait_until { page.has_content? @status_groups.second.name }
-        end
-
+        click_tab :corporate_info_tab
         within '#corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
@@ -76,16 +73,14 @@ feature 'Corporate Vita', js: true do
         end
 
         # run the second workflow
+        click_tab :general_user_info_tab
         within '.box.first' do
           click_on I18n.t(:change_status)
           click_on @second_promotion_workflow.name
         end
 
+        click_tab :corporate_info_tab
         within '#corporate_vita' do
-          wait_until { page.has_content? @status_groups.last.name }
-        end
-
-        within first '.section.corporate_vita' do
           page.should have_content @status_groups.first.name
           page.should have_content @status_groups.second.name
           page.should have_content @status_groups.last.name
@@ -103,6 +98,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
@@ -173,6 +169,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.in_time_zone(@user.time_zone).to_date
@@ -208,6 +205,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should still be visible in the profile' do
+        click_tab :corporate_info_tab
         page.should have_content @status_groups.first.name
       end
     end
@@ -260,6 +258,7 @@ feature 'Corporate Vita', js: true do
       end
 
       it 'should not be possible to change the date' do
+        click_tab :corporate_info_tab
         within('#corporate_vita') do
 
           @valid_from_formatted = I18n.localize @membership.valid_from.to_date

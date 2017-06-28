@@ -1,0 +1,11 @@
+#inline-pictures
+  = galleria theme: 'classic' do
+
+    - if primary_teaser_url = page.teaser_image_url
+      = image_tag primary_teaser_url
+
+    - (page.possible_teaser_image_urls - [primary_teaser_url]).each do |src|
+      = image_tag src
+
+    - page.image_attachments_not_listed_in_content.each do |attachment|
+      = attachment_galleria_image_tag attachment

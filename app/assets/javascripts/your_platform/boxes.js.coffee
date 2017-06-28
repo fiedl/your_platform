@@ -8,7 +8,6 @@ $(document).on 'save', '.box', ->
 $(document).on 'cancel', '.box', ->
   $(this).find('.content').removeClass 'currently_in_edit_mode'
 
-
 $(document).ready ->
   $('.content_twoCols_right > div.col-xs-12').each ->
     $(this).find('.box:first').addClass('first')
@@ -16,9 +15,8 @@ $(document).ready ->
 $.fn.process_box_tools = ->
   this.find('.box.event .edit_button').hide()
   this.find('.box.event #ics_export').hide()
-  this.find('.archive_button').hide()
-  this.find('.show_activities_button').hide()
-  this.find('.manage_attachments_button').hide()
+  this.find('.shown_on_edit_button_hover').hide()
+  this.find('.shown_on_box_header_hover').hide()
 
   this.find('.box .box_header .tool').each ->
     tool = $(this)
@@ -26,6 +24,15 @@ $.fn.process_box_tools = ->
       .find('.box_toolbar').first()
     tool.detach()
     tool.prependTo(box_toolbar)
+
+  # If there is a panel-footer added to the content, move it outside
+  # the panel-body to display it correctly.
+  #
+  this.find('.panel-body .panel-footer').each ->
+    footer = $(this)
+    panel = footer.closest('.panel')
+    footer.detach()
+    footer.appendTo(panel)
 
   # Remove 'edit' buttons for boxes where no .editable element
   # is included.
@@ -38,12 +45,3 @@ $.fn.process_box_tools = ->
 $(document).ready ->
   $(document).process_box_tools()
 
-$(document).on 'mouseenter', '.edit_button', ->
-  $(this).closest('.box').find('.archive_button').show('fade')
-  $(this).closest('.box').find('.show_activities_button').show('fade')
-  $(this).closest('.box').find('.manage_attachments_button').show('fade')
-
-$(document).on 'mouseleave', '.box_header', ->
-  $(this).find('.archive_button').hide('fade')
-  $(this).find('.show_activities_button').hide('fade')
-  $(this).find('.manage_attachments_button').hide('fade')

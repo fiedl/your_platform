@@ -21,6 +21,7 @@ feature "review membership" do
 
     visit user_path(@user)
 
+    click_tab :corporate_info_tab
     within ".box.section.corporate_vita" do
       page.should have_text @group.name
       page.should have_selector ".confirm-review-button"

@@ -1,11 +1,16 @@
+- # locals:
+- # attachment
+- show_author ||= (attachment.parent.kind_of?(Event))
+- show_only_in_edit_mode ||= true if can?(:update, attachment) and attachment.title.blank?
+
 .picture-info
-  .picture-title
+  .picture-title{class: ('show_only_in_edit_mode editable' if show_only_in_edit_mode)}
     - if can? :destroy, attachment
       = remove_button(attachment)
     = best_in_place_if can?(:update, attachment), attachment, :title, nil: I18n.t(:click_here_to_set_an_image_title)
-  .picture-description
+  .picture-description{class: ('show_only_in_edit_mode editable' if show_only_in_edit_mode)}
     = best_in_place_if can?(:update, attachment), attachment, :description, nil: I18n.t(:click_here_to_set_an_image_description)
-  - if attachment.author
+  - if attachment.author and show_author
     .picture-author
       &copy;
       = attachment.created_at.year.to_s + ","

@@ -1,14 +1,14 @@
 - # show officers box for a structureable
 - #
 - # locales:
-- #    structureable
-- #
+- structureable || raise('no structureable given')
+- limit ||= 1000
 
 - if structureable.find_officers_groups.any? or can?(:create_officers_group_for, structureable)
-  %h1.officers.section= t :officers
+  %h1.officers.section{id: "officers-box-for-#{structureable.id}"}= t :officers
   %span#officers
-    %ul.officer_groups
-      - sorted_officers_groups_for(structureable).each do |officer_group|
+    %ul.officer_groups.keys-and-values
+      - sorted_officers_groups_for(structureable).first(limit).each do |officer_group|
 
         - # do not display the parent group itself (bug circumvention)
         - # (there are several of these groups.l they have been created by
@@ -16,7 +16,7 @@
         - #
         - if not officer_group.has_flag? :officers_parent
           = render partial: 'officers/officers_group_entry', locals: {officer_group: officer_group, structureable: structureable}
-      
+
     - if can? :create_officers_group_for, structureable
       .add_officers_group.show_only_in_edit_mode
         %p
@@ -27,7 +27,6 @@
             = t :add_office
         %p
           = render partial: 'officers/history_notice'
-            
+
     .show_only_in_edit_mode
       = render partial: 'shared/authorization_info', locals: {subject: 'officers', navable: structureable}
-              

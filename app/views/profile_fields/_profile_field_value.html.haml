@@ -3,6 +3,9 @@
   - input_type = :select
   - collection = ProfileFields::Address.country_codes_hash
 
+- if profile_field.type == 'ProfileFieldTypes::About'
+  - input_type = :textarea
+
 - if profile_field.children_count == 0
   = best_in_place_if can?(:update, profile_field), profile_field, :value, {as: input_type, class: 'value', collection: collection}
 

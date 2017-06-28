@@ -1,11 +1,10 @@
 class Event < ActiveRecord::Base
 
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
-  is_navable
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-
+  include Navable
   include EventGroups
   include EventContactPeople
   include EventAttendees

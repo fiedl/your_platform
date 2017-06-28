@@ -9,11 +9,11 @@ module CapybaraHelper
     end
   end
 
-  def click_on(link_text)
+  def click_on(link_text, options = {})
     if link_text.kind_of?(String) or link_text.kind_of?(Symbol)
-      super(t(link_text, default: link_text))
+      super(t(link_text, default: link_text), options)
     else # It could already be a node.
-      super link_text
+      super link_text, options
     end
   end
 
@@ -89,4 +89,19 @@ module CapybaraHelper
     find('#attachment_file', visible: false).set local_file_path
   end
 
+end
+
+# https://github.com/ryanb/cancan/blob/master/lib/cancan/matchers.rb
+RSpec::Matchers.define :be_able_to do |*args|
+  match do |ability|
+    ability.can?(*args)
+  end
+
+  failure_message_for_should do |ability|
+    "expected to be able to #{args.map(&:inspect).join(" ")}"
+  end
+
+  failure_message_for_should_not do |ability|
+    "expected not to be able to #{args.map(&:inspect).join(" ")}"
+  end
 end

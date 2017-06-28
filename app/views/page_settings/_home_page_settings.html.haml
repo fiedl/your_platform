@@ -1,0 +1,17 @@
+- home_page || raise('no home_page given.')
+
+%table.settings.home_page_settings
+  %tr
+    %th= t :horizontal_nav
+    %td.show_in_menu
+      - ([home_page] + home_page.child_pages).each do |p|
+        %p= ajax_check_box p, :show_in_menu, p.title
+  %tr.layout
+    %th= t :layout
+    %td= setting_in_place home_page, :layout, as: :select, collection: ApplicationController.new.permitted_layouts.collect { |layout| [layout, layout]}
+  %tr.home_page_title
+    %th= t :home_page_title
+    %td= setting_in_place home_page, :home_page_title
+  %tr.home_page_sub_title
+    %th= t :home_page_sub_title
+    %td= setting_in_place home_page, :home_page_sub_title

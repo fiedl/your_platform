@@ -12,8 +12,6 @@ class App.Attachments
         if $(attachments_element).find('#new_attachment').size() > 0
           App.upload_boxes.push new App.UploadBox($(attachments_element))
 
-
-
 App.attachments = new App.Attachments()
 
 $(document).ready ->
@@ -24,8 +22,3 @@ $(document).on 'click', '.pictures .remove_button', ->
   pictures_box.find('.galleria-image.active').hide('explode')
   pictures_box.find('.picture-info').hide('explode')
 
-$(document).on 'click', '.image_attachment_thumbnails img', ->
-  image_big_url = $(this).data('image-big-url')
-  gallery = $(this).closest('.box').find('.galleria').data('gallery')
-  gallery.show(image_big_url)
-  gallery.open_lightbox()

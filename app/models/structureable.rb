@@ -95,7 +95,7 @@ module Structureable
 
       for link in links do
 
-        if link.destroyable?
+        if link.reload.destroyable?
           link.destroy
         else
 

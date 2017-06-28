@@ -48,6 +48,7 @@ require 'haml'
 require 'redcarpet'
 require 'gemoji'
 require 'auto_html'
+require 'reverse_markdown'
 
 # JavaScript
 require 'rails-assets-jquery-ujs'
@@ -71,13 +72,13 @@ require 'rails-assets-bootstrap-social'
 
 # In Place Editing
 require 'best_in_place'
+require 'rails-assets-Voog--wysihtml'
 
 # Search
 require 'elasticsearch/model'
 
 # Geo Coding
 require 'geocoder'
-require 'gmaps4rails'
 require 'biggs'
 
 # Form Helpers
@@ -99,6 +100,11 @@ require 'edit_mode'
 # View Helpers
 require 'phony'
 require 'will_paginate'
+
+# Gallery
+require 'rails-assets-jquery-masonry'
+require 'rails-assets-imagesloaded'
+# also, galleria is in our `vendor` directory.
 
 # Client-Side Validations
 require 'judge'

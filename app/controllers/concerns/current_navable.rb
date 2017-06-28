@@ -1,7 +1,8 @@
 concern :CurrentNavable do
 
   included do
-    helper_method :current_navable, :current_home_page, :point_navigation_to, :set_current_navable
+    helper_method :current_navable, :point_navigation_to, :set_current_navable
+    helper_method :current_home_page
   end
 
   # This method returns the navable object the navigational elements on the

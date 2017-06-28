@@ -10,7 +10,7 @@ module EmailHelper
   # readable, i.e. can be removed manually.
   #
   def markup_and_email_scrambler(text)
-    markup scramble_emails text
+    markup scramble_emails text if text
   end
 
   def scramble_emails(text)

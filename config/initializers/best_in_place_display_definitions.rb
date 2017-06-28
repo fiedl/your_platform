@@ -27,7 +27,7 @@ ActionView::Base.send :include, TagHelper
 
 # This calls a helper method `markup(str)`.
 #
-BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup_and_email_scrambler)
+BestInPlace::DisplayMethods.add_helper_method(Page, :content, :page_markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :body, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :welcome_message, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)

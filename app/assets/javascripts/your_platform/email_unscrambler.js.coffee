@@ -2,11 +2,21 @@
 # inserted in: app/helpers/email_helper.rb
 #
 unscramble = (text)->
-  text.replace("-without-spam@no-spam-", "@")
+  text.replace("-without-spam", "")
+    .replace("no-spam-", "")
 
-$(document).ready ->
+unscramble_email_tags = (html)->
   # http://stackoverflow.com/a/1770981/2066546
-  $('a[href^="mailto:"]').each ->
+  $(html).find('a[href^="mailto:"]').each ->
     a_tag = $(this)
     a_tag.html unscramble a_tag.html()
     a_tag.attr 'href', unscramble(a_tag.attr('href'))
+
+$(document).ready ->
+  unscramble_email_tags $(document)
+
+$(document).on 'save', '.wysiwyg', ->
+  wysiwyg = $(this)
+  setTimeout ->
+    unscramble_email_tags wysiwyg
+  , 800

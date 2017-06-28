@@ -7,6 +7,31 @@ de:
   page_author: Autor
   redirect_page_to: 'Weiterleiten nach'
 
+  home_page_settings: Homepage-Einstellungen
+  boxes_on_this_page: Boxen auf dieser Seite
+  select_boxes_to_display_on_the_page_str: "Hier kann ausgewählt werden, welche Inhalte auf der Seite '%{str}' als Boxen angezeigt werden:"
+  horizontal_nav: Horizontales Menü
+  layout: Layout
+  home_page_title: Homepage-Überschrift
+  home_page_sub_title: Homepage-Untertitel
+
+  sub_pages: Unterseiten
+
+  locations_map: Karte der Standorte
+  group_map_sub_title: Untertitel der Karte
+  show_locations_map: Karte der Standorte anzeigen
+  locations_map_group_id: "Gruppen-ID der Gruppe, deren Untergruppen auf der Karte angezeigt werden sollen:"
+
+  show_events: Veranstaltungen anzeigen
+  show_events_for_group_id: "Veranstaltungen der Gruppe mit folgender ID anzeigen:"
+  show_only_events_published_on_global_website: "Nur Veranstaltungen anzeigen, für die 'Auf globaler öffentlicher Homepage' ausgewählt wurde."
+  show_only_events_published_on_local_website: "Nur Veranstaltungen anzeigen, für die 'Auf lokaler Homepage veröffentlichen' ausgewählt wurde."
+
+  show_officers: Amtsträger anzeigen
+  show_officers_of_group_id: Amtsträger der Gruppe mit folgender ID anzeigen.
+  for_empty_field_show_page_officers: "Wenn das Feld leer ist, werden die Amtsträger angezeigt, die direkt dieser Inhaltsseite zugeordnet sind (siehe Kasten 'Amtsträger' weiter unten). Wenn hingegen eine Gruppen-ID angegeben ist, werden stattdessen die Amtsträger dieser Gruppe angezeigt."
+  show_only_the_first_n_offices: "Nur die ersten N Ämter anzeigen:"
+
   sub_pages: Unterseiten
 
   danger_zone_tm: Danger Zone™

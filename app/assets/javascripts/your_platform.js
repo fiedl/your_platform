@@ -26,6 +26,10 @@
 //= require i18n/translations
 //= require pgwbrowser
 //= require jquery.atwho
+//= require wysihtml/wysihtml
+//= require wysihtml/wysihtml.toolbar
+//= require 'jquery-masonry/dist/masonry.pkgd'
+//= require imagesloaded
 //= require Chart.bundle
 //= require chartkick
 //= require bootstrap-tokenfield

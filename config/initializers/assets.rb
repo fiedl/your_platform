@@ -1,7 +1,11 @@
 # This file lists the assets that need to be compiled into separate files.
 
 # Layout
-Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_layout.css compact_layout.css modern_layout.css mobile_layout.css )
+Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_layout.css )
+Rails.application.config.assets.precompile += %w( iweb_layout.css )
+Rails.application.config.assets.precompile += %w( compact_layout.css )
+Rails.application.config.assets.precompile += %w( modern_layout.css )
+Rails.application.config.assets.precompile += %w( mobile_layout.css )
 
 # Galleria
 Rails.application.config.assets.precompile += %w( galleria-classic.js galleria/classic-loader.gif galleria/classic-map.png )

@@ -81,6 +81,7 @@ class Ability
         end
         if user.admin_of_anything? and view_as?(:admin)
           rights_for_local_admins
+          rights_for_page_admins
         end
         if view_as?([:officer, :admin])
           rights_for_local_officers
@@ -186,6 +187,18 @@ class Ability
         (workflow.admins_of_ancestors.include?(user))
       end
     end
+
+    can :index, :home_pages
+    can :create, Pages::HomePage
+  end
+
+  def rights_for_page_admins
+    can :manage, Page do |page|
+      user.administrated_objects.include? page
+    end
+    can :manage, Attachment do |attachment|
+      can? :manage, attachment.parent
+    end
   end
 
   def rights_for_local_officers
@@ -244,7 +257,7 @@ class Ability
       end
       can :update, Attachment do |attachment|
         can?(:read, attachment) &&
-        (attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
+        (attachment.parent.respond_to?(:group) && attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
         ((attachment.author == user) || (attachment.parent.respond_to?(:author) && attachment.parent.author == user))
       end
 
@@ -486,6 +499,12 @@ class Ability
     can :use, :semester_calendars
     cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
 
+    # Use the tabs view in users#show. This has been a beta feature previously.
+    # TODO: Remove the feature switch whenever you feel we won't switch back.
+    #
+    can :use, :tab_view
+
+
     # Imprint
     # Make sure all users (even if not logged in) can read the imprint.
     #
@@ -497,7 +516,9 @@ class Ability
 
     # All users can read the public website.
     #
-    can :read, Page, id: Page.public_website_page_ids
+    can :read, Page do |page|
+      page.public?
+    end
     can [:read, :download], Attachment do |attachment|
       attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
@@ -515,6 +536,12 @@ class Ability
     #
     can :create_comment_for, BlogPost do |blog_post|
       can? :read, blog_post
+    end
+
+    # All users can read public events.
+    #
+    can :read, Event do |event|
+      event.publish_on_global_website || event.publish_on_local_website
     end
 
     # Listing Events and iCalendar (ICS) Export:

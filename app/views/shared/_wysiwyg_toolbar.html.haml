@@ -1,0 +1,18 @@
+#wysihtml-toolbar.wysihtml-toolbar{:style => "display: none;"}
+  .btn-toolbar
+    .btn-group
+      -#%a.btn.btn-default{data: {wysihtml_command: 'formatBlock', wysihtml_command_blank_value: true}}= fa_icon :font
+      %a.btn.btn-default{data: {wysihtml_command: 'formatBlock', wysihtml_command_value: 'h2'}}= fa_icon :header
+      %a.btn.btn-default{data: {wysihtml_command: 'bold'}}= fa_icon :bold
+      %a.btn.btn-default{data: {wysihtml_command: 'italic'}}= fa_icon :italic
+    .btn-group
+      -#%a.btn.btn-default{data: {wysihtml_command: 'formatBlock', wysihtml_command_value: 'blockquote'}}= fa_icon 'quote-right'
+      %a.btn.btn-default{data: {wysihtml_command: 'insertUnorderedList'}}= fa_icon 'list-ul'
+      %a.btn.btn-default{data: {wysihtml_command: 'insertOrderedList'}}= fa_icon 'list-ol'
+    %a.btn.btn-default{data: {wysihtml_command: 'createLink'}}= fa_icon :link
+    %span{data: {wysihtml_dialog: 'createLink'}, style: "display: none;"}
+      %label
+        = "#{t(:link)}:"
+        %input.text{"data-wysihtml-dialog-field" => "href", :value => "https://"}/
+      %a.btn.btn-default{"data-wysihtml-dialog-action" => "save"}= t :ok
+      %a.btn.btn-default{"data-wysihtml-dialog-action" => "cancel"}= t :cancel

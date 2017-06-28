@@ -8,18 +8,36 @@
 # this mechanism can fetch the content.
 #
 #     resource_url = "/pages/123"
-#     $('#attachments').ajax_reload(resource_url, '#attachments')
+#     $('#box').ajax_reload {
+#       url: ...,
+#       selector: '#attachments', # or:
+#       selectors: ['#attachments', '#inline-pictures'],
+#       success: -> ...
+#     }
 #
 $(document).ready ->
-  jQuery.fn.ajax_reload = (url, selector)->
-    target = this
-    target.fadeOut()
+  jQuery.fn.ajax_reload = (options)->
+
+    root_element = this
+    selectors = options['selectors'] if options['selectors']
+    selectors = [options['selector']] if options['selector']
+    url = options['url']
+    success_callback = options['success']
+
+    for selector in selectors
+      target = root_element.find(selector).addBack(selector)
+      target.fadeOut()
+
     $.ajax {
       type: 'GET',
       url: url,
       success: (result)->
-        result_content = $(result).find(selector).html()
-        target.html(result_content)
-        target.fadeIn()
-        target.process()
-    }
+        for selector in selectors
+          target = root_element.find(selector).addBack(selector)
+          result_content = $(result).find(selector).html()
+          target.html(result_content)
+          target.fadeIn()
+          target.process()
+        success_callback?.call
+      }
+

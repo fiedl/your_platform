@@ -1,0 +1,10 @@
+- # locals:
+- page || raise('no page given')
+
+%h1.page.teaser_box{id: "page-#{page.id}-box"}= link_to page.title, page
+%div
+  = render partial: 'teaser_image', object: page, as: :page
+  .page_body
+    = page_markup page.teaser_text
+  .panel-footer
+    = link_to t(:learn_more), page

@@ -15,6 +15,7 @@ class ContactMessagesController < ApplicationController
 
   def create
     authorize! :create, ContactMessage
+    authorize! :use, :contact_forms
 
     ContactMessage.new(contact_message_params).deliver
 

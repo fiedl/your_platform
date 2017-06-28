@@ -1,7 +1,6 @@
 class Page < ActiveRecord::Base
 
   is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
-  is_navable
 
   acts_as_taggable
 
@@ -10,11 +9,12 @@ class Page < ActiveRecord::Base
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
   serialize :redirect_to
+  serialize :box_configuration
 
-  include RailsSettings::Extend
-
+  include Navable
   include PagePublicWebsite
   include Archivable
+  include PageHasSettings
   include HasPermalinks
   include RelatedPages
 
@@ -46,7 +46,6 @@ class Page < ActiveRecord::Base
     title
   end
 
-
   def author_title=(new_title)
     self.author = User.find_by_title(new_title)
   end
@@ -60,10 +59,30 @@ class Page < ActiveRecord::Base
   end
 
 
-  def teaser_text
-    super || content.to_s.gsub(teaser_youtube_url.to_s, '').strip.split("\n").first
+  def child_teaser_boxes
+    teaser_boxes
   end
-
+  def teaser_boxes
+    # # For some reason, this does not work: FIXME
+    # child_pages
+    #   .where.not(type: 'BlogPost')
+    #   .where.not(nav_nodes: {hidden_teaser_box: true})
+    #
+    child_pages
+      .select { |page| not page.type == 'BlogPost'}
+      .select { |page| not page.nav_node.hidden_teaser_box }
+      .select { |page| not page.new_record? }
+  end
+  def teaser_text
+    super || if content
+      paragraphs = content
+        .gsub(teaser_youtube_url.to_s, '')
+        .gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
+      teaser_content = paragraphs.first
+      teaser_content += "\n\n" + paragraphs.second if teaser_content.start_with?("http") # For inline videos etc.
+      teaser_content
+    end
+  end
   def teaser_image_url
     if self.settings.teaser_image_url
       self.settings.teaser_image_url
@@ -87,11 +106,14 @@ class Page < ActiveRecord::Base
       []
     end
   end
-
   def teaser_youtube_url
     content.to_s.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/).try(:[], 0)
   end
 
+
+  def group_map_parent_group_id
+    settings.group_map_parent_group_id || Group.corporations_parent.id
+  end
 
   # This is the group the page belongs to, for example:
   #
@@ -312,9 +334,22 @@ class Page < ActiveRecord::Base
     Page.find_by_flag :imprint
   end
 
+  # All descendant pages where no other object type is inbetween.
+  #
+  def connected_descendant_pages
+    cached do
+      # The step between root and intranet root needs to be
+      # excluded here, since this is no ordinary step between
+      # pages.
+      # See: `#administrated_objects`.
+      (self.child_pages - [Page.intranet_root]).collect do |child_page|
+        [child_page] + child_page.connected_descendant_pages
+      end.flatten.uniq
+    end
+  end
 
   def self.types
-    [nil, Page, BlogPost, Blog]
+    [nil, Page, BlogPost, Blog, Pages::HomePage]
   end
 
   include PageCaching if use_caching?

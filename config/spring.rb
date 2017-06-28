@@ -1,0 +1,1 @@
+Spring.application_root = './demo_app/my_platform'

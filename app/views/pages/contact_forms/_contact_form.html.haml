@@ -1,3 +1,5 @@
-%h1= current_title
+%h1.contact_form{id: "contact-form-page-#{@page.id}-box"}= current_title
 %div.contact_form
+  - if not can? :use, :contact_forms
+    = render partial: 'shared/feature_deactivated'
   = render partial: 'contact_messages/form'

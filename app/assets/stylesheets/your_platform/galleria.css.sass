@@ -1,11 +1,37 @@
-.galleria
-  width: 100%
-  margin-left: auto
-  margin-right: auto
-    
 .galleria-errors
   display: none
   visibility: hidden
-  
+
 .galleria-info-link
   display: none !important
+
+.galleria-stage
+  position: absolute
+  top: 0px
+  bottom: 0px
+  left: 0px
+  right: 0px
+
+.galleria-thumbnails-container
+  display: none
+
+.galleria-magnification-glass
+  background: rgba(255,255,255,0.4)
+  width: 32px
+  height: 32px
+  padding-left: 8px
+  position: absolute
+  bottom: 0px
+  right: 0px
+  z-index: 100
+  font-size: 24px
+  color: white
+  cursor: pointer
+
+.galleria-magnification-glass.for-small-video
+  background: rgba(255,255,255,0)
+  width: 100%
+  height: 100%
+
+.galleria, .galleria-container, .galleria-stage
+  display: flex

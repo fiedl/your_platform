@@ -22,6 +22,7 @@ class Issue < ActiveRecord::Base
   scope :unresolved, -> { where(resolved_at: nil) }
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
   scope :automatically_created, -> { where author_id: nil }
+
   scope :concerning_postal_addresses, -> {
     ids = all.select { |issue| issue.reference.kind_of? ProfileFields::Address }.map(&:id)
     where(id: ids)

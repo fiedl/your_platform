@@ -1,4 +1,7 @@
-= best_in_place reference, :permalinks_list, as: :textarea
+- if can? :use, :permalinks
+  = best_in_place reference, :permalinks_list, as: :textarea
+- else
+  = render partial: 'shared/feature_deactivated'
 
 %p.hidden_help
   = t :explanation_what_is_a_permalink

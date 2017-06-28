@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
   #
 
   # Rails and Rails Additions
-  s.add_dependency "rails", ">= 4.2.5.1"
+  s.add_dependency "rails", "~> 4.2"
   s.add_dependency 'rack', '>= 1.6.2'
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
@@ -96,6 +96,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'redcarpet', '>= 3.3.2'  # for Markdown                             # MIT License
   s.add_dependency 'gemoji', '>= 2.1.0'
   s.add_dependency 'auto_html', '~> 1.6.4'
+  s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '>= 4.7'
@@ -106,13 +107,13 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
+  s.add_dependency 'rails-assets-Voog--wysihtml', '0.6.0.beta1'
 
   # Search
   s.add_dependency 'elasticsearch-model'
 
   # Geo Coding
   s.add_dependency 'geocoder'                                                          # MIT License
-  s.add_dependency 'gmaps4rails', '2.0.2' # CURRENTLY ONLY THE FORK WORKS FOR US       # MIT License
   s.add_dependency 'biggs'
 
   # Form Helper
@@ -135,6 +136,11 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
+
+  # Gallery
+  s.add_dependency 'rails-assets-jquery-masonry'
+  s.add_dependency 'rails-assets-imagesloaded'
+  # also, galleria is in our `vendor` directory.
 
   # Client-Side Validations
   s.add_dependency 'judge'

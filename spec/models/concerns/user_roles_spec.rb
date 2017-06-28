@@ -13,9 +13,9 @@ describe User do
 
   describe "#role_for" do
     before do
-      @object = create( :page )
+      @object = create(:group)
       @object.create_main_admins_parent_group
-      @sub_object = create( :group ); @sub_object.parent_pages << @object
+      @sub_object = create( :group ); @sub_object.parent_groups << @object
       @sub_sub_object = create( :user ); @sub_sub_object.parent_groups << @sub_object
     end
     subject { @user.role_for @object }

@@ -1,4 +1,4 @@
-trigger_selector = "#horizontal_nav ul.nav > li > a, ul.breadcrumbs > li > a"
+trigger_selector = "#horizontal-nav-bar ul.nav > li > a, a.breadcrumb_link"
 
 $(document).on 'mouseenter', trigger_selector, (event)->
   trigger_link = $(this)

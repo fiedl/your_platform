@@ -1,0 +1,31 @@
+!!!
+%html{:lang => 'en'}
+  %head
+    %meta{:charset => 'utf-8'}/
+    %title= website_title_with_app_name
+    = csrf_meta_tags
+    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
+    = stylesheet_link_tag 'iweb_layout', :media => 'all'
+    = stylesheet_link_tag 'application', :media => 'all'
+
+    = google_maps_api_script_tag
+    = javascript_include_tag 'application'
+
+    = yield :scripts
+    = yield :head
+
+  = body_tag do
+    .container-fluid
+      .row#horizontal-nav-bar
+        = horizontal_nav
+      #header.row
+        #home_page_title.col-xs-12.col-sm-8
+          .home_page_title
+            = wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_title
+          .home_page_sub_title= wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_sub_title
+        #logo.col-xs-12.col-sm-4= current_logo
+      #toolbar.row
+      .row
+        = flash_area
+      .row
+        #content= replace_unicode_special_chars_by_html_escape_strings(convert_to_content_box { yield })

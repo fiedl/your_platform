@@ -4,6 +4,6 @@
 - if can? :update, @user
   %h1.section.communication= t(:communication)
   %div
-    %ul.attributes
+    %ul.attributes.keys-and-values
       %li.local_postal_mail_subscription.attribute= render partial: 'users/local_postal_mail_subscription'
       = profile_field_lis @user.profile.section(:communication).fields, no_remove: true, lock_label: true

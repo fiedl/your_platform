@@ -1,0 +1,59 @@
+- # Locals:
+- parent_page || raise('no parent_page given')
+
+- if can? :create_page_for, parent_page
+  - unless parent_page.kind_of? BlogPost  # Otherwise, the admin could create nested blog posts where he would expect a sibling post.
+    .col.col-sm-3
+      .box.add_teaser_box
+        %a.btn.btn-default#new_page{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
+          = icon :plusw
+          = "#{t(:new_page)} ..."
+
+    #new_page_modal.modal.fade
+      - new_page = parent_page.child_pages.new
+      = form_for new_page do |f|
+        .modal-dialog
+          .modal-content
+            %div.modal-header
+              %a.close{href: '#', data: {dismiss: 'modal'}, 'aria-label' => 'Close'}
+                %span{'aria-hidden' => true} &times;
+              %h4= t :new_page
+            %div.modal-body
+              = hidden_field_tag :parent_id, parent_page.id
+              %p= t :this_will_create_a_new_page_on_the_page_str, str: parent_page.title
+              %table
+                %tr
+                  %td= t :page_headline
+                  %td= f.text_field :title
+                %tr
+                  %td= t :options
+                  %td
+                    = label_tag :type_blog_post do
+                      = radio_button_tag :type, 'blog_post', true
+                      = t :display_the_new_page_as_blog_post
+                      %ul.hidden_help= t :blog_posts_will_be_displayed_on_the_parent_page
+                    = label_tag :type_page do
+                      = radio_button_tag :type, 'page'
+                      = t :display_the_new_page_as_regular_page
+                      %ul
+                        .hidden_help= t :regular_pages_are_used_for_permanent_information
+                        = content_tag :label do
+                          = hidden_field_tag :show_as_teaser_box, false
+                          = check_box_tag :show_as_teaser_box, true, true
+                          = t :display_the_new_page_as_teaser_box
+                        = content_tag :label do
+                          = hidden_field_tag :show_in_menu, false
+                          = check_box_tag :show_in_menu, true, true
+                          = t :display_the_new_page_in_the_nav
+                    = label_tag :type_hidden do
+                      = radio_button_tag :type, 'hidden'
+                      = t :hide_the_new_page
+                      %ul.hidden_help= t :for_example_for_special_pages_like_the_imprint
+                    = t :the_page_options_may_be_changed_later_on_the_page_settings_page
+                    %p.align-right
+                      %a.show_hidden_help{href: '#'}
+                        = help_icon
+                        = t :decision_help
+            %div.modal-footer
+              %a.btn.btn-default{href: '#', data: {dismiss: 'modal'}}= t :cancel
+              = f.submit t(:confirm), class: 'btn btn-primary'

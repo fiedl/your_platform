@@ -15,11 +15,36 @@ concern :PagePublicWebsite do
   end
 
   def public?
+    part_of_the_global_public_website? or part_of_a_local_public_website?
+  end
+
+  def part_of_the_global_public_website?
     self.id.in? self.class.public_website_page_ids
+  end
+
+  def part_of_a_local_public_website?
+    (self.nav_node.breadcrumb_root.try(:type) == 'Pages::HomePage') and not part_of_the_intranet?
+  end
+
+  def part_of_the_intranet?
+    (self.id == Page.intranet_root.id) or (self.ancestor_pages.include?(Page.intranet_root))
+  end
+
+  def home_page
+    nav_node.breadcrumb_root if nav_node.breadcrumb_root.kind_of? Pages::HomePage
+  end
+
+  def layout
+    home_page.try(:layout)
   end
 
   class_methods do
 
+    # The organization has a public website, example.com, and the intranet
+    # as sub page. If the public website has sub pages that do not belong
+    # to the intranet, i.e. which are public to each internet user, these
+    # pages are considered as public_website_pages.
+    #
     def public_website_page_ids(reload = false)
       @public_website_page_ids = nil if reload
       @public_website_page_ids ||= (Page.flagged(:root).pluck(:id) + (Page.flagged(:root).try(:collect) { |root_page| root_page.descendant_page_ids }) || []).flatten - [nil] - Page.flagged(:intranet_root).pluck(:id) - (Page.flagged(:intranet_root).first.try(:descendant_page_ids) || [])

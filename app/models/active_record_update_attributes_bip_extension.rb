@@ -8,6 +8,7 @@ module ActiveRecordUpdateAttributesBipExtension
   extend ActiveSupport::Concern
 
   # Definition of the original method:
+  # http://apidock.com/rails/v4.2.1/ActiveRecord/Persistence/update, former:
   # http://apidock.com/rails/v3.2.13/ActiveRecord/Persistence/update_attributes
   #
   def update_attributes(attributes, options = {})

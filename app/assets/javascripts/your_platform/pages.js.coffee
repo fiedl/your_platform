@@ -6,11 +6,11 @@ $(document).ready ->
     href = destroy_button.attr('href')
     box = destroy_button.closest('.box')
     is_blog_entry = (box.closest('#blog_entries').size() > 0)
-    
+
     box.trigger 'cancel'
     box.hide 'explode', 300, ->
       box.remove()
-      
+
       # We trigger the request manually here in order not to
       # suppress the animation before.
       $.ajax({
@@ -23,5 +23,8 @@ $(document).ready ->
         failure: (result) ->
           alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
       })
-    
+
     return false
+
+  if $('#page_settings_button') and $('#toolbar').size() > 0
+    $('#page_settings_button').detach().appendTo($('#toolbar'))

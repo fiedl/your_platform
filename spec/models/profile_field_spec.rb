@@ -209,8 +209,6 @@ describe ProfileFields::Address do
     end
   end
 
-  its( :gmaps4rails_address ) { should == @address_field.value }
-
   describe "after saving" do
     before { @address_field.save }
 
@@ -411,7 +409,7 @@ end
 
 describe ProfileFields::Description do
   before { @description_field = ProfileFields::Description.create( label: "Heraldic Animal",
-                                                                       value: "The heraldic animal of the organisation is a fox." ) }
+                                                                   value: "The heraldic animal of the organisation is a fox." ) }
   subject { @description_field }
   its( :display_html ) { should include( @description_field.value ) }
 end

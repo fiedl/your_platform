@@ -8,11 +8,31 @@ de:
   add_attachment: 'Anhang hinzufügen'
 
   destroy_page_again: Eintrag wieder löschen
-  a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde.'
+  a_new_page_can_be_destroyed_within_ten_minutes: 'Der neue Inhalt kann bis zehn Minuten nach der Erstellung gelöscht werden, falls er versehentlich erstellt wurde. Danach kann er nur noch archiviert werden, um ihn auszublenden, aber in der Datenbank zu belassen.'
   destroying_page: Inhalt wird gelöscht.
   please_wait: Bitte warten.
 
   looks_up_information: sieht sich Informationen an
+
+  new_page: Neuer Inhalt
+  this_will_create_a_new_page_on_the_page_str: "Hierdurch wird ein neuer Inhalt auf der Seite %{str} erstellt."
+  page_headline: Überschrift
+  options: Optionen
+  display_the_new_page_as_blog_post: Die neue Seite als Blog-Eintrag anzeigen.
+  blog_posts_will_be_displayed_on_the_parent_page: "Blog-Einträge werden auf der Übersichtsseite direkt angezeigt und rutschen nach unten, wenn neuere Einträge hinzugekommen. Sie sind für die Präsentation von Neuigkeiten geeignet."
+  display_the_new_page_as_regular_page: Die neue Seite als regulären Inhalt anzeigen.
+  regular_pages_are_used_for_permanent_information: Reguläre Seiten sind zur Darstellung von langfristig anzuzeigenden Inhalten oder von Übersichtsseiten geeignet.
+  display_the_new_page_as_teaser_box: Die neue Seite als Teaser-Box anzeigen.
+  display_the_new_page_in_the_nav: Die neue Seite im Navigationsmenü anzeigen.
+  hide_the_new_page: Die neue Seite verstecken.
+  for_example_for_special_pages_like_the_imprint: Die neue Seite wird weder im Menü noch auf der übergeordneten Seite angezeigt. Man gelangt also nur durch einen händisch erzeugten Verweis auf diese Seite. Dies ist z.B. für Spezialseiten wie das Impressum die richtige Wahl.
+  the_page_options_may_be_changed_later_on_the_page_settings_page: Die Optionen können später auf der Einstellungsseite des Inhalts verändert werden.
+  decision_help: Entscheidungshilfe
+
+  page_settings: Seiten-Einstellungen
+  destroy_page_permanently: Seite unwiderruflich löschen
+  archive_page: Seite archivieren
+  unarchive_page: Seite wiederherstellen
 
   teaser_image: Vorschau-Bild
   teaser_image_url: Vorschau-Bild-Url

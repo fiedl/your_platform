@@ -1,0 +1,22 @@
+// Boxes of equal height done with css flex boxes rather than javascript.
+// See also: http://codepen.io/fiedl/pen/gMmqrN?editors=0100
+// Or as gist: https://gist.github.com/fiedl/62e8f179e623215cb141c4e72f88e0e5
+
+.row.row-eq-height
+  display: flex
+  flex-wrap: wrap
+  flex-direction: row
+
+  > [class*='col-']
+    display: flex
+    flex-direction: row
+
+  &:before
+    display: block
+
+  .edit_mode_group, .page_with_attachments
+    display: flex
+    width: 100%
+
+  .box
+    width: 100%

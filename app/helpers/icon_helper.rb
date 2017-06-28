@@ -44,12 +44,16 @@ module IconHelper
     icon 'list-alt'
   end
 
-  def folder_icon
-    fa_icon 'folder-open-o'
+  def help_icon
+    icon 'question-sign'
   end
 
   def settings_icon
-    fa_icon 'sliders' # cogs, wrench
+    fa_icon 'sliders' # cogs, wrench  # icon 'cog'
+  end
+
+  def folder_icon
+    fa_icon 'folder-open-o'
   end
 
   def create_icon

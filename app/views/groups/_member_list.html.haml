@@ -7,7 +7,8 @@
       %th.has_tooltip{title: "Die Spalte 'Seit' zeigt an, seit wann die Person in der Liste '#{group.name}' geführt wird.", data: {placement: 'left'}} Seit
   %tbody
     - member_table_rows.each do |row|
-      %tr
+      -#%tr.member{data: {profile_fields: member.address_fields_json}}
+      %tr.member
         %td
           %strong= link_to row[:last_name], user_path(id: row[:user_id])
         %td= row[:first_name]

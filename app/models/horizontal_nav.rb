@@ -28,11 +28,26 @@ class HorizontalNav
   end
 
   def public_navables
-    navables = [current_home_page]
-    navables += current_home_page.child_pages.where(type: [nil, 'Page', 'Blog'])
-    navables -= [Page.find_intranet_root, Page.find_imprint]
-    navables -= Page.flagged(:public_root_element)
-    return navables
+    pages = [current_home_page]
+    if current_home_page.respond_to? :horizontal_nav_child_pages
+      pages += current_home_page.horizontal_nav_child_pages
+    else
+      pages += current_home_page.child_pages.where(type: [nil, 'Page', 'Blog'])
+    end
+    pages -= [Page.find_intranet_root, Page.find_imprint]
+    pages -= Page.flagged(:public_root_element)
+
+    # Sort by the persisted order.
+    # http://stackoverflow.com/a/7790994/2066546
+    if current_home_page.respond_to?(:settings) && current_home_page.settings.horizontal_nav_page_id_order.kind_of?(Array)
+      pages_by_id = Hash[pages.map { |p| [p.id, p] }]
+      pages = (pages_by_id.values_at(*current_home_page.settings.horizontal_nav_page_id_order) + pages).uniq
+    end
+
+    # Filter "new page" element (id: nil) and hidden pages.
+    pages = pages.select { |page| page.try(:id) && page.show_in_menu? }
+
+    return pages
   end
 
   def currently_in_intranet?

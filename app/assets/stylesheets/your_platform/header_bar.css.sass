@@ -1,0 +1,36 @@
+// This is the flex layout for the header bar.
+// Minimal example: http://codepen.io/fiedl/pen/XKRQKW?editors=1100
+
+#header-bar
+  display: flex
+  flex-direction: column
+  justify-content: space-between
+#first-header-line
+  display: flex
+  flex-wrap: wrap
+  align-items: flex-start
+  justify-content: space-between
+#second-header-line
+  display: flex
+  flex-wrap: wrap
+  align-items: flex-end
+  justify-content: flex-end
+#logo-area, #claim-area
+  flex-grow: 1
+#search-area
+  text-align: right
+  flex-grow: 1
+#nav-area
+  display: flex
+  flex-wrap: wrap
+  justify-content: flex-end
+ul#horizontal_nav
+  display: flex
+  flex-wrap: wrap
+  justify-content: center
+
+
+@media (max-width: 500px)
+  #first-header-line, #second-header-line, #search-area
+    justify-content: center
+    text-align: center

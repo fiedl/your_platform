@@ -161,17 +161,21 @@ module ProfileFields
       Hash[*country_codes.zip(country_codes).flatten]
     end
 
-    # Google Maps integration
-    # see: http://rubydoc.info/gems/gmaps4rails/
-    #
-    acts_as_gmappable
     concerning :GoogleMapsIntegration do
-      def gmaps4rails_address
-        self.value
+      def as_json(options = nil)
+        super(options).merge({
+          position: {
+            lng: longitude,
+            lat: latitude
+          },
+          title: title,
+          profileable_title: profileable.try(:title),
+          profileable_type: profileable_type
+        })
       end
 
-      def gmaps
-        true
+      def title
+        ([profileable.try(:title), label] - [nil]).join(", ")
       end
     end
 

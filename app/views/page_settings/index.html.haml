@@ -22,6 +22,57 @@
       %th= t :updated_at
       %td= localize @page.updated_at
 
+  = render partial: 'shared/nav_node_settings', locals: {navable: @page}
+
+- if @page.kind_of? Pages::HomePage
+  %h1.home_page_settings= t :home_page_settings
+  %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
+
+%h1.boxes_on_this_page= t :boxes_on_this_page
+%div
+  = t :select_boxes_to_display_on_the_page_str, str: @page.title
+
+  %table.settings
+    %tr.locations_map
+      %th= t :locations_map
+      %td
+        %p= setting_check_box @page, :show_group_map, t(:show_locations_map)
+        %p
+          = t :locations_map_group_id
+          = setting_in_place @page, :group_map_parent_group_id
+        %p
+          = t :group_map_sub_title
+          = setting_in_place @page, :group_map_sub_title
+    %tr.events
+      %th= t :events
+      %td
+        .show_events= setting_check_box @page, :show_events
+        .show_events_for_group_id
+          = t :show_events_for_group_id
+          = setting_in_place @page, :show_events_for_group_id
+        .global_website= setting_check_box @page, :show_only_events_published_on_global_website
+        .local_website= setting_check_box @page, :show_only_events_published_on_local_website
+    %tr.officers
+      %th= t :officers
+      %td
+        %p= setting_check_box @page, :show_officers
+        %p
+          %strong= t :show_officers_of_group_id
+          = setting_in_place @page, :show_officers_for_group_id
+          %p.hidden_help= t :for_empty_field_show_page_officers
+        %p
+          = t :show_only_the_first_n_offices
+          = setting_in_place @page, :show_only_the_first_n_offices
+    %tr.sub_pages
+      %th= t :sub_pages
+      %td
+        - @page.child_pages.each do |teaser_page|
+          %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
+
+%h1.permalinks= t :permalinks
+%div
+  = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @page}
+
 %h1.teaser_image= t :teaser_image
 %div
   %table.settings
@@ -38,7 +89,7 @@
 %h1.danger_zone= t :danger_zone_tm
 %div
   %p= t :a_new_page_can_be_destroyed_within_ten_minutes
-  -#%p= destroy_page_button @page, t(:destroy_page_permanently)
+  %p= destroy_page_button @page, t(:destroy_page_permanently)
   %p
     = archived_label @page
     - if @page.archived?

@@ -34,9 +34,14 @@ de:
   optional: optional
   thanks: Danke!
 
+  ok: OK
+  cancel: Abbrechen
+  link: Link
+
   show_all: Alle anzeigen
   overview: Überblick
   see_also: Siehe auch
+
   back: Zurück
 
   filter_table: "Tabelle filtern ..."
@@ -45,7 +50,7 @@ de:
   updated_at: Letzte Änderung am
   last_update: Letzte Änderung
   format: Format
+
   type: Typ
 
   delete: Löschen
-

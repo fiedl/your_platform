@@ -30,20 +30,20 @@
     = favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
     / For all other devices
     / Size should be 32 x 32 pixels
-    = favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+    -#= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
 
     %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
 
+    = google_maps_api_script_tag
     = javascript_include_tag 'application', data: {turbolinks_eval: false}
-    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js"
-    = gmaps4rails_api_script_tags
+    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js" unless Rails.env.test? # Takes tooooo long.
     = yield :scripts
     = yield :head
 
   = body_tag do
     = render partial: 'shared/current_masquerade'
     - if user_account_signed_in?
-      %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
+      %nav#logged-in-bar.navbar.navbar-default.navbar-top
         .container-fluid
           .navbar-header
             %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
@@ -86,24 +86,13 @@
                   = current_user.title
                   %b.caret
                 = render partial: 'layouts/current_user_dropdown'
-              %li
-                = link_to user_badges_path(current_user) do
-                  = merit_indicator(current_user)
+              - if can? :use, :merit
+                %li
+                  = link_to user_badges_path(current_user) do
+                    = merit_indicator(current_user)
 
-    .row#header-bar
-      .col-sm-7.col-xs-12
-        %span#logo
-          = link_to image_tag(logo_url), root_path, class: 'navbar-brand'
-
-      .col-sm-5.col-xs-12
-        #header_help= render partial: 'support_requests/help_button'
-        #header_search
-          %span#search_box= render partial: 'shared/search_box'
-
-    .row#horizontal-nav-bar.hidden-xs
-      -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
-      %span#category_indicator.right
-        = render partial: 'layouts/horizontal_nav'
+    .row#header-bar-wrapper
+      = render partial: 'layouts/header_bar'
 
     .row#breadcrumb-bar
       %nav#breadcrumb.navbar

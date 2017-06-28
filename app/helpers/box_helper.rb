@@ -6,9 +6,10 @@ module BoxHelper
     heading = options[ :heading ]
     content = options[ :content ]
     content = yield unless content
-    box_class = options[ :box_class ]
+    box_class = options[:box_class]
+    box_id = options[:box_id]
 
-    render partial: 'layouts/box', locals: { heading: heading, content: content, box_class: box_class }
+    render partial: 'layouts/box', locals: {heading: heading, content: content, box_class: box_class, box_id: box_id}
   end
 
   def convert_to_content_box( html_code = nil )
@@ -36,6 +37,7 @@ module BoxHelper
       heading_class = h1_node.attr( :class )
       heading_class ||= ""
       heading_class += " first" if box_counter == 1
+      heading_id = h1_node.attr(:id)
 
       content_element = h1_node.next_element
       if content_element
@@ -44,7 +46,7 @@ module BoxHelper
       end
       content ||= "" # because content_box expects a String
 
-      h1_node.replace( content_box( heading: heading, content: content, box_class: heading_class ) )
+      h1_node.replace content_box(heading: heading, content: content, box_class: heading_class, box_id: heading_id)
     end
 
     return doc.to_s.html_safe

@@ -25,4 +25,8 @@ module EventsHelper
     return t :events
   end
 
+  def remove_trailing_commas_from_event_info
+    capture_haml { yield }.gsub(/,[\n ]*<\/small>/, "</small>").html_safe
+  end
+
 end

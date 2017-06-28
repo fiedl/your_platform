@@ -81,7 +81,7 @@ class SearchController < ApplicationController
         redirect_to @results.first
       end
 
-      if @results.count < 100
+      if @results.count < 300
         @large_map_address_fields = @results.collect do |result|
           result.profile_fields.where(type: "ProfileFields::Address") if result.respond_to? :profile_fields
         end.flatten - [nil]
@@ -177,6 +177,7 @@ class SearchController < ApplicationController
       object ||= Page.where("title like ?", like_query_string).limit(1).first
       object ||= Group.where("name like ?", like_query_string).limit(1).first
       object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
+      object ||= User.find_by_title(query_string)
 
       object = nil unless can? :read, object
     end

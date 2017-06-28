@@ -91,7 +91,15 @@ class App.UploadBox
       self.show_uploading()
 
   refresh_attachments_section: ->
-    @root_element.ajax_reload(@parent_url(), '#attachments, #inline-pictures, .attachments')
+    @root_element.closest('.box').ajax_reload {
+      url: @parent_url(),
+      selectors: ['#attachments', '#inline-pictures'],
+      success: ->
+        @inline_pictures_element().find('.show_only_in_edit_mode').show() # since we are already in edit mode.
+    }
+
+  inline_pictures_element: ->
+    @root_element.closest('.box').find('#inline-pictures')
 
   parent_url: ->
     @find('.box.upload_attachment').attr('data-parent-url')

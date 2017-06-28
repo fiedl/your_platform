@@ -37,6 +37,11 @@ concern :CurrentLayout do
   end
 
   def default_layout
+    #current_home_page.try(:layout) || 'bootstrap'
+    Page.root.try(:layout) || 'bootstrap'
+  end
+
+  def default_layout
     'bootstrap'
   end
 

@@ -1,10 +1,16 @@
 module Api::V1
   class NavigationController < ApplicationController
-    
+
+    # GET /api/v1/navigation?navable=gid://wingolfsplattform/Pages::HomePage/1
+    #                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    #                                          navable.to_global_id
+    #
     def show
       navable || raise('no navable given')
       authorize! :read, navable
-      
+
+      navable.delete_cache if params[:uncached]
+
       respond_to do |format|
         format.json do
           render json: {
@@ -15,12 +21,12 @@ module Api::V1
         end
       end
     end
-    
+
     private
-    
+
     def navable
       @navable ||= GlobalID::Locator.locate params[:navable].gsub("\"", "")
     end
-    
+
   end
 end

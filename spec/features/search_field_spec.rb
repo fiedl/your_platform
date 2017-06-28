@@ -21,6 +21,7 @@ feature "Search Field", js: true do
       specify "searching for foo should redirect to the user page" do
         page.should have_content( @user1.title )
         page.should have_content( I18n.t( :name ) )
+        click_tab :contact_info_tab
         page.should have_content( I18n.t( :contact_information ) )
       end
     end

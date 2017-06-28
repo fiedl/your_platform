@@ -19,6 +19,7 @@ FactoryGirl.define do
     trait :with_address do
       after :create do |user|
         user.profile_fields.create(type: ProfileFields::Address.name)
+        user.address_fields.first.postal_address = true
       end
     end
 

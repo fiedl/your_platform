@@ -33,7 +33,10 @@ source 'https://rubygems.org' do
   gem 'sdoc', '~> 0.4.0',          group: :doc
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring',        group: :development
+  group :development do
+    gem 'spring'
+    gem 'spring-commands-rspec'
+  end
 
   # Use ActiveModel has_secure_password
   # gem 'bcrypt', '~> 3.1.7'
@@ -82,8 +85,6 @@ source 'https://rubygems.org' do
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
-    gem 'guard-spork'
-    gem 'spork'
     gem 'simplecov', require: false
     gem 'coveralls'
     gem 'email_spec'
@@ -100,8 +101,6 @@ source 'https://rubygems.org' do
   gem 'sidekiq', '~> 3.5.1'
 
   # Temporary Forks and Overrides
-  gem 'gmaps4rails', '~> 2.0.2', git: 'https://github.com/fiedl/Google-Maps-for-Rails.git'
-    # see: http://stackoverflow.com/questions/13807686
   gem 'json'
   gem 'colored'
   gem 'rake', '< 11.0' # http://stackoverflow.com/a/35893625/2066546, Gem Load Error is: undefined method `last_comment', TODO: Remove after updating rspec.

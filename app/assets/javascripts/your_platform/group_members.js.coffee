@@ -1,3 +1,7 @@
+$(document).on 'change keyup paste', '.dataTables_filter input', ->
+  if $('.google_maps')
+    $('.google_maps').data('GoogleMap').reload_markers()
+
 $(document).ready ->
   $('.add_group_member_tools').hide()
 

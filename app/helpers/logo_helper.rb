@@ -13,6 +13,16 @@ module LogoHelper
     @logo_url
   end
 
+  def logo
+    if current_navable
+      link_to current_navable.home_page do
+        image_tag logo_url
+      end
+    else
+      image_tag logo_url
+    end
+  end
+
   def logo_image_tag(logo_key = nil)
     logo_path = Attachment.logos.where(title: logo_key).last.try(:file_path) if logo_key
     logo_path ||= current_logo_url if current_logo

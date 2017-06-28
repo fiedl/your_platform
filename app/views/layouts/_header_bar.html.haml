@@ -1,0 +1,14 @@
+#header-bar
+  #first-header-line
+    #claim-area.hidden-xs
+      = current_home_page.try(:settings).try(:home_page_sub_title)
+    #search-area
+      #header_help= render partial: 'support_requests/help_button'
+      #header_search
+        %span#search_box= render partial: 'shared/search_box'
+  #second-header-line
+    #logo-area
+      #logo= link_to image_tag(logo_url), root_path
+    #nav-area
+      #horizontal-nav-bar
+        = horizontal_nav

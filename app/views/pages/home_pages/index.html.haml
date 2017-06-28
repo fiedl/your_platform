@@ -1,0 +1,22 @@
+%h1= current_title
+%div
+  %table.home_pages.datatable
+    %thead
+      %tr
+        %th= t :title
+        %th= t :admin
+        %th= t :created_at
+        %th= t :updated_at
+    %tbody
+      - @home_pages.each do |home_page|
+        %tr
+          %td= link_to home_page.title, home_page
+          %td
+            = link_to home_page.admins.first.title, home_page.admins.first if home_page.admins.first
+          %td= l home_page.created_at.to_date
+          %td= l home_page.updated_at.to_date
+
+  - if can? :create, Pages::HomePage
+    = link_to home_pages_path, class: 'btn btn-default', method: :post do
+      = icon :plus
+      = t :create_new_home_page

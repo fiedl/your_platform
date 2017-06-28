@@ -1,5 +1,13 @@
 class User < ActiveRecord::Base
 
+  # Virtual attribute, which can be used in member lists to add a note in memory when the user
+  # has joined a group or list.
+  #
+  # See:
+  #   - `_member_list.html.haml`
+  #
+  attr_accessor :member_since
+
   # Gamification: https://github.com/merit-gem/merit
   include Merit
   has_merit
@@ -32,7 +40,7 @@ class User < ActiveRecord::Base
   has_many                  :comments, foreign_key: 'author_user_id', class_name: 'Comment'
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
-  is_navable
+  include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name
   before_save               :build_account_if_requested
@@ -54,7 +62,6 @@ class User < ActiveRecord::Base
 
   include UserMixins::Memberships
   include UserMixins::Identification
-  include ProfileableMixins::Address
   include UserCorporations
   include UserGroups
   include UserEvents

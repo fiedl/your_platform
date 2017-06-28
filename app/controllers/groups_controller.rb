@@ -1,4 +1,5 @@
 class GroupsController < ApplicationController
+  include MarkdownHelper
   before_action :load_resource, only: [:show, :update, :destroy]
   authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
@@ -99,7 +100,7 @@ class GroupsController < ApplicationController
     respond_to do |format|
       format.json do
         authorize! :read, @group
-        render json: @group.serializable_hash.merge({member_count: @memberships.count})
+        render json: @group.serializable_hash.merge({member_count: @memberships.try(:count)})
       end
       format.pdf do
         authorize! :read, @group
@@ -133,6 +134,10 @@ class GroupsController < ApplicationController
   end
 
   def update
+    if group_params[:body]
+      params[:group][:body] = html2markdown params[:group][:body]
+    end
+
     @group.update_attributes(group_params)
     respond_to do |format|
       format.json { respond_with_bip @group.reload }
@@ -188,6 +193,10 @@ class GroupsController < ApplicationController
   #   http://railscasts.com/episodes/371-strong-parameters
   #
   def group_params
+    # Need to sync in both directions for best in place:
+    params[:corporation] ||= params[:group]
+    params[:officer_group] ||= params[:group]
+
     # STI override:
     params[:group] ||= params[:corporation] # for Corporation objects
     params[:group] ||= params[:officer_group] # for OfficerGroup objects
