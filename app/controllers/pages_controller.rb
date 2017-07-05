@@ -70,7 +70,7 @@ class PagesController < ApplicationController
   def update
     authorize! :update, @page
     params[:page] ||= {}
-    params[:page][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
+    params[:page][:archived] ||= params[:archived] if params[:archived] # required for archivable.js.coffee to work properly.
 
     if page_params[:content]
       params[:page][:content] = html2markdown params[:page][:content]
@@ -90,6 +90,7 @@ class PagesController < ApplicationController
       @association = Page
       authorize! :create, Page
     end
+    params[:page] ||= {}
     params[:page][:title] ||= I18n.t(:new_page)
     params[:page][:author_user_id] ||= current_user.id
     @new_page = @association.create!(page_params)
@@ -120,7 +121,7 @@ private
     params[:blog_post] ||= params[:page]
 
     params[:page] ||= {}
-    params[:page][:archived] ||= params[:archived]
+    params[:page][:archived] ||= params[:archived] if params[:archived]
 
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
     if params[:type] == "hidden"

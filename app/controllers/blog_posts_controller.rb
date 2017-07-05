@@ -36,7 +36,7 @@ class BlogPostsController < PagesController
     authorize! :update, @blog_post
 
     params[:blog_post] ||= {}
-    params[:blog_post][:archived] ||= params[:archived]  # required for archivable.js.coffee to work properly.
+    params[:blog_post][:archived] ||= params[:archived] if params[:archived] # required for archivable.js.coffee to work properly.
     set_inheritance_instance_variable
 
     @blog_post.update_attributes(blog_post_params)
