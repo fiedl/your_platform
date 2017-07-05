@@ -239,6 +239,8 @@ feature "Events" do
       find('#create_event').click
       wait_until(timeout: 90.seconds) { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
+      page.should have_no_text I18n.t(:reload_event)
+      page.should have_text Event.last.group.name
     end
 
     scenario "creating an event from a group page" do

@@ -54,11 +54,7 @@ feature "Semester Calendars", :js do
         page.should have_no_text I18n.t(:uploading_files)
         page.should have_text I18n.t(:files_have_been_uploaded)
         page.should have_no_text I18n.t(:files_have_been_uploaded)
-
-        # There's no problem when trying it out in a browser.
-        # But in capybara, it does not work :(
-        # # sleep 15 # as backend processing takes some time.
-        # # page.should have_text I18n.t(:uploaded_at)
+        page.should have_text I18n.t(:uploaded_at)
       end
       @semester_calendar.attachments.first.pdf?.should be true
     end

@@ -22,6 +22,14 @@ feature 'Change Status' do
     expect { @workflow.execute(user_id: @user_to_promote.id) }.not_to raise_error
   end
 
+  specify "the model layer should work" do
+    @workflow.execute(user_id: @user_to_promote.id)
+    @user_to_promote.should be_member_of @corporation.status_groups.second
+    @user_to_promote.should_not be_member_of @corporation.status_groups.first
+    @corporation.status_groups.second.members.should include @user_to_promote
+    @corporation.status_groups.first.members.should_not include @user_to_promote
+  end
+
   scenario 'promote user from first to second status', js: true do
     login @local_admin
     visit user_path(@user_to_promote)
@@ -35,11 +43,13 @@ feature 'Change Status' do
     page.should have_text @user_to_promote.name
     page.should have_selector '.workflow_triggers'
 
+    wait_until(timeout: 45.seconds) { page.has_no_text?("#{I18n.t(:change_status)} ...") }
+
     click_tab :corporate_info_tab
     within("#corporate_vita") { page.should have_text @corporation.status_groups.second.name }
 
-    @user_to_promote.should be_member_of @corporation.status_groups.second
-    @user_to_promote.should_not be_member_of @corporation.status_groups.first
+    @corporation.status_groups.second.members.should include @user_to_promote
+    @corporation.status_groups.first.members.should_not include @user_to_promote
   end
 
   describe "for nested status structures" do
@@ -68,6 +78,7 @@ feature 'Change Status' do
     scenario "promote a user from a group with sub-status groups (bug fix)", js: true do
       login @local_admin
       visit user_path(@user_to_promote)
+      click_tab :general_user_info_tab
 
       within('.box.section.general') do
         find('.workflow_triggers').click
@@ -78,13 +89,13 @@ feature 'Change Status' do
       page.should have_text @user_to_promote.name
       page.should have_selector '.workflow_triggers'
 
+      click_tab :corporate_info_tab
       wait_until(timeout: 90.seconds) { within("#corporate_vita") { page.has_text? @corporation.status_groups.second.name } }
 
       within("#corporate_vita") { page.should have_text @corporation.status_groups.second.name }
 
-      @user_to_promote.groups(true)
-      @user_to_promote.should be_member_of @corporation.status_groups.second
-      @user_to_promote.should_not be_member_of @corporation.status_groups.first
+      @corporation.status_groups.second.members.should include @user_to_promote
+      @corporation.status_groups.first.members.should_not include @user_to_promote
     end
   end
 

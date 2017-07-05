@@ -22,6 +22,7 @@ feature "Address changes" do
   scenario "An admin changes the address of a user", :js do
     login :admin
     visit user_path(@user)
+    click_tab :contact_info_tab
 
     within '.box.contact_information' do
       click_on :edit

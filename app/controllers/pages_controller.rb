@@ -93,6 +93,7 @@ class PagesController < ApplicationController
     params[:page] ||= {}
     params[:page][:title] ||= I18n.t(:new_page)
     params[:page][:author_user_id] ||= current_user.id
+    @page = Page.new
     @new_page = @association.create!(page_params)
 
     redirect_to @new_page

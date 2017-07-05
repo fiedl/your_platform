@@ -7,6 +7,7 @@ feature "Home Pages" do
       @page = Page.create title: "example.com"
       @page.settings.layout = 'bootstrap'
       @page.assign_admin @user
+      wait_for_cache
     end
 
     scenario "Creating a home page with layout", :js do
@@ -46,7 +47,7 @@ feature "Home Pages" do
       end
 
       scenario "Adding events", :js do
-        @event = Group.everyone.child_events.create name: "Garden party",
+        @event = Group.everyone.events.create name: "Garden party",
           publish_on_global_website: true,
           start_at: 1.day.from_now
 
@@ -70,6 +71,7 @@ feature "Home Pages" do
         visit page_path @page
 
         create_a_new_teaser_box "My new teaser"
+
         click_on :edit
         edit_page_content "This is a short teaser text.\n\nAnd this is some more content."
         click_on :save
