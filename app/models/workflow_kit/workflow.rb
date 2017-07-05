@@ -23,6 +23,7 @@ module WorkflowKit
 
 
     is_structureable   ancestor_class_names: %w(Group)
+    include Navable
 
     def title
       name

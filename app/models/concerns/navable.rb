@@ -4,6 +4,9 @@
 concern :Navable do
   included do
 
+    include NavableBreadcrumbs
+    include NavableVerticalNavs
+
     has_one :nav_node, as: :navable, dependent: :destroy, autosave: true
 
     accepts_nested_attributes_for :nav_node
@@ -71,6 +74,8 @@ concern :Navable do
       n.navable = self
       return n
     end
+
+    include NavableCaching if use_caching?
 
   end
 end
