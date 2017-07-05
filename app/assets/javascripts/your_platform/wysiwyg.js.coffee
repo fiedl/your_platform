@@ -126,5 +126,6 @@ $(document).on 'page:load', ->
 #
 $(document).on 'page:fetch', ->
   $('.wysiwyg.editable').each ->
-    $(this).data('editor').destroy()
-    $(this).data('editor', null)
+    if $(this).data('editor')?
+      $(this).data('editor').destroy()
+      $(this).data('editor', null)
