@@ -111,9 +111,11 @@ module ActiveRecordCacheExtension
   end
 
   def delete_cached(method_name)
-    # p "DEBUG DELETE CACHED #{self} #{method_name}"
-    Rails.cache.delete [self, method_name]
-    Rails.cache.delete_matched "#{self.cache_key}/#{method_name}/*"
+    if self.class.use_caching?
+      # p "DEBUG DELETE CACHED #{self} #{method_name}"
+      Rails.cache.delete [self, method_name]
+      Rails.cache.delete_matched "#{self.cache_key}/#{method_name}/*"
+    end
   end
 
   def bulk_delete_cached(method_name, objects)
