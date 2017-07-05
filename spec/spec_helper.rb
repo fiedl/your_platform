@@ -171,6 +171,19 @@ Sidekiq::Testing.inline!
 
 RSpec.configure do |config|
 
+  # rspec-rails 3 will no longer automatically infer an example group's
+  # spec type from the file location. You can explicitly opt-in to this
+  # feature using this snippet:
+  #
+  config.infer_spec_type_from_file_location!
+
+  # Enables both, the new `expect` and the old `should` syntax.
+  # https://www.relishapp.com/rspec/rspec-expectations/docs/syntax-configuration
+  #
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+
   # Inclusion of helper methods.
   # ......................................................................................
   #
