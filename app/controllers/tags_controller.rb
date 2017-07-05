@@ -38,7 +38,7 @@ class TagsController < ApplicationController
   end
 
   def find_resource_by_permalink
-    tag_id = Permalink.find_by(path: params[:permalink], reference_type: 'ActsAsTaggableOn::Tag').try(:reference_id)
+    tag_id = Permalink.find_by(url_path: params[:permalink], reference_type: 'ActsAsTaggableOn::Tag').try(:reference_id)
     @tag ||= ActsAsTaggableOn::Tag.find(tag_id) if tag_id
   end
 

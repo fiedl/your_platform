@@ -159,7 +159,7 @@ private
   end
 
   def find_resource_by_permalink
-    page_id = Permalink.find_by(path: params[:permalink], reference_type: 'Page').try(:reference_id)
+    page_id = Permalink.find_by(url_path: params[:permalink], reference_type: 'Page').try(:reference_id)
     @page ||= Page.find(page_id) if page_id
   end
 

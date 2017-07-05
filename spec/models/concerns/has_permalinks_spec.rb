@@ -42,7 +42,7 @@ describe HasPermalinks do
       end
       it "should save the path separately" do
         subject
-        page.permalinks.map(&:path).should == ["foo", "bar", "baz"]
+        page.permalinks.map(&:url_path).should == ["foo", "bar", "baz"]
       end
     end
 
@@ -57,7 +57,7 @@ describe HasPermalinks do
       end
       it "should save the path separately" do
         subject
-        page.permalinks.map(&:path).should == ["foo", "bar", "baz"]
+        page.permalinks.map(&:url_path).should == ["foo", "bar", "baz"]
       end
     end
 

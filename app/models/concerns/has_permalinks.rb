@@ -5,15 +5,15 @@ concern :HasPermalinks do
   end
 
   def permalink_path
-    "/#{permalinks.first.path}" if permalinks.any?
+    "/#{permalinks.first.url_path}" if permalinks.any?
   end
 
   def permalink_paths
     permalinks.collect do |permalink|
       if permalink.host.present?
-        "https://#{permalink.host}/#{permalink.path}"
+        "https://#{permalink.host}/#{permalink.url_path}"
       else
-        permalink.path
+        permalink.url_path
       end
     end
   end
@@ -30,7 +30,7 @@ concern :HasPermalinks do
         host = path.gsub("https://", "").split("/").first
         path = path.gsub("https://#{host}/", "")
       end
-      Permalink.new path: path, host: host
+      Permalink.new url_path: path, host: host
     end
 
     self.permalinks += new_permalinks.select { |permalink| permalink.valid? }

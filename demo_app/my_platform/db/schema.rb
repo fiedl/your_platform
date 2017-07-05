@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170626143909) do
+ActiveRecord::Schema.define(version: 20170628195622) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -353,7 +353,7 @@ ActiveRecord::Schema.define(version: 20170626143909) do
   add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
 
   create_table "permalinks", force: :cascade do |t|
-    t.string   "path",           limit: 255
+    t.string   "url_path",       limit: 255
     t.string   "reference_type", limit: 255
     t.integer  "reference_id",   limit: 4
     t.datetime "created_at",                 null: false

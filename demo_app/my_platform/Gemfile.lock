@@ -1,5 +1,5 @@
 PATH
-  remote: .
+  remote: ../..
   specs:
     your_platform (1.0.1)
       actionpack (>= 4.2.5.2)
@@ -81,8 +81,8 @@ PATH
       refile (~> 0.5.5)
       responders (~> 2.0)
       rest-client (>= 1.8)
-      rubyzip (>= 1.2.1)
       reverse_markdown
+      rubyzip (>= 1.2.1)
       sass-rails (>= 3.2)
       sidekiq (>= 3.5.1)
       simple_form
@@ -767,4 +767,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.14.6
+   1.15.1
