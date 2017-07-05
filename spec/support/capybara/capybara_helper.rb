@@ -56,10 +56,12 @@ module CapybaraHelper
     # select option, from: selector
     # http://stackoverflow.com/a/20134451/2066546
     find_best_in_place(selector).find('select').find(:option, option).select_option
+    wait_for_best_in_place_to_save(selector)
   end
 
   def enter_in_place(selector, text)
     enter_in_place_with_pressing_enter(selector, text)
+    wait_for_best_in_place_to_save(selector)
   end
 
   def enter_in_place_with_pressing_enter(selector, text)
@@ -87,6 +89,13 @@ module CapybaraHelper
     local_file_path = File.expand_path(File.join(__FILE__, "../../../support/uploads/#{filename}"))
     File.exist?(local_file_path).should == true
     find('#attachment_file', visible: false).set local_file_path
+  end
+
+  def wait_for_best_in_place_to_save(selector)
+    within(selector) { page.should have_selector '.best_in_place.success' }
+  end
+  def wait_for_best_in_place(selector)
+    wait_for_best_in_place_to_save(selector)
   end
 
 end

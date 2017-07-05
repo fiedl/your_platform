@@ -337,6 +337,7 @@ RSpec.configure do |config|
 
   config.after(:each, js: true) do
     # https://github.com/jnicklas/capybara/issues/1089
+    #page.execute_script "window.stop()"
     give_it_some_time_to_finish_the_test_before_wiping_the_database
   end
 
