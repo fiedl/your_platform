@@ -293,7 +293,7 @@ RSpec.configure do |config|
     DatabaseCleaner.start
 
     # Clear the cache.
-    Rails.cache.clear
+    Rails.cache.clear unless ENV['NO_CACHING']
 
     # # Clear cookies
     # # https://makandracards.com/makandra/16117
