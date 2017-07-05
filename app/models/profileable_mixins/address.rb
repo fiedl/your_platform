@@ -8,7 +8,7 @@ module ProfileableMixins::Address
   end
 
   def address_fields_json
-    cached { address_fields.to_json }
+    address_fields.to_json
   end
 
 

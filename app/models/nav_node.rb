@@ -8,11 +8,13 @@ class NavNode < ActiveRecord::Base
   include RailsSettings::Extend
   delegate :hidden_footer, :hidden_footer=, to: :settings
 
-  after_save :delete_cache
+  if use_caching?
+    after_save :delete_cache
 
-  def delete_cache
-    super
-    Rails.cache.delete_matched '*horizontal_nav*' if @hidden_menu_has_changed
+    def delete_cache
+      super
+      Rails.cache.delete_matched '*horizontal_nav*' if @hidden_menu_has_changed
+    end
   end
 
 
@@ -187,7 +189,7 @@ class NavNode < ActiveRecord::Base
   end
 
   def cache_key
-    [navable, "nav_node"]
+    "#{navable.cache_key}/nav_node"
   end
 
 end

@@ -36,6 +36,7 @@ concern :UserCaching do
 
     # ProfileFields
     cache :email
+    cache :address_fields_json
 
     # UserGender
     cache :female?

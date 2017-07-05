@@ -8,6 +8,7 @@ concern :PageCaching do
 
     cache :group_id
     cache :sub_page_ids
+    cache :connected_descendant_page_ids
   end
 
   include StructureableRoleCaching

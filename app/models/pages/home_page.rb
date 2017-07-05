@@ -22,10 +22,8 @@ class Pages::HomePage < Page
   end
 
   def group_id
-    cached {
-      profileable = ProfileFieldTypes::Homepage.where('value LIKE ?', "%#{domain}%").first.try(:profileable)
-      profileable.kind_of?(Group) ? profileable.id : nil
-    }
+    profileable = ProfileFields::Homepage.where('value LIKE ?', "%#{domain}%").first.try(:profileable)
+    profileable.kind_of?(Group) ? profileable.id : nil
   end
 
   # The domain of the home page is taken from the left-most
