@@ -148,5 +148,12 @@ feature "Home Pages" do
     within "#content" do
       expect(page).to have_text Page.intranet_root.title
     end
+
+    # We need this to prevent ajax requests after via scroll-to-load
+    # after leaving the spec.
+    visit root_path(scroll_to_load: 'false')
+    within "#content" do
+      expect(page).to have_text Page.intranet_root.title
+    end
   end
 end
