@@ -23,6 +23,14 @@ concern :PageHasSettings do
     super(attributes)
   end
 
+  def update_attributes!(attributes)
+    if attributes[:settings]
+      self.settings_attributes = attributes[:settings]
+      attributes = attributes.except(:settings)
+    end
+    super(attributes)
+  end
+
   # Original: lib/active_record/nested_attributes.rb
   #
   def settings_attributes=(attributes)

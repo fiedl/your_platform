@@ -5,7 +5,7 @@ $(document).ready ->
     }
 
 nav_ul = ->
-  $('#horizontal-nav-bar > ul')
+  $('#horizontal-nav-bar ul.nav')
 
 update_url = ->
   nav_ul().data('breadcrumb-root-path')

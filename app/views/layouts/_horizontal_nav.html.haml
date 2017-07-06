@@ -2,11 +2,11 @@
   - if show_resource_nav?
     = render partial: 'layouts/resource_nav'
   - else
-    %ul.horizontal_nav.nav.navbar-nav.nav-pills
+    = horizontal_nav_ul do
       - horizontal_nav.link_objects.each do |object|
         - if object.kind_of? Hash
-          %li
+          %li.horizontal-nav-link
             = link_to object[:title], (object[:path] || object.except(:title))
         - else
-          %li{class: horizontal_nav_li_css_class(object), data: {short: ((object.internal_token || object.token) if object.respond_to?(:token))}}
+          %li.horizontal-nav-link{class: horizontal_nav_li_css_class(object), data: {short: ((object.internal_token || object.token) if object.respond_to?(:token))}}
             = link_to_navable (object.nav_title), object
