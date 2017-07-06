@@ -447,7 +447,7 @@ class User < ActiveRecord::Base
   #
   def sorted_current_corporations
     current_corporations.sort_by do |corporation|
-      corporation.membership_of(self).valid_from || Time.zone.now - 100.years
+      Membership.with_invalid.find_by_user_and_group(self, corporation).valid_from || Time.zone.now - 100.years
     end
   end
 
