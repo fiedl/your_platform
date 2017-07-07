@@ -85,12 +85,9 @@ source 'https://rubygems.org' do
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
-    gem 'simplecov', require: false
-    gem 'coveralls'
     gem 'email_spec'
     gem 'timecop'  # time_travel
     gem 'fuubar'
-    gem "codeclimate-test-reporter", require: nil
     gem 'pry'
   end
 

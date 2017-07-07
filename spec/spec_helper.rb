@@ -32,35 +32,6 @@
 # FactoryGirls      Library to provide test data objects.
 #                   https://github.com/thoughtbot/factory_girl
 #
-# SimpleCov         Tool to detect the test coverage of our code.
-#                   https://github.com/colszowka/simplecov
-#
-# Coveralls         Tool to add a code coverage badge.
-#                   https://coveralls.io/docs/ruby
-#
-# CodeClimate       Code Evaluation and Test Coverage
-#                   https://codeclimate.com/github/fiedl/wingolfsplattform
-#
-#
-
-# Test Coverage
-# ===========================================================================
-#
-# This uses simplecov, coveralls and codeclimate.
-# See https://gist.github.com/jaryl/6554599
-#
-require 'simplecov' unless ENV['DRB']
-require 'coveralls'
-formatters = [SimpleCov::Formatter::HTMLFormatter]
-formatters << Coveralls::SimpleCov::Formatter if ENV['COVERALLS_REPO_TOKEN']
-formatters << CodeClimate::TestReporter::Formatter if ENV['CODECLIMATE_REPO_TOKEN']
-SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter.new(*formatters)
-SimpleCov.start 'rails'
-
-if ENV['CI'] == 'travis'
-  require "codeclimate-test-reporter"
-  CodeClimate::TestReporter.start
-end
 
 # Required Basic Libraries
 # ==========================================================================================
