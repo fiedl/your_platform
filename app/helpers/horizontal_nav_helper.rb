@@ -1,7 +1,12 @@
 module HorizontalNavHelper
 
   def horizontal_nav
-    @horizontal_nav ||= HorizontalNav.for_user current_user, current_navable: current_navable, current_home_page: current_home_page
+    @horizontal_nav ||= horizontal_nav_for current_navable
+  end
+
+  def horizontal_nav_for(navable, options = {})
+    options[:home_page] ||= current_home_page
+    HorizontalNav.for_user current_user, current_navable: navable, current_home_page: options[:home_page]
   end
 
   def horizontal_nav_li_css_class(navable)

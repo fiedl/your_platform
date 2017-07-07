@@ -46,6 +46,16 @@ module CacheStoreExtension
     remove_renew_at_time_for_nested_calls
   end
 
+  def renew_if(condition, time = Time.zone.now)
+    result = nil
+    if condition
+      renew(time) { result = yield }
+    else
+      result = yield
+    end
+    return result
+  end
+
   def store_renew_at_time_for_nested_calls(time)
     (@renew_at_times ||= []) << time
   end
