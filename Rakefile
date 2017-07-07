@@ -10,15 +10,12 @@ require File.expand_path('../demo_app/my_platform/config/application', __FILE__)
 #
 # # MyPlatform::Application.load_tasks
 
+task :tests do
+  sh "rspec spec/models spec/features"
+end
 
-# Use rspec-rerun as default task.
-#
-#   - rake
-#   - rake rspec-rerun:spec
-#
-require 'rspec/core/rake_task'
-
-task default: 'spec'
+task test: :tests
+task default: :tests
 
 
 # Version bumping mechanism.
