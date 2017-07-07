@@ -1,26 +1,28 @@
 .row
-  .col-sm-3.pull-right.side-col
-    = render partial: 'root/start_page_elements'
-    = render @page
-    %h1= app_name
-    %div.side_footer
-      = render partial: 'layouts/footer'
+  .col-sm-3.col-xs-12.pull-right.side-col
+    .row
+      = render partial: 'root/start_page_elements'
+      .col-sm-12.hidden-xs
+        = render @page
+        %h1= app_name
+        %div.side_footer
+          = render partial: 'layouts/footer'
 
-.col-sm-9
-  .row
-    .col-sm-4.hidden-xs.side-col
-      = render partial: 'layouts/vertical_nav'
+  .col-sm-9.col-xs-12
+    .row
+      .col-sm-4.hidden-xs.side-col
+        = render partial: 'layouts/vertical_nav'
 
-    .col-sm-8
-      = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
-      -#= render partial: 'root/what_is_new'
+      .col-sm-8
+        = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+        -#= render partial: 'root/what_is_new'
 
-      #top_post
+        #top_post
 
-  .row
-    .col-sm-12#social_stream
-      -#- if can? :use, :new_post_in_social_stream
-      -#  .row.new_post= render partial: 'root/new_post', locals: {sent_from_root_page: true}
-      .row.insert_loaded_content_here
-      .row.scroll_to_load
-        = render 'root/scroll_to_load'
+
+      .col-sm-12#social_stream
+        -#- if can? :use, :new_post_in_social_stream
+        -#  .row.new_post= render partial: 'root/new_post', locals: {sent_from_root_page: true}
+        .insert_loaded_content_here
+        .scroll_to_load
+          = render 'root/scroll_to_load'

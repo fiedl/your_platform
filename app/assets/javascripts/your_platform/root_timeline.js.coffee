@@ -23,8 +23,8 @@ load_next_news_for_n_days = (n)->
         is_loading = false
         if result.length > 0
           current_day_interval = 1
-          $('.row.insert_loaded_content_here').show()
-          new_elements = $(result).appendTo($('.row.insert_loaded_content_here'))
+          $('.insert_loaded_content_here').show()
+          new_elements = $(result).appendTo($('.insert_loaded_content_here'))
           new_elements
             .hide()
             .fadeIn()
@@ -88,11 +88,11 @@ $(document).on 'mouseleave', '.timeline_entry.already_read', ->
   }
 
 $(document).on 'submit', '.filter_news form', (event)->
-  $('.row.insert_loaded_content_here').fadeOut()
+  $('.insert_loaded_content_here').fadeOut()
   last_loaded_day = 0
 
   if $('#filter_news_query').val() == ""
-    $('.row.insert_loaded_content_here').html('')
+    $('.insert_loaded_content_here').html('')
     load_next_page()
   else
     $.ajax {
@@ -104,9 +104,9 @@ $(document).on 'submit', '.filter_news form', (event)->
       success: (result)->
         is_loading = false
         if result.length > 0
-          $('.row.insert_loaded_content_here').html('').show()
+          $('.insert_loaded_content_here').html('').show()
           $(result)
-            .appendTo($('.row.insert_loaded_content_here'))
+            .appendTo($('.insert_loaded_content_here'))
             .hide()
             .fadeIn()
             .process()
