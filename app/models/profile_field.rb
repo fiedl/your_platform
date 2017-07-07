@@ -11,7 +11,7 @@ class ProfileField < ActiveRecord::Base
   validates_each :type do |record, attr, value|
     if value
       if not ( defined?( value.constantize ) && ( value.constantize.class == Class ) && value.start_with?( "ProfileFields::" ) )
-        record.errors.add "#{value} is not a ProfileFieldTypes class."
+        record.errors.add "#{value} is not a ProfileFields class."
       end
     end
   end

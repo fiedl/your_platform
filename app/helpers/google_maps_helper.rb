@@ -16,7 +16,7 @@ module GoogleMapsHelper
   def map_of_address_profile_fields(address_profile_fields, options = {})
     with_info_window_class = "with_info_window" if options[:with_info_window]
     address_profile_fields = address_profile_fields.select do |pf|
-      pf.type == "ProfileFieldTypes::Address"
+      pf.type == "ProfileFields::Address"
     end
     json = address_profile_fields.to_json
     content_tag :div, class: 'map_container' do

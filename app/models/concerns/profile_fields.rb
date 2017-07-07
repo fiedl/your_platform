@@ -34,7 +34,7 @@ concern :ProfileFields do
 
   def website
     unless @website
-      @website = profile_fields.where(type: 'ProfileFieldTypes::Homepage').first.try(:value)
+      @website = profile_fields.where(type: 'ProfileFields::Homepage').first.try(:value)
       @website = "https://#{@website}" if @website and not (@website.start_with?("http://") or @website.start_with?("https://"))
     end
     @website
