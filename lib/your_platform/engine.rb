@@ -145,8 +145,6 @@ require 'mail_form'
 require 'apipie-rails'
 require 'discourse_api'
 
-::STAGE = "development" unless defined? ::STAGE
-
 require_relative '../../config/initializers/inflections'
 
 module YourPlatform

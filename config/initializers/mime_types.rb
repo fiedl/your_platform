@@ -1,4 +1,4 @@
-Mime::Type.register "application/xls", :xls
+Mime::Type.register "application/xls", :xls unless Mime::Type.lookup_by_extension(:xls)
 #Mime::Type.register 'text/x-vcard', :vcf
 
 # http://stackoverflow.com/a/2443434/2066546

@@ -1,8 +1,10 @@
 require 'spec_helper'
 
-unless ActiveRecord::Migration.table_exists? :my_structureables
-  ActiveRecord::Migration.create_table :my_structureables do |t|
-    t.string :name
+silence_stream(STDOUT) do
+  unless ActiveRecord::Migration.table_exists? :my_structureables
+    ActiveRecord::Migration.create_table :my_structureables do |t|
+      t.string :name
+    end
   end
 end
 

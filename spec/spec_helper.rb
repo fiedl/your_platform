@@ -64,7 +64,6 @@ ENV_NO_CACHING = ENV['NO_CACHING']
 # ----------------------------------------------------------------------------------------
 
 require 'rspec/rails'
-require 'rspec/autorun'
 require 'nokogiri'
 require 'capybara/poltergeist'
 require 'rspec/expectations'
@@ -364,8 +363,6 @@ RSpec.configure do |config|
   # rspec-rails.
   #
   config.infer_base_class_for_anonymous_controllers = false
-
-  config.treat_symbols_as_metadata_keys_with_true_values = true
 
 end
 
