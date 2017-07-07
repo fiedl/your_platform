@@ -32,6 +32,7 @@ class Group < ApplicationRecord
   include GroupSemesterCalendars
   include GroupEvents
   include GroupListExports
+  include GroupMapItem
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:

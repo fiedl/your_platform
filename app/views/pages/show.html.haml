@@ -15,7 +15,7 @@
 
   - if page.settings.show_group_map
     .col.col-sm-6.col-xs-12.resizable_col
-      %h1#group-map-box= t(:group_map_title)
+      %h1#group-map-box= group_map_title
       %div
         = render partial: 'shared/group_map', locals: {page: page}
 

@@ -26,6 +26,9 @@ concern :GroupCaching do
 
     # GroupListExports
     cache :export_list
+
+    # GroupMapItem
+    cache :map_item
   end
 
   def fill_cache

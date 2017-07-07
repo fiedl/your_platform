@@ -74,32 +74,26 @@ class MapItem
   end
 
   def self.from_group(group)
-    Rails.cache.fetch [group, "map_item"] do
-      map_item = self.new(group)
-      map_item.address
-      map_item.phone
-      map_item.email
-      map_item.website
-      map_item.image_url
-      map_item.image_link_url
-      map_item.longitude
-      map_item.latitude
-      map_item
-    end
+    map_item = self.new(group)
+    map_item.address
+    map_item.phone
+    map_item.email
+    map_item.website
+    map_item.image_url
+    map_item.image_link_url
+    map_item.longitude
+    map_item.latitude
+    map_item
   end
 
   def self.from_groups(groups_or_parent_group)
-    groups = groups_or_parent_group.kind_of?(Group) ? groups_or_parent_group.child_groups : groups_or_parent_group
-    groups.collect { |group| self.from_group(group) }
-  end
-
-  def self.from_corporation(corporation)
-    self.from_group(corporation)
+    groups = groups_or_parent_group.kind_of?(Group) ? ([groups_or_parent_group] + groups_or_parent_group.child_groups) : groups_or_parent_group
+    groups.collect(&:map_item)
   end
 
   def self.from_corporations(corporations = nil)
     corporations ||= Corporation.all
-    corporations.collect { |corporation| self.from_corporation(corporation) }
+    corporations.collect(&:map_item)
   end
 
 end
