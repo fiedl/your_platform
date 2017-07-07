@@ -23,7 +23,7 @@
           .home_page_title
             = wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_title
           .home_page_sub_title= wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_sub_title
-        #logo.col-xs-12.col-sm-4= current_logo
+        #logo.col-xs-12.col-sm-4= image_tag(current_logo_url)
       #toolbar.row
       .row
         = flash_area
