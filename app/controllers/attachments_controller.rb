@@ -52,10 +52,10 @@ class AttachmentsController < ApplicationController
     respond_to do |format|
       if @attachment.update_attributes(attachment_params)
         format.html { redirect_to @attachment, notice: 'Attachment was successfully updated.' }
-        format.json { head :no_content }
+        format.json { respond_with_bip(@attachment) }
       else
         format.html { render action: "edit" }
-        format.json { render json: @attachment.errors, status: :unprocessable_entity }
+        format.json { respond_with_bip(@attachment) }
       end
     end
   end
@@ -110,7 +110,7 @@ class AttachmentsController < ApplicationController
 private
 
   def attachment_params
-    params.require(:attachment).permit(:description, :file, :parent_id, :parent_type, :title, :author, :type)
+    params.require(:attachment).permit(:description, :file, :parent_id, :parent_type, :title, :author, :author_title, :type)
   end
 
   # This method secures the version parameter from a DoS attack.

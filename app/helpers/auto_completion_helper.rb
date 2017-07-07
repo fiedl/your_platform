@@ -30,4 +30,14 @@ module AutoCompletionHelper
                    class: "relationships #{attribute}" )
   end
 
+  def user_best_in_place_if(condition, object, attribute)
+    if condition
+      user_best_in_place(object, attribute)
+    else
+      if user = object.send(attribute.to_s.gsub("_title", ""))
+        link_to(user.title, user)
+      end
+    end
+  end
+
 end

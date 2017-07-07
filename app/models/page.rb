@@ -6,12 +6,12 @@ class Page < ActiveRecord::Base
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-  belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
   serialize :redirect_to
   serialize :box_configuration
 
   include Navable
+  include HasAuthor
   include PagePublicWebsite
   include Archivable
   include PageHasSettings
@@ -45,14 +45,6 @@ class Page < ActiveRecord::Base
   def to_s
     title
   end
-
-  def author_title=(new_title)
-    self.author = User.find_by_title(new_title)
-  end
-  def author_title
-    self.author.try(:title)
-  end
-
 
   def as_json(options = {})
     super.as_json(options).merge({tag_list: tag_list})

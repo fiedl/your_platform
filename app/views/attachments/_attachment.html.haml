@@ -15,10 +15,14 @@
         - if can? :destroy, attachment
           = remove_button attachment
 
-      %p.attachment.filename
-        = link_to attachment.filename, attachment.file.url
+      - if show_technical_information
+        %p.attachment.filename
+          = link_to attachment.filename, attachment.file.url
       %p.attachment.description
         = best_in_place_if can?(:update, attachment), attachment, :description
+      %p.attachment.author
+        = "#{t(:author)}: "
+        = user_best_in_place_if can?(:manage, attachment), attachment, :author_title
 
       - if show_technical_information && can?(:manage, attachment)
         %p.attachment.type

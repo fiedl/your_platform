@@ -1,7 +1,6 @@
 class Attachment < ActiveRecord::Base
 
   belongs_to :parent, polymorphic: true
-  belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
 
   mount_uploader :file, AttachmentUploader
 
@@ -11,6 +10,7 @@ class Attachment < ActiveRecord::Base
 
   scope :logos, -> { where('title like ?', "%logo%") }
 
+  include HasAuthor
   # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
 
   def title
