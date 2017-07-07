@@ -45,6 +45,8 @@ add_read_more_links_to = (html)->
     if box.height() > 250
       box.append('<div class="panel-footer"><a href="#" class="read-on">' + I18n.t('read_on') + '</a></div>')
       box.addClass 'collapsed'
+      if box.find('.pictures').size() > 0
+        box.addClass 'with_image'
 
 move_first_post_to_special_position = (html)->
   if $('#top_post').size() == 1

@@ -88,12 +88,17 @@ input.filter_news
   opacity: 0.2
 
 .box.news.collapsed
+  .picture-info, .box_meta
+    display: none
   .panel-body
     max-height: 200px
     overflow: hidden
   a.read-on
     display: block
     text-align: center
+.box.news.collapsed.with_image
+  .panel-body
+    max-height: 400px
 
 .root_view_switcher
   margin-bottom: 16px
