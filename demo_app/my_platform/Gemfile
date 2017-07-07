@@ -60,7 +60,6 @@ source 'https://rubygems.org' do
   # Security Tools
   group :development, :test do
     gem 'brakeman', '>= 2.3.1'
-    #gem 'guard-brakeman', '>= 0.8.1'
   end
 
   # Documentation Tools
@@ -71,12 +70,10 @@ source 'https://rubygems.org' do
 
   # Testing Environment
   group :test, :development do
-    gem 'guard'
     gem 'rspec-rails'
     gem 'rspec-legacy_formatters'
     gem 'rspec-collection_matchers'
     gem 'rspec-its'
-    gem 'guard-rspec'
     gem 'parallel_tests'
     gem 'rspec-instafail'
     #gem 'rspec-retry'  # TODO: activate when migrating to rspec 3
@@ -94,8 +91,6 @@ source 'https://rubygems.org' do
   # JavaScript Runtime
   gem 'execjs'
   gem 'therubyracer', :platform => :ruby
-
-  gem 'sidekiq', '~> 3.5.1'
 
   # Temporary Forks and Overrides
   gem 'json'

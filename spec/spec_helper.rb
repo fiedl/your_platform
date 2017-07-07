@@ -9,10 +9,6 @@
 # rspec-rails       Integration of RSpec into Rails, providing generators, et cetera.
 #                   https://github.com/rspec/rspec-rails
 #
-# Guard             Detecting changed files and running corresponding tests in the
-#                   background during development.
-#                   https://github.com/guard/guard
-#
 # Spring            Keeping some less frequently changing components in memory
 #                   in order to increase test performance, i.e. minimize the time
 #                   Guard needs to restart the tests.
