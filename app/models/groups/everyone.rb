@@ -20,7 +20,8 @@ class Groups::Everyone < Group
         first_name: user.first_name,
         last_name: user.last_name,
         name_affix: user.name_affix,
-        joined_at: joined_at
+        joined_at: joined_at,
+        address_fields_json: user.address_fields_json
       }
     end
   end

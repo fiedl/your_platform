@@ -16,7 +16,8 @@ concern :GroupMemberList do
           first_name: user.first_name,
           last_name: user.last_name,
           name_affix: user.name_affix,
-          joined_at: membership.valid_from
+          joined_at: membership.valid_from,
+          address_fields_json: user.address_fields_json
         }
         hash
       end
