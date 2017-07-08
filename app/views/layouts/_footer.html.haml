@@ -16,4 +16,4 @@
   #footer_line
   .clear
   %small
-    #version_footer= app_version_footer
+    #version_footer= app_version_footer unless Rails.env.test? # Do not show in testing, because `git` does not work on travis and produces "fatal: No names found, cannot describe anything." warnings.
