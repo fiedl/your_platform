@@ -138,7 +138,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'will_paginate', '> 3.0'
 
   # Gallery
-  s.add_dependency 'rails-assets-jquery-masonry'
   s.add_dependency 'rails-assets-imagesloaded'
   # also, galleria is in our `vendor` directory.
 

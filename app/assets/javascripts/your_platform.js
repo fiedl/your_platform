@@ -28,7 +28,7 @@
 //= require jquery.atwho
 //= require wysihtml/wysihtml
 //= require wysihtml/wysihtml.toolbar
-//= require 'jquery-masonry/dist/masonry.pkgd'
+//= require masonry-layout/dist/masonry.pkgd
 //= require imagesloaded
 //= require Chart.bundle
 //= require chartkick

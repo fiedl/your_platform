@@ -102,7 +102,6 @@ require 'phony'
 require 'will_paginate'
 
 # Gallery
-require 'rails-assets-jquery-masonry'
 require 'rails-assets-imagesloaded'
 # also, galleria is in our `vendor` directory.
 
