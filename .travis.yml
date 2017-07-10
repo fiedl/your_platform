@@ -36,7 +36,6 @@ addons:
   chrome: stable
   apt:
     packages:
-      - pwgen
       - libicu-dev
 services:
   - redis-server
