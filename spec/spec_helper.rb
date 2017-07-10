@@ -98,7 +98,6 @@ unless ENV['SELENIUM']
       chromeOptions: {args: %w(headless disable-gpu)}
     )
     Capybara::Selenium::Driver.new(app,
-      port: 51674 + ENV['TEST_ENV_NUMBER'].to_i,
       browser: :chrome,
       desired_capabilities: capabilities
     )
