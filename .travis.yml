@@ -33,6 +33,7 @@ cache:
 dist: precise
 sudo: false
 addons:
+  chrome: stable
   apt:
     packages:
       - pwgen
@@ -43,6 +44,7 @@ services:
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler
+  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 install:
   - travis_retry bundle install
   - bundle install
