@@ -26,8 +26,8 @@
 //= require i18n/translations
 //= require pgwbrowser
 //= require jquery.atwho
-//= require wysihtml/wysihtml
-//= require wysihtml/wysihtml.toolbar
+//= require wysihtml/dist/wysihtml
+//= require wysihtml/dist/wysihtml.toolbar
 //= require masonry-layout/dist/masonry.pkgd
 //= require imagesloaded
 //= require Chart.bundle

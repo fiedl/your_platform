@@ -72,7 +72,6 @@ require 'rails-assets-bootstrap-social'
 
 # In Place Editing
 require 'best_in_place'
-require 'rails-assets-Voog--wysihtml'
 
 # Search
 require 'elasticsearch/model'

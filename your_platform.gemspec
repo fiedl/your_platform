@@ -107,7 +107,6 @@ Gem::Specification.new do |s|
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-  s.add_dependency 'rails-assets-Voog--wysihtml', '0.6.0.beta1'
 
   # Search
   s.add_dependency 'elasticsearch-model'
