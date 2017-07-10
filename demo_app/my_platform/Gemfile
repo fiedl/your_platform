@@ -71,13 +71,12 @@ source 'https://rubygems.org' do
   # Testing Environment
   group :test, :development do
     gem 'rspec-rails'
-    gem 'rspec-legacy_formatters'
     gem 'rspec-collection_matchers'
     gem 'rspec-its'
     gem 'parallel_tests'
     gem 'rspec-instafail'
     gem 'capybara'
-    gem 'poltergeist'
+    gem 'capybara-selenium'
     gem 'selenium-webdriver'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
