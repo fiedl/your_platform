@@ -78,7 +78,7 @@ source 'https://rubygems.org' do
     gem 'capybara'
     gem 'capybara-selenium'
     gem 'selenium-webdriver'
-    #gem 'chromedriver-helper'
+    gem 'chromedriver-helper'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
     gem 'email_spec'

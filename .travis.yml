@@ -42,6 +42,11 @@ services:
   - redis-server
   - elasticsearch
 before_install:
+  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH="$HOME/chromedriver:$PATH"
+  - echo $PATH
+  - which chromedriver
+  - chromedriver --version
+  - chromedriver &
   - travis_retry gem update --system
   - travis_retry gem install bundler
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
@@ -52,11 +57,6 @@ install:
   - node -v
   - npm i -g yarn
   - yarn
-  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH="$HOME/chromedriver:$PATH"
-  - echo $PATH
-  - which chromedriver
-  - chromedriver --version
-  - chromedriver &
 before_script:
   - sleep 10
   - cd demo_app/my_platform
