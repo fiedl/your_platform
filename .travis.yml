@@ -52,7 +52,7 @@ install:
   - node -v
   - npm i -g yarn
   - yarn
-  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH="~/chromedriver:$PATH"
+  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH="$HOME/chromedriver:$PATH"
   - echo $PATH
   - which chromedriver
   - chromedriver --version
