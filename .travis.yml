@@ -31,11 +31,12 @@ cache:
     - node_modules
   yarn: true
 dist: trusty
-sudo: false
+sudo: true
 addons:
   chrome: stable
   apt:
     packages:
+      - pwgen
       - libicu-dev
 services:
   - redis-server
