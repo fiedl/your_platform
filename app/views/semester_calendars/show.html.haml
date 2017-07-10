@@ -5,7 +5,13 @@
     = current_title
     - if can? :update, @semester_calendar
       .edit-semester-calendar.tool
-        = link_to t(:edit), edit_semester_calendar_path(@semester_calendar), class: 'btn btn-default'
+        = link_to edit_icon, edit_semester_calendar_path(@semester_calendar), class: 'btn btn-default', title: t(:edit)
+    - if can? :create_semester_calendar_for, @group
+      .new_semester_calendar.tool
+        = link_to group_semester_calendars_path(group_id: @group.id), class: 'btn btn-default', title: t(:new_semester_calendar) do
+          - # We don't create a new calendar here, but redirect to the index. Maybe somebody else
+          - # has created the calendar already; thus, this is to avoid duplication.
+          = "#{t(:new)} ..."
   %div
     %p.semester
       = @semester_calendar.title(locale: current_user.locale)

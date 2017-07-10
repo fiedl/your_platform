@@ -229,6 +229,9 @@ class Ability
       can :create_attachment_for, SemesterCalendar do |semester_calendar|
         can? :update, semester_calendar
       end
+      can :change_term, SemesterCalendar do |semester_calendar|
+        can?(:update, semester_calendar)
+      end
       can :create, SemesterCalendar
       can :destroy, SemesterCalendar do |semester_calendar|
         can? :update, semester_calendar
@@ -604,6 +607,14 @@ class Ability
     cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
       ballot.signed?
     end
+
+    # We don't want people to re-use older semester calendars. Thus, after a while,
+    # the term cannot be changed anymore. They should create new calendars for new
+    # terms.
+    cannot :change_term, SemesterCalendar do |semester_calendar|
+      semester_calendar.created_at < 1.day.ago
+    end
+
 
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
