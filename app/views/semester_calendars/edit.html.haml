@@ -12,7 +12,7 @@
       = form_for @semester_calendar, url: update_term_and_year_semester_calendar_path(@semester_calendar), method: 'patch', remote: true do |f|
         = t :term
         = f.select :term, semester_calendar_terms_hash
-        = f.select :year, (Time.zone.now.year - 10)..(Time.zone.now.year + 10)
+        = f.select :year, (Time.zone.now.year - 15)..(Time.zone.now.year + 10)
     - else
       = "#{t(:term)}: #{@semester_calendar.term_to_s(current_locale)}"
 
