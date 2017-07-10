@@ -44,7 +44,6 @@ services:
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler
-  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH=~/chromedriver:$PATH
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 install:
   - travis_retry bundle install
@@ -53,6 +52,10 @@ install:
   - node -v
   - npm i -g yarn
   - yarn
+  - mkdir -p ~/chromedriver && wget https://github.com/davidthornton/chromedriver-2.31/blob/master/chromedriver\?raw\=true -O ~/chromedriver/chromedriver && chmod a+x ~/chromedriver/chromedriver && export PATH="~/chromedriver:$PATH"
+  - echo $PATH
+  - which chromedriver
+  - chromedriver --version
 before_script:
   - sleep 10
   - cd demo_app/my_platform
