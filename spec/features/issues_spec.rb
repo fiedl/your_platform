@@ -17,6 +17,10 @@ feature "Issues", :js do
     @address_field.country_code = 'GB'
     @address_field.save
 
+    # We have some strange timing issues here.
+    # Automatic cache renew does not kick in, especially on travis.
+    @person.renew_cache
+
     Issue.count.should == 0
     Issue.scan(@address_field)
     Issue.count.should == 1
