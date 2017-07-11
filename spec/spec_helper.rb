@@ -18,6 +18,13 @@
 #                   integration tests.
 #                   https://github.com/jnicklas/capybara
 #
+# PhantomJS         Simulated browser for running integration tests headless,
+#                   including the execution of JavaScript and AJAX requests.
+#                   http://phantomjs.org/
+#
+# poltergeist       Driver to use PhantomJS with Capybara.
+#                   https://github.com/jonleighton/poltergeist
+#
 # Selenium          http://www.seleniumhq.org
 # Chrome-Headless   https://robots.thoughtbot.com/headless-feature-specs-with-chrome
 #
@@ -57,7 +64,6 @@ ENV_NO_CACHING = ENV['NO_CACHING']
 
 require 'rspec/rails'
 require 'nokogiri'
-require 'selenium/webdriver'
 require 'rspec/expectations'
 require 'sidekiq/testing'
 
@@ -89,6 +95,24 @@ Geocoder.configure( lookup: :test )
 # ----------------------------------------------------------------------------------------
 
 unless ENV['SELENIUM']
+  require 'capybara/poltergeist'
+  Capybara.register_driver :poltergeist do |app|
+    # The `inspector: true` argument gives you the possibility to stop the execution
+    # of the tests using `page.driver.debug` in your spec code. This will open an
+    # inspector in the browser that allows you to see the current DOM structure and
+    # other information useful for debugging tests.
+    #
+    Capybara::Poltergeist::Driver.new(app, {
+      port: 51674 + ENV['TEST_ENV_NUMBER'].to_i,
+      inspector: true,
+      js_errors: (not ENV['NO_JS_ERRORS'].present?),
+      timeout: 120
+    })
+  end
+  Capybara.javascript_driver = :poltergeist
+end
+if ENV['USE_CHROMEDRIVER']
+  require 'selenium/webdriver'
   # https://robots.thoughtbot.com/headless-feature-specs-with-chrome
   Capybara.register_driver :chrome do |app|
     Capybara::Selenium::Driver.new(app, browser: :chrome)
