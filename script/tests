@@ -47,60 +47,66 @@ else
   other_specs
 end
 
-worker_id = (ENV['WORKER_ID'] || 0).to_i
-number_of_workers = (ENV['NUMBER_OF_WORKERS'] || 1).to_i
-number_of_specs_to_run_by_each_worker = (1.0 * specs_to_run.count / number_of_workers).ceil # rounds up
+if specs_to_run.any?
 
-specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
+  worker_id = (ENV['WORKER_ID'] || 0).to_i
+  number_of_workers = (ENV['NUMBER_OF_WORKERS'] || 1).to_i
+  number_of_specs_to_run_by_each_worker = (1.0 * specs_to_run.count / number_of_workers).ceil # rounds up
 
-print "\n\n\nTHIS WORKER #{worker_id} OF #{number_of_workers} RUNS:\n"
-specs_to_run_by_this_worker.each { |spec| print "#{spec}\n" }
-print "\n\n\n"
+  specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
+
+  print "\n\n\nTHIS WORKER #{worker_id} OF #{number_of_workers} RUNS:\n"
+  specs_to_run_by_this_worker.each { |spec| print "#{spec}\n" }
+  print "\n\n\n"
 
 
-require 'colored'
-def shell(command)
-  print "#{command}\n".white.bold
+  require 'colored'
+  def shell(command)
+    print "#{command}\n".white.bold
 
-  output = ""
-  r, io = IO.pipe
-  fork do
-    system(command, out: io, err: :out)
+    output = ""
+    r, io = IO.pipe
+    fork do
+      system(command, out: io, err: :out)
+    end
+    io.close
+    r.each_char{|c| print c; output += c}
+
+    return output
   end
-  io.close
-  r.each_char{|c| print c; output += c}
 
-  return output
-end
+  result = shell "bin/rspec #{specs_to_run_by_this_worker.join(' ')}"
 
-result = shell "bin/rspec #{specs_to_run_by_this_worker.join(' ')}"
+  failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
 
-failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
+  if failed_specs.any?
+    print "\nRerunning failed specs ...\n\n".blue
 
-if failed_specs.any?
-  print "\nRerunning failed specs ...\n\n".blue
-
-  finally_failing_specs = []
-  failed_specs.each do |spec|
-    number_of_retries = 0
-    loop do
-      number_of_retries += 1
-      result = shell "bin/rspec #{spec}"
-      number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
-      if number_of_failing_specs == 0
-        break
-      elsif number_of_retries > 3
-        finally_failing_specs << spec
-        break
+    finally_failing_specs = []
+    failed_specs.each do |spec|
+      number_of_retries = 0
+      loop do
+        number_of_retries += 1
+        result = shell "bin/rspec #{spec}"
+        number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
+        if number_of_failing_specs == 0
+          break
+        elsif number_of_retries > 3
+          finally_failing_specs << spec
+          break
+        end
       end
     end
+
+    print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
+
+    exit(finally_failing_specs.count)
+  else
+    exit 0
   end
 
-  print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
-
-  exit(finally_failing_specs.count)
 else
+  print "No specs to run for this worker.\n"
   exit 0
 end
-
 
