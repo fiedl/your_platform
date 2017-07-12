@@ -19,7 +19,7 @@ feature "Issues", :js do
 
     # We have some strange timing issues here.
     # Automatic cache renew does not kick in, especially on travis.
-    @person.renew_cache
+    wait_until { Rails.cache.uncached { @address_field.profileable.name_with_surrounding }.include? "Student" }
 
     Issue.count.should == 0
     Issue.scan(@address_field)
