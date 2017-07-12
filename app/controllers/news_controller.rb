@@ -25,7 +25,8 @@ class NewsController < ApplicationController
     # Load Pages directly
     @pages = current_user.news_pages.where(updated_at: date_range)
     @pages = @pages.where('title like ?', '%' + query + '%') if query
-    @pages = @pages.select { |page| can?(:read, page) && page.not_empty? }
+    @pages = @pages.select { |page| not page.public? }
+    @pages = @pages.select { |page| page.not_empty? && can?(:read, page) }
 
     # Load Posts directly
     @posts = current_user.posts_for_me.where(created_at: date_range)
