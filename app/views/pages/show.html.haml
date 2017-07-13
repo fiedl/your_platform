@@ -33,7 +33,7 @@
       - if page.settings.show_officers_for_group_id
         = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.number_of_officers_to_show}
       - else
-        = render partial: 'pages/officers', locals: {structureable: page}
+        = render partial: 'pages/officers', locals: {structureable: page, limit: page.number_of_officers_to_show}
 
 .row
   = render partial: 'pages/new_page_button', locals: {parent_page: page}
