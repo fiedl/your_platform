@@ -16,8 +16,9 @@ Rails.application.config.assets.precompile += %w( password_strength.js zxcvbn.js
 # Vendor Images
 Rails.application.config.assets.precompile += %w( aiga_immigration.png )
 
-# Separate mobile javascript
+# Separate layout javascripts
 Rails.application.config.assets.precompile += %w( mobile.js )
+Rails.application.config.assets.precompile += %w( iweb.js )
 
 
 # Include node modules where javascript stuff lives.
