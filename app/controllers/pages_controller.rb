@@ -69,8 +69,6 @@ class PagesController < ApplicationController
 
   def update
     authorize! :update, @page
-    params[:page] ||= {}
-    params[:page][:archived] ||= params[:archived] if params[:archived] # required for archivable.js.coffee to work properly.
 
     if page_params[:content]
       params[:page][:content] = html2markdown params[:page][:content]
@@ -96,7 +94,11 @@ class PagesController < ApplicationController
     @page = Page.new
     @new_page = @association.create!(page_params)
 
-    redirect_to @new_page
+    if @new_page.kind_of? Pages::ContentBox
+      redirect_to @new_page.parent
+    else
+      redirect_to @new_page
+    end
   end
 
   def destroy
@@ -120,11 +122,13 @@ private
     #
     params[:page] ||= params[:blog_post]
     params[:blog_post] ||= params[:page]
+    params[:page] ||= params[:pages_content_box]
 
     params[:page] ||= {}
-    params[:page][:archived] ||= params[:archived] if params[:archived]
+    params[:page][:archived] ||= params[:archived] if params[:archived] # required for archivable.js.coffee to work properly.
 
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
+    params[:page][:type] = "Pages::ContentBox" if params[:type] == 'content_box'
     if params[:type] == "hidden"
       params[:show_in_menu] = false
       params[:show_as_teaser_box] = false

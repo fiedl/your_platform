@@ -20,7 +20,10 @@ de:
   options: Optionen
   display_the_new_page_as_blog_post: Die neue Seite als Blog-Eintrag anzeigen.
   blog_posts_will_be_displayed_on_the_parent_page: "Blog-Einträge werden auf der Übersichtsseite direkt angezeigt und rutschen nach unten, wenn neuere Einträge hinzugekommen. Sie sind für die Präsentation von Neuigkeiten geeignet."
+  display_the_new_page_as_content_box: Inhalts-Kasten auf der gleichen Seite anlegen.
+  for_example_to_display_additional_info_on_the_same_page: Hiermit können zusätzliche Informationen auf der gleichen Seite angezeigt werden, aber in einem separaten Inhalts-Kasten.
   display_the_new_page_as_regular_page: Die neue Seite als regulären Inhalt anzeigen.
+  display_the_new_page_as_regular_sub_page: Die neue Seite als Unterseite anzeigen.
   regular_pages_are_used_for_permanent_information: Reguläre Seiten sind zur Darstellung von langfristig anzuzeigenden Inhalten oder von Übersichtsseiten geeignet.
   display_the_new_page_as_teaser_box: Die neue Seite als Teaser-Box anzeigen.
   display_the_new_page_in_the_nav: Die neue Seite im Navigationsmenü anzeigen.

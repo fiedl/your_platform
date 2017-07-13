@@ -8,6 +8,8 @@
     - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
       -#= best_in_place_if can?(:update, page), page, :title
       = wysiwyg_in_place_if can?(:update, page), page, :title
+    - elsif page.kind_of? Pages::ContentBox
+      = best_in_place_if can?(:update, page), page, :title
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'

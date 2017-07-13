@@ -26,6 +26,9 @@
       %div
         = render partial: 'events/events_lis', locals: {events: @events, show_location_rather_than_group: true}
 
+  - page.content_boxes.each do |content_box_page|
+    .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
+
   - page.teaser_boxes.each do |teaser_box_page|
     .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
 

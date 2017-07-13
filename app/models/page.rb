@@ -50,6 +50,9 @@ class Page < ActiveRecord::Base
     super.as_json(options).merge({tag_list: tag_list})
   end
 
+  def content_boxes
+    child_pages.where(type: "Pages::ContentBox")
+  end
 
   def child_teaser_boxes
     teaser_boxes
@@ -61,7 +64,7 @@ class Page < ActiveRecord::Base
     #   .where.not(nav_nodes: {hidden_teaser_box: true})
     #
     child_pages
-      .select { |page| not page.type == 'BlogPost'}
+      .select { |page| not page.type.in? ['BlogPost', 'Pages::ContentBox'] }
       .select { |page| not page.nav_node.hidden_teaser_box }
       .select { |page| not page.new_record? }
   end
@@ -342,7 +345,7 @@ class Page < ActiveRecord::Base
   end
 
   def self.types
-    [nil, Page, BlogPost, Blog, Pages::HomePage]
+    [nil, Page, BlogPost, Blog, Pages::HomePage, Pages::ContentBox]
   end
 
   include PageCaching if use_caching?

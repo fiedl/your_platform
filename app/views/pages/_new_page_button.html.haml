@@ -32,9 +32,13 @@
                       = radio_button_tag :type, 'blog_post', true
                       = t :display_the_new_page_as_blog_post
                       %ul.hidden_help= t :blog_posts_will_be_displayed_on_the_parent_page
+                    = label_tag :type_content_box do
+                      = radio_button_tag :type, 'content_box'
+                      = t :display_the_new_page_as_content_box
+                      %ul.hidden_help= t :for_example_to_display_additional_info_on_the_same_page
                     = label_tag :type_page do
                       = radio_button_tag :type, 'page'
-                      = t :display_the_new_page_as_regular_page
+                      = t :display_the_new_page_as_regular_sub_page
                       %ul
                         .hidden_help= t :regular_pages_are_used_for_permanent_information
                         = content_tag :label do
@@ -49,7 +53,7 @@
                       = radio_button_tag :type, 'hidden'
                       = t :hide_the_new_page
                       %ul.hidden_help= t :for_example_for_special_pages_like_the_imprint
-                    = t :the_page_options_may_be_changed_later_on_the_page_settings_page
+                    %p= t :the_page_options_may_be_changed_later_on_the_page_settings_page
                     %p.align-right
                       %a.show_hidden_help{href: '#'}
                         = help_icon
