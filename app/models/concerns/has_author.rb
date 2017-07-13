@@ -2,6 +2,8 @@ concern :HasAuthor do
 
   included do
     belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+
+    scope :by_author, -> (user) { where(author_user_id: user.id) }
   end
 
   def author_title=(new_title)

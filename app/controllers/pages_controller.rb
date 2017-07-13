@@ -29,7 +29,7 @@ class PagesController < ApplicationController
         return
       end
 
-      @blog_entries = @page.blog_entries.for_display
+      @blog_entries = @page.blog_entries.visible_to(current_user)
 
       if @page.show_events?
         @events = @page.events

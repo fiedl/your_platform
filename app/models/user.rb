@@ -580,7 +580,7 @@ class User < ActiveRecord::Base
       .where(groups: {id: group_ids_the_user_is_no_member_of})
     Page
       .where.not(id: (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
-      .for_display
+      .visible_to(self)
       .order('pages.updated_at DESC')
   end
 

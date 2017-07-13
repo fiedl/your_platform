@@ -20,10 +20,8 @@ class Page < ActiveRecord::Base
   include PageEvents
   include PageOfficers
   include PageTeaserBoxes
-
-  scope :for_display, -> { not_archived.includes(:ancestor_users,
-    :ancestor_events, :author, :parent_pages,
-    :parent_users, :parent_groups, :parent_events) }
+  include PagePublishing
+  include PageVisibility
 
   scope :regular, -> {
     where(type: nil)
