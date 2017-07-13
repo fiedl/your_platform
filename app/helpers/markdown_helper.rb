@@ -12,7 +12,7 @@ module MarkdownHelper
     # To prevent the numbering issue with ordered lists, simply
     # convert all numbered lists to unordered ones.
     #
-    text = text.gsub(/^([0-9]*\. .*$)/, '* \1')
+    text = text.to_s.gsub(/^([0-9]*\. .*$)/, '* \1')
 
     rendered_html = Redcarpet::Markdown.new(Redcarpet::Render::ModifiedHtml.new(renderer_options.merge({unrendered_content: text})), markdown_options).render(text || "").html_safe
 
