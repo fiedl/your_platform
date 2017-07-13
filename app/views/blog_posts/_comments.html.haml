@@ -1,12 +1,13 @@
-#comments.clearfix.blog_post_comments
-  .comments-title
-    %h3
-      -#%span= number_of_comments_string(blog_post.comments.count)
-      %span= blog_post.comments.count
-      = t :comments
+- if can? :use, :blog_post_comments
+  #comments.clearfix.blog_post_comments
+    .comments-title
+      %h3
+        -#%span= number_of_comments_string(blog_post.comments.count)
+        %span= blog_post.comments.count
+        = t :comments
 
-  %ol.commentlist.clearfix{class: "comments-for-#{blog_post.id}"}
-    = render blog_post.comments
-  .clear
+    %ol.commentlist.clearfix{class: "comments-for-#{blog_post.id}"}
+      = render blog_post.comments
+    .clear
 
-  = render partial: 'comments/new_comment', locals: {commentable: blog_post}
+    = render partial: 'comments/new_comment', locals: {commentable: blog_post}
