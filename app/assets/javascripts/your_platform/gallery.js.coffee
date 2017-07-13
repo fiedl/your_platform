@@ -50,11 +50,10 @@ class App.Gallery
   }
 
   default_height: ->
-    if @closest('.box').width() > 250
-      # return 0.5629, # 16:9
-      return 0.5 # 16:9 aspect ratio with border correction
-    else
-      return 0.625 # 16:10
+    1.0 / @aspect_ratio_of_first_image()
+
+  aspect_ratio_of_first_image: ->
+    1.0 * @closest('.box').find('.picture-attachment img').first().data('width') / @closest('.box').find('.picture-attachment img').first().data('height')
 
   initSettings: ->
     self = this

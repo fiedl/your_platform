@@ -18,6 +18,8 @@ module GalleriaHelper
         big: attachment.big_url,
         title: attachment.title,
         description: attachment.description,
+        height: attachment.height,
+        width: attachment.width
         #link: attachment.file_url,
       }
     end
