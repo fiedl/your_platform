@@ -2,7 +2,7 @@
 - structureable
 - limit ||= 1000
 
-%h1.officers= t :officers
+%h1.officers{id: "officers-box-for-#{structureable.id}"}= t :officers
 %div
   %ul.officers
     - sorted_officers_groups_for(structureable).first(limit).each do |officer_group|
