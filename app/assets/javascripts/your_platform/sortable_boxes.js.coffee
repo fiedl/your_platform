@@ -87,10 +87,11 @@ $(document).ready ->
     while i > 0
       i--
       configuration = box_configuration[i]
-      box = $("##{configuration.id}.box")
-      col = box.closest('.col, .resizable_col')
-      row = box.closest('.row')
-      row.prepend(col)
-      col.removeClass "col-sm-3 col-sm-6 col-sm-9 col-sm-12"
-      col.addClass configuration.class
-      col.show('fade')
+      if configuration.id
+        box = $("##{configuration.id}.box")
+        col = box.closest('.col, .resizable_col')
+        row = box.closest('.row')
+        row.prepend(col)
+        col.removeClass "col-sm-3 col-sm-6 col-sm-9 col-sm-12"
+        col.addClass configuration.class
+        col.show('fade')
