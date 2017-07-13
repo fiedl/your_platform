@@ -4,6 +4,8 @@ body.iweb-layout
   font-size: 15px
   h2
     font-size: 20px
+  h3
+    font-size: 17px
   h1, h2, h3, h4
     margin-top: 20px
     margin-bottom: 10px
@@ -49,8 +51,25 @@ body.iweb-layout
         font-weight: normal
         letter-spacing: 0.24em
   #toolbar
-    margin-top: -40px
+    margin-top: -50px
     margin-bottom: 20px
+
+  .box.page:not(.blog_post)
+    border: none
+    .panel-heading
+      margin-top: -40px
+      height: 40px
+      background: none
+    .panel-title
+      visibility: hidden
+    .box_meta
+      display: none
+    .picture-info
+      display: none
+    .box_toolbar
+      margin-top: 20px
+      margin-bottom: -20px
+      z-index: 20
 
   .panel-default
     border-color: white
@@ -72,22 +91,6 @@ body.iweb-layout
 
   .galleria-container
     -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
-
-
-// No box header for the home page.
-body.pages-homepage.iweb-layout
-  .box.page.first
-    border: none
-    .panel-heading
-      margin-top: -40px
-      height: 40px
-      background: none
-    .panel-title
-      visibility: hidden
-    .box_meta
-      display: none
-    .picture-info
-      display: none
 
 // No global page settings button for this compact layout.
 body.iweb-layout
