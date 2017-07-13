@@ -55,7 +55,7 @@ concern :Navable do
 
     def show_vertical_nav?
       if self.respond_to?(:public?) && self.public?
-        (self.type != 'Pages::HomePage') && ((self.navable_children.select(&:show_in_menu?).count > 0) || self.parents.first.try(:show_vertical_nav?))
+        (self.respond_to?(:type) && (self.type != 'Pages::HomePage')) && ((self.navable_children.select(&:show_in_menu?).count > 0) || self.parents.first.try(:show_vertical_nav?))
       else
         (self.children.count + self.ancestors.count > 1)
       end
