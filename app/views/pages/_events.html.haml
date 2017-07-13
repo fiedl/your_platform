@@ -1,0 +1,11 @@
+%h1#public-root-events-box= t(:events)
+%div
+  = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
+
+  - if page.semester_calendar && attachment = page.semester_calendar.attachments.last
+    %h3
+      = t :semester_calendar
+      = link_to "ical", group_events_url(group_id: page.show_events_for_group, format: 'ics', protocol: 'webcal'), class: 'ical_abo_link'
+    = link_to attachment.file.url do
+      = image_tag(attachment.thumb_url)
+

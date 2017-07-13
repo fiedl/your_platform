@@ -12,4 +12,8 @@ concern :GroupSemesterCalendars do
     false
   end
 
+  def semester_calendar
+    semester_calendars.current.last
+  end
+
 end

@@ -17,6 +17,7 @@ class Page < ActiveRecord::Base
   include PageHasSettings
   include HasPermalinks
   include RelatedPages
+  include PageEvents
 
   scope :for_display, -> { not_archived.includes(:ancestor_users,
     :ancestor_events, :author, :parent_pages,

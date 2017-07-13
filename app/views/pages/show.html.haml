@@ -20,11 +20,7 @@
         = render partial: 'shared/group_map', locals: {page: page}
 
   - if @events
-    .col.col-sm-3.col-xs-12.public_root_events
-      %h1#public-root-events-box
-        = t(:events)
-      %div
-        = render partial: 'events/events_lis', locals: {events: @events, show_location_rather_than_group: true}
+    .col.col-sm-3.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
 
   - page.content_boxes.each do |content_box_page|
     .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
