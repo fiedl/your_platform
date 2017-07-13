@@ -35,9 +35,9 @@
   - if page.settings.show_officers
     .col.col-sm-3.col-xs-12.resizable_col
       - if page.settings.show_officers_for_group_id
-        = render partial: 'officers/officers_box', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.settings.show_only_the_first_n_offices.try(:to_i)}
+        = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.settings.show_only_the_first_n_offices.try(:to_i)}
       - else
-        = render partial: 'officers/officers_box', locals: {structureable: page}
+        = render partial: 'pages/officers', locals: {structureable: page}
 
 .row
   = render partial: 'pages/new_page_button', locals: {parent_page: page}

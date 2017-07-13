@@ -1,0 +1,11 @@
+- # locals:
+- structureable
+- limit ||= 1000
+
+%h1.officers= t :officers
+%div
+  %ul.officers
+    - sorted_officers_groups_for(structureable).first(limit).each do |officer_group|
+      %li
+        .office= officer_group.name
+        .officer= user_links officer_group.members
