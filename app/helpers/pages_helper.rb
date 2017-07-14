@@ -22,7 +22,7 @@ module PagesHelper
 
   def publish_page_button(page)
     if page.unpublished? && can?(:publish, page)
-      link_to publish_icon, page_publications_path(page_id: page.id), method: :post, class: 'btn btn-primary publish_page tool', title: t(:publish_page)
+      link_to publish_icon, page_publications_path(page_id: page.id), method: :post, remote: true, class: 'btn btn-primary publish_page tool', title: t(:publish_page_which_is_draft_now)
     end
   end
 

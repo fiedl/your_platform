@@ -28,3 +28,17 @@ $(document).ready ->
 
   if $('#page_settings_button') and $('#toolbar').size() > 0
     $('#page_settings_button').detach().appendTo($('#toolbar'))
+
+$(document).on 'click', '.btn.publish_page', ->
+  button = $(this)
+  App.spinner.show(button)
+  $.ajax({
+    type: 'Post',
+    url: button.attr('href'),
+    success: (result) ->
+      button.hide('highlight')
+    failure: (result) ->
+      console.log result
+      alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
+  })
+  false

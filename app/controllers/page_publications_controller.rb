@@ -1,5 +1,5 @@
 class PagePublicationsController < ApplicationController
-
+  respond_to :json
   expose :page
 
   def create
@@ -7,7 +7,7 @@ class PagePublicationsController < ApplicationController
 
     page.update_attributes published_at: Time.zone.now
 
-    redirect_to :back
+    respond_with page
   end
 
 end
