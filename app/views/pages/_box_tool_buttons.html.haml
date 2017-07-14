@@ -1,5 +1,7 @@
 - page || raise('no page given')
 
+= publish_page_button(page)
+
 - if can? :destroy, page
   .delete_page_tool.tool= destroy_page_button(page)
 

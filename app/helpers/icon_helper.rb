@@ -84,4 +84,8 @@ module IconHelper
     fa_icon 'pencil-square-o'
   end
 
+  def publish_icon
+    fa_icon 'cloud-upload'
+  end
+
 end

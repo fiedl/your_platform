@@ -115,6 +115,7 @@ Rails.application.routes.draw do
     get :attachments, to: 'attachments#index'
     get :permalinks, to: 'permalinks#index'
     get :settings, to: 'page_settings#index'
+    resources :publications, only: [:create], controller: :page_publications
   end
 
   get :home_pages, to: 'pages/home_pages#index'

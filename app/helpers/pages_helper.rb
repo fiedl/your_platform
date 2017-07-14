@@ -20,4 +20,10 @@ module PagesHelper
     end
   end
 
+  def publish_page_button(page)
+    if page.unpublished? && can?(:publish, page)
+      link_to publish_icon, page_publications_path(page_id: page.id), method: :post, class: 'btn btn-primary publish_page tool', title: t(:publish_page)
+    end
+  end
+
 end
