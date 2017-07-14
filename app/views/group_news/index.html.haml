@@ -13,7 +13,7 @@
   %h1 Inhalte und Blog-Posts
   %div
     %ul
-      - group.descendant_pages.order('updated_at desc').limit(5).each do |page|
+      - group.descendant_pages.order(published_at: :desc).limit(5).each do |page|
         %li= link_to page.title, page
 
   %h1 Dokumente

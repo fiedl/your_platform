@@ -188,13 +188,13 @@ class Page < ActiveRecord::Base
     blog_posts
   end
   def blog_posts
-    child_pages.where(type: "BlogPost").order('created_at DESC')
+    child_pages.where(type: "BlogPost").order(published_at: :desc)
   end
   def child_blog_posts
-    child_pages.where(type: "BlogPost").order('created_at DESC')
+    child_pages.where(type: "BlogPost").order(published_at: :desc)
   end
   def descendant_blog_posts
-    descendant_pages.where(type: "BlogPost").order('created_at DESC')
+    descendant_pages.where(type: "BlogPost").order(published_at: :desc)
   end
 
   # Finder and Creator Methods

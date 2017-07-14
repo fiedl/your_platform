@@ -23,7 +23,7 @@ class NewsController < ApplicationController
 
   def load_news(date_range, query = nil)
     # Load Pages directly
-    @pages = current_user.news_pages.where(updated_at: date_range)
+    @pages = current_user.news_pages.where(published_at: date_range)
     @pages = @pages.where('title like ?', '%' + query + '%') if query
     @pages = @pages.select { |page| not page.public? }
     @pages = @pages.select { |page| page.not_empty? && can?(:read, page) }
@@ -48,7 +48,7 @@ class NewsController < ApplicationController
 
     # Sort Objects
     @posts = (@posts).uniq.sort_by { |obj| obj.updated_at }.reverse
-    @pages = (@pages).uniq.sort_by { |obj| obj.updated_at }.reverse
+    @pages = (@pages).uniq.sort_by { |obj| obj.published_at }.reverse
     @events = @events.uniq.order('events.updated_at desc')
     @objects = @posts + @pages + @events
 
