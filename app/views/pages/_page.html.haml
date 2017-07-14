@@ -15,8 +15,10 @@
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
     = render partial: 'pages/box_tool_buttons', object: page, as: :page
   %div.page
-    - if page.image_attachments_not_listed_in_content.any?
-      #inline-pictures= render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
+    #inline-pictures
+      - # The `#inline-pictures` selector needs to be outside the `if`, because it's target to `ajax_replace`.
+      - if page.image_attachments_not_listed_in_content.any?
+        = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
 
     = render partial: 'pages/meta', object: page, as: :page
 
