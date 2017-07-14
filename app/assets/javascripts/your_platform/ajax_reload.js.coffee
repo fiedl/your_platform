@@ -24,10 +24,6 @@ $(document).ready ->
     url = options['url']
     success_callback = options['success']
 
-    for selector in selectors
-      target = root_element.find(selector).addBack(selector)
-      target.fadeOut()
-
     $.ajax {
       type: 'GET',
       url: url,
