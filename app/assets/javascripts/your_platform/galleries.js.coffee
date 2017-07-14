@@ -23,7 +23,7 @@ $(document).ready ->
 # The button to remove an image is only to be shown when
 # hovering the image description.
 #
-$(document).on 'mouseenter', '.picture-title', ->
+$(document).on 'mouseenter', '.picture-info', ->
   $(this).find('.remove_button').show()
-$(document).on 'mouseleave', '.picture-title', ->
+$(document).on 'mouseleave', '.picture-info', ->
   $(this).find('.remove_button').hide()
