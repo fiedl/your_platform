@@ -502,8 +502,13 @@ class Ability
     #
     can :use, :semester_calendars
     cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
-    can :use, :wysihtml if Rails.env.test? # it's not ready, yet, but the tests use it already.
-    can :use, :permalinks if Rails.env.test? # it's not ready, yet, but the tests use it already.
+
+    # it's not ready, yet, but the tests use it already.
+    if Rails.env.test?
+      can :use, :wysihtml
+      can :use, :permalinks
+      can :use, :blog_post_comments
+    end
 
     # Use the tabs view in users#show. This has been a beta feature previously.
     # TODO: Remove the feature switch whenever you feel we won't switch back.

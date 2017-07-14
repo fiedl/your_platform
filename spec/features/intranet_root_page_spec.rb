@@ -29,9 +29,9 @@ feature "Intranet Root" do
     @group.assign_user @user, at: 1.year.ago
     @other_group = create :group
 
-    @page_of_group = @group.child_pages.create title: 'Page of a group the user is member of', content: "This page needs content to be shown."
-    @page_of_other_group = @other_group.child_pages.create title: 'Page of a group the user is NOT member of', content: "This page needs content to be shown."
-    @page_without_group = create :page, title: 'Page without a group, i.e. a global page', content: "This page needs content to be shown."
+    @page_of_group = @group.child_pages.create title: 'Page of a group the user is member of', content: "This page needs content to be shown.", published_at: 1.day.ago
+    @page_of_other_group = @other_group.child_pages.create title: 'Page of a group the user is NOT member of', content: "This page needs content to be shown.", published_at: 1.day.ago
+    @page_without_group = create :page, title: 'Page without a group, i.e. a global page', content: "This page needs content to be shown.", published_at: 1.day.ago
 
     login @user
     visit root_path

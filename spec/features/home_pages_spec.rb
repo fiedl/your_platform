@@ -4,7 +4,7 @@ feature "Home Pages" do
   context "As homepage admin" do
     background do
       @user = create :user_with_account
-      @page = Page.create title: "example.com"
+      @page = Page.create title: "example.com", published_at: 1.day.ago
       @page.settings.layout = 'bootstrap'
       @page.assign_admin @user
       wait_for_cache

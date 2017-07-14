@@ -42,9 +42,9 @@ feature "Page Settings", :js do
 
   describe "for home pages" do
     before do
-      @page = Pages::HomePage.create title: "example.com", content: "Test home page"
-      @sub_page = @page.child_pages.create title: "Sub page"
-      @second_sub_page = @page.child_pages.create title: "Second page"
+      @page = Pages::HomePage.create title: "example.com", content: "Test home page", published_at: 1.day.ago
+      @sub_page = @page.child_pages.create title: "Sub page", published_at: 1.day.ago
+      @second_sub_page = @page.child_pages.create title: "Second page", published_at: 1.day.ago
 
       login :admin
     end
