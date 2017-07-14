@@ -16,4 +16,15 @@ concern :PagePublishing do
     unpublished?
   end
 
+  def localized_published_at
+    I18n.localize published_at.to_date if published_at
+  end
+
+  def localized_published_at=(date_string)
+    begin
+      self.published_at = date_string.to_date
+    rescue
+      self.published_at = nil
+    end
+  end
 end

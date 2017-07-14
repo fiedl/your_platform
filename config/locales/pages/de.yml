@@ -40,6 +40,8 @@ de:
   teaser_image: Vorschau-Bild
   teaser_image_url: Vorschau-Bild-Url
 
+  published_at: Veröffentlicht am
+
   file: 'Datei'
   helpers:
     submit:

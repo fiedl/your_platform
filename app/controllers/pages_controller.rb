@@ -142,6 +142,7 @@ private
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
     permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
     permitted_keys += [:settings => [:horizontal_nav_page_id_order => []]] if can? :manage, @page
+    permitted_keys += [:published_at, :localized_published_at] if can? :publish, @page
 
     if (@page.new_record? and can?(:create_page_for, secure_parent)) or can?(:manage, @page)
       permitted_keys += [:title, :content, :type, :author_user_id]

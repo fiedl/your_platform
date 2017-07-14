@@ -15,6 +15,9 @@
     %tr.redirect_page_to
       %th= t :redirect_page_to
       %td= best_in_place @page, :redirect_to
+    %tr.published_at
+      %th= t :published_at
+      %td= best_in_place @page, :localized_published_at
     %tr.created_at
       %th= t :created_at
       %td= localize @page.created_at
