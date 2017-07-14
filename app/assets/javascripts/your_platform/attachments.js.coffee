@@ -22,3 +22,6 @@ $(document).on 'click', '.pictures .remove_button', ->
   pictures_box.find('.galleria-image.active').hide('explode')
   pictures_box.find('.picture-info').hide('explode')
 
+$(document).on 'click', 'table.attachments .remove_button', ->
+  $(this).closest('tr').hide 'fade', ->
+    $(this).remove()
