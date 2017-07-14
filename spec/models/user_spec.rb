@@ -1136,17 +1136,17 @@ describe User do
   describe "#news_pages" do
     subject { @user.news_pages }
     before do
-      @independent_page = create :page, title: 'independent_page'
+      @independent_page = create :page, title: 'independent_page', published_at: 1.day.ago
       @root_page = Page.find_root
-      @page_0 = @root_page.child_pages.create title: 'page_0'
+      @page_0 = @root_page.child_pages.create title: 'page_0', published_at: 1.day.ago
       @everyone = Group.everyone
-      @page_1 = @everyone.child_pages.create title: 'page_1'
-      @page_2 = @page_1.child_pages.create title: 'page_2'
+      @page_1 = @everyone.child_pages.create title: 'page_1', published_at: 1.day.ago
+      @page_2 = @page_1.child_pages.create title: 'page_2', published_at: 1.day.ago
       @group_1 = @everyone.child_groups.create name: 'group_1'
-      @page_3 = @group_1.child_pages.create title: 'page_3'
+      @page_3 = @group_1.child_pages.create title: 'page_3', published_at: 1.day.ago
       @group_2 = @everyone.child_groups.create name: 'group_2'
       @group_2.assign_user @user
-      @page_4 = @group_2.child_pages.create title: 'page_4'
+      @page_4 = @group_2.child_pages.create title: 'page_4', published_at: 1.day.ago
       time_travel 2.seconds
       @user.reload
     end

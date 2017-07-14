@@ -27,6 +27,7 @@ $(document).on 'submit', '.add_group_members form.new_membership', (event)->
     success: (result)->
       $('.box.members .box_content .alert').remove()
       $('table.members').html result.group_members_table_html
+      $('.members_count').remove()
     error: (jqXHR, textStatus, errorThrown)->
       $('.box.members .box_content .alert').remove()
       $('.box.members .box_content')

@@ -16,6 +16,8 @@ feature "memberships#create" do
       click_on I18n.t(:add)
     end
 
+    wait_until(timeout: 60.seconds) { print "/"; page.has_no_text? "Mitglieder (0)" }
+
     within '#members' do
       page.should have_text @user.last_name
       page.should have_text @user.first_name
