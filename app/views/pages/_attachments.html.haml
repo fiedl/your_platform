@@ -1,5 +1,6 @@
 - attachments = page.attachments.includes(:author, :parent).find_without_types("video", "image")
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
+- show_drop_field ||= false
 
 - # - attachments = .order('created_at DESC')
 - # - attachments = attachments. + attachments.find_by_types('image', 'video').where(author: current_user)
@@ -13,7 +14,7 @@
 - #
 
 - if attachments.count > 0
-  = render partial: 'attachments/documents', locals: {attachments: attachments, parent: page}
+  = render partial: 'attachments/documents', locals: {attachments: attachments, parent: page, show_drop_field: show_drop_field}
 
 -#- if not @blog_entries.present? and not @hide_attachment_drop_fields and not @tag and can?(:create_attachment_for, page)
 -#  .hidden-print= render partial: 'attachments/drop_field', locals: {parent: page}

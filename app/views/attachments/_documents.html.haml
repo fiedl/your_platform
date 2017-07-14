@@ -18,4 +18,5 @@
       wechseln.
 
   - if show_drop_field && can?(:create_attachment_for, parent)
-    = render partial: 'attachments/drop_field', locals: {type: :pdf, parent: parent}
+    .hidden-print.show_only_in_edit_mode
+      = render partial: 'attachments/drop_field', locals: {type: :pdf, parent: parent}
