@@ -26,4 +26,9 @@ module PagesHelper
     end
   end
 
+  def visible_pages_only(pages)
+    pages = Page.where(id: pages.map(&:id)) if pages.kind_of? Array
+    pages.visible_to(current_user, preview_as: params[:preview_as])
+  end
+
 end

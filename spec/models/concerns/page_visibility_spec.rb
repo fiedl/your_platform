@@ -17,6 +17,9 @@ describe PageVisibility do
       it { should_not be_visible_to author_user }
     end
 
+    describe "when simulating how other users see the page" do
+      it { should_not be_visible_to author_user, preview_as: :user}
+    end
   end
 
   describe "for another user" do

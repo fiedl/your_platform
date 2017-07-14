@@ -6,7 +6,7 @@
 %li.active
   = link_to_navable navable.nav_title, navable
 
-- navable.nav_child_pages.each do |page|
+- visible_pages_only(navable.nav_child_pages).each do |page|
   - if can? :read, page
     %li.child.page
       = link_to_navable page.nav_node.nav_title, page

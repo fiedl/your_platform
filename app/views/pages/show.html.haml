@@ -22,10 +22,10 @@
   - if @events
     .col.col-sm-3.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
 
-  - page.content_boxes.each do |content_box_page|
+  - visible_pages_only(page.content_boxes).each do |content_box_page|
     .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
 
-  - page.teaser_boxes.each do |teaser_box_page|
+  - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
     .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
 
   - if page.settings.show_officers
@@ -39,9 +39,8 @@
   = render partial: 'pages/new_page_button', locals: {parent_page: page}
 
 .row#blog_entries
-  - if page.blog_entries.count > 0
-    - page.blog_entries.each do |blog_entry|
-      = render partial: 'pages/page', object: blog_entry
+  - visible_pages_only(page.blog_entries).each do |blog_entry|
+    = render partial: 'pages/page', object: blog_entry
 
 
 -#%div.col3
