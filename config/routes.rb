@@ -230,9 +230,6 @@ Rails.application.routes.draw do
   constraints global_admin_constraint do
     mount Sidekiq::Web => '/sidekiq'
   end
-  constraints developer_constraint do
-    mount RedisAnalytics::Dashboard::Engine => "/analytics"
-  end
 
   # Refile File Attachments
   mount Refile.app, at: '/refile', as: :refile_app
