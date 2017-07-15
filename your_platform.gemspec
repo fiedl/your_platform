@@ -26,13 +26,13 @@ Gem::Specification.new do |s|
   #
 
   # Rails and Rails Additions
-  s.add_dependency "rails", "~> 4.2"
+  s.add_dependency "rails", "~> 5.0.0"
   s.add_dependency 'rack', '>= 1.6.2'
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
-  s.add_dependency 'web-console', '>= 2.1.3'
+  s.add_dependency 'web-console'
   s.add_dependency 'sprockets-rails', '~> 2.3'
   s.add_dependency 'decent_exposure', '~> 3.0'
 
@@ -101,8 +101,8 @@ Gem::Specification.new do |s|
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '>= 4.7'
   # fix bootstrap to 3.3.3 due to icon issue:
-  s.add_dependency 'bootstrap-sass', '= 3.3.3'                                                  # Apache License 2.0
-  s.add_dependency 'sass-rails', '>= 3.2'
+  s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
+  s.add_dependency 'sass-rails'
   s.add_dependency 'rails-assets-bootstrap-social'
 
   # In Place Editing
@@ -122,7 +122,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick'
-  s.add_dependency 'refile', '~> 0.5.5'
+  s.add_dependency 'refile'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
 
