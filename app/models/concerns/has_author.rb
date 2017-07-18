@@ -1,7 +1,7 @@
 concern :HasAuthor do
 
   included do
-    belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
+    belongs_to :author, class_name: 'User', foreign_key: 'author_user_id', optional: true
 
     scope :by_author, -> (user) { user ? where(author_user_id: user.id) : none }
   end

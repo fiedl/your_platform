@@ -9,7 +9,7 @@
 # if several requests belong to a single visit.
 #
 class Request < ApplicationRecord
-  belongs_to :navable, polymorphic: true
+  belongs_to :navable, polymorphic: true, optional: true
   before_save :purge_user_id_from_the_database
 
   def self.create(attrs)

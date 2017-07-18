@@ -16,8 +16,8 @@
 class Issue < ApplicationRecord
 
   belongs_to :reference, polymorphic: true
-  belongs_to :responsible_admin, class_name: 'User'
-  belongs_to :author, class_name: 'User'
+  belongs_to :responsible_admin, class_name: 'User', optional: true
+  belongs_to :author, class_name: 'User', optional: true
 
   scope :unresolved, -> { where(resolved_at: nil) }
   scope :by_admin, ->(admin) { where(responsible_admin_id: admin.id) }
