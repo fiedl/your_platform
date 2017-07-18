@@ -57,7 +57,7 @@ Gem::Specification.new do |s|
   # Retry transactions: Rescue from deadlocks.
   s.add_dependency 'transaction_retry'
   # DAG Structure, https://github.com/resgraph/acts-as-dag
-  s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
+  s.add_dependency 'acts-as-dag', '>= 4.0'
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   s.add_dependency 'wannabe_bool'
   s.add_dependency 'acts-as-taggable-on', '~> 4.0'
@@ -122,7 +122,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick'
-  s.add_dependency 'refile'
+  s.add_dependency 'refile', '>= 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
 
