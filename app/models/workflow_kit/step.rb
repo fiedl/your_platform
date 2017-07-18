@@ -2,7 +2,7 @@ module WorkflowKit
 
   require 'workflow_kit/brick'
 
-  class Step < ActiveRecord::Base
+  class Step < ApplicationRecord
     self.table_name = "workflow_kit_steps"
 
     default_scope { order(:sequence_index) }

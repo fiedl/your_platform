@@ -1,4 +1,4 @@
-class StatusGroupMembershipInfo < ActiveRecord::Base
+class StatusGroupMembershipInfo < ApplicationRecord
 
   belongs_to :membership, touch: true, class_name: "Memberships::Status", inverse_of: :status_membership_info
 

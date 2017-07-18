@@ -1,1 +1,0 @@
-require_relative '../../app/models/cache_store_extension'

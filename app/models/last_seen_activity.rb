@@ -1,4 +1,4 @@
-class LastSeenActivity < ActiveRecord::Base
+class LastSeenActivity < ApplicationRecord
 
   belongs_to :user
   belongs_to :link_to_object, polymorphic: true

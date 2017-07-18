@@ -1,4 +1,4 @@
-class Location < ActiveRecord::Base
+class Location < ApplicationRecord
   belongs_to :object, polymorphic: true
 
   # location.neadby_users(within_meters: 100)

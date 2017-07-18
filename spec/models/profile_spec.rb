@@ -11,10 +11,11 @@ end
 describe Profile do
 
   before do
-    class MyStructureable < ActiveRecord::Base
-      is_structureable( ancestor_class_names: %w(MyStructureable),
-                        descendant_class_names: %w(MyStructureable Group User Workflow Page) )
-      has_profile_fields sections: [ :general, :group ]
+    class MyStructureable < ApplicationRecord
+      has_dag_links ancestor_class_names: %w(MyStructureable), descendant_class_names: %w(MyStructureable Group User Workflow Page), link_class_name: 'DagLink'
+
+      include Structureable
+      include HasProfile
     end
 
     @profileable = MyStructureable.create(name: "My Profileable")

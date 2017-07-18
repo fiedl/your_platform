@@ -1,17 +1,11 @@
-# This class represents a user group. Besides users, groups may have sub-groups as children.
-# One group may have several parent-groups. Therefore, the relations between groups, users,
-# etc. is stored using the DAG model, which is implemented by the `is_structureable` method.
-#
 class Group < ApplicationRecord
 
-  is_structureable(ancestor_class_names: %w(Group Page Event),
-                   descendant_class_names: %w(Group User Page Workflow Project))
-  has_profile_fields
+  has_dag_links ancestor_class_names: %w(Group Page Event), descendant_class_names: %w(Group User Page Workflow Project), link_class_name: 'DagLink'
 
   default_scope { includes(:flags) }
-
   scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
 
+  include Structureable
   include Navable
   include GroupMemberships
   include GroupMemberList
@@ -33,6 +27,8 @@ class Group < ApplicationRecord
   include GroupEvents
   include GroupListExports
   include GroupMapItem
+  include HasProfile
+
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:

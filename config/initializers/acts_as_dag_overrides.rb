@@ -1,1 +1,0 @@
-Dag::CreateCorrectnessValidator.send(:prepend, ActsAsDagOverrides::CreateCorrectnessValidatorOverrides)

@@ -1,4 +1,4 @@
-class AuthToken < ActiveRecord::Base
+class AuthToken < ApplicationRecord
   has_secure_token :token
   belongs_to :user
   belongs_to :resource, polymorphic: true

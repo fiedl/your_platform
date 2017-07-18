@@ -8,7 +8,7 @@
 # Using the ip, which is stored, we try to identify
 # if several requests belong to a single visit.
 #
-class Request < ActiveRecord::Base
+class Request < ApplicationRecord
   belongs_to :navable, polymorphic: true
   before_save :purge_user_id_from_the_database
 

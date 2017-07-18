@@ -1,4 +1,4 @@
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
 
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'

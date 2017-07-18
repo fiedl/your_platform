@@ -1,4 +1,4 @@
-class Attachment < ActiveRecord::Base
+class Attachment < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 

@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   # Virtual attribute, which can be used in member lists to add a note in memory when the user
   # has joined a group or list.
@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
 
   delegate                  :send_welcome_email, :to => :account
 
-  is_structureable          ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page)
+  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page), link_class_name: 'DagLink'
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   has_many                  :comments, foreign_key: 'author_user_id', class_name: 'Comment'
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
+  include Structureable
   include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name

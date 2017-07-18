@@ -1,4 +1,4 @@
-class TermReport < ActiveRecord::Base
+class TermReport < ApplicationRecord
   default_scope { includes(:term).order('terms.year asc, terms.type asc') }
 
   belongs_to :term

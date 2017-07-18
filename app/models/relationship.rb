@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-#
 # This class models a relationship between two users.
 #
 # For example, John is the brother of Sue.
@@ -8,7 +6,7 @@
 #   is:  Brother     relationship.is       relationship.name
 #   of:  Sue         relationship.user2    relationship.of
 #
-class Relationship < ActiveRecord::Base
+class Relationship < ApplicationRecord
 
   belongs_to :user1, class_name: "User", inverse_of: :relationships_as_first_user
   belongs_to :user2, class_name: "User", inverse_of: :relationships_as_second_user

@@ -1,4 +1,4 @@
-class TermReportMemberEntry < ActiveRecord::Base
+class TermReportMemberEntry < ApplicationRecord
 
   belongs_to :term_report
   belongs_to :user

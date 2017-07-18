@@ -13,7 +13,7 @@
 #     issue = issues.first
 #     issue.resecan         # Rescan a specific issue.
 #
-class Issue < ActiveRecord::Base
+class Issue < ApplicationRecord
 
   belongs_to :reference, polymorphic: true
   belongs_to :responsible_admin, class_name: 'User'

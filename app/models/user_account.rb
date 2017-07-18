@@ -7,7 +7,7 @@
 #    account.save                  # Now, the user may log in.
 #    account.destroy               # Now, the user may not log in anymore.
 #
-class UserAccount < ActiveRecord::Base
+class UserAccount < ApplicationRecord
 
   # For authentication, we use devise,
   # https://github.com/plataformatec/devise.

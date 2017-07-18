@@ -13,7 +13,7 @@
 #      11 Nov | Wintersemester
 #      12 Dez |
 #
-class SemesterCalendar < ActiveRecord::Base
+class SemesterCalendar < ApplicationRecord
   belongs_to :group
   enum term: [:winter_term, :summer_term]
 

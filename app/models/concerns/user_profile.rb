@@ -3,8 +3,7 @@
 concern :UserProfile do
 
   included do
-    has_profile_fields profile_sections: [:contact_information, :about_myself, :study_information, :career_information,
-       :organizations, :bank_account_information]
+    include HasProfile
   end
 
   def landline_profile_fields
@@ -109,6 +108,13 @@ concern :UserProfile do
       .becomes(ProfileFields::NameSurrounding)
     pf.text_above_name = ""; pf.name_prefix = "Herrn"; pf.name_suffix = ""; pf.text_below_name = ""
     pf.save
+  end
+
+  class_methods do
+    def profile_section_titles
+      [:contact_information, :about_myself, :study_information, :career_information,
+        :organizations, :bank_account_information]
+    end
   end
 
 end

@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-class ProfileField < ActiveRecord::Base
+class ProfileField < ApplicationRecord
 
   has_many               :issues, as: :reference, dependent: :destroy
 
@@ -45,7 +44,7 @@ class ProfileField < ActiveRecord::Base
 
   # Profile fields may have flags, e.g. :preferred_address.
   #
-  has_many_flags
+  include Flags
 
 
   def title
@@ -186,7 +185,7 @@ class ProfileField < ActiveRecord::Base
   #
   # This is stored as the flag :needs_review.
   #
-  may_need_review
+  include Review
 
   def vcard_property_type
     # Subclasses need to override this. For example for phones: "TEL", emails: "EMAIL", ...

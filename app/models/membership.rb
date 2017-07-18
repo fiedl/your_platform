@@ -49,8 +49,8 @@ class Membership < DagLink
   #
   # This is stored as the flag :needs_review.
   #
-  has_many_flags
-  may_need_review
+  include Flags
+  include Review
 
 
   # General Properties

@@ -1,9 +1,10 @@
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
 
-  is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
+  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
 
   has_many :attachments, as: :parent, dependent: :destroy
 
+  include Structureable
   include Navable
   include EventGroups
   include EventContactPeople
