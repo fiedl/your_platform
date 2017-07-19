@@ -45,6 +45,6 @@ feature "Profile fields maintenance view", :js do
     within "table.profile_fields tbody" do
       page.should have_selector 'tr', count: profile_fields_count_before + 1
     end
-    @user.profile_fields(true).count.should == profile_fields_count_before + 1
+    @user.profile_fields.reload.count.should == profile_fields_count_before + 1
   end
 end

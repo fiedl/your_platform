@@ -66,7 +66,7 @@ class Issue < ApplicationRecord
         address_field.issues.create title: 'issues.could_not_extract_street', description: 'issues.the_geo_system_could_not_extract_the_street_from_this_address', responsible_admin_id: address_field.profileable.try(:responsible_admin_id)
       end
     end
-    return address_field.issues(true)
+    return address_field.issues.reload
   end
 
   def self.scan_email_field(email_field)
@@ -76,7 +76,7 @@ class Issue < ApplicationRecord
     elsif email_field.value.present? && email_field.needs_review?
       email_field.issues.create title: 'issues.email_needs_review', description: 'issues.please_enter_the_correct_email_address', responsible_admin_id: email_field.profileable.try(:responsible_admin_id)
     end
-    return email_field.issues(true)
+    return email_field.issues.reload
   end
 
   def self.scan_membership(membership)

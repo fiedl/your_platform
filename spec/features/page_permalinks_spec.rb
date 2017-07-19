@@ -19,7 +19,7 @@ feature "Page Permalinks", :js do
 
     wait_for_ajax
     visit page_path(@page)
-    @page.reload.permalinks(true).count.should == 1
+    @page.reload.permalinks.reload.count.should == 1
     @page.reload.permalinks_list.should include "foo/bar"
 
     visit "/foo/bar"
