@@ -131,7 +131,7 @@ concern :GroupMemberships do
     # when generating the SQL query. This is why the conditions have to be repeated here.
     #
     has_many(:members,
-      -> { where('dag_links.ancestor_type' => 'Group').uniq },
+      -> { where('dag_links.ancestor_type' => 'Group').distinct },
       through: :memberships,
       source: :descendant, source_type: 'User'
       )
@@ -139,7 +139,7 @@ concern :GroupMemberships do
     # This associates only the direct group members (users).
     #
     has_many(:direct_members,
-      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true).uniq },
+      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => true).distinct },
       through: :direct_memberships,
       source: :descendant, source_type: 'User'
       )
@@ -147,7 +147,7 @@ concern :GroupMemberships do
     # This associates only the indirect group members (users).
     #
     has_many(:indirect_members,
-      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false).uniq },
+      -> { where('dag_links.ancestor_type' => 'Group', 'dag_links.direct' => false).distinct },
       through: :indirect_memberships,
       source: :descendant, source_type: 'User'
       )

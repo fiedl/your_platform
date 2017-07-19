@@ -138,7 +138,7 @@ class Group < ApplicationRecord
     Workflow
       .joins( :links_as_descendant )
       .where( :dag_links => { :ancestor_type => "Group", :ancestor_id => self.id } )
-      .uniq
+      .distinct
   end
 
   def child_workflows
