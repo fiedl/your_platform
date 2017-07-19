@@ -51,7 +51,7 @@ require 'auto_html'
 require 'reverse_markdown'
 
 # JavaScript
-require 'rails-assets-jquery-ujs'
+require 'jquery-rails'
 require 'rails-assets-jquery-ui'
 require 'autosize/rails'
 require 'sugar-rails'

@@ -17,9 +17,6 @@
 //= require jquery.purr
 //= require_boxes
 //
-// TODO Reintegrate gmap4rails into your_platform. We have to get away form the fork.
-//= require gmaps4rails
-//
 //= require your_platform
 //= require_tree .
 //
