@@ -98,18 +98,8 @@ module MembershipMixins::ValidityRange
     # This scope widens the query such that also memberships that are not valid
     # at the present time are returned.
     #
-    # Have a look at `rewhere`:
-    # https://github.com/rails/rails/commit/f950b2699f97749ef706c6939a84dfc85f0b05f2#diff-bf6dd6226db3aab589916f09236881c7R562
-    #
-    # But `rewhere` is not enough. We need more filtering:
-    # https://github.com/fiedl/temporal_scopes/blob/master/lib/temporal_scopes/has_temporal_scopes.rb
-    #
-    # TODO: Check if this still needs the extra filter when migrating to Rails 5.
-    #
     def with_invalid
-      relation = unscope(where: [:valid_from, :valid_to])
-      relation.where_values.delete_if { |query| query.to_s.include?("valid_from") || query.to_s.include?("valid_to") }
-      relation
+      unscope(where: [:valid_from, :valid_to])
     end
   end
 
