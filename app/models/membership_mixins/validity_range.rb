@@ -63,7 +63,26 @@
 #
 #   * Rails 5 supports an `.or(...)` syntax:
 #     https://github.com/rails/rails/pull/16052
+#
+#     But it only supports left-to-right construction, not `(A || B) && (C || D)`.
+#     This could be circumvented with `where(a: [A, B]).where(b: [C, D])`.
+#
+#     But this does not work with `unscope`:
+#
+#         Membership
+#           .unscoped.where(valid_from: [nil, (1000.years.ago)..(Time.zone.now)])
+#           .where_values_hash
+#         => {"type"=>["Membership", "Memberships::Status"]}
+#
+#     Therefore, we have patched `ActiveRecord::Relation`.
+#     See `core_ext/active_record/relation.rb`.
+#
+#     TODO: Re-check when migrating to Rails 6.
 #     TODO: Refactor the queries in the scopes when migrating to Rails 5.
+#
+#   * Rails 5 does not support open-end datetime ranges.
+#     TODO: Check if this is resolved in rails 6 and remove the hack.
+#     Maybe with `DateTime::Infinity`.
 #
 module MembershipMixins::ValidityRange
 
@@ -76,8 +95,8 @@ module MembershipMixins::ValidityRange
 
     # Validity Perspective
     # TODO: Allow :valid to include memberships that BECOME valid in the future.
-    scope :valid, -> { where("valid_from IS NULL OR valid_from <= ?", Time.zone.now).where("valid_to IS NULL OR valid_to >= ?", Time.zone.now) }
-    scope :invalid, -> { with_invalid.where("valid_to < ?", Time.zone.now) }
+    scope :valid, -> { where('`valid_from` IS NULL OR `valid_from` <= ?', Time.zone.now).where('`valid_to` IS NULL OR `valid_to` >= ?', Time.zone.now) }
+    scope :invalid, -> { with_invalid.where('`valid_to` < ?', Time.zone.now) }
     # scope :with_invalid  # This is defined as method below due to some issues.
     scope :only_valid, -> { valid }
     scope :only_invalid, -> { invalid }
@@ -89,9 +108,9 @@ module MembershipMixins::ValidityRange
     scope :with_past, -> { with_invalid }
     scope :now_and_past, -> { with_invalid }
     scope :now_and_in_the_past, -> { with_invalid }
-    scope :at_time, -> (time) { with_past.where("valid_from IS NULL OR valid_from <= ?", time).where("valid_to IS NULL OR valid_to >= ?", time) }
-    scope :this_year, -> { with_invalid.where("valid_from >= ?", "#{Time.zone.now.year}-01-01 00:00:00") }
-    scope :started_after, -> (time) { where('NOT valid_from IS NULL').where("valid_from >= ?", time) }
+    scope :at_time, -> (time) { with_past.where('`valid_from` IS NULL OR `valid_from` <= ?', time).where('`valid_to` IS NULL OR `valid_to` >= ?', time) }
+    scope :this_year, -> { with_invalid.where('`valid_from` >= ?', "#{Time.zone.now.year}-01-01 00:00:00") }
+    scope :started_after, -> (time) { where('NOT `valid_from` IS NULL').where('`valid_from` >= ?', time) }
   end
 
   module ClassMethods
