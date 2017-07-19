@@ -161,7 +161,7 @@ module CacheStoreExtension
 
   def entry(name)
     options = merged_options(nil)
-    key = namespaced_key(name, options)
+    key = normalize_key(name, options)
     read_entry(key, options)
   end
 
