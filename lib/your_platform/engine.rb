@@ -141,6 +141,9 @@ require 'mail_form'
 require 'apipie-rails'
 require 'discourse_api'
 
+# Exceptions
+require 'exception_notification'
+
 require_relative '../../config/initializers/inflections'
 
 module YourPlatform

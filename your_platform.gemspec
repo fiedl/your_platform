@@ -180,6 +180,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'apipie-rails', '~> 0.4.0'
   s.add_dependency 'discourse_api'
 
+  # Exceptions
+  s.add_dependency 'exception_notification'
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
