@@ -151,7 +151,6 @@ module YourPlatform
 
     engine_name "your_platform"
 
-    config.autoload_paths += %W(#{config.root}/app/models/concerns)
     config.autoload_paths += %W(#{config.root}/app/pdfs)
 
     # In order to override the locales in the main_app, add the following to the main app's
