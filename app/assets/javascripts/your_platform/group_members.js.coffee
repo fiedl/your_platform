@@ -16,7 +16,7 @@ $(document).on 'submit', '.add_group_members form.new_membership', (event)->
   event.preventDefault()
   event.stopPropagation()
 
-  unless $('.box.members .box_content .alert').size() > 0
+  unless $('.box.members .box_content .alert').count() > 0
     $('.box.members .box_content')
         .prepend("<div class='alert alert-success'>#{I18n.t('member_is_added_in_the_background')}</div>")
 

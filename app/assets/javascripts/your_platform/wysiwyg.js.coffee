@@ -1,7 +1,7 @@
 $(document).ready ->
   #App.wysiwyg_editors = []
 
-  if $('.wysiwyg.editable').size() > 0
+  if $('.wysiwyg.editable').count() > 0
     $('.wysiwyg.editable').each ->
       editable = $(this)
       toolbar = editable.prev('.wysihtml-toolbar')

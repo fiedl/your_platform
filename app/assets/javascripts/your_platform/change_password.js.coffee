@@ -1,6 +1,6 @@
 $(document).ready ->
   
-  if $('.password_strength_container').size() > 0
+  if $('.password_strength_container').count() > 0
     lib_path = $('.password_strength_container').data('lib-script-path')
     $.getScript(lib_path).done ->
       validate_checked_account_agreement = ->

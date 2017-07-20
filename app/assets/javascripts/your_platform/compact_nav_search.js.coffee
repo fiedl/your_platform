@@ -92,7 +92,7 @@ class App.CompactNav
     # })
     
   focus_search_box: ->
-    @search_box().focus() if @search_box().size() > 0
+    @search_box().focus() if @search_box().count() > 0
     
   mark_as_turbolinks_permanent: ->
     # In order to keep the compact navigation untouched by

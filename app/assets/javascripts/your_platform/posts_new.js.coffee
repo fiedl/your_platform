@@ -5,7 +5,7 @@ $(document).ready ->
   $('.new_post .post_tools').hide()
   $('.new_post textarea').autosize()
   original_box_title = $('.box.first.new_post .box_header h1').text()
-  if $('.new_post .camera-button').size() > 0
+  if $('.new_post .camera-button').count() > 0
     $('.new_post textarea').height($('.new_post .camera-button').height())
 
 $(document).on 'change keyup paste', '.new_post textarea', ->
@@ -16,7 +16,7 @@ $(document).on 'change keyup paste', '.new_post textarea', ->
   else
     $('.new_post .post_tools').hide()
     $('.box.first.new_post .box_header h1').text(original_box_title)
-    if $('.new_post .camera-button').size() > 0
+    if $('.new_post .camera-button').count() > 0
       $('.new_post textarea').height($('.new_post .camera-button').height())
 
 $(document).on 'focus', '.new_post textarea', ->
@@ -30,7 +30,7 @@ hide_preview_stuff = ->
   $('.new_post textarea').show().focus()
 
 $(document).on 'click', '.preview_post', ->
-  if $('.new_post textarea:visible').size() > 0
+  if $('.new_post textarea:visible').count() > 0
     $('.new_post textarea').hide()
     $('.new_post .camera-button').hide()
     $.ajax {

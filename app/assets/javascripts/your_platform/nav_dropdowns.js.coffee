@@ -4,7 +4,7 @@ $(document).on 'mouseenter', trigger_selector, (event)->
   trigger_link = $(this)
   vertical_nav_path = trigger_link.data('vertical-nav-path')
 
-  if vertical_nav_path and trigger_link.closest('.dropdown-menu').size() == 0 and trigger_link.find('.dropdown-menu').size() == 0
+  if vertical_nav_path and trigger_link.closest('.dropdown-menu').count() == 0 and trigger_link.find('.dropdown-menu').count() == 0
     trigger_link.addClass('hover')
 
     $.get vertical_nav_path, (result)->
@@ -19,7 +19,7 @@ $(document).on 'mouseenter', trigger_selector, (event)->
           "top": trigger_link.position().top + trigger_link.closest('li').height(),
           "left": trigger_link.position().left
         })
-        if $('ul#nav_dropdown li.child').size() > 0
+        if $('ul#nav_dropdown li.child').count() > 0
           $('ul#nav_dropdown').show()
           $('ul#nav_dropdown li:not(.child)').hide()
   false

@@ -13,11 +13,11 @@ $(document).on 'submit submit.rails', 'form.warn_when_leaving', ->
   $(this).removeClass('dirty')
 
 $(document).on 'turbolinks:before-visit', ->
-  if $('form.warn_when_leaving.dirty').size() > 0
+  if $('form.warn_when_leaving.dirty').count() > 0
     confirm(are_you_sure_to_leave_without_saving_message())
 
 $(document).ready ->
   $(window).off('beforeunload').on 'beforeunload', ->
-    if $('form.warn_when_leaving.dirty').size() > 0
+    if $('form.warn_when_leaving.dirty').count() > 0
       # This needs to return the message itself. See http://stackoverflow.com/a/1889450/2066546.
       are_you_sure_to_leave_without_saving_message()

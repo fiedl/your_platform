@@ -9,7 +9,7 @@ ready = ->
   refresh_number_of_recipients_display = ->
     $('span.member_count').text("…")
     valid_from = ""
-    valid_from = $('input.valid_from').val() if $('input.valid_from:hidden').size() == 0 # date visible
+    valid_from = $('input.valid_from').val() if $('input.valid_from:hidden').count() == 0 # date visible
     if (valid_from.length == 10) or (valid_from.length == 0)  # valid date or no date
       url = $('span.member_count').data('query-url')
       url += "?valid_from=" + valid_from if valid_from.length == 10

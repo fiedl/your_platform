@@ -92,7 +92,7 @@ class App.UploadBox
 
   refresh_attachments_section: ->
     parent_element = @root_element.closest('.page_with_attachments')
-    parent_element = @root_element.closest('.box') if parent_element.size() == 0
+    parent_element = @root_element.closest('.box') if parent_element.count() == 0
     parent_element.ajax_reload {
       url: @parent_url(),
       selectors: ['.attachments', '#attachments', '#inline-pictures'],

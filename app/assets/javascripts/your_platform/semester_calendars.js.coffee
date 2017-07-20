@@ -4,7 +4,7 @@ $(document).ready ->
 
   $('.change_semester_ok_button').hide()
 
-  if $('.replace_semester_calendar_pdf').size() > 0
+  if $('.replace_semester_calendar_pdf').count() > 0
     $('.semester_calendar_pdf #new_attachment').hide()
 
 $(document).on 'focus', 'td.event_name input, td.event_location input', ->
@@ -49,7 +49,7 @@ $(document).on 'click', '.add_semester_calendar_event', ->
   for i in [0..4]
     new_table_row.find('td.event_starts_at select:eq(' + i + ')').val(last_table_row.find('td.event_starts_at select:eq(' + i + ')').val())
   new_table_row.find('td.event_location input').val(last_table_row.find('td.event_location input').val())
-  for i in [0..(last_table_row.find('input[type="checkbox"]').size() - 1)]
+  for i in [0..(last_table_row.find('input[type="checkbox"]').count() - 1)]
     new_table_row.find('input[type="checkbox"]:eq(' + i + ')').prop('checked', last_table_row.find('input[type="checkbox"]:eq(' + i + ')').prop('checked'))
   new_table_row.find('td.event_starts_at select').first().focus()
   false

@@ -16,7 +16,7 @@ $(document).on 'click', '.archive_button', (e)->
   boxes = button.closest('.page_with_attachments')
 
   button.effect('highlight')
-  if boxes.size() > 0
+  if boxes.count() > 0
     boxes.hide 'fold', 300, ->
       boxes.remove()
 
@@ -39,7 +39,7 @@ $(document).on 'click', '.unarchive_button', (e)->
     send_archive_request(url, false)
 
     button.hide 'blind'
-    if boxes.size() > 0
+    if boxes.count() > 0
       boxes.find('.archived_label').hide 'blind'
     else
       $('.archived_label').hide 'blind'
