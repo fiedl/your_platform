@@ -9,10 +9,6 @@ concern :ReadOnlyMode do
     ApplicationRecord.read_only_mode?
   end
 
-  def read_only_mode?
-    self.class.read_only_mode?
-  end
-
   class_methods do
 
     def read_only_mode?

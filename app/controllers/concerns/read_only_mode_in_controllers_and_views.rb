@@ -1,4 +1,4 @@
-concern :ReadOnlyMode do
+concern :ReadOnlyModeInControllersAndViews do
 
   included do
     helper_method :read_only_mode?
