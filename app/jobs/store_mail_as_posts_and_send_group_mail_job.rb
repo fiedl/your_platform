@@ -8,7 +8,7 @@ class StoreMailAsPostsAndSendGroupMailJob < ApplicationJob
   # workaround.
   #
   def self.perform_later(*args)
-    raise 'Only `perform_now` is allowed at the moment.'
+    raise RuntimeError, 'Only `perform_now` is allowed at the moment.'
   end
   def self.perform(*args)
     self.perform_now(*args)

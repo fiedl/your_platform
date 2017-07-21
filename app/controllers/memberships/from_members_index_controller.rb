@@ -6,8 +6,8 @@ class Memberships::FromMembersIndexController < ApplicationController
   # POST groups/123/members/memberships
   def create
     authorize! :manage_memberships_manually, group
-    raise 'No user title given' unless membership_params[:user_title].present?
-    raise 'User not found' unless user
+    raise ActionController::ParameterMissing, 'No user title given' unless membership_params[:user_title].present?
+    raise ActionController::ParameterMissing, 'User not found' unless user
 
     if (membership = group.assign_user(user, at: processed_membership_params[:valid_from])) && membership.errors.none?
       Rails.cache.renew { group.member_table_rows }
@@ -17,7 +17,7 @@ class Memberships::FromMembersIndexController < ApplicationController
         group_members_table_html: render_partial('groups/member_list', group: group, member_table_rows: group.member_table_rows)
       }
     else
-      raise membership.errors
+      raise ActiveRecord::RecordInvalid.new(membership)
     end
   end
 

@@ -1,5 +1,5 @@
 - # locals:
-- navable || raise('no navable given')
+- navable || raise(ActionController::ParameterMissing, 'no navable given')
 - nav_node ||= navable.nav_node
 
 %h2= t :navigation

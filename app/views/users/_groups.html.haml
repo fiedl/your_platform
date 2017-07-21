@@ -1,5 +1,5 @@
 - # locals:
-- user || raise('no user given')
+- user || raise(ActionController::ParameterMissing, 'no user given')
 
 %ul.user_groups_by_category
   - user.group_ids_by_category.each do |category, group_ids|

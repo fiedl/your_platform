@@ -1,5 +1,5 @@
 - # Locals:
-- attachment || raise('no attachment given')
+- attachment || raise(ActionController::ParameterMissing, 'no attachment given')
 
 = afterglow_video(attachment)
 

@@ -1,4 +1,4 @@
-- profile_field || raise('no profile_field given')
+- profile_field || raise(ActionController::ParameterMissing, 'no profile_field given')
 - profile_field_types ||= ProfileField.possible_types.map(&:name)
 
 %tr{class: "profile-field-#{profile_field.id}"}

@@ -6,7 +6,7 @@ module Api::V1
     #                                          navable.to_global_id
     #
     def show
-      navable || raise('no navable given')
+      navable || raise(ActionController::ParameterMissing, 'no navable given')
       authorize! :read, navable
 
       horizontal_nav = Rails.cache.renew_if(params[:uncached]) do

@@ -1,4 +1,4 @@
-- home_page || raise('no home_page given.')
+- home_page || raise(ActionController::ParameterMissing, 'no home_page given.')
 
 %table.settings.home_page_settings
   %tr

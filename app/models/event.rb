@@ -197,7 +197,7 @@ class Event < ApplicationRecord
   # TODO: Check if this is still necessary when migrating to Rails 5.
   #
   def wait_for_me_to_exist
-    raise 'The event has no id, yet!' unless id
+    raise RuntimeError, 'The event has no id, yet!' unless id
     begin
       Event.find self.id
     rescue ActiveRecord::RecordNotFound => e

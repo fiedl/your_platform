@@ -2,7 +2,7 @@
 # needed to store the message as Post in our database.
 #
 #     mail = ReceivedPostMail.new(message)
-# 
+#
 #     mail.content
 #     mail.sender_email
 #     mail.sender_user
@@ -11,12 +11,12 @@
 #     mail.content_type
 #
 class ReceivedPostMail < ReceivedMail
-  
+
   def no_duplicates_exist?(group)
     group.posts.where(message_id: self.message_id).count == 0 and
     group.posts.where(subject: possible_duplicate_subjects(group), author_user_id: self.sender_user.try(:id), sent_at: 1.minute.ago..1.second.from_now).count == 0
   end
-  
+
   def possible_duplicate_subjects(group)
     [
       self.subject,                            # Just the same subject
@@ -24,11 +24,11 @@ class ReceivedPostMail < ReceivedMail
       self.subject.gsub(/\[.*\] (.*)/) { $1 }  # Brackets removed
     ]
   end
-  
+
   def store_as_posts
     store_as_posts_when_authorized
   end
-  
+
   def store_as_posts_when_authorized
     recipient_emails.collect do |recipient_email|
       if group = ProfileFields::MailingListEmail.where(value: recipient_email).first.try(:profileable)
@@ -43,7 +43,7 @@ class ReceivedPostMail < ReceivedMail
             else
               post.external_author = self.sender_string
             end
-            raise 'something is wrong. this group is not a recipient' unless group.in?(self.recipient_groups)
+            raise RuntimeError, 'something is wrong. this group is not a recipient' unless group.in?(self.recipient_groups)
             post.group_id = group.id
             post.sent_at = Time.zone.now
             post.subject = self.subject
@@ -53,18 +53,18 @@ class ReceivedPostMail < ReceivedMail
             post.sent_via = recipient_email
             post.save
             if self.has_attachments?
-            
+
               # I've copied this from https://github.com/ivaldi/brimir: ticket_mailer.rb
               self.attachments.each do |attachment|
                 file = StringIO.new(attachment.decoded)
                 # add needed fields for paperclip
                 file.class.class_eval { attr_accessor :original_filename, :content_type }
                 file.original_filename = attachment.filename
-                file.content_type = attachment.mime_type 
+                file.content_type = attachment.mime_type
                 post_attachment = post.attachments.create(file: file)
                 post_attachment.save # FIXME do we need this because of paperclip?
               end
-            
+
               # We need to replace the inline-image sources in the message text:
               attachment_counter = 0
               post.text = post.text.gsub(/(<img [^>]* src=)("cid:[^>"]*")([^>]*>)/) do
@@ -89,7 +89,7 @@ class ReceivedPostMail < ReceivedMail
       end
     end - [nil]
   end
-  
+
   def deliver_rejection_emails
     @unauthorized_groups && @unauthorized_groups.each do |group|
       PostRejectionMailer.post_rejection_email(self.sender_email, group.name, "Re: #{self.subject}", "You are not authorized to send messages to this group.").deliver_now
@@ -98,11 +98,11 @@ class ReceivedPostMail < ReceivedMail
     # # Do not send a rejection message at the moment when a recipient is not listed.
     # # TODO: Reactivate when we actually use the smtp_envelope_to.
     # # Otherwise, if a message is sent
-    # # 
+    # #
     # #    To: group@example.com, another-user@gmail.com
-    # # 
+    # #
     # # then another-user@gmail.com will be processed, but is not found in our user database.
-    # # 
+    # #
     # self.unmatched_recipient_emails.each do |email|
     #   PostRejectionMailer.post_rejection_email(self.sender_email, email, "Re: #{self.subject}", "Recipient could not be determined. Maybe a typo in the email address?").deliver_now
     # end

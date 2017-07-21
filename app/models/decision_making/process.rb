@@ -95,7 +95,7 @@ module DecisionMaking
     end
 
     def notify_global_officers_about_new_proposal(options = {})
-      current_user = options[:current_user] || raise('option current_user missing')
+      current_user = options[:current_user] || raise(RuntimeError, 'option current_user missing')
       self.class.global_officers_that_can_approve_proposal.each do |recipient|
         Notification.create(
           recipient_id: recipient.id,

@@ -1,7 +1,7 @@
 concern :Review do
 
   included do
-    raise 'missing `include Flags`.' unless self.instance_methods.include? :flags
+    raise RuntimeError, 'missing `include Flags`.' unless self.instance_methods.include? :flags
 
     scope :review_needed, -> { joins(:flags).where('flags.key' => :needs_review, 'flags.flagable_type' => 'ProfileField') }
 

@@ -1,5 +1,5 @@
 - # locals:
-- attachment || raise('no attachment given')
+- attachment || raise(ActionController::ParameterMissing, 'no attachment given')
 - show_technical_information ||= false
 
 %tr{ id: "attachment-#{attachment.id}" }

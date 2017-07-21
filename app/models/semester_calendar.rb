@@ -77,7 +77,7 @@ class SemesterCalendar < ApplicationRecord
             event.update_attributes event_params.except(:_destroy, :id)
           end
         else
-          raise("event #{event_params[:id]} not found.")
+          raise(ActiveRecord::RecordNotFound, "event #{event_params[:id]} not found.")
         end
       else
         if event_params[:name].present?

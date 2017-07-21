@@ -37,8 +37,8 @@ concern :Structureable do
         # In facty, all these links should be destroyable. If this error should
         # be raised, something really went wrong. Please send in a bug report then
         # at http://github.com/fiedl/your_platform.
-        raise "Could not destroy dag links of the structureable object that should be deleted." +
-          " Please send in a bug report at http://github.com/fiedl/your_platform."
+        raise RuntimeError, "Could not destroy dag links of the structureable object that should be deleted." +
+          " This is an important issue. Please send in a bug report at http://github.com/fiedl/your_platform."
         return false
       end
 
@@ -62,7 +62,7 @@ concern :Structureable do
   # Move the node to another parent.
   #
   def move_to(parent_node)
-    raise 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
+    raise RuntimeError, 'Case not handled, yet. This node has several parents. Not moving.' if self.parents.count > 1
     if parent_node != self.parents.first
       old_updated_at = self.updated_at
       self.links_as_child.destroy_all
@@ -76,7 +76,7 @@ concern :Structureable do
   def <<(object)
     begin
       if object.kind_of? User
-        raise 'Users can only be assigned to groups.' unless self.kind_of? Group
+        raise RuntimeError 'Users can only be assigned to groups.' unless self.kind_of? Group
         self.assign_user(object) unless self.child_users.include? object
       elsif object.kind_of? Group
         if self.kind_of?(Group) &&
@@ -98,9 +98,9 @@ concern :Structureable do
         # self.child_workflows << object unless self.child_workflows.include? object
         object.parent_groups << self unless object.parent_groups.include? self
       elsif object.nil?
-        raise "Something is wrong! You've tried to add nil."
+        raise RuntimeError, "Something is wrong! You've tried to add nil."
       else
-        raise "Case not handled yet. Please implement this. It's easy :)"
+        raise RuntimeError, "Case not handled yet. Please implement this. It's easy :)"
       end
     rescue ActiveRecord::RecordInvalid => e
       logger.warn(e.message)

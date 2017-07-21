@@ -99,7 +99,7 @@ module WorkflowKit
     end
 
     def self.create_mark_as_deceased_workflow
-      raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
+      raise ActiveRecord::RecordInvalid, 'Workflow already present.' if self.find_mark_as_deceased_workflow
       workflow = Workflow.create(name: "Todesfall")
       step = workflow.steps.build
       step.sequence_index = 1

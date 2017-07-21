@@ -14,7 +14,7 @@ class BlogPostsController < PagesController
   end
 
   def create
-    secure_parent.present? || raise('A blog post requires a parent_id to identify the parent page.')
+    secure_parent.present? || raise(ActionController::ParameterMissing, 'A blog post requires a parent_id to identify the parent page.')
     authorize! :create_page_for, secure_parent
 
     @page = @blog_post = BlogPost.create title: I18n.t(:new_blog_post), author_user_id: current_user.id, content: "—"

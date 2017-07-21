@@ -69,7 +69,7 @@ concern :SpecialGroups do
 
     def create_special_group( group_flag, options = {} )
       if find_special_group( group_flag, options )
-        raise "special group :#{group_flag} already exists."
+        raise ActiveRecord::RecordNotSaved, "special group :#{group_flag} already exists."
       end
       object_to_create = options[:parent_element].try(:child_groups)
       object_to_create ||= Group unless options[:local]

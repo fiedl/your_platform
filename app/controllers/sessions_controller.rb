@@ -24,8 +24,8 @@ class SessionsController < Devise::SessionsController
     begin
       if params[:provider].present?
         auth = request.env['omniauth.auth']
-        user = User.from_omniauth(auth) || raise("Omniauth user not found via email: #{auth.info.email}")
-        account = user.account || raise("User has no account.")
+        user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
+        account = user.account || raise(ActionController::BadRequest, "User has no account.")
 
         sign_in_and_redirect account, event: :authentication
       else

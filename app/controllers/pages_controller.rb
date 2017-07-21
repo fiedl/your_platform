@@ -133,7 +133,7 @@ private
     handle_checkbox_param :show_group_map
 
     permitted_keys = []
-    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
+    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise(ActionController::ParameterMissing, '@page not given'))
     permitted_keys += [:teaser_text, :teaser_image_url] if can? :update, @page
     permitted_keys += [:redirect_to] if can? :update, @page
     permitted_keys += [:tag_list, :permalinks_list] if can? :update, @page

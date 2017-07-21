@@ -1,4 +1,4 @@
-- semester_calendar || raise('no semester_calendar given')
+- semester_calendar || raise(ActionController::ParameterMissing, 'no semester_calendar given')
 - attachment ||= semester_calendar.attachments.last
 
 #attachments.semester_calendar_pdf

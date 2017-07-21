@@ -1,7 +1,7 @@
 - # show officers box for a structureable
 - #
 - # locales:
-- structureable || raise('no structureable given')
+- structureable || raise(ActionController::ParameterMissing, 'no structureable given')
 - limit ||= 1000
 
 - if structureable.find_officers_groups.any? or can?(:create_officers_group_for, structureable)

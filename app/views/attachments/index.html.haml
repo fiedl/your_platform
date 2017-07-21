@@ -1,5 +1,5 @@
-- @parent || raise('no @parent given')
-- @attachments || raise('no @attachments given')
+- @parent || raise(ActionController::ParameterMissing, 'no @parent given')
+- @attachments || raise(ActionController::ParameterMissing, 'no @attachments given')
 
 %h1.attachments= current_title
 %div

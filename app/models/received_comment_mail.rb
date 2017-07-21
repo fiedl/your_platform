@@ -1,5 +1,5 @@
 class ReceivedCommentMail < ReceivedMail
-  
+
   # This returns the post this email concerns.
   #
   # In this example
@@ -29,13 +29,13 @@ class ReceivedCommentMail < ReceivedMail
   def user
     User.find_by_token(user_token) if user_token.present?
   end
-  
+
   # This extracts the comment from the text part of the email.
   #
   def comment_text
     ActionController::Base.helpers.strip_tags(content_without_quotes).strip
   end
-  
+
   def store_as_comment_if_authorized
     store_as_comment if Ability.new(user).can? :create_comment_for, post
   end
@@ -47,17 +47,17 @@ class ReceivedCommentMail < ReceivedMail
     comment.save
     return comment
   end
-    
+
   # Generate the email address that triggers a comment for the given post from the given user.
   #
-  # Example: 
+  # Example:
   #   user-aeng9iLei8lahso9shohfu0vaeth4oom2kooloi2iSh7Hahr.post-345.create-comment.plattform@example.com
   #
   def self.generate_address(user, post)
-    user_token = user.account.try(:auth_token) || raise('no user auth token')
-    post_id = post.try(:id) || raise('no post id')
-    domain = AppVersion.email_domain || raise('no domain')
+    user_token = user.account.try(:auth_token) || raise(RuntimeError, 'no user auth token')
+    post_id = post.try(:id) || raise(RuntimeError, 'no post id')
+    domain = AppVersion.email_domain || raise(RuntimeError, 'no domain')
     return "user-#{user_token}.post-#{post_id}.create-comment.plattform@#{domain}"
   end
-  
+
 end

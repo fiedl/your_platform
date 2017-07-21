@@ -37,7 +37,7 @@ concern :StructureableRoles do
   end
 
   def officers_parent!
-    find_officers_parent_group || raise('special group :officers_parent does not exist.')
+    find_officers_parent_group || raise(ActiveRecord::RecordNotFound, 'special group :officers_parent does not exist.')
   end
 
 
@@ -155,7 +155,7 @@ concern :StructureableRoles do
   end
 
   def admins_parent!
-    find_admins_parent_group || raise('special group :admins_parent does not exist.')
+    find_admins_parent_group || raise(ActiveRecord::RecordNotFound, 'special group :admins_parent does not exist.')
   end
 
   def admins
@@ -249,7 +249,7 @@ concern :StructureableRoles do
   end
 
   def main_admins_parent!
-    find_main_admins_parent_group || raise('special group :main_admins_parent does not exist.')
+    find_main_admins_parent_group || raise(ActiveRecord::RecordNotFound, 'special group :main_admins_parent does not exist.')
   end
 
   def main_admins

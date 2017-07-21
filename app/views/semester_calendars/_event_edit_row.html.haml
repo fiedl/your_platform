@@ -1,4 +1,4 @@
-- form || raise('no form object given')
+- form || raise(ActionController::ParameterMissing, 'no form object given')
 - builder ||= form
 
 %tr

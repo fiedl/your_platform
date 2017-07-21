@@ -1,7 +1,7 @@
 concern :ReadOnlyMode do
 
   def destroy
-    raise 'Read-Only Mode' if readonly?
+    raise RuntimeError, 'Read-Only Mode' if readonly?
     super
   end
 

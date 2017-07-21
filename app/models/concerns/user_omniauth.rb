@@ -7,7 +7,7 @@ concern :UserOmniauth do
         User.find_by_email auth.info.email if auth.info.email.present?
       else
         binding.pry if Rails.env.development?
-        raise "Omniauth provider #{auth.provider} not handled, yet."
+        raise RuntimeError, "Omniauth provider #{auth.provider} not handled, yet."
       end
     end
   end

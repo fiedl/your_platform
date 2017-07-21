@@ -35,7 +35,7 @@ class Role
   end
 
   def user
-    @user || raise('User not given, when trying to determine Role.')
+    @user || raise(RuntimeError, 'User not given, when trying to determine Role.')
   end
 
   def object

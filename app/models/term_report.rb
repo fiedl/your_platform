@@ -14,7 +14,7 @@ class TermReport < ApplicationRecord
   end
 
   def fill_info
-    raise "term report has already been #{self.state.to_s}." if self.state
+    raise ActiveRecord::RecordInvalid, "term report has already been #{self.state.to_s}." if self.state
     self.number_of_members = group.memberships.at_time(end_of_term).count
     self.number_of_new_members = group.memberships.with_past.where(valid_from: term_time_range).count
     self.number_of_membership_ends = group.memberships.with_past.where(valid_to: term_time_range).count

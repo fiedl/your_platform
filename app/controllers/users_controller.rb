@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     begin
       redirect_to group_path(Group.everyone)
     rescue
-      raise "No basic groups are present, yet. Try `rake bootstrap:all`."
+      raise ActiveRecord::RecordNotFound, "No basic groups are present, yet. Try `rake bootstrap:all`."
     end
   end
 

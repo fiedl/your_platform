@@ -24,7 +24,7 @@ concern :CurrentNavable do
     elsif Page.find_by(title: request.host)
       Page.find_by(title: request.host)
     else
-      Page.root || raise('Page.root not present, but needed for current_home_page.')
+      Page.root || raise(ActiveRecord::RecordNotFound, 'Page.root not present, but needed for current_home_page.')
     end
   end
 

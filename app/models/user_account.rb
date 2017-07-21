@@ -101,17 +101,17 @@ class UserAccount < ApplicationRecord
     # What can go wrong?
     # 1. No user could match the login string.
     users_that_match_the_login_string ||= User.find_all_by_identification_string( login_string )
-    #raise 'no_user_found' unless users_that_match_the_login_string.count > 0
+    #raise RuntimeError, 'no_user_found' unless users_that_match_the_login_string.count > 0
     return nil unless users_that_match_the_login_string.count > 0
 
     # 2. The user may not have an active user account.
     users_that_match_the_login_string_and_have_an_account = users_that_match_the_login_string.select do |user|
       user.has_account?
     end
-    raise 'user_has_no_account' unless users_that_match_the_login_string_and_have_an_account.count > 0
+    raise RuntimeError, 'user_has_no_account' unless users_that_match_the_login_string_and_have_an_account.count > 0
 
     # 3. The identification string may refer to several users with an active user account.
-    raise 'identification_not_unique' if users_that_match_the_login_string_and_have_an_account.count > 1
+    raise RuntimeError, 'identification_not_unique' if users_that_match_the_login_string_and_have_an_account.count > 1
     identified_user = users_that_match_the_login_string_and_have_an_account.first
 
     return identified_user.account
@@ -144,7 +144,7 @@ class UserAccount < ApplicationRecord
   def generate_auth_token!
     # see also: https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
     #
-    raise 'auth_token already set' if self.read_attribute(:auth_token)
+    raise RuntimeError, 'auth_token already set' if self.read_attribute(:auth_token)
     token = ''
     loop do
       token = Devise.friendly_token + Devise.friendly_token
@@ -155,7 +155,7 @@ class UserAccount < ApplicationRecord
   end
 
   def send_welcome_email
-    raise 'attempt to send welcome email with empty password' unless self.password
+    raise RuntimeError, 'attempt to send welcome email with empty password' unless self.password
     UserAccountMailer.welcome_email(self.user, self.password).deliver_now
   end
 end

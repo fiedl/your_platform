@@ -4,7 +4,7 @@ class AddressLabelsPdf < Prawn::Document
 
   def book_rate_line(address_label)
     move_up 2.mm
-    address_label.kind_of?(AddressLabel) || raise('Expected AddressLabel, got String. This might be caused by a change of interface. Please call `uncached(:members_postal_addresses)` on all Groups.')
+    address_label.kind_of?(AddressLabel) || raise(RuntimeError, 'Expected AddressLabel, got String. This might be caused by a change of interface. Please call `uncached(:members_postal_addresses)` on all Groups.')
     book_rate_text = (address_label.country_code == "DE") ? "BÜCHERSENDUNG" : "ENVOIS À TAXE RÉDUITE"
     text "<b>#{book_rate_text}</b>", size: 12.pt, inline_format: true
     move_down 1.mm

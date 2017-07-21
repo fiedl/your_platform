@@ -325,7 +325,7 @@ class User < ApplicationRecord
   # and prevents the user from logging in.
   #
   def deactivate_account
-    raise "no user account exists, therefore it can't be destroyed." if not self.account
+    raise ActiveRecord::RecordNotFound, "no user account exists, therefore it can't be destroyed." if not self.account
     self.account.destroy
     self.account = nil
   end
@@ -396,10 +396,10 @@ class User < ApplicationRecord
       corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
       corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
       if corporation
-        status_group = corporation.becomes(Corporation).status_groups.first || raise('no status group in this corporation!')
+        status_group = corporation.becomes(Corporation).status_groups.first || raise(RuntimeError, 'no status group in this corporation!')
         status_group.assign_user self
       else
-        raise 'corporation not found.'
+        raise ActiveRecord::RecordNotFound, 'corporation not found.'
       end
       self.add_to_corporation = nil
     end

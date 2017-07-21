@@ -9,8 +9,8 @@ module WorkflowKit
         "The new group has to be passed as a parameter to the workflow step."
     end
     def execute( params )
-      raise 'no user_id given' unless params[ :user_id ]
-      raise 'no group_id given' unless params[ :group_id ]
+      raise RuntimeError, 'no user_id given' unless params[ :user_id ]
+      raise RuntimeError, 'no group_id given' unless params[ :group_id ]
 
       user = User.find( params[ :user_id ] )
       group = Group.find( params[ :group_id ] )
@@ -21,7 +21,7 @@ module WorkflowKit
         # We don't want to stop the workflow here as other important steps
         # would be skipped. But notify our ticket system.
         begin
-          raise "Workflow brick AddToGroup for user #{params[:user_id]} and group #{params[:group_id]} has failed. No membership has been created."
+          raise RuntimeError, "Workflow brick AddToGroup for user #{params[:user_id]} and group #{params[:group_id]} has failed. No membership has been created."
         rescue => exception
           ExceptionNotifier.notify_exception(exception)
         end

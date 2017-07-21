@@ -11,7 +11,7 @@ class StatusMembershipsController < ApplicationController
     if @status_membership.update_attributes(attributes)
       respond_with @status_membership
     else
-      raise "updating attributes of membership has failed: " + @status_membership.errors.full_messages.first
+      raise ActiveRecord::RecordInvalid.new(@status_membership)
     end
   end
 

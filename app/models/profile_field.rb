@@ -116,7 +116,7 @@ class ProfileField < ApplicationRecord
   # Example: For a ProfileFields::FooBar-type profile field, this method returns 'foo_bar'.
   #
   def underscored_type
-    raise 'This profile field has no type!' unless self.type.present?
+    raise RuntimeError, 'This profile field has no type!' unless self.type.present?
     self.type.demodulize.underscore
   end
 

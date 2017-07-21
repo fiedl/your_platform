@@ -1,5 +1,5 @@
 - # Locals:
-- parent_page || raise('no parent_page given')
+- parent_page || raise(ActionController::ParameterMissing, 'no parent_page given')
 
 - if can? :create_page_for, parent_page
   - unless parent_page.kind_of? BlogPost  # Otherwise, the admin could create nested blog posts where he would expect a sibling post.

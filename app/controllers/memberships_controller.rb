@@ -25,7 +25,7 @@ class MembershipsController < ApplicationController
       authorize! :manage, group
       @object = group
     else
-      raise 'neither group nor user are given'
+      raise ActionController::ParameterMissing, 'neither group nor user are given'
     end
 
     set_current_navable @object

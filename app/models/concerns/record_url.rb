@@ -17,7 +17,7 @@ concern :RecordUrl do
     end
 
     def url_options
-      options = Rails.application.config.action_mailer.default_url_options || raise("Please set 'config.action_mailer.default_url_options = {host: ...}' in the application config.")
+      options = Rails.application.config.action_mailer.default_url_options || raise(RuntimeError, "Please set 'config.action_mailer.default_url_options = {host: ...}' in the application config.")
       options = options.merge({only_path: @only_path}) if not @only_path.nil?
       options[:subdomain] = options[:subdomain].call if options[:subdomain].kind_of? Proc
       options

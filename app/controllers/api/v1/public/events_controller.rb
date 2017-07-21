@@ -39,7 +39,7 @@ class Api::V1::Public::EventsController < Api::V1::PublicController
     elsif params[:year] && params[:term]
       @events = @events.where(start_at: SemesterCalendar.new(year: params[:year], term: params[:term]).current_terms_time_range)
     elsif !params[:year] && params[:term]
-      raise 'no year given'
+      raise ActionController::ParameterMissing, 'No year given'
     end
 
     if params[:limit]

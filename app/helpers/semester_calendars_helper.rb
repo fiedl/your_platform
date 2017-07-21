@@ -11,7 +11,7 @@ module SemesterCalendarsHelper
 
   def link_to_add_semester_calendar_event(title, options = {})
     # http://railscasts.com/episodes/196-nested-model-form-revised
-    form = options[:form] || raise('no form given')
+    form = options[:form] || raise(RuntimeError, 'no form given')
     semester_calendar = form.object
     new_event = semester_calendar.group.events.new
     new_event.contact_person_id = semester_calendar_default_contact_person(semester_calendar).try(:id)
