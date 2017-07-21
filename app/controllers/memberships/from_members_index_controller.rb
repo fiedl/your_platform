@@ -40,13 +40,13 @@ class Memberships::FromMembersIndexController < ApplicationController
         trackable: user,
         key: "create membership",
         owner: current_user,
-        parameters: processed_membership_params.merge({group_id: group.id})
+        parameters: processed_membership_params.to_unsafe_hash.merge({group_id: group.id})
       )
       PublicActivity::Activity.create!(
         trackable: group,
         key: "create membership",
         owner: current_user,
-        parameters: processed_membership_params
+        parameters: processed_membership_params.to_unsafe_hash
       )
     end
   end
