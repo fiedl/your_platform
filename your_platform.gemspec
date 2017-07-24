@@ -130,7 +130,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
 
   # Edit Mode
-  s.add_dependency 'edit_mode', '>= 1.0.2'                                             # MIT License
+  s.add_dependency 'edit_mode', '>= 1.0.3'                                             # MIT License
 
   # View Helpers
   s.add_dependency 'phony'
