@@ -60,7 +60,6 @@ before_script:
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate
   - rake your_platform:install:node_modules || echo 'task not found'
-  - bundle exec rake assets:precompile 2>/dev/null
   - cd ../..
 script:
   - bundle exec ruby script/tests
