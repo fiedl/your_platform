@@ -144,7 +144,7 @@ class SemesterCalendarsController < ApplicationController
       trackable: @group,
       key: "Destroy semester calendar #{@semester_calendar.title(locale: current_user.locale)}",
       owner: current_user,
-      parameters: params.except('authenticity_token')
+      parameters: params.to_unsafe_hash.except('authenticity_token')
     )
 
     @semester_calendar.destroy
