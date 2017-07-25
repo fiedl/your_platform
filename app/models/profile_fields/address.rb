@@ -86,7 +86,7 @@ module ProfileFields
         end
 
         def original_value
-          value
+          read_attribute :value
         end
 
         def composed_value
