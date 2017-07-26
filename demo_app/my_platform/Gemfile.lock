@@ -634,7 +634,7 @@ DEPENDENCIES
   acts-as-dag!
   binding_of_caller!
   brakeman (>= 2.3.1)!
-  capybara (= 2.13.0)!
+  capybara!
   coffee-rails (>= 4.0.0)!
   colored!
   database_cleaner!
@@ -645,7 +645,7 @@ DEPENDENCIES
   letter_opener!
   mysql2!
   parallel_tests!
-  poltergeist (= 1.11.0)!
+  poltergeist!
   pry!
   rails (~> 5.0)!
   redcarpet!
