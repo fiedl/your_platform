@@ -177,7 +177,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'mail_form'
 
   # API
-  s.add_dependency 'apipie-rails', '~> 0.4.0'
+  s.add_dependency 'apipie-rails', '~> 0.5'
   s.add_dependency 'discourse_api'
 
   # Exceptions

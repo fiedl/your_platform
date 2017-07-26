@@ -34,7 +34,7 @@ PATH
       acts-as-dag (>= 4.0)
       acts-as-taggable-on (~> 4.0)
       acts_as_tree
-      apipie-rails (~> 0.4.0)
+      apipie-rails (~> 0.5)
       auto_html (~> 1.6.4)
       autosize-rails
       bcrypt (>= 3.0.1)
@@ -172,9 +172,8 @@ GEM
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
     ambry (1.0.0)
-    apipie-rails (0.4.0)
-      json
-      rails (>= 4.0)
+    apipie-rails (0.5.1)
+      rails (>= 4.1)
     arel (7.1.4)
     auto_html (1.6.4)
       redcarpet (~> 3.1)
@@ -350,7 +349,7 @@ GEM
     mimemagic (0.3.2)
     mini_magick (4.8.0)
     mini_portile2 (2.2.0)
-    minitest (5.10.2)
+    minitest (5.10.3)
     multi_json (1.12.1)
     multi_xml (0.6.0)
     multipart-post (2.0.0)
