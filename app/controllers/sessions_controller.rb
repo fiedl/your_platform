@@ -3,7 +3,7 @@ class SessionsController < Devise::SessionsController
   # In order to allow guest users to sign out, skip checking if the user is already
   # signed out through devise. http://stackoverflow.com/a/26244910/2066546
   #
-  skip_before_filter :verify_signed_out_user
+  skip_before_action :verify_signed_out_user
 
   def new
     set_current_title t :sign_in
