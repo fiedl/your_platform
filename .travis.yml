@@ -33,7 +33,7 @@ cache:
 dist: trusty
 sudo: true
 addons:
-  firefox: true
+  firefox: latest
   chrome: stable
   apt:
     packages:
