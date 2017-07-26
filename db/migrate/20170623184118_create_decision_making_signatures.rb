@@ -1,4 +1,4 @@
-class CreateDecisionMakingSignatures < ActiveRecord::Migration
+class CreateDecisionMakingSignatures < ActiveRecord::Migration[4.2]
   def change
     create_table :decision_making_signatures do |t|
       t.integer :user_id

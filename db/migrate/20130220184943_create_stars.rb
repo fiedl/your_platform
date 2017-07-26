@@ -1,4 +1,4 @@
-class CreateStars < ActiveRecord::Migration
+class CreateStars < ActiveRecord::Migration[4.2]
   def change
     create_table :stars do |t|
       t.integer :starrable_id

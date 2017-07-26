@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170327232815)
-class CreateRequests < ActiveRecord::Migration
+class CreateRequests < ActiveRecord::Migration[4.2]
   def change
     create_table :requests do |t|
       t.integer :user_id

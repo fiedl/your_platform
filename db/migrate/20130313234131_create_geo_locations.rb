@@ -1,4 +1,4 @@
-class CreateGeoLocations < ActiveRecord::Migration
+class CreateGeoLocations < ActiveRecord::Migration[4.2]
   def change
     create_table :geo_locations do |t|
       t.string :address

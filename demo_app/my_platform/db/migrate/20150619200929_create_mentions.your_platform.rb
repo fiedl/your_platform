@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150619193355)
-class CreateMentions < ActiveRecord::Migration
+class CreateMentions < ActiveRecord::Migration[4.2]
   def change
     create_table :mentions do |t|
       t.integer :who_user_id

@@ -1,6 +1,6 @@
 # This migration comes from your_platform (originally 20161011140818)
 # This migration comes from acts_as_taggable_on_engine (originally 6)
-class AddMissingIndexes < ActiveRecord::Migration
+class AddMissingIndexes < ActiveRecord::Migration[4.2]
   def change
     add_index :taggings, :tag_id
     add_index :taggings, :taggable_id

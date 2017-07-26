@@ -1,6 +1,6 @@
 # This migration comes from your_platform (originally 20140611170430)
 # Migration responsible for creating a table with activities
-class CreateActivities < ActiveRecord::Migration
+class CreateActivities < ActiveRecord::Migration[4.2]
   # Create table
   def self.up
     create_table :activities do |t|

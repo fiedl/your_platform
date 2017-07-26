@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20120814100529)
-class CreateAttachments < ActiveRecord::Migration
+class CreateAttachments < ActiveRecord::Migration[4.2]
   def change
     create_table :attachments do |t|
       t.string :file

@@ -1,4 +1,4 @@
-class AddIndicesForPolymorphicReferences < ActiveRecord::Migration
+class AddIndicesForPolymorphicReferences < ActiveRecord::Migration[4.2]
   def change
     add_index 'profile_fields', [:profileable_id, :profileable_type], { name: 'profileable', order: { profileable_id: :asc } }
     add_index 'profile_fields', [:profileable_id, :profileable_type, :type], { name: 'profileable_type', order: { profileable_id: :asc } }

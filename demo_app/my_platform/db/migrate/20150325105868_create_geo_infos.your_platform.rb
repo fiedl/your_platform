@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20130313211414)
-class CreateGeoInfos < ActiveRecord::Migration
+class CreateGeoInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :geo_infos do |t|
 

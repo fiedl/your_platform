@@ -1,4 +1,4 @@
-class AddProfileFieldActsAsTree < ActiveRecord::Migration
+class AddProfileFieldActsAsTree < ActiveRecord::Migration[4.2]
 
   def change
     change_table :profile_fields do |t|

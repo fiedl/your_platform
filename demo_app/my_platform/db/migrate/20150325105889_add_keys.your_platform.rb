@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20141209161946)
-class AddKeys < ActiveRecord::Migration
+class AddKeys < ActiveRecord::Migration[4.2]
   def change
     add_foreign_key "attachments", "users", name: "attachments_author_user_id_fk", column: "author_user_id"
     add_foreign_key "bookmarks", "users", name: "bookmarks_user_id_fk"

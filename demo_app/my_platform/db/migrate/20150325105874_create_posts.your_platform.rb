@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20130329231657)
-class CreatePosts < ActiveRecord::Migration
+class CreatePosts < ActiveRecord::Migration[4.2]
   def change
     create_table :posts do |t|
       t.string :subject

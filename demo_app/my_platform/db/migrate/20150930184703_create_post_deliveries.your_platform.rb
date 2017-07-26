@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150930184624)
-class CreatePostDeliveries < ActiveRecord::Migration
+class CreatePostDeliveries < ActiveRecord::Migration[4.2]
   def change
     create_table :post_deliveries do |t|
       t.integer :post_id

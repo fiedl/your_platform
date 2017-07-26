@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170117231215)
-class CreateLocations < ActiveRecord::Migration
+class CreateLocations < ActiveRecord::Migration[4.2]
   def change
     create_table :locations do |t|
       t.integer :object_id

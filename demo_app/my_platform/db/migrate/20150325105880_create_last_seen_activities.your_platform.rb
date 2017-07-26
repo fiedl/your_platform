@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20140808223512)
-class CreateLastSeenActivities < ActiveRecord::Migration
+class CreateLastSeenActivities < ActiveRecord::Migration[4.2]
   def change
     create_table :last_seen_activities do |t|
       t.integer :user_id

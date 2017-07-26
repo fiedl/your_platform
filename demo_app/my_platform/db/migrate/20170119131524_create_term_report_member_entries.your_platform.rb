@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170119131314)
-class CreateTermReportMemberEntries < ActiveRecord::Migration
+class CreateTermReportMemberEntries < ActiveRecord::Migration[4.2]
   def change
     create_table :term_report_member_entries do |t|
       t.integer :user_id

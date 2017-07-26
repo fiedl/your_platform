@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20130118220014)
-class AddRelationshipsTableWithoutDag < ActiveRecord::Migration
+class AddRelationshipsTableWithoutDag < ActiveRecord::Migration[4.2]
   def change
     create_table :relationships do |t|
       t.string :name

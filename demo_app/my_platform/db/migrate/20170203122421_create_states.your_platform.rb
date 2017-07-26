@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170203120149)
-class CreateStates < ActiveRecord::Migration
+class CreateStates < ActiveRecord::Migration[4.2]
   def change
     create_table :states do |t|
       t.string :name

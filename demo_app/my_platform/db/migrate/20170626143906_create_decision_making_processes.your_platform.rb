@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170623151707)
-class CreateDecisionMakingProcesses < ActiveRecord::Migration
+class CreateDecisionMakingProcesses < ActiveRecord::Migration[4.2]
   def change
     create_table :decision_making_processes do |t|
       t.string :title

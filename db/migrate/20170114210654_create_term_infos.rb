@@ -1,4 +1,4 @@
-class CreateTermInfos < ActiveRecord::Migration
+class CreateTermInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :term_infos do |t|
       t.integer :term_id

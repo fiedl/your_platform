@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20120426023322)
-class CreateGroups < ActiveRecord::Migration
+class CreateGroups < ActiveRecord::Migration[4.2]
   def change
     create_table :groups do |t|
       t.string :name

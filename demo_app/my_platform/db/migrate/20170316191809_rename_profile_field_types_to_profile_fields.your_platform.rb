@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170316191356)
-class RenameProfileFieldTypesToProfileFields < ActiveRecord::Migration
+class RenameProfileFieldTypesToProfileFields < ActiveRecord::Migration[4.2]
   def change
     %w(About AcademicDegree Address BankAccount Competence Custom Date Description Email Employment General Homepage MailingListEmail NameSurrounding Organization Phone ProfessionalCategory Study).each do |sub_type|
       rename_sti_type :profile_fields, "ProfileFieldTypes::#{sub_type}", "ProfileFields::#{sub_type}"

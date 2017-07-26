@@ -1,4 +1,4 @@
-class CreateNavableVisits < ActiveRecord::Migration
+class CreateNavableVisits < ActiveRecord::Migration[4.2]
   def change
     create_table :navable_visits do |t|
       t.integer :navable_id

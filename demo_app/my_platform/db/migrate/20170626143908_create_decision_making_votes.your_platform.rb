@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170623152003)
-class CreateDecisionMakingVotes < ActiveRecord::Migration
+class CreateDecisionMakingVotes < ActiveRecord::Migration[4.2]
   def change
     create_table :decision_making_votes do |t|
       t.integer :process_id

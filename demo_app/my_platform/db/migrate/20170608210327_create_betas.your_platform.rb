@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170608134552)
-class CreateBetas < ActiveRecord::Migration
+class CreateBetas < ActiveRecord::Migration[4.2]
   def change
     create_table :betas do |t|
       t.string :title

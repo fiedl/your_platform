@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20170114210654)
-class CreateTermInfos < ActiveRecord::Migration
+class CreateTermInfos < ActiveRecord::Migration[4.2]
   def change
     create_table :term_infos do |t|
       t.integer :term_id
