@@ -1,16 +1,16 @@
 rvm:
   - "2.3.1"
 env:
-  - "WORKER_ID=0  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=1  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=2  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=3  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=4  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=5  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=6  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=7  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=8  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
-  - "WORKER_ID=9  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
+  - "WORKER_ID=0  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=1  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=2  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=3  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=4  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=5  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=6  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=7  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=8  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
+  - "WORKER_ID=9  NUMBER_OF_WORKERS=10 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql SELENIUM=true"
   - "WORKER_ID=0  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true          RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
   - "WORKER_ID=1  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true          RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
   - "WORKER_ID=2  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true          RAILS_ENV=test CI=travis COVERALLS_SILENT=true DB=mysql"
@@ -61,6 +61,9 @@ before_script:
   - bundle exec rake db:create db:migrate
   - rake your_platform:install:node_modules || echo 'task not found'
   - cd ../..
+  - "export DISPLAY=:99.0" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 script:
   - bundle exec ruby script/tests
 notifications:
