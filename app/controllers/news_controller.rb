@@ -49,7 +49,7 @@ class NewsController < ApplicationController
     # Sort Objects
     @posts = (@posts).uniq.sort_by { |obj| obj.updated_at }.reverse
     @pages = (@pages).uniq.sort_by { |obj| obj.published_at }.reverse
-    @events = @events.uniq.order('events.updated_at desc')
+    @events = @events.distinct.order('events.updated_at desc')
     @objects = @posts + @pages + @events
 
     # Group Objects by Date
