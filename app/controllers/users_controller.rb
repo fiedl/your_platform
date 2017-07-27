@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       format.js
       format.vcf do
         current_user.add_recent_contact @user
-        render text: @user.to_vcf
+        render plain: @user.to_vcf
       end
     end
   end

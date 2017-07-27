@@ -115,7 +115,7 @@ class EventsController < ApplicationController
         # show.html.erb
       end
       format.json { render json: @event }
-      format.ics { render text: @event.to_ics }
+      format.ics { render plain: @event.to_ics }
     end
   end
 
