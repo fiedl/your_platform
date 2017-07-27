@@ -88,7 +88,7 @@ class SemesterCalendar < ApplicationRecord
         end
       end
     end
-    self.touch if attributes.any?
+    self.touch unless attributes.empty?
   end
 
   def save(*args)
