@@ -20,9 +20,7 @@
 # found that are valid at present time. To override this scope, use either
 # `with_invalid` or `unscoped`.
 #
-module MembershipMixins::ValidityRangeForIndirectMemberships
-
-  extend ActiveSupport::Concern
+concern :IndirectMembershipValidityRange do
 
   included do
     # The `becomes` part is needed for serialization, because this is also

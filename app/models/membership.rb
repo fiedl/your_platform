@@ -37,8 +37,8 @@ class Membership < DagLink
   # Validity Range
   # ====================================================================================================
 
-  include MembershipMixins::ValidityRange
-  include MembershipMixins::ValidityRangeForIndirectMemberships
+  include MembershipValidityRange
+  include IndirectMembershipValidityRange
 
 
   # May Need Review Flag

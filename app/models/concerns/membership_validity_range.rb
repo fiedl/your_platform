@@ -84,9 +84,7 @@
 #     TODO: Check if this is resolved in rails 6 and remove the hack.
 #     Maybe with `DateTime::Infinity`.
 #
-module MembershipMixins::ValidityRange
-
-  extend ActiveSupport::Concern
+concern :MembershipValidityRange do
 
   included do
     before_validation :set_valid_from_to_now
@@ -113,7 +111,7 @@ module MembershipMixins::ValidityRange
     scope :started_after, -> (time) { where('NOT `valid_from` IS NULL').where('`valid_from` >= ?', time) }
   end
 
-  module ClassMethods
+  class_methods do
     # This scope widens the query such that also memberships that are not valid
     # at the present time are returned.
     #

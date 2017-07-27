@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe MembershipMixins::ValidityRange do
+describe MembershipValidityRange do
 
   before do
     @user = create(:user)
