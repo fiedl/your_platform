@@ -103,6 +103,10 @@ module CapybaraHelper
     wait_for_best_in_place_to_save(selector)
   end
 
+  def wait_for_wysiwyg(selector)
+    within(first(selector)) { page.should have_selector '.wysiwyg.success' }
+  end
+
 end
 
 # https://github.com/ryanb/cancan/blob/master/lib/cancan/matchers.rb

@@ -75,12 +75,13 @@ feature "Home Pages" do
         click_on :edit
         edit_page_content "This is a short teaser text.\n\nAnd this is some more content."
         click_on :save
+        wait_for_wysiwyg '.page_content'
 
         within('#horizontal-nav-bar') { click_on "example.com" }
         within '#content' do
+          expect(page).to have_no_text "And this is some more content."
           expect(page).to have_text "My new teaser"
           expect(page).to have_text "This is a short teaser text."
-          expect(page).to have_no_text "And this is some more content."
         end
         within '#horizontal-nav-bar' do
           expect(page).to have_no_text "My new teaser"
@@ -140,9 +141,6 @@ feature "Home Pages" do
     # Destroying the home page within the first ten minutes
     # should work.
     within '.box.first' do
-      #find('.edit_button').trigger('mouseover')
-      #sleep 0.5 # to wait for the other buttons to appear. Otherwise, we would hit
-      # the wrong button, next.
       find('.destroy_page.btn').trigger('click')
     end
 
