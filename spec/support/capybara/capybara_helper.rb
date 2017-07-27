@@ -65,7 +65,12 @@ module CapybaraHelper
   end
 
   def enter_in_place_with_pressing_enter(selector, text)
-    enter_in_place_without_pressing_enter(selector, "#{text}\n")
+    if selenium?
+      enter_in_place_without_pressing_enter(selector, text)
+      find_best_in_place(selector).find('input').native.send_keys(:return) # https://stackoverflow.com/a/11660212/2066546
+    else
+      enter_in_place_without_pressing_enter(selector, "#{text}\n")
+    end
   end
 
   def enter_in_place_without_pressing_enter(selector, text)
@@ -79,9 +84,9 @@ module CapybaraHelper
 
   def find_best_in_place(selector)
     if selector.include? ".best_in_place"
-      find(selector)
+      first(selector)
     else
-      find(selector).find(".best_in_place")
+      first(selector).find(".best_in_place")
     end
   end
 
@@ -92,7 +97,7 @@ module CapybaraHelper
   end
 
   def wait_for_best_in_place_to_save(selector)
-    within(selector) { page.should have_selector '.best_in_place.success' }
+    within(first(selector)) { page.should have_selector '.best_in_place.success' }
   end
   def wait_for_best_in_place(selector)
     wait_for_best_in_place_to_save(selector)

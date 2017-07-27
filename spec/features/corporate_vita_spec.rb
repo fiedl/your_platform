@@ -105,15 +105,8 @@ feature 'Corporate Vita', js: true do
 
           page.should have_content @valid_from_formatted
 
-          # activate inplace editing of the date_field
-          first('.best_in_place.status_group_date_of_joining').click
-
-          within first '.best_in_place.status_group_date_of_joining' do
-            page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
-          end
-
           @new_date = 10.days.ago.to_date
-          fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
+          enter_in_place "#corporate_vita tr.membership", I18n.localize(@new_date)
 
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
@@ -176,15 +169,8 @@ feature 'Corporate Vita', js: true do
 
           page.should have_content @valid_from_formatted
 
-          # activate inplace editing of the date_field
-          first('.best_in_place.status_group_date_of_joining').click
-
-          within first '.best_in_place.status_group_date_of_joining' do
-            page.should have_field 'valid_from_localized_date', with: @valid_from_formatted
-          end
-
           @new_date = 10.days.ago.to_date
-          fill_in "valid_from_localized_date", with: I18n.localize(@new_date)
+          enter_in_place "#corporate_vita tr.membership", I18n.localize(@new_date)
 
           page.should have_no_selector("input")
           page.should have_content I18n.localize(@new_date)
