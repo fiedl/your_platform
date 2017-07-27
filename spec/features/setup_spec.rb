@@ -54,7 +54,6 @@ feature 'Setup' do
       page.should have_text 'New York'
 
       visit setup_path
-      page.should have_text 'Error'
       page.should have_text 'Setup already done.'
       page.should have_no_text I18n.t :this_setup_will_get_you_up_and_running
 

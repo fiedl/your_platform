@@ -13,6 +13,7 @@ feature "memberships#create" do
 
     within '#new_membership' do
       fill_in :membership_user_title, with: @user.title
+      sleep 0.3
       click_on I18n.t(:add)
     end
 

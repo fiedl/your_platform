@@ -24,7 +24,7 @@ concern :UserSearch do
         .where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
         .order('last_name', 'first_name')
       users = [User.find_by_title(query)] - [nil] if users.none?
-      users.uniq
+      users.distinct
     end
 
   end

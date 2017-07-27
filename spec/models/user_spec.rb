@@ -1252,14 +1252,14 @@ describe User do
         it 'should make sure user is in the hidden_users group' do
           @user.should be_member_of Group.hidden_users
           subject
-          @user.should be_member_of Group.hidden_users
+          @user.reload.should be_member_of Group.hidden_users
         end
       end
       describe 'for the user not being hidden' do
         it 'should assign the user to the hidden_users group' do
           @user.should_not be_member_of Group.hidden_users
           subject
-          @user.should be_member_of Group.hidden_users
+          @user.reload.should be_member_of Group.hidden_users
         end
       end
     end
@@ -1270,14 +1270,14 @@ describe User do
         it 'should remove the user from the hidden_users group' do
           @user.should be_member_of Group.hidden_users
           subject
-          @user.should_not be_member_of Group.hidden_users
+          @user.reload.should_not be_member_of Group.hidden_users
         end
       end
       describe 'for the user not being hidden' do
         it 'should make sure the user is not in the hidden_users group' do
           @user.should_not be_member_of Group.hidden_users
           subject
-          @user.should_not be_member_of Group.hidden_users
+          @user.reload.should_not be_member_of Group.hidden_users
         end
       end
     end

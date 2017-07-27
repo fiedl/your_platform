@@ -96,6 +96,7 @@ feature "Home Pages" do
         click_on :edit
         edit_page_content "We are nice people."
         click_on :save
+        wait_for_wysiwyg '.page_content'
 
         within('#horizontal-nav-bar') { expect(page).to have_text "About us" }
 
