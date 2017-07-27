@@ -267,46 +267,6 @@ describe Group do
       end
     end
 
-    describe '#cached(:leaf_groups)' do
-      subject { @group.reload.cached(:leaf_groups) }
-      describe 'for the group being a corporation' do
-        before do
-          @group = create(:corporation)
-          @group.cached(:leaf_groups)
-        end
-        it { should == @group.leaf_groups }
-      end
-      describe 'for the group being a corporation with status groups' do
-        before do
-          @group = create(:corporation_with_status_groups)
-          @group.cached(:leaf_groups)
-        end
-        it { should == @group.cached(:leaf_groups) }
-      end
-      describe 'for the group being a corporation with admin groups' do
-        before do
-          @group = create(:corporation)
-          @group.cached(:leaf_groups)
-          @group.find_or_create_admins_parent_group
-        end
-        it { should == @group.leaf_groups }
-      end
-      describe 'for the group being a corporation with normal and status groups' do
-        before do
-          @group = create(:corporation)
-          @group.cached(:leaf_groups)
-          wait_for_cache
-
-          # The creation of this group structure should reset the cache.
-          @status_1 = @group.child_groups.create
-          @group_a = @group.child_groups.create
-          @status_2 = @group_a.child_groups.create
-          @group_b = @group.child_groups.create
-          @status_3 = @group_b.child_groups.create
-        end
-        it { should == @group.leaf_groups }
-      end
-    end
   end
 
 
