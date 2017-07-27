@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170713234117) do
+ActiveRecord::Schema.define(version: 20170727152859) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "trackable_type"
@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(version: 20170713234117) do
     t.integer  "count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "valid_to"
-    t.datetime "valid_from"
+    t.datetime "valid_to",        precision: 6
+    t.datetime "valid_from",      precision: 6
     t.string   "type"
     t.index ["ancestor_id", "ancestor_type", "direct"], name: "dag_ancestor", using: :btree
     t.index ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
