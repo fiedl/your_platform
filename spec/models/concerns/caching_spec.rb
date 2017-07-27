@@ -68,14 +68,14 @@ describe Caching do
       subject { @user.reload.corporate_vita_memberships_in(@corporation) }
       describe "with no cached value stored" do
         it "should return the fresh value" do
-          subject.should == @user.reload.corporate_vita_memberships_in(@corporation)
+          subject.to_a.should == @user.reload.corporate_vita_memberships_in(@corporation).to_a
           subject.should include @membership
         end
       end
       describe "with a cached value stored" do
         before { @cached_memberships = @user.corporate_vita_memberships_in(@corporation) }
         it "should return the cached value" do
-          subject.should == @cached_memberships
+          subject.to_a.should == @cached_memberships.to_a
           subject.should include @membership
         end
       end
@@ -87,7 +87,7 @@ describe Caching do
           wait_for_cache
         end
         it "should return the new value" do
-          subject.should == @user.reload.corporate_vita_memberships_in(@corporation)
+          subject.to_a.should == @user.reload.corporate_vita_memberships_in(@corporation).to_a
           subject.should include @new_membership
         end
       end
