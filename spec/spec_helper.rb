@@ -253,6 +253,9 @@ RSpec.configure do |config|
   #
   module TimeEqlPrecisionCorrection
     def eql?(other)
+      slef == other
+    end
+    def ==(other)
       self.round(6).eql?(other.round(6))
     end
   end
