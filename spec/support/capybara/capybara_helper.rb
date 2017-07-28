@@ -83,6 +83,7 @@ module CapybaraHelper
   end
 
   def find_best_in_place(selector)
+    page.should have_selector selector
     if selector.include? ".best_in_place"
       first(selector)
     else
@@ -97,6 +98,7 @@ module CapybaraHelper
   end
 
   def wait_for_best_in_place_to_save(selector)
+    page.should have_selector selector
     within(first(selector)) { page.should have_selector '.best_in_place.success' }
   end
   def wait_for_best_in_place(selector)

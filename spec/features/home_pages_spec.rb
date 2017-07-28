@@ -19,15 +19,19 @@ feature "Home Pages" do
 
       click_on :back_to_the_page
       click_on :page_settings # in order to load the home page settings.
+
       select_in_place 'tr.layout', 'iweb'
       enter_in_place 'tr.home_page_title', 'Example, Corp.'
       enter_in_place 'tr.home_page_sub_title', 'The place to be. Since 1850.'
 
       click_on :back_to_the_page
+
       within "#header" do
         expect(page).to have_text "Example, Corp."
         expect(page).to have_text "The place to be. Since 1850."
       end
+
+      give_it_some_time_to_finish_the_test_before_wiping_the_database
     end
 
     context "For a Pages::HomePage" do
@@ -142,7 +146,7 @@ feature "Home Pages" do
     # Destroying the home page within the first ten minutes
     # should work.
     within '.box.first' do
-      find('.destroy_page.btn').trigger('click')
+      find('.destroy_page.btn').click
     end
 
     # This should redirect to the root#index.

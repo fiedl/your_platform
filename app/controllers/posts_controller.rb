@@ -116,7 +116,7 @@ class PostsController < ApplicationController
           redirect_to group_posts_path(@group), change: 'posts'
         end
       end
-      format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
+      format.json { render json: {recipients_count: @send_counter, post_url: post_path(@post)} }
     end
 
   end
