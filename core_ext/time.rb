@@ -13,14 +13,24 @@
 #
 module TimeEqlPrecisionCorrection
   def eql?(other, options = {})
+    p "compare #{self.to_s} to #{other.to_s} with eql?"
     return super(other) if options[:super]
-    self.round(6).eql?(other.round(6), super: true)
+    self.round(7).eql?(other.round(7), super: true)
   end
+
+  def <=>(other)
+    p "compare #{self.to_s} to #{other.to_s} with <=>"
+    return 1 if self.eql?(other)
+    super(other)
+  end
+
   def ==(other)
+    p "compare #{self.to_s} to #{other.to_s} with =="
     self.eql?(other)
   end
+
 end
 
-class Time
+class ActiveSupport::TimeWithZone
   prepend TimeEqlPrecisionCorrection
 end

@@ -9,12 +9,12 @@ describe Time do
       group = create :group
       membership = Membership.create user: user, group: group, valid_from: @time
       @time_from_database = membership.reload.valid_from
-      @rounded_time = @time.round(6)
+      @rounded_time = @time.round(7)
     end
 
     describe "#==" do
       subject { @time == @time_from_database }
-      it { should be true }
+      it { binding.pry; should be true }
       specify { @time.should == @time_from_database }
       specify { @time.should == @rounded_time }
     end
