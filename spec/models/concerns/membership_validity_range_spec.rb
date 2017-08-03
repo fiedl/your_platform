@@ -78,7 +78,7 @@ describe MembershipValidityRange do
       it "should set the valid_to argument to the given time" do
         @membership.valid_to.should == nil
         subject
-        @membership.valid_to.should == @time
+        @membership.valid_to.should be_the_same_time_as @time
       end
       it "should mark the membership as invalid" do
         @membership.currently_valid?.should == true
@@ -93,7 +93,7 @@ describe MembershipValidityRange do
         it "should set the valid_to argument to the given time" do
           @membership.valid_to.should == nil
           subject
-          @membership.valid_to.should == @time
+          @membership.valid_to.should be_the_same_time_as @time
         end
       end
     end
@@ -115,7 +115,7 @@ describe MembershipValidityRange do
       it "should set the valid_to argument to the given time" do
         @membership.valid_to.should == nil
         subject
-        @membership.valid_to.should == @time
+        @membership.valid_to.should be_the_same_time_as @time
       end
       it "should mark the membership as invalid" do
         @membership.currently_valid?.should == true
@@ -130,7 +130,7 @@ describe MembershipValidityRange do
         it "should set the valid_to argument to the given time" do
           @membership.valid_to.should == nil
           subject
-          @membership.valid_to.should == @time
+          @membership.valid_to.should be_the_same_time_as @time
         end
       end
     end
