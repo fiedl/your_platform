@@ -12,6 +12,10 @@ concern :Caching do
     private :rescue_from_too_big_to_marshal
   end
 
+  def use_caching?
+    self.class.use_caching?
+  end
+
   # Case 1: Use it to call a cached method result.
   #
   #     user.cached(:name)
