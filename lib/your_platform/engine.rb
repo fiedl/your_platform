@@ -37,9 +37,6 @@ require 'gender_detector'
 # Authorization
 require 'cancancan'
 
-# Encryption
-require 'has_secure_token'
-
 # Settings
 require 'rails-settings-cached'
 

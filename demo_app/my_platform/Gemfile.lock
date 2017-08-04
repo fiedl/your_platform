@@ -67,7 +67,6 @@ PATH
       gravatar_image_tag
       groupdate
       haml (~> 4.0)
-      has_secure_token
       i18n-js (>= 3.0.0.rc8)
       icalendar
       jquery-atwho-rails (>= 1.1.0)
@@ -115,7 +114,6 @@ PATH
       sugar-rails
       table-formatter
       to_xls
-      transaction_retry
       turboboost
       turbolinks (>= 5.0)
       uglifier (>= 2.7.2)
@@ -302,8 +300,6 @@ GEM
       activesupport (>= 3)
     haml (4.0.7)
       tilt
-    has_secure_token (1.0.0)
-      activerecord (>= 3.0)
     hashie (3.5.6)
     htmlentities (4.3.4)
     http-cookie (1.0.3)
@@ -586,11 +582,6 @@ GEM
     timecop (0.9.1)
     to_xls (1.5.3)
       spreadsheet
-    transaction_isolation (1.0.3)
-      activerecord (>= 3.0.11)
-    transaction_retry (1.0.2)
-      activerecord (>= 3.0.11)
-      transaction_isolation (>= 1.0.2)
     ttfunk (1.4.0)
     turboboost (0.1.1)
       coffee-rails

@@ -16,7 +16,7 @@ feature "Viewing pages that redirect to other locations", js: true do
     login(:user)
 
     visit page_path(@intranet_root)
-    within "#breadcrumb" do
+    within "ul.breadcrumbs" do
       click_on "example.com"
     end
 

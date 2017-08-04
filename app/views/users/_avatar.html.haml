@@ -5,16 +5,8 @@
       = form_for @user do |form|
         - auto_trigger_class = params[:trigger_change_avatar] ? 'auto_trigger' : ''
         = form.attachment_field :avatar, direct: true, class: auto_trigger_class
-      
+
       - if @user.avatar_id?
-        - # This is not possible in Rails 4.1, yet, since `params` does not support
-        - # a nested hash here. 
-        - # See also: https://groups.google.com/forum/#!topic/rubyonrails-core/otqJ-ClTyFk
-        - # TODO: Check again when migrating to Rails 5.
-        - # # = button_to t(:remove_avatar), user_path(@user), params: {user: {remove_avatar: true}}, method: 'put', class: 'btn btn-default btn-sm remove_avatar'
-        - #
-        = form_for @user, html: {class: 'button_to edit_user'} do |form|
-          = form.hidden_field :remove_avatar, value: true
-          = form.submit t(:remove_avatar), class: 'btn btn-default btn-sm remove_avatar'
-      
+        = button_to t(:remove_avatar), user_path(@user), params: {user: {remove_avatar: true}}, method: 'put', class: 'btn btn-default btn-sm remove_avatar'
+
       .uploading_avatar.alert.alert-success.hidden=t :uploading_avatar

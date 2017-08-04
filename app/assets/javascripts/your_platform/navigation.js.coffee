@@ -7,12 +7,12 @@ $(document).ready ->
         navable: global_id
       },
       success: (result)->
-        $('#breadcrumb').html(result.breadcrumbs)
+        $('ul.breadcrumbs').html(result.breadcrumbs)
         $('#vertical_nav > ul').html(result.vertical_nav)
         $('#horizontal_nav').html(result.horizontal_nav)
     }
-  
-  
+
+
   if $('.reload-navigation').data('navable')
     setTimeout ->
       $(document).replace_navigation $('.reload-navigation').data('navable')

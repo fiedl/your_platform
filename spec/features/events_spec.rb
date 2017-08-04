@@ -11,13 +11,13 @@ feature "Events" do
     @other_group = create(:group)
     @other_event = @other_group.events.create name: "Other Event", start_at: 2.days.from_now
 
-    # Apparently, the callbacks need time. If we don't sleep here, `ActiveRecord::RecordNotFound`
-    # is raised. In practice, we use an error handler in the EventsController due to this inconvenience.
-    #
-    # This does still exist in Rails 4.
-    # TODO: Check if this problem still exists when migrating to Rails 5.
-    #
-    @event.wait_for_me_to_exist
+    # # Apparently, the callbacks need time. If we don't sleep here, `ActiveRecord::RecordNotFound`
+    # # is raised. In practice, we use an error handler in the EventsController due to this inconvenience.
+    # #
+    # # This does still exist in Rails 4.
+    # # TODO: Check if this problem still exists when migrating to Rails 5.
+    # #
+    # @event.wait_for_me_to_exist
   end
 
   context "for the public internet" do
@@ -251,22 +251,19 @@ feature "Events" do
       page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
     end
 
-    if ENV['CI'] != 'travis'  # this keeps failing on travis
-      scenario "editing an event" do
-        sleep 3  # to give the database some time after creating the event.
-        visit event_path(@event)
-        within('.box.first h1') do
-          find('.best_in_place').click
-          find('input').set "My cool new event\n"
-          page.should have_no_selector 'input'
-          page.should have_text "My cool new event"
-
-          # # This works in practice, but not in the test. :(
-          # # TODO: Fix this test:
-          # within('.vertical_menu') { page.should have_text "My cool new event" }
-          # within('#breadcrumb') { page.should have_text "My cool new event" }
-        end
+    scenario "editing an event" do
+      sleep 3  # to give the database some time after creating the event.
+      visit event_path(@event)
+      within('.box.first') do
+        enter_in_place 'h1', "My cool new event"
       end
+      within('.box.first h1') do
+        page.should have_no_selector 'input'
+        page.should have_text "My cool new event"
+      end
+
+      within('.vertical_menu') { page.should have_text "My cool new event" }
+      within('ul.breadcrumbs') { page.should have_text "My cool new event" }
     end
 
     scenario "editing an event, pt. 2" do

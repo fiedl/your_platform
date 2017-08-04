@@ -78,7 +78,7 @@
 #     See `core_ext/active_record/relation.rb`.
 #
 #     TODO: Re-check when migrating to Rails 6.
-#     TODO: Refactor the queries in the scopes when migrating to Rails 5.
+#     TODO: Refactor the queries in the scopes when migrating to Rails 6.
 #
 #   * Rails 5 does not support open-end datetime ranges.
 #     TODO: Check if this is resolved in rails 6 and remove the hack.

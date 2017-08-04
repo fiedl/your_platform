@@ -182,29 +182,5 @@ class Event < ApplicationRecord
     self.to_ics
   end
 
-
-  # Existance
-  # ==========================================================================================
-
-  # For some strange reason, the callbacks of the creation of an event appear to
-  # prevent the event form being found in the database after its creation.
-  #
-  # In the EventsController and in specs, we need to make sure that the event exists
-  # before continuing. Otherwise `ActiveRecord::RecordNotFound` is raised in the controller
-  # or when redirecting to the event.
-  #
-  # This still exists in Rails 4.
-  # TODO: Check if this is still necessary when migrating to Rails 5.
-  #
-  def wait_for_me_to_exist
-    raise RuntimeError, 'The event has no id, yet!' unless id
-    begin
-      Event.find self.id
-    rescue ActiveRecord::RecordNotFound => e
-      sleep 1
-      retry
-    end
-  end
-
   include EventCaching if use_caching?
 end

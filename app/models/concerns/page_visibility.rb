@@ -17,9 +17,7 @@ concern :PageVisibility do
     #
     scope :visible_to, -> (user, options = {}) {
       user = nil if options[:preview_as].to_s == 'user'
-      # TODO: Use the new syntax when migrating to rails 5.
-      # # (published.or.by_author(user)).not_archived
-      Page.not_archived.where(id: (published.pluck(:id) + by_author(user).pluck(:id)))
+      (published.or(by_author(user))).not_archived
     }
 
   end

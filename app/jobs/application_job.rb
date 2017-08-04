@@ -49,7 +49,7 @@ class ApplicationJob < ActiveJob::Base
   # @see https://github.com/rails/rails/issues/22044
   # @see https://github.com/fiedl/your_platform/issues/23
   #
-  # TODO: When migrating to rails 5, check if https://github.com/rails/rails/pull/26221 is
+  # TODO: When migrating to rails 5.1, check if https://github.com/rails/rails/pull/26221 is
   # pulled already.
   #
   def serialize
