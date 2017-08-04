@@ -111,10 +111,28 @@ module CacheStoreExtension
   end
 
   def delete_regex(regex)
+    keys = find_keys_by_regex(regex)
+    @data.del(*keys) if keys.count > 0
+  end
+
+  def find_keys_by_regex(regex)
     if @data
-      keys = @data.keys.select { |key| key =~ regex }
-      @data.del(*keys) if keys.count > 0
+      @data.keys.select { |key| key =~ regex }
+    else
+      []
     end
+  end
+
+  def find_entries_by_regex(regex)
+    find_keys_by_regex(regex).collect { |key|
+      entry = entry(key)
+      {
+        key: key,
+        value: entry.value,
+        created_at: entry.created_at,
+        expires_at: Time.at(entry.expires_at)
+      }
+    }
   end
 
   # # This provides a solution to errors like

@@ -73,6 +73,12 @@ concern :Caching do
     end
   end
 
+  # For inspections, it might be useful to list all caches of a record.
+  #
+  def cache
+    Rails.cache.find_entries_by_regex(/#{cache_key}\/*/)
+  end
+
   def read_cached(method)
     Rails.cache.read([self.cache_key, method])
   end
