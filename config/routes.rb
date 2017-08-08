@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :nav_nodes
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
-  devise_for :user_accounts, controllers: {sessions: "sessions"}, :skip => [:registrations]
+  devise_for :user_accounts, controllers: {sessions: "sessions", masquerades: 'user_account_masquerades'}, :skip => [:registrations]
   devise_scope :user_account do
     get 'sign_in' => 'sessions#new', as: :sign_in
     delete 'sign_out' => 'sessions#destroy', as: :sign_out

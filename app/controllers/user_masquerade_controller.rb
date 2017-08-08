@@ -8,7 +8,7 @@ class UserMasqueradeController < ApplicationController
     authorize! :masquerade_as, user
 
     if account = user.account
-      redirect_to masquerade_path(account)
+      redirect_to masquerade_path(account) # UserAccountMasqueradesController#show
     else
       raise "user #{user.id} has no account."
     end

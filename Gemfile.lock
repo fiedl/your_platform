@@ -22,7 +22,7 @@ PATH
       coffee-rails (>= 4.1.0)
       decent_exposure (~> 3.0)
       devise (>= 3.5.4)
-      devise_masquerade
+      devise_masquerade (~> 0.5.3)
       discourse_api
       edit_mode (>= 1.0.2)
       elasticsearch-model
@@ -153,7 +153,7 @@ GEM
     auto_html (1.6.4)
       redcarpet (~> 3.1)
       rinku (~> 1.5.0)
-    autoprefixer-rails (7.1.1.2)
+    autoprefixer-rails (7.1.2.3)
       execjs
     autosize-rails (1.18.17)
       rails (>= 3.1)
@@ -222,17 +222,17 @@ GEM
       railties (>= 4.1.0, < 5.2)
       responders
       warden (~> 1.2.3)
-    devise_masquerade (0.5.1)
+    devise_masquerade (0.5.3)
       devise (>= 2.1.0)
       railties (>= 3.0)
     diff-lcs (1.3)
-    discourse_api (0.16.0)
+    discourse_api (0.17.0)
       faraday (~> 0.9)
       faraday_middleware (~> 0.10)
       rack (>= 1.6)
     domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    edit_mode (1.0.2)
+    edit_mode (1.0.3)
       jquery-rails
       jquery-turbolinks
       rails (>= 3.2)
@@ -261,9 +261,9 @@ GEM
     factory_girl_rails (4.5.0)
       factory_girl (~> 4.5.0)
       railties (>= 3.0.0)
-    faker (1.7.3)
+    faker (1.8.4)
       i18n (~> 0.5)
-    faraday (0.12.1)
+    faraday (0.12.2)
       multipart-post (>= 1.2, < 3)
     faraday_middleware (0.11.0.1)
       faraday (>= 0.7.4, < 1.0)
@@ -288,7 +288,7 @@ GEM
       tilt
     has_secure_token (1.0.0)
       activerecord (>= 3.0)
-    hashie (3.5.5)
+    hashie (3.5.6)
     highline (1.7.8)
     hike (1.2.3)
     http-cookie (1.0.3)
@@ -326,15 +326,15 @@ GEM
       nokogiri (>= 1.5.9)
     mail (2.6.6.rc1)
       mime-types (>= 1.16, < 4)
-    mail_form (1.6.0)
-      actionmailer (>= 3.2, < 5.1)
-      activemodel (>= 3.2, < 5.1)
-    merit (2.4.0)
+    mail_form (1.7.0)
+      actionmailer (>= 3.2, < 5.2)
+      activemodel (>= 3.2, < 5.2)
+    merit (3.0.0)
       ambry (~> 1.0.0)
     method_source (0.8.2)
     mime-types (2.99.3)
     mimemagic (0.3.2)
-    mini_magick (4.7.2)
+    mini_magick (4.8.0)
     mini_portile2 (2.2.0)
     minitest (5.10.2)
     multi_json (1.12.1)
@@ -359,7 +359,7 @@ GEM
     omniauth-github (1.3.0)
       omniauth (~> 1.5)
       omniauth-oauth2 (>= 1.4.0, < 2.0)
-    omniauth-google-oauth2 (0.5.0)
+    omniauth-google-oauth2 (0.5.1)
       jwt (~> 1.5)
       multi_json (~> 1.3)
       omniauth (>= 1.1.1)
@@ -379,7 +379,7 @@ GEM
       parallel
     passgen (1.0.2)
     pdf-core (0.6.1)
-    phony (2.15.44)
+    phony (2.15.47)
     poltergeist (1.11.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)
@@ -422,10 +422,10 @@ GEM
     rails-assets-bootstrap-social (5.1.1)
       rails-assets-bootstrap (~> 3)
       rails-assets-font-awesome (~> 4.7)
-    rails-assets-ev-emitter (1.0.3)
+    rails-assets-ev-emitter (1.1.1)
     rails-assets-font-awesome (4.7.0)
-    rails-assets-imagesloaded (4.1.1)
-      rails-assets-ev-emitter (~> 1.0.0)
+    rails-assets-imagesloaded (4.1.3)
+      rails-assets-ev-emitter (>= 1.0.0, < 2)
     rails-assets-inline-attachment (2.0.3)
     rails-assets-jquery (3.2.1)
     rails-assets-jquery-ui (1.12.1)
@@ -460,7 +460,7 @@ GEM
       actionpack (>= 4.0, < 6)
       redis-rack (>= 1, < 3)
       redis-store (>= 1.1.0, < 1.4.0)
-    redis-activesupport (5.0.2)
+    redis-activesupport (5.0.3)
       activesupport (>= 3, < 6)
       redis-store (~> 1.3.0)
     redis-namespace (1.5.3)
@@ -675,4 +675,4 @@ RUBY VERSION
    ruby 2.3.1p112
 
 BUNDLED WITH
-   1.15.1
+   1.15.2

@@ -78,7 +78,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-twitter'
   s.add_dependency 'omniauth-google-oauth2'
   s.add_dependency 'omniauth-facebook', '~> 3.0.0'
-  s.add_dependency 'devise_masquerade'
+  s.add_dependency 'devise_masquerade', '~> 0.5.3'
   s.add_dependency 'gender_detector'
 
   # Authorization
