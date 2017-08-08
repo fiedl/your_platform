@@ -21,6 +21,8 @@
         = link_to group_term_report_path(group), class: 'btn btn-default' do
           = fa_icon 'bar-chart'
           = t(:term_report)
+    - if can? :manage, group
+      .tool.renew_cache= renew_cache_button(group)
   %div
     = render partial: 'groups/export_button'
     - if can? :update_members, group

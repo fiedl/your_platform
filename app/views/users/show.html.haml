@@ -31,6 +31,7 @@
       - if can? :manage, @user
         .tool.profile_fields_index
           = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-default'
+        .tool.renew_cache= renew_cache_button(@user)
     %div
       .media
         .media-left= render partial: 'avatar'

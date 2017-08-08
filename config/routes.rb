@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
     get :posts, to: 'user_posts#index'
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
+    post :renew_cache, to: 'cache_renewals#create'
   end
 
   get :settings, to: 'user_settings#index'
@@ -94,6 +95,7 @@ Rails.application.routes.draw do
     get :term_report, to: 'term_reports#show'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
+    post :renew_cache, to: 'cache_renewals#create'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -116,6 +118,7 @@ Rails.application.routes.draw do
     get :permalinks, to: 'permalinks#index'
     get :settings, to: 'page_settings#index'
     resources :publications, only: [:create], controller: :page_publications
+    post :renew_cache, to: 'cache_renewals#create'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
@@ -171,6 +174,7 @@ Rails.application.routes.draw do
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
     get :attachments, to: 'attachments#index'
+    post :renew_cache, to: 'cache_renewals#create'
   end
   resources :semester_calendars do
     member do
