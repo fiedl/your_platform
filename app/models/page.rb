@@ -55,7 +55,9 @@ class Page < ActiveRecord::Base
     child_pages.where(type: "Pages::ContentBox")
   end
 
-
+  def show_vertical_nav?
+    (self.type != 'Pages::HomePage') && ((self.navable_children.select(&:show_in_menu?).count > 0) || self.parents.first.try(:show_vertical_nav?))
+  end
 
   def group_map_parent_group_id
     settings.group_map_parent_group_id || Group.corporations_parent.id
