@@ -8,7 +8,7 @@
   - elsif attachment
     = link_to attachment.file.url do
       %p= image_tag(attachment.thumb_url)
-      %p= "#{semester_calendar.group.title}: #{semester_calendar.title(locale: current_user.locale)}"
+      %p= "#{semester_calendar.group.title}: #{semester_calendar.title}"
     %p
       %small= "#{t(:uploaded_at)} #{localize attachment.updated_at.to_date}"
 

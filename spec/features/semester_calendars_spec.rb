@@ -9,7 +9,8 @@ feature "Semester Calendars", :js do
     @officer = create :user_with_account
     @office.assign_user @officer
 
-    @semester_calendar = @corporation.semester_calendars.create year: Time.zone.now.year, term: :summer_term
+    @term = Term.by_year_and_type Time.zone.now.year, "Terms::Summer"
+    @semester_calendar = @corporation.semester_calendars.create term_id: @term.id
   end
 
   scenario "Adding an event" do
@@ -27,7 +28,7 @@ feature "Semester Calendars", :js do
     find('.event_name input').set "My new event"
     find('.event_location input').set "adH"
 
-    click_on :save
+    find('.save_semester_calendar_button').click
     page.should have_text 'Das Semesterprogramm wird nun gespeichert. Das kann bei typischen Semesterprogrammen fünf Minuten dauern.'
 
     wait_until { page.has_no_text? 'Das Semesterprogramm wird nun gespeichert. Das kann bei typischen Semesterprogrammen fünf Minuten dauern.' }
@@ -57,6 +58,16 @@ feature "Semester Calendars", :js do
         page.should have_text I18n.t(:uploaded_at)
       end
       @semester_calendar.attachments.first.pdf?.should be true
+    end
+  end
+
+  scenario "Looking at semester calendars for all corporations" do
+    login :user
+    visit semester_calendars_path
+
+    within "#content" do
+      page.should have_text @term.title
+      page.should have_text @corporation.name
     end
   end
 end

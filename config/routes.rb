@@ -78,7 +78,7 @@ Rails.application.routes.draw do
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :semester_calendars
-    get :semester_calendar, to: 'semester_calendars#show_current', as: 'current_semester_calendar'
+    get :semester_calendar, to: 'semester_calendars#show', as: 'search_semester_calendar'
     resources :posts
     get :pages, to: 'group_pages#index'
     get :profile, to: 'profiles#show'
@@ -94,6 +94,7 @@ Rails.application.routes.draw do
     post :test_welcome_message, to: 'groups#test_welcome_message'
     get :term_report, to: 'term_reports#show'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
+    get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
     post :renew_cache, to: 'cache_renewals#create'
   end

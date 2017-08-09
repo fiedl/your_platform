@@ -42,7 +42,7 @@ class CorporationScore < TermReports::ForCorporation
   end
 
   def semester_calendars
-    corporation.semester_calendars.where(year: term.year, term: term.to_enum)
+    corporation.semester_calendars.where(term_id: term.id)
   end
 
   def semester_calendar_pdfs

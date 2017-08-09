@@ -11,8 +11,4 @@ class Terms::Summer < Term
     "#{I18n.t(:summer_term)} #{year.to_s}"
   end
 
-  def to_enum
-    1
-  end
-
 end

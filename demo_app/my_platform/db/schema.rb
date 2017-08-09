@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170713234117) do
+ActiveRecord::Schema.define(version: 20170809152349) do
 
   create_table "activities", force: :cascade do |t|
     t.integer  "trackable_id",   limit: 4
@@ -445,10 +445,9 @@ ActiveRecord::Schema.define(version: 20170713234117) do
 
   create_table "semester_calendars", force: :cascade do |t|
     t.integer  "group_id",   limit: 4
-    t.integer  "year",       limit: 4
-    t.integer  "term",       limit: 4
     t.datetime "created_at",           null: false
     t.datetime "updated_at",           null: false
+    t.integer  "term_id",    limit: 4
   end
 
   create_table "settings", force: :cascade do |t|

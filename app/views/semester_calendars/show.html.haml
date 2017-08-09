@@ -3,24 +3,18 @@
 .col-sm-8.col-xs-12
   %h1.semester_calendar
     = current_title
-    - if can? :update, @semester_calendar
+    - if can? :update, semester_calendar
       .edit-semester-calendar.tool
-        = link_to edit_icon, edit_semester_calendar_path(@semester_calendar), class: 'btn btn-default', title: t(:edit)
-    - if can? :create_semester_calendar_for, @group
-      .new_semester_calendar.tool
-        = link_to group_semester_calendars_path(group_id: @group.id), class: 'btn btn-default', title: t(:new_semester_calendar) do
-          - # We don't create a new calendar here, but redirect to the index. Maybe somebody else
-          - # has created the calendar already; thus, this is to avoid duplication.
-          = "#{t(:new)} ..."
+        = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-default', title: t(:edit)
   %div
     %p.semester
-      = @semester_calendar.title(locale: current_user.locale)
-      %small
-        = surround "(", ")" do
-          = link_to "Anderes Semester?", group_semester_calendars_path(group_id: @group.id)
+      = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get' do
+        = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year)
+        = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
+        = submit_tag("OK")
 
     %ul.semester_calendar
-      - @semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
+      - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
         %li.month_name
           %strong
             = I18n.t('date.month_names')[month]
@@ -34,17 +28,15 @@
       .show_other_semester_calendars_links
         .show_semester_calendars_of_all_groups
           = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
-        .show_all_semesters
-          = link_to "Semesterprogramme anderer Semester anzeigen", group_semester_calendars_path(group_id: @group.id)
 
 .col-sm-4.col-xs-12
   %h1.semester_calendar_pdf PDF
   %div
-    = render partial: 'semester_calendars/pdf', locals: {semester_calendar: @semester_calendar}
+    = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
 
   %h1= t :offices
   %div
-    = render partial: 'semester_calendars/info_section', locals: {semester_calendar: @semester_calendar}
+    = render partial: 'semester_calendars/info_section', locals: {semester_calendar: semester_calendar}
 
 
   %h1= t :calendar_abo
