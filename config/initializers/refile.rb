@@ -1,4 +1,4 @@
-Refile.mount_point = 'refile'
+Refile.mount_point = '/refile'
 Refile.automount = false
 
 Refile.store = Refile::Backend::FileSystem.new(Rails.root.join("uploads/refile/store").to_s)
