@@ -60,7 +60,7 @@ class UserAccountsController < ApplicationController
 
     if @user_account.destroy
       respond_to do |format|
-        format.html { redirect_to :back, notice: t(:user_account_deleted)  }
+        format.html { redirect_back notice: t(:user_account_deleted)  }
         format.json { head :no_content }
       end
     end

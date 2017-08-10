@@ -85,7 +85,7 @@ concern :Structureable do
             direct: false).first)
           existing_link.make_direct
         else
-          self.child_groups << object unless self.child_groups.include? object
+          object.parent_groups << self unless self.child_groups.reload.include? object
         end
       elsif object.kind_of? Page
         self.child_pages << object unless self.child_pages.include? object

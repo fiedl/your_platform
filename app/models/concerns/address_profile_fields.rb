@@ -2,8 +2,8 @@ concern :AddressProfileFields do
 
   # Scope for profile fields that are postal addresses.
   #
-  def address_fields(reload = false)
-    self.id ? profile_fields(reload).where(type: 'ProfileFields::Address') : profile_fields.where('false')
+  def address_fields
+    self.id ? profile_fields.where(type: 'ProfileFields::Address') : profile_fields.where('false')
   end
 
   def address_fields_json
