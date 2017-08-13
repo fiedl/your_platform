@@ -131,6 +131,7 @@ Rails.application.routes.draw do
 
   namespace :structureables do
     namespace :sub_entries do
+      resources :pages
       resources :groups
     end
   end

@@ -14,7 +14,7 @@
   %ul.dropdown-menu
     - if can? :create_page_for, parent
       %li
-        = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
+        = link_to t(:page), structureables_sub_entries_pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
     - if can? :create_group_for, parent
       %li
         = link_to t(:group), structureables_sub_entries_groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
