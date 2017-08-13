@@ -18,4 +18,5 @@
 ActiveSupport::Inflector.inflections do |inflect|
   # https://stackoverflow.com/a/44437447/2066546
   inflect.irregular 'beta', 'betas'
+  inflect.irregular 'group_of_groups', 'groups_of_groups'
 end
