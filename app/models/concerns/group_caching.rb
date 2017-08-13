@@ -29,6 +29,9 @@ concern :GroupCaching do
 
     # GroupMapItem
     cache :map_item
+
+    # GroupSearch
+    cache :breadcrumb_titles
   end
 
   def fill_cache

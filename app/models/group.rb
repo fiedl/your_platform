@@ -33,6 +33,7 @@ class Group < ApplicationRecord
   include GroupEvents
   include GroupListExports
   include GroupMapItem
+  include GroupSearch
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
