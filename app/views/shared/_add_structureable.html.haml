@@ -17,6 +17,5 @@
         = link_to I18n.t(:page), pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
     - if can? :create_group_for, parent
       %li
-        = link_to I18n.t(:group), groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
-        
+        = link_to t(:group), structureables_sub_entries_groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
     = render partial: 'layouts/add_structureable_additions', locals: {parent: parent}

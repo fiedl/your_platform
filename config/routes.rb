@@ -129,6 +129,12 @@ Rails.application.routes.draw do
   resources :mailing_lists
   get :lists, to: 'mailing_lists#index'
 
+  namespace :structureables do
+    namespace :sub_entries do
+      resources :groups
+    end
+  end
+
   resources :projects
 
   namespace :activities do
