@@ -4,7 +4,7 @@ class Structureables::SubEntriesController < ApplicationController
   expose :parent, -> { find_parent }
 
   def destroy
-    authorize! :manage, parent
+    authorize! :update, parent
 
     link = object.links_as_child.find_by(ancestor_id: parent.id, ancestor_type: parent.class.base_class.name)
     link.destroy!
