@@ -1,0 +1,10 @@
+en:
+  add_sub_entry: Add sub entry
+  existing_group: Existing group
+  add_existing_group_as_sub_group: Add existing group as sub group
+
+  the_existing_group_is_now_being_added_as_sub_group_please_wait: The existing group is now being added as sub group. This may take some time. Please wait.
+
+  edit_vertical_navigation: Edit vertical navigation
+  vertical_nav_move_handle: Move entry within navigation
+  vertical_nav_remove_button: Remove entry from navigation

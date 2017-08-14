@@ -1,8 +1,8 @@
 $(document).on 'click', '.add-structureable a.add_existing_group', ->
-  $(this).closest('.add-structureable').find('.dropdown-toggle, .dropdown-menu').hide()
+  $(this).closest('.add-structureable').find('.dropdown-toggle, .dropdown-menu, .edit_vertical_nav').hide()
 
   form = "<form class=\"add_existing_group\" method=\"post\">
-    Bestehende Gruppe als Untergruppe hinzufügen:
+    #{I18n.t('add_existing_group_as_sub_group')}:
     <input type=\"text\" name=\"group_id\" id=\"group_id\" class=\"group_id\">
     <input type=\"hidden\" name=\"parent_gid\" class=\"parent_gid\">
     <input type=\"hidden\" name=\"authenticity_token\" class=\"authenticity_token\">
@@ -23,11 +23,12 @@ $(document).on 'click', '.add-structureable a.cancel', ->
   wrapper = $(this).closest('.add-structureable')
   wrapper.find('form.add_existing_group').remove()
   wrapper.find('a.dropdown-toggle').button('reset')
-  wrapper.find('.dropdown-toggle, .dropdown-menu').show().attr('style', "")
+  wrapper.find('.dropdown-toggle, .dropdown-menu, .edit_vertical_nav').show().attr('style', "")
   wrapper.find('a.dropdown-toggle').dropdown('toggle')
   false
 
 $(document).on 'submit', '.add-structureable form', ->
   $(this).find('input[type=submit]').hide()
   $(this).find('a.cancel').hide()
-  $(this).append("<div class=\"progress_message\">Die bestehende Gruppe wird nun als Untergruppe hinzugefügt. Für Gruppen mit vielen Mitgliedern kann das ein paar Minuten dauern. Bitte warten.</div>")
+  $(this).append("<div class=\"progress_message\">#{I18n.t('the_existing_group_is_now_being_added_as_sub_group_please_wait')}</div>")
+

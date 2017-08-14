@@ -1,6 +1,9 @@
 de:
   add_sub_entry: Unterpunkt hinzufügen
   existing_group: Bestehende Gruppe
+  add_existing_group_as_sub_group: Bestehende Gruppe als Untergruppe hinzufügen
+
+  the_existing_group_is_now_being_added_as_sub_group_please_wait: Die bestehende Gruppe wird nun als Untergruppe hinzugefügt. Für Gruppen mit vielen Mitgliedern kann das ein paar Minuten dauern. Bitte warten.
 
   edit_vertical_navigation: Vertikales Menü bearbeiten
   vertical_nav_move_handle: Eintrag im Menü verschieben

@@ -55,6 +55,7 @@ load_vertical_nav_configuration = ->
       first_child_li.before(li)
 
 $(document).ready ->
+  $('.edit_vertical_nav').remove() if $('#vertical_nav li.child').length == 0
   load_vertical_nav_configuration()
 
 
