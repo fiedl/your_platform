@@ -76,7 +76,7 @@ module MembershipMixins::ValidityRange
 
     # Validity Perspective
     # TODO: Allow :valid to include memberships that BECOME valid in the future.
-    scope :valid, -> { where("valid_from IS NULL OR valid_from <= ?", Time.zone.now).where("valid_to IS NULL OR valid_to >= ?", Time.zone.now) }
+    scope :valid, -> { where("valid_from IS NULL OR valid_from <= ?", Time.zone.now).where("valid_to IS NULL OR valid_to > ?", Time.zone.now) }
     scope :invalid, -> { with_invalid.where("valid_to < ?", Time.zone.now) }
     # scope :with_invalid  # This is defined as method below due to some issues.
     scope :only_valid, -> { valid }
@@ -89,7 +89,7 @@ module MembershipMixins::ValidityRange
     scope :with_past, -> { with_invalid }
     scope :now_and_past, -> { with_invalid }
     scope :now_and_in_the_past, -> { with_invalid }
-    scope :at_time, -> (time) { with_past.where("valid_from IS NULL OR valid_from <= ?", time).where("valid_to IS NULL OR valid_to >= ?", time) }
+    scope :at_time, -> (time) { with_past.where("valid_from IS NULL OR valid_from <= ?", time).where("valid_to IS NULL OR valid_to > ?", time) }
     scope :this_year, -> { with_invalid.where("valid_from >= ?", "#{Time.zone.now.year}-01-01 00:00:00") }
     scope :started_after, -> (time) { where('NOT valid_from IS NULL').where("valid_from >= ?", time) }
   end

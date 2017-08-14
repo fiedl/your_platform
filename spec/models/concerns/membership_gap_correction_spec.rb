@@ -35,6 +35,11 @@ describe MembershipGapCorrection do
       subject
       @membership2.reload.valid_from.should == @time2
     end
+
+    specify "at the cut point, there should by only one membership" do
+      subject
+      @user.memberships.direct.with_past.at_time(@time2).count.should == 1
+    end
   end
 
   describe "for corporations and status groups" do
