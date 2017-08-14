@@ -21,6 +21,6 @@
         = link_to t(:group), structureables_sub_entries_groups_path(parent_id: parent_id, parent_type: parent_type), method: :post, class: 'add_group'
       - if parent.kind_of?(Group) || parent.kind_of?(Page)
         %li
-          = link_to "#{t(:existing_group)} ...", '#', class: 'add_existing_group', data: {url: structureables_sub_entries_existing_groups_path, authenticity_token: form_authenticity_token}, class: 'add_existing_group'
+          = link_to "#{t(:existing_group)} ...", '#', class: 'add_existing_group', data: {url: structureables_sub_entries_existing_groups_path, authenticity_token: form_authenticity_token}
 
     = render partial: 'layouts/add_structureable_additions', locals: {parent: parent}
