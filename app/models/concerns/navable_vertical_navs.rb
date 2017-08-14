@@ -27,7 +27,7 @@ concern :NavableVerticalNavs do
   end
 
   def nav_configuration
-    settings.nav_configuration || []
+    (settings.nav_configuration if respond_to?(:settings)) || []
   end
 
   def nav_configuration=(navable_ids)
