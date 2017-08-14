@@ -47,11 +47,12 @@ save_vertical_nav_configuration = ->
 
 load_vertical_nav_configuration = ->
   nav_configuration = $('#vertical_nav').data('nav-configuration')
-  ul = $('#vertical_nav ul')
-  for id in nav_configuration.reverse()
-    first_child_li = ul.find('li.child:first')
-    li = $("a##{id}").closest('li')
-    first_child_li.before(li)
+  if nav_configuration?
+    ul = $('#vertical_nav ul')
+    for id in nav_configuration.reverse()
+      first_child_li = ul.find('li.child:first')
+      li = $("a##{id}").closest('li')
+      first_child_li.before(li)
 
 $(document).ready ->
   load_vertical_nav_configuration()

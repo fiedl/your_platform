@@ -1,4 +1,4 @@
-%span.vertical_nav.vertical_menu.sidebar-nav#vertical_nav{data: {new_menu_feature: can?(:use, :new_menu_feature) ? "true" : nil, nav_configuration: @navable.settings.nav_configuration}}
+%span.vertical_nav.vertical_menu.sidebar-nav#vertical_nav{data: {new_menu_feature: can?(:use, :new_menu_feature) ? "true" : nil, nav_configuration: @navable.nav_configuration}}
 
   %ul.nav.nav-pills.nav-stacked
     = render partial: 'layouts/vertical_nav_lis', object: @navable, as: :navable

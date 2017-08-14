@@ -5,7 +5,7 @@ class Api::V1::Navables::VerticalNavConfigurationController < ApplicationControl
   def update
     authorize! :manage, navable
 
-    navable.settings.nav_configuration = params[:nav_configuration]
+    navable.nav_configuration = params[:nav_configuration]
     render json: {}, status: :ok
   end
 
