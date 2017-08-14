@@ -130,6 +130,7 @@ Rails.application.routes.draw do
   get :lists, to: 'mailing_lists#index'
 
   namespace :structureables do
+    delete 'sub_entries/destroy', to: 'sub_entries#destroy'
     namespace :sub_entries do
       resources :existing_groups
       resources :pages
