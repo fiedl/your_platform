@@ -35,7 +35,4 @@
           = link_to t(:show_all_events), events_path
       - if can?(:use, :semester_calendars) && can?(:index, SemesterCalendar) and not group
         .show_semester_calendars
-          = link_to t(:show_semester_calendars), semester_calendars_path
-          - if current_user.primarily_administrated_corporation && can?(:create, SemesterCalendar)
-            |
-            = link_to t(:edit_semester_calendar), group_current_semester_calendar_path(current_user.primarily_administrated_corporation)
+          = link_to t(:semester_calendar), group_search_semester_calendar_path(group_id: current_user.primary_corporation)

@@ -7,15 +7,19 @@
 - #
 
 %div.btn-group.add-structureable
-  %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
+  %a.btn.btn-default.dropdown-toggle{title: t(:add_sub_entry), href: '#', data: {toggle: 'dropdown'}}
     = icon :plus
-    = I18n.t(:add)
     %span.caret
   %ul.dropdown-menu
+    %li.dropdown-header= "#{t :add_sub_entry}:"
     - if can? :create_page_for, parent
       %li
         = link_to t(:page), structureables_sub_entries_pages_path(parent_id: parent_id, parent_type: parent_type), method: :post
     - if can? :create_group_for, parent
       %li
         = link_to t(:group), structureables_sub_entries_groups_path(parent_id: parent_id, parent_type: parent_type), method: :post
+      - if parent.kind_of?(Group) || parent.kind_of?(Page)
+        %li
+          = link_to "#{t(:existing_group)} ...", '#', class: 'add_existing_group', data: {url: structureables_sub_entries_existing_groups_path, authenticity_token: form_authenticity_token}
+
     = render partial: 'layouts/add_structureable_additions', locals: {parent: parent}
