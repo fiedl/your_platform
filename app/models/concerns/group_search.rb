@@ -28,7 +28,7 @@ concern :GroupSearch do
           false
         else
           phrase = group.breadcrumb_titles.join(" ")
-          if query_words.all? { |word| phrase.include? word }
+          if query_words.all? { |word| phrase.downcase.include? word.downcase }
             count += 1
             true
           else
