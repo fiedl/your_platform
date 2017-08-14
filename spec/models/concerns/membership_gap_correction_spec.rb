@@ -21,24 +21,24 @@ describe MembershipGapCorrection do
     subject { Membership.apply_gap_correction(@user, @group) }
 
     it "should preserve the valid_from of the left-most membership" do
-      @membership1.reload.valid_from.should == @time1
+      @membership1.reload.valid_from.should be_the_same_time_as @time1
       subject
-      @membership1.reload.valid_from.should == @time1
+      @membership1.reload.valid_from.should be_the_same_time_as @time1
     end
     it "should correct the valid_to of the left-most membership" do
-      @membership1.valid_to.should_not == @time2
+      @membership1.valid_to.should == nil
       subject
-      @membership1.reload.valid_to.should == @time2
+      @membership1.reload.valid_to.should be_the_same_time_as @time2
     end
     it "should preserve the valid_from of middle memberships" do
-      @membership2.reload.valid_from.should == @time2
+      @membership2.reload.valid_from.should be_the_same_time_as @time2
       subject
-      @membership2.reload.valid_from.should == @time2
+      @membership2.reload.valid_from.should be_the_same_time_as @time2
     end
 
     specify "at the cut point, there should by only one membership" do
       subject
-      @user.memberships.direct.with_past.at_time(@time2).count.should == 1
+      @user.memberships.direct.with_past.at_time(@time2).count.should be_the_same_time_as 1
     end
   end
 
@@ -57,19 +57,19 @@ describe MembershipGapCorrection do
       subject { @membership2.apply_gap_correction }
 
       it "should preserve the valid_from of the left-most membership" do
-        @membership1.reload.valid_from.should == @time1
+        @membership1.reload.valid_from.should be_the_same_time_as @time1
         subject
-        @membership1.reload.valid_from.should == @time1
+        @membership1.reload.valid_from.should be_the_same_time_as @time1
       end
       it "should correct the valid_to of the left-most membership" do
-        @membership1.valid_to.should_not == @time2
+        @membership1.valid_to.should == nil
         subject
-        @membership1.reload.valid_to.should == @time2
+        @membership1.reload.valid_to.should be_the_same_time_as @time2
       end
       it "should preserve the valid_from of middle memberships" do
-        @membership2.reload.valid_from.should == @time2
+        @membership2.reload.valid_from.should be_the_same_time_as @time2
         subject
-        @membership2.reload.valid_from.should == @time2
+        @membership2.reload.valid_from.should be_the_same_time_as @time2
       end
     end
   end
