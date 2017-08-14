@@ -301,6 +301,9 @@ Rails.application.routes.draw do
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
       end
+      namespace :navables do
+        put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
+      end
       get :search_groups, to: 'search_groups#index'
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}
