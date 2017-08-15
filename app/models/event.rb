@@ -1,5 +1,8 @@
 class Event < ActiveRecord::Base
 
+  validates :start_at, presence: true
+  before_validation -> { self.start_at ||= self.created_at || Time.zone.now }
+
   is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
 
   has_many :attachments, as: :parent, dependent: :destroy
