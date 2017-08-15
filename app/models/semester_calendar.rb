@@ -23,7 +23,7 @@ class SemesterCalendar < ActiveRecord::Base
   # has_many :events, -> (semester_calendar) { where(start_at: semester_calendar.current_terms_time_range) }, through: :group, source: :descendant_events
   # accepts_nested_attributes_for :events
 
-  scope :current, -> { where(term_id: Term.current.pluck(:id) ) }
+  scope :current, -> { where(term_id: Term.current.map(&:id)) }
 
   def current?
     term.time_range.cover? Time.zone.now
