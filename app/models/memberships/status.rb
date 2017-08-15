@@ -5,6 +5,8 @@
 #
 class Memberships::Status < Membership
 
+  after_save :apply_gap_correction
+
   include ::StatusMembershipFinders
 
   def model_name
