@@ -5,9 +5,9 @@ feature "Public api for events" do
   background do
     @group = create :group
 
-    @local_event = @group.events.create name: "Local event", publish_on_local_website: true
-    @global_event = @group.events.create name: "Global event", publish_on_global_website: true
-    @private_event = @group.events.create name: "Private event"
+    @local_event = @group.events.create name: "Local event", publish_on_local_website: true, start_at: 1.year.ago
+    @global_event = @group.events.create name: "Global event", publish_on_global_website: true, start_at: 1.year.ago
+    @private_event = @group.events.create name: "Private event", start_at: 1.year.ago
   end
 
   scenario "GET /api/v1/public/events" do
