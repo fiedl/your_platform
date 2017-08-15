@@ -35,11 +35,32 @@ describe MembershipGapCorrection do
       subject
       @membership2.reload.valid_from.should be_the_same_time_as @time2
     end
+    it "should preserve the valid_to of the right membership" do
+      @membership2.reload.valid_to.should be_the_same_time_as @time3
+      subject
+      @membership2.reload.valid_to.should be_the_same_time_as @time3
+    end
 
     specify "at the cut point, there should by only one membership" do
       subject
       @user.memberships.direct.with_past.at_time(@time2).count.should be_the_same_time_as 1
     end
+
+    describe "for nested group structures" do
+      before do
+        @middle_group = @group.child_groups.create name: "This group is inbetween group and status 3"
+        @status3 = @middle_group.child_groups.create name: "Status 3"
+        @time4 = 2.days.ago
+        @membership3 = @status3.assign_user @user, at: @time4
+      end
+
+      it "should consider the nested status group when applying the gap correction" do
+        @membership2.reload.valid_to.should be_the_same_time_as @time3
+        subject
+        @membership2.reload.valid_to.should be_the_same_time_as @time4
+      end
+    end
+
   end
 
   describe "for corporations and status groups" do
@@ -72,6 +93,21 @@ describe MembershipGapCorrection do
         @membership2.reload.valid_from.should be_the_same_time_as @time2
       end
     end
+
+    describe "for being a status-group officer" do
+      before do
+        @status3 = @corporation.status_groups[2]
+        @status3_office = @status3.create_officer_group name: "Secretary of status 3"
+        @status3_office.assign_user @user, at: 4.days.ago
+      end
+
+      it "should not consider the indirect membership of status3 as the user is only officer there, no regular member" do
+        @membership2.reload.valid_to.should be_the_same_time_as @time3
+        subject
+        @membership2.reload.valid_to.should be_the_same_time_as @time3
+      end
+    end
+
   end
 
 end
