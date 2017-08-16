@@ -299,9 +299,9 @@ describe Group do
         @object_to_add = @subgroup
       end
       it "should add the group as a subgroup" do
-        @group.child_groups.should_not include @subgroup
+        @group.child_groups.reload.should_not include @subgroup
         subject
-        @group.child_groups.should include @subgroup
+        @group.child_groups.reload.should include @subgroup
       end
     end
   end

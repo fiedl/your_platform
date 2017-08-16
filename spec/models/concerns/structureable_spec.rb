@@ -131,7 +131,7 @@ describe Structureable do
 
         it "should add the group as child group of the parent group" do
           subject
-          @parent.child_groups.should include @child
+          @parent.child_groups.reload.should include @child
         end
 
         describe "if they have a common user" do
@@ -142,7 +142,7 @@ describe Structureable do
           end
           it "should add the group as child group of the parent group" do
             subject
-            @parent.child_groups.should include @child
+            @parent.child_groups.reload.should include @child
           end
         end
 
@@ -165,7 +165,7 @@ describe Structureable do
           end
           it "should add the group as child group of the parent group" do
             subject
-            @parent.child_groups.should include @child
+            @parent.child_groups.reload.should include @child
           end
         end
 
