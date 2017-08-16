@@ -15,7 +15,8 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   if OmniAuthProvider.google.available?
     provider :google_oauth2,
       OmniAuthProvider.google.app_id,
-      OmniAuthProvider.google.app_secret
+      OmniAuthProvider.google.app_secret,
+      verify_iss: false # https://stackoverflow.com/a/45292982/2066546
   end
   if OmniAuthProvider.facebook.available?
     provider :facebook,
