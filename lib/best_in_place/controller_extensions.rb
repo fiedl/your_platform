@@ -14,14 +14,21 @@ module BestInPlace
     def respond_bip_ok(obj, options = {})
       param_key = options[:param] ||= BestInPlace::Utils.object_to_key(obj)
 
-      updating_attr = params[param_key].keys.first
-
-      if renderer = BestInPlace::DisplayMethods.lookup(obj.class, updating_attr)
-        render json: renderer.render_json(obj)
+      if updating_attr = params[param_key].keys.first
+        if renderer = BestInPlace::DisplayMethods.lookup(obj.class, updating_attr)
+          render json: renderer.render_json(obj)
+        else
+          render json: {
+            display_as: obj.send(updating_attr)
+            # object: obj.as_json
+          }
+        end
       else
         render json: {
-          display_as: obj.send(updating_attr)
-          # object: obj.as_json
+          warning: "No updating attribute found.",
+          param_key: param_key,
+          params: params,
+          object: obj.as_json
         }
       end
     end
