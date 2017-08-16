@@ -46,7 +46,7 @@ class BlogPostsController < PagesController
   private
 
   def blog_post_params
-    params[:blog_post].try(:permit, :content, :title, :teaser_text, :author, :tag_list, :teaser_image_url, :archived) || {}
+    params[:blog_post].try(:permit, :content, :title, :teaser_text, :author, :author_title, :author_user_id, :tag_list, :teaser_image_url, :archived, :published_at, :localized_published_at) || {}
   end
 
   def set_inheritance_instance_variable
