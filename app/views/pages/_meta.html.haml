@@ -4,14 +4,9 @@
 
 %ul.box_meta
   - if page.created_at
-    %li.created_at.page_created_at
+    %li.published_at.page_published_at
       = icon :calendar
-      = localize(page.created_at)
-  - if (not teaser) && page.updated_at && page.updated_at > page.created_at + 1.hour
-    %li.updated_at.page_updated_at
-      = icon :edit
-      = t(:edited_at)
-      = localize(page.updated_at)
+      = localize(page.published_at)
   - if (not teaser) && page.author
     %li.author.page_author
       = icon :user
