@@ -6,7 +6,7 @@
   - if page.created_at
     %li.published_at.page_published_at
       = icon :calendar
-      = localize(page.published_at)
+      = page.published_at ? localize(page.published_at) : t(:unpublished_draft)
   - if (not teaser) && page.author
     %li.author.page_author
       = icon :user

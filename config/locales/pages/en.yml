@@ -26,6 +26,11 @@ en:
   the_page_options_may_be_changed_later_on_the_page_settings_page: The options can be changed later on the settings page.
   decision_help: Help me decide.
 
+  publish_page: Publish page
+  publish_page_which_is_draft_now: Publish page. Currently, this is an unpublished draft.
+  published_at: Published at
+  unpublished_draft: Unpublished draft
+
   file: 'File'
   helpers:
     submit:
