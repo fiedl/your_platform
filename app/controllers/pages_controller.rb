@@ -127,6 +127,7 @@ private
       params[:show_in_menu] = false
       params[:show_as_teaser_box] = false
     end
+    params[:box_configuration] = params[:box_configuration].to_h if params[:box_configuration]
 
     handle_checkbox_param :show_in_menu
     handle_checkbox_param :show_as_teaser_box
