@@ -13,13 +13,25 @@ class OfficerGroupsController < GroupsController
     @group = @scope.officers_parent.child_groups.create(officer_group_params)
     @group.update_attribute :type, 'OfficerGroup'
 
-    redirect_to :back, change: 'officers_table'
+    redirect_back(fallback_location: group_members_path(group_id: @group))
   end
+
+  def update
+    @group = Group.find params[:id]
+    authorize! :update, @group
+
+    @group.update_attributes! officer_group_params
+
+    respond_to do |format|
+      format.json { respond_with_bip @group.reload }
+    end
+  end
+
 
   private
 
   def officer_group_params
-    params.require(:officer_group).permit(:name)
+    params.require(:officer_group).permit(:name, :direct_members_titles_string)
   end
 
 end

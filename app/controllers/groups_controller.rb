@@ -138,7 +138,7 @@ class GroupsController < ApplicationController
       params[:group][:body] = html2markdown params[:group][:body]
     end
 
-    @group.update_attributes(group_params)
+    @group.update_attributes!(group_params)
     respond_to do |format|
       format.json { respond_with_bip @group.reload }
     end
