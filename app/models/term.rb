@@ -15,6 +15,10 @@ class Term < ApplicationRecord
     start_at..end_at
   end
 
+  def officer_valuation_date
+    end_at - 20.days
+  end
+
   def current?
     time_range.cover? Time.zone.now
   end

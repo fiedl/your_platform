@@ -43,6 +43,7 @@ de:
   publish_page: Seite veröffentlichen
   publish_page_which_is_draft_now: Seite veröffentlichen. Im Moment ist sie ein unveröffentlichter Entwurf.
   published_at: Veröffentlicht am
+  unpublished_draft: Unveröffentlichter Entwurf
 
   file: 'Datei'
   helpers:

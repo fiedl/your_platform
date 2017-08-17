@@ -8,10 +8,10 @@
       %span.caret
     %ul.dropdown-menu
       %li
-        = link_to groups_groups_of_group_path(group, format: 'xls') do
+        = link_to groups_group_of_groups_path(group, format: 'xls') do
           = xls_icon
           = t(:excel_list)
-        = link_to groups_groups_of_group_path(group, format: 'csv') do
+        = link_to groups_group_of_groups_path(group, format: 'csv') do
           = csv_icon
           = t(:csv_list)
 %div

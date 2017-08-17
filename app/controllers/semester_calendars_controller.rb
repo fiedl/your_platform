@@ -14,105 +14,74 @@
 #      12 Dez |
 #
 class SemesterCalendarsController < ApplicationController
-  before_action :load_resource, except: [:index, :new]
   after_action :log_public_activity_for_semester_calendar, only: [:update]
 
-  def show
-    authorize! :read, @group
-    authorize! :read, @semester_calendar
+  include CurrentTerm
 
-    set_current_navable @group
-    set_current_title "#{@group.title}: #{t(:semester_calendar)}"
+  expose :semester_calendar, -> {
+    if params[:id] || params[:semester_calendar_id]
+      SemesterCalendar.find (params[:id] || params[:semester_calendar_id])
+    elsif term && corporation
+      SemesterCalendar.by_corporation_and_term corporation, term
+    elsif corporation
+      SemesterCalendar.by_corporation_and_term corporation, Term.current.first
+    end
+  }
+
+  expose :termable, -> { semester_calendar }
+
+
+  def show
+    authorize! :read, group
+    authorize! :read, semester_calendar
+
+    set_current_navable group
+    set_current_title "#{group.title}: #{t(:semester_calendar)}"
     set_current_tab :events
-    set_current_activity :is_looking_at_semester_calendar, @semester_calendar
+    set_current_activity :is_looking_at_semester_calendar, semester_calendar
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_content
   end
 
-  def show_current
-    authorize! :read, @group
-
-    if @semester_calendar = @group.semester_calendars.current.last
-      redirect_to @semester_calendar
-    else
-      redirect_to group_semester_calendars_path(@group)
-    end
-  end
-
-  def new
-    authorize! :create, SemesterCalendar
-
-    @new_semester_calendar = SemesterCalendar.new(year: Time.zone.now.year, term: SemesterCalendar.current_term)
-    @corporations = Corporation.all.select do |corporation|
-      can? :create_semester_calendar_for, corporation
-    end
-
-    set_current_title t(:new_semester_calendar)
-    set_current_breadcrumbs [
-      {title: t(:semester_calendars), path: semester_calendars_path},
-      {title: current_title}
-    ]
-  end
-
   def edit
-    authorize! :read, @group
-    authorize! :create_event, @group
-    authorize! :update, @semester_calendar
+    authorize! :read, group
+    authorize! :create_event, group
+    authorize! :update, semester_calendar
 
-    set_current_navable @group
-    set_current_title "#{@group.title}: #{t(:semester_calendar)}"
-    set_current_activity :is_editing_a_semester_calendar, @semester_calendar
+    set_current_navable group
+    set_current_title "#{group.title}: #{t(:semester_calendar)}"
+    set_current_activity :is_editing_a_semester_calendar, semester_calendar
     set_current_access :signed_in
     set_current_access_text :only_officers_can_edit_this_content
   end
 
   def update
-    authorize! :read, @group
-    authorize! :create_event, @group
-    authorize! :update, @semester_calendar
+    authorize! :read, group
+    authorize! :create_event, group
+    authorize! :update, semester_calendar
 
-    @semester_calendar.update_attributes(semester_calendar_params) if semester_calendar_params
-    redirect_to group_semester_calendar_path(group_id: @group.id, id: @semester_calendar.id)
-  end
-
-  def update_term_and_year
-    authorize! :read, @group
-    authorize! :create_event, @group
-    authorize! :update, @semester_calendar
-
-    @semester_calendar.update_attributes(semester_calendar_params)
-    @semester_calendar.reload
-
-    # Then, the javascript in app/views/semester_calendars/update_term_and_year.js
-    # is executed.
+    semester_calendar.update_attributes(semester_calendar_params) if semester_calendar_params
+    redirect_to group_semester_calendar_path(group_id: group.id, id: semester_calendar.id)
   end
 
   def index
-    if params[:group_id]
-      @group = Group.find(params[:group_id])
+    if group
+      authorize! :read, group
+      @semester_calendars = group.semester_calendars.order(:year, 'term desc')
 
-      authorize! :read, @group
-      @semester_calendars = @group.semester_calendars.order(:year, 'term desc')
-
-      set_current_navable @group
-      set_current_title "#{I18n.t(:semester_calendars)} #{@group.title}"
+      set_current_navable group
+      set_current_title "#{I18n.t(:semester_calendars)} #{group.title}"
       set_current_tab :events
     else
       authorize! :index, SemesterCalendar
 
-      params[:year] ||= params[:semester_calendar].try(:[], :year) || Time.zone.now.year
-      params[:term] ||= params[:semester_calendar].try(:[], :term) || SemesterCalendar.current_term
-
-      @semester_calendars = SemesterCalendar.all
-      @semester_calendars = @semester_calendars.where(year: params[:year]) if params[:year]
-      @semester_calendars = @semester_calendars.where(term: SemesterCalendar.terms[params[:term]]) if params[:term]
-      @semester_calendars = @semester_calendars.includes(:group).order('groups.name asc')
+      @semester_calendars = SemesterCalendar.where(term_id: term.id).includes(:group).order('groups.name asc')
 
       if current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
       end
 
-      @public_events = SemesterCalendar.all_public_events_for(year: params[:year], term: params[:term]).order(:start_at)
+      @public_events = Event.where(publish_on_global_website: true, start_at: term.time_range)
 
       set_current_title t(:semester_calendars)
       set_current_breadcrumbs [
@@ -123,18 +92,6 @@ class SemesterCalendarsController < ApplicationController
       set_current_access :signed_in
       set_current_access_text :all_signed_in_users_can_read_this_content
     end
-  end
-
-  def create
-    authorize! :create_semester_calendar_for, @group
-
-    attributes = semester_calendar_params
-    attributes[:year] ||= Time.zone.now.year
-    attributes[:term] ||= SemesterCalendar.current_term
-
-    @semester_calendar = @group.semester_calendars.new(attributes)
-    @semester_calendar.save!
-    redirect_to edit_semester_calendar_path(@semester_calendar)
   end
 
   def destroy
@@ -152,20 +109,8 @@ class SemesterCalendarsController < ApplicationController
 
   private
 
-  def load_resource
-    params[:group_id] ||= params[:semester_calendar].try(:[], :group_id)
-    if params[:group_id]
-      @group = Group.find params[:group_id]
-      @semester_calendar = @group.semester_calendars.find(params[:id]) if params[:id]
-      @semester_calendar ||= @group.semester_calendars.last
-    else
-      @semester_calendar = SemesterCalendar.find params[:id]
-      @group = @semester_calendar.group
-    end
-  end
-
   def semester_calendar_params
-    if (@semester_calendar and can?(:update, @semester_calendar)) or (@group and can?(:create_semester_calendar_for, @group))
+    if (semester_calendar and can?(:update, semester_calendar)) or (group and can?(:create_semester_calendar_for, group))
       if params[:semester_calendar]
         params.require(:semester_calendar).permit(:year, :term, events_attributes: [:id, :name, :location, :start_at, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :contact_person_id, :_destroy])
       else
@@ -176,7 +121,7 @@ class SemesterCalendarsController < ApplicationController
 
 
   def log_public_activity_for_semester_calendar
-    @semester_calendar.events.each do |event|
+    semester_calendar.events.each do |event|
       PublicActivity::Activity.create(
         trackable: event,
         key: "edit event via semester calendar",
@@ -188,6 +133,5 @@ class SemesterCalendarsController < ApplicationController
       )
     end
   end
-
 
 end

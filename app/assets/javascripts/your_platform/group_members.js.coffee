@@ -1,5 +1,5 @@
 $(document).on 'change keyup paste', '.dataTables_filter input', ->
-  if $('.google_maps')
+  if $('.google_maps').length > 0
     $('.google_maps').data('GoogleMap').reload_markers()
 
 $(document).ready ->

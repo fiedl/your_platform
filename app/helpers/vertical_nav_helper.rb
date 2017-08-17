@@ -5,7 +5,8 @@ module VerticalNavHelper
   end
 
   def link_to_navable(title, navable)
-    link_to(title, current_tab_path(navable), data: {
+    link_to(title, current_tab_path(navable), id: "navable-#{navable.class.base_class.name}-#{navable.id}", class: 'navable', data: {
+      navable_gid: navable.to_global_id.to_s,
       vertical_nav_path: vertical_nav_path(navable_type: navable.class.base_class.name, navable_id: navable.id),
       # corporation_name: (navable.corporation.try(:name) if navable.respond_to?(:corporation))
       page_id: (navable.id if navable.kind_of?(Page))

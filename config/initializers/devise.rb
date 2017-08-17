@@ -237,4 +237,12 @@ Devise.setup do |config|
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = "/my_engine/users/auth"
+
+  # We need to specify the masquerade resource since updating
+  # to masquerade 0.5.3. See also: https://trello.com/c/BiFIeBGq/1166-fix.
+  # https://github.com/oivoodoo/devise_masquerade/commit/0b48a69b644c3
+  config.masquerading_resource_name = :user_account
+  config.masquerading_resource_class = UserAccount
+  config.masqueraded_resource_name = :user_account
+  config.masqueraded_resource_class = UserAccount
 end

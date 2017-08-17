@@ -28,7 +28,7 @@ class Group < ApplicationRecord
   include GroupListExports
   include GroupMapItem
   include HasProfile
-
+  include GroupSearch
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:

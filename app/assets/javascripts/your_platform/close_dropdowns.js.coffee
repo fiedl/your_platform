@@ -13,6 +13,10 @@ $(document).on 'click', '.dropdown-menu * a', (event) ->
     # The download is started by the browser in parallel. There is no
     # need to deactivate the button.
 
+  else if $(this).closest('.btn-group').hasClass('add-structureable') && $(this).hasClass('add_existing_group')
+    # Nothing to do here. This is handled by
+    # add_structureable_tools.coffee.
+
   else if $(this).closest('.btn-group').hasClass("workflow_triggers")
     $('.workflow_triggers > .btn').each ->
       lock_button_and_show_loading $(this)

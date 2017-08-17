@@ -37,7 +37,8 @@ class Api::V1::Public::EventsController < Api::V1::PublicController
       year = DateTime.new(params[:year].to_i)
       @events = @events.where(start_at: year.beginning_of_year..year.end_of_year)
     elsif params[:year] && params[:term]
-      @events = @events.where(start_at: SemesterCalendar.new(year: params[:year], term: params[:term]).current_terms_time_range)
+      type = (params[:term] == 'summer_term') ? 'Terms::Summer' : 'Terms::Winter'
+      @events = @events.where(start_at: Term.by_year_and_type(params[:year], type).time_range)
     elsif !params[:year] && params[:term]
       raise ActionController::ParameterMissing, 'No year given'
     end

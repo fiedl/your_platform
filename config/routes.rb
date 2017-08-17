@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   resources :nav_nodes
 
   # Users should be allowed to change their password(update registration), but not to sign up(create registration)
-  devise_for :user_accounts, controllers: {sessions: "sessions"}, :skip => [:registrations]
+  devise_for :user_accounts, controllers: {sessions: "sessions", masquerades: 'user_account_masquerades'}, :skip => [:registrations]
   devise_scope :user_account do
     get 'sign_in' => 'sessions#new', as: :sign_in
     delete 'sign_out' => 'sessions#destroy', as: :sign_out
@@ -59,6 +59,7 @@ Rails.application.routes.draw do
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
     get :posts, to: 'user_posts#index'
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
+    post :renew_cache, to: 'cache_renewals#create'
   end
 
   get :settings, to: 'user_settings#index'
@@ -77,7 +78,7 @@ Rails.application.routes.draw do
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :semester_calendars
-    get :semester_calendar, to: 'semester_calendars#show_current', as: 'current_semester_calendar'
+    get :semester_calendar, to: 'semester_calendars#show', as: 'search_semester_calendar'
     resources :posts
     get :pages, to: 'group_pages#index'
     get :profile, to: 'profiles#show'
@@ -93,7 +94,9 @@ Rails.application.routes.draw do
     post :test_welcome_message, to: 'groups#test_welcome_message'
     get :term_report, to: 'term_reports#show'
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
+    get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
+    post :renew_cache, to: 'cache_renewals#create'
   end
   get :my_groups, to: 'groups#index_mine'
 
@@ -116,6 +119,7 @@ Rails.application.routes.draw do
     get :permalinks, to: 'permalinks#index'
     get :settings, to: 'page_settings#index'
     resources :publications, only: [:create], controller: :page_publications
+    post :renew_cache, to: 'cache_renewals#create'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
@@ -124,6 +128,15 @@ Rails.application.routes.draw do
 
   resources :mailing_lists
   get :lists, to: 'mailing_lists#index'
+
+  namespace :structureables do
+    delete 'sub_entries/destroy', to: 'sub_entries#destroy'
+    namespace :sub_entries do
+      resources :existing_groups
+      resources :pages
+      resources :groups
+    end
+  end
 
   resources :projects
 
@@ -171,6 +184,7 @@ Rails.application.routes.draw do
     delete :leave, to: 'events#leave'
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
     get :attachments, to: 'attachments#index'
+    post :renew_cache, to: 'cache_renewals#create'
   end
   resources :semester_calendars do
     member do
@@ -284,6 +298,11 @@ Rails.application.routes.draw do
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
       end
+      resources :memberships
+      namespace :navables do
+        put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
+      end
+      get :search_groups, to: 'search_groups#index'
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}
     end

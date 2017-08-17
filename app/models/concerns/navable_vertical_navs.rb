@@ -26,4 +26,12 @@ concern :NavableVerticalNavs do
     nav_node.nav_title
   end
 
+  def nav_configuration
+    (settings.nav_configuration if respond_to?(:settings)) || []
+  end
+
+  def nav_configuration=(navable_ids)
+    settings.nav_configuration = navable_ids
+  end
+
 end

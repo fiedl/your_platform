@@ -1,7 +1,9 @@
 class Event < ApplicationRecord
 
-  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
+  validates :start_at, presence: true
+  before_validation -> { self.start_at ||= self.created_at || Time.zone.now }
 
+  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
   has_many :attachments, as: :parent, dependent: :destroy
 
   include Structureable

@@ -1,24 +1,6 @@
 class TermReportsController < ApplicationController
+  include CurrentTerm
 
-  # https://railscasts.com/episodes/259-decent-exposure
-  #
-  expose :term, -> {
-    if params[:year] && params[:term_type]
-      Term.by_year_and_type params[:year], params[:term_type]
-    elsif params[:term_id]
-      Term.find params[:term_id]
-    else
-      Term.current.first
-    end
-  }
-  expose :group, -> {
-    if params[:group_id]
-      Group.find params[:group_id]
-    else
-      term_report.group
-    end
-  }
-  expose :corporation, -> { group if group.kind_of? Corporation }
   expose :term_report, -> {
     if params[:id] || params[:term_report_id]
       TermReport.find (params[:id] || params[:term_report_id])
@@ -28,6 +10,7 @@ class TermReportsController < ApplicationController
       TermReports::ForCorporation.by_corporation_and_term corporation, Term.current.first
     end
   }
+  expose :termable, -> { term_report }
 
   def show
     authorize! :read, term_report

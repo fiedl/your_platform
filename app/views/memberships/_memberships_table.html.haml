@@ -24,7 +24,7 @@
       %th Löschen
   %tbody
     - memberships.each do |membership|
-      %tr{class: ((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid")}
+      %tr{class: [((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid"), "membership_#{membership.id}"].join(" ")}
         %td.copy-to-clipboard{title: "Membership.now_and_in_the_past.find(#{membership.id})"}= membership.id
         %td
           - if user

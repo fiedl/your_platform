@@ -9,6 +9,8 @@
         = icon :calendar
         .hidden-xs
           Kalender-Export
+    - if can? :renew_cache, @event
+      .tool.renew_cache= renew_cache_button(@event)
 %div
   = render partial: 'events/event_details'
 

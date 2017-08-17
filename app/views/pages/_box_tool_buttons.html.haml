@@ -15,12 +15,15 @@
     .do_not_show_in_edit_mode.shown_on_box_header_hover
       = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)
 
-- if can? :manage, page
   .attachment_tools.tool
     .shown_on_box_header_hover.do_not_show_in_edit_mode
       = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
 
-- if can? :manage, page
   .page_settings_tool.tool
     .shown_on_box_header_hover.do_not_show_in_edit_mode
       = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
+
+- if can? :renew_cache, page
+  .tool.renew_cache
+    .shown_on_box_header_hover.do_not_show_in_edit_mode
+      = renew_cache_button(page)

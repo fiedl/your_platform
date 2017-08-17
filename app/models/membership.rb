@@ -18,6 +18,7 @@ class Membership < DagLink
 
 
   include MembershipCreator
+  include MembershipGapCorrection
 
   def self.logger
     # http://stackoverflow.com/a/337971/2066546

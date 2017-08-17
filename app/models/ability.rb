@@ -457,6 +457,11 @@ class Ability
       project.group.members.include? user
     end
 
+    # Renew caches
+    can :renew_cache, [User, Group, Page, Event] do |obj|
+      can? :read, obj
+    end
+
     # Betas
     # All users can see what betas we have.
     can :read, Beta

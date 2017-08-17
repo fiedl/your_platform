@@ -71,8 +71,8 @@ concern :GroupMemberships do
     # The memberships are removed using the standard methods, which means that the memberships
     # are only marked as deleted. See: acts_as_paranoid_dag gem.
     #
-    def direct_members_titles_string=( titles_string )
-      new_members_titles = titles_string.split( "," )
+    def direct_members_titles_string=(titles_string)
+      new_members_titles = titles_string.to_s.split(",")
       new_members = new_members_titles.collect do |title|
         u = User.find_by_title( title.strip )
         self.errors.add :direct_member_titles_string, 'user not found: #{title}' unless u

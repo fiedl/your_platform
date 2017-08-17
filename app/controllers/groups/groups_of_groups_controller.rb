@@ -5,7 +5,9 @@ class Groups::GroupsOfGroupsController < ApplicationController
   def show
     authorize! :read, group
 
+    set_current_navable group
     set_current_title group.title
+    @hide_vertical_nav = true
 
     respond_to do |format|
       format.html

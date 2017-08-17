@@ -5,7 +5,7 @@ class TermReports::ForCorporation < TermReport
   end
 
   def semester_calendar
-    corporation.semester_calendars.find_by year: term.year, term: term.to_enum
+    corporation.semester_calendars.find_by term_id: term.id
   end
 
   def fill_info

@@ -21,7 +21,7 @@ feature "Pages" do
 
     visit group_members_path(@group)
     within '#vertical_nav' do
-      click_on :add
+      find('.add_to_vertical_nav').click
       click_on :page
     end
 

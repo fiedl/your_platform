@@ -1,5 +1,9 @@
 module GroupsHelper
 
+  def group_select_field(key, default_group = nil)
+    text_field_tag key, default_group.try(:id), class: 'group_id'
+  end
+
   def groups_of_user_table(user, options = {require_post_ability: false})
     content_tag :table, :class => "user_groups" do
       content_tag :tr do
