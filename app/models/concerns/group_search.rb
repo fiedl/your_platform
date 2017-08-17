@@ -3,8 +3,6 @@ concern :GroupSearch do
 
     def search(query, options = {})
       limit = options[:limit] || 10000
-      # TODO: Rails 5
-      # search_by_name(query).or(search_by_extensive_name(query))
       (search_by_name(query).limit(limit) + search_by_breadcrumbs(query, limit: limit)).uniq.first(limit)
     end
 
