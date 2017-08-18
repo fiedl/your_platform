@@ -38,10 +38,10 @@ class UserAccountsController < ApplicationController
 
         @user.send_welcome_email
 
-        format.html { redirect_to :back, notice: t(:user_account_created) }
+        format.html { redirect_back fallback_location: user_path(@user), notice: t(:user_account_created) }
         format.json { render json: @user_account, status: :created, location: @user_account }
       else
-        format.html { redirect_to :back, flash: {error: @user_account.errors.full_messages.join(", ")} }
+        format.html { redirect_back fallback_location: user_path(@user), flash: {error: @user_account.errors.full_messages.join(", ")} }
         format.json { render json: @user_account.errors, status: :unprocessable_entity }
       end
     end

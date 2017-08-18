@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     authorize! :update, @user.account
     @user.account.send_new_password
     flash[:notice] = I18n.t(:new_password_has_been_sent_to, user_name: @user.title)
-    redirect_to :back
+    redirect_back(fallback_location: sign_in_path)
   end
 
   private
