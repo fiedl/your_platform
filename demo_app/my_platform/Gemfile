@@ -11,48 +11,31 @@ end
 
 
 source 'https://rubygems.org' do
-
-  # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
   gem 'rails', '~> 5.0'
-  # Use mysql as the database for Active Record
   gem 'mysql2'
-  # Use SCSS for stylesheets
   gem 'sass-rails'
-  # Use Uglifier as compressor for JavaScript assets
   gem 'uglifier', '>= 1.3.0'
-  # Use CoffeeScript for .js.coffee assets and views
   gem 'coffee-rails', '>= 4.0.0'
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer',  platforms: :ruby
-
-  # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
   gem 'turbolinks'
-  # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', '~> 0.4.0',          group: :doc
 
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  group :production do
+    gem 'unicorn'
+  end
+
+  # Spring speeds up development by keeping your application running in the background.
   group :development do
     gem 'spring'
     gem 'spring-commands-rspec'
   end
 
-  # Use ActiveModel has_secure_password
-  # gem 'bcrypt', '~> 3.1.7'
-
-  # Use unicorn as the app server
-  gem 'unicorn'
-
-  # Use Capistrano for deployment
-  # gem 'capistrano-rails', group: :development
-
-  # Use debugger
-  # gem 'debugger', group: [:development, :test]
-
+  # Error tracing
   group :development do
     #gem 'better_errors'
     gem 'binding_of_caller'
     gem 'letter_opener'
     gem 'web-console'
+    gem 'pry'
+    gem 'pry-remote'
   end
 
   # Security Tools
@@ -73,23 +56,28 @@ source 'https://rubygems.org' do
     gem 'rspec-its'
     gem 'parallel_tests'
     gem 'rspec-instafail'
-    gem 'capybara' #, '2.13.0'
+    gem 'capybara'
     gem 'selenium-webdriver'
-    gem 'poltergeist' #, '1.11.0'
+    gem 'poltergeist'
     gem 'factory_girl_rails'
     gem 'database_cleaner'
     gem 'email_spec'
-    gem 'timecop'  # time_travel
-    gem 'pry'
+    gem 'timecop'
   end
 
   # JavaScript Runtime
   gem 'execjs'
   gem 'therubyracer', :platform => :ruby
 
-  # Temporary Forks and Overrides
+  # Other helpers
   gem 'json'
   gem 'colored'
+
+  # Security fixes
+  gem 'rubyzip', '>= 1.2.1'  # CVE-2017-5946
+  gem 'nokogiri', '>= 1.7.1'  #  USN-3235-1
+
+  # Temporary Forks and Overrides
   gem 'acts-as-dag', git: 'https://github.com/fiedl/acts-as-dag', branch: 'sf/rails-5'
   gem 'refile', git: 'https://github.com/sobrinho/refile'
   gem 'refile-mini_magick', git: 'https://github.com/refile/refile-mini_magick'

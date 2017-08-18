@@ -135,6 +135,9 @@ require 'faker'
 # Contact form
 require 'mail_form'
 
+# Encoding detection
+require 'charlock_holmes'
+
 # API
 require 'apipie-rails'
 require 'discourse_api'

@@ -173,6 +173,9 @@ Gem::Specification.new do |s|
   # Contact form
   s.add_dependency 'mail_form'
 
+  # Encoding detection
+  s.add_dependency 'charlock_holmes'
+
   # API
   s.add_dependency 'apipie-rails', '~> 0.5'
   s.add_dependency 'discourse_api'
