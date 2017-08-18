@@ -101,8 +101,11 @@ if specs_to_run.any?
     print "\nFailing specs: #{finally_failing_specs.join(' ')}\n\n".red
 
     exit(finally_failing_specs.count)
-  else
+  elsif result.include? " 0 failures"
     exit 0
+  else
+    print "\nSomething went wrong.\n\n".red
+    exit 1
   end
 
 else
