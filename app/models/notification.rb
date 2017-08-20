@@ -17,11 +17,11 @@
 #       t.timestamps null: false
 #     end
 #
-class Notification < ActiveRecord::Base
+class Notification < ApplicationRecord
 
   belongs_to :recipient, class_name: 'User'
-  belongs_to :author, class_name: 'User'
-  belongs_to :reference, polymorphic: true
+  belongs_to :author, class_name: 'User', optional: true
+  belongs_to :reference, polymorphic: true, optional: true
 
   scope :sent, -> { where.not(sent_at: nil) }
   scope :read, -> { where.not(read_at: nil) }

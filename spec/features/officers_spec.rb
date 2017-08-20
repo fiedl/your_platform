@@ -57,7 +57,7 @@ feature "Officers Management" do
       find(".save_button").click
     end
 
-    wait_until(timeout: 45.seconds) { @president_group.members(true).include? @new_user }
+    wait_until(timeout: 45.seconds) { @president_group.members.reload.include? @new_user }
 
     within(".officer_group_members .direct_officers .best_in_place") do
       page.should have_selector "a", text: @new_user.title

@@ -22,7 +22,7 @@ module GroupMixins::HiddenUsers
     def find_hidden_users_group
       find_special_group(:hidden_users)
     end
-    
+
     def create_hidden_users_group
       create_special_group(:hidden_users)
     end
@@ -30,13 +30,13 @@ module GroupMixins::HiddenUsers
     def find_or_create_hidden_users_group
       find_or_create_special_group(:hidden_users)
     end
-    
+
     def hidden_users
       find_or_create_hidden_users_group
     end
-    
+
     def hidden_users!
-      find_hidden_users_group || raise('special group :hidden_users does not exist.')
+      find_hidden_users_group || raise(ActiveRecord::RecordNotFound, 'special group :hidden_users does not exist.')
     end
   end
 

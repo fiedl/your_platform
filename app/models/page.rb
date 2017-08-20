@@ -1,15 +1,15 @@
-class Page < ActiveRecord::Base
+class Page < ApplicationRecord
 
-  is_structureable       ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event)
+  has_dag_links ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event), link_class_name: 'DagLink'
 
   acts_as_taggable
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-
   serialize :redirect_to
   serialize :box_configuration
 
+  include Structureable
   include Navable
   include HasAuthor
   include PagePublicWebsite

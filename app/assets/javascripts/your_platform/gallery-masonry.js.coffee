@@ -5,7 +5,7 @@
 # https://github.com/desandro/masonry/issues/501#issuecomment-34583942
 #
 $.fn.masonryImagesReveal = (items) ->
-  if this.size() > 0
+  if this.count() > 0
     msnry = this.data('masonry')
     itemSelector = msnry.options.itemSelector
     items.hide()

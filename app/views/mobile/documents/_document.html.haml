@@ -1,4 +1,4 @@
-- document || raise('no document given')
+- document || raise(ActionController::ParameterMissing, 'no document given')
 
 -#= link_to document.title, mobile_document_path(document)
 -#= link_to document.title, document.file_url

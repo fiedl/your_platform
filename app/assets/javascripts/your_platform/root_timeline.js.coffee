@@ -45,11 +45,11 @@ add_read_more_links_to = (html)->
     if box.height() > 250
       box.append('<div class="panel-footer"><a href="#" class="read-on">' + I18n.t('read_on') + '</a></div>')
       box.addClass 'collapsed'
-      if box.find('.pictures').size() > 0
+      if box.find('.pictures').count() > 0
         box.addClass 'with_image'
 
 move_first_post_to_special_position = (html)->
-  if $('#top_post').size() == 1
+  if $('#top_post').count() == 1
     if $("#top_post").html() == ""
       $(html).find('.timeline_entry').first().appendTo($('#top_post'))
 
@@ -57,11 +57,11 @@ $(document).ready ->
   last_loaded_day = 0
   is_loading = false
 
-  if $('.scroll-indicator').size() > 0
+  if $('.scroll-indicator').count() > 0
 
     # initial loading
     #
-    if $('.news_entry').size() == 0
+    if $('.news_entry').count() == 0
       for t in [500, 600, 700]
         setTimeout ->
           is_loading = false
@@ -71,9 +71,9 @@ $(document).ready ->
     # loading on scroll
     #
     $(window).scroll ->
-      if $('.scroll-indicator').size() > 0
+      if $('.scroll-indicator').count() > 0
         if $(window).scrollTop() > $(document).height() - $(window).height() - 800
-          if $('#filter_news_query').val() == "" or $('#filter_news_query').size() == 0
+          if $('#filter_news_query').val() == "" or $('#filter_news_query').count() == 0
             load_next_page()
 
 $(document).on 'click', '.scroll-indicator', ->

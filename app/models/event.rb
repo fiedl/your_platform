@@ -1,12 +1,12 @@
-class Event < ActiveRecord::Base
+class Event < ApplicationRecord
 
   validates :start_at, presence: true
   before_validation -> { self.start_at ||= self.created_at || Time.zone.now }
 
-  is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
-
+  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
   has_many :attachments, as: :parent, dependent: :destroy
 
+  include Structureable
   include Navable
   include EventGroups
   include EventContactPeople
@@ -182,30 +182,6 @@ class Event < ActiveRecord::Base
 
   def self.to_ical
     self.to_ics
-  end
-
-
-  # Existance
-  # ==========================================================================================
-
-  # For some strange reason, the callbacks of the creation of an event appear to
-  # prevent the event form being found in the database after its creation.
-  #
-  # In the EventsController and in specs, we need to make sure that the event exists
-  # before continuing. Otherwise `ActiveRecord::RecordNotFound` is raised in the controller
-  # or when redirecting to the event.
-  #
-  # This still exists in Rails 4.
-  # TODO: Check if this is still necessary when migrating to Rails 5.
-  #
-  def wait_for_me_to_exist
-    raise 'The event has no id, yet!' unless id
-    begin
-      Event.find self.id
-    rescue ActiveRecord::RecordNotFound => e
-      sleep 1
-      retry
-    end
   end
 
   include EventCaching if use_caching?

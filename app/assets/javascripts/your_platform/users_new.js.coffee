@@ -15,7 +15,7 @@ ready = ->
         if $(input).val() == ""
           mark_as_invalid(input)
         
-        if $('form.formtastic .invalid').size() == 0
+        if $('form.formtastic .invalid').count() == 0
           $('.users_new input[type=submit]').removeClass('btn-warning')
           $('#why_fields_are_required').removeClass('hidden').hide()
       
@@ -42,7 +42,7 @@ ready = ->
   #
   $("form.formtastic").submit (e) ->
     confirm_button = $('.users_new input[type=submit]')
-    if $('form.formtastic .invalid').size() > 0
+    if $('form.formtastic .invalid').count() > 0
       e.preventDefault()
       $('#why_fields_are_required').removeClass('hidden').show()
       confirm_button.addClass('btn-warning')

@@ -1,5 +1,5 @@
 # This migration comes from workflow_kit (originally 20120721140613)
-class CreateWorkflowKitParameters < ActiveRecord::Migration
+class CreateWorkflowKitParameters < ActiveRecord::Migration[4.2]
   def change
     create_table :workflow_kit_parameters do |t|
       t.string :key

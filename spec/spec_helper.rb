@@ -238,6 +238,10 @@ RSpec.configure do |config|
   config.include HomePageSpecHelper, type: :feature
   config.include TabSpecHelper, type: :feature
 
+  # Time matchers
+  #
+  config.include TimeMatchers
+
 
   # Database Wiping Policy
   # ......................................................................................
@@ -277,6 +281,7 @@ RSpec.configure do |config|
   end
 
   config.before(:suite) do
+    DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean
   end
 

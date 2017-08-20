@@ -9,6 +9,7 @@ require 'rubygems'
 require 'sprockets'
 require 'strong_parameters' unless defined? ActionController::Parameters
 require 'rails-i18n'
+require 'web-console' if ENV['RAILS_ENV'].nil? || (ENV['RAILS_ENV'] == "development")
 require 'decent_exposure'
 
 # Data Structures
@@ -37,9 +38,6 @@ require 'gender_detector'
 # Authorization
 require 'cancancan'
 
-# Encryption
-require 'has_secure_token'
-
 # Settings
 require 'rails-settings-cached'
 
@@ -51,7 +49,7 @@ require 'auto_html'
 require 'reverse_markdown'
 
 # JavaScript
-require 'rails-assets-jquery-ujs'
+require 'jquery-rails'
 require 'rails-assets-jquery-ui'
 require 'autosize/rails'
 require 'sugar-rails'
@@ -88,7 +86,6 @@ require 'simple_form'
 require 'carrierwave'
 require 'jquery-fileupload-rails'
 require 'refile/rails'
-require 'refile/image_processing'
 
 # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
 require 'gravatar_image_tag'
@@ -109,7 +106,6 @@ require 'judge'
 
 # Metrics
 require 'rack-mini-profiler'
-require 'redis_analytics'
 require 'chartkick'
 require 'groupdate'
 
@@ -139,9 +135,15 @@ require 'faker'
 # Contact form
 require 'mail_form'
 
+# Encoding detection
+require 'charlock_holmes'
+
 # API
 require 'apipie-rails'
 require 'discourse_api'
+
+# Exceptions
+require 'exception_notification'
 
 require_relative '../../config/initializers/inflections'
 
@@ -150,7 +152,6 @@ module YourPlatform
 
     engine_name "your_platform"
 
-    config.autoload_paths += %W(#{config.root}/app/models/concerns)
     config.autoload_paths += %W(#{config.root}/app/pdfs)
 
     # In order to override the locales in the main_app, add the following to the main app's

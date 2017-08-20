@@ -1,4 +1,4 @@
-class CreateUserAccounts < ActiveRecord::Migration
+class CreateUserAccounts < ActiveRecord::Migration[4.2]
   def change
     create_table :user_accounts do |t|
       t.string :encrypted_password

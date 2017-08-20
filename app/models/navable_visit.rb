@@ -4,6 +4,6 @@
 # That way, based on the group memberships, we can guess
 # navables of interest.
 #
-class NavableVisit < ActiveRecord::Base
+class NavableVisit < ApplicationRecord
   belongs_to :navable, polymorphic: true
 end

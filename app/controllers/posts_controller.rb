@@ -73,7 +73,7 @@ class PostsController < ApplicationController
   def create
     return create_via_email if params[:message].present?
 
-    @group = Group.find(params[:group_id] || params[:post][:group_id] || raise('no group given'))
+    @group = Group.find(params[:group_id] || params[:post][:group_id] || raise(ActionController::ParameterMissing, 'no group given'))
     authorize! :create_post_for, @group
 
     @text = params[:text] || params[:post][:text]
@@ -86,7 +86,7 @@ class PostsController < ApplicationController
       if params[:valid_from].present?
         @memberships = @group.memberships.started_after(params[:valid_from].to_datetime)
         @recipients = @group.members.where(dag_links: {id: @memberships.map(&:id)})
-        raise 'validation error: the number of recipients does not match.' if @recipients.count != params[:recipients_count].to_i
+        raise ActionController::ParameterMissing, 'validation error: the number of recipients does not match.' if @recipients.count != params[:recipients_count].to_i
       else
         @recipients = @group.members
       end
@@ -116,7 +116,7 @@ class PostsController < ApplicationController
           redirect_to group_posts_path(@group), change: 'posts'
         end
       end
-      format.json { render json: {recipients_count: @send_counter, post_url: @post.url} }
+      format.json { render json: {recipients_count: @send_counter, post_url: post_path(@post)} }
     end
 
   end

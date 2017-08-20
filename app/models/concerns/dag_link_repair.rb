@@ -83,11 +83,11 @@ concern :DagLinkRepair do
       end
 
       def mute_sql_log
-        @old_log_level = ActiveRecord::Base.logger.level
-        ActiveRecord::Base.logger.level = 1
+        @old_log_level = ApplicationRecord.logger.level
+        ApplicationRecord.logger.level = 1
       end
       def unmute_sql_log
-        ActiveRecord::Base.logger.level = @old_log_level
+        ApplicationRecord.logger.level = @old_log_level
       end
 
       # There are cases when an indirect membership is represented by multiple dag links

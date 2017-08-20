@@ -1,4 +1,4 @@
-class EncryptPassword < ActiveRecord::Migration
+class EncryptPassword < ActiveRecord::Migration[4.2]
 
   def change
     rename_column :users, :password, :encrypted_password

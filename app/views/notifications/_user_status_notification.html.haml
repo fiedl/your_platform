@@ -2,7 +2,7 @@
 
 .notification
   %div{style: 'float: left; margin-right: 10px'}
-    - notification.reference.kind_of?(User) || raise('status notification reference should be a User.')
+    - notification.reference.kind_of?(User) || raise(RuntimeError, 'status notification reference should be a User.')
     = user_avatar(notification.reference)
   %div{style: 'overflow: hidden'}
     %small

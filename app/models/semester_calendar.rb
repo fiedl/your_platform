@@ -13,7 +13,7 @@
 #      11 Nov | Wintersemester
 #      12 Dez |
 #
-class SemesterCalendar < ActiveRecord::Base
+class SemesterCalendar < ApplicationRecord
   belongs_to :group
   belongs_to :term
 
@@ -77,7 +77,7 @@ class SemesterCalendar < ActiveRecord::Base
             event.update_attributes event_params.except(:_destroy, :id)
           end
         else
-          raise("event #{event_params[:id]} not found.")
+          raise(RuntimeError, "event #{event_params[:id]} not in semester calendar events.")
         end
       else
         if event_params[:name].present?
@@ -88,7 +88,7 @@ class SemesterCalendar < ActiveRecord::Base
         end
       end
     end
-    self.touch if attributes.any?
+    self.touch unless attributes.empty?
   end
 
   def save(*args)

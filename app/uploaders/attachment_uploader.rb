@@ -16,14 +16,14 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
-    model.id || raise('Model has no id. But need one to save the file.')
+    model.id || raise(RuntimeError, 'Model has no id. But need one to save the file.')
     "#{Rails.root}/uploads/#{Rails.env}_env/#{model.class.base_class.to_s.underscore}s/#{model.id}"
   end
   def cache_dir
-    # model.id || raise('Model has no id. But need one to save the file.')
+    # model.id || raise(RuntimeError, 'Model has no id. But need one to save the file.')
     # "#{Rails.root}/tmp/uploads/#{Rails.env}_env/#{model.class.to_s.underscore}s/#{model.id}"
-    Rails.root || raise('no rails root')
-    Rails.env || raise('no rails env')
+    Rails.root || raise(RuntimeError, 'no rails root')
+    Rails.env || raise(RuntimeError, 'no rails env')
     "#{Rails.root}/tmp/uploads/#{Rails.env}_env/"
   end
 
@@ -150,7 +150,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # end
 
   def url(version = nil)
-    model.id || raise('Model has no id.')
+    model.id || raise(RuntimeError, 'Model has no id.')
     if version
       filename = self.send(version).current_path
     else

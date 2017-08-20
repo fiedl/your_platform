@@ -1,4 +1,4 @@
-class GeoLocation < ActiveRecord::Base
+class GeoLocation < ApplicationRecord
 
   # When to perform geocoding queries (to google)
   # ==========================================================================================

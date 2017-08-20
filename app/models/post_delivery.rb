@@ -1,4 +1,4 @@
-class PostDelivery < ActiveRecord::Base
+class PostDelivery < ApplicationRecord
 
   belongs_to :post
   belongs_to :user

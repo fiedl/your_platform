@@ -1,5 +1,5 @@
 - # locals:
-- commentable || raise('no commentable given!')
+- commentable || raise(ActionController::ParameterMissing, 'no commentable given!')
 - show_max_comments ||= 3
 - show_all_comments ||= @show_all_comments
 
@@ -13,6 +13,6 @@
 
   - if can?(:create_comment_for, commentable)
     %li= render partial: 'comments/new_comment', locals: {commentable: commentable}
-  
+
   - if commentable.comments.count > show_max_comments and not show_all_comments
     %li.show-all-comments= link_to t(:show_all_comments), commentable  # on the commentable#show all comments are shown.

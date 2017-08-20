@@ -15,10 +15,27 @@ $(document).on 'ajax:success', '.best_in_place', ->
   $(this).effect 'highlight'
 
 $(document).on 'ajax:error', '.best_in_place', (request, error)->
-  console.log "best in place error"
-  console.log error
   $(this).removeClass 'saving'
   $(this).addClass 'error'
+
+  # This is not very helpful information :(
+  console.log "best in place error"
+  console.log request
+  console.log JSON.stringify error
+
+
+# # https://github.com/bernat/best_in_place/blob/master/lib/assets/javascripts/best_in_place.purr.js
+# BestInPlaceEditor.defaults.purrErrorContainer = "<div class='alert alert-danger'></div>"
+#
+# $(document).on 'best_in_place:error', '.best_in_place', (event, request, error)->
+#   console.log "best in place error"
+#   console.log JSON.stringify(request)
+#   if request.responseText?
+#     jQuery.each jQuery.parseJSON(request.responseText), (index, value)->
+#       value = (index + " " + value.toString()) if (typeof value == "object")
+#       container = jQuery(BestInPlaceEditor.defaults.purrErrorContainer).html(value)
+#       container.purr()
+
 
 # Clicking on ajax checkboxes submits their forms.
 $(document).on 'change', '.ajax_check_box', ->

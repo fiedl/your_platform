@@ -1,9 +1,9 @@
 $(document).ready ->
 
-  if $('#horizontal_nav ul.nav > li.active').size() > 0
+  if $('#horizontal_nav ul.nav > li.active').count() > 0
     $('#horizontal_nav ul.nav > li').removeClass('under_this_category')
 
-  if $('#horizontal_nav ul.nav > li.under_this_category').size() > 1
+  if $('#horizontal_nav ul.nav > li.under_this_category').count() > 1
     $('#horizontal_nav ul.nav > li:not(:last-child)')
       .removeClass('under_this_category')
 

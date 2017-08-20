@@ -1,7 +1,9 @@
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   attr_accessor :corporation_name
 
-  is_structureable ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page)
+  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
+
+  include Structureable
   include Navable
 
   def group

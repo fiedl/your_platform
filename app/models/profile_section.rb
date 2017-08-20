@@ -1,17 +1,17 @@
 class ProfileSection < Struct.new(:title, :profileable)
 
   def initialize( options = {} )
-    self.title = options[:title] || raise('missing option "title"')
-    self.profileable = options[:profileable] || raise('missing option "profileable"')
+    self.title = options[:title] || raise(RuntimeError, 'missing option "title"')
+    self.profileable = options[:profileable] || raise(RuntimeError, 'missing option "profileable"')
   end
-  
+
   def profile_fields
     profileable.profile_fields.where( type: self.profile_field_types )
   end
   def fields
     profile_fields
   end
-  
+
   def profile_field_types
     case(self.title.to_sym)
       when :general
@@ -36,14 +36,14 @@ class ProfileSection < Struct.new(:title, :profileable)
       else
         []
     end
-    
+
   end
   def field_types
     profile_field_types
   end
-  
+
   def to_s
     self.title.to_s
   end
-  
+
 end

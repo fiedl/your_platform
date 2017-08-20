@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150707222861)
-class CreateScoresAndPoints < ActiveRecord::Migration
+class CreateScoresAndPoints < ActiveRecord::Migration[4.2]
   def change
     create_table :merit_scores do |t|
       t.references :sash

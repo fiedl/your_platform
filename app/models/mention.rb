@@ -1,8 +1,8 @@
-class Mention < ActiveRecord::Base
+class Mention < ApplicationRecord
   belongs_to :who, foreign_key: 'who_user_id', class_name: 'User'
   belongs_to :whom, foreign_key: 'whom_user_id', class_name: 'User'
   belongs_to :reference, polymorphic: true
-  
+
   # Create mentions from, for example, a Comment:
   #
   #     Mention.create_multiple(current_user, comment, comment.text)
@@ -19,12 +19,12 @@ class Mention < ActiveRecord::Base
       mention.whom = User.find_by_title(match[0])
       mention.reference = reference
       mention.save
-      
+
       mentions += [mention]
     end
     return mentions
   end
-  
+
   def reference_title
     if reference.respond_to? :title
       reference.title
@@ -32,7 +32,7 @@ class Mention < ActiveRecord::Base
       reference.commentable.title if reference.kind_of? Comment
     end
   end
-  
+
   def self.create_multiple_and_notify_instantly(current_user, reference, text)
     mentions = Mention.create_multiple(current_user, reference, text)
     users_to_notify_immediately = []
@@ -43,5 +43,5 @@ class Mention < ActiveRecord::Base
     users_to_notify_immediately.each { |user| Notification.deliver_for_user(user) }
     return mentions
   end
-  
+
 end

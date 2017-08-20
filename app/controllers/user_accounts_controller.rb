@@ -38,10 +38,10 @@ class UserAccountsController < ApplicationController
 
         @user.send_welcome_email
 
-        format.html { redirect_to :back, notice: t(:user_account_created) }
+        format.html { redirect_back fallback_location: user_path(@user), notice: t(:user_account_created) }
         format.json { render json: @user_account, status: :created, location: @user_account }
       else
-        format.html { redirect_to :back, flash: {error: @user_account.errors.full_messages.join(", ")} }
+        format.html { redirect_back fallback_location: user_path(@user), flash: {error: @user_account.errors.full_messages.join(", ")} }
         format.json { render json: @user_account.errors, status: :unprocessable_entity }
       end
     end
@@ -55,12 +55,12 @@ class UserAccountsController < ApplicationController
       @user = User.find params[:user_id]
       @user_account = @user.account
     else
-      raise('neither [account] :id nor :user_id given.')
+      raise ActionController::ParameterMissing, 'neither [account] :id nor :user_id given.'
     end
 
     if @user_account.destroy
       respond_to do |format|
-        format.html { redirect_to :back, notice: t(:user_account_deleted)  }
+        format.html { redirect_to user_path(@user), notice: t(:user_account_deleted)  }
         format.json { head :no_content }
       end
     end

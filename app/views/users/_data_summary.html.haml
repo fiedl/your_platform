@@ -1,4 +1,4 @@
-- user || raise('user not given')
+- user || raise(ActionController::ParameterMissing, 'user not given')
 
 %ul.attributes.profile_fields
   = profile_field_li user.personal_title_field

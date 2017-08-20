@@ -38,8 +38,8 @@ class Membership < DagLink
   # Validity Range
   # ====================================================================================================
 
-  include MembershipMixins::ValidityRange
-  include MembershipMixins::ValidityRangeForIndirectMemberships
+  include MembershipValidityRange
+  include IndirectMembershipValidityRange
 
 
   # May Need Review Flag
@@ -50,8 +50,8 @@ class Membership < DagLink
   #
   # This is stored as the flag :needs_review.
   #
-  has_many_flags
-  may_need_review
+  include Flags
+  include Review
 
 
   # General Properties

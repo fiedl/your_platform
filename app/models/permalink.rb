@@ -1,4 +1,4 @@
-class Permalink < ActiveRecord::Base
+class Permalink < ApplicationRecord
   belongs_to :reference, polymorphic: true
   validates :url_path, presence: true
 

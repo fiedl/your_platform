@@ -10,14 +10,29 @@ Rails.application.configure do
   config.eager_load = false
 
   # Show full error reports.
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
 
-  # Caching
-  # See also: config/initializers/cache.rb
-  config.action_controller.perform_caching = true
+  # Enable/disable caching. By default caching is disabled.
+  if Rails.root.join('tmp/caching-dev.txt').exist?
+    config.action_controller.perform_caching = true
+
+    config.cache_store = :memory_store
+    config.public_file_server.headers = {
+      'Cache-Control' => 'public, max-age=172800'
+    }
+  else
+    config.action_controller.perform_caching = false
+
+    config.cache_store = :null_store
+  end
 
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
+
+  config.action_mailer.perform_caching = false
+
+  config.action_mailer.delivery_method = :letter_opener
+  config.action_mailer.default_url_options = {host: 'localhost', port: 3000, protocol: 'http'}
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -30,15 +45,13 @@ Rails.application.configure do
   # number of complex assets.
   config.assets.debug = true
 
-  # Adds additional error checking when serving assets at runtime.
-  # Checks for improperly declared sprockets dependencies.
-  # Raises helpful error messages.
-  config.assets.raise_runtime_errors = true
+  # Suppress logger output for asset requests.
+  config.assets.quiet = true
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # Mailer Settings
-  config.action_mailer.delivery_method = :letter_opener
-  config.action_mailer.default_url_options = {host: 'localhost', port: 3000, protocol: 'http'}
+  # Use an evented file watcher to asynchronously detect changes in source code,
+  # routes, locales, etc. This feature depends on the listen gem.
+  # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 end

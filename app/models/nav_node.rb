@@ -1,7 +1,7 @@
 # Each Navable object has got an associated NavNode, i.e. an object representing the information
 # relevant to the position of the Navable object within the navigational structure.
 #
-class NavNode < ActiveRecord::Base
+class NavNode < ApplicationRecord
 
   belongs_to :navable, polymorphic: true
 

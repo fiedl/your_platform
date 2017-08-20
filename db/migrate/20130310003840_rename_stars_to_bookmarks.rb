@@ -1,4 +1,4 @@
-class RenameStarsToBookmarks < ActiveRecord::Migration
+class RenameStarsToBookmarks < ActiveRecord::Migration[4.2]
   def up
     rename_table :stars, :bookmarks
   end

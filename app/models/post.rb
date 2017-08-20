@@ -1,4 +1,4 @@
-class Post < ActiveRecord::Base
+class Post < ApplicationRecord
 
   belongs_to :group
   belongs_to :author, :class_name => "User", foreign_key: 'author_user_id'
@@ -179,7 +179,7 @@ class Post < ActiveRecord::Base
   end
   def self.from_or_to_user(user)
     ids = from_user(user).pluck(:id) + to_user_via_group(user).pluck(:id) + to_user_via_mention(user).map(&:id)
-    Post.where(id: ids).uniq.order(:created_at)
+    Post.where(id: ids).distinct.order(:created_at)
   end
   def self.from_user(user)
     self.where(author_user_id: user.id)

@@ -1,5 +1,5 @@
 module WorkflowKit
-  class Workflow < ActiveRecord::Base
+  class Workflow < ApplicationRecord
     self.table_name = "workflow_kit_workflows"
 
     has_many :steps, dependent: :destroy
@@ -10,7 +10,7 @@ module WorkflowKit
     def execute( params = {} )
       params = {} unless params
       params = params.merge( self.parameters_to_hash ) if self.parameters.count > 0
-      ActiveRecord::Base.transaction do
+      ApplicationRecord.transaction do
         self.steps.collect do |step|
           step.execute( params )
         end
@@ -22,7 +22,8 @@ module WorkflowKit
     end
 
 
-    is_structureable   ancestor_class_names: %w(Group)
+    has_dag_links ancestor_class_names: %w(Group), link_class_name: 'DagLink'
+    include Structureable
     include Navable
 
     def title
@@ -98,7 +99,7 @@ module WorkflowKit
     end
 
     def self.create_mark_as_deceased_workflow
-      raise 'Workflow already present.' if self.find_mark_as_deceased_workflow
+      raise ActiveRecord::RecordInvalid, 'Workflow already present.' if self.find_mark_as_deceased_workflow
       workflow = Workflow.create(name: "Todesfall")
       step = workflow.steps.build
       step.sequence_index = 1

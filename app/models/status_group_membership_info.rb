@@ -1,9 +1,9 @@
-class StatusGroupMembershipInfo < ActiveRecord::Base
+class StatusGroupMembershipInfo < ApplicationRecord
 
   belongs_to :membership, touch: true, class_name: "Memberships::Status", inverse_of: :status_membership_info
 
-  belongs_to :promoted_by_workflow, foreign_key: 'promoted_by_workflow_id', class_name: "Workflow"
-  belongs_to :promoted_on_event, foreign_key: 'promoted_on_event_id', class_name: "Event"
+  belongs_to :promoted_by_workflow, foreign_key: 'promoted_by_workflow_id', class_name: "Workflow", optional: true
+  belongs_to :promoted_on_event, foreign_key: 'promoted_on_event_id', class_name: "Event", optional: true
 
 
   # Alias Methods

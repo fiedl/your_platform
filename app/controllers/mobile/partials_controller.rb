@@ -22,7 +22,7 @@ class Mobile::PartialsController < ApplicationController
       @found_users = User.search(params[:query])
         .select { |user| can?(:read, user) && user.alive? && user.wingolfit? }
     else
-      raise("partial #{params[:partial_key]} not handled in load_resources.")
+      raise(StandardError, "partial #{params[:partial_key]} not handled in load_resources.")
     end
   end
 

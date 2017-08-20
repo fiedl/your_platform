@@ -1,7 +1,7 @@
 - user ||= @user
 %div.deceased_modal.modal.fade{class: "deceased-modal-for-user-#{user.id}"}
   - workflow = Workflow.find_by_name('Todesfall')
-  - workflow || raise('mark-as-deceased workflow missing. Please call "Workflow.find_or_create_mark_as_deceased_workflow".')
+  - workflow || raise(ActiveRecord::RecordNotFound, 'mark-as-deceased workflow missing. Please call "Workflow.find_or_create_mark_as_deceased_workflow".')
   = form_tag execute_status_workflow_path(workflow, {user_id: user.id}), method: :put, remote: true, class:'deceased_modal_date_of_death' do
 
     .modal-dialog

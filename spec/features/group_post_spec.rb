@@ -75,6 +75,11 @@ feature "Group Posts" do
         end
       end
       email_text.should include @random_message
+
+      # I don't know why this needs so much time, but here it is:
+      give_it_some_time_to_finish_the_test_before_wiping_the_database
+      give_it_some_time_to_finish_the_test_before_wiping_the_database
+      give_it_some_time_to_finish_the_test_before_wiping_the_database
     end
   end
 

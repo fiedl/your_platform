@@ -1,6 +1,11 @@
 class ApplicationRecord < ActiveRecord::Base
   self.abstract_class = true
 
+  include Caching
+  include ReadOnlyMode
+  include RecordUrl
+  include BestInPlaceCorrections
+
   # Patch the `#first` method to allow the following for STI classes
   # like `Group`, which has descendant classes like `Groups::Everyone`.
   #

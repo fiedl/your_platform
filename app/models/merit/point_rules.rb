@@ -13,7 +13,7 @@ module Merit
     include Merit::PointRulesMethods
 
     def initialize
-      unless ActiveRecord::Base.read_only_mode?
+      unless ApplicationRecord.read_only_mode?
 
         # score 10, :on => 'users#create' do |user|
         #   user.bio.present?

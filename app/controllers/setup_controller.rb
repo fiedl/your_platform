@@ -14,11 +14,11 @@ class SetupController < ApplicationController
   end
 
   def create
-    raise 'name not given' if params[:first_name].blank? or params[:last_name].blank?
-    raise 'email not given' if params[:email].blank?
-    raise 'no password' if params[:password].blank?
-    raise 'password too short' if params[:password].length < 9
-    raise 'password confirmation did not match' if params[:password] != params[:password_confirmation]
+    raise ActionController::ParameterMissing, 'name not given' if params[:first_name].blank? or params[:last_name].blank?
+    raise ActionController::ParameterMissing, 'email not given' if params[:email].blank?
+    raise ActionController::ParameterMissing, 'no password' if params[:password].blank?
+    raise ActionController::BadRequest, 'password too short' if params[:password].length < 9
+    raise ActionController::BadRequest, 'password confirmation did not match' if params[:password] != params[:password_confirmation]
 
     user = User.new first_name: params[:first_name], last_name: params[:last_name]
     user.email = params[:email]
@@ -63,7 +63,7 @@ class SetupController < ApplicationController
 private
 
   def handle_authorization
-    raise 'Setup already done. To start over, wipe your database.' if User.count > 0
+    raise ActionController::BadRequest, 'Setup already done. To start over, wipe your database.' if User.count > 0
   end
 
   def bootstrap

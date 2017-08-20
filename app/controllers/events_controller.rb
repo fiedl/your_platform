@@ -115,7 +115,7 @@ class EventsController < ApplicationController
         # show.html.erb
       end
       format.json { render json: @event }
-      format.ics { render text: @event.to_ics }
+      format.ics { render plain: @event.to_ics }
     end
   end
 
@@ -135,18 +135,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-
-        # Attention: The save call will call some callbacks, which might cause
-        # one of the following calls to run into sql deadlock issues.
-        # ActiveRecord of Rails 3 does not resolve these issues.
-        # Therefore, we use the transaction_retry gem, which retries the
-        # call after running into locked records.
-        #
-        # The locking issues still exist in Rails 4.
-        # TODO: Check again, when migrating to Rails 5.
-        # The transaction_retry gem has been updated last in 2012!
-        #
-        @event.reload
         @event.create_attendees_group
         @event.create_contact_people_group
         @event.contact_people_group.assign_user current_user, at: 2.seconds.ago
@@ -275,7 +263,7 @@ private
   # available to the other server instance. So, try a few times before giving up.
   #
   def wait_for_existance
-    raise "No id given. Params are: #{params.to_s}" unless params[:id] || params[:event_id]
+    raise ActionController::ParameterMissing, "No id given. Params are: #{params.to_s}" unless params[:id] || params[:event_id]
     counter = 20
     begin
       sleep 0.5

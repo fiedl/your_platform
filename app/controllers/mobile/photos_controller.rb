@@ -11,7 +11,7 @@ class Mobile::PhotosController < Mobile::BaseController
   end
 
   def create
-    raise 'no event given' unless event
+    raise ActionController::ParameterMissing, 'no event given' unless event
     authorize! :create_attachment_for, event
     current_user.join(event)
 

@@ -1,4 +1,4 @@
-class ValidityRangeForDagLinks < ActiveRecord::Migration
+class ValidityRangeForDagLinks < ActiveRecord::Migration[4.2]
   def up
     change_table :dag_links do |t|
       t.rename :deleted_at, :valid_to

@@ -50,7 +50,7 @@ module GroupMixins::Corporations
     end
 
     def corporations_parent!
-      find_corporations_parent_group || raise('special group :corporations_parent does not exist.')
+      find_corporations_parent_group || raise(ActiveRecord::RecordNotFound, 'special group :corporations_parent does not exist.')
     end
 
     # Find all corporation groups, i.e. the children of `corporations_parent`.

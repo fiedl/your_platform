@@ -19,15 +19,19 @@ feature "Home Pages" do
 
       click_on :back_to_the_page
       click_on :page_settings # in order to load the home page settings.
+
       select_in_place 'tr.layout', 'iweb'
       enter_in_place 'tr.home_page_title', 'Example, Corp.'
       enter_in_place 'tr.home_page_sub_title', 'The place to be. Since 1850.'
 
       click_on :back_to_the_page
+
       within "#header" do
         expect(page).to have_text "Example, Corp."
         expect(page).to have_text "The place to be. Since 1850."
       end
+
+      give_it_some_time_to_finish_the_test_before_wiping_the_database
     end
 
     context "For a Pages::HomePage" do
@@ -75,12 +79,13 @@ feature "Home Pages" do
         click_on :edit
         edit_page_content "This is a short teaser text.\n\nAnd this is some more content."
         click_on :save
+        wait_for_wysiwyg '.page_content'
 
         within('#horizontal-nav-bar') { click_on "example.com" }
         within '#content' do
+          expect(page).to have_no_text "And this is some more content."
           expect(page).to have_text "My new teaser"
           expect(page).to have_text "This is a short teaser text."
-          expect(page).to have_no_text "And this is some more content."
         end
         within '#horizontal-nav-bar' do
           expect(page).to have_no_text "My new teaser"
@@ -95,6 +100,7 @@ feature "Home Pages" do
         click_on :edit
         edit_page_content "We are nice people."
         click_on :save
+        wait_for_wysiwyg '.page_content'
 
         within('#horizontal-nav-bar') { expect(page).to have_text "About us" }
 
@@ -140,10 +146,7 @@ feature "Home Pages" do
     # Destroying the home page within the first ten minutes
     # should work.
     within '.box.first' do
-      #find('.edit_button').trigger('mouseover')
-      #sleep 0.5 # to wait for the other buttons to appear. Otherwise, we would hit
-      # the wrong button, next.
-      find('.destroy_page.btn').trigger('click')
+      find('.destroy_page.btn').click
     end
 
     # This should redirect to the root#index.

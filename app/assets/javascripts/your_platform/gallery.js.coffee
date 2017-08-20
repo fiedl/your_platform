@@ -225,7 +225,7 @@ class App.Gallery
         setTimeout (-> self.play_lightbox_video()), 500
       ## The idea is to open the video in a lightbox for small boxes.
       ## But this prevents the user from further exploring the site.
-      #if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').size() > 0
+      #if self.find('.galleria-container').width() < 300 and self.find('.video, .galleria-videoicon').count() > 0
       #  self.find('.galleria-magnification-glass').addClass('for-small-video')
       #
       # And hide the small magnification class if the video starts playing.

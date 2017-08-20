@@ -127,13 +127,14 @@ private
       params[:show_in_menu] = false
       params[:show_as_teaser_box] = false
     end
+    params[:box_configuration] = params[:box_configuration].to_h if params[:box_configuration]
 
     handle_checkbox_param :show_in_menu
     handle_checkbox_param :show_as_teaser_box
     handle_checkbox_param :show_group_map
 
     permitted_keys = []
-    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise('@page not given'))
+    permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise(ActionController::ParameterMissing, '@page not given'))
     permitted_keys += [:teaser_text, :teaser_image_url] if can? :update, @page
     permitted_keys += [:redirect_to] if can? :update, @page
     permitted_keys += [:tag_list, :permalinks_list] if can? :update, @page

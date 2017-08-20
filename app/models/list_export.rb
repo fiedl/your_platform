@@ -41,7 +41,7 @@ class ListExport
     when 'join_statistics', 'join_and_persist_statistics'
       [:group] + ((Date.today.year - 25)..(Date.today.year)).to_a.reverse.map(&:to_s)
     else
-      raise "The list '#{preset.to_s}' is not defined."
+      raise RuntimeError, "The list '#{preset.to_s}' is not defined."
     end
   end
 
@@ -152,7 +152,7 @@ class ListExport
             elsif preset.to_s == 'join_and_persist_statistics'
               memberships = group.memberships
             else
-              raise 'attention, case not handled, yet!'
+              raise RuntimeError, 'attention, case not handled, yet!'
             end
             memberships = memberships.where(valid_from: "#{year}-01-01".to_datetime..("#{year + 1}-01-01".to_datetime - 1.second))
             memberships.count # TODO: Refactor this when allowing multiple dag links between two nodes.
@@ -185,9 +185,9 @@ class ListExport
   def raise_error_if_data_is_not_valid
     case preset.to_s
     when 'birthday_list', 'address_list', 'dpag_internetmarke', 'phone_list', 'email_list', 'name_list'
-      data.kind_of?(Group) || data.first.kind_of?(User) || raise("Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
+      data.kind_of?(Group) || data.first.kind_of?(User) || raise(RuntimeError, "Expecing Group or list of Users as data in ListExport with the preset '#{preset}'.")
     when 'member_development'
-      data.kind_of?(Group) || raise('The member_development list can only be generated for a Group, not an Array of Users.')
+      data.kind_of?(Group) || raise(RuntimeError, 'The member_development list can only be generated for a Group, not an Array of Users.')
     end
   end
 
@@ -201,7 +201,7 @@ class ListExport
           elsif row.respond_to? column_name
             row.try(:send, column_name)
           else
-            raise "Don't know how to access the given attribute or value. Trying to access '#{column_name}' on '#{row}'."
+            raise RuntimeError, "Don't know how to access the given attribute or value. Trying to access '#{column_name}' on '#{row}'."
           end
         end
       end

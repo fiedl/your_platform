@@ -1,4 +1,4 @@
-class Term < ActiveRecord::Base
+class Term < ApplicationRecord
   has_many :term_reports
 
   validates :year, uniqueness: {scope: :type}

@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  protect_from_forgery with: :exception
 
   include CurrentLayout
   include CurrentTimeZone
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
 
   include CheckAuthorization
   include AcceptTermsOfUse
-  include ReadOnlyMode
+  include ReadOnlyModeInControllersAndViews
   include DemoMode
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging

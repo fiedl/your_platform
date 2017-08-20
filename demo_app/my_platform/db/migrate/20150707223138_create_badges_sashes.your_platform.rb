@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150707222860)
-class CreateBadgesSashes < ActiveRecord::Migration
+class CreateBadgesSashes < ActiveRecord::Migration[4.2]
   def self.up
     create_table :badges_sashes do |t|
       t.integer :badge_id, :sash_id

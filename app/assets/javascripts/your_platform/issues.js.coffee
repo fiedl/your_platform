@@ -26,7 +26,8 @@ $(document).on 'save', 'body.issues .box .editable.value', ->
         profile_field.closest('.box').find('.scanning_issue').hide()
         if result.issues.length == 0
           profile_field.closest('.box').find('.thanks_for_fixing_issue').show()
-          profile_field.closest('.box').trigger('toggle-minimized')
+          profile_field.closest('.box').find('.description_container').hide()
+          profile_field.closest('.box').find('.original_value_container').hide()
       failed: ->
         profile_field.closest('.box').find('.scanning_issue').hide()
     )
@@ -35,8 +36,8 @@ $(document).on 'save', 'body.issues .box .editable.value', ->
 $(document).on 'click', 'body.issues .destroy-container .btn', ->
   $(this).closest('.box').find('.destroy-container').hide()
   $(this).closest('.box').find('.thanks_for_fixing_issue').show()
-  $(this).closest('.box').trigger('toggle-minimized')
-
+  $(this).closest('.box').find('.description_container').hide()
+  $(this).closest('.box').find('.original_value_container').hide()
 
 
 # issues#new

@@ -1,5 +1,5 @@
 - # locals:
-- page || raise('no page given')
+- page || raise(ActionController::ParameterMissing, 'no page given')
 
 %h1.page.teaser_box{id: "page-#{page.id}-box"}
   = link_to page.title, page

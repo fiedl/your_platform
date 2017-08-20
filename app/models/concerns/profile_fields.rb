@@ -1,5 +1,12 @@
 concern :ProfileFields do
 
+  included do
+    has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
+    has_many :address_profile_fields, -> { where type: 'ProfileFields::Address' }, class_name: 'ProfileFields::Address', as: :profileable, dependent: :destroy, autosave: true
+
+    include AddressProfileFields
+  end
+
   def email
     @email ||= profile_fields.where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']).first.try(:value)
   end

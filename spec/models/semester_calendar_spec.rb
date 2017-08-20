@@ -25,7 +25,7 @@ describe SemesterCalendar do
         @subgroup = @corporation.child_groups.create name: "Subgroup"
         wait_for_cache
         @sub_event = @subgroup.events.create name: "Clean-up after BBQ", start_at: @event.start_at + 6.hours
-        @semester_calendar.reload.events(true)
+        @semester_calendar.reload.events.reload
       end
       it "should include the events of subgroups" do
         subject.should include @sub_event

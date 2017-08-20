@@ -1,4 +1,4 @@
-class AddGroupInternalToken < ActiveRecord::Migration
+class AddGroupInternalToken < ActiveRecord::Migration[4.2]
 
   def change
 

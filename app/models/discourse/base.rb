@@ -17,7 +17,7 @@ class Discourse::Base
   end
 
   def self.discourse_url
-    Rails.application.secrets.discourse_url || raise('secret discourse_url missing')
+    Rails.application.secrets.discourse_url || raise(RuntimeError, 'secret discourse_url missing')
   end
 
   def self.api_key
@@ -25,7 +25,7 @@ class Discourse::Base
   end
 
   def self.api_username
-    Rails.application.secrets.discourse_user || raise('secret discourse_user missing')
+    Rails.application.secrets.discourse_user || raise(RuntimeError, 'secret discourse_user missing')
   end
 
   def self.new_topic_url

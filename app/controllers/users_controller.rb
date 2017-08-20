@@ -15,7 +15,7 @@ class UsersController < ApplicationController
     begin
       redirect_to group_path(Group.everyone)
     rescue
-      raise "No basic groups are present, yet. Try `rake bootstrap:all`."
+      raise ActiveRecord::RecordNotFound, "No basic groups are present, yet. Try `rake bootstrap:all`."
     end
   end
 
@@ -39,7 +39,7 @@ class UsersController < ApplicationController
       format.js
       format.vcf do
         current_user.add_recent_contact @user
-        render text: @user.to_vcf
+        render plain: @user.to_vcf
       end
     end
   end
@@ -78,7 +78,7 @@ class UsersController < ApplicationController
     authorize! :update, @user.account
     @user.account.send_new_password
     flash[:notice] = I18n.t(:new_password_has_been_sent_to, user_name: @user.title)
-    redirect_to :back
+    redirect_back(fallback_location: sign_in_path)
   end
 
   private

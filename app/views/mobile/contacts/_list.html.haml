@@ -1,4 +1,4 @@
-- contacts || raise('no contacts given')
+- contacts || raise(ActionController::ParameterMissing, 'no contacts given')
 
 - contacts.each do |contact|
   = link_to contact.title, user_path(contact, format: 'vcf'), class: 'btn btn-default vcf_link'

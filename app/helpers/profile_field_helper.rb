@@ -20,9 +20,9 @@ module ProfileFieldHelper
   #   profile_section
   #
   def link_to_add_profile_field( args )
-    raise "expected argument 'profileable'" unless args[:profileable].present?
-    raise "expected argument 'profile_field_type'" unless args[:profile_field_type].present?
-    raise "expected argument 'profile_section'" unless args[:profile_section].present?
+    raise ActionController::ParameterMissing, "expected argument 'profileable'" unless args[:profileable].present?
+    raise ActionController::ParameterMissing, "expected argument 'profile_field_type'" unless args[:profile_field_type].present?
+    raise ActionController::ParameterMissing, "expected argument 'profile_section'" unless args[:profile_section].present?
     label_in_english_with_underscores = args[:profile_field_type].demodulize.underscore
     link_to( I18n.t(label_in_english_with_underscores),
              profile_fields_path(

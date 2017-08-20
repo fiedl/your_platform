@@ -2,6 +2,8 @@
 #
 class PageSettings < RailsSettings::ScopedSettings
 
+  include RecordUrl
+
   # Post-process settings here.
   # ...
 

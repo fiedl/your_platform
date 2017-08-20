@@ -5,12 +5,12 @@
     %title= website_title_with_app_name
     = csrf_meta_tags
     = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
-    = stylesheet_link_tag 'iweb_layout', :media => 'all'
+    = stylesheet_link_tag 'iweb_layout', :media => 'all', data: {turbolinks_track: 'reload'}
     = stylesheet_link_tag 'application', :media => 'all'
 
     = google_maps_api_script_tag
     = javascript_include_tag 'application'
-    = javascript_include_tag 'iweb'
+    = javascript_include_tag 'iweb', data: {turbolinks_track: 'reload'}
 
     = yield :scripts
     = yield :head
@@ -24,7 +24,7 @@
           .home_page_title
             = wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_title
           .home_page_sub_title= wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_sub_title
-        #logo.col-xs-12.col-sm-4= link_to image_tag(current_logo_url), root_path
+        #logo.col-xs-12.col-sm-4= link_to image_tag(current_logo_url), root_path if current_logo_url
       #toolbar.row
       .row
         = flash_area

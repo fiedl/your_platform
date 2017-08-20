@@ -3,7 +3,7 @@ class SessionsController < Devise::SessionsController
   # In order to allow guest users to sign out, skip checking if the user is already
   # signed out through devise. http://stackoverflow.com/a/26244910/2066546
   #
-  skip_before_filter :verify_signed_out_user
+  skip_before_action :verify_signed_out_user
 
   def new
     set_current_title t :sign_in
@@ -24,8 +24,8 @@ class SessionsController < Devise::SessionsController
     begin
       if params[:provider].present?
         auth = request.env['omniauth.auth']
-        user = User.from_omniauth(auth) || raise("Omniauth user not found via email: #{auth.info.email}")
-        account = user.account || raise("User has no account.")
+        user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
+        account = user.account || raise(ActionController::BadRequest, "User has no account.")
 
         sign_in_and_redirect account, event: :authentication
       else

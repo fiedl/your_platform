@@ -26,19 +26,19 @@ Gem::Specification.new do |s|
   #
 
   # Rails and Rails Additions
-  s.add_dependency "rails", "~> 4.2"
+  s.add_dependency "rails", "~> 5.0.0"
   s.add_dependency 'rack', '>= 1.6.2'
   s.add_dependency 'rack-ssl', '>= 1.3.4'
   s.add_dependency "rails-i18n"                                                        # MIT License
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
-  s.add_dependency 'web-console', '>= 2.1.3'
+  s.add_development_dependency 'web-console'
   s.add_dependency 'sprockets-rails', '~> 2.3'
   s.add_dependency 'decent_exposure', '~> 3.0'
 
 
   # JavaScript
-  s.add_dependency 'rails-assets-jquery-ujs'
+  s.add_dependency 'jquery-rails'
   s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
@@ -54,10 +54,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-inline-attachment'
 
   # Data Structures
-  # Retry transactions: Rescue from deadlocks.
-  s.add_dependency 'transaction_retry'
   # DAG Structure, https://github.com/resgraph/acts-as-dag
-  s.add_dependency 'acts-as-dag', '>= 2.5.7'                                           # MIT License
+  s.add_dependency 'acts-as-dag', '>= 4.0'
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   s.add_dependency 'wannabe_bool'
   s.add_dependency 'acts-as-taggable-on', '~> 4.0'
@@ -86,7 +84,6 @@ Gem::Specification.new do |s|
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
-  s.add_dependency 'has_secure_token' # TODO: This is included in Rails 5. Remove this when migrating to Rails 5.
 
   # Settings
   s.add_dependency 'rails-settings-cached', '>= 0.6.5'
@@ -101,8 +98,8 @@ Gem::Specification.new do |s|
   # Layout: Twitter Bootstrap
   s.add_dependency 'font-awesome-rails', '>= 4.7'
   # fix bootstrap to 3.3.3 due to icon issue:
-  s.add_dependency 'bootstrap-sass', '= 3.3.3'                                                  # Apache License 2.0
-  s.add_dependency 'sass-rails', '>= 3.2'
+  s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
+  s.add_dependency 'sass-rails'
   s.add_dependency 'rails-assets-bootstrap-social'
 
   # In Place Editing
@@ -122,7 +119,7 @@ Gem::Specification.new do |s|
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick'
-  s.add_dependency 'refile', '~> 0.5.5'
+  s.add_dependency 'refile', '>= 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
 
@@ -130,7 +127,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'gravatar_image_tag'                                                # MIT License
 
   # Edit Mode
-  s.add_dependency 'edit_mode', '>= 1.0.2'                                             # MIT License
+  s.add_dependency 'edit_mode', '>= 1.0.3'                                             # MIT License
 
   # View Helpers
   s.add_dependency 'phony'
@@ -145,7 +142,6 @@ Gem::Specification.new do |s|
 
   # Metrics
   s.add_dependency 'rack-mini-profiler'
-  s.add_dependency 'redis_analytics'
   s.add_dependency 'chartkick'
   s.add_dependency 'groupdate'
 
@@ -177,9 +173,15 @@ Gem::Specification.new do |s|
   # Contact form
   s.add_dependency 'mail_form'
 
+  # Encoding detection
+  s.add_dependency 'charlock_holmes'
+
   # API
-  s.add_dependency 'apipie-rails', '~> 0.4.0'
+  s.add_dependency 'apipie-rails', '~> 0.5'
   s.add_dependency 'discourse_api'
+
+  # Exceptions
+  s.add_dependency 'exception_notification'
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

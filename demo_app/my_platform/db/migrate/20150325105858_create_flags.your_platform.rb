@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20120811140509)
-class CreateFlags < ActiveRecord::Migration
+class CreateFlags < ActiveRecord::Migration[4.2]
   def change
     create_table :flags do |t|
       t.string :key

@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150707222857)
-class CreateMeritActions < ActiveRecord::Migration
+class CreateMeritActions < ActiveRecord::Migration[4.2]
   def change
     create_table :merit_actions do |t|
       t.integer :user_id

@@ -5,7 +5,7 @@ $(document).ready ->
   # Otherwise, the box widths would depend on whether the vertical menu
   # is shown or not.
   #
-  if $('.content_col .row.box_configuration').size() > 0
+  if $('.content_col .row.box_configuration').count() > 0
     vertical_nav_col = $('.vertical_nav_col')
     vertical_nav_col.detach()
     vertical_nav_col.prependTo($('.content_col .row.box_configuration'))

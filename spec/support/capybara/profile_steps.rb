@@ -28,7 +28,7 @@ module ProfileSteps
       end
 
       page.should have_selector('a.save_button', visible: true)
-      page.find('.save_button').trigger :click
+      click_on :save
     end
   end
 
@@ -37,7 +37,7 @@ module ProfileSteps
     field_name = type.name.demodulize.underscore
     #page.save_screenshot('tmp/screenshot1.png')
     page.should have_selector('.add_button', visible: true)
-    page.find('.add_button').trigger :click   # click_on I18n.t(:add)
+    click_on :add
     wait_for_ajax; wait_for_ajax
     #page.save_screenshot('tmp/screenshot2.png')
 
@@ -58,14 +58,13 @@ module ProfileSteps
       num_of_fields_before_destroy = all('.profile_field_parent').count
       within (all('.profile_field_parent').last) do
         page.should have_selector('.remove_button', visible: true)
-        page.find('.remove_button').trigger :click  # the button has no size in the spec
+        click_on :remove
       end
 
       page.should have_no_selector("a#add_#{field_name}_field", visible: true)
       page.should have_selector('ul.profile_fields')
 
-      wait_until { all('.profile_field_parent').count == num_of_fields_before_destroy - 1 }
-
+      sleep 3
       # p "============================================================================", type
       # puts all('.remove_button').count.to_s + ' remove buttons'
       # puts all('.profile_field_parent', visible: true).count.to_s + ' profile fields'

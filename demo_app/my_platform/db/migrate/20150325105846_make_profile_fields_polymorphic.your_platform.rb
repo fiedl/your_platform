@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20120507165551)
-class MakeProfileFieldsPolymorphic < ActiveRecord::Migration
+class MakeProfileFieldsPolymorphic < ActiveRecord::Migration[4.2]
 
   def change
     change_table :profile_fields do |t|

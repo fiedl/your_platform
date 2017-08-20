@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150518134530)
-class CreateNotifications < ActiveRecord::Migration
+class CreateNotifications < ActiveRecord::Migration[4.2]
   def change
     create_table :notifications do |t|
       t.integer :recipient_id

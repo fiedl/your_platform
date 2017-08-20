@@ -22,9 +22,9 @@ concern :UserSearch do
       q = "%" + query.gsub(' ', '%') + "%"
       users = self
         .where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
-        .order('last_name', 'first_name')
+        .order('last_name', 'first_name').distinct
       users = [User.find_by_title(query)] - [nil] if users.none?
-      users.uniq
+      users
     end
 
   end

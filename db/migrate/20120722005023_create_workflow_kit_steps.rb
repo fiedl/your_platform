@@ -1,5 +1,5 @@
 # This migration comes from workflow_kit (originally 20120721140135)
-class CreateWorkflowKitSteps < ActiveRecord::Migration
+class CreateWorkflowKitSteps < ActiveRecord::Migration[4.2]
   def change
     create_table :workflow_kit_steps do |t|
       t.integer :sequence_index

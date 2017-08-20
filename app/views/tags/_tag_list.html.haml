@@ -1,4 +1,4 @@
-- taggable || raise('no taggable given')
+- taggable || raise(ActionController::ParameterMissing, 'no taggable given')
 
 - if can? :update, taggable
   - activator_id = "#{taggable.cache_key} tag list activator".parameterize

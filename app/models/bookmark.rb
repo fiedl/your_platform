@@ -5,7 +5,7 @@
 #
 # Such bookmarkable objects may be other users, or pages, groups, et cetera.
 #
-class Bookmark < ActiveRecord::Base
+class Bookmark < ApplicationRecord
 
   belongs_to :bookmarkable, polymorphic: true
   belongs_to :user

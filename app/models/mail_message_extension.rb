@@ -37,7 +37,7 @@ module MailMessageExtension
   end
 
   def recipient_address_needs_review!
-    raise 'no recipient address' unless recipient_address.present?
+    raise RuntimeError, 'no recipient address' unless recipient_address.present?
     if profile_field = ProfileFields::Email.where(value: recipient_address).first
       Rails.logger.warn "Adding :needs_review flag to email address #{recipient_address}."
       profile_field.needs_review!

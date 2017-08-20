@@ -22,7 +22,7 @@ concern :GroupEveryone do
     end
 
     def everyone!
-      find_everyone_group || raise('special group Groups::Everyone does not exist.')
+      find_everyone_group || raise(ActiveRecord::RecordNotFound, 'special group Groups::Everyone does not exist.')
     end
 
   end

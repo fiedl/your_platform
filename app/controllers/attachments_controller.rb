@@ -1,6 +1,7 @@
 class AttachmentsController < ApplicationController
 
-  skip_filter *_process_action_callbacks.map(&:filter), only: :download # skip all filters for downloads
+  # The list of callbacks is stored in `_process_action_callbacks.map(&:filter)`
+  skip_callback :process_action # skip all filters for downloads
   skip_before_action :verify_authenticity_token, only: [:create] # via inline-attachment gem
   load_and_authorize_resource except: [:index]
   skip_authorize_resource only: [:create, :description]

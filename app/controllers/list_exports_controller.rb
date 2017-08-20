@@ -15,7 +15,7 @@ class ListExportsController < ApplicationController
       trackable: group,
       key: "Export #{params[:list] || params[:pdf_type]}",
       owner: current_user,
-      parameters: params.except('authenticity_token')
+      parameters: params.to_unsafe_hash.except('authenticity_token')
     )
 
     respond_to do |format|

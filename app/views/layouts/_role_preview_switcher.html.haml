@@ -6,7 +6,7 @@
   - active_or_not = (current_role_view != current_role.to_s) ? 'active' : ''
 
   %li{class: "backendBarItem dropdown #{active_or_not} role-preview-switcher"}
-    = link_to(params.merge({preview_as: current_role.to_s}), class: 'dropdown-toggle', data: {toggle: 'dropdown'}) do
+    = link_to "?preview_as=#{current_role.to_s}", class: 'dropdown-toggle', data: {toggle: 'dropdown'} do
       = t current_role_view
       - if Issue.by_admin(current_user).count > 0
         .badge= Issue.by_admin(current_user).count
@@ -27,4 +27,4 @@
         - current_role.allowed_preview_roles.each do |preview_role|
           - active_or_not = (preview_role == current_role_view) ? 'active' : ''
           %li{class: active_or_not}
-            = link_to t(preview_role), params.merge({preview_as: preview_role})
+            = link_to t(preview_role), "?preview_as=#{preview_role}"

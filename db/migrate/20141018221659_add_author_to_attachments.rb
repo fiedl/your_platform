@@ -1,4 +1,4 @@
-class AddAuthorToAttachments < ActiveRecord::Migration
+class AddAuthorToAttachments < ActiveRecord::Migration[4.2]
   def change
     add_column :attachments, :author_user_id, :integer
   end

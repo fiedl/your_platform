@@ -1,5 +1,5 @@
 module WorkflowKit
-  class Parameter < ActiveRecord::Base
+  class Parameter < ApplicationRecord
     self.table_name = "workflow_kit_parameters"
 
     belongs_to :parameterable, polymorphic: true

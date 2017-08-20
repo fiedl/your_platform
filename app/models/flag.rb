@@ -1,4 +1,4 @@
-class Flag < ActiveRecord::Base
+class Flag < ApplicationRecord
 
   belongs_to :flagable, polymorphic: true
 

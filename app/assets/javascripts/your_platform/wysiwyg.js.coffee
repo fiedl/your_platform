@@ -1,7 +1,7 @@
 $(document).ready ->
   #App.wysiwyg_editors = []
 
-  if $('.wysiwyg.editable').size() > 0
+  if $('.wysiwyg.editable').count() > 0
     $('.wysiwyg.editable').each ->
       editable = $(this)
       toolbar = editable.prev('.wysihtml-toolbar')
@@ -59,13 +59,14 @@ $(document).ready ->
       editable.data('editor', editor)
       editable.on 'edit', ->
         editor.enable()
+        editable.removeClass('success')
         editable.addClass('active')
         toolbar.show('blind')
 
 
       editable.on 'save', ->
         editor.disable()
-        editable.removeClass('active')
+        editable.removeClass('active success')
         toolbar.hide('blind')
 
         # Replace video galleries with the link in order to persist them correctly.
@@ -87,12 +88,13 @@ $(document).ready ->
           success: (result)->
             editor.setValue(result['display_as']) if result
             editable.effect('highlight')
+            editable.addClass('success')
             App.galleries.process(editable)
         }
 
       editable.on 'cancel', ->
         editor.disable()
-        editable.removeClass('active')
+        editable.removeClass('active success')
         toolbar.hide('blind')
 
       editor.on 'load', ->

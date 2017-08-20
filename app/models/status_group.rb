@@ -22,7 +22,7 @@ class StatusGroup < Group
     # to fix the issue cannot be used.
     #
     begin
-      raise "Status not unique for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map{ |x| x.name + ' (' + x.id.to_s + ')' }.join(', ') }." if status_groups.count > 1
+      raise ActiveRecord::RecordInvalid, "Status not unique for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map{ |x| x.name + ' (' + x.id.to_s + ')' }.join(', ') }." if status_groups.count > 1
     rescue => exception
       if Rails.env.test?
         Rails.logger.warn exception

@@ -1,6 +1,6 @@
-class BetaInvitation < ActiveRecord::Base
+class BetaInvitation < ApplicationRecord
   belongs_to :beta
-  belongs_to :inviter, class_name: "User"
+  belongs_to :inviter, class_name: "User", optional: true
   belongs_to :invitee, class_name: "User"
 
   def invitee_title

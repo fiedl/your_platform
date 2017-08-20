@@ -1,4 +1,4 @@
-class AddScoreColumnsToTermReports < ActiveRecord::Migration
+class AddScoreColumnsToTermReports < ActiveRecord::Migration[4.2]
   def change
     add_column :term_reports, :number_of_status_changes, :integer
     add_column :term_reports, :number_of_good_events, :integer

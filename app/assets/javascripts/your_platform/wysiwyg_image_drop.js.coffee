@@ -7,7 +7,7 @@ $(document).on 'edit', '.page_body', ->
   page_body = $(this)
 
   setTimeout ->
-    if page_body.find('.wysihtml-editor').size() > 0
+    if page_body.find('.wysihtml-editor').count() > 0
       selection = page_body.find('.wysihtml-editor')
         .data('editor').composer.selection
       cursor_position = {}

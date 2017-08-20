@@ -1,5 +1,5 @@
 # This migration comes from your_platform (originally 20150523111527)
-class CreateIssues < ActiveRecord::Migration
+class CreateIssues < ActiveRecord::Migration[4.2]
   def change
     create_table :issues do |t|
       t.string :title

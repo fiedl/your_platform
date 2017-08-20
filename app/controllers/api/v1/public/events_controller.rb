@@ -40,7 +40,7 @@ class Api::V1::Public::EventsController < Api::V1::PublicController
       type = (params[:term] == 'summer_term') ? 'Terms::Summer' : 'Terms::Winter'
       @events = @events.where(start_at: Term.by_year_and_type(params[:year], type).time_range)
     elsif !params[:year] && params[:term]
-      raise 'no year given'
+      raise ActionController::ParameterMissing, 'No year given'
     end
 
     if params[:limit]

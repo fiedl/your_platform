@@ -1,4 +1,4 @@
-class ChangeProfileFieldValueToText < ActiveRecord::Migration
+class ChangeProfileFieldValueToText < ActiveRecord::Migration[4.2]
 
   def change
     change_table :profile_fields do |t|

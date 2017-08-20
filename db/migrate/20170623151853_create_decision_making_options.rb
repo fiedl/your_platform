@@ -1,4 +1,4 @@
-class CreateDecisionMakingOptions < ActiveRecord::Migration
+class CreateDecisionMakingOptions < ActiveRecord::Migration[4.2]
   def change
     create_table :decision_making_options do |t|
       t.string :title

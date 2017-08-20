@@ -1,4 +1,4 @@
-class CreateNavNodes < ActiveRecord::Migration
+class CreateNavNodes < ActiveRecord::Migration[4.2]
   def change
     create_table :nav_nodes do |t|
       t.string :url_component

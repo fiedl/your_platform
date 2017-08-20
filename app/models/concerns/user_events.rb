@@ -27,7 +27,7 @@ concern :UserEvents do
     if event_or_group.kind_of? Group
       # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
       # event_or_group.members.destroy(self)
-      raise 'We need multiple dag links between two nodes!'
+      raise RuntimeError, 'We need multiple dag links between two nodes!'
     elsif event_or_group.kind_of? Event
       # TODO: Change to `unassign` when he can have multiple dag links between two nodes.
       event_or_group.attendees_group.members.destroy(self)

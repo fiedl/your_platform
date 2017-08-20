@@ -32,13 +32,13 @@ $(document).on 'change', 'body.mobile form input[type="file"]', ->
   $(this).closest('form')[0].reset()
 
 transmit_json_response_to_native_app = ->
-  if $('.json_response').size() > 0
+  if $('.json_response').count() > 0
     # See: https://github.com/turbolinks/turbolinks-ios#passing-messages-from-javascript-to-your-application
     webkit.messageHandlers.handle_json_response
       .postMessage $('.json_response').text()
 
 load_from_partial = (selector, partial)->
-  if $(selector).size() > 0
+  if $(selector).count() > 0
     target = $(selector)
     url = "/mobile/partials/#{partial}"
     $.ajax {
@@ -114,7 +114,7 @@ $(document).on 'click', 'body.mobile .photoswipe > ul.thumbs > li > img', ->
 
   enter_fullscreen()
   photoswipe_gallery.listen 'close', ->
-    unless $('.photo_index').size() > 0
+    unless $('.photo_index').count() > 0
       leave_fullscreen()
 
   $('#blackscreen').show()
@@ -139,7 +139,7 @@ $(document).on 'click', 'body.mobile .photo_index .leave_fullscreen', ->
   return false
 
 $(document).ready ->
-  if $('body.mobile.photos .photo_index').size() > 0
+  if $('body.mobile.photos .photo_index').count() > 0
     $('body').addClass('fullscreen')
 
 $(document).on 'click', 'body.mobile .profiler-output', ->

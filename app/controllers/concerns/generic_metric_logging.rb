@@ -69,7 +69,7 @@ concern :GenericMetricLogging do
         trackable: object,
         key: action_name,
         owner: current_user,
-        parameters: params.except('authenticity_token', 'attachment', 'message').deep_merge({
+        parameters: params.to_unsafe_hash.except('authenticity_token', 'attachment', 'message').deep_merge({
           "user" => {avatar: nil},
           "user_account" => {password: nil, password_confirmation: nil}
         })

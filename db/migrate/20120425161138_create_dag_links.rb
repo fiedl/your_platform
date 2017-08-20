@@ -1,4 +1,4 @@
-class CreateDagLinks < ActiveRecord::Migration
+class CreateDagLinks < ActiveRecord::Migration[4.2]
   def change
     create_table :dag_links do |t|
       t.integer :ancestor_id

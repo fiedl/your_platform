@@ -221,7 +221,7 @@ describe User do
       it "should assign the user to the developers group" do
         @user.should_not be_member_of Group.developers
         subject
-        @user.should be_member_of Group.developers
+        @user.reload.should be_member_of Group.developers
       end
     end
     describe "false" do
@@ -230,7 +230,7 @@ describe User do
       it "should un-assign the user from the developers group" do
         @user.should be_member_of Group.developers
         subject
-        @user.should_not be_member_of Group.developers
+        @user.reload.should_not be_member_of Group.developers
       end
     end
   end

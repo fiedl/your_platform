@@ -15,7 +15,7 @@ module Merit
     include Merit::RankRulesMethods
 
     def initialize
-      unless ActiveRecord::Base.read_only_mode?
+      unless ApplicationRecord.read_only_mode?
 
         # set_rank :level => 1, :to => Commiter.active do |commiter|
         #   commiter.repositories.count > 1 && commiter.followers >= 10

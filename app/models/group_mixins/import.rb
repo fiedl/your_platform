@@ -51,7 +51,7 @@ module GroupMixins::Import
       counter_for_created_groups = 0
 
       for new_group_hash in hash_array_of_groups do
-        
+
         unless parent_group.children.select { |child| child.name == (new_group_hash["name"] || new_group_hash[:name]) }.count > 0
 
           # get children from hash
@@ -196,7 +196,7 @@ module GroupMixins::Import
     #    Group.json_import_groups_into_parent_group( "foo_groups.json", foo_parent_group )
     #
     def json_import_groups_into_parent_group( json_file_title, parent_group )
-      raise "no parent group given during import" unless parent_group
+      raise RuntimeError, "no parent group given during import" unless parent_group
       import_json_file = File.open( File.join( Rails.root, "import", json_file_title ), "r" )
       json = IO.read( import_json_file )
 
@@ -223,13 +223,13 @@ module GroupMixins::Import
     #       - Group 2.2
     #   - Group 3:
     #       - Group 3.1
-    # 
-    # The YAML files are expected to be stored in the `#{Rails.root}/import` directory 
+    #
+    # The YAML files are expected to be stored in the `#{Rails.root}/import` directory
     # of the main application. For example, the file `#{Rails.root}/import/foo.yml`
     # is imported by calling:
-    # 
+    #
     #    Group.yaml_import_groups_into_parent_group( "foo.yml", parent_group )
-    # 
+    #
     def yaml_import_groups_into_parent_group( yaml_file_title, parent_group )
       yaml_file_name = File.join( Rails.root, "import", yaml_file_title )
       if File.exists? yaml_file_name
@@ -238,13 +238,13 @@ module GroupMixins::Import
         File.open( yaml_file_name, "r" ) do |file|
           sub_group_hashes = YAML::load(file)
         end
-        
+
         # This allows to use a short-form of yaml. Because of this, one doesn't need to
         # specify the `name` attribute in yaml, but can just use the group name as key,
         # like shown above in the description of the `yaml_import_groups_into_parent_group`
         # method.
         sub_group_hashes = convert_group_names_to_group_hashes( sub_group_hashes )
-        
+
         Group.hash_array_import_groups_into_parent_group( sub_group_hashes, parent_group )
 
       else
@@ -287,10 +287,10 @@ module GroupMixins::Import
 
   # When importing group structures, certain group names indicate special group attributes.
   # This method sets these flags based on the group name.
-  # 
+  #
   # This method is called by the `hash_array_import_groups_into_parent_group` method.
-  # 
-  def set_flags_based_on_group_name 
+  #
+  def set_flags_based_on_group_name
 
     # Officers
     set_flag_based_on_name :officers_parent
@@ -300,16 +300,16 @@ module GroupMixins::Import
 
     # Deceased
     set_flag_based_on_name :deceased_parent
-    
+
     # Former Members
     set_flag_based_on_name :former_members_parent
-    
+
   end
 
   def set_flag_based_on_name( name )
     translations = []
     name = name.to_sym
-    I18n.translate( name ) # required to initialize the I18n 
+    I18n.translate( name ) # required to initialize the I18n
     I18n.backend.send( :translations ).each do |language, translations_hash|
       translations << translations_hash[ name ]
     end

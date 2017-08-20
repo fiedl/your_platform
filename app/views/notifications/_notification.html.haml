@@ -1,4 +1,4 @@
-- notification || raise('no notification given')
+- notification || raise(ActionController::ParameterMissing, 'no notification given')
 
 - case notification.reference_type
 - when 'Post'

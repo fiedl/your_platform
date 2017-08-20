@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
 
   # Virtual attribute, which can be used in member lists to add a note in memory when the user
   # has joined a group or list.
@@ -28,7 +28,7 @@ class User < ActiveRecord::Base
 
   delegate                  :send_welcome_email, :to => :account
 
-  is_structureable          ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page)
+  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page), link_class_name: 'DagLink'
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
@@ -40,6 +40,7 @@ class User < ActiveRecord::Base
   has_many                  :comments, foreign_key: 'author_user_id', class_name: 'Comment'
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
+  include Structureable
   include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name
@@ -125,14 +126,25 @@ class User < ActiveRecord::Base
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
   # in the main application.
+  #
   # Notice: This method does *not* return the academic title of the user.
   #
   def title
-    name
+    "#{name} #{name_affix}".gsub("  ", " ").strip
   end
 
   def name_affix
-    title.gsub(name, '').strip
+    "#{string_for_death_symbol}".strip
+  end
+
+  # For dead users, there is a cross symbol in the title.
+  # (✝,✞,✟)
+  #
+  # More characters in this table:
+  # http://www.utf8-chartable.de/unicode-utf8-table.pl?start=9984&names=2&utf8=-&unicodeinhtml=hex
+  #
+  def string_for_death_symbol
+    "(✟)" if dead?
   end
 
 
@@ -324,7 +336,7 @@ class User < ActiveRecord::Base
   # and prevents the user from logging in.
   #
   def deactivate_account
-    raise "no user account exists, therefore it can't be destroyed." if not self.account
+    raise ActiveRecord::RecordNotFound, "no user account exists, therefore it can't be destroyed." if not self.account
     self.account.destroy
     self.account = nil
   end
@@ -395,10 +407,10 @@ class User < ActiveRecord::Base
       corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
       corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
       if corporation
-        status_group = corporation.becomes(Corporation).status_groups.first || raise('no status group in this corporation!')
+        status_group = corporation.becomes(Corporation).status_groups.first || raise(RuntimeError, 'no status group in this corporation!')
         status_group.assign_user self
       else
-        raise 'corporation not found.'
+        raise ActiveRecord::RecordNotFound, 'corporation not found.'
       end
       self.add_to_corporation = nil
     end

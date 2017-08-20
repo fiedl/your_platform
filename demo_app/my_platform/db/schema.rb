@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -13,134 +12,128 @@
 
 ActiveRecord::Schema.define(version: 20170809152349) do
 
-  create_table "activities", force: :cascade do |t|
-    t.integer  "trackable_id",   limit: 4
-    t.string   "trackable_type", limit: 255
-    t.integer  "owner_id",       limit: 4
-    t.string   "owner_type",     limit: 255
-    t.string   "key",            limit: 255
+  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "trackable_type"
+    t.integer  "trackable_id"
+    t.string   "owner_type"
+    t.integer  "owner_id"
+    t.string   "key"
     t.text     "parameters",     limit: 65535
-    t.integer  "recipient_id",   limit: 4
-    t.string   "recipient_type", limit: 255
+    t.string   "recipient_type"
+    t.integer  "recipient_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
+    t.index ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
+    t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
   end
 
-  add_index "activities", ["owner_id", "owner_type"], name: "index_activities_on_owner_id_and_owner_type", using: :btree
-  add_index "activities", ["recipient_id", "recipient_type"], name: "index_activities_on_recipient_id_and_recipient_type", using: :btree
-  add_index "activities", ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
-
-  create_table "attachments", force: :cascade do |t|
-    t.string   "file",           limit: 255
-    t.string   "title",          limit: 255
+  create_table "attachments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "file"
+    t.string   "title"
     t.text     "description",    limit: 65535
-    t.integer  "parent_id",      limit: 4
-    t.string   "parent_type",    limit: 255
+    t.integer  "parent_id"
+    t.string   "parent_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "content_type",   limit: 255
-    t.integer  "file_size",      limit: 4
-    t.integer  "author_user_id", limit: 4
-    t.integer  "width",          limit: 4
-    t.integer  "height",         limit: 4
-    t.string   "type",           limit: 255
+    t.string   "content_type"
+    t.integer  "file_size"
+    t.integer  "author_user_id"
+    t.integer  "width"
+    t.integer  "height"
+    t.string   "type"
+    t.index ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
   end
 
-  add_index "attachments", ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
-
-  create_table "auth_tokens", force: :cascade do |t|
-    t.string   "token",         limit: 255
-    t.integer  "user_id",       limit: 4
-    t.string   "resource_type", limit: 255
-    t.integer  "resource_id",   limit: 4
-    t.integer  "post_id",       limit: 4
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+  create_table "auth_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "token"
+    t.integer  "user_id"
+    t.string   "resource_type"
+    t.integer  "resource_id"
+    t.integer  "post_id"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.index ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
   end
 
-  add_index "auth_tokens", ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
-
-  create_table "badges_sashes", force: :cascade do |t|
-    t.integer  "badge_id",      limit: 4
-    t.integer  "sash_id",       limit: 4
-    t.boolean  "notified_user",           default: false
+  create_table "badges_sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "badge_id"
+    t.integer  "sash_id"
+    t.boolean  "notified_user", default: false
     t.datetime "created_at"
+    t.index ["badge_id", "sash_id"], name: "index_badges_sashes_on_badge_id_and_sash_id", using: :btree
+    t.index ["badge_id"], name: "index_badges_sashes_on_badge_id", using: :btree
+    t.index ["sash_id"], name: "index_badges_sashes_on_sash_id", using: :btree
   end
 
-  add_index "badges_sashes", ["badge_id", "sash_id"], name: "index_badges_sashes_on_badge_id_and_sash_id", using: :btree
-  add_index "badges_sashes", ["badge_id"], name: "index_badges_sashes_on_badge_id", using: :btree
-  add_index "badges_sashes", ["sash_id"], name: "index_badges_sashes_on_sash_id", using: :btree
-
-  create_table "beta_invitations", force: :cascade do |t|
-    t.integer  "beta_id",    limit: 4
-    t.integer  "inviter_id", limit: 4
-    t.integer  "invitee_id", limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+  create_table "beta_invitations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "beta_id"
+    t.integer  "inviter_id"
+    t.integer  "invitee_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "betas", force: :cascade do |t|
-    t.string   "title",                       limit: 255
-    t.integer  "max_invitations_per_inviter", limit: 4
+  create_table "betas", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
+    t.integer  "max_invitations_per_inviter"
     t.datetime "created_at",                                null: false
     t.datetime "updated_at",                                null: false
     t.text     "description",                 limit: 65535
-    t.string   "key",                         limit: 255
+    t.string   "key"
   end
 
-  create_table "bookmarks", force: :cascade do |t|
-    t.integer  "bookmarkable_id",   limit: 4
-    t.string   "bookmarkable_type", limit: 255
-    t.integer  "user_id",           limit: 4
+  create_table "bookmarks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "bookmarkable_id"
+    t.string   "bookmarkable_type"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["user_id"], name: "bookmarks_user_id_fk", using: :btree
   end
 
-  add_index "bookmarks", ["user_id"], name: "bookmarks_user_id_fk", using: :btree
-
-  create_table "comments", force: :cascade do |t|
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.text     "text",             limit: 65535
-    t.integer  "author_user_id",   limit: 4
-    t.string   "commentable_type", limit: 255
-    t.integer  "commentable_id",   limit: 4
+    t.integer  "author_user_id"
+    t.string   "commentable_type"
+    t.integer  "commentable_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
   end
 
-  create_table "dag_links", force: :cascade do |t|
-    t.integer  "ancestor_id",     limit: 4
-    t.string   "ancestor_type",   limit: 255
-    t.integer  "descendant_id",   limit: 4
-    t.string   "descendant_type", limit: 255
+  create_table "dag_links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "ancestor_id"
+    t.string   "ancestor_type"
+    t.integer  "descendant_id"
+    t.string   "descendant_type"
     t.boolean  "direct"
-    t.integer  "count",           limit: 4
+    t.integer  "count"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.datetime "valid_to"
-    t.datetime "valid_from"
-    t.string   "type",            limit: 255
+    t.datetime "valid_to",        precision: 6
+    t.datetime "valid_from",      precision: 6
+    t.string   "type"
+    t.index ["ancestor_id", "ancestor_type", "direct"], name: "dag_ancestor", using: :btree
+    t.index ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
   end
 
-  add_index "dag_links", ["ancestor_id", "ancestor_type", "direct"], name: "dag_ancestor", using: :btree
-  add_index "dag_links", ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
-
-  create_table "decision_making_options", force: :cascade do |t|
-    t.string   "title",       limit: 255
+  create_table "decision_making_options", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
     t.text     "description", limit: 65535
-    t.integer  "process_id",  limit: 4
+    t.integer  "process_id"
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
 
-  create_table "decision_making_processes", force: :cascade do |t|
-    t.string   "title",                limit: 255
-    t.string   "type",                 limit: 255
+  create_table "decision_making_processes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
+    t.string   "type"
     t.text     "wording",              limit: 65535
     t.text     "rationale",            limit: 65535
-    t.integer  "proposer_group_id",    limit: 4
-    t.integer  "scope_group_id",       limit: 4
-    t.integer  "creator_user_id",      limit: 4
-    t.string   "required_majority",    limit: 255
+    t.integer  "proposer_group_id"
+    t.integer  "scope_group_id"
+    t.integer  "creator_user_id"
+    t.string   "required_majority"
     t.datetime "proposed_at"
     t.datetime "opened_for_voting_at"
     t.datetime "deadline"
@@ -149,186 +142,181 @@ ActiveRecord::Schema.define(version: 20170809152349) do
     t.datetime "updated_at",                         null: false
   end
 
-  create_table "decision_making_signatures", force: :cascade do |t|
-    t.integer  "user_id",       limit: 4
-    t.string   "signable_type", limit: 255
-    t.string   "signable_id",   limit: 255
-    t.string   "verified_by",   limit: 255
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+  create_table "decision_making_signatures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.string   "signable_type"
+    t.string   "signable_id"
+    t.string   "verified_by"
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
   end
 
-  create_table "decision_making_votes", force: :cascade do |t|
-    t.integer  "process_id", limit: 4
-    t.integer  "option_id",  limit: 4
-    t.integer  "user_id",    limit: 4
-    t.integer  "group_id",   limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+  create_table "decision_making_votes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "process_id"
+    t.integer  "option_id"
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "events", force: :cascade do |t|
-    t.string   "name",                      limit: 255
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
     t.text     "description",               limit: 65535
     t.datetime "start_at"
     t.datetime "end_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "location",                  limit: 255
+    t.string   "location"
     t.boolean  "publish_on_global_website"
     t.boolean  "publish_on_local_website"
-    t.integer  "group_id",                  limit: 4
+    t.integer  "group_id"
   end
 
-  create_table "flags", force: :cascade do |t|
-    t.string   "key",           limit: 255
-    t.integer  "flagable_id",   limit: 4
-    t.string   "flagable_type", limit: 255
+  create_table "flags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "key"
+    t.integer  "flagable_id"
+    t.string   "flagable_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["flagable_id", "flagable_type", "key"], name: "flagable_key", using: :btree
+    t.index ["flagable_id", "flagable_type"], name: "flagable", using: :btree
+    t.index ["key"], name: "key", using: :btree
   end
 
-  add_index "flags", ["flagable_id", "flagable_type", "key"], name: "flagable_key", using: :btree
-  add_index "flags", ["flagable_id", "flagable_type"], name: "flagable", using: :btree
-  add_index "flags", ["key"], name: "key", using: :btree
-
-  create_table "geo_locations", force: :cascade do |t|
-    t.string   "address",      limit: 255
+  create_table "geo_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "address"
     t.float    "latitude",     limit: 24
     t.float    "longitude",    limit: 24
-    t.string   "country",      limit: 255
-    t.string   "country_code", limit: 255
-    t.string   "city",         limit: 255
-    t.string   "postal_code",  limit: 255
+    t.string   "country"
+    t.string   "country_code"
+    t.string   "city"
+    t.string   "postal_code"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "queried_at"
-    t.string   "street",       limit: 255
-    t.string   "state",        limit: 255
+    t.string   "street"
+    t.string   "state"
+    t.index ["address"], name: "index_geo_locations_on_address", using: :btree
   end
 
-  add_index "geo_locations", ["address"], name: "index_geo_locations_on_address", using: :btree
-
-  create_table "groups", force: :cascade do |t|
-    t.string   "name",                       limit: 255
+  create_table "groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "token",                      limit: 255
-    t.string   "extensive_name",             limit: 255
-    t.string   "internal_token",             limit: 255
+    t.string   "token"
+    t.string   "extensive_name"
+    t.string   "internal_token"
     t.text     "body",                       limit: 65535
-    t.string   "type",                       limit: 255
-    t.string   "mailing_list_sender_filter", limit: 255
+    t.string   "type"
+    t.string   "mailing_list_sender_filter"
   end
 
-  create_table "issues", force: :cascade do |t|
-    t.string   "title",                limit: 255
+  create_table "issues", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
     t.text     "description",          limit: 65535
-    t.integer  "reference_id",         limit: 4
-    t.string   "reference_type",       limit: 255
+    t.integer  "reference_id"
+    t.string   "reference_type"
     t.datetime "resolved_at"
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
-    t.integer  "responsible_admin_id", limit: 4
-    t.integer  "author_id",            limit: 4
+    t.integer  "responsible_admin_id"
+    t.integer  "author_id"
   end
 
-  create_table "last_seen_activities", force: :cascade do |t|
-    t.integer  "user_id",             limit: 4
-    t.string   "description",         limit: 255
-    t.integer  "link_to_object_id",   limit: 4
-    t.string   "link_to_object_type", limit: 255
+  create_table "last_seen_activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.string   "description"
+    t.integer  "link_to_object_id"
+    t.string   "link_to_object_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["user_id"], name: "last_seen_activities_user_id_fk", using: :btree
   end
 
-  add_index "last_seen_activities", ["user_id"], name: "last_seen_activities_user_id_fk", using: :btree
-
-  create_table "locations", force: :cascade do |t|
-    t.integer  "object_id",   limit: 4
-    t.string   "object_type", limit: 255
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "object_id"
+    t.string   "object_type"
     t.float    "longitude",   limit: 24
     t.float    "latitude",    limit: 24
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
   end
 
-  create_table "mentions", force: :cascade do |t|
-    t.integer  "who_user_id",    limit: 4
-    t.integer  "whom_user_id",   limit: 4
-    t.string   "reference_type", limit: 255
-    t.integer  "reference_id",   limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+  create_table "mentions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "who_user_id"
+    t.integer  "whom_user_id"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.index ["whom_user_id"], name: "index_mentions_on_whom_user_id", using: :btree
   end
 
-  add_index "mentions", ["whom_user_id"], name: "index_mentions_on_whom_user_id", using: :btree
-
-  create_table "merit_actions", force: :cascade do |t|
-    t.integer  "user_id",       limit: 4
-    t.string   "action_method", limit: 255
-    t.integer  "action_value",  limit: 4
+  create_table "merit_actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.string   "action_method"
+    t.integer  "action_value"
     t.boolean  "had_errors",                  default: false
-    t.string   "target_model",  limit: 255
-    t.integer  "target_id",     limit: 4
+    t.string   "target_model"
+    t.integer  "target_id"
     t.text     "target_data",   limit: 65535
     t.boolean  "processed",                   default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "merit_activity_logs", force: :cascade do |t|
-    t.integer  "action_id",           limit: 4
-    t.string   "related_change_type", limit: 255
-    t.integer  "related_change_id",   limit: 4
-    t.string   "description",         limit: 255
+  create_table "merit_activity_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "action_id"
+    t.string   "related_change_type"
+    t.integer  "related_change_id"
+    t.string   "description"
     t.datetime "created_at"
   end
 
-  create_table "merit_score_points", force: :cascade do |t|
-    t.integer  "score_id",   limit: 4
-    t.integer  "num_points", limit: 4,   default: 0
-    t.string   "log",        limit: 255
+  create_table "merit_score_points", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "score_id"
+    t.integer  "num_points", default: 0
+    t.string   "log"
     t.datetime "created_at"
   end
 
-  create_table "merit_scores", force: :cascade do |t|
-    t.integer "sash_id",  limit: 4
-    t.string  "category", limit: 255, default: "default"
+  create_table "merit_scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer "sash_id"
+    t.string  "category", default: "default"
   end
 
-  create_table "nav_nodes", force: :cascade do |t|
-    t.string   "url_component",     limit: 255
-    t.string   "breadcrumb_item",   limit: 255
-    t.string   "menu_item",         limit: 255
+  create_table "nav_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "url_component"
+    t.string   "breadcrumb_item"
+    t.string   "menu_item"
     t.boolean  "slim_breadcrumb"
     t.boolean  "slim_url"
     t.boolean  "slim_menu"
     t.boolean  "hidden_menu"
-    t.integer  "navable_id",        limit: 4
-    t.string   "navable_type",      limit: 255
+    t.string   "navable_type"
+    t.integer  "navable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "hidden_teaser_box"
+    t.index ["navable_id", "navable_type"], name: "navable_type", using: :btree
   end
 
-  add_index "nav_nodes", ["navable_id", "navable_type"], name: "navable_type", using: :btree
-
-  create_table "navable_visits", force: :cascade do |t|
-    t.integer  "navable_id",   limit: 4
-    t.string   "navable_type", limit: 255
-    t.integer  "group_id",     limit: 4
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+  create_table "navable_visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "navable_id"
+    t.string   "navable_type"
+    t.integer  "group_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  create_table "notifications", force: :cascade do |t|
-    t.integer  "recipient_id",   limit: 4
-    t.integer  "author_id",      limit: 4
-    t.string   "reference_url",  limit: 255
-    t.string   "reference_type", limit: 255
-    t.integer  "reference_id",   limit: 4
-    t.string   "message",        limit: 255
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "recipient_id"
+    t.integer  "author_id"
+    t.string   "reference_url"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+    t.string   "message"
     t.text     "text",           limit: 65535
     t.datetime "sent_at"
     t.datetime "created_at",                   null: false
@@ -337,289 +325,280 @@ ActiveRecord::Schema.define(version: 20170809152349) do
     t.datetime "failed_at"
   end
 
-  create_table "pages", force: :cascade do |t|
-    t.string   "title",             limit: 255
+  create_table "pages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
     t.text     "content",           limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "redirect_to",       limit: 255
-    t.integer  "author_user_id",    limit: 4
-    t.string   "type",              limit: 255
+    t.string   "redirect_to"
+    t.integer  "author_user_id"
+    t.string   "type"
     t.datetime "archived_at"
     t.text     "box_configuration", limit: 65535
     t.text     "teaser_text",       limit: 65535
     t.datetime "published_at"
+    t.index ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
   end
 
-  add_index "pages", ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
-
-  create_table "permalinks", force: :cascade do |t|
-    t.string   "url_path",       limit: 255
-    t.string   "reference_type", limit: 255
-    t.integer  "reference_id",   limit: 4
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-    t.string   "host",           limit: 255
+  create_table "permalinks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "url_path"
+    t.string   "reference_type"
+    t.integer  "reference_id"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "host"
   end
 
-  create_table "post_deliveries", force: :cascade do |t|
-    t.integer  "post_id",    limit: 4
-    t.integer  "user_id",    limit: 4
-    t.string   "user_email", limit: 255
+  create_table "post_deliveries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "post_id"
+    t.integer  "user_id"
+    t.string   "user_email"
     t.datetime "sent_at"
     t.datetime "failed_at"
-    t.string   "comment",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+    t.string   "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "posts", force: :cascade do |t|
-    t.string   "subject",         limit: 255
+  create_table "posts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "subject"
     t.text     "text",            limit: 65535
-    t.integer  "group_id",        limit: 4
-    t.integer  "author_user_id",  limit: 4
-    t.string   "external_author", limit: 255
+    t.integer  "group_id"
+    t.integer  "author_user_id"
+    t.string   "external_author"
     t.datetime "sent_at"
     t.boolean  "sticky"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "entire_message",  limit: 65535
-    t.string   "message_id",      limit: 255
-    t.string   "content_type",    limit: 255
-    t.string   "sent_via",        limit: 255
+    t.string   "message_id"
+    t.string   "content_type"
+    t.string   "sent_via"
+    t.index ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
+    t.index ["group_id"], name: "posts_group_id_fk", using: :btree
   end
 
-  add_index "posts", ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
-  add_index "posts", ["group_id"], name: "posts_group_id_fk", using: :btree
-
-  create_table "profile_fields", force: :cascade do |t|
-    t.integer  "profileable_id",   limit: 4
-    t.string   "label",            limit: 255
-    t.string   "type",             limit: 255
+  create_table "profile_fields", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "profileable_id"
+    t.string   "label"
+    t.string   "type"
     t.text     "value",            limit: 65535
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "profileable_type", limit: 255
-    t.integer  "parent_id",        limit: 4
+    t.string   "profileable_type"
+    t.integer  "parent_id"
+    t.index ["parent_id"], name: "profile_fields_parent_id_fk", using: :btree
+    t.index ["profileable_id", "profileable_type", "type"], name: "profileable_type", using: :btree
+    t.index ["profileable_id", "profileable_type"], name: "profileable", using: :btree
+    t.index ["type"], name: "type", using: :btree
   end
 
-  add_index "profile_fields", ["parent_id"], name: "profile_fields_parent_id_fk", using: :btree
-  add_index "profile_fields", ["profileable_id", "profileable_type", "type"], name: "profileable_type", using: :btree
-  add_index "profile_fields", ["profileable_id", "profileable_type"], name: "profileable", using: :btree
-  add_index "profile_fields", ["type"], name: "type", using: :btree
-
-  create_table "projects", force: :cascade do |t|
-    t.string   "title",       limit: 255
+  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "title"
     t.text     "description", limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
 
-  create_table "relationships", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.integer  "user1_id",   limit: 4
-    t.integer  "user2_id",   limit: 4
+  create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.integer  "user1_id"
+    t.integer  "user2_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["user1_id"], name: "relationships_user1_id_fk", using: :btree
+    t.index ["user2_id"], name: "relationships_user2_id_fk", using: :btree
+  end
+
+  create_table "requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.string   "ip"
+    t.string   "method"
+    t.string   "request_url"
+    t.string   "referer"
+    t.integer  "navable_id"
+    t.string   "navable_type"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  create_table "sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "relationships", ["user1_id"], name: "relationships_user1_id_fk", using: :btree
-  add_index "relationships", ["user2_id"], name: "relationships_user2_id_fk", using: :btree
-
-  create_table "requests", force: :cascade do |t|
-    t.integer  "user_id",      limit: 4
-    t.string   "ip",           limit: 255
-    t.string   "method",       limit: 255
-    t.string   "request_url",  limit: 255
-    t.string   "referer",      limit: 255
-    t.integer  "navable_id",   limit: 4
-    t.string   "navable_type", limit: 255
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+  create_table "semester_calendars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "term_id"
   end
 
-  create_table "sashes", force: :cascade do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "semester_calendars", force: :cascade do |t|
-    t.integer  "group_id",   limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "term_id",    limit: 4
-  end
-
-  create_table "settings", force: :cascade do |t|
-    t.string   "var",        limit: 255,   null: false
+  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "var",                      null: false
     t.text     "value",      limit: 65535
-    t.integer  "thing_id",   limit: 4
-    t.string   "thing_type", limit: 255
+    t.integer  "thing_id"
+    t.string   "thing_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
+  end
+
+  create_table "states", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.integer  "author_user_id"
+    t.integer  "reference_id"
+    t.string   "reference_type"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  create_table "status_group_membership_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "membership_id"
+    t.integer  "promoted_by_workflow_id"
+    t.integer  "promoted_on_event_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
-
-  create_table "states", force: :cascade do |t|
-    t.string   "name",           limit: 255
-    t.integer  "author_user_id", limit: 4
-    t.integer  "reference_id",   limit: 4
-    t.string   "reference_type", limit: 255
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
-  end
-
-  create_table "status_group_membership_infos", force: :cascade do |t|
-    t.integer  "membership_id",           limit: 4
-    t.integer  "promoted_by_workflow_id", limit: 4
-    t.integer  "promoted_on_event_id",    limit: 4
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "taggings", force: :cascade do |t|
-    t.integer  "tag_id",        limit: 4
-    t.integer  "taggable_id",   limit: 4
-    t.string   "taggable_type", limit: 255
-    t.integer  "tagger_id",     limit: 4
-    t.string   "tagger_type",   limit: 255
+  create_table "taggings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "tag_id"
+    t.string   "taggable_type"
+    t.integer  "taggable_id"
+    t.string   "tagger_type"
+    t.integer  "tagger_id"
     t.string   "context",       limit: 128
     t.datetime "created_at"
+    t.index ["context"], name: "index_taggings_on_context", using: :btree
+    t.index ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
+    t.index ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
+    t.index ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
+    t.index ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
+    t.index ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
+    t.index ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
+    t.index ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
+    t.index ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
   end
 
-  add_index "taggings", ["context"], name: "index_taggings_on_context", using: :btree
-  add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
-  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "context"], name: "index_taggings_on_taggable_id_and_taggable_type_and_context", using: :btree
-  add_index "taggings", ["taggable_id", "taggable_type", "tagger_id", "context"], name: "taggings_idy", using: :btree
-  add_index "taggings", ["taggable_id"], name: "index_taggings_on_taggable_id", using: :btree
-  add_index "taggings", ["taggable_type"], name: "index_taggings_on_taggable_type", using: :btree
-  add_index "taggings", ["tagger_id", "tagger_type"], name: "index_taggings_on_tagger_id_and_tagger_type", using: :btree
-  add_index "taggings", ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
-
-  create_table "tags", force: :cascade do |t|
-    t.string  "name",           limit: 255
-    t.integer "taggings_count", limit: 4,     default: 0
-    t.string  "title",          limit: 255
+  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string  "name",                                     collation: "utf8_bin"
+    t.integer "taggings_count",               default: 0
+    t.string  "title"
     t.text    "body",           limit: 65535
-    t.string  "subtitle",       limit: 255
+    t.string  "subtitle"
+    t.index ["name"], name: "index_tags_on_name", unique: true, using: :btree
   end
 
-  add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
-
-  create_table "term_report_member_entries", force: :cascade do |t|
-    t.integer  "user_id",           limit: 4
-    t.integer  "term_report_id",    limit: 4
-    t.string   "last_name",         limit: 255
-    t.string   "first_name",        limit: 255
-    t.string   "name_affix",        limit: 255
-    t.string   "date_of_birth",     limit: 255
-    t.string   "primary_address",   limit: 255
-    t.string   "secondary_address", limit: 255
-    t.string   "phone",             limit: 255
-    t.string   "email",             limit: 255
-    t.string   "profession",        limit: 255
-    t.string   "category",          limit: 255
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+  create_table "term_report_member_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "user_id"
+    t.integer  "term_report_id"
+    t.string   "last_name"
+    t.string   "first_name"
+    t.string   "name_affix"
+    t.string   "date_of_birth"
+    t.string   "primary_address"
+    t.string   "secondary_address"
+    t.string   "phone"
+    t.string   "email"
+    t.string   "profession"
+    t.string   "category"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
   end
 
-  create_table "term_reports", force: :cascade do |t|
-    t.integer  "term_id",                           limit: 4
-    t.integer  "group_id",                          limit: 4
-    t.integer  "number_of_members",                 limit: 4
-    t.integer  "number_of_new_members",             limit: 4
-    t.integer  "number_of_membership_ends",         limit: 4
-    t.integer  "number_of_deaths",                  limit: 4
-    t.integer  "number_of_events",                  limit: 4
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
-    t.integer  "balance",                           limit: 4
-    t.string   "type",                              limit: 255
-    t.integer  "number_of_status_changes",          limit: 4
-    t.integer  "number_of_good_events",             limit: 4
-    t.integer  "number_of_events_with_pictures",    limit: 4
-    t.integer  "number_of_semester_calendars",      limit: 4
-    t.integer  "number_of_semester_calendar_pdfs",  limit: 4
-    t.integer  "number_of_current_officers",        limit: 4
-    t.integer  "number_of_documents",               limit: 4
-    t.integer  "number_of_good_member_profiles",    limit: 4
-    t.integer  "number_of_current_member_profiles", limit: 4
-    t.decimal  "score",                                         precision: 10
+  create_table "term_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "term_id"
+    t.integer  "group_id"
+    t.integer  "number_of_members"
+    t.integer  "number_of_new_members"
+    t.integer  "number_of_membership_ends"
+    t.integer  "number_of_deaths"
+    t.integer  "number_of_events"
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+    t.integer  "balance"
+    t.string   "type"
+    t.integer  "number_of_status_changes"
+    t.integer  "number_of_good_events"
+    t.integer  "number_of_events_with_pictures"
+    t.integer  "number_of_semester_calendars"
+    t.integer  "number_of_semester_calendar_pdfs"
+    t.integer  "number_of_current_officers"
+    t.integer  "number_of_documents"
+    t.integer  "number_of_good_member_profiles"
+    t.integer  "number_of_current_member_profiles"
+    t.decimal  "score",                             precision: 10
   end
 
-  create_table "terms", force: :cascade do |t|
-    t.integer  "year",       limit: 4
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.string   "type",       limit: 255
+  create_table "terms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "type"
   end
 
-  create_table "user_accounts", force: :cascade do |t|
-    t.string   "encrypted_password",     limit: 255, default: "", null: false
+  create_table "user_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "encrypted_password",     default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "user_id",                limit: 4
-    t.string   "reset_password_token",   limit: 255
+    t.integer  "user_id"
+    t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0
+    t.integer  "sign_in_count",          default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.string   "auth_token",             limit: 255
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.string   "auth_token"
+    t.index ["reset_password_token"], name: "index_user_accounts_on_reset_password_token", unique: true, using: :btree
+    t.index ["user_id"], name: "user_accounts_user_id_fk", using: :btree
   end
 
-  add_index "user_accounts", ["reset_password_token"], name: "index_user_accounts_on_reset_password_token", unique: true, using: :btree
-  add_index "user_accounts", ["user_id"], name: "user_accounts_user_id_fk", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "alias",               limit: 255
-    t.string   "first_name",          limit: 255
-    t.string   "last_name",           limit: 255
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "alias"
+    t.string   "first_name"
+    t.string   "last_name"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "female"
-    t.string   "accepted_terms",      limit: 255
+    t.string   "accepted_terms"
     t.datetime "accepted_terms_at"
     t.boolean  "incognito"
-    t.string   "avatar_id",           limit: 255
-    t.string   "notification_policy", limit: 255
-    t.string   "locale",              limit: 255
-    t.integer  "sash_id",             limit: 4
-    t.integer  "level",               limit: 4,   default: 0
+    t.string   "avatar_id"
+    t.string   "notification_policy"
+    t.string   "locale"
+    t.integer  "sash_id"
+    t.integer  "level",               default: 0
   end
 
-  create_table "workflow_kit_parameters", force: :cascade do |t|
-    t.string   "key",                limit: 255
-    t.string   "value",              limit: 255
-    t.integer  "parameterable_id",   limit: 4
-    t.string   "parameterable_type", limit: 255
+  create_table "workflow_kit_parameters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "key"
+    t.string   "value"
+    t.string   "parameterable_type"
+    t.integer  "parameterable_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "workflow_kit_steps", force: :cascade do |t|
-    t.integer  "sequence_index", limit: 4
-    t.integer  "workflow_id",    limit: 4
-    t.string   "brick_name",     limit: 255
+  create_table "workflow_kit_steps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.integer  "sequence_index"
+    t.integer  "workflow_id"
+    t.string   "brick_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["workflow_id"], name: "workflow_kit_steps_workflow_id_fk", using: :btree
+  end
+
+  create_table "workflow_kit_workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "workflow_kit_steps", ["workflow_id"], name: "workflow_kit_steps_workflow_id_fk", using: :btree
-
-  create_table "workflow_kit_workflows", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.string   "description", limit: 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "workflows", force: :cascade do |t|
-    t.string   "name",       limit: 255
+  create_table "workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

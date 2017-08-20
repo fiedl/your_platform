@@ -92,7 +92,7 @@ class GroupsController < ApplicationController
         trackable: @group,
         key: "Export #{params[:list] || params[:pdf_type]}",
         owner: current_user,
-        parameters: params.except('authenticity_token')
+        parameters: params.to_unsafe_hash.except('authenticity_token')
       )
     end
 
@@ -138,7 +138,7 @@ class GroupsController < ApplicationController
       params[:group][:body] = html2markdown params[:group][:body]
     end
 
-    @group.update_attributes(group_params)
+    @group.update_attributes!(group_params)
     respond_to do |format|
       format.json { respond_with_bip @group.reload }
     end

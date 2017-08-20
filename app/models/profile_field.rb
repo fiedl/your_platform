@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
-class ProfileField < ActiveRecord::Base
+class ProfileField < ApplicationRecord
 
   has_many               :issues, as: :reference, dependent: :destroy
 
   include ProfileFieldMixins::HasChildProfileFields
   include ProfileFieldProfileable
+  include ProfileFieldComposedValue
 
   # Only allow the type column to be an existing class name.
   #
@@ -40,12 +40,10 @@ class ProfileField < ActiveRecord::Base
   #    account = BankAccount.create( label: "Bank Account" )
   #
   acts_as_tree
-  before_save :adapt_composed_value
-  after_save :save_parent_composed_value
 
   # Profile fields may have flags, e.g. :preferred_address.
   #
-  has_many_flags
+  include Flags
 
 
   def title
@@ -84,40 +82,15 @@ class ProfileField < ActiveRecord::Base
     translated_label_text = I18n.translate( label_text, :default => label_text.to_s ) if label_text.present?
   end
 
-  # If the field has children, their values are included in the main field's value.
-  # Attention! Probably, you want to display only one in the view: The main value or the child fields.
-  #
-  def composed_value
-    if children_count > 0
-      ([value] + children.collect { |child| child.value }).join(", ")
-    else
-      value
-    end
-  end
-
-  def save_parent_composed_value
-    if self.value_changed? && (! @do_not_save_parent) && self.parent && (self.parent.value != (composed_value = self.parent.composed_value))
-      self.parent.update_attributes value: composed_value
-      @do_not_save_parent = false
-    end
-  end
-  def do_not_save_parent
-    @do_not_save_parent = true
-  end
-
   def children_count
     children.count
-  end
-
-  def adapt_composed_value
-    self.value = self.composed_value if children.any?
   end
 
   # Returns a profile field type in an underscored form that can be used as argument for I18n.translate.
   # Example: For a ProfileFields::FooBar-type profile field, this method returns 'foo_bar'.
   #
   def underscored_type
-    raise 'This profile field has no type!' unless self.type.present?
+    raise RuntimeError, 'This profile field has no type!' unless self.type.present?
     self.type.demodulize.underscore
   end
 
@@ -186,7 +159,7 @@ class ProfileField < ActiveRecord::Base
   #
   # This is stored as the flag :needs_review.
   #
-  may_need_review
+  include Review
 
   def vcard_property_type
     # Subclasses need to override this. For example for phones: "TEL", emails: "EMAIL", ...

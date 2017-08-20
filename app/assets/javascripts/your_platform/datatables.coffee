@@ -90,9 +90,9 @@ App.datatables = {
      .addClass('form-control')
 
   create: (selector, options)->
-    if $(selector).size() > 0
+    if $(selector).count() > 0
       unless $.fn.dataTable.isDataTable(selector)
-        if $(selector).parents('.dataTables_wrapper').size() == 0
+        if $(selector).parents('.dataTables_wrapper').count() == 0
           configuration = {}
           $.extend configuration, App.datatables.common_configuration()
           $.extend configuration, options
@@ -248,7 +248,7 @@ $(document).ready ->
 
   App.datatables.create '.datatable.corporation_score', {
     "pageLength": 10,
-    "order": [[$('.datatable.corporation_score tbody tr:first td').size() - 1, "desc"]],
+    "order": [[$('.datatable.corporation_score tbody tr:first td').count() - 1, "desc"]],
   }
 
   App.datatables.create '.datatable.bv_mappings', {

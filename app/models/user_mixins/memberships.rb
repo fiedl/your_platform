@@ -44,7 +44,7 @@ module UserMixins::Memberships
     # This associates the groups the user is member of, direct as well as indirect.
     #
     has_many(:groups,
-      -> { where('dag_links.descendant_type' => 'User').uniq },
+      -> { where('dag_links.descendant_type' => 'User').distinct },
       through: :memberships,
       source: :ancestor, source_type: 'Group'
       )
@@ -52,7 +52,7 @@ module UserMixins::Memberships
     # This associates only the direct groups.
     #
     has_many(:direct_groups,
-      -> { where('dag_links.descendant_type' => 'User', 'dag_links.direct' => true).uniq },
+      -> { where('dag_links.descendant_type' => 'User', 'dag_links.direct' => true).distinct },
       through: :direct_memberships,
       source: :ancestor, source_type: 'Group'
       )
@@ -60,7 +60,7 @@ module UserMixins::Memberships
     # This associates only the indirect groups.
     #
     has_many(:indirect_groups,
-      -> { where('dag_links.descendant_type' => 'User', 'dag_links.direct' => false).uniq },
+      -> { where('dag_links.descendant_type' => 'User', 'dag_links.direct' => false).distinct },
       through: :indirect_memberships,
       source: :ancestor, source_type: 'Group'
       )
