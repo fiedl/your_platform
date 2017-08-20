@@ -126,14 +126,25 @@ class User < ApplicationRecord
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden
   # in the main application.
+  #
   # Notice: This method does *not* return the academic title of the user.
   #
   def title
-    name
+    "#{name} #{name_affix}".gsub("  ", " ").strip
   end
 
   def name_affix
-    title.gsub(name, '').strip
+    "#{string_for_death_symbol}".strip
+  end
+
+  # For dead users, there is a cross symbol in the title.
+  # (✝,✞,✟)
+  #
+  # More characters in this table:
+  # http://www.utf8-chartable.de/unicode-utf8-table.pl?start=9984&names=2&utf8=-&unicodeinhtml=hex
+  #
+  def string_for_death_symbol
+    "(✟)" if dead?
   end
 
 
