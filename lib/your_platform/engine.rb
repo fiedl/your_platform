@@ -9,7 +9,6 @@ require 'rubygems'
 require 'sprockets'
 require 'strong_parameters' unless defined? ActionController::Parameters
 require 'rails-i18n'
-require 'web-console' if ENV['RAILS_ENV'].nil? || (ENV['RAILS_ENV'] == "development")
 require 'decent_exposure'
 
 # Data Structures

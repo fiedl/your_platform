@@ -33,7 +33,6 @@ source 'https://rubygems.org' do
     #gem 'better_errors'
     gem 'binding_of_caller'
     gem 'letter_opener'
-    gem 'web-console'
     gem 'pry-remote'
   end
 
