@@ -33,8 +33,8 @@ Gem::Specification.new do |s|
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
   s.add_development_dependency 'web-console'
-  s.add_dependency 'sprockets-rails', '~> 2.3'
-  s.add_dependency 'decent_exposure', '~> 3.0'
+  s.add_dependency 'sprockets-rails'
+  s.add_dependency 'decent_exposure'
 
 
   # JavaScript
