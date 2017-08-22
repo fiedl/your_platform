@@ -27,6 +27,9 @@ module IconHelper
 
     fa_icon icon_key if defined?(fa_icon)  # it's not defined in mailers.
   end
+  def fa_icon(icon_key)
+    content_tag :i, '', class: "fa fa-#{icon_key} #{icon_key}"
+  end
 
   def large_awesome_icon(icon_key)
     fa_icon "#{icon_key} 2x"

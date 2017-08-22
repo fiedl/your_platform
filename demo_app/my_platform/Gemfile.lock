@@ -59,7 +59,6 @@ PATH
       exception_notification
       execjs (>= 2.5.2)
       faker
-      font-awesome-rails (>= 4.7)
       foreman
       formtastic
       gemoji (>= 2.1.0)
@@ -284,8 +283,6 @@ GEM
     faraday_middleware (0.12.2)
       faraday (>= 0.7.4, < 1.0)
     ffi (1.9.18)
-    font-awesome-rails (4.7.0.2)
-      railties (>= 3.2, < 5.2)
     foreman (0.84.0)
       thor (~> 0.19.1)
     formtastic (3.1.5)

@@ -96,11 +96,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
-  s.add_dependency 'font-awesome-rails', '>= 4.7'
   # fix bootstrap to 3.3.3 due to icon issue:
   s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
   s.add_dependency 'sass-rails'
-  s.add_dependency 'rails-assets-bootstrap-social'
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
