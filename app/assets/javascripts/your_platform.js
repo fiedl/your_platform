@@ -17,8 +17,7 @@
 //= require refile
 //= require datatables/media/js/jquery.dataTables
 //= require pretty_pre
-//= require galleria
-//= require galleria-classic
+//= require galleria/src/galleria
 //= require underscore
 //= require json2
 //= require judge

@@ -635,6 +635,12 @@ fstream@^1.0.0, fstream@^1.0.10, fstream@^1.0.2:
     mkdirp ">=0.5 0"
     rimraf "2"
 
+galleria@^1.5.7:
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/galleria/-/galleria-1.5.7.tgz#ffdc079b1ddd012c7181cc9d49a5676bcce2cde6"
+  dependencies:
+    jquery ">=1.9.0"
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -889,7 +895,7 @@ jodid25519@^1.0.0:
   dependencies:
     jsbn "~0.1.0"
 
-jquery@>=1.7:
+jquery@>=1.7, jquery@>=1.9.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.2.1.tgz#5c4d9de652af6cd0a770154a631bba12b015c787"
 
