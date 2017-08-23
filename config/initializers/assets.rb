@@ -1,5 +1,8 @@
 # This file lists the assets that need to be compiled into separate files.
 
+# Images
+Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+
 # Layout
 Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_layout.css )
 Rails.application.config.assets.precompile += %w( iweb_layout.css )
