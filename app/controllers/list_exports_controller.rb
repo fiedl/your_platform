@@ -1,6 +1,7 @@
 class ListExportsController < ApplicationController
   expose :group
   expose :list_preset, -> { params[:list] }
+  expose :quater, -> { params[:quater] }
 
   def show
     authorize! :read, group
@@ -25,7 +26,7 @@ class ListExportsController < ApplicationController
         # Everything else, we encode as UTF-8.
         #
         csv_data = Rack::MiniProfiler.step("retrieve csv data") do
-          group.export_list(list_preset: list_preset, format: :csv)
+          group.export_list(list_preset: list_preset, format: :csv, quater: quater)
         end
         if list_preset.try(:include?, 'dpag_internetmarke')
           csv_data = csv_data.encode('ISO-8859-1')
@@ -40,7 +41,7 @@ class ListExportsController < ApplicationController
       end
       format.xls do
         xls_data = Rack::MiniProfiler.step("retrieve xls data") do
-          group.export_list(list_preset: list_preset, format: :xls)
+          group.export_list(list_preset: list_preset, format: :xls, quater: quater)
         end
         send_data(xls_data, type: 'application/xls; charset=utf-8; header=present', filename: "#{file_title}.xls")
       end
