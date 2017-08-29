@@ -59,4 +59,25 @@ feature 'Group Member List Export' do
     visit group_list_export_path group_id: group.id, list: 'phone_list', format: 'csv'
     page.should have_text user.last_name
   end
+
+  describe "with users with birthdays" do
+    before do
+      @user_with_birthday_in_q3 = create :user
+      @user_with_birthday_in_q3.date_of_birth = "1986-08-24".to_date
+      @user_with_birthday_in_q3.save
+      group << @user_with_birthday_in_q3
+      @user_with_birthday_in_q4 = create :user
+      @user_with_birthday_in_q4.date_of_birth = "1986-11-13".to_date
+      @user_with_birthday_in_q4.save
+      group << @user_with_birthday_in_q4
+    end
+
+    scenario "exporting a birthday list of quater 4" do
+      visit group_list_export_path group_id: group.id, list: 'birthday_list', format: 'csv', quater: 4
+      page.should have_text @user_with_birthday_in_q4.last_name
+      page.should have_text @user_with_birthday_in_q4.localized_date_of_birth
+      page.should have_no_text @user_with_birthday_in_q3.last_name
+      page.should have_no_text @user_with_birthday_in_q3.localized_date_of_birth
+    end
+  end
 end
