@@ -23,7 +23,7 @@ module ListExports
     #
     def data
       super.select { |user|
-        case @options[:quater]
+        case @options[:quarter]
         when nil, ''
           true
         when '1'

@@ -29,11 +29,11 @@ concern :GroupListExports do
     when 'dpag_internetmarken_not_in_germany'
       self.export_dpag_internetmarken_not_in_germany
     when 'birthday_list'
-      self.export_birthday_list(quater: options[:quater])
+      self.export_birthday_list(quarter: options[:quarter])
     when 'email_list'
       self.export_email_list
     when 'special_birthdays'
-      self.export_special_birthdays_list(quater: options[:quater])
+      self.export_special_birthdays_list(quarter: options[:quarter])
     when 'deceased_members'
       self.export_deceased_members_list
     when 'former_and_deceased_members'
@@ -74,7 +74,7 @@ concern :GroupListExports do
   end
 
   def export_birthday_list(options = {})
-    ListExports::BirthdayList.from_group(self, quater: options[:quater])
+    ListExports::BirthdayList.from_group(self, quarter: options[:quarter])
   end
 
   def export_email_list
@@ -82,7 +82,7 @@ concern :GroupListExports do
   end
 
   def export_special_birthdays_list(options = {})
-    ListExports::SpecialBirthdays.from_group(self, quater: options[:quater])
+    ListExports::SpecialBirthdays.from_group(self, quarter: options[:quarter])
   end
 
   def export_deceased_members_list
