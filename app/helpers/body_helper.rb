@@ -18,7 +18,9 @@ module BodyHelper
         navable: @navable.try(:to_global_id).try(:to_s),
         tab: current_tab
       } do
-      yield
+        content_tag :div, id: 'vue-app' do
+        yield
+      end
     end
   end
 

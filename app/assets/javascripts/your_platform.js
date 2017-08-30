@@ -38,6 +38,7 @@
 //= require photoswipe/dist/photoswipe-ui-default
 //
 //= require your_platform_node_modules.pack
+//= require vue_app.pack
 //= require_tree ./your_platform
 //
 //= require turbolinks

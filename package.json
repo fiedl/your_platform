@@ -7,14 +7,22 @@
   "author": "Sebastian Fiedlschuster <github@fiedlschuster.de>",
   "license": "AGPL",
   "dependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
     "bootstrap-social": "^5.1.1",
+    "css-loader": "^0.28.7",
     "datatables": "^1.10.13",
     "font-awesome": "^4.7.0",
     "galleria": "^1.5.7",
     "highlight.js": "^9.12.0",
     "masonry-layout": "^4.2.0",
+    "node-sass": "^4.5.3",
     "photoswipe": "^4.1.2",
+    "sass-loader": "^6.0.6",
+    "vue": "^2.4.2",
+    "vue-loader": "^13.0.4",
+    "vue-template-compiler": "^2.4.2",
     "webpack": "^2.6.1",
-    "wysihtml": "^0.6.0-beta1"
+    "wysihtml": "^0.6.0-beta1",
   }
 }
