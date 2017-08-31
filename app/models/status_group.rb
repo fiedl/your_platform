@@ -17,18 +17,9 @@ class StatusGroup < Group
   def self.find_by_user_and_corporation(user, corporation)
     status_groups = corporation.status_groups & user.status_groups
 
-    # Send this error to our support address using the `ExceptionNotifier`
-    # but continue to execute the code. Otherwise, the user interface
-    # to fix the issue cannot be used.
-    #
-    begin
-      raise ActiveRecord::RecordInvalid, "Status not unique for user #{user.id}. Please correct this. Found possible status groups: #{status_groups.map{ |x| x.name + ' (' + x.id.to_s + ')' }.join(', ') }." if status_groups.count > 1
-    rescue => exception
-      if Rails.env.test?
-        Rails.logger.warn exception
-      else
-        ExceptionNotifier.notify_exception(exception)
-      end
+    if status_groups.count > 1
+      Membership.apply_gap_correction(user, corporation, "Memberships::Status")
+      status_groups = corporation.status_groups & user.status_groups
     end
 
     status_groups.last
