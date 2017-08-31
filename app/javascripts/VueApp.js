@@ -3,9 +3,10 @@
 // Otherwise, the changes are not picked up by the asset pipeline.
 
 import Vue from 'vue'
+import TurbolinksAdapter from 'vue-turbolinks'
 
 
-window.addEventListener('load', function() {
+window.addEventListener('turbolinks:load', function() {
 
   let vueApp = new Vue({
     el: '#vue-app'
