@@ -44,7 +44,7 @@
       %span.add_group_member_name_field.left
         = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
       %span.add_group_member_tools.right
-        = form.date_select :valid_from, value: Date.today, class: 'valid-from-field'
+        = form.date_select :valid_from, value: Date.today, class: 'valid-from-field', start_year: 1950, end_year: Time.now.year + 5
         = form.submit t(:add), class: 'btn btn-primary add-user-button'
 
 %h1.group_members_map= t :map
