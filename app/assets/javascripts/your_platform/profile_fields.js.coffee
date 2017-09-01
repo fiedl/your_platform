@@ -1,21 +1,30 @@
 
-
+# Adress profile fields
+# ------------------------------------------------------------------------------------------
 $(document).on 'click', '.address_profile_field.value.can_edit', ->
   $(this).closest('.box').trigger('edit')
 
-$(document).on 'save', '.address_profile_field.value.editable'), ->
-  url = $(this).data('profile-field-url') + '.json'
-  field_to_replace = $(this).find('.display_html')
-  field_to_replace.html('...')
-  setTimeout ->
-    $.ajax(
+$(document).on 'save', '.address_profile_field.value.editable', ->
+  $(this).find('.display_html').html("...")
+
+$(document).on 'save_complete', '.box', ->
+  $(this).find('.address_profile_field.value.editable').each ->
+    url = $(this).data('profile-field-url') + '.json'
+    value_field = $(this)
+    field_to_replace = $(this).find('.display_html')
+    field_to_replace.html('...')
+    $.ajax
       url: url,
       type: 'GET',
       success: (result)->
         field_to_replace.html(result.display_html)
-    )
-  , 500
+        value_field.addClass('success')
+      error: ->
+        value_field.addClass('error')
 
+
+# Review buttons
+# ------------------------------------------------------------------------------------------
 $(document).on 'click', '.address_needs_review .confirm-review-button', ->
   wrapper = $(this).closest('.address_needs_review')
   wrapper.find('.label')
