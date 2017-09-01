@@ -23,12 +23,6 @@ feature "Issues", :js do
   end
 
   scenario "Fixing an issue where a postal address has too many lines" do
-
-    #
-    #Issue.count.should == 0
-    #Issue.scan(@address_field)
-    #Issue.count.should == 1
-
     login :admin
     visit issues_path
 
@@ -49,10 +43,9 @@ feature "Issues", :js do
     page.should have_no_text t(:scanning_issue)
     page.should have_text t(:thanks)
 
-    #@address_field.reload.region.should be_blank
-
-    #Issue.scan(@address_field)
-    #Issue.count.should == 0
+    page.should have_no_text "Cambridgeshire"
+    page.should have_text "Student"
+    page.should have_text "King's College"
   end
 
 end

@@ -11,27 +11,25 @@ $(document).on 'save', 'body.issues .box .editable.value', ->
   profile_field = $(this)
   profile_field.closest('.box').find('.scanning_issue').show()
 
-  #profile_field_id = profile_field.data('profile-field-id')
-  #url = "/api/v1/..."
+$(document).on 'save_complete', 'body.issues .box', ->
+  box = $(this)
+  profile_field = $(this).find('.editable.value')
 
-  #url = profile_field.data('bip-url') if profile_field.data('bip-url')? # "bip" is "best in place"
   url = profile_field.data('profile-field-json-path') if profile_field.data('profile-field-json-path')?
   url = url + '?scan_for_issues=true'
 
-  setTimeout ->
-    $.ajax(
-      url: url,
-      type: 'GET',
-      success: (result)->
-        profile_field.closest('.box').find('.scanning_issue').hide()
-        if result.issues.length == 0
-          profile_field.closest('.box').find('.thanks_for_fixing_issue').show()
-          profile_field.closest('.box').find('.description_container').hide()
-          profile_field.closest('.box').find('.original_value_container').hide()
-      failed: ->
-        profile_field.closest('.box').find('.scanning_issue').hide()
-    )
-  , 500
+  $.ajax
+    url: url,
+    type: 'GET',
+    success: (result)->
+      box.find('.scanning_issue').hide()
+      if result.issues.length == 0
+        box.find('.thanks_for_fixing_issue').show()
+        box.find('.description_container').hide()
+        box.find('.original_value_container').hide()
+    error: ->
+      box.find('.scanning_issue').hide()
+      box.addClass('error')
 
 $(document).on 'click', 'body.issues .destroy-container .btn', ->
   $(this).closest('.box').find('.destroy-container').hide()
