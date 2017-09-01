@@ -181,6 +181,9 @@ Gem::Specification.new do |s|
   # Exceptions
   s.add_dependency 'exception_notification'
 
+  # Log
+  s.add_dependency 'fiedl-log'
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
