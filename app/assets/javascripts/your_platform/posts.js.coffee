@@ -1,11 +1,11 @@
 ready = ->
-  
+
   $('.new.post #message_text').autosize()
-  
+
   $('.short_delivery_report').each ->
     if $(this).data('show-long-delivery-report') == true
       $(this).popover('show')
-  
+
   refresh_number_of_recipients_display = ->
     $('span.member_count').text("…")
     valid_from = ""
@@ -20,14 +20,14 @@ ready = ->
           $('span.member_count').text(r.member_count)
         }
       )
-  
+
   $('label.constrain_validity_range').click ->
     if $(this).find('input').prop('checked')
       $('ul.constrain_validity_range').removeClass('hidden').show()
     else
       $('ul.constrain_validity_range').hide()
     refresh_number_of_recipients_display()
-  
+
   $('input#valid_from').keyup ->
     refresh_number_of_recipients_display()
 
@@ -77,6 +77,6 @@ ready = ->
     .addClass('btn-success')
     .delay(500)
     .hide()
-      
+
 $(document).ready(ready)
 
