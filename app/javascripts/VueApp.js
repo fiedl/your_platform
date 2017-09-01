@@ -6,8 +6,9 @@ import Vue from 'vue'
 import TurbolinksAdapter from 'vue-turbolinks'
 import VuePasswordFieldWithStrengthMeter from './VuePasswordFieldWithStrengthMeter.vue'
 
+Vue.use(TurbolinksAdapter)
 
-window.addEventListener('turbolinks:load', function() {
+document.addEventListener('turbolinks:load', function() {
   Vue.component('vue-password-field-with-strength-meter', VuePasswordFieldWithStrengthMeter)
 
   let vueApp = new Vue({
