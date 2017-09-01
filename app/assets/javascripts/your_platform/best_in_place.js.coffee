@@ -12,14 +12,8 @@ trigger_box_edit_mode_complete_if_all_are_finished = (best_in_place)->
     box.trigger('save_complete')
 
 $(document).on 'best_in_place:before-update', '.best_in_place', ->
-  # https://github.com/bernat/best_in_place/commit/53c8f15b5f482e3369021f9d00dd2328bda74b29
-  if $(this).find('input').count() > 0
-    old_value = String($(this).data('bip-original-content')) if $(this).data('bip-original-content')?
-    old_value = "" unless old_value
-    new_value = String($(this).find('input').val())
-    if old_value != new_value
-      $(this).addClass 'saving'
-      $(this).removeClass 'success error'
+  $(this).addClass 'saving'
+  $(this).removeClass 'success error'
 
 $(document).on 'ajax:success', '.best_in_place', ->
   $(this).removeClass 'saving'

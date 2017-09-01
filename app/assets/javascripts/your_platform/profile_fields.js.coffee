@@ -4,7 +4,7 @@
 $(document).on 'click', '.address_profile_field.value.can_edit', ->
   $(this).closest('.box').trigger('edit')
 
-$(document).on 'save', '.address_profile_field.value.editable', ->
+$(document).on 'best_in_place:before-update', '.address_profile_field.value.editable .best_in_place', ->
   $(this).find('.display_html').html("...")
 
 $(document).on 'save_complete', '.box', ->
