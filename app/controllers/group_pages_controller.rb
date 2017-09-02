@@ -16,7 +16,7 @@ class GroupPagesController < ApplicationController
 
   def redirect_if_cannot_read_pages
     if not can? :read_pages, group
-      if not current_user.global_admin? # Because global admins could use override.
+      if not current_user.try(:global_admin?) # Because global admins could use override.
         authorize! :read, group
         redirect_to group_members_path(group_id: group.id)
         return true
