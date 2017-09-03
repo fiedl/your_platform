@@ -28,7 +28,7 @@ module CapybaraHelper
   end
 
   def selenium?
-    Capybara.current_driver == :selenium
+    Capybara.current_driver.in? [:selenium, :selenium_with_long_timeout]
   end
 
   def poltergeist?
