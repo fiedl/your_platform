@@ -14,11 +14,11 @@ feature "Home Pages" do
       login @user
       visit page_path @page
 
-      click_on :page_settings
+      first('a#page_settings_button').click
       select_in_place "tr.page_type", 'Pages::HomePage'
 
       click_on :back_to_the_page
-      click_on :page_settings # in order to load the home page settings.
+      first('a#page_settings_button').click # in order to load the home page settings.
 
       select_in_place 'tr.layout', 'iweb'
       enter_in_place 'tr.home_page_title', 'Example, Corp.'
@@ -113,7 +113,7 @@ feature "Home Pages" do
         login @user
         visit page_path @page
 
-        click_on :page_settings
+        first('a#page_settings_button').click
         within('tr.officers') { check :show_officers }
 
         click_on :back_to_the_page
@@ -137,7 +137,7 @@ feature "Home Pages" do
     visit home_pages_path
 
     click_on :create_new_home_page
-    click_on :page_settings
+    first('a#page_settings_button').click
     enter_in_place 'tr.page_title', 'example.org'
 
     click_on :back_to_the_page
