@@ -56,8 +56,8 @@
     = profile_section @user.profile.section :contact_information
 
   - # Corporate Vita
-  #corporate{class: tab_pane_class}
-    - if @user.corporations.count > 0
+  - if @user.corporations.count > 0
+    #corporate{class: tab_pane_class}
       %h1.section.corporate_vita= t :corporate_vita
       %div
         .pull-right= render partial: 'workflow_triggers'
