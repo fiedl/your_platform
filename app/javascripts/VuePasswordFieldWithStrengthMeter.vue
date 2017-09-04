@@ -4,7 +4,7 @@
   import Password from 'vue-password-strength-meter'
   export default {
     components: { Password },
-    data () {
+    data: function() {
       return {
         password: null,
         secureLength: 12,

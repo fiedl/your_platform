@@ -11,7 +11,7 @@ Vue.use(TurbolinksAdapter)
 document.addEventListener('turbolinks:load', function() {
   Vue.component('vue-password-field-with-strength-meter', VuePasswordFieldWithStrengthMeter)
 
-  let vueApp = new Vue({
+  var vueApp = new Vue({
     el: '#vue-app'
   })
 })
