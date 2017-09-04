@@ -15,13 +15,16 @@ module.exports = {
         test: /\.vue$/,
         loader: 'vue-loader',
         options: {
-          // other vue-loader options go here
+          presets: ["es2015"]
         }
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/
+        exclude: /node_modules/,
+        options: {
+          presets: ['es2015'],
+        }
       },
     ]
   },
