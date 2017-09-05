@@ -39,7 +39,16 @@ class AttachmentDownloadsController < ActionController::Base
       authorize! :download, attachment
     end
 
-    send_file file_path, x_sendfile: true, disposition: :inline,
+    # I'm not sure why this has to be set manually. Just passing the `type`
+    # to `send_file` stopped working with rails 5.
+    #
+    # TODO: Re-check when updating to rails 5.1.
+    # In order to test, just open a pdf attachment in development
+    # after commenting out this line:
+    #
+    response.headers["Content-Type"] = content_type
+
+    send_file file_path, x_sendfile: true, disposition: 'inline',
         range: (attachment.video?), type: content_type
   end
 
