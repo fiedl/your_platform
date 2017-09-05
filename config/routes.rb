@@ -309,7 +309,7 @@ Rails.application.routes.draw do
   end
 
 
-  get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachments', action: 'download', as: 'attachment_download'
+  get "/attachments/:id(/:version)/*basename.:extension", controller: 'attachment_downloads', action: 'show', as: 'attachment_download'
 
   # We need 'show' for short permalinks and 'put' to make best_in_place work,
   # which does not distinguish when generating the url.

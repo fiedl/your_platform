@@ -394,7 +394,7 @@ class Ability
       (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
     can [:read, :download], Attachment do |attachment|
-      attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
+      can?(:quickly_download, attachment) || attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
     end
 
     # All users can join events.
@@ -446,7 +446,7 @@ class Ability
 
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
-      attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
+      can?(:quickly_download, attachment) || attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
     end
 
     # All signed-in users can read their news (timeline).
@@ -536,11 +536,19 @@ class Ability
       page.public?
     end
     can [:read, :download], Attachment do |attachment|
-      attachment.parent.kind_of?(Page) && attachment.parent.public?
+      can?(:quickly_download, attachment) || attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
-    can [:read, :download], Attachment do |attachment|
-      attachment.id.in? Attachment.logos.pluck(:id)
+
+    # Logos should not add delay for downloading.
+    # Thus, authorize quickly.
+    can :quickly_download, Attachment do |attachment|
+      attachment.id.in?(Attachment.logos.pluck(:id))
     end
+
+    # Thumbnails should not add delay. They do not contain
+    # valueable information. Just pass them through.
+    can :download_thumb, Attachment
+
 
     # All users can read the public bios of the users.
     #

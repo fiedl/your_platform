@@ -1,7 +1,5 @@
 class AttachmentsController < ApplicationController
 
-  # The list of callbacks is stored in `_process_action_callbacks.map(&:filter)`
-  skip_callback :process_action # skip all filters for downloads
   skip_before_action :verify_authenticity_token, only: [:create] # via inline-attachment gem
   load_and_authorize_resource except: [:index]
   skip_authorize_resource only: [:create, :description]
@@ -66,27 +64,6 @@ class AttachmentsController < ApplicationController
     @attachment.destroy
   end
 
-  # This action allows to download a file, which is not in the public/ directory
-  # but at a secured location. That way, access control for uploaded files cannot
-  # be circumvented by downloading files directly from the public folder.
-  #
-  # https://github.com/carrierwaveuploader/carrierwave/wiki/How-To%3A-Secure-Upload
-  #
-  def download
-    path = ""
-    if secure_version
-      if @attachment.file.versions[secure_version]
-        path = @attachment.file.versions[secure_version].current_path
-        content_type = @attachment.file.versions[secure_version].content_type
-      end
-    else
-      current_user.track_visit @attachment.parent if @attachment.parent && current_user && (not current_user.incognito?)
-      path = @attachment.file.current_path
-      content_type = @attachment.content_type
-    end
-    send_file path, x_sendfile: true, disposition: :inline,
-      range: (@attachment.video?), type: content_type
-  end
 
   # This returns a json object with description information of the
   # requested file.
@@ -114,14 +91,6 @@ private
     params.require(:attachment).permit(:description, :file, :parent_id, :parent_type, :title, :author, :author_title, :type)
   end
 
-  # This method secures the version parameter from a DoS attack.
-  # See: http://brakemanscanner.org/docs/warning_types/denial_of_service/
-  #
-  def secure_version
-    @secure_version ||= AttachmentUploader.valid_versions.select do |version|
-      version.to_s == params[:version]
-    end.first
-  end
 
   def secure_parent
     return Page.find(params[:attachment][:parent_id]) if params[:attachment][:parent_type] == 'Page'
@@ -140,50 +109,6 @@ private
       params[:attachment][:parent_type] ||= params[:parent_type] if params[:parent_type].present?
       params[:attachment][:parent_id] ||= params[:parent_id] if params[:parent_id].present?
       params[:attachment][:file] ||= params[:file] if params[:file] # inline-attachment gem
-    end
-  end
-
-  def send_file(path, options = {})
-    if options[:range]
-      send_file_with_range(path, options)
-    else
-      super(path, options)
-    end
-  end
-
-  # To stream videos, we have to handle the requested byte range.
-  #
-  # For a summary, see http://stackoverflow.com/a/37570158/2066546.
-  #
-  # In order to find out the correct headers, we've put a test-video.mp4 into the public folder
-  # and inspected the requests. For example, the first requests results in a 200 to check if the
-  # video is actually there. Then, the byte range is requested and the corresponding data is sent.
-  #
-  # Sending the correct data and extracting the byte range from the request header
-  # is taken from http://stackoverflow.com/q/22581727/2066546.
-  #
-  # Possible alternative, but did not work with Rails 4.2:
-  # https://github.com/adamcooke/send_file_with_range
-  #
-  def send_file_with_range(path, options = {})
-    if File.exist?(path)
-      size = File.size(path)
-      if !request.headers["Range"]
-        status_code = 200 # 200 OK
-        offset = 0
-        length = File.size(path)
-      else
-        status_code = 206 # 206 Partial Content
-        bytes = Rack::Utils.byte_ranges(request.headers, size)[0]
-        offset = bytes.begin
-        length = bytes.end - bytes.begin
-      end
-      response.header["Accept-Ranges"] = "bytes"
-      response.header["Content-Range"] = "bytes #{bytes.begin}-#{bytes.end}/#{size}" if bytes
-
-      send_data IO.binread(path, length, offset), options
-    else
-      raise ActionController::MissingFile, "Cannot read file #{path}."
     end
   end
 
