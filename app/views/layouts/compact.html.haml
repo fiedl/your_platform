@@ -16,15 +16,16 @@
     = google_maps_api_script_tag
     = csrf_meta_tags
     = yield :head
-  %body{:class => "compact-layout " + controller.controller_name, data: { locale: I18n.locale }}
-    = render partial: 'layouts/compact_nav'
-    #contentBgLayer1
-      #contentBgLayer2
-        #contentBgLayer3
-          #content_wrapper{data: {turbolinks: {temporary: true}}}
-            = render partial: 'shared/horizontal_nav'
-            = flash_area
-            = convert_to_content_box yield
-            .clear
-    = render partial: 'layouts/footer'
-    = yield :scripts
+  = body_tag do
+    #vue-app
+      = render partial: 'layouts/compact_nav'
+      #contentBgLayer1
+        #contentBgLayer2
+          #contentBgLayer3
+            #content_wrapper{data: {turbolinks: {temporary: true}}}
+              = render partial: 'shared/horizontal_nav'
+              = flash_area
+              = convert_to_content_box yield
+              .clear
+      = render partial: 'layouts/footer'
+      = yield :scripts

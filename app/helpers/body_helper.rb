@@ -18,7 +18,7 @@ module BodyHelper
       tab: current_tab
     }
     content_tag :body, class: css_classes.join(" "), data: data do
-      (content_tag(:div, id: 'vue-app') { yield })
+      yield
     end
   end
 

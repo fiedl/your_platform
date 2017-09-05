@@ -43,68 +43,69 @@
     = yield :head
 
   = body_tag do
-    - if user_account_signed_in?
-      %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
-        .container-fluid
-          .navbar-header
-            %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
-              %span.sr-only Toggle Navigation
-              %span.icon-bar
-              %span.icon-bar
-              %span.icon-bar
-            %a.navbar-brand{:href => '#'}= app_name
+    #vue-app
+      - if user_account_signed_in?
+        %nav#logged-in-bar.navbar.navbar-default.navbar-fixed-top
+          .container-fluid
+            .navbar-header
+              %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
+                %span.sr-only Toggle Navigation
+                %span.icon-bar
+                %span.icon-bar
+                %span.icon-bar
+              %a.navbar-brand{:href => '#'}= app_name
 
-          .collapse.navbar-collapse#logged-in-bar-collapse
-            %ul.nav.navbar-nav
-              - if not show_role_preview_menu?
-                %li
-                  = link_to t(:my_profile), current_user, :class => 'my_profile'
-              %li.dropdown.my_groups
-                %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
-                  = t :my_groups
-                  %b.caret= ''
-                %ul.dropdown-menu
-                  = render partial: 'users/groups', object: current_user, as: :user
+            .collapse.navbar-collapse#logged-in-bar-collapse
+              %ul.nav.navbar-nav
+                - if not show_role_preview_menu?
+                  %li
+                    = link_to t(:my_profile), current_user, :class => 'my_profile'
+                %li.dropdown.my_groups
+                  %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
+                    = t :my_groups
+                    %b.caret= ''
+                  %ul.dropdown-menu
+                    = render partial: 'users/groups', object: current_user, as: :user
 
-              - # role indicator and preview menu
-              = render partial: 'layouts/role_preview_switcher'
+                - # role indicator and preview menu
+                = render partial: 'layouts/role_preview_switcher'
 
-            %ul.nav.navbar-nav.navbar-right
-              %li.last.dropdown
-                %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
-                  = render 'layouts/session_bar_avatar'
-                  %b.caret
-                = render partial: 'layouts/current_user_dropdown'
+              %ul.nav.navbar-nav.navbar-right
+                %li.last.dropdown
+                  %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
+                    = render 'layouts/session_bar_avatar'
+                    %b.caret
+                  = render partial: 'layouts/current_user_dropdown'
 
-    .row#header-bar
-      .col-sm-7.col-xs-12
-        %span#logo
-          = link_to image_tag(logo_url), root_path, class: 'navbar-brand'
+      .row#header-bar
+        .col-sm-7.col-xs-12
+          %span#logo
+            = link_to image_tag(logo_url), root_path, class: 'navbar-brand'
 
-      .col-sm-5.col-xs-12
-        #header_help= render partial: 'support_requests/help_button'
-        #header_search
-          %span#search_box= render partial: 'shared/search_box'
+        .col-sm-5.col-xs-12
+          #header_help= render partial: 'support_requests/help_button'
+          #header_search
+            %span#search_box= render partial: 'shared/search_box'
 
-    .row#horizontal-nav-bar.hidden-xs
-      -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
-      %span#category_indicator.right
-        = render partial: 'layouts/horizontal_nav'
+      .row#horizontal-nav-bar.hidden-xs
+        -#.col-md-6.col-sm-5.col-xs-12.hidden-xs
+        %span#category_indicator.right
+          = render partial: 'layouts/horizontal_nav'
 
-    .row#breadcrumb-bar
-      %nav#breadcrumb.navbar
-        .container-fluid
-          .breadcrumbs_current_page= "#{t(:current_page)}:"
-          = render partial: 'layouts/breadcrumbs'
+      .row#breadcrumb-bar
+        %nav#breadcrumb.navbar
+          .container-fluid
+            .breadcrumbs_current_page= "#{t(:current_page)}:"
+            = render partial: 'layouts/breadcrumbs'
 
-          %span#access_indicator
-            = access_indicator if current_user
+            %span#access_indicator
+              = access_indicator if current_user
 
-    .container-fluid
-      .row
-        = render partial: 'layouts/horizontal_structure_nav'
-      .row
-        #content
-          = render partial: 'layouts/multi_column_content_area'
+      .container-fluid
+        .row
+          = render partial: 'layouts/horizontal_structure_nav'
+        .row
+          #content
+            = render partial: 'layouts/multi_column_content_area'
 
-    .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
+      .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer

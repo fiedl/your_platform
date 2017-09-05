@@ -16,17 +16,18 @@
     = yield :head
 
   = body_tag do
-    .container-fluid
-      .row#horizontal-nav-bar
-        = render partial: 'layouts/horizontal_nav'
-      #header.row
-        #home_page_title.col-xs-12.col-sm-8
-          .home_page_title
-            = wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_title
-          .home_page_sub_title= wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_sub_title
-        #logo.col-xs-12.col-sm-4= link_to image_tag(current_logo_url), root_path if current_logo_url
-      #toolbar.row
-      .row
-        = flash_area
-      .row
-        #content= replace_unicode_special_chars_by_html_escape_strings(convert_to_content_box { yield })
+    #vue-app
+      .container-fluid
+        .row#horizontal-nav-bar
+          = render partial: 'layouts/horizontal_nav'
+        #header.row
+          #home_page_title.col-xs-12.col-sm-8
+            .home_page_title
+              = wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_title
+            .home_page_sub_title= wysiwyg_in_place_if can?(:manage, current_home_page), current_home_page, nil, setting: :home_page_sub_title
+          #logo.col-xs-12.col-sm-4= link_to image_tag(current_logo_url), root_path if current_logo_url
+        #toolbar.row
+        .row
+          = flash_area
+        .row
+          #content= replace_unicode_special_chars_by_html_escape_strings(convert_to_content_box { yield })
