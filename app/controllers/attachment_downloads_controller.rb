@@ -1,4 +1,6 @@
-class AttachmentDownloadsController < ApplicationController
+class AttachmentDownloadsController < ActionController::Base
+  include CurrentUser
+  layout false
 
   expose :attachment
   expose :version, -> {
