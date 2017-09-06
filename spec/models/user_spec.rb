@@ -89,6 +89,25 @@ describe User do
     end
   end
 
+  describe "#summary_string" do
+    subject { @user.summary_string }
+    before do
+      @user = User.create last_name: "Wein", first_name: "Björn"
+      @user.localized_date_of_birth = "19.12.1980"
+      @user.home_address = "Feinhäuser Allee 25, 35037 Marburg"
+      @user.phone = "06421-12345"
+      @user.save
+    end
+
+    it { should == "Wein, Björn, *19.12.1980, Feinhäuser Allee 25, 35037 Marburg, 06421-12345" }
+
+    describe "with email" do
+      before { @user.email = "wein@example.com"; @user.save; @user.delete_cache }
+
+      it { should == "Wein, Björn, *19.12.1980, Feinhäuser Allee 25, 35037 Marburg, 06421-12345, wein@example.com" }
+    end
+  end
+
 
   describe "#date_of_birth" do
     subject { @user.date_of_birth }

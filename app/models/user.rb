@@ -147,6 +147,28 @@ class User < ApplicationRecord
     "(✟)" if dead?
   end
 
+  # For printed registers, a summary string is useful.
+  #
+  # For example: "Wein, Björn (Gi 06, Dp 08), *19.12.1980, Feinhäuser Allee 25, 35037 Marburg, 06421-12345, wein@example.com"
+  #
+  def summary_string
+    summary_components.values.select(&:present?).join(", ")
+        .gsub(", (", " (")
+        .gsub(" ()", "")
+        .gsub(", , ,", ",")
+  end
+  def summary_components
+    {
+      last_name: last_name,
+      first_name: first_name,
+      name_affix: "(#{name_affix})",
+      date_of_birth: "*#{localized_date_of_birth}",
+      address: primary_address.gsub("\n", ", "),
+      phone: phone,
+      email: email
+    }
+  end
+
 
   # This sets the format of the User urls to be
   #

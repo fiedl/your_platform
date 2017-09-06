@@ -14,6 +14,9 @@ concern :AddressProfileFields do
   def primary_address_field
     postal_address_field_or_first_address_field
   end
+  def primary_address
+    primary_address_field.try(:value)
+  end
 
   # The postal address at the study location.
   #
