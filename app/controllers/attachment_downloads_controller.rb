@@ -1,5 +1,6 @@
 class AttachmentDownloadsController < ActionController::Base
   include CurrentUser
+  include CheckAuthorization
   layout false
 
   expose :attachment
