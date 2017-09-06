@@ -163,6 +163,8 @@ class User < ApplicationRecord
       first_name: first_name,
       name_affix: "(#{name_affix})",
       date_of_birth: "*#{localized_date_of_birth}",
+      academic_degree: academic_degree,
+      employment_title: employment_title,
       address: primary_address.gsub("\n", ", "),
       phone: phone,
       email: email

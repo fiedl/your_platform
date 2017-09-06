@@ -47,4 +47,8 @@ concern :ProfileFields do
     @website
   end
 
+  def employment_title
+    profile_fields.where(type: "ProfileFields::ProfessionalCategory", label: "employment_title").pluck(:value).join(", ")
+  end
+
 end

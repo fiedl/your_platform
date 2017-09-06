@@ -96,15 +96,18 @@ describe User do
       @user.localized_date_of_birth = "19.12.1980"
       @user.home_address = "Feinhäuser Allee 25, 35037 Marburg"
       @user.phone = "06421-12345"
+      @user.academic_degree = "Dr.rer.nat."
       @user.save
+
+      @user.profile_fields.create type: "ProfileFields::ProfessionalCategory", label: "employment_title", value: "Winzer"
     end
 
-    it { should == "Wein, Björn, *19.12.1980, Feinhäuser Allee 25, 35037 Marburg, 06421-12345" }
+    it { should == "Wein, Björn, *19.12.1980, Dr.rer.nat., Winzer, Feinhäuser Allee 25, 35037 Marburg, 06421-12345" }
 
     describe "with email" do
       before { @user.email = "wein@example.com"; @user.save; @user.delete_cache }
 
-      it { should == "Wein, Björn, *19.12.1980, Feinhäuser Allee 25, 35037 Marburg, 06421-12345, wein@example.com" }
+      it { should == "Wein, Björn, *19.12.1980, Dr.rer.nat., Winzer, Feinhäuser Allee 25, 35037 Marburg, 06421-12345, wein@example.com" }
     end
   end
 
