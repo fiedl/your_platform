@@ -104,9 +104,13 @@ feature "Home Pages" do
 
         within('#horizontal-nav-bar') { expect(page).to have_text "About us" }
 
+        sleep 5
         within('#horizontal-nav-bar') { click_on "example.com" }
-        within('#horizontal-nav-bar') { expect(page).to have_text "About us" }
         expect(page).to have_no_text "We are nice people"
+
+        sleep 5
+        within('#horizontal-nav-bar') { first(:link, "About us").click }
+        expect(page).to have_text "We are nice people"
       end
 
       scenario "Adding an officers box", :js do
