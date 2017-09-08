@@ -7,6 +7,6 @@
 %div
   = render partial: 'teaser_image', object: page, as: :page
   .page_body
-    = page_markup page.teaser_text
+    = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, sanitize: false
   .panel-footer
     = link_to t(:learn_more), page
