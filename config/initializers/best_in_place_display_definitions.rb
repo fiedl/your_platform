@@ -27,7 +27,6 @@ ActionView::Base.send :include, TagHelper
 
 # This calls a helper method `markup(str)`.
 #
-BestInPlace::DisplayMethods.add_helper_method(Page, :content, :page_markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :body, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Group, :welcome_message, :markup)
 BestInPlace::DisplayMethods.add_helper_method(Event, :description, :markup)
@@ -44,5 +43,8 @@ BestInPlace::DisplayMethods.add_helper_method(Page, :permalinks_list, :simple_fo
 BestInPlace::DisplayMethods.add_helper_method(Blog, :permalinks_list, :simple_format)
 BestInPlace::DisplayMethods.add_helper_method(BlogPost, :permalinks_list, :simple_format)
 
-BestInPlace::DisplayMethods.add_helper_method(Page, :content, :markup)
-BestInPlace::DisplayMethods.add_helper_method(BlogPost, :content, :markup)
+BestInPlace::DisplayMethods.add_helper_method(Page, :content, :page_markup)
+BestInPlace::DisplayMethods.add_helper_method(BlogPost, :content, :page_markup)
+BestInPlace::DisplayMethods.add_helper_method(Pages::ContactForm, :content, :page_markup)
+BestInPlace::DisplayMethods.add_helper_method(Pages::ContentBox, :content, :page_markup)
+BestInPlace::DisplayMethods.add_helper_method(Pages::HomePage, :content, :page_markup)
