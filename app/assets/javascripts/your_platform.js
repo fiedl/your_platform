@@ -3,7 +3,6 @@
 //= require jquery-ui
 //
 //= require sugar
-//= require jquery.appear-1.1.1
 //= require jquery.autosize
 //= require jqueryui-timepicker-addon
 //= require jqueryui-timepicker-addon/i18n/jquery-ui-timepicker-de
