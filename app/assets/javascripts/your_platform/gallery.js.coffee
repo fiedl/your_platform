@@ -139,6 +139,9 @@ class App.Gallery
 
       })
 
+  only_description_title_is_shown: ->
+    (this.picture_info_element().find('.picture-title').count() == 1) && (this.picture_info_element().find('.picture-description').count() == 0)
+
   # /attachments/123/filename.png
   image_path: ->
     @current_image_data.big
@@ -146,7 +149,9 @@ class App.Gallery
   # Transform the image path into the description json url.
   # /attachments/123/filename.png
   description_path: ->
-    @image_path().split("/").slice(0,3).join("/") + "/description.json"
+    args_string = ""
+    args_string = "?only_title=true" if this.only_description_title_is_shown()
+    @image_path().split("/").slice(0,3).join("/") + "/description.json" + args_string
 
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
