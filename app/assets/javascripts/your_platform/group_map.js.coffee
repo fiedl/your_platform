@@ -16,19 +16,28 @@ $(document).ready ->
   map_longitude_width = map_right_longitude - map_left_longitude
   map_latitude_height = map_top_latitude - map_bottom_latitude
 
-  $('.group_map .map_item').hide()
+  App.hide_group_map_items()
 
-  counter = 0
   $('.group_map .map_item').each ->
     map_item = $(this)
     if map_item.data('longitude') and map_item.data('latitude')
-      counter += 1
       map_item.css(
         position: 'absolute',
         left: ((map_item.data('longitude') - map_left_longitude) / map_longitude_width * map_width) + "px",
         top: ((map_top_latitude - map_item.data('latitude')) / map_latitude_height * map_height) + "px"
       )
-      setTimeout (-> map_item.show('puff')), 1000 + counter * 50
+
+  App.animate_group_map_items()
+
+App.hide_group_map_items = ->
+  $('.group_map .map_item').hide()
+
+App.animate_group_map_items = ->
+  counter = 0
+  $('.group_map .map_item').each ->
+    map_item = $(this)
+    counter += 1
+    setTimeout (-> map_item.show('puff')), 100 + counter * 50
 
 $(document).on 'mouseenter touchstart', '.group_map .map_item', ->
   map_item = $(this)
