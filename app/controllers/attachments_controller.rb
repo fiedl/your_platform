@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: [:create] # via inline-attachment gem
   load_and_authorize_resource except: [:index]
-  skip_authorize_resource only: [:create, :description]
+  skip_authorize_resource only: [:create]
   respond_to :html, :json
   layout nil
 
@@ -62,27 +62,6 @@ class AttachmentsController < ApplicationController
   def destroy
     @attachment = Attachment.find(params[:id])
     @attachment.destroy
-  end
-
-
-  # This returns a json object with description information of the
-  # requested file.
-  #
-  def description
-    @attachment = Attachment.find(params[:attachment_id])
-    authorize! :read, @attachment
-
-    respond_to do |format|
-      format.json do
-        self.formats = [:html, :json]
-        render json: {
-          title: @attachment.title,
-          description: @attachment.description,
-          author: @attachment.author.try(:title),
-          html: render_to_string(partial: 'attachments/description', formats: [:html], locals: {attachment: @attachment})
-        }
-      end
-    end
   end
 
 private

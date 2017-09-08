@@ -170,7 +170,7 @@ Rails.application.routes.draw do
   resources :blogs
   resources :blog_posts
   resources :attachments do
-    get 'description(.:format)', to: 'attachments#description'
+    get 'description(.:format)', to: 'attachment_descriptions#show'
   end
   resources :profile_fields
   resources :memberships
