@@ -3,11 +3,10 @@
 
 - if can? :create_page_for, parent_page
   - unless parent_page.kind_of? BlogPost  # Otherwise, the admin could create nested blog posts where he would expect a sibling post.
-    .col.col-sm-3
-      .box.add_teaser_box
-        %a.btn.btn-default#new_page{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
-          = icon :plusw
-          = "#{t(:new_page)} ..."
+    .box.add_teaser_box
+      %a.btn.btn-default#new_page{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
+        = icon :plusw
+        = "#{t(:new_page)} ..."
 
     #new_page_modal.modal.fade
       - new_page = parent_page.child_pages.new

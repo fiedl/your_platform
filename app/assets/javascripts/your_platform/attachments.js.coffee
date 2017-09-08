@@ -25,3 +25,7 @@ $(document).on 'click', '.pictures .remove_button', ->
 $(document).on 'click', 'table.attachments .remove_button', ->
   $(this).closest('tr').hide 'fade', ->
     $(this).remove()
+
+# Remove empty #attachments divs as they disturb the flex layout.
+$(document).ready ->
+  $('#attachments:empty').remove()

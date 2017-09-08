@@ -35,12 +35,13 @@
       - else
         = render partial: 'pages/officers', locals: {structureable: page, limit: page.number_of_officers_to_show}
 
-.row
-  = render partial: 'pages/new_page_button', locals: {parent_page: page}
+  .col.col-sm-12.col-xs-12
+    = render partial: 'pages/new_page_button', locals: {parent_page: page}
 
-.row#blog_entries
-  - visible_pages_only(page.blog_entries).each do |blog_entry|
-    = render partial: 'pages/page', object: blog_entry
+  #blog_entries.eq-height
+    - visible_pages_only(page.blog_entries).each do |blog_entry|
+      .col.col-sm-12.col-xs-12.resizable_col
+        = render partial: 'pages/page', object: blog_entry
 
 
 -#%div.col3
