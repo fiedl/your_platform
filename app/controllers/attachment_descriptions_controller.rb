@@ -22,4 +22,14 @@ class AttachmentDescriptionsController < ApplicationController
     end
   end
 
+  private
+
+  # Do not log loading the description.
+  #
+  def log_request
+  end
+
+  def log_activity
+  end
+
 end
