@@ -1,6 +1,7 @@
 %h1#public-root-events-box= t(:events)
 %div
-  = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
+  %ul.website-events
+    = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
 
   - if page.semester_calendar && attachment = page.semester_calendar.attachments.last
     %h3
