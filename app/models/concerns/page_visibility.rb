@@ -17,8 +17,13 @@ concern :PageVisibility do
     #
     scope :visible_to, -> (user, options = {}) {
       user = nil if options[:preview_as].to_s == 'user'
-      (published.or(by_author(user))).not_archived
+      visible_based_on_published(user)
+          .visible_based_on_archived(user)
+          .visible_based_on_public_or_intranet(user)
     }
+    scope :visible_based_on_published, -> (user) { published.or(by_author(user)) }
+    scope :visible_based_on_archived, -> (user) { not_archived }
+    scope :visible_based_on_public_or_intranet, -> (user) { user ? all : public_website }
 
   end
 

@@ -206,11 +206,11 @@ class Page < ApplicationRecord
   # root
 
   def self.root
-    self.find_root
+    Page.find_root
   end
 
   def self.find_root
-    Page.find_by_flag( :root )
+    Page.unscoped.find_by_flag(:root)
   end
 
   def self.find_or_create_root
