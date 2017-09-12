@@ -43,8 +43,10 @@ class TagsController < ApplicationController
   end
 
   def find_taggables
-    @pages = Page.tagged_with @tag.name
+    @pages = Page.visible_to(current_user).tagged_with(@tag.name)
     @taggables = @pages
+
+    @taggables = @taggables.select { |taggable| can? :read, taggable }
   end
 
 

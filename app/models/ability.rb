@@ -633,6 +633,9 @@ class Ability
       semester_calendar.created_at < 1.day.ago
     end
 
+    # All users can show tags. This does not mean that they
+    # can see all tagged contents though.
+    can :read, ActsAsTaggableOn::Tag
 
     # Send messages to a group, either via web ui or via email:
     # This is allowed if the user matches the mailing-list-sender-filter setting.
