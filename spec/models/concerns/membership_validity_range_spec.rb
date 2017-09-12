@@ -69,6 +69,20 @@ describe MembershipValidityRange do
         expect { subject }.to raise_error
       end
     end
+    describe "setting just a year" do
+      subject { @membership.valid_from_localized_date = "2005" }
+      it "should set the correct date as jan first" do
+        subject
+        @membership.valid_from.to_date.should == "1.1.2005".to_date
+      end
+    end
+    describe "setting a year with illegal space" do
+      subject { @membership.valid_from_localized_date = "2005 " }
+      it "should set the correct date as jan first" do
+        subject
+        @membership.valid_from.to_date.should == "1.1.2005".to_date
+      end
+    end
   end
 
   describe "#make_invalid" do
