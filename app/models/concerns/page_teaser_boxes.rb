@@ -54,7 +54,7 @@ concern :PageTeaserBoxes do
   end
 
   def teaser_youtube_url
-    content.to_s.match(/^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$/).try(:[], 0)
+    content.to_s.match(/(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+/).try(:[], 0)
   end
 
 end
