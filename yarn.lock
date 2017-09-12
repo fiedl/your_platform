@@ -3394,10 +3394,6 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vue-chartkick@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/vue-chartkick/-/vue-chartkick-0.2.0.tgz#4bfaffdf5bd21144be9293df97f0ee7e6c5eb2fa"
-
 vue-hot-reload-api@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.1.0.tgz#9ca58a6e0df9078554ce1708688b6578754d86de"

@@ -6,11 +6,8 @@ import Vue from 'vue'
 import TurbolinksAdapter from 'vue-turbolinks' # https://github.com/jeffreyguenther/vue-turbolinks
 
 import VuePasswordFieldWithStrengthMeter from './VuePasswordFieldWithStrengthMeter.vue'
-import Chartkick from 'chartkick' # https://github.com/ankane/vue-chartkick
-import VueChartkick from 'vue-chartkick'
 
 Vue.use(TurbolinksAdapter)
-Vue.use(VueChartkick, { Chartkick })
 
 jQuery(document).ready ->
 
