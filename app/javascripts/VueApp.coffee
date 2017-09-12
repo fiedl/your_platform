@@ -20,3 +20,20 @@ jQuery(document).ready ->
   for selector in ['#vue-change-password-app']
     vue_apps.push(new Vue({el: selector})) if jQuery(selector).count() > 0
 
+
+# # As an alternative to `vue-turbolinks` we could save and restore
+# # the html content of the vue components ourselves.
+# #
+# # This restoration is needed due to turbolinks caching. Otherwise,
+# # the vue components cannot be initialized when loading a page from
+# # the turbolinks cache.
+# #
+# # See also: https://github.com/turbolinks/turbolinks/wiki/VueJs-and-Turbolinks
+# #
+# store_vue_components_html = ->
+#   jQuery('.vue-app').each ->
+#     jQuery(this).data 'html-before-vue', jQuery(this)[0].outerHTML
+#
+# restore_vue_components_html = ->
+#   jQuery('.vue-app').each ->
+#     jQuery(this).replaceWith jQuery(this).data('html-before-vue')
