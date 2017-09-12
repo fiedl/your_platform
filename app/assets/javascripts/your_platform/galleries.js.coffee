@@ -12,11 +12,16 @@ class App.Galleries
         $(galleria_element).uniqueId()
         App.gallery_instances.push new App.Gallery($(galleria_element))
 
-
+  clean: ->
+    for gallery in App.gallery_instances
+      gallery.destroy()
+    App.gallery_instances = []
 
 App.galleries = new App.Galleries()
 
 $(document).ready ->
+  # # Just an idea, yet:
+  # App.galleries.clean()
   App.galleries.process($(document))
 
 

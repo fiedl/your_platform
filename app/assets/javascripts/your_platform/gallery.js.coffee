@@ -279,3 +279,5 @@ class App.Gallery
       @galleria_instance.setOptions('transition', 'fade')
       @galleria_instance.show(slide_index)
 
+  destroy: ->
+    @galleria_instance.destroy()
