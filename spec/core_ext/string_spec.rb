@@ -18,6 +18,13 @@ describe String do
       its(:day) { should == 13 }
     end
 
+    describe "for dash notation date strings" do
+      before { @string = "2005-11-13" }
+      its(:year) { should == 2005 }
+      its(:month) { should == 11 }
+      its(:day) { should == 13 }
+    end
+
     describe "for month and year, e.g. 11/2005" do
       before { @string = "11/2005" }
       its(:year) { should == 2005 }
@@ -27,6 +34,13 @@ describe String do
 
     describe "for a year, e.g. 2005" do
       before { @string = "2005" }
+      its(:year) { should == 2005 }
+      its(:month) { should == 1 }
+      its(:day) { should == 1 }
+    end
+
+    describe "for a year with illegal whitespace, e.g. ' 2005 '" do
+      before { @string = " 2005 " }
       its(:year) { should == 2005 }
       its(:month) { should == 1 }
       its(:day) { should == 1 }
