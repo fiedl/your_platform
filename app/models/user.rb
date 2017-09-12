@@ -18,6 +18,7 @@ class User < ApplicationRecord
   validates_presence_of     :last_name
   validates_format_of       :first_name, with: /\A[^\,]*\z/, if: Proc.new { |user| user.first_name.present? }  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
+  before_validation         :strip_first_and_last_name
 
   before_validation         :change_alias_if_already_taken
   validates_uniqueness_of   :alias, :if => Proc.new { |user| user.account and user.alias.present? }
@@ -122,6 +123,11 @@ class User < ApplicationRecord
     return name_string.slice(0, 1).capitalize + name_string.slice(1..-1) if name_string.present?
   end
   private :capitalized_name_string
+
+  def strip_first_and_last_name
+    self.first_name = self.first_name.strip
+    self.last_name = self.last_name.strip
+  end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
   # Use this rather than the name attribute itself, since the title method is likely to be overridden

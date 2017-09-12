@@ -31,6 +31,32 @@ describe User do
     it { should == "#{@user.first_name} #{@user.last_name}" }
   end
 
+  describe "#first_name" do
+    subject { @user.first_name }
+    describe "when containing illegal spaces" do
+      before { @user.first_name = " John " }
+      describe "after saving" do
+        before { @user.save }
+        it "should be stripped" do
+          @user.first_name.should == "John"
+        end
+      end
+    end
+  end
+
+  describe "#last_name" do
+    subject { @user.last_name }
+    describe "when containing illegal spaces" do
+      before { @user.last_name = " Doe " }
+      describe "after saving" do
+        before { @user.save }
+        it "should be stripped" do
+          @user.last_name.should == "Doe"
+        end
+      end
+    end
+  end
+
   describe "#capitalize_name" do
     [ { first_name: "john", last_name: "doe",
         capitalized_first_name: "John", capitalized_last_name: "Doe" },
