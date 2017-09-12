@@ -26,6 +26,10 @@ module.exports = {
           presets: ['es2015'],
         }
       },
+      {
+        test: /\.coffee$/,
+        use: [ 'coffee-loader' ]
+      }
     ]
   },
   resolve: {
