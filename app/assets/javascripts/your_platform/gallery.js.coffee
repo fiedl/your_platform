@@ -54,7 +54,10 @@ class App.Gallery
     1.0 / @aspect_ratio_of_first_image()
 
   aspect_ratio_of_first_image: ->
-    1.0 * @closest('.box').find('.picture-attachment img').first().data('width') / @closest('.box').find('.picture-attachment img').first().data('height')
+    if @closest('.box').find('.picture-attachment img').first().data('width')?
+      1.0 * @closest('.box').find('.picture-attachment img').first().data('width') / @closest('.box').find('.picture-attachment img').first().data('height')
+    else
+      16.0 / 9
 
   initSettings: ->
     self = this
