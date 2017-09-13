@@ -115,6 +115,16 @@ feature 'Corporate Vita', js: true do
           Membership.now_and_in_the_past.find(@membership.id).valid_from.to_date.should == @new_date
         end
       end
+
+      describe "when entering just a year" do
+        before do
+          click_tab :corporate_info_tab
+          enter_in_place "#corporate_vita tr.membership", "2005"
+        end
+        it "should convert the year to 01.01.year and display it" do
+          page.should have_content "01.01.2005"
+        end
+      end
     end
   end
 

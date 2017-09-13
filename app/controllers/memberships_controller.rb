@@ -37,15 +37,8 @@ class MembershipsController < ApplicationController
   end
 
   def update
-    if membership.update_attributes!( membership_params )
-      respond_to do |format|
-        format.json do
-          #head :ok
-          #respond_with_bip membership
-          respond_with membership
-        end
-      end
-    end
+    membership.update_attributes! membership_params
+    respond_with_bip membership
   end
 
   def destroy
