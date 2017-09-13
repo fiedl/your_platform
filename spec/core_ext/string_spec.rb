@@ -46,6 +46,11 @@ describe String do
       its(:day) { should == 1 }
     end
 
+    describe "for entering a minus (-)" do
+      before { @string = "-" }
+      it { should == nil }
+    end
+
     describe "for something invalid" do
       before { @string = "asd" }
       it "should raise an error" do
@@ -97,6 +102,11 @@ describe String do
       its(:year) { should == 2005 }
       its(:month) { should == 1 }
       its(:day) { should == 1 }
+    end
+
+    describe "for entering a minus (-)" do
+      before { @string = "-" }
+      it { should == nil }
     end
 
     describe "for something invalid" do

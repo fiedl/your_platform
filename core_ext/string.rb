@@ -5,11 +5,13 @@ module StringOverrides
   #
   def to_datetime
     self.gsub!(/^[ ]*([12][019][0-9][0-9])[ ]*$/, '01.01.\1')
+    return nil if self == "-"
     super
   end
 
   def to_date
     self.gsub!(/^[ ]*([12][019][0-9][0-9])[ ]*$/, '01.01.\1')
+    return nil if self == "-"
     super
   end
 
