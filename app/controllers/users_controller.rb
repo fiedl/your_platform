@@ -70,8 +70,8 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes(user_params)
-    respond_with @user
+    @user.update_attributes! user_params
+    respond_with_bip @user
   end
 
   def forgot_password
