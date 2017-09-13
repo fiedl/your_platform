@@ -8,6 +8,11 @@ module StringOverrides
     super
   end
 
+  def to_date
+    self.gsub!(/^[ ]*([12][019][0-9][0-9])[ ]*$/, '01.01.\1')
+    super
+  end
+
 end
 
 class String
