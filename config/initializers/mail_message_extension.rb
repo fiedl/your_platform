@@ -1,1 +1,0 @@
-Mail::Message.send(:prepend, MailMessageExtension)
