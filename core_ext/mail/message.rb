@@ -1,3 +1,5 @@
+require 'mail/message'
+
 # This is prepended to Mail::Message.
 # https://github.com/mikel/mail/blob/master/lib/mail/message.rb
 #
