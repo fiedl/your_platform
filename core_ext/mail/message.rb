@@ -7,7 +7,11 @@ module MailMessageExtension
   # handle cases where the message cannot be delivered. In those
   # cases, the email adress is marked as 'invalid'.
   #
+  # Also make sure to only deliver emails to users with accounts.
+  #
   def deliver
+    return false unless recipient_has_user_account?
+
     if recipient_address.include?('@')
       begin
         Rails.logger.info "Sending mail smtp_envelope_to #{self.smtp_envelope_to.to_s}."
@@ -50,6 +54,10 @@ module MailMessageExtension
 
   def recipient_email_profile_field
     ProfileFields::Email.where(value: recipient_address).first if recipient_address.present?
+  end
+
+  def recipient_has_user_account?
+    recipient_address.present? && User.find_by_email(recipient_address).has_account?
   end
 
 end
