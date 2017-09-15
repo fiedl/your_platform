@@ -63,11 +63,17 @@ feature "Semester Calendars", :js do
 
   scenario "Looking at semester calendars for all corporations" do
     login :user
-    visit semester_calendars_path
+    visit semester_calendars_path(term_id: @term.id)
 
     within "#content" do
       page.should have_text @term.title
       page.should have_text @corporation.name
     end
+  end
+
+  scenario "Looking at semester calendars for all corporations without specifying a term" do
+    login :user
+
+    expect { visit semester_calendars_path }.not_to raise_error
   end
 end

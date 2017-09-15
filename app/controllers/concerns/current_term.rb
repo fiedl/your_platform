@@ -12,7 +12,7 @@ concern :CurrentTerm do
       elsif params[:id]
         termable.term
       else
-        Term.current.first
+        Term.first_or_create_current
       end
     }
 

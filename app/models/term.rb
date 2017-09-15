@@ -31,4 +31,14 @@ class Term < ApplicationRecord
     self.find_or_create_by(year: year, type: type)
   end
 
+  def self.first_or_create_current
+    # For cases where the terms do not exist, yet,
+    # those types will be created:
+    Term.by_year_and_type(Time.zone.now.year, "Terms::Winter")
+    Term.by_year_and_type(Time.zone.now.year, "Terms::Summer")
+
+    self.current.first
+  end
+
+
 end
