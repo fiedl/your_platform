@@ -12,7 +12,7 @@ module MailMessageExtension
   # Also make sure to only deliver emails to users with accounts.
   #
   def deliver
-    return false unless recipient_has_user_account?
+    return false unless @allow_recipients_without_account || recipient_has_user_account?
 
     if recipient_address.include?('@')
       begin
@@ -36,6 +36,10 @@ module MailMessageExtension
       recipient_address_needs_review!
       return false
     end
+  end
+
+  def allow_recipients_without_account!
+    @allow_recipients_without_account = true
   end
 
   def recipient_address
