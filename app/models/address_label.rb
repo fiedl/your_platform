@@ -8,7 +8,7 @@ class AddressLabel
   def initialize(name, address_field, name_surrounding_field, personal_title = '', company = '')
     self.name = name
     self.company = company
-    self.postal_address = address_field.try(:value)
+    self.postal_address = address_field.try(:composed_value)
     self.street = address_field.try(:street_with_number)
     self.postal_code = address_field.try(:postal_code)
     self.state = address_field.try(:region)
