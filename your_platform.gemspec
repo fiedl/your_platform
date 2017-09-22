@@ -190,7 +190,7 @@ Gem::Specification.new do |s|
   # https://github.com/lautis/uglifier/pull/86
   s.add_dependency 'uglifier', '>= 2.7.2'
   s.add_dependency 'mail', '~> 2.6.6.rc1' # https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_309
-  s.add_dependency 'nokogiri', '>= 1.7.2' # CVE-2017-5029, CVE-2016-1683, CVE-2016-1841, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_714
+  s.add_dependency 'nokogiri', '>= 1.8.1' # USN-3424-1, https://trello.com/c/ztKz5gMj/1207-sicherheits-updates.
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
   s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
