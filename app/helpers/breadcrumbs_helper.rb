@@ -13,7 +13,7 @@ module BreadcrumbsHelper
     [
       {path: page_path(Page.root), title: Page.root.title},
       {path: page_path(Page.intranet_root), title: Page.intranet_root.title}
-    ] + (manual_current_breadcrumbs || [{title: title}])
+    ] + (manual_current_breadcrumbs || ([{title: title}] if title) || [])
   end
 
 end
