@@ -1,5 +1,11 @@
 previous_password_present = ->
-  $('#user_account_current_password').val()? && ($('#user_account_current_password').val().length > 3)
+  if $('#user_account_current_password').count() == 0
+    # When the user has accessed this page through a reset email
+    # with token, there is no need to enter the previous password
+    # and this field is missing.
+    return true
+  else
+    $('#user_account_current_password').val()? && ($('#user_account_current_password').val().length > 3)
 
 password_and_confirmation_match = ->
   if $('#password').val() == $('#user_account_password_confirmation').val()
