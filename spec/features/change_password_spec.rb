@@ -130,4 +130,29 @@ feature 'Change Password', js: true do
 
     it { should_not have_link(I18n.t(:change_password))}
   end
+
+  describe "when using the forgot-password mechanism" do
+    background do
+      @user = create :user_with_account
+      visit forgot_password_path
+      fill_in :user_account_email, with: @user.email
+      click_on "Passwort zurücksetzen"
+      token = last_email.body.to_s.match(/reset_password_token=([A-za-z0-9]+)/)[1]
+      visit reset_password_path(reset_password_token: token)
+    end
+
+    subject { page }
+
+    it { should have_no_field('user_account_current_password') }
+
+    it "should allow the user to change his password" do
+      @password = 'fordprefecthasanawesometowel!'
+      fill_in 'password', with: @password
+      fill_in 'user_account_password_confirmation', with: @password
+      check(I18n.t(:i_agree_i_do_not_use_the_same_password_on_other_services))
+      click_button I18n.t(:submit_changed_password)
+      page.should have_text "Passwort-Änderung erfolgreich. Sie sind jetzt angemeldet."
+    end
+
+  end
 end
