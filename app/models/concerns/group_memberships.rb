@@ -94,9 +94,17 @@ concern :GroupMemberships do
     # This assings the given user as a member to the group, i.e. this will
     # create a Membership.
     #
-    def assign_user( user, options = {} )
-      if user and not user.in?(self.direct_members)
-        time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
+    # If a membership already exists, it will be extended.
+    #
+    def assign_user(user, options = {})
+      raise RuntimeError, "no user given" if not user
+      time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
+      if m = Membership.with_past.find_by_user_and_group(user, self)
+        m.valid_from = time_of_joining if m.valid_from && time_of_joining < m.valid_from
+        m.valid_to = nil
+        m.save
+        m
+      else
         m = Membership.create descendant_id: user.id, ancestor_id: self.id
         m.update_attributes valid_from: time_of_joining # It does not work when added in `create`.
         m

@@ -96,9 +96,10 @@ describe GroupMemberships do
 
   describe "#assign_user" do
     before { @membership1.destroy! }
+    subject { @group.assign_user @user }
     it "should assign the user to the group" do
       @group.members.should_not include @user
-      @group.assign_user @user
+      subject
       @group.reload
       @group.members.should include @user
     end
@@ -106,9 +107,26 @@ describe GroupMemberships do
       before { @group.direct_members << @user }
       it "should just keep them as members" do
         @group.members.should include @user
-        @group.assign_user @user
+        subject
         @group.reload
         @group.members.should include @user
+      end
+    end
+    describe "for users that have been members in the past" do
+      before { @previous_membership = @group.assign_user @user, at: (@t1 = 10.years.ago) }
+      describe "but are no longer members" do
+        before { @previous_membership.invalidate 5.years.ago }
+        it "should extend the existing membership" do
+          subject
+          Membership.find_by_user_and_group(@user, @group).should == @previous_membership.reload
+          @previous_membership.valid_from.should == @t1
+          @previous_membership.valid_to.should == nil
+        end
+        describe "when the new valid_from is older" do
+          subject { @group.assign_user @user, at: (@t0 = 20.years.ago) }
+          its(:valid_from) { should == @t0 }
+          its(:valid_from) { should_not == @t1 }
+        end
       end
     end
   end
