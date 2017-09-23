@@ -1,17 +1,19 @@
 - # Locals:
 - #  - memberships
 
-.alert.alert-warning
-  %p
-    %strong Besondere Sorgfalt geboten:
-    Die Mitgliedschaftszeiträume der direkten Mitgliedschaften können durch Klick auf das Datum bearbeitet werden. Hierbei wird allerdings keinerlei Prüfung der Plausibilität vorgenommen, sondern direkt die Datenbank bearbeitet. Bitte äußerste Vorsicht walten lassen.
-  %p
-    Abgeleitete Informationen werden erst nach einem Neuladen angezeigt. Abgeleitete Informationen, z.B. Aktivitätszahlen, können mit (wenigen Minuten) Verzögerung angezeigt werden.
+- if can? :manage, scope
+  .alert.alert-warning
+    %p
+      %strong Besondere Sorgfalt geboten:
+      Die Mitgliedschaftszeiträume der direkten Mitgliedschaften können durch Klick auf das Datum bearbeitet werden. Hierbei wird allerdings keinerlei Prüfung der Plausibilität vorgenommen, sondern direkt die Datenbank bearbeitet. Bitte äußerste Vorsicht walten lassen.
+    %p
+      Abgeleitete Informationen werden erst nach einem Neuladen angezeigt. Abgeleitete Informationen, z.B. Aktivitätszahlen, können mit (wenigen Minuten) Verzögerung angezeigt werden.
 
 %table.datatable.memberships
   %thead
     %tr
-      %th Id
+      - if can? :manage, scope
+        %th Id
       %th
         - if user  # All memberships belong to this user. This column specifies the group then.
           Gruppe
@@ -21,11 +23,13 @@
       %th Mitglied seit
       %th Mitglied bis
       %th Direkte Mitgliedschaft
-      %th Löschen
+      - if can? :manage, scope
+        %th Löschen
   %tbody
     - memberships.each do |membership|
       %tr{class: [((membership.group && membership.currently_valid?) ? "currently_valid" : "currently_invalid"), "membership_#{membership.id}"].join(" ")}
-        %td.copy-to-clipboard{title: "Membership.now_and_in_the_past.find(#{membership.id})"}= membership.id
+        - if can? :manage, scope
+          %td.copy-to-clipboard{title: "Membership.now_and_in_the_past.find(#{membership.id})"}= membership.id
         %td
           - if user
             - if membership.group
@@ -63,6 +67,7 @@
           - else
             = localize(membership.read_attribute(:valid_to).to_date) if membership.read_attribute(:valid_to)
         %td= membership.direct? ? "<strong>direkt</strong>".html_safe : "count: #{membership.count}"
-        %td
-          - if membership.destroyable? and can?(:destroy, membership)
-            = remove_button membership, show_only_in_edit_mode: false, confirm: "Dies löscht den Eintrag unwiderbringlich! Dies soll nicht dazu verwendet werden, um eine Mitgliedschaft zu beenden, sondern NUR, WENN es sich um einen FEHLERHAFTEN EINTRAG handelt. Soll der Eintrag wirklich gelöscht werden?"
+        - if can? :manage, scope
+          %td
+            - if membership.destroyable? and can?(:destroy, membership)
+              = remove_button membership, show_only_in_edit_mode: false, confirm: "Dies löscht den Eintrag unwiderbringlich! Dies soll nicht dazu verwendet werden, um eine Mitgliedschaft zu beenden, sondern NUR, WENN es sich um einen FEHLERHAFTEN EINTRAG handelt. Soll der Eintrag wirklich gelöscht werden?"

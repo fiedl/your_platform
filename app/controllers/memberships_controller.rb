@@ -4,16 +4,11 @@ class MembershipsController < ApplicationController
 
   expose :user, -> { User.find params[:user_id] if params[:user_id] }
   expose :group, -> { Group.find params[:group_id] if params[:group_id] }
+  expose :scope, -> { group || user }
   expose :membership, -> {
     DagLink.find(params[:id]) || Membership.find_by_user_and_group(user, group).with_past
   }
-  expose :memberships, -> {
-    if user
-      user.memberships.with_past
-    elsif group
-      group.memberships.with_past
-    end
-  }
+  expose :memberships, -> { scope.memberships.with_past }
 
   respond_to :json, :html
 
@@ -22,7 +17,7 @@ class MembershipsController < ApplicationController
       authorize! :manage, user
       @object = user
     elsif group
-      authorize! :manage, group
+      authorize! :index_memberships, group
       @object = group
     else
       raise ActionController::ParameterMissing, 'neither group nor user are given'

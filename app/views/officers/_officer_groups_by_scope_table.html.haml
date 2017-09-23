@@ -30,7 +30,7 @@
           %p= render partial: 'officer_group_members', locals: {officer_group: officer_group}
 
         %td.history
-          - if can? :manage, officer_group
+          - if can? :index_memberships, officer_group
             = link_to icon(:history), group_memberships_path(group_id: officer_group.id), class: 'btn btn-default btn-sm', title: t(:office_history)
         %td.updated_at
           %p= localize officer_group.updated_at.to_date
