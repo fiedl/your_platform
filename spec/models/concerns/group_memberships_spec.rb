@@ -119,13 +119,14 @@ describe GroupMemberships do
         it "should extend the existing membership" do
           subject
           Membership.find_by_user_and_group(@user, @group).should == @previous_membership.reload
-          @previous_membership.valid_from.should == @t1
+          @previous_membership.valid_from.should be_the_same_time_as @t1
           @previous_membership.valid_to.should == nil
         end
         describe "when the new valid_from is older" do
-          subject { @group.assign_user @user, at: (@t0 = 20.years.ago) }
-          its(:valid_from) { should == @t0 }
-          its(:valid_from) { should_not == @t1 }
+          before { @t0 = 20.years.ago }
+          subject { @group.assign_user @user, at: @t0 }
+          its(:valid_from) { should be_the_same_time_as @t0 }
+          its(:valid_from) { should_not be_the_same_time_as @t1 }
         end
       end
     end
