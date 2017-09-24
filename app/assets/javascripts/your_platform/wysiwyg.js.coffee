@@ -59,6 +59,7 @@ $(document).ready ->
       editable.data('editor', editor)
       editable.on 'edit', ->
         editor.enable()
+        editor.previous_value = editor.getValue()
         editable.removeClass('success')
         editable.addClass('active')
         toolbar.show('blind')
@@ -75,21 +76,22 @@ $(document).ready ->
           $(this).replaceWith(video_url)
 
         html = editor.getValue()
-        url = editable.data('url')
-        $.ajax {
-          type: 'POST',
-          url: url,
-          data: {
-            _method: 'PATCH',
-            "#{editable.data('object-key')}": { # e.g. "page"
-              "#{editable.data('attribute-key')}": html # e.g. "content"
-            }
-          },
-          success: (result)->
-            editor.setValue(result['display_as']) if result
-            App.success editable
-            App.galleries.process(editable)
-        }
+        if editor.previous_value != html
+          url = editable.data('url')
+          $.ajax {
+            type: 'POST',
+            url: url,
+            data: {
+              _method: 'PATCH',
+              "#{editable.data('object-key')}": { # e.g. "page"
+                "#{editable.data('attribute-key')}": html # e.g. "content"
+              }
+            },
+            success: (result)->
+              editor.setValue(result['display_as']) if result
+              App.success editable
+              App.galleries.process(editable)
+          }
 
       editable.on 'cancel', ->
         editor.disable()
