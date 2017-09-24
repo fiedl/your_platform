@@ -1,4 +1,6 @@
-%h1.blog_post_teaser= link_to blog_post.title, blog_post
+%h1.blog_post_teaser
+  = link_to blog_post.title, blog_post
+  = publish_page_button(blog_post)
 %div
   = render partial: 'blog_posts/image', object: blog_post, as: :blog_post
   = render partial: 'blog_posts/meta', object: blog_post, as: :blog_post, locals: {teaser: true}
