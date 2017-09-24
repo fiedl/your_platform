@@ -97,6 +97,9 @@ Rails.application.routes.draw do
     get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
     post :renew_cache, to: 'cache_renewals#create'
+    namespace :excel_imports do
+      resources :users
+    end
   end
   get :my_groups, to: 'groups#index_mine'
 
