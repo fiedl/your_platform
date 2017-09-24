@@ -190,13 +190,19 @@ class Page < ApplicationRecord
     blog_posts
   end
   def blog_posts
-    child_pages.where(type: "BlogPost").order(published_at: :desc)
+    child_pages.where(type: "BlogPost").order_by_published_at
   end
   def child_blog_posts
-    child_pages.where(type: "BlogPost").order(published_at: :desc)
+    child_pages.where(type: "BlogPost").order_by_published_at
   end
   def descendant_blog_posts
-    descendant_pages.where(type: "BlogPost").order(published_at: :desc)
+    descendant_pages.where(type: "BlogPost").order_by_published_at
+  end
+  def self.order_by_published_at
+    # The minus makes unpublished top.
+    # https://stackoverflow.com/a/14595507/2066546
+    # TODO: Change this when migrating to postgres.
+    self.order("-published_at ASC")
   end
 
   # Finder and Creator Methods
