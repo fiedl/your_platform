@@ -4,5 +4,5 @@
 %div
   = render partial: 'blog_posts/image', object: blog_post, as: :blog_post
   = render partial: 'blog_posts/meta', object: blog_post, as: :blog_post, locals: {teaser: true}
-  = markup blog_post.teaser_text
+  = best_in_place_if can?(:update, blog_post), blog_post, :teaser_text, as: :textarea, sanitize: false
   = link_to t(:read_more), blog_post, class: 'more-link'
