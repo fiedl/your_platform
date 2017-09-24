@@ -87,8 +87,7 @@ $(document).ready ->
           },
           success: (result)->
             editor.setValue(result['display_as']) if result
-            editable.effect('highlight')
-            editable.addClass('success')
+            App.success editable
             App.galleries.process(editable)
         }
 

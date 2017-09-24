@@ -16,9 +16,7 @@ $(document).on 'best_in_place:before-update', '.best_in_place', ->
   $(this).removeClass 'success error'
 
 $(document).on 'ajax:success', '.best_in_place', ->
-  $(this).removeClass 'saving'
-  $(this).addClass 'success'
-  $(this).effect 'highlight'
+  App.success $(this)
   trigger_box_edit_mode_complete_if_all_are_finished($(this))
 
 $(document).on 'ajax:error', '.best_in_place', (request, error)->
