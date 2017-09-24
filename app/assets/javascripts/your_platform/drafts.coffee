@@ -8,6 +8,7 @@ $(document).on 'click', '.btn.publish_page', ->
     success: (result) ->
       button.hide('highlight')
       $('.page_published_at').remove()
+      App.success button.closest('.box')
     failure: (result) ->
       console.log result
       alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
