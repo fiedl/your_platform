@@ -2,11 +2,11 @@ $(document).on 'mouseenter', '.edit_button', ->
   if not $(this).closest('edit_mode_group').hasClass('currently_in_edit_mode')
     $(this).closest('.box').find('.shown_on_edit_button_hover').show(animation_preset)
 
-$(document).on 'mouseenter', '.panel-heading', ->
+$(document).on 'mouseenter', '.box_header', ->
   if not $(this).closest('edit_mode_group').hasClass('currently_in_edit_mode')
     $(this).closest('.box').find('.shown_on_box_header_hover').show(animation_preset)
 
-$(document).on 'mouseleave', '.panel-heading', ->
+$(document).on 'mouseleave', '.box_header', ->
   $(this).find('.shown_on_edit_button_hover').hide(animation_preset)
   $(this).find('.shown_on_box_header_hover').hide(animation_preset)
 
