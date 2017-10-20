@@ -1,0 +1,9 @@
+%h1 Logos
+%div
+  .logos.attachments
+    %ul
+      - logos.each do |logo|
+        %li
+          .title= logo.title
+          .light-bg= image_tag logo.file_path
+          .dark-bg= image_tag logo.file_path
