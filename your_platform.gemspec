@@ -187,6 +187,9 @@ Gem::Specification.new do |s|
   # LDAP
   s.add_dependency 'net-ldap'
 
+  # Neo4j
+  s.add_dependency 'neography'
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'

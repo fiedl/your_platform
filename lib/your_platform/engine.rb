@@ -145,6 +145,9 @@ require 'exception_notification'
 # LDAP
 require 'net/ldap'
 
+# Neo4j
+require 'neography'
+
 require_relative '../../config/initializers/inflections'
 
 module YourPlatform
