@@ -49,9 +49,7 @@ class GraphDatabase
 
   def self.get_descendant_group_ids(group)
     neo.execute_query("
-      match (parent:Group), (groups:Group)
-      where parent.id = #{group.id}
-      and (parent)-[:IS_SUBGROUP_OF*1..100]->(groups)
+      match (parent:Group {id: #{group.id}})-[:IS_SUBGROUP_OF*]->(groups:Group)
       return groups.id
     ")['data'].flatten
   end
