@@ -6,6 +6,13 @@ class ApplicationRecord < ActiveRecord::Base
   include RecordUrl
   include BestInPlaceCorrections
 
+  # Shortcut for global id.
+  # The reverse is: `GlobalID::Locator.locate gid`.
+  #
+  def gid
+    to_global_id.to_s
+  end
+
   # Patch the `#first` method to allow the following for STI classes
   # like `Group`, which has descendant classes like `Groups::Everyone`.
   #

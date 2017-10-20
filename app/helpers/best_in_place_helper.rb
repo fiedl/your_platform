@@ -12,6 +12,7 @@ module BestInPlaceHelper
     setting = (object == Setting ? Setting : object.settings)
       .where(var: setting_key).first_or_create
     options[:collection] = Hash[options[:collection].collect { |item| [item, item] }] if options[:collection].kind_of? Array
+    options[:place_holder] ||= options[:default]
     best_in_place setting, :value, options
   end
 
@@ -19,7 +20,7 @@ module BestInPlaceHelper
     if condition
       setting_in_place object, setting_key, options
     else
-      object.settings.send setting_key
+      object.settings.send(setting_key) || options[:default]
     end
   end
 
