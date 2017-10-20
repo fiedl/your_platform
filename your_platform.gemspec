@@ -184,6 +184,9 @@ Gem::Specification.new do |s|
   # Log
   s.add_dependency 'fiedl-log'
 
+  # LDAP
+  s.add_dependency 'net-ldap'
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'

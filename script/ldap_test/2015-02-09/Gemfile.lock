@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    net-ldap (0.11)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  net-ldap

@@ -142,6 +142,9 @@ require 'discourse_api'
 # Exceptions
 require 'exception_notification'
 
+# LDAP
+require 'net/ldap'
+
 require_relative '../../config/initializers/inflections'
 
 module YourPlatform
