@@ -60,4 +60,9 @@ class GraphDatabase
     Group.find get_descendant_group_ids(group)
   end
 
+  def self.create_group_id_index
+    # In order to make finding groups by id faster.
+    neo.create_schema_index "Group", ["id"]
+  end
+
 end
