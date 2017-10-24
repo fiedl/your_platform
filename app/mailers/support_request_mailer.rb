@@ -9,7 +9,9 @@ class SupportRequestMailer < BaseMailer
     @role = meta_data[:role]
     @from_email = sender_user.try(:email) || SupportRequestsController.support_email
 
-    mail to: [receiver_email], from: @from_email, subject: subject
+    mail_message = mail(to: [receiver_email], from: @from_email, subject: subject)
+    mail_message.allow_recipients_without_account!
+    mail_message
   end
 
   private
