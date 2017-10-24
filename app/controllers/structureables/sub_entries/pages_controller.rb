@@ -12,7 +12,7 @@ class Structureables::SubEntries::PagesController < Structureables::SubEntriesCo
   private
 
   def secure_child_type
-    params[:child_type] if params[:child_type].start_with?("Pages::")
+    params[:child_type] if params[:child_type] && params[:child_type].start_with?("Pages::")
   end
 
 end
