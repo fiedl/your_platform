@@ -12,6 +12,15 @@ class GraphDatabase::HasSubgroup < GraphDatabase::Link
     GraphDatabase::Group.get_node(link.descendant)
   end
 
+  def sync_parent
+    GraphDatabase::Group.sync link.ancestor
+  end
+
+  def sync_child
+    GraphDatabase::Group.sync link.descendant
+  end
+
+
 
   # def self.create_subgroup_relation(parent, child)
   #   if neo.execute_query("match (:Group {id: #{parent.id}})-[r:HAS_SUBGROUP]->(:Group {id: #{child.id}}) return r")['data'].flatten.count == 0

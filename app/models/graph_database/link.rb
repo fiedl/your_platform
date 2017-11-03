@@ -17,6 +17,8 @@ class GraphDatabase::Link < GraphDatabase::Base
   end
 
   def sync
+    sync_parent
+    sync_child
     write_link
   end
 
