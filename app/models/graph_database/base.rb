@@ -9,12 +9,16 @@ class GraphDatabase::Base
     @neo ||= Neography::Rest.new(Rails.configuration.x.neo4j_rest_url || raise('neo4j database connection not configured.'))
   end
 
+  def self.configured?
+    Rails.configuration.x.neo4j_rest_url
+  end
+
   def neo
     self.class.neo
   end
 
   def self.sync(object)
-    self.new(object).sync
+    self.new(object).sync if self.configured?
   end
 
   def initialize(object)
