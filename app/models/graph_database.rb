@@ -84,8 +84,10 @@ class GraphDatabase
     group_node = get_group_node(membership.group)
     user_node = get_user_node(membership.user)
     neo.execute_query("match (m:Membership {id: #{membership.id}})-[r]-() delete r")
-    neo.create_relationship "HAS_MEMBERSHIP", group_node, membership_node
-    neo.create_relationship "HAS_MEMBER", membership_node, user_node
+    if user_node && group_node
+      neo.create_relationship "HAS_MEMBERSHIP", group_node, membership_node
+      neo.create_relationship "HAS_MEMBER", membership_node, user_node
+    end
     membership_node
   end
 
