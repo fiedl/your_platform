@@ -6,6 +6,7 @@ class DagLink < ApplicationRecord
     "Link #{ancestor_type} #{ancestor_id} --> #{descendant_type} #{descendant_id}"
   end
 
+  include DagLinkGraph
   include DagLinkTypes
   include DagLinkRepair
   include DagLinkCaching if use_caching?

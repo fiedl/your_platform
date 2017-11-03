@@ -62,6 +62,7 @@ class User < ApplicationRecord
   # Mixins
   # ==========================================================================================
 
+  include UserGraph
   include UserMixins::Memberships
   include UserMixins::Identification
   include UserCorporations
