@@ -6,9 +6,10 @@
 //= require sugar
 //= require best_in_place
 //= require underscore
-//= require photoswipe/dist/photoswipe
-//= require photoswipe/dist/photoswipe-ui-default
+//  # require photoswipe/dist/photoswipe
+//  # require photoswipe/dist/photoswipe-ui-default
 //
+//= require your_platform/017-jquery-patches
 //= require your_platform/mobile
 //
 //= require turbolinks

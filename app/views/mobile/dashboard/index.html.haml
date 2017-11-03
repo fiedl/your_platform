@@ -1,4 +1,4 @@
-= Rails.cache.fetch([current_user, 'mobile_dashboard'], expires_in: 15.minutes) do
+= Rails.cache.fetch([current_user, 'mobile_dashboard', 'Kov6shoi'], expires_in: 15.minutes) do
   - capture_haml do
     .app_logo
       .logo= image_tag 'logo.png'
@@ -30,10 +30,10 @@
           = render partial: 'mobile/partials/events'
           -#.events_list_partial
 
-      - if can? :read, :mobile_photos
-        -#= render partial: 'mobile/photos/thumbs', locals: {thumbs: @latest_event_images.reverse}
-        = render partial: 'mobile/photos/photos', locals: {photos: @all_event_images.reverse, thumbs: @latest_event_images.reverse}
-        .more_photos.clear= link_to "Mehr Fotos", mobile_photos_path, class: 'btn-mobile center'
+      -#- if can? :read, :mobile_photos
+      -#  -#= render partial: 'mobile/photos/thumbs', locals: {thumbs: @latest_event_images.reverse}
+      -#  = render partial: 'mobile/photos/photos', locals: {photos: @all_event_images.reverse, thumbs: @latest_event_images.reverse}
+      -#  .more_photos.clear= link_to "Mehr Fotos", mobile_photos_path, class: 'btn-mobile center'
 
     .row.sign_out
       = link_to "App-Info", mobile_app_info_path
