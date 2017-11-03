@@ -1,7 +1,12 @@
 class GraphDatabase::Base
 
   def self.neo
-    @neo ||= Neography::Rest.new authentication: :basic, username: 'neo4j', password: 'trinity'
+    # Configure the rest interface in an initializer.
+    #
+    #     # config/initializers/neo4j.rb
+    #     Rails.configuration.x.neo4j_rest_url = "http://neo4j:swordfish@localhost:7474"
+    #
+    @neo ||= Neography::Rest.new(Rails.configuration.x.neo4j_rest_url || raise('neo4j database connection not configured.'))
   end
 
   def neo
