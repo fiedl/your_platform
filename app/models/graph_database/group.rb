@@ -15,7 +15,7 @@ class GraphDatabase::Group < GraphDatabase::Node
   def get_member_ids
     neo.execute_query("
       match path = (group:Group {id: #{group.id}})-[:HAS_SUBGROUP*]->(g:Group)-[m:MEMBERSHIP]->(users:User)
-      where not g.type = 'OfficerGroup'
+      where #{self.class.regular_group_condition}
       and #{GraphDatabase::Membership.validity_range_condition}
       return distinct(users.id)
       union
@@ -36,13 +36,25 @@ class GraphDatabase::Group < GraphDatabase::Node
     ")['data'].flatten
   end
 
-  #def self.get_descendant_groups(group)
-  #  ::Group.find get_descendant_group_ids(group)
-  #end
+  def self.get_membership_ids(group)
+    neo.execute_query("
+      match (parent:Group {id: #{group.id}})-[memberships:MEMBERSHIP]->()
+      return memberships.id
+      union
+      match (parent:Group {id: #{group.id}})-[:HAS_SUBGROUP*]->(g:Group)-[memberships:MEMBERSHIP]->()
+      where #{regular_group_condition}
+      return memberships.id
+    ")['data'].flatten
+  end
 
   def self.create_group_id_index
     # In order to make finding groups by id faster.
     neo.create_schema_index "Group", ["id"]
+  end
+
+  def self.regular_group_condition(options = {})
+    group_symbol = options[:symbol] || :g
+    "(not #{group_symbol}.type = 'OfficerGroup')"
   end
 
 

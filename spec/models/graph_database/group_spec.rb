@@ -9,7 +9,7 @@ if GraphDatabase::Base.configured?
       @group = create :group
       @subgroup = @group.child_groups.create
       @user = create :user
-      @subgroup.assign_user @user
+      @membership = @subgroup.assign_user @user
     end
 
     describe ".get_member_ids" do
@@ -47,6 +47,11 @@ if GraphDatabase::Base.configured?
     describe ".get_descendant_group_ids" do
       subject { GraphDatabase::Group.get_descendant_group_ids @group }
       it { should == [@subgroup.id] }
+    end
+
+    describe ".get_membership_ids" do
+      subject { GraphDatabase::Group.get_membership_ids @group }
+      it { should == [@membership.id]}
     end
 
   end
