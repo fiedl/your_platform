@@ -25,7 +25,17 @@ class GraphDatabase::Base
     @object = object
   end
 
+  def self.clean(confirmation = nil)
+    self.delete_all_nodes_and_relations(confirmation)
+  end
 
+  def self.delete_all_nodes_and_relations(confirmation = nil)
+    if confirmation.to_s == "yes_i_am_sure"
+      neo.execute_query "MATCH (n) DETACH DELETE n" # https://stackoverflow.com/a/21357473/2066546
+    else
+      raise 'please confirm with parameter :yes_i_am_sure'
+    end
+  end
 
   def self.import(group)
     GraphDatabase::Group.sync group
