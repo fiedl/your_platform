@@ -28,4 +28,10 @@ class GraphDatabase::Membership < GraphDatabase::Link
     GraphDatabase::User.sync membership.descendant
   end
 
+  def self.validity_range_condition(options = {})
+    time = options[:time] || Time.zone.now
+    membership_symbol = options[:symbol] || :m
+    "(#{membership_symbol}.valid_to = '' or #{membership_symbol}.valid_to > '#{time.to_s}')"
+  end
+
 end
