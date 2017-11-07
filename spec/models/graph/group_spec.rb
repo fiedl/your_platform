@@ -3,8 +3,6 @@ require 'spec_helper'
 if Graph::Base.configured?
   describe Graph::Group do
 
-    before { Graph::Base.clean :yes_i_am_sure }
-
     before do
       @group = create :group
       @subgroup = @group.child_groups.create

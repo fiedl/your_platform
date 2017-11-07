@@ -292,6 +292,7 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean
+    Graph::Base.clean :yes_i_am_sure if Graph::Base.configured?
   end
 
   config.before(:each) do
@@ -307,6 +308,7 @@ RSpec.configure do |config|
       DatabaseCleaner.strategy = :truncation
     end
     DatabaseCleaner.start
+    Graph::Base.clean :yes_i_am_sure if Graph::Base.configured?
 
     # Clear the cache.
     Rails.cache.clear unless ENV['NO_CACHING']
