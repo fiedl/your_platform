@@ -318,6 +318,9 @@ class Ability
     #
     can :index, MailingList
 
+    # Regular users can index officers.
+    can :index, :officers
+
     if not read_only_mode?
       # Regular users can create, update or destroy own profile fields
       # that do not belong to the General section.

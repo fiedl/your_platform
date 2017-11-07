@@ -263,3 +263,8 @@ $(document).ready ->
       { type: 'de_date', targets: 0 }
     ]
   }
+
+  App.datatables.create '.datatable.officers_by_flag', {
+    "pageLength": 500,
+    "order": [[0, "asc"]]
+  }

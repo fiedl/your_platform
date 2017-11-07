@@ -1,0 +1,14 @@
+%h1.officers_by_flag= current_title
+%div
+  %table.datatable.officers_by_flag
+    %thead
+      %tr
+        %th= t :corporation
+        %th= t :office
+        %th= t :officers
+    %tbody
+      - officer_groups.each do |officer_group|
+        %tr
+          %td= officer_group.corporation.title
+          %td= officer_group.title
+          %td= render partial: 'officers/officer_group_members', object: officer_group, as: :officer_group

@@ -114,6 +114,11 @@ Rails.application.routes.draw do
   resources :corporations, controller: 'groups'
   resources :officer_groups
 
+  namespace :officers do
+    get ':flag', to: 'by_flag#index'
+  end
+
+
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'
     get :activities, to: 'activities#index'
