@@ -52,5 +52,19 @@ if Graph::Base.configured?
       it { should == [@membership.id]}
     end
 
+    describe "#descendant_event_ids" do
+      subject { Graph::Group.find(@group).descendant_event_ids }
+
+      describe "when the group has direct events" do
+        before { @event = @group.events.create name: "Some event" }
+        it { should include @event.id }
+      end
+
+      describe "when a subgroup has direct events" do
+        before { @subgroup_event = @subgroup.events.create name: "Subgroup event" }
+        it { should include @subgroup_event.id }
+      end
+    end
+
   end
 end

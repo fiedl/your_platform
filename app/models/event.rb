@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   has_many :attachments, as: :parent, dependent: :destroy
 
   include Structureable
+  include EventGraph
   include Navable
   include EventGroups
   include EventContactPeople

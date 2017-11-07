@@ -57,5 +57,11 @@ class Graph::Group < Graph::Node
     "(not #{group_symbol}.type = 'OfficerGroup')"
   end
 
+  def descendant_event_ids
+    query_ids("
+      match (parent:Group {id: #{group.id}})-[:HAS_SUBGROUP|:HAS_EVENT*]->(events:Event)
+      return distinct(events.id)
+    ")
+  end
 
 end
