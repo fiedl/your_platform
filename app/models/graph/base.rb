@@ -41,6 +41,10 @@ class Graph::Base
     end
   end
 
+  def query_ids(query)
+    neo.execute_query(query)['data'].flatten
+  end
+
   def self.import(group)
     Graph::Group.sync group
     group.descendant_groups.each { |g| Graph::Group.sync g }
