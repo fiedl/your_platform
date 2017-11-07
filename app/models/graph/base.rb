@@ -25,6 +25,10 @@ class Graph::Base
     @object = object
   end
 
+  def self.find(object)
+    self.new(object)
+  end
+
   def self.clean(confirmation = nil)
     self.delete_all_nodes_and_relations(confirmation)
   end

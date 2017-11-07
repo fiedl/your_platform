@@ -1,13 +1,5 @@
 class Graph::Link < Graph::Base
 
-  def self.find(object)
-    neo.execute_query("
-      match ()-[r:#{self.relationship_type}]-()
-      where r.id = #{object.id}
-      return r
-    ")['data'].flatten.first
-  end
-
   def link
     @object
   end
@@ -22,6 +14,14 @@ class Graph::Link < Graph::Base
     write_link
   end
 
+  def get_link
+    neo.execute_query("
+      match ()-[r:#{self.class.relationship_type}]-()
+      where r.id = #{@object.id}
+      return r
+    ")['data'].flatten.first
+  end
+
   def write_link
     neo.set_relationship_properties link_id, properties
   end
@@ -31,7 +31,7 @@ class Graph::Link < Graph::Base
   end
 
   def self.find_or_create(link)
-    find(link) || create(link)
+    find(link).get_link || create(link)
   end
 
   def self.create(link)
