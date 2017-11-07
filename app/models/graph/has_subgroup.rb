@@ -1,30 +1,30 @@
-class GraphDatabase::HasSubgroup < GraphDatabase::Link
+class Graph::HasSubgroup < Graph::Link
 
   def self.relationship_type
     "HAS_SUBGROUP"
   end
 
   def parent_node
-    GraphDatabase::Group.get_node(link.ancestor)
+    Graph::Group.get_node(link.ancestor)
   end
 
   def child_node
-    GraphDatabase::Group.get_node(link.descendant)
+    Graph::Group.get_node(link.descendant)
   end
 
   def sync_parent
-    GraphDatabase::Group.sync link.ancestor
+    Graph::Group.sync link.ancestor
   end
 
   def sync_child
-    GraphDatabase::Group.sync link.descendant
+    Graph::Group.sync link.descendant
   end
 
 
 
   # def self.create_subgroup_relation(parent, child)
   #   if neo.execute_query("match (:Group {id: #{parent.id}})-[r:HAS_SUBGROUP]->(:Group {id: #{child.id}}) return r")['data'].flatten.count == 0
-  #     neo.create_relationship "HAS_SUBGROUP", GraphDatabase::User.get_node(parent), GraphDatabase::User.get_node(child)
+  #     neo.create_relationship "HAS_SUBGROUP", Graph::User.get_node(parent), Graph::User.get_node(child)
   #   end
   # end
 

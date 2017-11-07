@@ -5,7 +5,7 @@ concern :GroupGraph do
   end
 
   def sync_to_graph_database
-    GraphDatabase::Group.sync self
+    Graph::Group.sync self
   end
 
 end

@@ -1,4 +1,4 @@
-class GraphDatabase::Node < GraphDatabase::Base
+class Graph::Node < Graph::Base
 
   def sync
     self.class.write_object @object, node_label, properties

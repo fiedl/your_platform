@@ -1,4 +1,4 @@
-class GraphDatabase::User < GraphDatabase::Node
+class Graph::User < Graph::Node
 
   def user
     @object

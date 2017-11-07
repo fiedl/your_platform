@@ -6,8 +6,8 @@ concern :DagLinkGraph do
 
   def sync_to_graph_database
     if self.direct?
-      GraphDatabase::HasSubgroup.sync self if ancestor.kind_of?(Group) && descendant.kind_of?(Group)
-      GraphDatabase::Membership.sync self if ancestor.kind_of?(Group) && descendant.kind_of?(User)
+      Graph::HasSubgroup.sync self if ancestor.kind_of?(Group) && descendant.kind_of?(Group)
+      Graph::Membership.sync self if ancestor.kind_of?(Group) && descendant.kind_of?(User)
     end
   end
 

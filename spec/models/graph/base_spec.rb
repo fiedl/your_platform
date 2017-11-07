@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe GraphDatabase::Base do
+describe Graph::Base do
 
   describe "when no interface is configured" do
     before { Rails.configuration.x.neo4j_rest_url = nil }

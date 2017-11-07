@@ -1,4 +1,4 @@
-class GraphDatabase::Group < GraphDatabase::Node
+class Graph::Group < Graph::Node
 
   def group
     @object
@@ -16,11 +16,11 @@ class GraphDatabase::Group < GraphDatabase::Node
     neo.execute_query("
       match path = (group:Group {id: #{group.id}})-[:HAS_SUBGROUP*]->(g:Group)-[m:MEMBERSHIP]->(users:User)
       where #{self.class.regular_group_condition}
-      and #{GraphDatabase::Membership.validity_range_condition}
+      and #{Graph::Membership.validity_range_condition}
       return distinct(users.id)
       union
       match path = (group:Group {id: #{group.id}})-[m:MEMBERSHIP]->(users:User)
-      where #{GraphDatabase::Membership.validity_range_condition}
+      where #{Graph::Membership.validity_range_condition}
       return distinct(users.id)
     ")['data'].flatten
   end

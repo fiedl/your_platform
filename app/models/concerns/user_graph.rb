@@ -5,7 +5,7 @@ concern :UserGraph do
   end
 
   def sync_to_graph_database
-    GraphDatabase::User.sync self
+    Graph::User.sync self
   end
 
 end

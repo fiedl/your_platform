@@ -1,4 +1,4 @@
-class GraphDatabase::Link < GraphDatabase::Base
+class Graph::Link < Graph::Base
 
   def self.find(object)
     neo.execute_query("

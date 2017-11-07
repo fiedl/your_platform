@@ -1,4 +1,4 @@
-class GraphDatabase::Membership < GraphDatabase::Link
+class Graph::Membership < Graph::Link
 
   def self.relationship_type
     "MEMBERSHIP"
@@ -13,19 +13,19 @@ class GraphDatabase::Membership < GraphDatabase::Link
   end
 
   def parent_node
-    GraphDatabase::Group.get_node(membership.ancestor)
+    Graph::Group.get_node(membership.ancestor)
   end
 
   def child_node
-    GraphDatabase::User.get_node(membership.descendant)
+    Graph::User.get_node(membership.descendant)
   end
 
   def sync_parent
-    GraphDatabase::Group.sync membership.ancestor
+    Graph::Group.sync membership.ancestor
   end
 
   def sync_child
-    GraphDatabase::User.sync membership.descendant
+    Graph::User.sync membership.descendant
   end
 
   def self.validity_range_condition(options = {})

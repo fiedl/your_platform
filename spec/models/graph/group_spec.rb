@@ -1,9 +1,9 @@
 require 'spec_helper'
 
-if GraphDatabase::Base.configured?
-  describe GraphDatabase::Group do
+if Graph::Base.configured?
+  describe Graph::Group do
 
-    before { GraphDatabase::Base.clean :yes_i_am_sure }
+    before { Graph::Base.clean :yes_i_am_sure }
 
     before do
       @group = create :group
@@ -13,7 +13,7 @@ if GraphDatabase::Base.configured?
     end
 
     describe ".get_member_ids" do
-      subject { GraphDatabase::Group.get_member_ids @group }
+      subject { Graph::Group.get_member_ids @group }
       it { should == [@user.id] }
 
       describe "when the group has current members" do
@@ -45,12 +45,12 @@ if GraphDatabase::Base.configured?
     end
 
     describe ".get_descendant_group_ids" do
-      subject { GraphDatabase::Group.get_descendant_group_ids @group }
+      subject { Graph::Group.get_descendant_group_ids @group }
       it { should == [@subgroup.id] }
     end
 
     describe ".get_membership_ids" do
-      subject { GraphDatabase::Group.get_membership_ids @group }
+      subject { Graph::Group.get_membership_ids @group }
       it { should == [@membership.id]}
     end
 
