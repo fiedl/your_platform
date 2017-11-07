@@ -9,7 +9,7 @@ class Graph::Group < Graph::Node
   end
 
   def properties
-    {id: group.id, name: group.name.to_s, type: group.type.to_s}
+    {id: group.id, name: group.name.to_s, token: group.token.to_s, type: group.type.to_s}
   end
 
   def descendant_member_ids

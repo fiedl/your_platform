@@ -9,7 +9,7 @@ class Graph::User < Graph::Node
   end
 
   def properties
-    {id: user.id, name: user.name.to_s, title: user.title.to_s}
+    {id: user.id, name: user.name.to_s, title: user.title.to_s, first_name: user.first_name.to_s, last_name: user.last_name.to_s, name_affix: user.name_affix.to_s}
   end
 
 end
