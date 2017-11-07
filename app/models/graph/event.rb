@@ -4,10 +4,12 @@ class Graph::Event < Graph::Node
     @object
   end
 
-  def sync
-    super
-    Graph::HasEvent.sync event if event.group
-  end
+  # # This causes "end of file reached (EOFError)"
+  # # in specs, e.g. in rspec ./spec/features/events_spec.rb:350
+  #def sync
+  #  super
+  #  Graph::HasEvent.sync event if event.group
+  #end
 
   def node_label
     "Event"
