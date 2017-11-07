@@ -8,7 +8,14 @@ class MembershipsController < ApplicationController
   expose :membership, -> {
     DagLink.find(params[:id]) || Membership.find_by_user_and_group(user, group).with_past
   }
-  expose :memberships, -> { scope.memberships.with_past }
+  expose :memberships, -> {
+    # TODO: Simplify this when the graph database is better integrated.
+    if scope.kind_of?(Group)
+      scope.descendant_memberships.with_past
+    else
+      scope.memberships.direct.with_past
+    end
+  }
 
   respond_to :json, :html
 

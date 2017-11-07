@@ -8,4 +8,8 @@ concern :GroupGraph do
     Graph::Group.sync self
   end
 
+  def descendant_memberships
+    Membership.where(id: Graph::Group.find(self).descendant_membership_ids)
+  end
+
 end

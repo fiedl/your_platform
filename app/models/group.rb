@@ -6,6 +6,7 @@ class Group < ApplicationRecord
   scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
 
   include Structureable
+  include GroupGraph
   include Navable
   include GroupMemberships
   include GroupMemberList
