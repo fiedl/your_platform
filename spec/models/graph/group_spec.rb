@@ -10,8 +10,8 @@ if Graph::Base.configured?
       @membership = @subgroup.assign_user @user
     end
 
-    describe ".get_member_ids" do
-      subject { Graph::Group.get_member_ids @group }
+    describe "#descendant_member_ids" do
+      subject { Graph::Group.find(@group).descendant_member_ids }
       it { should == [@user.id] }
 
       describe "when the group has current members" do
@@ -43,12 +43,12 @@ if Graph::Base.configured?
     end
 
     describe ".get_descendant_group_ids" do
-      subject { Graph::Group.get_descendant_group_ids @group }
+      subject { Graph::Group.find(@group).descendant_group_ids }
       it { should == [@subgroup.id] }
     end
 
     describe ".get_membership_ids" do
-      subject { Graph::Group.get_membership_ids @group }
+      subject { Graph::Group.find(@group).descendant_membership_ids }
       it { should == [@membership.id]}
     end
 
