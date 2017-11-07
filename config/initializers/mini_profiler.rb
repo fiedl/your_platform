@@ -39,3 +39,9 @@ Rack::MiniProfiler.config.skip_paths << '/attachments'
 # to be able to use the mini profiler.
 #
 Rack::MiniProfiler.config.authorization_mode = :whitelist
+
+# Profile neo4j queries.
+Rails.application.config.to_prepare do
+  #::Rack::MiniProfiler.profile_singleton_method(User, :non_admins) { |a| "executing all_non_admins" }
+  ::Rack::MiniProfiler.profile_method(Neography::Rest, :execute_query) { |a| "executing neo4j query" }
+end
