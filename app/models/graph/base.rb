@@ -65,4 +65,13 @@ class Graph::Base
     end
   end
 
+  def self.retry_on_end_of_file_error
+    begin
+      yield
+    rescue Excon::Error::Socket
+      p "Excon::Error::Socket: end of file reached (EOFError). Retrying."
+      retry
+    end
+  end
+
 end

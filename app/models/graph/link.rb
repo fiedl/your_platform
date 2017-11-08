@@ -9,9 +9,15 @@ class Graph::Link < Graph::Base
   end
 
   def sync
-    sync_parent
-    sync_child
-    write_link
+    self.class.retry_on_end_of_file_error do
+      sync_parent
+    end
+    self.class.retry_on_end_of_file_error do
+      sync_child
+    end
+    self.class.retry_on_end_of_file_error do
+      write_link
+    end
   end
 
   def get_link
@@ -41,6 +47,5 @@ class Graph::Link < Graph::Base
   def create_link
     neo.create_relationship self.class.relationship_type, parent_node, child_node, properties
   end
-
 
 end

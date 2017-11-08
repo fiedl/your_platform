@@ -1,7 +1,9 @@
 class Graph::Node < Graph::Base
 
   def sync
-    self.class.write_object @object, node_label, properties
+    self.class.retry_on_end_of_file_error do
+      self.class.write_object @object, node_label, properties
+    end
   end
 
   def self.get_node(object)
