@@ -45,7 +45,43 @@ class Graph::Base
     neo.execute_query(query)['data'].flatten
   end
 
-  def self.import(group)
+  def self.import(group = nil)
+    if group
+      import_group_with_descendants(group)
+    else
+      import_everything
+    end
+  end
+
+  def self.import_everything
+    require 'fiedl/log'
+    log = Fiedl::Log::Log.new
+
+    log.head "Importing everything into the graph database"
+    log.section "Groups"
+    log.info "Importing #{::Group.count} groups ..."
+    Group.find_each { |group| Graph::Group.sync group }
+    log.success "Done importing groups."
+
+    log.section "Users"
+    log.info "Importing #{::User.count} users ..."
+    User.find_each { |user| Graph::User.sync user }
+    log.success "Done importing users."
+
+    log.section "Pages"
+    log.info "Importing #{::Page.count} pages ..."
+    Page.find_each { |page| Graph::Page.sync page }
+    log.success "Done importing pages."
+
+    log.section "DagLinks"
+    log.info "Importing #{::DagLink.direct.count} direct dag links ..."
+    DagLink.direct.find_each { |link| link.sync_to_graph_database }
+    log.success "Done importing dag links."
+
+    log.success "Everything has been imported into the graph database."
+  end
+
+  def self.import_group_with_descendants(group)
     Graph::Group.sync group
     group.descendant_groups.each { |g| Graph::Group.sync g }
     group.descendant_groups.each do |child|

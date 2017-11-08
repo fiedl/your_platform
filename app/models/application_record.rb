@@ -28,4 +28,15 @@ class ApplicationRecord < ActiveRecord::Base
       super
     end
   end
+
+  # We have several databases that need synchronizing.
+  # The primary database, which is always considered to contain the
+  # correct data, is the sql database.
+  # From there, we export data to a graph database and
+  # later to ldap.
+  #
+  def sync
+    sync_to_graph_database if respond_to? :sync_to_graph_database
+  end
+
 end
