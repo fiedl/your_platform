@@ -13,8 +13,6 @@
     - else  # Blog Entries:
       = link_to(page) do
         = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-    - if page.draft?
-      .label.label-info= t :draft
     = render partial: 'pages/box_tool_buttons', object: page, as: :page
   %div.page
     #inline-pictures
