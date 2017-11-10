@@ -203,7 +203,13 @@ concern :UserRoles do
   end
 
   def page_ids_of_pages_the_user_is_officer_of
-    self.groups.where(type: "OfficerGroup").collect(&:scope).select { |scope| scope.kind_of?(Page) }.collect { |page| page.sub_page_ids }.flatten.uniq
+    # # This is the proper command and it does work in the console.
+    # # But in the browser, as well in development as in production, this raises
+    # # "Mysql2::Error: Not unique table/alias".
+    # self.groups.where(type: "OfficerGroup").collect(&:scope).select { |scope| scope.kind_of?(Page) }.collect { |page| page.sub_page_ids }.flatten.uniq
+
+    # It's much easier with the graph database:
+    Graph::User.find(self).page_ids_of_pages_the_user_is_page_officer_of
   end
 
   def pages_the_user_is_officer_of
