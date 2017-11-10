@@ -1,5 +1,5 @@
 module AccessIndicatorHelper
-  
+
   # This indicator shows
   # - a closed "lock" if the user can see this content due to admins override
   # - an open lock ("unlock") if the user can see this restricted content
@@ -7,7 +7,9 @@ module AccessIndicatorHelper
   # - a "globe" if all internet users can see this content
   #
   def access_indicator
-    if current_access
+    if current_navable.respond_to?(:draft?) && current_navable.draft?
+      content_tag :span, t(:draft), class: 'label label-primary draft_label'
+    elsif current_access
       css = 'access-indicator has_tooltip'
       css += ' private' if current_access.to_s.in? ['group']
       css += ' ' + current_access.to_s
@@ -20,5 +22,5 @@ module AccessIndicatorHelper
       end
     end
   end
-  
+
 end
