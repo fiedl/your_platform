@@ -20,7 +20,18 @@ class Graph::Node < Graph::Base
     attributes = attributes.merge({id: object.id, url: object.url, gid: object.gid})
     neo.reset_node_properties node, attributes
     neo.set_label node, type
+    sync_flags(object, type)
     node
+  end
+
+  def self.sync_flags(object, type)
+    if object.respond_to?(:flags)
+      neo.execute_query("
+        match (n:#{type} {id: #{object.id}})
+        set n.flags = #{"['" + object.flags.join("', '") + "']"}
+        return n
+      ")
+    end
   end
 
   def self.get_object_node(object, type)
