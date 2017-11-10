@@ -570,6 +570,9 @@ class Ability
     can :read, Event do |event|
       event.publish_on_global_website || event.publish_on_local_website
     end
+    can :index_attendees, Event do |event|
+      can? :join, event
+    end
 
     # Listing Events and iCalendar (ICS) Export:
     #
