@@ -72,9 +72,10 @@
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
 
-%h1.permalinks= t :permalinks
-%div
-  = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @page}
+- if can? :use, :permalinks
+  %h1.permalinks= t :permalinks
+  %div
+    = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @page}
 
 %h1.teaser_image= t :teaser_image
 %div
