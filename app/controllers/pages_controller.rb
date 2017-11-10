@@ -33,7 +33,7 @@ class PagesController < ApplicationController
 
       if @page.show_events?
         @events = @page.events
-        @events = @events.upcoming.order('events.start_at, events.created_at').limit(5)
+        @events = @events.upcoming.order('events.start_at, events.created_at').limit(3)
         @events = @events.select { |event| current_ability.can? :read, event }
       end
 
