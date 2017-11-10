@@ -18,7 +18,7 @@
 
       = render 'devise/shared/links'
 
-  - if OmniAuthProvider.any?
+  - if OmniAuthProvider.any? && can?(:use, :omni_auth)
     .col-md-6.col-xs-12
       %h1= t :sign_in_with_external_services
       %div
