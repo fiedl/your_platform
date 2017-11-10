@@ -202,6 +202,14 @@ concern :UserRoles do
     end
   end
 
+  def page_ids_of_pages_the_user_is_officer_of
+    self.groups.where(type: 'OfficerGroup').collect { |g| g.ancestor_page_ids }.flatten.uniq
+  end
+
+  def pages_the_user_is_officer_of
+    Page.where(id: page_ids_of_pages_the_user_is_officer_of)
+  end
+
 
   # Methods transferred from former Role class
   # ==========================================================================================

@@ -8,7 +8,7 @@ concern :PageVisibility do
 
     # Some rules about page visibility:
     #
-    # - A draft is invisible, except for its author.
+    # - A draft is invisible, except for its author and its officers.
     # - When previewing as user, ignore authorship, i.e. hide drafts.
     # - An archived page is invisible.
     #
@@ -21,9 +21,11 @@ concern :PageVisibility do
           .visible_based_on_archived(user)
           .visible_based_on_public_or_intranet(user)
     }
-    scope :visible_based_on_published, -> (user) { published.or(by_author(user)) }
+    scope :visible_based_on_published, -> (user) { published.or(by_author(user)).or(by_officers(user)) }
     scope :visible_based_on_archived, -> (user) { not_archived }
     scope :visible_based_on_public_or_intranet, -> (user) { user ? all : public_website }
+
+    scope :by_officers, -> (user) { where(id: user.page_ids_of_pages_the_user_is_officer_of) }
 
   end
 
