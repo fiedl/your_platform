@@ -203,7 +203,7 @@ concern :UserRoles do
   end
 
   def page_ids_of_pages_the_user_is_officer_of
-    self.groups.where(type: 'OfficerGroup').collect { |g| g.links_as_descendant_for_pages.pluck(:ancestor_id) }.flatten.uniq
+    self.groups.where(type: "OfficerGroup").collect(&:scope).select { |scope| scope.kind_of?(Page) }.collect { |page| page.sub_page_ids }.flatten.uniq
   end
 
   def pages_the_user_is_officer_of
