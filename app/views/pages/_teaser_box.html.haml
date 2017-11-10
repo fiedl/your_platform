@@ -1,7 +1,7 @@
 - # locals:
 - page || raise(ActionController::ParameterMissing, 'no page given')
 
-%h1.page.teaser_box{id: "page-#{page.id}-box", class: page.class.name.underscore.parameterize}
+%h1.page.teaser_box{id: "page-#{page.id}-box", class: [page.class.name.underscore.parameterize, ("with_picture" if page.image_attachments_not_listed_in_content.any?)].join(" ")}
   = link_to page.title, page
   = publish_page_button(page)
 %div

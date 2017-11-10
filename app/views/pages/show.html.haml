@@ -22,16 +22,16 @@
           = render partial: 'shared/group_map', locals: {page: page}
 
     - if @events
-      .col.col-sm-3.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
+      .col.col-sm-6.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
 
     - visible_pages_only(page.content_boxes).each do |content_box_page|
-      .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
+      .col.col-sm-6.col-xs-12.resizable_col= render content_box_page
 
     - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
-      .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
+      .col.col-sm-6.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
 
     - if page.settings.show_officers
-      .col.col-sm-3.col-xs-12.resizable_col
+      .col.col-sm-6.col-xs-12.resizable_col
         - if page.settings.show_officers_for_group_id
           = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.number_of_officers_to_show}
         - else
