@@ -6,7 +6,6 @@ concern :GroupCaching do
   included do
     after_save { self.renew_cache_later }
 
-    cache :corporation_id
     cache :leaf_group_ids
 
     cache :group_of_groups?
