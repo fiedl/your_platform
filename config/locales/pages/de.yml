@@ -44,6 +44,7 @@ de:
   publish_page_which_is_draft_now: Seite veröffentlichen. Im Moment ist sie ein unveröffentlichter Entwurf.
   published_at: Veröffentlicht am
   unpublished_draft: Unveröffentlichter Entwurf
+  this_page_has_not_been_published_yet: Diese Seite wurde noch nicht veröffentlicht.
 
   file: 'Datei'
   helpers:

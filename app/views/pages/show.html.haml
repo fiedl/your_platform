@@ -2,57 +2,50 @@
 
 - page ||= @page
 
-- if can? :manage, page
-  .row.for_settings_button
-    = link_to page_settings_path(page), id: 'page_settings_button', class: 'btn btn-default btn-sm pull-right' do
-      = settings_icon
-      = t :page_settings
+- if page.visible_to?(current_user, preview_as: params[:preview_as])
 
-= draggable_boxes_row(page) do
+  - if can? :manage, page
+    .row.for_settings_button
+      = link_to page_settings_path(page), id: 'page_settings_button', class: 'btn btn-default btn-sm pull-right' do
+        = settings_icon
+        = t :page_settings
 
-  .col.col-sm-9.col-xs-12.resizable_col
-    = render page
+  = draggable_boxes_row(page) do
 
-  - if page.settings.show_group_map
-    .col.col-sm-6.col-xs-12.resizable_col
-      %h1#group-map-box= group_map_title
-      %div
-        = render partial: 'shared/group_map', locals: {page: page}
+    .col.col-sm-9.col-xs-12.resizable_col
+      = render page
 
-  - if @events
-    .col.col-sm-3.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
+    - if page.settings.show_group_map
+      .col.col-sm-6.col-xs-12.resizable_col
+        %h1#group-map-box= group_map_title
+        %div
+          = render partial: 'shared/group_map', locals: {page: page}
 
-  - visible_pages_only(page.content_boxes).each do |content_box_page|
-    .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
+    - if @events
+      .col.col-sm-3.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
 
-  - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
-    .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
+    - visible_pages_only(page.content_boxes).each do |content_box_page|
+      .col.col-sm-3.col-xs-12.resizable_col= render content_box_page
 
-  - if page.settings.show_officers
-    .col.col-sm-3.col-xs-12.resizable_col
-      - if page.settings.show_officers_for_group_id
-        = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.number_of_officers_to_show}
-      - else
-        = render partial: 'pages/officers', locals: {structureable: page, limit: page.number_of_officers_to_show}
+    - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
+      .col.col-sm-3.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
 
-  .col.col-sm-12.col-xs-12
-    = render partial: 'pages/new_page_button', locals: {parent_page: page}
+    - if page.settings.show_officers
+      .col.col-sm-3.col-xs-12.resizable_col
+        - if page.settings.show_officers_for_group_id
+          = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.number_of_officers_to_show}
+        - else
+          = render partial: 'pages/officers', locals: {structureable: page, limit: page.number_of_officers_to_show}
 
-  #blog_entries.eq-height
-    - visible_pages_only(page.blog_entries).each do |blog_entry|
-      .col.col-sm-12.col-xs-12.resizable_col
-        = render partial: 'pages/page', object: blog_entry
+    .col.col-sm-12.col-xs-12
+      = render partial: 'pages/new_page_button', locals: {parent_page: page}
 
+    #blog_entries.eq-height
+      - visible_pages_only(page.blog_entries).each do |blog_entry|
+        .col.col-sm-12.col-xs-12.resizable_col
+          = render partial: 'pages/page', object: blog_entry
 
--#%div.col3
--#
--#  -# - if can?(:create_page_for, @page)
--#  -#   - # No nested blog posts!
--#  -#   - # The user might suspect to create a sibling, but really would create a nested blog post.
--#  -#   - # Note: `@page.type` could be 'Page' for the PagesController. But `Page.find(@page.id)` finds the type in the database.
--#  -#   - #
--#  -#   - if (Page.find(@page.id).type != 'BlogPost')
--#  -#     %div.blog_tools.box
--#  -#       = link_to blog_posts_path(parent_id: @page.id), :class => "btn btn-success add_blog_post", :method => :post, :remote => :true do
--#  -#         = icon :plus
--#  -#         = I18n.t(:add_blog_entry)
+- else # Page not visible to the user
+  %h1= page.title
+  %div
+    = t :this_page_has_not_been_published_yet
