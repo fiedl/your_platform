@@ -25,7 +25,7 @@ concern :PageVisibility do
     scope :visible_based_on_archived, -> (user) { not_archived }
     scope :visible_based_on_public_or_intranet, -> (user) { user ? all : public_website }
 
-    scope :by_officers, -> (user) { where(id: user.page_ids_of_pages_the_user_is_officer_of) }
+    scope :by_officers, -> (user) { user ? where(id: user.page_ids_of_pages_the_user_is_officer_of) : none }
 
   end
 
