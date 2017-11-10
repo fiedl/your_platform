@@ -42,10 +42,7 @@ class PagesController < ApplicationController
       set_current_activity :looks_up_information, @page
       set_current_tab :pages
 
-      if @page.group
-        set_current_access :group
-        set_current_access_text I18n.t(:members_of_group_name_can_read_this_content, group_name: @page.group.name)
-      elsif @page.public? or @page.has_flag?(:imprint)
+      if @page.public? or @page.has_flag?(:imprint)
         set_current_access :public
         set_current_access_text :this_is_the_public_website_and_can_be_read_by_all_internet_users
       elsif @page.group
