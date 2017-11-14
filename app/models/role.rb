@@ -45,6 +45,13 @@ class Role
     @object
   end
 
+  def as_json(options = {})
+    super.merge({
+      admin?: admin?,
+      officer?: officer?
+    })
+  end
+
   #
   # Roles for groups
   #

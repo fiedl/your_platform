@@ -9,6 +9,8 @@ module BodyHelper
       ("public-website" if @navable.kind_of?(Page) && @navable.public?),
       ("demo_mode" if demo_mode?),
       ("ios" if params[:app] == "ios"),
+      ("fast-lane" if params[:fast_lane]),
+      ("no-fast-lane" if params[:no_fast_lane]),
       options[:class]
     ]
     data = {

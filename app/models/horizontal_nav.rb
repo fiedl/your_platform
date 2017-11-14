@@ -16,7 +16,7 @@ class HorizontalNav
   end
 
   def navables
-    if currently_in_intranet?
+    if logged_in? && currently_in_intranet?
       intranet_navables
     else
       public_navables.select { |navable| not navable.nav_node.hidden_menu? }
@@ -51,7 +51,7 @@ class HorizontalNav
   end
 
   def currently_in_intranet?
-    current_navable && ([current_navable] + current_navable.ancestor_pages).include?(Page.find_intranet_root)
+    current_navable && ([current_navable] + current_navable.ancestor_navables).include?(Page.find_intranet_root)
   end
 
   def current_navable

@@ -8,6 +8,7 @@ concern :CurrentUser do
   # This method returns the currently signed in user.
   #
   def current_user
+    return nil if params[:fast_lane]
     @current_user ||= current_devise_user || current_user_by_auth_token || guest_user_by_cookie
   end
 

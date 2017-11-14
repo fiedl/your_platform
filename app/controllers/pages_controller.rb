@@ -4,12 +4,25 @@ class PagesController < ApplicationController
   before_action :find_resource_by_permalink, only: [:show, :update]
   before_action :find_resource_by_id, only: [:show, :update]
   load_resource only: [:destroy]
-  authorize_resource
+  authorize_resource except: [:show, :create]
   skip_authorize_resource only: [:create]
+  skip_authorization_check only: [:show]
 
   respond_to :html, :json
 
   def show
+    if @page.public? and not params[:no_fast_lane]
+      # This is the fast lane.
+      render inline: (Rails.cache.fetch([@page, :fast_lane]) {
+        set_current_title @page.title
+        set_current_navable @page
+        @events = @page.events.upcoming.order('events.start_at, events.created_at').limit(3) if @page.show_events?
+        use_the_fast_lane
+        render_to_string template: 'pages/show'
+      })
+      return
+    end
+
     authorize! :read, @page
     if @page
       if @page.redirect_to
