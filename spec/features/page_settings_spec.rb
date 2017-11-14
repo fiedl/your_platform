@@ -4,7 +4,7 @@ feature "Page Settings", :js do
   include SessionSteps
 
   background do
-    @page = create :page
+    @page = create :page, published_at: 1.year.ago
     @new_author = create :user
   end
 

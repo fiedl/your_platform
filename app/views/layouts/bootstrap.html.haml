@@ -43,7 +43,7 @@
   = body_tag do
     #vue-app
       = render partial: 'shared/current_masquerade'
-      - if user_account_signed_in?
+      - if current_user
         %nav#logged-in-bar.navbar.navbar-default.navbar-top
           .container-fluid
             .navbar-header
