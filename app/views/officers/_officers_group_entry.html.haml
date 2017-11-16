@@ -10,10 +10,9 @@
         = icon :trash
 
   .label-wrapper
+    -#= link_to group_members_path(officer_group) do
+    -#  = best_in_place_if can?(:rename, officer_group), officer_group, :name, activator: true
     - if can? :rename, officer_group
-      - if current_user.developer?
-        .icon-small.copy-to-clipboard.show_only_in_edit_mode{title: "Group.find(#{officer_group.id})"}
-          = icon :wrench
       = best_in_place officer_group, :name
     - else
       = officer_group.name

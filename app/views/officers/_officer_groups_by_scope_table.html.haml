@@ -20,10 +20,11 @@
               %a.btn.btn-sm.btn-danger.remove_button.show_only_in_edit_mode#destroy_office{href: group_path(officer_group, format: 'json')}
                 = icon :trash
         %td.name
-          %p= best_in_place_if can?(:rename, officer_group), officer_group, :name
+          %p
+            = link_to group_members_path(officer_group) do
+              = best_in_place_if can?(:rename, officer_group), officer_group, :name, activator: 'only_manual'
 
         %td.flags.show_only_in_edit_mode
-          = group_handle(officer_group)
           %span.officer_group_flags.group_flags= flags(officer_group)
 
         %td.members
@@ -40,6 +41,7 @@
           %td= link_to scope.title, scope
           %td.show_only_in_edit_mode
           %td
+            -# colspan does not work due to datatables
             %p
               = form_for OfficerGroup.new do |form|
                 %input{type: 'hidden', name: 'parent_type', value: scope.class.base_class.name}
