@@ -1,3 +1,8 @@
+- if Setting.embedded_comments_discourse_url.present?
+  %h1= t :comments
+  %div
+    = render partial: 'comments/discourse_embedded_comments'
+
 - if can? :use, :blog_post_comments
   #comments.clearfix.blog_post_comments
     .comments-title
