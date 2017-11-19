@@ -17,6 +17,38 @@ class Graph::Base
     self.class.neo
   end
 
+  # Neo4j has no namespacing and only has one single database.
+  # This makes stages and even multi tenancy a bit more difficult.
+  #
+  # To support use cases where several distinct graph databases
+  # are needed, we use the rails environment as example namespace.
+  #
+  # Namespaces are applied by adding the namespace as additional label
+  # to each graph node. Therefore, each query must add this to the
+  # starting node.
+  #
+  #     execute_query("match (n:Group:#{namespace})")
+  #
+  # Don't be afraid. `execute_query` will warn you if the namespace
+  # is missing from the query string.
+  #
+  def self.namespace
+    Rails.env.to_s
+  end
+
+  def namespace
+    self.class.namespace
+  end
+
+  def self.execute_query(query)
+    raise 'namespace is missing in query string' if not query.include? ":#{namespace}"
+    neo.execute_query query
+  end
+
+  def execute_query(query)
+    self.class.execute_query query
+  end
+
   def self.sync(object)
     self.new(object).sync if self.configured?
   end
@@ -35,14 +67,14 @@ class Graph::Base
 
   def self.delete_all_nodes_and_relations(confirmation = nil)
     if confirmation.to_s == "yes_i_am_sure"
-      neo.execute_query "MATCH (n) DETACH DELETE n" # https://stackoverflow.com/a/21357473/2066546
+      execute_query "MATCH (n:#{namespace}) DETACH DELETE n" # https://stackoverflow.com/a/21357473/2066546
     else
       raise 'please confirm with parameter :yes_i_am_sure'
     end
   end
 
   def query_ids(query)
-    neo.execute_query(query)['data'].flatten
+    execute_query(query)['data'].flatten
   end
 
   def self.import(group = nil)

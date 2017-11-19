@@ -1,8 +1,8 @@
 class Graph::HasEvent < Graph::Link
 
-  def self.relationship_type
-    "HAS_EVENT"
-  end
+  # def link_label
+  #   "HAS_EVENT"
+  # end
 
   # # TODO: Reintroduce this when migrating back to a data model
   # # where events are connected to groups via dag links:
@@ -23,11 +23,11 @@ class Graph::HasEvent < Graph::Link
   #   Graph::Event.sync link.descendant
   # end
 
-  def self.sync(event)
-    child_node = Graph::Event.get_node(event)
-    parent_node = Graph::Group.get_node(event.group)
-    neo.execute_query "MATCH (parent:Group {id: event.group.id})-[link:HAS_EVENT]->(event:Event) DELETE link"
-    neo.create_relationship relationship_type, parent_node, child_node, {}
-  end
+  # def self.sync(event)
+  #   child_node = Graph::Event.get_node(event)
+  #   parent_node = Graph::Group.get_node(event.group)
+  #   neo.execute_query "MATCH (parent:Group {id: event.group.id})-[link:HAS_EVENT]->(event:Event) DELETE link"
+  #   neo.create_relationship relationship_type, parent_node, child_node, {}
+  # end
 
 end

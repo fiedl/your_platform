@@ -14,7 +14,7 @@ class Graph::Page < Graph::Node
 
   def sub_page_ids
     query_ids("
-      match (parent:Page {id: #{page.id}})-[:HAS_SUBPAGE*]->(subpages:Page)
+      match (parent:Page:#{namespace} {id: #{page.id}})-[:HAS_SUBPAGE*]->(subpages:Page)
       return distinct(subpages.id)
     ")
   end

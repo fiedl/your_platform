@@ -14,7 +14,7 @@ class Graph::User < Graph::Node
 
   def page_ids_of_pages_the_user_is_page_officer_of
     query_ids("
-      match (user:User {id: #{user.id}})<-[m:MEMBERSHIP]-(:Group {type: 'OfficerGroup'})<-[:HAS_SUBGROUP*0..5]-(:Group {type: 'OfficerGroup'})<--(officers_parent:Group)<--(scope:Page)-[:HAS_SUBPAGE*]->(subpages:Page)
+      match (user:User:#{namespace} {id: #{user.id}})<-[m:MEMBERSHIP]-(:Group {type: 'OfficerGroup'})<-[:HAS_SUBGROUP*0..5]-(:Group {type: 'OfficerGroup'})<--(officers_parent:Group)<--(scope:Page)-[:HAS_SUBPAGE*]->(subpages:Page)
       where not (subpages)<-[*]-(:Page {flags: 'intranet_root'})
       and #{Graph::Membership.validity_range_condition}
       return scope.id, subpages.id

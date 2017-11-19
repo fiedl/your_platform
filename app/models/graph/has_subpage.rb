@@ -1,23 +1,15 @@
 class Graph::HasSubpage < Graph::Link
 
-  def self.relationship_type
+  def link_label
     "HAS_SUBPAGE"
   end
 
   def parent_node
-    Graph::Page.get_node(link.ancestor)
+    Graph::Page.find(link.ancestor).find_or_create_node
   end
 
   def child_node
-    Graph::Page.get_node(link.descendant)
-  end
-
-  def sync_parent
-    Graph::Page.sync link.ancestor
-  end
-
-  def sync_child
-    Graph::Page.sync link.descendant
+    Graph::Page.find(link.descendant).find_or_create_node
   end
 
 end

@@ -1,23 +1,15 @@
 class Graph::PageHasGroup < Graph::Link
 
-  def self.relationship_type
+  def link_label
     "PAGE_HAS_GROUP"
   end
 
   def parent_node
-    Graph::Page.get_node(link.ancestor)
+    Graph::Page.find(link.ancestor).find_or_create_node
   end
 
   def child_node
-    Graph::Group.get_node(link.descendant)
-  end
-
-  def sync_parent
-    Graph::Page.sync link.ancestor
-  end
-
-  def sync_child
-    Graph::Group.sync link.descendant
+    Graph::Group.find(link.descendant).find_or_create_node
   end
 
 end

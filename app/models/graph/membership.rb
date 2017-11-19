@@ -1,6 +1,6 @@
 class Graph::Membership < Graph::Link
 
-  def self.relationship_type
+  def link_label
     "MEMBERSHIP"
   end
 
@@ -13,19 +13,11 @@ class Graph::Membership < Graph::Link
   end
 
   def parent_node
-    Graph::Group.get_node(membership.ancestor)
+    Graph::Group.find(membership.ancestor).find_or_create_node
   end
 
   def child_node
-    Graph::User.get_node(membership.descendant)
-  end
-
-  def sync_parent
-    Graph::Group.sync membership.ancestor
-  end
-
-  def sync_child
-    Graph::User.sync membership.descendant
+    Graph::User.find(membership.descendant).find_or_create_node
   end
 
   def self.validity_range_condition(options = {})
