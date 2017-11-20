@@ -11,6 +11,18 @@ class PagesController < ApplicationController
   respond_to :html, :json
 
   def show
+    if @page.try(:redirect_to)
+      target = @page.redirect_to
+
+      # In order to avoid multiple redirects, we force https manually here
+      # in production.
+      #
+      target.merge!({protocol: "https://"}) if target.kind_of?(Hash) && Rails.env.production?
+
+      redirect_to target
+      return
+    end
+
     if @page.public? and not params[:no_fast_lane]
       # This is the fast lane.
       render inline: (Rails.cache.fetch([@page, :fast_lane]) {
@@ -25,18 +37,6 @@ class PagesController < ApplicationController
 
     authorize! :read, @page
     if @page
-      if @page.redirect_to
-        target = @page.redirect_to
-
-        # In order to avoid multiple redirects, we force https manually here
-        # in production.
-        #
-        target.merge!({protocol: "https://"}) if target.kind_of?(Hash) && Rails.env.production?
-
-        redirect_to target
-        return
-      end
-
       if @page.has_flag?(:intranet_root)
         redirect_to root_path
         return

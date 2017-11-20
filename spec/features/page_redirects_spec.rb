@@ -7,6 +7,7 @@ feature "Viewing pages that redirect to other locations", js: true do
     time_travel 2.seconds # for caching. TODO: Remove this when increasing the timestamp resolution.
     @root = Page.find_root
     @root.redirect_to = "http://example.com"
+    @root.published_at = 10.years.ago
     @root.title = "example.com"
     @root.save
     time_travel 2.seconds # for caching. TODO: Remove this when increasing the timestamp resolution.
