@@ -44,6 +44,11 @@ describe Graph::Group do
   describe "#descendant_group_ids" do
     subject { Graph::Group.find(@group).descendant_group_ids }
     it { should == [@subgroup.id] }
+
+    describe "after destroying the subgroup" do
+      before { @subgroup.destroy }
+      it { should == [] }
+    end
   end
 
   describe "#descendant_membership_ids" do

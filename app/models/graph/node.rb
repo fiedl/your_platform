@@ -18,6 +18,13 @@ class Graph::Node < Graph::Base
     {name: object.name.to_s}
   end
 
+  def delete
+    execute_query("
+      match (n:#{namespace}:#{node_label} {id: #{object.id}})
+      detach delete n
+    ")
+  end
+
   # Update node properties or create node.
   #
   # In neo4j's terminology, `MERGE` ensures that the given

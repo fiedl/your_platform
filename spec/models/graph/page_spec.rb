@@ -15,6 +15,11 @@ describe Graph::Page do
     describe "when public blog posts exist" do
       before { @public_blog_post = @root.child_pages.create title: "Public Post", type: "BlogPost" }
       it { should include @public_blog_post.id }
+
+      describe "after destroying the sub page" do
+        before { @former_public_blog_post_id = @public_blog_post.id; @public_blog_post.destroy }
+        it { should_not include @former_public_blog_post_id }
+      end
     end
 
     describe "when the intranet contains a group that has its own pages" do
