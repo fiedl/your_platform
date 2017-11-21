@@ -38,6 +38,6 @@ $(document).on 'turbolinks:click', (event)->
 
     Turbolinks.clearCache()
     $("html, body").animate {scrollTop: 0}, 300, 'swing', ->
-      $('#content')
+      $('#content > *')
         .css('-webkit-transition', 'opacity 0.3s ease-out').css('opacity', '0')
         .hide('scale', {percent: 90}, 300)
