@@ -92,22 +92,22 @@ class Graph::Base
     log.head "Importing everything into the graph database"
     log.section "Groups"
     log.info "Importing #{::Group.count} groups ..."
-    Group.find_each { |group| Graph::Group.sync group }
+    Group.find_each { |group| Graph::Group.sync(group); print "." }
     log.success "Done importing groups."
 
     log.section "Users"
     log.info "Importing #{::User.count} users ..."
-    User.find_each { |user| Graph::User.sync user }
+    User.find_each { |user| Graph::User.sync(user); print "." }
     log.success "Done importing users."
 
     log.section "Pages"
     log.info "Importing #{::Page.count} pages ..."
-    Page.find_each { |page| Graph::Page.sync page }
+    Page.find_each { |page| Graph::Page.sync(page); print "." }
     log.success "Done importing pages."
 
     log.section "DagLinks"
     log.info "Importing #{::DagLink.direct.count} direct dag links ..."
-    DagLink.direct.find_each { |link| link.sync_to_graph_database }
+    DagLink.direct.find_each { |link| link.sync_to_graph_database; print "." }
     log.success "Done importing dag links."
 
     log.success "Everything has been imported into the graph database."
