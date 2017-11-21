@@ -99,9 +99,9 @@ class PagesController < ApplicationController
     @new_page = @association.create!(page_params)
 
     if @new_page.kind_of? Pages::ContentBox
-      redirect_to @new_page.parent
+      redirect_to page_path(@new_page.parent, no_fast_lane: true)
     else
-      redirect_to @new_page
+      redirect_to page_path(@new_page, no_fast_lane: true)
     end
   end
 
