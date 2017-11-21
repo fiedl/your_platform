@@ -6,3 +6,10 @@
 .widget
   %h4= t :images
   = render partial: 'blogs/image_collection'
+
+- if @tags && @tags.any?
+  .widget
+    %h4= t :tags
+    .tagcloud
+      - @tags.each do |tag|
+        = link_to_tag tag

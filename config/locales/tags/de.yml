@@ -1,12 +1,12 @@
 de:
-  tag: Etikett
-  tags: Etikette
-  edit_tag: Etikett bearbeiten
+  tag: Kategorie
+  tags: Kategorien
+  edit_tag: Kategorie bearbeiten
   edit_tag_str: "Kategorie '%{str}' bearbeiten"
-  edit_tags: Tags bearbeiten
+  edit_tags: Kategorien bearbeiten
 
   category: Kategorie
   categories: Kategorien
 
-  contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}'"
-  show_contents_tagged_with_str: "Inhalte mit dem Etikett '%{str}' anzeigen"
+  contents_tagged_with_str: "Inhalte der Kategorie '%{str}'"
+  show_contents_tagged_with_str: "Inhalte der Kategorie '%{str}' anzeigen"

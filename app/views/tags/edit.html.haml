@@ -26,7 +26,7 @@
 
 %h1= t :permalinks
 %div
-  = render partial: 'permalinks/editable_permalinks_list', locals: {reference: @tag}
+  = render partial: 'permalinks/edit_permalinks_list', locals: {reference: @tag}
 
 %h1= t :contents_tagged_with_str, str: @tag.name
 %div
