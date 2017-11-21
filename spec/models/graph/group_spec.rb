@@ -20,6 +20,11 @@ describe Graph::Group do
       end
 
       it { should include @current_member.id }
+
+      describe "after destroying the membership" do
+        before { @current_membership.destroy }
+        it { should_not include @current_member.id }
+      end
     end
     describe "when the group has past members" do
       before do

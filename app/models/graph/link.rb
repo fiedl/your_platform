@@ -18,6 +18,13 @@ class Graph::Link < Graph::Base
     end
   end
 
+  def delete
+    execute_query("
+      match (:#{namespace})-[r:#{link_label} {id: #{link.id}}]-(:#{namespace})
+      delete r
+    ")
+  end
+
   def write_link
     attributes = properties.merge({id: link.id, gid: link.gid})
     neo.reset_relationship_properties(find_or_create_link_id, attributes)
