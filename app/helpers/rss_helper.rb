@@ -14,14 +14,14 @@ module RssHelper
       xml.channel do
         xml.title args[:root_element].title
         xml.description description
-        xml.link args[:root_element].url
+        xml.link url_for(args[:root_element])
         xml.generator "https://github.com/fiedl/your_platform"
 
         args[:items].each do |item|
           xml.item do
             xml.title item.title
-            xml.description item.teaser_text
-            xml.pubDate item.created_at.to_s(:rfc822)
+            xml.description item.content
+            xml.pubDate item.published_at.to_s(:rfc822)
             xml.link item.url
             xml.guid item.url
             xml.tag! 'content:encoded' do
