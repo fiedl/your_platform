@@ -20,7 +20,7 @@ class TagsController < ApplicationController
   private
 
   def tag_params
-    params.require(:acts_as_taggable_on_tag).permit(:title, :subtitle, :body, :permalinks_list)
+    params.require(:acts_as_taggable_on_tag).permit(:name, :title, :subtitle, :body, :permalinks_list)
   end
 
   def find_resource

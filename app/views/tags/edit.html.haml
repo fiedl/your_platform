@@ -1,5 +1,8 @@
 %h1= current_title
 %div
+  .name
+    %label= t :name
+    = best_in_place_if can?(:update, @tag), @tag, :name
   .title
     %label= t :title
     = best_in_place_if can?(:update, @tag), @tag, :title
