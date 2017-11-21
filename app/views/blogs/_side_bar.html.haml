@@ -3,6 +3,8 @@
     = create_icon
     = t :create_blog_post_in_str, str: @blog.title
 
+= best_in_place_if can?(:update, @blog), @blog, :content, as: :textarea, sanitize: false
+
 .widget
   %h4= t :images
   = render partial: 'blogs/image_collection'

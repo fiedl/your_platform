@@ -44,6 +44,7 @@ BestInPlace::DisplayMethods.add_helper_method(Blog, :permalinks_list, :simple_fo
 BestInPlace::DisplayMethods.add_helper_method(BlogPost, :permalinks_list, :simple_format)
 
 BestInPlace::DisplayMethods.add_helper_method(Page, :content, :page_markup)
+BestInPlace::DisplayMethods.add_helper_method(Blog, :content, :page_markup)
 BestInPlace::DisplayMethods.add_helper_method(BlogPost, :content, :page_markup)
 BestInPlace::DisplayMethods.add_helper_method(Pages::ContactForm, :content, :page_markup)
 BestInPlace::DisplayMethods.add_helper_method(Pages::ContentBox, :content, :page_markup)
