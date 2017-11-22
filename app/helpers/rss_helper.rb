@@ -34,6 +34,7 @@ module RssHelper
   end
 
   def rss_button(url = nil)
+    url ||= blog_url(@blog, format: 'rss', token: current_user.try(:token)) if @blog
     url ||= rss_default_url
     link_to url, class: 'btn btn-default btn-xs' do
       rss_icon

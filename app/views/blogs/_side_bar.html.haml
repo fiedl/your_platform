@@ -25,3 +25,4 @@
     %p
       = link_to group_members_path(@blog.subscriber_group) do
         = "#{@blog.subscribers.count} #{t(:subscribers)}"
+  .si-share.noborder.clearfix= rss_button
