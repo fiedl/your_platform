@@ -1,4 +1,4 @@
-- contact_message ||= ContactMessage.new
+- contact_message ||= ContactMessage.new(email: current_user.try(:email), name: current_user.try(:name))
 
 = simple_form_for contact_message, html: {class: 'form-horizontal'} do |f|
   = f.input :name, required: true

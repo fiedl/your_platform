@@ -26,3 +26,10 @@
       = link_to group_members_path(@blog.subscriber_group) do
         = "#{@blog.subscribers.count} #{t(:subscribers)}"
   .si-share.noborder.clearfix= rss_button
+
+- if can? :create_suggestion_for, @blog
+  .widget
+    %h4= t :suggest_something
+    %p
+      = t :or_suggest_something_privately
+      = render partial: 'contact_messages/form'
