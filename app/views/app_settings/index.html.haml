@@ -42,6 +42,12 @@
       Discourse root url for embedded comments (with ending slash):
       = setting_in_place Setting, :embedded_comments_discourse_url, html_attrs: {placeholder: "https://discourse.example.com/"}
 
+  %h2 Suggestions
+  %ul.settings
+    %li
+      Discourse category for suggestions:
+      = setting_in_place Setting, :discourse_suggestions_url, html_attrs: {placeholder: "https://discourse.example.com/"}
+
 - content_for :side_bar do
   = link_to settings_path do
     = settings_icon
