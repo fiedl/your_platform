@@ -1,5 +1,6 @@
 %h1.contact_form{id: "contact-form-page-#{@page.id}-box"}= current_title
 %div.contact_form
+  = best_in_place_if can?(:update, @page), @page, :content, as: :textarea, sanitize: false
   - if not can? :use, :contact_forms
     = render partial: 'shared/feature_deactivated'
   = render partial: 'contact_messages/form'
