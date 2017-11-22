@@ -22,8 +22,8 @@ module RssHelper
             xml.title item.title
             xml.description item.content
             xml.pubDate item.published_at.to_s(:rfc822)
-            xml.link item.url
-            xml.guid item.url
+            xml.link url_for(item)
+            xml.guid url_for(item)
             xml.tag! 'content:encoded' do
               xml.cdata! ((image_tag(item.teaser_image_url).html_safe if item.respond_to? :teaser_image_url and item.teaser_image_url).to_s + item.teaser_text.to_s)
             end
