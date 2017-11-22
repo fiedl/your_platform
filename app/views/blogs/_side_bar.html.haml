@@ -1,9 +1,11 @@
-- if can? :create_page_for, @blog
-  = link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default btn-long' do
-    = create_icon
-    = t :create_blog_post_in_str, str: @blog.title
+.widget
+  = best_in_place_if can?(:update, @blog), @blog, :content, as: :textarea, sanitize: false
 
-= best_in_place_if can?(:update, @blog), @blog, :content, as: :textarea, sanitize: false
+- if can? :create_page_for, @blog
+  .widget
+    = link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default btn-long' do
+      = create_icon
+      = t :create_blog_post_in_str, str: @blog.title
 
 .widget
   %h4= t :images
