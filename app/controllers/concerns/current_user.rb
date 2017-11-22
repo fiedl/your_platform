@@ -35,11 +35,13 @@ concern :CurrentUser do
   end
 
   def create_guest_user_from_form_data
-    if params[:guest_user_name].present? || params[:guest_user_email].present?
-      cookies[:guest_user_name] = params[:guest_user_name]
-      cookies[:guest_user_email] = params[:guest_user_email]
-      GuestUser.find_or_create(params[:guest_user_name], params[:guest_user_email])
-      # TODO: Ask the user to sign in if user.account
+    if (name = params[:guest_user_name]).present? || (email = params[:guest_user_email] || params[:email]).present?
+      unless current_user
+        cookies[:guest_user_name] = name
+        cookies[:guest_user_email] = email
+        GuestUser.find_or_create(name, email)
+        # TODO: Ask the user to sign in if user.account
+      end
     end
   end
 

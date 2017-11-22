@@ -178,7 +178,10 @@ Rails.application.routes.draw do
 
   post :create_officers_group, to: 'officers#create_officers_group'
 
-  resources :blogs
+  resources :blogs do
+    delete :subscriptions, to: 'blog_subscriptions#destroy'
+    resources :subscriptions, controller: 'blog_subscriptions'
+  end
   resources :blog_posts
   resources :attachments do
     get 'description(.:format)', to: 'attachment_descriptions#show'

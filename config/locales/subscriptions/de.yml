@@ -1,0 +1,10 @@
+de:
+  subscription: Abonnement
+  subscriptions: Abonnements
+  subscribe: Abonnieren
+  subscribers: Abonnenten
+  enter_your_email: E-Mail-Adresse
+  subscribe_str_via_email: '%{str} per E-Mail abonnieren'
+  you_have_subscribed_to_str: 'Sie haben %{str} abonniert.'
+  you_have_unsubscribed_str: 'Sie haben Ihr Abonnement von %{str} beendet.'
+  unsubscribe: Abonnement beenden

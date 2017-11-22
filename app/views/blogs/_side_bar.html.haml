@@ -15,3 +15,13 @@
     .tagcloud
       - @tags.each do |tag|
         = link_to_tag tag
+
+.widget
+  %h4= t :subscribe
+  - if can? :subscribe_to, @blog
+    -#= t :subscribe_str_via_email, str: @blog.title
+    %p= render partial: 'blog_subscriptions/form', object: @blog, as: :blog
+  - if can? :manage, @blog
+    %p
+      = link_to group_members_path(@blog.subscriber_group) do
+        = "#{@blog.subscribers.count} #{t(:subscribers)}"

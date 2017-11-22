@@ -126,8 +126,8 @@ class User < ApplicationRecord
   private :capitalized_name_string
 
   def strip_first_and_last_name
-    self.first_name = self.first_name.strip
-    self.last_name = self.last_name.strip
+    self.first_name = self.first_name.try(:strip)
+    self.last_name = self.last_name.try(:strip)
   end
 
   # This method returns a kind of label for the user, e.g. for menu items representing the user.
