@@ -45,7 +45,7 @@
         .col.col-sm-12.col-xs-12.resizable_col
           = render partial: 'pages/page', object: blog_entry
 
-    - if page.public? && (page.id != page.home_page.id) && page.home_page.settings.scroll_over_to_start_page
+    - if page.public? && page.home_page && (page.id != page.home_page.id) && page.home_page.settings.scroll_over_to_start_page
       #scroll_over_to_home_page{data: {url: page.home_page.url}}
         #goto_start_page
           #goto_start_page_indicator= fa_icon 'chevron-down'
