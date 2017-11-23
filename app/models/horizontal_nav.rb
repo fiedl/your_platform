@@ -11,7 +11,7 @@ class HorizontalNav
 
   def link_objects
     objects = navables.to_a
-    objects << {title: I18n.t(:sign_in), path: '/sign_in'} if not logged_in?
+    objects << {title: I18n.t(:horizontal_nav_sign_in), path: '/sign_in'} if not logged_in?
     objects
   end
 
@@ -34,8 +34,6 @@ class HorizontalNav
     else
       pages += current_home_page.child_pages.where(type: [nil, 'Page', 'Blog'])
     end
-    pages -= [Page.find_intranet_root, Page.find_imprint]
-    pages -= Page.flagged(:public_root_element)
 
     # Sort by the persisted order.
     # http://stackoverflow.com/a/7790994/2066546

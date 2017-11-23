@@ -17,6 +17,8 @@ de:
   sign_out:                 Abmelden
   sign_up:                  Registrieren
 
+  horizontal_nav_sign_in:   Anmelden
+
   submit_send_instructions: Passwort zurücksetzen
   forgot_password:          Passwort vergessen?
   change_password:          Passwort ändern
