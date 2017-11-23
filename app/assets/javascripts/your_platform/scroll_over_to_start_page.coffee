@@ -12,7 +12,14 @@ $(document).ready ->
       data: {fast_lane: true},
       success: (result)->
         element.show()
-        content = $(result).find('#content #content_area .row.box_configuration')[0].outerHTML
+        content = $($(result).find('#content #content_area .row.box_configuration')[0].outerHTML)
+
+        # Remove duplicate boxes
+        content.find('.box').each ->
+          box = $(this)
+          if box.attr('id') && $('body').find("##{box.attr('id')}").count() > 0
+            box.closest('.col').remove()
+
         container.append content
         container.find('.row:last').process()
     }

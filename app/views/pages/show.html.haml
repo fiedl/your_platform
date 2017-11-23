@@ -26,6 +26,8 @@
 
     - visible_pages_only(page.content_boxes).each do |content_box_page|
       .col.col-sm-6.col-xs-12.resizable_col= render content_box_page
+      - content_box_page.blog_posts.each do |blog_post|
+        .col.col-sm-12.col-xs-12= render blog_post
 
     - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
       .col.col-sm-6.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
