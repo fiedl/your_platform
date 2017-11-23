@@ -23,8 +23,7 @@ class PagesController < ApplicationController
       return
     end
 
-    if @page.public? and not params[:no_fast_lane]
-      # This is the fast lane.
+    if @page.public? && can?(:use, :fast_lane) && (not params[:no_fast_lane])
       render inline: (Rails.cache.fetch([@page, :fast_lane]) {
         set_current_title @page.title
         set_current_navable @page
