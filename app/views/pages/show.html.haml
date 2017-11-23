@@ -17,7 +17,7 @@
 
     - if page.settings.show_group_map
       .col.col-sm-6.col-xs-12.resizable_col
-        %h1#group-map-box= group_map_title
+        %h1{id: "group-map-box-#{page.id}"}= group_map_title
         %div
           = render partial: 'shared/group_map', locals: {page: page}
 
@@ -44,6 +44,13 @@
       - visible_pages_only(page.blog_entries).each do |blog_entry|
         .col.col-sm-12.col-xs-12.resizable_col
           = render partial: 'pages/page', object: blog_entry
+
+    - # TODO: Feature switch or home page setting
+    - if page.public? && (page.id != page.home_page.id)
+      #scroll_over_to_home_page{data: {url: page.home_page.url}}
+        #goto_start_page
+          #goto_start_page_indicator= fa_icon 'chevron-down'
+          = t :goto_start_page
 
 - else # Page not visible to the user
   %h1= page.title

@@ -11,7 +11,11 @@ $(document).ready ->
 
     App.attachments.process($(this))
     App.galleries.process($(this))
+    App.process_group_maps($(this))
+    App.process_box_configuration($(this))
 
     afterglow.init() if afterglow?
 
     App.code_highlighting.process($(this))
+
+    this.trigger('process')

@@ -1,5 +1,5 @@
-$(document).ready ->
-  panelList = $('.draggable_boxes')
+App.process_box_configuration = (element)->
+  panelList = $(element).find('.draggable_boxes').addBack('.draggable_boxes')
 
   # The box configuration is persisted in the database.
   #
@@ -13,12 +13,12 @@ $(document).ready ->
   #       {id: "page-225-box", class: "col-sm-6"}
   #     ]
   #
-  box_configuration = $('.box_configuration').data('box-configuration')
-  box_configuration_update_url = $('.box_configuration').data('page-url')
+  box_configuration = $(element).find('.box_configuration').addBack('.box_configuration').data('box-configuration')
+  box_configuration_update_url = $(element).find('.box_configuration').addBack('.box_configuration').data('page-url')
 
   save_box_configuration = ->
     box_configuration = []
-    $('.panel', panelList).each (index, elem)->
+    panelList.find('.panel').each (index, elem)->
       box_configuration.push {
         id: $(elem).attr('id'),
         class: $(elem).closest('.col, .resizable_col').attr('class')
@@ -33,11 +33,11 @@ $(document).ready ->
       }
     }
 
-  $('.draggable_boxes').sortable {
+  $(element).find('.draggable_boxes').sortable {
     # Only make the .panel-heading child elements support dragging.
     # Omit this to make then entire <li>...</li> draggable.
     connectWith: '.draggable_boxes',
-    handle: '.panel-heading',
+    handle: '.box',
     update: ->
       save_box_configuration()
     cancel: '.currently_in_edit_mode *',
@@ -45,7 +45,7 @@ $(document).ready ->
     tolerance: "pointer"
   }
 
-  $('.draggable_boxes .resizable_col').resizable {
+  $(element).find('.draggable_boxes .resizable_col').resizable {
     handles: "e",
     resize: (event, ui)->
       ui.size.height = ui.originalSize.height
@@ -76,7 +76,7 @@ $(document).ready ->
       save_box_configuration()
   }
 
-  $('.draggable_boxes .resizable_col .box').each ->
+  $(element).find('.draggable_boxes .resizable_col .box').each ->
     $(this).append("<span class='resize_handle'></span>")
 
   # Loop through box configuration in reverse in order to have new
@@ -95,3 +95,6 @@ $(document).ready ->
         col.removeClass "col-sm-3 col-sm-6 col-sm-9 col-sm-12"
         col.addClass configuration.class
         col.show('fade')
+
+$(document).ready ->
+  App.process_box_configuration($('body'))

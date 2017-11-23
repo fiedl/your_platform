@@ -47,7 +47,7 @@ feature "Home Pages" do
         within('tr.locations_map') { check :show_locations_map }
 
         click_on :back_to_the_page
-        expect(page).to have_selector "#content #group-map-box"
+        expect(page).to have_selector "#content #group-map-box-#{@page.id}"
       end
 
       scenario "Adding events", :js do
