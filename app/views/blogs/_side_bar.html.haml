@@ -34,6 +34,5 @@
     %h4= t :suggest_something
     - if Setting.discourse_suggestions_url.present?
       %p= link_to t(:suggest_something_in_community), Setting.discourse_suggestions_url, class: 'btn btn-success'
-    %p
-      = t :or_suggest_something_privately
-      = render partial: 'contact_messages/form'
+      %p= t :or_suggest_something_privately
+    %p= render partial: 'contact_messages/form'
