@@ -38,11 +38,12 @@
 
       - if show_location_rather_than_group
         %span{class: "event location"}
-          = event.location
+          = best_in_place_if can?(:update, event), event, :location
 
     %span{class: "event name"}
       %strong
         - if link_to_mobile
           = link_to event.name, mobile_event_path(event)
         - else
-          = link_to event.name, event
+          = link_to event do
+            = best_in_place_if can?(:update, event), event, :name

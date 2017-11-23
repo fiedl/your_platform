@@ -34,6 +34,6 @@ $(document).ready ->
           target.html(result_content)
           target.fadeIn()
           target.process()
-        success_callback?.call
+        success_callback.call() if success_callback?
       }
 

@@ -200,6 +200,9 @@ class Ability
     can :manage, Attachment do |attachment|
       can? :manage, attachment.parent
     end
+    can :update, Event do |event|
+      event.id.in? Page.find(user.page_ids_of_pages_the_user_is_officer_of).collect(&:event_ids).flatten
+    end
   end
 
   def rights_for_local_officers

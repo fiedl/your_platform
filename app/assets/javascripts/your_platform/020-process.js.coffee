@@ -13,6 +13,7 @@ $(document).ready ->
     App.galleries.process($(this))
     App.process_group_maps($(this))
     App.process_box_configuration($(this))
+    App.process_public_events($(this))
 
     afterglow.init() if afterglow?
 
