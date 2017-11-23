@@ -19,7 +19,6 @@ $(document).ready ->
 $(document).on 'turbolinks:before-cache', ->
   $(".alert").remove()
   App.spinner.hide()
-  $('#content > *').css('opacity', '1').show()
 
 App.spinner = {
   hide: ->
@@ -36,8 +35,10 @@ $(document).on 'turbolinks:click', (event)->
     App.spinner.hide()
     App.spinner.show(button)
 
-    Turbolinks.clearCache()
-    $("html, body").animate {scrollTop: 0}, 300, 'swing', ->
-      $('#content > *')
-        .css('-webkit-transition', 'opacity 0.3s ease-out').css('opacity', '0')
-        .hide('scale', {percent: 90}, 300)
+    $("html, body").animate {scrollTop: 0}, 300, 'swing' #, ->
+    $('#content > div')
+      .css('-webkit-transition', 'opacity 0.3s ease-out').css('opacity', '0')
+      .hide('scale', {percent: 90}, 300)
+
+$(document).on 'turbolinks:render', (event)->
+  $('#content > div').css('opacity', '1').show()
