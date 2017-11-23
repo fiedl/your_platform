@@ -19,7 +19,7 @@ $(document).ready ->
 $(document).on 'turbolinks:before-cache', ->
   $(".alert").remove()
   App.spinner.hide()
-  $('#content').css('opacity', '1').show()
+  $('#content > *').css('opacity', '1').show()
 
 App.spinner = {
   hide: ->
