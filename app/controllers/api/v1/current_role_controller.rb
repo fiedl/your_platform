@@ -8,7 +8,11 @@ class Api::V1::CurrentRoleController < ApplicationController
   skip_authorization_check only: [:show]
 
   def show
-    render json: Role.of(current_user).for(object).as_json
+    render json: if current_user
+      Role.of(current_user).for(object).as_json
+    else
+      {}
+    end
   end
 
 end
