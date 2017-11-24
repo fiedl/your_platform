@@ -35,6 +35,8 @@ $(document).on 'turbolinks:click', (event)->
     App.spinner.hide()
     App.spinner.show(button)
 
+$(document).on 'turbolinks:request-start', (event)->
+  unless $('body').hasClass('mobile')
     $("html, body").animate {scrollTop: 0}, 300, 'swing' #, ->
     $('#content > div')
       .css('-webkit-transition', 'opacity 0.3s ease-out').css('opacity', '0')
