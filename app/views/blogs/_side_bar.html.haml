@@ -1,15 +1,18 @@
-.widget
-  = best_in_place_if can?(:update, @blog), @blog, :content, as: :textarea, sanitize: false
+- if @blog
+  - if (@blog.content.to_s.length > 5) || can?(:update, @blog)
+    .widget
+      = best_in_place_if can?(:update, @blog), @blog, :content, as: :textarea, sanitize: false
 
-- if can? :create_page_for, @blog
+  - if can? :create_page_for, @blog
+    .widget
+      = link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default btn-long' do
+        = create_icon
+        = t :create_blog_post_in_str, str: @blog.title
+
+- if @blog_posts
   .widget
-    = link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default btn-long' do
-      = create_icon
-      = t :create_blog_post_in_str, str: @blog.title
-
-.widget
-  %h4= t :images
-  = render partial: 'blogs/image_collection'
+    %h4= t :images
+    = render partial: 'blogs/image_collection'
 
 - if @tags && @tags.any?
   .widget
@@ -18,21 +21,25 @@
       - @tags.each do |tag|
         = link_to_tag tag
 
-.widget
-  %h4= t :subscribe
-  - if can? :subscribe_to, @blog
-    -#= t :subscribe_str_via_email, str: @blog.title
-    %p= render partial: 'blog_subscriptions/form', object: @blog, as: :blog
-  - if can? :manage, @blog
-    %p
-      = link_to group_members_path(@blog.subscriber_group) do
-        = "#{@blog.subscribers.count} #{t(:subscribers)}"
-  .si-share.noborder.clearfix= rss_button
-
-- if can? :create_suggestion_for, @blog
+- if @blog
   .widget
-    %h4= t :suggest_something
-    - if Setting.discourse_suggestions_url.present?
-      %p= link_to t(:suggest_something_in_community), Setting.discourse_suggestions_url, class: 'btn btn-success'
-      %p= t :or_suggest_something_privately
-    %p= render partial: 'contact_messages/form'
+    %h4= t :subscribe
+    - if can? :subscribe_to, @blog
+      -#= t :subscribe_str_via_email, str: @blog.title
+      %p= render partial: 'blog_subscriptions/form', object: @blog, as: :blog
+    - if can? :manage, @blog
+      %p
+        = link_to group_members_path(@blog.subscriber_group) do
+          = "#{@blog.subscribers.count} #{t(:subscribers)}"
+    .si-share.noborder.clearfix= rss_button
+
+  - if can? :create_suggestion_for, @blog
+    .widget
+      %h4= t :suggest_something
+      - if Setting.discourse_suggestions_url.present?
+        %p= link_to t(:suggest_something_in_community), Setting.discourse_suggestions_url, class: 'btn btn-success'
+      %p
+        = t(:or_colon) if Setting.discourse_suggestions_url.present?
+        %a.show_suggestion_form{href: '#'}= t :suggest_something_privately
+      %p
+        .suggestion_form.hidden= render partial: 'contact_messages/form'
