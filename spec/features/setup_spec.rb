@@ -27,6 +27,8 @@ feature 'Setup' do
 
       click_on I18n.t :confirm
 
+      wait_until { page.has_text? t(:setup_complete) }
+
       accept_terms_of_use
       @user = User.first
 

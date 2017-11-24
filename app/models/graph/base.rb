@@ -42,7 +42,9 @@ class Graph::Base
 
   def self.execute_query(query)
     raise 'namespace is missing in query string' if not query.include? ":#{namespace}"
-    neo.execute_query query
+    self.retry_on_end_of_file_error do
+      neo.execute_query query
+    end
   end
 
   def execute_query(query)
