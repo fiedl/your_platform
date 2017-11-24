@@ -98,6 +98,8 @@ App.process_box_configuration = (element)->
           col.removeClass "col-sm-3 col-sm-6 col-sm-9 col-sm-12"
           col.addClass configuration.class
           col.show('fade')
+    # deactivate light box for large boxes
+    $(element).find('.col-sm-12 .galleria').addClass('deactivate-auto-lightbox deactivate-magnification-glass')
 
 $(document).ready ->
   App.process_box_configuration($('body'))

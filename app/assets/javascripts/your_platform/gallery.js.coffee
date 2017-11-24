@@ -91,6 +91,8 @@ class App.Gallery
         # shown below the image.
         #
         self.galleria_instance.bind 'loadfinish', (e)->
+          unless self.root_element.hasClass('deactivate-magnification-glass')
+            self.add_magnification_glass() # needs to be in loadfinish to detect video
           self.active_video_on_mobile()
           if e.galleriaData
             self.current_image_data = e.galleriaData
