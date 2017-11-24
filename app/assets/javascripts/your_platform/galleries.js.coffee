@@ -9,8 +9,10 @@ class App.Galleries
   process: (root_element)->
     if root_element.find('.galleria').count() > 0
       root_element.find('.galleria').each (index, galleria_element)->
-        $(galleria_element).uniqueId()
-        App.gallery_instances.push new App.Gallery($(galleria_element))
+
+        jquery_galleria_element = $(galleria_element)
+        jquery_galleria_element.uniqueId()
+        App.gallery_instances.push new App.Gallery(jquery_galleria_element)
 
   clean: ->
     for gallery in App.gallery_instances

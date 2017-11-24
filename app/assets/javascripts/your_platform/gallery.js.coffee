@@ -3,6 +3,7 @@ class App.Gallery
   root_element: {}
   galleria_instance: {}
   current_image_data: {}
+  ready_bindings_done: false
 
   # Initialize a `Gallery` with a `$('.galleria')` element.
   #
@@ -10,10 +11,10 @@ class App.Gallery
   #
   constructor: (root_element)->
     @root_element = root_element
-
     @generate_uniqe_id()
     @initSettings()
     @initTheme()
+    @bindGalleriaReady()
     @runGalleria()
     @store_gallery_instance_in_data_attribute()
 
@@ -46,8 +47,7 @@ class App.Gallery
       debug: true,
       lightbox: true,
       thumbnails: false,
-      imageMargin: 0,
-      extend: -> self.initCallback(self, this)
+      imageMargin: 0
     }
 
   default_height: ->
@@ -74,32 +74,36 @@ class App.Gallery
     self = this
     Galleria.run(self.unique_id(), self.default_galleria_options())
 
-  initCallback: (self, galleria_instance)->
-    # This is called by galleria through the `extend` option
-    # after finishing `Galleria.run`. In this callback, `galleria_instance`
-    # is refering to the galleria instance, `self` is refering
-    # to the `App.Gallery` instance.
-    #
-    self.galleria_instance = galleria_instance
+  bindGalleriaReady: ->
+    self = this
 
-    # When loading a gallery image, also update the description
-    # shown below the image.
-    #
-    self.galleria_instance.bind 'loadfinish', (e)->
-      self.add_magnification_glass() # needs to be in loadfinish to detect video
-      self.active_video_on_mobile()
-      if e.galleriaData
-        self.current_image_data = e.galleriaData
-        self.find('.galleria-image').removeClass('active')
-        $(e.imageTarget).closest('.galleria-image').addClass('active')
-        self.show_description()
+    Galleria.ready ->
+      # The Galleria.ready is fired several times, since it's bound to
+      # each instance, again. Therefore, we need to find out, here, whether
+      # to process the following stuff, now.
+      #
+      if self.root_element and self.find('.galleria-thumbnails').length > 0 and self.root_element.attr('id') == this._target.id
 
-    if self.root_element.hasClass('deactivate-auto-lightbox')
-      self.galleria_instance.setOptions 'lightbox', false
+        self.ready_bindings_done = true
+        self.galleria_instance = this
 
-    self.hide_thumbs_or_slideshow()
-    self.hide_errors_container()
-    self.bind_fullscreen_events()
+        # When loading a gallery image, also update the description
+        # shown below the image.
+        #
+        self.galleria_instance.bind 'loadfinish', (e)->
+          self.active_video_on_mobile()
+          if e.galleriaData
+            self.current_image_data = e.galleriaData
+            self.find('.galleria-image').removeClass('active')
+            $(e.imageTarget).closest('.galleria-image').addClass('active')
+            self.show_description()
+
+        if self.root_element.hasClass('deactivate-auto-lightbox')
+          self.galleria_instance.setOptions 'lightbox', false
+
+        self.hide_thumbs_or_slideshow()
+        self.hide_errors_container()
+        self.bind_fullscreen_events()
 
   store_gallery_instance_in_data_attribute: ->
     @root_element.data('gallery', this)
