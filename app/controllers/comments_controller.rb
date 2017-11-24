@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
 
   before_action :find_secure_commentable, only: :create
+  before_action :create_guest_user_from_form_data, only: [:create]
 
   def create
     authorize! :create_comment_for, @commentable

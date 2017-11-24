@@ -1,5 +1,7 @@
 class ContactMessagesController < ApplicationController
 
+  before_action :create_guest_user_from_form_data, only: [:create]
+
   # https://railscasts.com/episodes/259-decent-exposure
   #
   expose :contact_message

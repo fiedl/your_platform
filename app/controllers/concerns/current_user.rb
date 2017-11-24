@@ -2,7 +2,6 @@ concern :CurrentUser do
 
   included do
     helper_method :current_user
-    before_action :create_guest_user_from_form_data, only: [:create]
   end
 
   # This method returns the currently signed in user.
