@@ -11,7 +11,8 @@ concern :PageTeaserBoxes do
     #   .where.not(nav_nodes: {hidden_teaser_box: true})
     #
     child_pages
-      .select { |page| not page.type.in? ['BlogPost', 'Pages::ContentBox'] }
+      .select { |page| not page.type.in? ['BlogPost'] }
+      .select { |page| not page.embedded? }
       .select { |page| not page.nav_node.hidden_teaser_box }
       .select { |page| not page.new_record? }
   end

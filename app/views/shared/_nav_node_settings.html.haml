@@ -10,6 +10,7 @@
       = ajax_check_box navable, :show_in_menu
       = ajax_check_box navable, :slim_menu
       = ajax_check_box navable, :show_as_teaser_box
+      = ajax_check_box navable, :embedded if navable.respond_to? :embedded
   %tr
     %th= t :breadcrumb_options
     %td

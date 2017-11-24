@@ -23,6 +23,7 @@ class Page < ApplicationRecord
   include PageTeaserBoxes
   include PagePublishing
   include PageVisibility
+  include PageEmbedding
 
   scope :regular, -> {
     where(type: nil)
@@ -50,10 +51,6 @@ class Page < ApplicationRecord
 
   def as_json(options = {})
     super.as_json(options).merge({tag_list: tag_list})
-  end
-
-  def content_boxes
-    child_pages.where(type: "Pages::ContentBox")
   end
 
   def show_vertical_nav?
@@ -305,7 +302,7 @@ class Page < ApplicationRecord
   end
 
   def self.types
-    [nil, Page, BlogPost, Blog, Pages::HomePage, Pages::ContentBox, Pages::ContactForm]
+    [nil, Page, BlogPost, Blog, Pages::HomePage, Pages::ContactForm]
   end
 
   include PageCaching if use_caching?

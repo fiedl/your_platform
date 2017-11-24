@@ -98,7 +98,7 @@ class PagesController < ApplicationController
     @page = Page.new
     @new_page = @association.create!(page_params)
 
-    if @new_page.kind_of? Pages::ContentBox
+    if @new_page.embedded?
       redirect_to page_path(@new_page.parent, no_fast_lane: true)
     else
       redirect_to page_path(@new_page, no_fast_lane: true)
@@ -132,7 +132,7 @@ private
     params[:page][:archived] ||= params[:archived] if params[:archived] # required for archivable.js.coffee to work properly.
 
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
-    params[:page][:type] = "Pages::ContentBox" if params[:type] == 'content_box'
+    params[:page][:embedded] = true if params[:type] == 'content_box'
     if params[:type] == "hidden"
       params[:show_in_menu] = false
       params[:show_as_teaser_box] = false

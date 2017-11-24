@@ -24,10 +24,10 @@
     - if @events
       .col.col-sm-6.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
 
-    - visible_pages_only(page.content_boxes).each do |content_box_page|
-      .col.col-sm-6.col-xs-12.resizable_col= render content_box_page
-      - content_box_page.blog_posts.each do |blog_post|
-        .col.col-sm-12.col-xs-12= render blog_post
+    - visible_pages_only(page.embedded_pages).each do |embedded_page|
+      .col.col-sm-6.col-xs-12.resizable_col= render embedded_page
+      - embedded_page.blog_posts.each do |blog_post|
+        .col.col-sm-6.col-xs-12= render partial: 'blog_posts/teaser', object: blog_post, as: :blog_post
 
     - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
       .col.col-sm-6.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page

@@ -16,6 +16,11 @@ de:
   home_page_sub_title: Homepage-Untertitel
 
   sub_pages: Unterseiten
+  embedded: Eingebettet anzeigen
+  embedded_pages: Eingebettete Seiten
+  teaser_boxes: Teaser-Boxen
+  embedded_pages_help_text: Eingebettete Seiten werden mit ungekürztem Inhalt als Boxen auf der übergeordneten Seite angezeigt.
+  teaser_boxes_help_text: Inhalte, die als Teaser-Boxen angezeigt werden, werden mit gekürztem Inhalt, d.h. nur mit Anrisstext und einem Weiterlesen-Link auf der übergeordneten Seite angezeigt.
 
   locations_map: Karte der Standorte
   group_map_sub_title: Untertitel der Karte
@@ -31,7 +36,5 @@ de:
   show_officers_of_group_id: Amtsträger der Gruppe mit folgender ID anzeigen.
   for_empty_field_show_page_officers: "Wenn das Feld leer ist, werden die Amtsträger angezeigt, die direkt dieser Inhaltsseite zugeordnet sind (siehe Kasten 'Amtsträger' weiter unten). Wenn hingegen eine Gruppen-ID angegeben ist, werden stattdessen die Amtsträger dieser Gruppe angezeigt."
   show_only_the_first_n_offices: "Nur die ersten N Ämter anzeigen:"
-
-  sub_pages: Unterseiten
 
   danger_zone_tm: Danger Zone™

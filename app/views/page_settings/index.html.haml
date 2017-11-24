@@ -66,9 +66,16 @@
         %p
           = t :show_only_the_first_n_offices
           = setting_in_place @page, :show_only_the_first_n_offices
-    %tr.sub_pages
-      %th= t :sub_pages
+    %tr.embedded_pages
+      %th= t :embedded_pages
       %td
+        %p.hidden_help= t :embedded_pages_help_text
+        - @page.child_pages.each do |embedded_page|
+          %p= ajax_check_box embedded_page, :embedded, embedded_page.title
+    %tr.teaser_boxes
+      %th= t :teaser_boxes
+      %td
+        %p.hidden_help= t :teaser_boxes_help_text
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
 

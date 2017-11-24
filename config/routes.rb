@@ -133,7 +133,6 @@ Rails.application.routes.draw do
 
   get :home_pages, to: 'pages/home_pages#index'
   post :home_pages, to: 'pages/home_pages#create'
-  resources :pages_content_boxes, controller: :pages
 
   resources :logos
 
