@@ -125,25 +125,27 @@ class App.Gallery
     if self.is_video_gallery()
       self.picture_info_element().hide()
     else
-      $.ajax({
-        type: 'GET',
-        url: self.description_path(),
-        success: (result) ->
-          self.picture_info_element()
-            .hide()
-            .replaceWith(result.html).show()
-          self.picture_info_element().find('.remove_button')
-            .removeClass('show_only_in_edit_mode')
-            .hide()
-          self.picture_info_element().apply_edit_mode()
-          self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
-          ## When the user enters a title, it should stay visible when
-          ## exiting edit mode.
-          #self.picture_info_element().on 'change paste keydown', 'input', ->
-          #  self.picture_info_element().find('.show_only_in_edit_mode')
-          #    .removeClass('show_only_in_edit_mode')
-
-      })
+      if self.description_path()
+        $.ajax({
+          type: 'GET',
+          url: self.description_path(),
+          success: (result) ->
+            self.picture_info_element()
+              .hide()
+              .replaceWith(result.html).show()
+            self.picture_info_element().find('.remove_button')
+              .removeClass('show_only_in_edit_mode')
+              .hide()
+            self.picture_info_element().apply_edit_mode()
+            self.picture_info_element().find('.show_only_in_edit_mode').show() if self.currently_in_edit_mode()
+            ## When the user enters a title, it should stay visible when
+            ## exiting edit mode.
+            #self.picture_info_element().on 'change paste keydown', 'input', ->
+            #  self.picture_info_element().find('.show_only_in_edit_mode')
+            #    .removeClass('show_only_in_edit_mode')
+        })
+      else
+        self.picture_info_element().hide()
 
   only_description_title_is_shown: ->
     (this.picture_info_element().find('.picture-title').count() == 1) && (this.picture_info_element().find('.picture-description').count() == 0)
@@ -155,9 +157,10 @@ class App.Gallery
   # Transform the image path into the description json url.
   # /attachments/123/filename.png
   description_path: ->
-    args_string = ""
-    args_string = "?only_title=true" if this.only_description_title_is_shown()
-    @image_path().split("/").slice(0,3).join("/") + "/description.json" + args_string
+    if @image_path().includes("/attachments/")
+      args_string = ""
+      args_string = "?only_title=true" if this.only_description_title_is_shown()
+      @image_path().split("/").slice(0,3).join("/") + "/description.json" + args_string
 
   picture_info_element: ->
     @root_element.parent().find('.picture-info')
