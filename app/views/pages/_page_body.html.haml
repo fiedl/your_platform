@@ -18,5 +18,6 @@
 
     = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false, activator: 'manual'
 
-    .show_only_in_edit_mode
-      = render partial: 'shared/markdown_help'
+    - if can? :update, page
+      .show_only_in_edit_mode
+        = render partial: 'shared/markdown_help'

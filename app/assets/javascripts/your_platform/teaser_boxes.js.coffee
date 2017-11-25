@@ -12,7 +12,7 @@ $(document).ready ->
 
 $(document).on 'click', '.box.teaser_box .galleria-image img', (e)->
   unless $(this).closest('.galleria').hasClass('video-gallery')
-    Turbolinks.visit $(this).closest('.box').find('h1.panel-title a').attr('href')
+    Turbolinks.visit $(this).closest('.box').find('.box_title a').attr('href')
     e.preventDefault()
     e.stopPropagation()
     false

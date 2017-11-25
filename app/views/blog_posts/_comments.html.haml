@@ -1,4 +1,4 @@
-- if Setting.embedded_comments_discourse_url.present?
+- if Setting.embedded_comments_discourse_url.to_s.length > 5
   %h1= t :comments
   %div
     = render partial: 'comments/discourse_embedded_comments'

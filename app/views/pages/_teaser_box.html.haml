@@ -1,12 +1,18 @@
-- # locals:
-- page || raise(ActionController::ParameterMissing, 'no page given')
+- page || raise('no page given')
 
-%h1.page.teaser_box{id: "page-#{page.id}-box", class: [page.class.name.underscore.parameterize, ("with_picture" if page.image_attachments_not_listed_in_content.any?)].join(" ")}
-  = link_to page.title, page
-  = publish_page_button(page)
-%div
-  = render partial: 'teaser_image', object: page, as: :page
-  .page_body
-    = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, sanitize: false
-  .panel-footer
-    = link_to t(:learn_more), page
+= box id: "page-#{page.id}-box", classes: ['page', 'teaser_box', page.class.name.underscore.parameterize] do
+  - content_for :box_title do
+    = link_to page.title, page
+  - content_for :box_tools do
+    = publish_page_button(page)
+  - if page.teaser_image?
+    - content_for :box_image do
+      = render partial: 'teaser_image', object: page, as: :page
+  - if page.kind_of? BlogPost
+    - content_for :box_meta do
+      = render partial: 'blog_posts/meta', object: page, as: :blog_post, locals: {teaser: true}
+  - content_for :box_footer do
+    = link_to t(:read_more), page, class: 'more-link'
+  - content_for :box_body do
+    .page_body
+      = best_in_place_if can?(:update, page), page, :teaser_text, as: :textarea, sanitize: false

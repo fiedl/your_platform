@@ -4,29 +4,36 @@
 - raise(RuntimeError, 'Please use the pages/teaser_box partial instead!') if teaser_box
 
 .page_with_attachments
-  %h1.page{id: "page-#{page.id}-box", class: [page.class.name.underscore.parameterize, ("with_picture" if page.image_attachments_not_listed_in_content.any?)].join(" ") }
-    - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
-      -#= best_in_place_if can?(:update, page), page, :title
-      = wysiwyg_in_place_if can?(:update, page), page, :title
-    - elsif page.embedded?
-      = best_in_place_if can?(:update, page), page, :title
-    - else  # Blog Entries:
-      = link_to(page) do
-        = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
-    = render partial: 'pages/box_tool_buttons', object: page, as: :page
-  %div.page
-    #inline-pictures
-      - # The `#inline-pictures` selector needs to be outside the `if`, because it's target to `ajax_replace`.
-      - if page.image_attachments_not_listed_in_content.any?
-        = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
+  = box id: "page-#{page.id}-box", classes: ['page', page.class.name.underscore.parameterize] do
 
-    = render partial: 'pages/meta', object: page, as: :page
+    - content_for :box_title do
+      - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
+        = wysiwyg_in_place_if can?(:update, page), page, :title
+      - elsif page.embedded?
+        = wysiwyg_in_place_if can?(:update, page), page, :title
+      - else  # Blog Entries:
+        = link_to(page) do
+          = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'
 
-    = render partial: 'pages/page_body', object: page, as: :page
+    - content_for :box_tools do
+      = render partial: 'pages/box_tool_buttons', object: page, as: :page
 
-    - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
-      .hidden-print.show_only_in_edit_mode
-        #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
+    - content_for :box_image do
+      #inline-pictures
+        - # The `#inline-pictures` selector needs to be outside the `if`, because it's target to `ajax_replace`.
+        - if page.image_attachments_not_listed_in_content.any?
+          = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
+
+    - if page.kind_of?(BlogPost)
+      - content_for :box_meta do
+        = render partial: 'pages/meta', object: page, as: :page
+
+    - content_for :box_body do
+      = render partial: 'pages/page_body', object: page, as: :page
+
+      - if not @blog_entries.present? and not @hide_attachment_drop_fields and can?(:create_attachment_for, page)
+        .hidden-print.show_only_in_edit_mode
+          #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
   #attachments.attachments
     = render(partial: 'pages/videos', locals: {page: page})

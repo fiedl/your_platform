@@ -11,6 +11,7 @@ class BlogPostsController < PagesController
     authorize! :read, @blog_post
 
     set_current_navable @blog_post
+    set_current_title @blog_post.title
   end
 
   def create

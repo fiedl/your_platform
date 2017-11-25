@@ -2,8 +2,7 @@
 
 = render partial: 'pages/page_settings_button', object: @blog, as: :page if can? :manage, @blog
 
-#posts
-  = render partial: 'blog_posts/teaser', collection: @blog_posts, as: :blog_post
+= render partial: 'blogs/blog_posts'
 
 - content_for :side_bar do
   = render partial: 'blogs/side_bar'
