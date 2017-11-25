@@ -1,0 +1,32 @@
+.box.new_box
+
+  > .box_header
+    display: block
+
+    > .box_image
+      overflow: hidden
+      border-radius: 3px
+
+    > .box_title > h1
+      font-size: 130%
+
+    > .box_tools
+      position: absolute
+      top: 5px
+      right: 5px
+      z-index: 20
+      direction: rtl
+      > *
+        direction: ltr
+      text-align: right
+      white-space: nowrap
+      width: auto
+      > div, a
+        vertical-align: middle
+
+    > .box_meta
+      font-size: 80%
+      margin-top: 5px
+
+  > .box_content
+    width: 100%

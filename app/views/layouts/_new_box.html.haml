@@ -1,0 +1,39 @@
+- id ||= nil
+- classes ||= []
+
+.box.new_box.panel.panel-default.edit_mode_group{id: id, class: classes.join(" ")}
+  - block_content = yield
+  - box_body = content_for?(:box_body) ? content_for(:box_body) : block_content
+
+  - if content_for?(:box_title) || content_for?(:box_image)
+    .box_header.panel-heading
+
+      - if content_for? :box_image
+        .box_image= content_for :box_image
+
+      - if content_for? :box_title
+        .box_title
+          %h1= content_for :box_title
+
+      - if content_for? :box_meta
+        .box_meta= content_for :box_meta
+
+      .box_tools
+        = edit_button
+        = save_button
+        = content_for :box_tools
+
+  .box_content.panel-body
+    = box_body
+
+  - if content_for? :box_footer
+    .box_footer.panel-footer= content_for :box_footer
+
+- # Reset the contents. Otherwise, the next box would append the content.
+- #
+- content_for(:box_title, flush: true) { "" }
+- content_for(:box_tools, flush: true) { "" }
+- content_for(:box_image, flush: true) { "" }
+- content_for(:box_meta, flush: true) { "" }
+- content_for(:box_body, flush: true) { "" }
+- content_for(:box_footer, flush: true) { "" }

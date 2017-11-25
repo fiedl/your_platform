@@ -2,6 +2,14 @@ require 'nokogiri'
 
 module BoxHelper
 
+  def box(options = {}, &block)
+    @box_counter = (@box_counter || 0) + 1
+    options[:classes] ||= []
+    options[:classes] += [options[:class]] if options[:class]
+    options[:classes] += ['first'] if @box_counter == 1
+    render layout: 'layouts/new_box', locals: options, &block
+  end
+
   def content_box( options = {} )
     heading = options[ :heading ]
     content = options[ :content ]
@@ -9,7 +17,11 @@ module BoxHelper
     box_class = options[:box_class]
     box_id = options[:box_id]
 
-    render partial: 'layouts/box', locals: {heading: heading, content: content, box_class: box_class, box_id: box_id}
+    box id: box_id, class: box_class do
+      content_for(:box_title) { heading }
+      content_for(:box_content) { content }
+      content
+    end
   end
 
   def convert_to_content_box( html_code = nil )
@@ -32,21 +44,23 @@ module BoxHelper
 
     box_counter = 0
     doc.xpath( 'descendant::h1' ).each do |h1_node|
-      box_counter += 1
-      heading = h1_node.inner_html.html_safe
-      heading_class = h1_node.attr( :class )
-      heading_class ||= ""
-      heading_class += " first" if box_counter == 1
-      heading_id = h1_node.attr(:id)
+      unless h1_node.ancestors('.box').any?
+        box_counter += 1
+        heading = h1_node.inner_html.html_safe
+        heading_class = h1_node.attr( :class )
+        heading_class ||= ""
+        heading_class += " first" if box_counter == 1
+        heading_id = h1_node.attr(:id)
 
-      content_element = h1_node.next_element
-      if content_element
-        content = content_element.to_html.html_safe
-        content_element.remove()
+        content_element = h1_node.next_element
+        if content_element
+          content = content_element.to_html.html_safe
+          content_element.remove()
+        end
+        content ||= "" # because content_box expects a String
+
+        h1_node.replace content_box(heading: heading, content: content, box_class: heading_class, box_id: heading_id)
       end
-      content ||= "" # because content_box expects a String
-
-      h1_node.replace content_box(heading: heading, content: content, box_class: heading_class, box_id: heading_id)
     end
 
     return doc.to_s.html_safe

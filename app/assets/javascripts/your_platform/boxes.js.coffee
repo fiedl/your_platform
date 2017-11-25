@@ -1,12 +1,12 @@
 $(document).on 'edit', '.box', ->
   # This is needed for css styling.
-  $(this).find('.content').addClass 'currently_in_edit_mode'
+  $(this).find('.box_content').addClass 'currently_in_edit_mode'
 
 $(document).on 'save', '.box', ->
-  $(this).find('.content').removeClass 'currently_in_edit_mode'
+  $(this).find('.box_content').removeClass 'currently_in_edit_mode'
 
 $(document).on 'cancel', '.box', ->
-  $(this).find('.content').removeClass 'currently_in_edit_mode'
+  $(this).find('.box_content').removeClass 'currently_in_edit_mode'
 
 $(document).ready ->
   $('.content_twoCols_right > div.col-xs-12').each ->
@@ -21,18 +21,9 @@ $.fn.process_box_tools = ->
   this.find('.box .box_header .tool').each ->
     tool = $(this)
     box_toolbar = tool.closest('.box')
-      .find('.box_toolbar').first()
+      .find('.box_tools').first()
     tool.detach()
-    tool.prependTo(box_toolbar)
-
-  # If there is a panel-footer added to the content, move it outside
-  # the panel-body to display it correctly.
-  #
-  this.find('.panel-body .panel-footer').each ->
-    footer = $(this)
-    panel = footer.closest('.panel')
-    footer.detach()
-    footer.appendTo(panel)
+    tool.appendTo(box_toolbar)
 
   # Remove 'edit' buttons for boxes where no .editable element
   # is included.
