@@ -28,34 +28,4 @@ concern :PageTeaserBoxes do
     end
   end
 
-  def teaser_image_url
-    if self.settings.teaser_image_url
-      self.settings.teaser_image_url
-    else
-      possible_teaser_image_urls.first
-    end
-  end
-
-  def teaser_image_url=(new_url)
-    if new_url.present?
-      self.settings.teaser_image_url = new_url
-    else
-      self.settings.teaser_image_url = nil
-    end
-  end
-
-  def possible_teaser_image_urls
-    image_attachments.map(&:medium_url) + if content.present?
-      URI.extract(content)
-        .select{ |l| l[/\.(?:gif|png|jpe?g)\b/]}
-        .collect { |url| url.gsub(")", "") } # to fix markdown image urls
-    else
-      []
-    end
-  end
-
-  def teaser_youtube_url
-    content.to_s.match(/(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+/).try(:[], 0)
-  end
-
 end

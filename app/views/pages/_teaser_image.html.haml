@@ -1,14 +1,15 @@
-#inline-pictures
-  = galleria theme: 'classic' do
+- if page.teaser_youtube_url
+  = you_tube page.teaser_youtube_url
+- else
+  #inline-pictures
+    = galleria theme: 'classic' do
 
-    - if primary_teaser_url = page.teaser_image_url
-      = image_tag primary_teaser_url
+      - page.teaser_images.each do |image|
+        - if image.kind_of? Attachment
+          = render partial: 'attachments/picture', locals: { attachment: image }
+        - if image.kind_of? String
+          = image_tag image
 
-    - (page.possible_teaser_image_urls - [primary_teaser_url]).each do |src|
-      = image_tag src
-
-    - page.image_attachments_not_listed_in_content.each do |attachment|
-      = render partial: 'attachments/picture', locals: { attachment: attachment }
-  .picture-info
-    .picture-title
-      - # Will be filled from app/assets/javascripts/your_platform/gallery.js.coffee if a gallery is used for this teaser image.
+    .picture-info
+      .picture-title
+        - # Will be filled from app/assets/javascripts/your_platform/gallery.js.coffee if a gallery is used for this teaser image.

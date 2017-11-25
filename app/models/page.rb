@@ -24,6 +24,7 @@ class Page < ApplicationRecord
   include PagePublishing
   include PageVisibility
   include PageEmbedding
+  include PageImages
 
   scope :regular, -> {
     where(type: nil)
@@ -160,17 +161,6 @@ class Page < ApplicationRecord
   #
   def attachments_by_type( type )
     attachments.find_by_type type
-  end
-  def image_attachments
-    attachments.find_by_type('image')
-  end
-  def image_attachments_not_listed_in_content
-    image_attachments.select do |attachment|
-      # Do not list images that are `![markdown-images](...)` within the
-      # page content as attachments in order to avoid displaying them
-      # twice.
-      not self.content.try(:include?, attachment.file_path)
-    end
   end
 
 
