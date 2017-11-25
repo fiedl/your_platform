@@ -12,7 +12,7 @@ module MailMessageExtension
   # Also make sure to only deliver emails to users with accounts.
   #
   def deliver
-    if Ability.new.can? :use, :mail_delivery_account_filter
+    if Ability.new(nil).can? :use, :mail_delivery_account_filter
       return false unless @allow_recipients_without_account || recipient_is_system_address? || recipient_has_user_account?
     end
 
