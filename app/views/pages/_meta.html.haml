@@ -19,7 +19,7 @@
     %li.page_parent
       = folder_icon
       = link_to page.parents.first.title, page.parents.first
-  - if page.tags.any? || can?(:update, page)
+  - if (page.tags.any? || can?(:update, page)) && can?(:use, :tags)
     %li.tags.page_tags
       = icon :tag
       = render partial: 'tags/tag_list', object: page, as: :taggable

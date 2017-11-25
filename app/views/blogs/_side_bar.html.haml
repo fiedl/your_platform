@@ -14,7 +14,7 @@
     %h4= t :images
     = render partial: 'blogs/image_collection'
 
-- if @tags && @tags.any?
+- if @tags && @tags.any? && can?(:use, :tags)
   .widget
     %h4= t :tags
     .tagcloud
