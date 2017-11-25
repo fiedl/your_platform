@@ -1,5 +1,7 @@
 - content_for :head, auto_discovery_link_tag(:rss, blog_path(@blog, format: "rss"))
 
+= render partial: 'pages/page_settings_button', object: @blog, as: :page if can? :manage, @blog
+
 #posts
   = render partial: 'blog_posts/teaser', collection: @blog_posts, as: :blog_post
 

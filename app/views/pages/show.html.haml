@@ -4,11 +4,7 @@
 
 - if page.visible_to?(current_user, preview_as: params[:preview_as])
 
-  - if can? :manage, page
-    .row.for_settings_button
-      = link_to page_settings_path(page), id: 'page_settings_button', class: 'btn btn-default btn-sm pull-right' do
-        = settings_icon
-        = t :page_settings
+  = render partial: 'pages/page_settings_button', object: page, as: :page if can? :manage, page
 
   = draggable_boxes_row(page) do
 
