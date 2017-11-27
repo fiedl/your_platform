@@ -10,9 +10,10 @@
 $(document).ready ->
   $('.box.teaser_box .galleria').addClass('deactivate-auto-lightbox')
 
-$(document).on 'click', '.box.teaser_box .galleria-image img', (e)->
+$(document).on 'click', '.teaser_image .galleria-image img', (e)->
   unless $(this).closest('.galleria').hasClass('video-gallery')
-    Turbolinks.visit $(this).closest('.box').find('.box_title a').attr('href')
+    url = $(this).closest('.teaser_image').data('page-url')
+    Turbolinks.visit url
     e.preventDefault()
     e.stopPropagation()
     false

@@ -1,7 +1,7 @@
 - if page.teaser_youtube_url
   = you_tube page.teaser_youtube_url
 - else
-  #inline-pictures
+  #inline-pictures.teaser_image{data: {page_url: url_for(page)}}
     = galleria theme: 'classic' do
 
       - page.teaser_images.each do |image|

@@ -1,5 +1,5 @@
 .mpost
-  .entry-image= render partial: 'blog_posts/image', object: related_post, as: :blog_post
+  .entry-image= render partial: 'pages/teaser_image', object: related_post, as: :page
   .entry-c
     .entry-title
       %h4= link_to related_post.title, related_post
