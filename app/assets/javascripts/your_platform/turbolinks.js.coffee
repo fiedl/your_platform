@@ -36,7 +36,7 @@ $(document).on 'turbolinks:click', (event)->
     App.spinner.show(button)
 
 $(document).on 'turbolinks:request-start', (event)->
-  if (not $('body').hasClass('mobile')) and (not App.rails_env == "test") # The animation confuses our tests in slow environments, because some text is found but considered invisible.
+  if (not $('body').hasClass('mobile')) and (not (App.rails_env == "test")) # The animation confuses our tests in slow environments, because some text is found but considered invisible.
     $("html, body").animate {scrollTop: 0}, 300, 'swing' #, ->
     $('#content > div')
       .css('-webkit-transition', 'opacity 0.3s ease-out').css('opacity', '0')
