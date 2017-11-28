@@ -12,7 +12,10 @@ $(document).ready ->
           <div class='alert alert-info fast_lane'>
             #{I18n.t('you_can_edit_this_page')}
             <a href='#{App.current_url_without_fast_lane()}' id='load_editable_page_version'>
-              #{I18n.t('load_editable_version')}
+              #{I18n.t('load_editable_version')}.
+            </a>
+            <a href='/renew_cache?gid=#{$('body').data('navable')}' id='renew_cache'>
+              #{I18n.t('renew_cache')}.
             </a>
           </div>
         ")

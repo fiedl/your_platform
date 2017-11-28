@@ -128,6 +128,7 @@ Rails.application.routes.draw do
     get :settings, to: 'page_settings#index'
     resources :publications, only: [:create], controller: :page_publications
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
     resources :logos, controller: :logos
     resources :relocations, controller: 'page_relocations'
   end
@@ -245,6 +246,8 @@ Rails.application.routes.draw do
       resources :submissions
     end
   end
+
+  get :renew_cache, to: 'cache_renewals#create'
 
   get "errors/unauthorized"
 
