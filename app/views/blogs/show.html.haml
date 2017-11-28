@@ -3,6 +3,11 @@
 - content_for :toolbar do
   = render partial: 'pages/page_settings_button', object: @blog, as: :page if can? :manage, @blog
 
+  - if can? :create_page_for, @blog
+    = link_to blog_posts_path(parent_id: @blog.id), method: 'post', class: 'btn btn-default btn-sm btn-long pull-right' do
+      = create_icon
+      = t :create_blog_post_in_str, str: @blog.title
+
 = render partial: 'blogs/blog_posts'
 
 - content_for :side_bar do
