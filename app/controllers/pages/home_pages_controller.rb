@@ -3,8 +3,10 @@ class Pages::HomePagesController < ApplicationController
   def index
     authorize! :index, :home_pages
 
-    @home_pages = Pages::HomePage.all
-      .select { |home_page| can? :read, home_page }
+    @home_pages = Page.where(type: ["Pages::HomePage"])
+        .or(Page.where.not(domain: nil))
+        .all
+        .select { |home_page| can? :read, home_page }
 
     set_current_title t(:public_home_pages)
     set_current_access :admin
