@@ -12,7 +12,6 @@ class App.Gallery
   constructor: (root_element)->
     @root_element = root_element
     @generate_uniqe_id()
-    @initSettings()
     @initTheme()
     @bindGalleriaReady()
     @runGalleria()
@@ -58,10 +57,6 @@ class App.Gallery
       1.0 * @closest('.box').find('.picture-attachment img').first().data('width') / @closest('.box').find('.picture-attachment img').first().data('height')
     else
       16.0 / 9
-
-  initSettings: ->
-    self = this
-    Galleria.configure(self.default_galleria_options())
 
   initTheme: ->
     # Initialize galleria. One has to load a theme here,
