@@ -1,4 +1,5 @@
 de:
+  create_blog_post: Neuen Blog-Post erstellen
   create_blog_post_in_str: Neuen Blog-Post in "%{str}" erstellen
   read_more: Mehr erfahren
   share_this_post: Diesen Inhalt teilen

@@ -2,6 +2,11 @@
 
 = publish_page_button(page)
 
+- if page.kind_of?(Blog) && can?(:create_page_for, page)
+  = link_to blog_posts_path(parent_id: page.id), method: 'post', class: 'btn btn-default', title: t(:create_blog_post_in_str, str: page.title) do
+    = create_icon
+    = t :create_blog_post
+
 - if can? :destroy, page
   .delete_page_tool.tool= destroy_page_button(page)
 

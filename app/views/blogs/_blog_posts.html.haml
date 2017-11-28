@@ -1,6 +1,6 @@
 - blog_posts ||= @blog_posts || raise('no blog_posts given')
 
-#posts.row.blog_posts
+#posts.row.blog_posts.eq-height
   - blog_posts.each do |blog_post|
     .blog_post_teaser_col.col.col-sm-6.col-xs-12
       = render partial: 'blog_posts/teaser', object: blog_post, as: :blog_post
