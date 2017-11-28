@@ -44,8 +44,7 @@ class Request < ApplicationRecord
   # The user id is purged from the database.
   #
   def purge_user_id_from_the_database
-    write_attribute :user_id, nil
-    Request.update_all user_id: nil
+    Request.where(user_id: user_id).update_all(user_id: nil)
   end
 
 end
