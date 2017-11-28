@@ -201,7 +201,7 @@ class Ability
       can? :manage, attachment.parent
     end
     can :update, Event do |event|
-      event.id.in? Page.find(user.page_ids_of_pages_the_user_is_officer_of).collect(&:event_ids).flatten
+      event.id.in? Page.where(id: user.page_ids_of_pages_the_user_is_officer_of).collect(&:event_ids).flatten
     end
   end
 
