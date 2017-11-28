@@ -9,7 +9,7 @@
   = draggable_boxes_row(page) do
 
     .col.col-sm-9.col-xs-12.resizable_col
-      = render page
+      = render page, show_meta: (page.kind_of?(BlogPost) || (not page.public?))
 
     - if page.settings.show_group_map
       .col.col-sm-6.col-xs-12.resizable_col

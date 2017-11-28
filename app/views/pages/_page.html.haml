@@ -2,6 +2,7 @@
 - page || raise(ActionController::ParameterMissing, 'no page given')
 - teaser_box ||= false
 - raise(RuntimeError, 'Please use the pages/teaser_box partial instead!') if teaser_box
+- show_meta ||= page.kind_of?(BlogPost)
 
 .page_with_attachments
   = box id: "page-#{page.id}-box", classes: ['page', page.class.name.underscore.parameterize] do
@@ -24,7 +25,7 @@
         - if page.image_attachments_not_listed_in_content.any?
           = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
 
-    - if page.kind_of?(BlogPost)
+    - if show_meta
       - content_for :box_meta do
         = render partial: 'pages/meta', object: page, as: :page
 

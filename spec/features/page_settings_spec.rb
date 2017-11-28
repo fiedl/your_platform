@@ -5,6 +5,7 @@ feature "Page Settings", :js do
 
   background do
     @page = create :page, published_at: 1.year.ago
+    Page.intranet_root << @page
     @new_author = create :user
   end
 
@@ -51,10 +52,10 @@ feature "Page Settings", :js do
 
     scenario "Showing the sub page as teaser box" do
       visit page_settings_path(@page)
-      within(".box.boxes_on_this_page form#edit_page_#{@sub_page.id}") do
+      within(".box.boxes_on_this_page .teaser_boxes form#edit_page_#{@sub_page.id}") do
         check "Sub page"
       end
-      within(".box.boxes_on_this_page form#edit_page_#{@second_sub_page.id}") do
+      within(".box.boxes_on_this_page .teaser_boxes form#edit_page_#{@second_sub_page.id}") do
         uncheck "Second page"
       end
       click_on I18n.t(:back_to_the_page)
@@ -73,7 +74,7 @@ feature "Page Settings", :js do
 
     scenario "Hiding the sub page as teaser box" do
       visit page_settings_path(@page)
-      within(".box.boxes_on_this_page form#edit_page_#{@sub_page.id}") do
+      within(".box.boxes_on_this_page .teaser_boxes form#edit_page_#{@sub_page.id}") do
         uncheck "Sub page"
       end
       click_on I18n.t(:back_to_the_page)

@@ -132,8 +132,8 @@ feature 'User page' do
 
       scenario "the section :career_information should be editable", js: true do
         click_tab :study_and_work_tab
+        within('.box.section.career_information') { click_on :edit }
         within '.box.section.career_information' do
-          click_on I18n.t(:edit)
           subject.should have_selector('a.add_button', visible: true)
 
           click_on I18n.t(:add)
