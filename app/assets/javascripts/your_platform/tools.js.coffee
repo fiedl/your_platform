@@ -22,7 +22,7 @@ $(document).on 'mouseleave', '.box_tools', ->
 # Thus, make the animation dependent on the environment.
 #
 animation_preset = ->
-  if $('body').data('env') == "test"
+  if App.rails_env == "test"
     ''
   else
     'fade'
