@@ -91,4 +91,12 @@ module IconHelper
     fa_icon 'cloud-upload'
   end
 
+  def move_icon
+    fa_icon 'arrow-circle-o-right'
+  end
+
+  def relocation_icon
+    move_icon
+  end
+
 end

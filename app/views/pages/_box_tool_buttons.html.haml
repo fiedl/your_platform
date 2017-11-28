@@ -16,6 +16,10 @@
     .shown_on_box_header_hover.do_not_show_in_edit_mode= archive_button(page)
 
 - if can? :manage, page
+  .page_relocations_tool.tool
+    .do_not_show_in_edit_mode.shown_on_box_header_hover
+      = link_to relocation_icon, new_page_relocation_path(page), class: 'btn btn-default relocate_page_button', title: t(:move_page_to_another_parent)
+
   .activities_tool.tool
     .do_not_show_in_edit_mode.shown_on_box_header_hover
       = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)

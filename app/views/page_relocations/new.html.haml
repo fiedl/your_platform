@@ -1,0 +1,15 @@
+%h1.relocate_page= current_title
+%div
+  = form_tag page_relocations_path(page), method: 'post' do
+    %p
+      = "#{t(:page_to_relocate)}:"
+      = link_to page.title, page
+    %p
+      = "#{t(:former_parent_page)}:"
+      = link_to page.parent.title, page.parent
+    %p
+      = "#{t(:new_parent_page)}:"
+      = hidden_field_tag :new_parent_page_id, "", class: 'page_id'
+      -#= text_field_tag :new_parent_page_title, "", id: 'new_parent_page_title', placeholder: t(:find_page_title), class: 'page_title_select'
+    %p
+      = submit_tag("OK", class: 'btn btn-primary')

@@ -129,6 +129,7 @@ Rails.application.routes.draw do
     resources :publications, only: [:create], controller: :page_publications
     post :renew_cache, to: 'cache_renewals#create'
     resources :logos, controller: :logos
+    resources :relocations, controller: 'page_relocations'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
@@ -318,6 +319,7 @@ Rails.application.routes.draw do
         put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
       end
       get :search_groups, to: 'search_groups#index'
+      get :search_pages, to: 'search_pages#index'
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}
     end

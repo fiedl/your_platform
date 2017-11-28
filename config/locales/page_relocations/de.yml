@@ -1,0 +1,8 @@
+de:
+  relocate_page: Seite verschieben
+  move_page_to_another_parent: Seite unter eine neue Eltern-Seite verschieben
+
+  page_to_relocate: Zu verschiebende Seite
+  former_parent_page: Bisherige Eltern-Seite
+  new_parent_page: Neue Eltern-Seite
+  search_page: Seite suchen

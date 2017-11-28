@@ -1,0 +1,8 @@
+en:
+  relocate_page: Move page
+  move_page_to_another_parent: Move page to other parent page
+
+  page_to_relocate: Page to move
+  former_parent_page: Former parent apge
+  new_parent_page: New parent page
+  search_page: Search page
