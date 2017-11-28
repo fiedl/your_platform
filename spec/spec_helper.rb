@@ -97,8 +97,8 @@ Geocoder.configure( lookup: :test )
 if ENV['SELENIUM']
   Capybara.register_driver :selenium_with_long_timeout do |app|
     client = Selenium::WebDriver::Remote::Http::Default.new
-    client.read_timeout = 240
-    client.open_timeout = 240
+    client.read_timeout = 360
+    client.open_timeout = 360
     Capybara::Selenium::Driver.new(app, http_client: client)
   end
   Capybara.javascript_driver = :selenium_with_long_timeout
@@ -149,7 +149,7 @@ end
 # rather than in the background.
 #
 Capybara.default_max_wait_time = if ENV['CI'] == 'travis'
-  240 # travis is much slower and might take longer to process stuff
+  360 # travis is much slower and might take longer to process stuff
 else
   30
 end

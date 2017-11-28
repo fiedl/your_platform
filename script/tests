@@ -91,7 +91,7 @@ if specs_to_run.any?
         number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
         if number_of_failing_specs == 0
           break
-        elsif number_of_retries > 8
+        elsif number_of_retries > 4
           finally_failing_specs << spec
           break
         end
