@@ -149,7 +149,7 @@ private
     permitted_keys += [:redirect_to] if can? :update, @page
     permitted_keys += [:tag_list, :permalinks_list] if can? :update, @page
     permitted_keys += [:type, :author, :author_title, :author_user_id, :archived] if can? :manage, @page
-    permitted_keys += [:layout, :home_page_title, :home_page_sub_title] if @page.kind_of? Pages::HomePage and can? :manage, @page
+    permitted_keys += [:layout, :home_page_title, :home_page_sub_title, :domain] if @page.kind_of? Pages::HomePage and can? :manage, @page
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
     permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
     permitted_keys += [:settings => [:horizontal_nav_page_id_order => []]] if can? :manage, @page

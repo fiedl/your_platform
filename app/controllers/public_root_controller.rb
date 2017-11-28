@@ -10,7 +10,7 @@
   private
 
   def public_root_page
-    Page.find_by(title: request.host) || Page.public_root
+    Page.find_by(domain: request.host) || Page.public_root
   end
 
 end

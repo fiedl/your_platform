@@ -23,19 +23,9 @@ class Pages::HomePage < Page
 
   def group_id
     return nil if self.root?
+    return nil if domain.blank?
     profileable = ProfileFields::Homepage.where('value LIKE ?', "%#{domain}%").first.try(:profileable)
     profileable.kind_of?(Group) ? profileable.id : nil
-  end
-
-  # The domain of the home page is taken from the left-most
-  # breadcrum element, i.e. the breadcrumb entry of this
-  # page.
-  #
-  #   example.com > About us
-  #   ~~~~~~~~~~~
-  #
-  def domain
-    self.nav_node.breadcrumb_item
   end
 
   # The home pages are always public, i.e. can be seen by anyone on the

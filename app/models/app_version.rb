@@ -65,11 +65,7 @@ class AppVersion
   end
 
   def self.email_domain
-    if Page.find_root.title.count(".") == 1 and Page.find_root.title.count(" ") == 0
-      Page.find_root.title
-    elsif Rails.env.test?
-      "example.com"
-    end
+    Page.find_root.try(:domain) || "example.com"
   end
 
   def self.your_platform_changelog_url
