@@ -11,6 +11,10 @@ concern :PageEvents do
     end
   end
 
+  def event_ids
+    events.pluck(:id)
+  end
+
   def show_events?
     settings.show_events
   end
