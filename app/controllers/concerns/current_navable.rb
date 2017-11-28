@@ -21,8 +21,8 @@ concern :CurrentNavable do
   def current_home_page
     @current_home_page ||= if current_navable && current_navable.respond_to?(:home_page) && current_navable.home_page
       current_navable.home_page
-    elsif Page.find_by(title: request.host)
-      Page.find_by(title: request.host)
+    elsif Page.find_by(domain: request.host)
+      Page.find_by(domain: request.host)
     else
       Page.root || raise(ActiveRecord::RecordNotFound, 'Page.root not present, but needed for current_home_page.')
     end
