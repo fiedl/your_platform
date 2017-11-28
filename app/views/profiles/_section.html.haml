@@ -16,11 +16,11 @@
     .profile-fields-left-flex-column
       = render partial: 'profiles/profile_section_ul', locals: { section: section, profile_field_options: profile_field_options }
 
-      - if profile_field_options[:formatting_help]
-        .show_only_in_edit_mode.right
-          = render partial: 'shared/markdown_help'
-
-      = render partial: 'profiles/add_profile_field_button', locals: { section: section, profileable: section.profileable }
+      - if can? :update, section.profileable
+        - if profile_field_options[:formatting_help]
+          .show_only_in_edit_mode.right
+            = render partial: 'shared/markdown_help'
+        = render partial: 'profiles/add_profile_field_button', locals: { section: section, profileable: section.profileable }
 
       - if section.title.to_s == 'contact_information' and section.profileable.kind_of?(Group)
         = render partial: 'profiles/send_group_message_button', locals: {group: section.profileable}

@@ -192,8 +192,8 @@ feature 'User page' do
             page.should have_selector('.postal_address', :visible => true)
             page.should have_no_selector('.radio', :visible => true)
             subject.should have_no_selector('a.edit_button', visible: true)
-            subject.should have_no_selector('a.add_button', visible: true)
-            subject.should have_no_selector('.remove_button', visible: true)
+            subject.should have_no_selector('a.add_button')
+            subject.should have_no_selector('.remove_button')
           end
         end
 

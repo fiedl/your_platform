@@ -31,7 +31,7 @@ $.fn.process_box_tools = ->
   this.find('.box_header .edit_button').each ->
     edit_button = $(this)
     box = edit_button.closest('.box')
-    edit_button.remove() if box.find('.box_content').find('.editable,.show_only_in_edit_mode,.best_in_place').length == 0
+    edit_button.remove() if box.find('.box_content').find('.editable:not(.do_not_show_in_edit_mode),.show_only_in_edit_mode,.best_in_place').length == 0
 
 $(document).ready ->
   $(document).process_box_tools()
