@@ -1,6 +1,6 @@
 %h1.page_settings
   = current_title
-  .back_to_page.tool= link_to t(:back_to_the_page), @page, class: 'btn btn-default'
+  .back_to_page.tool= link_to t(:back_to_the_page), polymorphic_path(@page, no_fast_lane: true), class: 'btn btn-default'
 %div
   %table.settings
     %tr.page_title
