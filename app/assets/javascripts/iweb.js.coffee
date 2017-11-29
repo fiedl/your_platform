@@ -11,3 +11,21 @@ $(document).ready ->
 $(document).on 'click', '#horizontal_nav ul.nav > li a', ->
   # in order to adjust to loading spinner icon
   setTimeout (-> make_sure_horizontal_nav_fits_in_one_line()), 50
+
+
+$(document).ready ->
+  if $('body').hasClass('iweb-layout')
+
+    # Column layout
+    App.permitted_bootstrap_column_classes = [
+      'col-sm-12', 'col-sm-8', 'col-sm-4'
+    ]
+
+    # Boxes
+    $('.box').removeClass('panel panel-default')
+    $('.box_header').removeClass('panel-heading')
+    $('.box_title')
+    $('.box_image')
+    $('.box_meta')
+    $('.box_content').removeClass('panel-body')
+    $('.box_footer').removeClass('panel-footer')

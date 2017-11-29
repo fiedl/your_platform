@@ -13,7 +13,7 @@ body.iweb-layout
     margin-top: 5px
     margin-bottom: 10px
 
-  > .container-fluid
+  > .container-fluid, > #vue-app > .container-fluid
     max-width: 650px
     margin-left: auto
     margin-right: auto
@@ -54,37 +54,9 @@ body.iweb-layout
     margin-top: -50px
     margin-bottom: 20px
 
-  .box.page:not(.blog_post)
+  .box
     border: none
-    .panel-heading
-      margin-top: -40px
-      height: 40px
-      background: none
-    .panel-title
-      visibility: hidden
-    .box_meta
-      display: none
-    .picture-info
-      display: none
-    .box_toolbar
-      margin-top: 20px
-      margin-bottom: -20px
-      z-index: 20
-
-  .panel-default
-    border-color: white
-    .panel-heading
-      background-color: white
-      border-color: white
-      padding-top: 3px
-      padding-bottom: 0px
-    .panel-body
-      padding-top: 2px
-    .panel-footer
-      background-color: white
-      border-color: white
-  .page_footer
-    display: none
+    background: white
 
   #inline-pictures
     margin-bottom: 65px
@@ -97,7 +69,7 @@ body.iweb-layout
       background-image: asset-url("bg_group_map_de.png")
     .all_n_corporations
       width: 157px
-// No global page settings button for this compact layout.
-body.iweb-layout
-  .row.for_settings_button
-    display: none
+
+  .box ul.website-events
+    padding: 0
+    list-style-type: none
