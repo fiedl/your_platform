@@ -17,6 +17,7 @@ body.iweb-layout
     max-width: 650px
     margin-left: auto
     margin-right: auto
+
   #horizontal-nav-bar
     text-align: center
     border-bottom: solid 1px #666
@@ -32,6 +33,9 @@ body.iweb-layout
         color: #463C3C
         font-weight: bold
         background: none
+    .dropdown-menu > li > a
+      white-space: normal
+
   #header
     padding-top: 10px
     margin-bottom: 15px
@@ -50,6 +54,7 @@ body.iweb-layout
         font-family: 'Garamond', serif
         font-weight: normal
         letter-spacing: 0.24em
+
   #toolbar
     margin-top: -50px
     margin-bottom: 20px
@@ -58,11 +63,16 @@ body.iweb-layout
     border: none
     background: white
 
-  #inline-pictures
+  .box:not(.page-picture)
+    border-bottom: 1px lightgrey solid
     margin-bottom: 65px
+    padding-bottom: 24px
 
-  .galleria-container
-    -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
+  .box.first
+    #inline-pictures
+      margin-bottom: 65px
+    .galleria-container
+      -webkit-box-reflect: below 0 -webkit-gradient(linear, left top, left bottom, color-stop(1, rgba(255, 255, 255, 0.5)), color-stop(0.8, rgba(255, 255, 255, 0)))
 
   .group_map
     .group_map_background
@@ -70,6 +80,29 @@ body.iweb-layout
     .all_n_corporations
       width: 157px
 
-  .box ul.website-events
-    padding: 0
-    list-style-type: none
+  #public-root-events-box
+    ul.website-events
+      padding: 0
+      list-style-type: none
+
+      .event.info, .event.location
+        display: inline
+      .event.location:before
+        content: "|"
+      .event.name a
+        font-size: 11pt
+    .semester_calendar
+      margin-top: 40px
+      img
+        border: 1px grey solid
+        border-radius: 3px
+      .ical_abo_link
+        font-size: 80%
+        &:before
+          content: "("
+        &:after
+          content: ")"
+      h3
+        font-size: 12pt
+      .semester_calendar_title
+        font-size: 10pt
