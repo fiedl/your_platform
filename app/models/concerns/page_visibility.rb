@@ -23,7 +23,7 @@ concern :PageVisibility do
     }
     scope :visible_based_on_published, -> (user) { published.or(by_author(user)).or(by_officers(user)) }
     scope :visible_based_on_archived, -> (user) { not_archived }
-    scope :visible_based_on_public_or_intranet, -> (user) { user ? all : public_website }
+    scope :visible_based_on_public_or_intranet, -> (user) { user ? all : public_websites }
 
     scope :by_officers, -> (user) { user ? where(id: user.page_ids_of_pages_the_user_is_officer_of) : none }
 

@@ -12,6 +12,12 @@ concern :PagePublicWebsite do
     #
     scope :public_website, -> { where(id: Page.unscoped.public_website_page_ids) }
 
+    scope :home_pages, -> { where.not(domain: nil) }
+
+    scope :public_websites, -> { where(id: Page.unscoped.public_websites_page_ids) }
+
+    scope :intranet, -> { where(id: (Page.flagged(:intranet_root).pluck(:id) + (Page.flagged(:intranet_root).first.try(:descendant_page_ids) || []))) }
+
   end
 
   def public?
@@ -46,7 +52,13 @@ concern :PagePublicWebsite do
     # pages are considered as public_website_pages.
     #
     def public_website_page_ids(reload = false)
-      (Page.flagged(:root).pluck(:id) + (Page.flagged(:root).try(:collect) { |root_page| root_page.descendant_page_ids }) || []).flatten - [nil] - Page.flagged(:intranet_root).pluck(:id) - (Page.flagged(:intranet_root).first.try(:descendant_page_ids) || [])
+      (Page.flagged(:root).pluck(:id) + (Page.flagged(:root).try(:collect) { |root_page| root_page.descendant_page_ids }) || []).flatten - [nil] - Page.intranet.pluck(:id)
+    end
+
+    # There might be several websites.
+    #
+    def public_websites_page_ids
+      (Page.home_pages.pluck(:id) + Page.home_pages.collect { |home_page| home_page.descendant_page_ids }).flatten - [nil] - Page.intranet.pluck(:id)
     end
 
     # The public website is present if the Page.find_root has no redirect_to entry,
