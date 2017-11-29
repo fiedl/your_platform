@@ -16,8 +16,7 @@ feature "Intranet Root" do
 
   scenario "Viewing the intranet root page when not logged in and the public website is done with this system" do
     create :user_with_account
-    Page.find_root.update_attribute :content, "This is our public website!"
-    Page.public_website_page_ids(true)
+    Page.find_root.update_attributes content: "This is our public website!", published_at: 1.year.ago, domain: "example.com"
 
     visit root_path
     within("#content_area") { page.should have_text "This is our public website!" }
