@@ -12,7 +12,9 @@ $(document).ready ->
       data: {fast_lane: true},
       success: (result)->
         element.show()
-        content = $($(result).find('#content #content_area .row.box_configuration')[0].outerHTML)
+        content_container = $(result).find('#content #content_area .row.box_configuration')
+        content_container = $(result).find('#content #content_area') if content_container.count() == 0
+        content = $(content_container[0].outerHTML)
 
         # Remove duplicate boxes
         content.find('.box').each ->
