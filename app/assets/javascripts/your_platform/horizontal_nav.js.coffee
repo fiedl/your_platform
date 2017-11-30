@@ -4,8 +4,7 @@ $(document).ready ->
     $('#horizontal_nav ul.nav > li').removeClass('under_this_category')
 
   if $('#horizontal_nav ul.nav > li.under_this_category').count() > 1
-    $('#horizontal_nav ul.nav > li:not(:last-child)')
-      .removeClass('under_this_category')
+    $('#horizontal_nav ul.nav > li.under_this_category:not(:last)').removeClass('under_this_category')
 
   if $('#horizontal_nav ul.nav').height() > $('#horizontal_nav ul.nav > li:first').height() * 1.1
     $('#horizontal_nav ul.nav > li').each ->
