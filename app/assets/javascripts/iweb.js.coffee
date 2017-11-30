@@ -18,7 +18,7 @@ $(document).ready ->
 
     # Column layout
     App.permitted_bootstrap_column_classes = [
-      'col-sm-12', 'col-sm-8', 'col-sm-4'
+      'col-sm-12', 'col-sm-8', 'col-sm-4', 'col-sm-6'
     ]
 
     # Boxes
