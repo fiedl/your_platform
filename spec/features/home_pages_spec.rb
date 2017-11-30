@@ -137,8 +137,8 @@ feature "Home Pages" do
     visit home_pages_path
 
     click_on :create_new_home_page
-    find('a#page_settings_button').click
-    enter_in_place 'tr.page_title', 'example.org'
+    enter_in_place 'tr.page_title', 'Welcome to example.org!'
+    enter_in_place 'tr.page_domain', 'example.org'
 
     click_on :back_to_the_page
     expect(page).to have_text "example.org"

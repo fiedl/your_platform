@@ -9,7 +9,7 @@
     %tr.page_type
       %th= t :page_type
       %td= best_in_place @page, :type, as: :select, collection: Page.types.collect { |type| type.try(:name) }.collect { |type| [type, type] }
-    %tr
+    %tr.page_domain
       %th= t :domain
       %td.domain= best_in_place_if can?(:change_domain, @page), @page, :domain
     %tr.page_author
