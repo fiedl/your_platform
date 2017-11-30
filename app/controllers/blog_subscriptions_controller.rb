@@ -1,5 +1,7 @@
 class BlogSubscriptionsController < ApplicationController
 
+  before_action :create_guest_user_from_form_data, only: [:create]
+
   expose :blog
   expose :email, -> { params[:email] }
 
