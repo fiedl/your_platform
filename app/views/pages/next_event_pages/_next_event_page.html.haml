@@ -1,0 +1,37 @@
+- page ||= next_event_page
+- event ||= page.events.upcoming.first
+
+- content_for :toolbar do
+  - if can? :create_event, page.show_events_for_group
+    %a.btn.btn-default.btn-sm.pull-right#create_event{href: events_path(group_id: page.show_events_for_group.id, format: 'json')}
+      = icon :plus
+      = t :create_new_event
+
+.col.col-sm-12.col-xs-12.resizable_col
+  = render event, embedded: true
+
+-#.col.col-sm-12.col-xs-12.resizable_col
+-#  = box do
+-#    - content_for :box_title, event.try(:title) || page.title
+-#
+-#    - content_for :box_body do
+-#      = render partial: 'pages/page_body', object: page, as: :page
+-#      = render partial: 'events/event_details', object: event, as: :event if event
+-#
+-#.col.col-sm-12.col-xs-12.resizable_col
+-#  %h1 Öffentliche Informationen
+-#  %div
+-#
+-#.col.col-sm-12.col-xs-12.resizable_col
+-#  %h1 Informationen und Unterlagen für Teilnehmer
+-#  %div
+-#
+-#.col.col-sm-12.col-xs-12.resizable_col
+-#  %h1 Tagungsort
+-#  %div
+-#
+-#.col.col-sm-12.col-xs-12.resizable_col
+-#  %h1 Ansprechpartner
+-#  %div
+
+

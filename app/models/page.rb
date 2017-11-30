@@ -293,7 +293,7 @@ class Page < ApplicationRecord
   end
 
   def self.types
-    [nil, Page, BlogPost, Blog, Pages::HomePage, Pages::ContactForm]
+    [nil, Page, BlogPost, Blog, Pages::HomePage, Pages::ContactForm, Pages::NextEventPage]
   end
 
   include PageCaching if use_caching?
