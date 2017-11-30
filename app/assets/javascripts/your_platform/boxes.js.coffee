@@ -36,3 +36,18 @@ $.fn.process_box_tools = ->
 $(document).ready ->
   $(document).process_box_tools()
 
+
+$(document).on 'edit', '.box.page', ->
+  image_box_id = $(this).attr('id').replace('page-', 'page-image-')
+  image_box = $("##{image_box_id}")
+  image_box.trigger('edit').addClass('edit-mode-modal')
+
+$(document).on 'save', '.box.page', ->
+  image_box_id = $(this).attr('id').replace('page-', 'page-image-')
+  image_box = $("##{image_box_id}")
+  image_box.trigger('save').removeClass('edit-mode-modal')
+
+$(document).on 'cancel', '.box.page', ->
+  image_box_id = $(this).attr('id').replace('page-', 'page-image-')
+  image_box = $("##{image_box_id}")
+  image_box.trigger('cancel').removeClass('edit-mode-modal')
