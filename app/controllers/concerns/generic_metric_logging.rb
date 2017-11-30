@@ -21,7 +21,7 @@ concern :GenericMetricLogging do
   # if several requests belong to a single visit.
   #
   def log_request
-    if current_user
+    if current_user && (not read_only_mode?)
       Request.create user_id: current_user.id,
           ip: request.remote_ip,
           method: request.method,
