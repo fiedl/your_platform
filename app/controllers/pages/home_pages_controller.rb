@@ -21,7 +21,7 @@ class Pages::HomePagesController < ApplicationController
     @home_page.assign_admin current_user
     @home_page.save
 
-    redirect_to @home_page
+    redirect_to page_settings_path(@home_page)
   end
 
 end
