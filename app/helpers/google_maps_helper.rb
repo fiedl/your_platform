@@ -14,13 +14,24 @@ module GoogleMapsHelper
   end
 
   def map_of_address_profile_fields(address_profile_fields, options = {})
+    google_map address_profile_fields, options
+  end
+
+  def google_map(locations, options = {})
     with_info_window_class = "with_info_window" if options[:with_info_window]
-    address_profile_fields = address_profile_fields.select do |pf|
-      pf.type == "ProfileFields::Address"
-    end
-    json = address_profile_fields.to_json
-    content_tag :div, class: 'map_container' do
-      content_tag :div, '', class: "google_maps #{with_info_window_class}", data: {profile_fields: json}
+
+    locations = [locations] if locations.kind_of? String
+
+    data = {
+      profile_fields: locations.select { |location| location.kind_of? ProfileFields::Address },
+      addresses: locations.select { |location| location.kind_of? String }.collect { |address_string|
+        geo_location = GeoLocation.find_or_create_by(address: address_string)
+        {string: address_string, longitude: geo_location.longitude, latitude: geo_location.latitude}
+      }
+    }
+
+    content_tag :div, class: 'map_container large_map_section' do
+      content_tag :div, '', class: "google_maps #{with_info_window_class}", data: data
     end
   end
 

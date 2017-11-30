@@ -1,9 +1,11 @@
 - id ||= nil
 - classes ||= []
+- title ||= nil
 
 .box.new_box.panel.panel-default.edit_mode_group{id: id, class: classes.join(" ")}
   - block_content = yield
   - box_body = content_for?(:box_body) ? content_for(:box_body) : block_content
+  - content_for :box_title, title
 
   - if content_for?(:box_title) || content_for?(:box_image)
     .box_header.panel-heading

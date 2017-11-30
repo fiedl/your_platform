@@ -32,6 +32,14 @@ class App.GoogleMap
         if $(row).data('profile-fields')?
           fields = fields.concat $(row).data('profile-fields')
       return fields
+    else
+      return []
+
+  addresses: ->
+    if @map_div.data 'addresses'
+      @map_div.data 'addresses'
+    else
+      []
 
   dom_element: ->
     @map_div.get(0)
@@ -50,6 +58,7 @@ class App.GoogleMap
   init_markers: ->
     self = this
     self.markers = []
+
     for profile_field in self.profile_fields()
       if profile_field.position.lng?
         if profile_field.profileable_type == 'Group'
@@ -69,6 +78,14 @@ class App.GoogleMap
           marker.addListener 'click', ->
             self.show_marker_info_window this
         self.markers.push marker
+
+    for address in self.addresses()
+      marker = new google.maps.Marker {
+        map: self.map,
+        title: address.string,
+        position: {lng: address.longitude, lat: address.latitude}
+      }
+      self.markers.push marker
 
   reload_markers: ->
     marker.setMap(null) for marker in @markers
