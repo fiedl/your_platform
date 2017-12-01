@@ -16,9 +16,10 @@ class PostsController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
 
   def index
+    params[:limit] ||= 10
     if params[:group_id].present?
       @group = Group.find(params[:group_id])
-      @posts = @group.posts.order('sent_at DESC') if @group
+      @posts = @group.posts.order('sent_at DESC').limit(params[:limit]) if @group
 
       authorize! :index_posts, @group
 
@@ -34,7 +35,7 @@ class PostsController < ApplicationController
 
       cookies[:group_tab] = "posts"
     else
-      @posts = Post.from_or_to_user(current_user).select { |post| can? :read, post }.reverse
+      @posts = Post.from_or_to_user(current_user).limit(params[:limit]).select { |post| can? :read, post }.reverse
       @posts.each { |post| authorize! :read, post }
 
       set_current_title t(:my_posts)

@@ -1,3 +1,5 @@
 = render partial: 'groups/tabs', locals: {active: 'posts'} if @group
 = render partial: 'new' if @new_post
 #posts= render @posts
+
+#load_more= link_to t(:show_more), "?limit=#{(params[:limit] || 1).to_i * 10}"
