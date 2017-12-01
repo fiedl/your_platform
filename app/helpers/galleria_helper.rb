@@ -12,7 +12,7 @@ module GalleriaHelper
     # See: http://galleria.io/docs/references/data/#separate-thumbnails
     link_to attachment.medium_url do
       image_tag attachment.thumb_url, data: {
-        image: attachment.big_url,
+        image: attachment.medium_url,
         thumb: attachment.thumb_url,
         medium: attachment.medium_url,
         big: attachment.big_url,
