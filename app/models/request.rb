@@ -10,7 +10,7 @@
 #
 class Request < ApplicationRecord
   belongs_to :navable, polymorphic: true, optional: true
-  after_save { self.delay.purge_user_id_from_the_database }
+  after_save { Request.delay.purge_user_id_from_the_database }
 
   def self.create(attrs)
     obj = super(attrs.except(:user_id))
@@ -43,8 +43,8 @@ class Request < ApplicationRecord
   # user id to the cache, where it lives for a limited time.
   # The user id is purged from the database.
   #
-  def purge_user_id_from_the_database
-    Request.where(user_id: user_id).update_all(user_id: nil)
+  def self.purge_user_id_from_the_database
+    Request.update_all(user_id: nil)
   end
 
 end
