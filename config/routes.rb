@@ -306,6 +306,7 @@ Rails.application.routes.draw do
           resources :events
         end
         resources :events
+        resources :blog_posts
       end
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
