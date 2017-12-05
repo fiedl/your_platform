@@ -15,6 +15,7 @@
 #
 class SemesterCalendarsController < ApplicationController
   after_action :log_public_activity_for_semester_calendar, only: [:update]
+  help_topic :semester_calendars
 
   include CurrentTerm
 

@@ -14,6 +14,7 @@ class ApplicationController < ActionController::Base
   include CurrentRole
   include CurrentAccess
   include CurrentBreadcrumbs
+  include CurrentHelp
 
   include CheckAuthorization
   include AcceptTermsOfUse
