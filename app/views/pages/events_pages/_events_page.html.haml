@@ -1,0 +1,15 @@
+- page ||= events_page || raise('no page given')
+- events ||= page.events.order(start_at: :desc)
+
+- events.each do |event|
+  .col-sm-6.col-xs-12.col
+    = box class: 'event' do
+      - content_for :box_title do
+        = link_to event.title, event
+      - content_for :box_body do
+        .event_time
+          = localize event.start_at.to_date
+          - if event.end_at && event.end_at.to_date != event.start_at.to_date
+            = "-"
+            = localize event.end_at.to_date
+        .event_location= event.location if event.location

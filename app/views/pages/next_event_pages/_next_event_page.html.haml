@@ -1,14 +1,20 @@
-- page ||= next_event_page
+- page ||= next_event_page || raise('no page given')
 - event ||= page.events.upcoming.first
 
 - content_for :toolbar do
-  - if can? :create_event, page.show_events_for_group
+  - if page.show_events_for_group && can?(:create_event, page.show_events_for_group)
     %a.btn.btn-default.btn-sm.pull-right#create_event{href: events_path(group_id: page.show_events_for_group.id, format: 'json')}
       = icon :plus
       = t :create_new_event
 
 .col.col-sm-12.col-xs-12.resizable_col
-  = render event, embedded: true
+  - if event
+    = render event, embedded: true
+  - else
+    = box title: page.title do
+      - content_for :box_body do
+        = t :there_are_currently_no_events
+
 
 -#.col.col-sm-12.col-xs-12.resizable_col
 -#  = box do
