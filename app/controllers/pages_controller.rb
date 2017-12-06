@@ -153,6 +153,8 @@ private
     permitted_keys += [:domain] if can? :change_domain, @page
     permitted_keys += [:nav_node_attributes => [:hidden_menu, :hidden_teaser_box]] if can? :update, @page
     permitted_keys += [:show_group_map, :group_map_parent_group_id] if can? :manage, @page
+    permitted_keys += [:show_events_for_group_id] if can? :manage, @page
+    permitted_keys += [:show_officers_for_group_id] if can? :manage, @page
     permitted_keys += [:settings => [:horizontal_nav_page_id_order => []]] if can? :manage, @page
     permitted_keys += [:published_at, :localized_published_at] if can? :publish, @page
 

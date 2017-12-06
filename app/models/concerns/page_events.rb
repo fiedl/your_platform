@@ -19,8 +19,16 @@ concern :PageEvents do
     settings.show_events
   end
 
+  def show_events_for_group_id
+    settings.show_events_for_group_id.to_i if settings.show_events_for_group_id
+  end
+
+  def show_events_for_group_id=(new_group_id)
+    settings.show_events_for_group_id = new_group_id
+  end
+
   def show_events_for_group
-    Group.find(settings.show_events_for_group_id.to_i) if settings.show_events_for_group_id
+    Group.find(show_events_for_group_id) if show_events_for_group_id
   end
 
   def semester_calendar

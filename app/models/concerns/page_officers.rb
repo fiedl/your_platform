@@ -6,4 +6,12 @@ concern :PageOfficers do
     end
   end
 
+  def show_officers_for_group_id
+    settings.show_officers_for_group_id
+  end
+
+  def show_officers_for_group_id=(new_group_id)
+    settings.show_officers_for_group_id = new_group_id
+  end
+
 end

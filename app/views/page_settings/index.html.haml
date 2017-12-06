@@ -44,8 +44,8 @@
       %td
         %p= setting_check_box @page, :show_group_map, t(:show_locations_map)
         %p
-          = t :locations_map_group_id
-          = setting_in_place @page, :group_map_parent_group_id
+          = t :locations_map_group
+          = group_select_in_place @page, :page, :group_map_parent_group_id
         %p
           = t :group_map_sub_title
           = setting_in_place @page, :group_map_sub_title
@@ -53,18 +53,13 @@
       %th= t :events
       %td
         .show_events= setting_check_box @page, :show_events
-        .show_events_for_group_id
-          = t :show_events_for_group_id
-          = setting_in_place @page, :show_events_for_group_id
-        .global_website= setting_check_box @page, :show_only_events_published_on_global_website
-        .local_website= setting_check_box @page, :show_only_events_published_on_local_website
     %tr.officers
       %th= t :officers
       %td
         %p= setting_check_box @page, :show_officers
         %p
-          %strong= t :show_officers_of_group_id
-          = setting_in_place @page, :show_officers_for_group_id
+          %strong= t :show_officers_of_group
+          = group_select_in_place @page, :page, :show_officers_for_group_id
           %p.hidden_help= t :for_empty_field_show_page_officers
         %p
           = t :show_only_the_first_n_offices
@@ -81,6 +76,13 @@
         %p.hidden_help= t :teaser_boxes_help_text
         - @page.child_pages.each do |teaser_page|
           %p= ajax_check_box teaser_page, :show_as_teaser_box, teaser_page.title
+
+= box class: 'events', title: t(:events) do
+  .show_events_for_group_id
+    = t :show_events_for_group
+    = group_select_in_place @page, :page, :show_events_for_group_id
+  .global_website= setting_check_box @page, :show_only_events_published_on_global_website
+  .local_website= setting_check_box @page, :show_only_events_published_on_local_website
 
 - if can? :use, :permalinks
   %h1.permalinks= t :permalinks
