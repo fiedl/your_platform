@@ -35,4 +35,5 @@
         .row
           #content= replace_unicode_special_chars_by_html_escape_strings(convert_to_content_box { yield })
 
+      .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
     = render partial: 'layouts/cookies_notice'
