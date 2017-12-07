@@ -60,6 +60,8 @@ feature "Home Pages" do
         visit page_settings_path @page
         within 'tr.events' do
           within('.show_events') { check :show_events }
+        end
+        within '.box.events' do
           within('.global_website') { check :show_only_events_published_on_global_website }
         end
 
