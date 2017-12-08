@@ -37,6 +37,7 @@ concern :CurrentNavable do
   def set_current_navable(navable)
 
     @navable = navable
+    @current_home_page = nil
 
     # We have to reload the current_ability at this point, i.e. after executing
     # authorize_miniprofiler et cetera, because before, the current_navable is not
