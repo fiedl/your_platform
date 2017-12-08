@@ -119,12 +119,9 @@ body.iweb-layout
     margin-top: 80px
     background: #444
     font-size: 80%
-    padding: 20px
     color: #bbb
     text-align: center
-    position: relative
-    left: 0
-    right: 0
+    padding: 20px
     a
       color: #ddd
     ul
@@ -133,7 +130,28 @@ body.iweb-layout
       display: inline
       margin: 12px
 
-
 body.iweb-layout.page_settings
   h1, h2, h3
     margin-top: 50px
+
+
+// This makes the footer position.
+// https://codepen.io/cbracco/pen/zekgx
+
+html
+  height: 100%
+  box-sizing: border-box
+
+*, *:before, *:after
+  box-sizing: inherit
+
+body
+  position: relative
+  padding-bottom: 6rem
+  min-height: 100%
+
+#footer
+  position: absolute
+  right: 0
+  left: 0
+  bottom: 0
