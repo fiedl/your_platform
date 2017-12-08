@@ -134,8 +134,8 @@ private
     params[:page][:type] = "BlogPost" if params[:type] == 'blog_post'
     params[:page][:embedded] = true if params[:type] == 'content_box'
     if params[:type] == "hidden"
-      params[:show_in_menu] = false
-      params[:show_as_teaser_box] = false
+      params[:page][:show_in_menu] = params[:show_in_menu] = false
+      params[:page][:show_as_teaser_box] = params[:show_as_teaser_box] = false
     end
     params[:box_configuration] = params[:box_configuration].to_h if params[:box_configuration]
 
