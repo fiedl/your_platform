@@ -99,4 +99,8 @@ module IconHelper
     move_icon
   end
 
+  def search_icon
+    fa_icon 'search'
+  end
+
 end

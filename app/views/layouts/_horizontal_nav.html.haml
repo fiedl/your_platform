@@ -1,3 +1,5 @@
+- search ||= false
+
 #horizontal_nav
   - if show_resource_nav?
     = render partial: 'layouts/resource_nav'
@@ -11,3 +13,9 @@
           - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
             %li.horizontal-nav-link{class: horizontal_nav_li_css_class(object), data: {short: ((object.internal_token || object.token) if object.respond_to?(:token))}}
               = link_to_navable (object.nav_title), object
+      - if search
+        %li.horizontal-nav-search-link
+          %a= search_icon
+    - if search
+      #horizontal_nav_search
+        = render partial: 'shared/search_box'
