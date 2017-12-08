@@ -46,6 +46,8 @@ de:
   unpublished_draft: Unveröffentlichter Entwurf
   this_page_has_not_been_published_yet: Diese Seite wurde noch nicht veröffentlicht.
 
+  show_in_footer: Im Footer anzeigen
+
   file: 'Datei'
   helpers:
     submit:

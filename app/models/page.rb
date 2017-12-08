@@ -26,6 +26,7 @@ class Page < ApplicationRecord
   include PageEmbedding
   include PageImages
   include PageSearch
+  include PageFooter
 
   scope :regular, -> {
     where(type: nil)

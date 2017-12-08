@@ -160,7 +160,7 @@ private
 
     if (@page.new_record? and can?(:create_page_for, secure_parent)) or can?(:manage, @page)
       permitted_keys += [:title, :content, :type, :author_user_id]
-      permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu]
+      permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu, :show_in_footer]
     end
 
     params.require(:page).permit(*permitted_keys)
