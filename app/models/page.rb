@@ -1,6 +1,7 @@
 class Page < ApplicationRecord
 
   has_dag_links ancestor_class_names: %w(Page User Group Event), descendant_class_names: %w(Page User Group Event), link_class_name: 'DagLink'
+  after_save { parent.try(:touch) }
 
   acts_as_taggable
 
