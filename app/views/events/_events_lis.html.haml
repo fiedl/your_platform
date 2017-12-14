@@ -46,4 +46,4 @@
           = link_to event.name, mobile_event_path(event)
         - else
           = link_to event do
-            = best_in_place_if can?(:update, event), event, :name
+            = best_in_place_if can?(:update, event), event, :name, activator: 'only_manual'
