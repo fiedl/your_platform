@@ -84,6 +84,12 @@ App.process_box_configuration = (element)->
   $(element).find('.draggable_boxes .resizable_col .box').each ->
     $(this).append("<span class='resize_handle'></span>")
 
+  # Resolve nested cols.
+  $('.col > .col').each ->
+    col = $(this)
+    row = col.closest('.row')
+    col.detach().appendTo(row)
+
   # Loop through box configuration in reverse in order to have new
   # boxes appear at the end rather at the top.
   #
