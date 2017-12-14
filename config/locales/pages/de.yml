@@ -46,7 +46,8 @@ de:
   unpublished_draft: Unveröffentlichter Entwurf
   this_page_has_not_been_published_yet: Diese Seite wurde noch nicht veröffentlicht.
 
-  show_in_footer: Im Footer anzeigen
+  show_in_footer: Als Link im Footer anzeigen
+  footer_embedded: Eingebettet im Footer anzeigen
 
   file: 'Datei'
   helpers:

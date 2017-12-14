@@ -1,0 +1,8 @@
+- pages ||= current_home_page.child_pages.flagged(:footer_embedded)
+
+- if pages.any?
+  .row
+    - pages.each do |page|
+      .col-sm-4.col-xs-12
+        %h2= best_in_place_if can?(:update, page), page, :title
+        = best_in_place_if can?(:update, page), page, :content, as: :textarea, sanitize: false
