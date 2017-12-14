@@ -23,7 +23,7 @@
 
     - visible_pages_only(page.embedded_pages).each do |embedded_page|
       .col.col-sm-6.col-xs-12.resizable_col= render embedded_page
-      - embedded_page.blog_posts.each do |blog_post|
+      - visible_pages_only(embedded_page.blog_posts).each do |blog_post|
         .col.col-sm-6.col-xs-12= render partial: 'blog_posts/teaser', object: blog_post, as: :blog_post
 
     - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
