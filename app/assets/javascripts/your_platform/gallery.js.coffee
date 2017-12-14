@@ -46,7 +46,8 @@ class App.Gallery
       debug: true,
       lightbox: true,
       thumbnails: false,
-      imageMargin: 0
+      imageMargin: 0,
+      keepSource: true
     }
 
   default_height: ->
