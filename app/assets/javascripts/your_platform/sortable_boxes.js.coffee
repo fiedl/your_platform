@@ -87,8 +87,8 @@ App.process_box_configuration = (element)->
   # Resolve nested cols.
   $('.col > .col').each ->
     col = $(this)
-    row = col.closest('.row')
-    col.detach().appendTo(row)
+    parent_col = col.parents('.col')
+    col.detach().insertAfter(parent_col)
 
   # Loop through box configuration in reverse in order to have new
   # boxes appear at the end rather at the top.
