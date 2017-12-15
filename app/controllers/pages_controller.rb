@@ -142,6 +142,9 @@ private
     handle_checkbox_param :show_in_menu
     handle_checkbox_param :show_as_teaser_box
     handle_checkbox_param :show_group_map
+    handle_checkbox_param :embedded
+    handle_checkbox_param :show_in_footer
+    handle_checkbox_param :footer_embedded
 
     permitted_keys = []
     permitted_keys += [:title, :content, :box_configuration => [:id, :class]] if can? :update, (@page || raise(ActionController::ParameterMissing, '@page not given'))
@@ -160,7 +163,7 @@ private
 
     if (@page.new_record? and can?(:create_page_for, secure_parent)) or can?(:manage, @page)
       permitted_keys += [:title, :content, :type, :author_user_id]
-      permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :show_in_menu, :show_in_footer, :footer_embedded]
+      permitted_keys += [:hidden_menu, :slim_menu, :slim_breadcrumb, :show_as_teaser_box, :embedded, :show_in_menu, :show_in_footer, :footer_embedded]
     end
 
     params.require(:page).permit(*permitted_keys)
