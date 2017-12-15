@@ -15,6 +15,9 @@ unscramble_email_tags = (html)->
 $(document).ready ->
   unscramble_email_tags $(document)
 
+$(document).on 'process', 'div', ->
+  unscramble_email_tags $(document)
+
 $(document).on 'save', '.wysiwyg', ->
   wysiwyg = $(this)
   setTimeout ->
