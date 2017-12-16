@@ -11,5 +11,14 @@ concern :PageCaching do
     cache :connected_descendant_page_ids
   end
 
+  def invalidate_connected_caches
+    touch_connected_pages
+  end
+
+  def touch_connected_pages
+    self.touch
+    connected_descendant_pages.each(&:touch)
+  end
+
   include StructureableRoleCaching
 end

@@ -12,6 +12,7 @@ class CacheRenewalsController < ApplicationController
     raise 'no object given' unless object
     authorize! :read, object
     object.delete_cache
+    object.touch_connected_pages if object.respond_to? :touch_connected_pages
     redirect_to object
   end
 
