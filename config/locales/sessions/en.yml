@@ -17,6 +17,8 @@ en:
   sign_out:                 Sign Out
   sign_up:                  Sign Up
 
+  horizontal_nav_sign_in:   Sign in
+
   submit_send_instructions: Send me reset password instructions
   forgot_password:          Forgot your password?
   change_password:          Change your password

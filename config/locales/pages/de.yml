@@ -48,6 +48,7 @@ de:
 
   show_in_footer: Als Link im Footer anzeigen
   footer_embedded: Eingebettet im Footer anzeigen
+  locale: Sprache
 
   file: 'Datei'
   helpers:

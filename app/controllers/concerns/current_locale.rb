@@ -16,7 +16,7 @@ concern :CurrentLocale do
   #   4. Use the default locale if no other could be determined.
   #
   def set_locale
-    I18n.locale = current_user.try(:locale) || cookies[:locale] || Setting.preferred_locale || browser_language_if_supported_by_app || I18n.default_locale
+    I18n.locale = (current_navable.locale if current_navable.respond_to?(:locale)) || current_user.try(:locale) || cookies[:locale] || Setting.preferred_locale || browser_language_if_supported_by_app || I18n.default_locale
   end
   def update_locale_cookie
     cookies[:locale] = secure_locale_param if params[:locale].present?

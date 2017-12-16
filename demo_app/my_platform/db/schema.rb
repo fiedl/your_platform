@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171128155245) do
+ActiveRecord::Schema.define(version: 20171216191010) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "trackable_type"
@@ -286,10 +286,6 @@ ActiveRecord::Schema.define(version: 20171128155245) do
     t.string  "category", default: "default"
   end
 
-  create_table "my_structureables", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string "name"
-  end
-
   create_table "nav_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "url_component"
     t.string   "breadcrumb_item"
@@ -343,6 +339,7 @@ ActiveRecord::Schema.define(version: 20171128155245) do
     t.datetime "published_at"
     t.boolean  "embedded"
     t.string   "domain"
+    t.string   "locale"
     t.index ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
   end
 

@@ -53,6 +53,9 @@ concern :CurrentNavable do
     # Load layout overrides needed for this navable.
     #
     prepend_layout_view_path
+
+    # Reload locale
+    set_locale if navable.respond_to?(:locale)
   end
 
 end

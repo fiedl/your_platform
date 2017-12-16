@@ -15,6 +15,9 @@
     %tr.page_author
       %th= t :page_author
       %td= user_best_in_place @page, :author_title
+    %tr.page_locale
+      %th= t :locale
+      %td= best_in_place @page, :locale, as: :select, collection: ([["", nil]] + I18n.available_locales.collect { |locale| [locale.to_s, locale.to_s] })
     %tr.redirect_page_to
       %th= t :redirect_page_to
       %td= best_in_place @page, :redirect_to
