@@ -43,7 +43,7 @@ concern :CurrentTab do
       else group_profile_path(object)
       end
     else
-      object
+      polymorphic_path object
     end
   end
 
