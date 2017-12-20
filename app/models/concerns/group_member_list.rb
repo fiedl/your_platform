@@ -9,7 +9,7 @@ concern :GroupMemberList do
   # - joined at
   #
   def member_table_rows
-    if memberships.any?
+    if memberships.count == members.count
       memberships_for_member_list.reorder('valid_from ASC').collect do |membership|
         if user = membership.user
           hash = {
