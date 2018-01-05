@@ -62,7 +62,7 @@ class ListExport
       # To be able to generate lists from Groups as well as search results, these presets expect
       # an Array of Users as data. If a Group is given instead, just take the group members as data.
       #
-      @data = @data.members
+      @data = @data.members.order(:last_name, :first_name)
     end
 
     # Make the extended methods available that are defined below.

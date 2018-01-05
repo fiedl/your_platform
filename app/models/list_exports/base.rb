@@ -43,7 +43,7 @@ module ListExports
     # export data.
     #
     def self.from_group(group, options = {})
-      self.new(group.members.to_a, options.merge({group: group}))
+      self.new(group.members.order(:last_name, :first_name).to_a, options.merge({group: group}))
     end
 
     def group
