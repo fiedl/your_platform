@@ -161,10 +161,17 @@ class Group < ApplicationRecord
     options[:type].constantize.new(members_postal_addresses, title: self.title, updated_at: timestamp, **options).render
   end
   def members_postal_addresses
+    # Sort alphabetically:
     members
       .apply_filter(@filter)
+      .order(:last_name, :first_name)
       .collect { |user| user.address_label }
-      .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
+
+    # # Sort by address:
+    # members
+    #   .apply_filter(@filter)
+    #   .collect { |user| user.address_label }
+    #   .sort_by { |address_label| (not address_label.country_code == 'DE').to_s + address_label.country_code.to_s + address_label.postal_code.to_s }
   end
 
   # def cached_members_postal_addresses_created_at
