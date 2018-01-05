@@ -26,7 +26,7 @@ class StatusGroup < Group
   end
 
   def self.model_name
-    Attachment.model_name
+    Group.model_name
   end
 
 end
