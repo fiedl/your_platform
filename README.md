@@ -14,22 +14,23 @@ The application serves four main purposes: Centralized or decentralized member m
 
 ## Getting Started Developing
 
-1. Check out the demo application locally:
+Check out the demo application locally:
 
-  ```bash
-  git clone git@github.com:fiedl/your_platform.git
-  cd your_platform/demo_app/my_platform
+```bash
+git clone git@github.com:fiedl/your_platform.git
+cd your_platform/demo_app/my_platform
 
-  # provide a config/database.yml according to your local mysql credentials
+# provide a config/database.yml according to your local mysql credentials
 
-  bundle install
-  bundle exec rake db:create db:migrate
-  bundle exec foreman start
-  bundle exec rails server
-  ```
+bundle install
+bundle exec rake db:create db:migrate
+bundle exec foreman start
+bundle exec rails server
+```
 
-  View the application at [http://localhost:3000](http://localhost:3000).
-1. If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
+View the application at [http://localhost:3000](http://localhost:3000).
+
+If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
 If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
 
@@ -37,16 +38,6 @@ If you have any troubles, **feel free to contact us on our [gitter channel](http
 
 Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/github/fiedl/your_platform).
 
-## Versioning
-
-* Have a quick look at [rubygem's short explanation of semantic versioning](http://guides.rubygems.org/patterns/#semantic-versioning).
-* The version can be bumped using one of these:
-
-  ```
-  rake version:bump:major
-  rake version:bump:minor
-  rake version:bump:patch
-  ```
 
 ## Contributing
 
@@ -59,7 +50,7 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 
 ## Authors and License
 
-**Copyright** (c) 2012-2017, Sebastian Fiedlschuster
+**Copyright** (c) 2012-2018, Sebastian Fiedlschuster
 
 **Contributors**: Jörg Reichardt, Manuel Zerpies, Joachim Back
 
