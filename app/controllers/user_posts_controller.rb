@@ -3,7 +3,12 @@ class UserPostsController < ApplicationController
   # https://railscasts.com/episodes/259-decent-exposure
   #
   expose :user
-  expose :posts, -> { BlogPost.where(author_user_id: user.id).order(created_at: 'desc').select { |post| can? :read, post } }
+  expose :posts, -> {
+    BlogPost.where(author_user_id: user.id)
+    .visible_to(current_user)
+    .order(created_at: 'desc')
+    .select { |post| can? :read, post }
+  }
 
   def index
     authorize! :read_public_bio, user
