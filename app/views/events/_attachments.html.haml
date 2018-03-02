@@ -2,7 +2,7 @@
 - image_attachments = attachments.find_by_type("image")
 - other_attachments = attachments - image_attachments
 
-#attachments
+#attachments.attachments
   - if other_attachments.count > 0
     = render partial: 'attachments/documents', locals: {attachments: other_attachments, parent: event}
 
