@@ -19,7 +19,8 @@
     #vue-app
       .container-fluid
         .row#horizontal-nav-bar
-          = render partial: 'layouts/horizontal_nav', locals: {search: true}
+          = render partial: 'layouts/horizontal_nav', locals: {search: true, session: true}
+
         #header.row
           #home_page_title.col-xs-12.col-sm-8
             .home_page_title

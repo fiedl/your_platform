@@ -1,12 +1,12 @@
 switch_to_search = ->
-  $('#horizontal_nav ul').hide()
+  $('#horizontal_nav > ul').hide()
   $('#horizontal_nav_search').show()
   $('#horizontal_nav_search input#query').focus()
 
 switch_to_nav = ->
   $('#horizontal_nav_search').hide()
   $('#horizontal_nav_search input#query').val('')
-  $('#horizontal_nav ul').show()
+  $('#horizontal_nav > ul').show()
 
 $(document).ready ->
   $('#horizontal_nav_search').hide()
