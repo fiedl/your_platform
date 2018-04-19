@@ -29,5 +29,6 @@
         = "#{t(:type)}: "
         = best_in_place attachment, :type
 
-      %p.attachment.filesize
-        = attachment.file_size_human
+      - if show_technical_information
+        %p.attachment.filesize
+          = attachment.file_size_human

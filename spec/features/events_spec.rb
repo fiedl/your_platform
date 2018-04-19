@@ -274,7 +274,7 @@ feature "Events" do
         # tab \t switches to the next input field. But the event handlers are not triggered as expected.
         # TODO: Fix this feature.
       end
-      find('tr.start_at').click # just click somewhere outisde, closes editing the description
+      find('tr.start_at th').click # just click somewhere outisde, closes editing the description
       page.should have_selector 'tr.description .success'
 
       within('tr.start_at') { find('.best_in_place').click }
