@@ -91,13 +91,14 @@ class App.UploadBox
       self.show_uploading()
 
   refresh_attachments_section: ->
+    self = this
     parent_element = @root_element.closest('.page_with_attachments')
     parent_element = @root_element.closest('.box') if parent_element.count() == 0
     parent_element.ajax_reload {
       url: @parent_url(),
       selectors: ['.attachments', '#attachments', '#inline-pictures'],
       success: ->
-        @inline_pictures_element().find('.show_only_in_edit_mode').show() # since we are already in edit mode.
+        self.inline_pictures_element().find('.show_only_in_edit_mode').show() # since we are already in edit mode.
     }
 
   inline_pictures_element: ->

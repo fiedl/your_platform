@@ -8,7 +8,7 @@ body.iweb-layout
   h3
     font-size: 17px
   h1, h2, h3, h4
-    margin-top: 20px
+    margin-top: 50px
     margin-bottom: 10px
   h1.panel-title
     margin-top: 5px
@@ -64,8 +64,14 @@ body.iweb-layout
     margin-bottom: 15px
 
   #horizontal_nav_search
+    height: 46px
     input#query
       width: 100%
+
+  .horizontal-nav-session-dropdown > a.current_user_dropdown
+    padding: 7px
+    .avatar img
+      border-radius: 50px
 
   .box
     border: none
@@ -129,10 +135,6 @@ body.iweb-layout
     li
       display: inline
       margin: 12px
-
-body.iweb-layout.page_settings
-  h1, h2, h3
-    margin-top: 50px
 
 
 // This makes the footer position.

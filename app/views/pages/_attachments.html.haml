@@ -2,19 +2,6 @@
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
 - show_drop_field ||= false
 
-- # - attachments = .order('created_at DESC')
-- # - attachments = attachments. + attachments.find_by_types('image', 'video').where(author: current_user)
-
-- # Show attachments box if:
-- #   (a) There are attachments.
-- #   (b) The user can add attachments,
-- #          but there are no blog entries.
-- #          (If there are blog entries, it is not clear where to put
-- #          the attachment.)
-- #
-
-- if attachments.count > 0
+- if (attachments.count > 0) || show_drop_field
   = render partial: 'attachments/documents', locals: {attachments: attachments, parent: page, show_drop_field: show_drop_field}
 
--#- if not @blog_entries.present? and not @hide_attachment_drop_fields and not @tag and can?(:create_attachment_for, page)
--#  .hidden-print= render partial: 'attachments/drop_field', locals: {parent: page}

@@ -11,7 +11,3 @@ $(document).ready ->
       li = $(this)
       if li.data('short')
         li.find('a').text(li.data('short'))
-      else
-        max_length = 20
-        if li.find('a').text().length > max_length
-          li.find('a').text(li.find('a').text().substr(0, max_length) + "...")

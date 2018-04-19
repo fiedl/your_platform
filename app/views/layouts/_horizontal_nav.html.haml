@@ -1,4 +1,5 @@
 - search ||= false
+- session ||= false
 
 #horizontal_nav
   - if show_resource_nav?
@@ -16,6 +17,12 @@
       - if search
         %li.horizontal-nav-search-link
           %a= search_icon
+      - if session && current_user
+        %li.horizontal-nav-session-dropdown
+          %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
+            = render 'layouts/session_bar_avatar'
+            %b.caret
+          = render partial: 'layouts/current_user_dropdown'
     - if search
       #horizontal_nav_search
         = render partial: 'shared/search_box'

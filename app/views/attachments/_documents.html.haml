@@ -5,18 +5,10 @@
 - attachments = attachments.sort_by { |attachment| attachment.created_at }.reverse
 - show_drop_field ||= false
 
-%h1.attachments.documents= t :documents
-%div
-  %table.attachments.documents
-    - attachments.each do |attachment|
-      = render attachment
+%table.attachments.documents
+  - attachments.each do |attachment|
+    = render attachment
 
-  - if @blog_entries.present? and parent.kind_of?(Page) and can?(:create_attachment_for, parent)
-    %p.show_only_in_edit_mode
-      Um eine Datei hochzuladen, bitte zur Seite
-      = link_to parent.title, parent
-      wechseln.
-
-  - if show_drop_field && can?(:create_attachment_for, parent)
-    .hidden-print.show_only_in_edit_mode
-      = render partial: 'attachments/drop_field', locals: {type: :pdf, parent: parent}
+- if show_drop_field && can?(:create_attachment_for, parent)
+  .hidden-print.show_only_in_edit_mode
+    = render partial: 'attachments/drop_field', locals: {type: :pdf, parent: parent}
