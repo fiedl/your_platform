@@ -76,6 +76,10 @@ class Graph::Base
   end
 
   def query_ids(query)
+    self.class.query_ids query
+  end
+
+  def self.query_ids(query)
     execute_query(query)['data'].flatten
   end
 
