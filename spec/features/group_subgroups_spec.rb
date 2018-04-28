@@ -64,12 +64,12 @@ feature "Group Subgroups" do
   end
 
   scenario "exporting a name_list as csv of the group of groups" do
-    visit groups_groups_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'csv'
+    visit groups_group_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'csv'
     page.should have_text @user.last_name
   end
   
   scenario "exporting a name_list as xls of the group of groups" do
-    visit groups_groups_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'xls'
+    visit groups_group_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'xls'
     page.should have_text @user.last_name
   end  
 end
