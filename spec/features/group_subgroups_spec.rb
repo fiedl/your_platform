@@ -67,4 +67,9 @@ feature "Group Subgroups" do
     visit groups_groups_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'csv'
     page.should have_text @user.last_name
   end
+  
+  scenario "exporting a name_list as xls of the group of groups" do
+    visit groups_groups_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'xls'
+    page.should have_text @user.last_name
+  end  
 end
