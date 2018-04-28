@@ -71,5 +71,14 @@ feature "Group Subgroups" do
   scenario "exporting a name_list as xls of the group of groups" do
     visit groups_group_of_groups_table_export_path group_id: @corporations_parent.id, list: 'name_list', format: 'xls'
     page.should have_text @user.last_name
+  end
+  
+  scenario "exporting a name_list as xls of the group of groups as visitor" do
+    visit group_subgroups_path(@corporations_parent)
+    within '.box.edit_mode_group' do
+      click_on I18n.t(:download)
+      click_on I18n.t(:excel_list)
+      page.should have_text @user.last_name
+    end
   end  
 end
