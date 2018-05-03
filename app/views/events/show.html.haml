@@ -14,8 +14,7 @@
 %div
   = render partial: 'events/event_details'
 
-.hidden-xs
-  = render partial: 'events/attachments', locals: {event: @event}
+= render partial: 'events/attachments', locals: {event: @event}
 
 - if can? :index_attendees, @event
   %h1=t :attendees
