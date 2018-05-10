@@ -1,5 +1,7 @@
 - if page.teaser_youtube_url
   = you_tube page.teaser_youtube_url
+- elsif page.teaser_video_url
+  = video_tag page.teaser_video_url, controls: true, class: 'video'
 - else
   #inline-pictures.teaser_image{data: {page_url: url_for(page)}}
     = galleria theme: 'classic' do

@@ -62,6 +62,10 @@ concern :PageImages do
     content.to_s.match(/(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+/).try(:[], 0)
   end
 
+  def teaser_video_url
+    content.to_s.match(/(https?\:\/\/.*.(mp4|m4v))/).try(:[], 0)
+  end
+
   def teaser_image?
     teaser_images.any? || teaser_youtube_url
   end
