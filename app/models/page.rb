@@ -26,6 +26,7 @@ class Page < ApplicationRecord
   include PageVisibility
   include PageEmbedding
   include PageImages
+  include PageVideos
   include PageSearch
   include PageFooter
 

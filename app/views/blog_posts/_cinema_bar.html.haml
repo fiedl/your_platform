@@ -1,0 +1,5 @@
+.cinema_bar
+  - if blog_post.teaser_video_url
+    = video_tag blog_post.teaser_video_url, controls: true
+  - elsif blog_post.teaser_youtube_url
+    = you_tube blog_post.teaser_youtube_url

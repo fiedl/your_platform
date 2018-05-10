@@ -1,3 +1,7 @@
+- if @blog_post.video?
+  - content_for :custom_header do
+    = render partial: 'blog_posts/cinema_bar', locals: {blog_post: @blog_post}
+
 .single-post
   = render @blog_post
 
