@@ -23,7 +23,7 @@ concern :PageTeaserBoxes do
         .gsub(teaser_youtube_url.to_s, '')
         .gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
       teaser_content = paragraphs.first
-      teaser_content += "\n\n" + paragraphs.second if teaser_content.to_s.start_with?("http") # For inline videos etc.
+      teaser_content += "\n\n" + paragraphs.second if paragraphs.second && teaser_content.to_s.start_with?("http") # For inline videos etc.
       teaser_content
     end
   end
