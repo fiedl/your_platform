@@ -20,6 +20,9 @@ class FeedsController < ApplicationController
     when 'public'
       authorize! :read, :public_feed
       public_feed
+    when 'podcast'
+      authorize! :read, :default_feed
+      podcast_feed
     end.select { |page| can?(:read, page) && page.not_empty? }
   end
 
@@ -35,6 +38,10 @@ class FeedsController < ApplicationController
 
   def public_feed
     BlogPost.all
+  end
+
+  def podcast_feed
+    default_feed.select { |blog_post| blog_post.video? }
   end
 
 end

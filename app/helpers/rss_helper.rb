@@ -15,6 +15,7 @@ module RssHelper
         xml.title args[:root_element].title
         xml.description description
         xml.link url_for(args[:root_element])
+        #xml.itunes :image, href: logo_url
         xml.generator "https://github.com/fiedl/your_platform"
 
         args[:items].each do |item|
@@ -27,6 +28,7 @@ module RssHelper
             xml.tag! 'content:encoded' do
               xml.cdata! ((image_tag(item.teaser_image_url).html_safe if item.respond_to? :teaser_image_url and item.teaser_image_url).to_s + item.teaser_text.to_s)
             end
+            xml.enclosure url: item.video_url
           end
         end
       end
@@ -42,7 +44,11 @@ module RssHelper
   end
 
   def rss_default_url
-    feed_path(id: 'default', format: 'rss', token: current_user.try(:token))
+    rss_url("default")
+  end
+
+  def rss_url(id = "default")
+    feed_path(id: id, format: 'rss', token: current_user.try(:token))
   end
 
 end

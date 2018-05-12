@@ -1,5 +1,6 @@
 de:
   feeds: Feeds
+  rss_feed: RSS-Feed
   rss_feeds: RSS-Feeds
 
   rss_subscription: RSS-Abonnement
@@ -11,3 +12,5 @@ de:
   personal_feed: Personalisierter Feed
   public_feed: Öffentlicher Feed
   overall_feed: Gesamt-Feed
+
+  podcast_feed: Postcast-Feed

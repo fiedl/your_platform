@@ -1,7 +1,11 @@
 concern :PageVideos do
 
   def video?
-    teaser_youtube_url || teaser_video_url || video_attachments.any?
+    video_url.present?
+  end
+
+  def video_url
+    teaser_youtube_url || teaser_video_url || video_attachments.first.try(:url)
   end
 
   def video_attachments
