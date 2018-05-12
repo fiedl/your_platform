@@ -23,10 +23,7 @@
   - # General Info Box
   #general{class: tab_pane_class + " in active"}
     %h1.section.general.no_uppercase
-      %span.obscure-in-demo= editable_first_and_last_name(@user)
-      &nbsp;
-      %span.regular_case
-        = @user.name_affix
+      %span.obscure-in-demo.regular_case= @user.title
       .workflow-tool.tool= render partial: 'workflow_triggers'
       - if can? :manage, @user
         .tool.profile_fields_index

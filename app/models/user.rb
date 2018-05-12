@@ -623,25 +623,6 @@ class User < ApplicationRecord
   # Finder Methods
   # ==========================================================================================
 
-  # This method returns the first user matching the given title.
-  #
-  def self.find_by_title( title )
-    self.where("? LIKE CONCAT('%', first_name, ' ', last_name, '%')", title).select do |user|
-      user.title == title
-    end.first
-  end
-
-  def self.find_by_name( name )
-    self.find_all_by_name(name).limit(1).first
-  end
-
-  # This method finds all users having the given name attribute.
-  # notice: case insensitive
-  #
-  def self.find_all_by_name( name ) # TODO: Test this
-    self.where("CONCAT(first_name, ' ', last_name) = ?", name)
-  end
-
   # This finds a user matching an auth token.
   #
   def self.find_by_token(token)

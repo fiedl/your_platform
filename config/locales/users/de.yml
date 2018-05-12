@@ -21,6 +21,7 @@ de:
   next_age:                   Geburtstag
   age_at_date_of_death:       Erreichtes Alter
   name_affix_without_deceased_symbol: Namenszusatz
+  display_name:               Anzeige-Name
 
   user_hidden:                Benutzer versteckt
   hidden_users_can_only_be_seen_by_admins:   'Versteckte Benutzer können nur von zuständigen Administratoren gesehen werden. Für alle anderen Benutzer sind sie unsichtbar.'

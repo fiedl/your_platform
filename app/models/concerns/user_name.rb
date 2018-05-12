@@ -16,6 +16,20 @@ concern :UserName do
   end
 
 
+  def display_name
+    display_name_fields.first.try(:value).to_s
+  end
+
+  def display_name=(new_display_name)
+    field = display_name_fields.first_or_create
+    field.value = new_display_name
+    field.save
+  end
+
+  def display_name_fields
+    profile_fields.where(type: "ProfileFields::General", label: "display_name")
+  end
+
 
   # This method will make the first_name and the last_name capitalized.
   # For example:
@@ -49,7 +63,11 @@ concern :UserName do
   # Notice: This method does *not* return the academic title of the user.
   #
   def title
+    if display_name.present?
+      display_name
+    else
       name_and_affix
+    end
   end
 
   def name_and_affix
@@ -68,6 +86,31 @@ concern :UserName do
   #
   def string_for_death_symbol
     "(✟)" if dead?
+  end
+
+  class_methods do
+
+    # This method returns the first user matching the given title.
+    #
+    def find_by_title(title)
+      ids = self.where("? LIKE CONCAT('%', first_name, ' ', last_name, '%')", title).pluck(:id)
+      ids += ProfileField.where(type: "ProfileFields::General", label: "display_name").where("value LIKE ?", "%" + title + "%").collect { |profile_field| profile_field.profileable_id if profile_field.profileable_type == "User" } - [nil]
+      self.where(id: ids.uniq).select do |user|
+        user.title == title
+      end.first
+    end
+
+    def find_by_name(name)
+      self.find_all_by_name(name).limit(1).first
+    end
+
+    # This method finds all users having the given name attribute.
+    # notice: case insensitive
+    #
+    def find_all_by_name(name) # TODO: Test this
+      self.where("CONCAT(first_name, ' ', last_name) = ?", name)
+    end
+
   end
 
 end
