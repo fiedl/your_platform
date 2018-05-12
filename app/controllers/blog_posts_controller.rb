@@ -10,6 +10,9 @@ class BlogPostsController < PagesController
     @blog_post ||= @page
     authorize! :read, @blog_post
 
+    @blog = @blog_post.parent
+    @tags = @blog_post.tags
+
     set_current_navable @blog_post
     set_current_title @blog_post.title
   end
