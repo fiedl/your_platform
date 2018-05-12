@@ -6,7 +6,7 @@
   %li.published_at.page_published_at
     = icon :calendar
     = render partial: 'pages/published_at', locals: {page: page}
-  - if (not teaser) && page.author
+  - if (not teaser) && page.contributors.any?
     %li.author.page_author
       = icon :user
       - page.contributors.each do |user|
