@@ -93,7 +93,7 @@ class User < ApplicationRecord
   # The name of the user, i.e. first_name and last_name.
   #
   def name
-    first_name + " " + last_name if first_name && last_name
+    "#{first_name} #{last_name}".strip
   end
   def name=(new_name)
     if new_name.present?
