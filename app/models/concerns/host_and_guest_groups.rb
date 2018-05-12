@@ -26,4 +26,13 @@ concern :HostAndGuestGroups do
     (super + hosts + guests).uniq
   end
 
+  class_methods do
+    def by_contributor(user)
+      ids = BlogPost.where(author_user_id: user.id).pluck(:id)
+      host_or_guest_group_ids_of_this_user = (user.groups.flagged(:hosts).pluck(:id) + user.groups.flagged(:guests).pluck(:id))
+      ids += Page.find(Group.where(id: host_or_guest_group_ids_of_this_user).includes(:links_as_child).where(dag_links: {ancestor_type: "Page"}).pluck('dag_links.ancestor_id'))
+      self.where(id: ids.uniq)
+    end
+  end
+
 end
