@@ -562,9 +562,7 @@ class Ability
 
     # All users can read the public bios of the users.
     #
-    can :read_public_bio, User do |user|
-      user.account
-    end
+    can :read_public_bio, User
 
     # All users can comment contents they can read.
     #
