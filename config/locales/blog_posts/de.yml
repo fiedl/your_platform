@@ -4,3 +4,4 @@ de:
   hosts: Hosts
 
   posts_by_str: "Posts von %{str}"
+  allow_comments_for_this_post: Kommentare für diesen Blog-Post zulassen

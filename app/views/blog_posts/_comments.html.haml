@@ -1,18 +1,22 @@
-- if Setting.embedded_comments_discourse_url.to_s.length > 5
-  %h1= t :comments
-  %div
-    = render partial: 'comments/discourse_embedded_comments'
+- if blog_post.comments_enabled?
+  - if Setting.embedded_comments_discourse_url.to_s.length > 5
+    %h1= t :comments
+    %div
+      = render partial: 'comments/discourse_embedded_comments'
 
-- if can? :use, :blog_post_comments
-  #comments.clearfix.blog_post_comments
-    .comments-title
-      %h3
-        -#%span= number_of_comments_string(blog_post.comments.count)
-        %span= blog_post.comments.count
-        = t :comments
+  - if can? :use, :blog_post_comments
+    #comments.clearfix.blog_post_comments
+      .comments-title
+        %h3
+          -#%span= number_of_comments_string(blog_post.comments.count)
+          %span= blog_post.comments.count
+          = t :comments
 
-    %ol.commentlist.clearfix{class: "comments-for-#{blog_post.id}"}
-      = render blog_post.comments
-    .clear
+      %ol.commentlist.clearfix{class: "comments-for-#{blog_post.id}"}
+        = render blog_post.comments
+      .clear
 
-    = render partial: 'comments/new_comment', locals: {commentable: blog_post}
+      = render partial: 'comments/new_comment', locals: {commentable: blog_post}
+
+- if can? :update, blog_post
+  = setting_check_box blog_post, :comments_enabled, t(:allow_comments_for_this_post)
