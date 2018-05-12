@@ -3,7 +3,10 @@
     = render partial: 'blog_posts/cinema_bar', locals: {blog_post: @blog_post}
 
 .single-post
-  = render @blog_post
+  = render @blog_post, locals: {show_meta: false}
+
+  - content_for :side_bar do
+    = render partial: 'blog_posts/meta_for_side_bar', locals: {blog_post: @blog_post}
 
   = render partial: 'blog_posts/tag_cloud', locals: {blog_post: @blog_post}
   = render partial: 'blog_posts/related_posts', locals: {blog_post: @blog_post}

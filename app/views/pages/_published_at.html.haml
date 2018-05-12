@@ -1,0 +1,6 @@
+- if page.published_at
+  = localize(page.published_at)
+- else
+  %span.unpublished_draft= t :unpublished_draft
+  - if can? :publish, page
+    %span.publish= "(<a href='#' class='publish_draft'>#{t(:publish)}</a>)".html_safe

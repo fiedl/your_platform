@@ -2,7 +2,7 @@
 - page || raise(ActionController::ParameterMissing, 'no page given')
 - teaser_box ||= false
 - raise(RuntimeError, 'Please use the pages/teaser_box partial instead!') if teaser_box
-- show_meta ||= page.kind_of?(BlogPost)
+- show_meta ||= page.kind_of?(BlogPost) if show_meta.nil?
 - separate_image_box ||= false
 
 - if separate_image_box

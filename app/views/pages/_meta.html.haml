@@ -2,15 +2,10 @@
 - # page
 - teaser ||= false
 
-%ul.box_meta
-  - if page.created_at
-    %li.published_at.page_published_at
-      = icon :calendar
-      - if page.published_at
-        = localize(page.published_at)
-      - else
-        %span.unpublished_draft= t :unpublished_draft
-        %span.publish= "(<a href='#' class='publish_draft'>#{t(:publish)}</a>)".html_safe
+%ul.meta
+  %li.published_at.page_published_at
+    = icon :calendar
+    = render partial: 'pages/published_at', locals: {page: page}
   - if (not teaser) && page.author
     %li.author.page_author
       = icon :user
