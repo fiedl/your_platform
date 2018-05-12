@@ -20,6 +20,7 @@ module BodyHelper
       navable: @navable.try(:to_global_id).try(:to_s),
       tab: current_tab
     }
+    data[:turbolinks] = options[:turbolinks]
     content_tag :body, class: css_classes.join(" "), data: data do
       yield
     end
