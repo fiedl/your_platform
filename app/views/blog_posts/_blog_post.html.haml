@@ -1,1 +1,1 @@
-= render partial: 'pages/page', object: blog_post, locals: locals
+= render partial: 'pages/page', object: blog_post, locals: defined?(locals) ? locals : {}
