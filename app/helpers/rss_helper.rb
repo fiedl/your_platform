@@ -21,7 +21,7 @@ module RssHelper
           xml.item do
             xml.title item.title
             xml.description item.content
-            xml.pubDate item.published_at.to_s(:rfc822)
+            xml.pubDate item.published_at.to_s(:rfc822) if item.published_at
             xml.link url_for(item)
             xml.guid url_for(item)
             xml.tag! 'content:encoded' do
@@ -33,11 +33,11 @@ module RssHelper
     end
   end
 
-  def rss_button(url = nil)
+  def rss_button(url = nil, options = {})
     url ||= blog_url(@blog, format: 'rss', token: current_user.try(:token)) if @blog
     url ||= rss_default_url
     link_to url, class: 'btn btn-default btn-xs' do
-      rss_icon
+      rss_icon + options[:title].to_s
     end
   end
 

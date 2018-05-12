@@ -1,4 +1,9 @@
-%h1.rss_feeds= t :rss_feeds
+.jumbotron
+  %h2= t :rss_subscription
+  %p= t :subscribe_our_website_in_rss_with_your_favorite_rss_reader_to_stay_up_to_date
+  %p= rss_button(rss_default_url, title: t(:subscribe_via_rss))
+
+%h3.rss_feeds= t :other_rss_feeds
 %div
   %table
     %tr

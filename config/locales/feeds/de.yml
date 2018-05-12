@@ -2,6 +2,11 @@ de:
   feeds: Feeds
   rss_feeds: RSS-Feeds
 
+  rss_subscription: RSS-Abonnement
+  subscribe_our_website_in_rss_with_your_favorite_rss_reader_to_stay_up_to_date: Abonnieren Sie unsere Website mit Ihrer RSS-Reader-App, um automatisch auf dem aktuellen Stand zu bleiben. Neue Artikel erscheinen automatisch in Ihrer RSS-App.
+  subscribe_via_rss: Per RSS abonnieren
+
+  other_rss_feeds: Weitere RSS-Feeds
   default_feed: Standard-Feed
   personal_feed: Personalisierter Feed
   public_feed: Öffentlicher Feed
