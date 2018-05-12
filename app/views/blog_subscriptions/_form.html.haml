@@ -1,15 +1,17 @@
 - blog || raise('no blog given')
 
-- if current_user && blog.subscribers.include?(current_user)
-  %p
-    = t :you_have_subscribed_to_str, str: blog.title
-    = link_to t(:unsubscribe), blog_subscriptions_path(blog_id: blog.id), method: 'delete'
+- if blog.kind_of?(Blog)
 
-- else
-  = form_tag blog_subscriptions_path(blog_id: blog.id), method: 'post', class: 'nobottommargin', id: 'widget-subscribe-form' do
-    .input-group.divcenter
-      %span.input-group-addon
-        %i.icon-email2
-      %input#widget-subscribe-form-email.form-control.required.email{name: "email", placeholder: t(:enter_your_email), type: "email", value: current_user.try(:email)}
-      %span.input-group-btn
-        %button.btn.btn-success{:type => "submit"}= t :subscribe
+  - if current_user && blog.subscribers.include?(current_user)
+    %p
+      = t :you_have_subscribed_to_str, str: blog.title
+      = link_to t(:unsubscribe), blog_subscriptions_path(blog_id: blog.id), method: 'delete'
+
+  - else
+    = form_tag blog_subscriptions_path(blog_id: blog.id), method: 'post', class: 'nobottommargin', id: 'widget-subscribe-form' do
+      .input-group.divcenter
+        %span.input-group-addon
+          %i.icon-email2
+        %input#widget-subscribe-form-email.form-control.required.email{name: "email", placeholder: t(:enter_your_email), type: "email", value: current_user.try(:email)}
+        %span.input-group-btn
+          %button.btn.btn-success{:type => "submit"}= t :subscribe

@@ -15,7 +15,7 @@
       - @tags.each do |tag|
         = link_to_tag tag
 
-- if @blog
+- if @blog.kind_of?(Blog)
   .widget
     %h4= t :subscribe
     - if can? :subscribe_to, @blog
