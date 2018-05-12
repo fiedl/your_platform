@@ -12,6 +12,8 @@ $(document).ready ->
   $('.content_twoCols_right > div.col-xs-12').each ->
     $(this).find('.box:first').addClass('first')
 
+  $('.box_image:not(:has(img))').addClass('empty')
+
 $.fn.process_box_tools = ->
   this.find('.box.event .edit_button').hide()
   this.find('.box.event #ics_export').hide()
