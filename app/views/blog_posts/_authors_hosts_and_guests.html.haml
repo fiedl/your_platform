@@ -1,0 +1,29 @@
+.authors_hosts_and_guests
+
+  - if can? :manage, blog_post
+    %a.trigger_edit.right{title: t(:edit)}= edit_icon
+    .edit_authors_hosts_and_guests
+      %p
+        = t(:author).to_s + ":"
+        = user_best_in_place blog_post, :author_title
+      %p
+        = t(:hosts).to_s + ":"
+        = multiple_users_best_in_place blog_post.hosts_group, :direct_members_titles_string, activator: true
+      %p
+        = t(:guests).to_s + ":"
+        = multiple_users_best_in_place blog_post.guests_group, :direct_members_titles_string, activator: true
+
+  .show_authors_hosts_and_guests
+    - if blog_post.hosts.any?
+      %h4= t (blog_post.hosts.count > 1 ? :hosts : :host)
+      - blog_post.hosts.each do |user|
+        %p= link_to_user_with_avatar(user, user_posts_path(user_id: user.id))
+
+      - if blog_post.guests.any?
+        %h4= t (blog_post.guests.count > 1 ? :guests : :guest)
+        - blog_post.guests.each do |user|
+          %p= link_to_user_with_avatar(user, user_posts_path(user_id: user.id))
+
+    - elsif blog_post.author
+      %h4= t :author
+      %p= link_to_user_with_avatar(blog_post.author, user_posts_path(user_id: blog_post.author.id))

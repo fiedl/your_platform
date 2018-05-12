@@ -18,4 +18,8 @@ module UsersHelper
     end
   end
 
+  def link_to_user_with_avatar(user, path = nil)
+    link_to(user_avatar(user) + " " + user.title, path || user_path(user))
+  end
+
 end
