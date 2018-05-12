@@ -1,5 +1,6 @@
 = render posts
 
 - content_for :side_bar do
-  This is
-  = user.title
+  %h4= t(:posts_by_str, str: user.title)
+  %p= user_avatar(user, size: 64)
+  = best_in_place_if can?(:update, user), user, :bio

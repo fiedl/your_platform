@@ -2,3 +2,5 @@ de:
   related_posts: Weitere Beiträge
   host: Host
   hosts: Hosts
+
+  posts_by_str: "Posts von %{str}"
