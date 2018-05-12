@@ -14,7 +14,7 @@ concern :HasAuthor do
   end
 
   def contributors
-    [author]
+    [author] - [nil]
   end
 
 end
