@@ -106,6 +106,8 @@
 
             = render partial: 'layouts/toolbar'
 
+      = yield :custom_header
+
       .container-fluid
         .row
           #content
