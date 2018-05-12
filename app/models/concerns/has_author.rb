@@ -13,4 +13,8 @@ concern :HasAuthor do
     self.author.try(:title)
   end
 
+  def contributors
+    [author]
+  end
+
 end

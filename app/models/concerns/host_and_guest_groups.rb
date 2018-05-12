@@ -21,4 +21,9 @@ concern :HostAndGuestGroups do
     find_special_group(:guests).try(:destroy)
     super
   end
+
+  def contributors
+    (super + hosts + guests).uniq
+  end
+
 end
