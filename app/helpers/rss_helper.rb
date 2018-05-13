@@ -10,25 +10,33 @@ module RssHelper
     # http://railscasts.com/episodes/87-generating-rss-feeds-revised?autoplay=true
     #
     xml.instruct! :xml, version: "1.0"
-    xml.rss version: "2.0", 'xmlns:content' => "http://purl.org/rss/1.0/modules/content/" do
+    xml.rss version: "2.0", 'xmlns:content' => "http://purl.org/rss/1.0/modules/content/", 'xmlns:itunes' => "http://www.itunes.com/dtds/podcast-1.0.dtd" do
       xml.channel do
         xml.title args[:root_element].title
         xml.description description
         xml.link url_for(args[:root_element])
-        #xml.itunes :image, href: logo_url
         xml.generator "https://github.com/fiedl/your_platform"
+        xml.language args[:root_element].locale || Setting.preferred_locale || I18n.default_locale
+
+        xml.itunes :image, href: logo_url('logo-icon')
+        xml.itunes :type, 'serial'
+        xml.itunes :author, args[:root_element].title
 
         args[:items].each do |item|
           xml.item do
             xml.title item.title
-            xml.description item.content
+            xml.description item.content_without_video_url
             xml.pubDate item.published_at.to_s(:rfc822) if item.published_at
             xml.link url_for(item)
             xml.guid url_for(item)
             xml.tag! 'content:encoded' do
               xml.cdata! ((image_tag(item.teaser_image_url).html_safe if item.respond_to? :teaser_image_url and item.teaser_image_url).to_s + item.teaser_text.to_s)
             end
-            xml.enclosure url: item.video_url
+
+            xml.enclosure url: item.video_url, length: 0, type: "video/mp4"
+            xml.itunes :image, href: logo_url('logo-icon')
+            xml.itunes :subtitle, item.teaser_text
+
           end
         end
       end

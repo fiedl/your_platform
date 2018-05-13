@@ -18,15 +18,15 @@ concern :PageTeaserBoxes do
   end
 
   def teaser_text
-    super || if content
-      paragraphs = content
-        .gsub(teaser_youtube_url.to_s, '')
-        .gsub(teaser_video_url.to_s, '')
-        .gsub(/\n[ ]*\n/, "\n\n").split("\n\n")
-      teaser_content = paragraphs.first
-      teaser_content += "\n\n" + paragraphs.second if paragraphs.second && teaser_content.to_s.start_with?("http") # For inline videos etc.
-      teaser_content
-    end
+    super || content_without_video_url.to_s.split("\n\n").first
+  end
+
+  def content_without_video_url
+    content.to_s
+      .gsub(teaser_youtube_url.to_s, '')
+      .gsub(teaser_video_url.to_s, '')
+      .gsub(/\n[ ]*\n/, "\n\n")
+      .gsub(/\A\n\n/, "")
   end
 
 end
