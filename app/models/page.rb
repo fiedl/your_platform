@@ -29,6 +29,7 @@ class Page < ApplicationRecord
   include PageVideos
   include PageSearch
   include PageFooter
+  include PageAnalytics
 
   scope :regular, -> {
     where(type: nil)

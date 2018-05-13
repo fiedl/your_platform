@@ -50,6 +50,8 @@ de:
   footer_embedded: Eingebettet im Footer anzeigen
   locale: Sprache
 
+  view_count: Aufrufe
+
   file: 'Datei'
   helpers:
     submit:

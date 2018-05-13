@@ -1,5 +1,4 @@
 class PagesController < ApplicationController
-  include MarkdownHelper
 
   before_action :find_resource_by_permalink, only: [:show, :update]
   before_action :find_resource_by_id, only: [:show, :update]
@@ -9,6 +8,9 @@ class PagesController < ApplicationController
   skip_authorization_check only: [:show]
 
   respond_to :html, :json
+
+  include PageAnalyticsMetricLogging
+  include MarkdownHelper
 
   def show
     if @page.try(:redirect_to)
