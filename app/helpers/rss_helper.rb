@@ -57,7 +57,7 @@ module RssHelper
   end
 
   def rss_url(id = "default")
-    feed_path(id: id, format: 'rss', token: current_user.try(:token))
+    feed_url(id: id, format: 'rss', token: current_user.try(:token), protocol: 'pcast')
   end
 
 end
