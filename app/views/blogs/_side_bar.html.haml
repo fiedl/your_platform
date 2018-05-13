@@ -25,7 +25,10 @@
       %p
         = link_to group_members_path(@blog.subscriber_group) do
           = "#{@blog.subscribers.count} #{t(:subscribers)}"
-    .si-share.noborder.clearfix= rss_button
+
+    .feeds.noborder.clearfix
+      %span{title: t(:rss_feed)}= rss_button(rss_url("default"))
+      %span{title: t(:podcast_feed)}= rss_button(rss_url("podcast"))
 
   - if can? :create_suggestion_for, @blog
     .widget
