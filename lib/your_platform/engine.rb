@@ -105,6 +105,7 @@ require 'judge'
 require 'rack-mini-profiler'
 require 'chartkick'
 require 'groupdate'
+require 'impressionist'
 
 # Activity Logger
 require 'public_activity'
