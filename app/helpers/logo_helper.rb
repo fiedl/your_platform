@@ -8,8 +8,7 @@ module LogoHelper
 
   def global_logo_url
     unless @logo_url
-      @logo_url = current_logo_url if defined?(current_logo_url)
-      @logo_url ||= Attachment.logos.first.try(:file).try(:url)
+      @logo_url = Attachment.logos.first.try(:file).try(:url)
 
       # TODO # #current_navable.nav_node.breadcrumb_root
 
@@ -29,11 +28,8 @@ module LogoHelper
     end
   end
 
-  def logo_image_tag(logo_key = nil)
-    logo_path = Attachment.logos.where(title: logo_key).last.try(:file_path) if logo_key
-    logo_path ||= current_logo_url if current_logo
-    logo_path ||= default_logo
-    image_tag logo_path
+  def logo_image_tag(key = nil)
+    image_tag logo_url(key)
   end
 
   # To which path leads the logo?

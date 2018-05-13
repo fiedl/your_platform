@@ -51,7 +51,7 @@ concern :CurrentLayout do
   end
 
   def current_logo(key = nil)
-    logos = Attachment.where(parent_type: 'Page', parent_id: current_home_page.child_pages.pluck(:id)).logos
+    logos = Attachment.where(parent_type: 'Page', parent_id: [current_home_page.id] + current_home_page.child_pages.pluck(:id)).logos
     logos = Attachment.logos if logos.none?
     logos = logos.where(title: key) if key
     logos.last
