@@ -7,6 +7,7 @@ concern :CurrentLayout do
 
     helper_method :current_layout
     helper_method :resource_centred_layout?
+    helper_method :permitted_layouts
 
     helper_method :current_logo_url
     helper_method :current_logo
@@ -38,8 +39,7 @@ concern :CurrentLayout do
   end
 
   def default_layout
-    #current_home_page.try(:layout) || 'bootstrap'
-    Page.root.try(:layout) || 'bootstrap'
+    current_home_page.try(:layout) || Page.root.try(:layout) || 'bootstrap'
   end
 
   def default_layout
