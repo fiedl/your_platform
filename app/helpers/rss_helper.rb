@@ -14,6 +14,7 @@ module RssHelper
       xml.channel do
         xml.title args[:root_element].title
         xml.description description
+        xml.pubDate args[:root_element].published_at.to_s(:rfc822) if args[:root_element].published_at
         xml.link url_for(args[:root_element])
         xml.generator "https://github.com/fiedl/your_platform"
         xml.language args[:root_element].locale || Setting.preferred_locale || I18n.default_locale

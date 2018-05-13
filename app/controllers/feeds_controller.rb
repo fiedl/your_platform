@@ -9,7 +9,7 @@ class FeedsController < ApplicationController
   end
 
   def show
-    @rss_root = Page.root
+    @rss_root = current_home_page || Page.root
     @rss_items = case params[:id]
     when 'default'
       authorize! :read, :default_feed
