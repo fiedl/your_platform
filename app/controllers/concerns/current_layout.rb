@@ -46,12 +46,15 @@ concern :CurrentLayout do
     'bootstrap'
   end
 
-  def current_logo_url
-    current_logo.try(:file).try(:url)
+  def current_logo_url(key = nil)
+    current_logo(key).try(:file).try(:url)
   end
 
-  def current_logo
-    Attachment.where(parent_type: 'Page', parent_id: current_home_page.child_pages.pluck(:id)).logos.last || Attachment.logos.last
+  def current_logo(key = nil)
+    logos = Attachment.where(parent_type: 'Page', parent_id: current_home_page.child_pages.pluck(:id)).logos
+    logos = Attachment.logos if logos.none?
+    logos = logos.where(title: key) if key
+    logos.last
   end
 
   def default_logo

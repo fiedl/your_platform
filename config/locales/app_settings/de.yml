@@ -6,3 +6,9 @@ de:
   logos: Logos
   preferred_locale: Standard-Sprache
   support_email: Support-E-Mail-Adresse
+
+  settings_of_the_current_website_str: "Einstellungen der aktuellen Website %{str}"
+  settings_of_the_other_websites: Einstellungen der anderen Websites
+
+  logo_settings: Logo-Einstellungen
+  logo_settings_for_str: "Logo-Einstellungen für %{str}"

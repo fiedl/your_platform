@@ -33,9 +33,13 @@
 
   = render partial: 'shared/nav_node_settings', locals: {navable: @page}
 
-- if @page.kind_of? Pages::HomePage
+- if @page.kind_of?(Pages::HomePage)
   %h1.home_page_settings= t :home_page_settings
   %div= render partial: 'page_settings/home_page_settings', locals: {home_page: @page}
+
+- if @page.kind_of?(Pages::HomePage) || @page.kind_of?(Blog)
+  %h1.logo_settings= t :logo_settings
+  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: @page.domain || @page.title), page_logos_path(@page), class: 'btn btn-default'
 
 %h1.boxes_on_this_page= t :boxes_on_this_page
 %div

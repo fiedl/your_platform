@@ -1,6 +1,10 @@
 module LogoHelper
 
-  def logo_url
+  def logo_url(key = nil)
+    current_logo_url(key) || global_logo_url
+  end
+
+  def global_logo_url
     unless @logo_url
       @logo_url = current_logo_url if defined?(current_logo_url)
       @logo_url ||= Attachment.logos.first.try(:file).try(:url)

@@ -22,6 +22,9 @@
           = best_in_place logo, :title
     #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @logo_page, title: "logo", type: :image}
 
+  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: current_home_page.domain || current_home_page.title), page_logos_path(current_home_page), class: 'btn btn-default'
+
+
   %h2 Root-Breadcrumb
   %ul.settings
     %li
@@ -49,6 +52,18 @@
       = setting_in_place Setting, :discourse_suggestions_url, html_attrs: {placeholder: "https://discourse.example.com/"}
 
 - content_for :side_bar do
-  = link_to settings_path do
-    = settings_icon
-    = "#{t(:see_also)}: #{t(:user_settings)}"
+  %h4=t :see_also
+
+  %ul
+    %li
+      = link_to settings_path do
+        = settings_icon
+        = t :user_settings
+    %li
+      = link_to page_settings_path(current_home_page) do
+        = settings_icon
+        = t :settings_of_the_current_website_str, str: current_home_page.domain
+    %li
+      = link_to home_pages_path do
+        = settings_icon
+        = t :settings_of_the_other_websites
