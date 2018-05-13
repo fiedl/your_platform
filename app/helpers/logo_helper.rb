@@ -1,7 +1,8 @@
 module LogoHelper
 
   def logo_url(key = nil)
-    url = current_logo_url(key) || global_logo_url
+    url = current_logo_url(key) if defined? current_logo_url
+    url ||= global_logo_url
     url = root_url.chomp("/") + url unless url.start_with? "http"
     url
   end
