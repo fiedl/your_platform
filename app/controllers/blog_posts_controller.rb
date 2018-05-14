@@ -10,11 +10,19 @@ class BlogPostsController < PagesController
     @blog_post ||= @page
     authorize! :read, @blog_post
 
-    @blog = @blog_post.parent
-    @tags = @blog_post.tags
+    respond_to do |format|
+      format.html do
+        @blog = @blog_post.parent
+        @tags = @blog_post.tags
 
-    set_current_navable @blog_post
-    set_current_title @blog_post.title
+        set_current_navable @blog_post
+        set_current_title @blog_post.title
+      end
+      format.mp4 do
+        # The play is counted via `PageAnalyticsMetricLogging`.
+        redirect_to @blog_post.video_url
+      end
+    end
   end
 
   def create

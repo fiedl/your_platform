@@ -34,7 +34,7 @@ module RssHelper
               xml.cdata! ((image_tag(item.teaser_image_url).html_safe if item.respond_to? :teaser_image_url and item.teaser_image_url).to_s + item.teaser_text.to_s)
             end
 
-            xml.enclosure url: item.video_url, length: 0, type: "video/mp4"
+            xml.enclosure url: blog_post_url(item, format: 'mp4'), length: 0, type: "video/mp4"
             xml.itunes :image, href: logo_url('logo-icon')
             xml.itunes :subtitle, item.teaser_text
 
