@@ -19,7 +19,9 @@ module ActionDispatch::Routing
         options[:subdomain] = options[:subdomain].call
       end
 
-      if Rails.application.config.action_mailer.default_url_options[:subdomain].respond_to? :call
+      # When `request.host` is not available, e.g. in mailers or sidekiq, then the
+      # default host might be used.
+      if super.include?(Rails.application.config.action_mailer.default_url_options[:host]) && Rails.application.config.action_mailer.default_url_options[:subdomain].respond_to?(:call)
         options[:subdomain] ||= Rails.application.config.action_mailer.default_url_options[:subdomain].call
       end
 
