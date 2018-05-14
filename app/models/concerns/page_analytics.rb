@@ -9,6 +9,7 @@ concern :PageAnalytics do
   end
 
   def view_count
-    self.impressionist_count
+    # Hitting the same url in the same session in the same minute counts as only one hit.
+    self.impressionist_count(filter: "session_hash, ROUND(TIME_TO_SEC(created_at) / 60)")
   end
 end
