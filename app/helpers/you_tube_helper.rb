@@ -16,7 +16,7 @@ module YouTubeHelper
   #
   def youtubify(content)
     AutoHtml.auto_html(content) do
-      youtube(autoplay: false)
+      youtube(autoplay: false, hide_related: true)
     end.html_safe
   end
 
