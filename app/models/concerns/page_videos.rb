@@ -8,6 +8,14 @@ concern :PageVideos do
     teaser_youtube_url || teaser_video_url || video_attachments.first.try(:url)
   end
 
+  def raw_video_url
+    teaser_video_url || video_attachments.first.try(:url) || raw_youtube_video_url
+  end
+
+  def raw_youtube_video_url
+    `youtube-dl --get-url -f best #{teaser_youtube_url}`.strip if teaser_youtube_url
+  end
+
   def video_attachments
     attachments_by_type("video")
   end

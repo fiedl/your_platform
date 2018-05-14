@@ -20,7 +20,7 @@ class BlogPostsController < PagesController
       end
       format.mp4 do
         # The play is counted via `PageAnalyticsMetricLogging`.
-        redirect_to @blog_post.video_url
+        redirect_to @blog_post.raw_video_url
       end
     end
   end
