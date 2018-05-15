@@ -86,4 +86,4 @@ source 'https://rubygems.org' do
 end
 
 source 'https://rails-assets.org'
-ruby '2.3.3'
+ruby '2.4.4'

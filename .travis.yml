@@ -1,5 +1,5 @@
 rvm:
-  - "2.3.3"
+  - "2.4.4"
 env:
   - "WORKER_ID=0   NUMBER_OF_WORKERS=25 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql SELENIUM=true"
   - "WORKER_ID=1   NUMBER_OF_WORKERS=25 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql SELENIUM=true"
