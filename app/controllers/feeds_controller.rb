@@ -23,7 +23,7 @@ class FeedsController < ApplicationController
     when 'podcast'
       authorize! :read, :default_feed
       podcast_feed
-    end.select { |page| can?(:read, page) && page.not_empty? }
+    end.select { |page| page.not_empty? && can?(:read, page) && page.visible_to?(current_user) }
   end
 
   private
