@@ -4,7 +4,7 @@ concern :GenericMetricLogging do
     helper_method :metric_logger
 
     # before_action :log_generic_metric_event
-    after_action :log_request
+    # after_action :log_request
     after_action  :log_activity
   end
 
