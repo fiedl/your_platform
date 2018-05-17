@@ -8,3 +8,5 @@ de:
   you_have_subscribed_to_str: 'Sie haben %{str} abonniert.'
   you_have_unsubscribed_str: 'Sie haben Ihr Abonnement von %{str} beendet.'
   unsubscribe: Abonnement beenden
+  please_confirm_your_subscription_to_str_via_email_token: "Sie haben von uns eine E-Mail-Nachricht mit Bestätigungs-Link erhalten. Bitte bestätigen Sie dort Ihr Abonnement für %{str}."
+  please_confirm_your_subscription_to_str: "Bitte bestätigen Sie Ihr Abonnement von %{str}"

@@ -183,6 +183,7 @@ Rails.application.routes.draw do
     delete :subscriptions, to: 'blog_subscriptions#destroy'
     resources :subscriptions, controller: 'blog_subscriptions'
   end
+  get 'confirm_blog_subscription/:token', to: 'blog_subscription_confirmations#create', as: :create_blog_subscription_confirmation
   resources :blog_posts
   resources :attachments do
     get 'description(.:format)', to: 'attachment_descriptions#show'
