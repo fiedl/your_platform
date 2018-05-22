@@ -28,6 +28,8 @@ Open [http://localhost:3001](http://localhost:3001) in your web browser.
 
 **Attention**: Do not use this in production on a real server as [docker-compose.yml](https://github.com/fiedl/your_platform/blob/master/docker-compose.yml) includes dummy passwords!
 
+Make sure that your docker machine has at least 8GB of RAM.
+
 If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
 If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
