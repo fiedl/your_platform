@@ -1,0 +1,85 @@
+version: '3'
+
+volumes:
+  your_platform_mysql_data: {}
+  your_platform_redis_data: {}
+  your_platform_neo4j_data: {}
+  your_platform_uploads: {}
+  your_platform_gems: {}
+
+networks:
+  backend:
+    driver: bridge
+
+services:
+  web:
+    build: docker/services/your_platform_web_development
+    volumes:
+      - ".:/app"
+      - "your_platform_uploads:/app/uploads"
+      - "your_platform_gems:/usr/local/bundle"
+    expose:
+      - 3001
+    ports:
+      - "0.0.0.0:3001:3001"
+    environment:
+      RAILS_ENV: development
+      MYSQL_DATABASE: your_platform
+      MYSQL_TEST_DATABASE: your_platform_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
+    depends_on:
+      - mysql
+      - redis
+      - neo4j_development
+    networks:
+      - default
+      - backend
+    command:
+      - script/start
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - your_platform_mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: your_platform
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_USER: your_platform
+    networks:
+      - backend
+    command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+
+  redis:
+    image: redis
+    volumes:
+      - your_platform_redis_data:/var/lib/redis
+    networks:
+      - backend
+
+  neo4j_development:
+    image: neo4j
+    volumes:
+      - your_platform_neo4j_data:/data
+    ports:
+      - "0.0.0.0:7474:7474"
+      - "0.0.0.0:7687:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/trinity"
+    networks:
+      - backend
+
+  neo4j_test:
+    image: neo4j
+    ports:
+      - "0.0.0.0:7475:7474"
+      - "0.0.0.0:7688:7687"
+    environment:
+      NEO4J_AUTH: "neo4j/trinity"
+    networks:
+      - backend

@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# YourPlatform is a rails engine, i.e. needs to be embedded into
+# a main application. The standalone application that does that
+# is located at `demo_app`.
+#
+cd demo_app/my_platform
+
+# Install ruby gems.
+bundle install
+
+# Install javascript modules.
+rake your_platform:install:node_modules
+
+# Migrate the database.
+bin/rails db:create db:migrate db:test:prepare
+
+# Start the development server.
+rm tmp/pids/server.pid
+bin/rails server -p 3001 -b 0.0.0.0
