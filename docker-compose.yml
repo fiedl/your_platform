@@ -6,6 +6,7 @@ volumes:
   your_platform_neo4j_data: {}
   your_platform_uploads: {}
   your_platform_gems: {}
+  your_platform_tmp: {}
 
 networks:
   backend:
@@ -18,6 +19,7 @@ services:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
+      - "your_platform_tmp/app/demo_app/my_platform/tmp"
     expose:
       - 3001
     ports:
@@ -48,6 +50,7 @@ services:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
+      - "your_platform_tmp/app/demo_app/my_platform/tmp"
     environment:
       RAILS_ENV: development
       MYSQL_DATABASE: your_platform
@@ -72,6 +75,7 @@ services:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
+      - "your_platform_tmp/app/demo_app/my_platform/tmp"
     environment:
       RAILS_ENV: development
       MYSQL_DATABASE: your_platform
@@ -96,6 +100,7 @@ services:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
+      - "your_platform_tmp/app/demo_app/my_platform/tmp"
     environment:
       RAILS_ENV: development
       MYSQL_DATABASE: your_platform
