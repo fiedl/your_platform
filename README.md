@@ -4,7 +4,6 @@
 [![Gem Version](https://badge.fury.io/rb/your_platform.svg)](http://badge.fury.io/rb/your_platform)
 [![Build Status](https://travis-ci.org/fiedl/your_platform.svg?branch=master)](https://travis-ci.org/fiedl/your_platform)
 [![Code Climate](https://codeclimate.com/github/fiedl/your_platform/badges/gpa.svg)](https://codeclimate.com/github/fiedl/your_platform)
-[![Dependency Status](https://gemnasium.com/fiedl/your_platform.svg)](https://gemnasium.com/fiedl/your_platform)
 
 YourPlatform is a [ruby on rails](http://rubyonrails.org) engine that provides the basis for administrtive and social network platforms for closed user groups such as alumni organizations.
 
