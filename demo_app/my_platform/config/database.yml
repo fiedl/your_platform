@@ -1,0 +1,19 @@
+development:
+  adapter: mysql2
+  pool: 25
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  database: <%= ENV['MYSQL_DATABASE'] %>
+  username: <%= ENV['MYSQL_USER'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+  host: <%= ENV['MYSQL_HOST'] %>
+
+test:
+  adapter: mysql2
+  pool: 25
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
+  database: <%= ENV['MYSQL_TEST_DATABASE'] %><%= ENV['TEST_ENV_NUMBER'] %>
+  username: <%= ENV['MYSQL_USER'] %>
+  password: <%= ENV['MYSQL_PASSWORD'] %>
+  host: <%= ENV['MYSQL_HOST'] %>

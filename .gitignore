@@ -26,7 +26,7 @@ coverage
 # Ignore database configuration
 database.yml
 config/database.yml
-demo_app/my_platform/config/database.yml
+!demo_app/my_platform/config/database.yml
 
 # Ignore secret password and key file.
 config/secrets.yml
