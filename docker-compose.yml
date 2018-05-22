@@ -66,6 +66,30 @@ services:
       - backend
     command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec sidekiq --queue critical --queue default --queue low --queue cache --queue dag_links --verbose --environment development"
 
+  notifications:
+    build: docker/services/your_platform_web_development
+    volumes:
+      - ".:/app"
+      - "your_platform_uploads:/app/uploads"
+      - "your_platform_gems:/usr/local/bundle"
+    environment:
+      RAILS_ENV: development
+      MYSQL_DATABASE: your_platform
+      MYSQL_TEST_DATABASE: your_platform_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
+    depends_on:
+      - mysql
+      - redis
+      - neo4j_development
+    networks:
+      - backend
+    command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rake your_platform:notifications:worker"
+
   mysql:
     image: mysql:5.7
     volumes:
