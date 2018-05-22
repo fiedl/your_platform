@@ -13,21 +13,20 @@ The application serves four main purposes: Centralized or decentralized member m
 
 ## Getting Started Developing
 
-Check out the demo application locally:
+Install [Docker](https://www.docker.com/community-edition#/download) including *docker-compose* on your development machine.
+
+Then check out and start the standalone application:
 
 ```bash
 git clone git@github.com:fiedl/your_platform.git
-cd your_platform/demo_app/my_platform
+cd your_platform
 
-# provide a config/database.yml according to your local mysql credentials
-
-bundle install
-bundle exec rake db:create db:migrate
-bundle exec foreman start
-bundle exec rails server
+docker-compose up
 ```
 
-View the application at [http://localhost:3000](http://localhost:3000).
+Open [http://localhost:3001](http://localhost:3001) in your web browser.
+
+**Attention**: Do not use this in production on a real server as [docker-compose.yml](https://github.com/fiedl/your_platform/blob/master/docker-compose.yml) includes dummy passwords!
 
 If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
 
