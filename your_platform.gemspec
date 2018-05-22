@@ -208,4 +208,8 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency "rspec-rails"
 
+  # Email preview
+  s.add_development_dependency "letter_opener"
+  s.add_development_dependency "letter_opener_web"
+
 end

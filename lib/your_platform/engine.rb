@@ -151,6 +151,15 @@ require 'neography'
 
 require_relative '../../config/initializers/inflections'
 
+# Development:
+if Rails.env.development?
+
+  # Email preview
+  require 'letter_opener'
+  require 'letter_opener_web/engine'
+
+end
+
 module YourPlatform
   class Engine < ::Rails::Engine
 

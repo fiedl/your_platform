@@ -272,6 +272,9 @@ Rails.application.routes.draw do
 
   resources :contact_messages, only: [:new, :create]
 
+  # Email previews
+  mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
+
   get :feeds, to: 'feeds#index', as: :feeds
 
   # ATTENTION: Changing feed urls might break subscribed feeds!
