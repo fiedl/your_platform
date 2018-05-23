@@ -58,7 +58,7 @@ concern :PagePublicWebsite do
     # There might be several websites.
     #
     def public_websites_page_ids
-      (Page.home_pages.pluck(:id) + Page.home_pages.collect { |home_page| home_page.descendant_page_ids }).flatten - [nil] - Page.intranet.pluck(:id)
+      public_website_page_ids + (Page.home_pages.pluck(:id) + Page.home_pages.collect { |home_page| home_page.descendant_page_ids }).flatten - [nil] - Page.intranet.pluck(:id)
     end
 
     # The public website is present if the Page.find_root has no redirect_to entry,
