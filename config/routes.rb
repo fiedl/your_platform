@@ -14,9 +14,6 @@ Rails.application.routes.draw do
   get :terms, to: 'terms_of_use#index'
   post :terms, to: 'terms_of_use#accept'
 
-  get :privacy, to: 'privacy#index'
-  get :datenschutz, to: 'privacy#index'
-
   get "vertical_navs/:navable_type/:navable_id", to: 'vertical_navs#show', as: :vertical_nav
   resources :nav_nodes
 
