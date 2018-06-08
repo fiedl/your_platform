@@ -1,0 +1,10 @@
+.trello_card
+  = link_to card.url do
+    - if card.cover_image_id.present?
+      - cover_image = card.attachments.detect { |attachment| attachment.id == card.cover_image_id }
+      .cover_image
+        %img{src: cover_image.previews[3]["url"]}
+    .labels
+      - card.labels.each do |label|
+        .label{class: [label.name.parameterize, label.color].join(" ")}= label.name
+    .name= card.name
