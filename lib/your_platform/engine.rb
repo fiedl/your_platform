@@ -149,6 +149,9 @@ require 'net/ldap'
 # Neo4j
 require 'neography'
 
+# Trello API
+require 'trello'
+
 require_relative '../../config/initializers/inflections'
 
 # Development:
