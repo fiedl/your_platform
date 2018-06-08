@@ -26,3 +26,6 @@
 
   .col-sm-12
     %h1 Aktuell in Entwicklung
+    %div
+      - TrelloIntegration.new.features_doing_cards.each do |card|
+        = render partial: 'integrations/trello/card', object: card
