@@ -107,4 +107,12 @@ module IconHelper
     fa_icon 'search'
   end
 
+  def discourse_icon
+    fa_icon "discourse"
+  end
+
+  def github_icon
+    fa_icon "github"
+  end
+
 end

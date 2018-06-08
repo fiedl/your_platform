@@ -1,0 +1,28 @@
+- @hide_vertical_nav = true
+
+.row.eq-height
+  .col-sm-6
+    %h1 Aktuelles
+    %div.chat_wrapper
+      %iframe{src: 'https://gitter.im/fiedl/wingolfsplattform/~embed'}
+
+  .col-sm-6
+    %h1 Feature-Wünsche
+    %div
+      %p
+        Wenn ihr Wünsche für neue Funktionen habt, tragt diese am Besten in unsere Feature-Sammlung im Discourse-Forum ein:
+      %p
+        %a.btn.btn-success{href: discourse_features_url}
+          = discourse_icon
+          Feature-Vorschläge
+      %p
+        Bugs könnt ihr entweder über den
+        %strong blauen Hilfe-Knopf
+        oben in der Leiste oder in unserem Issue-Tracker auf Github melden. Vielen Dank!
+      %p
+        %a.btn.btn-default{href: github_issues_url}
+          = github_icon
+          Issue-Tracker
+
+  .col-sm-12
+    %h1 Aktuell in Entwicklung

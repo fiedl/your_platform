@@ -245,6 +245,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :features
+
   get :renew_cache, to: 'cache_renewals#create'
 
   get "errors/unauthorized"
