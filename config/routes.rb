@@ -247,6 +247,10 @@ Rails.application.routes.draw do
 
   resources :features
 
+  resources :integrations, only: [:index]
+  get 'integrations/trello', to: 'integrations/trello#show'
+
+
   get :renew_cache, to: 'cache_renewals#create'
 
   get "errors/unauthorized"

@@ -1,0 +1,44 @@
+%h1 Trello Integration
+%div
+  To connect this application to
+  = link_to "https://trello.com" do
+    = trello_icon
+    Trello
+  you need to provide the following authentication information:
+
+  %ol
+    %li
+      Visit
+      = link_to "https://trello.com" do
+        = trello_icon
+        https://trello.com
+      and login as the bot user that will represent the platform application.
+
+    %li
+      Click
+      %a{href: Trello.public_key_url}
+        = trello_icon
+        here
+      and copy the displayed public key into here:
+      %br
+      = setting_in_place Setting, :trello_bot_public_key, place_holder: "[Click here to edit the trello bot's public key.]"
+
+    %li
+      Refresh this page.
+    %li
+      Click
+      %a{href: Trello.authorize_url(key: Setting.trello_bot_public_key)}
+        = trello_icon
+        here
+      and copy the displayed token into here:
+      %br
+      = setting_in_place Setting, :trello_bot_auth_token, place_holder: "[Click here to edit the trello bot's auth token.]"
+    %li
+      Refresh this page again to check if the integration works:
+      %br
+      - if (trello = TrelloIntegration.new) && trello.trello_user
+        Bot user:
+        %img.avatar{src: trello.avatar_url}
+        = trello.user_name
+      - else
+        No bot user found.

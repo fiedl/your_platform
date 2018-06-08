@@ -115,4 +115,8 @@ module IconHelper
     fa_icon "github"
   end
 
+  def trello_icon
+    fa_icon "trello"
+  end
+
 end
