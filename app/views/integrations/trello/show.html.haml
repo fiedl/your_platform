@@ -42,3 +42,12 @@
         = trello.user_name
       - else
         No bot user found.
+
+%h1 Feature development
+%div
+  Platform features can be presented at:
+  = link_to features_path, features_path
+  %ul
+    %li
+      Trello board url for features development:
+      = setting_in_place Setting, :trello_board_url_for_features, place_holder: "[Click here to edit the url.]"
