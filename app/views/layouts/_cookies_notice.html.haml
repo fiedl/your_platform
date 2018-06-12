@@ -1,4 +1,5 @@
 - if current_user && (not current_user.account) && (not cookies_notice_discarded?)
   #cookies_notice
     = t :this_website_uses_cookies
+    %a{href: "/datenschutz"} Weitere Informationen zum Datenschutz
     %a#cookies_notice_ok.btn.btn-primary.btn-xs OK
