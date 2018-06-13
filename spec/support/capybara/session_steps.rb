@@ -29,6 +29,8 @@ module SessionSteps
     login_string = user.alias
 
     visit sign_in_path
+    confirm_cookies_notice
+
     within "#content" do
       fill_in 'user_account_login', with: login_string
       fill_in 'user_account_password', with: password
@@ -48,6 +50,14 @@ module SessionSteps
 
   def logout
     click_link I18n.t( :logout )
+  end
+
+  def confirm_cookies_notice
+    if page.has_selector? "#cookies_notice"
+      within "#cookies_notice" do
+        find("#cookies_notice_ok").click
+      end
+    end
   end
 
 end
