@@ -27,13 +27,13 @@ class PagesController < ApplicationController
 
     if @page.public? && can?(:use, :fast_lane) && (not params[:no_fast_lane])
       event_ids = @page.events.upcoming.order('events.start_at, events.created_at').limit(3).pluck(:id) if @page.show_events?
-      render inline: (Rails.cache.fetch([@page, :fast_lane, event_ids]) {
+      render html: (Rails.cache.fetch([@page, :fast_lane, event_ids, "v4"]) {
         set_current_title @page.title
         set_current_navable @page
         @events = Event.find(event_ids) if event_ids
         use_the_fast_lane
-        render_to_string template: 'pages/show'
-      })
+        render_to_string template: 'pages/show', layout: false
+      }), layout: true
       return
     end
 
