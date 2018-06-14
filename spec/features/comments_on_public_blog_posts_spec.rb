@@ -19,6 +19,7 @@ feature "Comments on public blog posts", js: true do
 
     scenario "A guest user posts a comment on a public blog post" do
       visit blog_post_path(@blog_post)
+      confirm_cookies_notice
 
       wait_until { page.has_selector? '.blog_post_comments' }
       within '.blog_post_comments' do

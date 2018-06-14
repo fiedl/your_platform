@@ -135,6 +135,7 @@ feature 'Change Password', js: true do
     background do
       @user = create :user_with_account
       visit forgot_password_path
+      confirm_cookies_notice
       fill_in :user_account_email, with: @user.email
       click_on "Passwort zurücksetzen"
       token = last_email.body.to_s.match(/reset_password_token=([A-za-z0-9]+)/)[1]

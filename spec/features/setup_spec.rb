@@ -17,6 +17,8 @@ feature 'Setup' do
       visit root_path
       page.should have_text I18n.t :this_setup_will_get_you_up_and_running
 
+      confirm_cookies_notice
+
       fill_in :first_name, with: 'John'
       fill_in :last_name, with: 'Doe'
       fill_in :email, with: 'j.doe@example.com'
