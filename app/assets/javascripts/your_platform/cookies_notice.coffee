@@ -1,6 +1,17 @@
-$(document).on 'click', '#cookies_notice_ok', ->
-  $.ajax {
-    type: 'POST',
-    url: '/api/v1/discard_cookies_notice'
-  }
-  $('#cookies_notice').remove()
+$(document).ready ->
+  window.cookieconsent.initialise({
+    "palette": {
+      "popup": {
+        "background": "#000"
+      },
+      "button": {
+        "background": "#f1d600"
+      }
+    },
+    "content": {
+      "message": "Dieser Internetauftritt verwendet Cookies. Mit der fortgesetzten Nutzung erklären Sie sich damit einverstanden. Weitere Informationen:",
+      "dismiss": "OK",
+      "link": "Datenschutz-Infos",
+      "href": "/datenschutz"
+    }
+  })

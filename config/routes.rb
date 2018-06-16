@@ -333,7 +333,6 @@ Rails.application.routes.draw do
       get :search_pages, to: 'search_pages#index'
       get :navigation, to: 'navigation#show'
       get 'search/preview', to: '/search#preview', defaults: {format: :json}
-      post :discard_cookies_notice, to: 'cookies_notice_discards#create'
     end
   end
 

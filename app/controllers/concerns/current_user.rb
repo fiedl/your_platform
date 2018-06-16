@@ -2,7 +2,6 @@ concern :CurrentUser do
 
   included do
     helper_method :current_user
-    helper_method :cookies_notice_discarded?
   end
 
   # This method returns the currently signed in user.
@@ -51,14 +50,6 @@ concern :CurrentUser do
       cookies[:guest_user_email] = nil
       set_flash_message! :notice, :signed_out
     end
-  end
-
-  def cookies_notice_discarded?
-    cookies[:cookies_notices_discarded]
-  end
-
-  def discard_cookies_notice
-    cookies[:cookies_notices_discarded] = true
   end
 
 end

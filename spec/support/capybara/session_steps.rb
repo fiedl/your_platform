@@ -53,9 +53,9 @@ module SessionSteps
   end
 
   def confirm_cookies_notice
-    if page.has_selector? "#cookies_notice"
-      within "#cookies_notice" do
-        find("#cookies_notice_ok").click
+    if page.has_selector? ".cc-window"
+      within ".cc-window" do
+        find(".cc-btn.cc-dismiss").click
       end
     end
   end

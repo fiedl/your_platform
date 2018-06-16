@@ -35,6 +35,7 @@
 //= require inline-attachment/jquery.inline-attachment
 //= require photoswipe/dist/photoswipe
 //= require photoswipe/dist/photoswipe-ui-default
+//= require cookieconsent/build/cookieconsent.min
 //
 //= require your_platform_node_modules.pack.js
 //= require vue_app.pack.js

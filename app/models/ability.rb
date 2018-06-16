@@ -685,8 +685,5 @@ class Ability
     # Everyone can read the mobile app's welcome screen.
     can :read, :mobile_welcome
 
-    # Everyone can discard the cookies notice.
-    can :discard, :cookies_notice
-
   end
 end
