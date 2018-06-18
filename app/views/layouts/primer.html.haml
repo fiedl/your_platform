@@ -1,0 +1,31 @@
+!!!
+%html{:lang => "en"}
+  %head
+    %meta{:charset => 'utf-8'}/
+    %title= website_title_with_app_name
+    = csrf_meta_tags
+    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
+
+    = stylesheet_link_tag 'primer_layout', :media => 'all'
+
+    = yield :scripts
+    = yield :head
+
+  = body_tag do
+    %header.masthead
+      .container
+        %a.masthead-logo= app_name
+        .header-search
+          %input{placeholder: "Suche"}
+        %nav.masthead-nav
+          %a.active Start
+          %a Mitglieder
+          %a Kommunikation
+          %a Veranstaltungen
+          %a Amtsträger
+          %a Dokumente
+        %a.header-help.btn Hilfe
+        - if current_user
+          .header-avatar SF
+    .container
+      = yield

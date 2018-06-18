@@ -9,6 +9,7 @@ Rails.application.config.assets.precompile += %w( iweb_layout.css )
 Rails.application.config.assets.precompile += %w( compact_layout.css )
 Rails.application.config.assets.precompile += %w( modern_layout.css )
 Rails.application.config.assets.precompile += %w( mobile_layout.css )
+Rails.application.config.assets.precompile += %w( primer_layout.css )
 
 # Galleria
 Rails.application.config.assets.precompile += %w( galleria-classic.js galleria/classic-loader.gif galleria/classic-map.png )

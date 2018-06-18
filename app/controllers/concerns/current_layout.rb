@@ -35,7 +35,7 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017 primer)).uniq
   end
 
   def default_layout
@@ -62,7 +62,7 @@ concern :CurrentLayout do
   end
 
   def resource_centred_layouts
-    %w(resource_2017)
+    %w(resource_2017 primer)
   end
 
   def resource_centred_layout?
