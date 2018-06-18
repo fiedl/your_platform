@@ -17,6 +17,9 @@
         %a.masthead-logo= app_name
         .header-search
           %input{placeholder: "Suche"}
+        %a.header-help.btn Hilfe
+        - if current_user
+          .header-avatar SF
         %nav.masthead-nav
           %a.active Start
           %a Mitglieder
@@ -24,8 +27,5 @@
           %a Veranstaltungen
           %a Amtsträger
           %a Dokumente
-        %a.header-help.btn Hilfe
-        - if current_user
-          .header-avatar SF
     .container
       = yield
