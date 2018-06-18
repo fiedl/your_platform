@@ -24,6 +24,7 @@
     "masonry-layout": "^4.2.0",
     "node-sass": "^4.9.0",
     "photoswipe": "^4.1.2",
+    "primer": "^10.6.0",
     "sass-loader": "^6.0.6",
     "scrollreveal": "^3.3.6",
     "vue": "^2.4.2",
