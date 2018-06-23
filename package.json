@@ -31,6 +31,7 @@
     "primer": "^10.6.0",
     "sass-loader": "^6.0.6",
     "scrollreveal": "^3.3.6",
+    "stimulus": "^1.0.1",
     "vue": "^2.4.2",
     "vue-loader": "^13.0.4",
     "vue-password-strength-meter": "^1.1.0",

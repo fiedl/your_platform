@@ -45,3 +45,6 @@
 //= require turbolinks
 //= require turbolinks-compatibility
 //= require turboboost/turboboost
+//
+// These controllers are stimulus.js controllers:
+//= require_tree ./controllers
