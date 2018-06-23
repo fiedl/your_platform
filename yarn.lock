@@ -1134,6 +1134,34 @@ dashdash@^1.12.0:
   dependencies:
     assert-plus "^1.0.0"
 
+datatables.net-bs@^1.10.15, datatables.net-bs@^1.10.18:
+  version "1.10.18"
+  resolved "https://registry.yarnpkg.com/datatables.net-bs/-/datatables.net-bs-1.10.18.tgz#72c9ebe926f9189f891d4c474a629defc99753e6"
+  dependencies:
+    datatables.net "1.10.18"
+    jquery ">=1.7"
+
+datatables.net-fixedheader-bs@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/datatables.net-fixedheader-bs/-/datatables.net-fixedheader-bs-3.1.4.tgz#79621d78504eb0e9a5481df1042536c09ada8fab"
+  dependencies:
+    datatables.net-bs "^1.10.15"
+    datatables.net-fixedheader "3.1.4"
+    jquery ">=1.7"
+
+datatables.net-fixedheader@3.1.4, datatables.net-fixedheader@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/datatables.net-fixedheader/-/datatables.net-fixedheader-3.1.4.tgz#b1de00345cba039892cd19544d7de28b7f9ed118"
+  dependencies:
+    datatables.net "^1.10.15"
+    jquery ">=1.7"
+
+datatables.net@1.10.18, datatables.net@^1.10.15, datatables.net@^1.10.18:
+  version "1.10.18"
+  resolved "https://registry.yarnpkg.com/datatables.net/-/datatables.net-1.10.18.tgz#b6f045aa533101bcd33714e5338da8f905d3ef09"
+  dependencies:
+    jquery ">=1.7"
+
 datatables@^1.10.13:
   version "1.10.13"
   resolved "https://registry.yarnpkg.com/datatables/-/datatables-1.10.13.tgz#9bb2dec6f7dcf02049a00e4f0e7d3fe009c39346"

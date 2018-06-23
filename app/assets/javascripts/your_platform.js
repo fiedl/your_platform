@@ -14,7 +14,8 @@
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
 //= require refile
-//= require datatables/media/js/jquery.dataTables
+//= require datatables.net/js/jquery.dataTables.js
+//= require datatables.net-fixedheader/js/dataTables.fixedHeader.js
 //= require pretty_pre
 //= require galleria/src/galleria
 //= require underscore

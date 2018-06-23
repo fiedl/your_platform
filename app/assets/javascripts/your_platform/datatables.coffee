@@ -34,6 +34,7 @@ App.datatables = {
       "bJQueryUI": true,
       "lengthMenu": [ 10, 20, 50, 100, 1000 ],
       "language": App.datatables.language_options(),
+      "fixedHeader": true,
       "drawCallback": (settings)->
         # Hide the pagination elements if there is only one page.
         if (settings._iDisplayLength > settings.fnRecordsDisplay())
