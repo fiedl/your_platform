@@ -15,13 +15,19 @@ concern :CurrentLayout do
   end
 
   def current_layout
+    layout ||= (permitted_layouts & [layout_param]).first
     layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
     layout ||= mobile_layout_if_mobile_app
-    layout ||= (permitted_layouts & [params[:layout]]).first
     layout ||= current_navable.layout if current_navable.respond_to? :layout
     layout ||= current_home_page.layout if current_home_page
+    layout ||= intranet_layout if current_navable.try(:in_intranet?)
     layout ||= default_layout
     return (permitted_layouts & [layout]).first
+  end
+
+  def layout_param
+    save_layout_setting_as_cookie unless @layout_setting
+    @layout_setting ||= params[:layout]
   end
 
   def layout_setting
@@ -43,6 +49,10 @@ concern :CurrentLayout do
   end
 
   def default_layout
+    'bootstrap'
+  end
+
+  def intranet_layout
     'bootstrap'
   end
 
