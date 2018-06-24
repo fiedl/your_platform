@@ -17,6 +17,10 @@
         .box_title
           %h1= content_for :box_title
 
+      - if content_for? :box_filter
+        .box_filter
+          = content_for :box_filter
+
       - if content_for? :box_meta
         .box_meta= content_for :box_meta
 
@@ -25,8 +29,9 @@
         = save_button
         = content_for :box_tools
 
-  .box_content.panel-body
-    = box_body
+  - if box_body.present?
+    .box_content.panel-body
+      = box_body
 
   - if content_for? :box_footer
     .box_footer.panel-footer= content_for :box_footer
@@ -35,6 +40,7 @@
 - #
 - content_for(:box_title, flush: true) { "" }
 - content_for(:box_tools, flush: true) { "" }
+- content_for(:box_filter, flush: true) { "" }
 - content_for(:box_image, flush: true) { "" }
 - content_for(:box_meta, flush: true) { "" }
 - content_for(:box_body, flush: true) { "" }

@@ -2,12 +2,14 @@ class TermReportsController < ApplicationController
   include CurrentTerm
 
   expose :term_report, -> {
-    if params[:id] || params[:term_report_id]
-      TermReport.find (params[:id] || params[:term_report_id])
-    elsif term && corporation
-      TermReports::ForCorporation.by_corporation_and_term corporation, term
-    elsif corporation
-      TermReports::ForCorporation.by_corporation_and_term corporation, Term.current.first
+    unless action_name.in?(['index'])
+      if params[:id] || params[:term_report_id]
+        TermReport.find (params[:id] || params[:term_report_id])
+      elsif term && corporation
+        TermReports::ForCorporation.by_corporation_and_term corporation, term
+      elsif corporation
+        TermReports::ForCorporation.by_corporation_and_term corporation, Term.current.first
+      end
     end
   }
   expose :termable, -> { term_report }
@@ -29,7 +31,12 @@ class TermReportsController < ApplicationController
     ]
   end
 
-  expose :term_reports, -> { term.try(:term_reports) || TermReport.all }
+  expose :term_reports, -> {
+    reports = TermReport.all
+    reports = reports.where(group_id: group.id) if group
+    reports = reports.where(term_id: terms.pluck(:id)) if terms && terms.any?
+    reports
+  }
 
   def index
     authorize! :index, TermReport
