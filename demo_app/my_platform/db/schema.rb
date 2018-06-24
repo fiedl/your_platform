@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180513125716) do
+ActiveRecord::Schema.define(version: 20180623154231) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string   "trackable_type"
@@ -478,8 +478,9 @@ ActiveRecord::Schema.define(version: 20180513125716) do
     t.integer  "author_user_id"
     t.integer  "reference_id"
     t.string   "reference_type"
-    t.datetime "created_at",     null: false
-    t.datetime "updated_at",     null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.text     "comment",        limit: 65535
   end
 
   create_table "status_group_membership_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|

@@ -14,7 +14,7 @@ class TermReport < ApplicationRecord
   end
 
   def fill_info
-    raise ActiveRecord::RecordInvalid, "term report has already been #{self.state.to_s}." if self.state
+    raise ActiveRecord::RecordInvalid, "term report has already been #{self.state.to_s}." if self.state && !(self.state.rejected?)
     self.number_of_members = group.memberships.at_time(end_of_term).count
     self.number_of_new_members = group.memberships.with_past.where(valid_from: term_time_range).count
     self.number_of_membership_ends = group.memberships.with_past.where(valid_to: term_time_range).count
@@ -42,6 +42,10 @@ class TermReport < ApplicationRecord
     states.where(name: "submitted").last.try(:created_at)
   end
 
+  def submitted_by
+    states.where(name: "submitted").last.try(:author)
+  end
+
   def accepted?
     accepted_at
   end
@@ -54,8 +58,16 @@ class TermReport < ApplicationRecord
     rejected_at
   end
 
+  def rejected_state
+    states.where(name: "rejected").last
+  end
+
   def rejected_at
-    states.where(name: "rejected").last.try(:rejected_at)
+    rejected_state.try(:created_at)
+  end
+
+  def rejected_by
+    rejected_state.try(:author)
   end
 
   def state

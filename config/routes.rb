@@ -165,9 +165,9 @@ Rails.application.routes.draw do
   end
 
   resources :term_reports do
-    post :submit, to: 'term_reports#submit'
-    post :accept, to: 'term_reports#accept'
-    post :reject, to: 'term_reports#reject'
+    post :submit, to: 'term_report_submissions#create'
+    post :accept, to: 'term_report_acceptions#create'
+    post :recalculate, to: 'term_report_recalculations#create'
   end
 
   get :term_report, to: 'term_reports#show', as: :search_term_report

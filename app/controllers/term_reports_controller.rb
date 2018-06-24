@@ -41,20 +41,17 @@ class TermReportsController < ApplicationController
   def index
     authorize! :index, TermReport
 
-    set_current_title t :term_reports
-  end
-
-  # POST /term_reports/123/submit
-  #
-  def submit
-    authorize! :submit, term_report
-    raise ActionController::BadRequest, "term report #{term_report.id} cannot be submitted because it has already been #{term_report.state.to_s}." if term_report.state
-    raise ActionController::BadRequest, "term report #{term_report.id} is not due." unless term_report.due?
-    raise ActionController::BadRequest, "term report #{term_report.id} is too old to submit." if term_report.too_old_to_submit?
-
-    term_report.states.create name: "submitted", author_user_id: current_user.id
-
-    redirect_to term_report_path(term_report)
+    if term && corporation
+      redirect_to term_report_path(id: TermReports::ForCorporation.by_corporation_and_term(corporation, term))
+    else
+      @hide_vertical_nav = true
+      if group
+        set_current_navable group
+      else
+        set_current_navable Page.intranet_root
+      end
+      set_current_title t :term_reports
+    end
   end
 
 end

@@ -1,11 +1,72 @@
+body.term_reports
+  .chart-title
+    position: relative
+    top: 60px
+    text-align: center
+    font-weight: bold
+
+  table.members
+    font-size: 70%
+    td
+      padding-right: 3px
+      text-align: right
+    td.name, td.date_of_birth
+      text-align: left
+    tr.first_for_member
+      td
+        padding-top: 3px
+        vertical-align: top
+      td.name
+        font-weight: bold
+      td.address
+        border-bottom: 1px solid grey
+    tr.second_for_member
+      td
+        border-bottom: 1px solid grey
+        vertical-align: bottom
+
+  table.officers
+    font-size: 90%
+    td, th
+      vertical-align: top
+    th
+      width: 40%
+      padding-right: 3px
+    td
+      padding-bottom: 3px
+
+
 #term_report_submission
   .alert form
     text-align: right
     margin-top: 10px
+  .buttons
+    text-align: right
+    form
+      display: inline
+  .submission_author
+    margin-top: 5px
+    text-align: right
+    font-size: 80%
+    img
+      height: 16px
+      width: 16px
 
 #term_report_acception
   .alert
-    height: 85px
-  button.btn
-    float: right
-    margin-left: 5px
+    min-height: 85px
+
+  .term_report_acception_tools
+    display: flex
+    flex-wrap: wrap
+    textarea
+      flex-grow: 1
+    > *
+      margin: 3px
+    margin: -3px
+    margin-top: 10px
+
+#term_report_acception, #term_report_rejected
+  .comment
+    .author
+      font-size: 80%
