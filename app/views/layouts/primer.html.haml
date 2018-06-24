@@ -32,7 +32,18 @@
           %a Mitglieder
           %a Kommunikation
           %a Veranstaltungen
-          %a Amtsträger
+          %a Ansprechpartner
           %a Dokumente
+
     .container
-      = yield
+      %nav#breadcrumbs.navbar
+        = render partial: 'layouts/breadcrumbs'
+
+        %span#access_indicator
+          = access_indicator if current_user
+
+    .container
+      #content
+        = render partial: 'layouts/multi_column_content_area'
+
+    .bottom_page_footer.hidden-print= render partial: 'layouts/footer'
