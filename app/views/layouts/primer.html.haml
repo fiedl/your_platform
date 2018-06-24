@@ -14,7 +14,9 @@
   = body_tag do
     %header.masthead
       .container
-        %a.masthead-logo= app_name
+        %a.masthead-logo
+          = image_tag "icon.png"
+          = app_name
         .header-search
           %input{placeholder: "Suche"}
         %a.header-help.btn Hilfe
