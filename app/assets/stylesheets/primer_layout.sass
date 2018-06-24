@@ -62,10 +62,22 @@ header.masthead
 
   .header-avatar
     background: #ddd
+
+    .header-avatar
+      background: #ddd
+      border-radius: 50px
+      width: 42px
+      height: 42px
+
+      .dropdown-menu
+        li.user_name, li.user_email
+          font-size: 70%
+          padding: 3px 20px
+        li.user_email
+          padding-top: 0px
+
+  .avatar img
     border-radius: 50px
-    width: 42px
-    height: 42px
-    padding: 10px
 
 @media all and (min-width: 1080px)
   .header-help, .header-avatar

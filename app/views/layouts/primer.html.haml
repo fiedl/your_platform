@@ -6,8 +6,10 @@
     = csrf_meta_tags
     %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
 
+    = stylesheet_link_tag 'application', :media => 'all'
     = stylesheet_link_tag 'primer_layout', :media => 'all'
 
+    = javascript_include_tag 'application'
     = yield :scripts
     = yield :head
 
@@ -21,7 +23,10 @@
           %input#search{placeholder: "Suchen und Filtern"}
         %a.header-help.btn Hilfe
         - if current_user
-          .header-avatar SF
+          .header-avatar.dropdown
+            %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
+              = user_avatar(current_user, size: 42)
+            = render partial: 'layouts/current_user_dropdown'
         %nav.masthead-nav
           %a.active Start
           %a Mitglieder

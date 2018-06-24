@@ -1,5 +1,7 @@
 %ul.dropdown-menu.dropdown-menu-right{role: 'menu'}
   - if current_user.account
+    %li.user_name.obscure-in-demo= current_user.title
+    %li.user_email.obscure-in-demo= current_user.email
     %li= link_to t(:my_profile), user_path(current_user)
     %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true), class: 'change_avatar'
     %li= link_to t(:change_password), change_password_path
