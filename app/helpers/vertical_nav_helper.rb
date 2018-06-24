@@ -1,7 +1,14 @@
 module VerticalNavHelper
 
   def show_vertical_nav?
-    (not @hide_vertical_nav) && @navable.present? && @navable.show_vertical_nav?
+    if resource_centred_layout?
+      # TODO: Add a mechanism to show the group list
+      # within resource-centered layouts, e.g. by
+      # calling something in the controller or by
+      # a more intelligent mechanism.
+    else
+      (not @hide_vertical_nav) && @navable.present? && @navable.show_vertical_nav?
+    end
   end
 
   def link_to_navable(title, navable)

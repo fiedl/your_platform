@@ -47,6 +47,10 @@ concern :Navable do
       nav_node.breadcrumb_root if nav_node.breadcrumb_root.kind_of? Pages::HomePage
     end
 
+    def in_intranet?
+      ([self] + self.ancestor_navables).include? Page.find_intranet_root
+    end
+
     unless defined? layout
       def layout
         home_page.try(:layout)

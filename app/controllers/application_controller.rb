@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
   include CurrentTimeZone
   include CurrentUser
   include CurrentNavable
+  include CurrentResource
   include CurrentTitle
   include CurrentActivity
   include CurrentTab

@@ -1,4 +1,6 @@
 class TermReportsController < ApplicationController
+  set_parent_resource_controller MembersDashboardController
+
   include CurrentTerm
 
   expose :term_report, -> {
@@ -22,13 +24,9 @@ class TermReportsController < ApplicationController
     #
     redirect_to(term_report_path(id: term_report.id)) unless params[:id]
 
+    @hide_vertical_nav = true
     set_current_title term_report.title
-    set_current_breadcrumbs [
-      {title: Page.intranet_root.title, path: root_path},
-      {title: t(:term_reports), path: term_reports_path},
-      {title: term_report.group.name, path: group_members_path(term_report.group)},
-      {title: term_report.term.title}
-    ]
+    set_current_navable term_report.group
   end
 
   expose :term_reports, -> {

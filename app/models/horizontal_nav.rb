@@ -49,7 +49,7 @@ class HorizontalNav
   end
 
   def currently_in_intranet?
-    current_navable && ([current_navable] + current_navable.ancestor_navables).include?(Page.find_intranet_root)
+    current_navable.try(:in_intranet?)
   end
 
   def current_navable

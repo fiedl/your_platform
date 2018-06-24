@@ -28,8 +28,8 @@
               = user_avatar(current_user, size: 42)
             = render partial: 'layouts/current_user_dropdown'
         %nav.masthead-nav
-          %a.active Start
-          %a Mitglieder
+          %a{class: ('active' unless current_resource_category)} Start
+          %a{class: ('active' if current_resource_category == "members")} Mitglieder
           %a Kommunikation
           %a Veranstaltungen
           %a Ansprechpartner

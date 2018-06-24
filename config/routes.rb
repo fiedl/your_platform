@@ -115,6 +115,7 @@ Rails.application.routes.draw do
     get ':flag', to: 'by_flag#index'
   end
 
+  resources :members, only: [:index], controller: :members_dashboard
 
   resources :pages do
     get :photo_contest, to: 'photo_contests#show'

@@ -6,14 +6,22 @@ module BreadcrumbsHelper
   # The latter is set through `set_current_breadcrumbs` in the controller.
   #
   def current_breadcrumbs
-    manual_current_breadcrumbs || current_navable.try(:breadcrumbs) || breadcrumbs_for_title(current_title)
+    manual_current_breadcrumbs || (navable_breadcrumbs + resource_breadcrumbs)
   end
 
-  def breadcrumbs_for_title(title)
-    [
-      {path: page_path(Page.root), title: Page.root.title},
-      {path: page_path(Page.intranet_root), title: Page.intranet_root.title}
-    ] + (manual_current_breadcrumbs || ([{title: title}] if title) || [])
+  def navable_breadcrumbs
+    current_navable.try(:breadcrumbs) || [Page.root.nav_node, Page.intranet_root.nav_node]
+  end
+
+  def resource_breadcrumbs
+    ancestor_resource_controllers.reverse.collect { |controller|
+      if controller
+        underscored_controller_name = controller.name.gsub("Controller", "").underscore
+        title = translate(underscored_controller_name)
+        group_id = group.id if defined?(group) && group
+        {title: title, path: url_for(controller: underscored_controller_name, action: "index", group_id: group_id, id: nil)}
+      end
+    } - [nil] + [{title: current_title}]
   end
 
 end
