@@ -2,6 +2,7 @@ de:
   find: Suche
   search: Suche
   results: Ergebnisse
+  find_and_filter: Suchen und Filtern
 
   found_users: Gefundene Benutzer
   found_groups: Gefundene Gruppen
@@ -10,7 +11,7 @@ de:
   found_posts: Gefundene Nachrichten
 
   no_results_found: Keine Ergebnisse gefunden.
-  
+
   type_query_and_press_enter: Suchbegriff eingeben und mit der Eingabetaste bestätigen.
 
   is_searching_for_something: sucht gerade etwas
