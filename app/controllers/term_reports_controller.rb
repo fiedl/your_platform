@@ -3,6 +3,14 @@ class TermReportsController < ApplicationController
 
   include CurrentTerm
 
+  expose :term, -> {
+    if action_name == "show"
+      term_by_params || default_term
+    else
+      term_by_params
+    end
+  }
+
   expose :term_report, -> {
     unless action_name.in?(['index'])
       if params[:id] || params[:term_report_id]
