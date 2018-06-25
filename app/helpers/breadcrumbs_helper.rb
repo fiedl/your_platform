@@ -16,10 +16,12 @@ module BreadcrumbsHelper
   def resource_breadcrumbs
     ancestor_resource_controllers.reverse.collect { |controller|
       if controller
-        underscored_controller_name = controller.name.gsub("Controller", "").underscore
-        title = translate(underscored_controller_name)
-        group_id = group.id if defined?(group) && group
-        {title: title, path: url_for(controller: underscored_controller_name, action: "index", group_id: group_id, id: nil)}
+        if controller.action_methods.include? 'index'
+          underscored_controller_name = controller.name.gsub("Controller", "").underscore
+          title = translate(underscored_controller_name)
+          group_id = group.id if defined?(group) && group
+          {title: title, path: url_for(controller: underscored_controller_name, action: "index", group_id: group_id, id: nil)}
+        end
       end
     } - [nil] + [{title: current_title}]
   end
