@@ -33,7 +33,6 @@ services:
       MYSQL_HOST: mysql
       REDIS_HOST: redis
       NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
-      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
     depends_on:
       - mysql
       - redis
@@ -60,7 +59,6 @@ services:
       MYSQL_HOST: mysql
       REDIS_HOST: redis
       NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
-      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
     depends_on:
       - mysql
       - redis
@@ -85,7 +83,6 @@ services:
       MYSQL_HOST: mysql
       REDIS_HOST: redis
       NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
-      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
     depends_on:
       - mysql
       - redis
@@ -110,7 +107,6 @@ services:
       MYSQL_HOST: mysql
       REDIS_HOST: redis
       NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
-      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7475/"
     depends_on:
       - mysql
       - redis
@@ -118,6 +114,28 @@ services:
     networks:
       - backend
     command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rails console"
+
+  tests:
+    build: docker/services/your_platform_web_development
+    volumes:
+      - ".:/app"
+      - "your_platform_gems:/usr/local/bundle"
+      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
+    environment:
+      RAILS_ENV: test
+      MYSQL_TEST_DATABASE: your_platform_test
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_HOST: mysql
+      REDIS_HOST: redis
+      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7474/"
+    depends_on:
+      - mysql
+      - redis
+      - neo4j_test
+    networks:
+      - backend
+    command: /bin/bash -c "bundle install && bundle exec rspec spec/models"
 
   mysql:
     image: mysql:5.7
