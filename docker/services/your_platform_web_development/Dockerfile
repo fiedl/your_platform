@@ -14,5 +14,8 @@ RUN aptitude install -y nodejs
 RUN node --version
 RUN npm i -g yarn
 
+# Install helper packages.
+RUN aptitude install -y pwgen
+
 WORKDIR /app
 CMD ["script/start"]
