@@ -12,9 +12,9 @@ module UsersHelper
 
   def link_to_user_with_phone_number(user)
     if user.phone.present?
-      link_to(user.title, user) + ", " + I18n.t(:fon) + ": " + user.phone
+      link_to(user.title, user, class: 'user') + ", " + I18n.t(:fon) + ": " + content_tag(:span, user.phone, class: 'phone')
     else
-      link_to(user.title, user)
+      link_to(user.title, user, class: 'user')
     end
   end
 

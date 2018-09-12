@@ -41,7 +41,7 @@ concern :CurrentTerm do
       end
     }
 
-    expose :corporation, -> { group if group.kind_of? Corporation }
+    expose :corporation, -> { group.try(:corporation) }
   end
 
 end
