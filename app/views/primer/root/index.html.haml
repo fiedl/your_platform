@@ -1,0 +1,17 @@
+- content_for :side_bar do
+  = render partial: 'root/start_page_elements'
+  = render @page
+
+- content_for :groups_bar do
+  %ul
+    %li Erlanger Wingolf
+    %li Aktivitas
+
+    %li Verbindungen
+
+    %li Wingolfsbund
+
+= render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+
+%h1 Foo!
+%div Bar
