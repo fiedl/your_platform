@@ -15,7 +15,7 @@ concern :UserDag do
     has_many :current_parent_groups, through: :current_links_as_child, source: :ancestor, source_type: "Group", inverse_of: :current_child_users
   end
 
-  def recreate_indirect_dag_links
+  def create_indirect_dag_links
     new_links = []
     links_as_child.each do |direct_link|
       direct_group = direct_link.ancestor

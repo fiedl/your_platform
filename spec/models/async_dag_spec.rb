@@ -82,7 +82,7 @@ describe "Async DAG" do
     end
   end
 
-  describe "User#recreate_indirect_dag_links" do
+  describe "User#create_indirect_dag_links" do
     before do
       @user = create :user
       @direct_group_1 = create :group
@@ -95,9 +95,9 @@ describe "Async DAG" do
       @direct_group_1.assign_user @user
       @direct_group_2.assign_user @user
 
-      @user.recreate_indirect_dag_links
+      @user.create_indirect_dag_links
     end
-    subject { @user.recreate_indirect_dag_links }
+    subject { @user.create_indirect_dag_links }
 
     it "should keep required links instead of destroying and recreating them" do
       @last_update = @user.links_as_descendant.last.updated_at
