@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "Async DAG" do
+describe UserDag do
   before do
     Sidekiq::Testing.fake!
   end
@@ -20,7 +20,7 @@ describe "Async DAG" do
       @group.assign_user @user
     end
 
-    describe "User#current_ancestor_groups" do
+    describe "#current_ancestor_groups" do
       subject { @user.current_ancestor_groups }
 
       it { should include @group }
@@ -37,7 +37,7 @@ describe "Async DAG" do
       end
     end
 
-    describe "User#current_parent_groups" do
+    describe "#current_parent_groups" do
       subject { @user.current_parent_groups }
 
       it { should include @group }
@@ -59,7 +59,7 @@ describe "Async DAG" do
       @direct_group_2.assign_user @user
     end
 
-    describe "User#current_ancestor_groups" do
+    describe "#current_ancestor_groups" do
       subject { @user.current_ancestor_groups }
 
       it { should include @direct_group_1 }
@@ -73,7 +73,7 @@ describe "Async DAG" do
       end
     end
 
-    describe "User#current_parent_groups" do
+    describe "#current_parent_groups" do
       subject { @user.current_parent_groups }
 
       it { should include @direct_group_1 }
@@ -82,7 +82,7 @@ describe "Async DAG" do
     end
   end
 
-  describe "User#create_indirect_dag_links" do
+  describe "#create_indirect_dag_links" do
     before do
       @user = create :user
       @direct_group_1 = create :group
