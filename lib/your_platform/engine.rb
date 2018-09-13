@@ -12,7 +12,6 @@ require 'rails-i18n'
 require 'decent_exposure'
 
 # Data Structures
-require 'acts-as-dag'
 require 'acts_as_tree'
 require 'wannabe_bool'
 require 'acts-as-taggable-on'

@@ -54,8 +54,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'rails-assets-inline-attachment'
 
   # Data Structures
-  # DAG Structure, https://github.com/resgraph/acts-as-dag
-  s.add_dependency 'acts-as-dag', '>= 4.0'
   s.add_dependency 'acts_as_tree'                                                      # MIT License
   s.add_dependency 'wannabe_bool'
   s.add_dependency 'acts-as-taggable-on', '~> 4.0'
