@@ -105,9 +105,7 @@ concern :GroupMemberships do
         m.save
         m
       else
-        m = Membership.create descendant_id: user.id, ancestor_id: self.id, direct: true
-        m.update_attributes valid_from: time_of_joining # It does not work when added in `create`.
-        m
+        Membership.create descendant_id: user.id, descendant_type: "User", ancestor_id: self.id, ancestor_type: "Group", direct: true, valid_from: time_of_joining
       end
     end
 

@@ -20,4 +20,12 @@ concern :GroupDag do
     has_many :current_child_users, through: :current_links_as_parent, source: :descendant, source_type: "User", inverse_of: :current_parent_groups
 
   end
+
+  def recursive_parent_groups
+    parent_groups + parent_groups.collect { |g| g.recursive_parent_groups }.flatten
+  end
+
+  # def ancestor_groups
+  #   recursive_parent_groups
+  # end
 end
