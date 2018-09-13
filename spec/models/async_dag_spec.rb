@@ -82,5 +82,31 @@ describe "Async DAG" do
     end
   end
 
+  describe "User#recreate_indirect_dag_links" do
+    before do
+      @user = create :user
+      @direct_group_1 = create :group
+      @direct_group_2 = create :group
+      @ancestor_group = create :group
+
+      @ancestor_group << @direct_group_1
+      @ancestor_group << @direct_group_2
+
+      @direct_group_1.assign_user @user
+      @direct_group_2.assign_user @user
+
+      @user.recreate_indirect_dag_links
+    end
+    subject { @user.recreate_indirect_dag_links }
+
+    it "should keep required links instead of destroying and recreating them" do
+      @last_update = @user.links_as_descendant.last.updated_at
+      @last_id = @user.links_as_descendant.last.id
+      subject
+      @user.reload.links_as_descendant.last.updated_at.should == @last_update
+      @user.reload.links_as_descendant.last.id.should == @last_id
+    end
+  end
+
   after { Sidekiq::Worker.clear_all }
 end
