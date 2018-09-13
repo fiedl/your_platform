@@ -1,14 +1,12 @@
 class DagLink < ApplicationRecord
 
-  acts_as_dag_links polymorphic: true
+  belongs_to :ancestor, polymorphic: true
+  belongs_to :descendant, polymorphic: true
 
-  def title
-    "Link #{ancestor_type} #{ancestor_id} --> #{descendant_type} #{descendant_id}"
-  end
+  scope :direct, -> { where(direct: true) }
+  scope :now, -> { p "TODO: #now"; all }
 
   include DagLinkGraph
   include DagLinkTypes
-  include DagLinkRepair
-  include DagLinkCaching if use_caching?
 
 end
