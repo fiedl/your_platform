@@ -145,20 +145,11 @@ end
 # See: https://github.com/jnicklas/capybara#asynchronous-javascript-ajax-and-friends
 # https://docs.travis-ci.com/user/common-build-problems/#Capybara%3A-I’m-getting-errors-about-elements-not-being-found
 #
-# We need these huge numbers since all caching jobs are done inline
-# rather than in the background.
-#
 Capybara.default_max_wait_time = if ENV['CI'] == 'travis'
   360 # travis is much slower and might take longer to process stuff
 else
   30
 end
-
-
-# Background Jobs:
-# Perform all background jobs immediately.
-#
-Sidekiq::Testing.inline!
 
 
 # Rspec Configuration
@@ -365,6 +356,10 @@ RSpec.configure do |config|
 
   config.after(:suite) do
     DatabaseCleaner.clean
+  end
+
+  config.after(:each) do
+    Sidekiq::Worker.clear_all
   end
 
 
