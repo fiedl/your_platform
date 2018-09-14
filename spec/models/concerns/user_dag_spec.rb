@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe UserDag do
-  before do
-    Sidekiq::Testing.fake!
-  end
-
   describe "for a user with ancestor groups" do
     before do
       @user = create :user
@@ -108,5 +104,4 @@ describe UserDag do
     end
   end
 
-  after { Sidekiq::Worker.clear_all }
 end
