@@ -11,9 +11,10 @@ concern :GroupWelcomeMessage do
   end
 
   def trigger_welcome_messages_for(user)
-    ([self] + self.ancestor_groups)
-    .select { |group| not user.member_of? group, at: 10.seconds.ago }
-    .each { |group| group.send_welcome_message_to user }
+    # ([self] + self.ancestor_groups)
+    # .select { |group| not user.member_of? group, at: 10.seconds.ago }
+    # .each { |group| group.send_welcome_message_to user }
+    p "TODO: #trigger_welcome_messages_for"
   end
 
   def send_welcome_message_to(user)

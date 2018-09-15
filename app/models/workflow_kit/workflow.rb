@@ -22,7 +22,7 @@ module WorkflowKit
     end
 
 
-    has_dag_links ancestor_class_names: %w(Group), link_class_name: 'DagLink'
+    #has_dag_links ancestor_class_names: %w(Group), link_class_name: 'DagLink'
     include Structureable
     include Navable
 

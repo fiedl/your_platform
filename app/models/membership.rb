@@ -39,7 +39,7 @@ class Membership < DagLink
   # ====================================================================================================
 
   include MembershipValidityRange
-  include IndirectMembershipValidityRange
+  #include IndirectMembershipValidityRange
 
 
   # May Need Review Flag
@@ -224,11 +224,12 @@ class Membership < DagLink
   # ====================================================================================================
 
   def indirect_memberships
-    self.group.ancestor_groups.collect do |ancestor_group|
-      Membership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
-    end.select do |item|
-      item != nil
-    end
+    p "TODO: #indirect_memberships"
+    # self.group.ancestor_groups.collect do |ancestor_group|
+    #   Membership.with_invalid.find_by_user_and_group(self.user, ancestor_group)
+    # end.select do |item|
+    #   item != nil
+    # end
   end
 
   # Methods to Change the Membership
