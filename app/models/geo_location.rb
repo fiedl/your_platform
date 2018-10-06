@@ -14,14 +14,20 @@ class GeoLocation < ApplicationRecord
     result = geo_query_results.first
     if result
       # Definition of `result` with available methods can be found here:
+      # https://github.com/alexreisner/geocoder/blob/master/lib/geocoder/results/base.rb
       # https://github.com/alexreisner/geocoder/blob/master/lib/geocoder/results/google.rb
+      # https://github.com/alexreisner/geocoder/blob/master/lib/geocoder/results/nominatim.rb
       geo_location.latitude = result.latitude
       geo_location.longitude = result.longitude
       geo_location.city = result.city
       geo_location.country = result.country
       geo_location.country_code = result.country_code
       geo_location.postal_code = result.postal_code
-      geo_location.street = [result.route, result.street_number].join(" ")
+      if result.respond_to?(:route)
+        geo_location.street = [result.route, result.street_number].join(" ")
+      elsif result.respond_to?(:street)
+        geo_locaiton.street = result.street
+      end
       geo_location.state = result.state
 
       # There is no way to determine whether the street format is
