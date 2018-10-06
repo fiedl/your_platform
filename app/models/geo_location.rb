@@ -26,7 +26,7 @@ class GeoLocation < ApplicationRecord
       if result.respond_to?(:route)
         geo_location.street = [result.route, result.street_number].join(" ")
       elsif result.respond_to?(:street)
-        geo_locaiton.street = result.street
+        geo_location.street = result.street
       end
       geo_location.state = result.state
 
