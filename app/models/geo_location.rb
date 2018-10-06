@@ -24,21 +24,19 @@ class GeoLocation < ApplicationRecord
       geo_location.country_code = result.country_code
       geo_location.postal_code = result.postal_code
       if result.respond_to?(:route)
-        geo_location.street = [result.route, result.street_number].join(" ")
+        # There is no way to determine whether the street format is
+        # `{{street name}} {{street number}}` or `{{street number}} {{street name}}`.
+        # Therefore take the format from the original input.
+        #
+        if result.address.try(:include?, [result.street_number, result.route].join(" "))
+          geo_location.street = [result.street_number, result.route].join(" ")
+        else
+          geo_location.street = [result.route, result.street_number].join(" ")
+        end
       elsif result.respond_to?(:street)
         geo_location.street = result.street
       end
       geo_location.state = result.state
-
-      # There is no way to determine whether the street format is
-      # `{{street name}} {{street number}}` or `{{street number}} {{street name}}`.
-      # Therefore take the format from the original input.
-      #
-      if result.address.try(:include?, [result.street_number, result.route].join(" "))
-        geo_location.street = [result.street_number, result.route].join(" ")
-      else
-        geo_location.street = [result.route, result.street_number].join(" ")
-      end
     end
     self
   end
