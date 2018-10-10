@@ -1,6 +1,6 @@
 # The global search field may be used to filter the current content.
 #
-$(document).on 'keyup', 'header #search, #header_search #query', ->
+$(document).on 'keyup', 'header #search, #header_search #query.find_and_filter', ->
   query = $(this).val()
 
   $('.filter-hidden').removeClass('filter-hidden')
@@ -15,3 +15,11 @@ $(document).on 'keyup', 'header #search, #header_search #query', ->
         element = $(this)
         unless element.text().toUpperCase().indexOf(str.toUpperCase()) >= 0
           element.addClass('filter-hidden')
+
+# TODO: Remove this after the feature switch is obsolte.
+#
+$(document).ready ->
+  if $('input.search-query.find_and_filter').count() == 0
+    # This feature is still deactivated.
+    # Rename the placeholder from "find and filter" to "find".
+    $('input.search-query').attr('placeholder', I18n.t('search'))
