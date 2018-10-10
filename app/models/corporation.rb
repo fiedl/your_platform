@@ -13,6 +13,11 @@ class Corporation < Group
   include CorporationTermReports
   include CorporationLocation
 
+  def self.active
+    # TODO: only count corporations as active when they have any members
+    self.all
+  end
+
   # This returns the group that has all Corporations as children.
   # The corporations_parent itself is a Group, no Corporation.
   #

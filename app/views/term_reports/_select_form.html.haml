@@ -1,5 +1,5 @@
 = form_tag term_reports_path, method: 'get' do
-  = select_tag :group_id, options_for_select([[t(:corporation), nil]] +  Corporation.all.collect { |corporation| [corporation.title, corporation.id] }, group.try(:id)), class: 'form-control'
+  = select_tag :group_id, options_for_select([[t(:corporation), nil]] + Corporation.all.active.order(:name).collect { |corporation| [corporation.title, corporation.id] }, group.try(:id)), class: 'form-control'
   = select_tag :year, options_for_select([[t(:year), nil]] + (1900..Time.zone.now.year).collect { |year| [year, year] }, term.try(:year) || params[:year]), class: 'form-control'
   = select_tag :term_type, options_for_select([[t(:term), nil], [t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"], ["Ganzes Jahr", "Terms::Year"]], term.try(:type) || params[:term_type]), class: 'form-control'
   = submit_tag("OK", class: 'btn btn-sm btn-primary')
