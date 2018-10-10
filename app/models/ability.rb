@@ -684,5 +684,11 @@ class Ability
     # Everyone can read the mobile app's welcome screen.
     can :read, :mobile_welcome
 
+    # Nobody can recalculate term reports that have already been submitted.
+    cannot :recalculate, TermReport do |term_report|
+      term_report.state && !(term_report.state.rejected?)
+    end
+
+
   end
 end
