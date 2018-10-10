@@ -136,7 +136,6 @@ class Ability
   def rights_for_developers
     can :use, Rack::MiniProfiler
 
-    can :use, :term_reports
     can :use, :requests_index
     can :use, :permalinks
 
