@@ -6,7 +6,7 @@ module BreadcrumbsHelper
   # The latter is set through `set_current_breadcrumbs` in the controller.
   #
   def current_breadcrumbs
-    manual_current_breadcrumbs || (navable_breadcrumbs + resource_breadcrumbs)
+    manual_current_breadcrumbs || (navable_breadcrumbs + (show_resource_nav? ? resource_breadcrumbs : []))
   end
 
   def navable_breadcrumbs
