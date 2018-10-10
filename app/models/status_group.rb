@@ -18,7 +18,7 @@ class StatusGroup < Group
     status_groups = corporation.status_groups & user.status_groups
 
     if status_groups.count > 1
-      Membership.apply_gap_correction(user, corporation, "Memberships::Status")
+      Membership.apply_gap_correction(user, corporation, membership_type: "Memberships::Status")
       status_groups = corporation.status_groups & user.status_groups
     end
 
