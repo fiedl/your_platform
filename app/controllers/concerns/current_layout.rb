@@ -18,9 +18,9 @@ concern :CurrentLayout do
     layout ||= (permitted_layouts & [layout_param]).first
     layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
     layout ||= mobile_layout_if_mobile_app
+    layout ||= intranet_layout if current_navable.try(:in_intranet?)
     layout ||= current_navable.layout if current_navable.respond_to? :layout
     layout ||= current_home_page.layout if current_home_page
-    layout ||= intranet_layout if current_navable.try(:in_intranet?)
     layout ||= default_layout
     return (permitted_layouts & [layout]).first
   end
