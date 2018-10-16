@@ -17,7 +17,7 @@
     = best_in_place_if can?(:rename, group), group, :name
     = ": #{t :members}"
     %span.members_count (#{member_table_rows.count})
-    - if can? :use, :term_reports
+    - if can?(:use, :term_reports) && group.corporation
       .tool.term_reports
         = link_to group_term_report_path(group), class: 'btn btn-default' do
           = fa_icon 'bar-chart'
