@@ -11,7 +11,7 @@ module AvatarHelper
     options[:class] = "img-rounded #{options[:class]}"
     content_tag(:span, class: 'avatar') do
       if user.try(:avatar_id?)
-        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: options[:class]
+        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: options[:class], alt: options[:title]
       else
         user_gravatar(user, options)
       end
@@ -38,6 +38,8 @@ module AvatarHelper
     #options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
     options[:gravatar][:secure] = true
+    options[:title] ||= user.title
+    options[:alt] ||= options[:title]
 
     options[:class] ||= ""
 

@@ -13,7 +13,7 @@ class ListExports::HtmlTable < ListExports::Base
     doc.xpath('//table/*/tr').each do |row|
       tarray = []
       row.xpath('th', 'td').each do |cell|
-        tarray << cell.text
+        tarray << cell.text.strip + cell.css('img').map{ |i| i['alt'] }.join("\n")
       end
       rows << tarray
     end
