@@ -169,6 +169,7 @@ Rails.application.routes.draw do
     post :submit, to: 'term_report_submissions#create'
     post :accept, to: 'term_report_acceptions#create'
     post :recalculate, to: 'term_report_recalculations#create'
+    get :export, to: 'term_reports/exports#show', on: :collection
   end
 
   get :term_report, to: 'term_reports#show', as: :search_term_report
