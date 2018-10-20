@@ -17,17 +17,17 @@
         .box_title
           %h1= content_for :box_title
 
+      .box_tools
+        = edit_button
+        = save_button
+        = content_for :box_tools
+
       - if content_for? :box_filter
         .box_filter
           = content_for :box_filter
 
       - if content_for? :box_meta
         .box_meta= content_for :box_meta
-
-      .box_tools
-        = edit_button
-        = save_button
-        = content_for :box_tools
 
   - if box_body.present?
     .box_content.panel-body
