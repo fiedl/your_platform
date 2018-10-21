@@ -3,12 +3,13 @@
   position: relative
 
   > .box_header
-    display: flow-root
+    display: flex
+    flex-wrap: wrap
+    justify-content: space-between
 
     > .box_title
       h1, h2, h3, h4, h5, h6
         margin-top: 0
-      display: inline-block
       margin-right: 20px
 
     > .box_image
@@ -20,20 +21,15 @@
       padding: 0
 
     > .box_filter
-      display: inline-block
       .form-control
         display: inline-block
         width: auto
 
     > .box_tools
-      float: right
-      top: 5px
-      right: 5px
       z-index: 20
       direction: rtl
       > *
         direction: ltr
-      text-align: right
       white-space: nowrap
       width: auto
       > div, a
