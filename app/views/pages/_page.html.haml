@@ -46,6 +46,6 @@
           .hidden-print.show_only_in_edit_mode
             #attachments= render partial: 'attachments/drop_field', locals: {parent: page}
 
-    #attachments.attachments
-      = render(partial: 'pages/videos', locals: {page: page})
-      = render(partial: 'pages/attachments', locals: {page: page, show_drop_field: true})
+        #attachments.attachments
+          = render(partial: 'pages/videos', locals: {page: page})
+          = render(partial: 'pages/attachments', locals: {page: page, show_drop_field: true})
