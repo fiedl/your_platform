@@ -78,6 +78,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'omniauth-facebook', '~> 3.0.0'
   s.add_dependency 'devise_masquerade', '~> 0.5.3'
   s.add_dependency 'gender_detector'
+  s.add_dependency 'devise_token_auth'
 
   # Authorization
   s.add_dependency 'cancancan', '~> 1.15.0'

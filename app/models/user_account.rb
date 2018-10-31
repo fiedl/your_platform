@@ -34,6 +34,8 @@ class UserAccount < ApplicationRecord
   #
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable, :masqueradable
 
+  include DeviseTokenAuth::Concerns::User
+
   # Virtual attribute for authenticating by either username, alias or email
   attr_accessor :login
 
@@ -51,6 +53,17 @@ class UserAccount < ApplicationRecord
                              # Notice: Apparently, even `validates_associated :account` in the User model has no effect.
 
   delegate :email, :to => :user, :allow_nil => true
+
+  # Needed for devise-auth-token
+  # https://github.com/lynndylanhurley/devise_token_auth/issues/257#issuecomment-106628953
+  before_validation :set_provider
+  before_validation :set_uid
+  def set_provider
+    self[:provider] = "email" if self[:provider].blank?
+  end
+  def set_uid
+    self[:uid] = self[:email] if self[:uid].blank? && self[:email].present?
+  end
 
   def readonly?
     false # Otherwise, the user is not able to login.

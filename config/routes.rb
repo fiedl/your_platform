@@ -309,6 +309,9 @@ Rails.application.routes.draw do
   get :api, to: 'apipie/apipies#index'
   namespace :api do
     namespace :v1 do
+      mount_devise_token_auth_for 'UserAccount', at: 'auth', controllers: {
+        sessions: 'api/v1/sessions'
+      }
       get :sso, to: 'single_sign_on#sign_in'
       namespace :public do
         resources :groups do

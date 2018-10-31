@@ -1,4 +1,4 @@
-class Api::V1::CurrentUserController < ApplicationController
+class Api::V1::CurrentUserController < Api::V1::BaseController
 
   expose :groups, -> { Group.search(params[:query], limit: params[:limit].try(:to_i)) }
 
