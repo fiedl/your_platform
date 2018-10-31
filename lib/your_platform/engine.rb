@@ -34,6 +34,7 @@ require 'omniauth-facebook'
 require 'devise_masquerade'
 require 'gender_detector'
 require 'devise_token_auth'
+require 'rack/cors'
 
 # Authorization
 require 'cancancan'

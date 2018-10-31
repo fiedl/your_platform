@@ -93,6 +93,7 @@ PATH
       prawn (= 2.0.2)
       public_activity (~> 1.4.1)
       rack (>= 1.6.2)
+      rack-cors
       rack-mini-profiler
       rack-ssl (>= 1.3.4)
       rails (~> 5.0.0)
@@ -439,6 +440,7 @@ GEM
       railties (>= 3.0.0)
     public_suffix (2.0.5)
     rack (2.0.5)
+    rack-cors (1.0.2)
     rack-mini-profiler (1.0.0)
       rack (>= 1.2.0)
     rack-protection (2.0.4)
