@@ -2,7 +2,11 @@ concern :UserSearch do
   class_methods do
 
     def search(query)
-      search_by_geo_location(query) || search_by_name_and_title(query)
+      if query.present?
+        search_by_geo_location(query) || search_by_name_and_title(query)
+      else
+        []
+      end
     end
 
     private

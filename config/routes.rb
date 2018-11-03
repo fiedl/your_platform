@@ -334,6 +334,7 @@ Rails.application.routes.draw do
       namespace :navables do
         put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
       end
+      get :search_users, to: 'search_users#index'
       get :search_groups, to: 'search_groups#index'
       get :search_pages, to: 'search_pages#index'
       get :navigation, to: 'navigation#show'
