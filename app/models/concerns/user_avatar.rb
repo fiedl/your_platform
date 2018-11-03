@@ -12,6 +12,10 @@ concern :UserAvatar do
 
   included do
     attachment :avatar, type: :image
+
+    def avatar_url
+      AppVersion.root_url + avatar_path
+    end
   end
 
   def avatar_base64
@@ -21,10 +25,6 @@ concern :UserAvatar do
 
   def avatar_file_content
     open(avatar_url) { |io| io.read }
-  end
-
-  def avatar_url
-    AppVersion.root_url + avatar_path
   end
 
   def avatar_path
