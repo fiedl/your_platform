@@ -61,7 +61,7 @@ services:
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
   - mkdir geckodriver
   - tar -xzf geckodriver*.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
