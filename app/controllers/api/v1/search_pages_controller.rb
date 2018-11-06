@@ -1,4 +1,4 @@
-class Api::V1::SearchPagesController < ApplicationController
+class Api::V1::SearchPagesController < Api::V1::BaseController
 
   expose :pages, -> { Page.search(params[:query], limit: params[:limit].try(:to_i)) }
 
