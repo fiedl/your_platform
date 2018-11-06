@@ -15,8 +15,8 @@ concern :CorporationGroups do
     status_groups.where(name: group_name).first
   end
 
-  def sub_group(group_name)
-    descendant_groups.where(name: group_name).first
+  def sub_group(group_name_or_names)
+    descendant_groups.where(name: group_name_or_names).first
   end
 
 end
