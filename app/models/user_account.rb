@@ -36,6 +36,18 @@ class UserAccount < ApplicationRecord
 
   include DeviseTokenAuth::Concerns::User
 
+  # After including `DeviseTokenAuth::Concerns::User`, we need to
+  # remove the scoped email uniqueness validation, because the email
+  # attribute is delegated, which causes an error:
+  # "undefined method `collation' for nil:NilClass"
+  #
+  # https://trello.com/c/Hj9p1WGu/1301-devise-token-auth
+  # https://stackoverflow.com/a/26964557/2066546
+  #
+  _validators[:email]
+      .find { |v| v.is_a?(ActiveRecord::Validations::UniquenessValidator) && v.options[:scope] == :provider }
+      .attributes.delete(:email)
+
   # Virtual attribute for authenticating by either username, alias or email
   attr_accessor :login
 
