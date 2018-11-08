@@ -26,7 +26,9 @@ feature "memberships#create" do
 
     @user.should be_member_of @group
     @user.should be_member_of @parent_group
-    Membership.with_past.find_by_user_and_group(@user, @group).valid_from.to_date.should == Time.zone.now.to_date
+    Time.use_zone(User.first.time_zone) do
+      Membership.with_past.find_by_user_and_group(@user, @group).valid_from.to_date.should == Time.zone.now.to_date
+    end
 
     # Make sure that adding a second user also works (bug fix).
     # https://trello.com/c/S7neT5I1/1304-direktes-eintragen
