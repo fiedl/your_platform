@@ -17,7 +17,7 @@ class AvatarsController < ApplicationController
 
     @user = User.find_by_email(params[:email]) if params[:email]
     @user ||= User.find params[:user_id] if params[:user_id]
-    @size = params[:size]
+    @size = params[:size] || 512
 
     if @user
       redirect_to view_context.user_avatar_url(@user, size: @size)
