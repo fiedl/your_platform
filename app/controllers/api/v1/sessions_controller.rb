@@ -50,7 +50,9 @@ class Api::V1::SessionsController < DeviseTokenAuth::SessionsController
           account_id: account.id,
           user_id: account.user.id,
           email: account.email,
-          account_errors: account.errors
+          account_errors: account.errors,
+          early_access: account.user.early_access?,
+          beta_tester: account.user.beta_tester?
         })
       }
     else
