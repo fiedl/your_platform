@@ -17,6 +17,9 @@ concern :EventContactPeople do
   def contact_people
     contact_people_group.members
   end
+  def contact_person
+    contact_people.first
+  end
 
   def destroy
     find_contact_people_group.try(:destroy)

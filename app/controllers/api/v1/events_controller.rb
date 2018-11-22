@@ -20,7 +20,7 @@ class Api::V1::EventsController < Api::V1::BaseController
     @events = @events.order 'events.start_at, events.created_at'
     @events = @events.select { |event| can? :read, event }
 
-    render json: @events.as_json
+    render json: @events.as_json(methods: [:avatar_url, :group_name, :corporation_name, :contact_name, :contact_id])
   end
 
 end
