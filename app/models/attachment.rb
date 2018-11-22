@@ -29,10 +29,10 @@ class Attachment < ApplicationRecord
   end
 
   def medium_url
-    file.url(:medium) if has_type? 'image'
+    AppVersion.root_url + file.url(:medium) if has_type? 'image'
   end
   def big_url
-    file.url(:big) if has_type? 'image'
+    AppVersion.root_url + file.url(:big) if has_type? 'image'
   end
 
   def has_type?( type )

@@ -1,15 +1,15 @@
 class Attachments::Image < Attachment
 
   def thumb_url
-    url = file.url(:thumb) || helpers.image_path('file.png')
+    AppVersion.root_url + (file.url(:thumb) || helpers.image_path('file.png'))
   end
 
   def medium_url
-    file.url(:medium)
+    AppVersion.root_url + file.url(:medium)
   end
 
   def big_url
-    file.url(:big)
+    AppVersion.root_url + file.url(:big)
   end
 
 end
