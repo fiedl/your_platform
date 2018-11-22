@@ -51,7 +51,10 @@ class ProfileField < ApplicationRecord
   end
 
   def as_json(options = {})
-    super(options.merge(methods: [:type, :key]))
+    super.merge({
+      type: type,
+      key: key
+    })
   end
 
 
