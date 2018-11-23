@@ -76,26 +76,30 @@ class Ability
         # the rights granted by the token.
         rights_for_auth_token_users
       elsif user
-        if user.global_admin? and view_as?(:global_admin)
-          rights_for_global_admins
+        if user.has_flag? :dummy
+          rights_for_dummy_users
+        else
+          if user.global_admin? and view_as?(:global_admin)
+            rights_for_global_admins
+          end
+          if user.admin_of_anything? and view_as?(:admin)
+            rights_for_local_admins
+            rights_for_page_admins
+          end
+          if view_as?([:officer, :admin])
+            rights_for_local_officers
+          end
+          if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
+            rights_for_global_officers
+          end
+          if user.developer?
+            rights_for_developers
+          end
+          if user.beta_tester?
+            rights_for_beta_testers
+          end
+          rights_for_signed_in_users
         end
-        if user.admin_of_anything? and view_as?(:admin)
-          rights_for_local_admins
-          rights_for_page_admins
-        end
-        if view_as?([:officer, :admin])
-          rights_for_local_officers
-        end
-        if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
-          rights_for_global_officers
-        end
-        if user.developer?
-          rights_for_developers
-        end
-        if user.beta_tester?
-          rights_for_beta_testers
-        end
-        rights_for_signed_in_users
       end
     end
     rights_for_everyone
@@ -689,6 +693,19 @@ class Ability
       term_report.state && !(term_report.state.rejected?)
     end
 
+  end
 
+  # During App-Store approval, we must give a dummy user access to our platform.
+  # But he should not be able to access any real data.
+  #
+  def rights_for_dummy_users
+    can :read, :terms_of_use
+    can :accept, :terms_of_use if not read_only_mode?
+
+    can :read, User do |user|  # Only read other dummy users.
+      user.has_flag? :dummy
+    end
+
+    can :index, Event
   end
 end
