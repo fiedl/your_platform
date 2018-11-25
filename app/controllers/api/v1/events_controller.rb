@@ -1,5 +1,7 @@
 class Api::V1::EventsController < Api::V1::BaseController
 
+  expose :event
+
   def index
     authorize! :index, Event
 
@@ -20,7 +22,19 @@ class Api::V1::EventsController < Api::V1::BaseController
     @events = @events.order 'events.start_at, events.created_at'
     @events = @events.select { |event| can? :read, event }
 
-    render json: @events.as_json(methods: [:avatar_url, :group_name, :corporation_name, :contact_name, :contact_id])
+    render json: @events.as_json(methods: required_event_methods)
+  end
+
+  def show
+    authorize! :read, event
+
+    render json: event.as_json(methods: required_event_methods)
+  end
+
+  private
+
+  def required_event_methods
+    [:avatar_url, :group_name, :corporation_name, :contact_name, :contact_id]
   end
 
 end
