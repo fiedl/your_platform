@@ -66,6 +66,10 @@ class UserAccount < ApplicationRecord
 
   delegate :email, :to => :user, :allow_nil => true
 
+  def devise_scope
+    :user_account
+  end
+
   # Needed for devise-auth-token
   # https://github.com/lynndylanhurley/devise_token_auth/issues/257#issuecomment-106628953
   before_validation :set_provider
