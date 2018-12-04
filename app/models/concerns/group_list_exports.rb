@@ -41,7 +41,7 @@ concern :GroupListExports do
     when 'phone_list'
       self.export_phone_list(options)
     else
-      ListExport.new(self.members, preset, options)
+      ListExport.new(self.members, preset)
     end
   end
 
@@ -54,11 +54,11 @@ concern :GroupListExports do
   end
 
   def export_member_development(options)
-    ListExport.new(self, :member_development, options)
+    ListExport.new(self, :member_development)
   end
 
   def export_join_statistics(options)
-    ListExport.new(self, :join_statistics, options)
+    ListExport.new(self, :join_statistics)
   end
 
   def export_dpag_internetmarken(options)
@@ -94,7 +94,7 @@ concern :GroupListExports do
   end
 
   def export_phone_list(options)
-    ListExport.new(self, :phone_list, options)
+    ListExport.new(self, :phone_list)
   end
 
   class_methods do
