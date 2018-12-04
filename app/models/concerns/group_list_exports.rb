@@ -15,86 +15,86 @@ concern :GroupListExports do
   def list_export_by_preset(preset, options = {})
     case preset.to_s
     when 'name_list', '', nil
-      self.export_name_list
+      self.export_name_list(options)
     when 'address_list'
-      self.export_address_list
+      self.export_address_list(options)
     when 'member_development'
-      self.export_member_development
+      self.export_member_development(options)
     when 'join_statistics'
-      self.export_join_statistics
+      self.export_join_statistics(options)
     when 'dpag_internetmarken'
-      self.export_dpag_internetmarken
+      self.export_dpag_internetmarken(options)
     when 'dpag_internetmarken_in_germany'
-      self.export_dpag_internetmarken_in_germany
+      self.export_dpag_internetmarken_in_germany(options)
     when 'dpag_internetmarken_not_in_germany'
-      self.export_dpag_internetmarken_not_in_germany
+      self.export_dpag_internetmarken_not_in_germany(options)
     when 'birthday_list'
-      self.export_birthday_list(quarter: options[:quarter])
+      self.export_birthday_list(options)
     when 'email_list'
-      self.export_email_list
+      self.export_email_list(options)
     when 'special_birthdays'
-      self.export_special_birthdays_list(quarter: options[:quarter])
+      self.export_special_birthdays_list(options)
     when 'deceased_members'
-      self.export_deceased_members_list
+      self.export_deceased_members_list(options)
     when 'former_and_deceased_members'
-      self.export_former_and_deceased_members_list
+      self.export_former_and_deceased_members_list(options)
     when 'phone_list'
-      self.export_phone_list
+      self.export_phone_list(options)
     else
-      ListExport.new(self.members, preset)
+      ListExport.new(self.members, preset, options)
     end
   end
 
-  def export_name_list
-    ListExports::NameList.from_group(self)
+  def export_name_list(options)
+    ListExports::NameList.from_group(self, options)
   end
 
-  def export_address_list
-    ListExports::AddressList.from_group(self)
+  def export_address_list(options)
+    ListExports::AddressList.from_group(self, options)
   end
 
-  def export_member_development
-    ListExport.new(self, :member_development)
+  def export_member_development(options)
+    ListExport.new(self, :member_development, options)
   end
 
-  def export_join_statistics
-    ListExport.new(self, :join_statistics)
+  def export_join_statistics(options)
+    ListExport.new(self, :join_statistics, options)
   end
 
-  def export_dpag_internetmarken
-    ListExports::DpagInternetmarken.from_group(self)
+  def export_dpag_internetmarken(options)
+    ListExports::DpagInternetmarken.from_group(self, options)
   end
 
-  def export_dpag_internetmarken_in_germany
-    ListExports::DpagInternetmarkenInGermany.from_group(self)
+  def export_dpag_internetmarken_in_germany(options)
+    ListExports::DpagInternetmarkenInGermany.from_group(self, options)
   end
 
-  def export_dpag_internetmarken_not_in_germany
-    ListExports::DpagInternetmarkenNotInGermany.from_group(self)
+  def export_dpag_internetmarken_not_in_germany(options)
+    ListExports::DpagInternetmarkenNotInGermany.from_group(self, options)
   end
 
   def export_birthday_list(options = {})
-    ListExports::BirthdayList.from_group(self, quarter: options[:quarter])
+    ListExports::BirthdayList.from_group(self, options)
   end
 
-  def export_email_list
-    ListExports::EmailList.from_group(self)
+  def export_email_list(options)
+    ListExports::EmailList.from_group(self, options)
   end
 
   def export_special_birthdays_list(options = {})
-    ListExports::SpecialBirthdays.from_group(self, quarter: options[:quarter])
+    ListExports::SpecialBirthdays.from_group(self, options)
   end
 
-  def export_deceased_members_list
-    ListExports::DeceasedMembers.from_group(self)
+  def export_deceased_members_list(options)
+    ListExports::DeceasedMembers.from_group(self, options)
   end
 
-  def export_former_and_deceased_members_list
-    ListExports::FormerAndDeceasedMembers.from_group(self)
+  def export_former_and_deceased_members_list(options)
+    ListExports::FormerAndDeceasedMembers.from_group(self, options)
   end
 
-  def export_phone_list
-    ListExport.new(self, :phone_list)
+  def export_phone_list(options)
+    ListExport.new(self, :phone_list, options)
   end
 
   class_methods do

@@ -3,12 +3,15 @@ class ListExportsController < ApplicationController
   expose :list_preset, -> { params[:list] }
   expose :quarter, -> { params[:quarter] }
 
+  expose :year, -> { params[:year] }
+  expose :date, -> { "#{year}-01-01".to_date if year }
+
   def show
     authorize! :read, group
     authorize! :export_member_list, group
 
     list_preset_i18n = I18n.translate(list_preset) if list_preset.present?
-    file_title = "#{group.name} #{list_preset_i18n} #{Time.zone.now}".parameterize
+    file_title = "#{group.name} #{list_preset_i18n} #{date || Time.zone.now}".parameterize
 
     # Log exports.
     #
@@ -26,7 +29,7 @@ class ListExportsController < ApplicationController
         # Everything else, we encode as UTF-8.
         #
         csv_data = Rack::MiniProfiler.step("retrieve csv data") do
-          group.export_list(list_preset: list_preset, format: :csv, quarter: quarter)
+          group.export_list(list_preset: list_preset, format: :csv, quarter: quarter, date: date, current_user: current_user)
         end
         if list_preset.try(:include?, 'dpag_internetmarke')
           csv_data = csv_data.encode('ISO-8859-1')
@@ -41,7 +44,7 @@ class ListExportsController < ApplicationController
       end
       format.xls do
         xls_data = Rack::MiniProfiler.step("retrieve xls data") do
-          group.export_list(list_preset: list_preset, format: :xls, quarter: quarter)
+          group.export_list(list_preset: list_preset, format: :xls, quarter: quarter, date: date, current_user: current_user)
         end
         send_data(xls_data, type: 'application/xls; charset=utf-8; header=present', filename: "#{file_title}.xls")
       end
