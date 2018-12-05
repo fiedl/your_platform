@@ -329,12 +329,14 @@ Rails.application.routes.draw do
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
       end
+      resources :groups
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships
       namespace :navables do
         put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
       end
+      get :search_contacts, to: 'search_contacts#index'
       get :search_users, to: 'search_users#index'
       get :search_groups, to: 'search_groups#index'
       get :search_pages, to: 'search_pages#index'

@@ -77,6 +77,10 @@ class Event < ApplicationRecord
     self.group.try(:corporation).try(:name)
   end
 
+  def corporation_id
+    self.group.try(:corporation).try(:id)
+  end
+
   def contact_name
     self.contact_person.try(:title)
   end

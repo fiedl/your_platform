@@ -18,6 +18,10 @@ class Corporation < Group
     self.all
   end
 
+  def active?
+    self.id.in? self.class.active.pluck(:id)
+  end
+
   # This returns the group that has all Corporations as children.
   # The corporations_parent itself is a Group, no Corporation.
   #

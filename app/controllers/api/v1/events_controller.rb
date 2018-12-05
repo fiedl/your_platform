@@ -34,7 +34,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   private
 
   def required_event_methods
-    [:avatar_url, :group_name, :corporation_name, :contact_name, :contact_id]
+    [:avatar_url, :group_id, :group_name, :corporation_id, :corporation_name, :contact_name, :contact_id]
   end
 
 end
