@@ -706,6 +706,12 @@ class Ability
       user.has_flag? :dummy
     end
 
+    can :read, Corporation do |corporation|
+      corporation.active?
+    end
+
     can :index, Event
+    can :index, User
+    can :index, Corporation
   end
 end
