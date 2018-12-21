@@ -6,7 +6,7 @@ send_archive_request = (url, true_or_false)->
       archived: true_or_false
     },
     #success: (result) -> # nothing to do
-    failure: (result) ->
+    error: (result) ->
       alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
   })
 

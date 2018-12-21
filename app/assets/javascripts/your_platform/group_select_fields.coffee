@@ -50,10 +50,10 @@ $(document).on 'keypress', '.group_name_select', (e)->
               </a></li>"
               group_name_select.siblings('ul.group_search_results').append(li)
 
-          },
-          failure: (result)->
+          error: (result)->
             group_name_select.removeClass('progress')
                 .removeClass('success').addClass('failure')
+        }
     return false
 
 $(document).on 'keydown', '.group_name_select, .group_search_results', (e)->

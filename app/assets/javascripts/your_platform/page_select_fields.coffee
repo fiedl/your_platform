@@ -49,10 +49,10 @@ $(document).on 'keypress', '.page_title_select', (e)->
                 <div class='result_breadcrumbs'>#{breadcrumbs_string}</div>
               </a></li>"
               page_title_select.siblings('ul.search_results').append(li)
-          },
-          failure: (result)->
+          error: (result)->
             page_title_select.removeClass('progress')
                 .removeClass('success').addClass('failure')
+        }
     return false
 
 $(document).on 'keydown', '.page_title_select, .page_search_results', (e)->

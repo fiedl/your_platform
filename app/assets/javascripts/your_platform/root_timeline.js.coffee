@@ -34,7 +34,7 @@ load_next_news_for_n_days = (n)->
         else
           current_day_interval = Math.pow(current_day_interval + 1, 1.2)
           load_next_page()
-      failure: (result)->
+      error: (result)->
         is_loading = false
     }
 
@@ -114,7 +114,7 @@ $(document).on 'submit', '.filter_news form', (event)->
             .process()
         else
           load_next_page()
-      failure: (result)->
+      error: (result)->
         is_loading = false
     }
 
