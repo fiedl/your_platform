@@ -27,7 +27,7 @@ $(document).on 'keypress', '.page_title_select', (e)->
     else
       page_title_select = $(this)
       query = page_title_select.val()
-      if query.length > 3
+      if query.length > 2
         url = "/api/v1/search_pages/"
         data = {
           query: query,
