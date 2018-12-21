@@ -1,6 +1,6 @@
 class Groups::GroupsOfGroups::TableExportsController < ApplicationController
 
-  expose :group, -> { Group.find params[:groups_of_group_id] }
+  expose :group, -> { Group.find params[:group_of_groups_id] }
 
   # GET /groups_of_groups/123/exports/excel.xls
   #
