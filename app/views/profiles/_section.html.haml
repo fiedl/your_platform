@@ -25,6 +25,6 @@
       - if section.title.to_s == 'contact_information' and section.profileable.kind_of?(Group)
         = render partial: 'profiles/send_group_message_button', locals: {group: section.profileable}
 
-    - if small_map
-      .contact_section.map.do_not_show_in_edit_mode
-        = map_of_address_profile_fields small_map_address_fields
+    -#- if small_map
+    -#  .contact_section.map.do_not_show_in_edit_mode
+    -#    = map_of_address_profile_fields small_map_address_fields

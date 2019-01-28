@@ -53,10 +53,10 @@
       - for object in @posts
         %li= link_to object.title, object
 
-- if @large_map_address_fields.try(:any?)
-  %h1.large_map.section= t :map
-  .group_map
-    .large_map_section
-      = map_of_address_profile_fields @large_map_address_fields, with_info_window: true
+-#- if @large_map_address_fields.try(:any?)
+-#  %h1.large_map.section= t :map
+-#  .group_map
+-#    .large_map_section
+-#      = map_of_address_profile_fields @large_map_address_fields, with_info_window: true
 
 
