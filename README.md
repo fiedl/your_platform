@@ -50,7 +50,7 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 
 ## Authors and License
 
-**Copyright** (c) 2012-2018, Sebastian Fiedlschuster
+**Copyright** (c) 2012-2019, Sebastian Fiedlschuster
 
 **Contributors**: Jörg Reichardt, Manuel Zerpies, Joachim Back
 
@@ -59,3 +59,5 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
 
 You should have received a copy of the GNU Affero General Public License along with this program. If not, see http://www.gnu.org/licenses/.
+
+Senior clause for VAW e.V.: For commit `1b459b92e`  and later, Philistres of the VAW e.V. may only use the software if the development work is compensated in accordance with the so-called "new development model".
