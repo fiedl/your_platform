@@ -27,11 +27,6 @@ class RootController < ApplicationController
     @documents = current_user.documents_in_my_scope
       .order(created_at: :desc)
       .limit(10)
-
-    #@hide_attachment_drop_fields = true
-
-    #@view_setting = view_setting
-    #@new_post = current_user.posts.new
   end
 
 
@@ -69,27 +64,6 @@ private
     @page = Page.find_intranet_root
     @navable = @page
     authorize! :show, @page
-  end
-
-  # The user may choose how to view the root page:
-  #   - 'timeline'
-  #   - 'social'
-  #
-  # Change via the `view_setting` GET parameter on `root#index`.
-  #
-  def view_setting
-    if params[:view_setting]
-      if params[:view_setting].present?
-        current_user.settings.root_index_view_setting = params[:view_setting].to_s
-      else
-        current_user.settings.root_index_view_setting = nil
-      end
-    end
-    return current_user.settings.root_index_view_setting || self.class.default_view_setting
-  end
-
-  def self.default_view_setting
-    'social'
   end
 
 end
