@@ -59,6 +59,10 @@ module IconHelper
     fa_icon 'folder-open-o'
   end
 
+  def document_icon
+    fa_icon 'file-o'
+  end
+
   def create_icon
     fa_icon 'plus-circle'
   end

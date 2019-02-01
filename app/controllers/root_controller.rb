@@ -13,10 +13,25 @@ class RootController < ApplicationController
 
     @pinned_objects = Event.flagged(:pinned) + Page.flagged(:pinned)
 
-    @hide_attachment_drop_fields = true
+    @blog_posts = BlogPost
+      .relevant_to(current_user)
+      .visible_to(current_user)
+      .order(published_at: :desc)
+      .limit(5)
+      .select { |blog_post| can? :read, blog_post }
 
-    @view_setting = view_setting
-    @new_post = current_user.posts.new
+    @posts = current_user.posts_for_me
+      .reorder(created_at: :desc)
+      .limit(5)
+
+    @documents = current_user.documents_in_my_scope
+      .order(created_at: :desc)
+      .limit(10)
+
+    #@hide_attachment_drop_fields = true
+
+    #@view_setting = view_setting
+    #@new_post = current_user.posts.new
   end
 
 

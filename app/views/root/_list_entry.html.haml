@@ -1,0 +1,22 @@
+%li.root_page_list_entry
+  .icon_and_entry
+    - if defined?(thumb)
+      .thumb
+        = link_to obj, target: ('_blank' if defined?(new_tab) && new_tab) do
+          = image_tag thumb
+    - elsif defined?(author)
+      .avatar
+        - if author
+          = user_avatar(author, size: 24)
+        - else
+          = document_icon
+    .entry
+      .meta
+        - if defined?(author) && author
+          .author= link_to author.title, author
+        .date= localize date
+        - if defined?(category) && category
+          .category
+            = folder_icon
+            = link_to category.title, category
+      .title= link_to obj.title, obj, target: ('_blank' if defined?(new_tab) && new_tab)

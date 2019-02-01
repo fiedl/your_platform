@@ -64,6 +64,11 @@ class AttachmentsController < ApplicationController
     @attachment.destroy
   end
 
+  def show
+    attachment = Attachment.find(params[:id])
+    redirect_to attachment.file.url
+  end
+
 private
 
   def attachment_params
