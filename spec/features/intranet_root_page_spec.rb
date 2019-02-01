@@ -34,6 +34,10 @@ feature "Intranet Root" do
     @blog_post_of_other_group = @blog_of_other_group.child_pages.create title: 'Blog post of a group the user is NOT member of', content: "This page needs content to be shown.", published_at: 1.day.ago, type: "BlogPost"
     @blog_without_group = create :page, title: "Blog without a group, i.e. a global blog", published_at: 1.day.ago
     @blog_post_without_group = @blog_without_group.child_pages.create title: 'Blog post without a group, i.e. a global page', content: "This page needs content to be shown.", published_at: 1.day.ago, type: "BlogPost"
+    @unpublished_blog_post = @blog_without_group.child_pages.create title: "Unpublished blog post in published blog", published_at: nil, type: "BlogPost"
+
+    @document_of_published_blog_post = create :attachment, title: "Document of published blog post"; @blog_post_of_group.attachments << @document_of_published_blog_post
+    @document_of_unpublished_blog_post = create :attachment, title: "Document of unpublished blog post"; @unpublished_blog_post.attachments << @document_of_unpublished_blog_post
 
     login @user
     visit root_path
@@ -47,6 +51,15 @@ feature "Intranet Root" do
 
       # List the pages without group, i.e. "global pages"
       page.should have_text @blog_post_without_group.title
+
+      # Do not list unpublished blog posts
+      page.should have_no_text @unpublished_blog_post.title
+
+      # List documents of visible blog posts
+      page.should have_text @document_of_published_blog_post.title
+
+      # Do not list documents of unpublished blog posts
+      page.should have_no_text @document_of_unpublished_blog_post
     end
   end
 end
