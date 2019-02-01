@@ -28,22 +28,25 @@ feature "Intranet Root" do
     @group.assign_user @user, at: 1.year.ago
     @other_group = create :group
 
-    @page_of_group = @group.child_pages.create title: 'Page of a group the user is member of', content: "This page needs content to be shown.", published_at: 1.day.ago
-    @page_of_other_group = @other_group.child_pages.create title: 'Page of a group the user is NOT member of', content: "This page needs content to be shown.", published_at: 1.day.ago
-    @page_without_group = create :page, title: 'Page without a group, i.e. a global page', content: "This page needs content to be shown.", published_at: 1.day.ago
+    @blog_of_group = @group.child_pages.create title: "Blog of a group the user is member of", published_at: 1.day.ago
+    @blog_post_of_group = @blog_of_group.child_pages.create title: 'Blog post of a group the user is member of', content: "This page needs content to be shown.", published_at: 1.day.ago, type: "BlogPost"
+    @blog_of_other_group = @other_group.child_pages.create title: "Blog post of a group the user is NOT member of", published_at: 1.day.ago
+    @blog_post_of_other_group = @blog_of_other_group.child_pages.create title: 'Blog post of a group the user is NOT member of', content: "This page needs content to be shown.", published_at: 1.day.ago, type: "BlogPost"
+    @blog_without_group = create :page, title: "Blog without a group, i.e. a global blog", published_at: 1.day.ago
+    @blog_post_without_group = @blog_without_group.child_pages.create title: 'Blog post without a group, i.e. a global page', content: "This page needs content to be shown.", published_at: 1.day.ago, type: "BlogPost"
 
     login @user
     visit root_path
 
     within '#content_area' do
       # List the pages of the groups the user is member of
-      page.should have_text @page_of_group.title
+      page.should have_text @blog_post_of_group.title
 
       # Do not list the pages of groups the user is not member of
-      page.should have_no_text @page_of_other_group.title
+      page.should have_no_text @blog_post_of_other_group.title
 
       # List the pages without group, i.e. "global pages"
-      page.should have_text @page_without_group.title
+      page.should have_text @blog_post_without_group.title
     end
   end
 end
