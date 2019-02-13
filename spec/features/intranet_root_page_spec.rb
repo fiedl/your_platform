@@ -22,7 +22,7 @@ feature "Intranet Root" do
     within("#content_area") { page.should have_text "This is our public website!" }
   end
 
-  scenario "Looking at the news pages at the intranet root", js: true do
+  scenario "Looking at the news pages at the intranet root" do
     @user = create :user_with_account
     @group = create :group
     @group.assign_user @user, at: 1.year.ago
