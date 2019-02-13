@@ -54,12 +54,6 @@ addons:
     packages:
       - pwgen
       - libicu-dev
-      - libxml2
-      - libxslt-dev
-      - libicu52
-      - imagemagick
-      - libmagickcore-dev
-      - libmagickwand-dev
 services:
   - redis-server
   - elasticsearch
