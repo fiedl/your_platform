@@ -58,7 +58,6 @@ addons:
       - libxslt-dev
       - libicu52
       - imagemagick
-      - libmagick-dev
       - libmagickcore-dev
       - libmagickwand-dev
 services:
