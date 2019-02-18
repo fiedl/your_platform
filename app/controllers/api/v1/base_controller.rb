@@ -18,4 +18,11 @@ class Api::V1::BaseController < ApplicationController
     authenticate_api_v1_user_account! if request.headers["HTTP_ACCESS_TOKEN"].present?
   end
 
+  # Do not apply the caching feature switch to API calls.
+  # The API uses the default setting for applyching caching.
+  #
+  def use_caching_ability_switch
+    yield
+  end
+
 end
