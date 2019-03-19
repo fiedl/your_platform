@@ -527,6 +527,7 @@ class Ability
       can :use, :permalinks
       can :use, :blog_post_comments
       can :use, :caching
+      can :use, :mailing_lists
     end
 
     # Use the tabs view in users#show. This has been a beta feature previously.

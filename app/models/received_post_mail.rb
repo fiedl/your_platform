@@ -33,7 +33,8 @@ class ReceivedPostMail < ReceivedMail
     recipient_emails.collect do |recipient_email|
       if group = ProfileFields::MailingListEmail.where(value: recipient_email).first.try(:profileable)
         if no_duplicates_exist?(group) || Rails.env.development?
-          if Ability.new(self.sender_user).can? :create_post_for, group
+          ability = Ability.new(self.sender_user)
+          if ability.can?(:use, :mailing_lists) && ability.can?(:create_post_for, group)
             post = Post.new
             if self.sender_by_email
               post.author_user_id = self.sender_user.id
