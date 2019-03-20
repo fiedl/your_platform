@@ -38,16 +38,21 @@
         .child_users
           = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
 
-- if can? :add_member_to, group
+- if can?(:add_member_to, group) || can?(:import_members, group)
   %h1= t :add_members_manually
   %div.add_group_members
-    = form_for new_membership, url: group_members_memberships_path(format: 'json') do |form|
-      %span.add_group_member_name_field.left
-        = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
-      %span.add_group_member_tools.right
-        = form.date_select :valid_from, value: Date.today, class: 'valid-from-field', start_year: 1950, end_year: Time.now.year + 5
-        = form.submit t(:add), class: 'btn btn-primary add-user-button'
-
+    - if can?(:add_member_to, group)
+      = form_for new_membership, url: group_members_memberships_path(format: 'json') do |form|
+        %span.add_group_member_name_field.left
+          = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
+        %span.add_group_member_tools.right
+          = form.date_select :valid_from, value: Date.today, class: 'valid-from-field', start_year: 1950, end_year: Time.now.year + 5
+          = form.submit t(:add), class: 'btn btn-primary add-user-button'
+    - if can?(:import_members, group)
+      %hr
+      = link_to new_group_list_imports_members_import_path, class: 'btn btn-default' do
+        = csv_icon
+        = t(:import_str, str: group.name)
 -#%h1.group_members_map= t :map
 -#%div
 -#  .google_maps.with_info_window{data: {datatable: 'table.members'}}

@@ -1,0 +1,5 @@
+de:
+  import_group_members: Gruppen-Mitglieder importieren
+  import_str: "%{str} importieren"
+  import_users_into_group_str: "Benutzer als Mitglieder in die Gruppe \"%{str}\" importieren."
+  destination: Ziel

@@ -1,0 +1,30 @@
+%h1= t :import_str, str: group.name
+%div
+  %table
+    %tr
+      %th= t :file
+      %td
+        = form_tag group_list_imports_members_imports_path, multipart: true do
+          = file_field_tag :file
+          -#= submit_tag t(:import)
+    %tr
+      %th= t :format
+      %td CSV
+    %tr
+      %th= t :destination
+      %td= t :import_users_into_group_str, str: group.name
+    %tr
+      %th Spalten
+      %td
+        Die zu importierende Datei muss folgender Spalten-Konfiguration entsprechen:
+
+        %table
+          %tr
+            %th id
+            %th Nachname
+            %th Vorname
+          %tr
+            %td
+            %td Mustermann
+            %td Max
+
