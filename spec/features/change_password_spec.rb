@@ -74,7 +74,7 @@ feature 'Change Password', js: true do
               click_button I18n.t(:submit_changed_password)
             end
 
-            it { should have_text "Das Passwort konnte nicht geändert werden!" }
+            it { should have_text "Current password ist nicht gültig" } # TODO: can we i18n this?
           end
         end
 
