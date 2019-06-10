@@ -272,3 +272,9 @@ $(document).ready ->
     "pageLength": 500,
     "order": [[0, "asc"]]
   }
+
+  App.datatables.create '.datatable.subscriptions', {
+    columnDefs: [
+      { type: 'de_date', targets: 5 }
+    ]
+  }

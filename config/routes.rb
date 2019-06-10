@@ -285,6 +285,8 @@ Rails.application.routes.draw do
   # ATTENTION: Changing feed urls might break subscribed feeds!
   get 'feeds/:id(.:format)', to: 'feeds#show', as: :feed
 
+  resources :subscriptions
+
   resources :beta_invitations
   resources :betas do
     get :invitations, to: 'beta_invitations#index'
