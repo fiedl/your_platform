@@ -10,7 +10,11 @@ module BreadcrumbsHelper
   end
 
   def navable_breadcrumbs
-    current_navable.try(:breadcrumbs) || [Page.root.nav_node, Page.intranet_root.nav_node]
+    current_navable.try(:breadcrumbs) || if Page.root
+      [Page.root.nav_node, Page.intranet_root.nav_node]
+    else
+      []
+    end
   end
 
   def resource_breadcrumbs
