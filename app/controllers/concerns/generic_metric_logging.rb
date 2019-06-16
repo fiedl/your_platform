@@ -71,6 +71,7 @@ concern :GenericMetricLogging do
         owner: current_user,
         parameters: params.to_unsafe_hash.except('authenticity_token', 'attachment', 'message').deep_merge({
           "password" => nil,
+          "password_confirmation" => nil,
           "user" => {avatar: nil},
           "user_account" => {password: nil, password_confirmation: nil}
         })
