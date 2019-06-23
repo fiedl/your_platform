@@ -68,7 +68,7 @@ before_install:
 install:
   - travis_retry bundle install
   - bundle install
-  - nvm install node v10.16.0
+  - nvm install v10.16.0
   - node -v
   - npm i -g yarn
   - yarn
