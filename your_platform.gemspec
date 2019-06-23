@@ -142,7 +142,7 @@ Gem::Specification.new do |s|
 
   # Metrics
   s.add_dependency 'rack-mini-profiler'
-  s.add_dependency 'chartkick'
+  s.add_dependency 'chartkick', '>= 3.2.0' # CVE-2019-12732
   s.add_dependency 'groupdate'
   s.add_dependency 'impressionist'
 
