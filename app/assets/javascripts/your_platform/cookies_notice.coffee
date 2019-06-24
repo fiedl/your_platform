@@ -13,5 +13,6 @@ $(document).ready ->
       "dismiss": "OK",
       "link": "Datenschutz-Infos",
       "href": "/datenschutz"
-    }
+    },
+    "position": "top"
   })
