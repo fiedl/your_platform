@@ -1,4 +1,4 @@
-FROM ruby:2.3.3
+FROM ruby:2.6.2
 
 ENV RAILS_ENV=development
 
