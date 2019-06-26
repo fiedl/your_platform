@@ -2,7 +2,7 @@
 # closes the dropdown menu, even if the request takes some time.
 #
 lock_button_and_show_loading = (btn)->
-  btn.attr('data-loading-text', '<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>' + " " + btn.text().trim() + " ...")
+  btn.attr('data-loading-text', '<span class="fa fa-refresh" aria-hidden="true"></span>' + " " + btn.text().trim() + " ...")
   btn.button("loading") # http://stackoverflow.com/questions/14793367/
 
 

@@ -25,7 +25,7 @@ App.spinner = {
     $(".spinner").remove()
     $(".hidden-by-spinner").removeClass('hidden-by-spinner')
   show: (link)->
-    link.find('img, i, .glyphicon').addClass('hidden-by-spinner')
+    link.find('img, i, .fa').addClass('hidden-by-spinner')
     link.prepend('<span class="spinner"></span>')
 }
 

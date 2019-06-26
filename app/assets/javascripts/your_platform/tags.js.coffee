@@ -1,4 +1,4 @@
-$(document).on 'click', '.tags .glyphicon-tag', ->
+$(document).on 'click', '.tags .fa-tag', ->
   $(this).next('.best_in_place').data('bestInPlaceEditor').activate()
 
 $(document).on 'click', '.tagcloud .edit_tag_cloud', ->
