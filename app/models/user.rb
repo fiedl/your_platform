@@ -88,6 +88,7 @@ class User < ApplicationRecord
   include UserPostalSubscriptions
   include UserGender
   include UserBio
+  include UserBackup
 
   # General Properties
   # ==========================================================================================
