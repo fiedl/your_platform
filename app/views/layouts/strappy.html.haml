@@ -15,33 +15,23 @@
     %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
       = link_to root_path, class: 'navbar-brand' do
         = image_tag(logo_url)
-        = app_name
       %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
         %span.navbar-toggler-icon
       #navbarSupportedContent.collapse.navbar-collapse
         %form.form-inline.my-2.my-lg-0
           %input.form-control.mr-sm-2{"aria-label" => "Search", :placeholder => "Search", :type => "search"}/
-          %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"} Search
+          %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"} Search
         %ul.navbar-nav.mr-auto
-          %li.nav-item.active
-            %a.nav-link{:href => "#"}
-              Home
-              %span.sr-only (current)
-          %li.nav-item
-            %a.nav-link{:href => "#"} Link
-          %li.nav-item.dropdown
-            %a#navbarDropdown.nav-link.dropdown-toggle{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
-              Dropdown
-            .dropdown-menu{"aria-labelledby" => "navbarDropdown"}
-              %a.dropdown-item{:href => "#"} Action
-              %a.dropdown-item{:href => "#"} Another action
-              .dropdown-divider
-              %a.dropdown-item{:href => "#"} Something else here
-          %li.nav-item
-            %a.nav-link.disabled{"aria-disabled" => "true", :href => "#", :tabindex => "-1"} Disabled
+          - horizontal_nav.link_objects.each do |object|
+            %li.nav-link{class: horizontal_nav_li_css_class(object)}
+              - if object.kind_of? Hash
+                -#= link_to object[:title], (object[:path] || object.except(:title))
+              - else
+                - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
+                  = link_to_navable (object.nav_title), object, class: 'nav-link'
         %ul.navbar-nav.ml-auto
           %li.nav-item
-            %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"}= t :help
+            %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :help
           - if current_user
             %li.nav-item.dropdown
               %a.nav-link.dropdown-toggle#avatar-navlink{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
@@ -53,7 +43,11 @@
                 %a.dropdown-item{:href => "#"} Something else here
           - else
             %li.nav-item
-              %button.btn.btn-outline-success.my-2.my-sm-0{:type => "submit"}= t :sign_in
+              %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :sign_in
+
+    #content.container-fluid
+      = render partial: 'layouts/multi_column_content_area'
+
     / Optional JavaScript
     / jQuery first, then Popper.js, then Bootstrap JS
     %script{:crossorigin => "anonymous", :integrity => "sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo", :src => "https://code.jquery.com/jquery-3.3.1.slim.min.js"}

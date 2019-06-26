@@ -3,36 +3,35 @@
 - @hide_vertical_nav = true
 -#- @hide_footer = true
 
-.row
-  .col-sm-3.col-xs-12.pull-right.side-col
-    .row
-      = render partial: 'root/start_page_elements'
+.col-sm-3.col-xs-12.pull-right.side-col
+  .row
+    = render partial: 'root/start_page_elements'
 
-  .col-sm-9.col-xs-12
-    .row
-      .col-sm-4.hidden-xs.side-col
-        = render partial: 'layouts/vertical_nav'
+.col-sm-9.col-xs-12
+  .row
+    .col-sm-4.hidden-xs.side-col
+      = render partial: 'layouts/vertical_nav'
 
-        .row= render @page
+      .row= render @page
 
-      .col-sm-8
-        - if @pinned_objects.any?
-          = render @pinned_objects
+    .col-sm-8
+      - if @pinned_objects.any?
+        = render @pinned_objects
 
-        = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+      = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
 
-        = box title: t(:blog_entries) do
-          %ul.blog_posts.root_list
-            - for blog_post in @blog_posts
-              = render partial: 'root/list_entry', locals: {obj: blog_post, date: blog_post.published_at, category: blog_post.parent, author: blog_post.author}
+      = box title: t(:blog_entries) do
+        %ul.blog_posts.root_list
+          - for blog_post in @blog_posts
+            = render partial: 'root/list_entry', locals: {obj: blog_post, date: blog_post.published_at, category: blog_post.parent, author: blog_post.author}
 
-        = box title: "Sammelnachrichten" do
-          %ul.posts.root_list
-            - for post in @posts
-              = render partial: 'root/list_entry', locals: {obj: post, date: post.created_at, category: post.group, author: post.author}
+      = box title: "Sammelnachrichten" do
+        %ul.posts.root_list
+          - for post in @posts
+            = render partial: 'root/list_entry', locals: {obj: post, date: post.created_at, category: post.group, author: post.author}
 
-        = box title: t(:documents) do
-          %ul.documents.root_list
-            - for document in @documents
-              = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_url, new_tab: true}
+      = box title: t(:documents) do
+        %ul.documents.root_list
+          - for document in @documents
+            = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_url, new_tab: true}
 
