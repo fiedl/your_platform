@@ -10,6 +10,8 @@
     = stylesheet_link_tag 'strappy_layout', :media => 'all', data: {turbolinks_track: 'reload'}
     = stylesheet_link_tag 'application', :media => 'all'
 
+    = javascript_include_tag 'application', data: {turbolinks_eval: false}
+
     %title= website_title_with_app_name
   = body_tag do
     %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark
