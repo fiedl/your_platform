@@ -27,7 +27,7 @@
       .workflow-tool.tool= render partial: 'workflow_triggers'
       - if can? :manage, @user
         .tool.profile_fields_index
-          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-default'
+          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-outline-secondary'
       - if can? :renew_cache, @user
         .tool.renew_cache= renew_cache_button(@user)
     %div
@@ -59,7 +59,7 @@
       %div
         .pull-right= render partial: 'workflow_triggers'
         - if can? :manage, @user
-          = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+          = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
         = corporate_vita_for_user @user
 
   #career{class: tab_pane_class}
@@ -84,7 +84,7 @@
     %h1
       = t(:groups_of) + " " + @user.title
       - if can? :manage, @user
-        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
     %div
       = render partial: 'users/groups', object: @user, as: :user
 

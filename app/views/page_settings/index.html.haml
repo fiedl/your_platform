@@ -1,6 +1,6 @@
 %h1.page_settings
   = current_title
-  .back_to_page.tool= link_to t(:back_to_the_page), polymorphic_path(@page, no_fast_lane: true), class: 'btn btn-default'
+  .back_to_page.tool= link_to t(:back_to_the_page), polymorphic_path(@page, no_fast_lane: true), class: 'btn btn-outline-secondary'
 %div
   %table.settings
     %tr.page_title
@@ -39,7 +39,7 @@
 
 - if @page.kind_of?(Pages::HomePage) || @page.kind_of?(Blog)
   %h1.logo_settings= t :logo_settings
-  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: @page.domain || @page.title), page_logos_path(@page), class: 'btn btn-default'
+  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: @page.domain || @page.title), page_logos_path(@page), class: 'btn btn-outline-secondary'
 
 %h1.boxes_on_this_page= t :boxes_on_this_page
 %div

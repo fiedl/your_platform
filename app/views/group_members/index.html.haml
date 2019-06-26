@@ -21,18 +21,18 @@
     - content_for :box_tools do
       - if can?(:use, :term_reports) && group.corporation
         .tool.term_reports
-          = link_to group_term_report_path(group), class: 'btn btn-default' do
+          = link_to group_term_report_path(group), class: 'btn btn-outline-secondary' do
             = fa_icon 'bar-chart'
             = t(:term_report)
       - if can? :renew_cache, group
         .tool.renew_cache= renew_cache_button(group)
       = render partial: 'groups/export_button'
       - if can? :update_members, group
-        = link_to group_member_data_summaries_path(group), class: 'btn btn-default right' do
+        = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary right' do
           = icon 'folder-open'
           = t(:data_administration)
       - if can? :manage_memberships_manually, group
-        = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-default right'
+        = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-outline-secondary right'
     - content_for :box_body do
       %span#group_members
         .child_users

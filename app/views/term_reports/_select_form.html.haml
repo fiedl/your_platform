@@ -4,4 +4,4 @@
   = select_tag :term_type, options_for_select([[t(:term), nil], [t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"], ["Ganzes Jahr", "Terms::Year"]], term.try(:type) || params[:term_type]), class: 'form-control'
   = submit_tag("OK", class: 'btn btn-sm btn-primary')
   - if corporation
-    = link_to t(:all_corporations), term_reports_path(term_id: term.try(:id) || Term.first_or_create_current.id), class: 'btn btn-default btn-sm'
+    = link_to t(:all_corporations), term_reports_path(term_id: term.try(:id) || Term.first_or_create_current.id), class: 'btn btn-outline-secondary btn-sm'

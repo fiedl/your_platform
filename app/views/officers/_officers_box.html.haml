@@ -22,7 +22,7 @@
         %p
           - id_attrs ||= structureable.kind_of?(Group) ? {group_id: structureable.id} : nil
           - id_attrs ||= structureable.kind_of?(Page) ? {page_id: structureable.id} : nil
-          %a.btn.btn-default#add_office{href: create_officers_group_path(id_attrs.merge({format: 'json'}))}
+          %a.btn.btn-outline-secondary#add_office{href: create_officers_group_path(id_attrs.merge({format: 'json'}))}
             = icon :plus
             = t :add_office
         %p

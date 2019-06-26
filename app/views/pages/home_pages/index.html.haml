@@ -21,6 +21,6 @@
           %td= l home_page.updated_at.to_date
 
   - if can? :create, Pages::HomePage
-    = link_to home_pages_path, class: 'btn btn-default', method: :post do
+    = link_to home_pages_path, class: 'btn btn-outline-secondary', method: :post do
       = icon :plus
       = t :create_new_home_page

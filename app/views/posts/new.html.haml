@@ -43,7 +43,7 @@
     -#   %br
 
     %p.buttons.right
-      %a.btn.btn-default#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
+      %a.btn.btn-outline-secondary#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
         = icon :envelope
         = "Zum Testen an meine eigene Adresse senden."
       %a.btn.btn-primary#confirm_message{href: group_posts_path(group_id: @group.id, recipient: @group.id, format: 'json')}

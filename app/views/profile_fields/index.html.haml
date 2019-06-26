@@ -11,6 +11,6 @@
       - @profile_fields.each do |profile_field|
         = render partial: 'profile_fields/profile_field_tr', locals: {profile_field: profile_field}
 
-  = link_to profile_fields_path(profileable_type: @profileable.class.name, profileable_id: @profileable.id, profile_field: {type: 'ProfileFields::General'}), class: 'add_profile_field btn btn-default', remote: true, method: 'post' do
+  = link_to profile_fields_path(profileable_type: @profileable.class.name, profileable_id: @profileable.id, profile_field: {type: 'ProfileFields::General'}), class: 'add_profile_field btn btn-outline-secondary', remote: true, method: 'post' do
     = tool_icon :plus
     = t :add_profile_field

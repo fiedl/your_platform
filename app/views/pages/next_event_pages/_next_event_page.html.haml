@@ -3,7 +3,7 @@
 
 - content_for :toolbar do
   - if page.show_events_for_group && can?(:create_event, page.show_events_for_group)
-    %a.btn.btn-default.btn-sm.pull-right#create_event{href: events_path(group_id: page.show_events_for_group.id, format: 'json')}
+    %a.btn.btn-outline-secondary.btn-sm.pull-right#create_event{href: events_path(group_id: page.show_events_for_group.id, format: 'json')}
       = icon :plus
       = t :create_new_event
 

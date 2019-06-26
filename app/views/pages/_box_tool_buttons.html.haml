@@ -3,7 +3,7 @@
 = publish_page_button(page)
 
 - if page.kind_of?(Blog) && can?(:create_page_for, page)
-  = link_to blog_posts_path(parent_id: page.id), method: 'post', class: 'btn btn-default', title: t(:create_blog_post_in_str, str: page.title) do
+  = link_to blog_posts_path(parent_id: page.id), method: 'post', class: 'btn btn-outline-secondary', title: t(:create_blog_post_in_str, str: page.title) do
     = create_icon
     = t :create_blog_post
 
@@ -18,19 +18,19 @@
 - if can? :manage, page
   .page_relocations_tool.tool
     .do_not_show_in_edit_mode.shown_on_box_header_hover
-      = link_to relocation_icon, new_page_relocation_path(page), class: 'btn btn-default relocate_page_button', title: t(:move_page_to_another_parent)
+      = link_to relocation_icon, new_page_relocation_path(page), class: 'btn btn-outline-secondary relocate_page_button', title: t(:move_page_to_another_parent)
 
   .activities_tool.tool
     .do_not_show_in_edit_mode.shown_on_box_header_hover
-      = link_to icon(:history), page_activities_path(page), class: 'btn btn-default show_activities_button', title: t(:show_page_activity_log)
+      = link_to icon(:history), page_activities_path(page), class: 'btn btn-outline-secondary show_activities_button', title: t(:show_page_activity_log)
 
   .attachment_tools.tool
     .shown_on_box_header_hover.do_not_show_in_edit_mode
-      = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-default manage_attachments_button', title: t(:manage_attachments)
+      = link_to attachment_icon, page_attachments_path(page_id: page.id), class: 'btn btn-outline-secondary manage_attachments_button', title: t(:manage_attachments)
 
   .page_settings_tool.tool
     .shown_on_box_header_hover.do_not_show_in_edit_mode
-      = link_to settings_icon, page_settings_path(page), class: 'btn btn-default', title: t(:page_settings)
+      = link_to settings_icon, page_settings_path(page), class: 'btn btn-outline-secondary', title: t(:page_settings)
 
 - if can? :renew_cache, page
   .tool.renew_cache

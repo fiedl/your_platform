@@ -7,5 +7,5 @@ $(document).ready ->
       #
       if $(this).find('.content h1').count() > 0
         $(this).find('.content').addClass('jumbotron')
-        $(this).find('.page_body a').addClass('btn btn-lg btn-default')
-        $(this).find('.page_body a:first').addClass('btn-primary').removeClass('btn-default')
+        $(this).find('.page_body a').addClass('btn btn-lg btn-outline-secondary')
+        $(this).find('.page_body a:first').addClass('btn-primary').removeClass('btn-outline-secondary')

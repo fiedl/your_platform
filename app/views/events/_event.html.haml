@@ -9,7 +9,7 @@
       = link_to event.title, event
 
   - content_for :box_tools do
-    %a.btn.btn-default#ics_export.has_tooltip{href: event_path(id: event.id, format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+    %a.btn.btn-outline-secondary#ics_export.has_tooltip{href: event_path(id: event.id, format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
       = icon :calendar
       Kalender-Export
 

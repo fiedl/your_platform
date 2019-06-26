@@ -22,7 +22,7 @@
           = best_in_place logo, :title
     #new_attachment= render partial: 'attachments/drop_field', locals: {parent: @logo_page, title: "logo", type: :image}
 
-  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: current_home_page.domain || current_home_page.title), page_logos_path(current_home_page), class: 'btn btn-default'
+  %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: current_home_page.domain || current_home_page.title), page_logos_path(current_home_page), class: 'btn btn-outline-secondary'
 
 
   %h2 Root-Breadcrumb

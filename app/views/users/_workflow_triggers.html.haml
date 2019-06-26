@@ -3,7 +3,7 @@
   - workflows_by_corporation = executable_workflows_by_corporation(user)
   - if workflows_by_corporation.any? || user.markable_as_deceased?
     %div.btn-group.workflow_triggers.pull-right{class: "workflow-triggers-for-user-#{user.id}"}
-      %a.btn.btn-default.dropdown-toggle(data-toggle="dropdown" href="#")
+      %a.btn.btn-outline-secondary.dropdown-toggle(data-toggle="dropdown" href="#")
         = icon 'chevron-up'
         = I18n.t(:change_status)
         .caret

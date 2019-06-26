@@ -9,7 +9,7 @@ $(document).ready ->
     box = $(this)
     if box.find('.hidden_help').count() > 0 and box.find('.show_hidden_help').count() == 0
       box_toolbar = box.find('.box_toolbar').first()
-      help_button = $("<a href='#' class='show_hidden_help btn btn-default'><i class='fa fa-info-circle'></i></a>")
+      help_button = $("<a href='#' class='show_hidden_help btn btn-outline-secondary'><i class='fa fa-info-circle'></i></a>")
       help_button.attr('title', I18n.t('help'))
       box_toolbar.prepend(help_button)
 

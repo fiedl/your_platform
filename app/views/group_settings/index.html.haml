@@ -40,7 +40,7 @@
   - if current_user.beta_tester?
     %h2=t :mailing_lists
     %p
-      = link_to group_mailing_lists_path(@group), class: 'btn btn-default' do
+      = link_to group_mailing_lists_path(@group), class: 'btn btn-outline-secondary' do
         = icon :envelope
         = t(:manage_mailing_lists)
       = beta_badge
@@ -53,7 +53,7 @@
   %hr
   %p=t :welcome_message_explanation
   %p
-    = button_to(group_test_welcome_message_path(@group), method: :post, remote: true, class: 'btn btn-default test-welcome-message-button') do
+    = button_to(group_test_welcome_message_path(@group), method: :post, remote: true, class: 'btn btn-outline-secondary test-welcome-message-button') do
       = icon :envelope
       Zum Testen an meine eigene Adresse schicken.
 
@@ -66,4 +66,4 @@
 -#       %option Nur Administratoren dürfen Mitglieder hinzufügen
 -#       %option Niemand darf Mitglieder hinzufügen (vom System verwaltetete Gruppe)
 -#   %p
--#     = link_to t(:manage_members), group_path(@group) + "#members", class: 'btn btn-default'
+-#     = link_to t(:manage_members), group_path(@group) + "#members", class: 'btn btn-outline-secondary'

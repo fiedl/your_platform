@@ -30,7 +30,7 @@ module ToolButtonsHelper
 
     # default options
     options = { 
-      :class => 'add_button tool show_only_in_edit_mode btn btn-default',
+      :class => 'add_button tool show_only_in_edit_mode btn btn-outline-secondary',
       :remote => true
     }.merge( options )
     
@@ -59,7 +59,7 @@ module ToolButtonsHelper
   private
   
   def tool_button( type, icon, text, options = {} )
-    css_class = "button #{type}_button btn btn-default #{options[ :class ]}"; options.delete( :class )
+    css_class = "button #{type}_button btn btn-outline-secondary #{options[ :class ]}"; options.delete( :class )
     options = { 
       :class => css_class, 
       'aria-label' => I18n.t(type)  # for accessibility and screen readers

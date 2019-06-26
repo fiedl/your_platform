@@ -5,7 +5,7 @@
     = current_title
     - if can? :update, semester_calendar
       .edit-semester-calendar.tool
-        = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-default', title: t(:edit)
+        = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-outline-secondary', title: t(:edit)
   %div
     %p.semester
       = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get' do
@@ -44,17 +44,17 @@
     %p
       %small= t :get_all_semester_calendars_of_str_automatically, str: @group.title
     %p
-      %a.btn.btn-default{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+      %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
         = icon :calendar
         = t :ical_all_events
 
       - if current_user.member_of? @group
-        %a.btn.btn-default{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+        %a.btn.btn-outline-secondary{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
           = icon :calendar
           = t :ical_events_concerning_me
 
       - else
-        %a.btn.btn-default{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+        %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
           = icon :calendar
           = t :ical_events_from_the_homepage
 
