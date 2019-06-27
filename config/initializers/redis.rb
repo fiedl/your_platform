@@ -91,11 +91,7 @@ class RedisConnectionConfiguration
   end
 
   def namespace
-    if Gem.loaded_specs.has_key? 'apartment'
-      Proc.new { "#{::STAGE}_#{Apartment::Tenant.current}_#{@namespace_key}" }
-    else
-      "#{::STAGE}_#{@namespace_key}"
-    end
+    Proc.new { ApplicationRecord.storage_namespace(@namespace_key) }
   end
 
   def to_hash

@@ -33,7 +33,7 @@ class Graph::Base
   # is missing from the query string.
   #
   def self.namespace
-    Rails.env.to_s
+    ApplicationRecord.storage_namespace
   end
 
   def namespace
