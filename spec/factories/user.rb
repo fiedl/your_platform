@@ -18,8 +18,13 @@ FactoryGirl.define do
 
     trait :with_address do
       after :create do |user|
-        user.profile_fields.create(type: ProfileFields::Address.name)
-        user.address_fields.first.postal_address = true
+        pf = user.profile_fields.create(type: ProfileFields::Address.name)
+        pf.postal_address = true
+        pf.first_address_line = "Pariser Platz 1"
+        pf.postal_code = "10117"
+        pf.city = "Berlin"
+        pf.country_code = "DE"
+        pf.save
       end
     end
 
