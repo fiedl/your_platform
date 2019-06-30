@@ -21,6 +21,9 @@ concern :UserBackup do
             only: [:key, :created_at, :updated_at]
           }
         }
+      },
+      account: {
+        only: [:created_at, :updated_at, :encrypted_password, :auth_token]
       }
     })
   end
@@ -49,6 +52,12 @@ concern :UserBackup do
         profile_field.flags.create flag_hash
       end
     end
+    self.delete_cache; self.reload  # to have `User#email` present
+    account = self.build_account hash['account']
+    account.password = Password.generate
+    account.save!
+    account.encrypted_password = hash['account']['encrypted_password']
+    account.save!
     self.delete_cache
   end
 

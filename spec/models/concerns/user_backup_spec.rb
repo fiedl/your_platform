@@ -9,6 +9,8 @@ describe UserBackup do
     @alias = @user.alias
     @last_status_membership_valid_from = @user.status_memberships.last.valid_from
     @date_of_birth = @user.date_of_birth
+    @auth_token = @user.account.auth_token
+    @encrypted_password = @user.account.encrypted_password
   end
 
   describe "#backup_and_remove_profile" do
@@ -94,6 +96,18 @@ describe UserBackup do
 
     it "should restore the date of birth" do
       @user.date_of_birth.should == @date_of_birth
+    end
+
+    it "should create an account if the backup has one" do
+      @user.account.should be_present
+    end
+
+    it "should restore the hashed password" do
+      @user.account.encrypted_password.should == @encrypted_password
+    end
+
+    it "should restore the account's auth token" do
+      @user.account.auth_token.should == @auth_token
     end
   end
 end
