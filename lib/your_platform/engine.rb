@@ -26,7 +26,6 @@ require 'sidekiq'
 
 # Authentification
 require 'devise'
-require 'passgen'
 require 'omniauth-github'
 require 'omniauth-twitter'
 require 'omniauth-google-oauth2'
