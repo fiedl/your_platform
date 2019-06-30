@@ -1,22 +1,22 @@
 - tab_pane_class = ""
 - if can? :use, :tab_view
   - tab_pane_class = "tab-pane fade"
-  %ul.nav.nav-tabs.user
-    %li.active
-      %a{href: '#general', data: {toggle: 'tab'}}= t :general_user_info_tab
+  %ul.nav.nav-pills.user
+    %li.nav-item
+      %a.nav-link.active{href: '#general', data: {toggle: 'tab'}}= t :general_user_info_tab
     -#- if can? :use, :merit
     -#  %li
     -#    %a{href: '#merit', data: {toggle: 'tab'}}
     -#      Plattform-Rang
     -#      = beta_badge
-    %li
-      %a{href: '#contact', data: {toggle: 'tab'}}= t :contact_info_tab
-    %li
-      %a{href: '#corporate', data: {toggle: 'tab'}}= t :corporate_info_tab
-    %li
-      %a{href: '#career', data: {toggle: 'tab'}}= t :study_and_work_tab
-    %li
-      %a{href: '#more', data: {toggle: 'tab'}}= t :more_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#contact', data: {toggle: 'tab'}}= t :contact_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#corporate', data: {toggle: 'tab'}}= t :corporate_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#career', data: {toggle: 'tab'}}= t :study_and_work_tab
+    %li.nav-item
+      %a.nav-link{href: '#more', data: {toggle: 'tab'}}= t :more_info_tab
 
 .tab-content.user
 
