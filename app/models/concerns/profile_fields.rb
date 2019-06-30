@@ -14,7 +14,7 @@ concern :ProfileFields do
     @email = nil
     @email_profile_field ||= profile_fields_by_type("ProfileFields::Email").first
     if email.nil?
-      @email_profile_field.destroy
+      @email_profile_field.try(:destroy)
     else
       @email_profile_field ||= profile_fields.build(type: "ProfileFields::Email", label: "email")
       @email_profile_field.value = email
