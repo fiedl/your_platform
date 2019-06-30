@@ -89,7 +89,6 @@ PATH
       omniauth-github
       omniauth-google-oauth2
       omniauth-twitter
-      passgen
       phony
       prawn (= 2.0.2)
       public_activity (~> 1.4.1)
@@ -259,16 +258,16 @@ GEM
       jquery-rails
       jquery-turbolinks
       rails (>= 3.2)
-    elasticsearch (7.1.0)
-      elasticsearch-api (= 7.1.0)
-      elasticsearch-transport (= 7.1.0)
-    elasticsearch-api (7.1.0)
+    elasticsearch (7.2.0)
+      elasticsearch-api (= 7.2.0)
+      elasticsearch-transport (= 7.2.0)
+    elasticsearch-api (7.2.0)
       multi_json
     elasticsearch-model (6.0.0)
       activesupport (> 3)
       elasticsearch (> 1)
       hashie
-    elasticsearch-transport (7.1.0)
+    elasticsearch-transport (7.2.0)
       faraday
       multi_json
     email_spec (2.1.1)
@@ -419,9 +418,8 @@ GEM
     parallel (1.12.0)
     parallel_tests (2.14.3)
       parallel
-    passgen (1.0.2)
     pdf-core (0.6.1)
-    phony (2.18.3)
+    phony (2.18.5)
     poltergeist (1.16.0)
       capybara (~> 2.1)
       cliver (~> 0.3.1)

@@ -71,7 +71,6 @@ Gem::Specification.new do |s|
 
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
-  s.add_dependency 'passgen'
   s.add_dependency 'omniauth-github'
   s.add_dependency 'omniauth-twitter'
   s.add_dependency 'omniauth-google-oauth2'
