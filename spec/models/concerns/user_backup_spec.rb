@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe UserBackup do
   before do
-    @user = create :user_with_account, :with_profile_fields, :with_date_of_birth, :with_address, :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
+    @user = create :user_with_account, :with_profile_fields, :with_date_of_birth, :with_address,  :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
     @email = @user.email
     @postal_address = @user.postal_address
+    @postal_address_flag = @user.address_fields.first.postal_address?
     @alias = @user.alias
     @last_status_membership_valid_from = @user.status_memberships.last.valid_from
     @date_of_birth = @user.date_of_birth
@@ -76,6 +77,11 @@ describe UserBackup do
 
     it "should restore the postal address" do
       @user.postal_address.should == @postal_address
+    end
+
+    it "should restore the label of profile fields" do
+      @user.address_fields.count.should == 1
+      @user.address_fields.first.should have_flag :postal_address
     end
 
     it "should restore the alias" do

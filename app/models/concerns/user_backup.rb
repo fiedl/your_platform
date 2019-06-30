@@ -16,6 +16,9 @@ concern :UserBackup do
           children: {
             only: [:type, :key, :value, :created_at, :updated_at, :parent_id],
             methods: [:key]
+          },
+          flags: {
+            only: [:key, :created_at, :updated_at]
           }
         }
       }
@@ -35,12 +38,15 @@ concern :UserBackup do
     self.alias = hash['alias']
     self.save!
     hash['profile_fields'].each do |profile_field_hash|
-      profile_field = self.profile_fields.create profile_field_hash.except('children', 'key')
+      profile_field = self.profile_fields.create profile_field_hash.except('children', 'key', 'flags')
       profile_field.children.destroy_all # there might be relic children lying around
       profile_field.key = profile_field_hash['key']
       profile_field.save
       profile_field_hash['children'].each do |child_hash|
         profile_field.children.create child_hash.except('parent_id')
+      end
+      profile_field_hash['flags'].each do |flag_hash|
+        profile_field.flags.create flag_hash
       end
     end
     self.delete_cache
