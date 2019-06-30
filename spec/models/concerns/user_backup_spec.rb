@@ -6,6 +6,7 @@ describe UserBackup do
     @email = @user.email
     @postal_address = @user.postal_address
     @alias = @user.alias
+    @last_status_membership_valid_from = @user.status_memberships.last.valid_from
   end
 
   describe "#backup_and_remove_profile" do
@@ -47,6 +48,12 @@ describe UserBackup do
       subject
       @user.reload.postal_address.should be_nil
     end
+
+    it "should keep the corporate vita" do
+      @user.status_memberships.last.valid_from.should be_present
+      subject
+      @user.status_memberships.last.valid_from.should be_present
+    end
   end
 
   describe "#restore_profile" do
@@ -66,6 +73,10 @@ describe UserBackup do
 
     it "should restore the alias" do
       @user.alias.should == @alias
+    end
+
+    it "should not preserve the corporate vita" do
+      @user.status_memberships.last.valid_from.should == @last_status_membership_valid_from
     end
   end
 end
