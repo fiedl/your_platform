@@ -37,7 +37,7 @@
           %ul.attributes.keys-and-values
             = render partial: 'user_corporation_attribute'
             %li.name.attribute= render partial: 'user_name_attribute'
-            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth'
+            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth' if @user.date_of_birth
             - general_fields = @user.profile.section(:general).fields
             = profile_field_lis general_fields, lock_label: true, no_remove: true
             = render partial: 'users/special_general_info_fields', locals: {user: @user}

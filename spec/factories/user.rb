@@ -16,6 +16,13 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_date_of_birth do
+      after :create do |user|
+        user.date_of_birth = "13.12.1986"
+        user.save
+      end
+    end
+
     trait :with_address do
       after :create do |user|
         pf = user.profile_fields.create(type: ProfileFields::Address.name)

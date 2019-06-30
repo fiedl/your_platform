@@ -10,10 +10,12 @@ concern :UserBackup do
   def as_json_for_backup
     as_json(include: {
       profile_fields: {
-        only: [:type, :label, :value, :created_at, :updated_at, :parent_id, :children],
+        only: [:type, :key, :value, :created_at, :updated_at, :parent_id, :children],
+        methods: [:key],
         include: {
           children: {
-            only: [:type, :label, :value, :created_at, :updated_at, :parent_id]
+            only: [:type, :key, :value, :created_at, :updated_at, :parent_id],
+            methods: [:key]
           }
         }
       }
@@ -33,8 +35,10 @@ concern :UserBackup do
     self.alias = hash['alias']
     self.save!
     hash['profile_fields'].each do |profile_field_hash|
-      profile_field = self.profile_fields.create profile_field_hash.except('children')
+      profile_field = self.profile_fields.create profile_field_hash.except('children', 'key')
       profile_field.children.destroy_all # there might be relic children lying around
+      profile_field.key = profile_field_hash['key']
+      profile_field.save
       profile_field_hash['children'].each do |child_hash|
         profile_field.children.create child_hash.except('parent_id')
       end

@@ -2,11 +2,12 @@ require 'spec_helper'
 
 describe UserBackup do
   before do
-    @user = create :user_with_account, :with_profile_fields, :with_address, :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
+    @user = create :user_with_account, :with_profile_fields, :with_date_of_birth, :with_address, :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
     @email = @user.email
     @postal_address = @user.postal_address
     @alias = @user.alias
     @last_status_membership_valid_from = @user.status_memberships.last.valid_from
+    @date_of_birth = @user.date_of_birth
   end
 
   describe "#backup_and_remove_profile" do
@@ -54,6 +55,12 @@ describe UserBackup do
       subject
       @user.status_memberships.last.valid_from.should be_present
     end
+
+    it "should remove the date of birth" do
+      @user.date_of_birth.should be_present
+      subject
+      @user.date_of_birth.should be_nil
+    end
   end
 
   describe "#restore_profile" do
@@ -77,6 +84,10 @@ describe UserBackup do
 
     it "should not preserve the corporate vita" do
       @user.status_memberships.last.valid_from.should == @last_status_membership_valid_from
+    end
+
+    it "should restore the date of birth" do
+      @user.date_of_birth.should == @date_of_birth
     end
   end
 end

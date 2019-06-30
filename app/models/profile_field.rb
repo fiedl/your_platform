@@ -79,6 +79,9 @@ class ProfileField < ApplicationRecord
   def key
     read_attribute :label
   end
+  def key=(new_key)
+    self.label = new_key
+  end
 
   # This method returns the label text of the profile_field.
   # If a translation exists, the translation is returned instead.
