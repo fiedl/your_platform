@@ -5,6 +5,7 @@ describe UserBackup do
     @user = create :user_with_account, :with_profile_fields, :with_address, :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
     @email = @user.email
     @postal_address = @user.postal_address
+    @alias = @user.alias
   end
 
   describe "#backup_and_remove_profile" do
@@ -35,6 +36,12 @@ describe UserBackup do
       @user.reload.email.should be_nil
     end
 
+    it "should remove the user's alias" do
+      @user.alias.should be_present
+      subject
+      @user.reload.alias.should be_nil
+    end
+
     it "should remove the user's postal address" do
       @user.postal_address.should be_present
       subject
@@ -55,6 +62,10 @@ describe UserBackup do
 
     it "should restore the postal address" do
       @user.postal_address.should == @postal_address
+    end
+
+    it "should restore the alias" do
+      @user.alias.should == @alias
     end
   end
 end

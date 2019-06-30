@@ -30,6 +30,8 @@ concern :UserBackup do
     hash = ActiveSupport::JSON.decode(File.read(latest_backup_file))
     self.first_name = hash['first_name']
     self.last_name = hash['last_name']
+    self.alias = hash['alias']
+    self.save!
     hash['profile_fields'].each do |profile_field_hash|
       profile_field = self.profile_fields.create profile_field_hash.except('children')
       profile_field.children.destroy_all # there might be relic children lying around
@@ -42,12 +44,14 @@ concern :UserBackup do
 
   def anonymize_name_and_remove_profile_and_account!(confirmation = {})
     raise "Please confirm the destructive action by 'confirm: \"yes\"'." unless confirmation[:confirm] == "yes"
+    self.profile_fields.destroy_all
+    self.account.try(:destroy!)
+    self.reload
     self.first_name = ""
     self.last_name = self.last_name.first
     self.email = nil
-    self.save
-    self.profile_fields.destroy_all
-    self.account.try(:destroy)
+    self.alias = nil
+    self.save!
   end
 
   def backup_path
