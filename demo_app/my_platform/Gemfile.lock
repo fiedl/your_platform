@@ -85,10 +85,6 @@ PATH
       neography
       net-ldap
       nokogiri (>= 1.8.1)
-      omniauth-facebook (~> 3.0.0)
-      omniauth-github
-      omniauth-google-oauth2
-      omniauth-twitter
       phony
       prawn (= 2.0.2)
       public_activity (~> 1.4.1)
@@ -341,7 +337,6 @@ GEM
     json (2.1.0)
     judge (3.0.0)
       rails (>= 5.0)
-    jwt (2.2.1)
     kgio (2.11.0)
     launchy (2.4.3)
       addressable (~> 2.3)
@@ -370,7 +365,6 @@ GEM
     mini_portile2 (2.4.0)
     minitest (5.11.3)
     multi_json (1.13.1)
-    multi_xml (0.6.0)
     multipart-post (2.1.1)
     mustermann (1.0.3)
     mysql2 (0.4.9)
@@ -387,33 +381,6 @@ GEM
     nokogiri (1.10.3)
       mini_portile2 (~> 2.4.0)
     oauth (0.5.4)
-    oauth2 (1.4.1)
-      faraday (>= 0.8, < 0.16.0)
-      jwt (>= 1.0, < 3.0)
-      multi_json (~> 1.3)
-      multi_xml (~> 0.5)
-      rack (>= 1.2, < 3)
-    omniauth (1.9.0)
-      hashie (>= 3.4.6, < 3.7.0)
-      rack (>= 1.6.2, < 3)
-    omniauth-facebook (3.0.0)
-      omniauth-oauth2 (~> 1.2)
-    omniauth-github (1.3.0)
-      omniauth (~> 1.5)
-      omniauth-oauth2 (>= 1.4.0, < 2.0)
-    omniauth-google-oauth2 (0.7.0)
-      jwt (>= 2.0)
-      omniauth (>= 1.1.1)
-      omniauth-oauth2 (>= 1.5)
-    omniauth-oauth (1.1.0)
-      oauth
-      omniauth (~> 1.0)
-    omniauth-oauth2 (1.6.0)
-      oauth2 (~> 1.1)
-      omniauth (~> 1.9)
-    omniauth-twitter (1.4.0)
-      omniauth-oauth (~> 1.1)
-      rack
     orm_adapter (0.5.0)
     os (1.0.1)
     parallel (1.12.0)

@@ -22,15 +22,17 @@ class SessionsController < Devise::SessionsController
   #
   def create
     begin
-      if params[:provider].present?
-        auth = request.env['omniauth.auth']
-        user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
-        account = user.account || raise(ActionController::BadRequest, "User has no account.")
+      # dropped omniauth due to https://github.com/fiedl/your_platform/network/alert/demo_app/my_platform/Gemfile.lock/omniauth/open
 
-        sign_in_and_redirect account, event: :authentication
-      else
+      #if params[:provider].present?
+      #  auth = request.env['omniauth.auth']
+      #  user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
+      #  account = user.account || raise(ActionController::BadRequest, "User has no account.")
+      #
+      #  sign_in_and_redirect account, event: :authentication
+      #else
         super
-      end
+      #end
     rescue => error
       flash[:error] = t("errors.#{error.message}")
     end

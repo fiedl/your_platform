@@ -71,10 +71,15 @@ Gem::Specification.new do |s|
 
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
-  s.add_dependency 'omniauth-github'
-  s.add_dependency 'omniauth-twitter'
-  s.add_dependency 'omniauth-google-oauth2'
-  s.add_dependency 'omniauth-facebook', '~> 3.0.0'
+  #s.add_dependency 'omniauth-github'
+  #s.add_dependency 'omniauth-twitter'
+  #s.add_dependency 'omniauth-google-oauth2'
+  #s.add_dependency 'omniauth-facebook', '~> 3.0.0'
+  # omniauth dropped due to CVE-2015-9284
+  # https://github.com/fiedl/your_platform/network/alert/demo_app/my_platform/Gemfile.lock/omniauth/open
+  # https://github.com/omniauth/omniauth/issues/960
+  # https://github.com/omniauth/omniauth/pull/809
+
   s.add_dependency 'devise_masquerade', '~> 0.5.3'
   s.add_dependency 'gender_detector'
   s.add_dependency 'devise_token_auth'
