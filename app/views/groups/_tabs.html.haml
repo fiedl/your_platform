@@ -4,7 +4,7 @@
 
 - unless show_resource_nav?
 
-  %ul.nav.nav-pills.group.group_tabs
+  %ul.nav.nav-pills.group.group_tabs.tabs
     - if @group.group_of_groups?
       %li.nav-item
         %a.nav-link{href: group_subgroups_path(@group), class: (active == 'subgroups' ? 'active' : '')}= @group.name

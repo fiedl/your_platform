@@ -1,7 +1,7 @@
 - tab_pane_class = ""
 - if can? :use, :tab_view
   - tab_pane_class = "tab-pane fade"
-  %ul.nav.nav-pills.user
+  %ul.nav.nav-pills.user.tabs
     %li.nav-item
       %a.nav-link.active{href: '#general', data: {toggle: 'tab'}}= t :general_user_info_tab
     -#- if can? :use, :merit
