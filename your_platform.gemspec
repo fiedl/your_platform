@@ -206,6 +206,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
   s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
   s.add_dependency 'actionview', '>= 5.0.7.2'  # CVE-2019-5418, https://trello.com/c/4sVtIW7h/1330-kritische-sicherheitslücke-in-actionview-cve-2019-5418
+  s.add_dependency 'yard', '>= 0.9.20' # GHSA-xfhh-rx56-rxcr
 
   #
   # Development Dependencies

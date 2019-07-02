@@ -126,6 +126,7 @@ PATH
       vcardigan
       wannabe_bool
       will_paginate (> 3.0)
+      yard (>= 0.9.20)
 
 GEM
   remote: https://rails-assets.org/
@@ -646,7 +647,7 @@ GEM
     will_paginate (3.1.7)
     xpath (2.1.0)
       nokogiri (~> 1.3)
-    yard (0.9.16)
+    yard (0.9.20)
 
 PLATFORMS
   ruby
