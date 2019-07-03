@@ -49,11 +49,11 @@ concern :CurrentLayout do
   end
 
   def default_layout
-    'bootstrap'
+    'strappy'
   end
 
   def intranet_layout
-    'bootstrap'
+    'strappy'
   end
 
   def current_logo_url(key = nil)
