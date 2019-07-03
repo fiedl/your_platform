@@ -104,6 +104,7 @@ Gem::Specification.new do |s|
   # Layout: Twitter Bootstrap
   s.add_dependency 'bootstrap', '~> 4.3.1' # https://github.com/twbs/bootstrap-rubygem
   s.add_dependency 'sass-rails'
+  s.add_dependency 'sass', '>= 3.7.4' # https://github.com/twbs/bootstrap/issues/24549#issuecomment-339473607
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
