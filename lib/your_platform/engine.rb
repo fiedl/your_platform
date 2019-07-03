@@ -63,7 +63,7 @@ require 'bootstrap_tokenfield_rails'
 require 'rails-assets-inline-attachment'
 
 # Layout: Twitter Bootstrap
-require 'bootstrap-sass'
+require 'bootstrap'
 require 'sass-rails'
 
 # In Place Editing

@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
   s.add_development_dependency 'web-console'
-  s.add_dependency 'sprockets-rails'
+  s.add_dependency 'sprockets-rails', '>= 2.3.2' # required by bootstrap
   s.add_dependency 'decent_exposure'
 
 
@@ -102,8 +102,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
-  # fix bootstrap to 3.3.3 due to icon issue:
-  s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
+  s.add_dependency 'bootstrap', '~> 4.3.1' # https://github.com/twbs/bootstrap-rubygem
   s.add_dependency 'sass-rails'
 
   # In Place Editing
