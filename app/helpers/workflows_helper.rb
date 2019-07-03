@@ -26,7 +26,7 @@ module WorkflowsHelper
             execute_status_workflow_path(workflow, workflow_params),
             method: :put,
             remote: true,
-            :class => 'workflow_trigger',
+            class: "workflow_trigger #{context_infos[:class]}",
             title: title
             )
   end
