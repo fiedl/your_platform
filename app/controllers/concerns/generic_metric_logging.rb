@@ -56,7 +56,7 @@ concern :GenericMetricLogging do
   # Generic Activity Logger
   #
   def log_activity
-    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title", "preview", "description"]) and not params['controller'].in?(['sessions', 'devise/sessions', 'profile_fields', 'user_accounts'])
+    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title", "preview", "description"]) and not params['controller'].in?(['sessions', 'devise/sessions', 'api/v1/sessions', 'profile_fields', 'user_accounts'])
       begin
         type = self.class.name.gsub("Controller", "").singularize
         id = params[:id]
@@ -73,7 +73,8 @@ concern :GenericMetricLogging do
           "password" => nil,
           "password_confirmation" => nil,
           "user" => {avatar: nil},
-          "user_account" => {password: nil, password_confirmation: nil}
+          "user_account" => {password: nil, password_confirmation: nil},
+          "session" => {password: nil}
         })
       )
     end
