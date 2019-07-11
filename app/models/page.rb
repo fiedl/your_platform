@@ -14,6 +14,7 @@ class Page < ApplicationRecord
   include PageGraph
   include Navable
   include HasAuthor
+  include PageBody
   include PagePublicWebsite
   include Archivable
   include PageHasSettings

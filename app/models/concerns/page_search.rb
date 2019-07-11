@@ -8,8 +8,6 @@ concern :PageSearch do
       (search_by_title(query).limit(limit) + search_by_breadcrumbs(query, limit: limit, base_class: Page, search_attribute: :title)).uniq.first(limit)
     end
 
-    private
-
     def search_by_title(query)
       where("title LIKE ?", "%#{query}%")
     end

@@ -332,6 +332,7 @@ Rails.application.routes.draw do
         put :location, on: :collection, to: 'users/locations#update'
       end
       resources :groups
+      resources :songs
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships
