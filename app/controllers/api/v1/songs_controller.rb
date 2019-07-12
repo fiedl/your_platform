@@ -13,6 +13,7 @@ class Api::V1::SongsController < Api::V1::BaseController
     pages = songs_parent.child_pages
     pages = pages.search_by_title(query) if query.present?
     pages = pages.visible_to(current_user)
+    pages = pages.order(:title)
     pages
   }
 
