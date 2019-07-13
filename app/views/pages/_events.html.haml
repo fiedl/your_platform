@@ -1,5 +1,10 @@
-%h1#public-root-events-box= t(:events)
-%div
+= box title: t(:events), id: 'public-root-events-box' do
+  - content_for :box_tools do
+    - if page.show_events_for_group
+      = link_to group_events_url(group_id: page.show_events_for_group, format: 'ics', protocol: 'webcal'), class: 'ical_abo_link btn btn-outline-secondary', title: t(:calendar_feed) do
+        = calendar_icon
+
+
   %ul.website-events
     = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
 
@@ -7,7 +12,6 @@
     .semester_calendar
       %h3
         = t :semester_calendar
-        = link_to "ical", group_events_url(group_id: page.show_events_for_group, format: 'ics', protocol: 'webcal'), class: 'ical_abo_link'
       = link_to attachment.file.url do
         .semester_calendar_title
           = page.semester_calendar.title
