@@ -1,61 +1,62 @@
 = render partial: 'groups/tabs', locals: {active: 'events'}
 
-.col-sm-8.col-xs-12
-  %h1.semester_calendar
-    = current_title
-    - if can? :update, semester_calendar
-      .edit-semester-calendar.tool
-        = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-outline-secondary', title: t(:edit)
-  %div
-    %p.semester
-      = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get' do
-        = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year)
-        = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
-        = submit_tag("OK")
+.row
+  .col-sm-8.col-xs-12
+    %h1.semester_calendar
+      = current_title
+      - if can? :update, semester_calendar
+        .edit-semester-calendar.tool
+          = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-outline-secondary', title: t(:edit)
+    %div
+      %p.semester
+        = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get' do
+          = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year)
+          = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
+          = submit_tag("OK")
 
-    %ul.semester_calendar
-      - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
-        %li.month_name
-          %strong
-            = I18n.t('date.month_names')[month]
-            = events.first.start_at.year
-        - events.each do |event|
-          %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
-            .event_starts_at= format_event_datetime(event.start_at)
-            .event_title= link_to event.title, event
+      %ul.semester_calendar
+        - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
+          %li.month_name
+            %strong
+              = I18n.t('date.month_names')[month]
+              = events.first.start_at.year
+          - events.each do |event|
+            %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
+              .event_starts_at= format_event_datetime(event.start_at)
+              .event_title= link_to event.title, event
 
-    - if can? :index, SemesterCalendar
-      .show_other_semester_calendars_links
-        .show_semester_calendars_of_all_groups
-          = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+      - if can? :index, SemesterCalendar
+        .show_other_semester_calendars_links
+          .show_semester_calendars_of_all_groups
+            = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
 
-.col-sm-4.col-xs-12
-  %h1.semester_calendar_pdf PDF
-  %div
-    = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
+  .col-sm-4.col-xs-12
+    %h1.semester_calendar_pdf PDF
+    %div
+      = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
 
-  %h1= t :offices
-  %div
-    = render partial: 'semester_calendars/info_section', locals: {semester_calendar: semester_calendar}
+    %h1= t :offices
+    %div
+      = render partial: 'semester_calendars/info_section', locals: {semester_calendar: semester_calendar}
 
 
-  %h1= t :calendar_abo
-  %div
-    %p
-      %small= t :get_all_semester_calendars_of_str_automatically, str: @group.title
-    %p
-      %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-        = icon :calendar
-        = t :ical_all_events
-
-      - if current_user.member_of? @group
-        %a.btn.btn-outline-secondary{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+    %h1= t :calendar_abo
+    %div
+      %p
+        %small= t :get_all_semester_calendars_of_str_automatically, str: @group.title
+      %p
+        %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
           = icon :calendar
-          = t :ical_events_concerning_me
+          = t :ical_all_events
 
-      - else
-        %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-          = icon :calendar
-          = t :ical_events_from_the_homepage
+        - if current_user.member_of? @group
+          %a.btn.btn-outline-secondary{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+            = icon :calendar
+            = t :ical_events_concerning_me
 
-  = render partial: 'semester_calendars/calendar_feed_box'
+        - else
+          %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+            = icon :calendar
+            = t :ical_events_from_the_homepage
+
+    = render partial: 'semester_calendars/calendar_feed_box'
