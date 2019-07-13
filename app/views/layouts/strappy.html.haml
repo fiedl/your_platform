@@ -38,7 +38,7 @@
                     = link_to_navable (object.nav_title), object, class: 'nav-link'
           %ul.navbar-nav.ml-auto
             %li.nav-item
-              %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :help
+              = render partial: 'support_requests/help_button'
             - if current_user
               %li.nav-item.dropdown
                 %a.nav-link.dropdown-toggle#avatar-navlink{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}

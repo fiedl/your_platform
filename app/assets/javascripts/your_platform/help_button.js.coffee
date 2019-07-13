@@ -1,11 +1,4 @@
-tmp = $.fn.popover.Constructor::show
-
-$.fn.popover.Constructor::show = ->
-  tmp.call this
-  if @options.callback
-    @options.callback()
-  return
-
+help_button_popover_body = ""
 $(document).ready ->
 
   help_button_popover_body = $('#help_button_popover_body').html()
@@ -21,10 +14,11 @@ $(document).ready ->
     trigger: 'click',
     html: true,
     animation: false,
-    callback: ->
-      $('.help-button-temp').html(help_button_popover_body)
   })
 
+$(document).on 'shown.bs.popover', '.help-button', (e)->
+  $('.help-button-temp').html(help_button_popover_body)
+  $('.help-button-temp .hidden').hide()
 
 $(document).on 'click', '.close_help_popover', ->
   $('.help-button').popover('hide')
