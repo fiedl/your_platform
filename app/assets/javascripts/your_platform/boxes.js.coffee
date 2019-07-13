@@ -9,8 +9,7 @@ $(document).on 'cancel', '.box', ->
   $(this).find('.box_content').removeClass 'currently_in_edit_mode'
 
 $(document).ready ->
-  $('.content_twoCols_right > div.col-xs-12').each ->
-    $(this).find('.box:first').addClass('first')
+  $("#content_area .box:first").addClass('first jumbotron')
 
   $('.box_image:not(:has(img))').addClass('empty')
 
@@ -53,3 +52,4 @@ $(document).on 'cancel', '.box.page', ->
   image_box_id = $(this).attr('id').replace('page-', 'page-image-')
   image_box = $("##{image_box_id}")
   image_box.trigger('cancel').removeClass('edit-mode-modal')
+
