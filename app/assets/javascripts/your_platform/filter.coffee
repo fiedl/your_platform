@@ -11,7 +11,7 @@ $(document).on 'keyup', 'header #search, #header_search #query.find_and_filter',
 
   for str in query.split(" ")
     for selector in [".box", "li", "tbody tr"]
-      $(selector).each ->
+      $("#content " + selector).each ->
         element = $(this)
         unless element.text().toUpperCase().indexOf(str.toUpperCase()) >= 0
           element.addClass('filter-hidden')
