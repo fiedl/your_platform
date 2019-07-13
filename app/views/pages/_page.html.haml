@@ -12,7 +12,7 @@
         #inline-pictures
           = render partial: 'attachments/pictures', locals: {attachments: page.image_attachments_not_listed_in_content, inline: true}
 
-.col.col-sm-12.col-xs-12.resizable_col
+.col-sm-12.col-xs-12.resizable_col
   .page_with_attachments
     = box id: "page-#{page.id}-box", classes: ['page', page.class.name.underscore.parameterize] do
 

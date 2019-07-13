@@ -7,7 +7,7 @@
       = icon :plus
       = t :create_new_event
 
-.col.col-sm-12.col-xs-12.resizable_col
+.col-sm-12.col-xs-12.resizable_col
   - if event
     = render event, embedded: true
   - else
@@ -16,7 +16,7 @@
         = t :there_are_currently_no_events
 
 
--#.col.col-sm-12.col-xs-12.resizable_col
+-#.col-sm-12.col-xs-12.resizable_col
 -#  = box do
 -#    - content_for :box_title, event.try(:title) || page.title
 -#
@@ -24,19 +24,19 @@
 -#      = render partial: 'pages/page_body', object: page, as: :page
 -#      = render partial: 'events/event_details', object: event, as: :event if event
 -#
--#.col.col-sm-12.col-xs-12.resizable_col
+-#.col-sm-12.col-xs-12.resizable_col
 -#  %h1 Öffentliche Informationen
 -#  %div
 -#
--#.col.col-sm-12.col-xs-12.resizable_col
+-#.col-sm-12.col-xs-12.resizable_col
 -#  %h1 Informationen und Unterlagen für Teilnehmer
 -#  %div
 -#
--#.col.col-sm-12.col-xs-12.resizable_col
+-#.col-sm-12.col-xs-12.resizable_col
 -#  %h1 Tagungsort
 -#  %div
 -#
--#.col.col-sm-12.col-xs-12.resizable_col
+-#.col-sm-12.col-xs-12.resizable_col
 -#  %h1 Ansprechpartner
 -#  %div
 

@@ -16,10 +16,10 @@
   - content_for :box_body do
     = render partial: 'events/event_details', locals: {event: event}
 
-.col.col-sm-12.col-xs-12.resizable_col
+.col-sm-12.col-xs-12.resizable_col
   = render partial: 'events/pictures', locals: {event: event}
 
-.col.col-sm-12.col-xs-12.resizable_col
+.col-sm-12.col-xs-12.resizable_col
   = box title: t(:location), class: 'event_location_map' do
     .event_location= event.location
     = google_map event.location
