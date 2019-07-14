@@ -43,11 +43,7 @@
               %li.nav-item.dropdown
                 %a.nav-link.dropdown-toggle#avatar-navlink{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
                   = render 'layouts/session_bar_avatar'
-                .dropdown-menu.dropdown-menu-right{"aria-labelledby" => "navbarDropdown"}
-                  %a.dropdown-item{:href => "#"} Action
-                  %a.dropdown-item{:href => "#"} Another action
-                  .dropdown-divider
-                  %a.dropdown-item{:href => "#"} Something else here
+                = render partial: 'layouts/current_user_dropdown'
             - else
               %li.nav-item
                 %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :sign_in

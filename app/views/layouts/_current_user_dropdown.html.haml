@@ -1,13 +1,14 @@
-%ul.dropdown-menu.dropdown-menu-right{role: 'menu'}
+.dropdown-menu.dropdown-menu-right#current_user_dropdown{"aria-labelledby" => "navbarDropdown"}
   - if current_user.account
-    %li.user_name.obscure-in-demo= current_user.title
-    %li.user_email.obscure-in-demo= current_user.email
-    %li= link_to t(:my_profile), user_path(current_user)
-    %li= link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true), class: 'change_avatar'
-    %li= link_to t(:change_password), change_password_path
-    %li= link_to t(:settings), user_settings_path(current_user), class: 'user_settings'
+    .user_name.obscure-in-demo= current_user.title
+    .user_email.obscure-in-demo= current_user.email
+    = link_to t(:my_profile), user_path(current_user), class: 'dropdown-item'
+    = link_to t(:my_groups), my_groups_path, class: 'dropdown-item'
+    = link_to t(:change_avatar), user_path(current_user, trigger_change_avatar: true), class: 'change_avatar dropdown-item'
+    = link_to t(:change_password), change_password_path, class: 'dropdown-item'
+    = link_to t(:settings), user_settings_path(current_user), class: 'user_settings dropdown-item'
   - elsif current_user.guest_user?
     %p= t :you_are_signed_in_as_guest_user_via_cookie
     %p= current_user.title
     %p= current_user.email
-  %li= link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out'
+  = link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out', class: 'dropdown-item'
