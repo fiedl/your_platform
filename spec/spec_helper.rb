@@ -40,7 +40,7 @@ require 'rubygems'
 
 # Required Application Environment
 # ----------------------------------------------------------------------------------------
-ENV['RAILS_ENV'] ||= 'test'
+ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../demo_app/my_platform/config/environment', __FILE__)
 
 # Does not work :(
