@@ -27,7 +27,7 @@ class EventsController < ApplicationController
 
     # Show semetser calendars for corporations
     if (! @public) && can?(:use, :semester_calendars) && @group.kind_of?(Corporation)
-      authorize! :read, @group
+      authorize! :index_public_events, @group
       redirect_to group_search_semester_calendar_path(group_id: @group.id)
       return
     end

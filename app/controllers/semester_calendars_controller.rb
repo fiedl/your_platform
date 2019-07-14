@@ -33,7 +33,6 @@ class SemesterCalendarsController < ApplicationController
 
 
   def show
-    authorize! :read, group
     authorize! :read, semester_calendar
 
     set_current_navable group
@@ -78,7 +77,7 @@ class SemesterCalendarsController < ApplicationController
 
       @semester_calendars = SemesterCalendar.where(term_id: term.id).includes(:group).order('groups.name asc')
 
-      if current_user.corporations_the_user_is_officer_in.count == 1
+      if current_user && current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
       end
 

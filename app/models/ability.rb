@@ -416,10 +416,6 @@ class Ability
     can :index, Event
     can :index_events, Group
     can :index_events, User, :id => user.id
-    can :read, SemesterCalendar do |semester_calendar|
-      can? :read, semester_calendar.group
-    end
-
 
     # Name auto completion
     #
@@ -583,6 +579,9 @@ class Ability
     can :index_attendees, Event do |event|
       can? :join, event
     end
+
+    # All users can read semester calendars.
+    can :read, SemesterCalendar
 
     # Listing Events and iCalendar (ICS) Export:
     #

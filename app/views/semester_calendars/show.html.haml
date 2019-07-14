@@ -1,4 +1,5 @@
-= render partial: 'groups/tabs', locals: {active: 'events'}
+= render partial: 'groups/tabs', locals: {active: 'events'} if can? :read, group
+- @hide_vertical_nav = true if not can? :read, group
 
 .row
   .col-sm-8.col-xs-12
@@ -21,14 +22,15 @@
               = I18n.t('date.month_names')[month]
               = events.first.start_at.year
           - events.each do |event|
-            %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
-              .event_starts_at= format_event_datetime(event.start_at)
-              .event_title= link_to event.title, event
+            - if can? :read, event
+              %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
+                .event_starts_at= format_event_datetime(event.start_at)
+                .event_title= link_to event.title, event
 
       - if can? :index, SemesterCalendar
         .show_other_semester_calendars_links
           .show_semester_calendars_of_all_groups
-            = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+            = link_to t(:show_more_semester_calendars), semester_calendars_path
 
   .col-sm-4.col-xs-12
     %h1.semester_calendar_pdf PDF
@@ -43,19 +45,20 @@
     %h1= t :calendar_abo
     %div
       %p
-        %small= t :get_all_semester_calendars_of_str_automatically, str: @group.title
+        %small= t :get_all_semester_calendars_of_str_automatically, str: group.title
       %p
-        %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-          = icon :calendar
-          = t :ical_all_events
+        - if current_user
+          %a.btn.btn-outline-secondary{href: group_events_url(group_id: group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+            = icon :calendar
+            = t :ical_all_events
 
-        - if current_user.member_of? @group
+        - if current_user.try(:member_of?, @group)
           %a.btn.btn-outline-secondary{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
             = icon :calendar
             = t :ical_events_concerning_me
 
         - else
-          %a.btn.btn-outline-secondary{href: group_events_url(group_id: @group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
+          %a.btn.btn-outline-secondary{href: group_events_url(group_id: group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token))}
             = icon :calendar
             = t :ical_events_from_the_homepage
 
