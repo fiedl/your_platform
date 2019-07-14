@@ -513,16 +513,15 @@ class Ability
     can :use, :semester_calendars
     cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
     # can :use, :mail_delivery_account_filter
-    can :use, :help_videos do
-      Rails.env.development?
-    end
+    can :use, :help_videos
+    can :use, :permalinks
+    can :use, :caching
 
     # it's not ready, yet, but the tests use it already.
     if Rails.env.test?
       can :use, :wysihtml
-      can :use, :permalinks
+
       can :use, :blog_post_comments
-      can :use, :caching
       can :use, :mailing_lists
     end
 
