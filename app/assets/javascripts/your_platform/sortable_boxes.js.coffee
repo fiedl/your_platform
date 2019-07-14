@@ -16,12 +16,14 @@ App.process_box_configuration = (element)->
   box_configuration = $(element).find('.box_configuration').addBack('.box_configuration').data('box-configuration')
   box_configuration_update_url = $(element).find('.box_configuration').addBack('.box_configuration').data('page-url')
 
+  col_classes = '.col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12, .resizable_col'
+
   save_box_configuration = ->
     box_configuration = []
     panelList.find('.box').each (index, elem)->
       box_configuration.push {
         id: $(elem).attr('id'),
-        class: $(elem).closest('.col, .resizable_col').attr('class')
+        class: $(elem).closest(col_classes).attr('class')
       }
     $.ajax {
       type: 'PUT',
@@ -39,7 +41,7 @@ App.process_box_configuration = (element)->
     update: ->
       save_box_configuration()
     cancel: '.currently_in_edit_mode *',
-    placeholder: 'draggable-box-placeholder col col-sm-3 col-xs-12',
+    placeholder: 'draggable-box-placeholder col-sm-3 col-xs-12',
     tolerance: "pointer"
   }
 
@@ -100,7 +102,7 @@ App.process_box_configuration = (element)->
       configuration = box_configuration[i]
       if configuration.id
         box = $("##{configuration.id}.box")
-        col = box.closest('.col, .resizable_col')
+        col = box.closest(col_classes)
         row = box.closest('.row')
         if box.count() > 1
           col.last().remove()
