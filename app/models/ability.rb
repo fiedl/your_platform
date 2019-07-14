@@ -581,6 +581,7 @@ class Ability
     end
 
     # All users can read semester calendars.
+    can :index_events, Group
     can :read, SemesterCalendar
 
     # Listing Events and iCalendar (ICS) Export:
