@@ -83,6 +83,10 @@ module IconHelper
     fa_icon(:calendar)
   end
 
+  def event_icon
+    fa_icon('calendar-check-o')
+  end
+
   def edit_icon
     icon :edit
   end

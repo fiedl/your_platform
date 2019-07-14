@@ -8,6 +8,11 @@
   %ul.website-events
     = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
 
+    - if page.show_events_for_group
+      %li.upcoming_event.see_more_events
+        = link_to group_events_url(group_id: page.show_events_for_group), class: "btn btn-outline-secondary btn-sm" do
+          = t :more_events
+
   - if page.semester_calendar && attachment = page.semester_calendar.attachments.last
     .semester_calendar
       %h3
