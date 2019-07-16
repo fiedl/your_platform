@@ -2,7 +2,7 @@
 - if can? :change_status, user
   - workflows_by_corporation = executable_workflows_by_corporation(user)
   - if workflows_by_corporation.any? || user.markable_as_deceased?
-    .dropdown
+    .dropdown.workflow_triggers{class: "workflow-triggers-for-user-#{user.id}"}
       %a.btn.btn-outline-secondary.dropdown-toggle(data-toggle="dropdown" href="#")
         = icon 'chevron-up'
         = t :change_status

@@ -24,7 +24,7 @@ feature "Move Pages" do
     within ".box_title" do
       page.should have_text "My Page"
     end
-    within ".breadcrumbs" do
+    within ".vertical_nav" do
       page.should have_text "New Parent"
     end
 

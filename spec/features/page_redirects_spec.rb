@@ -16,10 +16,7 @@ feature "Viewing pages that redirect to other locations", js: true do
   scenario "Clicking on a breadcrumb link that redirects to an external website" do
     login(:user)
 
-    visit page_path(@intranet_root)
-    within "ul.breadcrumbs" do
-      click_on "example.com"
-    end
+    visit page_path(@root)
 
     page.should have_content "Example Domain"
   end

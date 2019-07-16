@@ -34,19 +34,15 @@ feature 'Setup' do
       accept_terms_of_use
       @user = User.first
 
-      within '#logged-in-bar' do
-        page.should have_text 'My New Network Application'
-      end
-
       within('#content_area') { page.should have_text Page.find_intranet_root.title }
-      page.should have_text @user.title
-      within '#horizontal-nav-bar' do
+      within '#header-nav' do
+        page.should have_selector '.avatar'
         page.should have_text 'London'
         page.should have_no_text 'Berlin'
       end
-      within '#logged-in-bar' do
-        page.should have_text I18n.t :global_admin
-      end
+      #within '#logged-in-bar' do
+      #  page.should have_text I18n.t :global_admin
+      #end
 
       within '.vertical_menu' do
         click_on I18n.t :corporations

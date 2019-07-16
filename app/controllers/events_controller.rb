@@ -76,7 +76,7 @@ class EventsController < ApplicationController
     @events = @events.upcoming.limit(@limit) if @limit && @limit > 0
 
     # Filter by access.
-    @events = Event.where(id: @events.select { |event| can? :read, event }.pluck(:id))
+    @events = Event.where(id: @events.select { |event| can? :read, event }.pluck(:id)).order('events.start_at, events.created_at')
 
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public
