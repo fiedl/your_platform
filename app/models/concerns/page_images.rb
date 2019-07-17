@@ -45,7 +45,7 @@ concern :PageImages do
   end
 
   def possible_teaser_image_urls
-    image_attachments.map(&:big_url) + image_urls_from_content
+    image_attachments.map(&:big_path) + image_urls_from_content
   end
 
   def image_urls_from_content
