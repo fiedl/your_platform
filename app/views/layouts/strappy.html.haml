@@ -49,6 +49,8 @@
                 %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :sign_in
       = yield :custom_header
 
+      = render partial: 'shared/flashes'
+
       #content.container-fluid
         = render partial: 'layouts/multi_column_content_area'
 
