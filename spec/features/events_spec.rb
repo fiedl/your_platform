@@ -266,7 +266,6 @@ feature "Events" do
       end
 
       within('.vertical_menu') { page.should have_text "My cool new event" }
-      within('ul.breadcrumbs') { page.should have_text "My cool new event" }
     end
 
     scenario "editing an event, pt. 2" do
