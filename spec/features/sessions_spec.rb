@@ -25,33 +25,30 @@ feature 'Sessions' do
       end
 
       it 'should allow to create a new session with user name' do
-        fill_in 'user_account_login', with: @user.name
-        fill_in 'user_account_password', with: @password
-
-        Timeout::timeout(30) do
-          click_button I18n.t(:login)
+        within "#content_area" do
+          fill_in 'user_account_login', with: @user.name
+          fill_in 'user_account_password', with: @password
+          click_on :login
         end
         page.should have_content(@user.name)
         page.should have_content(I18n.t(:logout))
       end
 
       it 'should allow to create a new session with email' do
-        fill_in 'user_account_login', with: @user.email
-        fill_in 'user_account_password', with: @password
-
-        Timeout::timeout(30) do
-          click_button I18n.t(:login)
+        within "#content_area" do
+          fill_in 'user_account_login', with: @user.email
+          fill_in 'user_account_password', with: @password
+          click_on :login
         end
         page.should have_content(@user.name)
         page.should have_content(I18n.t(:logout))
       end
 
       it 'should allow to create a new session with alias' do
-        fill_in 'user_account_login', with: @user.alias
-        fill_in 'user_account_password', with: @password
-
-        Timeout::timeout(30) do
-          click_button I18n.t(:login)
+        within "#content_area" do
+          fill_in 'user_account_login', with: @user.alias
+          fill_in 'user_account_password', with: @password
+          click_on :login
         end
         page.should have_content(@user.name)
         page.should have_content(I18n.t(:logout))
@@ -61,9 +58,11 @@ feature 'Sessions' do
     describe 'filling in an invalid password' do
       before do
         @user = create(:user_with_account)
-        fill_in 'user_account_login', with: @user.name
-        fill_in 'user_account_password', with: 'invalid'
-        click_button I18n.t(:login)
+        within "#content_area" do
+          fill_in 'user_account_login', with: @user.name
+          fill_in 'user_account_password', with: 'invalid'
+          click_on :login
+        end
       end
 
       it { should have_no_content(@user.name) }
@@ -77,9 +76,11 @@ feature 'Sessions' do
         @user.create_account = true
         @user.save
         @password = @user.account.password
-        fill_in 'user_account_login', with: 'invalid'
-        fill_in 'user_account_password', with: @password
-        click_button I18n.t(:login)
+        within "#content_area" do
+          fill_in 'user_account_login', with: 'invalid'
+          fill_in 'user_account_password', with: @password
+          click_on :login
+        end
       end
 
       it { should have_no_content(@user.name) }
