@@ -46,7 +46,7 @@ before_script:
   - bin/rails assets:precompile
   - cd ../..
   - "export DISPLAY=:99.0" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-  - "sh -e /etc/init.d/xvfb start --server-args="-screen 0 1024x768x24""
+  - "sh -e /etc/init.d/xvfb start --server-args='-screen 0 1024x768x24'"
   - sleep 3 # give xvfb some time to start
 script:
   - bin/rspec spec/features/search_field_spec.rb:85
