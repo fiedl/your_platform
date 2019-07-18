@@ -25,7 +25,7 @@
         = box title: t(:documents) do
           %ul.documents.root_list
             - for document in @documents
-              = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_url, new_tab: true}
+              = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_path, new_tab: true}
 
       .col-sm-4.float-left.side-col
         = render partial: 'layouts/vertical_nav'
