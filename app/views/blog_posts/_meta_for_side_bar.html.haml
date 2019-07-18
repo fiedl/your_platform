@@ -1,11 +1,16 @@
 = render partial: 'blog_posts/authors_hosts_and_guests', locals: {blog_post: blog_post}
 
+- if blog_post.parent
+  %h4 Blog
+  = folder_icon
+  = link_to blog_post.parent.title, blog_post.parent
+
 %h4 Details
 %ul.meta
   %li.published_at.page_published_at
-    %span{title: t(:published_at)}= icon :calendar
+    %span{title: t(:published_at)}= calendar_icon
     = render partial: 'pages/published_at', locals: {page: blog_post}
   - if can? :update, blog_post
     %li.view_counter
-      %span{title: t(:view_count)}= icon :time
+      %span{title: t(:view_count)}= time_icon
       = blog_post.view_count

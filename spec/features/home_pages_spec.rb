@@ -5,7 +5,7 @@ feature "Home Pages" do
     background do
       @user = create :user_with_account
       @page = Page.create title: "example.com", published_at: 1.day.ago
-      @page.settings.layout = 'bootstrap'
+      @page.settings.layout = 'strappy'
       @page.assign_admin @user
       wait_for_cache
     end
@@ -18,7 +18,9 @@ feature "Home Pages" do
       select_in_place "tr.page_type", 'Pages::HomePage'
 
       click_on :back_to_the_page
-      find('a#page_settings_button').click # in order to load the home page settings.
+      within('#site_tools') do
+        find('a#page_settings_button').click # in order to load the home page settings.
+      end
 
       select_in_place 'tr.layout', 'iweb'
       enter_in_place 'tr.home_page_title', 'Example, Corp.'
@@ -83,13 +85,13 @@ feature "Home Pages" do
         click_on :save
         wait_for_wysiwyg '.page_content'
 
-        within('#horizontal-nav-bar') { click_on "example.com" }
+        within('#header-nav') { click_on "example.com" }
         within '#content' do
           expect(page).to have_no_text "And this is some more content."
           expect(page).to have_text "My new teaser"
           expect(page).to have_text "This is a short teaser text."
         end
-        within '#horizontal-nav-bar' do
+        within '#header-nav' do
           expect(page).to have_no_text "My new teaser"
         end
       end
@@ -104,7 +106,7 @@ feature "Home Pages" do
         click_on :save
         wait_for_wysiwyg '.page_content'
 
-        within('#horizontal-nav-bar') { expect(page).to have_text "About us" }
+        within('#header-nav') { expect(page).to have_text "About us" }
 
         sleep 10
         visit page_path(Page.find_by title: "About us")

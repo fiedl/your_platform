@@ -87,6 +87,10 @@ module IconHelper
     fa_icon('calendar-check-o')
   end
 
+  def time_icon
+    fa_icon('clock-o')
+  end
+
   def edit_icon
     icon :edit
   end

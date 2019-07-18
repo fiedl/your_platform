@@ -1,3 +1,13 @@
+# Hide "add" dropdown after clicking an entry.
+# The response may take some time. The js response
+# will show the button again.
+$(document).on 'click', 'a.add_profile_field', ->
+  $(this).closest('.dropdown.add_profile_field').hide()
+  $(this).closest('.dropdown.add_profile_field').after('
+    <div class="spinner-border spinner-border-sm add_profile_field_spinner" role="status">
+      <span class="sr-only">Adding profile field ...</span>
+    </div>
+  ')
 
 # Adress profile fields
 # ------------------------------------------------------------------------------------------

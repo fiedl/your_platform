@@ -37,3 +37,9 @@ if ($('body').hasClass('profile_fields')) {
   }
 
 }
+
+// Restore the hidden add button, which has been hidden by
+// profile_fields.js.coffee.
+$('.add_profile_field_spinner').remove();
+$('.dropdown.add_profile_field').dropdown('hide');
+$('.dropdown.add_profile_field').show();
