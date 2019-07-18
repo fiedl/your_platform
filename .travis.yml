@@ -27,6 +27,7 @@ before_install:
   - mkdir geckodriver
   - tar -xzf geckodriver*.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
 install:
   - travis_retry bundle install
   - bundle install
@@ -45,10 +46,6 @@ before_script:
   - bundle exec rake your_platform:install:node_modules || echo 'task not found'
   - bin/rails assets:precompile
   - cd ../..
-  - "export DISPLAY=:99" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-  - "export XVFBARGS=':99 -ac -screen 0 1024x768x24'"
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
 script:
   - bin/rspec spec/features/search_field_spec.rb:85
 notifications:
