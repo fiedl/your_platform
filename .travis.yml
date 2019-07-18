@@ -87,7 +87,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
 script:
-  - bundle exec ruby script/tests
+  - bin/rspec spec/features/search_field_spec.rb:85
 notifications:
   webhooks:
     urls:

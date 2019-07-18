@@ -82,6 +82,8 @@ feature "Search Field", js: true do
       @page = create(:page, title: "foo", content: "some page content")
     end
     specify "searching for page titles should list the pages" do
+      sleep 15
+      p page.body
       within('.navbar-search') { fill_in 'query', with: "foo" }
       press_enter in: 'query'
       page.should have_content @page.title
