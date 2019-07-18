@@ -122,7 +122,7 @@ Gem::Specification.new do |s|
 
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
-  s.add_dependency 'mini_magick'
+  s.add_dependency 'mini_magick', '>= 4.9.4' # CVE-2019-13574
   s.add_dependency 'refile', '>= 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
