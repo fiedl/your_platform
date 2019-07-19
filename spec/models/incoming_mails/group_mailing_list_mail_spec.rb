@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IncomingMails::GroupMailingListMail do
   describe "#process" do
-    subject { IncomingMails::GroupMailingListMail.create_from_message(example_raw_message).process }
+    subject { IncomingMails::GroupMailingListMail.from_message(example_raw_message).process }
 
     let(:example_raw_message) { %{
       From: john@example.com
