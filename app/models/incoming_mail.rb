@@ -105,11 +105,9 @@ class IncomingMail
   end
 
   def process(options = {})
-    p "TODO process email from #{from}"
-
-    # self.class.processor_sub_classes.collect do |incoming_mail_subclass|
-    #   incoming_mail_subclass.process id
-    # end.flatten
+    self.class.processor_sub_classes.collect do |incoming_mail_subclass|
+      incoming_mail_subclass.from_message(message).process
+    end.flatten
   end
 
 end

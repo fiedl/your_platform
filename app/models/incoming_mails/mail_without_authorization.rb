@@ -8,7 +8,9 @@
 class IncomingMails::MailWithoutAuthorization < IncomingMail
 
   def process(options = {})
-    if authorized?
+    if recipient_group.nil?
+      []
+    elsif authorized?
       []
     elsif sender_user.nil?
       notify_about_missing_user_record
