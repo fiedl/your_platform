@@ -134,9 +134,6 @@ require 'faker'
 # Contact form
 require 'mail_form'
 
-# Encoding detection
-require 'charlock_holmes'
-
 # API
 require 'apipie-rails'
 require 'discourse_api'
@@ -152,6 +149,10 @@ require 'neography'
 
 # Trello API
 require 'trello'
+
+# Emails and Encoding
+require 'charlock_holmes'
+require 'extended_email_reply_parser'
 
 require_relative '../../config/initializers/inflections'
 

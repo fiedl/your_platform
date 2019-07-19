@@ -178,9 +178,6 @@ Gem::Specification.new do |s|
   # Contact form
   s.add_dependency 'mail_form'
 
-  # Encoding detection
-  s.add_dependency 'charlock_holmes'
-
   # API
   s.add_dependency 'apipie-rails', '~> 0.5'
   s.add_dependency 'discourse_api'
@@ -199,6 +196,11 @@ Gem::Specification.new do |s|
 
   # Trello API
   s.add_dependency 'ruby-trello'
+
+  # Emails and Encoding
+  s.add_dependency 'charlock_holmes'
+  s.add_dependency 'extended_email_reply_parser'
+
 
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509

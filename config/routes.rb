@@ -280,6 +280,11 @@ Rails.application.routes.draw do
   # Email previews
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
+  post :incoming_mails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :incoming_emails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :mailgate, to: 'incoming_mails#create', defaults: {format: :json}
+  resources :incoming_mails
+
   get :feeds, to: 'feeds#index', as: :feeds
 
   # ATTENTION: Changing feed urls might break subscribed feeds!
