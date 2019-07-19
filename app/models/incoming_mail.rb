@@ -67,7 +67,7 @@ class IncomingMail
     sender_profileable_by_email || sender_by_name
   end
   def sender_profileable_by_email
-    ProfileFieldTypes::Email.where(value: from).first.try(:profileable)
+    ProfileFields::Email.where(value: from).first.try(:profileable)
   end
   def sender_by_name
     User.find_by_name sender_name
@@ -86,7 +86,7 @@ class IncomingMail
     recipient_profileable if recipient_profileable.kind_of? Group
   end
   def recipient_profileable
-    ProfileFieldTypes::MailingListEmail.where(value: destination).first.try(:profileable)
+    ProfileFields::MailingListEmail.where(value: destination).first.try(:profileable)
   end
 
   def authorized?

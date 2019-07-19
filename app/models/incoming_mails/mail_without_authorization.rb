@@ -38,7 +38,6 @@ class IncomingMails::MailWithoutAuthorization < IncomingMail
       subject, reason
     rejection_mail.in_reply_to = message_id
     rejection_mail.deliver_now
-    rejection_mail.delivery.update comment: reason
     return [rejection_mail]
   end
 

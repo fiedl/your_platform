@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe IncomingMails::MailWithoutAuthorization do
   describe "#process" do
-    subject { IncomingMails::MailWithoutAuthorization.create_from_message(example_raw_message).process }
+    subject { IncomingMails::MailWithoutAuthorization.from_message(example_raw_message).process }
 
     let(:example_raw_message) { %{
       From: john@example.com
