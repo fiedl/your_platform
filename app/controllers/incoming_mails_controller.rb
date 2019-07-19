@@ -43,8 +43,8 @@ class IncomingMailsController < ApplicationController
   #
   def create
     authorize! :use, :platform_mailgate
-    @incoming_mail = IncomingMail.create_from_message incoming_mail_params[:message]
-    IncomingMail.process @incoming_mail.id, async: true
+    @incoming_mail = IncomingMail.from_message incoming_mail_params[:message]
+    @incoming_mail.process
     render json: @incoming_mail
   end
 
