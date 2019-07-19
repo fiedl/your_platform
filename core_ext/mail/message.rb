@@ -1,9 +1,16 @@
-require 'mail'
+require File.join(Gem.loaded_specs['mail'].full_gem_path, 'lib/mail/message')
+require File.join(Gem.loaded_specs['extended_email_reply_parser'].full_gem_path, 'lib/extended_email_reply_parser/mail/message')
 
-# This is prepended to Mail::Message.
-# https://github.com/mikel/mail/blob/master/lib/mail/message.rb
+# This extends the mail message class, which is originally defined in
 #
-module MailMessageExtension
+#     https://github.com/mikel/mail
+#     https://github.com/mikel/mail/blob/master/lib/mail/message.rb
+#
+# and further extended in
+#
+#     https://github.com/fiedl/extended_email_reply_parser
+#
+module YourPlatformMailMessageExtensions
 
   # This method overrides the original delivery method in order to
   # handle cases where the message cannot be delivered. In those
@@ -44,6 +51,18 @@ module MailMessageExtension
     @allow_recipients_without_account = true
   end
 
+  def content_type
+    super || guess_content_type
+  end
+
+  def guess_content_type
+    if body_in_utf8.include? "<p>"
+      'text/html'
+    else
+      'text/plain'
+    end
+  end
+
   def recipient_address
     self.smtp_envelope_to.try(:first) || self.to.try(:first)
   end
@@ -55,6 +74,35 @@ module MailMessageExtension
       profile_field.needs_review!
     else
       Rails.logger.warn "Could not find matching email address #{recipient_address} in our database."
+    end
+  end
+
+  # When we have an incoming email, the smtp envelope is already gone and unavailable
+  # to this application. Thus, we need to read out the headers.
+  #
+  def smtp_envelope_to_header
+    header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.map(&:value)
+  end
+
+  # For forwarding a modified message through action mailer, we need to deliver
+  # the message object. But in order to do that we need to import some settings
+  # from action mailer.
+  #
+  def deliver_with_action_mailer_now
+    import_delivery_method_from_actionmailer
+    deliver
+  end
+
+  def import_delivery_method_from_actionmailer
+    case Rails.application.config.action_mailer.delivery_method
+    when :test
+      delivery_method Mail::TestMailer
+    when :smtp
+      delivery_method Mail::SMTP, Rails.application.config.action_mailer.smtp_settings
+    when :letter_opener
+      delivery_method LetterOpener::DeliveryMethod, location: File.join(Rails.root, 'tmp/letter_opener')
+    when :sendmail
+      delivery_method Mail::Sendmail, location: '/usr/sbin/sendmail', arguments: '-i -t'
     end
   end
 
@@ -74,4 +122,6 @@ module MailMessageExtension
 
 end
 
-Mail::Message.send(:prepend, MailMessageExtension)
+class Mail::Message
+  prepend YourPlatformMailMessageExtensions
+end
