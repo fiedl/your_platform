@@ -36,6 +36,7 @@
 #     The app's `/incoming_emails` path is handled by this controller.
 #
 class IncomingMailsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   respond_to :json
 
   # POST /incoming_emails
