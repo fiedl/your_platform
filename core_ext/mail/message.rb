@@ -65,7 +65,7 @@ module MailMessageExtension
   end
 
   def recipient_has_user_account?
-    recipient_address.present? && User.find_by_email(recipient_address).has_account?
+    recipient_address.present? && User.find_by_email(recipient_address).try(:has_account?)
   end
 
   def recipient_is_system_address?
