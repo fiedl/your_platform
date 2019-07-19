@@ -57,6 +57,11 @@ if specs_to_run.any?
 
   specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
 
+  if specs_to_run_by_this_worker.nil? || specs_to_run_by_this_worker.none?
+    print "After rounding conservatively, no specs are left for this worker.\n"
+    exit 0
+  end
+
   print "\n\n\nTHIS WORKER #{worker_id} OF #{number_of_workers} RUNS:\n"
   specs_to_run_by_this_worker.each { |spec| print "#{spec}\n" }
   print "\n\n\n"
