@@ -42,7 +42,7 @@ class IncomingMailsController < ApplicationController
   # Provide the raw message as `message` parameter.
   #
   def create
-    authorize! :create, IncomingMail
+    authorize! :use, :platform_mailgate
     @incoming_mail = IncomingMail.create_from_message incoming_mail_params[:message]
     IncomingMail.process @incoming_mail.id, async: true
     render json: @incoming_mail

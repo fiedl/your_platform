@@ -672,7 +672,6 @@ class Ability
     # the StoreMailAsPostsAndSendGroupMailJob.
     #
     can :use, :platform_mailgate
-    can :create, IncomingMail
 
     # All users can use the blue help button.
     #
