@@ -46,7 +46,7 @@ class IncomingMailsController < ApplicationController
     authorize! :use, :platform_mailgate
     @incoming_mail = IncomingMail.from_message incoming_mail_params[:message]
     @incoming_mail.process
-    render json: @incoming_mail
+    render json: {}
   end
 
   def incoming_mail_params
