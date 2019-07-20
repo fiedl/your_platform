@@ -309,12 +309,10 @@ feature "Events" do
       @event.id.should be_present
       visit event_path(@event)
       within('tr.publish_on_local_website') do
-        find('.best_in_place').click
-        find('select').click
+        check "Auf lokaler Homepage veröffentlichen"
       end
       within('tr.publish_on_global_website') do
-        find('.best_in_place').click
-        find('select').click
+        check "Auf globaler Homepage veröffentlichen"
       end
     end
 

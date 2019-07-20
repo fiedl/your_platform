@@ -38,7 +38,7 @@
         %tr.publish_on_local_website
           %th
           %td
-            = best_in_place event, :publish_on_local_website, as: :select, collection: [['false', "Nicht auf lokaler Homepage veröffentlichen"], ['true', "Auf lokaler Homepage veröffentlichen"]], place_holder: "Nicht auf lokaler Homepage veröffentlichen"
+            = ajax_check_box event, :publish_on_local_website, "Auf lokaler Homepage veröffentlichen"
             –
             = link_to group_events_public_url(group_id: event.group) do
               = icon 'list-alt'
@@ -48,7 +48,7 @@
       %tr.publish_on_global_website
         %th
         %td
-          = best_in_place event, :publish_on_global_website, as: :select, collection: [['false', "Nicht auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"], ['true', "Auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"]], place_holder: "Nicht auf öffentlicher Homepage veröffentlichen (#{Page.find_root.title})"
+          = ajax_check_box event, :publish_on_global_website, "Auf globaler Homepage veröffentlichen (#{Page.find_root.domain})"
           –
           = link_to public_events_url do
             = icon 'list-alt'

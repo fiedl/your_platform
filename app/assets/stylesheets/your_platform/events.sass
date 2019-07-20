@@ -13,8 +13,12 @@ table.event_details
   tr.description
     textarea
       height: 100px
-  input, textarea
-    width: 100%
+  tr.description, tr.start_at, tr.end_at, tr.location, tr.contact_people
+    input, textarea
+      width: 100%
+  tr.publish_on_local_website, tr.publish_on_global_website
+    form, label
+      display: inline-block
 
   .multi_user_select_activator
     margin-left: 20px
