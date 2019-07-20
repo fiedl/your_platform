@@ -81,9 +81,11 @@ module YourPlatformMailMessageExtensions
   # to this application. Thus, we need to read out the headers.
   #
   def smtp_envelope_to_header
-    value = header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.map(&:value)
-    value = value.split("<").last.split(">").first if value && value.include?("<")
-    value
+    header_fields.select { |field| field.name.downcase.in? ['smtp-envelope-to', 'envelope-to'] }.collect { |field|
+      value = field.value
+      value = value.split("<").last.split(">").first if value && value.include?("<")
+      value
+    }
   end
 
   # For forwarding a modified message through action mailer, we need to deliver
