@@ -94,11 +94,11 @@ module YourPlatformMailMessageExtensions
   end
 
   def import_delivery_method_from_actionmailer
-    case Rails.application.config.action_mailer.delivery_method
+    case ActionMailer::Base.delivery_method
     when :test
       delivery_method Mail::TestMailer
     when :smtp
-      delivery_method Mail::SMTP, Rails.application.config.action_mailer.smtp_settings
+      delivery_method Mail::SMTP, ActionMailer::Base.smtp_settings
     when :letter_opener
       delivery_method LetterOpener::DeliveryMethod, location: File.join(Rails.root, 'tmp/letter_opener')
     when :sendmail
