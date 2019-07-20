@@ -11,7 +11,8 @@ concern :CheckAuthorization do
 
 
     rescue_from CanCan::AccessDenied do |exception|
-      if request.format.html?
+      Rails.logger.info "Access denied for user #{current_user.try(:id)} on #{exception.action} for #{session['exception.subject']}."
+      if request.format.html? || controller_name == "attachment_downloads"
         session['exception.action'] = exception.action
         if exception.subject.kind_of?(String) or exception.subject.kind_of?(Symbol)
           session['exception.subject'] = exception.subject
@@ -20,13 +21,11 @@ concern :CheckAuthorization do
           # exception.subject.to_s.first(50)
         end
         session['return_to_after_login'] = request.fullpath
+        store_location_for :user_account, request.fullpath
         redirect_to errors_unauthorized_url
       else
         raise CanCan::AccessDenied, exception
       end
-      Rails.logger.info "Access denied for user #{current_user.try(:id)} on #{exception.action} for #{session['exception.subject']}."
-      store_location_for :user_account, request.fullpath
-      redirect_to errors_unauthorized_path
     end
   end
 
