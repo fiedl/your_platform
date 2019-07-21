@@ -13,7 +13,11 @@
     .entry
       .meta
         - if defined?(author) && author
-          .author= link_to author.title, author
+          .author
+            - if author.kind_of? User
+              = link_to author.title, author
+            - else
+              = author
         .date= localize date
         - if defined?(category) && category
           .category
