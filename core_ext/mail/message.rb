@@ -88,6 +88,16 @@ module YourPlatformMailMessageExtensions
     }
   end
 
+  # The postfix transport might add the `RCPT TO` as `X-Original-To` header.
+  # See: https://trello.com/c/ZbMA33GL/1021-e-mails-envelope
+  # And: https://serverfault.com/questions/258469/how-to-configure-postfix-to-pipe-all-incoming-email-to-a-script#comment1270334_258491
+  #
+  def x_original_to
+    value = header_fields.detect { |field| field.name.downcase == "x-original-to" }.try(:value)
+    value = value.split("<").last.split(">").first if value && value.include?("<")
+    value
+  end
+
   # For forwarding a modified message through action mailer, we need to deliver
   # the message object. But in order to do that we need to import some settings
   # from action mailer.

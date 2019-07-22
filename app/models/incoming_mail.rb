@@ -43,6 +43,10 @@ class IncomingMail
     end
   end
 
+  def x_original_to
+    message.x_original_to
+  end
+
   def subject
     message.subject
   end
@@ -52,7 +56,13 @@ class IncomingMail
   end
 
   def destinations
-    envelope_to || to + cc
+    if x_original_to
+      [x_original_to]
+    elsif envelope_to.any?
+      envelope_to
+    else
+      to + cc
+    end
   end
   def destination
     raise "No destinations." if destinations.count == 0
