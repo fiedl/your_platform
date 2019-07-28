@@ -153,11 +153,12 @@ $(document).ready ->
     "order": [[0, "asc"]]
   }
 
+  num_of_memberships_cols = $('.datatable.memberships thead td').count()
   App.datatables.create '.datatable.memberships', {
     "pageLength": 100,
     columnDefs: [
-      { type: 'de_date', targets: 3 },
-      { type: 'de_date', targets: 4 }
+      { type: 'de_date', targets: num_of_memberships_cols - 1 },
+      { type: 'de_date', targets: num_of_memberships_cols }
     ]
   }
 
