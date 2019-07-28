@@ -44,6 +44,30 @@ describe Graph::Group do
 
       it { should include @current_member_with_limited_membership.id }
     end
+
+    describe "when the group has officers that are no regular members" do
+      before do
+        @officer_group = @group.create_officer_group name: "Officer"
+        @officer_but_no_member = create :user
+        @officer_but_no_member_membership = @officer_group.assign_user @officer_but_no_member
+      end
+
+      it "should not include the officer, which is no regular member of the group" do
+        subject.should_not include @officer_but_no_member.id
+      end
+    end
+
+    describe "when the group is an OfficerGroup" do
+      before do
+        @group = @group.create_officer_group name: "Officer"
+        @officer_but_no_member = create :user
+        @officer_but_no_member_membership = @group.assign_user @officer_but_no_member
+      end
+
+      it "should include the officer, which is no regular member of the parent group, because the request was to list the descendants of the officer group, e.g. when listing the officer-group memberships" do
+        subject.should include @officer_but_no_member.id
+      end
+    end
   end
 
   describe "#descendant_group_ids" do
@@ -59,6 +83,30 @@ describe Graph::Group do
   describe "#descendant_membership_ids" do
     subject { Graph::Group.find(@group).descendant_membership_ids }
     it { should == [@membership.id]}
+
+    describe "when the group has officers that are no regular members" do
+      before do
+        @officer_group = @group.create_officer_group name: "Officer"
+        @officer_but_no_member = create :user
+        @officer_but_no_member_membership = @officer_group.assign_user @officer_but_no_member
+      end
+
+      it "should not include the officer, which is no regular member of the group" do
+        subject.should_not include @officer_but_no_member_membership.id
+      end
+    end
+
+    describe "when the group is an OfficerGroup" do
+      before do
+        @group = @group.create_officer_group name: "Officer"
+        @officer_but_no_member = create :user
+        @officer_but_no_member_membership = @group.assign_user @officer_but_no_member
+      end
+
+      it "should include the officer, which is no regular member of the parent group, because the request was to list the descendants of the officer group, e.g. when listing the officer-group memberships" do
+        subject.should include @officer_but_no_member_membership.id
+      end
+    end
   end
 
   # describe "#descendant_event_ids" do

@@ -44,6 +44,7 @@ class Graph::Base
     if configured?
       raise 'namespace is missing in query string' if not query.include? ":#{namespace}"
       self.retry_on_end_of_file_error do
+        Rails.logger.debug "NEO4J: #{query}"
         neo.execute_query query
       end
     else
