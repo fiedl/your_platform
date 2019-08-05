@@ -19,9 +19,14 @@ module YourPlatformMailMessageExtensions
   # Also make sure to only deliver emails to users with accounts.
   #
   def deliver
+    Rails.logger.info "Beginning delivery of Mail::Message #{message_id}."
+
     if Ability.new(nil).can? :use, :mail_delivery_account_filter
       return false unless @allow_recipients_without_account || recipient_is_system_address? || recipient_has_user_account?
     end
+
+    check_anti_spam_criteria_for_address_field :from
+    check_anti_spam_criteria_for_address_field :to
 
     if recipient_address.include?('@')
       begin
@@ -44,6 +49,14 @@ module YourPlatformMailMessageExtensions
     else
       recipient_address_needs_review!
       return false
+    end
+  end
+
+  def check_anti_spam_criteria_for_address_field(field_name)
+    self[field_name].value.split(",").each do |address_string|
+      unless address_string.include?('"') and address_string.include?('<') and address_string.include?('@')
+        raise 'Make sure the ' + field_name.to_s + ' field (currently ' + address_string + ') is formatted like "Foo" <bar@example.com>. Otherwise this message will be classified as spam by some servers.'
+      end
     end
   end
 
