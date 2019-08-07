@@ -20,7 +20,7 @@
   = body_tag do
     #vue-app
       = render partial: 'shared/current_masquerade'
-      %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark#header-nav
+      %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.fixed-top#header-nav
         = link_to root_path, class: 'navbar-brand' do
           = image_tag(logo_url)
         %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
