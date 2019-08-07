@@ -15,7 +15,7 @@ describe IncomingMail do
     }.gsub("  ", "") }
 
     it { should be_kind_of IncomingMail }
-    its(:from) { should == ["john@example.com"] }
+    its(:from) { should == "john@example.com" }
     its(:to) { should == ["all-developers@example.com"] }
     its(:destinations) { should == ["all-developers@example.com"] }
     its(:subject) { should == "Great news for all developers!" }
