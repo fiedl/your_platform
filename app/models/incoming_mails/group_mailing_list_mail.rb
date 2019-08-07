@@ -7,7 +7,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
     if recipient_group && authorized?
       deliveries = recipient_group.members.with_account.collect do |user|
         new_message = self.message.clone
-        #new_message.smtp_envelope_from = bounces_address
+        new_message.smtp_envelope_from = bounces_address
         new_message.from = formatted_from
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email

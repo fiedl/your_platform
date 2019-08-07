@@ -108,6 +108,10 @@ class IncomingMail
     Ability.new(sender_user).can? :create_post_for, recipient_group
   end
 
+  def bounces_address
+    BaseMailer.default_params[:from]
+  end
+
   def self.processor_sub_classes
     # Does not work in development due to delayed constant auto loading:
     # # self.subclasses
