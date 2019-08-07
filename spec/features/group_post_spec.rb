@@ -12,7 +12,7 @@ feature "Group Posts" do
     #
     @user = create :user_with_account
     @other_user = create :user_with_account
-    @group = create :group
+    @group = create :group, email: "group@example.com"
     @group << @other_user
     @parent_group = create :group
     @parent_group << @group

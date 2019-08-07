@@ -53,7 +53,7 @@ module YourPlatformMailMessageExtensions
   end
 
   def check_anti_spam_criteria_for_address_field(field_name)
-    self[field_name].value.split(",").each do |address_string|
+    self[field_name].try(:value).to_s.split(",").each do |address_string|
       unless address_string.include?('"') and address_string.include?('<') and address_string.include?('@')
         raise 'Make sure the ' + field_name.to_s + ' field (currently ' + address_string + ') is formatted like "Foo" <bar@example.com>. Otherwise this message will be classified as spam by some servers.'
       end

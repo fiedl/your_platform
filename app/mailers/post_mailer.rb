@@ -29,12 +29,12 @@ class PostMailer < BaseMailer
     #
     # See also: http://stackoverflow.com/a/15851602/2066546
     #
-    @to_field = [@group.email] || to_emails
+    @to_field = "\"#{@group.title}\" <#{@group.email}>"
     @smtp_envelope_to_field = recipients.collect { |user| user.email }
 
     if sender.kind_of? User
       # If the sender is recognized by the system, replies generate comments.
-      @from_field = "#{sender.title} <#{sender.email}>"
+      @from_field = "\"#{sender.title}\" <#{sender.email}>"
       @reply_to = ReceivedCommentMail.generate_address(recipients.first, post) if post.try(:id)
       @show_delivery_report_link = ([sender.id] == recipients.map(&:id))
     else

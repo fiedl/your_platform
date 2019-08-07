@@ -24,7 +24,11 @@ class IncomingMail
   end
 
   def from
-    message.from
+    if message.from.kind_of? Array
+      message.from.first
+    else
+      message.from
+    end
   end
 
   def to
