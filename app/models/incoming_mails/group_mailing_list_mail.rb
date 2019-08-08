@@ -12,6 +12,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
         new_message.subject = subject_with_group_name
+        fill_in_placeholders new_message, from_user: sender_user, to_user: user
         new_message.deliver_with_action_mailer_now
       end
       deliveries
@@ -47,6 +48,22 @@ class IncomingMails::GroupMailingListMail < IncomingMail
 
   def formatted_to
     "\"#{recipient_group.title}\" <#{destination}>"
+  end
+
+  PERSONAL_GREETING_PLACEHOLDERS = ["{{anrede}}", "{{greeting}}"]
+
+  def fill_in_placeholders(message, options = {})
+    PERSONAL_GREETING_PLACEHOLDERS.each do |placeholder|
+      message.replace placeholder, personal_greeting(options[:from_user], options[:to_user])
+    end
+  end
+
+  def personal_greeting(from_user, to_user)
+    if to_user
+      to_user.personal_greeting(current_user: from_user)
+    else
+      I18n.t(:good_day).to_s.gsub(",", "").gsub("!", "")
+    end
   end
 
 end

@@ -33,4 +33,8 @@ concern :UserNotifications do
     end
   end
 
+  def personal_greeting(options = {})
+    I18n.t(:dear_str, str: self.name, locale: self.locale)
+  end
+
 end

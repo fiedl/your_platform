@@ -133,6 +133,21 @@ module YourPlatformMailMessageExtensions
     end
   end
 
+  # Replace a string in the message, e.g. a {{placeholder}}.
+  #
+  def replace(search, replace)
+    if self.multipart?
+      self.parts.each do |part|
+        if part.text?
+          part.body.raw_source.replace part.body.decoded.gsub(search, replace)
+        end
+      end
+    else
+      self.body.raw_source.replace self.body.decoded.gsub(search, replace)
+    end
+  end
+
+
   private
 
   def recipient_email_profile_field

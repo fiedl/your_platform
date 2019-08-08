@@ -109,6 +109,46 @@ describe IncomingMails::GroupMailingListMail do
       end
     end
 
+    describe "when the body contains the {{greeting}} placeholder" do
+      let(:example_raw_message) { %{
+        From: john@example.com
+        To: all-developers@example.com
+        Subject: Great news for all developers!
+        Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+        {{greeting}}!
+
+        I have great news for you!
+      }.gsub("  ", "") }
+      before { @group.update! mailing_list_sender_filter: :open }
+      it "replaces the {{greeting}} placeholder with the personal greeting for the recipient" do
+        subject
+        last_email.body.should include "Dear #{@member.name}!"
+      end
+
+      describe "when the message contains an attachment" do
+        let(:example_raw_message) {
+          message = Mail::Message.new %{
+            From: john@example.com
+            To: all-developers@example.com
+            Subject: Great news for all developers!
+            Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+            {{greeting}}!
+
+            I have great news for you!
+          }.gsub("  ", "")
+          message.add_file File.expand_path(File.join(__FILE__, '../../../support/uploads/pdf-upload.pdf'))
+          message
+        }
+        it "replaces the {{greeting}} placeholder with the personal greeting for the recipient" do
+          subject
+          last_email.to_s.should include "Dear #{@member.name}!"
+          last_email.to_s.should_not include "{{greeting}}"
+        end
+      end
+    end
+
   end
 end
 
