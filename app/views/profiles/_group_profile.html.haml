@@ -12,6 +12,20 @@
   = wysiwyg_in_place_if can?(:update, @group), @group, :body, toolbar: true, multiline: true, activate: 'manual' do
     = markup @group.body
 
+- if @groups_with_mailing_lists.any?
+  #mailing-lists
+    %h1.mailing-lists= t :mailing_lists
+    %div
+      %ul.attributes.profile_fields.keys-and-values
+        - @groups_with_mailing_lists.each do |group|
+          %li.attribute.profile_field
+            %span.label-wrapper
+              = group.name
+            %span.value-wrapper
+              %ul
+                - group.mailing_lists.each do |list|
+                  %li
+                    = link_to list.value, "mailto:#{list.value}"
 #contact
   = profile_sections_to_html(@group.profile.sections_by_title([:contact_information]), force_show: can?(:create_post_for, @group))
 

@@ -13,6 +13,12 @@ class ProfilesController < ApplicationController
     cookies[:group_tab] = "profile"
 
     @section = params[:section] if params[:section].present?
+
+    if @group
+      @groups_with_mailing_lists = ([@group] + @group.descendant_groups.order(:id)).select do |group|
+        group.mailing_lists.any?
+      end
+    end
   end
 
   private
