@@ -120,7 +120,10 @@ describe IncomingMails::GroupMailingListMail do
 
         I have great news for you!
       }.gsub("  ", "") }
-      before { @group.update! mailing_list_sender_filter: :open }
+      before do
+        @group.update! mailing_list_sender_filter: :open
+        john_doe.update! locale: 'en'
+      end
       it "replaces the {{greeting}} placeholder with the personal greeting for the recipient" do
         subject
         last_email.body.should include "Dear #{@member.name}!"
