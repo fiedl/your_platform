@@ -19,14 +19,14 @@ describe IncomingMails::GroupMailingListMail do
       group
     }
     let(:john_doe) {
-      create :user_with_account, email: 'john@example.com'
+      create :user_with_account, email: 'john@example.com', locale: 'en'
     }
 
     before do
       ActionMailer::Base.deliveries = []
       @group = developers_group
       @user = john_doe
-      @member = create :user_with_account
+      @member = create :user_with_account, locale: 'en'
       @group << @member
     end
 
@@ -100,7 +100,7 @@ describe IncomingMails::GroupMailingListMail do
       }.gsub("  ", "") }
       before do
         @group.update! mailing_list_sender_filter: :open
-        @member = create :user_with_account
+        @member = create :user_with_account, locale: 'en'
         @group << @member
       end
       it 'forwards the mail with 🍕' do
@@ -122,7 +122,6 @@ describe IncomingMails::GroupMailingListMail do
       }.gsub("  ", "") }
       before do
         @group.update! mailing_list_sender_filter: :open
-        john_doe.update! locale: 'en'
       end
       it "replaces the {{greeting}} placeholder with the personal greeting for the recipient" do
         subject
