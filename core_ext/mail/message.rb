@@ -142,6 +142,12 @@ module YourPlatformMailMessageExtensions
       self.parts.each do |part|
         if part.text?
           part.body.raw_source.replace part.body.decoded.gsub(search, replace) if part.body.decoded.include? search
+        elsif part.multipart?
+          part.parts.each do |part|
+            if part.text?
+              part.body.raw_source.replace part.body.decoded.gsub(search, replace) if part.body.decoded.include? search
+            end
+          end
         end
       end
     else
