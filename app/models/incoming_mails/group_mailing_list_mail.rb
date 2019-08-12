@@ -6,7 +6,13 @@ class IncomingMails::GroupMailingListMail < IncomingMail
   def process(options = {})
     if recipient_group && authorized?
       deliveries = recipient_group.members.with_account.collect do |user|
-        new_message = self.message.clone
+
+        # Create a copy of the original message.
+        # `self.message.clone` and `self.message.dup` would keep certain references,
+        # such that modifying the body would modify the body for all further messages
+        # in the loop.
+        new_message = Mail::Message.new self.message.to_s
+
         new_message.smtp_envelope_from = bounces_address
         new_message.from = formatted_from
         new_message.to = formatted_to

@@ -145,6 +145,18 @@ describe IncomingMails::GroupMailingListMail do
         last_email.body.should include "Dear #{@member.name}!"
       end
 
+      describe "when the group has several members" do
+        before do
+          @james = create :user_with_account, first_name: "James", last_name: "Bond", locale: 'en'; @group << @james
+          @alec = create :user_with_account, first_name: "Alec", last_name: "Trevelyan", locale: 'en'; @group << @alec
+        end
+        it "replaces the {{greeting}} placeholder with the personal greeting for the recipient" do
+          subject
+          ActionMailer::Base.deliveries[-1].to_s.should include "Dear Alec Trevelyan"
+          ActionMailer::Base.deliveries[-2].to_s.should include "Dear James Bond"
+        end
+      end
+
       describe "when the message contains an attachment" do
         let(:example_raw_message) {
           message = Mail::Message.new %{
