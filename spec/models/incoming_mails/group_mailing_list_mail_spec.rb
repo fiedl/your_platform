@@ -89,6 +89,23 @@ describe IncomingMails::GroupMailingListMail do
       end
     end
 
+    describe "when, by forwarding rules, the email has several X-Original-To headers" do
+      let(:example_raw_message) { %{
+        From: john@example.com
+        To: all-developers@example.com
+        Subject: Great news for all developers!
+        X-Original-To: all-developers-relay@example.com
+        X-Original-To: all-developers@example.com
+        Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+        Free drinks this evening!
+      }.gsub("  ", "") }
+      before do
+        @group.update! mailing_list_sender_filter: :open
+      end
+      it_behaves_like 'forwarding the message'
+    end
+
     describe "when the body contains a utf-8-🍕" do
       let(:example_raw_message) { %{
         From: john@example.com

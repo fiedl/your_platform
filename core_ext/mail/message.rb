@@ -108,9 +108,13 @@ module YourPlatformMailMessageExtensions
   # And: https://serverfault.com/questions/258469/how-to-configure-postfix-to-pipe-all-incoming-email-to-a-script#comment1270334_258491
   #
   def x_original_to
-    value = header_fields.detect { |field| field.name.downcase == "x-original-to" }.try(:value)
-    value = value.split("<").last.split(">").first if value && value.include?("<")
-    value
+    header_fields.select { |field| field.name.downcase == "x-original-to" }.collect do |field|
+      if field.value.include? "<"
+        field.value.split("<").last.split(">").first
+      else
+        field.value
+      end
+    end.reverse # The top-most header is added latest.
   end
 
   # For forwarding a modified message through action mailer, we need to deliver

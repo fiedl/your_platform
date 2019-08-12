@@ -104,6 +104,44 @@ describe IncomingMail do
       its(:cc) { should == ["all-testers@example.com"] }
       its(:destinations) { should == ["all-developers@example.com"] }
     end
+
+    describe "given an X-Original-To header" do
+      let(:example_raw_message) { %{
+        From: john@example.com
+        To: all-developers@example.com
+        CC: all-testers@example.com
+        X-Original-To: all-developers@example.com
+        Subject: Great news for all developers!
+        Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+        Free drinks this evening!
+      }.gsub("  ", "") }
+      its(:x_original_to) { should == ["all-developers@example.com"] }
+      its(:to) { should == ["all-developers@example.com"] }
+      its(:cc) { should == ["all-testers@example.com"] }
+      its(:destinations) { should == ["all-developers@example.com"] }
+    end
+
+    describe "given two X-Original-To headers" do
+      let(:example_raw_message) { %{
+        From: john@example.com
+        To: all-developers@example.com
+        CC: all-testers@example.com
+        X-Original-To: all-developers-relay@example.com
+        X-Original-To: all-developers@example.com
+        Subject: Great news for all developers!
+        Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+        Free drinks this evening!
+      }.gsub("  ", "") }
+      its(:x_original_to) { should == ["all-developers@example.com"] }
+      specify "the message object reveals all headers" do
+        subject.message.x_original_to.should == ["all-developers@example.com", "all-developers-relay@example.com"]
+      end
+      its(:to) { should == ["all-developers@example.com"] }
+      its(:cc) { should == ["all-testers@example.com"] }
+      its(:destinations) { should == ["all-developers@example.com"] }
+    end
   end
 
   describe "#process" do

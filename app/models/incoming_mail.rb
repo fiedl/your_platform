@@ -47,8 +47,22 @@ class IncomingMail
     end
   end
 
+  # Postfix relays copy the `RCPT TO` into the `X-Original-To` header.
+  # There might be severl relays, but we want to consider the original one
+  # where the email has been sent to, because this is the one which is
+  # registered as mailing list. The later one might be mailgates by our
+  # own system.
+  #
+  # For example, aktivitas@erlanger-wingolf.de forwards to
+  # aktivitas.erlangen@wingolf.io, which is handled by our wingolf.io
+  # mail transport. Both are added as `X-Original-To`, but only the first
+  # is added as mailing list.
+  #
+  # If both would be added as mailing list, the message should be delivered
+  # only once. The easiest way is to set a limit to only consider the
+  # header added first.
   def x_original_to
-    message.x_original_to
+    message.x_original_to.first(1)
   end
 
   def subject
@@ -60,8 +74,8 @@ class IncomingMail
   end
 
   def destinations
-    if x_original_to
-      [x_original_to]
+    if x_original_to.any?
+      x_original_to
     elsif envelope_to.any?
       envelope_to
     else
