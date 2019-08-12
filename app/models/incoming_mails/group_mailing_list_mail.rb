@@ -11,7 +11,6 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         new_message.from = formatted_from
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
-        new_message.subject = subject_with_group_name
         fill_in_placeholders new_message, from_user: sender_user, to_user: user
         new_message.deliver_with_action_mailer_now
       end
