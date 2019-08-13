@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   devise_for :user_accounts, controllers: {sessions: "sessions", masquerades: 'user_account_masquerades'}, :skip => [:registrations]
   devise_scope :user_account do
     get 'sign_in' => 'sessions#new', as: :sign_in
+    post 'sign_in' => 'sessions#create'
     delete 'sign_out' => 'sessions#destroy', as: :sign_out
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_password'
