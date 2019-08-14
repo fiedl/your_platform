@@ -9,7 +9,7 @@ class SessionsController < Devise::SessionsController
   # In order to allow logins from remote forms, do not require a CSRF authenticity token
   # from them.
   #
-  skip_before_filter :verify_authenticity_token, only: [:create]
+  skip_before_action :verify_authenticity_token, only: [:create]
 
   def new
     set_current_title t :sign_in
