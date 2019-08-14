@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181031094634) do
+ActiveRecord::Schema.define(version: 20190813235918) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string   "trackable_type"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(version: 20181031094634) do
     t.text     "body",                       limit: 65535
     t.string   "type"
     t.string   "mailing_list_sender_filter"
+    t.string   "subdomain"
   end
 
   create_table "impressions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
