@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.add_dependency "responders", "~> 2.0"
   s.add_dependency "bundler", ">= 1.9.4"
   s.add_development_dependency 'web-console'
-  s.add_dependency 'sprockets-rails'
+  s.add_dependency 'sprockets-rails', '>= 2.3.2' # required by bootstrap
   s.add_dependency 'decent_exposure'
 
 
@@ -69,13 +69,19 @@ Gem::Specification.new do |s|
 
   # Authentification
   s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
-  s.add_dependency 'passgen'
-  s.add_dependency 'omniauth-github'
-  s.add_dependency 'omniauth-twitter'
-  s.add_dependency 'omniauth-google-oauth2'
-  s.add_dependency 'omniauth-facebook', '~> 3.0.0'
+  #s.add_dependency 'omniauth-github'
+  #s.add_dependency 'omniauth-twitter'
+  #s.add_dependency 'omniauth-google-oauth2'
+  #s.add_dependency 'omniauth-facebook', '~> 3.0.0'
+  # omniauth dropped due to CVE-2015-9284
+  # https://github.com/fiedl/your_platform/network/alert/demo_app/my_platform/Gemfile.lock/omniauth/open
+  # https://github.com/omniauth/omniauth/issues/960
+  # https://github.com/omniauth/omniauth/pull/809
+
   s.add_dependency 'devise_masquerade', '~> 0.5.3'
   s.add_dependency 'gender_detector'
+  s.add_dependency 'devise_token_auth'
+  s.add_dependency 'rack-cors'
 
   # Authorization
   s.add_dependency 'cancancan', '~> 1.15.0'
@@ -94,9 +100,9 @@ Gem::Specification.new do |s|
   s.add_dependency 'reverse_markdown'
 
   # Layout: Twitter Bootstrap
-  # fix bootstrap to 3.3.3 due to icon issue:
-  s.add_dependency 'bootstrap-sass'                                                  # Apache License 2.0
+  s.add_dependency 'bootstrap', '~> 4.3.1' # https://github.com/twbs/bootstrap-rubygem
   s.add_dependency 'sass-rails'
+  s.add_dependency 'sass', '>= 3.7.4' # https://github.com/twbs/bootstrap/issues/24549#issuecomment-339473607
 
   # In Place Editing
   s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
@@ -114,7 +120,7 @@ Gem::Specification.new do |s|
 
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
-  s.add_dependency 'mini_magick'
+  s.add_dependency 'mini_magick', '>= 4.9.4' # CVE-2019-13574
   s.add_dependency 'refile', '>= 0.5.5'
   s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
@@ -138,7 +144,7 @@ Gem::Specification.new do |s|
 
   # Metrics
   s.add_dependency 'rack-mini-profiler'
-  s.add_dependency 'chartkick'
+  s.add_dependency 'chartkick', '>= 3.2.0' # CVE-2019-12732
   s.add_dependency 'groupdate'
   s.add_dependency 'impressionist'
 
@@ -170,9 +176,6 @@ Gem::Specification.new do |s|
   # Contact form
   s.add_dependency 'mail_form'
 
-  # Encoding detection
-  s.add_dependency 'charlock_holmes'
-
   # API
   s.add_dependency 'apipie-rails', '~> 0.5'
   s.add_dependency 'discourse_api'
@@ -192,6 +195,11 @@ Gem::Specification.new do |s|
   # Trello API
   s.add_dependency 'ruby-trello'
 
+  # Emails and Encoding
+  s.add_dependency 'charlock_holmes'
+  s.add_dependency 'extended_email_reply_parser'
+
+
   # Fixes
   # https://github.com/eventmachine/eventmachine/issues/509
   s.add_dependency 'eventmachine', '>= 1.0.7'
@@ -202,6 +210,8 @@ Gem::Specification.new do |s|
   s.add_dependency 'actionpack', '>= 4.2.5.2' # CVE-2016-2098, https://gemnasium.com/fiedl/your_platform/alerts#advisory_342
   s.add_dependency 'activerecord', '>= 4.2.7.1' # CVE-2016-6317, https://gemnasium.com/github.com/fiedl/your_platform/alerts#advisory_426
   s.add_dependency 'rubyzip', '>= 1.2.1'  # CVE-2017-5946, https://gemnasium.com/github.com/fiedl/wingolfsplattform/alerts#advisory_658
+  s.add_dependency 'actionview', '>= 5.0.7.2'  # CVE-2019-5418, https://trello.com/c/4sVtIW7h/1330-kritische-sicherheitslücke-in-actionview-cve-2019-5418
+  s.add_dependency 'yard', '>= 0.9.20' # GHSA-xfhh-rx56-rxcr
 
   #
   # Development Dependencies

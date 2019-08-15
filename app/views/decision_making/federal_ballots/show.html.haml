@@ -37,7 +37,7 @@
           = "#{link_to_user(signature.user)}, #{l(signature.created_at.to_date)}".html_safe
         - if can?(:sign, federal_ballot) && !federal_ballot.signatures.pluck(:user_id).include?(current_user.id)
           %p= t :after_signing_the_document_cannot_be_changed
-          = link_to new_decision_making_ballot_signature_path(ballot_id: federal_ballot.id), class: 'btn btn-default' do
+          = link_to new_decision_making_ballot_signature_path(ballot_id: federal_ballot.id), class: 'btn btn-outline-secondary' do
             = signature_icon
             = t :sign_dots
 

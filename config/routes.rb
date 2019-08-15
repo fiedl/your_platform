@@ -21,6 +21,7 @@ Rails.application.routes.draw do
   devise_for :user_accounts, controllers: {sessions: "sessions", masquerades: 'user_account_masquerades'}, :skip => [:registrations]
   devise_scope :user_account do
     get 'sign_in' => 'sessions#new', as: :sign_in
+    post 'sign_in' => 'sessions#create'
     delete 'sign_out' => 'sessions#destroy', as: :sign_out
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_registration'
     get 'change_password' => 'devise/registrations#edit', :as => 'edit_password'
@@ -169,6 +170,7 @@ Rails.application.routes.draw do
     post :submit, to: 'term_report_submissions#create'
     post :accept, to: 'term_report_acceptions#create'
     post :recalculate, to: 'term_report_recalculations#create'
+    get :export, to: 'term_reports/exports#show', on: :collection
   end
 
   get :term_report, to: 'term_reports#show', as: :search_term_report
@@ -279,10 +281,17 @@ Rails.application.routes.draw do
   # Email previews
   mount LetterOpenerWeb::Engine, at: "/letter_opener" if Rails.env.development?
 
+  post :incoming_mails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :incoming_emails, to: 'incoming_mails#create', defaults: {format: :json}
+  post :mailgate, to: 'incoming_mails#create', defaults: {format: :json}
+  resources :incoming_mails
+
   get :feeds, to: 'feeds#index', as: :feeds
 
   # ATTENTION: Changing feed urls might break subscribed feeds!
   get 'feeds/:id(.:format)', to: 'feeds#show', as: :feed
+
+  resources :subscriptions
 
   resources :beta_invitations
   resources :betas do
@@ -308,6 +317,9 @@ Rails.application.routes.draw do
   get :api, to: 'apipie/apipies#index'
   namespace :api do
     namespace :v1 do
+      mount_devise_token_auth_for 'UserAccount', at: 'auth', controllers: {
+        sessions: 'api/v1/sessions'
+      }
       get :sso, to: 'single_sign_on#sign_in'
       namespace :public do
         resources :groups do
@@ -316,6 +328,7 @@ Rails.application.routes.draw do
         resources :events
         resources :blog_posts
       end
+      resources :events
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
@@ -324,12 +337,16 @@ Rails.application.routes.draw do
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
       end
+      resources :groups
+      resources :songs
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships
       namespace :navables do
         put :vertical_nav_configuration, to: 'vertical_nav_configuration#update'
       end
+      get :search_contacts, to: 'search_contacts#index'
+      get :search_users, to: 'search_users#index'
       get :search_groups, to: 'search_groups#index'
       get :search_pages, to: 'search_pages#index'
       get :navigation, to: 'navigation#show'

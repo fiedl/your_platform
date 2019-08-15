@@ -14,6 +14,7 @@ class Page < ApplicationRecord
   include PageGraph
   include Navable
   include HasAuthor
+  include PageBody
   include PagePublicWebsite
   include Archivable
   include PageHasSettings
@@ -217,7 +218,7 @@ class Page < ApplicationRecord
   end
 
   def self.create_root(attrs = {})
-    root_page = Page.create(title: "Root", published_at: Time.zone.now, domain: "example.com")
+    root_page = Page.create(title: "Root", published_at: Time.zone.now, domain: "example.com", type: "Pages::HomePage")
     root_page.update_attributes attrs
     root_page.add_flag :root
     n = root_page.nav_node; n.slim_menu = true; n.save; n = nil

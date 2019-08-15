@@ -30,7 +30,7 @@ $(document).on 'click', '.destroy_event', (e)->
       success: (result) ->
         $('.alert-danger').replaceWith("<div class='alert alert-success'>#{I18n.t('event_has_been_destroyed_redirecting_to_start_page')}</div>")
         Turbolinks.visit redirect_path
-      failure: (result) ->
+      error: (result) ->
         alert(I18n.t('something_went_wrong_please_reload'))
     })
   e.stopPropagation()

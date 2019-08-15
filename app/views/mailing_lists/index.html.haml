@@ -15,7 +15,7 @@
           %td= link_to mailing_list.email, "mailto:#{mailing_list.email}"
           %td
             - if can? :manage, mailing_list
-              = link_to settings_icon, group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-default btn-xs'
+              = link_to settings_icon, group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-outline-secondary btn-xs'
           %td= link_to mailing_list.group_name, mailing_list.group
           %td= mailing_list.members_count
           %td= t mailing_list.sender_policy, scope: 'sender_filter_short'

@@ -69,6 +69,30 @@ class Event < ApplicationRecord
     not self.find_attendees_group.try(:members).try(:any?)
   end
 
+  def group_name
+    self.group.try(:name)
+  end
+
+  def corporation_name
+    self.group.try(:corporation).try(:name)
+  end
+
+  def corporation_id
+    self.group.try(:corporation).try(:id)
+  end
+
+  def contact_name
+    self.contact_person.try(:title)
+  end
+
+  def contact_id
+    self.contact_person.try(:id)
+  end
+
+  def avatar_url
+    self.group.try(:avatar_url) || self.group.try(:corporation).try(:avatar_url)
+  end
+
 
   # Times
   # ==========================================================================================

@@ -237,8 +237,10 @@ feature "Events" do
     scenario "creating an event from the root page" do
       visit root_path
       find('#create_event').click
-      wait_until(timeout: 90.seconds) { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
-      page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
+
+      wait_until { page.has_selector? ".box_title input" }
+      find(".box_title input").value.should == "Bezeichnung der Veranstaltung hier eingeben"
+
       page.should have_no_text I18n.t(:reload_event)
       page.should have_text Event.last.group.name
     end
@@ -247,8 +249,9 @@ feature "Events" do
       visit group_path(@group)
       within('.group_tabs') { click_on I18n.t(:events) }
       find('#create_event').click
-      wait_until(timeout: 90.seconds) { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
-      page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
+
+      wait_until { page.has_selector? ".box_title input" }
+      find(".box_title input").value.should == "Bezeichnung der Veranstaltung hier eingeben"
     end
 
     scenario "editing an event" do
@@ -263,7 +266,6 @@ feature "Events" do
       end
 
       within('.vertical_menu') { page.should have_text "My cool new event" }
-      within('ul.breadcrumbs') { page.should have_text "My cool new event" }
     end
 
     scenario "editing an event, pt. 2" do
@@ -307,12 +309,10 @@ feature "Events" do
       @event.id.should be_present
       visit event_path(@event)
       within('tr.publish_on_local_website') do
-        find('.best_in_place').click
-        find('select').click
+        check "Auf lokaler Homepage veröffentlichen"
       end
       within('tr.publish_on_global_website') do
-        find('.best_in_place').click
-        find('select').click
+        check "Auf globaler Homepage veröffentlichen"
       end
     end
 
@@ -355,8 +355,10 @@ feature "Events" do
       within('#create_event') { page.should have_text @corporation.name }
 
       find('#create_event').click
-      wait_until { page.has_text? 'Bezeichnung der Veranstaltung hier eingeben' }
-      page.should have_text 'Bezeichnung der Veranstaltung hier eingeben'
+
+      wait_until { page.has_selector? ".box_title input" }
+      find(".box_title input").value.should == "Bezeichnung der Veranstaltung hier eingeben"
+
       within '.contact_people' do
         page.should have_text @user.title
       end

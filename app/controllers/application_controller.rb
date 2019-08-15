@@ -24,6 +24,7 @@ class ApplicationController < ActionController::Base
   include FastLane
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
+  include CachingSwitch
 
 
   # We use this custom method to render a partial to a json string.

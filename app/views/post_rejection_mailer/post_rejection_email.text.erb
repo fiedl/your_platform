@@ -1,11 +1,16 @@
-Your email message
+<%= t :your_email_message %>
 
     <%= @subject %>
-    
-to
+
+<%= t :to_the_recipient %>
 
     <%= @recipient_name %>
 
-has been rejected.
+<%= t :has_been_rejected %>.
 
-Reason: <%= @reason || "You are not authorized to send messages to this group." %>
+<% if @reason %>
+<%= t :reason %>: <%= @reason %>
+<% end %>
+
+<%= t :if_you_need_help_reply_to_contact_our_support_team %>
+

@@ -70,7 +70,7 @@ source 'https://rubygems.org' do
 
   # JavaScript Runtime
   gem 'execjs'
-  gem 'therubyracer', :platform => :ruby
+  gem 'mini_racer'
 
   # Other helpers
   gem 'json'
@@ -83,7 +83,8 @@ source 'https://rubygems.org' do
   # Temporary Forks and Overrides
   gem 'refile', git: 'https://github.com/sobrinho/refile'
   gem 'refile-mini_magick', git: 'https://github.com/refile/refile-mini_magick'
+  gem 'rails-settings-cached', '0.7.1'
 end
 
 source 'https://rails-assets.org'
-ruby '2.3.3'
+ruby '2.6.2'

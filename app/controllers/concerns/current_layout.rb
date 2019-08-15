@@ -18,9 +18,9 @@ concern :CurrentLayout do
     layout ||= (permitted_layouts & [layout_param]).first
     layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
     layout ||= mobile_layout_if_mobile_app
+    layout ||= intranet_layout if current_navable.try(:in_intranet?)
     layout ||= current_navable.layout if current_navable.respond_to? :layout
     layout ||= current_home_page.layout if current_home_page
-    layout ||= intranet_layout if current_navable.try(:in_intranet?)
     layout ||= default_layout
     return (permitted_layouts & [layout]).first
   end
@@ -41,7 +41,7 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017 primer)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017 primer strappy)).uniq
   end
 
   def default_layout
@@ -49,11 +49,11 @@ concern :CurrentLayout do
   end
 
   def default_layout
-    'bootstrap'
+    'strappy'
   end
 
   def intranet_layout
-    'bootstrap'
+    'strappy'
   end
 
   def current_logo_url(key = nil)
@@ -61,7 +61,11 @@ concern :CurrentLayout do
   end
 
   def current_logo(key = nil)
-    logos = Attachment.where(parent_type: 'Page', parent_id: [current_home_page.id] + current_home_page.child_pages.pluck(:id)).logos
+    logos = if current_home_page
+      Attachment.where(parent_type: 'Page', parent_id: [current_home_page.id] + current_home_page.child_pages.pluck(:id)).logos
+    else
+      Attachment.none
+    end
     logos = Attachment.logos if logos.none?
     logos = logos.where(title: key) if key
     logos.last

@@ -52,7 +52,7 @@ $(document).on 'click', '.new_post .preview', ->
 $(document).on 'click', '.dropdown-menu.select_post_recipient a', ->
   $('.new_post input.group_id').val($(this).data('group-id'))
   $('.btn.recipient').dropdown('toggle')
-  $('.btn.recipient').removeClass('btn-primary').addClass('btn-default')
+  $('.btn.recipient').removeClass('btn-primary').addClass('btn-outline-secondary')
   $('.btn.recipient').text(I18n.t('recipient') + ": " + $(this).data('group-title'))
   $('.submit_post').removeClass('hidden').show()
   false

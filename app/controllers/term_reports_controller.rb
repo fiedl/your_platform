@@ -25,6 +25,7 @@ class TermReportsController < ApplicationController
   expose :termable, -> { term_report }
 
   def show
+    authorize! :use, :term_reports
     authorize! :read, term_report
 
     # To make the url unique, redirect to the proper url
@@ -45,6 +46,7 @@ class TermReportsController < ApplicationController
   }
 
   def index
+    authorize! :use, :term_reports
     authorize! :index, TermReport
 
     if term && corporation

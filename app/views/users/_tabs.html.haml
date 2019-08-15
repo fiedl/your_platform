@@ -1,5 +1,5 @@
 - active ||= 'general'
 
-%ul.nav.nav-tabs.user.user_tabs
-  %li{class: active == 'contact' ? 'active' : ''}
-    = link_to t(:contact), user_contact_information_path(@user)
+%ul.nav.nav-pills.user.user_tabs.tabs
+  %li.nav-item
+    = link_to t(:contact), user_contact_information_path(@user), class: "nav-link #{active == 'contact' ? 'active' : ''}"

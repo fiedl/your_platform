@@ -4,15 +4,15 @@ module IconHelper
     if icon_key.to_s.in? ['beer', 'coffee', 'key', 'lock', 'unlock', 'unlock-alt', 'archive', 'undo', 'history', 'folder-open', 'sort-alpha-asc', 'sort-numeric-asc', 'sort-numeric-desc']
       awesome_icon(icon_key)
     else
-      glyphicon(icon_key.to_s.gsub('glyphicon-', ''))
+      fa(icon_key.to_s.gsub('fa-', ''))
     end
   end
 
   # This includes an icon from Twitter-Bootstrap's Glyphicon icon set:
-  # http://getbootstrap.com/components/#glyphicons
+  # http://getbootstrap.com/components/#fas
   #
-  def glyphicon(icon_key)
-    content_tag :span, '', class: "glyphicon glyphicon-#{icon_key}", 'aria-hidden' => true
+  def fa(icon_key)
+    content_tag :span, '', class: "fa fa-#{icon_key}", 'aria-hidden' => true
   end
 
   # This includes an icon from the Font-Awesome icon set:
@@ -59,6 +59,10 @@ module IconHelper
     fa_icon 'folder-open-o'
   end
 
+  def document_icon
+    fa_icon 'file-o'
+  end
+
   def create_icon
     fa_icon 'plus-circle'
   end
@@ -77,6 +81,14 @@ module IconHelper
 
   def calendar_icon
     fa_icon(:calendar)
+  end
+
+  def event_icon
+    fa_icon('calendar-check-o')
+  end
+
+  def time_icon
+    fa_icon('clock-o')
   end
 
   def edit_icon

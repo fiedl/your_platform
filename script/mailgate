@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# This script posts incoming emails to the YourPlatform application's
+# IncomingEmailsController.
+#
+# For more information on how to use this script to receive emails
+# with YourPlatform, have a look at this documentation:
+# https://github.com/fiedl/your_platform/blob/master/app/controllers/incoming_emails_controller.rb
+#
+# We've taken this file from: https://github.com/ivaldi/brimir
+#
+exec curl --silent --output /dev/null --data-urlencode message@- $1

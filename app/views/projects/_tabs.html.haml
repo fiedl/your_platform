@@ -1,10 +1,10 @@
 - #locals:
 - active ||= 'info'
 
-%a.btn.btn-default.right{href: projects_path}
-  = icon('glyphicon-th')
+%a.btn.btn-outline-secondary.right{href: projects_path}
+  = icon('fa-th')
   = t(:all_my_projects)
 
-%ul.nav.nav-tabs.project.project_tabs
+%ul.nav.nav-pills.project.project_tabs.tabs
   %li{class: active == 'info' ? 'active' : ''}
     %a{href: project_path(@project)} Projekt-Info

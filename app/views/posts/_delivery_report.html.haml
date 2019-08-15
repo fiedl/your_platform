@@ -32,7 +32,7 @@
 
   - if post.pending_to_send_to_count > 0 && can?(:deliver, post)
     %p#deliver_now
-      = button_to post_deliver_path(post), remote: true, method: 'put', class: 'btn btn-default send_message_instantly', disable_with: t(:message_sent) do
+      = button_to post_deliver_path(post), remote: true, method: 'put', class: 'btn btn-outline-secondary send_message_instantly', disable_with: t(:message_sent) do
         = icon :envelope
         =t :deliver_instantly
 

@@ -13,6 +13,6 @@
 
     %p.buttons
       = link_to "#{t list_preset} anzeigen", statistics_path(list: list_preset), class: 'btn btn-primary'
-      = link_to statistics_path(list: list_preset, format: 'csv'), class: 'btn btn-default' do
+      = link_to statistics_path(list: list_preset, format: 'csv'), class: 'btn btn-outline-secondary' do
         = icon 'list-alt'
         Als CSV-Tabelle herunterladen

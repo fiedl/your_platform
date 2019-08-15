@@ -8,42 +8,45 @@
   - group = event.group
   - corporation = group.try(:corporation)
   %li.upcoming_event
-    = remove_trailing_commas_from_event_info do
-      %small.event.info
-        - if event.end_at and event.end_at.to_date != event.start_at.to_date
-          %span{class: 'event from_date_to_end_date'}
-            = localize(event.start_at.to_date, format: :long).gsub(event.end_at.year.to_s, '')
-            = translate 'date.to'
-            = succeed ',' do
-              = localize(event.end_at.to_date, format: :long)
-        - else
-          = succeed ',' do
-            %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
-          -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
-          = succeed ',' do
-            %span{class: "event start_at_time"}= localize event.start_at, :format => :time
+    .icon_and_entry
+      = event_icon
+      .entry
+        = remove_trailing_commas_from_event_info do
+          %small.event.info
+            - if event.end_at and event.end_at.to_date != event.start_at.to_date
+              %span{class: 'event from_date_to_end_date'}
+                = localize(event.start_at.to_date, format: :long).gsub(event.end_at.year.to_s, '')
+                = translate 'date.to'
+                = succeed ',' do
+                  = localize(event.end_at.to_date, format: :long)
+            - else
+              = succeed ',' do
+                %span{class: "event start_at_date"}= localize event.start_at.to_date, :format => :long
+              -# = link_to localize(event.start_at.to_date, :format => :long),  events_path(start_at_date: event.start_at.to_date)
+              = succeed ',' do
+                %span{class: "event start_at_time"}= localize event.start_at, :format => :time
 
-      - if group and not show_location_rather_than_group
-        %span{class: "event group"}
-          - if link_groups
-            = link_to group.name, group
-          - else
-            = group.name
-          - if corporation && (corporation.id != group.id)
-            = surround '(', ')' do
-              - if link_groups
-                = link_to corporation.token, corporation
-              - else
-                = corporation.token
+            - if group #and not show_location_rather_than_group
+              %span{class: "event group"}
+                - if link_groups
+                  = link_to group.name, group
+                - else
+                  = group.name
+                - if corporation && (corporation.id != group.id)
+                  = surround '(', ')' do
+                    - if link_groups
+                      = link_to corporation.token, corporation
+                    - else
+                      = corporation.token
 
-      - if show_location_rather_than_group
-        %span{class: "event location"}
-          = best_in_place_if can?(:update, event), event, :location
+          - if show_location_rather_than_group
+            %span{class: "event location"}
+              = best_in_place_if can?(:update, event), event, :location
 
-    %span{class: "event name"}
-      %strong
-        - if link_to_mobile
-          = link_to event.name, mobile_event_path(event)
-        - else
-          = link_to event do
-            = best_in_place_if can?(:update, event), event, :name, activator: 'only_manual'
+        %span{class: "event name"}
+          %strong
+            - if link_to_mobile
+              = link_to event.name, mobile_event_path(event)
+            - else
+              = link_to event do
+                = best_in_place_if can?(:update, event), event, :name, activator: 'only_manual'

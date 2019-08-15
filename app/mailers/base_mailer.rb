@@ -11,6 +11,6 @@ class BaseMailer < ActionMailer::Base
   helper ActionView::Helpers::SanitizeHelper
 
   helper ApplicationHelper
-  default from: Setting.support_email
+  default from: "\"#{AppVersion.app_name}\" <#{Setting.support_email}>"
 
 end

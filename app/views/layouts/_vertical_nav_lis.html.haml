@@ -1,18 +1,18 @@
 - navable.ancestor_nav_nodes.each do |node|
   - unless node.slim_menu
-    %li.ancestor
+    %li.ancestor.nav-item
       = link_to_navable node.nav_title, node.navable
 
-%li.active
-  = link_to_navable navable.nav_title, navable
+%li.active.nav-item
+  = link_to_navable navable.nav_title, navable, class: 'active'
 
 - visible_pages_only(navable.nav_child_pages).each do |page|
   - if can? :read, page
-    %li.child.page
+    %li.child.page.nav-item
       = link_to_navable page.nav_node.nav_title, page
 
 - navable.nav_child_groups.each do |group|
-  %li.child.group
+  %li.child.group.nav-item
     - if show_corporation_names_in_vertical_nav?(navable)
       = link_to_navable group.name_with_corporation, group
     - else

@@ -1,15 +1,24 @@
-%h1#public-root-events-box= t(:events)
-%div
+= box title: t(:events), id: 'public-root-events-box' do
+  - content_for :box_tools do
+    - if page.show_events_for_group
+      = link_to group_events_url(group_id: page.show_events_for_group, format: 'ics', protocol: 'webcal'), class: 'ical_abo_link btn btn-outline-secondary', title: t(:calendar_feed) do
+        = calendar_icon
+
+
   %ul.website-events
     = render partial: 'events/events_lis', locals: {events: events, show_location_rather_than_group: true}
+
+    - if page.show_events_for_group
+      %li.upcoming_event.see_more_events
+        = link_to group_events_url(group_id: page.show_events_for_group), class: "btn btn-outline-secondary btn-sm" do
+          = t :more_events
 
   - if page.semester_calendar && attachment = page.semester_calendar.attachments.last
     .semester_calendar
       %h3
         = t :semester_calendar
-        = link_to "ical", group_events_url(group_id: page.show_events_for_group, format: 'ics', protocol: 'webcal'), class: 'ical_abo_link'
       = link_to attachment.file.url do
         .semester_calendar_title
           = page.semester_calendar.title
-        = image_tag(attachment.thumb_url)
+        = image_tag(attachment.thumb_path)
 

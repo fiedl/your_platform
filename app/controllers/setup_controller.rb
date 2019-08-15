@@ -72,7 +72,7 @@ private
       Group.everyone
       Group.corporations_parent
 
-      Page.create_root title: 'example.com', redirect_to: 'http://example.com'
+      Page.create_root title: 'example.com'
       Page.create_intranet_root
       Page.create_help_page
       Page.create_imprint

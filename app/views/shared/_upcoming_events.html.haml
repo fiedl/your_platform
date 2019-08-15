@@ -11,10 +11,10 @@
     =t :events
     .ics_abo_buttons.tool
       - if group
-        %a#ics_abo{href: group_events_url(group_id: group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Kalender-Abo (ICS, iCal): Veranstaltungen von '#{group.name}' im Kalender auf dem eigenen Rechner abonnieren.", data: {placement: 'top'}}
+        %a#ics_abo{href: group_events_url(group_id: group.id, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token)), title: "Kalender-Abo (ICS, iCal): Veranstaltungen von '#{group.name}' im Kalender auf dem eigenen Rechner abonnieren.", data: {placement: 'top'}}
           = icon :calendar
       - elsif current_user
-        %a.btn.btn-default#ics_abo{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten. (Empfohlen.)", data: {placement: 'top'}}
+        %a.btn.btn-outline-secondary#ics_abo{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten. (Empfohlen.)", data: {placement: 'top'}}
           = icon :calendar
           = "#{t(:calendar_abo)}!"
   %div
@@ -23,7 +23,7 @@
     .events_footer
       .create_event
         - if current_user && group_to_create_the_event_for && can?(:create_event, group_to_create_the_event_for)
-          %a.btn.btn-default.btn-small#create_event{href: events_path(group_id: group_to_create_the_event_for.id, format: 'json')}
+          %a.btn.btn-outline-secondary.btn-small#create_event{href: events_path(group_id: group_to_create_the_event_for.id, format: 'json')}
             = icon :plus
             =t :add_event_for
             = surround "'", "'" do
@@ -33,6 +33,6 @@
           = link_to t(:show_all_events), group_events_path(group_id: group.id, all: true)
         - else
           = link_to t(:show_all_events), events_path
-      - if can?(:use, :semester_calendars) && can?(:index, SemesterCalendar) && (not group) && current_user.primary_corporation
+      - if current_user && can?(:use, :semester_calendars) && can?(:index, SemesterCalendar) && (not group) && current_user.primary_corporation
         .show_semester_calendars
           = link_to t(:semester_calendar), group_search_semester_calendar_path(group_id: current_user.primary_corporation)

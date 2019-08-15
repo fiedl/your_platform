@@ -9,10 +9,10 @@ $(document).on 'click', '.edit_vertical_nav', ->
   else
     $('#vertical_nav li.child').each ->
       remove_button = "
-        <a class=\"remove_button\" title=\"#{I18n.t('vertical_nav_remove_button')}\"><span class=\"glyphicon glyphicon-trash\"></span></a>
+        <a class=\"remove_button\" title=\"#{I18n.t('vertical_nav_remove_button')}\"><span class=\"fa fa-trash\"></span></a>
       "
       move_handle = "
-        <a class=\"move_handle\" title=\"#{I18n.t('vertical_nav_move_handle')}\"><span class=\"glyphicon glyphicon-menu-hamburger\"></span></a>
+        <a class=\"move_handle\" title=\"#{I18n.t('vertical_nav_move_handle')}\"><span class=\"fa fa-menu-hamburger\"></span></a>
       "
       $(this).prepend(remove_button)
       $(this).prepend(move_handle)

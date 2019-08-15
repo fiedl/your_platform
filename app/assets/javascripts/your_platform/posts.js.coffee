@@ -73,7 +73,7 @@ ready = ->
 
   $(document).on 'click', '.send_message_instantly', ->
     $(this)
-    .removeClass('btn-default')
+    .removeClass('btn-outline-secondary')
     .addClass('btn-success')
     .delay(500)
     .hide()

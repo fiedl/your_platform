@@ -11,7 +11,7 @@
 concern :UserCorporations do
 
   def corporation_id
-    (Corporation.pluck(:id) & self.ancestor_group_ids).first
+    memberships.where(ancestor_id: Corporation.pluck(:id)).order(:valid_from).first.try(:ancestor_id)
   end
 
   # Returns the (single) Corporation the user is associated with.

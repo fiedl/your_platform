@@ -2,8 +2,23 @@
   filter: blur(3px)
 
 body.demo_mode
+  .profiler-results
+    display: none
+
+  .discourse_topics
+    .title, .last_poster
+      +obscure
+
+  #logged-in-bar
+    .user_avatar, .user_name
+      +obscure
+
+body.demo_mode:not(.mustermann)
   .obscure-in-demo
     +obscure
+
+  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle):not(.workflow_trigger):not(.change_avatar):not(.user_settings):not(.mustermann)
+      +obscure
 
   .vertical_nav .active.user
     +obscure
@@ -25,9 +40,6 @@ body.demo_mode
       dd
         +obscure
 
-  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle):not(.workflow_trigger):not(.change_avatar):not(.user_settings)
-    +obscure
-
   ul.nav .recent a.user
     +obscure
 
@@ -38,10 +50,6 @@ body.demo_mode
   .direct_officers
     +obscure
 
-  .discourse_topics
-    .title, .last_poster
-      +obscure
-
   a.user
     +obscure
 
@@ -51,5 +59,8 @@ body.demo_mode
   .submission_author
     +obscure
 
-  .term_report_members td
+  .term_report_members td:not(.mustermann)
     +obscure
+
+  h1 .obscure-in-demo
+    filter: blur(10px)

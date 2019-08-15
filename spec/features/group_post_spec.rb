@@ -12,7 +12,7 @@ feature "Group Posts" do
     #
     @user = create :user_with_account
     @other_user = create :user_with_account
-    @group = create :group
+    @group = create :group, email: "group@example.com"
     @group << @other_user
     @parent_group = create :group
     @parent_group << @group
@@ -25,19 +25,19 @@ feature "Group Posts" do
   describe "as officer:", :js do
     background { login(@user) }
 
-    scenario 'Selecting conditions on recipients' do
-      visit group_profile_path(@group)
-      find('#new_post').click
-      page.should have_text 'Anzahl der Empfänger: 2'
-
-      find('label.constrain_validity_range').click
-      # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
-      page.should have_text 'Anzahl der Empfänger: 2'
-
-      fill_in :valid_from, with: I18n.localize('2025-12-01'.to_date)
-      # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
-      page.should have_text 'Anzahl der Empfänger: 0'
-    end
+    # scenario 'Selecting conditions on recipients' do
+    #   visit group_profile_path(@group)
+    #   find('#new_post').click
+    #   page.should have_text 'Anzahl der Empfänger: 2'
+    #
+    #   find('label.constrain_validity_range').click
+    #   # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
+    #   page.should have_text 'Anzahl der Empfänger: 2'
+    #
+    #   fill_in :valid_from, with: I18n.localize('2025-12-01'.to_date)
+    #   # page.should have_text 'Anzahl der Empfänger: …'  # test is too fast.
+    #   page.should have_text 'Anzahl der Empfänger: 0'
+    # end
     scenario 'Sending a test message' do
       visit group_profile_path(@group)
       find('#new_post').click

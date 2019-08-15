@@ -14,8 +14,8 @@ class Graph::Group < Graph::Node
 
   def descendant_member_ids
     query_ids("
-      match path = (group:Group:#{namespace} {id: #{group.id}})-[:HAS_SUBGROUP*0..999]->(g:Group)-[m:MEMBERSHIP]->(users:User)
-      where #{self.class.regular_group_condition}
+      match path = (group:Group:#{namespace} {id: #{group.id}})-[:HAS_SUBGROUP*0..]->(g:Group)-[m:MEMBERSHIP]->(users:User)
+      where (#{self.class.regular_group_condition} or (group.id = g.id))
       and #{Graph::Membership.validity_range_condition}
       return distinct(users.id)
     ")
@@ -30,8 +30,8 @@ class Graph::Group < Graph::Node
 
   def descendant_membership_ids
     query_ids("
-    match (parent:Group:#{namespace} {id: #{group.id}})-[:HAS_SUBGROUP*0..999]->(g:Group)-[memberships:MEMBERSHIP]->()
-    where #{self.class.regular_group_condition}
+    match (parent:Group:#{namespace} {id: #{group.id}})-[:HAS_SUBGROUP*0..]->(g:Group)-[memberships:MEMBERSHIP]->()
+    where #{self.class.regular_group_condition} or (parent.id = g.id)
     return memberships.id
     ")
   end

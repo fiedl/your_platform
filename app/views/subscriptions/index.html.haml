@@ -1,0 +1,28 @@
+= box do
+  - content_for :box_title do
+    Subscriptions
+  - content_for :box_tools do
+    = link_to 'New Subscription', new_subscription_path, class: 'btn btn-outline-secondary'
+  %table.datatable.subscriptions
+    %thead
+      %tr
+        %th Group
+        %th Corporation
+        %th Type
+        %th Members
+        %th Quaterly Price
+        %th Paid Until
+        %th Edit
+    %tbody
+      - @subscriptions.each do |subscription|
+        %tr{class: ('active' if subscription.active?)}
+          %td= subscription.group.name
+          %td= subscription.group.corporation.try(:name)
+          %td= subscription.type
+          %td= subscription.group.members.count
+          %td= subscription.price_per_quater
+          %td= subscription.paid_until
+          %td
+            = link_to 'Show', subscription
+            = link_to 'Edit', edit_subscription_path(subscription)
+            = link_to 'Destroy', subscription, method: :delete, data: { confirm: 'Are you sure?' }

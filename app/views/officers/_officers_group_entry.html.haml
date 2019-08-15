@@ -20,7 +20,7 @@
     - if can? :rename, officer_group
       %span.group_flags.show_only_in_edit_mode
         - for flag in officer_group.flags
-          %span.label.label-info
+          %span.badge.badge-info
             = icon :tag
             =t flag
 

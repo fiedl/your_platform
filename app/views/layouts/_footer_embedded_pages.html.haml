@@ -1,4 +1,5 @@
-- pages ||= current_home_page.child_pages.flagged(:footer_embedded).visible_to(current_user).order(:published_at)
+- pages ||= current_home_page.child_pages.flagged(:footer_embedded).visible_to(current_user).order(:published_at) if current_home_page
+- pages ||= []
 
 - if pages.any?
   .row

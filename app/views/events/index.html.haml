@@ -1,7 +1,8 @@
 - @title = title_for_events_index  # see EventsHelper
 - set_title @title  # set html title tag
 
-= render partial: 'groups/tabs', locals: {active: 'events'} if @group
+= render partial: 'groups/tabs', locals: {active: 'events'} if @group && can?(:read, @group)
+- @hide_vertical_nav = true if not can?(:read, @group)
 
 - if @group and not @all
   = render partial: 'upcoming_events'

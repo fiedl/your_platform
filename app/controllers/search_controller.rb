@@ -184,4 +184,8 @@ class SearchController < ApplicationController
     return object
   end
 
+  def log_activity
+    # Do not log searches.
+  end
+
 end

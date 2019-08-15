@@ -4,7 +4,7 @@
 
 %tr{ id: "attachment-#{attachment.id}" }
   %td
-    = link_to image_tag( attachment.thumb_url ), attachment.file.url
+    = link_to image_tag(attachment.thumb_path), attachment.file.url
   %td
     %span.attachment-description
       %p.attachment.title

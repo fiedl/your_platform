@@ -27,7 +27,7 @@ $(document).on 'keypress', '.page_title_select', (e)->
     else
       page_title_select = $(this)
       query = page_title_select.val()
-      if query.length > 3
+      if query.length > 2
         url = "/api/v1/search_pages/"
         data = {
           query: query,
@@ -49,10 +49,10 @@ $(document).on 'keypress', '.page_title_select', (e)->
                 <div class='result_breadcrumbs'>#{breadcrumbs_string}</div>
               </a></li>"
               page_title_select.siblings('ul.search_results').append(li)
-          },
-          failure: (result)->
+          error: (result)->
             page_title_select.removeClass('progress')
                 .removeClass('success').addClass('failure')
+        }
     return false
 
 $(document).on 'keydown', '.page_title_select, .page_search_results', (e)->

@@ -60,6 +60,7 @@ module ProfileSteps
         page.should have_selector('.remove_button', visible: true)
         click_on :remove
       end
+      page.should have_selector('.remove_button', visible: true, count: num_of_fields_before_destroy - 1)
     }.to change{ all('.profile_field_parent').count }.by -1
 
     page.should have_no_selector("a#add_#{field_name}_field", visible: true)

@@ -28,10 +28,12 @@ class Memberships::FromMembersIndexController < ApplicationController
   end
 
   def processed_membership_params
-    membership_params.merge({
-      user_id: user.id,
-      valid_from: Date.new(membership_params["valid_from(1i)"].to_i, membership_params["valid_from(2i)"].to_i, membership_params["valid_from(3i)"].to_i).to_datetime.change(hour: 2)
-    }).except("valid_from(1i)", "valid_from(2i)", "valid_from(3i)", :user_title)
+    Time.use_zone(current_user.time_zone) do
+      membership_params.merge({
+        user_id: user.id,
+        valid_from: Time.zone.local(membership_params["valid_from(1i)"].to_i, membership_params["valid_from(2i)"].to_i, membership_params["valid_from(3i)"].to_i).to_datetime.change(hour: 0)
+      }).except("valid_from(1i)", "valid_from(2i)", "valid_from(3i)", :user_title)
+    end
   end
 
   def log_activity

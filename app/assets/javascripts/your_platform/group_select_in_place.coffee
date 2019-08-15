@@ -26,7 +26,7 @@ $(document).on 'save', '.group_select_in_place', ->
       success: ->
         container.html(group_name)
         App.success(container)
-      failure: ->
+      error: ->
         container.html("")
         container.addClass('failure')
     }

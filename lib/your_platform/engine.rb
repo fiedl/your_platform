@@ -25,13 +25,14 @@ require 'sidekiq'
 
 # Authentification
 require 'devise'
-require 'passgen'
-require 'omniauth-github'
-require 'omniauth-twitter'
-require 'omniauth-google-oauth2'
-require 'omniauth-facebook'
+#require 'omniauth-github'
+#require 'omniauth-twitter'
+#require 'omniauth-google-oauth2'
+#require 'omniauth-facebook'
 require 'devise_masquerade'
 require 'gender_detector'
+require 'devise_token_auth'
+require 'rack/cors'
 
 # Authorization
 require 'cancancan'
@@ -61,7 +62,7 @@ require 'bootstrap_tokenfield_rails'
 require 'rails-assets-inline-attachment'
 
 # Layout: Twitter Bootstrap
-require 'bootstrap-sass'
+require 'bootstrap'
 require 'sass-rails'
 
 # In Place Editing
@@ -132,9 +133,6 @@ require 'faker'
 # Contact form
 require 'mail_form'
 
-# Encoding detection
-require 'charlock_holmes'
-
 # API
 require 'apipie-rails'
 require 'discourse_api'
@@ -150,6 +148,10 @@ require 'neography'
 
 # Trello API
 require 'trello'
+
+# Emails and Encoding
+require 'charlock_holmes'
+require 'extended_email_reply_parser'
 
 require_relative '../../config/initializers/inflections'
 

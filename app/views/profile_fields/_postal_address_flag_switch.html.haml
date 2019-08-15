@@ -9,7 +9,7 @@
   - css_class += ' do_not_show_in_edit_mode'
   %span{ :class => "postal_address show_only_in_edit_mode profile_field_#{profile_field.id}",
          :data => { profile_field_id: profile_field.id, update_json_url: profile_field_path(profile_field, format: :json) } }
-    %span.label.label-info
+    %span.badge.badge-info
       %label.radio
         - if flagged
           %input(type="radio" name="postal_address" checked)
@@ -17,5 +17,5 @@
           %input(type="radio" name="postal_address")
         = t :postal_address_label
 %span{ :class => "postal_address #{css_class} profile_field_#{profile_field.id}" }
-  %span.label.label-info
+  %span.badge.badge-info
     =t :postal_address_label

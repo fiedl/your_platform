@@ -12,7 +12,7 @@ module ApplicationHelper
 
   def application_name
     # The `current_home_page` is not defined when using a mailer.
-    @application_name ||= if defined?(current_home_page) && current_home_page.settings.app_name.present?
+    @application_name ||= if defined?(current_home_page) && current_home_page && current_home_page.settings.app_name.present?
       current_home_page.settings.app_name
     else
       AppVersion.app_name

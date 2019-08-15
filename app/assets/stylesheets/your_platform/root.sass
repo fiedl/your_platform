@@ -1,7 +1,14 @@
-input.filter_news
-  width: 35%
-  margin-top: 50px
-  margin-bottom: -50px
+ul.root_list
+  list-style: none
+  padding: 0px
+  li
+    margin-bottom: 8px
+  .date, .category, .author
+    display: inline-block
+    font-size: 80%
+    margin-right: 5px
+  .title
+    font-weight: bold
 
 .root_page_date_heading
   text-align: center
@@ -23,99 +30,7 @@ input.filter_news
   .col-md-6.left_column
   .col-md-6.right_column
 
-.scroll-indicator
-  margin-top: 40px
-  margin-bottom: 20px
-  font-size: 130%
-  font-family: Helvetica Neue
-  color: #111
-  .arrow
-    margin-right: 10px
-    background: #111
-    border-radius: 50%
-    color: white
-    display: inline-block
-    width: 32px
-    height: 32px
-    text-align: center
-    vertical-align: center
-
-.timeline
-  background-image: image-url("your_platform/time-line.png")
-  background-position: center
-  background-repeat: repeat-y
-  max-width: 100%
-  margin: 0 auto
-  position: relative
-  height: auto
-  padding: 0px
-  clear: both
-  overflow: hidden
-
-  .timeline_entry
-    width: 45%
-    position: relative
-
-  .timeline_entry:nth-child(odd)
-    clear: left
-    float: left
-
-  .timeline_entry:nth-child(even)
-    clear: right
-    float: right
-    margin-top: 100px
-    margin-bottom: 50px
-
-  .timeline_entry:nth-child(odd)::after
-    background: #DBAF26
-    content: ""
-    height: 2px
-    position: absolute
-    right: -11.2%
-    top: 30px
-    width: 11.2%
-
-  .timeline_entry:nth-child(even)::before
-    background: #DBAF26
-    content: ""
-    height: 2px
-    position: absolute
-    top: 30px
-    width: 11.2%
-    left: -11.2%
-
-.timeline_entry.already_read
-  opacity: 0.2
-
-.box.news.collapsed
-  .picture-info, .box_meta
-    display: none
-  .panel-body
-    max-height: 200px
-    overflow: hidden
-  a.read-on
-    display: block
-    text-align: center
-.box.news.collapsed.with_image
-  .panel-body
-    max-height: 400px
-
-.root_view_switcher
-  margin-bottom: 16px
-
-.last_seen_activities
-  margin-bottom: 50px
 
 .side-col .box.upcoming_events
   .head
     height: 70px
-
-.box.new_post
-  form
-    margin: 10px
-  textarea
-    height: 34px
-  .input-group-btn
-    vertical-align: top
-  .post_buttons
-    text-align: right

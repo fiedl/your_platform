@@ -12,10 +12,10 @@
             .post-body
           = form.text_area :text, placeholder: t(:enter_new_post_here), class: 'form-control', data: {user_titles_path: titles_api_v1_users_path}
           .post_tools
-            .post_attachment
-              = form.fields_for :attachments, Attachment.new do |builder|
-                %fieldset
-                  = builder.file_field :file
+            -#.post_attachment
+            -#  = form.fields_for :attachments, Attachment.new do |builder|
+            -#    %fieldset
+            -#      = builder.file_field :file
             .what_will_happen
               - if can? :force_post_notification, @group
                 %select.notification{name: 'notification'}
@@ -26,8 +26,8 @@
                 = link_to @group.name, @group
                 werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen per E-Mail informiert,
                 spätestens jedoch nach einem Tag.
-  
+
             = form.submit t(:submit_post), class: 'submit_post btn btn-primary right'
-            = link_to t(:preview_post), post_preview_path, class: 'preview_post btn btn-default right'
+            = link_to t(:preview_post), post_preview_path, class: 'preview_post btn btn-outline-secondary right'
             %span.right
-            
+

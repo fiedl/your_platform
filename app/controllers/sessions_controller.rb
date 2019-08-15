@@ -1,9 +1,15 @@
 class SessionsController < Devise::SessionsController
+  respond_to :html, :json
 
   # In order to allow guest users to sign out, skip checking if the user is already
   # signed out through devise. http://stackoverflow.com/a/26244910/2066546
   #
   skip_before_action :verify_signed_out_user
+
+  # In order to allow logins from remote forms, do not require a CSRF authenticity token
+  # from them.
+  #
+  skip_before_action :verify_authenticity_token, only: [:create]
 
   def new
     set_current_title t :sign_in
@@ -22,15 +28,17 @@ class SessionsController < Devise::SessionsController
   #
   def create
     begin
-      if params[:provider].present?
-        auth = request.env['omniauth.auth']
-        user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
-        account = user.account || raise(ActionController::BadRequest, "User has no account.")
+      # dropped omniauth due to https://github.com/fiedl/your_platform/network/alert/demo_app/my_platform/Gemfile.lock/omniauth/open
 
-        sign_in_and_redirect account, event: :authentication
-      else
+      #if params[:provider].present?
+      #  auth = request.env['omniauth.auth']
+      #  user = User.from_omniauth(auth) || raise(ActionController::BadRequest, "Omniauth user not found via email: #{auth.info.email}")
+      #  account = user.account || raise(ActionController::BadRequest, "User has no account.")
+      #
+      #  sign_in_and_redirect account, event: :authentication
+      #else
         super
-      end
+      #end
     rescue => error
       flash[:error] = t("errors.#{error.message}")
     end

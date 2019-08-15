@@ -39,4 +39,15 @@ class ApplicationRecord < ActiveRecord::Base
     sync_to_graph_database if respond_to? :sync_to_graph_database
   end
 
+  # We have several databases and file storages where we need
+  # namespacing, e.g. for a staging environment.
+  #
+  def self.storage_namespace(key = nil)
+    (storage_namespace_keys + [key] - [nil]).join("_")
+  end
+
+  def self.storage_namespace_keys
+    ["your_platform", Rails.env.to_s, ENV['TEST_ENV_NUMBER']]
+  end
+
 end

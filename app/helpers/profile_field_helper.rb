@@ -34,7 +34,8 @@ module ProfileFieldHelper
              ),
              :id => "add_#{label_in_english_with_underscores}_field",
              :remote => true,
-             :method => 'post'
+             :method => 'post',
+             class: args[:class]
            )
   end
 end

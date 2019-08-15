@@ -1,6 +1,6 @@
 %span.vertical_nav.vertical_menu.sidebar-nav#vertical_nav{data: {new_menu_feature: can?(:use, :new_menu_feature) ? "true" : nil, nav_configuration: @navable.nav_configuration}}
 
-  %ul.nav.nav-pills.nav-stacked
+  %ul.nav.nav-pills.flex-column
     = render partial: 'layouts/vertical_nav_lis', object: @navable, as: :navable
 
   - if @navable && (can?(:create_page_for, @navable) || can?(:create_group_for, @navable))

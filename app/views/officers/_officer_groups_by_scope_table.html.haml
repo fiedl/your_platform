@@ -32,9 +32,11 @@
 
         %td.history
           - if can? :index_memberships, officer_group
-            = link_to icon(:history), group_memberships_path(group_id: officer_group.id), class: 'btn btn-default btn-sm', title: t(:office_history)
+            = link_to icon(:history), group_memberships_path(group_id: officer_group.id), class: 'btn btn-outline-secondary btn-sm', title: t(:office_history)
         %td.updated_at
-          %p= localize officer_group.updated_at.to_date
+          %p
+            - updated_at = officer_group.memberships.with_past.maximum(:updated_at).try(:to_date)
+            = localize updated_at if updated_at
     - @officer_groups_by_scope.each do |scope, officer_groups|
       - if can?(:create_officer_group_for, scope)
         %tr.add_office

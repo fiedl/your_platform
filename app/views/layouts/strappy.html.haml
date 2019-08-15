@@ -1,0 +1,57 @@
+!!!
+%html{:lang => "en"}
+  %head
+    / Required meta tags
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width, initial-scale=1, shrink-to-fit=no", :name => "viewport"}/
+
+    %title= website_title_with_app_name
+    = csrf_meta_tags
+
+    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
+
+    = stylesheet_link_tag 'strappy_layout', :media => 'all', data: {turbolinks_track: 'reload'}
+    = stylesheet_link_tag 'application', :media => 'all'
+
+    = javascript_include_tag 'application', data: {turbolinks_eval: false}
+    = yield :scripts
+    = yield :head
+
+  = body_tag do
+    #vue-app
+      = render partial: 'shared/current_masquerade'
+      %nav.navbar.navbar-expand-lg.navbar-dark.bg-dark#header-nav
+        = link_to root_path, class: 'navbar-brand' do
+          = image_tag(logo_url)
+        %button.navbar-toggler{"aria-controls" => "navbarSupportedContent", "aria-expanded" => "false", "aria-label" => "Toggle navigation", "data-target" => "#navbarSupportedContent", "data-toggle" => "collapse", :type => "button"}
+          %span.navbar-toggler-icon
+        #navbarSupportedContent.collapse.navbar-collapse
+          #header_search
+            %span#search_box= render partial: 'shared/search_box'
+          %ul.navbar-nav.mr-auto
+            - horizontal_nav.link_objects.each do |object|
+              %li.nav-link{class: horizontal_nav_li_css_class(object)}
+                - if object.kind_of? Hash
+                  -#= link_to object[:title], (object[:path] || object.except(:title))
+                - else
+                  - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
+                    = link_to_navable (object.nav_title), object, class: 'nav-link'
+          %ul.navbar-nav.ml-auto
+            %li.nav-item
+              = render partial: 'support_requests/help_button'
+            - if current_user
+              %li.nav-item.dropdown.current_user_dropdown
+                %a.nav-link.dropdown-toggle#avatar-navlink{"aria-expanded" => "false", "aria-haspopup" => "true", "data-toggle" => "dropdown", :href => "#", :role => "button"}
+                  = render 'layouts/session_bar_avatar'
+                = render partial: 'layouts/current_user_dropdown'
+            - else
+              %li.nav-item
+                %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :sign_in
+      = yield :custom_header
+
+      = render partial: 'shared/flashes'
+
+      #content.container-fluid
+        = render partial: 'layouts/multi_column_content_area'
+
+      #gotoTop= icon 'chevron-up'

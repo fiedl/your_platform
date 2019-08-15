@@ -8,4 +8,8 @@ concern :GroupAttachments do
     attachments.find_by_type 'image'
   end
 
+  def image_url
+    image_attachments.first.file_url
+  end
+
 end

@@ -20,7 +20,7 @@ $(document).ready ->
           # If this is just a blog post, we don't need redirection.
           # If the current navable (Page) is destroyed, we need to redirect.
           Turbolinks.visit result.redirect_to unless is_blog_entry
-        failure: (result) ->
+        error: (result) ->
           alert('Es ist etwas schief gegangen. Bitte laden Sie die Seite neu.')
       })
 

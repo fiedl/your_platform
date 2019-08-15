@@ -6,7 +6,7 @@ class Graph::Base
     #     # config/initializers/neo4j.rb
     #     Rails.configuration.x.neo4j_rest_url = "http://neo4j:swordfish@localhost:7474"
     #
-    @neo ||= Neography::Rest.new(Rails.configuration.x.neo4j_rest_url || raise('neo4j database connection not configured.'))
+    @neo ||= (Neography::Rest.new(Rails.configuration.x.neo4j_rest_url) if configured?)
   end
 
   def self.configured?
@@ -33,7 +33,7 @@ class Graph::Base
   # is missing from the query string.
   #
   def self.namespace
-    Rails.env.to_s
+    ApplicationRecord.storage_namespace
   end
 
   def namespace
@@ -41,9 +41,14 @@ class Graph::Base
   end
 
   def self.execute_query(query)
-    raise 'namespace is missing in query string' if not query.include? ":#{namespace}"
-    self.retry_on_end_of_file_error do
-      neo.execute_query query
+    if configured?
+      raise 'namespace is missing in query string' if not query.include? ":#{namespace}"
+      self.retry_on_end_of_file_error do
+        Rails.logger.debug "NEO4J: #{query}"
+        neo.execute_query query
+      end
+    else
+      p "Neo4j: Not executing query, because neo4j connection is not configured: #{query}"
     end
   end
 
@@ -80,7 +85,11 @@ class Graph::Base
   end
 
   def self.query_ids(query)
-    execute_query(query)['data'].flatten
+    if configured?
+      execute_query(query)['data'].flatten
+    else
+      []
+    end
   end
 
   def self.import(group = nil)
@@ -140,11 +149,17 @@ class Graph::Base
   end
 
   def self.retry_on_end_of_file_error
+    counter = 0
     begin
       yield
     rescue Excon::Error::Socket
       p "Excon::Error::Socket: end of file reached (EOFError). Retrying."
-      retry
+      counter += 1
+      if counter < 100
+        retry
+      else
+        raise "Giving up on neo4j connection."
+      end
     end
   end
 

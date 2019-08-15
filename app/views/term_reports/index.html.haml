@@ -4,6 +4,21 @@
   - content_for(:box_title) { current_title }
   - content_for :box_filter do
     = render partial: 'select_form'
+  - content_for :box_tools do
+    - if term
+      .download.tool.btn-group
+        %button.btn.btn-outline-secondary.dropdown-toggle{type: 'button', data: {toggle: 'dropdown'}}
+          = icon 'list-alt'
+          = t :download_list
+          %span.caret
+        %ul.dropdown-menu
+          %li
+            = link_to export_term_reports_path(term_id: term.id, format: 'xls') do
+              = xls_icon
+              = t(:excel_list)
+            = link_to export_term_reports_path(term_id: term.id, format: 'csv') do
+              = csv_icon
+              = t(:csv_list)
   - content_for :box_body do
     %table.datatable.term_reports
       %thead

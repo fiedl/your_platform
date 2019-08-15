@@ -34,6 +34,20 @@ class UserAccount < ApplicationRecord
   #
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable, :masqueradable
 
+  include DeviseTokenAuth::Concerns::User
+
+  # After including `DeviseTokenAuth::Concerns::User`, we need to
+  # remove the scoped email uniqueness validation, because the email
+  # attribute is delegated, which causes an error:
+  # "undefined method `collation' for nil:NilClass"
+  #
+  # https://trello.com/c/Hj9p1WGu/1301-devise-token-auth
+  # https://stackoverflow.com/a/26964557/2066546
+  #
+  _validators[:email]
+      .find { |v| v.is_a?(ActiveRecord::Validations::UniquenessValidator) && v.options[:scope] == :provider }
+      .attributes.delete(:email)
+
   # Virtual attribute for authenticating by either username, alias or email
   attr_accessor :login
 
@@ -51,6 +65,21 @@ class UserAccount < ApplicationRecord
                              # Notice: Apparently, even `validates_associated :account` in the User model has no effect.
 
   delegate :email, :to => :user, :allow_nil => true
+
+  def devise_scope
+    :user_account
+  end
+
+  # Needed for devise-auth-token
+  # https://github.com/lynndylanhurley/devise_token_auth/issues/257#issuecomment-106628953
+  before_validation :set_provider
+  before_validation :set_uid
+  def set_provider
+    self[:provider] = "email" if self[:provider].blank?
+  end
+  def set_uid
+    self[:uid] = self[:email] if self[:uid].blank? && self[:email].present?
+  end
 
   def readonly?
     false # Otherwise, the user is not able to login.

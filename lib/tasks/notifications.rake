@@ -1,18 +1,18 @@
 namespace :your_platform do
   namespace :notifications do
-    
+
     task :process => [:environment] do
       Time.use_zone("Berlin") do
         process_notifications
       end
     end
-    
+
     task :worker => [:environment] do
       Time.use_zone("Berlin") do
         loop_process_notifications interval: 60.seconds
       end
     end
-    
+
     def loop_process_notifications(options = {interval: 60.seconds})
       notifications_log "== STARTING NOTIFICATIONS TASK LOOP =="
       notifications_log "   with an interval of #{options[:interval].to_s} seconds."
@@ -22,7 +22,7 @@ namespace :your_platform do
         sleep options[:interval]
       end
     end
-    
+
     def process_notifications
       notifications_log "== Processing #{Notification.due.count} notifications =="
       if production_stage_or_development_environment?
@@ -33,7 +33,7 @@ namespace :your_platform do
       end
       notifications_log "   Done."
     end
-    
+
     def production_stage_or_development_environment?
       if @production_stage_or_development_environment
         return true
@@ -42,17 +42,17 @@ namespace :your_platform do
         return false
       end
     end
-    
+
     def detect_environment
-      notifications_log "   Environment: #{Rails.env.to_s}, Stage: #{::STAGE}"
+      notifications_log "   Environment: #{Rails.env.to_s}, Namespace: #{ApplicationRecord.storage_namespace}"
       @production_stage_or_development_environment = true if Rails.env.development? or Rails.env.production?
     end
-    
+
     def notifications_log(text)
       notifications_worker_log.info text
       print "#{I18n.localize(Time.zone.now)}  #{text}\n"
     end
-    
+
     def notifications_worker_log
       @notifications_worker_notifications_log ||= Logger.new("#{Rails.root}/log/your_platform_notifications.log")
     end

@@ -26,8 +26,8 @@ class EventsController < ApplicationController
     @limit = params[:limit].to_i
 
     # Show semetser calendars for corporations
-    if (! @public) && can?(:use, :semester_calendars) && @group.kind_of?(Corporation)
-      authorize! :read, @group
+    if (! @public) && request.format.html? && can?(:use, :semester_calendars) && @group.kind_of?(Corporation)
+      authorize! :index_public_events, @group
       redirect_to group_search_semester_calendar_path(group_id: @group.id)
       return
     end
@@ -74,6 +74,9 @@ class EventsController < ApplicationController
     # Limit the number of events.
     # If a limit exists, make sure to return upcoming events.
     @events = @events.upcoming.limit(@limit) if @limit && @limit > 0
+
+    # Filter by access.
+    @events = Event.where(id: @events.select { |event| can? :read, event }.pluck(:id)).order('events.start_at, events.created_at')
 
     # Add the Cross-origin resource sharing header for public requests.
     response.headers['Access-Control-Allow-Origin'] = '*' if @public

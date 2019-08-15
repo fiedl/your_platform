@@ -10,6 +10,7 @@
 //= require best_in_place_datetime
 //= require jquery.ui.datepicker-de
 //= require edit_mode
+//= require popper
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl

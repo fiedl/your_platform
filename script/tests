@@ -21,6 +21,8 @@
 #     CI_CATEGORY=models ...
 #     CI_CATEGORY=others WORKER_ID=0 NUMBER_OF_WORKERS=1      bundle exec ruby script/tests
 
+NUMBER_OF_RETRIES = 2
+
 rspec_args = ARGV.to_a.join(" ")
 
 json_list_of_specs = `bin/rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}`
@@ -54,6 +56,11 @@ if specs_to_run.any?
   number_of_specs_to_run_by_each_worker = (1.0 * specs_to_run.count / number_of_workers).ceil # rounds up
 
   specs_to_run_by_this_worker = specs_to_run.each_slice(number_of_specs_to_run_by_each_worker).to_a[worker_id]
+
+  if specs_to_run_by_this_worker.nil? || specs_to_run_by_this_worker.none?
+    print "After rounding conservatively, no specs are left for this worker.\n"
+    exit 0
+  end
 
   print "\n\n\nTHIS WORKER #{worker_id} OF #{number_of_workers} RUNS:\n"
   specs_to_run_by_this_worker.each { |spec| print "#{spec}\n" }
@@ -91,7 +98,7 @@ if specs_to_run.any?
         number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
         if number_of_failing_specs == 0
           break
-        elsif number_of_retries > 4
+        elsif number_of_retries > NUMBER_OF_RETRIES
           finally_failing_specs << spec
           break
         end

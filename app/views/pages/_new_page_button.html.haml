@@ -4,7 +4,7 @@
 - if can? :create_page_for, parent_page
   - unless parent_page.kind_of? BlogPost  # Otherwise, the admin could create nested blog posts where he would expect a sibling post.
     .box.add_teaser_box
-      %a.btn.btn-default#new_page{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
+      %a.btn.btn-outline-secondary#new_page{href: '#', data: {toggle: 'modal', target: '#new_page_modal'}}
         = icon :plusw
         = "#{t(:new_page)} ..."
 
@@ -58,5 +58,5 @@
                         = help_icon
                         = t :decision_help
             %div.modal-footer
-              %a.btn.btn-default{href: '#', data: {dismiss: 'modal'}}= t :cancel
+              %a.btn.btn-outline-secondary{href: '#', data: {dismiss: 'modal'}}= t :cancel
               = f.submit t(:confirm), class: 'btn btn-primary'

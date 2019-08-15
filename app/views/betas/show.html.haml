@@ -1,7 +1,7 @@
 %h1
   = current_title
   - if can? :edit, @beta
-    .tool.edit= link_to t(:edit), edit_beta_path(@beta), class: 'btn btn-default'
+    .tool.edit= link_to t(:edit), edit_beta_path(@beta), class: 'btn btn-outline-secondary'
 %div
   = markup @beta.description
 

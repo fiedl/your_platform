@@ -4,9 +4,9 @@ class PostRejectionMailer < BaseMailer
     @recipient_name = recipient_name
     @subject = subject
     @reason = reason
-    @from = 'no-reply@your-platform.org'
+    @to = "\"#{sender_email}\" <#{sender_email}>"
 
-    mail_message = mail(to: sender_email, subject: @subject, from: @from)
+    mail_message = mail(to: @to, subject: @subject)
     mail_message.allow_recipients_without_account!
     mail_message
   end

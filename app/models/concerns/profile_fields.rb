@@ -13,8 +13,12 @@ concern :ProfileFields do
   def email=( email )
     @email = nil
     @email_profile_field ||= profile_fields_by_type("ProfileFields::Email").first
-    @email_profile_field ||= profile_fields.build(type: "ProfileFields::Email", label: "email")
-    @email_profile_field.value = email
+    if email.nil?
+      @email_profile_field.try(:destroy)
+    else
+      @email_profile_field ||= profile_fields.build(type: "ProfileFields::Email", label: "email")
+      @email_profile_field.value = email
+    end
   end
   def email_does_not_work?
     email_needs_review? or email_empty?

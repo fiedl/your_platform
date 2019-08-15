@@ -10,8 +10,8 @@ module AvatarHelper
     options[:size] ||= 36
     options[:class] = "img-rounded #{options[:class]}"
     content_tag(:span, class: 'avatar') do
-      if user.try(:avatar_id?)
-        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: options[:class]
+      if User.kind_of?(User) && user.try(:avatar_id?)
+        image_tag Refile.attachment_url(user, :avatar, :fill, options[:size], options[:size]), class: options[:class], alt: options[:title]
       else
         user_gravatar(user, options)
       end
@@ -30,7 +30,14 @@ module AvatarHelper
   # This image is just provided by gravatar.
   #
   def user_gravatar(user, options = {})
-    email = user.try(:email)
+    if user.kind_of? User
+      email = user.try(:email)
+      options[:title] ||= user.title
+    elsif user.kind_of? String
+      email = user
+      options[:title] ||= email
+    end
+
     options[:size] ||= 36
     options[:gravatar] ||= {}
     options[:gravatar][:size] ||= options[:size]
@@ -38,6 +45,7 @@ module AvatarHelper
     #options[:title] ||= options[:alt]
     options['data-toggle'] ||= 'tooltip'
     options[:gravatar][:secure] = true
+    options[:alt] ||= options[:title]
 
     options[:class] ||= ""
 
@@ -74,7 +82,7 @@ module AvatarHelper
   end
 
   def user_avatar_default_url(user = nil, options = {})
-    if (options[:gender].to_s == "female") || user.try(:female?)
+    if (options[:gender].to_s == "female") || (user.kind_of?(User) && user.try(:female?))
       "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_female_480.png"
     else
       "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_male_480.png"

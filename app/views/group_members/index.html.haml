@@ -13,29 +13,30 @@
 -#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
 
 #members
-  %h1.section.members
-    = best_in_place_if can?(:rename, group), group, :name
-    = ": #{t :members}"
-    %span.members_count (#{member_table_rows.count})
-    - if can? :use, :term_reports
-      .tool.term_reports
-        = link_to group_term_report_path(group), class: 'btn btn-default' do
-          = fa_icon 'bar-chart'
-          = t(:term_report)
-    - if can? :renew_cache, group
-      .tool.renew_cache= renew_cache_button(group)
-  %div
-    = render partial: 'groups/export_button'
-    - if can? :update_members, group
-      = link_to group_member_data_summaries_path(group), class: 'btn btn-default right' do
-        = icon 'folder-open'
-        = t(:data_administration)
-    - if can? :manage_memberships_manually, group
-      = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-default right'
-    %br{clear: 'all'}
-    %span#group_members
-      .child_users
-        = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
+  = box class: 'section.members' do
+    - content_for :box_title do
+      = best_in_place_if can?(:rename, group), group, :name
+      = ": #{t :members}"
+      %span.members_count (#{member_table_rows.count})
+    - content_for :box_tools do
+      - if can?(:use, :term_reports) && group.corporation
+        .tool.term_reports
+          = link_to group_term_report_path(group), class: 'btn btn-outline-secondary' do
+            = fa_icon 'bar-chart'
+            = t(:term_report)
+      - if can? :renew_cache, group
+        .tool.renew_cache= renew_cache_button(group)
+      = render partial: 'groups/export_button'
+      - if can? :update_members, group
+        = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary right' do
+          = icon 'folder-open'
+          = t(:data_administration)
+      - if can? :manage_memberships_manually, group
+        = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-outline-secondary right'
+    - content_for :box_body do
+      %span#group_members
+        .child_users
+          = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
 
 - if can? :add_member_to, group
   %h1= t :add_members_manually
@@ -47,6 +48,6 @@
         = form.date_select :valid_from, value: Date.today, class: 'valid-from-field', start_year: 1950, end_year: Time.now.year + 5
         = form.submit t(:add), class: 'btn btn-primary add-user-button'
 
-%h1.group_members_map= t :map
-%div
-  .google_maps.with_info_window{data: {datatable: 'table.members'}}
+-#%h1.group_members_map= t :map
+-#%div
+-#  .google_maps.with_info_window{data: {datatable: 'table.members'}}

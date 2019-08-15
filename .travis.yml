@@ -1,5 +1,5 @@
 rvm:
-  - "2.3.3"
+  - "2.6.2"
 env:
   - "WORKER_ID=0   NUMBER_OF_WORKERS=25 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql SELENIUM=true"
   - "WORKER_ID=1   NUMBER_OF_WORKERS=25 CI_CATEGORY=features                                 RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql SELENIUM=true"
@@ -61,14 +61,16 @@ services:
 before_install:
   - travis_retry gem update --system
   - travis_retry gem install bundler
-  - wget https://github.com/mozilla/geckodriver/releases/download/v0.18.0/geckodriver-v0.18.0-linux64.tar.gz
+  - wget https://github.com/mozilla/geckodriver/releases/download/v0.24.0/geckodriver-v0.24.0-linux64.tar.gz
   - mkdir geckodriver
   - tar -xzf geckodriver*.tar.gz -C geckodriver
   - export PATH=$PATH:$PWD/geckodriver
+  - "export DISPLAY=:99"
+  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#using-xvfb-directly
 install:
   - travis_retry bundle install
   - bundle install
-  - nvm install node
+  - nvm install v10.16.0
   - node -v
   - npm i -g yarn
   - yarn
@@ -80,12 +82,9 @@ before_script:
   - mkdir -p public/uploads
   - mkdir -p tmp/cache
   - bundle exec rake db:create db:migrate
-  - rake your_platform:install:node_modules || echo 'task not found'
+  - bundle exec rake your_platform:install:node_modules || echo 'task not found'
   - bin/rails assets:precompile
   - cd ../..
-  - "export DISPLAY=:99.0" # https://docs.travis-ci.com/user/gui-and-headless-browsers/#Using-xvfb-to-Run-Tests-That-Require-a-GUI
-  - "sh -e /etc/init.d/xvfb start"
-  - sleep 3 # give xvfb some time to start
 script:
   - bundle exec ruby script/tests
 notifications:

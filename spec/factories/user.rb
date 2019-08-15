@@ -16,10 +16,22 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_date_of_birth do
+      after :create do |user|
+        user.date_of_birth = "13.12.1986"
+        user.save
+      end
+    end
+
     trait :with_address do
       after :create do |user|
-        user.profile_fields.create(type: ProfileFields::Address.name)
-        user.address_fields.first.postal_address = true
+        pf = user.profile_fields.create(type: ProfileFields::Address.name)
+        pf.postal_address = true
+        pf.first_address_line = "Pariser Platz 1"
+        pf.postal_code = "10117"
+        pf.city = "Berlin"
+        pf.country_code = "DE"
+        pf.save
       end
     end
 

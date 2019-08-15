@@ -14,7 +14,7 @@ class NotificationMailer < BaseMailer
         ability.can? :read, notification.reference  # just better double-check
       end
 
-      to_email = "#{recipient.title} <#{recipient.email}>"
+      to_email = "\"#{recipient.title}\" <#{recipient.email}>"
       subject = I18n.t(:you_have_n_unread_notifications, n: @notifications.count, locale: locale)
 
       # The user may reply by email to the upmost post or comment.
@@ -26,10 +26,8 @@ class NotificationMailer < BaseMailer
       end
       @reply_to = ReceivedCommentMail.generate_address(@user, @reply_to_post) if @reply_to_post
 
-      @from = Setting.support_email
-
       I18n.with_locale(locale) do
-        mail to: to_email, subject: subject, reply_to: @reply_to, from: @from
+        mail to: to_email, subject: subject, reply_to: @reply_to
       end
     end
   end

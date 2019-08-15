@@ -1,27 +1,27 @@
 = render partial: 'groups/tabs', locals: {active: 'posts'}
 
 %h1.new.post.recipients
-  Sammelnachricht an 
+  Sammelnachricht an
   = surround "'", "'" do
     = @group.try(:name)
 %div
-  - if @group
-    %p.constrain_validity_range
-      %label.constrain_validity_range{for: 'constrain_validity_range'}
-        %input{type: 'checkbox', name: 'constrain_validity_range', id: 'constrain_validity_range'}
-        Zielgruppe eingrenzen
-      %ul.constrain_validity_range.hidden
-        %li 
-          Nur an Personen schicken, die der Gruppe
-          = surround "'", "'" do
-            = link_to @group.name, @group
-          seit folgendem Datum angehören:
-          %input.valid_from#valid_from{value: I18n.localize(Date.today)}
-    %p.member_count
-      Anzahl der Empfänger:
-      %span.member_count{data: {query_url: group_url(@group, format: 'json')}}= @group.members.count
-  - else
-    Keine Gruppe ausgewählt.
+-#  - if @group
+-#    %p.constrain_validity_range
+-#      %label.constrain_validity_range{for: 'constrain_validity_range'}
+-#        %input{type: 'checkbox', name: 'constrain_validity_range', id: 'constrain_validity_range'}
+-#        Zielgruppe eingrenzen
+-#      %ul.constrain_validity_range.hidden
+-#        %li
+-#          Nur an Personen schicken, die der Gruppe
+-#          = surround "'", "'" do
+-#            = link_to @group.name, @group
+-#          seit folgendem Datum angehören:
+-#          %input.valid_from#valid_from{value: I18n.localize(Date.today)}
+-#    %p.member_count
+-#      Anzahl der Empfänger:
+-#      %span.member_count{data: {query_url: group_url(@group, format: 'json')}}= @group.members.count
+-#  - else
+-#    Keine Gruppe ausgewählt.
 
 %h1.new.post.message Nachricht
 %div
@@ -43,10 +43,9 @@
     -#   %br
 
     %p.buttons.right
-      %a.btn.btn-default#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
+      %a.btn.btn-outline-secondary#test_message{href: group_posts_path(group_id: @group.id, recipient: 'me', format: 'json')}
         = icon :envelope
         = "Zum Testen an meine eigene Adresse senden."
       %a.btn.btn-primary#confirm_message{href: group_posts_path(group_id: @group.id, recipient: @group.id, format: 'json')}
         = icon :envelope
         = "An '#{@group.name}' senden."
-        

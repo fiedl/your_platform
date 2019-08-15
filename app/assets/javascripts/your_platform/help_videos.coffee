@@ -17,7 +17,7 @@ $(document).ready ->
   if $('#help_video').count() > 0
     topics = $('#help_video').data('topics')
     $.ajax {
-      url: "http://my-platform.dev/api/v1/public/blog_posts",
+      url: "https://plattformpodcast.com/api/v1/public/blog_posts",
       method: 'get',
       data: {
         tags: topics

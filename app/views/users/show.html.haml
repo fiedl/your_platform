@@ -1,33 +1,33 @@
 - tab_pane_class = ""
 - if can? :use, :tab_view
   - tab_pane_class = "tab-pane fade"
-  %ul.nav.nav-tabs.user
-    %li.active
-      %a{href: '#general', data: {toggle: 'tab'}}= t :general_user_info_tab
+  %ul.nav.nav-pills.user.tabs
+    %li.nav-item
+      %a.nav-link.active{href: '#general', data: {toggle: 'pill'}}= t :general_user_info_tab
     -#- if can? :use, :merit
     -#  %li
     -#    %a{href: '#merit', data: {toggle: 'tab'}}
     -#      Plattform-Rang
     -#      = beta_badge
-    %li
-      %a{href: '#contact', data: {toggle: 'tab'}}= t :contact_info_tab
-    %li
-      %a{href: '#corporate', data: {toggle: 'tab'}}= t :corporate_info_tab
-    %li
-      %a{href: '#career', data: {toggle: 'tab'}}= t :study_and_work_tab
-    %li
-      %a{href: '#more', data: {toggle: 'tab'}}= t :more_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#contact', data: {toggle: 'pill'}}= t :contact_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#corporate', data: {toggle: 'pill'}}= t :corporate_info_tab
+    %li.nav-item
+      %a.nav-link{href: '#career', data: {toggle: 'pill'}}= t :study_and_work_tab
+    %li.nav-item
+      %a.nav-link{href: '#more', data: {toggle: 'pill'}}= t :more_info_tab
 
 .tab-content.user
 
   - # General Info Box
-  #general{class: tab_pane_class + " in active"}
+  #general{class: tab_pane_class + " show active"}
     %h1.section.general.no_uppercase
       %span.obscure-in-demo.regular_case= @user.title
       .workflow-tool.tool= render partial: 'workflow_triggers'
       - if can? :manage, @user
         .tool.profile_fields_index
-          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-default'
+          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-outline-secondary'
       - if can? :renew_cache, @user
         .tool.renew_cache= renew_cache_button(@user)
     %div
@@ -37,7 +37,7 @@
           %ul.attributes.keys-and-values
             = render partial: 'user_corporation_attribute'
             %li.name.attribute= render partial: 'user_name_attribute'
-            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth'
+            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth' if @user.date_of_birth
             - general_fields = @user.profile.section(:general).fields
             = profile_field_lis general_fields, lock_label: true, no_remove: true
             = render partial: 'users/special_general_info_fields', locals: {user: @user}
@@ -59,7 +59,7 @@
       %div
         .pull-right= render partial: 'workflow_triggers'
         - if can? :manage, @user
-          = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+          = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
         = corporate_vita_for_user @user
 
   #career{class: tab_pane_class}
@@ -84,7 +84,7 @@
     %h1
       = t(:groups_of) + " " + @user.title
       - if can? :manage, @user
-        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-default right'
+        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
     %div
       = render partial: 'users/groups', object: @user, as: :user
 

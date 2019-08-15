@@ -4,16 +4,16 @@
     %meta{:charset => 'utf-8'}/
     %title= website_title_with_app_name
     = csrf_meta_tags
-    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
-    = stylesheet_link_tag 'iweb_layout', :media => 'all', data: {turbolinks_track: 'reload'}
-    = stylesheet_link_tag 'application', :media => 'all'
 
-    = google_maps_api_script_tag
-    = javascript_include_tag 'application'
-    = javascript_include_tag 'iweb', data: {turbolinks_track: 'reload'}
+    -#= stylesheet_link_tag 'iweb_layout', :media => 'all', data: {turbolinks_track: 'reload'}
+    -#= stylesheet_link_tag 'application', :media => 'all'
 
-    = yield :scripts
-    = yield :head
+    -#= google_maps_api_script_tag
+    -#= javascript_include_tag 'application'
+    -#= javascript_include_tag 'iweb', data: {turbolinks_track: 'reload'}
+
+    -#= yield :scripts
+    -#= yield :head
 
   = body_tag do
     #vue-app

@@ -10,12 +10,12 @@ module GalleriaHelper
 
   def attachment_galleria_image_tag(attachment)
     # See: http://galleria.io/docs/references/data/#separate-thumbnails
-    link_to attachment.medium_url do
-      image_tag attachment.thumb_url, data: {
-        image: attachment.medium_url,
-        thumb: attachment.thumb_url,
-        medium: attachment.medium_url,
-        big: attachment.big_url,
+    link_to attachment.medium_path do
+      image_tag attachment.thumb_path, data: {
+        image: attachment.medium_path,
+        thumb: attachment.thumb_path,
+        medium: attachment.medium_path,
+        big: attachment.big_path,
         title: attachment.title,
         description: attachment.description,
         height: attachment.height,

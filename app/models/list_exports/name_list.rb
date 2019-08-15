@@ -1,5 +1,5 @@
 module ListExports
-  
+
   # This class produces simple name list export with some basic information that looks like this
   # in csv format with German locale:
   #
@@ -7,7 +7,7 @@ module ListExports
   #     Doe;Jonathan;\"\";Dr.;Dr. rer. nat.;12.12.1987
   #
   class NameList < Base
-    
+
     def columns
       [
         :last_name,
@@ -18,7 +18,7 @@ module ListExports
         :member_since
       ]
     end
-    
+
     # Sort the listed users last name and first name.
     # Also, add the date of joining.
     #
@@ -28,10 +28,10 @@ module ListExports
         user.member_since = I18n.localize(user.date_of_joining(group)) if user.date_of_joining(group)
         user
       }.sort_by { |user|
-        user.last_name + user.first_name
+        user.last_name.to_s + user.first_name.to_s
       }
     end
-    
+
     # Don't just write "Member since". Write "Member of 'group xyz' since".
     #
     def headers
@@ -43,6 +43,6 @@ module ListExports
         end
       end
     end
-    
+
   end
 end

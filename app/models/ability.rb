@@ -76,26 +76,30 @@ class Ability
         # the rights granted by the token.
         rights_for_auth_token_users
       elsif user
-        if user.global_admin? and view_as?(:global_admin)
-          rights_for_global_admins
+        if user.has_flag? :dummy
+          rights_for_dummy_users
+        else
+          if user.global_admin? and view_as?(:global_admin)
+            rights_for_global_admins
+          end
+          if user.admin_of_anything? and view_as?(:admin)
+            rights_for_local_admins
+            rights_for_page_admins
+          end
+          if view_as?([:officer, :admin])
+            rights_for_local_officers
+          end
+          if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
+            rights_for_global_officers
+          end
+          if user.developer?
+            rights_for_developers
+          end
+          if user.beta_tester?
+            rights_for_beta_testers
+          end
+          rights_for_signed_in_users
         end
-        if user.admin_of_anything? and view_as?(:admin)
-          rights_for_local_admins
-          rights_for_page_admins
-        end
-        if view_as?([:officer, :admin])
-          rights_for_local_officers
-        end
-        if view_as?([:global_officer, :officer, :admin]) and user.is_global_officer?
-          rights_for_global_officers
-        end
-        if user.developer?
-          rights_for_developers
-        end
-        if user.beta_tester?
-          rights_for_beta_testers
-        end
-        rights_for_signed_in_users
       end
     end
     rights_for_everyone
@@ -136,7 +140,6 @@ class Ability
   def rights_for_developers
     can :use, Rack::MiniProfiler
 
-    can :use, :term_reports
     can :use, :requests_index
     can :use, :permalinks
 
@@ -413,10 +416,6 @@ class Ability
     can :index, Event
     can :index_events, Group
     can :index_events, User, :id => user.id
-    can :read, SemesterCalendar do |semester_calendar|
-      can? :read, semester_calendar.group
-    end
-
 
     # Name auto completion
     #
@@ -514,15 +513,16 @@ class Ability
     can :use, :semester_calendars
     cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
     # can :use, :mail_delivery_account_filter
-    can :use, :help_videos do
-      Rails.env.development?
-    end
+    can :use, :help_videos
+    can :use, :permalinks
+    can :use, :caching
 
     # it's not ready, yet, but the tests use it already.
     if Rails.env.test?
       can :use, :wysihtml
-      can :use, :permalinks
+
       can :use, :blog_post_comments
+      can :use, :mailing_lists
     end
 
     # Use the tabs view in users#show. This has been a beta feature previously.
@@ -578,6 +578,10 @@ class Ability
     can :index_attendees, Event do |event|
       can? :join, event
     end
+
+    # All users can read semester calendars.
+    can :index_events, Group
+    can :read, SemesterCalendar
 
     # Listing Events and iCalendar (ICS) Export:
     #
@@ -685,5 +689,30 @@ class Ability
     # Everyone can read the mobile app's welcome screen.
     can :read, :mobile_welcome
 
+    # Nobody can recalculate term reports that have already been submitted.
+    cannot :recalculate, TermReport do |term_report|
+      term_report.state && !(term_report.state.rejected?)
+    end
+
+  end
+
+  # During App-Store approval, we must give a dummy user access to our platform.
+  # But he should not be able to access any real data.
+  #
+  def rights_for_dummy_users
+    can :read, :terms_of_use
+    can :accept, :terms_of_use if not read_only_mode?
+
+    can :read, User do |user|  # Only read other dummy users.
+      user.has_flag? :dummy
+    end
+
+    can :read, Corporation do |corporation|
+      corporation.active?
+    end
+
+    can :index, Event
+    can :index, User
+    can :index, Corporation
   end
 end

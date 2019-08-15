@@ -4,30 +4,30 @@
 
 - unless show_resource_nav?
 
-  %ul.nav.nav-tabs.group.group_tabs
+  %ul.nav.nav-pills.group.group_tabs.tabs
     - if @group.group_of_groups?
-      %li{class: active == 'subgroups' ? 'active' : ''}
-        %a{href: group_subgroups_path(@group)}= @group.name
+      %li.nav-item
+        %a.nav-link{href: group_subgroups_path(@group), class: (active == 'subgroups' ? 'active' : '')}= @group.name
     - unless @group.group_of_groups?
       - # One can see the posts tab under one of these conditions:
       - # - The user can read all posts of this group.
       - # - The user can see this particular post (due to an invitation) and, therefore, the posts controller is currently used.
       - if can?(:index_posts, @group) or params[:controller] == 'posts'
-        %li{class: active == 'posts' ? 'active' : ''}
-          %a{href: group_posts_path(@group)} Nachrichten
-      %li{class: active == 'profile' ? 'active' : ''}
-        %a{href: group_profile_path(@group)} Kontakt & Profil
-    %li{class: active == 'events' ? 'active' : ''}
+        %li.nav-item
+          %a.nav-link{href: group_posts_path(@group), class: (active == 'posts' ? 'active' : '')} Nachrichten
+      %li.nav-item
+        %a.nav-link{href: group_profile_path(@group), class: (active == 'profile' ? 'active' : '')} Kontakt & Profil
+    %li.nav-item
       - if @group.use_semester_calendars? && can?(:use, :semester_calendars)
-        %a{href: group_search_semester_calendar_path(@group)}= t :semester_calendar
+        %a.nav-link{href: group_search_semester_calendar_path(@group), class: (active == 'events' ? 'active' : '')}= t :semester_calendar
       - else
-        %a{href: group_events_path(@group)}= t :events
+        %a.nav-link{href: group_events_path(@group), class: (active == 'events' ? 'active' : '')}= t :events
     - unless @group.group_of_groups?
-      %li{class: active == 'members' ? 'active' : ''}
-        %a{href: group_members_path(@group)} Mitglieder
+      %li.nav-item
+        %a.nav-link{href: group_members_path(@group), class: (active == 'members' ? 'active' : '')} Mitglieder
     - unless @group.kind_of?(OfficerGroup)
-      %li{class: active == 'officers' ? 'active' : ''}
-        %a{href: group_officers_path(@group)} Amtsträger
+      %li.nav-item
+        %a.nav-link{href: group_officers_path(@group), class: (active == 'officers' ? 'active' : '')} Amtsträger
     - if can? :update, @group
-      %li{class: active == 'settings' ? 'active' : ''}
-        %a{href: group_settings_path(@group)}=t :settings
+      %li.nav-item
+        %a.nav-link{href: group_settings_path(@group), class: (active == 'settings' ? 'active' : '')}=t :settings

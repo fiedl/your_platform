@@ -25,7 +25,7 @@ concern :ProfileFieldCaching do
   def unassociate_profileable_and_renew_profileable_cache
     if not parent
       former_profileable = profileable
-      self.profileable = nil
+      self.profileable = nil if self.profileable_id
       self.save
       if former_profileable && former_profileable.respond_to?(:renew_cache)
         RenewCacheJob.perform_later(former_profileable, time: Time.zone.now,

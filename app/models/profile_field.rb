@@ -50,6 +50,13 @@ class ProfileField < ApplicationRecord
     "#{profileable_title}: #{label} = #{value}"
   end
 
+  def as_json(options = {})
+    super.merge({
+      type: type,
+      key: key
+    })
+  end
+
 
   # Often, profile_fields are to be displayed in a certain manner on a HTML page.
   # This method returns the profile_field's value as HTML code in the way
@@ -71,6 +78,9 @@ class ProfileField < ApplicationRecord
   #
   def key
     read_attribute :label
+  end
+  def key=(new_key)
+    self.label = new_key
   end
 
   # This method returns the label text of the profile_field.

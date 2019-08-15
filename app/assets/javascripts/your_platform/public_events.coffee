@@ -6,7 +6,7 @@ App.process_public_events = (element)->
     if li.find('.best_in_place').count() > 0
       li.append("
         <a class='remove_event_from_public_website show_only_in_edit_mode btn btn-info' title='#{I18n.t('remove_event_from_public_website')}'>
-          <span class='glyphicon glyphicon-trash'></span>
+          <span class='fa fa-trash'></span>
         </a>
       ")
       li.process()

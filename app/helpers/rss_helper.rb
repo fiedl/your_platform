@@ -48,7 +48,7 @@ module RssHelper
     url ||= rss_default_url
     icon = rss_icon
     icon = podcast_icon if url.include? "podcast.rss"
-    link_to url, class: 'btn btn-default btn-xs' do
+    link_to url, class: 'btn btn-outline-secondary btn-xs' do
       icon + options[:title].to_s
     end
   end

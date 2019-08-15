@@ -35,4 +35,8 @@ class ErrorsController < ApplicationController
     end
   end
 
+  def log_activity
+    # Do not log errors in the admin-activity log.
+  end
+
 end

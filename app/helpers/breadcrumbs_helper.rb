@@ -6,11 +6,15 @@ module BreadcrumbsHelper
   # The latter is set through `set_current_breadcrumbs` in the controller.
   #
   def current_breadcrumbs
-    manual_current_breadcrumbs || (navable_breadcrumbs + resource_breadcrumbs)
+    manual_current_breadcrumbs || (navable_breadcrumbs + (show_resource_nav? ? resource_breadcrumbs : []))
   end
 
   def navable_breadcrumbs
-    current_navable.try(:breadcrumbs) || [Page.root.nav_node, Page.intranet_root.nav_node]
+    current_navable.try(:breadcrumbs) || if Page.root
+      [Page.root.nav_node, Page.intranet_root.nav_node]
+    else
+      []
+    end
   end
 
   def resource_breadcrumbs
