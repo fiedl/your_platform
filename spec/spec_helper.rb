@@ -242,6 +242,11 @@ RSpec.configure do |config|
   #
   config.include TimeMatchers
 
+  # Run background jobs in specs
+  # https://trello.com/c/WXWhwaMV/1293-sidekiq-in-tests
+  #
+  config.include BackgroundJobs
+
 
   # Database Wiping Policy
   # ......................................................................................
