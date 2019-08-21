@@ -102,6 +102,8 @@ class PagesController < ApplicationController
 
     if @new_page.embedded?
       redirect_to page_path(@new_page.parent, no_fast_lane: true)
+    elsif @new_page.kind_of? BlogPost
+      redirect_to blog_post_path(@new_page, no_fast_lane: true)
     else
       redirect_to page_path(@new_page, no_fast_lane: true)
     end
