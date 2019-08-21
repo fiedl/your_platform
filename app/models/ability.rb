@@ -382,7 +382,7 @@ class Ability
       can [:update, :destroy], Attachment do |attachment|
         attachment.author == user and
         attachment.parent.kind_of?(Page) and
-        attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
+        attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user) # TODO: Page#event ?
       end
 
       # If a user can read an object, he can comment it.

@@ -49,8 +49,8 @@ describe Corporation do
 
     it { should be_kind_of Group }
     it { should_not be_kind_of Corporation }
-    its(:children) { should include @corporation }
-    its(:children) { should_not include @group }
+    its(:child_groups) { should include @corporation }
+    its(:child_groups) { should_not include @group }
   end
 
   describe "#is_first_corporation_this_user_has_joined?" do
@@ -132,6 +132,7 @@ describe Corporation do
       @user = create(:user)
       @membership = @corporation.status_groups.first.assign_user @user, at: 1.year.ago
       @former_members_parent = @corporation.former_members_parent
+      run_background_jobs
     end
 
     it "should be an Array of Hashes" do

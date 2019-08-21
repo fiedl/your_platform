@@ -10,7 +10,15 @@ end
 describe ProfileFields do
 
   class MyStructureable < ApplicationRecord
-    has_dag_links ancestor_class_names: %w(MyStructureable), descendant_class_names: %w(MyStructureable Group User Workflow Page), link_class_name: 'DagLink'
+    has_many :links_as_ancestor, as: :ancestor, class_name: "DagLink"
+    has_many :links_as_descendant, as: :descendant, class_name: "DagLink"
+    has_many :links_as_parent, -> { direct }, as: :ancestor, class_name: "DagLink"
+    has_many :links_as_child, -> { direct }, as: :descendant, class_name: "DagLink"
+
+    has_many :child_groups, through: :links_as_parent, source: :descendant, source_type: "Group"
+    has_many :child_users, through: :links_as_parent, source: :descendant, source_type: "User"
+    has_many :child_workflows, through: :links_as_parent, source: :descendant, source_type: "Workflow"
+    has_many :child_pages, through: :links_as_parent, source: :descendant, source_type: "Page"
 
     include Structureable
     include HasProfile

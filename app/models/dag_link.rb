@@ -10,6 +10,13 @@ class DagLink < ApplicationRecord
   include DagLinkGraph
   include DagLinkTypes
 
-  after_commit -> { CreateIndirectDagLinksJob.perform_later(descendant.id) if direct and descendant_type == "User" }
+  after_commit -> {
+    if direct
+      CreateIndirectDagLinksJob.perform_later(descendant.id) if descendant_type == "User"
+      if descendant_type == "Group"
+        descendant.descendant_user_ids.each { |user_id| CreateIndirectDagLinksJob.perform_later(user_id) }
+      end
+    end
+  }
 
 end

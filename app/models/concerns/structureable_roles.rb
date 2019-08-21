@@ -177,11 +177,15 @@ concern :StructureableRoles do
   end
 
   def admins_of_ancestors
-    ancestors.collect { |ancestor| ancestor.find_admins }.flatten
+    admins_of_ancestor_groups + admins_of_ancestor_pages
   end
 
   def admins_of_ancestor_groups
     ancestor_groups.collect { |ancestor| ancestor.find_admins }.flatten
+  end
+
+  def admins_of_ancestor_pages
+    ancestor_pages.collect { |ancestor| ancestor.find_admins }.flatten
   end
 
   def admins_of_self_and_ancestors

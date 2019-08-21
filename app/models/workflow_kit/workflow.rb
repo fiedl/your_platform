@@ -21,8 +21,9 @@ module WorkflowKit
       super.order( :sequence_index ).order( :created_at )
     end
 
+    has_many :links_as_child, -> { direct }, as: :descendant, class_name: "DagLink"
+    has_many :parent_groups, through: :links_as_child, source: :ancestor, source_type: "Group", inverse_of: :child_groups
 
-    #has_dag_links ancestor_class_names: %w(Group), link_class_name: 'DagLink'
     include Structureable
     include Navable
 

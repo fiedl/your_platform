@@ -99,14 +99,14 @@ concern :GroupMemberships do
     def assign_user(user, options = {})
       raise RuntimeError, "no user given" if not user
       time_of_joining = options[:joined_at] || options[:at] || options[:time] || Time.zone.now
-      if m = Membership.with_past.find_by_user_and_group(user, self)
-        m.valid_from = time_of_joining if m.valid_from && time_of_joining < m.valid_from
-        m.valid_to = nil
-        m.save
-        m
-      else
+      #if m = Membership.with_past.find_by_user_and_group(user, self)
+      #  m.valid_from = time_of_joining if m.valid_from && time_of_joining < m.valid_from
+      #  m.valid_to = nil
+      #  m.save
+      #  m
+      #else
         Membership.create descendant_id: user.id, descendant_type: "User", ancestor_id: self.id, ancestor_type: "Group", direct: true, valid_from: time_of_joining
-      end
+      #end
     end
 
     # This method will remove a Membership, i.e. terminate the membership

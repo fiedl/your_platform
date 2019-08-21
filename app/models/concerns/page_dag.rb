@@ -8,4 +8,8 @@ concern :PageDag do
     has_many :child_pages, through: :links_as_ancestor, as: :ancestor, class_name: "Page", source: :descendant, source_type: "Page"
     has_many :parent_pages, through: :links_as_descendant, as: :descendant, class_name: "Page", source: :ancestor, source_type: "Page"
   end
+
+  def parents
+    parent_pages
+  end
 end
