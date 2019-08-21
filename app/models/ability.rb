@@ -724,5 +724,9 @@ class Ability
     can :index, Event
     can :index, User
     can :index, Corporation
+
+    can :read, Page do |page|
+      page.has_flag? :songs
+    end
   end
 end
