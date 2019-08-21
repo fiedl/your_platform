@@ -13,13 +13,6 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   storage :file
   # storage :fog
 
-  # Raise processing errors.
-  # http://benw.me/posts/carrierwave-failing-silently/
-  # https://trello.com/c/uL8hQQhL/1399
-  ignore_integrity_errors false
-  ignore_processing_errors false
-  ignore_download_errors false
-
   # Override the directory where uploaded files will be stored.
   # This is a sensible default for uploaders that are meant to be mounted:
   def store_dir
