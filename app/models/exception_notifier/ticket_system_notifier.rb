@@ -12,7 +12,7 @@ module ExceptionNotifier
       options[:env]['exception_notifier.exception_data'] ||= {}
       options[:env]['exception_notifier.exception_data'][:backtrace] = exception.backtrace
       if current_user = options[:env]['exception_notifier.exception_data'][:current_user]
-        options[:sender_address] = "#{current_user.title} <#{current_user.email}>"
+        options[:sender_address] = "\"#{current_user.title}\" <#{current_user.email}>"
       end
       super(exception, options)
     end
