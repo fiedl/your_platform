@@ -29,3 +29,13 @@ $(document).ready ->
   if $('#page_settings_button') and $('#toolbar').count() > 0
     $('#page_settings_button').detach().appendTo($('#toolbar'))
 
+# Edit on click when there is no content, yet,
+# i.e. for new pages.
+#
+# When a page content is already present, we don't want this
+# to avoid accidental edits and triggering edits when copy/pasting.
+#
+$(document).on 'click', '.page_body', ->
+  if $(this).find('.best_in_place.editable').count() > 0
+    if $(this).find('.best_in_place.editable').text().length < 5
+      $(this).closest('.box').trigger('edit')
