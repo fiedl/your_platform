@@ -397,7 +397,7 @@ class Ability
         page.settings.anyone_can_create_blog_posts && can?(:read, page)
       end
       can [:update, :destroy, :publish], Page do |page|
-        can?(:read, page) && (page.author == user)
+        page.parent && page.parent.settings.anyone_can_create_blog_posts && can?(:read, page) && (page.author == user)
       end
 
     end

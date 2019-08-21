@@ -35,6 +35,27 @@ describe Ability do
       @the_user_ability ||= Ability.new(user.reload)
     end
 
+    context "(blog posts)" do
+      before { @blog = create :page, title: "Blog" }
+      he { should_not be_able_to :create_page_for, @blog }
+      context "when anyone can create blog posts" do
+        before { @blog.settings.anyone_can_create_blog_posts = true }
+        he { should be_able_to :create_page_for, @blog }
+        context "when he is the author of a post" do
+          before { @blog_post = @blog.child_pages.create title: "Blog Post", type: "BlogPost", author_user_id: user.id }
+          he { should be_able_to :update, @blog_post }
+          he { should be_able_to :publish, @blog_post }
+          he { should be_able_to :destroy, @blog_post }
+        end
+      end
+      context "when he is author of a post, but no officer" do
+        before { @blog_post = @blog.child_pages.create title: "Blog Post", type: "BlogPost", author_user_id: user.id }
+        he { should_not be_able_to :update, @blog_post }
+        he { should_not be_able_to :publish, @blog_post }
+        he { should_not be_able_to :destroy, @blog_post }
+      end
+    end
+
     context "(posts and comments)" do
       context "when the user is a member of a group" do
         before { @group = create(:group); @group.assign_user(user, at: 1.month.ago) }
