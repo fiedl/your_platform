@@ -19,3 +19,7 @@ $(document).on 'click', '.box_meta .publish_draft', ->
   publish_button = $(this).closest('.box').find('.btn.publish_page')
   publish_button.click()
   false
+
+$(document).on 'click', '.side_bar .publish_draft', ->
+  $('.blog_post.box.first .btn.publish_page').click()
+  false
