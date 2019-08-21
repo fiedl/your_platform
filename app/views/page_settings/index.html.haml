@@ -41,6 +41,14 @@
   %h1.logo_settings= t :logo_settings
   %div= link_to settings_icon + " " + t(:logo_settings_for_str, str: @page.domain || @page.title), page_logos_path(@page), class: 'btn btn-outline-secondary'
 
+%h1= t :rights
+%div
+  %table.settings
+    %tr.anyone_can_create_blog_posts
+      %th Blog
+      %td
+        = setting_check_box @page, :anyone_can_create_blog_posts
+
 %h1.boxes_on_this_page= t :boxes_on_this_page
 %div
   = t :select_boxes_to_display_on_the_page_str, str: @page.title

@@ -390,6 +390,16 @@ class Ability
       can :create_comment_for, [Post] do |commentable|
         can? :read, commentable
       end
+
+      # There are blogs where everyone can post.
+      #
+      can :create_page_for, Page do |page|
+        page.settings.anyone_can_create_blog_posts && can?(:read, page)
+      end
+      can [:update, :destroy, :publish], Page do |page|
+        can?(:read, page) && (page.author == user)
+      end
+
     end
 
     can :read, Group do |group|

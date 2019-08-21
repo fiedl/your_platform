@@ -52,6 +52,9 @@ de:
 
   view_count: Aufrufe
 
+  rights: Rechte
+  anyone_can_create_blog_posts: Jeder kann Blog-Posts erstellen
+
   file: 'Datei'
   helpers:
     submit:

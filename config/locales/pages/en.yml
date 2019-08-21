@@ -33,6 +33,9 @@ en:
 
   locale: Language
 
+  rights: Rights
+  anyone_can_create_blog_posts: Anyone can create blog posts
+
   file: 'File'
   helpers:
     submit:
