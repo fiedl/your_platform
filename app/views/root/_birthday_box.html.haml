@@ -1,0 +1,12 @@
+%h1.birthday_box= t :birthdays
+%div
+  %ul.birthdays
+    - Birthday.users_ordered_by_upcoming_birthday.each do |user_id|
+      - if (user = User.find(user_id)) && user.date_of_birth
+        %li
+          .icon_and_entry
+            .avatar= user_avatar user, size: 24
+            .entry
+              %span.name= link_to user.title, user
+              %span.birthday= localize user.date_of_birth
+              %span.age= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
