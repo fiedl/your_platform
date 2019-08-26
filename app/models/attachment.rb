@@ -20,6 +20,9 @@ class Attachment < ApplicationRecord
   def scope
     parent.try(:group) || parent.parents.first || parent
   end
+  def scope_title
+    scope.try(:title)
+  end
 
   def thumb_url
     AppVersion.root_url + thumb_path

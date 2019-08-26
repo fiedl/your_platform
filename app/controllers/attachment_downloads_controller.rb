@@ -34,7 +34,7 @@ class AttachmentDownloadsController < ActionController::Base
   #
   def show
     # Thumbnails should be authorized quicky to avoid delay.
-    if version == 'thumb'
+    if version.to_s == 'thumb'
       authorize! :download_thumb, attachment
     else
       authorize! :download, attachment
