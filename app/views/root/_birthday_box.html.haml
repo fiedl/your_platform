@@ -1,4 +1,4 @@
-= cache :birthday_box, expires_at: Date.tomorrow.beginning_of_day do
+= cache :birthday_box, expires_in: Time.now.end_of_day - Time.current do
   %h1.birthday_box= t :birthdays
   %div
     %ul.birthdays
