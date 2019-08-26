@@ -2,8 +2,8 @@
   %h1.birthday_box= t :birthdays
   %div
     %ul.birthdays
-      - Birthday.users_ordered_by_upcoming_birthday.each do |user_id|
-        - if (user = User.find(user_id)) && user.date_of_birth
+      - Birthday.users_ordered_by_upcoming_birthday.each do |user|
+        - if user.date_of_birth
           %li
             %span.name= link_to user.title, user
             %span.birthday= localize user.date_of_birth
