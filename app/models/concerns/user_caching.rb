@@ -20,7 +20,6 @@ concern :UserCaching do
 
     # UserDateOfBirth
     cache :date_of_birth
-    cache :age
     cache :birthday_this_year
 
     cache :group_ids_by_category
