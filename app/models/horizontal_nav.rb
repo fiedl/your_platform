@@ -16,7 +16,7 @@ class HorizontalNav
   end
 
   def navables
-    if logged_in? && currently_in_intranet?
+    if logged_in?
       intranet_navables
     else
       public_navables.select { |navable| not navable.nav_node.hidden_menu? }
