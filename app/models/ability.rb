@@ -314,6 +314,8 @@ class Ability
     can :accept, :terms_of_use if not read_only_mode?
     can :use, :single_sign_on
 
+    can :index, :documents
+
     # Regular users can read users that are not hidden.
     # And they can read themselves.
     #

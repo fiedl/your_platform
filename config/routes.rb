@@ -188,6 +188,8 @@ Rails.application.routes.draw do
   resources :attachments do
     get 'description(.:format)', to: 'attachment_descriptions#show'
   end
+
+  resources :documents
   resources :profile_fields
   resources :memberships
   resources :status_memberships

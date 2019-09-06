@@ -1,0 +1,13 @@
+%h1 Dokument hochladen
+%div
+  Keine
+
+= box title: t(:current_documents) do
+  %ul.documents.root_list
+    - for document in documents
+      = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_path, new_tab: true}
+
+%h1 Häufig benutzte Dokumente
+%div
+  Keine
+
