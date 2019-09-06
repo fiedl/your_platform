@@ -11,7 +11,7 @@ concern :UserDocuments do
   def document_ids_in_my_scope
     (self.news_pages + self.posts)
       .map(&:attachments).flatten
-      .select { |attachment| attachment.pdf? }
+      .select { |attachment| attachment.document? }
       .map(&:id)
   end
 

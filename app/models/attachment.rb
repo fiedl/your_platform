@@ -76,8 +76,16 @@ class Attachment < ApplicationRecord
     self.content_type.include? 'video'
   end
 
+  def document?
+    pdf? || office_document?
+  end
+
   def pdf?
     self.content_type.include? 'pdf'
+  end
+
+  def office_document?
+    self.content_type.include?("document")
   end
 
   def self.find_by_type( type )
