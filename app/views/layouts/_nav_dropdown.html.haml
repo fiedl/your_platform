@@ -1,0 +1,5 @@
+%ul
+  - navable.child_groups.each do |child_group|
+    %li.link
+      = link_to_navable child_group.title, child_group
+      = render partial: 'layouts/nav_dropdown', locals: {navable: child_group}

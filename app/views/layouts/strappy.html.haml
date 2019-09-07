@@ -31,11 +31,9 @@
           %ul.navbar-nav.mr-auto
             - horizontal_nav.link_objects.each do |object|
               %li.nav-link{class: horizontal_nav_li_css_class(object)}
-                - if object.kind_of? Hash
-                  -#= link_to object[:title], (object[:path] || object.except(:title))
-                - else
-                  - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
-                    = link_to_navable (object.nav_title), object, class: 'nav-link'
+                - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
+                  = link_to_navable (object.nav_title), object, class: 'nav-link'
+                  = render partial: 'layouts/nav_dropdown', locals: {navable: object}
             %li.nav-link
               = link_to t(:documents), documents_path, class: 'nav-link'
           %ul.navbar-nav.ml-auto
