@@ -2,8 +2,8 @@ var path = require('path');
 
 module.exports = {
   entry: {
-    your_platform_node_modules: path.resolve(__dirname, '..', 'app', 'javascripts', 'your_platform_node_modules.js'),
-    vue_app: path.resolve(__dirname, '..', 'app', 'javascripts', 'VueApp.coffee')
+    your_platform_node_modules: path.resolve(__dirname, '..', 'app', 'vue_components', 'your_platform_node_modules.js'),
+    vue_app: path.resolve(__dirname, '..', 'app', 'vue_components', 'VueApp.coffee')
   },
   output: {
     filename: '[name].pack.js',
