@@ -48,7 +48,7 @@
                 = render partial: 'layouts/current_user_dropdown'
             - else
               %li.nav-item
-                %button.btn.btn-outline-light.my-2.my-sm-0{:type => "submit"}= t :sign_in
+                = link_to (t :sign_in), sign_in_path, class: 'btn btn-outline-light my-2 my-sm-0'
       = yield :custom_header
 
       = render partial: 'shared/flashes'
