@@ -86,6 +86,11 @@ describe UserBackup do
       @user.address_fields.first.should have_flag :postal_address
     end
 
+    it "should preserve the number of child profile fields" do
+      profile_field = @user.address_fields.first
+      profile_field.children.count.should == profile_field.keys.count
+    end
+
     it "should restore the alias" do
       @user.alias.should == @alias
     end
