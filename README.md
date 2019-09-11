@@ -1,7 +1,7 @@
 # YourPlatform
 
 [![Join the chat at https://gitter.im/fiedl/your_platform](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/fiedl/your_platform?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Gem Version](https://badge.fury.io/rb/your_platform.svg)](http://badge.fury.io/rb/your_platform)
+[![test status](https://github.com/fiedl/your_platform/workflows/build/badge.svg)](https://github.com/fiedl/your_platform/actions)
 [![Build Status](https://travis-ci.org/fiedl/your_platform.svg?branch=master)](https://travis-ci.org/fiedl/your_platform)
 [![Code Climate](https://codeclimate.com/github/fiedl/your_platform/badges/gpa.svg)](https://codeclimate.com/github/fiedl/your_platform)
 
