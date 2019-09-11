@@ -85,6 +85,20 @@ describe UserBackup do
       end
     end
 
+    describe "for users without email, but with account" do
+      before do
+        @user.email_fields.first.update value: nil
+        @user.reload
+        @user.backup_and_remove_profile(confirm: "yes")
+        @user.restore_profile
+        @user.reload
+      end
+      it "should restore no account" do
+        @user.account.should be_nil
+        @user.email.should be_nil
+      end
+    end
+
     before { subject; @user.reload }
 
     it "should restore the email address" do
