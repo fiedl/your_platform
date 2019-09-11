@@ -5,6 +5,6 @@
       - Birthday.users_ordered_by_upcoming_birthday.each do |user|
         - if user.date_of_birth
           %li
-            %span.name= link_to user.title, user
+            %span.name= link_to user.title, user_path(user)
             %span.birthday= localize user.date_of_birth
             %span.age= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
