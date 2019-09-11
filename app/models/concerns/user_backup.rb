@@ -53,11 +53,13 @@ concern :UserBackup do
       end
     end
     self.delete_cache; self.reload  # to have `User#email` present
-    account = self.build_account hash['account']
-    account.password = Password.generate
-    account.save!
-    account.encrypted_password = hash['account']['encrypted_password']
-    account.save!
+    if hash['account']
+      account = self.build_account hash['account']
+      account.password = Password.generate
+      account.save!
+      account.encrypted_password = hash['account']['encrypted_password']
+      account.save!
+    end
     self.delete_cache
   end
 
