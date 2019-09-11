@@ -7,7 +7,8 @@ class SupportRequestMailer < BaseMailer
     @meta_data = meta_data
     @navable = navable
     @role = meta_data[:role]
-    @from_email = sender_user.try(:email) || SupportRequestsController.support_email
+    @from_email = "\"#{sender_user.title}\" <#{sender_user.email}>" if sender_user
+    @from_email ||= SupportRequestsController.support_email
 
     mail_message = mail(to: [receiver_email], from: @from_email, subject: subject)
     mail_message.allow_recipients_without_account!

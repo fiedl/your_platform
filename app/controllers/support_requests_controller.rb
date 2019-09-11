@@ -25,7 +25,7 @@ class SupportRequestsController < ApplicationController
   end
 
   def self.support_email
-    Setting.support_email
+    BaseMailer.default[:from]
   end
 
 end
