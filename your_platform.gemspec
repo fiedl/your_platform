@@ -170,7 +170,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'merit'
 
   # Dummy Data Generation
-  s.add_dependency 'faker'
+  s.add_dependency 'faker', '~> 2.3'
 
   # Console
   s.add_dependency "table-formatter"

@@ -11,7 +11,7 @@ concern :GroupDummyUsers do
     user.first_name = Faker::Name.first_name
     user.last_name = Faker::Name.last_name
     user.email = Faker::Internet.email
-    user.date_of_birth = Faker::Date.between(30.years.ago, 18.years.ago)
+    user.date_of_birth = Faker::Date.between(from: 30.years.ago, to: 18.years.ago)
     user.save
     
     user.profile_fields.create(label: :personal_title, type: "ProfileFields::General")
@@ -35,8 +35,8 @@ concern :GroupDummyUsers do
     user.profile_fields.create label: :homepage,
       value: "https://#{Faker::Internet.domain_name}",
       type: "ProfileFields::Homepage"
-    
-    self.assign_user user, at: Faker::Date.between(6.years.ago, 10.days.ago)
+
+    self.assign_user user, at: Faker::Date.between(from: 6.years.ago, to: 10.days.ago)
     return user
   end
   
