@@ -10,13 +10,21 @@ class Api::V1::DocumentsController < Api::V1::BaseController
   expose :limit, -> { params[:limit] }
   expose :query, -> { params[:query] }
 
+  expose :document, -> {
+    Attachment.find params[:id]
+  }
+
   api :GET, '/api/v1/documents/ID', "Returns the document with the id ID."
   param :id, :number, "Document id of the requested document"
 
   def show
-    authorize! :read, document
+    authorize! :download, document
 
-    render json: document.as_json
+    response.headers["Content-Type"] = document.content_type
+
+    send_file document.file.current_path,
+        x_sendfile: true, disposition: 'inline',
+        range: (document.video?), type: content_type
   end
 
 
