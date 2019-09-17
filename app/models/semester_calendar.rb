@@ -111,7 +111,7 @@ class SemesterCalendar < ApplicationRecord
   end
 
   def officer(key)
-    officer_group(key).memberships.at_time(officer_valuation_date).first.try(:user)
+    officer_group(key).memberships.at_time(officer_valuation_date).first.try(:user) if officer_group(key)
   end
 
   def officer_valuation_date
