@@ -70,7 +70,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'sidekiq', '~> 4.0'
 
   # Authentification
-  s.add_dependency 'devise', '>= 4.7.1' # MIT License, CVE-2019-16109, https://trello.com/c/7s9LGbE2/1432
+  s.add_dependency 'devise', '>= 3.5.4'                           # MIT License, CVE-2015-8314, https://gemnasium.com/fiedl/your_platform/alerts#advisory_329
   #s.add_dependency 'omniauth-github'
   #s.add_dependency 'omniauth-twitter'
   #s.add_dependency 'omniauth-google-oauth2'
@@ -82,7 +82,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'devise_masquerade', '~> 0.5.3'
   s.add_dependency 'gender_detector'
-  s.add_dependency 'devise_token_auth'
+  s.add_dependency 'devise_token_auth', '1.1.0' # 1.1.1 introduces an issue with `authenticate_api_v1_user_account!`, https://trello.com/c/p7kSJGz5/1398-app-funktioniert-nicht-mehr-access-control-origin#comment-5d5d65e117444351197bea4e
   s.add_dependency 'rack-cors'
 
   # Authorization
