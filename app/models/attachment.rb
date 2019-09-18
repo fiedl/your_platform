@@ -10,6 +10,7 @@ class Attachment < ApplicationRecord
 
   scope :logos, -> { where('title like ?', "%logo%") }
 
+  include Flags
   include HasAuthor
   # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
 

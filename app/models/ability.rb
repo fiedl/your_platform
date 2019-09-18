@@ -731,5 +731,9 @@ class Ability
     can :read, Page do |page|
       page.has_flag? :songs
     end
+
+    can [:read, :download], Attachment do |document|
+      document.has_flag? :dummy
+    end
   end
 end

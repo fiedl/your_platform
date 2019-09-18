@@ -5,6 +5,7 @@ class Api::V1::DocumentsController < Api::V1::BaseController
     docs = docs.where("title like ?", "%#{query}%") if query
     docs = docs.limit(limit) if limit
     docs = docs.order(created_at: :desc)
+    docs = docs.select { |document| can? :read, document }
     docs
   }
   expose :limit, -> { params[:limit] }
