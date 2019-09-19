@@ -29,6 +29,9 @@
           #header_search
             %span#search_box= render partial: 'shared/search_box'
           %ul.navbar-nav.mr-auto
+            - if can? :index, :root
+              %li.nav-link{class: ("active" if controller_name == 'root')}
+                = link_to "Start", root_path, class: 'nav-link'
             - horizontal_nav.link_objects.each do |object|
               %li.nav-link{class: horizontal_nav_li_css_class(object)}
                 - if object.kind_of? Hash
