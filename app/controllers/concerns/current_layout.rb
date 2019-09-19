@@ -16,11 +16,11 @@ concern :CurrentLayout do
 
   def current_layout
     layout ||= (permitted_layouts & [layout_param]).first
-    layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
-    layout ||= mobile_layout_if_mobile_app
-    layout ||= intranet_layout if current_navable.try(:in_intranet?)
-    layout ||= current_navable.layout if current_navable.respond_to? :layout
-    layout ||= current_home_page.layout if current_home_page
+    #layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
+    #layout ||= mobile_layout_if_mobile_app
+    #layout ||= intranet_layout if current_navable.try(:in_intranet?)
+    #layout ||= current_navable.layout if current_navable.respond_to? :layout
+    #layout ||= current_home_page.layout if current_home_page
     layout ||= default_layout
     return (permitted_layouts & [layout]).first
   end
@@ -42,10 +42,6 @@ concern :CurrentLayout do
 
   def permitted_layouts
     ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017 primer strappy)).uniq
-  end
-
-  def default_layout
-    current_home_page.try(:layout) || Page.root.try(:layout) || 'bootstrap'
   end
 
   def default_layout
