@@ -39,11 +39,6 @@ class PagesController < ApplicationController
 
     authorize! :read, @page
     if @page
-      if @page.has_flag?(:intranet_root)
-        redirect_to root_path
-        return
-      end
-
       @blog_entries = @page.blog_entries.visible_to(current_user)
 
       if @page.show_events?

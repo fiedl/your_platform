@@ -2,11 +2,11 @@ class RootController < ApplicationController
 
   before_action :redirect_to_setup_if_needed
   before_action :redirect_to_public_website_if_needed
-  before_action :redirect_to_sign_in_if_needed, :find_and_authorize_page
+  before_action :redirect_to_sign_in_if_needed
 
   def index
-    set_current_navable @page
-    set_current_activity :looks_at_the_start_page, @page
+    authorize! :index, :root
+
     set_current_access :user
     set_current_access_text :the_content_of_the_start_page_is_personalized
     set_current_tab :news
@@ -58,12 +58,6 @@ private
     if not @need_setup and not current_user
       redirect_to sign_in_path
     end
-  end
-
-  def find_and_authorize_page
-    @page = Page.find_intranet_root
-    @navable = @page
-    authorize! :show, @page
   end
 
 end
