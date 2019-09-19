@@ -33,6 +33,7 @@ de:
   show_events_for_group_id: "Veranstaltungen der Gruppe mit folgender ID anzeigen:"
   show_only_events_published_on_global_website: "Nur Veranstaltungen anzeigen, für die 'Auf globaler öffentlicher Homepage' ausgewählt wurde."
   show_only_events_published_on_local_website: "Nur Veranstaltungen anzeigen, für die 'Auf lokaler Homepage veröffentlichen' ausgewählt wurde."
+  events_limit: "Anzahl der angezeigten Veranstaltungen begrenzen (Standard: 3)"
 
   show_officers: Amtsträger anzeigen
   show_officers_of_group: Amtsträger der folgenden Gruppe anzeigen.

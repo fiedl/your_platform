@@ -98,6 +98,9 @@
     = group_select_in_place @page, :page, :show_events_for_group_id
   .global_website= setting_check_box @page, :show_only_events_published_on_global_website
   .local_website= setting_check_box @page, :show_only_events_published_on_local_website
+  .events_limit
+    = t :events_limit
+    = setting_in_place @page, :events_limit
 
 - if can? :use, :permalinks
   %h1.permalinks= t :permalinks

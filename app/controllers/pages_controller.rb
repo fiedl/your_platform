@@ -42,8 +42,9 @@ class PagesController < ApplicationController
       @blog_entries = @page.blog_entries.visible_to(current_user)
 
       if @page.show_events?
+        limit = (@page.settings.events_limit || 3).to_i
         @events = @page.events
-        @events = @events.upcoming.order('events.start_at, events.created_at').limit(3)
+        @events = @events.upcoming.order('events.start_at, events.created_at').limit(limit)
         @events = @events.select { |event| current_ability.can? :read, event }
       end
 
