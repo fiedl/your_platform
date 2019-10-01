@@ -118,7 +118,7 @@ Gem::Specification.new do |s|
 
   # Form Helper
   s.add_dependency 'formtastic'  # MIT License
-  s.add_dependency 'simple_form'
+  s.add_dependency 'simple_form', '>= 5.0.0' # GHSA-r74q-gxcg-73hx, https://trello.com/c/rX2RZtgU/1438
 
   # File Uploads
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
