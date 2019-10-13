@@ -16,4 +16,4 @@ jobs:
       - name: Build docker containers for YourPlatform
         run: docker-compose build
       - name: Run specs on tests container
-        run: docker-compose run tests /bin/bash -c "rake tests"
+        run: docker-compose run tests /bin/bash -c "bundle install && rake tests"
