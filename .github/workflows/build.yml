@@ -15,5 +15,7 @@ jobs:
           ruby-version: 2.6.x
       - name: Build docker containers for YourPlatform
         run: docker-compose build
-      - name: Run specs on tests container
-        run: docker-compose run tests /bin/bash -c "bundle install && bundle exec rake tests"
+      - name: Prepare specs to run in tests container
+        run: docker-compose run tests /bin/bash -c "bundle install && bundle exec rake prepare_tests"
+      - name: Run model specs in tests container
+        run: docker-compose run tests /bin/bash -c "bundle exec rspec spec/models"

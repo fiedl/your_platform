@@ -10,17 +10,17 @@ require File.expand_path('../demo_app/my_platform/config/application', __FILE__)
 #
 # # MyPlatform::Application.load_tasks
 
-task :tests do
-  sh "bundle install && \
-    cd demo_app/my_platform && \
-    bundle install && \
-    bundle exec rails db:create db:migrate && \
-    cd ../.. && \
-    bundle exec rspec spec/models"
+task :tests => [:prepare_tests] do
+  sh "bundle exec rspec spec/models"
 end
 
 task test: :tests
 task default: :tests
+
+task :prepare_tests do
+  sh "bundle install"
+  sh "cd demo_app/my_platform && bundle install && bundle exec rails db:create db:migrate && cd ../.."
+end
 
 
 # Version bumping mechanism.
