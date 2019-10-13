@@ -135,7 +135,7 @@ services:
       - neo4j_test
     networks:
       - backend
-    command: /bin/bash -c "bundle install && bundle exec rspec spec/models"
+    command: /bin/bash -c "rake tests"
 
   mysql:
     image: mysql:5.7

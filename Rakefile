@@ -11,7 +11,9 @@ require File.expand_path('../demo_app/my_platform/config/application', __FILE__)
 # # MyPlatform::Application.load_tasks
 
 task :tests do
-  sh "rspec spec/models spec/features"
+  sh "bundle install"
+  sh "cd demo_app/my_platform && bundle install && bundle exec rails db:create db:migrate"
+  sh "rspec spec/models"
 end
 
 task test: :tests
