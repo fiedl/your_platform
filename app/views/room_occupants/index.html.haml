@@ -1,0 +1,10 @@
+%h1= t :rooms
+%div
+  %table.datatable
+    %thead
+      %tr
+        %th= t :room
+    %tbody
+      - rooms.each do |room|
+        %tr
+          %td= best_in_place_if can?(:manage, room), room, :name

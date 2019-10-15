@@ -91,6 +91,7 @@ Rails.application.routes.draw do
     get :workflows, to: 'workflows#index'
     post :test_welcome_message, to: 'groups#test_welcome_message'
     get :term_report, to: 'term_reports#show'
+    resources :room_occupants
     get 'terms/:year/:term_type/report', to: 'term_reports#show'
     get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
@@ -106,6 +107,7 @@ Rails.application.routes.draw do
       get 'exports/table.:format', to: 'groups_of_groups/table_exports#show', as: 'table_export'
     end
     resources :corporations_parents, controller: 'groups_of_groups'
+    resources :rooms
   end
 
   get :corporations, to: 'corporations#index'

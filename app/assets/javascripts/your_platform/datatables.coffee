@@ -279,3 +279,8 @@ $(document).ready ->
       { type: 'de_date', targets: 5 }
     ]
   }
+
+  App.datatables.create '.datatable.room_occupants', {
+    columnDefs: [
+    ]
+  }
