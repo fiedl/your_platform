@@ -201,6 +201,10 @@ class GroupsController < ApplicationController
     params[:group] ||= params[:corporation] # for Corporation objects
     params[:group] ||= params[:officer_group] # for OfficerGroup objects
 
+    params.require(:group).permit(*permitted_group_attributes)
+  end
+
+  def permitted_group_attributes
     permitted_keys = []
     permitted_keys += [:name, :extensive_name] if can? :rename, @group
     permitted_keys += [:token] if can? :change_token, @group
@@ -208,7 +212,6 @@ class GroupsController < ApplicationController
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
     permitted_keys += [:body, :welcome_message] if can? :update, @group
     permitted_keys += [:mailing_list_sender_filter] if can? :update, @group
-    params.require(:group).permit(*permitted_keys)
   end
 
   def fill_map_address_fields

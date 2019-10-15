@@ -282,5 +282,6 @@ $(document).ready ->
 
   App.datatables.create '.datatable.room_occupants', {
     columnDefs: [
+      { type: 'de_date', targets: 3 }
     ]
   }

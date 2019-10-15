@@ -4,7 +4,15 @@
     %thead
       %tr
         %th= t :room
+        %th= t :rent
+        %th= t :occupant
+        %th= t :since
     %tbody
       - rooms.each do |room|
         %tr
           %td= best_in_place_if can?(:manage, room), room, :name
+          %td
+            = best_in_place_if can?(:manage, room), room, :rent
+            EUR
+          %td= user_best_in_place_if can?(:manage, room), room, :occupant_title
+          %td= localize room.occupant_since.try(:to_date) if room.occupant

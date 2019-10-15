@@ -1,3 +1,5 @@
 de:
   rooms: Zimmer
   room: Zimmer
+  rent: Miete
+  occupant: Bewohner
