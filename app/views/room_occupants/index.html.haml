@@ -6,6 +6,7 @@
         %th= t :room
         %th= t :rent
         %th= t :occupant
+        %th
         %th= t :since
     %tbody
       - rooms.each do |room|
@@ -14,5 +15,8 @@
           %td
             = best_in_place_if can?(:manage, room), room, :rent
             EUR
-          %td= user_best_in_place_if can?(:manage, room), room, :occupant_title
+          %td= link_to_user_with_avatar room.occupant if room.occupant
+          %td
+            - if can? :manage, room
+              = link_to edit_icon, new_group_room_occupancy_path(group_id: room.id), class: 'btn btn-outline-secondary btn-sm', title: t(:change_occupant)
           %td= localize room.occupant_since.try(:to_date) if room.occupant
