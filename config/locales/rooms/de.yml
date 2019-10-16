@@ -4,6 +4,7 @@ de:
   rent: Miete
   occupant: Bewohner
   change_occupant: Bewohner ändern
+  view_occupancy_history: Bewohner-Historie anzeigen
   change_occupant_for_str: "Bewohner für %{str} ändern"
   current_occupant: Aktueller Bewohner
   the_room_has_no_new_occupant: Das Zimmer hat keinen neuen Bewohner. Leerstand eintragen.

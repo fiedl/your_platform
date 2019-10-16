@@ -19,4 +19,5 @@
           %td
             - if can? :manage, room
               = link_to edit_icon, new_group_room_occupancy_path(group_id: room.id), class: 'btn btn-outline-secondary btn-sm', title: t(:change_occupant)
+              = link_to history_icon, group_room_occupancies_path(group_id: room.id), class: 'btn btn-outline-secondary btn-sm', title: t(:view_occupancy_history)
           %td= localize room.occupant_since.try(:to_date) if room.occupant

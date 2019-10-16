@@ -91,6 +91,10 @@ module IconHelper
     fa_icon('clock-o')
   end
 
+  def history_icon
+    time_icon
+  end
+
   def edit_icon
     icon :edit
   end
