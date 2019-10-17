@@ -18,6 +18,7 @@ describe Membership do
     membership2 = @corporation2.status_groups.first.assign_user @user1, at: (@time2 = 49.years.ago)
     membership1.move_to @corporation1.status_groups.second, at: (@time3 = 45.years.ago)
     membership2.move_to @corporation2.status_groups.second, at: (@time4 = @time3 + 1.year)
+    run_background_jobs  # in order to recalcualte indirect validity ranges
   end
 
   specify "The indirect validity ranges should match the direct ones" do

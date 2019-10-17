@@ -171,7 +171,10 @@ describe GroupMemberships do
       it { should_not include @user1 }
     end
     describe "for a group having invalidated indirect memberships" do
-      before { @membership1.invalidate at: 10.minutes.ago }
+      before do
+        @membership1.invalidate at: 10.minutes.ago
+        run_background_jobs  # because the indirect validity ranges are recalculated by a background job
+      end
       subject { @indirect_group.members }
       it { should include @user2 }
       it { should_not include @user1 }
@@ -277,7 +280,10 @@ describe GroupMemberships do
       it { should include @user1, @user2 }
     end
     describe "for a group having invalidated memberships" do
-      before { @membership1.invalidate at: 10.minutes.ago }
+      before do
+        @membership1.invalidate at: 10.minutes.ago
+        run_background_jobs  # because the indirect validity ranges are recalculated by a background job
+      end
       subject { @indirect_group.indirect_members }
       it { should include @user2 }
       it { should_not include @user1 }

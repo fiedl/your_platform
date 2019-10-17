@@ -43,14 +43,18 @@ describe TermReports::ForCorporation do
   describe "#fill_info" do
     subject { @term_report.fill_info }
 
-    it "should fill in the stats correctly" do
-      subject
-      @term_report.number_of_events.should == @semester_calendar.reload.events.count
-      @term_report.number_of_events.should == 1
-      @term_report.number_of_members.should == 1
-      @term_report.number_of_new_members.should == 1
-      @term_report.number_of_membership_ends.should == 1
-      @term_report.number_of_deaths.should == 1
+    describe "after all background jobs have run" do
+      before { run_background_jobs }
+
+      it "should fill in the stats correctly" do
+        subject
+        @term_report.number_of_events.should == @semester_calendar.reload.events.count
+        @term_report.number_of_events.should == 1
+        @term_report.number_of_members.should == 1
+        @term_report.number_of_new_members.should == 1
+        @term_report.number_of_membership_ends.should == 1
+        @term_report.number_of_deaths.should == 1
+      end
     end
   end
 end

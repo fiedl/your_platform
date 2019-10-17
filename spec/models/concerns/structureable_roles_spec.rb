@@ -146,9 +146,12 @@ describe StructureableRoles do
           @my_structureable.reload
           wait_for_cache # try to get it to work on travis.
         end
-        it "should refresh the cached value" do
-          subject.should_not include @admin1
-          subject.should include @admin2, @my_admin
+        describe "after the background jobs have run" do
+          before { run_background_jobs }
+          it "should refresh the cached value" do
+            subject.should_not include @admin1
+            subject.should include @admin2, @my_admin
+          end
         end
         specify "the admin should still be in the database after calling destroy on the association" do
           User.find(@admin1.id).should be_present
@@ -215,6 +218,7 @@ describe StructureableRoles do
 
         @group.admins_parent << admin_user
         @group.reload
+        run_background_jobs
       end
       it { should == Rails.cache.uncached { @group.find_admins } }
     end
@@ -227,6 +231,7 @@ describe StructureableRoles do
 
         @group.admins_parent.child_users << admin_user
         @group.reload
+        run_background_jobs
       end
       it { should == Rails.cache.uncached { @group.find_admins } }
     end

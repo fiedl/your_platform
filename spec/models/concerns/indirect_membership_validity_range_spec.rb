@@ -35,6 +35,7 @@ describe IndirectMembershipValidityRange do
     @direct_membership_a.update_attributes valid_from: @t1, valid_to: @t2
     @direct_membership_b.update_attributes valid_from: @t2, valid_to: @t3
 
+    run_background_jobs
     @direct_membership_a.reload
     @direct_membership_b.reload
     @indirect_membership.reload
@@ -82,7 +83,7 @@ describe IndirectMembershipValidityRange do
       @direct_membership_b.update_attribute(:valid_from, @t2)
       @direct_membership_b.update_attribute(:valid_to, @t3)
     end
-    subject { @indirect_membership.reload.recalculate_validity_range_from_direct_memberships; @indirect_membership.reload }
+    subject { @indirect_membership.reload.recalculate_validity_range_from_direct_memberships; @indirect_membership.save; @indirect_membership.reload }
     it "should make the indirect validity range match the direct memberships' combined range" do
       subject
       @indirect_membership.valid_from.to_i.should == @t1.to_i
@@ -130,6 +131,8 @@ describe IndirectMembershipValidityRange do
           .find_by_user_and_group( @user, @intermediate_group )
         @second_status_group = @intermediate_group.child_groups.create(name: "Second Status Group")
         @membership.update_attribute(:valid_from, 1.year.ago)
+
+        run_background_jobs
         @corpo_membership = Membership.find_by_user_and_group(@user, @corporation)
       end
       specify "prelims" do
@@ -144,7 +147,7 @@ describe IndirectMembershipValidityRange do
         # @membership          valid_from: 1.year.ago,   valid_to: 20.days.ago
         # @second_membership   valid_from: 20.days.ago,  valid_to: nil
         # @corpo_membership    valid_from: 1.year.ago,   valid_to: nil
-        before { subject }
+        before { subject; run_background_jobs }
 
         it "should update the valid_from and valid_to of the indirect membership" do
           @corpo_membership.read_attribute(:valid_from).to_date.should == 1.year.ago.to_date
@@ -267,6 +270,7 @@ describe IndirectMembershipValidityRange do
     end
     it "should not find the invalid indirect memberships" do
       @direct_membership_b.invalidate at: 20.minutes.ago
+      run_background_jobs
       subject.should_not include @indirect_membership
     end
   end

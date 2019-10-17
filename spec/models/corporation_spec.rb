@@ -65,6 +65,8 @@ describe Corporation do
       @first_membership.save
 
       @second_membership = Membership.create( user: @user, group: @second_corporation )
+
+      run_background_jobs
     end
     describe "for the corporation the user has joined first" do
       subject { @first_corporation.is_first_corporation_this_user_has_joined?( @user ) }

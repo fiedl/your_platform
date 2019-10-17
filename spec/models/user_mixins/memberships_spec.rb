@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe UserMixins::Memberships do
-  
+
   #   @indirect_group
   #        |------------ @group
   #        |                |------ @user1
@@ -22,10 +22,10 @@ describe UserMixins::Memberships do
     @group2 = @indirect_group.child_groups.create
   end
 
-    
+
   # User Group Memberships
   # ==========================================================================================
-    
+
   describe "#memberships" do
     subject { @user1.memberships }
     it { should include @membership1 }
@@ -39,20 +39,20 @@ describe UserMixins::Memberships do
       subject { should_not include @indirect_membership1 }
     end
   end
-    
+
   describe "#direct_memberships" do
     subject { @user1.direct_memberships }
     it { should include @membership1 }
     it { should_not include @indirect_membership1 }
   end
-    
+
   describe "#indirect_memberships" do
     subject { @user1.indirect_memberships }
     it { should include @indirect_membership1 }
     it { should_not include @membership1 }
   end
-    
-  
+
+
   describe "#membership_in( group )" do
     describe "for the user being a direct member" do
       subject { @user.membership_in @group }
@@ -63,7 +63,7 @@ describe UserMixins::Memberships do
       it { should == @indirect_membership1 }
     end
   end
-  
+
   describe "#member_of?( group )" do
     describe "for the user being direct member" do
       subject { @user.member_of? @group}
@@ -79,7 +79,7 @@ describe UserMixins::Memberships do
     end
   end
 
-  
+
   # Groups the user is member of
   # ==========================================================================================
 
@@ -89,10 +89,11 @@ describe UserMixins::Memberships do
     it { should include @indirect_group }
     it "should not include groups of invalidated memberships" do
       @membership1.invalidate at: 10.minutes.ago
+      run_background_jobs  # to update the indirect validity ranges
       subject.should_not include @group
       subject.should_not include @indirect_group
     end
-  end    
+  end
   describe "#groups << group" do
     subject { @user.groups << @group2 }
     it "should assign the user to the given group" do
@@ -122,17 +123,17 @@ describe UserMixins::Memberships do
       end
     end
   end
-    
+
   describe "#direct_groups" do
     subject { @user.direct_groups }
     it { should include @group }
     it { should_not include @indirect_group }
   end
-    
+
   describe "#indirect_groups" do
     subject { @user.indirect_groups }
     it { should include @indirect_group }
     it { should_not include @group }
   end
-  
+
 end

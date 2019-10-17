@@ -899,6 +899,7 @@ describe User do
         second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        run_background_jobs  # to update the indirect validity ranges
         @user.reload
       end
       it { should be_empty }
@@ -936,6 +937,7 @@ describe User do
 
         first_membership_S = Memberships::Status.create(user: @user, group: @corporationS.status_groups.first)
         first_membership_S.update_attributes(valid_from: "2010-05-01".to_datetime)
+        run_background_jobs  # to update the indirect validity ranges
         @user.reload
       end
       it { should == [ @corporationE, @corporationS ] }
@@ -959,6 +961,7 @@ describe User do
         second_membership_E = Memberships::Status.create(user: @user, group: former_group)
         second_membership_E.update_attributes(valid_from: "2014-05-01".to_datetime)
         @first_membership_E.update_attributes(valid_to: "2014-05-01".to_datetime)
+        run_background_jobs  # to update the indirect validity ranges
         @user.reload
       end
       it { should be_empty }
@@ -1259,7 +1262,9 @@ describe User do
       end
     end
     context "for the user being a former member of the group" do
-      before { @group.unassign_user @user, at: 2.minutes.ago }
+      before do
+        @group.unassign_user @user, at: 2.minutes.ago
+      end
       subject { @user.member_of? @group }
       it { should == false }
     end
@@ -1267,6 +1272,7 @@ describe User do
       before do
         @ancestor_group = @group.ancestor_groups.create
         @group.unassign_user @user, at: 2.minutes.ago
+        run_background_jobs  # to update the indirect validity ranges
       end
       subject { @user.member_of? @ancestor_group }
       it { should == false }
