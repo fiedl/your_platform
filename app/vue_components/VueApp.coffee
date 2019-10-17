@@ -7,15 +7,21 @@ import TurbolinksAdapter from 'vue-turbolinks' # https://github.com/jeffreyguent
 
 import VuePasswordFieldWithStrengthMeter from './VuePasswordFieldWithStrengthMeter.vue'
 
+import Datepicker from 'vuejs-datepicker' # https://github.com/charliekassel/vuejs-datepicker
+import {en, de} from 'vuejs-datepicker/dist/locale'
+
 Vue.use(TurbolinksAdapter)
 
 jQuery(document).ready ->
+  vue_apps = []
 
   Vue.component('vue-password-field-with-strength-meter', VuePasswordFieldWithStrengthMeter)
-
-  vue_apps = []
   for selector in ['#vue-change-password-app']
     vue_apps.push(new Vue({el: selector})) if jQuery(selector).count() > 0
+
+  Vue.component('datepicker', Datepicker)
+  for selector in ['#vue-datepicker-app']
+    vue_apps.push(new Vue({el: selector, data: {de: de, en: en}})) if jQuery(selector).count() > 0
 
 
 # # As an alternative to `vue-turbolinks` we could save and restore

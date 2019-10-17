@@ -62,6 +62,7 @@
     "vue-password-strength-meter": "^1.1.0",
     "vue-template-compiler": "^2.4.2",
     "vue-turbolinks": "^2.0.0",
+    "vuejs-datepicker": "^1.6.2",
     "webpack": "^2.6.1",
     "wysihtml": "^0.6.0-beta1",
     "zxcvbn": "^4.4.2"

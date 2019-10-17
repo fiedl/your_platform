@@ -8,7 +8,7 @@
       = t :none
   %p.new_occupancy_from
     Datum der Änderung:
-    %input{type: 'text'}
+    = datepicker_tag
   %p.new_occupant
     = form_tag group_room_occupancies_path, method: 'post' do
       = hidden_field_tag :group_id, room.id
