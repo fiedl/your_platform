@@ -43,7 +43,7 @@ describe TermReports::ForCorporation do
   describe "#fill_info" do
     subject { @term_report.fill_info }
 
-    it "should fill in the stats correctly" do
+    it "should fill in the stats correctly", :retry do
       subject
       @term_report.number_of_events.should == @semester_calendar.reload.events.count
       @term_report.number_of_events.should == 1

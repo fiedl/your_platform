@@ -528,6 +528,8 @@ GEM
       rspec-expectations (~> 3.6.0)
       rspec-mocks (~> 3.6.0)
       rspec-support (~> 3.6.0)
+    rspec-retry (0.6.1)
+      rspec-core (> 3.3)
     rspec-support (3.6.0)
     ruby-ole (1.2.12.2)
     ruby-trello (2.1.0)
@@ -661,6 +663,7 @@ DEPENDENCIES
   rspec-instafail!
   rspec-its!
   rspec-rails!
+  rspec-retry!
   rubyzip (>= 1.2.1)!
   sass-rails!
   selenium-webdriver!

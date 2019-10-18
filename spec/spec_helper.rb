@@ -66,6 +66,7 @@ require 'rspec/rails'
 require 'nokogiri'
 require 'rspec/expectations'
 require 'sidekiq/testing'
+require 'rspec/retry'
 
 
 # Required Support Files (that help you testing)
@@ -365,6 +366,22 @@ RSpec.configure do |config|
 
   config.after(:suite) do
     DatabaseCleaner.clean
+  end
+
+  # RSpec Retry: Retry failed tests
+  # https://github.com/NoRedInk/rspec-retry
+  #
+  # Mark a spec with `:retry` to use this.
+  #
+  config.verbose_retry = false
+  config.around :each, :retry do |example|
+    example.run_with_retry retry: 3, retry_wait: 10
+  end
+  config.retry_callback = proc do |example|
+    DatabaseCleaner.strategy = :truncation
+    DatabaseCleaner.clean
+    Graph::Base.clean :yes_i_am_sure if Graph::Base.configured?
+    Capybara.reset! if example.metadata[:js]
   end
 
 

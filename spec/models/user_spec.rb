@@ -913,7 +913,7 @@ describe User do
     end
   end
 
-  describe "#current_corporations" do
+  describe "#current_corporations", :retry do
     before do
       @corporationE = create( :corporation_with_status_groups, :token => "E" )
       @corporationS = create( :corporation_with_status_groups, :token => "S" )

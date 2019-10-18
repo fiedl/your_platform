@@ -66,6 +66,7 @@ source 'https://rubygems.org' do
     gem 'database_cleaner'
     gem 'email_spec'
     gem 'timecop'
+    gem 'rspec-retry'
   end
 
   # JavaScript Runtime
