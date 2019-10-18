@@ -10,9 +10,7 @@ class HorizontalNav
   end
 
   def link_objects
-    objects = navables.to_a
-    objects << {title: I18n.t(:horizontal_nav_sign_in), path: '/sign_in'} if not logged_in?
-    objects
+    navables.to_a
   end
 
   def navables
