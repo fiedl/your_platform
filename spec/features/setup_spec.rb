@@ -34,24 +34,15 @@ feature 'Setup' do
       accept_terms_of_use
       @user = User.first
 
-      within('#content_area') { page.should have_text Page.find_intranet_root.title }
       within '#header-nav' do
         page.should have_selector '.avatar'
         page.should have_text 'London'
         page.should have_no_text 'Berlin'
+        page.should have_text Page.find_intranet_root.title
       end
       #within '#logged-in-bar' do
       #  page.should have_text I18n.t :global_admin
       #end
-
-      within '.vertical_menu' do
-        click_on I18n.t :corporations
-      end
-
-      page.should have_text 'London'
-      page.should have_text 'Berlin'
-      page.should have_text 'Paris'
-      page.should have_text 'New York'
 
       visit setup_path
       page.should have_text 'Setup already done.'
