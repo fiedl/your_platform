@@ -298,6 +298,14 @@ RSpec.configure do |config|
 
   config.before(:each) do
 
+    # Finish all time travels.
+    # https://github.com/travisjeffery/timecop
+    #
+    # This has caused very-hard-to-find issues in the past.
+    # https://trello.com/c/1isSc5sk/1443
+    #
+    Timecop.return
+
     # This distinction reduces the run time of the test suite by over a factor of 4:
     # From 40 to a couple of minutes, since the truncation method, which is slower,
     # is only used when needed by Capybara, i.e. when running integration tests,
