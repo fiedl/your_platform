@@ -1,12 +1,12 @@
 .nav_dropdown
   // define the height of the menu
-  --menu-height: 40px
+  $menu-height: 40px
   // holder and ul general style
   box-sizing: border-box
   position: fixed
   top: 0
   left: 0
-  width: 100vw*/
+  width: 100vw
   ul
     list-style: none
     padding: 16px
@@ -59,7 +59,7 @@
   // and have its own style
   > ul
     display: flex
-    height: var(--menu-height)
+    height: $menu-height
     align-items: center
     background-color: #000000
     // the first ul elements can be a
@@ -76,7 +76,7 @@
         min-width: 160px
         background-color: #333
         position: absolute
-        top: calc(var(--menu-height) + 5px)
+        top: calc($menu-height + 5px)
         left: 50%
         transform: translateX(-50%)
         transition: 200ms
