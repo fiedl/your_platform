@@ -23,7 +23,7 @@ class AppVersion
   end
 
   def self.github_repo_url
-    git_remote_url.gsub(":", "/").gsub("git@", "https://").gsub(/.git$/, "")
+    git_remote_url.gsub(":", "/").gsub("git@", "https://").gsub(/.git$/, "").gsub("https///", "https://")
   end
 
   def self.github_commit_url

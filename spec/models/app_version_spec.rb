@@ -2,14 +2,14 @@ require 'spec_helper'
 
 describe AppVersion do
   if ENV['CI'] != 'travis' # because the git commands do not work there.
-  
+
     subject { AppVersion }
     it { should respond_to :last_tag }
     it { should respond_to :version }
     it { should respond_to :commit_id }
     it { should respond_to :short_commit_id }
     it { should respond_to :github_commit_url }
-    
+
     describe ".last_tag" do
       subject { AppVersion.last_tag }
       it { should be_present }
