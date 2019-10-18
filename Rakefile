@@ -19,7 +19,9 @@ task default: :tests
 
 task :prepare_tests do
   sh "bundle install"
-  sh "cd demo_app/my_platform && bundle install && bundle exec rails db:create db:migrate && cd ../.."
+  sh "cd demo_app/my_platform && bundle install && bundle exec rails db:create db:migrate"
+  sh "cd demo_app/my_platform && bundle exec rake your_platform:install:node_modules || echo 'task not found'"
+  sh "cd demo_app/my_platform && bin/rails assets:precompile"
 end
 
 
