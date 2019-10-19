@@ -8,9 +8,13 @@
   left: 0
   //width: 100vw
   z-index: 99999
+  > ul
+    > li
+      > ul
+        margin-left: 50%
   ul
     list-style: none
-    padding: 16px
+    padding: 0
     margin: 0
     li, li a
       opacity: .8
@@ -68,7 +72,7 @@
     // the nested ul will be a dropdown
     li
       position: relative
-      margin: 0 8px
+      margin: 0
       // the dropdown style
       ul
         visibility: hidden
@@ -77,20 +81,20 @@
         min-width: 160px
         background-color: #234571
         position: absolute
-        top: calc($menu-height + 5px)
-        left: 100%
+        top: calc(#{$menu-height} + 5px)
+        //left: 100%
         transform: translateX(-50%)
         transition: 200ms
         transition-delay: 200ms
         // the dropdown items style
         li
           margin: 0
-          padding: 8px 16px
+          padding: 5px 10px
           display: flex
           align-items: center
           justify-content: flex-start
-          height: 30px
-          padding-right: 40px
+          //height: 30px
+          //padding-right: 40px
           // lets put an arrow right
           // to the inner li`s with
           // dropdowns
@@ -104,7 +108,7 @@
           // every dropdown after the
           // first must open to the right
           ul
-            top: -2%
+            top: 0
             left: 100%
             transform: translate(0)
 

@@ -29,9 +29,9 @@
           #header_search
             %span#search_box= render partial: 'shared/search_box'
           %ul.navbar-nav.mr-auto
-            %li.nav_dropdown.nav-link
-              %ul
-                - horizontal_nav.link_objects.each do |object|
+            - horizontal_nav.link_objects.each do |object|
+              %li.nav_dropdown.nav-link
+                %ul
                   %li.nav-link{class: horizontal_nav_li_css_class(object)}
                     - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
                       = link_to_navable (object.nav_title), object, class: 'nav-link'
