@@ -36,7 +36,8 @@
                     - if !object.respond_to?(:visible_to?) || object.visible_to?(current_user, preview_as: params[:preview_as])
                       = link_to_navable (object.nav_title), object, class: 'nav-link'
                       //= object.nav_title
-                      = render partial: 'layouts/nav_dropdown', locals: {navable: object}
+                      - if can? :use, :nav_dropdowns
+                        = render partial: 'layouts/nav_dropdown', locals: {navable: object}
             %li.nav-link
               = link_to t(:documents), documents_path, class: 'nav-link'
           %ul.navbar-nav.ml-auto
