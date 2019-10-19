@@ -315,6 +315,7 @@ class Ability
     can :use, :single_sign_on
 
     can :index, :documents
+    can :index, :my_groups
 
     # Regular users can read users that are not hidden.
     # And they can read themselves.
