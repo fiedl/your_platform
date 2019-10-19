@@ -85,7 +85,9 @@ feature "Home Pages" do
         click_on :save
         wait_for_wysiwyg '.page_content'
 
-        within('#header-nav') { click_on "example.com" }
+        #within('#header-nav') { click_on "example.com" }
+        visit page_path @page
+
         within '#content' do
           expect(page).to have_no_text "And this is some more content."
           expect(page).to have_text "My new teaser"
