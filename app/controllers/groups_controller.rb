@@ -15,12 +15,6 @@ class GroupsController < ApplicationController
     set_current_activity :is_looking_at_group, @parent_group if @parent_group
   end
 
-  def index_mine
-    set_current_navable current_user
-    @groups = current_user.groups
-    respond_with @groups
-  end
-
   def show
     if @group
       if request.format.html?

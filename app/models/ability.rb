@@ -319,6 +319,7 @@ class Ability
     can :index, :root
 
     can :index, :documents
+    can :index, :my_groups
 
     can :index_mine, Group
 
@@ -534,6 +535,7 @@ class Ability
     can :use, :help_videos
     can :use, :permalinks
     can :use, :caching
+    can :use, :find_and_filter
 
     # it's not ready, yet, but the tests use it already.
     if Rails.env.test?

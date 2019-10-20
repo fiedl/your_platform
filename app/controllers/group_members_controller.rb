@@ -24,4 +24,8 @@ class GroupMembersController < ApplicationController
     set_current_tab :members
   end
 
+  def new
+    authorize! :manage, group
+  end
+
 end
