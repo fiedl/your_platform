@@ -1,0 +1,126 @@
+.nav_dropdown
+  // define the height of the menu
+  $menu-height: 40px
+  // holder and ul general style
+  box-sizing: border-box
+  //position: fixed
+  top: 0
+  left: 0
+  //width: 100vw
+  z-index: 99999
+  > ul
+    > li
+      > ul
+        margin-left: 50%
+  ul
+    list-style: none
+    padding: 0
+    margin: 0
+    li, li a
+      opacity: .8
+      color: #ffffff
+      cursor: pointer
+      transition: 200ms
+      text-decoration: none
+      white-space: nowrap
+      //font-weight: 700
+      &:hover
+        opacity: 1
+
+      a
+        display: flex
+        align-items: center
+        height: 100%
+        width: 100%
+
+
+    // lets put an arrow down
+    // to the li`s with dropdown
+    /*li
+      padding-right: 36px
+      &::before
+        content: ''
+        width: 0
+        height: 0
+        border-left: 5px solid transparent
+        border-right: 5px solid transparent
+        border-top: 5px solid #FFA500
+        position: absolute
+        right: 8px
+        top: 50%
+        transform: translateY(-50%)*/
+
+
+    .link
+      // links dont need arrow
+      &::before
+        padding-right: 0
+        display: none
+
+
+
+  // the first ul inside the container
+  // is the menu, so must be visible
+  // and have its own style
+  > ul
+    display: flex
+    height: $menu-height
+    align-items: center
+    //background-color: #000000
+    // the first ul elements can be a
+    // link or an li with a nested ul.
+    // the nested ul will be a dropdown
+    li
+      position: relative
+      margin: 0
+      // the dropdown style
+      ul
+        visibility: hidden
+        opacity: 0
+        padding: 0
+        min-width: 160px
+        background-color: #234571
+        position: absolute
+        top: calc(#{$menu-height} + 5px)
+        //left: 100%
+        transform: translateX(-50%)
+        transition: 200ms
+        transition-delay: 200ms
+        // the dropdown items style
+        li
+          margin: 0
+          padding: 5px 10px
+          display: flex
+          align-items: center
+          justify-content: flex-start
+          //height: 30px
+          //padding-right: 40px
+          // lets put an arrow right
+          // to the inner li`s with
+          // dropdowns
+          &::before
+            width: 0
+            height: 0
+            border-top: 5px solid transparent
+            border-bottom: 5px solid transparent
+            border-left: 5px solid #FFA500
+
+          // every dropdown after the
+          // first must open to the right
+          ul
+            top: 0
+            left: 100%
+            transform: translate(0)
+
+          &:hover
+            background-color: #14243a
+
+
+
+      // on hover an li (not an <a>)
+      // must show its ul (dropdown)
+      &:hover
+        > ul
+          opacity: 1
+          visibility: visible
+          transition-delay: 0ms

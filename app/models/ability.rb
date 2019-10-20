@@ -136,6 +136,7 @@ class Ability
     can :use, :tab_view  # this switch is only for user-tabs; group-tabs are for all.
     can :use, :merit
     can :use, :documents_index
+    can :use, :nav_dropdowns
   end
 
   def rights_for_developers
