@@ -25,7 +25,7 @@ class GroupMembersController < ApplicationController
   end
 
   def new
-    authorize! :manage, group
+    authorize! :add_group_member, group
   end
 
 end

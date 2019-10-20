@@ -26,7 +26,7 @@
             = t(:term_report)
       - if can? :renew_cache, group
         .tool.renew_cache= renew_cache_button(group)
-      - if can? :manage, group
+      - if can? :add_group_member, group
         = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
           = t :add_member
       = render partial: 'groups/export_button'
@@ -41,7 +41,7 @@
         .child_users
           = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
 
-- if can? :add_member_to, group
+- if can? :add_group_member_manually, group
   %h1= t :add_members_manually
   %div.add_group_members
     = form_for new_membership, url: group_members_memberships_path(format: 'json') do |form|

@@ -5,7 +5,7 @@ class Memberships::FromMembersIndexController < ApplicationController
 
   # POST groups/123/members/memberships
   def create
-    authorize! :add_member_to, group
+    authorize! :add_group_member_manually, group
     raise ActionController::ParameterMissing, 'No user title given' unless membership_params[:user_title].present?
     raise ActionController::ParameterMissing, 'User not found' unless user
 
