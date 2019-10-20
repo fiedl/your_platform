@@ -1,17 +1,17 @@
-%h1= t :change_occupant_for_str, str: room.name
+%h1.new_room_occupancy= t :change_occupant_for_str, str: room.name
 %div
-  %p.current_occupant
-    = t(:current_occupant) + ":"
-    - if room.occupant
-      = link_to_user room.occupant
-    - else
-      = t :none
-  %p.new_occupancy_from
-    Datum der Änderung:
-    = datepicker_tag 'occupancy_since'
-  %p.new_occupant
-    = form_tag group_room_occupancies_path, method: 'post' do
-      = hidden_field_tag :group_id, room.id
+  = form_tag group_room_occupancies_path, method: 'post' do
+    = hidden_field_tag :group_id, room.id
+    %p.current_occupant
+      = t(:current_occupant) + ":"
+      - if room.occupant
+        = link_to_user room.occupant
+      - else
+        = t :no_occupant
+    %p.new_occupancy_from
+      = t(:date_of_the_change) + ":"
+      = datepicker_tag 'occupancy_since'
+    %p.new_occupant
       .form-group
         .form-group.form-check
           %label.form-check-label
@@ -21,6 +21,8 @@
           %label.form-check-label
             = radio_button_tag 'occupancy_type', 'existing_user', false, class: 'form-check-input'
             = t :enter_existing_user_as_occupant
+          .existing_user_select
+            %input.user-select-input{type: 'text', name: 'existing_user_title', data: {autocomplete_url: titles_api_v1_users_path}, placeholder: t(:existing_user)}
         .form-group.form-check
           %label.form-check-label
             = radio_button_tag 'occupancy_type', 'new_user', false, class: 'form-check-input'
