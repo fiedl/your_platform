@@ -72,7 +72,6 @@ Rails.application.routes.draw do
   resources :groups do
     get :news, to: 'group_news#index'
     get :subgroups, to: 'groups#index'
-    get :mine, on: :collection, to: 'groups#index_mine'
     get 'events/public', to: 'events#index', published_on_local_website: true
     get :events, to: 'events#index'
     resources :semester_calendars
@@ -101,7 +100,8 @@ Rails.application.routes.draw do
       resources :users
     end
   end
-  get :my_groups, to: 'groups#index_mine'
+  
+  resources :my_groups
 
   namespace :groups, path: "" do
     resources :groups_of_groups do

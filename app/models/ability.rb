@@ -318,6 +318,7 @@ class Ability
     can :index, :root
 
     can :index, :documents
+    can :index, :my_groups
 
     can :index_mine, Group
 
