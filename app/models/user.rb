@@ -12,7 +12,7 @@ class User < ApplicationRecord
   include Merit
   has_merit
 
-  attr_accessor             :create_account, :add_to_group, :add_to_corporation
+  attr_accessor             :create_account, :add_to_corporation
   # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
 
   validates_presence_of     :last_name
@@ -367,12 +367,6 @@ class User < ApplicationRecord
   # ------------------------------------------------------------------------------------------
 
   def add_to_group_if_requested
-    if self.add_to_group
-      group = add_to_group if add_to_group.kind_of? Group
-      group = Group.find( add_to_group ) if add_to_group.to_i unless group
-      Membership.create( user: self, group: group ) if group
-      self.add_to_group = nil
-    end
     if self.add_to_corporation.present?
       corporation = add_to_corporation if add_to_corporation.kind_of? Group
       corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum

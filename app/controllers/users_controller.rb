@@ -48,7 +48,13 @@ class UsersController < ApplicationController
     @user = User.new
 
     @parent_group = Group.find(params[:parent_id]) if params[:parent_type] == 'Group'
-    @user.add_to_group = @parent_group.try(:id)
+    @parent_group ||= Group.find(params[:group_id]) if params[:group_id]
+
+    @group_member_since = Date.parse(params[:group_member_since]) if params[:group_member_since]
+    @group_member_since ||= Time.zone.now.to_date
+
+    @may_create_user_account = false # may be changed later when we extend this feature.
+
     @user.female = false
     @user.alias = params[:alias]
   end
@@ -59,14 +65,24 @@ class UsersController < ApplicationController
     @basic_user_params[:first_name] ||= I18n.t(:first_name)
     @basic_user_params[:last_name] ||= I18n.t(:last_name)
     @user = User.create(@basic_user_params)
-    if @user_params[:add_to_group]
-      Group.find(@user_params[:add_to_group]).assign_user @user
-      @user_params.except! :add_to_group
-    end
     @user.update_attributes(@user_params)
     @user.fill_in_template_profile_information
     @user.send_welcome_email if @user.account
-    redirect_to @user
+
+    if params[:group_id]
+      @group = Group.find params[:group_id]
+      @group.assign_user @user, at: (params[:group_member_since] || Time.zone.now)
+    end
+
+    if @group
+      if @group.kind_of? Groups::Room
+        redirect_to group_room_occupants_path(group_id: @group.parent.id)
+      else
+        redirect_to group_members_path(group_id: @group.id)
+      end
+    else
+      redirect_to @user
+    end
   end
 
   def update
