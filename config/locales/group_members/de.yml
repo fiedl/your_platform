@@ -5,3 +5,4 @@ de:
   adding_member_did_not_work: "Mitglied konnte nicht hinzugefügt werden. Fehlercode:"
   enter_last_name_wait_and_select_from_list: "Nachnamen eingeben, dann warten und Person aus Liste auswählen ..."
   member_is_added_in_the_background: "Das Mitglied wird im Hintergrund eingetragen. Es dauert etwas, bis das neue Mitglied in den Listen erscheint."
+  add_member: Mitglied hinzufügen

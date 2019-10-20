@@ -26,6 +26,9 @@
             = t(:term_report)
       - if can? :renew_cache, group
         .tool.renew_cache= renew_cache_button(group)
+      - if can? :manage, group
+        = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
+          = t :add_member
       = render partial: 'groups/export_button'
       - if can? :update_members, group
         = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary right' do
