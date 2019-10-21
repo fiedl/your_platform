@@ -55,4 +55,8 @@ concern :ProfileFields do
     profile_fields.where(type: "ProfileFields::ProfessionalCategory", label: "employment_title").pluck(:value).join(", ")
   end
 
+  def bank_account
+    profile_fields.where(type: "ProfileFields::BankAccount").first
+  end
+
 end
