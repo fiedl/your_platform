@@ -3,6 +3,7 @@ de:
   room: Zimmer
   rent: Miete
   occupant: Bewohner
+  occupants: Bewohner
   change_occupant: Bewohner ändern
   view_occupancy_history: Bewohner-Historie anzeigen
   change_occupant_for_str: "Bewohner für %{str} ändern"
@@ -13,3 +14,4 @@ de:
   date_of_the_change: Datum der Änderung
   existing_user: Bestehender Benutzer
   no_occupant: Kein Bewohner
+  manage_occupants: Bewohner verwalten
