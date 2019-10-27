@@ -189,7 +189,7 @@ describe Caching do
   end
 
   describe "#renew_cache" do
-    class User
+    class RenewCacheTestUser < User
       def fill_cache
         random_test_method
         dependent_test_method
@@ -208,6 +208,7 @@ describe Caching do
       end
     end
 
+    before { @user = @user.becomes(RenewCacheTestUser) }
     subject { @user.renew_cache }
 
     specify "calling a cached method twice should read the second time from cache" do
