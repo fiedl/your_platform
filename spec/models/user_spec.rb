@@ -20,7 +20,7 @@ describe User do
 
   describe "accessible attributes" do
     subject { @user }
-    [ :first_name, :last_name, :alias, :email, :create_account, :female, :add_to_group ].each do |attr|
+    [ :first_name, :last_name, :alias, :email, :create_account, :female ].each do |attr|
       it { should respond_to( attr ) }
       it { should respond_to( "#{attr}=".to_sym ) }
     end
@@ -757,30 +757,6 @@ describe User do
     end
     it "should return all ancestor groups" do
       subject.should == @user.ancestor_groups
-    end
-  end
-
-  describe "#add_to_group attribute" do
-    before do
-      @group = create( :group )
-    end
-    describe "#add_to_group == nil" do
-      subject { create( :user, :add_to_group => nil ) }
-      it "should not add the user to a group during creation" do
-        subject.parent_groups.should_not include( @group )
-      end
-    end
-    describe "#add_to_group == some_group" do
-      subject { create( :user, :add_to_group => @group ) }
-      it "should add the user to the group during creation" do
-        subject.parent_groups.should include( @group )
-      end
-    end
-    describe "#add_to_group == some_group_id" do
-      subject { create( :user, :add_to_group => @group.id ) }
-      it "should add the user to the group during creation" do
-        subject.parent_groups.should include( @group )
-      end
     end
   end
 
