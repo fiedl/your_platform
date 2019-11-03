@@ -98,7 +98,7 @@ class Event < ApplicationRecord
   # ==========================================================================================
 
   def localized_start_at
-    I18n.localize start_at.to_time if start_at.present?
+    I18n.localize start_at if start_at.present?
   end
   def localized_start_at=(string)
     attribute_will_change! :start_at
