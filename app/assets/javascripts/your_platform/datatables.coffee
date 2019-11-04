@@ -14,10 +14,10 @@ App.datatables = {
         "sSearch":         "",
         "sZeroRecords":    "Keine Einträge vorhanden.",
         "oPaginate": {
-          "sFirst":      "Erste",
-          "sPrevious":   "Vorige",
-          "sNext":       "Nächste",
-          "sLast":       "Letzte"
+          "sFirst":      "<<",
+          "sPrevious":   "<",
+          "sNext":       ">",
+          "sLast":       ">>"
         },
         "oAria": {
           "sSortAscending":  ": aktivieren, um Spalte aufsteigend zu sortieren",
@@ -41,6 +41,8 @@ App.datatables = {
           $(settings.nTableWrapper).find('.dataTables_paginate').hide()
         else
           $(settings.nTableWrapper).find('.dataTables_paginate').show()
+        $('.dataTables_wrapper .paginate_button').addClass('btn btn-outline-secondary')
+        $('.dataTables_paginate').addClass('btn-group btn-group-sm')
     }
 
   extend_sort: ->
@@ -88,7 +90,7 @@ App.datatables = {
     # Modify the datatable filter bar.
     $('.dataTables_filter label input')
      .attr('placeholder', I18n.t('type_to_filter_table'))
-     .addClass('form-control')
+     .addClass('form-control')    
 
   create: (selector, options)->
     if $(selector).count() > 0
