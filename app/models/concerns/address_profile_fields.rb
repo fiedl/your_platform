@@ -15,13 +15,13 @@ concern :AddressProfileFields do
     postal_address_field_or_first_address_field
   end
   def primary_address
-    primary_address_field.try(:value)
+    primary_address_field.try(:composed_value)
   end
 
   # The postal address at the study location.
   #
   def study_address
-    study_address_field.try(:value)
+    study_address_field.try(:composed_value)
   end
   def study_address=(address_string)
     field = study_address_field
@@ -46,7 +46,7 @@ concern :AddressProfileFields do
   # The postal address of the work place.
   #
   def work_address
-    work_address_field.try(:value)
+    work_address_field.try(:composed_value)
   end
   def work_address=(address_string)
     field = work_address_field
@@ -64,7 +64,7 @@ concern :AddressProfileFields do
   # The postal address of the user's home.
   #
   def home_address
-    home_address_field.try(:value)
+    home_address_field.try(:composed_value)
   end
   def home_address_field
     address_fields.where(label: home_address_labels).first
