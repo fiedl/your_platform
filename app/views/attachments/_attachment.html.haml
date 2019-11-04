@@ -24,11 +24,6 @@
         = "#{t(:author)}: "
         = user_best_in_place_if can?(:manage, attachment), attachment, :author_title
 
-      - if show_technical_information && can?(:manage, attachment)
-        %p.attachment.type
-        = "#{t(:type)}: "
-        = best_in_place attachment, :type
-
       - if show_technical_information
         %p.attachment.filesize
           = attachment.file_size_human
