@@ -31,7 +31,7 @@ class TermReports::ForCorporation < TermReport
   end
 
   def officer(key)
-    officer_group(key).memberships.at_time(end_of_term).first.try(:user) if officer_group(key)
+    officer_group(key).memberships.at_time(end_of_term).order(:valid_from).first.try(:user) if officer_group(key)
   end
 
   def events
