@@ -22,6 +22,7 @@ class GroupMembersController < ApplicationController
     set_current_access_text :all_signed_in_users_can_read_this_member_list
 
     set_current_tab :members
+    @show_resource_sidebar = true
   end
 
   def new

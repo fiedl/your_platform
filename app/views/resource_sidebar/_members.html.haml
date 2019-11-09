@@ -1,0 +1,20 @@
+%li.nav-item.has-treeview
+  = link_to group_members_path(@navable), class: 'nav-link' do
+    %i.nav-icon.fa.fa-list-alt
+    %p
+      = t :member_lists
+      %i.right.fas.fa-angle-left
+  %ul.nav.nav-treeview
+    %li.nav-item
+      %a.nav-link
+        -#%i.nav-icon.fa.fa-user-plus
+        %p= t :add_member
+    %li.nav-item
+      %a.nav-link
+        %p= t :term_report
+    %li.nav-item
+      %a.nav-link
+        %p= t :data_administration
+    %li.nav-item
+      %a.nav-link
+        %p= t :download_list

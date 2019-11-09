@@ -1,0 +1,14 @@
+%li.nav-item
+  = link_to group_profile_path{@navable}, class: 'nav-link' do
+    -#%i.nav-icon.fa.fa-user-circle
+    %i.nav-icon.fa.fa-address-card
+    %p
+      = t :profile
+      %i.right.fas.fa-angle-left
+
+-#%li.nav-item
+-#  = link_to group_profile_path{@navable}, class: 'nav-link' do
+-#    %i.nav-icon.fa.fa-address-card
+-#    %p
+-#      Kontaktdaten
+-#      %i.right.fas.fa-angle-left

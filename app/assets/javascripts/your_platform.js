@@ -38,6 +38,7 @@
 //= require photoswipe/dist/photoswipe
 //= require photoswipe/dist/photoswipe-ui-default
 //= require cookieconsent/build/cookieconsent.min
+//= require admin-lte/dist/js/adminlte
 //
 //= require your_platform_node_modules.pack.js
 //= require vue_app.pack.js

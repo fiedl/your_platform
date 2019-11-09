@@ -1,0 +1,23 @@
+- if @navable.child_groups.any?
+  %li.nav-header= t :nav_header_filters
+  %li.nav-item.has-treeview
+    = link_to @navable, class: 'nav-link' do
+      %p
+        = @navable.title
+        %i.right.fas.fa-angle-left
+    %ul.nav.nav-treeview
+      - @navable.child_groups.each do |group|
+        %li.nav-item
+          = link_to group, class: 'nav-link' do
+            %i.nav-icon.fas.fa-users
+            %p
+              = group.title
+
+%li.nav-header= t :nav_hedaer_features
+= render partial: 'resource_sidebar/profile'
+= render partial: 'resource_sidebar/events'
+= render partial: 'resource_sidebar/members'
+= render partial: 'resource_sidebar/officers'
+= render partial: 'resource_sidebar/documents'
+= render partial: 'resource_sidebar/communication'
+= render partial: 'resource_sidebar/settings'

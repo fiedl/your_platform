@@ -1,25 +1,30 @@
-.row
-  - if content_for?(:explorer_nav) and content_for?(:side_bar)
-    .col-sm-3#explorer_nav.hidden-print
-      %ul= yield :explorer_nav
-    .col-sm-6= render partial: 'layouts/content_area'
-    .col-sm-3.side_bar.hidden-print
-      = convert_to_content_box { yield :side_bar }
-  - elsif content_for(:explorer_nav)
-    .col-sm-3#explorer_nav.hidden-print
-      %ul= yield :explorer_nav
-    .col-sm-9= render partial: 'layouts/content_area'
-  - elsif show_vertical_nav? and content_for?(:side_bar)
-    .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
-    .col-sm-6= render partial: 'layouts/content_area'
-    .col-sm-3.side_bar
-      = convert_to_content_box { yield :side_bar }
-  - elsif show_vertical_nav? and not content_for?(:side_bar)
-    .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
-    .col-sm-9= render partial: 'layouts/content_area'
-  - elsif not show_vertical_nav? and content_for(:side_bar)
-    .col-sm-9= render partial: 'layouts/content_area'
-    .col-sm-3.side_bar
-      = convert_to_content_box { yield :side_bar }
-  - else
-    .col-12= render partial: 'layouts/content_area'
+- if @show_resource_sidebar
+  = render partial: 'resource_sidebar/sidebar'
+  .content-wrapper.px-4.py-2
+    = render partial: 'layouts/content_area'
+- else
+  .row
+    - if content_for?(:explorer_nav) and content_for?(:side_bar)
+      .col-sm-3#explorer_nav.hidden-print
+        %ul= yield :explorer_nav
+      .col-sm-6= render partial: 'layouts/content_area'
+      .col-sm-3.side_bar.hidden-print
+        = convert_to_content_box { yield :side_bar }
+    - elsif content_for(:explorer_nav)
+      .col-sm-3#explorer_nav.hidden-print
+        %ul= yield :explorer_nav
+      .col-sm-9= render partial: 'layouts/content_area'
+    - elsif show_vertical_nav? and content_for?(:side_bar)
+      .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
+      .col-sm-6= render partial: 'layouts/content_area'
+      .col-sm-3.side_bar
+        = convert_to_content_box { yield :side_bar }
+    - elsif show_vertical_nav? and not content_for?(:side_bar)
+      .col-sm-3#vertical_nav_area.hidden-print= render partial: 'layouts/vertical_nav'
+      .col-sm-9= render partial: 'layouts/content_area'
+    - elsif not show_vertical_nav? and content_for(:side_bar)
+      .col-sm-9= render partial: 'layouts/content_area'
+      .col-sm-3.side_bar
+        = convert_to_content_box { yield :side_bar }
+    - else
+      .col-12= render partial: 'layouts/content_area'
