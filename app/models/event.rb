@@ -106,7 +106,7 @@ class Event < ApplicationRecord
   end
 
   def localized_end_at
-    I18n.localize end_at.to_time if end_at.present?
+    I18n.localize end_at if end_at.present?
   end
   def localized_end_at=(string)
     attribute_will_change! :end_at
