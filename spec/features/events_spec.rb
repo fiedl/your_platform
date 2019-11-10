@@ -391,3 +391,33 @@ feature "Events" do
   end
 
 end
+
+feature "time-zone fix" do
+  # https://trello.com/c/50SnqbDZ/1442-zeitzonen-problem-bei-veranstaltungen
+  include SessionSteps
+
+  before do
+    Time.zone = "Tokyo"
+    @start_at = 1.day.from_now.change(hour: 20)
+    @end_at = @start_at + 1.hour
+
+    @semester_calendar = create :semester_calendar
+    @event = @semester_calendar.events.first
+    @event.update start_at: @start_at, end_at: @end_at, name: "Fröhliches Beisammensitzen"
+    wait_for_cache
+
+    Time.zone = User.default_timezone
+  end
+
+  scenario "Visit calendar and event details to check correct time zone" do
+    login :admin
+
+    visit semester_calendar_path(@semester_calendar)
+    page.text.should include "Fröhliches Beisammensitzen"
+    page.text.should include "12h" # 20:00 in Tokyo!
+
+    click_on "Fröhliches Beisammensitzen"
+    page.text.should include "12:00" # 20:00 in Tokyo!
+    page.text.should include "13:00"
+  end
+end
