@@ -1,6 +1,7 @@
 @import "bootstrap"
 
 body.strappy-layout
+  overflow-x: hidden
 
   nav.navbar
     background-color: #3a68a2 !important
@@ -11,6 +12,9 @@ body.strappy-layout
     #avatar-navlink
       padding-top: 0
       padding-bottom: 0
+
+  .turbolinks-progress-bar
+    background-color: red
 
   .side-col .box
     h1
@@ -58,7 +62,7 @@ body.strappy-layout
   .popover
     max-width: 500px
 
-  .box.first p:first-of-type
+  .box.first > p:first-of-type
     font-size: 1.25rem
     font-weight: 300
 

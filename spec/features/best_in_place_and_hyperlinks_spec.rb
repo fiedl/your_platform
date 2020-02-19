@@ -37,7 +37,7 @@ feature "best_in_place and hyperlinks" do
         @page = create :page, published_at: 1.day.ago
         @attachment = create :image_attachment, title: 'New Attachment'
         @page.attachments << @attachment
-        binding.pry
+        #binding.pry
         visit page_path @page
 
         click_on 'New Attachment'

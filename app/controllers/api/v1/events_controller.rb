@@ -28,7 +28,9 @@ class Api::V1::EventsController < Api::V1::BaseController
   def show
     authorize! :read, event
 
-    render json: event.as_json(methods: required_event_methods)
+    render json: event.as_json(methods: required_event_methods).merge({
+      description: markdown(event.description)
+    })
   end
 
   private
