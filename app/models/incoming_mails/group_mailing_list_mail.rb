@@ -20,7 +20,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
         fill_in_placeholders new_message, from_user: sender_user, to_user: user
-        new_message.deliver_with_action_mailer_now
+        new_message.delay.deliver_with_action_mailer_now
       end
       deliveries
     else
