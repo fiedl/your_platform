@@ -32,11 +32,11 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_HOST: mysql
       REDIS_HOST: redis
-      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
     depends_on:
       - mysql
       - redis
-      - neo4j_development
+      - neo4j
     networks:
       - default
       - backend
@@ -58,11 +58,11 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_HOST: mysql
       REDIS_HOST: redis
-      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
     depends_on:
       - mysql
       - redis
-      - neo4j_development
+      - neo4j
     networks:
       - backend
     command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec sidekiq --queue critical --queue default --queue low --queue cache --queue dag_links --verbose --environment development"
@@ -82,11 +82,11 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_HOST: mysql
       REDIS_HOST: redis
-      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
     depends_on:
       - mysql
       - redis
-      - neo4j_development
+      - neo4j
     networks:
       - backend
     command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rake your_platform:notifications:worker"
@@ -106,11 +106,11 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_HOST: mysql
       REDIS_HOST: redis
-      NEO4J_REST_URL: "http://neo4j:trinity@neo4j_development:7474/"
+      NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
     depends_on:
       - mysql
       - redis
-      - neo4j_development
+      - neo4j
     networks:
       - backend
     command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rails console"
@@ -128,11 +128,11 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_HOST: mysql
       REDIS_HOST: redis
-      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j_test:7474/"
+      NEO4J_REST_URL_TEST: "http://neo4j:trinity@neo4j:7474/"
     depends_on:
       - mysql
       - redis
-      - neo4j_test
+      - neo4j
     networks:
       - backend
     command: /bin/bash -c "rake tests"
@@ -157,8 +157,8 @@ services:
     networks:
       - backend
 
-  neo4j_development:
-    image: neo4j
+  neo4j:
+    image: neo4j:3.5
     volumes:
       - your_platform_neo4j_data:/data
     ports:
@@ -169,12 +169,3 @@ services:
     networks:
       - backend
 
-  neo4j_test:
-    image: neo4j
-    ports:
-      - "0.0.0.0:7475:7474"
-      - "0.0.0.0:7688:7687"
-    environment:
-      NEO4J_AUTH: "neo4j/trinity"
-    networks:
-      - backend
