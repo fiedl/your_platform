@@ -127,7 +127,7 @@ module YourPlatformMailMessageExtensions
   end
 
   def deliver_with_action_mailer_later
-    DeliverMessageJob.perform_later(self)
+    DeliverEmailMessageJob.perform_later(self)
   end
 
   def import_delivery_method_from_actionmailer
