@@ -126,6 +126,10 @@ module YourPlatformMailMessageExtensions
     deliver
   end
 
+  def deliver_with_action_mailer_later
+    DeliverMessageJob.perform_later(self)
+  end
+
   def import_delivery_method_from_actionmailer
     case ActionMailer::Base.delivery_method
     when :test
