@@ -15,6 +15,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
 
         new_message.from = formatted_from
         new_message.reply_to = formatted_from
+        new_message.return_path = BaseMailer.default[:from]
         new_message.sender = BaseMailer.default[:from]
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
