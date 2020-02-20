@@ -13,8 +13,9 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         # in the loop.
         new_message = Mail::Message.new self.message.to_s
 
-        new_message.smtp_envelope_from = bounces_address
         new_message.from = formatted_from
+        new_message.reply_to = formatted_from
+        new_message.sender = BaseMailer.default[:from]
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
         fill_in_placeholders new_message, from_user: sender_user, to_user: user
