@@ -127,7 +127,7 @@ module YourPlatformMailMessageExtensions
   end
 
   def deliver_with_action_mailer_later
-    DeliverEmailMessageJob.perform_later(self)
+    DeliverEmailMessageJob.perform_later(raw_message: self.to_s, envelope_attributes: envelope_attributes)
   end
 
   def import_delivery_method_from_actionmailer
@@ -142,6 +142,11 @@ module YourPlatformMailMessageExtensions
       delivery_method Mail::Sendmail, location: '/usr/sbin/sendmail', arguments: '-i -t'
     end
   end
+
+  def envelope_attributes
+    {smtp_envelope_to: smtp_envelope_to, smtp_envelope_from: smtp_envelope_from}
+  end
+
 
   # Replace a string in the message, e.g. a {{placeholder}}.
   #
