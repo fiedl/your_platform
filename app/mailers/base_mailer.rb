@@ -13,4 +13,8 @@ class BaseMailer < ActionMailer::Base
   helper ApplicationHelper
   default from: "\"#{AppVersion.app_name}\" <#{Setting.support_email}>"
 
+  def self.delivery_errors_address
+    "delivery-errors@#{AppVersion.email_domain}"
+  end
+
 end

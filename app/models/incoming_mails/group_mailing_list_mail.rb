@@ -15,11 +15,12 @@ class IncomingMails::GroupMailingListMail < IncomingMail
 
         new_message.from = formatted_from
         new_message.reply_to = formatted_from
+        new_message.return_path = BaseMailer.delivery_errors_address
         new_message.sender = BaseMailer.default[:from]
         new_message.to = formatted_to
         new_message.smtp_envelope_to = user.email
         fill_in_placeholders new_message, from_user: sender_user, to_user: user
-        new_message.deliver_with_action_mailer_now
+        new_message.deliver_with_action_mailer_later
       end
       deliveries
     else

@@ -26,9 +26,6 @@ module YourPlatformMailMessageExtensions
       return false unless @allow_recipients_without_account || recipient_is_system_address? || recipient_has_user_account?
     end
 
-    check_anti_spam_criteria_for_address_field :from
-    check_anti_spam_criteria_for_address_field :to
-
     if recipient_address.include?('@')
       begin
         Rails.logger.info "Sending mail smtp_envelope_to #{self.smtp_envelope_to.to_s}."
@@ -51,14 +48,6 @@ module YourPlatformMailMessageExtensions
       Rails.logger.info "Recipient address #{recipient_address} needs review. Not delivering."
       recipient_address_needs_review!
       return false
-    end
-  end
-
-  def check_anti_spam_criteria_for_address_field(field_name)
-    self[field_name].try(:value).to_s.split(",").each do |address_string|
-      unless address_string.include?('"') and address_string.include?('<') and address_string.include?('@')
-        raise 'Make sure the ' + field_name.to_s + ' field (currently ' + address_string + ') is formatted like "Foo" <bar@example.com>. Otherwise this message will be classified as spam by some servers.'
-      end
     end
   end
 
@@ -126,6 +115,10 @@ module YourPlatformMailMessageExtensions
     deliver
   end
 
+  def deliver_with_action_mailer_later
+    DeliverEmailMessageJob.perform_later(raw_message: self.to_s, envelope_attributes: envelope_attributes)
+  end
+
   def import_delivery_method_from_actionmailer
     case ActionMailer::Base.delivery_method
     when :test
@@ -138,6 +131,11 @@ module YourPlatformMailMessageExtensions
       delivery_method Mail::Sendmail, location: '/usr/sbin/sendmail', arguments: '-i -t'
     end
   end
+
+  def envelope_attributes
+    {smtp_envelope_to: smtp_envelope_to, smtp_envelope_from: smtp_envelope_from}
+  end
+
 
   # Replace a string in the message, e.g. a {{placeholder}}.
   #
