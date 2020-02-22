@@ -532,6 +532,113 @@ describe IncomingMails::GroupMailingListMail do
       end
     end
 
+    describe "when the recipient group has a name" do
+      before do
+        @group.name = "All Developers"
+        @group.mailing_list_sender_filter = :open
+        @group.save
+      end
+      describe "when the group is the sole 'To' recipient" do
+        it "injects the recipient-group name into the To field" do
+          subject
+          last_email["To"].to_s.should include "All Developers"
+        end
+      end
+      describe "when the 'To' recipient has already a formatted name" do
+        let(:example_raw_message) { %{
+          From: john@example.com
+          To: Developers <all-developers@example.com>
+          Subject: Great news for all developers!
+          X-Original-To: all-developers@example.com
+          Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+          Free drinks this evening!
+        }.gsub("  ", "") }
+        it "rewrites the field" do
+          subject
+          last_email["To"].to_s.should include "All Developers"
+        end
+      end
+      describe "when the 'To' recipient has already a formatted name with a comma" do
+        let(:example_raw_message) { %{
+          From: john@example.com
+          To: "Developers, All" <all-developers@example.com>
+          Subject: Great news for all developers!
+          X-Original-To: all-developers@example.com
+          Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+          Free drinks this evening!
+        }.gsub("  ", "") }
+        it "rewrites the field" do
+          subject
+          last_email["To"].to_s.should include "All Developers"
+          last_email["To"].to_s.should_not include "Developers, All"
+        end
+      end
+      describe "when the group is one of two 'To' recipients" do
+        let(:example_raw_message) { %{
+          From: john@example.com
+          To: all-developers@example.com, foo@example.com
+          Subject: Great news for all developers!
+          X-Original-To: all-developers@example.com
+          Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+          Free drinks this evening!
+        }.gsub("  ", "") }
+        it "injects the recipient-group name into the To field" do
+          subject
+          last_email["To"].to_s.should include "All Developers"
+          last_email["To"].to_s.should include "all-developers@example.com"
+          last_email["To"].to_s.should include "foo@example.com"
+        end
+      end
+      describe "when the group is one of two 'CC' recipients" do
+        let(:example_raw_message) { %{
+          From: john@example.com
+          To: foo@example.com
+          CC: bar@example.com, "Developers" <all-developers@example.com>
+          Subject: Great news for all developers!
+          X-Original-To: all-developers@example.com
+          Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+          Free drinks this evening!
+        }.gsub("  ", "") }
+        it "injects the recipient-group name into the CC field" do
+          subject
+          last_email["CC"].to_s.should include "All Developers"
+          last_email["CC"].to_s.should include "all-developers@example.com"
+          last_email["CC"].to_s.should include "bar@example.com"
+        end
+        it "leaves the To field unchanged" do
+          subject
+          last_email["To"].to_s.should == Mail::Message.new(example_raw_message)["To"].to_s
+          last_email["To"].to_s.should_not include "all-developers@example.com"
+        end
+      end
+      describe "when the group is in the BCC field" do
+        let(:example_raw_message) { %{
+          From: john@example.com
+          To: foo@example.com
+          CC: "Bar" <bar@example.com>
+          Subject: Great news for all developers!
+          X-Original-To: all-developers@example.com
+          Message-ID: <579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com>
+
+          Free drinks this evening!
+        }.gsub("  ", "") }
+        it "leaves the To field unchanged" do
+          subject
+          last_email["To"].to_s.should == Mail::Message.new(example_raw_message)["To"].to_s
+          last_email["To"].to_s.should_not include "all-developers@example.com"
+        end
+        it "leaves the CC field unchanged" do
+          subject
+          last_email["CC"].to_s.should == Mail::Message.new(example_raw_message)["CC"].to_s
+          last_email["CC"].to_s.should_not include "all-developers@example.com"
+        end
+      end
+    end
+
   end
 end
 

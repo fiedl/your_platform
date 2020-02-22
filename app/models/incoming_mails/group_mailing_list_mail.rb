@@ -17,7 +17,8 @@ class IncomingMails::GroupMailingListMail < IncomingMail
         new_message.reply_to = formatted_from
         new_message.return_path = BaseMailer.delivery_errors_address
         new_message.sender = BaseMailer.default[:from]
-        new_message.to = formatted_to
+        new_message.to = formatted_to_field
+        new_message.cc = formatted_cc_field
         new_message.smtp_envelope_to = user.email
         fill_in_placeholders new_message, from_user: sender_user, to_user: user
         new_message.deliver_with_action_mailer_later
@@ -55,6 +56,24 @@ class IncomingMails::GroupMailingListMail < IncomingMail
 
   def formatted_to
     "\"#{recipient_group.title}\" <#{destination}>"
+  end
+
+  def formatted_field(header_key)
+    if message[header_key]
+      parts = message[header_key].address_list.addresses.collect do |part|
+        part = formatted_to if part.address == destination
+        part.to_s
+      end
+      parts.join(", ")
+    end
+  end
+
+  def formatted_to_field
+    formatted_field("To")
+  end
+
+  def formatted_cc_field
+    formatted_field("CC")
   end
 
   PERSONAL_GREETING_PLACEHOLDERS = ["{{anrede}}", "{{greeting}}"]
