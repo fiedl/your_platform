@@ -157,6 +157,25 @@ module YourPlatformMailMessageExtensions
     end
   end
 
+  # Try to extract the text of the message
+  def text
+    if self.multipart?
+      self.parts.each do |part|
+        if part.text?
+          return part.body.decoded
+        elsif part.multipart?
+          part.parts.each do |part|
+            if part.text?
+              return part.body.decoded
+            end
+          end
+        end
+      end
+    else
+      return self.body.decoded
+    end
+  end
+
 
   private
 

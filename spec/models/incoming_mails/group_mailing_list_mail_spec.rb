@@ -52,8 +52,8 @@ describe IncomingMails::GroupMailingListMail do
         last_email.subject.should include 'Great news for all developers!'
         last_email.body.should include 'Free drinks this evening!'
       end
-      it 'does not create any post' do
-        expect { subject }.not_to change { Post.count }
+      it 'does create a post' do
+        expect { subject }.to change { Post.count }.by 1
       end
       it 'does not raise an error' do
         expect { subject }.not_to raise_error
@@ -84,7 +84,25 @@ describe IncomingMails::GroupMailingListMail do
         it_behaves_like 'forwarding the message'
         describe "when the group has no members" do
           before { @member.destroy }
-          it_behaves_like "nothing to do"
+          it 'does not send any email' do
+            expect { subject }.not_to change { ActionMailer::Base.deliveries.count }
+          end
+          it 'does create a post' do
+            expect { subject }.to change { Post.count }.by 1
+          end
+          it 'does not raise an error' do
+            expect { subject }.not_to raise_error
+          end
+        end
+
+        it "creates a post" do
+          subject
+          post = @group.posts.last
+          post.author.should == @user
+          post.title.should == "Great news for all developers!"
+          post.message_id.should == "579b28a0a60e2_5ccb3ff56d4319d8918bc@example.com"
+          post.text.should include "Free drinks this evening!"
+          post.sent_via.should == "all-developers@example.com"
         end
       end
     end
@@ -123,6 +141,11 @@ describe IncomingMails::GroupMailingListMail do
       it 'forwards the mail with 🍕' do
         subject
         last_email.body_in_utf8.should include '🍕'
+      end
+      it 'creates a post with 🍕' do
+        subject
+        post = @group.posts.last
+        post.text.should include "🍕"
       end
     end
 
@@ -188,6 +211,13 @@ describe IncomingMails::GroupMailingListMail do
             last_email.to_s.should include "Dear #{@member.name}!"
             last_email.to_s.should_not include "{{greeting}}"
           end
+        end
+
+        it "creates a post with attachment" do
+          subject
+          attachment = @group.posts.last.attachments.first
+          attachment.filename.should == "pdf-upload.pdf"
+          attachment.content_type.should == "application/pdf"
         end
       end
 
