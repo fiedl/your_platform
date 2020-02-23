@@ -5,7 +5,7 @@ class IncomingMails::GroupMailingListMail < IncomingMail
 
   def process(options = {})
     if recipient_group && authorized?
-      create_post_later
+      # create_post_later  # TODO: Bring this back when the database supports it. https://trello.com/c/L29imOT9/1013-e-mails-utf-8-pizza-🍕, https://trello.com/c/08q1iHFm/1469-e-mail-verteiler-anhänge-in-app-anzeigen
       deliver_message_to_earch_user_later
     else
       []

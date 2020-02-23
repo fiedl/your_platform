@@ -52,7 +52,7 @@ describe IncomingMails::GroupMailingListMail do
         last_email.subject.should include 'Great news for all developers!'
         last_email.body.should include 'Free drinks this evening!'
       end
-      it 'does create a post' do
+      pending 'does create a post' do
         expect { subject }.to change { Post.count }.by 1
       end
       it 'does not raise an error' do
@@ -87,7 +87,7 @@ describe IncomingMails::GroupMailingListMail do
           it 'does not send any email' do
             expect { subject }.not_to change { ActionMailer::Base.deliveries.count }
           end
-          it 'does create a post' do
+          pending 'does create a post' do
             expect { subject }.to change { Post.count }.by 1
           end
           it 'does not raise an error' do
@@ -95,7 +95,7 @@ describe IncomingMails::GroupMailingListMail do
           end
         end
 
-        it "creates a post" do
+        pending "creates a post" do
           subject
           post = @group.posts.last
           post.author.should == @user
@@ -142,7 +142,7 @@ describe IncomingMails::GroupMailingListMail do
         subject
         last_email.body_in_utf8.should include '🍕'
       end
-      it 'creates a post with 🍕' do
+      pending 'creates a post with 🍕' do
         subject
         post = @group.posts.last
         post.text.should include "🍕"
@@ -213,7 +213,7 @@ describe IncomingMails::GroupMailingListMail do
           end
         end
 
-        it "creates a post with attachment" do
+        pending "creates a post with attachment" do
           subject
           attachment = @group.posts.last.attachments.first
           attachment.filename.should == "pdf-upload.pdf"
