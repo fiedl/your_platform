@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190813235918) do
+ActiveRecord::Schema.define(version: 20200222235646) do
 
-  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "trackable_type"
     t.integer  "trackable_id"
     t.string   "owner_type"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["trackable_id", "trackable_type"], name: "index_activities_on_trackable_id_and_trackable_type", using: :btree
   end
 
-  create_table "attachments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "attachments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "file"
     t.string   "title"
     t.text     "description",    limit: 65535
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["author_user_id"], name: "attachments_author_user_id_fk", using: :btree
   end
 
-  create_table "auth_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "auth_tokens", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "token"
     t.integer  "user_id"
     t.string   "resource_type"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["token"], name: "index_auth_tokens_on_token", unique: true, using: :btree
   end
 
-  create_table "badges_sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "badges_sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "badge_id"
     t.integer  "sash_id"
     t.boolean  "notified_user", default: false
@@ -66,7 +66,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["sash_id"], name: "index_badges_sashes_on_sash_id", using: :btree
   end
 
-  create_table "beta_invitations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "beta_invitations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "beta_id"
     t.integer  "inviter_id"
     t.integer  "invitee_id"
@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "betas", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "betas", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.integer  "max_invitations_per_inviter"
     t.datetime "created_at",                                null: false
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.string   "key"
   end
 
-  create_table "bookmarks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "bookmarks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "bookmarkable_id"
     t.string   "bookmarkable_type"
     t.integer  "user_id"
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["user_id"], name: "bookmarks_user_id_fk", using: :btree
   end
 
-  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "comments", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.text     "text",             limit: 65535
     t.integer  "author_user_id"
     t.string   "commentable_type"
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",                     null: false
   end
 
-  create_table "dag_links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "dag_links", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "ancestor_id"
     t.string   "ancestor_type"
     t.integer  "descendant_id"
@@ -117,7 +117,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["descendant_id", "descendant_type"], name: "dag_descendant", using: :btree
   end
 
-  create_table "decision_making_options", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "decision_making_options", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.text     "description", limit: 65535
     t.integer  "process_id"
@@ -125,7 +125,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",                null: false
   end
 
-  create_table "decision_making_processes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "decision_making_processes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.string   "type"
     t.text     "wording",              limit: 65535
@@ -142,7 +142,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",                         null: false
   end
 
-  create_table "decision_making_signatures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "decision_making_signatures", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "user_id"
     t.string   "signable_type"
     t.string   "signable_id"
@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",    null: false
   end
 
-  create_table "decision_making_votes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "decision_making_votes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "process_id"
     t.integer  "option_id"
     t.integer  "user_id"
@@ -160,7 +160,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "events", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.text     "description",               limit: 65535
     t.datetime "start_at"
@@ -173,7 +173,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.integer  "group_id"
   end
 
-  create_table "flags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "flags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "key"
     t.integer  "flagable_id"
     t.string   "flagable_type"
@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["key"], name: "key", using: :btree
   end
 
-  create_table "geo_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "geo_locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "address"
     t.float    "latitude",     limit: 24
     t.float    "longitude",    limit: 24
@@ -200,7 +200,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["address"], name: "index_geo_locations_on_address", using: :btree
   end
 
-  create_table "groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "groups", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -213,7 +213,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.string   "subdomain"
   end
 
-  create_table "impressions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "impressions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "impressionable_type"
     t.integer  "impressionable_id"
     t.integer  "user_id"
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["user_id"], name: "index_impressions_on_user_id", using: :btree
   end
 
-  create_table "issues", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "issues", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.text     "description",          limit: 65535
     t.integer  "reference_id"
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.integer  "author_id"
   end
 
-  create_table "last_seen_activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "last_seen_activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "user_id"
     t.string   "description"
     t.integer  "link_to_object_id"
@@ -261,7 +261,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["user_id"], name: "last_seen_activities_user_id_fk", using: :btree
   end
 
-  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "locations", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "object_id"
     t.string   "object_type"
     t.float    "longitude",   limit: 24
@@ -270,7 +270,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",             null: false
   end
 
-  create_table "mentions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "mentions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "who_user_id"
     t.integer  "whom_user_id"
     t.string   "reference_type"
@@ -280,7 +280,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["whom_user_id"], name: "index_mentions_on_whom_user_id", using: :btree
   end
 
-  create_table "merit_actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "merit_actions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "user_id"
     t.string   "action_method"
     t.integer  "action_value"
@@ -293,7 +293,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at"
   end
 
-  create_table "merit_activity_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "merit_activity_logs", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "action_id"
     t.string   "related_change_type"
     t.integer  "related_change_id"
@@ -301,19 +301,19 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "created_at"
   end
 
-  create_table "merit_score_points", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "merit_score_points", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "score_id"
     t.integer  "num_points", default: 0
     t.string   "log"
     t.datetime "created_at"
   end
 
-  create_table "merit_scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "merit_scores", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer "sash_id"
     t.string  "category", default: "default"
   end
 
-  create_table "nav_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "nav_nodes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "url_component"
     t.string   "breadcrumb_item"
     t.string   "menu_item"
@@ -329,7 +329,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["navable_id", "navable_type"], name: "navable_type", using: :btree
   end
 
-  create_table "navable_visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "navable_visits", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "navable_id"
     t.string   "navable_type"
     t.integer  "group_id"
@@ -337,7 +337,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "notifications", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "recipient_id"
     t.integer  "author_id"
     t.string   "reference_url"
@@ -352,7 +352,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "failed_at"
   end
 
-  create_table "pages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "pages", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.text     "content",           limit: 65535
     t.datetime "created_at"
@@ -370,7 +370,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["author_user_id"], name: "pages_author_user_id_fk", using: :btree
   end
 
-  create_table "permalinks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "permalinks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "url_path"
     t.string   "reference_type"
     t.integer  "reference_id"
@@ -379,7 +379,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.string   "host"
   end
 
-  create_table "post_deliveries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "post_deliveries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "post_id"
     t.integer  "user_id"
     t.string   "user_email"
@@ -390,7 +390,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "posts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "posts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "subject"
     t.text     "text",            limit: 65535
     t.integer  "group_id"
@@ -408,7 +408,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["group_id"], name: "posts_group_id_fk", using: :btree
   end
 
-  create_table "profile_fields", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "profile_fields", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "profileable_id"
     t.string   "label"
     t.string   "type"
@@ -423,14 +423,14 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["type"], name: "type", using: :btree
   end
 
-  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "title"
     t.text     "description", limit: 65535
     t.datetime "created_at",                null: false
     t.datetime "updated_at",                null: false
   end
 
-  create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "relationships", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.integer  "user1_id"
     t.integer  "user2_id"
@@ -440,7 +440,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["user2_id"], name: "relationships_user2_id_fk", using: :btree
   end
 
-  create_table "requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "user_id"
     t.string   "ip"
     t.string   "method"
@@ -452,19 +452,19 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "sashes", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "semester_calendars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "semester_calendars", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "group_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "term_id"
   end
 
-  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "settings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "var",                      null: false
     t.text     "value",      limit: 65535
     t.integer  "thing_id"
@@ -474,7 +474,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
   end
 
-  create_table "states", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "states", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.integer  "author_user_id"
     t.integer  "reference_id"
@@ -484,7 +484,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.text     "comment",        limit: 65535
   end
 
-  create_table "status_group_membership_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "status_group_membership_infos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "membership_id"
     t.integer  "promoted_by_workflow_id"
     t.integer  "promoted_on_event_id"
@@ -492,7 +492,14 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at"
   end
 
-  create_table "taggings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "subscriptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
+    t.integer  "group_id"
+    t.string   "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "taggings", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "tag_id"
     t.string   "taggable_type"
     t.integer  "taggable_id"
@@ -511,8 +518,8 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["tagger_id"], name: "index_taggings_on_tagger_id", using: :btree
   end
 
-  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
-    t.string  "name",                                     collation: "utf8_bin"
+  create_table "tags", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
+    t.string  "name"
     t.integer "taggings_count",               default: 0
     t.string  "title"
     t.text    "body",           limit: 65535
@@ -520,7 +527,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["name"], name: "index_tags_on_name", unique: true, using: :btree
   end
 
-  create_table "term_report_member_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "term_report_member_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "user_id"
     t.integer  "term_report_id"
     t.string   "last_name"
@@ -537,7 +544,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at",        null: false
   end
 
-  create_table "term_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "term_reports", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "term_id"
     t.integer  "group_id"
     t.integer  "number_of_members"
@@ -561,14 +568,14 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.decimal  "score",                             precision: 10
   end
 
-  create_table "terms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "terms", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "year"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string   "type"
   end
 
-  create_table "user_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "user_accounts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "encrypted_password",                   default: "", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -589,7 +596,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["user_id"], name: "user_accounts_user_id_fk", using: :btree
   end
 
-  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "alias"
     t.string   "first_name"
     t.string   "last_name"
@@ -606,7 +613,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.integer  "level",               default: 0
   end
 
-  create_table "workflow_kit_parameters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "workflow_kit_parameters", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "key"
     t.string   "value"
     t.string   "parameterable_type"
@@ -615,7 +622,7 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.datetime "updated_at"
   end
 
-  create_table "workflow_kit_steps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "workflow_kit_steps", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.integer  "sequence_index"
     t.integer  "workflow_id"
     t.string   "brick_name"
@@ -624,14 +631,14 @@ ActiveRecord::Schema.define(version: 20190813235918) do
     t.index ["workflow_id"], name: "workflow_kit_steps_workflow_id_fk", using: :btree
   end
 
-  create_table "workflow_kit_workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "workflow_kit_workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.string   "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
+  create_table "workflows", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin" do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
