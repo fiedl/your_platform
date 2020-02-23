@@ -45,7 +45,7 @@ cache:
   directories:
     - node_modules
   yarn: true
-dist: trusty
+dist: xenial
 sudo: true
 addons:
   firefox: latest
