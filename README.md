@@ -13,24 +13,7 @@ The application serves four main purposes: Centralized or decentralized member m
 
 ## Getting Started Developing
 
-Install [Docker](https://www.docker.com/community-edition#/download) including *docker-compose* on your development machine.
-
-Then check out and start the standalone application:
-
-```bash
-git clone git@github.com:fiedl/your_platform.git
-cd your_platform
-
-docker-compose up
-```
-
-Open [http://localhost:3001](http://localhost:3001) in your web browser.
-
-**Attention**: Do not use this in production on a real server as [docker-compose.yml](https://github.com/fiedl/your_platform/blob/master/docker-compose.yml) includes dummy passwords!
-
-Make sure that your docker machine has at least 8GB of RAM.
-
-If you want to create an application based on the YourPlatform engine, please follow the [GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted) in the wiki.
+To create an application based on the YourPlatform engine, please follow our **[GETTING STARTED GUIDE](https://github.com/fiedl/your_platform/wiki/GettingStarted)**.
 
 If you have any troubles, **feel free to contact us on our [gitter channel](https://gitter.im/fiedl/your_platform)**.
 
@@ -50,9 +33,9 @@ Our [code documentation can be found on rubydoc.info](http://www.rubydoc.info/gi
 
 ## Authors and License
 
-**Copyright** (c) 2012-2019, Sebastian Fiedlschuster
+**Copyright** (c) 2012-2020, Sebastian Fiedlschuster
 
-**Contributors**: Jörg Reichardt, Manuel Zerpies, Joachim Back
+**Contributors**: Jörg Reichardt, Manuel Zerpies, Joachim Back, Falk Schimweg, Felix Plapper
 
 **License**: The Source Code is released under the GNU Affero General Public License (AGPL). Explicitely excluded are the images and fonts.
 
