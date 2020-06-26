@@ -71,4 +71,13 @@ class Relationship < ApplicationRecord
     self.of = User.find_by_title( title )
   end
 
+
+  # Relationship.related_users via: "Father", opposite: "Son"
+  def self.related_users(to:, via:, opposite:)
+    User.where(id: (
+      Relationship.where(name: via, user2: to).pluck(:user1_id) +
+      Relationship.where(name: opposite, user1: to).pluck(:user2_id)
+    ))
+  end
+
 end
