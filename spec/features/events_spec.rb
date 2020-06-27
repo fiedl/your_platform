@@ -414,10 +414,19 @@ feature "time-zone fix" do
 
     visit semester_calendar_path(@semester_calendar)
     page.text.should include "Fröhliches Beisammensitzen"
-    page.text.should include "12h" # 20:00 in Tokyo!
+    if Time.zone.now.dst? # Tokyo has no longer a daylight-saving time
+      page.text.should include "13h" # 20:00 in Tokyo!
+    else
+      page.text.should include "12h" # 20:00 in Tokyo!
+    end
 
     click_on "Fröhliches Beisammensitzen"
-    page.text.should include "12:00" # 20:00 in Tokyo!
-    page.text.should include "13:00"
+    if Time.zone.now.dst?
+      page.text.should include "13:00" # 20:00 in Tokyo!
+      page.text.should include "14:00"
+    else
+      page.text.should include "12:00" # 20:00 in Tokyo!
+      page.text.should include "13:00"
+    end
   end
 end
