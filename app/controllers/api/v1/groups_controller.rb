@@ -8,7 +8,14 @@ class Api::V1::GroupsController < Api::V1::BaseController
   def show
     authorize! :read, group
 
-    render json: group.as_json(methods: [:title, :avatar_url, :profile_fields, :important_officers])
+    render json: group.as_json(methods: [:title, :avatar_url, :profile_fields]).merge({
+      important_officers: group.important_officers.collect do |hash|
+        {
+          description: hash[:description],
+          user: hash[:user].as_json(methods: [:title, :avatar_url, :profile_fields])
+        }
+      end
+    })
   end
 
 end

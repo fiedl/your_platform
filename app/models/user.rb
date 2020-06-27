@@ -91,13 +91,6 @@ class User < ApplicationRecord
   include UserBio
   include UserBackup
 
-  def as_json(options = {})
-    super.as_json(options).merge({
-      title: title,
-      avatar_url: avatar_url,
-      profile_fields: profile_fields
-    })
-  end
 
   # General Properties
   # ==========================================================================================

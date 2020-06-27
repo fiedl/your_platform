@@ -20,7 +20,15 @@ class Api::V1::UsersController < Api::V1::BaseController
   def show
     authorize! :read, user
 
-    render json: user.as_json
+    render json: user.as_json(
+      include: {
+        profile_fields: {
+          only: [:type, :key, :label, :value, :created_at, :updated_at, :parent_id, :children],
+          methods: [:key]
+        }
+      },
+      methods: [:title, :avatar_url]
+    )
   end
 
 end
