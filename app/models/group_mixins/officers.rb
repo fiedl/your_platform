@@ -59,4 +59,21 @@ module GroupMixins::Officers
 
   end
 
+  def important_officers_keys
+    [:president, :ceo, :cto, :king, :emperor, :chair]
+  end
+
+  def important_officers
+    officers_group_ids = officers_groups_of_self_and_descendant_groups.map(&:id)
+    entries = []
+    important_officers_keys.each do |key|
+      Group.where(id: officers_group_ids).flagged(key).each do |group|
+        group.members.each do |user|
+          entries << {description: group.name, user: user}
+        end
+      end
+    end
+    return entries
+  end
+
 end

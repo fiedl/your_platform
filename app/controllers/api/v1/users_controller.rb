@@ -20,7 +20,7 @@ class Api::V1::UsersController < Api::V1::BaseController
   def show
     authorize! :read, user
 
-    render json: user.as_json(methods: [:title, :avatar_url, :profile_fields])
+    render json: user.as_json
   end
 
 end
