@@ -45,11 +45,11 @@ concern :CurrentLayout do
   end
 
   def default_layout
-    'strappy'
+    'bootstrap'
   end
 
   def intranet_layout
-    'strappy'
+    'bootstrap'
   end
 
   def current_logo_url(key = nil)
@@ -72,7 +72,7 @@ concern :CurrentLayout do
   end
 
   def resource_centred_layouts
-    %w(resource_2017 primer)
+    %w(resource_2017 primer bootstrap)
   end
 
   def resource_centred_layout?

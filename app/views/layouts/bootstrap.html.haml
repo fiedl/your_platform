@@ -1,116 +1,243 @@
 !!!
-%html{:lang => 'en'}
+%html{:lang => "en"}
   %head
-    %meta{:charset => 'utf-8'}/
-    %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
-    %meta{:content => 'width=device-width, initial-scale=1.0', :name => 'viewport'}/
-    %meta{name: 'turbolinks-cache-control', content: 'no-cache'}/
+    %meta{:charset => "utf-8"}/
+    %meta{:content => "width=device-width, initial-scale=1, viewport-fit=cover", :name => "viewport"}/
+    %meta{:content => "ie=edge", "http-equiv" => "X-UA-Compatible"}/
     %title= website_title_with_app_name
-    = csrf_meta_tags
-    / Le HTML5 shim, for IE6-8 support of HTML elements
-    /[if lt IE 9]
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
-
-
-
-    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
-    = stylesheet_link_tag 'bootstrap_layout', :media => 'all', data: {turbolinks_track: 'reload'}
+    %link{:crossorigin => "", :href => "https://fonts.gstatic.com/", :rel => "preconnect"}/
+    %meta{:content => "#206bc4", :name => "msapplication-TileColor"}/
+    %meta{:content => "#206bc4", :name => "theme-color"}/
+    %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
+    %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+    %meta{:content => "yes", :name => "mobile-web-app-capable"}/
+    %meta{:content => "True", :name => "HandheldFriendly"}/
+    %meta{:content => "320", :name => "MobileOptimized"}/
+    %meta{:content => "noindex,nofollow,noarchive", :name => "robots"}/
+    %link{:href => "./favicon.ico", :rel => "icon", :type => "image/x-icon"}/
+    %link{:href => "./favicon.ico", :rel => "shortcut icon", :type => "image/x-icon"}/
+    / CSS files
+    :css
+      body {
+      	display: none;
+      }
+    = stylesheet_link_tag 'bootstrap_layout', :media => 'all'
     = stylesheet_link_tag 'application', :media => 'all'
-
-    -#/ For third-generation iPad with high-resolution Retina display:
-    -#/ Size should be 144 x 144 pixels
-    -#= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
-    -#/ For iPhone with high-resolution Retina display:
-    -#/ Size should be 114 x 114 pixels
-    -#= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
-    -#/ For first- and second-generation iPad:
-    -#/ Size should be 72 x 72 pixels
-    -#= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
-    -#/ For non-Retina iPhone, iPod Touch, and Android 2.1+ devices:
-    -#/ Size should be 57 x 57 pixels
-    -#= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
-    -#/ For all other devices
-    -#/ Size should be 32 x 32 pixels
-    -#-#= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
-
-    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
-
-    = google_maps_api_script_tag
     = javascript_include_tag 'application', data: {turbolinks_eval: false}
-    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js" unless Rails.env.test? # Takes tooooo long.
-    = yield :scripts
-    = yield :head
-
-  = body_tag do
-    #vue-app
-      = render partial: 'shared/current_masquerade'
+    = javascript_include_tag 'bootstrap_tabler', data: {turbolinks_eval: false}
+    - if Rails.env.development? # vue dev tools
+      %script{src: "http://localhost:8098"}
+    = csrf_meta_tags
+  = body_tag class: 'antialiased' do
+    .page
       - if current_user
-        %nav#logged-in-bar.navbar.navbar-default.navbar-top
-          .container-fluid
-            .navbar-header
-              %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
-                %span.sr-only Toggle Navigation
-                %span.icon-bar
-                %span.icon-bar
-                %span.icon-bar
-              %a.navbar-brand{:href => '#'}= app_name
+        %header.navbar.navbar-expand-md.navbar-light
+          .container-xl
+            %button.navbar-toggler{"data-target" => "#navbar-menu", "data-toggle" => "collapse", :type => "button"}
+              %span.navbar-toggler-icon
+            %a.navbar-brand.navbar-brand-autodark.d-none-navbar-horizontal.pr-0.pr-md-3{:href => root_path}
+              %img.navbar-brand-image{:src => logo_url}/
+              &nbsp;
+              = AppVersion.app_name
+            .navbar-nav.flex-row.order-md-last
+              .nav-item.dropdown.d-none.d-md-flex.mr-3
+                %a.nav-link.px-0{"data-toggle" => "dropdown", :href => "#", :tabindex => "-1"}
+                  %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                    %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                    %path{:d => "M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"}
+                    %path{:d => "M9 17v1a3 3 0 0 0 6 0v-1"}
+                  %span.badge.bg-red
+                .dropdown-menu.dropdown-menu-right.dropdown-menu-card
+                  .card
+                    .card-body
+                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus ad amet consectetur exercitationem fugiat in ipsa ipsum, natus odio quidem quod repudiandae sapiente. Amet debitis et magni maxime necessitatibus ullam.
+              .nav-item.dropdown
+                %a.nav-link.d-flex.lh-1.text-reset.p-0{"data-toggle" => "dropdown", :href => "#"}
+                  %span.avatar{:style => "background-image: url(#{user_avatar_url(current_user)})"}
+                  .d-none.d-xl-block.pl-2
+                    %div= current_user.title
+                    .mt-1.small.text-muted
+                      - if current_role.to_s == current_role_view.to_s
+                        = t current_role
+                      - else
+                        = "#{t(:preview_as)}:"
+                        = t current_role_view
+                .dropdown-menu.dropdown-menu-right
+                  %a.dropdown-item{:href => "#"}
+                    %svg.icon.dropdown-item-icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                      %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                      %path{:d => "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"}
+                      %circle{:cx => "12", :cy => "12", :r => "3"}
+                    Action
+                  %a.dropdown-item{:href => "#"}
+                    %svg.icon.dropdown-item-icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                      %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                      %path{:d => "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"}
+                      %path{:d => "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"}
+                      %line{:x1 => "16", :x2 => "19", :y1 => "5", :y2 => "8"}
+                    Another action
+                  - unless params[:preview_not_possible]
+                    .dropdown-divider
+                    %span.dropdown-header= t :preview_as
+                    - current_role.allowed_preview_roles.each do |preview_role|
+                      - active_or_not = (preview_role == current_role_view) ? 'active' : ''
+                      %a.dropdown-item{class: active_or_not, href: "?preview_as=#{preview_role}"}= t(preview_role)
+                    .dropdown-divider
+                    = link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out', class: 'dropdown-item'
+        .navbar-expand-md
+          #navbar-menu.collapse.navbar-collapse
+            .navbar.navbar-light
+              .container-xl
+                %ul.navbar-nav
+                  %li.nav-item{class: ('active' if current_tab == :start or current_tab.blank?)}
+                    %a.nav-link{:href => root_path}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %polyline{:points => "5 12 3 12 12 3 21 12 19 12"}
+                          %path{:d => "M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"}
+                          %path{:d => "M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"}
+                      %span.nav-link-title
+                        Start
+                  %li.nav-item.dropdown{class: ('active' if current_tab ==  :contacts)}
+                    %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %polyline{:points => "12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"}
+                          %line{:x1 => "12", :x2 => "20", :y1 => "12", :y2 => "7.5"}
+                          %line{:x1 => "12", :x2 => "12", :y1 => "12", :y2 => "21"}
+                          %line{:x1 => "12", :x2 => "4", :y1 => "12", :y2 => "7.5"}
+                          %line{:x1 => "16", :x2 => "8", :y1 => "5.25", :y2 => "9.75"}
+                      %span.nav-link-title
+                        Kontaktdaten
+                    %ul.dropdown-menu
+                      %li
+                        %a.dropdown-item{:href => "./empty.html"}
+                          Meine Daten
+                      - current_user.corporations.each do |corporation|
+                        %li
+                          %a.dropdown-item{:href => "./empty.html"}
+                            = corporation.name
+                      %li
+                        %a.dropdown-item{:href => "./empty.html"}
+                          Verbindungen
+                      %li
+                        %a.dropdown-item{:href => "./empty.html"}
+                          Philistervereine
+                      %li
+                        %a.dropdown-item{:href => "./empty.html"}
+                          Bezirksverbände
 
-            .collapse.navbar-collapse#logged-in-bar-collapse
-              %ul.nav.navbar-nav
-                - if not show_role_preview_menu?
-                  %li
-                    = link_to t(:my_profile), current_user, :class => 'my_profile'
-                %li.dropdown.my_groups
-                  %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
-                    = t :my_groups
-                    %b.caret= ''
-                  %ul.dropdown-menu
-                    = groups_of_user_table current_user
+                  %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
+                    %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %polyline{:points => "12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"}
+                          %line{:x1 => "12", :x2 => "20", :y1 => "12", :y2 => "7.5"}
+                          %line{:x1 => "12", :x2 => "12", :y1 => "12", :y2 => "21"}
+                          %line{:x1 => "12", :x2 => "4", :y1 => "12", :y2 => "7.5"}
+                          %line{:x1 => "16", :x2 => "8", :y1 => "5.25", :y2 => "9.75"}
+                      %span.nav-link-title
+                        = t :members
+                    %ul.dropdown-menu
+                      %li
+                        %a.dropdown-item{:href => "./empty.html"}
+                          Aktivmeldung eintragen
+                      - current_user.corporations.each do |corporation|
+                        %li
+                          %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
+                            = corporation.name
+                  %li.nav-item
+                    %a.nav-link{:href => "./form-elements.html"}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %polyline{:points => "9 11 12 14 20 6"}
+                          %path{:d => "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"}
+                      %span.nav-link-title
+                        Veranstaltungen
+                  %li.nav-item.dropdown
+                    %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %path{:d => "M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z"}
+                      %span.nav-link-title
+                        Dokumente
+                    %ul.dropdown-menu
+                      %li
+                        %a.dropdown-item{:href => "./invoice.html"}
+                          Invoice
+                      %li
+                        %a.dropdown-item{:href => "./blog.html"}
+                          Blog cards
+                      %li
+                        %a.dropdown-item{:href => "./snippets.html"}
+                          Snippets
+                      %li
+                        %a.dropdown-item{:href => "./search-results.html"}
+                          Search results
+                      %li
+                        %a.dropdown-item{:href => "./pricing.html"}
+                          Pricing cards
+                      %li
+                        %a.dropdown-item{:href => "./users.html"}
+                          Users
+                      %li
+                        %a.dropdown-item{:href => "./gallery.html"}
+                          Gallery
+                      %li
+                        %a.dropdown-item{:href => "./profile.html"}
+                          Profile
+                      %li
+                        %a.dropdown-item{:href => "./music.html"}
+                          Music
+                  %li.nav-item.dropdown
+                    %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
+                      %span.nav-link-icon.d-md-none.d-lg-inline-block
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %rect{:height => "5", :rx => "2", :width => "6", :x => "4", :y => "4"}
+                          %rect{:height => "7", :rx => "2", :width => "6", :x => "4", :y => "13"}
+                          %rect{:height => "7", :rx => "2", :width => "6", :x => "14", :y => "4"}
+                          %rect{:height => "5", :rx => "2", :width => "6", :x => "14", :y => "15"}
+                      %span.nav-link-title
+                        Kommunikation
+                    %ul.dropdown-menu
+                      %li
+                        %a.dropdown-item{:href => "./layout-horizontal.html"}
+                          Horizontal
+                #header_search.my-2.my-md-0.flex-grow-1.flex-md-grow-0.order-first.order-md-last
+                  = form_tag search_path, :method => 'get', role: 'search' do
+                    .input-icon
+                      %span.input-icon-addon
+                        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                          %circle{:cx => "10", :cy => "10", :r => "7"}
+                          %line{:x1 => "21", :x2 => "15", :y1 => "21", :y2 => "15"}
+                      //%input.form-control{:placeholder => "Search…", :type => "text"}/
+                      = search_field_tag :query, params[:query], :class => "search-query form-control mr-sm-2 #{'find_and_filter' if can?(:use, :find_and_filter)}", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
 
-                - # role indicator and preview menu
-                = render partial: 'layouts/role_preview_switcher'
-
-                - # notifications
-                = render partial: 'notifications/notifications_dropdown'
-
-                - # %li.dropdown
-                - #   = link_to(                                                                   |
-                - #     ( t(:bookmarks) + ' ' + content_tag( :b, '', class: 'caret' ) ).html_safe, |
-                - #     my_bookmarks_path,                                                         |
-                - #     class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                   |
-                - #   %ul.dropdown-menu.my-favorites
-                - #     = bookmarked_objects_lis( current_user )
-
-              %ul.nav.navbar-nav.navbar-right
-                %li.last.dropdown
-                  %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
-                    = render 'layouts/session_bar_avatar'
-                    = current_user.title
-                    %b.caret
-                  = render partial: 'layouts/current_user_dropdown'
-                - if can? :use, :merit
-                  %li
-                    = link_to user_badges_path(current_user) do
-                      = merit_indicator(current_user)
-
-      .row#header-bar-wrapper
-        = render partial: 'layouts/header_bar'
-
-      .row#breadcrumb-bar
-        %nav#breadcrumb.navbar
-          .container-fluid
-            = render partial: 'layouts/breadcrumbs'
-
-            %span#access_indicator
-              = access_indicator if current_user
-
-            = render partial: 'layouts/toolbar'
-
-      = yield :custom_header
-
-      .container-fluid
-        .row
-          #content
-            = render partial: 'layouts/multi_column_content_area'
-
-      .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
+      #content.content
+        .container-xl
+          / Content here
+          #vue-app
+            = yield
+        %footer.footer.footer-transparent
+          .container
+            .row.text-center.align-items-center.flex-row-reverse
+              .col-lg-auto.ml-lg-auto
+                %ul.list-inline.list-inline-dots.mb-0
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://plattformpodcast.com"} Podcast
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://wingolf.io/vademecum/"} App
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://github.com/fiedl/your_platform", :target => "_blank"} Source-Code
+              .col-12.col-lg-auto.mt-3.mt-lg-0
+                = succeed "." do
+                  %a.link-secondary{:href => "https://wingolf.io/intro/"} Plattform-Projekt des AK Internet und IT-Dienstleistungen Fiedlschuster
+    :javascript
+      document.body.style.display = "block"

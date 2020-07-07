@@ -19,6 +19,7 @@ Rails.application.config.assets.precompile += %w( galleria-classic.js galleria/c
 Rails.application.config.assets.precompile += %w( aiga_immigration.png )
 
 # Separate layout javascripts
+Rails.application.config.assets.precompile += %w( bootstrap_tabler.js )
 Rails.application.config.assets.precompile += %w( mobile.js )
 Rails.application.config.assets.precompile += %w( iweb.js )
 
