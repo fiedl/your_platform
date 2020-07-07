@@ -10,6 +10,7 @@ import { Trash2Icon } from 'vue-feather-icons'
 
 import VuePasswordFieldWithStrengthMeter from './VuePasswordFieldWithStrengthMeter.vue'
 
+import VueApexCharts from 'vue-apexcharts'
 
 import Editable from './editable.vue'
 import EditableProperty from './editable_property.vue'
@@ -28,6 +29,7 @@ jQuery(document).ready ->
   for selector in ['#vue-change-password-app']
     vue_apps.push(new Vue({el: selector})) if jQuery(selector).count() > 0
 
+  Vue.component('apexchart', VueApexCharts)
 
   Vue.component("trash-icon", Trash2Icon)
 
