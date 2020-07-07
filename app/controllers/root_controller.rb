@@ -4,29 +4,23 @@ class RootController < ApplicationController
   before_action :redirect_to_public_website_if_needed
   before_action :redirect_to_sign_in_if_needed
 
+  expose :events, -> { current_user.upcoming_events.limit(5) }
+  expose :blog_posts, -> { BlogPost.relevant_to(current_user).visible_to(current_user).order(published_at: :desc).limit(5).select { |blog_post| can? :read, blog_post } }
+  expose :documents, -> { current_user.documents_in_my_scope.order(created_at: :desc).limit(5) }
+  expose :birthday_users, -> { Birthday.users_ordered_by_upcoming_birthday limit: 4 }
+
   def index
     authorize! :index, :root
 
     set_current_access :user
     set_current_access_text :the_content_of_the_start_page_is_personalized
-    set_current_tab :news
+    set_current_tab :start
 
     @pinned_objects = Event.flagged(:pinned) + Page.flagged(:pinned)
-
-    @blog_posts = BlogPost
-      .relevant_to(current_user)
-      .visible_to(current_user)
-      .order(published_at: :desc)
-      .limit(5)
-      .select { |blog_post| can? :read, blog_post }
 
     @posts = current_user.posts_for_me
       .reorder(created_at: :desc)
       .limit(5)
-
-    @documents = current_user.documents_in_my_scope
-      .order(created_at: :desc)
-      .limit(10)
   end
 
 

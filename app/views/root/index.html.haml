@@ -1,34 +1,83 @@
-- # We render the vertical nav within this view to save some space.
-- # Therefore, deactivate the vertical nav in the layout.
-- @hide_vertical_nav = true
--#- @hide_footer = true
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle= "Willkommen, #{current_user.first_name}!"
+      .page-title Start
 
-.row.start-page-entry
-  .col-sm-6.col-xs-12
-    .row.d-block
-      - if @pinned_objects.any?
-        = render @pinned_objects
 
-      = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+.row.row-deck.row-cards
+  .col-lg-6
+    .card
+      .card-header
+        %h4.card-title= t :events
+      .table-responsive
+        %table.table.card-table.table-vcenter
+          %tbody
+            - events.each do |event|
+              %tr
+                %td= link_to event.title, event
+                %td.text-muted
+                  = event_icon
+                  = localize event.start_at
+                %td= event.group.name
 
-      = box title: t(:blog_entries) do
-        %ul.blog_posts.root_list
-          - for blog_post in @blog_posts
-            = render partial: 'root/list_entry', locals: {obj: blog_post, date: blog_post.published_at, category: blog_post.parent, author: blog_post.author}
-  .col-sm-6.col-xs-12.side-col
-    .row
-      .col-sm-6.col-xs-12
-        = box title: "Sammelnachrichten" do
-          %ul.posts.root_list
-            - for post in @posts
-              = render partial: 'root/list_entry', locals: {obj: post, date: post.created_at, category: post.group, author: post.author}
-      .col-sm-6.col-xs-12
-        = render partial: 'root/start_page_elements'
-    .row
-      .col-sm-12.col-xs-12
-        = box title: t(:documents) do
-          %ul.documents.root_list
-            - for document in @documents
-              = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_path, new_tab: true}
 
-      
+  .col-lg-6
+    - if true #= cache :birthday_box, expires_in: Time.now.end_of_day - Time.current do
+      .card
+        .card-header
+          %h4.card-title= t :birthdays
+        .card-body
+          .row.mb-n3
+            - birthday_users.each do |user|
+              .col-6.row.mb-3.align-items-center.filterable
+                %a.col-auto
+                  %span.avatar{style: "background-image: url(#{user.avatar_path})"}
+                .col.text-truncate
+                  = link_to user.title, user, class: "text-body d-block text-truncate"
+                  %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
+                  %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
+
+  .col-lg-6
+    .card
+      .card-header
+        %h4.card-title= t :blog
+      .table-responsive
+        %table.table.card-table.table-vcenter
+          %tbody
+            - blog_posts.each do |blog_post|
+              %tr
+                %td.w-1
+                  - if blog_post.author
+                    %span.avatar{style: "background-image: url(#{blog_post.author.avatar_path})"}
+                -#  .thumb
+                -#    = image_tag document.thumb_path
+                %td= link_to blog_post.title, blog_post
+                %td.text-nowrap.text-muted
+                  = event_icon
+                  = localize blog_post.published_at.to_date
+                %td.text-nowrap
+                  - if blog_post.parent
+                    = folder_icon
+                    = link_to blog_post.parent.title, blog_post.parent
+
+  .col-lg-6
+    .card
+      .card-header
+        %h4.card-title= t :documents
+      .table-responsive
+        %table.table.card-table.table-vcenter
+          %tbody
+            - documents.each do |document|
+              %tr
+                %td.w-5
+                  .thumb
+                    = image_tag document.thumb_path
+                %td= link_to document.title, document
+                %td.text-nowrap.text-muted
+                  = event_icon
+                  = localize document.created_at.to_date
+                %td.text-nowrap
+                  - if document.scope
+                    = folder_icon
+                    = link_to document.scope.title, document.scope

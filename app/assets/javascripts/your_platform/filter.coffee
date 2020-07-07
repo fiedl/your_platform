@@ -10,7 +10,7 @@ $(document).on 'keyup', 'header #search, #header_search #query.find_and_filter',
     datatable.search(query).draw()
 
   for str in query.split(" ")
-    for selector in [".box", "li", "tbody tr"]
+    for selector in [".box", "li", "tbody tr", ".filterable"]
       $("#content " + selector).each ->
         element = $(this)
         unless element.text().toUpperCase().indexOf(str.toUpperCase()) >= 0

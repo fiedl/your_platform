@@ -17,8 +17,8 @@ class Birthday
 
   private
 
-  def self.users_ordered_by_upcoming_birthday
-    User.find Graph::User.user_ids_order_by_upcoming_birthday(limit: 3)
+  def self.users_ordered_by_upcoming_birthday(limit: 3)
+    User.find Graph::User.user_ids_order_by_upcoming_birthday(limit: limit)
   end
 
 end
