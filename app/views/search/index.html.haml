@@ -1,62 +1,153 @@
-%h1= @title
-%div
-  - if not @results
-    %p= t :no_results_found
-    - if current_user.nil?
-      %p Sie sind nicht am System angemeldet.
-      - session['return_to_after_login'] = request.fullpath
-      %p= link_to "Anmelden", new_user_account_session_url, class: 'btn btn-primary'
+.page-header
+  .row.align-items-center
+    .col-auto
+      %h2.page-title
+        = "#{t :search_results}: \"#{query}\""
+    .col-auto
+      .text-muted.text-h5.mt-2
+        = results.count
+        = t :results
 
-- if @users
-  %h1= t :found_users
-  %div
-    %ul
-      .users_found
-        - for user in @users
-          %li
-            = link_to user do
-              = render partial: 'users/user_title', locals: {user: user}
-- if @events
-  %h1= t :events
-  %div
-    %ul
-      - @events.each do |event|
-        %li= link_to event.title, event
+.row
+  .col-md-3
+    .subheader.mb-2= t :category
+    .list-group.list-group-transparent.mb-3
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'users'), href: search_path(query: query, category: 'users')}
+        = t :people
+        %small.text-muted.ml-auto= users.count
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'documents'), href: search_path(query: query, category: 'documents')}
+        = t :documents
+        %small.text-muted.ml-auto= documents.count
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'events'), href: search_path(query: query, category: 'events')}
+        = t :events
+        %small.text-muted.ml-auto= events.count
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'pages'), href: search_path(query: query, category: 'pages')}
+        = t :pages
+        %small.text-muted.ml-auto= pages.count
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'groups'), href: search_path(query: query, category: 'groups')}
+        = t :groups
+        %small.text-muted.ml-auto= groups.count
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'posts'), href: search_path(query: query, category: 'posts')}
+        = t :posts
+        %small.text-muted.ml-auto= posts.count
 
-- if @groups
-  %h1= t :found_groups
-  %div
-    %ul
-      - for object in @groups
-        %li= link_to object.title, object
+  .col-md-9
+    .row
+      - if results.none?
+        .col
+          .card
+            .card-body
+              %p= t :no_results_found
+              - if not current_user
+                %p Sie sind nicht am System angemeldet.
+                - session['return_to_after_login'] = request.fullpath
+                %p= link_to "Anmelden", new_user_account_session_url, class: 'btn btn-primary'
 
-- if @pages
-  %h1= t :found_pages
-  %div
-    %ul
-      - for object in @pages
-        %li= link_to object.title, object
+      - if category == 'users'
+        - for user in users.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: user_path(user)}
+              .card-body
+                .d-flex.align-items-center
+                  %span.avatar.mr-3.rounded{style: "background-image: url(#{user.avatar_url})"}
+                  .lh-sm
+                    %div= user.title
+                    .text-muted= user.search_hint
 
-- if can?(:use, :pdf_search) && @attachments
-  %h1= t :attachments
-  %div
-    %ul
-      - @attachments.each do |attachment|
-        %li
-          .title= link_to attachment.title, attachment
-          .preview= attachment.highlight.html_safe
+      - if category == 'documents'
+        - for document in documents.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: document.file.path}
+              - if document.thumb_url
+                .d-block
+                  %img.card-img-top{src: document.thumb_url}
+              .card-body
+                .d-flex.align-items-center
+                  - if document.author
+                    %span.avatar.mr-3.rounded{style: "background-image: url(#{document.author.avatar_url})"}
+                  - else
+                    %span.avatar.mr-3.rounded= document_icon
+                  .lh-sm
+                    %div= document.title
+                    %small.text-muted= document.created_at
+                    %small.text-muted= document.scope.try(:title)
 
-- if @posts
-  %h1= t :found_posts
-  %div
-    %ul
-      - for object in @posts
-        %li= link_to object.title, object
+      - if category == 'events'
+        - for event in events.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: event_path(event)}
+              - if image_attachment = event.attachments.find_by_type('image').first
+                .d-block
+                  %img.card-img-top{src: image_attachment.medium_url}
+              .card-body
+                .d-flex.align-items-center
+                  - if event.group.avatar_url
+                    %span.avatar.mr-3.rounded{style: "background-image: url(#{event.group.avatar_url})"}
+                  - else
+                    %span.avatar.mr-3.rounded= event_icon
+                  .lh-sm
+                    %div= event.title
+                    %small.text-muted= localize event.start_at.to_date
+                    %small.text-muted= event.parent.corporation.try(:title) || event.parent.title
 
--#- if @large_map_address_fields.try(:any?)
--#  %h1.large_map.section= t :map
--#  .group_map
--#    .large_map_section
--#      = map_of_address_profile_fields @large_map_address_fields, with_info_window: true
+      - if category == 'pages'
+        - for page in pages.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: page_path(page)}
+              - if image_attachment = page.teaser_images.first
+                .d-block
+                  %img.card-img-top{src: image_attachment.respond_to?(:medium_url) ? image_attachment.medium_url : image_attachment}
+              .card-body
+                .d-flex.align-items-center
+                  - if page.author
+                    %span.avatar.mr-3.rounded{style: "background-image: url(#{page.author.avatar_url})"}
+                  - else
+                    %span.avatar.mr-3.rounded= document_icon
+                  .lh-sm
+                    %div= page.title
+                    %small.text-muted= localize (page.published_at || page.created_at)
+                    %small.text-muted= page.group.try(:title)
 
+      - if category == 'groups'
+        - for group in groups.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: group_path(group)}
+              - if image_attachment = group.attachments.find_by_type('image').first
+                .d-block
+                  %img.card-img-top{src: image_attachment.medium_url}
+              .card-body
+                .d-flex.align-items-center
+                  - if group.avatar_url
+                    %span.avatar.mr-3.rounded{style: "background-image: url(#{group.avatar_url})"}
+                  - else
+                    %span.avatar.mr-3.rounded= group_icon
+                  .lh-sm
+                    %div= group.title
+                    %small.text-muted
+                      = group.members.count
+                      = t :members
+                    - if group.search_hint.present?
+                      %br
+                      %small.text-muted.mt-1= group.search_hint.to_s.truncate(100)
 
+      - if category == 'posts'
+        - for post in posts.to_a
+          .col-sm-6.col-lg-4
+            %a.card.card-sm{href: post_path(post)}
+              - if image_attachment = post.attachments.find_by_type('image').first
+                .d-block
+                  %img.card-img-top{src: image_attachment.medium_url}
+              .card-body
+                .d-flex.align-items-center
+                  - if post.author.kind_of? User
+                    %span.avatar.mr-3.rounded{style: "background-image: url(#{post.author.avatar_url})"}
+                  - else
+                    %span.avatar.mr-3.rounded= user_icon
+                  .lh-sm
+                    %div= post.title
+                    %small.text-muted
+                      = localize (post.sent_at || post.created_at).to_date
+                      - if post.author.kind_of? User
+                        = post.author.title
+                      - else
+                        = post.author.to_s

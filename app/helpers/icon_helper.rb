@@ -135,4 +135,12 @@ module IconHelper
     fa_icon "trello"
   end
 
+  def user_icon
+    fa_icon "user"
+  end
+
+  def group_icon
+    fa_icon "group"
+  end
+
 end

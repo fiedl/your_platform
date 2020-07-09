@@ -1,12 +1,16 @@
 concern :UserSearch do
+  included do
+    attr_accessor :search_hint
+  end
+
   class_methods do
 
     def search(query)
       if query.present?
-        search_by_geo_location(query) || search_by_name_and_title(query)
+        search_by_geo_location(query) || (search_by_name_and_title(query) + search_by_profile_fields(query))
       else
         []
-      end
+      end.uniq
     end
 
     private
@@ -29,6 +33,18 @@ concern :UserSearch do
         .order('last_name', 'first_name').distinct
       users = [User.find_by_title(query)] - [nil] if users.none?
       users
+    end
+
+    def search_by_profile_fields(query)
+      q = "%" + query.gsub(' ', '%') + "%"
+      profile_fields =
+        ProfileField.where(profileable_type: "User").where("value like ? or label like ?", q, q) +
+        ProfileField.joins(:parent).where(parents_profile_fields: {profileable_type: "User"}).where("profile_fields.value like ? or profile_fields.label like ?", q, q)
+      users = profile_fields.collect do |profile_field|
+        user = profile_field.profileable
+        user.search_hint = "#{profile_field.label}: #{profile_field.value}"
+        user
+      end
     end
 
   end

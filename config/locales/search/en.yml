@@ -3,6 +3,8 @@ en:
   search: Search
   results: Results
 
+  search_results: Search results
+
   found_users: Found Users
   found_groups: Found Groups
   found_pages: Found Pages
@@ -10,5 +12,5 @@ en:
   found_posts: Found Posts
 
   no_results_found: No results found.
-  
+
   type_query_and_press_enter: Enter your search query here and press enter.

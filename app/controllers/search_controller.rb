@@ -3,101 +3,34 @@ class SearchController < ApplicationController
   # https://github.com/ryanb/cancan/wiki/Ensure-Authorization
   skip_authorization_check
 
+  expose :query, -> { params[:query].to_s }
+  expose :query_string_with_wildcards, -> { "%" + query.gsub(' ', '%') + "%" }
+  expose :q, -> { query_string_with_wildcards }
+  expose :users, -> {
+    filter_by_authorization User.search(query) if query.length > 3
+  }
+  expose :documents, -> {
+    filter_by_authorization current_user.documents_in_my_scope.where("title like ?", "%#{query}%").order(created_at: :desc) if query.length > 3
+  }
+  expose :pages, -> {
+    filter_by_authorization Page.where("title like ? OR content like ?", q, q).order(published_at: :desc, title: :asc) if query.length > 3
+  }
+  expose :groups, -> {
+    filter_by_authorization Group.search(query) if query.length > 3
+  }
+  expose :events, -> {
+    filter_by_authorization Event.where("name like ?", q).order('start_at DESC') if query.length > 3
+  }
+  expose :posts, -> {
+    filter_by_authorization Post.where("subject like ? or text like ?", q, q).order(sent_at: :desc, created_at: :desc) if query.length > 3
+  }
+  expose :results, -> { users.to_a + documents.to_a + pages.to_a + groups.to_a + events.to_a + posts.to_a }
+  expose :category, -> { params[:category] || ('users' if users.present?) || ('documents' if documents.present?) || ('events' if events.present?) || ('pages' if pages.present?) || ('groups' if groups.present?) || ('posts' if posts.present?) }
+
   def index
-    query_string = params[ :query ]
-    if query_string.present?
-
-      # log search query for metrics analysis
-      #
-      metric_logger.log_event({query: query_string}, type: :search)
-
-      # browse users, pages, groups and events
-      #
-      q = "%" + query_string.gsub(' ', '%') + "%"
-      @users = User.search(query_string)
-      @pages = Page.where("title like ? OR content like ?", q, q)
-        .order('title')
-      @groups = Group.where( "name like ?", q )
-      @events = Event.where("name like ?", q).order('start_at DESC')
-      @posts = Post.where("subject like ? or text like ?", q, q)
-
-      # Convert to arrays in order to be able to add results through
-      # associations below.
-      @users = @users.to_a
-      @pages = @pages.to_a
-      @groups = @groups.to_a
-      @events = @events.to_a
-      @posts = @posts.to_a
-
-      # browse profile fields
-      #
-      profile_fields = ProfileField.where("value like ? or label like ?", q, q).collect do |profile_field|
-        profile_field.parent || profile_field
-      end.uniq
-      profile_fields.each do |profile_field|
-        if profile_field.profileable.kind_of? User
-          @users << profile_field.profileable
-        elsif profile_field.profileable.kind_of? Group
-          @groups << profile_field.profileable
-        end
-      end
-
-      # browse attachments
-      #
-      if can? :use, :pdf_search
-        @attachments = Attachment.search(query_string)
-      else
-        attachments = Attachment.where("title like ? or description like ?", q, q).where(parent_type: 'Page')
-        @pages += attachments.collect { |attachment| attachment.parent }
-        @attachments = []
-      end
-
-      # browse comments
-      #
-      comments = Comment.where("text like ?", q)
-      comments.each do |comment|
-        @posts << comment.commentable if comment.commentable.kind_of? Post
-      end
-
-      # eleminiate duplicate results
-      #
-      @users = @users.uniq
-      @pages = @pages.uniq
-      @groups = @groups.uniq
-      @events = @events.uniq
-      @posts = @posts.uniq
-
-      # AUTHORIZATION
-      #
-      @users = filter_by_authorization(@users)
-      @pages = filter_by_authorization(@pages)
-      @groups = filter_by_authorization(@groups)
-      @events = filter_by_authorization(@events)
-      @posts = filter_by_authorization(@posts)
-      @attachments = filter_by_authorization(@attachments)
-
-      @results = @users + @pages + @groups + @events + @posts + @attachments
-      if @results.count == 1 and not @attachments.count == 1
-        redirect_to @results.first
-      end
-
-      if @results.count < 300
-        @large_map_address_fields = @results.collect do |result|
-          result.profile_fields.where(type: "ProfileFields::Address") if result.respond_to? :profile_fields
-        end.flatten - [nil]
-      end
-
-      @pages = nil if @pages.count == 0
-      @users = nil if @users.count == 0
-      @groups = nil if @groups.count == 0
-      @events = nil if @events.count == 0
-      @posts = nil if @posts.count == 0
-      @attachments = nil if @attachments.count == 0
-      @results = nil if @results.count == 0
+    if results.count == 1 and not documents.count == 1
+      redirect_to results.first
     end
-    set_current_navable Page.find_intranet_root
-    set_current_title "#{t(:search)}: #{query_string}"
-    set_current_activity :is_searching_for_something
   end
 
   # This action results in a redirection to the search result
@@ -124,25 +57,6 @@ class SearchController < ApplicationController
     end
   end
 
-  # This returns title and body of a preview field (quick search).
-  #
-  def preview
-    @object = find_preview_object(params[:query])
-    respond_to do |format|
-      format.json do
-        if @object
-          preview_template = "search/preview_#{@object.class.name.underscore}" # e.g. preview_user
-          render json: {
-            :title => 'Suchergebnis',
-            :body => render_to_string(partial: preview_template, locals: {query: params['query'], obj: @object}, formats: ['html'])
-          }
-        else
-          head :no_content
-        end
-      end
-    end
-  end
-
   # This implements the OpenSearch standard in order to support browser search tools
   # to search the application directly.
   #
@@ -163,25 +77,6 @@ class SearchController < ApplicationController
     resources.select do |resource|
       can? :read, resource
     end
-  end
-
-  def find_preview_object(query_string)
-    object = nil
-    if query_string.present?
-      like_query_string = "%" + query_string.gsub( ' ', '%' ) + "%"
-
-      # The order of these assignments determines the priority.
-      #
-      object = Corporation.where(token: query_string).limit(1).first
-      object ||= User.where(last_name: query_string).limit(1).first
-      object ||= Page.where("title like ?", like_query_string).limit(1).first
-      object ||= Group.where("name like ?", like_query_string).limit(1).first
-      object ||= User.where("CONCAT(first_name, ' ', last_name) LIKE ?", like_query_string).limit(1).first
-      object ||= User.find_by_title(query_string)
-
-      object = nil unless can? :read, object
-    end
-    return object
   end
 
   def log_activity
