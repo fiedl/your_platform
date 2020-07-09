@@ -19,6 +19,7 @@ import ProfileField from './profile_field.vue'
 import AddressProfileField from './profile_fields/address.vue'
 import ProfileFields from './profile_fields.vue'
 import Datepicker from './datepicker.vue'
+import NumberOfMembersChart from './number_of_members_chart.vue'
 
 Vue.use(TurbolinksAdapter)
 
@@ -44,6 +45,7 @@ jQuery(document).ready ->
   Vue.component('address-profile-field', AddressProfileField)
   Vue.component('profile-fields', ProfileFields)
   Vue.component('datepicker', Datepicker)
+  Vue.component('number-of-members-chart', NumberOfMembersChart)
 
   vue_apps.push(new Vue({el: "#vue-app"}))
 

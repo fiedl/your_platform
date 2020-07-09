@@ -1,24 +1,4 @@
 .row.row-deck.row-cards
-  - groups_for_root_charts.each do |group|
+  - current_user.corporations.each do |corporation|
     .col-sm.col-xs-12
-      - link = TermReport.where(group_id: group.id).any? ? term_reports_path(group_id: group.id) : statistics_index_path
-      = link_to link, class: "card" do
-        .card-body
-          .d-flex.align-items-center
-            .subheader= t :members
-          .d-flex.align-items-baseline
-            .h1.mb-0.mr-2
-              = group.members.count
-            .mr-auto{title: "Veränderung innerhalb der letzten zwölf Monate"}
-              - change = group.memberships.count - group.memberships.at_time(1.year.ago).count
-              - if change < 0
-                %span.text-red.d-inline-flex.align-items-center.lh-1
-                  -
-                  = change
-              - else
-                %span.text-green.d-inline-flex.align-items-center.lh-1
-                  +
-                  = change
-          .d-flex.mt-2
-            %div= group.name
-        %div{style: 'margin-top: -20px'}= apexchart_number_of_members group: group
+      = render Charts::NumberOfMembers::Corporation.new(group: corporation)
