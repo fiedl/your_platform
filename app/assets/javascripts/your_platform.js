@@ -1,4 +1,8 @@
+//= require popper
+//= require bootstrap/dist/js/bootstrap.js
 //
+//  # jquery_ujs is required for rails' forgery protection
+//  # https://gist.github.com/collectiveidea/172391
 //= require jquery_ujs
 //= require jquery-ui
 //
@@ -10,7 +14,6 @@
 //= require best_in_place_datetime
 //= require jquery.ui.datepicker-de
 //= require edit_mode
-//= require popper
 //= require bootstrap-sprockets
 //= require jquery-fileupload/basic
 //= require jquery-fileupload/vendor/tmpl
@@ -38,14 +41,11 @@
 //= require photoswipe/dist/photoswipe
 //= require photoswipe/dist/photoswipe-ui-default
 //= require cookieconsent/build/cookieconsent.min
+//= require feather-icons/dist/feather
 //
 //= require your_platform_node_modules.pack.js
-//= require vue_app.pack.js
 //= require_tree ./your_platform
+//= require vue_app.pack.js
 //
-//= require turbolinks
-//= require turbolinks-compatibility
-//= require turboboost/turboboost
-//
-// These controllers are stimulus.js controllers:
+//  # These controllers are stimulus.js controllers:
 //= require_tree ./controllers

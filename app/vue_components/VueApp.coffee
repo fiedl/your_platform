@@ -3,7 +3,6 @@
 # Otherwise, the changes are not picked up by the asset pipeline.
 
 import Vue from 'vue'
-import TurbolinksAdapter from 'vue-turbolinks' # https://github.com/jeffreyguenther/vue-turbolinks
 
 import { Trash2Icon } from 'vue-feather-icons'
 
@@ -20,8 +19,6 @@ import AddressProfileField from './profile_fields/address.vue'
 import ProfileFields from './profile_fields.vue'
 import Datepicker from './datepicker.vue'
 import NumberOfMembersChart from './number_of_members_chart.vue'
-
-Vue.use(TurbolinksAdapter)
 
 jQuery(document).ready ->
   vue_apps = []
@@ -48,20 +45,3 @@ jQuery(document).ready ->
   Vue.component('number-of-members-chart', NumberOfMembersChart)
 
   vue_apps.push(new Vue({el: "#vue-app"}))
-
-# # As an alternative to `vue-turbolinks` we could save and restore
-# # the html content of the vue components ourselves.
-# #
-# # This restoration is needed due to turbolinks caching. Otherwise,
-# # the vue components cannot be initialized when loading a page from
-# # the turbolinks cache.
-# #
-# # See also: https://github.com/turbolinks/turbolinks/wiki/VueJs-and-Turbolinks
-# #
-# store_vue_components_html = ->
-#   jQuery('.vue-app').each ->
-#     jQuery(this).data 'html-before-vue', jQuery(this)[0].outerHTML
-#
-# restore_vue_components_html = ->
-#   jQuery('.vue-app').each ->
-#     jQuery(this).replaceWith jQuery(this).data('html-before-vue')
