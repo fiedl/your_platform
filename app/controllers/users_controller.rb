@@ -11,6 +11,8 @@ class UsersController < ApplicationController
     # Make sure in `user_params` that only the avatar can pass then!
   }
 
+  expose :user, -> { @user }
+
   def index
     begin
       redirect_to group_path(Group.everyone)
@@ -24,6 +26,7 @@ class UsersController < ApplicationController
     set_current_navable @user
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_user_profile
+    set_current_tab :contacts
 
     if current_user == @user
       set_current_activity :looks_at_own_profile, @user

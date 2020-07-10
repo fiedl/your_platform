@@ -1,117 +1,115 @@
-- tab_pane_class = ""
-- if can? :use, :tab_view
-  - tab_pane_class = "tab-pane fade"
-  %ul.nav.nav-pills.user.tabs
-    %li.nav-item
-      %a.nav-link.active{href: '#general', data: {toggle: 'pill'}}= t :general_user_info_tab
-    -#- if can? :use, :merit
-    -#  %li
-    -#    %a{href: '#merit', data: {toggle: 'tab'}}
-    -#      Plattform-Rang
-    -#      = beta_badge
-    %li.nav-item
-      %a.nav-link{href: '#contact', data: {toggle: 'pill'}}= t :contact_info_tab
-    %li.nav-item
-      %a.nav-link{href: '#corporate', data: {toggle: 'pill'}}= t :corporate_info_tab
-    %li.nav-item
-      %a.nav-link{href: '#career', data: {toggle: 'pill'}}= t :study_and_work_tab
-    %li.nav-item
-      %a.nav-link{href: '#more', data: {toggle: 'pill'}}= t :more_info_tab
+.row
+  .col-lg-4
+    .card.card-profile
+      .card-header
+      .card-body.text-center
+        %img.card-profile-img{src: user.avatar_path}
+        %h3.mb-3
+          = editable user, :first_name, editable: can?(:change_first_name, user)
+          = editable user, :last_name, editable: can?(:change_last_name, user)
+          = user.name_affix
+        = render partial: 'users/dead_badge', locals: { user: user }
+        .row
+          - ([user.find_or_create_date_of_birth_profile_field] + user.profile.section(:general).fields).each do |profile_field|
+            .col-lg-6.col-md-4.mb-3
+              %profile-field{':initial-profile-field': profile_field.as_json.merge({editable: can?(:update, profile_field), label_editable: false}).to_json}
 
-.tab-content.user
+    .card
+      .card-body
+        %h3=t :management
+        - if can? :manage, user
+          .tool.profile_fields_index
+            = link_to t(:profile_fields), profile_fields_path(user_id: user.id), class: 'btn btn-outline-secondary'
+        - if can? :manage, user
+          = link_to t(:show_group_memberships), user_memberships_path(user_id: user.id), class: 'btn btn-outline-secondary'
+        - if can? :renew_cache, user
+          .tool.renew_cache= renew_cache_button(user)
 
-  - # General Info Box
-  #general{class: tab_pane_class + " show active"}
-    %h1.section.general.no_uppercase
-      %span.obscure-in-demo.regular_case= @user.title
-      .workflow-tool.tool= render partial: 'workflow_triggers'
-      - if can? :manage, @user
-        .tool.profile_fields_index
-          = link_to t(:profile_fields), profile_fields_path(user_id: @user.id), class: 'btn btn-outline-secondary'
-      - if can? :renew_cache, @user
-        .tool.renew_cache= renew_cache_button(@user)
-    %div
-      .media
-        .media-left= render partial: 'avatar'
-        .media-body
-          %ul.attributes.keys-and-values
-            = render partial: 'user_corporation_attribute'
-            %li.name.attribute= render partial: 'user_name_attribute'
-            = profile_field_li @user.find_or_create_date_of_birth_profile_field, lock_label: true, no_remove: true, css_class: 'date-of-birth' if @user.date_of_birth
-            - general_fields = @user.profile.section(:general).fields
-            = profile_field_lis general_fields, lock_label: true, no_remove: true
-            = render partial: 'users/special_general_info_fields', locals: {user: @user}
-            = render partial: 'users/dead_badge', locals: { user: @user }
-            = render partial: 'users/hidden_flag_switch', locals: { user: @user }
 
-  -#- if can? :use, :merit
-  -#  #merit{class: tab_pane_class}
-  -#    = render partial: 'users/merit', locals: {user: @user}
+  .col-lg-8
+    .card
+      .card-body
+        #contact_information
+          %edit-box
+            %h2= t :contact_information
+            .row
+              .col-md-4
+                = editable_profile_fields profileable: user, types: ["ProfileFields::Address"], new_profile_fields: [{label: "Semesteranschrift", type: "ProfileFields::Address"}, {label: "Heimatanschrift", type: "ProfileFields::Address"}, {label: "Adresse", type: "ProfileFields::Address"}]
+              .col-md-4
+                = editable_profile_fields profileable: user, types: ["ProfileFields::Phone"], new_profile_fields: [{label: "Telefon", type: "ProfileFields::Phone"}, {label: "Mobil", type: "ProfileFields::Phone"}, {label: "Privat", type: "ProfileFields::Phone"}, {label: "Dienstlich", type: "ProfileFields::Phone"}, {label: "Fax", type: "ProfileFields::Phone"}]
+              .col-md-4
+                = editable_profile_fields profileable: user, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}]
 
-  - # Contact Info Box
-  #contact{class: tab_pane_class}
-    = profile_section @user.profile.section :contact_information
+    - if user.corporations.count > 0
+      .card
+        .card-body
+          #corporate_vita
+            %h2= t :corporate_vita
+            .pull-right= render partial: 'workflow_triggers'
+            = render partial: 'users/corporate_vita', locals: {user: user}
 
-  - # Corporate Vita
-  - if @user.corporations.count > 0
-    #corporate{class: tab_pane_class}
-      %h1.section.corporate_vita= t :corporate_vita
-      %div
-        .pull-right= render partial: 'workflow_triggers'
-        - if can? :manage, @user
-          = link_to t(:show_group_memberships), user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
-        = corporate_vita_for_user @user
+    - if user.profile_fields.where(type: "ProfileFields::About").any? || can?(:update, user)
+      .card
+        .card-body
+          #about
+            %edit-box
+              %h2= t :about
+              = editable_profile_fields profileable: user, types: ["ProfileFields::About"], new_profile_fields: [{label: "Über mich", type: "ProfileFields::About"}, {label: "Ich suche", type: "ProfileFields::About"}, {label: "Ich biete", type: "ProfileFields::About"}]
 
-  #career{class: tab_pane_class}
-    - # About Box
-    = optional_profile_section @user.profile.section(:about_myself), {formatting_help: true}
+    - if user.profile_fields.where(type: "ProfileFields::Study").any? || can?(:update, user)
+      .card
+        .card-body
+          #study
+            %edit-box
+              %h2= t :study
+              = editable_profile_fields profileable: user, types: ["ProfileFields::Study"], new_profile_fields: [{label: "Studium", type: "ProfileFields::Study"}, {label: "Bachelor-Studium", type: "ProfileFields::Study"}, {label: "Master-Studium", type: "ProfileFields::Study"}, {label: "Auslandsstudium", type: "ProfileFields::Study"}, {label: "Promotion", type: "ProfileFields::Study"}]
 
-    - # Study Info Box
-    = optional_profile_section @user.profile.section :study_information
+    - if user.profile_fields.where(type: ["ProfileFields::Employment", "ProfileFields::ProfessionalCategory", "ProfileFields::Competence"]).any? || can?(:update, user)
+      .card
+        .card-body
+          #career
+            %edit-box
+              %h2= t :career_information
+              = editable_profile_fields profileable: user, types: ["ProfileFields::Employment", "ProfileFields::ProfessionalCategory", "ProfileFields::Competence"], new_profile_fields: [{label: "Beschäftigung", type: "ProfileFields::Employment"}, {label: "Betätigungsfeld", type: "ProfileFields::Employment"}, {label: "Kompetenz", type: "ProfileFields::Competence"}, {label: "Sprache", type: "ProfileFields::Competence"}, {label: "Fertigkeit", type: "ProfileFields::Competence"}]
 
-    - # Career Info Box
-    = optional_profile_section @user.profile.section(:career_information), { lock_label: true }
+    - if user.profile_fields.where(type: "ProfileFields::Organization").any? || can?(:update, user)
+      .card
+        .card-body
+          #organizations
+            %edit-box
+              %h2= t :organizations
+              = editable_profile_fields profileable: user, types: ["ProfileFields::Organization"], new_profile_fields: [{label: "Organisation", type: "ProfileFields::Organization"}]
 
-    - # Organizations Box
-    = optional_profile_section @user.profile.section :organizations
+    - if user.profile_fields.where(type: "ProfileFields::BankAccount").any? || can?(:update, user)
+      .card
+        .card-body
+          #bank
+            %edit-box
+              %h2= t :bank_account_information
+              = editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
 
-  #more{class: tab_pane_class}
+    .card
+      .card-body
+        #groups
+          %h2= t :groups
+          = render partial: 'users/groups', object: user, as: :user
 
-    - # Bank Account Info Box
-    = optional_profile_section @user.profile.section :bank_account_information
-
-    - # Groups Box
-    %h1
-      = t(:groups_of) + " " + @user.title
-      - if can? :manage, @user
-        .tool= link_to "Gruppen-Mitgliedschaften anzeigen", user_memberships_path(user_id: @user.id), class: 'btn btn-outline-secondary right'
-    %div
-      = render partial: 'users/groups', object: @user, as: :user
-
-    -#   / Events
-    -#   - if @user.upcoming_events.present?
-    -#     %h1
-    -#       Veranstaltungen von #{@user.first_name}
-    -#     %div
-    -#       = upcoming_events_list_for_user( @user )
-    -#
     -#   / Relationships
     -#   %h1.section.relationships= t(:relationships)
     -#   %div
     -#     = relationships_of_user_ul @user
 
-    - # Communication Box
-    = render partial: 'users/communication_box', locals: {user: @user}
-
-    - # Login Data
-    - if can? :update, @user
-      %h1.section.access= t(:access_information)
-      %div
-        - if @user.has_account?
-          = render @user.account
-        - else
-          %p= t :user_has_no_account
-          - if can? :create_account_for, @user
-            %span.show_only_in_edit_mode
-              = link_to t(:create_account), user_account_path(@user), :method => :post, :class => "btn btn-success"
-              %p= t 'formtastic.hints.create_account'
+-#    = render partial: 'users/communication_box', locals: {user: @user}
+-#
+-#    - # Login Data
+-#    - if can? :update, @user
+-#      %h1.section.access= t(:access_information)
+-#      %div
+-#        - if @user.has_account?
+-#          = render @user.account
+-#        - else
+-#          %p= t :user_has_no_account
+-#          - if can? :create_account_for, @user
+-#            %span.show_only_in_edit_mode
+-#              = link_to t(:create_account), user_account_path(@user), :method => :post, :class => "btn btn-success"
+-#              %p= t 'formtastic.hints.create_account'

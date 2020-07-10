@@ -15,9 +15,6 @@
                     = link_to(membership_path(membership, 'membership[needs_review]' => false), method: :put, remote: true, :class => 'btn btn-small btn-success confirm-review-button', title: I18n.t(:confirm_review)) do
                       = icon 'ok'
                 %td.membership_valid_from
-                  - if can? :update, membership
-                    = status_membership_valid_from_best_in_place( membership )
-                  - else
-                    = membership.valid_from_localized_date
+                  = editable membership, :valid_from_localized_date, type: 'date'
                 %td.membership_group= link_to membership.group.title.singularize, membership.group, :class => 'status_group_label'
                 -# %td= status_membership_promoted_on_event( membership )

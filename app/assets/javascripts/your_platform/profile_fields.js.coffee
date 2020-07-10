@@ -1,37 +1,3 @@
-# Hide "add" dropdown after clicking an entry.
-# The response may take some time. The js response
-# will show the button again.
-$(document).on 'click', 'a.add_profile_field', ->
-  $(this).closest('.dropdown.add_profile_field').hide()
-  $(this).closest('.dropdown.add_profile_field').after('
-    <div class="spinner-border spinner-border-sm add_profile_field_spinner" role="status">
-      <span class="sr-only">Adding profile field ...</span>
-    </div>
-  ')
-
-# Adress profile fields
-# ------------------------------------------------------------------------------------------
-$(document).on 'click', '.address_profile_field.value.can_edit', ->
-  $(this).closest('.box').trigger('edit')
-
-$(document).on 'best_in_place:before-update', '.address_profile_field.value.editable .best_in_place', ->
-  $(this).find('.display_html').html("...")
-
-$(document).on 'save_complete', '.box', ->
-  $(this).find('.address_profile_field.value.editable').each ->
-    url = $(this).data('profile-field-url') + '.json'
-    value_field = $(this)
-    field_to_replace = $(this).find('.display_html')
-    field_to_replace.html('...')
-    $.ajax
-      url: url,
-      type: 'GET',
-      success: (result)->
-        field_to_replace.html(result.display_html)
-        value_field.addClass('success')
-      error: ->
-        value_field.addClass('error')
-
 
 # Review buttons
 # ------------------------------------------------------------------------------------------
@@ -44,21 +10,6 @@ $(document).on 'click', '.address_needs_review .confirm-review-button', ->
     wrapper.remove()
   , 800
 
-
-# Postal Address
-# ------------------------------------------------------------------------------------------
-$(document).on('change', ".postal_address * input", (event) ->
-  if $(this).prop('checked')
-    profile_field_id = $(this).closest('.postal_address').data('profileFieldId')
-    $(".postal_address").removeClass('flagged').addClass('unflagged')
-    $(".postal_address.profile_field_" + profile_field_id).addClass('flagged').removeClass('unflagged')
-    $.ajax(
-      url: $(this).closest('.postal_address').data('updateJsonUrl'),
-      type: 'POST',
-      data: { _method: 'PUT', profile_field: { postal_address: true  } },
-      dataType: 'json'
-    )
-  )
 
 # Benutzer versteckt
 # ------------------------------------------------------------------------------------------

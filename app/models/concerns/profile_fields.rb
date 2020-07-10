@@ -38,14 +38,26 @@ concern :ProfileFields do
   end
 
   def phone_profile_fields
-    profile_fields.where(type: 'ProfileFields::Phone').select do |field|
+    phone_and_fax_fields.select do |field|
       not field.label.downcase.include? 'fax'
     end
   end
 
+  def phone_fields
+    phone_profile_fields
+  end
+
+  def phone_and_fax_fields
+    profile_fields.where(type: 'ProfileFields::Phone')
+  end
+
+  def website_fields
+    profile_fields.where(type: 'ProfileFields::Homepage')
+  end
+
   def website
     unless @website
-      @website = profile_fields.where(type: 'ProfileFields::Homepage').first.try(:value)
+      @website = website_fields.first.try(:value)
       @website = "https://#{@website}" if @website and not (@website.start_with?("http://") or @website.start_with?("https://"))
     end
     @website

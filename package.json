@@ -62,6 +62,7 @@
     "tunnel-agent": "^0.6.0",
     "vue": "^2.4.2",
     "vue-apexcharts": "^1.5.3",
+    "vue-clickaway": "^2.2.2",
     "vue-feather-icons": "^5.0.0",
     "vue-input-autowidth": "^1.0.10",
     "vue-loader": "^13.0.4",

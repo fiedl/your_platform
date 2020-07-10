@@ -27,9 +27,7 @@ class ProfileFieldsController < ApplicationController
     @profile_field.profileable = @profileable
     @profile_field.label = params[:label] if params[:label].present?
     @profile_field.save if @profile_field.changed?
-    respond_to do |format|
-      format.js
-    end
+    render json: @profile_field, status: :ok
   end
 
   def update
@@ -51,7 +49,7 @@ class ProfileFieldsController < ApplicationController
     # Mark issues to be resolved. Then, they will be rechecked later.
     @profile_field.issues.update_all resolved_at: Time.zone.now
 
-    respond_with_bip @profile_field
+    render json: @profile_field, statis: :ok
   end
 
   def show

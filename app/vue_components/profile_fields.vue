@@ -53,6 +53,7 @@
             profileable_type: this.profileable_type
           success: (result)->
             new_profile_field.id = result.id
+            new_profile_field.children = result.children
           error: (result, message)->
             console.log(result)
       remove: (profile_field) ->
@@ -73,6 +74,8 @@
     }
     created: ->
       this.profile_fields = this.initial_profile_fields
+      if (this.editable && this.editBox())
+        this.editBox().$emit("require_edit_button")
   }
   `export default ProfileFields`
 </script>
