@@ -303,21 +303,6 @@ Rails.application.routes.draw do
     get :invitations, to: 'beta_invitations#index'
   end
 
-  namespace :mobile do
-    get :welcome, to: 'welcome#index'
-    get :beta, to: 'beta#show'
-    get :dashboard, to: 'dashboard#index'
-    get :app_info, to: 'app_info#index'
-    get :contacts, to: 'contacts#index'
-    get :documents, to: 'documents#index'
-    get 'documents/:id', to: 'documents#show', as: 'document'
-    get 'events/:id', to: 'events#show', as: 'event'
-    get :nearby_locations, to: 'nearby_locations#index'
-    get 'partials/:partial_key', to: 'partials#show'
-    resources :photos, only: [:show, :index, :create]
-  end
-
-
   apipie
   get :api, to: 'apipie/apipies#index'
   namespace :api do

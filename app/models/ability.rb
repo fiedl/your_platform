@@ -494,17 +494,6 @@ class Ability
     can :create_beta_invitation_for, Beta do |beta|
       beta.invitees.include? user
     end
-
-    # Mobile app
-    can :use, :mobile_app do
-      Mobile::BaseController.mobile_beta.invitees.include?(user)
-    end
-    can :read, :mobile_welcome
-    can :read, :mobile_dashboard
-    can :read, :mobile_app_info
-    can :read, :mobile_contacts
-    can :read, :mobile_events
-    can :read, :mobile_documents
   end
 
   def rights_for_auth_token_users
@@ -705,9 +694,6 @@ class Ability
     # See AvatarsController.
     #
     can :read, :avatars
-
-    # Everyone can read the mobile app's welcome screen.
-    can :read, :mobile_welcome
 
     # Nobody can recalculate term reports that have already been submitted.
     cannot :recalculate, TermReport do |term_report|

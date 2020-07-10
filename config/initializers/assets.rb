@@ -8,7 +8,6 @@ Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_
 Rails.application.config.assets.precompile += %w( iweb_layout.css )
 Rails.application.config.assets.precompile += %w( compact_layout.css )
 Rails.application.config.assets.precompile += %w( modern_layout.css )
-Rails.application.config.assets.precompile += %w( mobile_layout.css )
 Rails.application.config.assets.precompile += %w( primer_layout.css )
 Rails.application.config.assets.precompile += %w( strappy_layout.css )
 
@@ -20,7 +19,6 @@ Rails.application.config.assets.precompile += %w( aiga_immigration.png )
 
 # Separate layout javascripts
 Rails.application.config.assets.precompile += %w( bootstrap_tabler.js )
-Rails.application.config.assets.precompile += %w( mobile.js )
 Rails.application.config.assets.precompile += %w( iweb.js )
 
 

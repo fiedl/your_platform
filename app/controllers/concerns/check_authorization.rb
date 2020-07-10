@@ -39,20 +39,11 @@ concern :CheckAuthorization do
   end
 
   def after_sign_in_path_for(resource)
-    if cookies[:layout] == 'mobile'
-      mobile_dashboard_path
-    else
-      stored_location_for(resource) || root_path
-    end
+    stored_location_for(resource) || root_path
   end
 
   def after_sign_out_path_for(resource)
-    if cookies[:layout] == 'mobile'
-      mobile_welcome_path
-    else
-      # TODO: Maybe set this to the public home page in sf/wingolf-org
-      sign_in_path
-    end
+    sign_in_path
   end
 
   protected

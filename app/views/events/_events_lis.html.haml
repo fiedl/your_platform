@@ -2,7 +2,6 @@
 - events ||= []
 - show_location_rather_than_group ||= false
 - link_groups = true if link_groups.nil?
-- link_to_mobile ||= false
 
 - for event in events do
   - group = event.group
@@ -45,8 +44,5 @@
 
         %span{class: "event name"}
           %strong
-            - if link_to_mobile
-              = link_to event.name, mobile_event_path(event)
-            - else
-              = link_to event do
-                = best_in_place_if can?(:update, event), event, :name, activator: 'only_manual'
+            = link_to event do
+              = best_in_place_if can?(:update, event), event, :name, activator: 'only_manual'
