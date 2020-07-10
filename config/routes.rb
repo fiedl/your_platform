@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     get :posts, to: 'user_posts#index'
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
   end
 
   get :settings, to: 'user_settings#index'
@@ -96,11 +97,12 @@ Rails.application.routes.draw do
     get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
     namespace :excel_imports do
       resources :users
     end
   end
-  
+
   resources :my_groups
 
   namespace :groups, path: "" do
@@ -206,6 +208,7 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
     get :attachments, to: 'attachments#index'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
   end
   resources :semester_calendars do
     member do

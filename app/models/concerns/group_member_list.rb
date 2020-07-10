@@ -18,7 +18,10 @@ concern :GroupMemberList do
             last_name: user.last_name,
             name_affix: user.name_affix,
             joined_at: membership.valid_from,
-            address_fields_json: user.address_fields_json
+            address_fields_json: user.address_fields_json,
+            avatar_path: user.avatar_path,
+            status: user.current_status_in(self),
+            status_group_id: user.current_status_group_in(self).try(:id)
           }
           hash
         end
@@ -31,7 +34,10 @@ concern :GroupMemberList do
           last_name: user.last_name,
           name_affix: user.name_affix,
           joined_at: nil,
-          address_fields_json: user.address_fields_json
+          address_fields_json: user.address_fields_json,
+          avatar_path: user.avatar_path,
+          status: user.current_status_in(self),
+          status_group_id: user.current_status_group_in(self).try(:id)
         }
         hash
       end

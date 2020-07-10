@@ -1,0 +1,77 @@
+// https://bootsnipp.com/snippets/ypNAe
+
+.tree
+  margin: 0
+  padding: 0
+  list-style: none
+
+  ul
+    margin: 0
+    padding: 0
+    list-style: none
+    margin-left: 1em
+    position: relative
+
+    ul
+      margin-left: 0.5em
+
+    &:before
+      content: ""
+      display: block
+      width: 0
+      position: absolute
+      top: 0
+      bottom: 0
+      left: 0
+      border-left: 1px solid
+
+  li
+    margin: 0
+    padding: 0 1em
+    line-height: 2em
+    color: #369
+    position: relative
+
+  ul li
+    &:before
+      content: ""
+      display: block
+      width: 10px
+      height: 0
+      border-top: 1px solid
+      margin-top: -1px
+      position: absolute
+      top: 1em
+      left: 0
+
+    &:last-child:before
+      background: #fff
+      height: auto
+      top: 1em
+      bottom: 0
+
+.indicator
+  margin-right: 5px
+
+.tree li
+  a
+    text-decoration: none
+    color: #369
+
+  button
+    text-decoration: none
+    color: #369
+    border: none
+    background: transparent
+    margin: 0px 0px 0px 0px
+    padding: 0px 0px 0px 0px
+    outline: 0
+
+    &:active, &:focus
+      text-decoration: none
+      color: #369
+      border: none
+      background: transparent
+      margin: 0px 0px 0px 0px
+      padding: 0px 0px 0px 0px
+      outline: 0

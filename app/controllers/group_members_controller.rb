@@ -16,7 +16,7 @@ class GroupMembersController < ApplicationController
     authorize! :read, group
 
     set_current_navable group
-    set_current_title "#{group.name}: #{t(:members)}"
+    set_current_title "#{group.name} — #{t(:members)} (#{group.members.count})"
     set_current_activity :looks_at_member_lists, group
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_member_list
