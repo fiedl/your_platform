@@ -67,6 +67,7 @@
     "vue-input-autowidth": "^1.0.10",
     "vue-loader": "^13.0.4",
     "vue-password-strength-meter": "^1.1.0",
+    "vue-select": "^3.10.7",
     "vue-template-compiler": "^2.4.2",
     "vue-turbolinks": "^2.0.0",
     "vuejs-datepicker": "^1.6.2",

@@ -5533,6 +5533,11 @@ vue-password-strength-meter@^1.1.0:
   resolved "https://registry.yarnpkg.com/vue-password-strength-meter/-/vue-password-strength-meter-1.4.2.tgz#7f4c8610c1eeb44182d7d4e256bc43859cf0c260"
   integrity sha512-J0onvG2/7mE2szC/KMxiKWToIxUNg0Tz/PyDOOGDWV3pX277fEJ6fNOaHfRm7oaRgdy3vYlt39ifultq4r+5Hw==
 
+vue-select@^3.10.7:
+  version "3.10.7"
+  resolved "https://registry.yarnpkg.com/vue-select/-/vue-select-3.10.7.tgz#58d756a7159bf923ce99abf74c5d6309ea998136"
+  integrity sha512-6rvIYBNEp9y0xK/sq2ZzDCxKA2BoVNliyctOeMtzarQzvpLlab7l8zvqr2jhGZOxozp7jd2AvZxpF3Ivems2wQ==
+
 vue-style-loader@^3.0.0:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-3.1.2.tgz#6b66ad34998fc9520c2f1e4d5fa4091641c1597a"

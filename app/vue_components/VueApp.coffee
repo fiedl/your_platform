@@ -19,6 +19,8 @@ import AddressProfileField from './profile_fields/address.vue'
 import ProfileFields from './profile_fields.vue'
 import Datepicker from './datepicker.vue'
 import NumberOfMembersChart from './number_of_members_chart.vue'
+import Leibfamilie from './leibfamilie.vue'
+import UserSelect from './user_select.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -51,5 +53,9 @@ jQuery(document).ready ->
   Vue.component('vue-datepicker', Datepicker)
   Vue.component('number-of-members-chart', NumberOfMembersChart)
   Vue.component('vue-number-of-members-chart', NumberOfMembersChart)
+  Vue.component('leibfamilie', Leibfamilie)
+  Vue.component('vue-leibfamilie', Leibfamilie)
+  Vue.component('user-select', UserSelect)
+  Vue.component('vue-user-select', UserSelect)
 
   vue_apps.push(new Vue({el: "#vue-app"}))

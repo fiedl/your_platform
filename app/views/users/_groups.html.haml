@@ -5,11 +5,11 @@
   - user.group_ids_by_category.each do |category, group_ids|
     .col-sm-6.col-md-4
       - Group.find(group_ids).each do |group|
-        .row.align-items-center.mb-2
+        .row.row-sm.align-items-center.mb-2
           - if group.avatar_url
-            .avatar.col-auto{style: "background: url('#{group.avatar_url}')"}
+            %span.avatar.col-auto{style: "background-image: url('#{group.avatar_url}')"}
           - else
-            .avatar.col-auto= group_icon
+            %span.avatar.col-auto= group_icon
           .col.text-truncate
             = link_to group.title, group, class: "text-body d-block text-truncate"
             %small.d-block.text-muted.text-truncate.mt-n1

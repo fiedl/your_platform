@@ -94,10 +94,11 @@
           %h2= t :groups
           = render partial: 'users/groups', object: user, as: :user
 
-    -#   / Relationships
-    -#   %h1.section.relationships= t(:relationships)
-    -#   %div
-    -#     = relationships_of_user_ul @user
+    .card
+      .card-body
+        %vue-edit-box
+          %h2 Leibfamilie
+          %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json}
 
 -#    = render partial: 'users/communication_box', locals: {user: @user}
 -#

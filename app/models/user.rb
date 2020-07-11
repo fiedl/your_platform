@@ -92,6 +92,13 @@ class User < ApplicationRecord
   include UserBackup
 
 
+  def as_json(*options)
+    super.merge({
+      title: title,
+      avatar_url: avatar_url
+    })
+  end
+
   # General Properties
   # ==========================================================================================
 

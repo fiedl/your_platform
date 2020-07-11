@@ -11,7 +11,7 @@ class Api::V1::SearchUsersController < Api::V1::BaseController
     @users = @users.select { |user| (user.alive? && user.wingolfit?) || user.has_flag?(:dummy) }
     @users = @users.select { |user| can? :read, user }
 
-    render json: @users.as_json(methods: [:name, :title, :avatar_url])
+    render json: @users.as_json(methods: [:name, :title, :avatar_url, :search_hint])
   end
 
 end

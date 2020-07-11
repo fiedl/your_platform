@@ -113,8 +113,7 @@
                         Kontaktdaten
                     %ul.dropdown-menu
                       %li
-                        %a.dropdown-item{:href => "./empty.html"}
-                          Meine Daten
+                        = link_to "Meine Daten", current_user, class: 'dropdown-item'
                       - current_user.corporations.each do |corporation|
                         %li
                           %a.dropdown-item{:href => "./empty.html"}
