@@ -45,7 +45,7 @@ module ListExports
     def self.from_group(group, options = {})
       memberships = group.memberships
       memberships = memberships.at_time(options[:date].to_datetime) if options[:date]
-      members = memberships.collect { |m| m.user }.sort_by { |u| [u.last_name, u.first_name] }
+      members = memberships.collect { |m| m.user }.sort_by { |u| [u.last_name.to_s, u.first_name.to_s] }
       members = members.select { |member| options[:current_user].can? :read, member } if options[:current_user]
       self.new(members, options.merge({group: group}))
     end
