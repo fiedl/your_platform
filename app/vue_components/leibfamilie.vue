@@ -15,10 +15,10 @@
 
     <div class="add" v-if="editable && editBox() && editBox().editMode">
       <label class="form-label">Leibbursch eintragen</label>
-      <vue-user-select placeholder="Leibbursch auswählen" v-on:select="leibburschSelected" :value="newLeibbursch" ref="newLeibbursch"></vue-user-select>
+      <vue-user-select placeholder="Leibbursch auswählen" v-on:select="leibburschSelected" :value="newLeibbursch" ref="newLeibburschSelect"></vue-user-select>
 
       <label class="form-label">Leibfux eintragen</label>
-      <vue-user-select placeholder="Leibfuxen auswählen" v-on:select="leibfuxSelected" :value="newLeibfux" ref="newLeibfux"></vue-user-select>
+      <vue-user-select placeholder="Leibfuxen auswählen" v-on:select="leibfuxSelected" :value="newLeibfux" ref="newLeibfuxSelect"></vue-user-select>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@
     data: -> {
       leibfamilie: []
       newLeibbursch: null
+      newLeibfux: null
       editable: true
     }
     created: ->
@@ -68,8 +69,8 @@
           method: 'get'
           success: (result)->
             self.leibfamilie = result
-            self.$refs.newLeibbursch.reset()
-            self.$refs.newLeibfux.reset()
+            self.$refs.newLeibburschSelect.reset() if self.$refs.newLeibburschSelect
+            self.$refs.newLeibfuxSelect.reset() if self.$refs.newLeibfuxSelect
       remove: (entry) ->
         self = this
         @leibfamilie.splice(@leibfamilie.indexOf(entry), 1)
@@ -85,7 +86,7 @@
       editBox: ->
         this.$parent.editBox() if this.$parent.editBox
       editables: ->
-        (this.$children.map (child) -> child.editables()).flat()
+        (this.$children.map (child) -> (child.editables() if child.editables) || []).flat()
     }
     computed: {}
   }
