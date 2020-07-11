@@ -100,7 +100,7 @@
           %h2 Leibfamilie
           %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json}
 
--#    = render partial: 'users/communication_box', locals: {user: @user}
+    = render partial: 'users/communication_box', locals: {user: @user}
 -#
 -#    - # Login Data
 -#    - if can? :update, @user

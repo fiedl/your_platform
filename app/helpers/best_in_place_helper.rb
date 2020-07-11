@@ -35,6 +35,18 @@ module BestInPlaceHelper
     end
   end
 
+  def ajax_toggle(object, attribute, label = nil)
+    label ||= I18n.t(attribute)
+    form_for object, remote: true do |f|
+      content_tag :label, class: "form-check form-switch" do
+        f.hidden_field(attribute, value: false) +
+        f.check_box(attribute, {class: 'ajax_check_box form-check-input'}, true) +
+        label
+      end
+    end
+  end
+
+
   def setting_check_box(object, setting_key, label = nil)
     label ||= I18n.t(setting_key)
     setting = object.settings.where(var: setting_key).first_or_create
