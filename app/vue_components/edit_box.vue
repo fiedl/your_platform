@@ -73,16 +73,21 @@ EditBox = {
 
 <style lang="sass">
   .edit-box
+    position: relative
     background: white
-    margin: -10px
-    padding: 10px
+    margin: -20px
+    padding: 20px
     border-radius: 3px
     font-family: Helvetica Neue
   .edit-box.edit-mode
     z-index: 6000
     position: relative
   .edit-tools
+    position: absolute
+    right: 0
+    top: 0
     text-align: right
+    padding: 10px
     .btn.btn-outline-secondary.edit-button:hover
       background: white
       color: #6e7582
