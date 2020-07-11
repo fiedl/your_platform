@@ -30,7 +30,7 @@
     .card
       .card-body
         #contact_information
-          %edit-box
+          %vue-edit-box
             %h2= t :contact_information
             .row
               .col-md-4
@@ -52,7 +52,7 @@
       .card
         .card-body
           #about
-            %edit-box
+            %vue-edit-box
               %h2= t :about
               = editable_profile_fields profileable: user, types: ["ProfileFields::About"], new_profile_fields: [{label: "Über mich", type: "ProfileFields::About"}, {label: "Ich suche", type: "ProfileFields::About"}, {label: "Ich biete", type: "ProfileFields::About"}]
 
@@ -60,7 +60,7 @@
       .card
         .card-body
           #study
-            %edit-box
+            %vue-edit-box
               %h2= t :study
               = editable_profile_fields profileable: user, types: ["ProfileFields::Study"], new_profile_fields: [{label: "Studium", type: "ProfileFields::Study"}, {label: "Bachelor-Studium", type: "ProfileFields::Study"}, {label: "Master-Studium", type: "ProfileFields::Study"}, {label: "Auslandsstudium", type: "ProfileFields::Study"}, {label: "Promotion", type: "ProfileFields::Study"}]
 
@@ -68,7 +68,7 @@
       .card
         .card-body
           #career
-            %edit-box
+            %vue-edit-box
               %h2= t :career_information
               = editable_profile_fields profileable: user, types: ["ProfileFields::Employment", "ProfileFields::ProfessionalCategory", "ProfileFields::Competence"], new_profile_fields: [{label: "Beschäftigung", type: "ProfileFields::Employment"}, {label: "Betätigungsfeld", type: "ProfileFields::Employment"}, {label: "Kompetenz", type: "ProfileFields::Competence"}, {label: "Sprache", type: "ProfileFields::Competence"}, {label: "Fertigkeit", type: "ProfileFields::Competence"}]
 
@@ -76,7 +76,7 @@
       .card
         .card-body
           #organizations
-            %edit-box
+            %vue-edit-box
               %h2= t :organizations
               = editable_profile_fields profileable: user, types: ["ProfileFields::Organization"], new_profile_fields: [{label: "Organisation", type: "ProfileFields::Organization"}]
 
@@ -84,7 +84,7 @@
       .card
         .card-body
           #bank
-            %edit-box
+            %vue-edit-box
               %h2= t :bank_account_information
               = editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
 

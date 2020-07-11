@@ -5,7 +5,7 @@ module EditableHelper
   #   editable user, :email, type: "email"
   #
   def editable(object, key, type: 'text', editable: nil)
-    content_tag "editable", "", {
+    content_tag "vue-editable", "", {
       parameter: "#{object.class.name.parameterize}_#{object.id}",
       'initial-value': object.send(key),
       type: type,
@@ -16,7 +16,7 @@ module EditableHelper
   end
 
   def editable_profile_field(profile_field, type: 'text')
-    content_tag "editable-property", "", {
+    content_tag "vue-editable-property", "", {
       property: "profile_field_#{profile_field.id}",
       'initial-value': profile_field.value,
       'initial-label': profile_field.label,
@@ -33,7 +33,7 @@ module EditableHelper
       .where(type: types)
       .collect { |profile_field| profile_field.as_json.merge({editable: can?(:update, profile_field)})}
       .to_json
-    content_tag "profile-fields", "", {
+    content_tag "vue-profile-fields", "", {
       ':initial_profile_fields': profile_fields,
       ':new_profile_fields': new_profile_fields.to_json,
       ':profile_field_types': types.to_json,

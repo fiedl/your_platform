@@ -36,12 +36,20 @@ jQuery(document).ready ->
   #  vue_apps.push(new Vue({el: selector, data: {de: de, en: en}})) if jQuery(selector).count() > 0
 
   Vue.component('editable', Editable)
+  Vue.component('vue-editable', Editable)
   Vue.component('editable-property', EditableProperty)
+  Vue.component('vue-editable-property', EditableProperty)
   Vue.component('edit-box', EditBox)
+  Vue.component('vue-edit-box', EditBox)
   Vue.component('profile-field', ProfileField)
+  Vue.component('vue-profile-field', ProfileField)
   Vue.component('address-profile-field', AddressProfileField)
+  Vue.component('vue-address-profile-field', AddressProfileField)
   Vue.component('profile-fields', ProfileFields)
+  Vue.component('vue-profile-fields', ProfileFields)
   Vue.component('datepicker', Datepicker)
+  Vue.component('vue-datepicker', Datepicker)
   Vue.component('number-of-members-chart', NumberOfMembersChart)
+  Vue.component('vue-number-of-members-chart', NumberOfMembersChart)
 
   vue_apps.push(new Vue({el: "#vue-app"}))
