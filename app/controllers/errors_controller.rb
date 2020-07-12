@@ -31,6 +31,7 @@ class ErrorsController < ApplicationController
     @path_for_current_role = "#{@original_path}?preview_as=#{current_role.to_s}"
 
     if not current_devise_user
+      store_location_for :user_account, @original_path
       redirect_to sign_in_path, flash: { error: I18n.t(:unauthorized_please_sign_in) }
     end
   end
