@@ -25,12 +25,11 @@
 
 <script lang="coffee">
   Leibfamilie = {
-    props: ['initialLeibfamilie', 'user']
+    props: ['initialLeibfamilie', 'user', 'editable']
     data: -> {
       leibfamilie: []
       newLeibbursch: null
       newLeibfux: null
-      editable: true
     }
     created: ->
       this.leibfamilie = this.initialLeibfamilie

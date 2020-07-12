@@ -98,7 +98,7 @@
       .card-body
         %vue-edit-box
           %h2 Leibfamilie
-          %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json}
+          %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json, ':editable': can?(:update, user).to_json}
 
     = render partial: 'users/communication_box', locals: {user: @user}
 
