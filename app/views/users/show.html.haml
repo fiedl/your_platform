@@ -101,16 +101,17 @@
           %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json}
 
     = render partial: 'users/communication_box', locals: {user: @user}
--#
--#    - # Login Data
--#    - if can? :update, @user
--#      %h1.section.access= t(:access_information)
--#      %div
--#        - if @user.has_account?
--#          = render @user.account
--#        - else
--#          %p= t :user_has_no_account
--#          - if can? :create_account_for, @user
--#            %span.show_only_in_edit_mode
--#              = link_to t(:create_account), user_account_path(@user), :method => :post, :class => "btn btn-success"
--#              %p= t 'formtastic.hints.create_account'
+
+    - if can? :update, @user
+      .card
+        .card-body
+          %vue-edit-box
+            %h2= t :access_information
+            - if @user.has_account?
+              = render @user.account
+            - else
+              %p= t :user_has_no_account
+              - if can? :create_account_for, @user
+                %vue-show-in-edit-mode
+                  = link_to t(:create_account), user_account_path(@user), :method => :post, :class => "btn btn-success"
+                  %p= t 'formtastic.hints.create_account'

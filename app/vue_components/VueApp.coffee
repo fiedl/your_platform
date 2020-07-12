@@ -21,6 +21,7 @@ import Datepicker from './datepicker.vue'
 import NumberOfMembersChart from './number_of_members_chart.vue'
 import Leibfamilie from './leibfamilie.vue'
 import UserSelect from './user_select.vue'
+import ShowInEditMode from './show_in_edit_mode.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -57,5 +58,7 @@ jQuery(document).ready ->
   Vue.component('vue-leibfamilie', Leibfamilie)
   Vue.component('user-select', UserSelect)
   Vue.component('vue-user-select', UserSelect)
+  Vue.component('show-in-edit-mode', ShowInEditMode)
+  Vue.component('vue-show-in-edit-mode', ShowInEditMode)
 
   vue_apps.push(new Vue({el: "#vue-app"}))

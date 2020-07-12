@@ -4,7 +4,7 @@
     %dl
       %span.alias
         %dt= t :alias
-        %dd= best_in_place_if can?(:change_alias, @user), @user, :alias
+        %dd= editable @user, :alias, editable: can?(:change_alias, @user)
       %span.name
         %dt= t :name
         %dd= @user.name
@@ -12,7 +12,7 @@
         %dt= t :email
         %dd= @user.email
 
-.show_only_in_edit_mode
+%vue-show-in-edit-mode
   %dl
     - if can? :update, @user
       %dt= t :platform_access
