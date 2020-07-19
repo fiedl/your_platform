@@ -217,7 +217,7 @@
                           %circle{:cx => "10", :cy => "10", :r => "7"}
                           %line{:x1 => "21", :x2 => "15", :y1 => "21", :y2 => "15"}
                       //%input.form-control{:placeholder => "Search…", :type => "text"}/
-                      = search_field_tag :query, params[:query], :class => "search-query form-control mr-sm-2 #{'find_and_filter' if can?(:use, :find_and_filter)}", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
+                      = search_field_tag :query, params[:query], :class => "search-query form-control mr-sm-2 find_and_filter", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
 
       #content.content
         .container-xl

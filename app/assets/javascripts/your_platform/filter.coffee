@@ -16,10 +16,3 @@ $(document).on 'keyup', 'header #search, #header_search #query.find_and_filter',
         unless element.text().toUpperCase().indexOf(str.toUpperCase()) >= 0
           element.addClass('filter-hidden')
 
-# TODO: Remove this after the feature switch is obsolte.
-#
-$(document).ready ->
-  if $('input.search-query.find_and_filter').count() == 0
-    # This feature is still deactivated.
-    # Rename the placeholder from "find and filter" to "find".
-    $('input.search-query').attr('placeholder', I18n.t('search'))
