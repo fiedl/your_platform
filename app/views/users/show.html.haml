@@ -1,18 +1,18 @@
 .row
   .col-lg-4
     .card.card-profile
-      .card-header
+      %vue-editable-image{src: user.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, user).to_json, img_class: 'card-header', update_url: user_path(user), attribute_name: "user[carrierwave_avatar_background]"}
       .card-body.text-center
-        %img.card-profile-img{src: user.avatar_path}
+        %vue-editable-image{src: user.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, user).to_json, update_url: user_path(user), attribute_name: 'user[carrierwave_avatar]'}
         %h3.mb-3
           = editable user, :first_name, editable: can?(:change_first_name, user)
           = editable user, :last_name, editable: can?(:change_last_name, user)
           = user.name_affix
         = render partial: 'users/dead_badge', locals: { user: user }
         .row
-          - ([user.find_or_create_date_of_birth_profile_field] + user.profile.section(:general).fields).each do |profile_field|
+          - ([user.find_or_create_date_of_birth_profile_field] + user.profile.section(:general).fields).reverse.each do |profile_field|
             .col-lg-6.col-md-4.mb-3
-              %profile-field{':initial-profile-field': profile_field.as_json.merge({editable: can?(:update, profile_field), label_editable: false}).to_json}
+              %vue-profile-field{':initial-profile-field': profile_field.as_json.merge({editable: can?(:update, profile_field), label_editable: false}).to_json}
 
     .card
       .card-body
