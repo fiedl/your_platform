@@ -46,8 +46,11 @@
           self.options = []
       lostFocus: ->
         this.$emit('lostFocus')
-      selectedHandler: (option)->
-        this.$emit('select', option)
+      selectedHandler: (v)->
+        self = this
+        Vue.nextTick ->
+          self.$emit('select', self.selected)
+          self.$emit('input', self.selected)
       reset: ->
         this.selected = null
   `export default UserSelect`

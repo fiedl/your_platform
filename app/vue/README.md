@@ -1,6 +1,6 @@
-# Modern javascript
+# Vue
 
-This directory contains experimentally supported modern javascript files. The contained files.
+This directory contains our vue app and other javascript packed with webpack.
 
 ## Webpack
 
@@ -16,6 +16,10 @@ bin/pack
 bin/webpack-dev-server
 ```
 
+In preparation of deployment or tests, run `rake your_platform:install:node_modules`.
+
+The webpack configuration is in `config/webpack.config.js`.
+
 ## Node modules
 
 Add new node modules using `yarn` from the your-platform root directry.
@@ -28,4 +32,5 @@ bin/pack
 
 ## VueJS
 
-We have a basic VueJS app in place. Register new components in `VueApp.js`.
+We have a basic VueJS app in place. Register new components in `VueApp.coffee`.
+

@@ -2,10 +2,10 @@
   <div class="profile-fields">
     <ul>
       <li v-for="profile_field in profile_fields" :key="profile_field.id">
-        <address-profile-field v-if="profile_field.type == 'ProfileFields::Address'" :initial-profile-field="profile_field"></address-profile-field>
-        <profile-field :initial-profile-field="profile_field" v-else></profile-field>
+        <vue-address-profile-field v-if="profile_field.type == 'ProfileFields::Address'" :initial-profile-field="profile_field"></vue-address-profile-field>
+        <vue-profile-field :initial-profile-field="profile_field" v-else></vue-profile-field>
         <a v-on:click="remove(profile_field)" v-if="editable && editBox() && editBox().editMode" class="remove" :title="translate('remove')">
-          <trash-icon size="1.5x"></trash-icon>
+          <vue-trash-icon size="1.5x"></vue-trash-icon>
         </a>
       </li>
     </ul>

@@ -1,6 +1,6 @@
 <template>
   <div class="profile-field address-profile-field">
-    <editable-property
+    <vue-editable-property
       :property="'profile_field_' + profile_field.id"
       :initial-value="profile_field.value"
       :initial-label="profile_field.label"
@@ -10,7 +10,7 @@
       label-param-key="profile_field[label]"
       :render-value="render_value"
       :editable="editable"
-    ></editable-property>
+    ></vue-editable-property>
     <span class="badge bg-blue" v-if="!(editable && editBox().editMode) && has_postal_address_flag()">{{postal_address_flag_label}}</span>
     <div class="postal-address-option" v-if="editable && editBox().editMode">
       <label class="form-check">

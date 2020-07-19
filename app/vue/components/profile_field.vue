@@ -1,6 +1,6 @@
 <template>
   <div class="profile-field">
-    <editable-property
+    <vue-editable-property
       v-if="!profile_field.children || profile_field.children.length == 0"
       :property="'profile_field_' + profile_field.id"
       :initial-value="profile_field.value"
@@ -12,10 +12,10 @@
       :render-value="render_value"
       :editable="editable"
       :label-editable="profile_field.label_editable"
-    ></editable-property>
+    ></vue-editable-property>
     <span class="profile-field-with-children" v-if="profile_field.children && profile_field.children.length > 0">
       <div class="profile_field_parent_label">
-        <editable
+        <vue-editable
           :property="'profile_field_label_' + profile_field.id"
           type="text"
           :initial-value="profile_field.label"
@@ -23,10 +23,10 @@
           param-key="profile_field[label]"
           :editable="editable"
           v-on:edit="edit_children()"
-        ></editable>
+        ></vue-editable>
       </div>
       <div class="profile-field-children">
-        <editable-property
+        <vue-editable-property
           v-for="child_profile_field in profile_field.children"
           :property="'profile_field_' + child_profile_field.id"
           :initial-value="child_profile_field.value"
@@ -38,7 +38,7 @@
           :render-value="render_value"
           :editable="editable"
           :label-editable="false"
-        ></editable-property>
+        ></vue-editable-property>
       </div>
     </span>
   </div>
