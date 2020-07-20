@@ -29,6 +29,11 @@
     data: ->
       selected: null
       options: []
+    created: ->
+      this.selected = this.value
+    watch:
+      value: ->
+        this.selected = this.value
     methods:
       fetchUsers: (search, loading) ->
         self = this

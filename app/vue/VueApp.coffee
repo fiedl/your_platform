@@ -24,6 +24,7 @@ import UserSelect from './components/user_select.vue'
 import ShowInEditMode from './components/show_in_edit_mode.vue'
 import GroupMembersTable from './components/group_members_table.vue'
 import AddGroupMemberForm from './components/add_group_member_form.vue'
+import AutoAlignPopup from './components/auto_align_popup.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -48,6 +49,7 @@ jQuery(document).ready ->
   Vue.component('vue-show-in-edit-mode', ShowInEditMode)
   Vue.component('vue-group-members-table', GroupMembersTable)
   Vue.component('vue-add-group-member-form', AddGroupMemberForm)
+  Vue.component('vue-auto-align-popup', AutoAlignPopup)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)
