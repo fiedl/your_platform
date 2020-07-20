@@ -53,7 +53,7 @@
                       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus ad amet consectetur exercitationem fugiat in ipsa ipsum, natus odio quidem quod repudiandae sapiente. Amet debitis et magni maxime necessitatibus ullam.
               .nav-item.dropdown
                 %a.nav-link.d-flex.lh-1.text-reset.p-0{"data-toggle" => "dropdown", :href => "#"}
-                  %span.avatar{:style => "background-image: url(#{user_avatar_url(current_user)})"}
+                  = user_avatar(current_user)
                   .d-none.d-xl-block.pl-2
                     %div= current_user.title
                     .mt-1.small.text-muted
