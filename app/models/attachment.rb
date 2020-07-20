@@ -49,8 +49,8 @@ class Attachment < ApplicationRecord
     file.url(:big) if has_type? 'image'
   end
 
-  def has_type?( type )
-    self.content_type.include? type
+  def has_type?(type)
+    self.content_type.to_s.include? type
   end
 
   def filename

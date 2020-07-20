@@ -1,9 +1,9 @@
 .row
   .col-lg-4
     .card.card-profile
-      %vue-editable-image{src: user.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, user).to_json, img_class: 'card-header', update_url: user_path(user), attribute_name: "user[carrierwave_avatar_background]"}
+      %vue-editable-image{src: user.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, user).to_json, img_class: 'card-header', update_url: user_path(user), attribute_name: "user[avatar_background]"}
       .card-body.text-center
-        %vue-editable-image{src: user.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, user).to_json, update_url: user_path(user), attribute_name: 'user[carrierwave_avatar]'}
+        %vue-editable-image{src: user.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, user).to_json, update_url: user_path(user), attribute_name: 'user[avatar]'}
         %h3.mb-3
           = editable user, :first_name, editable: can?(:change_first_name, user)
           = editable user, :last_name, editable: can?(:change_last_name, user)

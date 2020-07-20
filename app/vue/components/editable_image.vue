@@ -11,6 +11,10 @@
     ]"
     :style="'background-image: url(' + image_url + ')'"
   >
+    <div class="icon_container" v-if="(! image_url) && icon">
+      <i :class="icon"></i>
+    </div>
+
     <vue-dropzone
       :options="dropzone_options"
       :id="attribute_name"
@@ -32,7 +36,7 @@
   Vue.component 'vue-dropzone', VueDropzone
 
   EditableImage =
-    props: ['src', 'editable', 'img_class', 'edit_alignment', 'update_url', 'attribute_name']
+    props: ['src', 'editable', 'img_class', 'edit_alignment', 'update_url', 'attribute_name', 'icon']
     data: ->
       self = this
       {
@@ -80,12 +84,19 @@
   .dz-preview
     display: none
 
-  .click_target
+  .click_target, .icon_container
     top: 0
     left: 0
     width: 100%
     height: 100%
     position: absolute
+
+  .icon_container
+    display: flex
+    align-items: center
+    justify-content: center
+    .fa-2x
+      font-size: 2em !important
 
   .editable_image.editable
     cursor: grab

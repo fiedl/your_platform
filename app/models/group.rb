@@ -30,6 +30,7 @@ class Group < ApplicationRecord
   include GroupMapItem
   include HasProfile
   include GroupSearch
+  include GroupAvatar
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:

@@ -12,6 +12,7 @@ class Corporation < Group
   include CorporationGroups
   include CorporationTermReports
   include CorporationLocation
+  include CorporationAvatar
 
   def self.active
     # TODO: only count corporations as active when they have any members
