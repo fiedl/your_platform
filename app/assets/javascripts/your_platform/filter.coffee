@@ -9,6 +9,8 @@ $(document).on 'keyup', 'header #search, #header_search #query.find_and_filter',
     datatable = $(this).DataTable()
     datatable.search(query).draw()
 
+  App.vue_app.$root.$emit("search", query)
+
   for str in query.split(" ")
     for selector in [".box", "li", "tbody tr", ".filterable"]
       $("#content " + selector).each ->

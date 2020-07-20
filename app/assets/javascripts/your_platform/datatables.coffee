@@ -29,6 +29,7 @@ App.datatables = {
 
   common_configuration: ->
     {
+      "destroy": true, # if the table already exists
       "sDom":"t<'card-footer d-flex align-items-center'<'m-0 text-muted' i><'pagination m-0 ml-auto'p>>",
       "sPaginationType": "full", # https://datatables.net/reference/option/pagingType
       "bJQueryUI": true,
@@ -89,27 +90,22 @@ App.datatables = {
 
   create: (selector, options)->
     if $(selector).count() > 0
-      unless $.fn.dataTable.isDataTable(selector)
-        if $(selector).parents('.dataTables_wrapper').count() == 0
-          configuration = {}
-          $.extend configuration, App.datatables.common_configuration()
-          $.extend configuration, options
-          $(selector).dataTable(configuration)
+      if $.fn.dataTable.isDataTable(selector)
+        $(selector).find(".dataTables_empty").closest("tr").remove()
+        $(selector).empty()
+        $(selector).dataTable().fnDestroy()
+
+      #  #if $(selector).parents('.dataTables_wrapper').count() == 0
+      configuration = {}
+      $.extend configuration, App.datatables.common_configuration()
+      $.extend configuration, options
+      $(selector).dataTable(configuration)
 }
 
 $(document).on 'dblclick', '.datatable tbody tr', ->
   $(this).find('a')[0].click() if $(this).find('a').count() > 0
 
-$(document).ready ->
-  App.datatables.extend_sort()
-
-  App.datatables.create '.datatable.members', {
-    "pageLength": 200,
-    "order": [[5, "desc"]],
-    columnDefs: [
-      {type: 'de_date', targets: 5}
-    ]
-  }
+App.datatables.init = ->
 
   App.datatables.create '.datatable.activities', {
     "pageLength": 100,
@@ -274,10 +270,9 @@ $(document).ready ->
     ]
   }
 
-
-
-
-
+$(document).ready ->
+  App.datatables.extend_sort()
+  App.datatables.init()
 
 
 

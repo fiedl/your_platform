@@ -49,4 +49,6 @@ jQuery(document).ready ->
   Vue.component('vue-group-members-table', GroupMembersTable)
   Vue.component('vue-add-group-member-form', AddGroupMemberForm)
 
-  vue_apps.push(new Vue({el: "#vue-app"}))
+  vue_app = new Vue({el: "#vue-app"})
+  vue_apps.push(vue_app)
+  App.vue_app = vue_app

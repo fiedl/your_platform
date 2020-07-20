@@ -9,7 +9,8 @@
   .col-lg-9
     .card
       .card-body
-        = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
+        %vue-group-members-table{':rows': member_table_rows.to_json}
+
   .col-lg-3
     .card
       .card-body
