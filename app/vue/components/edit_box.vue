@@ -83,11 +83,8 @@ EditBox = {
     z-index: 6000
     position: relative
   .edit-tools
-    position: absolute
-    right: 0
-    top: 0
+    float: right
     text-align: right
-    padding: 10px
     .btn.btn-outline-secondary.edit-button:hover
       background: white
       color: #6e7582
