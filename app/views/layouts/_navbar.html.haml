@@ -1,0 +1,134 @@
+.navbar-expand-md
+  #navbar-menu.collapse.navbar-collapse
+    .navbar.navbar-light
+      .container-xl
+        %ul.navbar-nav
+          %li.nav-item{class: ('active' if current_tab == :start or current_tab.blank?)}
+            %a.nav-link{:href => root_path}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %polyline{:points => "5 12 3 12 12 3 21 12 19 12"}
+                  %path{:d => "M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"}
+                  %path{:d => "M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"}
+              %span.nav-link-title
+                Start
+          %li.nav-item.dropdown{class: ('active' if current_tab ==  :contacts)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %polyline{:points => "12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"}
+                  %line{:x1 => "12", :x2 => "20", :y1 => "12", :y2 => "7.5"}
+                  %line{:x1 => "12", :x2 => "12", :y1 => "12", :y2 => "21"}
+                  %line{:x1 => "12", :x2 => "4", :y1 => "12", :y2 => "7.5"}
+                  %line{:x1 => "16", :x2 => "8", :y1 => "5.25", :y2 => "9.75"}
+              %span.nav-link-title
+                Kontaktdaten
+            %ul.dropdown-menu
+              %li
+                = link_to "Meine Daten", current_user, class: 'dropdown-item'
+              - current_user.corporations.each do |corporation|
+                %li
+                  = link_to group_path(corporation), class: 'dropdown-item' do
+                    = corporation.name
+              %li
+                %a.dropdown-item{:href => "./empty.html"}
+                  Verbindungen
+              %li
+                %a.dropdown-item{:href => "./empty.html"}
+                  Philistervereine
+              %li
+                %a.dropdown-item{:href => "./empty.html"}
+                  Bezirksverbände
+
+          %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %polyline{:points => "12 3 20 7.5 20 16.5 12 21 4 16.5 4 7.5 12 3"}
+                  %line{:x1 => "12", :x2 => "20", :y1 => "12", :y2 => "7.5"}
+                  %line{:x1 => "12", :x2 => "12", :y1 => "12", :y2 => "21"}
+                  %line{:x1 => "12", :x2 => "4", :y1 => "12", :y2 => "7.5"}
+                  %line{:x1 => "16", :x2 => "8", :y1 => "5.25", :y2 => "9.75"}
+              %span.nav-link-title
+                = t :members
+            %ul.dropdown-menu
+              %li
+                %a.dropdown-item{:href => "./empty.html"}
+                  Aktivmeldung eintragen
+              - current_user.corporations.each do |corporation|
+                %li
+                  %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
+                    = corporation.name
+          %li.nav-item
+            %a.nav-link{:href => "./form-elements.html"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %polyline{:points => "9 11 12 14 20 6"}
+                  %path{:d => "M20 12v6a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h9"}
+              %span.nav-link-title
+                Veranstaltungen
+          %li.nav-item.dropdown
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %path{:d => "M12 17.75l-6.172 3.245 1.179-6.873-4.993-4.867 6.9-1.002L12 2l3.086 6.253 6.9 1.002-4.993 4.867 1.179 6.873z"}
+              %span.nav-link-title
+                Dokumente
+            %ul.dropdown-menu
+              %li
+                %a.dropdown-item{:href => "./invoice.html"}
+                  Invoice
+              %li
+                %a.dropdown-item{:href => "./blog.html"}
+                  Blog cards
+              %li
+                %a.dropdown-item{:href => "./snippets.html"}
+                  Snippets
+              %li
+                %a.dropdown-item{:href => "./search-results.html"}
+                  Search results
+              %li
+                %a.dropdown-item{:href => "./pricing.html"}
+                  Pricing cards
+              %li
+                %a.dropdown-item{:href => "./users.html"}
+                  Users
+              %li
+                %a.dropdown-item{:href => "./gallery.html"}
+                  Gallery
+              %li
+                %a.dropdown-item{:href => "./profile.html"}
+                  Profile
+              %li
+                %a.dropdown-item{:href => "./music.html"}
+                  Music
+          %li.nav-item.dropdown
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %rect{:height => "5", :rx => "2", :width => "6", :x => "4", :y => "4"}
+                  %rect{:height => "7", :rx => "2", :width => "6", :x => "4", :y => "13"}
+                  %rect{:height => "7", :rx => "2", :width => "6", :x => "14", :y => "4"}
+                  %rect{:height => "5", :rx => "2", :width => "6", :x => "14", :y => "15"}
+              %span.nav-link-title
+                Kommunikation
+            %ul.dropdown-menu
+              %li
+                %a.dropdown-item{:href => "./layout-horizontal.html"}
+                  Horizontal
+        #header_search.my-2.my-md-0.flex-grow-1.flex-md-grow-0.order-first.order-md-last
+          = form_tag search_path, :method => 'get', role: 'search' do
+            .input-icon
+              %span.input-icon-addon
+                %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+                  %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+                  %circle{:cx => "10", :cy => "10", :r => "7"}
+                  %line{:x1 => "21", :x2 => "15", :y1 => "21", :y2 => "15"}
+              //%input.form-control{:placeholder => "Search…", :type => "text"}/
+              = search_field_tag :query, params[:query], :class => "search-query form-control mr-sm-2 find_and_filter", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
