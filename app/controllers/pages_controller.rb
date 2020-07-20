@@ -65,7 +65,6 @@ class PagesController < ApplicationController
       end
 
     end
-    metric_logger.log_event @page.attributes, type: :show_page
     respond_with @page
   end
 

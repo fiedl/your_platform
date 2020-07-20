@@ -34,8 +34,6 @@ class UsersController < ApplicationController
       set_current_activity :looks_at_profile, @user
     end
 
-    metric_logger.log_event @user.attributes.merge({name: @user.name, title: @user.title}), type: :show_user
-
     respond_to do |format|
       format.html
       format.json

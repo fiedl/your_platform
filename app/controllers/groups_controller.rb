@@ -123,8 +123,6 @@ class GroupsController < ApplicationController
         send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
-
-    metric_logger.log_event @group.try(:attributes), type: :show_group
   end
 
   def update

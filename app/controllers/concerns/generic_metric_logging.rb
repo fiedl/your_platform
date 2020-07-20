@@ -1,9 +1,6 @@
 concern :GenericMetricLogging do
 
   included do
-    helper_method :metric_logger
-
-    # before_action :log_generic_metric_event
     # after_action :log_request
     after_action  :log_activity
   end
@@ -30,26 +27,6 @@ concern :GenericMetricLogging do
           navable_id: current_navable.try(:id),
           navable_type: current_navable.try(:class).try(:name)
     end
-  end
-
-  # This logs the event using a metric storage.
-  # Here, we use fnordmetric. The metrics can be viewed via
-  #
-  #   http://localhost:4242
-  #
-  # when the deamon is started via
-  #
-  #   bundle exec foreman start fnordmetric
-  #
-  def log_generic_metric_event
-    unless read_only_mode?
-      type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
-      metric_logger.log_event( { id: params[:id] }, type: type)
-      metric_logger.log_event( { request_type: type }, type: :generic_request)
-    end
-  end
-  def metric_logger
-    @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
   end
 
 
