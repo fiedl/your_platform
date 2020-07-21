@@ -27,7 +27,7 @@
         { label: this.translate('last_name'), field: 'last_name' }
         { label: this.translate('first_name'), field: 'first_name' }
         { label: this.translate('name_affix'), field: 'name_affix' }
-        { label: this.translate('status'), field: 'status_link', html: true, hidden: (! this.has_status_entries) }
+        { label: this.translate('status'), field: 'status_link', html: true, hidden: (! this.has_status_entries()) }
         { label: this.translate('since'), field: 'since', type: 'date', dateOutputFormat: 'dd.MM.yyyy', firstSortType: 'desc', dateInputFormat: 'dd.MM.yyyy' }
       ]
       sort_options:
@@ -46,6 +46,8 @@
         @current_rows.push(member)
       search: (query)->
         @query = query
+      has_status_entries: ->
+        @rows.some (row) -> row.status
     computed:
       processed_rows: ->
         self = this
@@ -56,8 +58,6 @@
           if row.status
             row.status_link = "<a href=\"/groups/#{row.status_group_id}/members\">#{row.status}</a>"
           row
-      has_status_entries: ->
-        @rows.some (row) -> row.status
       search_options: ->
         enabled: true
         externalQuery: @query
