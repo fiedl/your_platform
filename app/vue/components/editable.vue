@@ -11,7 +11,7 @@
 
       <span key="1" class='edit' v-bind:class="editingClass" v-if="showEditField" v-on:click="acceptEditSuggestion" v-on:keydown.esc="cancelAll">
         <textarea v-if="typeIsTextarea" v-on:keydown="keydownToBeginEditing" v-model.trim="value" autofocus></textarea>
-        <datepicker v-else-if="type == 'date'" :initial-date="value" v-on:dateSelected="dateSelected" @cancelled="focusLost"></datepicker>
+        <vue-datepicker :open-initially="editing && !(editBox() && editBox().editMode)" v-else-if="type == 'date'" v-model="value" v-on:dateSelected="dateSelected" @cancelled="focusLost"></vue-datepicker>
         <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll" v-on:keyup="pushPropertyToStore" v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" autofocus />
         <div class="error-message" v-if="error">{{error}}</div>
         <div class="help" v-if="help">{{help}}</div>
@@ -65,6 +65,7 @@
         }
       },
       edit() {
+        self = this
         if (this.editable && (! this.editing)) {
           this.$emit('edit')
           this.valueBeforeEdit = this.value
@@ -92,7 +93,7 @@
         }
       },
       dateSelected(val) {
-        this.value = val.toLocaleDateString("de")
+        this.value = val
         if (! this.editBox()) {
           this.save()
         }

@@ -27,27 +27,30 @@
 
   export default {
     mixins: [clickaway],
-    props: ['initialDate', 'value'],
+    props: ['value', 'openInitially'],
     data() { return {
       date: null
     } },
     created() {
-      this.date = this.initialDate || this.value
+      moment.locale('de')
+      this.date = moment(this.value, "L").toDate()
+      this.$on('open', this.open)
+    },
+    mounted() {
+      if (this.openInitially) {
+        this.open()
+      }
     },
     methods: {
       open() {
         this.$refs.picker.showCalendar()
       },
-      parseDate(input) {
-        if (input) {
-          var parts = input.match(/(\d+)/g);
-          return new Date(parts[2], parts[1]-1, parts[0]);
-        }
-      },
       selected(val) {
+        self = this
+        self.date = val
         Vue.nextTick(() => {
-          this.$emit('dateSelected', val)
-          this.$emit('input', val)
+          this.$emit('dateSelected', self.formatted_date)
+          this.$emit('input', self.formatted_date)
         })
       },
       clicked_outside() {
@@ -63,6 +66,9 @@
     computed: {
       locale_de() {
         return de
+      },
+      formatted_date() {
+        return moment(this.date).locale('de').format('L')
       }
     }
   }
