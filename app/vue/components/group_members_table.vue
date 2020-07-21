@@ -23,7 +23,7 @@
       current_rows: []
       query: null
       columns: [
-        { label: "", field: 'avatar', html: true }
+        { label: "", field: 'avatar', html: true, tdClass: 'w-1' }
         { label: this.translate('last_name'), field: 'last_name' }
         { label: this.translate('first_name'), field: 'first_name' }
         { label: this.translate('name_affix'), field: 'name_affix' }
@@ -64,3 +64,8 @@
   }
   `export default GroupMembersTable`
 </script>
+
+<style lang="sass">
+  .vgt-global-search
+    display: none
+</style>
