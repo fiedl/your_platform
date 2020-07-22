@@ -6,7 +6,7 @@ class SmallAdsController < ApplicationController
   def index
     authorize! :index, :small_ads
 
-    set_current_title "Gesuche und Angebote"
+    set_current_title t(:small_ads)
     set_current_tab :network
   end
 

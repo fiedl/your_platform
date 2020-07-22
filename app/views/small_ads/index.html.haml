@@ -1,7 +1,7 @@
 .page-header
   .row.align-itens-center
     .col-auto
-      .page-title Gesuche und Angebote
+      .page-title= t :small_ads
 
 .row.row-deck.row-cards
   .col-lg-6
@@ -36,6 +36,7 @@
                     = localize about_field.created_at
                   %h4= link_to about_field.profileable.title, about_field.profileable
                 %div
+                  %span.text-muted Ich suche:
                   = about_field.value
 
   .col-lg-6
@@ -55,4 +56,5 @@
                     = localize about_field.created_at
                   %h4= link_to about_field.profileable.title, about_field.profileable
                 %div
+                  %span.text-muted Ich biete:
                   = about_field.value
