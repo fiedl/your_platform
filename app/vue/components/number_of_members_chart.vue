@@ -30,8 +30,9 @@
       </div>
     </div>
     <div class="chart_section">
-      <apexchart type="area" :options="options" :series="series" :height="height"></apexchart>
+      <vue-apexchart type="area" :options="options" :series="series" :height="height"></vue-apexchart>
     </div>
+    <slot></slot>
   </a>
 </template>
 
