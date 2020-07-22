@@ -48,10 +48,11 @@
           url: @update_url
           method: 'put'
           paramName: @attribute_name
-          accepted_files: 'image/*'
-          error: ->
+          acceptedFiles: 'image/*'
+          maxFilesize: 7 # MB
+          error: (file, msg)->
             self.image_url = null
-            alert("Der Upload hat nicht funktioniert.")
+            alert("Der Upload hat nicht funktioniert: " + msg)
           sending: (event, xhr, data)->
             data.append 'authenticity_token', $('meta[name=csrf-token]').attr('content')
           thumbnail: (event, data)->
