@@ -32,8 +32,9 @@
                 %li
                   = link_to group_path(corporation), class: 'dropdown-item' do
                     = corporation.name
+              .dropdown-divider
               %li
-                %a.dropdown-item{:href => "./empty.html"}
+                = link_to corporations_path, class: "dropdown-item #{'active' if controller_name == 'corporations'}" do
                   Verbindungen
               %li
                 %a.dropdown-item{:href => "./empty.html"}

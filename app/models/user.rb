@@ -95,7 +95,7 @@ class User < ApplicationRecord
   def as_json(*options)
     super.merge({
       title: title,
-      avatar_url: avatar_url
+      avatar_path: avatar_path
     })
   end
 

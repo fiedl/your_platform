@@ -47,6 +47,10 @@ concern :ProfileFields do
     phone_profile_fields
   end
 
+  def phone
+    phone_fields.first.try(:value)
+  end
+
   def phone_and_fax_fields
     profile_fields.where(type: 'ProfileFields::Phone')
   end

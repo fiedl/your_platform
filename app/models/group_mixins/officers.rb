@@ -69,7 +69,7 @@ module GroupMixins::Officers
     important_officers_keys.each do |key|
       Group.where(id: officers_group_ids).flagged(key).each do |group|
         group.members.each do |user|
-          entries << {description: group.name, user: user}
+          entries << {description: group.name, user: user, group: group}
         end
       end
     end

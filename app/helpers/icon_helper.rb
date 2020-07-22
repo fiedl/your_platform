@@ -47,6 +47,10 @@ module IconHelper
     icon 'list-alt'
   end
 
+  def list_icon
+    icon 'list-alt'
+  end
+
   def help_icon
     icon 'question-sign'
   end
@@ -141,6 +145,68 @@ module IconHelper
 
   def group_icon
     fa_icon "group"
+  end
+
+  def mail_icon
+    #fa_icon "envelope"
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-mail" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <rect x="3" y="5" width="18" height="14" rx="2" />
+        <polyline points="3 7 12 13 21 7" />
+      </svg>
+    }.html_safe
+  end
+
+  def network_icon
+    fa_icon "share-alt"
+  end
+
+  def home_icon
+    Haml::Engine.new(
+    %Q(%svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+      %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+      %polyline{:points => "5 12 3 12 12 3 21 12 19 12"}
+      %path{:d => "M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7"}
+      %path{:d => "M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6"}
+    )).render
+  end
+
+  def contact_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-mobile" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <rect x="7" y="4" width="10" height="16" rx="1" />
+        <line x1="11" y1="5" x2="13" y2="5" />
+        <line x1="12" y1="17" x2="12" y2="17.01" />
+      </svg>
+    }.html_safe
+  end
+
+  def descending_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sort-descending" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <line x1="4" y1="6" x2="13" y2="6" />
+        <line x1="4" y1="12" x2="11" y2="12" />
+        <line x1="4" y1="18" x2="11" y2="18" />
+        <polyline points="15 15 18 18 21 15" />
+        <line x1="18" y1="6" x2="18" y2="18" />
+      </svg>
+    }.html_safe
+  end
+
+  def ascending_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sort-ascending" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <line x1="4" y1="6" x2="11" y2="6" />
+        <line x1="4" y1="12" x2="11" y2="12" />
+        <line x1="4" y1="18" x2="13" y2="18" />
+        <polyline points="15 9 18 6 21 9" />
+        <line x1="18" y1="6" x2="18" y2="18" />
+      </svg>
+    }.html_safe
   end
 
 end

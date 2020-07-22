@@ -7,6 +7,16 @@ concern :GroupMailingLists do
     self.profile_fields.where(type: 'ProfileFields::MailingListEmail')
   end
 
+  # All mailing lists, including the ones of the sub groups.
+  #
+  def groups_with_mailing_lists
+    ([self] + descendant_groups.order(:id)).select { |g| g.mailing_lists.any? }
+  end
+
+  def chargen_mailing_list
+    chargen.mailing_lists.first if chargen
+  end
+
   # Possible settings for the sender filter, i.e. the group attribute that determines
   # whether an incoming post is accepted or rejected.
   #

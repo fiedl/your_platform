@@ -1,0 +1,16 @@
+:ruby
+  corporations_json = corporations.collect do |corporation|
+    corporation.as_json.merge({
+      avatar_path: corporation.avatar_path,
+      avatar_background_path: corporation.avatar_background_path,
+      members_count: corporation.members.count,
+      aktive_count: corporation.aktivitas.members.count,
+      philister_count: corporation.philisterschaft.members.count,
+      editable: can?(:update, corporation),
+      update_path: group_path(corporation),
+      officers: corporation.important_officers,
+      email: corporation.email,
+      phone: corporation.phone
+    })
+  end.to_json
+%vue_corporations_page{':corporations': corporations_json}
