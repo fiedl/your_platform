@@ -57,6 +57,7 @@
       render_value(value) {
         if (value) {
           if (this.profile_field.type == "ProfileFields::Email") { return `<a href="mailto:${value}">${value}</a>`}
+          if (this.profile_field.type == "ProfileFields::MailingListEmail") { return `<a href="mailto:${value}">${value}</a>`}
           if (this.profile_field.type == "ProfileFields::Phone") { return `<a href="tel:${value}">${value}</a>`}
           if (this.profile_field.type == "ProfileFields::Homepage") { return `<a href="${value}">${value}</a>`}
         }

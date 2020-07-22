@@ -10,4 +10,90 @@
         = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
           = markup group.body
 
+    - chart = Charts::NumberOfMembers::Corporation.new(group: group)
+    %vue-number-of-members-chart{height: "50px",
+      ':sub_charts': chart.sub_charts.to_json,
+      group_name: chart.group.name,
+      ':years': chart.years.to_json,
+      }
+      .card-body
+        .row.align-items.center
+          - %w(Burschen Fuxen Philister).each do |status|
+            - status_group = group.sub_group(status)
+            .col-auto
+              = link_to status_group.name, group_members_path(status_group)
+              = status_group.members.count
+        .mt-4
+          = link_to group_members_path(group), class: "btn btn-outline-secondary" do
+            = group_icon
+            Mitgliederliste anzeigen
+        .mt-2
+          = link_to term_report_path(group.term_reports.last), class: "btn btn-outline-secondary" do
+            = list_icon
+            Semesterstatistik anzeigen
+
   .col-lg-8
+    .card
+      .card-body
+        #officers
+          %h2 Chargierte und Amtsträger
+          .row.mb-n3
+            - group.important_officers.each do |entry|
+              .col-6.row.row-sm.mb-3.align-items-center
+                .col-auto
+                  = user_avatar(entry[:user])
+                .col
+                  .text-body.d-block= entry[:user].title
+                  %small.d-block.mt-n1.text-muted= entry[:description]
+                  %small.d-block.mt-n1.text-muted= entry[:user].phone
+                  - if email = entry[:group].mailing_lists.first
+                    %small.d-block.mt-n1.text-muted= email.value
+
+    .card
+      .card-body
+        #contact_information
+          %vue-edit-box
+            %h2= t :contact_information
+            .row
+              .col-md-4
+                = editable_profile_fields profileable: group, types: ["ProfileFields::Address"], new_profile_fields: [{label: "Anschrift", type: "ProfileFields::Address"}]
+              .col-md-4
+                = editable_profile_fields profileable: group, types: ["ProfileFields::Phone"], new_profile_fields: [{label: "Telefon", type: "ProfileFields::Phone"}, {label: "Fax", type: "ProfileFields::Phone"}]
+              .col-md-4
+                = editable_profile_fields profileable: group, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}]
+
+                - if group.chargen_mailing_list
+                  %vue-profile-field{':initial-profile-field': group.chargen_mailing_list.as_json.merge({label: "E-Mail Chargen"}).to_json}
+
+    - if group.groups_with_mailing_lists.any?
+      .card
+        .card-body
+          #mailing-lists
+            %h2= t :mailing_lists
+            .row.mb-n3
+              - group.groups_with_mailing_lists.each do |group|
+                .col-6.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = mail_icon
+                    -#= user_avatar(group)
+                  .col
+                    .text-body.d-block= group.title
+                    %small.d-block.mt-n1= link_to group.mailing_lists.first.value, "mailto:#{group.mailing_lists.first.value}"
+
+
+
+    - if group.profile_fields.where(type: "ProfileFields::BankAccount").any? || can?(:update, group)
+      .card
+        .card-body
+          #bank
+            %vue-edit-box
+              %h2= t :bank_account_information
+              = editable_profile_fields profileable: group, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
+
+    - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
+      .card
+        .card-body
+          #description
+            %vue-edit-box
+              %h2 Hintergrund-Infos
+              = editable_profile_fields profileable: group, types: ["ProfileFields::Description"], new_profile_fields: [{label: "Beschreibung", type: "ProfileFields::Description"}]

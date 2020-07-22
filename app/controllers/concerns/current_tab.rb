@@ -49,15 +49,7 @@ concern :CurrentTab do
 
   def current_tab(object = nil)
     object ||= current_navable
-    if object.kind_of?(Group)
-      if object.kind_of?(Groups::GroupOfGroups)
-        "subgroups"
-      else
-        cookies[:current_tab] || cookies[:group_tab]
-      end
-    else
-      cookies[:current_tab]
-    end
+    cookies[:current_tab]
   end
 
   def set_current_tab(tab)

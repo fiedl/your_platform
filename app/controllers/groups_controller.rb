@@ -4,6 +4,8 @@ class GroupsController < ApplicationController
   authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
 
+  expose :group
+
   def index
     @group = @parent_group = Group.find(params[:group_id]) if params[:group_id]
     @groups = (@parent_group.try(:child_groups) || Group.all).includes(:flags)
@@ -16,68 +18,9 @@ class GroupsController < ApplicationController
   end
 
   def show
-    if @group
-      if request.format.html?
-
-        if @group.kind_of? Groups::GroupOfGroups
-          redirect_to groups_group_of_groups_path(@group)
-          return
-        else
-          redirect_to_group_tab
-          return
-        end
-
-      elsif request.format.json?
-        Rack::MiniProfiler.step('groups#show controller: fetch memberships') do
-          # If this is a collection group, e.g. the corporations_parent group,
-          # do not list the single members.
-          #
-          if @group.group_of_groups?
-            @memberships = []
-            @child_groups = @group.child_groups - [@group.find_officers_parent_group]
-
-          # This is a regular group.
-          #
-          else
-            @memberships = @group.memberships_for_member_list
-          end
-        end
-
-        # The user might provide a `valid_from` option as constraint on the validity range.
-        #
-        if params[:valid_from].present?
-          @memberships = @memberships.started_after(params[:valid_from].to_datetime)
-        end
-
-        Rack::MiniProfiler.step('groups#show controller: cancan') do
-          # Make sure only members that are allowed to be seen are in this array!
-          #
-          allowed_member_ids = @group.members.accessible_by(current_ability).pluck(:id)
-          allowed_memberships = @group.memberships.where(descendant_id: allowed_member_ids)
-          @memberships = @memberships & allowed_memberships
-        end
-
-        Rack::MiniProfiler.step('groups#show controller: fetch members') do
-          # Fill also the members into a separate variable.
-          #
-          @members = @group.members.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)})
-
-          # For some special groups, the first method of retreiving the members does not work.
-          # Fallback to these slower methods:
-          @members = User.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)}) if @members.empty?
-          @members = @memberships.collect { |membership| membership.user } if @members.empty?
-        end
-
-        # for performance reasons deactivated for the moment.
-        # fill_map_address_fields
-        @large_map_address_fields = []
-
-        # @posts = @group.posts.order("sent_at DESC").limit(10)
-
-        @new_membership = @group.build_membership
-      end
-    end
-
+    set_current_title group.title
+    set_current_navable group
+    set_current_tab :contacts
 
     # Log exports.
     #
@@ -90,12 +33,8 @@ class GroupsController < ApplicationController
       )
     end
 
-
     respond_to do |format|
-      format.json do
-        authorize! :read, @group
-        render json: @group.serializable_hash.merge({member_count: @memberships.try(:count)})
-      end
+      format.html
       format.pdf do
         authorize! :read, @group
         authorize! :export_member_list, @group
