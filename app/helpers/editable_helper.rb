@@ -28,9 +28,9 @@ module EditableHelper
     }
   end
 
-  def editable_profile_fields(profileable:, types:, new_profile_fields: [])
-    profile_fields = profileable.profile_fields
-      .where(type: types)
+  def editable_profile_fields(profileable:, types: [], profile_fields: [], new_profile_fields: [])
+    profile_fields = profileable.profile_fields.where(type: types) unless profile_fields.present?
+    profile_fields = profile_fields
       .collect { |profile_field| profile_field.as_json.merge({editable: can?(:update, profile_field)})}
       .to_json
     content_tag "vue-profile-fields", "", {

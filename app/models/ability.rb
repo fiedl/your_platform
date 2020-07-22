@@ -320,6 +320,7 @@ class Ability
 
     can :index, :documents
     can :index, :my_groups
+    can :index, :small_ads
 
     can :index_mine, Group
 

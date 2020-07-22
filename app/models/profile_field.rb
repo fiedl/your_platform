@@ -6,6 +6,9 @@ class ProfileField < ApplicationRecord
   include ProfileFieldProfileable
   include ProfileFieldComposedValue
 
+  scope :ich_suche, -> { where(type: "ProfileFields::About", label: "Ich suche") }
+  scope :ich_biete, -> { where(type: "ProfileFields::About", label: "Ich biete") }
+
   # Only allow the type column to be an existing class name.
   #
   validates_each :type do |record, attr, value|

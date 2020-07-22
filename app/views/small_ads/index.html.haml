@@ -1,0 +1,58 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Gesuche und Angebote
+
+.row.row-deck.row-cards
+  .col-lg-6
+    .card
+      .card-body
+        %vue-edit-box
+          %h2 Ich suche
+          = editable_profile_fields profileable: current_user, profile_fields: current_user.profile_fields.ich_suche, new_profile_fields: [{label: "Ich suche", type: "ProfileFields::About"}]
+
+  .col-lg-6
+    .card
+      .card-body
+        %vue-edit-box
+          %h2 Ich biete
+          = editable_profile_fields profileable: current_user, profile_fields: current_user.profile_fields.ich_biete, new_profile_fields: [{label: "Ich biete", type: "ProfileFields::About"}]
+
+.row.row-deck.row-cards
+  .col-lg-6
+    .card
+      .card-header
+        %h2 Andere suchen
+      %ul.list-group.card-list-group
+        - for about_field in gesuche
+          %li.list-group-item.py-4
+            .d-flex
+              .mr-3
+                = link_to about_field.profileable do
+                  = user_avatar(about_field.profileable)
+              .flex-fill
+                %div
+                  %small.float-right.text-muted
+                    = localize about_field.created_at
+                  %h4= link_to about_field.profileable.title, about_field.profileable
+                %div
+                  = about_field.value
+
+  .col-lg-6
+    .card
+      .card-header
+        %h2 Andere bieten
+      %ul.list-group.card-list-group
+        - for about_field in angebote
+          %li.list-group-item.py-4
+            .d-flex
+              .mr-3
+                = link_to about_field.profileable do
+                  = user_avatar(about_field.profileable)
+              .flex-fill
+                %div
+                  %small.float-right.text-muted
+                    = localize about_field.created_at
+                  %h4= link_to about_field.profileable.title, about_field.profileable
+                %div
+                  = about_field.value
