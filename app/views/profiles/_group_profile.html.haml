@@ -2,13 +2,6 @@
 
 %h1.group_profile= best_in_place_if can?(:rename, @group), @group, :name
 %div
-  #inline-pictures
-    - if @group.image_attachments.any?
-      = render partial: 'attachments/pictures', locals: {attachments: @group.image_attachments, inline: true}
-  - if can? :update, @group
-    .hidden-print.show_only_in_edit_mode
-      #attachments= render partial: 'attachments/drop_field', locals: {parent: @group, type: :image}
-
   = wysiwyg_in_place_if can?(:update, @group), @group, :body, toolbar: true, multiline: true, activate: 'manual' do
     = markup @group.body
 
