@@ -18,19 +18,21 @@
       }
       .card-body
         .row.align-items.center
-          - %w(Burschen Fuxen Philister).each do |status|
-            - status_group = group.sub_group(status)
-            .col-auto
-              = link_to status_group.name, group_members_path(status_group)
-              = status_group.members.count
+          - if group.kind_of? Corporation
+            - %w(Burschen Fuxen Philister).each do |status|
+              - status_group = group.sub_group(status)
+              .col-auto
+                = link_to status_group.name, group_members_path(status_group)
+                = status_group.members.count
         .mt-4
           = link_to group_members_path(group), class: "btn btn-outline-secondary" do
             = group_icon
             Mitgliederliste anzeigen
-        .mt-2
-          = link_to term_report_path(group.term_reports.last), class: "btn btn-outline-secondary" do
-            = list_icon
-            Semesterstatistik anzeigen
+        - if group.respond_to? :term_reports
+          .mt-2
+            = link_to term_report_path(group.term_reports.last), class: "btn btn-outline-secondary" do
+              = list_icon
+              Semesterstatistik anzeigen
 
   .col-lg-8
     .card
@@ -62,7 +64,7 @@
               .col-md-4
                 = editable_profile_fields profileable: group, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}]
 
-                - if group.chargen_mailing_list
+                - if group.kind_of?(Corporation) && group.chargen_mailing_list
                   %vue-profile-field{':initial-profile-field': group.chargen_mailing_list.as_json.merge({label: "E-Mail Chargen"}).to_json}
 
     - if group.groups_with_mailing_lists.any?
