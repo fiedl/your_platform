@@ -49,6 +49,7 @@
     "photoswipe": "^4.1.2",
     "postcss-svgo": "^4.0.2",
     "primer": "^10.6.0",
+    "rails-erb-loader": "^5.5.2",
     "randomatic": "^3.0.0",
     "rc": "^1.2.8",
     "request": "2.88",
