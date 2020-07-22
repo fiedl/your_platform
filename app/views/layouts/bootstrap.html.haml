@@ -63,6 +63,8 @@
                         = "#{t(:preview_as)}:"
                         = t current_role_view
                 .dropdown-menu.dropdown-menu-right
+                  = link_to "Meine Daten", current_user, class: 'dropdown-item'
+                  .dropdown-divider
                   %a.dropdown-item{:href => "#"}
                     %svg.icon.dropdown-item-icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
                       %path{:d => "M0 0h24v24H0z", :stroke => "none"}
