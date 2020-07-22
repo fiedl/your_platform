@@ -10,7 +10,7 @@
         = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
           = markup group.body
 
-    - chart = Charts::NumberOfMembers::Corporation.new(group: group)
+    - chart = group.number_of_members_chart
     %vue-number-of-members-chart{height: "50px",
       ':sub_charts': chart.sub_charts.to_json,
       group_name: chart.group.name,
