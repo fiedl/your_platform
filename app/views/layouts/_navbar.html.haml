@@ -9,7 +9,7 @@
                 = home_icon
               %span.nav-link-title
                 Start
-          %li.nav-item.dropdown{class: ('active' if current_tab ==  :contacts)}
+          %li.nav-item.dropdown{class: ('active' if current_tab == :contacts)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
                 = contact_icon
@@ -51,13 +51,13 @@
                 %li
                   %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
                     = corporation.name
-          %li.nav-item
+          %li.nav-item{class: ('active' if current_tab == :events)}
             %a.nav-link{:href => "./form-elements.html"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
                 = calendar_icon
               %span.nav-link-title
                 Veranstaltungen
-          %li.nav-item.dropdown
+          %li.nav-item.dropdown{class: ('active' if current_tab == :documents)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
                 = document_icon
@@ -65,8 +65,9 @@
                 Dokumente
             %ul.dropdown-menu
               %li
-                %a.dropdown-item{:href => "./invoice.html"}
-                  Invoice
+                = link_to new_document_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'new'}" do
+                  Dokumente hochladen
+              .dropdown-divider
               %li
                 %a.dropdown-item{:href => "./blog.html"}
                   Blog cards
@@ -91,7 +92,7 @@
               %li
                 %a.dropdown-item{:href => "./music.html"}
                   Music
-          %li.nav-item.dropdown
+          %li.nav-item.dropdown{class: ('active' if current_tab == :communication)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
                 = mail_icon
@@ -99,8 +100,8 @@
                 Kommunikation
             %ul.dropdown-menu
               %li
-                %a.dropdown-item{:href => "./layout-horizontal.html"}
-                  Horizontal
+                = link_to decision_making_federal_ballots_path, class: "dropdown-item #{'active' if controller_name == 'federal_ballots'}" do
+                  Bundesanträge
 
           %li.nav-item.dropdown{class: ('active' if current_tab == :network)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}

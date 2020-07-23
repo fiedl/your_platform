@@ -1,0 +1,61 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Dokumente hochladen
+
+.card
+  .card-body
+    .mb-3
+      %textarea.form-control.mb-0{'data-toggle': 'autosize', placeholder: "Nachricht (optional)"}
+      .text-muted Entwurf gespeichert.
+    .mb-3
+      .form-label Dokumente
+      .form-file
+        %input.form-file-input{type: 'file'}
+        %label.form-file-label
+          %span.form-file-text Dokumente hinzufügen
+          %span.form-file-button Durchsuchen
+
+  .table-responsive
+    %table.table.table-vcenter.card-table.table-mobile-sm
+      %thead
+        %tr
+          %th
+          %th Dokument-Titel
+          %th Autor
+          %th Beschreibung
+          %th Löschen
+      %tbody
+        - for document in Attachment.last(4)
+          %tr
+            %td.w-5
+              .thumb
+                = link_to document do
+                  %img{src: document.thumb_path}
+            %td
+              %input.form-control{type: 'text', value: document.title}
+            %td
+              %input.form-control{type: 'text', value: document.author.try(:title), placeholder: "Dokument-Autor"}
+            %td
+              %textarea.form-control.mb-0{'data-toggle': 'autosize', placeholder: "Beschreibung", value: document.description}
+            %td.w-5
+              = trash_icon
+  .card-body
+    .row
+      .col-md-6.mb-3
+        .form-label Leserechte
+        .mb-2
+          = group_avatar(Group.find(12), class: "avatar-sm")
+          = Group.find(12).title
+        %input.form-control{type: 'text', placeholder: "Leserecht für Gruppe hinzufügen"}
+      .col-md-6.mb-3
+        .form-label Tags
+        %vue_editable_tags{':initial_tags': ActsAsTaggableOn::Tag.all.to_json}
+  .card-footer
+    .d-flex.align-items-center
+      %a.btn.btn-link Abbrechen
+      %label.form-check.form-switch.ml-auto.mr-3
+        %input.form-check-input{type: 'checkbox'}
+        %span.form-check-label Als E-Mail verschicken
+      %button.btn.btn-primary{type: 'submit'} Dokumente posten
+

@@ -75,6 +75,7 @@
     "vue-template-compiler": "^2.4.2",
     "vue-turbolinks": "^2.0.0",
     "vue2-dropzone": "^3.6.0",
+    "vue2-selectize": "^1.1.7",
     "vuejs-datepicker": "^1.6.2",
     "webpack": "^2.6.1",
     "wysihtml": "^0.6.0-beta1",

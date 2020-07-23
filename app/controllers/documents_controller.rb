@@ -6,4 +6,11 @@ class DocumentsController < ApplicationController
     authorize! :index, :documents
   end
 
+  def new
+    authorize! :create, Document
+
+    set_current_title "Dokumente hochladen"
+    set_current_tab :documents
+  end
+
 end

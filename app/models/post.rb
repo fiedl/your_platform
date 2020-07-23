@@ -12,6 +12,8 @@ class Post < ApplicationRecord
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
 
+  scope :draft, -> { where(sent_at: nil) }
+
   include Commentable
   include PostDeliveryReport
 
