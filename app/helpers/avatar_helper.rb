@@ -1,13 +1,18 @@
 module AvatarHelper
 
-  # This returns the html code for an avatar image of the given user.
-  #
-  # * If the user has uploaded an avatar image using refile, this one is used.
-  # * Next, the gravatar of the user's email is tried.
-  # * The fallback image is defined in the `user_avatar_default_url` method.
-  #
   def user_avatar(user, options = {})
-    content_tag :span, "", class: 'avatar', style: "background-image: url(#{user.avatar_path})", title: user.title
+    avatar user, options
+  end
+
+  def group_avatar(group, options = {})
+    options[:icon] = "fa fa-group"
+    avatar group, options
+  end
+
+  def avatar(object, options = {})
+    content_tag :span, class: "avatar #{options[:class]}", style: "background-image: url(#{object.avatar_path})", title: object.title do
+      content_tag :i, "", class: options[:icon] unless object.avatar_path
+    end
   end
 
   # Display avatars for several users.

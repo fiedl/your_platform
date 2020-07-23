@@ -24,6 +24,10 @@
                     = corporation.name
               .dropdown-divider
               %li
+                = link_to group_officers_path(group_id: (g = Group.where(name: "Alle Bundesamtsträger").first).id), class: "dropdown-item #{'active' if current_navable == g}" do
+                  Bundesamtsträger
+              .dropdown-divider
+              %li
                 = link_to corporations_path, class: "dropdown-item #{'active' if controller_name == 'corporations'}" do
                   Verbindungen
               %li

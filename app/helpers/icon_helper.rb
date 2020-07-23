@@ -183,6 +183,21 @@ module IconHelper
     }.html_safe
   end
 
+  def smartphone_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-device-mobile" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <rect x="7" y="4" width="10" height="16" rx="1" />
+        <line x1="11" y1="5" x2="13" y2="5" />
+        <line x1="12" y1="17" x2="12" y2="17.01" />
+      </svg>
+    }.html_safe
+  end
+
+  def phone_icon
+    smartphone_icon
+  end
+
   def descending_icon
     %q{
       <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-sort-descending" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">

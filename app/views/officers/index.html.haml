@@ -1,10 +1,62 @@
-= render partial: 'groups/tabs', locals: {active: 'officers'} if @group
+.page-header
+  .row.align-itens-center
+    .col-auto
+      - unless group.title.downcase.include? t(:officers).downcase
+        .page-pretitle= t :officers
+      .page-title= group.title
 
-= render partial: 'officers_overview'
+.row.row-deck.row-cards
+  - for officer_group in officer_groups
+    - if officer_group.members.count == 1
+      - officer = officer_group.members.first
+      .col-md-6.col-lg-4.filterable
+        .card
+          .card-body
+            .row.row-sm.align-items-center.mb-5
+              .col-auto
+                = user_avatar officer, class: "avatar-md"
+              .col
+                %h3.mb-0= link_to officer.title, officer
+                .text-muted.text-h5= officer_group.title
+            - if (mail = (officer_group.email || officer.email)).present?
+              .email
+                = mail_icon
+                = link_to mail, "mailto:#{mail}", class: "text-muted"
+            - if (phone = officer.phone).present?
+              .phone
+                = smartphone_icon
+                = link_to phone, "tel:#{phone}", class: "text-muted"
 
-%h1.officers= @title
-%div.officers
-  = render partial: 'officer_groups_by_scope_table.html'
+    - elsif officer_group.child_groups.any?
+      .col-md-6.col-lg-4.filterable
+        .card
+          .card-body
+            .row.row-sm
+              .col-auto
+                = group_avatar officer_group, class: "avatar-md"
+              .col
+                %h3.mb-0= officer_group.title
+                - for sub_officer_group in officer_group.child_groups
+                  - for officer in sub_officer_group.members
+                    .row.row-sm.align-items-center.mt-2
+                      .col-auto
+                        = user_avatar officer, class: "avatar-sm"
+                      .col
+                        %h4.mb-0= link_to officer.title, officer
+                        %small.text-muted= sub_officer_group.name
 
-- if can? :create_officers_group_for, @group
-  = render partial: 'history_notice'
+    - elsif officer_group.members.count > 1
+      .col-md-6.col-lg-4.filterable
+        .card
+          .card-body
+            .row.row-sm
+              .col-auto
+                = group_avatar officer_group, class: "avatar-md"
+              .col
+                %h3.mb-0= officer_group.title
+                - for officer in officer_group.members
+                  .row.row-sm.align-items-center.mt-2
+                    .col-auto
+                      = user_avatar officer, class: "avatar-sm"
+                    .col
+                      %h4.mb-0= link_to officer.title, officer
