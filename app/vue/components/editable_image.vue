@@ -96,6 +96,7 @@
     display: flex
     align-items: center
     justify-content: center
+    background-color: #eee
     .fa-2x
       font-size: 2em !important
 
