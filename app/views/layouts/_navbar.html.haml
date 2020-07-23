@@ -115,12 +115,10 @@
               %li
                 %a.dropdown-item{:href => "./layout-horizontal.html"}
                   Karte des Wingolfs
-              %li
-                %a.dropdown-item{:href => "./layout-horizontal.html"}
-                  Biermusiker
-              %li
-                %a.dropdown-item{:href => "./layout-horizontal.html"}
-                  Juristen
+              - %w(Biermusiker Juristen).each do |group_name|
+                %li
+                  = link_to group_members_path(g = Group.where(name: group_name).first), class: "dropdown-item #{'active' if current_navable == g}" do
+                    = group_name
 
         #header_search.my-2.my-md-0.flex-grow-1.flex-md-grow-0.order-first.order-md-last
           = form_tag search_path, :method => 'get', role: 'search' do
