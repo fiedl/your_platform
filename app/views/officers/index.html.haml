@@ -26,6 +26,9 @@
               .phone
                 = smartphone_icon
                 = link_to phone, "tel:#{phone}", class: "text-muted"
+          .card-footer
+            .btn-list
+              = link_to "Historie", group_officers_history_path(officer_group), class: "btn btn-white btn-sm"
 
     - elsif officer_group.child_groups.any?
       .col-md-6.col-lg-4.filterable
@@ -60,3 +63,6 @@
                       = user_avatar officer, class: "avatar-sm"
                     .col
                       %h4.mb-0= link_to officer.title, officer
+          .card-footer
+            .btn-list
+              = link_to "Historie", group_officers_history_path(officer_group), class: "btn btn-white btn-sm"

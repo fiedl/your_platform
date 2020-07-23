@@ -26,6 +26,7 @@ import GroupMembersTable from './components/group_members_table.vue'
 import AddGroupMemberForm from './components/add_group_member_form.vue'
 import AutoAlignPopup from './components/auto_align_popup.vue'
 import CorporationsPage from './components/corporations_page.vue'
+import EditableMembershipsTable from './components/editable_memberships_table.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -52,6 +53,7 @@ jQuery(document).ready ->
   Vue.component('vue-add-group-member-form', AddGroupMemberForm)
   Vue.component('vue-auto-align-popup', AutoAlignPopup)
   Vue.component('vue_corporations_page', CorporationsPage)
+  Vue.component('vue_editable_memberships_table', EditableMembershipsTable)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

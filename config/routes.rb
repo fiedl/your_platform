@@ -85,6 +85,9 @@ Rails.application.routes.draw do
     post 'members/memberships', to: 'memberships/from_members_index#create'
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
+    namespace :officers do
+      get :history, to: '/officer_history#index'
+    end
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'group_mailing_lists#index'
     get :memberships, to: 'memberships#index'
