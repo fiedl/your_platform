@@ -65,8 +65,9 @@
       on_leave: -> @suggesting_edit = false
       edit: ->
         @suggesting_edit = false
+      editables: -> []
     computed:
-      edit_label: -> I18n.translate 'edit'
+      edit_label: -> "Bild ändern"
 
   `export default EditableImage`
 </script>

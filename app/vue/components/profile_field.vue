@@ -28,6 +28,7 @@
       <div class="profile-field-children">
         <vue-editable-property
           v-for="child_profile_field in profile_field.children"
+          :key="'child-profile-field-' + child_profile_field.id"
           :property="'profile_field_' + child_profile_field.id"
           :initial-value="child_profile_field.value"
           :initial-label="child_profile_field.label"

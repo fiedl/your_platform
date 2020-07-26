@@ -20,7 +20,11 @@ concern :HasAvatar do
     end
 
     def avatar_background_path
-      avatar_background_attachment_path || default_avatar_background_path
+      customized_avatar_background_path || default_avatar_background_path
+    end
+
+    def customized_avatar_background_path
+      avatar_background_attachment_path
     end
 
     def avatar_background=(file)
@@ -67,11 +71,11 @@ concern :RefileAvatar do
     # The `attachment` method is provided by refile.
     # https://github.com/refile/refile
     #
-    attachment :avatar, type: :image
+    attachment :avatar, type: :image if has_attribute? :avatar_id
   end
 
   def refile_avatar
-    avatar if respond_to? :avatar_id
+    avatar if respond_to? :avatar
   end
 
   def refile_avatar_path

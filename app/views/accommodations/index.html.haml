@@ -1,0 +1,14 @@
+.row
+  .col-md-8
+    %vue_rooms{':initial_rooms': rooms.to_json,
+      ':corporation': corporation.to_json,
+      ':editable': can?(:update_accommodations, corporation).to_json}
+  .col-md-4
+    = render layout: 'groups/profile_card', locals: {group: institution} do
+      - # https://stackoverflow.com/a/2952056/2066546
+      .card-footer
+        = link_to t(:members), group_members_path(group_id: institution.id), class: "btn btn-sm btn-white"
+        = link_to t(:profile), group_path(institution), class: "btn btn-sm btn-white"
+
+    = render partial: 'groups/officers_card', locals: {group: institution}
+

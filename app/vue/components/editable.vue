@@ -11,8 +11,8 @@
 
       <span key="1" class='edit' v-bind:class="editingClass" v-if="showEditField" v-on:click="acceptEditSuggestion" v-on:keydown.esc="cancelAll">
         <textarea v-if="typeIsTextarea" v-on:keydown="keydownToBeginEditing" v-model.trim="value" autofocus></textarea>
-        <vue-datepicker :open-initially="editing && !(editBox() && editBox().editMode)" v-else-if="type == 'date'" v-model="value" v-on:dateSelected="dateSelected" @cancelled="focusLost"></vue-datepicker>
-        <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll" v-on:keyup="pushPropertyToStore" v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" autofocus />
+        <vue-datepicker :open-initially="editing && !(editBox() && editBox().editMode && !editBox().partialEditing)" v-else-if="type == 'date'" v-model="value" v-on:dateSelected="dateSelected" @cancelled="focusLost"></vue-datepicker>
+        <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll"  v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" autofocus />
         <div class="error-message" v-if="error">{{error}}</div>
         <div class="help" v-if="help">{{help}}</div>
       </span>
@@ -23,13 +23,12 @@
 
 <script>
   import Vue from 'vue'
-  import { propertyStore } from './property_store'
 
   import VueInputAutowidth from 'vue-input-autowidth'
   Vue.use(VueInputAutowidth)
 
   export default {
-    props: ['initialValue', 'property', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable'],
+    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable'],
     data() { return {
       editing: false,
       suggestingEdit: false,
@@ -41,7 +40,6 @@
     } },
     created() {
       this.value = this.initialValue
-      propertyStore.registerEditable(this)
       if (this.editBox() && this.editBox().editMode) {
         this.edit()
       }
@@ -169,9 +167,6 @@
             self.editing = true
           }
         })
-      },
-      pushPropertyToStore() {
-        propertyStore.updateProperty(this)
       },
       keydownToBeginEditing(event) {
         if (event.keyCode != 27) { this.edit() }

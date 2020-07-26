@@ -1,14 +1,6 @@
 .row
   .col-lg-4
-    .card.card-profile
-      %vue-editable-image{src: group.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: group_path(group), attribute_name: "group[avatar_background]"}
-      .card-body.text-center
-        %vue-editable-image{src: group.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, group).to_json, update_url: group_path(group), attribute_name: 'group[avatar]', icon: "fa fa-group fa-2x"}
-        %h3.mb-3
-          = editable group, :name, editable: can?(:rename, group)
-
-        = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
-          = markup group.body
+    = render partial: 'groups/profile_card', locals: {group: group}
 
     - chart = group.number_of_members_chart
     %vue-number-of-members-chart{height: "50px",

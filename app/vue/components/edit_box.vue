@@ -16,7 +16,8 @@
 EditBox = {
   data: -> {
     editMode: false,
-    editable: false
+    editable: false,
+    partialEditing: false
   },
   created: ->
     this.$on "require_edit_button", ->
@@ -47,10 +48,12 @@ EditBox = {
       else
         @saveAll()
     switchOnPartialEditing: ->
+      @partialEditing = true
       @editMode = true
       @editables().forEach (c) ->
         c.suggestingEdit = false
     switchOffPartialEditing: ->
+      @partialEditing = false
       @editMode = false
     editBox: ->
       this

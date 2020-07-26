@@ -28,6 +28,7 @@ import AutoAlignPopup from './components/auto_align_popup.vue'
 import CorporationsPage from './components/corporations_page.vue'
 import EditableMembershipsTable from './components/editable_memberships_table.vue'
 import EditableTags from './components/editable_tags.vue'
+import Rooms from './components/rooms.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -56,6 +57,7 @@ jQuery(document).ready ->
   Vue.component('vue_corporations_page', CorporationsPage)
   Vue.component('vue_editable_memberships_table', EditableMembershipsTable)
   Vue.component('vue_editable_tags', EditableTags)
+  Vue.component('vue_rooms', Rooms)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

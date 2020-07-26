@@ -245,6 +245,9 @@ class Ability
         can? :update, semester_calendar
       end
 
+      can :update_accommodations, Corporation do |corporation|
+        user.in? corporation.officers
+      end
 
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
@@ -329,6 +332,9 @@ class Ability
     #
     can :read, User, id: User.find_all_non_hidden.pluck(:id)
     can :read, user
+
+    can :read, Corporation
+    can :index_accommodations, Corporation
 
     # Regular users can access the list of mailing lists.
     #

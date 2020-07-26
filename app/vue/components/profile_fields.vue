@@ -38,7 +38,8 @@
       'profileable_type'
     ]
     methods: {
-      add: (new_profile_field)->
+      add: (profile_field)->
+        new_profile_field = Object.assign({}, profile_field);
         new_profile_field.id = 0
         new_profile_field.editable = true
         new_profile_field.value = "" unless new_profile_field.value

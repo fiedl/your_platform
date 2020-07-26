@@ -117,7 +117,9 @@ Rails.application.routes.draw do
   end
 
   get :corporations, to: 'corporations#index'
-  resources :corporations, controller: 'groups'
+  resources :corporations, controller: 'groups' do
+    get :accommodations, to: 'accommodations#index'
+  end
   resources :officer_groups
 
   namespace :officers do
@@ -336,6 +338,9 @@ Rails.application.routes.draw do
       end
       resources :groups do
         resources :members
+      end
+      resources :corporations do
+        resources :rooms
       end
       resources :documents
       resources :songs
