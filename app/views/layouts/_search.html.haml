@@ -1,0 +1,10 @@
+#header_search.my-2.my-md-0.flex-grow-1.flex-md-grow-0.order-first.order-md-last
+  = form_tag search_path, :method => 'get', role: 'search' do
+    .input-icon
+      %span.input-icon-addon
+        %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
+          %path{:d => "M0 0h24v24H0z", :stroke => "none"}
+          %circle{:cx => "10", :cy => "10", :r => "7"}
+          %line{:x1 => "21", :x2 => "15", :y1 => "21", :y2 => "15"}
+      //%input.form-control{:placeholder => "Search…", :type => "text"}/
+      = search_field_tag :query, params[:query], :class => "search-query form-control mr-sm-2 find_and_filter", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
