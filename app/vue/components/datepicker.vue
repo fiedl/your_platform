@@ -33,7 +33,9 @@
     } },
     created() {
       moment.locale('de')
-      this.date = moment(this.value, "L").toDate()
+      if (this.value) {
+        this.date = moment(this.value, "L").toDate()
+      }
       this.$on('open', this.open)
     },
     mounted() {

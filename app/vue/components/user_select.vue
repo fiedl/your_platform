@@ -2,13 +2,13 @@
   <vue-select label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" class="form-select" :placeholder="placeholder">
     <template slot="option" slot-scope="option">
       <div class="option">
-        <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_url + ')'"></span>
+        <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
         {{ option.title }}
       </div>
     </template>
     <template slot="selected-option" slot-scope="option">
       <div class="selected d-flex align-items-center">
-        <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_url + ')'"></span>
+        <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
         {{ option.title }}
       </div>
     </template>
@@ -19,8 +19,8 @@
 </template>
 
 <script lang="coffee">
-  `import Vue from 'vue'`
-  `import VueSelect from 'vue-select'` # https://github.com/sagalbot/vue-select
+  Vue = require('vue').default
+  VueSelect = require('vue-select').default # https://github.com/sagalbot/vue-select
 
   Vue.component 'vue-select', VueSelect
 
@@ -58,7 +58,8 @@
           self.$emit('input', self.selected)
       reset: ->
         this.selected = null
-  `export default UserSelect`
+
+  export default UserSelect
 </script>
 
 <style lang="sass">

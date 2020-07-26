@@ -69,7 +69,7 @@
           this.valueBeforeEdit = this.value
           this.editing = true
           this.success = false
-          if (this.editBox()) {
+          if (this.editBox() && !this.editBox().editMode) {
             this.editBox().switchOnPartialEditing()
           }
         }
