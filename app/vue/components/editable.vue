@@ -56,7 +56,7 @@
         }
       },
       edit_if_not_a_link() {
-        if (this.rendered_value().includes("<a ")) {
+        if (this.rendered_value() && this.rendered_value().includes("<a ")) {
           return
         } else {
           this.edit()

@@ -17,16 +17,16 @@
                 %vue-editable{':initial-value': "room.rent", ':url': "'/api/v1/corporations/' + corporation.id + '/rooms/' + room.id", paramKey: "room[rent]", ':editable': "editable", type: 'number'}
                 €
           .card-footer{'v-if': "room.id > 0"}
-            %a.btn.btn-white.btn-sm{'v-if': "room.previous_and_current_occupants && room.previous_and_current_occupants.length > 0", ':href': "'/groups/' + room.id + '/room_occupancies'"} Historie
+            %a.btn.btn-white.btn-sm{'v-if': "room.previous_and_current_occupants_count && room.previous_and_current_occupants_count > 0", ':href': "'/groups/' + room.id + '/room_occupancies'"} Historie
             %a.btn.btn-white.btn-sm{'v-if': "editable", ':href': "'/groups/' + room.id + '/room_occupancies/new'"} Bewohner ändern
-            %a.btn.btn-danger.btn-sm{'v-if': "editable && room.previous_and_current_occupants && room.previous_and_current_occupants.length == 0", '@click': "remove_room(room)"} Zimmer entfernen
+            %a.btn.btn-danger.btn-sm{'v-if': "editable && room.previous_and_current_occupants_count == 0", '@click': "remove_room(room)"} Zimmer entfernen
     .mt-3.text-center.mb-5{'v-if': "editable"}
       .btn.btn-secondary{'@click': "add_room"} Zimmer hinzufügen
 </template>
 
 <script lang="coffee">
-  Vue = require 'vue'
-  Api = require '../api.coffee'
+  Vue = require('vue').default
+  Api = require('../api.coffee').default
   moment = require 'moment'
 
   Rooms =
@@ -40,6 +40,7 @@
         self = this
         new_room = {}
         new_room.id = 0
+        new_room.rent = 100
         new_room.name = "Neues Zimmer"
         @rooms.push new_room
         Api.post "/corporations/#{@corporation.id}/rooms", {
@@ -47,7 +48,7 @@
             room: new_room
           success: (room)->
             new_room.id = room.id
-            new_room.previous_and_current_occupants = []
+            new_room.previous_and_current_occupants_count = 0
             Vue.nextTick ->
               self.$refs.room_name.each (editable)->
                 if editable.value == "Neues Zimmer"

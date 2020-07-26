@@ -29,6 +29,7 @@ import CorporationsPage from './components/corporations_page.vue'
 import EditableMembershipsTable from './components/editable_memberships_table.vue'
 import EditableTags from './components/editable_tags.vue'
 import Rooms from './components/rooms.vue'
+import RoomHistory from './components/room_history.vue'
 import Avatar from './components/avatar.vue'
 import NewRoomOccupancyForm from './components/new_room_occupancy_form.vue'
 
@@ -60,6 +61,7 @@ jQuery(document).ready ->
   Vue.component('vue_editable_memberships_table', EditableMembershipsTable)
   Vue.component('vue_editable_tags', EditableTags)
   Vue.component('vue_rooms', Rooms)
+  Vue.component('vue_room_history', RoomHistory)
   Vue.component('vue_avatar', Avatar)
   Vue.component('vue_new_room_occupancy_form', NewRoomOccupancyForm)
 

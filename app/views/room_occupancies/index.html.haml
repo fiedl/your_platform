@@ -1,0 +1,13 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle Zimmer-Belegung
+      .page-title= room.title
+    .col-auto.ml-auto.d-print.none
+      = link_to "Bewohner eintragen", new_group_room_occupancy_path(group_id: room.id), class: "btn btn-white"
+
+.row
+  .col-12
+    %vue-edit-box
+      .card.clear.mt-5
+        %vue_room_history{':room': room.to_json, ':initial_occupancies': occupancies.to_json, ':editable': can?(:manage, room).to_json}

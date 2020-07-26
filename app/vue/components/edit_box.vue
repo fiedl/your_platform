@@ -77,7 +77,6 @@ EditBox = {
 <style lang="sass">
   .edit-box
     position: relative
-    background: white
     margin: -20px
     padding: 20px
     border-radius: 3px
@@ -85,6 +84,7 @@ EditBox = {
   .edit-box.edit-mode
     z-index: 6000
     position: relative
+    background: white
   .edit-tools
     float: right
     text-align: right

@@ -28,11 +28,15 @@ class Groups::Room < Group
     memberships.with_past.map(&:user)
   end
 
+  def occupancies
+    memberships.with_past
+  end
+
   def as_json(*args)
     super.merge({
       occupant: occupant,
       occupant_since: occupant_since,
-      previous_and_current_occupants: previous_and_current_occupants,
+      previous_and_current_occupants_count: previous_and_current_occupants.count,
       rent: rent,
       avatar_path: avatar_path,
       avatar_background_path: avatar_background_path,
