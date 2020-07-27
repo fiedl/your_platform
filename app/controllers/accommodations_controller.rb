@@ -2,7 +2,7 @@ class AccommodationsController < ApplicationController
 
   expose :corporation
   expose :institution, -> { corporation.accommodations_institution }
-  expose :rooms, -> { corporation.rooms.order(:name) }
+  expose :rooms, -> { Naturally.sort corporation.rooms.order(:name), by: :name }
 
   def index
     authorize! :index_accommodations, corporation

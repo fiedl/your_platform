@@ -136,6 +136,7 @@ Gem::Specification.new do |s|
   # View Helpers
   s.add_dependency 'phony'
   s.add_dependency 'will_paginate', '> 3.0'
+  s.add_dependency 'naturally' # natural sorting 1, 3, 12
 
   # Gallery
   s.add_dependency 'rails-assets-imagesloaded'

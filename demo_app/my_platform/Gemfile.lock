@@ -83,6 +83,7 @@ PATH
       mail_form
       merit
       mini_magick (>= 4.9.4)
+      naturally
       neography
       net-ldap
       nokogiri (>= 1.10.4)
@@ -215,7 +216,7 @@ GEM
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
     charlock_holmes (0.7.7)
-    chartkick (3.3.1)
+    chartkick (3.3.2)
     childprocess (0.7.1)
       ffi (~> 1.0, >= 1.0.11)
     cliver (0.3.2)
@@ -379,6 +380,7 @@ GEM
     multipart-post (2.1.1)
     mustermann (1.0.3)
     mysql2 (0.4.9)
+    naturally (2.2.0)
     neography (1.8.0)
       excon (>= 0.33.0)
       json (>= 1.7.7)
