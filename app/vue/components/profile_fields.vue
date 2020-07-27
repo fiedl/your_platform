@@ -69,7 +69,7 @@
       editBox: ->
         this.$parent.editBox() if this.$parent.editBox
       editables: ->
-        return (this.$children.map (child) -> child.editables()).flat()
+        this.$children.map((child)-> (if child.editables then child.editables() else [])).flat()
     }
     computed: {
     }

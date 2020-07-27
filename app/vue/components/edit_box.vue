@@ -67,7 +67,7 @@ EditBox = {
     editBox: ->
       this
     editables: ->
-      return (@$children.map (child) -> child.editables()).flat()
+      this.$children.map((child)-> (if child.editables then child.editables() else [])).flat()
   computed:
     boxClass: ->
       if @editMode

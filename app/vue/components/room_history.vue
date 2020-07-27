@@ -46,7 +46,7 @@
       format_date: (date)->
         moment(date).locale('de').format('L') if date
       editables: ->
-        this.$children.map((child)-> child.editables()).flat()
+        this.$children.map((child)-> (if child.editables then child.editables() else [])).flat()
       editBox: ->
         this.$parent.editBox()
 
