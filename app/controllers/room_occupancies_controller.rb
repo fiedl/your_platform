@@ -2,7 +2,7 @@ class RoomOccupanciesController < ApplicationController
 
   expose :group
   expose :room, -> { group if group.kind_of? Groups::Room }
-  expose :occupancies, -> { room.occupancies.collect { |membership|
+  expose :occupancies, -> { room.occupancies.order(valid_from: :desc).collect { |membership|
     membership.as_json.merge({
       occupant: (membership.user if can?(:read, membership.user))
     })

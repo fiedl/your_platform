@@ -15,13 +15,16 @@ class Api::V1::RoomOccupanciesController < Api::V1::BaseController
     new_occupancy = create_from_existing_user if params[:occupancy_type] == 'existing_user'
     new_occupancy = create_from_new_user if params[:occupancy_type] == 'new_user'
 
+    current_occupancy = room.memberships.where.not(id: new_occupancy.id).first
+    new_occupancy.update valid_to: current_occupancy.valid_from if new_occupancy.valid_from < current_occupancy.valid_from
+
     render json: new_occupancy, status: :ok
   end
 
   private
 
   def terminate_existing_occupancies
-    room.memberships.update_all valid_to: valid_from
+    room.memberships.where('valid_from < ?', valid_from).update_all valid_to: valid_from
   end
 
   def create_from_existing_user

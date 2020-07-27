@@ -104,6 +104,7 @@ Rails.application.routes.draw do
     namespace :excel_imports do
       resources :users
     end
+    get :website, to: 'websites#show'
   end
 
   resources :my_groups
@@ -119,6 +120,7 @@ Rails.application.routes.draw do
   get :corporations, to: 'corporations#index'
   resources :corporations, controller: 'groups' do
     get :accommodations, to: 'accommodations#index'
+    resources :accommodation_sepa_debits
   end
   resources :officer_groups
 
