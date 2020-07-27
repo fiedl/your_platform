@@ -13,6 +13,14 @@
       ':editable': can?(:update_accommodations, corporation).to_json}
   .col-md-4
     = render layout: 'groups/profile_card', locals: {group: institution} do
+      - if postal_address.present? or phone.present?
+        .card-body.no-border.text-center
+          - if postal_address.present?
+            .with-newlines.pt-0.mt-0.mb-4= postal_address
+          - if phone.present?
+            .mt-0.mb-4
+              = landline_icon
+              = phone
       - # https://stackoverflow.com/a/2952056/2066546
       .card-footer
         = link_to t(:members), group_members_path(group_id: institution.id), class: "btn btn-sm btn-white"
@@ -20,3 +28,18 @@
 
     = render partial: 'groups/officers_card', locals: {group: institution}
 
+    - if bank_account.present?
+      .card
+        .card-body
+          .account_holder.mb-3
+            %label.form-label Kontoinhaber
+            = bank_account.account_holder
+          .iban.mb-3
+            %label.form-label IBAN
+            = bank_account.iban
+          .bic.mb-3
+            %label.form-label BIC
+            = bank_account.bic
+        - if can? :update, bank_account
+          .card-footer
+            = link_to "Kontodaten ändern", group_path(institution), class: 'btn btn-white btn-sm'

@@ -194,6 +194,10 @@ module IconHelper
     }.html_safe
   end
 
+  def landline_icon
+    fa_icon 'phone'
+  end
+
   def phone_icon
     smartphone_icon
   end

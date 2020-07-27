@@ -63,7 +63,7 @@ module ProfileFieldMixins::HasChildProfileFields
       # to work before the records are saved. But this should not be a problem,
       # since there are only a couple of child fields.
       #
-      self.children.select { |child| child.key.to_s == key.to_s }.first
+      self.children.select { |child| (child.key.to_s == key.to_s) || (child.key == I18n.translate(key)) }.first
     end
     def find_or_build_child_by_key(key)
       find_child_by_key(key) || build_child(key)

@@ -206,6 +206,7 @@
     position: absolute
     top: 0
     padding: .4375rem .75rem
+    pointer-events: none
   .error
     color: red
     font-size: 90%

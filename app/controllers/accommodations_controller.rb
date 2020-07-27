@@ -4,6 +4,10 @@ class AccommodationsController < ApplicationController
   expose :institution, -> { corporation.accommodations_institution }
   expose :rooms, -> { Naturally.sort corporation.rooms.order(:name), by: :name }
 
+  expose :postal_address, -> { institution.postal_address || corporation.postal_address }
+  expose :phone, -> { institution.phone || corporation.phone }
+  expose :bank_account, -> { institution.bank_account || corporation.bank_account }
+
   def index
     authorize! :index_accommodations, corporation
     backend_migration
