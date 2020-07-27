@@ -3,7 +3,7 @@
     .row.row-deck
       .col-md-6{'v-for': "room in rooms", ':key': "room.id"}
         .card.card-profile
-          %vue-editable-image{':src': "room.customized_avatar_background_path", edit_alignment: "top right", ':editable': "editable && room.id > 0", img_class: 'card-header', ':update_url': "'/groups/' + room.id", attribute_name: "group[avatar_background]", icon: "fa fa-home fa-2x"}
+          %vue-editable-image{':src': "room.customized_avatar_background_path", edit_alignment: "top right", ':editable': "editable && room.id > 0", img_class: 'card-header', ':update_url': "'/groups/' + room.id", attribute_name: "group[avatar_background]", ':icon': "room.occupant ? null : 'fa fa-home fa-2x'"}
           .card-body.text-center
             %vue-edit-box
               %vue-editable-image{':src': "room.occupant.avatar_path", img_class: "card-profile-img", ':editable': "editable", ':update_url': "'/users/' + room.occupant.id", attribute_name: 'user[avatar]', 'v-if': "room.occupant"}
