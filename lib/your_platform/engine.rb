@@ -94,6 +94,7 @@ require 'edit_mode'
 # View Helpers
 require 'phony'
 require 'will_paginate'
+require 'naturally'
 
 # Gallery
 require 'rails-assets-imagesloaded'
@@ -124,6 +125,9 @@ require 'icalendar/tzinfo'
 
 # VCF Export
 require 'vcardigan'
+
+# XML Export
+require 'sepa_king'
 
 # Gamification
 require 'merit'

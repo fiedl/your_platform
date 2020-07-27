@@ -1,3 +1,11 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle= corporation.title
+      .page-title Wohnheim
+    .col-auto.ml-auto
+      = link_to "SEPA-Miet-Einzug", new_corporation_accommodation_sepa_debit_path, class: 'btn btn-primary'
+
 .row
   .col-md-8
     %vue_rooms{':initial_rooms': rooms.to_json,

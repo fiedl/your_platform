@@ -167,6 +167,9 @@ Gem::Specification.new do |s|
   # VCF Export
   s.add_dependency 'vcardigan'
 
+  # XML Export
+  s.add_dependency 'sepa_king'
+
   # Gamification
   s.add_dependency 'merit'
 

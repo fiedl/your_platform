@@ -32,6 +32,8 @@ import Rooms from './components/rooms.vue'
 import RoomHistory from './components/room_history.vue'
 import Avatar from './components/avatar.vue'
 import NewRoomOccupancyForm from './components/new_room_occupancy_form.vue'
+import AccommodationSepaDebitForm from './components/accommodation_sepa_debit_form.vue'
+import EditableSetting from './components/editable_setting.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -65,6 +67,9 @@ jQuery(document).ready ->
   Vue.component('vue_avatar', Avatar)
   Vue.component('vue-avatar', Avatar)
   Vue.component('vue_new_room_occupancy_form', NewRoomOccupancyForm)
+  Vue.component('vue_accommodation_sepa_debit_form', AccommodationSepaDebitForm)
+  Vue.component('vue-editable-setting', EditableSetting)
+  Vue.component('vue_editable_setting', EditableSetting)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)
