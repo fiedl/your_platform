@@ -2,7 +2,7 @@
   <div>
     <div class="edit-box" v-bind:class="boxClass" v-on:click.self="saveAll">
       <div class="edit-tools" v-if="editable">
-        <button class="btn btn-outline-secondary edit-button" v-on:click.stop="toggle">{{buttonLabel}}</button>
+        <button class="btn btn-outline-secondary btn-sm edit-button" v-on:click.stop="toggle">{{buttonLabel}}</button>
       </div>
       <slot></slot>
     </div>
@@ -26,9 +26,18 @@ EditBox = {
     saveAll: ->
       @editMode = false
       @editables().forEach (c) ->
-        c.save()
-        return
-      return
+        c.waitForSave()
+      @save_next_editable()
+    save_next_editable: ->
+      # We need to save the editables one after another
+      # in order not to produce race conditions on the
+      # backend.
+      self = this
+      next_editable = @editables().find (e)-> e.waiting_for_submission
+      if next_editable
+        next_editable.save
+          success: -> self.save_next_editable()
+          error: -> self.save_next_editable()
     editAll: ->
       @editMode = true
       @editables().forEach (c) ->

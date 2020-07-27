@@ -36,6 +36,7 @@
       valueBeforeEdit: null,
       success: false,
       submitting: false,
+      waiting_for_submission: false,
       error: null
     } },
     created() {
@@ -96,16 +97,27 @@
           this.save()
         }
       },
-      save() {
+      waitForSave() {
         this.suggestingEdit = false
         if (this.editing) {
-        this.editing = false
-        if (this.editBox()) {
-          this.editBox().switchOffPartialEditing()
+          this.editing = false
+          this.waiting_for_submission = true
         }
-        if (this.value != this.valueBeforeEdit) {
-          this.submitSave()
-        }
+      },
+      save(options = {}) {
+        this.suggestingEdit = false
+        if (this.editing || this.waiting_for_submission) {
+          this.editing = false
+          this.waiting_for_submission = false
+          if (this.editBox()) {
+            this.editBox().switchOffPartialEditing()
+          }
+          if (this.value != this.valueBeforeEdit) {
+            this.submitSave(options)
+          } else {
+            if (options.success) { options.success() }
+            if (options.complete) { options.complete() }
+          }
         }
       },
       saveAll() {
@@ -114,6 +126,7 @@
         } else {
           this.save()
         }
+        return false // stop event propagation
       },
       cancelAll() {
         if (this.editBox()) {
@@ -142,7 +155,7 @@
       cancelSuggestEditWithDelay() {
         setTimeout(this.cancelSuggestEdit, 1500)
       },
-      submitSave() {
+      submitSave(options = {}) {
         var self = this
         this.submitting = true
         $.ajax({
@@ -156,6 +169,7 @@
             self.submitting = false
             self.success = true
             self.error = false
+            if (options.success) { options.success() }
           },
           error: function(result, message) {
             self.submitting = false
@@ -165,7 +179,8 @@
             self.edit()
             self.valueBeforeEdit = oldValue // because edit() replaces this value
             self.editing = true
-          }
+            if (options.error) { options.error() }
+          },
         })
       },
       keydownToBeginEditing(event) {
