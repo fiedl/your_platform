@@ -11,7 +11,7 @@
       %tbody
         %tr{'v-for': "occupancy in occupancies"}
           %td.w-1
-            .avatar{':style': "'background-image: url(' + occupancy.occupant.avatar_path + ')'", 'v-if': "occupancy.occupant"}
+            %vue-avatar{':url': "occupancy.occupant.avatar_path"}
           %td
             %a{'v-if': "occupancy.occupant", ':href': "'/users/' + occupancy.occupant.id"} {{ occupancy.occupant.title }}
             .text-muted{'v-else': true} Ausgeblendete Person

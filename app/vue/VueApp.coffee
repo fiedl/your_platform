@@ -63,6 +63,7 @@ jQuery(document).ready ->
   Vue.component('vue_rooms', Rooms)
   Vue.component('vue_room_history', RoomHistory)
   Vue.component('vue_avatar', Avatar)
+  Vue.component('vue-avatar', Avatar)
   Vue.component('vue_new_room_occupancy_form', NewRoomOccupancyForm)
 
   vue_app = new Vue({el: "#vue-app"})
