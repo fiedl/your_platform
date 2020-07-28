@@ -5,6 +5,7 @@ class GroupsController < ApplicationController
   respond_to :html, :json, :csv, :ics
 
   expose :group
+  expose :officer_groups, -> { group.important_officer_groups.any? ? group.important_officer_groups : group.officers_groups_of_self_and_descendant_groups }
 
   def index
     @group = @parent_group = Group.find(params[:group_id]) if params[:group_id]

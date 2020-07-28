@@ -32,16 +32,17 @@
         #officers
           %h2 Chargierte und Amtsträger
           .row.mb-n3
-            - group.important_officers.each do |entry|
-              .col-6.row.row-sm.mb-3.align-items-center
-                .col-auto
-                  = user_avatar(entry[:user])
-                .col
-                  .text-body.d-block= entry[:user].title
-                  %small.d-block.mt-n1.text-muted= entry[:description]
-                  %small.d-block.mt-n1.text-muted= entry[:user].phone
-                  - if email = entry[:group].mailing_lists.first
-                    %small.d-block.mt-n1.text-muted= email.value
+            - officer_groups.each do |officer_group|
+              - officer_group.members.each do |officer|
+                .col-6.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = user_avatar(officer)
+                  .col
+                    .text-body.d-block= officer.title
+                    %small.d-block.mt-n1.text-muted= officer_group.title
+                    %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
+                    - if email = officer_group.email || officer.email
+                      %small.d-block.mt-n1.text-muted= mail_to email, email, class: 'text-muted'
 
     .card
       .card-body
