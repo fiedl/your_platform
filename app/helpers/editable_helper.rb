@@ -38,7 +38,7 @@ module EditableHelper
       ':new_profile_fields': new_profile_fields.to_json,
       ':profile_field_types': types.to_json,
       profileable_id: profileable.id,
-      profileable_type: profileable.class.name,
+      profileable_type: profileable.class.base_class.name,
       ':editable': can?(:update, profileable)
     }
   end

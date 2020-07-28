@@ -44,7 +44,7 @@ EditBox = {
         c.edit()
       firstEditable = @editables()[0]
       setTimeout (->
-        firstEditable.focus()
+        firstEditable.focus() if firstEditable
       ), 300
     cancelAll: ->
       @editMode = false
