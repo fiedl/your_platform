@@ -3,6 +3,7 @@
     <textarea
       v-if="type == 'textarea'"
       v-model.trim="value"
+      class="form-control"
       autofocus
     ></textarea>
     <vue-datepicker
@@ -19,6 +20,7 @@
       v-on:blur="save"
       v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}"
       :placeholder="placeholder"
+      class="form-control"
       autofocus
     />
   </div>
