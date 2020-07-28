@@ -24,8 +24,8 @@ module FlashHelper
   def alert_field(type, message)
     type = bootstrap_alert_type(type)
     # message = make_first_part_of_the_message_bold(message)
-    content_tag :div, :class => "alert alert-#{type}" do
-      close_button + message
+    content_tag :div, :class => "alert alert-#{type} alert-dismissible" do
+      (message + close_button).html_safe
     end.html_safe
   end
 

@@ -47,7 +47,7 @@
         %label.form-label Verwendungszweck anpassen
         %input.form-control{'v-model': "subject", name: "subject"}
 
-        %label.mt-3.form-label Gläubiger-Identifikationsnummer
+        %label.mt-3.form-label.required Gläubiger-Identifikationsnummer
         %input.form-control{':value': "creditor_identifier", name: "creditor_identifier", placeholder: "DE98ZZZ09999999999"}
 
       .card-footer

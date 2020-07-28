@@ -151,10 +151,14 @@ class AccommodationSepaDebitsController < ApplicationController
       end
     end
 
-    send_data sdd.to_xml,
-      filename: "#{Time.zone.now} #{subject}".parameterize + '.xml',
-      type: 'application/xml',
-      disposition: 'attachment'
+    if sdd.valid?
+      send_data sdd.to_xml,
+        filename: "#{Time.zone.now} #{subject}".parameterize + '.xml',
+        type: 'application/xml',
+        disposition: 'attachment'
+    else
+      redirect_to :back, flash: {error: "Es gibt noch Probleme bei der Erstellung der XML-Datei: #{sdd.errors.full_messages.join("\n")}"}
+    end
   end
 
   private
