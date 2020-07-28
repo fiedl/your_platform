@@ -16,15 +16,22 @@
               .col-auto
                 = link_to status_group.name, group_members_path(status_group)
                 = status_group.members.count
-        .mt-4
-          = link_to group_members_path(group), class: "btn btn-outline-secondary" do
+      .card-footer
+        .mt-0
+          = link_to group_members_path(group), class: "btn btn-white" do
             = group_icon
             Mitgliederliste anzeigen
         - if group.respond_to? :term_reports
           .mt-2
-            = link_to term_report_path(group.term_reports.last), class: "btn btn-outline-secondary" do
+            = link_to term_report_path(group.term_reports.last), class: "btn btn-white" do
               = list_icon
               Semesterstatistik anzeigen
+
+        - if group.kind_of? Corporation
+          .mt-2
+            = link_to corporation_accommodations_path(corporation_id: group.id), class: "btn btn-white" do
+              = home_icon
+              Hausbewohner anzeigen
 
   .col-lg-8
     .card
@@ -40,9 +47,13 @@
                   .col
                     .text-body.d-block= officer.title
                     %small.d-block.mt-n1.text-muted= officer_group.title
-                    %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
+                    - if officer.phone
+                      %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
                     - if email = officer_group.email || officer.email
                       %small.d-block.mt-n1.text-muted= mail_to email, email, class: 'text-muted'
+      .card-footer
+        = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
+          Alle Amtsträger anzeigen
 
     .card
       .card-body
