@@ -330,11 +330,7 @@ class Ability
 
     can :index_mine, Group
 
-    # Regular users can read users that are not hidden.
-    # And they can read themselves.
-    #
-    can :read, User, id: User.find_all_non_hidden.pluck(:id)
-    can :read, user
+    can :read, User, id: user.id
 
     can :read, Corporation
     can :index_accommodations, Corporation
