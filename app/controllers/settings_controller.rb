@@ -8,7 +8,7 @@ class SettingsController < ApplicationController
 
   def update
     @setting = Setting.unscoped.find(params[:id])
-    authorize! :manage, @setting.thing
+    authorize! :manage_settings, @setting.thing
 
     @setting.value = new_value
     @setting.save!

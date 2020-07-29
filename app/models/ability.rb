@@ -248,6 +248,9 @@ class Ability
       can :update_accommodations, Corporation do |corporation|
         user.in? corporation.officers
       end
+      can :create_accommodation_sepa_debit, Corporation do |corporation|
+        user.in? corporation.wohnheimsverein.officers if corporation.wohnheimsverein
+      end
 
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.

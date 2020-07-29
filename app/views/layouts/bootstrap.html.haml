@@ -30,69 +30,28 @@
     = csrf_meta_tags
   = body_tag class: 'antialiased' do
     .page
-      - if current_user
-        %header.navbar.navbar-expand-md.navbar-light
-          .container-xl
-            %button.navbar-toggler{"data-target" => "#navbar-menu", "data-toggle" => "collapse", :type => "button"}
-              %span.navbar-toggler-icon
-            %a.navbar-brand.navbar-brand-autodark.d-none-navbar-horizontal.pr-0.pr-md-3{:href => root_path}
-              %img.navbar-brand-image{:src => logo_url}/
-              &nbsp;
-              = AppVersion.app_name
-            .navbar-nav.flex-row.order-md-last
-              .nav-item.dropdown.d-none.d-md-flex.mr-3
-                %a.nav-link.px-0{"data-toggle" => "dropdown", :href => "#", :tabindex => "-1"}
-                  %svg.icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                    %path{:d => "M0 0h24v24H0z", :stroke => "none"}
-                    %path{:d => "M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"}
-                    %path{:d => "M9 17v1a3 3 0 0 0 6 0v-1"}
-                  %span.badge.bg-red
-                .dropdown-menu.dropdown-menu-right.dropdown-menu-card
-                  .card
-                    .card-body
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusamus ad amet consectetur exercitationem fugiat in ipsa ipsum, natus odio quidem quod repudiandae sapiente. Amet debitis et magni maxime necessitatibus ullam.
-              .nav-item.dropdown
-                %a.nav-link.d-flex.lh-1.text-reset.p-0{"data-toggle" => "dropdown", :href => "#"}
-                  = user_avatar(current_user)
-                  .d-none.d-xl-block.pl-2
-                    %div= current_user.title
-                    .mt-1.small.text-muted
-                      - if current_role.to_s == current_role_view.to_s
-                        = t current_role
-                      - else
-                        = "#{t(:preview_as)}:"
-                        = t current_role_view
-                .dropdown-menu.dropdown-menu-right
-                  = link_to "Meine Daten", current_user, class: 'dropdown-item'
-                  .dropdown-divider
-                  %a.dropdown-item{:href => "#"}
-                    %svg.icon.dropdown-item-icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                      %path{:d => "M0 0h24v24H0z", :stroke => "none"}
-                      %path{:d => "M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"}
-                      %circle{:cx => "12", :cy => "12", :r => "3"}
-                    Action
-                  %a.dropdown-item{:href => "#"}
-                    %svg.icon.dropdown-item-icon{:fill => "none", :height => "24", :stroke => "currentColor", "stroke-linecap" => "round", "stroke-linejoin" => "round", "stroke-width" => "2", :viewbox => "0 0 24 24", :width => "24", :xmlns => "http://www.w3.org/2000/svg"}
-                      %path{:d => "M0 0h24v24H0z", :stroke => "none"}
-                      %path{:d => "M9 7 h-3a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-3"}
-                      %path{:d => "M9 15h3l8.5 -8.5a1.5 1.5 0 0 0 -3 -3l-8.5 8.5v3"}
-                      %line{:x1 => "16", :x2 => "19", :y1 => "5", :y2 => "8"}
-                    Another action
-                  - unless params[:preview_not_possible]
-                    .dropdown-divider
-                    %span.dropdown-header= t :preview_as
-                    - current_role.allowed_preview_roles.each do |preview_role|
-                      - active_or_not = (preview_role == current_role_view) ? 'active' : ''
-                      %a.dropdown-item{class: active_or_not, href: "?preview_as=#{preview_role}"}= t(preview_role)
-                    .dropdown-divider
-                    = link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out', class: 'dropdown-item'
+      %header.navbar.navbar-expand-md.navbar-light
+        .container-xl
+          %button.navbar-toggler{"data-target" => "#navbar-menu", "data-toggle" => "collapse", :type => "button"}
+            %span.navbar-toggler-icon
+          %a.navbar-brand.navbar-brand-autodark.d-none-navbar-horizontal.pr-0.pr-md-3{:href => root_path}
+            %img.navbar-brand-image{:src => logo_url}/
+            &nbsp;
+            = AppVersion.app_name
 
+          - if current_user
+            = render partial: 'layouts/topbar_avatar'
+          - else
+            = link_to "Anmelden", sign_in_path
+
+      - if current_user
         = render partial: 'layouts/navbar'
 
       #content.content
         .container-xl
           / Content here
           #vue-app
+            = render partial: 'shared/flashes'
             = yield
         %footer.footer.footer-transparent
           .container

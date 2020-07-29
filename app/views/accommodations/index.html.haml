@@ -4,13 +4,19 @@
       .page-pretitle= corporation.title
       .page-title Wohnheim
     .col-auto.ml-auto
-      = link_to "SEPA-Miet-Einzug", new_corporation_accommodation_sepa_debit_path, class: 'btn btn-primary'
+      - if can? :create_accommodation_sepa_debit, corporation
+        = link_to "SEPA-Miet-Einzug", new_corporation_accommodation_sepa_debit_path, class: 'btn btn-primary'
 
 .row
   .col-md-8
-    %vue_rooms{':initial_rooms': rooms.to_json,
-      ':corporation': corporation.to_json,
-      ':editable': can?(:update_accommodations, corporation).to_json}
+    - if rooms.any? || can?(:update_accommodations, corporation)
+      %vue_rooms{':initial_rooms': rooms.to_json,
+        ':corporation': corporation.to_json,
+        ':editable': can?(:update_accommodations, corporation).to_json}
+    - else
+      .card
+        .card-body
+          Derzeit sind hier keine Räume eingetragen.
   .col-md-4
     = render layout: 'groups/profile_card', locals: {group: institution} do
       - if postal_address.present? or phone.present?

@@ -1,6 +1,7 @@
 class AccommodationsController < ApplicationController
 
   expose :corporation
+  expose :hausbewohner, -> { corporation.sub_group("Hausbewohner") }
   expose :institution, -> { corporation.accommodations_institution }
   expose :rooms, -> { Naturally.sort corporation.rooms.order(:name), by: :name }
 
@@ -13,6 +14,7 @@ class AccommodationsController < ApplicationController
     backend_migration
 
     set_current_title "Wohnheim #{corporation.title}"
+    set_current_navable hausbewohner
     set_current_tab :contacts
   end
 
@@ -20,7 +22,7 @@ class AccommodationsController < ApplicationController
 
   def backend_migration
     if rooms.none?
-      corporation.sub_group("Hausbewohner").child_groups
+      hausbewohner.child_groups
         .regular.where(type: nil)
         .update_all type: "Groups::Room"
     end

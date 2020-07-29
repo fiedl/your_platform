@@ -16,7 +16,7 @@ class Api::V1::RoomOccupanciesController < Api::V1::BaseController
     new_occupancy = create_from_new_user if params[:occupancy_type] == 'new_user'
 
     current_occupancy = room.memberships.where.not(id: new_occupancy.id).first
-    new_occupancy.update valid_to: current_occupancy.valid_from if new_occupancy.valid_from < current_occupancy.valid_from
+    new_occupancy.update valid_to: current_occupancy.valid_from if current_occupancy && (new_occupancy.valid_from < current_occupancy.valid_from)
 
     render json: new_occupancy, status: :ok
   end

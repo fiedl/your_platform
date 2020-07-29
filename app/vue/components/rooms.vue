@@ -16,7 +16,7 @@
                 Miete:
                 %vue-editable{':initial-value': "room.rent", ':url': "'/api/v1/corporations/' + corporation.id + '/rooms/' + room.id", paramKey: "room[rent]", ':editable': "editable", type: 'number'}
                 €
-          .card-footer{'v-if': "room.id > 0"}
+          .card-footer{'v-if': "room.id > 0 && (editable || (room.previous_and_current_occupants_count && room.previous_and_current_occupants_count > 0))"}
             %a.btn.btn-white.btn-sm{'v-if': "room.previous_and_current_occupants_count && room.previous_and_current_occupants_count > 0", ':href': "'/groups/' + room.id + '/room_occupancies'"} Historie
             %a.btn.btn-white.btn-sm{'v-if': "editable", ':href': "'/groups/' + room.id + '/room_occupancies/new'"} Bewohner ändern
             %a.btn.btn-danger.btn-sm{'v-if': "editable && room.previous_and_current_occupants_count == 0", '@click': "remove_room(room)"} Zimmer entfernen

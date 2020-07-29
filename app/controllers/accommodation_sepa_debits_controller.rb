@@ -22,9 +22,10 @@ class AccommodationSepaDebitsController < ApplicationController
   }.to_json }
 
   def new
-    authorize! :manage, corporation
+    authorize! :create_accommodation_sepa_debit, corporation
 
     set_current_title "Miet-Einzug Wohnheim #{corporation.title}"
+    set_current_navable institution
     set_current_tab :contacts
   end
 
@@ -32,7 +33,7 @@ class AccommodationSepaDebitsController < ApplicationController
   expose :creditor_identifier, -> { params[:creditor_identifier] || institution.settings.creditor_identifier }
 
   def create
-    authorize! :manage, institution
+    authorize! :create_accommodation_sepa_debit, corporation
 
     institution.settings.creditor_identifier = creditor_identifier
 
