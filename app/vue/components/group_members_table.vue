@@ -11,9 +11,9 @@
 </template>
 
 <script lang="coffee">
-  `import Vue from 'vue'`
-  `import moment from 'moment'`
-  `import { VueGoodTable } from 'vue-good-table'`
+  Vue = require('vue').default
+  moment = require('moment')
+  VueGoodTable = require('vue-good-table').VueGoodTable
 
   Vue.component 'vue-good-table', VueGoodTable
 
@@ -24,7 +24,7 @@
       query: null
       columns: [
         { label: "", field: 'avatar', html: true, tdClass: 'w-1' }
-        { label: this.translate('last_name'), field: 'last_name' }
+        { label: this.translate('last_name'), field: 'last_name_link', html: true }
         { label: this.translate('first_name'), field: 'first_name' }
         { label: this.translate('name_affix'), field: 'name_affix' }
         { label: this.translate('status'), field: 'status_link', html: true, hidden: (! this.has_status_entries()) }
@@ -55,6 +55,11 @@
           row.since = self.format_date(row.joined_at)
           if row.avatar_path
             row.avatar = "<span class=\"avatar\" style=\"background-image: url(#{row.avatar_path})\"></span>"
+          if row.last_name
+            if row.href
+              row.last_name_link = "<a href=\"#{row.href}\">#{row.last_name}</a>"
+            else
+              row.last_name_link = row.last_name
           if row.status
             row.status_link = "<a href=\"/groups/#{row.status_group_id}/members\">#{row.status}</a>"
           row

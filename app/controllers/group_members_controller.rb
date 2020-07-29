@@ -4,10 +4,12 @@ class GroupMembersController < ApplicationController
   #
   expose :group
   expose :member_table_rows, -> {
-    accessible_user_ids = User.accessible_by(current_ability).pluck(:id)
+    readable_user_ids = User.accessible_by(current_ability, :read).pluck(:id)
+    name_readable_user_ids = User.accessible_by(current_ability, :read_name).pluck(:id)
     group.member_table_rows
-      .select { |member_row| member_row[:user_id].in? accessible_user_ids }
-      .select { |member_row| params[:valid_from].nil? || member_row[:joined_at] > params[:valid_from].to_datetime }
+      .select { |member_row| member_row[:user_id].in? name_readable_user_ids }
+      .select { |member_row| params[:valid_from].nil? || (member_row[:joined_at] > params[:valid_from].to_datetime) }
+      .collect { |member_row| member_row.merge({href: (user_path(id: member_row[:user_id]) if member_row[:user_id].in?(readable_user_ids))}) }
   }
   expose :new_membership, -> { group.build_membership }
   expose :own_memberships, -> { Membership.with_past.find_all_by_user_and_group(current_user, group) }
