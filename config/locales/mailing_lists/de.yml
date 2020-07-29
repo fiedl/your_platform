@@ -10,7 +10,7 @@ de:
 
   mailing_list_adresses: Verteiler-Adressen
 
-  sender_policy: Absender-Einstellung
+  sender_policy: Absender-Filter
 
   mailing_list_sender_filter: Absender-Filter für E-Mail-Verteiler
   sender_filter:

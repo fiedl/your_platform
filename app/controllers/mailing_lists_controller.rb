@@ -8,6 +8,7 @@ class MailingListsController < ApplicationController
     authorize! :index, MailingList
 
     set_current_title t :mailing_lists
+    set_current_tab :communication
     set_current_breadcrumbs [
       {title: current_title}
     ]

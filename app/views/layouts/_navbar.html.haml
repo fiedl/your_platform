@@ -103,6 +103,9 @@
                 Kommunikation
             %ul.dropdown-menu
               %li
+                = link_to mailing_lists_path, class: "dropdown-item #{'active' if controller_name == 'mailing_lists'}" do
+                  = t :mailing_lists
+              %li
                 = link_to decision_making_federal_ballots_path, class: "dropdown-item #{'active' if controller_name == 'federal_ballots'}" do
                   Bundesanträge
 

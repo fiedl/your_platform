@@ -1,22 +1,31 @@
-%h1= current_title
-%div
-  %table.datatable.mailing_lists
-    %thead
-      %tr
-        %td= t :email
-        %td
-        %td= t :group
-        %td= t :members
-        %td= t :sender_policy
-        %td= t :posts
-    %tbody
-      - mailing_lists.each do |mailing_list|
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title E-Mail-Verteiler
+    .col-auto.ml-auto
+      .btn.btn-primary Neuen Verteiler einrichten
+
+.card
+  .table-responsive
+    %table.mailing_lists.card-table.table.table-vcenter
+      %thead
         %tr
-          %td= link_to mailing_list.email, "mailto:#{mailing_list.email}"
-          %td
-            - if can? :manage, mailing_list
-              = link_to settings_icon, group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-outline-secondary btn-xs'
-          %td= link_to mailing_list.group_name, mailing_list.group
-          %td= mailing_list.members_count
-          %td= t mailing_list.sender_policy, scope: 'sender_filter_short'
-          %td= mailing_list.posts_count
+          %th Verteiler-Adresse
+          %th.d-sm-none.d-md-table-cell Empfänger-Gruppe
+          %th.d-sm-none.d-md-table-cell= t :members
+          %th.d-sm-none.d-md-table-cell Berechtigung
+          %th.d-sm-none.d-md-table-cell= t :posts
+          %th= t :settings
+      %tbody
+        - mailing_lists.each do |mailing_list|
+          %tr
+            %td= link_to mailing_list.email, "mailto:#{mailing_list.email}"
+            %td.d-sm-none.d-md-table-cell= link_to mailing_list.group_name, mailing_list.group
+            %td.d-sm-none.d-md-table-cell= mailing_list.members_count
+            %td.d-sm-none.d-md-table-cell
+              - if mailing_list.sender_policy.present?
+                = t mailing_list.sender_policy, scope: 'sender_filter_short'
+            %td.d-sm-none.d-md-table-cell= mailing_list.posts_count
+            %td
+              - if can? :manage, mailing_list
+                = link_to t(:settings), group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-sm btn-white'

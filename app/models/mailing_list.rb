@@ -43,7 +43,7 @@ class MailingList < ProfileFields::MailingListEmail
   end
 
   def self.all
-    ProfileFields::MailingListEmail.all.collect { |profile_field| profile_field.becomes(MailingList) }
+    ProfileFields::MailingListEmail.order(value: :asc).all.collect { |profile_field| profile_field.becomes(MailingList) }
   end
 
   def self.sti_name
