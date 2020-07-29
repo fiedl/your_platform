@@ -44,7 +44,6 @@
 //
 //= require your_platform_node_modules.pack.js
 //= require_tree ./your_platform
-//= require vue_app.pack.js
-//
+
 //  # These controllers are stimulus.js controllers:
 //= require_tree ./controllers

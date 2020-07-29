@@ -21,6 +21,8 @@ Rails.application.config.assets.precompile += %w( aiga_immigration.png )
 Rails.application.config.assets.precompile += %w( bootstrap_tabler.js )
 Rails.application.config.assets.precompile += %w( iweb.js )
 
+# Vue app
+Rails.application.config.assets.precompile += %w(vue_app.pack.js)
 
 # Include node modules where javascript stuff lives.
 # http://nithinbekal.com/posts/yarn-rails/

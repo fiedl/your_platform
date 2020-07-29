@@ -80,5 +80,9 @@
     "webpack": "^2.6.1",
     "wysihtml": "^0.6.0-beta1",
     "zxcvbn": "^4.4.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.12",
+    "webpack-dev-server": "2"
   }
 }
