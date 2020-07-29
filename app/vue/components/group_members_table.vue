@@ -28,6 +28,7 @@
         { label: this.translate('first_name'), field: 'first_name' }
         { label: this.translate('name_affix'), field: 'name_affix' }
         { label: this.translate('status'), field: 'status_link', html: true, hidden: (! this.has_status_entries()) }
+        { label: this.translate('group'), field: 'direct_group_link', html: true, hidden: (! this.has_direct_group_entries()) || this.has_status_entries() }
         { label: this.translate('since'), field: 'since', type: 'date', dateOutputFormat: 'dd.MM.yyyy', firstSortType: 'desc', dateInputFormat: 'dd.MM.yyyy' }
       ]
       sort_options:
@@ -48,6 +49,8 @@
         @query = query
       has_status_entries: ->
         @rows.some (row) -> row.status
+      has_direct_group_entries: ->
+        @rows.some (row) -> row.direct_group_name
     computed:
       processed_rows: ->
         self = this
@@ -62,6 +65,8 @@
               row.last_name_link = row.last_name
           if row.status
             row.status_link = "<a href=\"/groups/#{row.status_group_id}/members\">#{row.status}</a>"
+          if row.direct_group_id
+            row.direct_group_link = "<a href=\"/groups/#{row.direct_group_id}/members\">#{row.direct_group_name}</a>"
           row
       search_options: ->
         enabled: true

@@ -9,39 +9,45 @@ concern :GroupMemberList do
   # - joined at
   #
   def member_table_rows
-    if memberships.count == members.count
-      memberships_for_member_list.reorder('valid_from ASC').collect do |membership|
-        if user = membership.user
+    Rails.cache.fetch [self.cache_key, "member_table_rows", "v2"] do
+      if memberships.count == members.count
+        memberships_for_member_list.reorder('valid_from ASC').collect do |membership|
+          if user = membership.user
+            hash = {
+              user_id: user.id,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              name_affix: user.name_affix,
+              joined_at: membership.valid_from,
+              address_fields_json: user.address_fields_json,
+              avatar_path: user.avatar_path,
+              status: user.current_status_in(self),
+              status_group_id: user.current_status_group_in(self).try(:id),
+              direct_group_name: user.direct_groups_in(self).last.try(:name),
+              direct_group_id: user.direct_groups_in(self).last.try(:id)
+            }
+            hash
+          end
+        end
+      else
+        members.collect do |user|
           hash = {
             user_id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
             name_affix: user.name_affix,
-            joined_at: membership.valid_from,
+            joined_at: nil,
             address_fields_json: user.address_fields_json,
             avatar_path: user.avatar_path,
             status: user.current_status_in(self),
-            status_group_id: user.current_status_group_in(self).try(:id)
+            status_group_id: user.current_status_group_in(self).try(:id),
+            direct_group_name: user.direct_groups_in(self).last.try(:name),
+            direct_group_id: user.direct_groups_in(self).last.try(:id)
           }
           hash
         end
-      end
-    else
-      members.collect do |user|
-        hash = {
-          user_id: user.id,
-          first_name: user.first_name,
-          last_name: user.last_name,
-          name_affix: user.name_affix,
-          joined_at: nil,
-          address_fields_json: user.address_fields_json,
-          avatar_path: user.avatar_path,
-          status: user.current_status_in(self),
-          status_group_id: user.current_status_group_in(self).try(:id)
-        }
-        hash
-      end
-    end - [nil]
+      end - [nil]
+    end
   end
 
 

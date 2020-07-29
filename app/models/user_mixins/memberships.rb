@@ -1,3 +1,6 @@
+# Just to auto-load this class for sti.
+Memberships::Status
+
 #
 # This module contains the methods of the User model regarding the associated
 # user group memberships and groups.
