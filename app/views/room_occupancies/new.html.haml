@@ -7,4 +7,5 @@
 %vue_new_room_occupancy_form{url: group_room_occupancies_path,
     ':room': room.to_json,
     ':default_study_address': corporation.postal_address.to_json,
+    default_date: localize(Term.current!.start_at.to_date),
     redirect_to_url: redirect_to_url}

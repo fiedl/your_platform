@@ -127,9 +127,9 @@
   Api = require('../api.coffee').default
 
   NewRoomOccupancyForm =
-    props: ['url', 'room', 'default_study_address', 'redirect_to_url']
+    props: ['url', 'room', 'default_study_address', 'default_date', 'redirect_to_url']
     data: ->
-      valid_from: moment().locale('de').format('L')
+      valid_from: (this.default_date ||  moment().locale('de').format('L'))
       room_id: @room.id
       occupancy_type: 'empty'
       existing_user: null

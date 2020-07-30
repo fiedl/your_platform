@@ -1,10 +1,10 @@
 class Terms::Winter < Term
 
   def start_at
-    Time.zone.now.change(month: 9, day: 15, year: year)
+    Time.zone.now.change(month: 10, day: 1, year: year)
   end
   def end_at
-    Time.zone.now.change(month: 3, day: 14, year: year + 1)
+    Time.zone.now.change(month: 3, day: 31, year: year + 1)
   end
 
   def title

@@ -41,5 +41,9 @@ class Term < ApplicationRecord
     self.current.first
   end
 
+  def self.current!
+    first_or_create_current
+  end
+
 
 end
