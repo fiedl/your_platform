@@ -1,40 +1,34 @@
 <template>
-  <vue-auto-align-popup>
-    <vuejs-datepicker
-      ref="picker"
-      :language="locale_de"
-      :monday-first="true"
-      format="dd.MM.yyyy"
-      :typeable="false"
-      :open-date="date"
-      :value="date"
-      @selected="selected"
-      @opened="opened"
-      v-on-clickaway="clicked_outside"
+  <div>
+    <vue2-datepicker
+      v-model="date"
+      value-type="format"
+      format="DD.MM.YYYY"
+      :show-week-number="true"
+      :editable="false"
       input-class="form-control"
-    ></vuejs-datepicker>
-  </vue-auto-align-popup>
+      @change="selected"
+      :open.sync="open_state"
+    ></vue2-datepicker>
+  </div>
 </template>
 
 <script>
   import Vue from 'vue'
-  import VuejsDatepicker from 'vuejs-datepicker' // https://github.com/charliekassel/vuejs-datepicker
-  import {en, de} from 'vuejs-datepicker/dist/locale'
-  import { mixin as clickaway } from 'vue-clickaway'
-  import moment from 'moment'
+  import Vue2Datepicker from 'vue2-datepicker' // https://github.com/mengxiong10/vue2-datepicker
+  import {de} from 'vue2-datepicker/locale/de'
 
-  Vue.component('vuejs-datepicker', VuejsDatepicker)
+  Vue.component('vue2-datepicker', Vue2Datepicker)
 
   export default {
-    mixins: [clickaway],
     props: ['value', 'openInitially'],
     data() { return {
-      date: null
+      date: null,
+      open_state: false
     } },
     created() {
-      moment.locale('de')
       if (this.value) {
-        this.date = moment(this.value, "L").toDate()
+        this.date = this.value
       }
       this.$on('open', this.open)
     },
@@ -45,33 +39,15 @@
     },
     methods: {
       open() {
-        this.$refs.picker.showCalendar()
+        this.open_state = true
       },
       selected(val) {
-        self.date = val
         let component = this
         Vue.nextTick(() => {
-          this.$emit('dateSelected', self.formatted_date)
-          this.$emit('input', self.formatted_date)
+          this.$emit('dateSelected', component.date)
+          this.$emit('input', component.date)
         })
       },
-      clicked_outside() {
-        // This is a workaround for https://github.com/charliekassel/vuejs-datepicker/issues/522.
-        this.$refs.picker.close()
-        this.$emit('cancelled')
-      },
-      opened() {
-        // This event appears to be broken.
-        // https://github.com/charliekassel/vuejs-datepicker/issues/777
-      },
-    },
-    computed: {
-      locale_de() {
-        return de
-      },
-      formatted_date() {
-        return moment(this.date).locale('de').format('L')
-      }
     }
   }
 
@@ -81,6 +57,8 @@
   .popup-alignment-left .vdp-datepicker__calendar
     max-width: 100%
   .popup-alignment-right .vdp-datepicker__calendar
-    position: absolute;
-    right: 0px;
+    position: absolute
+    right: 0px
+  .mx-datepicker-popup
+    z-index: 9000
 </style>

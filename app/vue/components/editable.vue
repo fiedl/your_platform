@@ -40,7 +40,9 @@
       error: null
     } },
     created() {
-      this.value = this.initialValue
+      if (this.initialValue) {
+        this.value = this.initialValue
+      }
       if (this.editBox() && this.editBox().editMode) {
         this.edit()
       }
@@ -93,7 +95,7 @@
       },
       dateSelected(val) {
         this.value = val
-        if (! this.editBox()) {
+        if ((! this.editBox()) || (this.editBox().partialEditing)) {
           this.save()
         }
       },
