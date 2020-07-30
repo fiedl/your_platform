@@ -66,7 +66,7 @@
         }
       },
       edit() {
-        var component = this
+        let component = this
         if (this.editable && (! this.editing)) {
           this.$emit('edit')
           this.valueBeforeEdit = this.value
@@ -84,7 +84,7 @@
       },
       focus() {
         if (this.inputField) {
-          component = this
+          let component = this
           Vue.nextTick(function() { component.inputField.focus() })
         }
       },
@@ -158,7 +158,7 @@
         setTimeout(this.cancelSuggestEdit, 1500)
       },
       submitSave(options = {}) {
-        var component = this
+        let component = this
         this.submitting = true
         $.ajax({
           url: this.url,

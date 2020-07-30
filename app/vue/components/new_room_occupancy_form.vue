@@ -49,11 +49,11 @@
               %input.form-control{'v-model': "last_name", placeholder: "Nachname"}
 
             .date_of_birth.mb-3
-              %label.form-label.required Geburtsdatum
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Geburtsdatum
               %vue-datepicker{'v-model': "date_of_birth", placeholder: "Geburtsdatum"}
 
             .phone.mb-3
-              %label.form-label.required Handynummer
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Handynummer
               %input.form-control{'v-model': "phone", placeholder: "Handynummer"}
 
             .email.mb-3
@@ -61,7 +61,7 @@
               %input.form-control{'v-model': "email", placeholder: "E-Mail-Adresse"}
 
             .study_address.mb-3
-              %label.form-label.required Studienanschrift
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Studienanschrift
               .with_placeholder
                 %textarea.form-control{'v-model': "study_address", rows: 3}
                 .placeholder.text-muted{'v-if': "!study_address"}
@@ -70,7 +70,7 @@
                   12345 Musterstadt
 
             .home_address.mb-3
-              %label.form-label.required Heimatanschrift (Anschrift der Eltern)
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Heimatanschrift (Anschrift der Eltern)
               .with_placeholder
                 %textarea.form-control{'v-model': "home_address", rows: 3}
                 .placeholder.text-muted{'v-if': "!home_address"}
@@ -79,32 +79,32 @@
                   12345 Musterstadt
 
             .study.mb-3
-              %label.form-label.required Studienart
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Studienart
               %input.form-control{'v-model': "study", placeholder: "z.B. Bachelor-Studium"}
 
             .study_from.mb-3
-              %label.form-label.required Studienbeginn
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Studienbeginn
               %input.form-control{'v-model': "study_from", placeholder: "z.B. WS 2020/21"}
 
             .university.mb-3
-              %label.form-label.required Universität
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Universität
               %input.form-control{'v-model': "university", placeholder: "Name der Universität"}
 
             .subject.mb-3
-              %label.form-label.required Studienfach
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} Studienfach
               %input.form-control{'v-model': "subject", placeholder: "Studienfach"}
 
             .account_holder.mb-3
               %label.form-label Kontodaten für den Mieteinzug:
-              %label.form-label.required Kontoinhaber
+              %label.form-label Kontoinhaber
               %input.form-control{'v-model': "account_holder", placeholder: "Kontoinhaber"}
 
             .account_iban.mb-3
-              %label.form-label.required IBAN
+              %label.form-label{':class': "is_historic_entry ? '' : 'required'"} IBAN
               %input.form-control{'v-model': "account_iban", placeholder: "IBAN"}
 
             .account_bic.mb-3
-              %label.form-label.required BIC
+              %label.form-label BIC
               %input.form-control{'v-model': "account_bic", placeholder: "BIC"}
 
             .privacy.mb-3
@@ -187,15 +187,23 @@
       submission_enabled: ->
         !@submitting && @all_required_fields_are_given
       all_required_fields_are_given: ->
+        console.log("historic", @is_historic_entry)
         if @occupancy_type == 'empty'
           @valid_from
         else if @occupancy_type == 'existing_user'
           @valid_from && @existing_user
         else if @occupancy_type == 'new_user'
-          @valid_from && @first_name && @last_name && @date_of_birth && @phone && @study_address && @home_address && @study && @study_from && @university && @subject && @account_holder && @account_iban && @account_bic && @privacy
+          if @is_historic_entry
+            @valid_from && @first_name && @last_name && @privacy
+          else
+            @valid_from && @first_name && @last_name && @date_of_birth && @phone && @study_address && @home_address && @study && @study_from && @university && @subject && @account_iban && @privacy
       need_more_fields: ->
         !@all_required_fields_are_given
-
+      is_historic_entry: ->
+        if @valid_from
+          moment(@valid_from, 'DD.MM.YYYY').diff(moment(), 'years') <= -1
+        else
+          false
   export default NewRoomOccupancyForm
 </script>
 
