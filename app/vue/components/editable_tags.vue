@@ -15,7 +15,7 @@
   EditableTags =
     props: ['initial_tags']
     data: ->
-      self = this
+      component = this
       {
         options: []
         selected: []
@@ -29,7 +29,7 @@
           selectOnTab: true
           diacritics: true
           onItemAdd: (value)->
-            self.selected.push value
+            component.selected.push value
           render:
             option_create: (data, escape)->
               "<div class='create'>Neue Kategorie: <strong>#{escape(data.input)}</strong></div>"

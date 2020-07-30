@@ -38,7 +38,7 @@
   EditableImage =
     props: ['src', 'editable', 'img_class', 'edit_alignment', 'update_url', 'attribute_name', 'icon']
     data: ->
-      self = this
+      component = this
       {
         image_url: null
         suggesting_edit: false
@@ -51,12 +51,12 @@
           acceptedFiles: 'image/*'
           maxFilesize: 7 # MB
           error: (file, msg)->
-            self.image_url = null
+            component.image_url = null
             alert("Der Upload hat nicht funktioniert: " + msg)
           sending: (event, xhr, data)->
             data.append 'authenticity_token', $('meta[name=csrf-token]').attr('content')
           thumbnail: (event, data)->
-            self.image_url = data
+            component.image_url = data
         }
     created: ->
       @image_url = @src

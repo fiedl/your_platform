@@ -34,10 +34,10 @@
       sort_options:
         initialSortBy: { field: 'since', type: 'desc' }
     created: ->
-      self = this
+      component = this
       @current_rows = @rows
-      this.$root.$on 'add_member', self.add_member
-      this.$root.$on 'search', self.search
+      this.$root.$on 'add_member', component.add_member
+      this.$root.$on 'search', component.search
     methods:
       translate: (str)->
         I18n.translate str
@@ -53,9 +53,9 @@
         @rows.some (row) -> row.direct_group_name
     computed:
       processed_rows: ->
-        self = this
-        self.current_rows.map (row)->
-          row.since = self.format_date(row.joined_at)
+        component = this
+        component.current_rows.map (row)->
+          row.since = component.format_date(row.joined_at)
           if row.avatar_path
             row.avatar = "<span class=\"avatar\" style=\"background-image: url(#{row.avatar_path})\"></span>"
           if row.last_name

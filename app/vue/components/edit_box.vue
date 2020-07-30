@@ -32,12 +32,12 @@ EditBox = {
       # We need to save the editables one after another
       # in order not to produce race conditions on the
       # backend.
-      self = this
+      component = this
       next_editable = @editables().find (e)-> e.waiting_for_submission
       if next_editable
         next_editable.save
-          success: -> self.save_next_editable()
-          error: -> self.save_next_editable()
+          success: -> component.save_next_editable()
+          error: -> component.save_next_editable()
     editAll: ->
       @editMode = true
       @editables().forEach (c) ->

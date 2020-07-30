@@ -48,8 +48,8 @@
         this.$refs.picker.showCalendar()
       },
       selected(val) {
-        self = this
         self.date = val
+        let component = this
         Vue.nextTick(() => {
           this.$emit('dateSelected', self.formatted_date)
           this.$emit('input', self.formatted_date)

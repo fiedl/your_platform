@@ -36,26 +36,26 @@
         this.selected = this.value
     methods:
       fetchUsers: (search, loading) ->
-        self = this
+        component = this
         if search.length > 3
           loading true
           $.ajax
             method: 'get'
             url: "/api/v1/search_users?query=#{search}"
             success: (result)->
-              self.options = result
+              component.options = result
               loading false
             error: (result)->
               console.log result
         else
-          self.options = []
+          component.options = []
       lostFocus: ->
         this.$emit('lostFocus')
       selectedHandler: (v)->
-        self = this
+        component = this
         Vue.nextTick ->
-          self.$emit('select', self.selected)
-          self.$emit('input', self.selected)
+          component.$emit('select', component.selected)
+          component.$emit('input', component.selected)
       reset: ->
         this.selected = null
 

@@ -64,7 +64,7 @@
         }
       },
       edit() {
-        self = this
+        var component = this
         if (this.editable && (! this.editing)) {
           this.$emit('edit')
           this.valueBeforeEdit = this.value
@@ -82,8 +82,8 @@
       },
       focus() {
         if (this.inputField) {
-          self = this
-          Vue.nextTick(function() { self.inputField.focus() })
+          component = this
+          Vue.nextTick(function() { component.inputField.focus() })
         }
       },
       focusLost() {
@@ -156,7 +156,7 @@
         setTimeout(this.cancelSuggestEdit, 1500)
       },
       submitSave(options = {}) {
-        var self = this
+        var component = this
         this.submitting = true
         $.ajax({
           url: this.url,
@@ -166,19 +166,19 @@
             [this.paramKey]: this.value
           },
           success: function(result) {
-            self.submitting = false
-            self.success = true
-            self.error = false
+            component.submitting = false
+            component.success = true
+            component.error = false
             if (options.success) { options.success() }
           },
           error: function(result, message) {
-            self.submitting = false
-            self.success = false
-            self.error = message
-            var oldValue = self.valueBeforeEdit
-            self.edit()
-            self.valueBeforeEdit = oldValue // because edit() replaces this value
-            self.editing = true
+            component.submitting = false
+            component.success = false
+            component.error = message
+            var oldValue = component.valueBeforeEdit
+            component.edit()
+            component.valueBeforeEdit = oldValue // because edit() replaces this value
+            component.editing = true
             if (options.error) { options.error() }
           },
         })

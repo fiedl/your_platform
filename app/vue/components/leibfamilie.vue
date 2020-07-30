@@ -38,7 +38,7 @@
         this.editBox().$emit("require_edit_button")
     methods: {
       leibburschSelected: (leibbursch)->
-        self = this
+        component = this
         $.ajax
           url: "/api/v1/users/#{this.user.id}/leibfamilie"
           method: 'post'
@@ -48,9 +48,9 @@
           error: (result)->
             console.log result
           success: ->
-            self.reload()
+            component.reload()
       leibfuxSelected: (leibfux)->
-        self = this
+        component = this
         $.ajax
           url: "/api/v1/users/#{this.user.id}/leibfamilie/leibfuxen"
           method: 'post'
@@ -60,18 +60,18 @@
           error: (result)->
             console.log result
           success: ->
-            self.reload()
+            component.reload()
       reload: ->
-        self = this
+        component = this
         $.ajax
           url: "/api/v1/users/#{this.user.id}/leibfamilie"
           method: 'get'
           success: (result)->
-            self.leibfamilie = result
-            self.$refs.newLeibburschSelect.reset() if self.$refs.newLeibburschSelect
-            self.$refs.newLeibfuxSelect.reset() if self.$refs.newLeibfuxSelect
+            component.leibfamilie = result
+            component.$refs.newLeibburschSelect.reset() if component.$refs.newLeibburschSelect
+            component.$refs.newLeibfuxSelect.reset() if component.$refs.newLeibfuxSelect
       remove: (entry) ->
-        self = this
+        component = this
         @leibfamilie.splice(@leibfamilie.indexOf(entry), 1)
         $.ajax
           url: "/relationships/#{entry.relationship.id}",
@@ -79,7 +79,7 @@
           error: (result, message)->
             console.log(result)
           success: ->
-            self.reload()
+            component.reload()
       translate: (str)->
         I18n.translate(str)
       editBox: ->
