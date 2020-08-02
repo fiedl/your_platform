@@ -4,6 +4,7 @@ class Group < ApplicationRecord
 
   default_scope { includes(:flags) }
   scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
+  scope :has_descendant_users, -> { includes(:descendant_users).where(users: { id: nil }) }
 
   include Structureable
   include GroupGraph

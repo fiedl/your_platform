@@ -1,28 +1,22 @@
-# This ability class defines the basic structure for our role-based
-# authorization system.
-#
-# You can either override it completely or use the following method
-# to defined your own rights.
-#
-#     # app/model/ability.rb
-#     require_dependency YourPlatform::Engine.root.join('app/models/ability').to_s
-#
-#     module AbilityDefinitions
-#       def rights_for_local_admins
-#         super
-#         can :do, :amazing_things
-#       end
-#     end
-#
-#     class Ability
-#       prepend AbilityDefinitions
-#     end
-#
-# For an extensive example, have a look at:
-# https://github.com/fiedl/wingolfsplattform/blob/master/app/models/ability.rb
-#
 class Ability
   include CanCan::Ability
+
+  def ability_classes
+    [
+      Abilities::CorporationAbility,
+      Abilities::GroupAbility,
+      Abilities::UserAbility,
+      Abilities::UserAccountAbility,
+      Abilities::ProfileFieldAbility,
+      Abilities::DummyAbility
+    ]
+  end
+
+  # def initialize(user, options = {})
+  #   ability_classes.each do |ability_class|
+  #     self.merge ability_class.new(user, options)
+  #   end
+  # end
 
   def initialize(user, options = {})
     # Define abilities for the passed in user here. For example:
@@ -734,4 +728,5 @@ class Ability
       document.has_flag? :dummy
     end
   end
+
 end
