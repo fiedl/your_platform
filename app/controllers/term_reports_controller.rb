@@ -25,7 +25,6 @@ class TermReportsController < ApplicationController
   expose :termable, -> { term_report }
 
   def show
-    authorize! :use, :term_reports
     authorize! :read, term_report
 
     # To make the url unique, redirect to the proper url
@@ -33,9 +32,14 @@ class TermReportsController < ApplicationController
     #
     redirect_to(term_report_path(id: term_report.id)) unless params[:id]
 
+    if params[:recalculate].present?
+      term_report.fill_info if can? :recalculate, term_report
+    end
+
     @hide_vertical_nav = true
     set_current_title term_report.title
     set_current_navable term_report.group
+    set_current_tab :members
   end
 
   expose :term_reports, -> {
@@ -46,7 +50,6 @@ class TermReportsController < ApplicationController
   }
 
   def index
-    authorize! :use, :term_reports
     authorize! :index, TermReport
 
     if term && corporation
@@ -59,6 +62,7 @@ class TermReportsController < ApplicationController
         set_current_navable Page.intranet_root
       end
       set_current_title t :term_reports
+      set_current_tab :members
     end
   end
 

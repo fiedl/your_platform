@@ -24,3 +24,10 @@ $(document).on 'click', '.dropdown-menu * a', (event) ->
   else
     btn = $(this).closest('.btn-group').find('.btn.dropdown-toggle')
     lock_button_and_show_loading btn
+
+
+$(document).on 'hide.bs.dropdown', (e) ->
+  console.log e
+  if $(e.relatedTarget).hasClass('dropdown-toggle')
+    if $(this).find('.prevent-closing-outer-dropdowns').length > 0
+      e.preventDefault()

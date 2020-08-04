@@ -1,7 +1,9 @@
-<vue-number-of-members-chart
-  height="50px"
-  :sub_charts="<%= group.sub_charts.to_json %>"
-  group_name="<%= group.group.name %>"
-  :years="<%= group.years.to_json %>"
-  href="<%= group.term_report ? term_report_path(group.term_report) : '#' %>"
-></vue-number-of-members-chart>
+<% cache [group.group, "charts", "number_of_members", group.group.members.count] do %>
+  <vue-number-of-members-chart
+    height="50px"
+    :sub_charts="<%= group.sub_charts.to_json %>"
+    group_name="<%= group.group.name %>"
+    :years="<%= group.years.to_json %>"
+    href="<%= group.term_report ? term_report_path(group.term_report) : '#' %>"
+  ></vue-number-of-members-chart>
+<% end %>

@@ -1,7 +1,7 @@
 <template lang="haml">
   %div.change_status
     %vue-auto-align-popup
-      %button.btn.btn-white.dropdown-toggle{'@click': "toggle_dropdown"} Status ändern
+      %button.dropdown-toggle{'@click': "toggle_dropdown", ':class': "button_class || 'btn btn-white'"} Status ändern
       .dropdown-menu.dropdown-menu-card{':class': "dropdown_state"}
         .card
           .card-header
@@ -33,7 +33,7 @@
   Api = require('../api.coffee').default
 
   ChangeStatusButton =
-    props: ['corporations', 'user', 'redirect_to_url', 'current_status_ids']
+    props: ['corporations', 'user', 'redirect_to_url', 'current_status_ids', 'button_class']
     data: ->
       dropdown_state: null
       corporation: @corporations[0]
@@ -43,10 +43,10 @@
       submitting: false
     methods:
       toggle_dropdown: ->
-        if @dropdown_state == "show"
+        if @dropdown_state == "show prevent-closing-outer-dropdowns"
           @dropdown_state = ""
         else
-          @dropdown_state = "show"
+          @dropdown_state = "show prevent-closing-outer-dropdowns"
       submit: ->
         component = this
         @submitting = true

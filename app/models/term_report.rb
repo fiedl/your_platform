@@ -90,6 +90,10 @@ class TermReport < ApplicationRecord
     year < (Time.zone.now.year - 1)
   end
 
+  def draft?
+    !submitted? && !too_old_to_submit?
+  end
+
 end
 
 

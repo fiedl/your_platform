@@ -18,6 +18,7 @@
             %ul.dropdown-menu
               %li
                 = link_to "Meine Daten", current_user, class: 'dropdown-item'
+              .dropdown-divider
               - current_user.corporations.each do |corporation|
                 %li
                   = link_to group_path(corporation), class: 'dropdown-item' do
@@ -51,7 +52,7 @@
                 %li
                   = link_to new_aktivmeldung_path, class: "dropdown-item #{'active' if controller_name == 'aktivmeldungen'}" do
                     Aktivmeldung eintragen
-              .dropdown-divider
+                .dropdown-divider
               - current_user.corporations.each do |corporation|
                 %li
                   %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
@@ -63,7 +64,7 @@
                 %a.dropdown-item Alle Philister
               .dropdown-divider
               %li
-                %a.dropdown-item Semesterstatistik
+                = link_to "Semesterstatistik", term_report_path(current_user.primary_corporation.term_reports.last), class: 'dropdown-item'
           %li.nav-item{class: ('active' if current_tab == :events)}
             %a.nav-link{:href => "./form-elements.html"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block

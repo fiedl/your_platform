@@ -18,13 +18,14 @@
           = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
             = t :add_member
 
-        %h3.mt-4 Export
-        = render partial: 'groups/export_button'
+        - if can? :export_member_list, group
+          %h3.mt-4 Export
+          = render partial: 'groups/export_button'
 
-        %h3.mt-4 Statistik
-        - if can?(:use, :term_reports) && group.corporation
+        - if group.corporation
+          %h3.mt-4 Statistik
           .tool.term_reports
-            = link_to group_term_report_path(group), class: 'btn btn-outline-secondary' do
+            = link_to group_term_report_path(group.corporation), class: 'btn btn-outline-secondary' do
               = fa_icon 'bar-chart'
               = t(:term_report)
 
