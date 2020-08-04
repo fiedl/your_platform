@@ -228,4 +228,8 @@ module IconHelper
     }.html_safe
   end
 
+  def check_icon
+    fa_icon 'check'
+  end
+
 end

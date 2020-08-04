@@ -221,6 +221,26 @@ class Group < ApplicationRecord
   def status_group_ids
     status_groups.pluck(:id)
   end
+  def status_group_tree
+    child_groups_with_status_groups.collect do |child_group|
+      {
+        id: child_group.id,
+        name: child_group.name,
+        children: child_group.status_group_tree
+      }
+    end
+  end
+  def child_groups_with_status_groups
+    child_groups & (status_groups + status_groups.map(&:ancestor_groups)).flatten
+  end
+  def status_groups_with_level(group_hash_array = status_group_tree, level = 0)
+    group_hash_array.collect do |entry|
+      entry[:level] = level
+      children = status_groups_with_level(entry[:children], level + 1)
+      entry[:children] = nil
+      [entry, children]
+    end.flatten
+  end
 
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first

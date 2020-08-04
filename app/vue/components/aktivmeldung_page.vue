@@ -6,8 +6,8 @@
     .card
       .card-body
         %label.form-label Verbindung
-        %select.form-select{'v-model': "corporation.name"}
-          %option{'v-for': "c in corporations"} {{ c.name }}
+        %select.form-select{'v-model': "corporation"}
+          %option{'v-for': "c in corporations", ':value': "c", ':key': "c.id"} {{ c.name }}
 
         %label.form-label.mt-3 {{ page_title }} zum Datum
         %vue-datepicker{'v-model': "valid_from"}
@@ -207,12 +207,12 @@
   Api = require('../api.coffee').default
 
   AktivmeldungPage =
-    props: ['corporations']
+    props: ['corporations', 'initial_new_member_type', 'initial_existing_user']
     data: ->
-      new_member_type: "Aktivmeldung"
+      new_member_type: @initial_new_member_type || "Aktivmeldung"
       corporation: @corporations[0]
       valid_from: moment().locale('de').format('L')
-      existing_user: null
+      existing_user: @initial_existing_user || null
       first_name: null
       last_name: null
       date_of_birth: null
@@ -293,7 +293,7 @@
         if @new_member_type == "Aktivmeldung"
           @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @email && @study_address && @home_address && @study && @study_from && @university && @subject && @account_iban && @status && @privacy
         else if @new_member_type == "Bandaufnahme"
-          @corporation && @valid_from && @existing_user
+          @corporation && @valid_from && @existing_user && @status
         else if @new_member_type == "Hausbewohner"
           @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @study_address && @home_address && @study && @study_from && @university && @subject && @account_iban && @room && @privacy
         else if @new_member_type == "Keilgast"

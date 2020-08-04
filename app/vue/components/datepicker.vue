@@ -8,6 +8,7 @@
       :editable="false"
       input-class="form-control"
       @change="selected"
+      @close="closed"
       :open.sync="open_state"
     ></vue2-datepicker>
   </div>
@@ -48,6 +49,9 @@
           this.$emit('input', component.date)
         })
       },
+      closed() {
+        this.$emit('closed')
+      }
     }
   }
 

@@ -12,9 +12,6 @@ class User < ApplicationRecord
   include Merit
   has_merit
 
-  attr_accessor             :create_account, :add_to_corporation
-  # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
-
   validates_presence_of     :last_name
   validates_format_of       :first_name, with: /\A[^\,]*\z/, if: Proc.new { |user| user.first_name.present? }  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
@@ -46,9 +43,6 @@ class User < ApplicationRecord
   include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name
-  before_save               :build_account_if_requested
-  after_save                :add_to_group_if_requested
-
 
   # Easy user settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -304,11 +298,7 @@ class User < ApplicationRecord
   # This method activates the user account, i.e. grants the user the right to log in.
   #
   def activate_account
-    unless self.account
-      self.account = self.build_account
-      self.save
-    end
-    return self.account
+    create_account
   end
 
   # This method deactivates the user account, i.e. destroys the associated object
@@ -370,25 +360,6 @@ class User < ApplicationRecord
       end
     end
   end
-
-  # Groups
-  # ------------------------------------------------------------------------------------------
-
-  def add_to_group_if_requested
-    if self.add_to_corporation.present?
-      corporation = add_to_corporation if add_to_corporation.kind_of? Group
-      corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
-      corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
-      if corporation
-        status_group = corporation.becomes(Corporation).status_groups.first || raise(RuntimeError, 'no status group in this corporation!')
-        status_group.assign_user self
-      else
-        raise ActiveRecord::RecordNotFound, 'corporation not found.'
-      end
-      self.add_to_corporation = nil
-    end
-  end
-  private :add_to_group_if_requested
 
 
   # Corporations

@@ -18,12 +18,12 @@
       .card-body
         %h3 Verwaltung
         - if can? :manage, user
-          .tool.profile_fields_index
+          %span.tool.profile_fields_index
             = link_to t(:profile_fields), profile_fields_path(user_id: user.id), class: 'btn btn-outline-secondary'
         - if can? :manage, user
           = link_to t(:show_group_memberships), user_memberships_path(user_id: user.id), class: 'btn btn-outline-secondary'
         - if can? :renew_cache, user
-          .tool.renew_cache= renew_cache_button(user)
+          %span.tool.renew_cache= renew_cache_button(user)
 
 
   .col-lg-8
@@ -45,8 +45,13 @@
         .card-body
           #corporate_vita
             %h2= t :corporate_vita
-            .pull-right= render partial: 'workflow_triggers'
+            .float-md-right.mb-3= render partial: 'workflow_triggers'
             = render partial: 'users/corporate_vita', locals: {user: user}
+        - if current_user.admin_of_anything? && current_user.corporations.select { |corporation| can? :update, corporation }.any?
+          .card-footer
+            = link_to "Bandaufnahme eintragen", new_aktivmeldung_path(new_member_type: "Bandaufnahme", new_member_id: user.id), class: "btn btn-white btn-sm"
+
+
 
     - if user.profile_fields.where(type: "ProfileFields::About").any? || can?(:update, user)
       .card
