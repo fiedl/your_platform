@@ -154,7 +154,7 @@
       submit: ->
         @error = null
         @submitting = true
-        self = this
+        component = this
         Api.post "/room_occupancies", {
           data: {
             valid_from: @valid_from
@@ -178,10 +178,10 @@
             privacy: @privacy
           }
           error: (request, status, error)->
-            self.error = request.responseText
-            self.submitting = false
+            component.error = request.responseText
+            component.submitting = false
           success: ->
-            window.location = self.redirect_to_url
+            window.location = component.redirect_to_url
         }
     computed:
       submission_enabled: ->

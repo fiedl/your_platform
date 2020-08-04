@@ -47,13 +47,23 @@
               %span.nav-link-title
                 = t :members
             %ul.dropdown-menu
-              %li
-                %a.dropdown-item{:href => "./empty.html"}
-                  Aktivmeldung eintragen
+              - if can? :create, User
+                %li
+                  = link_to new_aktivmeldung_path, class: "dropdown-item #{'active' if controller_name == 'aktivmeldungen'}" do
+                    Aktivmeldung eintragen
+              .dropdown-divider
               - current_user.corporations.each do |corporation|
                 %li
                   %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
                     = corporation.name
+              .dropdown-divider
+              %li
+                %a.dropdown-item Alle Wingolfiten
+                %a.dropdown-item Alle Aktiven
+                %a.dropdown-item Alle Philister
+              .dropdown-divider
+              %li
+                %a.dropdown-item Semesterstatistik
           %li.nav-item{class: ('active' if current_tab == :events)}
             %a.nav-link{:href => "./form-elements.html"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block

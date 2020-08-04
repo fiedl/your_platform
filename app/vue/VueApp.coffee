@@ -34,6 +34,7 @@ import Avatar from './components/avatar.vue'
 import NewRoomOccupancyForm from './components/new_room_occupancy_form.vue'
 import AccommodationSepaDebitForm from './components/accommodation_sepa_debit_form.vue'
 import EditableSetting from './components/editable_setting.vue'
+import AktivmeldungPage from './components/aktivmeldung_page.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -70,6 +71,7 @@ jQuery(document).ready ->
   Vue.component('vue_accommodation_sepa_debit_form', AccommodationSepaDebitForm)
   Vue.component('vue-editable-setting', EditableSetting)
   Vue.component('vue_editable_setting', EditableSetting)
+  Vue.component('vue_aktivmeldung_page', AktivmeldungPage)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

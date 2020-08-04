@@ -16,7 +16,7 @@
 
     .card
       .card-body
-        %h3=t :management
+        %h3 Verwaltung
         - if can? :manage, user
           .tool.profile_fields_index
             = link_to t(:profile_fields), profile_fields_path(user_id: user.id), class: 'btn btn-outline-secondary'
@@ -94,11 +94,12 @@
           %h2= t :groups
           = render partial: 'users/groups', object: user, as: :user
 
-    .card
-      .card-body
-        %vue-edit-box
-          %h2 Leibfamilie
-          %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json, ':editable': can?(:update, user).to_json}
+    - if (user.leibfamilie.count > 1) || user.wingolfit? # The count is 1 if there is only the user himself.
+      .card
+        .card-body
+          %vue-edit-box
+            %h2 Leibfamilie
+            %vue-leibfamilie{':initial-leibfamilie': user.leibfamilie.to_json, ':user': user.to_json, ':editable': can?(:update, user).to_json}
 
     = render partial: 'users/communication_box', locals: {user: @user}
 
