@@ -18,11 +18,15 @@ class Api::V1::ChangeStatusController < Api::V1::BaseController
     new_membership.group.delete_cache
     new_membership.recalculate_indirect_validity_ranges
 
-    terminate_user_account unless user.wingolfit?
+    unless user.wingolfit?
+      terminate_user_account
+      terminate_subscriptions
+    end
 
     if status_group.has_flag? :deceased_parent
       mark_as_deceased_in_all_corporations
       terminate_user_account
+      terminate_subscriptions
       user.delete_cache
     end
 
@@ -34,7 +38,7 @@ class Api::V1::ChangeStatusController < Api::V1::BaseController
   def terminate_previous_status_memberships
     user
       .links_as_child.where(ancestor_type: 'Group', ancestor_id: (user.group_ids & corporation.status_group_tree_ids))
-      .each { |membership| membership.invalidate at: valid_from }
+      .each { |membership| membership.invalidate at: valid_from; membership.recalculate }
   end
 
   def mark_as_deceased_in_all_corporations
@@ -43,6 +47,12 @@ class Api::V1::ChangeStatusController < Api::V1::BaseController
 
   def terminate_user_account
     user.account.destroy
+  end
+
+  def terminate_subscriptions
+    user.wingolfsblaetter_abo = false
+    user.local_postal_mail_subscription = false
+    user.save
   end
 
 end
