@@ -44,10 +44,8 @@
       },
       selected(val) {
         let component = this
-        Vue.nextTick(() => {
-          this.$emit('dateSelected', component.date)
-          this.$emit('input', component.date)
-        })
+        this.$emit('dateSelected', component.date)
+        this.$emit('input', component.date)
       },
       closed() {
         this.$emit('closed')

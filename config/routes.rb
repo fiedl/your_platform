@@ -337,6 +337,7 @@ Rails.application.routes.draw do
         get :avatar, to: '/avatars#show'
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
+        post :change_status, to: 'change_status#create'
       end
       resources :groups do
         resources :members

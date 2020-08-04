@@ -462,7 +462,7 @@ class User < ApplicationRecord
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past
+    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past.where(direct: true)
   end
 
 

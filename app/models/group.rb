@@ -226,9 +226,13 @@ class Group < ApplicationRecord
       {
         id: child_group.id,
         name: child_group.name,
+        type: child_group.type,
         children: child_group.status_group_tree
       }
     end
+  end
+  def status_group_tree_ids
+    child_groups_with_status_groups.collect { |child_group| [child_group, child_group.descendant_groups] }.flatten.map(&:id)
   end
   def child_groups_with_status_groups
     child_groups & (status_groups + status_groups.map(&:ancestor_groups)).flatten

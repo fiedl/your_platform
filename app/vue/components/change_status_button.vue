@@ -18,7 +18,7 @@
 
             .new_status
               %label.form-label.required Neuer Status ab {{ valid_from }}
-              %vue-status-select{':statuses': "corporation.statuses", 'v-model': "new_status"}
+              %vue-status-select{':statuses': "corporation.statuses", 'v-model': "new_status", ':active_status_ids': "current_status_ids"}
           .card-footer
             .form-label.error.required{'v-if': "need_more_fields"} Bitte alle benötigten Felder ausfüllen
             .d-flex
@@ -30,9 +30,10 @@
 
 <script lang="coffee">
   moment = require('moment')
+  Api = require('../api.coffee').default
 
   ChangeStatusButton =
-    props: ['corporations', 'user']
+    props: ['corporations', 'user', 'redirect_to_url', 'current_status_ids']
     data: ->
       dropdown_state: null
       corporation: @corporations[0]
@@ -47,8 +48,20 @@
         else
           @dropdown_state = "show"
       submit: ->
+        component = this
         @submitting = true
-
+        @error = null
+        Api.post "/users/#{@user.id}/change_status", {
+          data:
+            corporation_id: @corporation.id
+            status_id: @new_status.id
+            valid_from: @valid_from
+          error: (request, status, error)->
+            component.error = request.responseText
+            component.submitting = false
+          success: (result)->
+            window.location = component.redirect_to_url
+        }
     computed:
       submission_enabled: ->
         (!@submitting) && (!@need_more_fields)
