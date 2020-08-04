@@ -14,13 +14,35 @@ class Api::V1::ChangeStatusController < Api::V1::BaseController
     terminate_previous_status_memberships
     new_membership = status_group.assign_user user, at: valid_from
 
+    new_membership.user.delete_cache
+    new_membership.group.delete_cache
+    new_membership.recalculate_indirect_validity_ranges
+
+    terminate_user_account unless user.wingolfit?
+
+    if status_group.has_flag? :deceased_parent
+      mark_as_deceased_in_all_corporations
+      terminate_user_account
+      user.delete_cache
+    end
+
     render json: new_membership, status: :ok
   end
+
+  private
 
   def terminate_previous_status_memberships
     user
       .links_as_child.where(ancestor_type: 'Group', ancestor_id: (user.group_ids & corporation.status_group_tree_ids))
       .each { |membership| membership.invalidate at: valid_from }
+  end
+
+  def mark_as_deceased_in_all_corporations
+    user.mark_as_deceased at: valid_from
+  end
+
+  def terminate_user_account
+    user.account.destroy
   end
 
 end

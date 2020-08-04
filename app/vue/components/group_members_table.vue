@@ -38,6 +38,7 @@
       @current_rows = @rows
       this.$root.$on 'add_member', component.add_member
       this.$root.$on 'search', component.search
+      this.$root.$on 'update_member_table', component.update_member_table
     methods:
       translate: (str)->
         I18n.translate str
@@ -51,6 +52,8 @@
         @rows.some (row) -> row.status
       has_direct_group_entries: ->
         @rows.some (row) -> row.direct_group_name
+      update_member_table: (member_table_rows)->
+        @current_rows = member_table_rows
     computed:
       processed_rows: ->
         component = this

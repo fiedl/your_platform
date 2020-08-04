@@ -11,6 +11,8 @@ class Api::V1::MembersController < Api::V1::BaseController
     authorize! :add_member, group
 
     membership = group.assign_user user, at: joined_at
+    membership.user.delete_cache
+    membership.group.delete_cache
 
     render json: {
       group: group,
