@@ -13,7 +13,8 @@
       </div>
     </template>
     <template #no-options="{ search, searching, loading }">
-      Bitte Namen eingeben und Person auswählen.
+      <span v-if="loading">Passende Personen werden gesucht. Bitte kurz warten ...</span>
+      <span v-else>Bitte Namen eingeben und Person auswählen.</span>
     </template>
   </vue-select>
 </template>
@@ -50,6 +51,7 @@
               loading false
             error: (result)->
               console.log result
+              loading false
           }
         else
           component.options = []
@@ -74,7 +76,8 @@
     margin: 0
     border: none
   .vs__actions
-    display: none
+    .vs__open-indicator
+      display: none
   .vs__selected-options
     padding-top: 4px
     padding-left: 3px

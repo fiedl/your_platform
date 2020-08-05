@@ -3,6 +3,7 @@ class Api::V1::RoomOccupanciesController < Api::V1::BaseController
   expose :room, -> { Groups::Room.find params[:room_id] }
   expose :existing_user, -> { User.find params[:existing_user][:id] }
   expose :valid_from, -> { params[:valid_from].to_date }
+  expose :valid_to, -> { params[:valid_to].to_date if params[:valid_to].present? }
 
   api :POST, '/api/v1/room_occupancies', "Set a new occupant for a room."
 
@@ -15,8 +16,15 @@ class Api::V1::RoomOccupanciesController < Api::V1::BaseController
     new_occupancy = create_from_existing_user if params[:occupancy_type] == 'existing_user'
     new_occupancy = create_from_new_user if params[:occupancy_type] == 'new_user'
 
-    current_occupancy = room.memberships.where.not(id: new_occupancy.id).first
-    new_occupancy.update valid_to: current_occupancy.valid_from if current_occupancy && (new_occupancy.valid_from < current_occupancy.valid_from)
+    if new_occupancy
+      current_occupancy = room.memberships.where.not(id: new_occupancy.id).first
+
+      if valid_to
+        new_occupancy.update valid_to: valid_to
+      elsif current_occupancy && (new_occupancy.valid_from < current_occupancy.valid_from)
+        new_occupancy.update valid_to: current_occupancy.valid_from
+      end
+    end
 
     render json: new_occupancy, status: :ok
   end

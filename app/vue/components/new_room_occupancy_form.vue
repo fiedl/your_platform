@@ -8,9 +8,13 @@
           %span.avatar.mr-2{'v-if': "room.occupant", ':style': "'background-image: url(' + room.occupant.avatar_path + ')'"}
           %span {{ (room.occupant && room.occupant.title) || 'Kein Bewohner' }}
 
-      .valid_from.mb-3
-        %label.form-label Datum der Änderung
-        %vue-datepicker{'v-model': "valid_from"}
+      .row
+        .valid_from.col-auto.mb-3
+          %label.form-label.required Datum der Änderung
+          %vue-datepicker{'v-model': "valid_from"}
+        .valid_to.col-auto.mb-3{'v-if': "is_historic_entry && (occupancy_type != 'empty')"}
+          %label.form-label Auszugsdatum
+          %vue-datepicker{'v-model': "valid_to"}
 
       .occupancy_type.mb-3
         %label.form-label Neuer Bewohner
@@ -21,7 +25,7 @@
             Leerstand eintragen
           %button.btn.btn-white{':class': "occupancy_type == 'existing_user' ? 'active': ''", '@click': "occupancy_type = 'existing_user'"}
             %i.fa.fa-user
-            Bestehende Person (Wingolfit)
+            Bestehende Person
           %button.btn.btn-white{':class': "occupancy_type == 'new_user' ? 'active': ''", '@click': "occupancy_type = 'new_user'"}
             %i.fa.fa-user-plus
             Neue Person
@@ -33,7 +37,7 @@
           .text-muted.mt-2.mb-3 Person als Bewohner eintragen, die bereits in der Datenbank hinterlegt ist.
 
           %fieldset.form-fieldset
-            %label.form-label Bestehende Person
+            %label.form-label.required Bestehende Person
             %vue-user-select{'v-model': "existing_user", placeholder: "Bestehende Person auswählen", ':find_non_wingolf_users': "find_non_wingolf_users", ':find_deceased_users': "find_deceased_users"}
 
         .occupancy_type_new_user{'v-if': "occupancy_type == 'new_user'"}
@@ -130,6 +134,7 @@
     props: ['url', 'room', 'default_study_address', 'default_date', 'redirect_to_url']
     data: ->
       valid_from: (this.default_date ||  moment().locale('de').format('L'))
+      valid_to: null
       room_id: @room.id
       occupancy_type: 'empty'
       existing_user: null
@@ -158,6 +163,7 @@
         Api.post "/room_occupancies", {
           data: {
             valid_from: @valid_from
+            valid_to: @valid_to
             room_id: @room_id
             occupancy_type: @occupancy_type
             existing_user: @existing_user
