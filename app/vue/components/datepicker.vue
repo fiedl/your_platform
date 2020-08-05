@@ -1,17 +1,21 @@
 <template>
-  <div>
+  <span>
     <vue2-datepicker
       v-model="date"
       value-type="format"
-      format="DD.MM.YYYY"
+      :format="format"
+      title-format="DD.MM.YYYY"
+      time-title-format="DD.MM.YYYY"
+      :type="type || 'date'"
       :show-week-number="true"
       :editable="false"
       input-class="form-control"
+      :time-picker-options="time_picker_options"
       @change="selected"
       @close="closed"
       :open.sync="open_state"
     ></vue2-datepicker>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -22,7 +26,7 @@
   Vue.component('vue2-datepicker', Vue2Datepicker)
 
   export default {
-    props: ['value', 'openInitially'],
+    props: ['value', 'openInitially', 'type'],
     data() { return {
       date: null,
       open_state: false
@@ -42,13 +46,27 @@
       open() {
         this.open_state = true
       },
-      selected(val) {
+      selected(val, type) {
         let component = this
-        this.$emit('dateSelected', component.date)
-        this.$emit('input', component.date)
+        if (((component.type == 'datetime') && (type == 'time')) || ((component.type != 'datetime') && (type == 'date'))) {
+          this.$emit('dateSelected', component.date)
+          this.$emit('input', component.date)
+        }
       },
       closed() {
         this.$emit('closed')
+      }
+    },
+    computed: {
+      format() {
+        if (this.type == "datetime") {
+          return "dd, DD.MM.YYYY, H:mm"
+        } else {
+          return "DD.MM.YYYY"
+        }
+      },
+      time_picker_options() {
+        return {start: '6:00', end: '24:00', step: '0:15', format: 'HH:mm'}
       }
     }
   }

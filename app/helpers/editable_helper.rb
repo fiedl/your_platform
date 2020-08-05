@@ -5,9 +5,16 @@ module EditableHelper
   #   editable user, :email, type: "email"
   #
   def editable(object, key, type: 'text', editable: nil, placeholder: nil, class: nil, input_class: nil)
+    if type == 'date'
+      initial_value = localize object.send(key).to_date
+    elsif type == 'datetime'
+      initial_value = localize object.send(key)
+    else
+      initial_value = object.send(key)
+    end
     content_tag "vue-editable", "", {
       parameter: "#{object.class.name.parameterize}_#{object.id}",
-      'initial-value': object.send(key),
+      'initial-value': initial_value,
       type: type,
       url: url_for(object),
       'param-key': "#{object.class.model_name.param_key}[#{key}]",
