@@ -5,7 +5,7 @@
       .page-title= room.title
     .col-auto.ml-auto.d-print.none
       - if can?(:update_accommodations, room.corporation)
-        = link_to "Bewohner eintragen", new_group_room_occupancy_path(group_id: room.id), class: "btn btn-white"
+        = link_to "Bewohner eintragen", new_group_room_occupancy_path(group_id: room.id, redirect_to_url: group_room_occupancies_path(group_id: room.id)), class: "btn btn-white"
 
 .row
   .col-12

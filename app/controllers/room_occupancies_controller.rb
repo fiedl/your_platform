@@ -10,7 +10,7 @@ class RoomOccupanciesController < ApplicationController
   } }
   expose :scope, -> { room.parent_groups.try(:first) }
   expose :corporation, -> { room.corporation }
-  expose :redirect_to_url, -> { corporation_accommodations_path(corporation_id: corporation.id) }
+  expose :redirect_to_url, -> { params[:redirect_to_url] || corporation_accommodations_path(corporation_id: corporation.id) }
 
   def index
     authorize! :read, room
