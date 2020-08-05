@@ -34,7 +34,7 @@
 
           %fieldset.form-fieldset
             %label.form-label Bestehende Person
-            %vue-user-select{'v-model': "existing_user", placeholder: "Bestehende Person auswählen"}
+            %vue-user-select{'v-model': "existing_user", placeholder: "Bestehende Person auswählen", ':find_non_wingolf_users': "find_non_wingolf_users", ':find_deceased_users': "find_deceased_users"}
 
         .occupancy_type_new_user{'v-if': "occupancy_type == 'new_user'"}
           .text-muted.mt-2.mb-3 Neue Person als Bewohner eintragen, die noch nicht in der Datenbank hinterlegt ist. Die neue Person wird nur als Datensatz angelegt und erhält keinen Zugang zur Plattform, bis sie sich aktivmeldet.
@@ -204,6 +204,10 @@
           moment(@valid_from, 'DD.MM.YYYY').diff(moment(), 'years') <= -1
         else
           false
+      find_non_wingolf_users: ->
+        true
+      find_deceased_users: ->
+        @is_historic_entry
   export default NewRoomOccupancyForm
 </script>
 

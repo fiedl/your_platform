@@ -41,10 +41,11 @@ concern :UserSearch do
         ProfileField.where(profileable_type: "User").where("value like ? or label like ?", q, q) +
         ProfileField.joins(:parent).where(parents_profile_fields: {profileable_type: "User"}).where("profile_fields.value like ? or profile_fields.label like ?", q, q)
       users = profile_fields.collect do |profile_field|
-        user = profile_field.profileable
-        user.search_hint = "#{profile_field.label}: #{profile_field.value}"
-        user
-      end
+        if user = profile_field.profileable
+          user.search_hint = "#{profile_field.label}: #{profile_field.value}"
+          user
+        end
+      end - [nil]
     end
 
   end

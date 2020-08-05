@@ -19,13 +19,14 @@
 </template>
 
 <script lang="coffee">
+  Api = require('../api.coffee').default
   Vue = require('vue').default
   VueSelect = require('vue-select').default # https://github.com/sagalbot/vue-select
 
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value']
+    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users']
     data: ->
       selected: null
       options: []
@@ -39,14 +40,17 @@
         component = this
         if search.length > 3
           loading true
-          $.ajax
-            method: 'get'
-            url: "/api/v1/search_users?query=#{search}"
+          Api.get "/search_users", {
+            data:
+              query: search
+              find_non_wingolf_users: component.find_non_wingolf_isers
+              find_deceased_users: component.find_deceased_users
             success: (result)->
               component.options = result
               loading false
             error: (result)->
               console.log result
+          }
         else
           component.options = []
       lostFocus: ->
