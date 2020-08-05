@@ -27,7 +27,6 @@ $(document).on 'click', '.dropdown-menu * a', (event) ->
 
 
 $(document).on 'hide.bs.dropdown', (e) ->
-  console.log e
   if $(e.relatedTarget).hasClass('dropdown-toggle')
     if $(this).find('.prevent-closing-outer-dropdowns').length > 0
       e.preventDefault()

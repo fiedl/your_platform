@@ -55,16 +55,16 @@
                 .dropdown-divider
               - current_user.corporations.each do |corporation|
                 %li
-                  %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if corporation == current_navable)}
+                  %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if (corporation == current_navable) && controller_name == 'group_members')}
                     = corporation.name
               .dropdown-divider
               %li
-                %a.dropdown-item Alle Wingolfiten
-                %a.dropdown-item Alle Aktiven
-                %a.dropdown-item Alle Philister
+                = link_to "Alle Wingolfiten", group_members_path(Group.alle_wingolfiten), class: 'dropdown-item'
+                = link_to "Alle Aktiven", group_members_path(Group.alle_aktiven), class: 'dropdown-item'
+                = link_to "Alle Philister", group_members_path(Group.alle_philister), class: 'dropdown-item'
               .dropdown-divider
               %li
-                = link_to "Semesterstatistik", term_report_path(current_user.primary_corporation.term_reports.last), class: 'dropdown-item'
+                = link_to "Semesterstatistik", term_report_path(current_user.primary_corporation.term_reports.last), class: "dropdown-item #{'active' if controller_name == 'term_reports'}"
           %li.nav-item{class: ('active' if current_tab == :events)}
             %a.nav-link{:href => "./form-elements.html"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
@@ -81,31 +81,6 @@
               %li
                 = link_to new_document_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'new'}" do
                   Dokumente hochladen
-              .dropdown-divider
-              %li
-                %a.dropdown-item{:href => "./blog.html"}
-                  Blog cards
-              %li
-                %a.dropdown-item{:href => "./snippets.html"}
-                  Snippets
-              %li
-                %a.dropdown-item{:href => "./search-results.html"}
-                  Search results
-              %li
-                %a.dropdown-item{:href => "./pricing.html"}
-                  Pricing cards
-              %li
-                %a.dropdown-item{:href => "./users.html"}
-                  Users
-              %li
-                %a.dropdown-item{:href => "./gallery.html"}
-                  Gallery
-              %li
-                %a.dropdown-item{:href => "./profile.html"}
-                  Profile
-              %li
-                %a.dropdown-item{:href => "./music.html"}
-                  Music
           %li.nav-item.dropdown{class: ('active' if current_tab == :communication)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
