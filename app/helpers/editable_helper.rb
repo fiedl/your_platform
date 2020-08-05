@@ -4,7 +4,7 @@ module EditableHelper
   #
   #   editable user, :email, type: "email"
   #
-  def editable(object, key, type: 'text', editable: nil)
+  def editable(object, key, type: 'text', editable: nil, placeholder: nil, class: nil, input_class: nil)
     content_tag "vue-editable", "", {
       parameter: "#{object.class.name.parameterize}_#{object.id}",
       'initial-value': object.send(key),
@@ -12,6 +12,8 @@ module EditableHelper
       url: url_for(object),
       'param-key': "#{object.class.model_name.param_key}[#{key}]",
       ':editable': editable.nil? ? can?(:update, object) : editable,
+      placeholder: placeholder,
+      input_class: binding.local_variable_get(:class) || input_class
     }
   end
 

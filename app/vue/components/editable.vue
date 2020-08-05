@@ -10,9 +10,9 @@
       </span>
 
       <span key="1" class='edit' v-bind:class="editingClass" v-if="showEditField" v-on:click="acceptEditSuggestion" v-on:keydown.esc="cancelAll">
-        <textarea v-if="typeIsTextarea" v-on:keydown="keydownToBeginEditing" v-model.trim="value" autofocus></textarea>
+        <textarea v-if="typeIsTextarea" v-on:keydown="keydownToBeginEditing" v-model.trim="value" :placeholder="placeholder" autofocus :class="input_class"></textarea>
         <vue-datepicker :open-initially="editing && !(editBox() && editBox().editMode && !editBox().partialEditing)" v-else-if="type == 'date'" v-model="value" v-on:dateSelected="dateSelected" @closed="focusLost"></vue-datepicker>
-        <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll"  v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" autofocus />
+        <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll"  v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" :placeholder="placeholder" autofocus :class="input_class" />
         <div class="error-message" v-if="error">{{error}}</div>
         <div class="help" v-if="help">{{help}}</div>
       </span>
@@ -28,7 +28,7 @@
   Vue.use(VueInputAutowidth)
 
   export default {
-    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable'],
+    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable', 'placeholder', 'input_class'],
     data() { return {
       editing: false,
       suggestingEdit: false,

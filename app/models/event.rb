@@ -12,6 +12,7 @@ class Event < ApplicationRecord
   include EventGroups
   include EventContactPeople
   include EventAttendees
+  include EventAvatar
 
 
   # General Properties
@@ -93,6 +94,14 @@ class Event < ApplicationRecord
     self.group.try(:avatar_url) || self.group.try(:corporation).try(:avatar_url)
   end
 
+  def groups
+    Group.where(id: [group_id] + parent_group_ids)
+  end
+
+  def corporations
+    groups.map(&:corporation) - [nil]
+  end
+
 
   # Times
   # ==========================================================================================
@@ -111,6 +120,21 @@ class Event < ApplicationRecord
   def localized_end_at=(string)
     attribute_will_change! :end_at
     self.end_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
+  end
+
+  def term
+    Term.by_date start_at
+  end
+
+  def semester_calendars
+    SemesterCalendar.where(group_id: corporations, term_id: term) if corporations.any? && term
+  end
+
+  def semester_calendar
+    semester_calendars.first
+  end
+  def semester_calendar!
+    semester_calendars.first_or_create
   end
 
 

@@ -31,6 +31,10 @@ class Term < ApplicationRecord
     self.find_or_create_by(year: year, type: type)
   end
 
+  def self.by_date(date)
+    where(year: date.year, type: ["Terms::Winter", "Terms::Summer"]).all.detect { |term| term.time_range.cover? date }
+  end
+
   def self.first_or_create_current
     # For cases where the terms do not exist, yet,
     # those types will be created:

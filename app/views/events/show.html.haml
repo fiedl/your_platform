@@ -1,52 +1,97 @@
-%h1
-  = best_in_place_if can?(:update, @event), @event, :name
-  - if can? :destroy, @event
-    .tool.destroy_event_tool
-      = link_to icon(:trash), event_path(@event, format: 'json'), method: 'delete', class: 'btn btn-danger destroy_event', title: 'Die neue Veranstaltung kann bis zehn Minuten nach der Erstellung gelöscht werden, falls sie versehentlich erstellt wurde.', data: {redirect: root_path}
-  - else  # This is a ui choice: If the event has just been created, we do not show the export button together with the destroy button in order not to clutter the tool bar.
-    .ics_export_buttons.tool
-      %a.btn.btn-outline-secondary#ics_export{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
-        = icon :calendar
-        .hidden-xs
-          Kalender-Export
-    - if can? :renew_cache, @event
-      .tool.renew_cache= renew_cache_button(@event)
-%div
-  = render partial: 'events/event_details'
+.page-header
+  .row.align-itemts-center
+    .col-auto
+      .page-pretitle= corporation.title unless group.id == corporation.id
+      .page-title= group.title
+    .col-auto.ml-auto.d-print-none
+      .d-flex
+        - if can? :destroy, @event
+          .tool.destroy_event_tool.mr-1
+            = link_to event_path(event), method: 'delete', class: 'btn btn-danger destroy_event', title: 'Die neue Veranstaltung kann bis zehn Minuten nach der Erstellung gelöscht werden, falls sie versehentlich erstellt wurde.', data: {redirect: root_path} do
+              = trash_icon
+              Veranstaltung löschen
+        .ics_export_buttons.tool
+          %a.btn.btn-white#ics_export{href: event_path(format: 'ics'), title: 'Dieses Ereignis als ICS-Datei (iCal) herunterladen, um es in einer Kalender-Anwendung zu öffnen.', data: {placement: 'top'}}
+            = calendar_icon
+            Kalender-Export
+        -#- if can? :renew_cache, event
+        -#  .tool.renew_cache= renew_cache_button(event)
 
-= render partial: 'events/attachments', locals: {event: @event}
+.row
+  .col-lg-4
+    .card.card-profile
+      %vue-editable-image{src: event.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, event).to_json, img_class: 'card-header', update_url: event_path(event), attribute_name: "event[avatar_background]"}
+      .card-body.text-center
+        %vue-edit-box
+          %vue-editable-image{src: event.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, event).to_json, update_url: event_path(event), attribute_name: 'event[avatar]', icon: "fa fa-calendar fa-2x"}
+          %h3.mb-3
+            = editable event, :name, editable: can?(:update, event)
 
-- if can? :index_attendees, @event
-  %h1=t :attendees
-  %div#attendees
-    %div#attendees_avatars
-      = render partial: 'groups/member_avatars', locals: {group: @event.attendees_group}
+          .description.mb-2= editable event, :description, editable: can?(:update, event), type: 'textarea', placeholder: "Beschreibung der Veranstaltung und sonstige Hinweise", input_class: 'form-control'
 
-    - if can? :join, @event
-      %p.center.join_event
-        - if @event.attendees.include? current_user
-          - join_button_hidden_class = 'hidden'
-        - else
-          - leave_button_hidden_class = 'hidden'
-        %a.btn.btn-success#join_event{href: event_join_path(@event, format: 'json'), class: join_button_hidden_class}
-          = icon :user
-          An dieser Veranstaltung teilnehmen
-        - if can? :leave, @event
-          %a.btn.btn-danger#leave_event{href: event_leave_path(@event, format: 'json'), class: leave_button_hidden_class}
-            = icon :user
-            Doch nicht teilnehmen
+          .text-left
+            .start_at.mb-2{title: "Beginn der Veranstaltung"}
+              %span.mr-2= calendar_icon
+              = editable event, :start_at, editable: can?(:update, event), type: 'datetime'
 
-    - if can?(:invite_to, @event) && @event.group
-      %p.center.invitation.hidden-xs
-        %a.btn.btn-outline-secondary.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'top'}}
-          = icon :envelope
-          = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"
-        %form.hidden#invite
-          %textarea#invitation_text= render partial: 'events/invitation_text'
-          %div.right
-            %a.btn.btn-outline-secondary#test_invite{href: event_invite_path(event_id: @event.id, recipient: 'me', format: 'json')}
-              = icon :envelope
-              = "Zum Testen an meine eigene Adresse senden."
-            %a.btn.btn-primary#confirm_invite{href: event_invite_path(event_id: @event.id, recipient: @event.group.id, format: 'json')}
-              = icon :envelope
-              = "An '#{@event.group.name}' senden."
+            .location.mb-2{title: "Ort der Veranstaltung"}
+              %span.mr-2= location_icon
+              = editable event, :location, editable: can?(:update, event)
+      .card-footer
+        = link_to semester_calendar_path(event.semester_calendar!), class: 'btn btn-white btn-sm' do
+          Semesterprogramm anzeigen
+
+    .card
+      .card-header
+        %h3 Veranstaltung Veröffentlichen
+      .card-body
+        - if can?(:update, event)
+          = ajax_toggle event, :publish_on_local_website, "Auf öffentlicher Website von #{group.name} veröffentlichen" if event.group
+          = ajax_toggle event, :publish_on_global_website, "Auf öffentlicher Website des Bundes veröffentlichen"
+
+  .col-lg-8
+    .card
+      .card-header
+        .input-group
+          %input.form-control{type: 'text', placeholder: "Nachricht posten"}
+          %a.btn.btn-white.btn-icon= camera_icon
+
+-#%div
+-#  = render partial: 'events/event_details'
+-#
+-#= render partial: 'events/attachments', locals: {event: @event}
+-#
+-#- if can? :index_attendees, @event
+-#  %h1=t :attendees
+-#  %div#attendees
+-#    %div#attendees_avatars
+-#      = render partial: 'groups/member_avatars', locals: {group: @event.attendees_group}
+-#
+-#    - if can? :join, @event
+-#      %p.center.join_event
+-#        - if @event.attendees.include? current_user
+-#          - join_button_hidden_class = 'hidden'
+-#        - else
+-#          - leave_button_hidden_class = 'hidden'
+-#        %a.btn.btn-success#join_event{href: event_join_path(@event, format: 'json'), class: join_button_hidden_class}
+-#          = icon :user
+-#          An dieser Veranstaltung teilnehmen
+-#        - if can? :leave, @event
+-#          %a.btn.btn-danger#leave_event{href: event_leave_path(@event, format: 'json'), class: leave_button_hidden_class}
+-#            = icon :user
+-#            Doch nicht teilnehmen
+-#
+-#    - if can?(:invite_to, @event) && @event.group
+-#      %p.center.invitation.hidden-xs
+-#        %a.btn.btn-outline-secondary.has_tooltip#toggle_invite{href: '#', title: 'Auf diesen Knopf drücken, dann den Nachrichtentext überprüfen und bestätigen.', data: {placement: 'top'}}
+-#          = icon :envelope
+-#          = "Alle Mitglieder der Gruppe '#{@event.group.name}' per E-Mail einladen …"
+-#        %form.hidden#invite
+-#          %textarea#invitation_text= render partial: 'events/invitation_text'
+-#          %div.right
+-#            %a.btn.btn-outline-secondary#test_invite{href: event_invite_path(event_id: @event.id, recipient: 'me', format: 'json')}
+-#              = icon :envelope
+-#              = "Zum Testen an meine eigene Adresse senden."
+-#            %a.btn.btn-primary#confirm_invite{href: event_invite_path(event_id: @event.id, recipient: @event.group.id, format: 'json')}
+-#              = icon :envelope
+-#              = "An '#{@event.group.name}' senden."

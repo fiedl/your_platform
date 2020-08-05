@@ -1,7 +1,5 @@
 class EventsController < ApplicationController
 
-  rescue_from ActiveRecord::RecordNotFound, with: :wait_for_existance
-
   load_and_authorize_resource except: [:invite]
   skip_authorize_resource only: [:index, :create, :join_via_get]
 
@@ -105,6 +103,10 @@ class EventsController < ApplicationController
     end
   end
 
+  expose :event, -> { @event || Event.find(params[:id]) }
+  expose :group, -> { event.group || event.parent_groups.first }
+  expose :corporation, -> { group.try(:corporation) }
+
   # GET /events/1
   # GET /events/1.json
   def show
@@ -112,10 +114,8 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        set_current_activity :is_looking_at_the_event, @event
-        set_current_access :signed_in
-        set_current_access_text :all_signed_in_users_can_read_this_event_and_can_join
-        # show.html.erb
+        set_current_title event.name
+        set_current_tab :events
       end
       format.json { render json: @event }
       format.ics { render plain: @event.to_ics }
@@ -153,18 +153,11 @@ class EventsController < ApplicationController
     end
   end
 
-  # PUT /events/1
-  # PUT /events/1.json
   def update
-    respond_to do |format|
-      if @event.update_attributes!(event_params)
-        format.html { redirect_to @event, notice: 'Event was successfully updated.' }
-        format.json { respond_with_bip(@event) }
-      else
-        format.html { render action: "edit" }
-        format.json { respond_with_bip(@event) }
-      end
-    end
+    authorize! :update, event
+
+    event.update_attributes!(event_params)
+    render json: event, status: :ok
   end
 
   # DELETE /events/1
@@ -259,22 +252,7 @@ class EventsController < ApplicationController
 private
 
   def event_params
-    params[:event].try(:permit, :description, :location, :end_at, :name, :start_at, :localized_start_at, :localized_end_at, :publish_on_local_website, :publish_on_global_website, :group_id, :contact_person_id) || {}
-  end
-
-  # For some strange reason, some ajax calls fail since the object is not yet
-  # available to the other server instance. So, try a few times before giving up.
-  #
-  def wait_for_existance
-    raise ActionController::ParameterMissing, "No id given. Params are: #{params.to_s}" unless params[:id] || params[:event_id]
-    counter = 20
-    begin
-      sleep 0.5
-      Event.find params[:id]
-    rescue ActiveRecord::RecordNotFound => e
-      counter -= 1
-      retry until counter <= 0
-    end
+    params.require(:event).permit(:name, :description, :start_at, :end_at, :location, :publish_on_local_website, :publish_on_global_website, :group_id, :contact_person_id, :avatar, :avatar_background)
   end
 
 end
