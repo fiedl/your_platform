@@ -6,6 +6,8 @@ class Event < ApplicationRecord
   has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
   has_many :attachments, as: :parent, dependent: :destroy
 
+  scope :important, -> { where(publish_on_global_website: true) }
+
   include Structureable
   include EventGraph
   include Navable
