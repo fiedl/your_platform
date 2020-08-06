@@ -61,11 +61,7 @@
     = render partial: 'groups/profile_card', locals: {group: corporation}
 
     - if semester_calendar.attachments.any? || can?(:update, semester_calendar)
-      .card.semester_calendar_pdf
-        .card-header
-          %h3 Semesterprogramm-PDF
-        .card-body
-          = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
+      %vue_semester_calendar_attachment_card{':semester_calendar': semester_calendar.to_json, ':term': term.as_json(methods: [:title]).to_json, ':initial_attachment': semester_calendar.attachments.last.to_json, ':editable': can?(:update, semester_calendar).to_json}
 
     .card.offices
       .card-header

@@ -37,6 +37,7 @@ import EditableSetting from './components/editable_setting.vue'
 import AktivmeldungPage from './components/aktivmeldung_page.vue'
 import ChangeStatusButton from './components/change_status_button.vue'
 import StatusSelect from './components/status_select.vue'
+import SemesterCalendarAttachmentCard from './components/semester_calendar_attachment_card.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -77,6 +78,7 @@ jQuery(document).ready ->
   Vue.component('vue_change_status_button', ChangeStatusButton)
   Vue.component('vue_status_select', StatusSelect)
   Vue.component('vue-status-select', StatusSelect)
+  Vue.component('vue_semester_calendar_attachment_card', SemesterCalendarAttachmentCard)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

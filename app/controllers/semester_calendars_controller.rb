@@ -60,8 +60,10 @@ class SemesterCalendarsController < ApplicationController
     authorize! :create_event, group
     authorize! :update, semester_calendar
 
-    semester_calendar.update_attributes(semester_calendar_params) if semester_calendar_params
-    redirect_to group_semester_calendar_path(group_id: group.id, id: semester_calendar.id)
+    semester_calendar.update_attributes(semester_calendar_params)
+    render json: semester_calendar.as_json.merge({
+      attachment: semester_calendar.attachments.last
+    }), status: :ok
   end
 
   def index
@@ -110,13 +112,7 @@ class SemesterCalendarsController < ApplicationController
   private
 
   def semester_calendar_params
-    if (semester_calendar and can?(:update, semester_calendar)) or (group and can?(:create_semester_calendar_for, group))
-      if params[:semester_calendar]
-        params.require(:semester_calendar).permit(:year, :term, events_attributes: [:id, :name, :location, :start_at, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :contact_person_id, :_destroy])
-      else
-        {}
-      end
-    end
+    params.require(:semester_calendar).permit(:year, :term, :attachment, events_attributes: [:id, :name, :location, :start_at, :localized_start_at, :aktive, :philister, :publish_on_local_website, :publish_on_global_website, :contact_person_id, :_destroy])
   end
 
 

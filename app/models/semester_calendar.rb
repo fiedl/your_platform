@@ -25,6 +25,10 @@ class SemesterCalendar < ApplicationRecord
 
   scope :current, -> { where(term_id: Term.current.map(&:id)) }
 
+  def attachment=(file)
+    attachments.create file: file
+  end
+
   def current?
     term.time_range.cover? Time.zone.now
   end
