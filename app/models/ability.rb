@@ -557,6 +557,8 @@ class Ability
       can?(:quickly_download, attachment) || attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
 
+    can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
+
     # Logos should not add delay for downloading.
     # Thus, authorize quickly.
     can :quickly_download, Attachment do |attachment|

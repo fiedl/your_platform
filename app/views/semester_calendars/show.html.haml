@@ -1,65 +1,93 @@
-= render partial: 'groups/tabs', locals: {active: 'events'} if can? :read, group
-- @hide_vertical_nav = true if not can? :read, group
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle= corporation.title
+      .page-title
+        Semesterprogramm
+        = term.title
+    .col-auto.ml-auto
+      .d-flex
+        .calendar_feed_button
+          - if current_user
+            .btn.btn-white.dropdown-toggle{'data-toggle': "dropdown"}
+              = calendar_icon
+              Kalender-Feed
+            .dropdown-menu.dropdown-menu-right
+              .dropdown-header
+                = corporation.title
+              = link_to group_events_url(group_id: group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), class: 'dropdown-item' do
+                = calendar_icon
+                Alle Veranstaltungen
+              - if current_user.member_of? group
+                = link_to events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), class: 'dropdown-item' do
+                  = calendar_icon
+                  Nur die Veranstaltungen, die mich betreffen
+              = link_to group_events_url(group_id: group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), class: 'dropdown-item' do
+                = calendar_icon
+                Nur die Veranstaltungne von der Website
+          - elsif not current_user
+            = link_to group_events_url(group_id: group.id, public: true, format: 'ics', protocol: 'webcal'), class: 'btn btn-white' do
+              = calendar_icon
+              Kalender-Feed
+
+          -#= render partial: 'semester_calendars/calendar_feed_box'  # --> TODO: move into dropdown
 
 .row
-  .col-sm-8.col-xs-12
-    %h1.semester_calendar
-      = current_title
-      - if can? :update, semester_calendar
-        .edit-semester-calendar.tool
-          = link_to edit_icon, edit_semester_calendar_path(semester_calendar), class: 'btn btn-outline-secondary', title: t(:edit)
-    %div
-      %p.semester
-        = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get' do
-          = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year)
-          = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
-          = submit_tag("OK")
+  .col-md-8
+    .card
+      = form_tag group_search_semester_calendar_path(group_id: group.id), method: 'get', class: 'card-header semester' do
+        = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year), class: 'form-select'
+        = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type), class: 'form-select'
+        = submit_tag "OK", class: 'btn btn-primary'
 
-      %ul.semester_calendar
-        - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
-          %li.month_name
-            %strong
+      .card-body
+        .semester_calendar
+          - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
+            %h3.month_name.mt-5
               = I18n.t('date.month_names')[month]
               = events.first.start_at.year
-          - events.each do |event|
-            - if can? :read, event
-              %li{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
-                .event_starts_at= format_event_datetime(event.start_at)
-                .event_title= link_to event.title, event
+            .events
+              - events.each do |event|
+                - if can? :read, event
+                  .event.row.mt-2{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
+                    .event_starts_at.col-sm-3= format_event_datetime(event.start_at)
+                    .event_title.col-sm-9= link_to event.title, event
+      - if can? :update, semester_calendar
+        .card-footer
+          .edit-semester-calendar
+            = link_to "Semesterprogramm bearbeiten", edit_semester_calendar_path(semester_calendar), class: 'btn btn-white btn-sm'
 
-      - if can? :index, SemesterCalendar
-        .show_other_semester_calendars_links
-          .show_semester_calendars_of_all_groups
-            = link_to t(:show_more_semester_calendars), semester_calendars_path
+  .col-md-4
+    = render partial: 'groups/profile_card', locals: {group: corporation}
 
-  .col-sm-4.col-xs-12
-    %h1.semester_calendar_pdf PDF
-    %div
-      = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
+    - if semester_calendar.attachments.any? || can?(:update, semester_calendar)
+      .card.semester_calendar_pdf
+        .card-header
+          %h3 Semesterprogramm-PDF
+        .card-body
+          = render partial: 'semester_calendars/pdf', locals: {semester_calendar: semester_calendar}
 
-    %h1= t :offices
-    %div
-      = render partial: 'semester_calendars/info_section', locals: {semester_calendar: semester_calendar}
+    .card.offices
+      .card-header
+        %h3
+          Chargierte im
+          = term.title
+      .card-body
+        .row
+          - for office_key in %w(senior fuxmajor kneipwart)
+            - if semester_calendar.respond_to?(office_key)
+              - if officer = semester_calendar.send(office_key)
+                .col-12.col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = user_avatar(officer)
+                  .col
+                    .text-body.d-block= link_to officer.title, officer
+                    %small.d-block.mt-n1.text-muted= translate office_key
+                    - if officer.phone
+                      %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
+      - if semester_calendar.current? && semester_calendar.officer_group(:senior) && can?(:update_memberships, semester_calendar.officer_group(:senior))
+        .card-footer
+          .change_officers
+            = link_to "Amtsträger ändern", group_officers_path(group_id: semester_calendar.group.id), class: 'btn btn-white btn-sm'
 
 
-    %h1= t :calendar_abo
-    %div
-      %p
-        %small= t :get_all_semester_calendars_of_str_automatically, str: group.title
-      %p
-        - if current_user
-          %a.btn.btn-outline-secondary{href: group_events_url(group_id: group.id, format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-            = icon :calendar
-            = t :ical_all_events
-
-        - if current_user.try(:member_of?, @group)
-          %a.btn.btn-outline-secondary{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token)}
-            = icon :calendar
-            = t :ical_events_concerning_me
-
-        - else
-          %a.btn.btn-outline-secondary{href: group_events_url(group_id: group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token))}
-            = icon :calendar
-            = t :ical_events_from_the_homepage
-
-    = render partial: 'semester_calendars/calendar_feed_box'

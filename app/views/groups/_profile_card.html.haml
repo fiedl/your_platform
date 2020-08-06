@@ -5,7 +5,8 @@
     %h3.mb-3
       = editable group, :name, editable: can?(:rename, group)
 
-    = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
-      = markup group.body
+    - unless block_given?
+      = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
+        = markup group.body
 
   = yield

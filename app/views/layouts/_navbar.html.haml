@@ -65,12 +65,24 @@
               .dropdown-divider
               %li
                 = link_to "Semesterstatistik", term_report_path(current_user.primary_corporation.term_reports.last), class: "dropdown-item #{'active' if controller_name == 'term_reports'}"
-          %li.nav-item{class: ('active' if current_tab == :events)}
-            %a.nav-link{:href => "./form-elements.html"}
+          %li.nav-item.dropdown{class: ('active' if current_tab == :events)}
+            %a.nav-link.dropdown-toggle{'data-toggle': "dropdown", href: "#"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
                 = calendar_icon
               %span.nav-link-title
                 Veranstaltungen
+            %ul.dropdown-menu
+              %a.dropdown-item Meine Veranstaltungen
+              .dropdown-divider
+              - current_user.corporations.each do |corporation|
+                = link_to corporation.title, group_search_semester_calendar_path(group_id: corporation.id), class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && current_navable == corporation}"
+              = link_to "Alle Semesterprogramme", semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index'}"
+              .dropdown-divider
+              %a.dropdown-item Stiftungsfeste
+              %a.dropdown-item Wartburgfeste
+              %a.dropdown-item Bundesconvente
+              .dropdown-divider
+              %a.dropdown-item Kalender
           %li.nav-item.dropdown{class: ('active' if current_tab == :documents)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
