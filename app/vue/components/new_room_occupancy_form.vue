@@ -12,8 +12,8 @@
         .valid_from.col-auto.mb-3
           %label.form-label.required Datum der Änderung
           %vue-datepicker{'v-model': "valid_from"}
-        .valid_to.col-auto.mb-3{'v-if': "is_historic_entry && (occupancy_type != 'empty')"}
-          %label.form-label Auszugsdatum
+        .valid_to.col-auto.mb-3{'v-if': "occupancy_type != 'empty'"}
+          %label.form-label Auszugsdatum (optional)
           %vue-datepicker{'v-model': "valid_to"}
 
       .occupancy_type.mb-3
