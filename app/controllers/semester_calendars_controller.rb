@@ -66,10 +66,18 @@ class SemesterCalendarsController < ApplicationController
     }), status: :ok
   end
 
+  expose :semester_calendars, -> {
+    if group
+      group.semester_calendars.includes(:term).order('terms.year desc, terms.type desc')
+    else
+      SemesterCalendar.where(term_id: term.id).includes(:group).order('groups.name asc')
+    end
+  }
+  expose :public_events, -> { Event.where(publish_on_global_website: true, start_at: term.time_range).order(start_at: :asc) }
+
   def index
     if group
       authorize! :read, group
-      @semester_calendars = group.semester_calendars.order(:year, 'term desc')
 
       set_current_navable group
       set_current_title "#{I18n.t(:semester_calendars)} #{group.title}"
@@ -77,13 +85,9 @@ class SemesterCalendarsController < ApplicationController
     else
       authorize! :index, SemesterCalendar
 
-      @semester_calendars = SemesterCalendar.where(term_id: term.id).includes(:group).order('groups.name asc')
-
       if current_user && current_user.corporations_the_user_is_officer_in.count == 1
         @corporation_of_the_current_officer = current_user.corporations_the_user_is_officer_in.first
       end
-
-      @public_events = Event.where(publish_on_global_website: true, start_at: term.time_range)
 
       set_current_title t(:semester_calendars)
       set_current_breadcrumbs [

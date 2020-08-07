@@ -74,6 +74,10 @@ class SemesterCalendar < ApplicationRecord
     group.events_with_subgroups.where(start_at: term.time_range).important.order(:start_at)
   end
 
+  def commers
+    group.events_with_subgroups.where(start_at: term.time_range).commers.first
+  end
+
   def events_attributes=(attributes)
     attributes.each do |i, event_params|
       if event_params[:id].present?

@@ -7,6 +7,7 @@ class Event < ApplicationRecord
   has_many :attachments, as: :parent, dependent: :destroy
 
   scope :important, -> { where(publish_on_global_website: true) }
+  scope :commers, -> { where("name like ? or name like ?", "%commers%", "%kommers%") }
 
   include Structureable
   include EventGraph

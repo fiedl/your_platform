@@ -76,7 +76,7 @@
               .dropdown-divider
               - current_user.corporations.each do |corporation|
                 = link_to corporation.title, group_search_semester_calendar_path(group_id: corporation.id), class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && current_navable == corporation}"
-              = link_to "Alle Semesterprogramme", semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index'}"
+              = link_to "Alle Semesterprogramme", semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index' && !group}"
               .dropdown-divider
               %a.dropdown-item Stiftungsfeste
               %a.dropdown-item Wartburgfeste

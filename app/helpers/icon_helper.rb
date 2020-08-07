@@ -262,4 +262,8 @@ module IconHelper
     }.html_safe
   end
 
+  def plus_icon
+    fa_icon 'plus'
+  end
+
 end
