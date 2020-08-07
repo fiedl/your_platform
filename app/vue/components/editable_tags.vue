@@ -5,12 +5,10 @@
 </template>
 
 <script lang="coffee">
-  `import VueSelectize from 'vue2-selectize'`
-  `import VueDropzone from 'vue2-dropzone'`
-  `import Vue from 'vue'`
+  VueSelectize = require('vue2-selectize').default
+  Vue = require('vue').default
 
   Vue.component 'vue-selectize', VueSelectize
-  Vue.component 'vue-dropzone', VueDropzone
 
   EditableTags =
     props: ['initial_tags']
@@ -36,7 +34,8 @@
       }
     created: ->
       @options = @initial_tags
-  `export default EditableTags`
+
+  export default EditableTags
 </script>
 
 <style lang="sass">

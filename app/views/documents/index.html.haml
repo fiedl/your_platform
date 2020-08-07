@@ -1,13 +1,49 @@
-%h1 Dokument hochladen
-%div
-  Keine
+.page-header
+  .row.align-itens-center
+    .col-auto
+      - if params[:tags]
+        .page-pretitle Dokumente
+        .page-title= params[:tags].join(" & ")
+      - else
+        .page-title Dokumente
+    .col-auto.ml-auto.d-flex
+      = link_to new_document_path, class: 'btn btn-primary' do
+        = plus_icon
+        Dokumente hochladen
 
-= box title: t(:current_documents) do
-  %ul.documents.root_list
-    - for document in documents
-      = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_path, new_tab: true}
-
-%h1 Häufig benutzte Dokumente
-%div
-  Keine
-
+.card
+  .responsive-table
+    %table.card-table.table.align-items-center.table-vcenter
+      %thead
+        %tr
+          %th
+          %th Dokument
+          %th Datum
+          %th Ordner
+          %th Kategorie
+      %tbody
+        - for document in documents
+          %tr
+            %td.w-5
+              .thumb
+                = link_to document, target: '_blank' do
+                  = image_tag document.thumb_path
+            %td
+              %strong= link_to document.title, document, target: '_blank'
+              %div
+                %small= link_to document.author.title, document.author, class: 'text-muted' if document.author
+            %td.text-nowrap.text-muted
+              = event_icon
+              = localize document.created_at.to_date
+            %td
+              - if document.groups.any?
+                = group_icon
+                - document.groups.each do |group|
+                  = link_to group.title, documents_path(group_id: group.id)
+              - elsif document.scope
+                = folder_icon
+                = link_to document.scope.title, document.scope
+            %td.text-nowrap
+              = tag_icon
+              .d-inline-block
+                %vue_editable_tags{':initial_tags': ActsAsTaggableOn::Tag.all.to_json}

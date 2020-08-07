@@ -13,6 +13,7 @@ class Attachment < ApplicationRecord
   include Flags
   include HasAuthor
   # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+  include DocumentTags
 
   def title
     super || filename.gsub("_", " ")
@@ -23,6 +24,16 @@ class Attachment < ApplicationRecord
   end
   def scope_title
     scope.try(:title)
+  end
+
+  def groups
+    if parent.kind_of? Post
+      parent.groups
+    elsif parent.kind_of? Page
+      [parent.group]
+    else
+      []
+    end
   end
 
   def thumb_url

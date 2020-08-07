@@ -1,7 +1,7 @@
 concern :UserDocuments do
 
-  def documents_of_interest
-    documents_in_my_scope.order(created_at: :desc).limit(10)
+  def documents_of_interest(limit: 10)
+    documents_in_my_scope.order(created_at: :desc).limit(limit)
   end
 
   def documents_in_my_scope
