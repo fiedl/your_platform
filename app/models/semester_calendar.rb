@@ -69,7 +69,7 @@ class SemesterCalendar < ApplicationRecord
   end
 
   def commers
-    events.commers
+    events.commers.first
   end
 
   def events_attributes=(attributes)
