@@ -31,10 +31,38 @@ class Api::V1::EventsController < Api::V1::BaseController
     render json: event.as_json(methods: required_event_methods)
   end
 
+  expose :group
+
+  def create
+    authorize! :create_event, group
+
+    new_event = group.events.create! event_params
+    render json: new_event, status: :ok
+  end
+
+  def destroy
+    authorize! :destroy, event
+    event.destroy!
+    render json: {}, status: :ok
+  end
+
+  def update
+    authorize! :update, event
+    event.update! event_params
+
+    render json: event.as_json.merge({
+      attendees_count: event.attendees.count
+    }), status: :ok
+  end
+
   private
 
   def required_event_methods
     [:avatar_url, :group_id, :group_name, :corporation_id, :corporation_name, :contact_name, :contact_id]
+  end
+
+  def event_params
+    params.require(:event).permit(:name, :start_at, :publish_on_local_website, :publish_on_global_website, :location, :aktive, :philister)
   end
 
 end

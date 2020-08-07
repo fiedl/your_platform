@@ -41,22 +41,7 @@
         = submit_tag "OK", class: 'btn btn-primary'
         = link_to "Überblick", semester_calendars_path(group_id: corporation.id), class: 'btn btn-white ml-2', title: "Alle Semesterprogramme von #{corporation.title}"
 
-      .card-body
-        .semester_calendar
-          - semester_calendar.events.sort_by { |event| event.start_at }.group_by { |event| event.start_at.month }.each do |month, events|
-            %h3.month_name.mt-5
-              = I18n.t('date.month_names')[month]
-              = events.first.start_at.year
-            .events
-              - events.each do |event|
-                - if can? :read, event
-                  .event.row.mt-2{class: "#{event.publish_on_global_website ? 'global_event' : ''} #{event.publish_on_local_website ? 'local_event' : ''} #{event.start_at.past? ? 'past_event' : ''}"}
-                    .event_starts_at.col-sm-3= format_event_datetime(event.start_at)
-                    .event_title.col-sm-9= link_to event.title, event
-      - if can? :update, semester_calendar
-        .card-footer
-          .edit-semester-calendar
-            = link_to "Semesterprogramm bearbeiten", edit_semester_calendar_path(semester_calendar), class: 'btn btn-white btn-sm'
+      %vue_semester_calendar_events{':initial_events': semester_calendar.events.select { |event| can? :read, event }.collect { |event| event.as_json(methods: [:aktive, :philister]).merge({attendees_count: event.attendees.count})}.to_json, ':editable': can?(:update, semester_calendar).to_json, ':group': group.to_json, default_location: group.postal_address}
 
   .col-md-4
     = render partial: 'groups/profile_card', locals: {group: corporation}

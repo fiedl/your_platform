@@ -25,6 +25,7 @@ EditBox = {
   methods:
     saveAll: ->
       @editMode = false
+      @.$emit 'editMode', @editMode
       @editables().forEach (c) ->
         c.waitForSave()
       @save_next_editable()
@@ -40,14 +41,12 @@ EditBox = {
           error: -> component.save_next_editable()
     editAll: ->
       @editMode = true
+      @.$emit 'editMode', @editMode
       @editables().forEach (c) ->
         c.edit()
-      firstEditable = @editables()[0]
-      setTimeout (->
-        firstEditable.focus() if firstEditable
-      ), 300
     cancelAll: ->
       @editMode = false
+      @.$emit 'editMode', @editMode
       @editables().forEach (c) ->
         c.cancel()
     toggle: ->

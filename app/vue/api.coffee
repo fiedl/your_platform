@@ -16,6 +16,14 @@ class Api
     request.options.method = 'post'
     request.execute()
 
+  @put: (path, options)->
+    request = new Api
+    request.path = path
+    request.options = options
+    request.options.method = 'post'
+    request.options.data._method = 'put'
+    request.execute()
+
   @delete: (path, options)->
     request = new Api
     request.path = path
@@ -24,7 +32,10 @@ class Api
     request.execute()
 
   url: ->
-    "/api/v1/#{@path}"
+    if @path.startsWith("/")
+      "/api/v1#{@path}"
+    else
+      "/api/v1/#{@path}"
 
   execute: ->
     @options.url = @url()

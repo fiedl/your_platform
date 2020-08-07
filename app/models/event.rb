@@ -62,7 +62,7 @@ class Event < ApplicationRecord
   end
 
   def empty_title?
-    self.name.in? [nil, "", I18n.t(:enter_name_of_event_here)]
+    self.name.in? [nil, "", I18n.t(:enter_name_of_event_here), "Neue Veranstaltung"]
   end
 
   def empty_description?

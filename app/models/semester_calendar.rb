@@ -60,22 +60,16 @@ class SemesterCalendar < ApplicationRecord
   end
 
 
-  def events(reload = false)
-    @events = nil if reload
-    @events ||= group.events_with_subgroups.where(start_at: term.time_range).order(:start_at).to_a
-  end
-
-  def reload
-    @events = nil
-    super
+  def events
+    group.events_with_subgroups.where(start_at: term.time_range).order(:start_at)
   end
 
   def important_events
-    group.events_with_subgroups.where(start_at: term.time_range).important.order(:start_at)
+    events.important
   end
 
   def commers
-    group.events_with_subgroups.where(start_at: term.time_range).commers.first
+    events.commers
   end
 
   def events_attributes=(attributes)

@@ -28,7 +28,7 @@
   Vue.use(VueInputAutowidth)
 
   export default {
-    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable', 'placeholder', 'input_class'],
+    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable', 'placeholder', 'input_class', 'initialObject'],
     data() { return {
       editing: false,
       suggestingEdit: false,
@@ -37,7 +37,8 @@
       success: false,
       submitting: false,
       waiting_for_submission: false,
-      error: null
+      error: null,
+      object: this.initialObject
     } },
     created() {
       if (this.initialValue) {
@@ -53,7 +54,7 @@
     methods: {
       rendered_value() {
         if (this.renderValue) {
-          return this.renderValue(this.value)
+          return this.renderValue(this.value, this.object)
         } else {
           return this.value
         }
@@ -172,6 +173,8 @@
             component.success = true
             component.error = false
             if (options.success) { options.success() }
+            component.$emit('save', result)
+            component.$emit('input', result)
           },
           error: function(result, message) {
             component.submitting = false

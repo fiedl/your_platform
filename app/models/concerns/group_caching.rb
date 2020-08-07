@@ -17,9 +17,6 @@ concern :GroupCaching do
     cache :latest_membership_ids
     cache :membership_ids_this_year
 
-    # GroupEvents
-    cache :event_ids_of_self_and_subgroups
-
     # GroupListExports
     cache :export_list
 

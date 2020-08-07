@@ -632,14 +632,6 @@ class Ability
       (page.created_at < 10.minutes.ago) && page.not_empty?
     end
 
-    # Nobody can destroy non-empty events that are older than 10 minutes.
-    # This kind of clean-up is not desired as this would delete events
-    # from the calendar subscriptions as well.
-    #
-    cannot :destroy, Event do |event|
-      (event.created_at < 10.minutes.ago) && event.non_empty?
-    end
-
     # Nobody can destroy semester calendars with attachments.
     #
     cannot :destroy, SemesterCalendar do |semester_calendar|

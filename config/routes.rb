@@ -70,6 +70,7 @@ Rails.application.routes.draw do
 
   get 'groups/:id/address_labels/(:filter)/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
+  get 'groups/:group_id/semester_calendar', to: 'semester_calendars#show', as: '/current_semester_calendar'
   resources :groups do
     get :news, to: 'group_news#index'
     get :subgroups, to: 'groups#index'
