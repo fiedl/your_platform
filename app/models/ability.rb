@@ -63,6 +63,9 @@ class Ability
     @read_only_mode = options[:read_only_mode]
     @user = user || @user_by_auth_token
 
+    # Fast lane
+    can :read, Pages::PublicPage
+
     if @user.try(:account) # has to be able to sign in
       if @user_by_auth_token
         # The user is identified via auth token.
@@ -456,8 +459,8 @@ class Ability
     end
 
     # Posts and Comments can be read when the users has been mentioned:
-    can :read, [Post, Comment] do |post_or_comment|
-      post_or_comment.mentioned_users.include? user
+    can :read, [Comment] do |comment|
+      comment.mentioned_users.include? user
     end
 
     # Users can always read posts they have created, e.g.

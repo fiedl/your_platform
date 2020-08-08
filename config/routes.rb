@@ -106,7 +106,10 @@ Rails.application.routes.draw do
       resources :users
     end
     get :website, to: 'websites#show'
+    post :website, to: 'websites#create'
   end
+
+  resources :websites
 
   resources :my_groups
 
@@ -143,6 +146,10 @@ Rails.application.routes.draw do
     get :renew_cache, to: 'cache_renewals#create'
     resources :logos, controller: :logos
     resources :relocations, controller: 'page_relocations'
+  end
+
+  namespace :pages, path: '' do
+    resources :public_pages, path: '/public'
   end
 
   get :home_pages, to: 'pages/home_pages#index'

@@ -33,6 +33,7 @@ class Group < ApplicationRecord
   include GroupSearch
   include GroupAvatar
   include GroupCharts
+  include GroupPublicWebsite
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:

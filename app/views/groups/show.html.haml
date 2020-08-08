@@ -17,21 +17,36 @@
                 = link_to status_group.name, group_members_path(status_group)
                 = status_group.members.count
       .card-footer
-        .mt-0
+        .mt-2.mr-2.d-inline-block
+          = link_to current_semester_calendar_path(group_id: (group.corporation || group)), class: 'btn btn-white' do
+            = calendar_icon
+            Semesterprogramm anzeigen
+        .mt-2.mr-2.d-inline-block
           = link_to group_members_path(group), class: "btn btn-white" do
             = group_icon
             Mitgliederliste anzeigen
         - if group.respond_to? :term_reports
-          .mt-2
+          .mt-2.mr-2.d-inline-block
             = link_to term_report_path(group.term_reports.last), class: "btn btn-white" do
               = list_icon
               Semesterstatistik anzeigen
 
         - if group.kind_of? Corporation
-          .mt-2
+          .mt-2.mr-2.d-inline-block
             = link_to corporation_accommodations_path(corporation_id: group.id), class: "btn btn-white" do
               = home_icon
               Hausbewohner anzeigen
+        - if group.public_home_page.present?
+          .mt-2.mr-2.d-inline-block
+            = link_to group_website_path(group_id: group), class: 'btn btn-white' do
+              = website_icon
+              Internetauftritt anzeigen
+        - elsif can? :update, group
+          .mt-2.mr-2.d-inline-block
+            = link_to group_website_path(group_id: group), method: 'post', class: 'btn btn-white', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
+              = website_icon
+              Internetauftritt erstellen
+
 
   .col-lg-8
     .card

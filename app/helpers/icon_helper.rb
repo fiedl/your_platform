@@ -285,4 +285,39 @@ module IconHelper
     }.html_safe
   end
 
+  def website_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-brand-safari" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <polyline points="8 16 10 10 16 8 14 14 8 16" />
+        <circle cx="12" cy="12" r="9" />
+      </svg>
+    }.html_safe
+  end
+
+  def preview_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-eye" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <circle cx="12" cy="12" r="2" />
+        <path d="M2 12l1.5 2a11 11 0 0 0 17 0l1.5 -2" />
+        <path d="M2 12l1.5 -2a11 11 0 0 1 17 0l1.5 2" />
+      </svg>
+    }.html_safe
+  end
+
+  def tools_icon
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-tools" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <path d="M3 21h4l13 -13a1.5 1.5 0 0 0 -4 -4l-13 13v4" />
+        <line x1="14.5" y1="5.5" x2="18.5" y2="9.5" />
+        <polyline points="12 8 7 3 3 7 8 12" />
+        <line x1="7" y1="8" x2="5.5" y2="9.5" />
+        <polyline points="16 12 21 17 17 21 12 16" />
+        <line x1="16" y1="17" x2="14.5" y2="18.5" />
+      </svg>
+    }.html_safe
+  end
+
 end
