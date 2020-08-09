@@ -50,14 +50,14 @@ class Attachment < ApplicationRecord
     AppVersion.root_url + medium_path if medium_path.present?
   end
   def medium_path
-    file.url(:medium) if has_type? 'image'
+    file.url(:medium) if has_type?( "image" ) or has_type?( "pdf" )
   end
 
   def big_url
     AppVersion.root_url + big_path if big_path.present?
   end
   def big_path
-    file.url(:big) if has_type? 'image'
+    file.url(:big) if has_type?( "image" ) or has_type?( "pdf" )
   end
 
   def has_type?(type)

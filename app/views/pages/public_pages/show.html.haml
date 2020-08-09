@@ -50,8 +50,13 @@
         .card-body
           - if semester_calendar = group.respond_to?(:semester_calendars) && group.semester_calendars.current.last
             - if attachment = semester_calendar.attachments.last
-              %a{href: attachment.file_url, target: '_blank'}
-                %img{src: attachment.file.medium.url}
+              .mb-4
+                %a{href: attachment.file_path, target: '_blank'}
+                  - if attachment.medium_path
+                    %img{src: attachment.medium_path}
+                  - else
+                    %img.thumb.mr-2{src: attachment.thumb_path}
+                    Semesterprogramm
           .row
             - events.each do |event|
               .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center

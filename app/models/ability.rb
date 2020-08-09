@@ -65,6 +65,9 @@ class Ability
 
     # Fast lane
     can :read, Pages::PublicPage
+    can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
+    can [:read, :download], Attachment, parent: { type: "Pages::PublicPage" }
+    can [:read, :download], Attachment, parent_type: "SemesterCalendar"
 
     if @user.try(:account) # has to be able to sign in
       if @user_by_auth_token
@@ -559,8 +562,6 @@ class Ability
     can [:read, :download], Attachment do |attachment|
       can?(:quickly_download, attachment) || attachment.parent.kind_of?(Page) && attachment.parent.public?
     end
-
-    can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
 
     # Logos should not add delay for downloading.
     # Thus, authorize quickly.
