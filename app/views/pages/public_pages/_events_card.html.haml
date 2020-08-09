@@ -1,0 +1,29 @@
+- events = group.upcoming_events.where(publish_on_local_website: true).limit(3)
+- if events.present? || can?(:update, group)
+  .card
+    .card-header
+      %h3.mb-0 Veranstaltungen
+      .ml-auto
+        = link_to group_events_public_path(group_id: group, format: 'ics', protocol: 'webcal'), title: "Kalender-Feed (iCal)" do
+          = calendar_icon
+    .card-body
+      - if semester_calendar = group.respond_to?(:semester_calendars) && group.semester_calendars.current.last
+        - if attachment = semester_calendar.attachments.last
+          .mb-4
+            %a{href: attachment.file_path, target: '_blank'}
+              - if attachment.medium_path
+                %img{src: attachment.medium_path}
+              - else
+                %img.thumb.mr-2{src: attachment.thumb_path}
+                Semesterprogramm
+      .row
+        - events.each do |event|
+          .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
+            .col-auto
+              = avatar(event)
+            .col
+              .text-body.d-block= link_to event.title, event
+              %small.d-block.mt-n1.text-muted= localize event.start_at
+    - if group.respond_to?(:semester_calendars) && can?(:update, group)
+      .card-footer
+        = link_to "Semesterprogramm bearbeiten", current_semester_calendar_path(group_id: group), class: 'btn btn-white btn-sm'

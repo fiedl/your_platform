@@ -1,7 +1,7 @@
 concern :GroupPublicWebsite do
 
   def public_pages
-    descendant_pages.where(type: "Pages::PublicPage")
+    descendant_pages.where(type: ["Pages::PublicPage", "Pages::PublicEventsPage"])
   end
 
   def public_home_page

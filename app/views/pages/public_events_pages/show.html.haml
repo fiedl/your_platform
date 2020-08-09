@@ -1,0 +1,11 @@
+.row
+  .col-md-8
+    .card
+      %vue_semester_calendar_events{':initial_events': semester_calendar.events.select { |event| can? :read, event }.collect { |event| event.as_json(methods: [:aktive, :philister]).merge({attendees_count: event.attendees.count})}.to_json, ':editable': can?(:update, semester_calendar).to_json, ':group': group.to_json, default_location: group.postal_address}
+
+    = render partial: 'pages/public_pages/posts'
+
+  .col-md-4
+    = render partial: 'pages/public_pages/events_card'
+    = render partial: 'pages/public_pages/profile_card'
+
