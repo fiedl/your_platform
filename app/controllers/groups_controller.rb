@@ -66,10 +66,6 @@ class GroupsController < ApplicationController
   end
 
   def update
-    if group_params[:body]
-      params[:group][:body] = html2markdown params[:group][:body]
-    end
-
     @group.update_attributes!(group_params)
     render json: {}, status: :ok
   end
