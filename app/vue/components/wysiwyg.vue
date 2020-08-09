@@ -1,102 +1,119 @@
 <template>
   <div class="editor">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive }" v-if="show_toolbar">
-      <div class="menubar btn-group mb-4">
+    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, getMarkAttrs }" v-if="show_toolbar">
+      <div class="menubar">
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.bold() }"
-          @click="commands.bold"
-        >
-          <i class="fa fa-bold" />
-        </button>
+        <div class="btn-group mb-4">
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.italic() }"
-          @click="commands.italic"
-        >
-          <i class="fa fa-italic" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.bold() }"
+            @click="commands.bold"
+          >
+            <i class="fa fa-bold" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.underline() }"
-          @click="commands.underline"
-        >
-          <i class="fa fa-underline" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.italic() }"
+            @click="commands.italic"
+          >
+            <i class="fa fa-italic" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.heading({ level: 1 }) }"
-          @click="commands.heading({ level: 1 })"
-        >
-          H1
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.underline() }"
+            @click="commands.underline"
+          >
+            <i class="fa fa-underline" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.heading({ level: 2 }) }"
-          @click="commands.heading({ level: 2 })"
-        >
-          H2
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.heading({ level: 1 }) }"
+            @click="commands.heading({ level: 1 })"
+          >
+            H1
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.heading({ level: 3 }) }"
-          @click="commands.heading({ level: 3 })"
-        >
-          H3
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.heading({ level: 2 }) }"
+            @click="commands.heading({ level: 2 })"
+          >
+            H2
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.bullet_list() }"
-          @click="commands.bullet_list"
-        >
-          <i class="fa fa-list-ul" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.heading({ level: 3 }) }"
+            @click="commands.heading({ level: 3 })"
+          >
+            H3
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.ordered_list() }"
-          @click="commands.ordered_list"
-        >
-          <i class="fa fa-list-ol" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.bullet_list() }"
+            @click="commands.bullet_list"
+          >
+            <i class="fa fa-list-ul" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          :class="{ 'active': isActive.blockquote() }"
-          @click="commands.blockquote"
-        >
-          <i class="fa fa-quote-left" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.ordered_list() }"
+            @click="commands.ordered_list"
+          >
+            <i class="fa fa-list-ol" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          @click="commands.undo"
-        >
-          <i class="fa fa-undo" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            :class="{ 'active': isActive.blockquote() }"
+            @click="commands.blockquote"
+          >
+            <i class="fa fa-quote-left" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          @click="commands.redo"
-        >
-          <i class="fa fa-undo" style="transform: scaleX(-1);"/>
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            @click="commands.undo"
+          >
+            <i class="fa fa-undo" />
+          </button>
 
-        <button
-          class="menubar__button btn btn-white btn-icon"
-          @click="commands.link"
-        >
-          <i class="fa fa-link" />
-        </button>
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            @click="commands.redo"
+          >
+            <i class="fa fa-undo" style="transform: scaleX(-1);"/>
+          </button>
+
+          <button
+            class="menubar__button btn btn-white btn-icon"
+            @click="showLinkMenu(getMarkAttrs('link'))"
+          >
+            <i class="fa fa-link" />
+          </button>
+        </div>
+
+        <form class="link_form input-group mb-2" @submit.prevent="setLinkUrl(commands.link, linkUrl)" v-if="linkMenuIsActive">
+          <span class="input-group-text">
+            <i class="fa fa-link mr-2"></i>
+          </span>
+          <input class="menububble__input form-control" type="text" v-model="linkUrl" placeholder="https://example.com" ref="linkInput" @keydown.esc="hideLinkMenu"/>
+          <button class="menububble__button btn btn-icon btn-primary" @click="setLinkUrl(commands.link, linkUrl)" type="button">
+            <i class="fa fa-check"></i>
+          </button>
+          <button class="menububble__button btn btn-icon btn-white" @click="setLinkUrl(commands.link, null)" type="button">
+            <i class="fa fa-trash"></i>
+          </button>
+        </form>
 
       </div>
+
     </editor-menu-bar>
 
     <editor-content class="editor__content" :editor="editor" />
@@ -104,7 +121,7 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar } from 'tiptap'
+import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
 import {
   Blockquote,
   CodeBlock,
@@ -128,6 +145,7 @@ export default {
   components: {
     EditorContent,
     EditorMenuBar,
+    EditorMenuBubble
   },
   props: ['value', 'editable', 'show_toolbar'],
   data() {
@@ -158,6 +176,8 @@ export default {
         onUpdate: component.on_update,
         onBlur: component.on_blur,
       }),
+      linkUrl: null,
+      linkMenuIsActive: false,
     }
   },
   created() {
@@ -171,7 +191,22 @@ export default {
     },
     on_blur() {
       this.$emit('blur')
-    }
+    },
+    showLinkMenu(attrs) {
+      this.linkUrl = attrs.href
+      this.linkMenuIsActive = true
+      this.$nextTick(() => {
+        this.$refs.linkInput.focus()
+      })
+    },
+    hideLinkMenu() {
+      this.linkUrl = null
+      this.linkMenuIsActive = false
+    },
+    setLinkUrl(command, url) {
+      command({ href: url })
+      this.hideLinkMenu()
+    },
   },
   beforeDestroy() {
     this.editor.destroy()
