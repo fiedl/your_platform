@@ -1,6 +1,8 @@
 .row
   .col-md-8
     .card
+      - if page.image || can?(:update, page)
+        %vue-editable-image{src: page.image.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, page).to_json, img_class: 'card-header', update_url: polymorphic_path(page), attribute_name: "pages_public_page[image]", icon: 'fa fa-image', style: 'min-height: 200px'}
       .card-body
         %vue-edit-box
           = editable page, :content, type: 'wysiwyg', class: 'form-control'

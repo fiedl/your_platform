@@ -1,5 +1,17 @@
 concern :PageImages do
 
+  def image
+    image_attachments.last
+  end
+
+  def image=(file)
+    attachments.create file: file
+  end
+
+  def image_path
+    image.big_path
+  end
+
   def image_attachments
     attachments.find_by_type('image')
   end
