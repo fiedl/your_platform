@@ -11,6 +11,7 @@
 
       <span key="1" class='edit' v-bind:class="editingClass" v-if="showEditField" v-on:click="acceptEditSuggestion" v-on:keydown.esc="cancelAll">
         <textarea v-if="typeIsTextarea" v-on:keydown="keydownToBeginEditing" v-model.trim="value" :placeholder="placeholder" autofocus :class="input_class"></textarea>
+        <vue-wysiwyg v-else-if="type == 'wysiwyg'" v-model="value" :show_toolbar="editBox()" @blur="focusLost"></vue-wysiwyg>
         <vue-datepicker :open-initially="editing && !(editBox() && editBox().editMode && !editBox().partialEditing)" v-else-if="['date', 'datetime'].includes(type)" :type="type" v-model="value" v-on:dateSelected="dateSelected" @closed="focusLost"></vue-datepicker>
         <input v-else :type="type || 'text'" v-model.trim="value" v-on:keydown="keydownToBeginEditing" v-on:keyup.enter="saveAll"  v-on:blur="focusLost()" v-autowidth="{maxWidth: '960px', minWidth: '50px', comfortZone: 0}" :placeholder="placeholder" autofocus :class="input_class" />
         <div class="error-message" v-if="error">{{error}}</div>

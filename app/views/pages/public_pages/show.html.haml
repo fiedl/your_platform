@@ -3,7 +3,7 @@
     .card
       .card-body
         %vue-edit-box
-          = editable page, :content, type: 'textarea', class: 'form-control'
+          = editable page, :content, type: 'wysiwyg', class: 'form-control'
 
     - if can? :update, page
       .card
@@ -20,5 +20,4 @@
         %h3.mb-3
           = editable group, :name, editable: can?(:rename, group)
 
-        = wysiwyg_in_place_if can?(:update, group), group, :body, toolbar: true, multiline: true, activate: 'click' do
-          = markup group.body
+        = editable group, :body, editable: can?(:update, group), type: 'wysiwyg'
