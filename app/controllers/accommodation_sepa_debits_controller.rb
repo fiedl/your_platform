@@ -58,7 +58,7 @@ class AccommodationSepaDebitsController < ApplicationController
     )
 
     for room in rooms
-      if room.occupant.try(:bank_account).try(:iban).present?
+      if room.occupant.try(:bank_account).try(:iban).present? and mandate_id_for_user(room.occupant).present?
         complete_subject = "#{subject} #{room.name}"
 
         sdd.add_transaction(
