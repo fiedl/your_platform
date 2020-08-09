@@ -21,3 +21,64 @@
           = editable group, :name, editable: can?(:rename, group)
 
         = editable group, :body, editable: can?(:update, group), type: 'wysiwyg'
+
+        - if (postal_address = group.postal_address).present?
+          .with-newlines.pt-0.mt-0.mb-2
+            = postal_address
+        - if (phone = group.phone).present?
+          .mt-0.mb-1
+            %span.mr-2= landline_icon
+            = link_to phone, "tel:#{phone}"
+        - if (email = group.email).present?
+          .mt-0.mb-0
+            %span.mr-1= mail_icon
+            = mail_to email
+      - if can? :update, group
+        .card-footer
+          = link_to "Daten ändern", group_path(group), class: "btn btn-sm btn-white"
+
+    - events = group.upcoming_events.where(publish_on_local_website: true).limit(3)
+    - if events.present? || can?(:update, group)
+      .card
+        .card-header
+          %h3.mb-0 Veranstaltungen
+          .ml-auto
+            = link_to group_events_public_path(group_id: group, format: 'ics', protocol: 'webcal'), title: "Kalender-Feed (iCal)" do
+              = calendar_icon
+        .card-body
+          - if semester_calendar = group.respond_to?(:semester_calendars) && group.semester_calendars.current.last
+            - if attachment = semester_calendar.attachments.last
+              %a{href: attachment.file_url, target: '_blank'}
+                %img{src: attachment.file.medium.url}
+          .row
+            - events.each do |event|
+              .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
+                .col-auto
+                  = avatar(event)
+                .col
+                  .text-body.d-block= link_to event.title, event
+                  %small.d-block.mt-n1.text-muted= localize event.start_at
+        - if group.respond_to?(:semester_calendars) && can?(:update, group)
+          .card-footer
+            = link_to "Semesterprogramm bearbeiten", current_semester_calendar_path(group_id: group), class: 'btn btn-white btn-sm'
+
+    -#- offices = group.descendant_groups.flagged([:senior, :fuxmajor, :kneipwart])
+    - offices = group.important_officer_groups.first(3) unless offices.present?
+    - offices = group.officers_groups.first(3) unless offices.present?
+    - if offices.present? || can?(:update, group)
+      .card
+        .card-body
+          .row
+            - offices.each do |office|
+              - for officer in office.members
+                .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = user_avatar(officer)
+                  .col
+                    .text-body.d-block= officer.title
+                    %small.d-block.mt-n1.text-muted= office.name
+                    - if email = office.email
+                      %small.d-block.mt-n1= mail_to email, email, class: 'text-muted'
+        - if can? :update, group
+          .card-footer
+            = link_to "Amtsträger ändern", group_officers_path(group_id: group.id), class: "btn btn-sm btn-white"

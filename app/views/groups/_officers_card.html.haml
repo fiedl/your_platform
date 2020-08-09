@@ -1,7 +1,10 @@
+- officer_groups ||= group.important_officer_groups
+- officer_groups = group.officers_groups unless officer_groups.present?
+
 .card
   .card-body
     .row
-      - group.officers_groups.each do |office|
+      - officer_groups.each do |office|
         - for officer in office.members
           .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
             .col-auto
@@ -12,6 +15,6 @@
               %small.d-block.mt-n1.text-muted= officer.phone
               - if email = office.email || officer.email
                 %small.d-block.mt-n1.text-muted= email
-  - if can? :update, institution
+  - if can? :update, group
     .card-footer
       = link_to "Amtsträger ändern", group_officers_path(group_id: group.id), class: "btn btn-sm btn-white"
