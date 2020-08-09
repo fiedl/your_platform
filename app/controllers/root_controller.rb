@@ -37,8 +37,8 @@ private
     if not @need_setup
       if home_page = Page.find_by(domain: request.host)
         redirect_to home_page
-      elsif Page.public_website_present? and cannot?(:read, Page.intranet_root)
-        redirect_to public_root_path
+      # elsif Page.public_website_present? and cannot?(:read, Page.intranet_root)
+      #   redirect_to public_root_path
       end
     end
   end

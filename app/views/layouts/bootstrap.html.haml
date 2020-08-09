@@ -54,7 +54,7 @@
 
       - if current_navable.kind_of? Pages::PublicPage
         = render partial: 'layouts/public_navbar'
-      - else
+      - elsif current_user
         = render partial: 'layouts/navbar'
 
       #content.content
