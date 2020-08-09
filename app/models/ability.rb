@@ -98,7 +98,9 @@ class Ability
           if user.beta_tester?
             rights_for_beta_testers
           end
-          rights_for_signed_in_users
+          if view_as?([:user])
+            rights_for_signed_in_users
+          end
         end
       end
     end

@@ -22,10 +22,10 @@
                 = link_to current_navable, method: :delete, class: 'dropdown-item' do
                   = tools_icon
                   = "Seite \"#{current_navable.title}\" umbenennen"
-                = link_to "?preview_as=user", class: 'dropdown-item' do
+                = link_to "?preview_as=public", class: 'dropdown-item' do
                   = preview_icon
                   Vorschau aktivieren
-          - if current_role_view.to_s == 'user'
+          - if current_role_view.to_s == 'public'
             %li.nav-item
               = link_to "?preview_as=#{current_role.allowed_preview_roles.first}", class: 'btn btn-white btn-icon', title: "Vorschau beenden" do
                 = preview_icon
