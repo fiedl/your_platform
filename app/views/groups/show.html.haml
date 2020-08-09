@@ -81,7 +81,7 @@
               .col-md-4
                 = editable_profile_fields profileable: group, types: ["ProfileFields::Phone"], new_profile_fields: [{label: "Telefon", type: "ProfileFields::Phone"}, {label: "Fax", type: "ProfileFields::Phone"}]
               .col-md-4
-                = editable_profile_fields profileable: group, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}]
+                = editable_profile_fields profileable: group, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}, {label: "Facebook", type: "ProfileFields::Homepage"}, {label: "Instagram", type: "ProfileFields::Homepage"}, {label: "YouTube", type: "ProfileFields::Homepage"}]
 
                 - if group.kind_of?(Corporation) && group.chargen_mailing_list
                   %vue-profile-field{':initial-profile-field': group.chargen_mailing_list.as_json.merge({label: "E-Mail Chargen"}).to_json}

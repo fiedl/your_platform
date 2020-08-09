@@ -35,6 +35,16 @@
           .mt-0.mb-0
             %span.mr-1= mail_icon
             = mail_to email
+
+        - if group.facebook_url || group.instagram_url || group.youtube_url
+          .social-links.mt-3
+            - if group.facebook_url
+              = link_to facebook_icon, group.facebook_url, target: '_blank'
+            - if group.instagram_url
+              = link_to instagram_icon, group.instagram_url, target: '_blank'
+            - if group.youtube_url
+              = link_to youtube_icon, group.youtube_url, class: 'text-muted', target: '_blank'
+
       - if can? :update, group
         .card-footer
           = link_to "Daten ändern", group_path(group), class: "btn btn-sm btn-white"
