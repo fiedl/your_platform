@@ -3,6 +3,6 @@
     .navbar.navbar-light
       .container-xl
         - if current_navable.kind_of? Pages::PublicPage
-          %vue_public_website_navbar_nav{':editable': can?(:update, current_navable).to_json, ':pages': current_navable.menu_items.collect { |page| page.as_json.merge({path: polymorphic_path(page)}) }.to_json, ':current_page': current_navable.to_json, tools_icon: tools_icon, plus_icon: plus_icon, trash_icon: trash_icon, preview_icon: preview_icon, ':active_menu_page': page.active_menu_page.to_json, current_role_view: current_role_view.to_s, default_role_view: current_role.allowed_preview_roles.first.to_s}
+          %vue_public_website_navbar_nav{':editable': can?(:update, current_navable).to_json, ':pages': current_navable.menu_items.collect { |page| page.as_json.merge({path: polymorphic_path(page)}) }.to_json, ':current_page': current_navable.to_json, tools_icon: tools_icon, plus_icon: plus_icon, trash_icon: trash_icon, preview_icon: preview_icon, ':active_menu_page': page.active_menu_page.to_json, current_role_view: current_role_view.to_s, default_role_view: current_role.try(:allowed_preview_roles).try(:first).to_s}
 
         = render partial: 'layouts/search'

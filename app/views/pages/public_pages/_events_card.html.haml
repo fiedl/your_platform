@@ -1,5 +1,5 @@
 - events = group.upcoming_events.where(publish_on_local_website: true).limit(3)
-- if events.present? || can?(:update, group)
+- if events.present? || semester_calendar.attachments.present? || can?(:update, group)
   .card
     .card-header
       %h3.mb-0 Veranstaltungen
