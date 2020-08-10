@@ -1,4 +1,5 @@
 - events = group.upcoming_events.where(publish_on_local_website: true).limit(3)
+- semester_calendar = group.respond_to?(:semester_calendars) && group.semester_calendars.current.last
 - if events.present? || semester_calendar.attachments.present? || can?(:update, group)
   .card
     .card-header
@@ -7,7 +8,7 @@
         = link_to group_events_public_path(group_id: group, format: 'ics', protocol: 'webcal'), title: "Kalender-Feed (iCal)" do
           = calendar_icon
     .card-body
-      - if semester_calendar = group.respond_to?(:semester_calendars) && group.semester_calendars.current.last
+      - if semester_calendar
         - if attachment = semester_calendar.attachments.last
           .mb-4
             %a{href: attachment.file_path, target: '_blank'}
