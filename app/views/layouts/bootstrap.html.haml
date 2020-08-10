@@ -34,7 +34,7 @@
 
     = csrf_meta_tags
   = body_tag class: 'antialiased' do
-    .page
+    #vue-app.page
       %header.navbar.navbar-expand-md.navbar-light
         .container-xl
           %button.navbar-toggler{"data-target" => "#navbar-menu", "data-toggle" => "collapse", :type => "button"}
@@ -60,9 +60,8 @@
       #content.content
         .container-xl
           / Content here
-          #vue-app
-            = render partial: 'shared/flashes'
-            = yield
+          = render partial: 'shared/flashes'
+          = yield
         %footer.footer.footer-transparent
           .container
             .row.text-center.align-items-center.flex-row-reverse

@@ -40,6 +40,7 @@ import StatusSelect from './components/status_select.vue'
 import SemesterCalendarAttachmentCard from './components/semester_calendar_attachment_card.vue'
 import SemesterCalendarEvents from './components/semester_calendar_events.vue'
 import Wysiwyg from './components/wysiwyg.vue'
+import PublicWebsiteNavbarNav from './components/public_website_navbar_nav.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -84,6 +85,7 @@ jQuery(document).ready ->
   Vue.component('vue_semester_calendar_events', SemesterCalendarEvents)
   Vue.component('vue_wysiwyg', Wysiwyg)
   Vue.component('vue-wysiwyg', Wysiwyg)
+  Vue.component('vue_public_website_navbar_nav', PublicWebsiteNavbarNav)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

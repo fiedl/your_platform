@@ -2,32 +2,7 @@
   #navbar-menu.collapse.navbar-collapse
     .navbar.navbar-light
       .container-xl
-        %ul.navbar-nav
-
-          - if current_navable.kind_of? Pages::PublicPage
-            - for page in current_navable.menu_items
-              %li.nav-item{class: ('active' if current_navable == page)}
-                = link_to page, class: 'nav-link' do
-                  %span.nav-link-title
-                    = page.title
-
-          - if can? :update, current_navable
-            %li.nav-item.dropdown
-              .btn.btn-white.dropdown-toggle{'data-toggle': 'dropdown'}
-                = tools_icon
-              .dropdown-menu
-                = link_to current_navable, method: :delete, class: 'dropdown-item' do
-                  = trash_icon
-                  = "Seite \"#{current_navable.title}\" löschen"
-                = link_to current_navable, method: :delete, class: 'dropdown-item' do
-                  = tools_icon
-                  = "Seite \"#{current_navable.title}\" umbenennen"
-                = link_to "?preview_as=public", class: 'dropdown-item' do
-                  = preview_icon
-                  Vorschau aktivieren
-          - if current_role_view.to_s == 'public'
-            %li.nav-item
-              = link_to "?preview_as=#{current_role.allowed_preview_roles.first}", class: 'btn btn-white btn-icon', title: "Vorschau beenden" do
-                = preview_icon
+        - if current_navable.kind_of? Pages::PublicPage
+          %vue_public_website_navbar_nav{':editable': can?(:update, current_navable).to_json, ':pages': current_navable.menu_items.collect { |page| page.as_json.merge({path: polymorphic_path(page)}) }.to_json, ':current_page': current_navable.to_json, tools_icon: tools_icon, plus_icon: plus_icon, trash_icon: trash_icon, preview_icon: preview_icon, ':active_menu_page': page.active_menu_page.to_json, current_role_view: current_role_view.to_s, default_role_view: current_role.allowed_preview_roles.first.to_s}
 
         = render partial: 'layouts/search'

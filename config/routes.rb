@@ -356,6 +356,7 @@ Rails.application.routes.draw do
       end
       resources :room_occupancies
       resources :documents
+      resources :pages
       resources :songs
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'

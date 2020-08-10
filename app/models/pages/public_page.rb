@@ -12,4 +12,10 @@ class Pages::PublicPage < Page
     child_pages.where(type: ["Pages::PublicPage", "Pages::PublicEventsPage"])
   end
 
+  def active_menu_page
+    return self if root == self
+    return self if parent == root
+    return (root.child_pages & self.ancestor_pages).first
+  end
+
 end
