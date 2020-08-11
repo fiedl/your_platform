@@ -20,10 +20,12 @@
   PostListGroup =
     props: ['posts']
     data: ->
+      current_posts: @posts
       processed_posts: @posts
     created: ->
       @process_posts()
       setInterval @process_posts, 60000
+      @$root.$on 'add_post', @add_post
     methods:
       format_datetime_relative: (datetime)->
         moment(datetime).locale('de').fromNow()
@@ -31,9 +33,11 @@
         moment(datetime).locale('de').format('dd, DD.MM.YYYY, H:mm')
       process_posts: ->
         component = this
-        @processed_posts = @posts.map (post)->
+        @processed_posts = @current_posts.map (post)->
           post.published_at_relative = component.format_datetime_relative(post.published_at)
           post
-
+      add_post: (post)->
+        @current_posts.unshift(post)
+        @process_posts()
   export default PostListGroup
 </script>

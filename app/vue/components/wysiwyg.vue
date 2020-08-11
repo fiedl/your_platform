@@ -211,6 +211,10 @@ export default {
       command({ href: url })
       this.hideLinkMenu()
     },
+    reset() {
+      this.current_value = ""
+      this.editor.setContent(this.current_value)
+    }
   },
   beforeDestroy() {
     this.editor.destroy()

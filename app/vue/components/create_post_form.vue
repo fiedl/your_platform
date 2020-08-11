@@ -1,7 +1,7 @@
 <template lang="haml">
   %div.w-100.create_post_form
     .input-group
-      %vue-wysiwyg{':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false: true"}
+      %vue-wysiwyg{'ref': "wysiwyg", ':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false : true"}
       .buttons_bottom
         .buttons
           %a.btn.btn-primary.btn-icon{'v-if': "post.id && (post.text.length > 10)", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submitting ? 'disabled' : ''"}
@@ -55,8 +55,18 @@
             post: @post
           error: (request, status, error)->
             component.error = request.responseText
-          success: ->
-            window.location = component.redirect_to_url
+            component.submitting = false
+          success: (new_post)->
+            component.$root.$emit 'add_post', new_post
+            component.reset()
+      reset: ->
+        @post.id = null
+        @post.text = ""
+        @post.attachments = []
+        @$refs.wysiwyg.reset()
+        @submitting = false
+        @error = null
+        @creating_draft = false
 
   export default CreatePostForm
 </script>
