@@ -47,6 +47,12 @@ import PostListGroup from './components/post_list_group.vue'
 jQuery(document).ready ->
   vue_apps = []
 
+  # Environment settings
+  # Note: minimizing is done using the asset pipeline.
+  if $('body').data('environment') == "production"
+    Vue.config.devtools = false
+    Vue.config.productionTip = false
+
   # Third-party components
   Vue.component('vue-apexchart', VueApexCharts)
   Vue.component("vue-trash-icon", Trash2Icon)
