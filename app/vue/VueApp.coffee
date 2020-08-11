@@ -42,6 +42,7 @@ import SemesterCalendarEvents from './components/semester_calendar_events.vue'
 import Wysiwyg from './components/wysiwyg.vue'
 import PublicWebsiteNavbarNav from './components/public_website_navbar_nav.vue'
 import CreatePostForm from './components/create_post_form.vue'
+import PostListGroup from './components/post_list_group.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -88,6 +89,7 @@ jQuery(document).ready ->
   Vue.component('vue-wysiwyg', Wysiwyg)
   Vue.component('vue_public_website_navbar_nav', PublicWebsiteNavbarNav)
   Vue.component('vue_create_post_form', CreatePostForm)
+  Vue.component('vue_post_list_group', PostListGroup)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

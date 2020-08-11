@@ -3,19 +3,4 @@
     - if can?(:create_post, page)
       .card-header
         %vue_create_post_form{placeholder: "Öffentlich posten", camera_icon: camera_icon, send_icon: send_icon, ':parent_page': page.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json, redirect_to_url: polymorphic_path(page)}
-    %ul.card-list-group.list-group
-      - for post in posts
-        .list-group-item.py-4
-          .d-flex
-            %div.mr-3= user_avatar post.author
-            .flex-fill
-              %div
-                %small.float-right.text-muted= localize post.published_at
-                %h4
-                  - if can? :read, post.author
-                    = link_to post.author.title, post.author
-                  - else
-                    = post.author.title
-              %div
-                = post.text.html_safe
-
+    %vue_post_list_group{':posts': posts.collect { |post| post.as_json.merge({author: post.author.as_json.merge({path: (polymorphic_path(post.author) if can?(:read, post.author))})}) }.to_json}
