@@ -358,6 +358,8 @@ Rails.application.routes.draw do
       resources :documents
       resources :pages
       resources :songs
+      resources :posts do
+      end
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships

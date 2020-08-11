@@ -5,6 +5,7 @@ class Post < ApplicationRecord
 
   has_many :attachments, as: :parent, dependent: :destroy
   accepts_nested_attributes_for :attachments
+  has_dag_links ancestor_class_names: %w(Group User Page Event), descendant_class_names: %w(), link_class_name: 'DagLink'
 
   has_many :mentions, as: :reference, dependent: :destroy
   has_many :directly_mentioned_users, through: :mentions, class_name: 'User', source: 'whom'
@@ -12,10 +13,10 @@ class Post < ApplicationRecord
   has_many :deliveries, class_name: 'PostDelivery'
   has_many :notifications, as: :reference, dependent: :destroy
 
-  scope :draft, -> { where(sent_at: nil) }
 
   include Commentable
   include PostDeliveryReport
+  include PostDrafts
 
   def title
     subject

@@ -1,6 +1,4 @@
 - if can? :update, page
   .card
     .card-header
-      .input-group
-        %input.form-control{type: 'text', placeholder: "Öffentlich posten"}
-        %a.btn.btn-white.btn-icon= camera_icon
+      %vue_create_post_form{placeholder: "Öffentlich posten", camera_icon: camera_icon, send_icon: send_icon, ':parent_page': page.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json}

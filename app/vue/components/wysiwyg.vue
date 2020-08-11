@@ -116,7 +116,10 @@
 
     </editor-menu-bar>
 
-    <editor-content class="editor__content" :editor="editor" />
+    <div class="with_placeholder">
+      <span class="placeholder" v-if="!(value && value.length > 0) || (value == '<p></p>')">{{ placeholder }}</span>
+      <editor-content class="editor__content" :editor="editor" />
+    </div>
   </div>
 </template>
 
@@ -147,7 +150,7 @@ export default {
     EditorMenuBar,
     EditorMenuBubble
   },
-  props: ['value', 'editable', 'show_toolbar'],
+  props: ['value', 'editable', 'show_toolbar', 'placeholder'],
   data() {
     let component = this
     return {
@@ -217,4 +220,13 @@ export default {
 <style lang="sass">
   .ProseMirror
     outline: auto
+
+  .with_placeholder
+    position: relative
+
+  .placeholder
+    position: absolute
+    top: 0
+    //padding: .4375rem .75rem
+    pointer-events: none
 </style>

@@ -433,6 +433,8 @@ class Ability
       can?(:quickly_download, attachment) || attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
     end
 
+    can :update, Post, author_user_id: user.id, sent_at: nil, published_at: nil
+
     # All users can join events.
     #
     can :read, Event
@@ -472,9 +474,7 @@ class Ability
     # - if they have left the group later
     # - if they have addressed another group
     #
-    can :read, Post do |post|
-      post.author == user
-    end
+    can :read, Post, author_user_id: user.id
 
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
