@@ -1,11 +1,11 @@
 <template lang="haml">
   %div.w-100.create_post_form
     .input-group
-      %vue-wysiwyg{':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input"}
+      %vue-wysiwyg{':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false: true"}
       .buttons_bottom
         .buttons
-          %a.btn.btn-primary.btn-icon{'v-if': "post.text.length > 10", 'v-html': "send_icon", title: "Nachricht posten"}
-          %a.btn.btn-white.btn-icon{'v-html': "camera_icon", title: "Bild hinzufügen"}
+          %a.btn.btn-primary.btn-icon{'v-if': "post.id && (post.text.length > 10)", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submitting ? 'disabled' : ''"}
+          %a.btn.btn-white.btn-icon{'v-html': "camera_icon", title: "Bild hinzufügen", ':disabled': "submitting ? true : false", ':class': "submitting ? 'disabled' : ''"}
     .error.text-truncate.mt-2{'v-if': "error", 'v-text': "error"}
 </template>
 
@@ -48,7 +48,15 @@
           error: (request, status, error)->
             component.error = request.responseText
       submit_post: ->
+        component = this
         @submitting = true
+        Api.post "/posts/#{@post.id}/publish",
+          data:
+            post: @post
+          error: (request, status, error)->
+            component.error = request.responseText
+          success: ->
+            window.location = component.redirect_to_url
 
   export default CreatePostForm
 </script>

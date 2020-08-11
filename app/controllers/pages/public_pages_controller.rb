@@ -3,8 +3,9 @@ class Pages::PublicPagesController < ApplicationController
   expose :page, -> { Pages::PublicPage.find params[:id] }
   expose :group, -> { page.root.group }
 
-  expose :post_draft_via_key, -> { "page-#{page.id}" }
+  expose :posts, -> { page.child_posts.published.order(published_at: :desc).limit(10) }
   expose :drafted_post, -> { current_user.drafted_posts.where(sent_via: post_draft_via_key).last }
+  expose :post_draft_via_key, -> { "page-#{page.id}" }
 
   def show
     authorize! :read, page

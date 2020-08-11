@@ -333,6 +333,7 @@ class Ability
     can :index_mine, Group
 
     can :read, User, id: user.id
+    can :index, User
 
     can :read, Corporation
     can :index_accommodations, Corporation

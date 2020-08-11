@@ -8,7 +8,7 @@ class Api::V1::PostsController < Api::V1::BaseController
     authorize! :create_post, parent_page
 
     new_post = Post.create! post_params.merge({author_user_id: current_user.id, sent_via: sent_via})
-    parent_page << new_post
+    parent_page.child_posts << new_post
 
     render json: new_post, status: :ok
   end

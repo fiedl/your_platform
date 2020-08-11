@@ -178,6 +178,7 @@ export default {
         content: null,
         onUpdate: component.on_update,
         onBlur: component.on_blur,
+        editable: component.editable
       }),
       linkUrl: null,
       linkMenuIsActive: false,
