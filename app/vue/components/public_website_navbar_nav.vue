@@ -9,12 +9,12 @@
       .btn.btn-white{'v-if': "processing"}
         %span{'v-html': "tools_icon"}
         %span{'v-text': "processing"}
-      %a.btn.btn-white.dropdown-toggle{'data-toggle': "dropdown", 'v-html': "tools_icon", 'v-if': "!processing && !renaming"}
-      .dropdown-menu{'v-if': "!processing && !renaming"}
-        %a.dropdown-item{'@click': "submit_create_main_page"}
+      %a.btn.btn-white.dropdown-toggle{'data-toggle': "dropdown", 'v-html': "tools_icon", 'v-if': "!processing && !renaming && !choosing_name_for_new_main_page && !choosing_name_for_new_child_page"}
+      .dropdown-menu{'v-if': "!processing && !renaming && !choosing_name_for_new_main_page && !choosing_name_for_new_child_page"}
+        %a.dropdown-item{'@click': "create_main_page"}
           %span{'v-html': "plus_icon"}
-          %span Neue Hauptseite
-        %a.dropdown-item{'@click': "submit_create_child_page"}
+          %span Neue Seite
+        %a.dropdown-item{'@click': "create_child_page", 'v-if': "active_menu_page.id != root_page.id"}
           %span{'v-html': "plus_icon"}
           %span{'v-text': "'Neue Unterseite von \"' + active_menu_page.title + '\"'"}
         .dropdown-divider
@@ -29,6 +29,7 @@
           %span{'v-html': "preview_icon"}
           %span Vorschau aktivieren
       %input.form-control{'v-if': "renaming && (active_menu_page.id != current_page.id)", ':placeholder': "page_title", 'v-model': "page_title", autofocus: true, '@blur': "submit_rename", '@keyup.enter': "submit_rename"}
+      %input.form-control{'v-if': "choosing_name_for_new_main_page || choosing_name_for_new_child_page", placeholder: "Neue Seite benennen", 'v-model': "new_page_name", autofocus: true, '@keyup.enter': "submit_create_page", '@keyup.esc': "choosing_name_for_new_main_page = false; choosing_name_for_new_child_page = false", '@blur': "submit_create_page"}
 
     %li.nav-item.ml-3{'v-if': "previewing"}
       %a.btn.btn-white.btn-icon{':href': "'?preview_as=' + default_role_view", title: "Vorschau beenden", 'v-html': "preview_icon"}
@@ -42,6 +43,9 @@
     data: ->
       processing: false
       renaming: false
+      choosing_name_for_new_main_page: false
+      choosing_name_for_new_child_page: false
+      new_page_name: "Neue Seite"
       page_title: @current_page.title
     computed:
       previewing: -> @current_role_view == 'public'
@@ -66,26 +70,37 @@
               window.location = "/"
             else
               window.location = component.root_page.path
+      create_main_page: ->
+        @new_page_name = "Neue Seite"
+        @choosing_name_for_new_main_page = true
+      create_child_page: ->
+        @new_page_name = "Neue Seite"
+        @choosing_name_for_new_child_page = true
+      submit_create_page: ->
+        @submit_create_main_page() if @choosing_name_for_new_main_page
+        @submit_create_child_page() if @choosing_name_for_new_child_page
       submit_create_main_page: ->
+        @choosing_name_for_new_main_page = false
         @processing = "Erstelle neue Seite ..."
         Api.post "/pages",
           data:
             parent_page_id: @root_page.id
             page:
-              title: "Neue Seite"
-              content: "<h1>Neue Seite</h1>"
+              title: @new_page_name
+              content: "<h1>#{@new_page_name}</h1>"
           error: ->
             @processing = "Fehler beim Erstellen"
           success: (new_page)->
             window.location = new_page.path
       submit_create_child_page: ->
+        @choosing_name_for_new_child_page = false
         @processing = "Erstelle neue Seite ..."
         Api.post "/pages",
           data:
             parent_page_id: @active_menu_page.id
             page:
-              title: "Neue Seite"
-              content: "<h1>Neue Seite</h1>"
+              title: @new_page_name
+              content: "<h1>#{@new_page_name}</h1>"
           error: ->
             @processing = "Fehler beim Erstellen"
           success: (new_page)->
