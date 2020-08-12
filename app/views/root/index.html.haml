@@ -24,7 +24,7 @@
 
 
   .col-lg-6
-    - if true #= cache :birthday_box, expires_in: Time.now.end_of_day - Time.current do
+    = cache :tabler_birthday_box, expires_in: Time.now.end_of_day - Time.current do
       .card
         .card-header
           %h4.card-title= t :birthdays
