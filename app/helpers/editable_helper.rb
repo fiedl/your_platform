@@ -6,9 +6,9 @@ module EditableHelper
   #
   def editable(object, key, type: 'text', editable: nil, placeholder: nil, class: nil, input_class: nil)
     if type == 'date'
-      initial_value = localize object.send(key).to_date
+      initial_value = localize object.send(key).to_date if object.send(key)
     elsif type == 'datetime'
-      initial_value = localize object.send(key)
+      initial_value = localize object.send(key) if object.send(key)
     else
       initial_value = object.send(key)
     end
