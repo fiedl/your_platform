@@ -341,6 +341,9 @@ class Ability
     can :read, Corporation
     can :index_accommodations, Corporation
 
+    can :read, Post, ancestor_groups: { id: user.group_ids }
+    can :read, Post, parent_events: { group_id: user.group_ids }
+
     # Regular users can access the list of mailing lists.
     #
     can :index, MailingList
@@ -449,6 +452,9 @@ class Ability
     can :index, Event
     can :index_events, Group
     can :index_events, User, :id => user.id
+
+    can [:create_post, :create_post_for], Event, group_id: user.group_ids
+    can [:create_post, :create_post_for], Event, parent_groups: { id: user.group_ids }
 
     # Name auto completion
     #

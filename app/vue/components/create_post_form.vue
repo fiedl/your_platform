@@ -1,6 +1,6 @@
 <template lang="haml">
   %div.w-100.create_post_form
-    %vue-dropzone{':options': "dropzone_options", ':useCustomSlot': "true", ':id': "'create_post_for_page_' + parent_page.id"}
+    %vue-dropzone{':options': "dropzone_options", ':useCustomSlot': "true", ':id': "'create_post_for_' + parent_type + '_' + parent.id", 'ref': "dropzone"}
       .input-group
         %vue-wysiwyg{'ref': "wysiwyg", ':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false : true"}
         .buttons_bottom
@@ -28,7 +28,7 @@
 
 
   CreatePostForm =
-    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via']
+    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via', 'parent_event']
     data: ->
       component = this
       {
@@ -43,7 +43,7 @@
           method: 'post'
           acceptedFiles: 'image/*'
           clickable: '.upload_button'
-          id: "create_post_for_page_#{@parent_page.id}"
+          id: "create_post_for_#{@get_parent_type()}_#{@get_parent().id}"
           paramName: 'attachment[file]'
           createImageThumbnails: false
           error: (file, msg)->
@@ -73,6 +73,7 @@
         Api.post "/posts",
           data:
             parent_page_id: @parent_page && @parent_page.id
+            parent_event_id: @parent_event && @parent_event.id
             sent_via: @sent_via
             post: @post
           error: (request, status, error)->
@@ -114,6 +115,18 @@
         Api.delete "/attachments/#{attachment.id}",
           error: (request, status, error)->
             component.error = request.responseText
+      get_parent: ->
+        @parent_page || @parent_event
+      get_parent_type: ->
+        "Page" if @parent_page
+        "Event" if @parent_event
+    computed:
+      parent: ->
+        # We need this because computed properties are not available during data init.
+        @get_parent()
+      parent_type: ->
+        @get_parent_type()
+
   export default CreatePostForm
 </script>
 

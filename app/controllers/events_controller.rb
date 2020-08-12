@@ -107,6 +107,11 @@ class EventsController < ApplicationController
   expose :group, -> { event.group || event.parent_groups.first }
   expose :corporation, -> { group.try(:corporation) }
 
+  expose :posts, -> { event.child_posts.published.order(published_at: :desc).accessible_by(current_ability) }
+  expose :drafted_post, -> { current_user.drafted_posts.where(sent_via: post_draft_via_key).last }
+  expose :post_draft_via_key, -> { "event-#{event.id}" }
+
+
   # GET /events/1
   # GET /events/1.json
   def show

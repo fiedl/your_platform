@@ -50,7 +50,6 @@
             component.error = null
             component.status = null
             component.attachment = response.attachment
-            console.log(file, response)
       }
     computed:
       card_header_title: ->
