@@ -81,12 +81,13 @@
             component.post.id = new_post.id
             component.creating_draft = false
       save_draft: ->
-        component = this
-        Api.put "/posts/#{@post.id}",
-          data:
-            post: @post
-          error: (request, status, error)->
-            component.error = request.responseText
+        if @post.id
+          component = this
+          Api.put "/posts/#{@post.id}",
+            data:
+              post: @post
+            error: (request, status, error)->
+              component.error = request.responseText
       submit_post: ->
         component = this
         @submitting = true
