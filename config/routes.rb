@@ -362,6 +362,7 @@ Rails.application.routes.draw do
       resources :posts do
         resources :attachments
         post :publish, to: 'posts/publications#create'
+        put :public_website_publications, to: 'posts/public_website_publications#update'
       end
       resources :attachments
       get :current_user, to: 'current_user#show'

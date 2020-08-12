@@ -11,13 +11,19 @@
             %h4.align-items-center.d-flex
               %a{':href': "post.author.path", 'v-if': "post.author.path"} {{ post.author.title }}
               %span{'v-else': true} {{ post.author.title }}
-              %span.badge.bg-blue.ml-2{'v-if': "post.publish_on_public_website && show_public_badges", title: "Auf öffentlichem Internetauftritt veröffentlicht"} Öffentlich
+              %span.badge.bg-blue.ml-2{'v-if': "post.publish_on_public_website && show_public_badges", title: "Auf öffentlichem Internetauftritt veröffentlicht", ':data-toggle': "post.can_update_publish_on_public_website ? 'dropdown' : ''"} Öffentlich
+              %span.badge.bg-gray.ml-2{'v-if': "!post.publish_on_public_website && show_public_badges", title: "Nur für Bundesbrüder sichtbar, nicht aber auf dem öffentlichem Internetauftritt veröffentlicht.", ':data-toggle': "post.can_update_publish_on_public_website ? 'dropdown' : ''"} Nicht öffentlich
+              .dropdown-menu{'v-if': "post.can_update_publish_on_public_website"}
+                %a.dropdown-item{':class': "post.publish_on_public_website ? 'active' : ''", '@click': "set_publish_on_public_website(post, true)"} Auf öffentlicher Website veröffentlichen
+                %a.dropdown-item{':class': "post.publish_on_public_website ? '' : 'active'", '@click': "set_publish_on_public_website(post, false)"} Nicht auf öffentlicher Website veröffentlichen
+            .error.mt-2.mb-4{'v-if': "post.error_message", 'v-text': "post.error_message"}
             %div{'v-html': "post.text"}
             %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "post.attachments"}
 </template>
 
 <script lang="coffee">
   moment = require('moment')
+  Api = require('../api.coffee').default
 
   PostListGroup =
     props: ['posts', 'show_public_badges']
@@ -41,5 +47,22 @@
       add_post: (post)->
         @current_posts.unshift(post)
         @process_posts()
+      set_publish_on_public_website: (post, setting)->
+        component = this
+        post.publish_on_public_website = setting
+        Api.put "/posts/#{post.id}/public_website_publications",
+          data:
+            post: post
+          error: (request, status, error)->
+            post.error_message = request.responseText.first(100)
+            post.publish_on_public_website = !setting
+
   export default PostListGroup
 </script>
+
+<style lang="sass">
+  a.dropdown-item
+    cursor: pointer
+  .error
+    color: red
+</style>

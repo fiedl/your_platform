@@ -442,6 +442,7 @@ class Ability
     end
 
     can :update, Post, author_user_id: user.id, sent_at: nil, published_at: nil
+    can :update_public_website_publication, Post, author_user_id: user.id
 
     # All users can join events.
     #
