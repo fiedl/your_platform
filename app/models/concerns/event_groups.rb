@@ -13,6 +13,10 @@ concern :EventGroups do
     self.save
   end
 
+  def admins_of_self_and_ancestors
+    (super + group.admins_of_self_and_ancestors).uniq
+  end
+
   class_methods do
     def find_all_by_group(group)
       group.events_of_self_and_subgroups.order('start_at')
