@@ -18,7 +18,8 @@
         -#  .tool.renew_cache= renew_cache_button(event)
 
 .row
-  .col-md-4
+  - show_posts_column = can?(:create_post, event) || posts.any?
+  .col-md-4{class: ('col-md-12' unless show_posts_column)}
     .card.card-profile
       %vue-editable-image{src: event.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, event).to_json, img_class: 'card-header', update_url: event_path(event), attribute_name: "event[avatar_background]"}
       .card-body.text-center
@@ -41,20 +42,19 @@
         = link_to semester_calendar_path(event.semester_calendar!), class: 'btn btn-white btn-sm' do
           Semesterprogramm anzeigen
 
-    .card
-      .card-header
-        %h3 Veranstaltung Veröffentlichen
-      .card-body
-        - if can?(:update, event)
+    - if can?(:update, event)
+      .card
+        .card-header
+          %h3 Veranstaltung Veröffentlichen
+        .card-body
           = ajax_toggle event, :publish_on_local_website, "Auf öffentlicher Website von #{group.name} veröffentlichen" if event.group
           = ajax_toggle event, :publish_on_global_website, "Auf öffentlicher Website des Bundes veröffentlichen"
 
-  .col-md-8
-    .card
-      .card-header
-        .input-group
-          %input.form-control{type: 'text', placeholder: "Nachricht posten"}
-          %a.btn.btn-white.btn-icon= camera_icon
+  - if show_posts_column
+    .col-md-8
+      .card
+        - if can? :create_post, event
+          .card-header
 
 -#%div
 -#  = render partial: 'events/event_details'
