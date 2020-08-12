@@ -6,7 +6,7 @@
         .buttons_bottom
           .buttons
             %a.btn.btn-primary.btn-icon{'v-if': "post.id && ((post.text.length > 10) || post.attachments.length > 0)", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submitting ? 'disabled' : ''"}
-            %a.btn.btn-white.btn-icon.upload_button{'v-if': "post.id", 'v-html': "camera_icon", title: "Bild hinzufügen", ':disabled': "submitting ? true : false", ':class': "submitting ? 'disabled' : ''"}
+            %a.btn.btn-white.btn-icon.upload_button{'v-show': "post.id", 'v-html': "camera_icon", title: "Bild hinzufügen", ':disabled': "submitting ? true : false", ':class': "submitting ? 'disabled' : ''"}
     .text-muted.mt-2{'v-if': "uploading == 1"} Bild wird hochgeladen ...
     .text-muted.mt-2{'v-if': "uploading > 1"} Bilder werden hochgeladen ...
     .error.text-truncate.mt-2{'v-if': "error", 'v-text': "error"}
@@ -67,6 +67,8 @@
         if @post.id
           clearTimeout @draft_saved_message_timeout_handler if @draft_saved_message_timeout_handler
           @draft_saved_message_timeout_handler = setTimeout @save_draft, 2000
+        else if not @creating_draft
+          @create_draft()
       create_draft: ->
         component = this
         @creating_draft = true
