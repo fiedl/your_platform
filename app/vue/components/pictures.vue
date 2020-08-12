@@ -62,9 +62,8 @@
     props: ['attachments', 'editable', 'show_captions']
     data: ->
       current_attachments: @attachments
-      filtered_attachments: @attachments
       error: null
-      search_query: null
+      search_query: ""
     created: ->
       this.$root.$on 'search', @search
     methods:

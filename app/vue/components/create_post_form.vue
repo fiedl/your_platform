@@ -2,14 +2,19 @@
   %div.w-100.create_post_form
     %vue-dropzone{':options': "dropzone_options", ':useCustomSlot': "true", ':id': "'create_post_for_' + parent_type + '_' + parent.id", 'ref': "dropzone"}
       .input-group
-        %vue-wysiwyg{'ref': "wysiwyg", ':placeholder': "placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false : true"}
+        %vue-wysiwyg{'ref': "wysiwyg", ':placeholder': "placeholder || default_placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false : true"}
         .buttons_bottom
           .buttons
-            %a.btn.btn-primary.btn-icon{'v-if': "post.id && ((post.text.length > 10) || post.attachments.length > 0)", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submitting ? 'disabled' : ''"}
+            %a.btn.btn-primary.btn-icon{'v-if': "show_submit_button", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submitting ? 'disabled' : ''"}
             %a.btn.btn-white.btn-icon.upload_button{'v-show': "post.id", 'v-html': "camera_icon", title: "Bild hinzufügen", ':disabled': "submitting ? true : false", ':class': "submitting ? 'disabled' : ''"}
     .text-muted.mt-2{'v-if': "uploading == 1"} Bild wird hochgeladen ...
     .text-muted.mt-2{'v-if': "uploading > 1"} Bilder werden hochgeladen ...
     .error.text-truncate.mt-2{'v-if': "error", 'v-text': "error"}
+    .text-right
+      .ml-auto.mt-2.d-inline-block{'v-if': "show_submit_button && !publish_on_public_website"}
+        %label.form-check.form-switch
+          %input.form-check-input{type: 'checkbox', 'v-model': "post.publish_on_public_website", '@input': "on_input"}
+          %span.form-check-label Post auf unserer öffentlichen Website veröffentlichen
     .images.mt-2.row.row-sm{'v-if': "post.attachments && post.attachments.length > 0"}
       .col-6.col-sm-4{'v-for': "attachment in post.attachments", ':key': "attachment.id"}
         .image.form-imagecheck.mb-2
@@ -28,11 +33,16 @@
 
 
   CreatePostForm =
-    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via', 'parent_event']
+    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via', 'parent_event', 'publish_on_public_website']
     data: ->
       component = this
       {
-        post: @initial_post || {id: null, text: "", attachments: []}
+        post: @initial_post || {
+          id: null,
+          text: "",
+          attachments: [],
+          publish_on_public_website: @publish_on_public_website
+        }
         submitting: false
         creating_draft: false
         error: null
@@ -84,11 +94,11 @@
             component.post.id = new_post.id
             component.creating_draft = false
       save_draft: ->
-        if @post.id
-          component = this
-          Api.put "/posts/#{@post.id}",
+        component = this
+        if component.post.id
+          Api.put "/posts/#{component.post.id}",
             data:
-              post: @post
+              post: component.post
             error: (request, status, error)->
               component.error = request.responseText
       submit_post: ->
@@ -107,6 +117,7 @@
         @post.id = null
         @post.text = ""
         @post.attachments = []
+        @post.publish_on_public_website = false
         @$refs.wysiwyg.reset()
         @submitting = false
         @error = null
@@ -128,6 +139,13 @@
         @get_parent()
       parent_type: ->
         @get_parent_type()
+      show_submit_button: ->
+        @post.id && ((@post.text.length > 10) || @post.attachments.length > 0)
+      default_placeholder: ->
+        if @post.publish_on_public_website
+          "Öffentlich posten"
+        else
+          "Nachricht posten"
 
   export default CreatePostForm
 </script>

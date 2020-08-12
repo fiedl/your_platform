@@ -66,11 +66,12 @@ class Ability
     # Fast lane
     can :read, Pages::PublicPage
     can :read, Post, parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
+    can :read, Post, publish_on_public_website: true
     can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
     can [:read, :download], Attachment, parent_type: "Page", parent: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
     can [:read, :download], Attachment, parent_type: "SemesterCalendar"
     can [:read, :download], Attachment, parent_type: "Post", parent: { parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] } }
-
+    can [:read, :download], Attachment, parent_type: "Post", parent: { publish_on_public_website: true }
 
     if @user.try(:account) # has to be able to sign in
       if @user_by_auth_token

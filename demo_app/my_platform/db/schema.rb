@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200730210703) do
+ActiveRecord::Schema.define(version: 20200812200056) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string   "trackable_type"
@@ -392,7 +392,7 @@ ActiveRecord::Schema.define(version: 20200730210703) do
 
   create_table "posts", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string   "subject"
-    t.text     "text",            limit: 65535
+    t.text     "text",                      limit: 65535
     t.integer  "group_id"
     t.integer  "author_user_id"
     t.string   "external_author"
@@ -400,11 +400,12 @@ ActiveRecord::Schema.define(version: 20200730210703) do
     t.boolean  "sticky"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "entire_message",  limit: 65535
+    t.text     "entire_message",            limit: 65535
     t.string   "message_id"
     t.string   "content_type"
     t.string   "sent_via"
     t.datetime "published_at"
+    t.boolean  "publish_on_public_website"
     t.index ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
     t.index ["group_id"], name: "posts_group_id_fk", using: :btree
   end

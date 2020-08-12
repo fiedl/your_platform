@@ -6,10 +6,12 @@
           %vue-avatar{':user': "post.author"}
         .flex-fill
           %div
-            %small.float-right.text-muted{'v-text': "post.published_at_relative", ':title': "format_datetime(post.published_at)"}
-            %h4
+            %small.float-right{':title': "format_datetime(post.published_at)"}
+              %a.text-muted{':href': "'/posts/' + post.id", 'v-text': "post.published_at_relative"}
+            %h4.align-items-center.d-flex
               %a{':href': "post.author.path", 'v-if': "post.author.path"} {{ post.author.title }}
               %span{'v-else': true} {{ post.author.title }}
+              %span.badge.bg-blue.ml-2{'v-if': "post.publish_on_public_website && show_public_badges", title: "Auf öffentlichem Internetauftritt veröffentlicht"} Öffentlich
             %div{'v-html': "post.text"}
             %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "post.attachments"}
 </template>
@@ -18,7 +20,7 @@
   moment = require('moment')
 
   PostListGroup =
-    props: ['posts']
+    props: ['posts', 'show_public_badges']
     data: ->
       current_posts: @posts
       processed_posts: @posts
