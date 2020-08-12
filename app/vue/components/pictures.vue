@@ -7,7 +7,7 @@
           .remove_button.btn.btn-white.btn-icon{'v-if': "editable", '@click': "remove_attachment(attachment)", title: "Bild entfernen"}
             %i.fa.fa-trash
           %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
-        .text-muted{'v-if': "show_captions"}
+        .text-muted.mb-3.text-center{'v-if': "show_captions"}
           %vue-editable{':initial-value': "attachment.title", ':editable': "editable", placeholder: "Bildunterschrift hinzufügen", ':initial-object': "attachment", ':url': "'/api/v1/attachments/' + attachment.id", paramKey: "attachment[title]"}
 
     / Root element of PhotoSwipe. Must have class pswp.
