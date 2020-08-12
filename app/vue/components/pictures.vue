@@ -1,13 +1,13 @@
 <template lang="haml">
   .pictures
     .image_gallery.mt-2.row.row-sm
-      .col-12{'v-if': "attachments.length == 1", 'v-for': "attachment in attachments", ':key': "attachment.id"}
+      .col-12{'v-if': "attachments.length == 1", 'v-for': "attachment in current_attachments", ':key': "attachment.id"}
         .image.form-imagecheck.mb-2
           %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
-      .col-6{'v-if': "attachments.length == 2", 'v-for': "attachment in attachments", ':key': "attachment.id"}
+      .col-6{'v-if': "attachments.length == 2", 'v-for': "attachment in current_attachments", ':key': "attachment.id"}
         .image.form-imagecheck.mb-2
           %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
-      .col-6.col-sm-4{'v-if': "attachments.length > 2", 'v-for': "attachment in attachments", ':key': "attachment.id"}
+      .col-6.col-sm-4{'v-if': "attachments.length > 2", 'v-for': "attachment in current_attachments", ':key': "attachment.id"}
         .image.form-imagecheck.mb-2
           %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
 
@@ -60,15 +60,22 @@
 
   Pictures =
     props: ['attachments']
+    data: ->
+      current_attachments: @attachments
+    created: ->
+      this.$root.$on 'search', @search
     methods:
       activate_photoswipe_view: (attachment)->
         pswpElement = @$refs.photosweipe_element
         options = {index: @attachments.indexOf(attachment)}
         gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, @items, options)
         gallery.init()
+      search: (query)->
+        @current_attachments = @attachments.filter (attachment)->
+          attachment.title.toLowerCase().includes(query.toLowerCase())
     computed:
       items: ->
-        @attachments.map (attachment)->
+        @current_attachments.map (attachment)->
           {
             src: attachment.file.url
             thumbnail: attachment.file.medium.url
