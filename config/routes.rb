@@ -359,8 +359,10 @@ Rails.application.routes.draw do
       resources :pages
       resources :songs
       resources :posts do
+        resources :attachments
         post :publish, to: 'posts/publications#create'
       end
+      resources :attachments
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships

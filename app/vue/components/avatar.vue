@@ -8,7 +8,7 @@
     props: ['url', 'user', 'group']
     computed:
       avatar_path: ->
-        @url || @user.avatar_path || @group.avatar_path
+        @url || (@user && @user.avatar_path) || (@group && @group.avatar_path)
       style: ->
         "background-image: url(#{@avatar_path})"
 

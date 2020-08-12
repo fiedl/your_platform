@@ -11,6 +11,10 @@
               %a{':href': "post.author.path", 'v-if': "post.author.path"} {{ post.author.title }}
               %span{'v-else': true} {{ post.author.title }}
             %div{'v-html': "post.text"}
+            .images.mt-2.row.row-sm{'v-if': "post.attachments && post.attachments.length > 0"}
+              .col-6.col-sm-4{'v-for': "attachment in post.attachments", ':key': "attachment.id"}
+                .image.form-imagecheck.mb-2
+                  %img.form-imagecheck-image{':src': "attachment.file.medium.url"}
 
 </template>
 
