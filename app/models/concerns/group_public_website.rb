@@ -1,7 +1,7 @@
 concern :GroupPublicWebsite do
 
   def public_pages
-    descendant_pages.where(type: ["Pages::PublicPage", "Pages::PublicEventsPage"])
+    descendant_pages.public_pages
   end
 
   def public_home_page
@@ -18,8 +18,8 @@ concern :GroupPublicWebsite do
     studieren = generate_public_website_page title: "Studieren", content: "<h2>Studieren im Wingolf</h2>Beschreibe kurz, warum es es besser ist, mit eurer Verbindung zu studieren."
     wohnen = generate_public_website_page title: "Wohnen", content: "<h2>Wohnen im Wingolf</h2>Beschreibe beispielsweise kurz, was ihr für Zimmer habt und welche Mieter ihr sucht."
     veranstaltungen = generate_public_website_page title: "Veranstaltungen"
-    fotos = generate_public_website_page title: "Fotos"
-    kontakt = generate_public_website_page title: "Kontakt"
+    fotos = generate_public_website_page title: "Fotos", type: "Pages::PublicGalleryPage", content: "<h2>Fotos</h2>Auf diese Seite kannst Du ein ppar Fotos hochladen."
+    kontakt = generate_public_website_page title: "Kontakt", content: "<h2>Kontakt</h2><p>#{group.title}<br />#{group.postal_address.gsub("\n", "<br />")}</p><h2>Impressum</h2>..."
 
     return homepage
   end

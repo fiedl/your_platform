@@ -151,6 +151,7 @@ Rails.application.routes.draw do
   namespace :pages, path: '' do
     resources :public_pages, path: '/public'
     resources :public_events_pages, path: '/public/events'
+    resources :public_gallery_pages, path: '/public/galleries'
   end
 
   get :home_pages, to: 'pages/home_pages#index'

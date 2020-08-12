@@ -9,7 +9,7 @@ class Pages::PublicPage < Page
   end
 
   def public_child_pages
-    child_pages.where(type: ["Pages::PublicPage", "Pages::PublicEventsPage"])
+    child_pages.public_pages
   end
 
   def active_menu_page

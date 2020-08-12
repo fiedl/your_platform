@@ -1,9 +1,11 @@
 class Api::V1::AttachmentsController < Api::V1::BaseController
 
   expose :post, -> { Post.find params[:post_id] if params[:post_id] }
-  expose :parent, -> { post }
+  expose :page, -> { Page.find params[:page_id] if params[:page_id] }
+  expose :parent, -> { post || page }
 
   def create
+    raise 'no parent given' unless parent
     authorize! :update, parent
 
     new_attachment = parent.attachments.create! author: current_user
