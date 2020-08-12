@@ -48,7 +48,9 @@ module.exports = {
             runner: (/^win/.test(process.platform) ? 'ruby ' : '') + 'bin/rails runner'
           }
         }]
-      }
+      },
+      { test: /\.(gif|svg|jpg|png)$/, loader: 'file-loader' },
+      { test: /\.css$/, loader: 'style-loader!css-loader' },
     ]
   },
   resolve: {
