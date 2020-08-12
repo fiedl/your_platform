@@ -35,10 +35,10 @@
                 = link_to corporations_path, class: "dropdown-item #{'active' if controller_name == 'corporations'}" do
                   Verbindungen
               %li
-                %a.dropdown-item{:href => "./empty.html"}
+                = link_to groups_group_of_groups_path(Groups::PhvsParent.first), class: "dropdown-item #{'active' if current_navable == Groups::PhvsParent.first}" do
                   Philistervereine
               %li
-                %a.dropdown-item{:href => "./empty.html"}
+                = link_to groups_group_of_groups_path(Group.bvs_parent), class: "dropdown-item #{'active' if current_navable == Group.bvs_parent}" do
                   Bezirksverbände
 
           %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
