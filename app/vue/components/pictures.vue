@@ -3,7 +3,7 @@
     .error.text-truncate.mb-2{'v-if': "error", 'v-text': "error"}
     .image_gallery.mt-2.row.row-sm
       %div{'v-for': "attachment in filtered_attachments", ':key': "attachment.id", ':class': "col_class"}
-        .image.form-imagecheck.mb-2
+        .image.form-imagecheck.mb-2{':style': "aspect_ratio_style(attachment)"}
           .remove_button.btn.btn-white.btn-icon{'v-if': "editable", '@click': "remove_attachment(attachment)", title: "Bild entfernen"}
             %i.fa.fa-trash
           %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
@@ -81,6 +81,9 @@
         Api.delete "/attachments/#{attachment.id}",
           error: (request, status, error)->
             component.error = request.responseText
+      aspect_ratio_style: (attachment)->
+        # https://www.w3schools.com/howto/howto_css_aspect_ratio.asp
+        "padding-top: #{attachment.height / attachment.width * 100}%"
     computed:
       items: ->
         @filtered_attachments.map (attachment)->
@@ -116,6 +119,9 @@
 
       .image.form-imagecheck
         position: relative
+        img
+          position: absolute
+          top: 0
         .remove_button
           z-index: 61
           position: absolute
