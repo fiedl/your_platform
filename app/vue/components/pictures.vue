@@ -1,9 +1,15 @@
 <template lang="haml">
-  %div
-    .images.mt-2.row.row-sm
-      .col-6.col-sm-4{'v-for': "attachment in attachments", ':key': "attachment.id"}
+  .pictures
+    .image_gallery.mt-2.row.row-sm
+      .col-12{'v-if': "attachments.length == 1", 'v-for': "attachment in attachments", ':key': "attachment.id"}
         .image.form-imagecheck.mb-2
-          %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':alt': "attachment.title"}
+          %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
+      .col-6{'v-if': "attachments.length == 2", 'v-for': "attachment in attachments", ':key': "attachment.id"}
+        .image.form-imagecheck.mb-2
+          %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
+      .col-6.col-sm-4{'v-if': "attachments.length > 2", 'v-for': "attachment in attachments", ':key': "attachment.id"}
+        .image.form-imagecheck.mb-2
+          %img.form-imagecheck-image{':src': "attachment.file.medium.url", '@click': "activate_photoswipe_view(attachment)", ':title': "attachment.title"}
 
     / Root element of PhotoSwipe. Must have class pswp.
     .pswp{"aria-hidden": "true", role: "dialog", tabindex: "-1", 'ref': "photosweipe_element"}
@@ -73,3 +79,11 @@
 
   export default Pictures
 </script>
+
+<style lang="sass">
+  .pictures .image_gallery
+    img.form-imagecheck-image
+      opacity: 0.9
+    img.form-imagecheck-image:hover
+      opacity: 1.0
+</style>
