@@ -128,4 +128,19 @@ class SemesterCalendar < ApplicationRecord
     self.find_or_create_by(group_id: corporation.id, term_id: term.id)
   end
 
+  def next
+    self.class.find_or_create_by group_id: group.id, term_id: term.next.id
+  end
+
+  def previous
+    self.class.find_or_create_by group_id: group.id, term_id: term.previous.id
+  end
+
+  def as_json(*args)
+    super.merge({
+      title: title,
+      term: term.as_json
+    })
+  end
+
 end

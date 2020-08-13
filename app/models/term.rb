@@ -50,5 +50,13 @@ class Term < ApplicationRecord
     first_or_create_current
   end
 
+  def as_json(*args)
+    super.merge({
+      title: title,
+      start_at: start_at,
+      end_at: end_at,
+      type: type
+    })
+  end
 
 end

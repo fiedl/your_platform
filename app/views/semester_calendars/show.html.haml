@@ -1,6 +1,6 @@
 .page-header
   .row.align-itens-center
-    .col-auto
+    .col
       .page-pretitle= corporation.title
       .page-title
         Semesterprogramm
@@ -39,9 +39,10 @@
         = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year), class: 'form-select'
         = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type), class: 'form-select'
         = submit_tag "OK", class: 'btn btn-primary'
-        = link_to "Überblick", semester_calendars_path(group_id: corporation.id), class: 'btn btn-white ml-2', title: "Alle Semesterprogramme von #{corporation.title}"
+        - if can? :index, SemesterCalendar and can? :read, group
+          = link_to "Überblick", semester_calendars_path(group_id: corporation.id), class: 'btn btn-white ml-2', title: "Alle Semesterprogramme von #{corporation.title}"
 
-      %vue_semester_calendar_events{':initial_events': semester_calendar.events.select { |event| can? :read, event }.collect { |event| event.as_json(methods: [:aktive, :philister]).merge({attendees_count: event.attendees.count})}.to_json, ':editable': can?(:update, semester_calendar).to_json, ':group': group.to_json, default_location: group.postal_address}
+      %vue_semester_calendar_events{':initial_events': semester_calendar.events.select { |event| can? :read, event }.collect { |event| event.as_json(methods: [:aktive, :philister]).merge({attendees_count: event.attendees.count})}.to_json, ':editable': can?(:update, semester_calendar).to_json, ':group': group.to_json, default_location: group.postal_address, ':semester_calendar': semester_calendar.to_json, ':next_semester_calendar': semester_calendar.next.to_json}
 
   .col-md-4
     = render partial: 'groups/profile_card', locals: {group: corporation}

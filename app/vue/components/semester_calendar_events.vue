@@ -31,7 +31,11 @@
                     %i.fa.fa-trash{'@click': "remove_event(event)", 'v-if': "editable && editing"}
       .card-footer{'v-if': "editable"}
         .error.text-danger{'v-if': "error", 'v-text': "error"}
-        %a.btn.btn-white.btn-sm{'@click': "add_event"} Veranstaltung hinzufügen
+        .row
+          .col
+            %a.btn.btn-white.btn-sm{'@click': "add_event"} Veranstaltung hinzufügen
+          .col-auto
+            %a.btn.btn-white.btn-sm.ml-auto{'@click': "navigate_to_next_semester_calendar", 'v-if': "next_semester_calendar"} Nächstes Semester
 </template>
 
 <script lang="coffee">
@@ -39,7 +43,7 @@
   Api = require('../api.coffee').default
 
   SemesterCalendarEvents =
-    props: ['initial_events', 'group', 'editable', 'default_location']
+    props: ['initial_events', 'group', 'editable', 'default_location', 'semester_calendar', 'next_semester_calendar']
     data: ->
       events: @initial_events
       editing: false
@@ -49,8 +53,9 @@
         moment(event.start_at).format('MMMM YYYY')
       events_by_month: (month)->
         component = this
-        @events.filter (event)->
+        @events.filter((event)->
           component.event_month(event) == month
+        ).sort( (event) -> event.start_at )
       event_class: (event)->
         "#{if event.publish_on_global_website then 'global_event' else ''} #{if event.publish_on_local_website then 'local_event' else ''}"
       localized_datetime: (datetime)->
@@ -61,13 +66,10 @@
         "<a href=\"/events/#{event.id}\">#{event_name}</a>"
       add_event: ->
         component = this
-        latest_event = @events.sort( (event) -> event.start_at ).last()
-        latest_datetime = latest_event.start_at if latest_event
-        latest_datetime = moment().add(1, 'days').set('hour', 20).set('minute', 15).format() unless latest_datetime
         new_event = {
           id: null,
           name: "Neue Veranstaltung",
-          start_at: latest_datetime,
+          start_at: @default_date_for_new_event,
           location: @default_location,
           aktive: true,
           philister: false
@@ -95,7 +97,22 @@
         Api.put "/events/#{event.id}",
           data:
             event: event
+      navigate_to_next_semester_calendar: ->
+        if @next_semester_calendar
+          window.location = "/semester_calendars/#{@next_semester_calendar.id}"
     computed:
+      sorted_events: ->
+        @events.sort( (event) -> event.start_at )
+      latest_event: ->
+        @sorted_events.last()
+      default_date_for_new_event: ->
+        if @latest_event
+          @latest_event.start_at
+        else if @semester_calendar.term.start_at > moment().format()
+          moment(@semester_calendar.term.start_at).set('hour', 20).set('minute', 15).format()
+        else
+          latest_datetime = moment().add(1, 'days').set('hour', 20).set('minute', 15).format()
+
       months: ->
         component = this
         component.events.sort( (event) -> event.start_at ).map( (event) -> component.event_month(event) ).unique()

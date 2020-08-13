@@ -11,4 +11,12 @@ class Terms::Summer < Term
     "#{I18n.t(:summer_term)} #{year.to_s}"
   end
 
+  def next
+    Terms::Winter.find_or_create_by year: year
+  end
+
+  def previous
+    Terms::Winter.find_or_create_by year: year - 1
+  end
+
 end
