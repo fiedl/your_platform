@@ -71,7 +71,7 @@
               component.processing = "Fehler beim Entfernen"
             success: ->
               if component.current_page.id == component.root_page.id
-                window.location = "/"
+                window.location = "/websites"
               else
                 window.location = component.root_page.path
       create_main_page: ->

@@ -11,7 +11,25 @@ concern :GroupPublicWebsite do
   def generate_public_website
     homepage = child_pages.where(type: "Pages::PublicPage").first
     if not homepage
-      homepage = Pages::PublicPage.create title: "Willkommen", content: "<h2>Willkommen zu eurer neuen Homepage</h2><p>Fang doch am Besten mit einer kurzen Begrüßung an.</p>"
+      if self.subdomain.present?
+        domain = "#{self.subdomain}.#{AppVersion.domain}"
+        url = "https://#{domain}"
+        url_paragraph = "Aktuell könnt ihr die Seite über
+          <a href=\"#{url}\" target=\"_blank\">#{url}</a>
+          erreichen.
+        "
+      end
+      homepage = Pages::PublicPage.create(
+        title: "Willkommen",
+        domain: domain
+      )
+      homepage.update content: "
+        <h2>Willkommen zu eurer neuen Website</h2>
+        <p>Fang doch am Besten mit einer kurzen Begrüßung an.</p>
+        <p>Wenn ihr fertig seid, meldet euch beim AK Internet.
+          Dann helfen wir euch beim Einrichten der Domain.
+          #{url_paragraph}
+        </p>".gsub("\n", " ")
       child_pages << homepage
     end
     about = generate_public_website_page title: "Über uns", content: "<h2>Über uns</h2><p>Beschreibe hier doch kurz, wer ihr seid.</p>"
