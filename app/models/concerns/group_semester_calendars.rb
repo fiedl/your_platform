@@ -13,7 +13,11 @@ concern :GroupSemesterCalendars do
   end
 
   def semester_calendar
-    semester_calendars.current.last
+    semester_calendars.current.first
+  end
+
+  def semester_calendar!
+    semester_calendars.current.first_or_create
   end
 
 end

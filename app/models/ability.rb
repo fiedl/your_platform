@@ -645,9 +645,10 @@ class Ability
 
     # Nobody can destroy non-empty pages that are older than 10 minutes.
     # Pages that are no longer needed can be archived instead.
+    # Public pages can be destroyed until TODO we have the archive-pages interface back.
     #
     cannot :destroy, Page do |page|
-      (page.created_at < 10.minutes.ago) && page.not_empty?
+      (page.created_at < 10.minutes.ago) && page.not_empty? && !page.kind_of?(Pages::PublicPage)
     end
 
     # Nobody can destroy semester calendars with attachments.

@@ -30,6 +30,7 @@
                   %td{'v-if': "editing"}
                     %i.fa.fa-trash{'@click': "remove_event(event)", 'v-if': "editable && editing"}
       .card-footer{'v-if': "editable"}
+        .error.text-danger{'v-if': "error", 'v-text': "error"}
         %a.btn.btn-white.btn-sm{'@click': "add_event"} Veranstaltung hinzufügen
 </template>
 
@@ -38,10 +39,11 @@
   Api = require('../api.coffee').default
 
   SemesterCalendarEvents =
-    props: ['initial_events', 'semester_calendar', 'group', 'editable', 'default_location']
+    props: ['initial_events', 'group', 'editable', 'default_location']
     data: ->
       events: @initial_events
       editing: false
+      error: null
     methods:
       event_month: (event)->
         moment(event.start_at).format('MMMM YYYY')
@@ -58,9 +60,10 @@
       render_event_link: (event_name, event)->
         "<a href=\"/events/#{event.id}\">#{event_name}</a>"
       add_event: ->
+        component = this
         latest_event = @events.sort( (event) -> event.start_at ).last()
         latest_datetime = latest_event.start_at if latest_event
-        latest_datetime = moment().add(1, 'days').set('hour', 20).set('minute', 15) unless latest_datetime
+        latest_datetime = moment().add(1, 'days').set('hour', 20).set('minute', 15).format() unless latest_datetime
         new_event = {
           id: null,
           name: "Neue Veranstaltung",
@@ -75,8 +78,8 @@
           data:
             group_id: @group.id
             event: new_event
-          error: (result, message)->
-            console.log(result)
+          error: (request, status, error)->
+            component.error = request.responseText
           success: (event)->
             new_event.id = event.id
 
@@ -89,7 +92,6 @@
       on_toggle_edit_mode: (editMode)->
         @editing = editMode
       save_event: (event)->
-        console.log "update"
         Api.put "/events/#{event.id}",
           data:
             event: event

@@ -66,6 +66,7 @@ jQuery(document).ready ->
   Vue.component('vue-editable-image', EditableImage)
   Vue.component('vue-edit-box', EditBox)
   Vue.component('vue-profile-field', ProfileField)
+  Vue.component('vue_profile_field', ProfileField)
   Vue.component('vue-address-profile-field', AddressProfileField)
   Vue.component('vue-profile-fields', ProfileFields)
   Vue.component('vue-datepicker', Datepicker)

@@ -10,6 +10,7 @@ class Api::V1::PagesController < Api::V1::BaseController
 
   def destroy
     authorize! :destroy, page
+    page.descendant_pages.each(&:destroy!) if page.kind_of? Pages::PublicPage
     page.destroy!
     render json: {}, status: :ok
   end

@@ -6,7 +6,8 @@ class Term < ApplicationRecord
   default_scope { order('year asc, type asc') }
 
   scope :current, -> {
-    where(year: (Time.zone.now.year - 1)..(Time.zone.now.year + 1)).select { |term|
+    where(type: ["Terms::Winter", "Terms::Summer"])
+    .where(year: (Time.zone.now.year - 1)..(Time.zone.now.year + 1)).select { |term|
       term.current?
     }
   }

@@ -23,7 +23,8 @@
           %span{'v-text': "'Seite \"' + page_title + '\" umbenennen'"}
         %a.dropdown-item{'@click': "submit_remove"}
           %span{'v-html': "trash_icon"}
-          %span{'v-text': "'Seite \"' + page_title + '\" entfernen'"}
+          %span{'v-text': "'Internetauftritt löschen'", 'v-if': "current_page.id == root_page.id"}
+          %span{'v-text': "'Seite \"' + page_title + '\" löschen'", 'v-else': true}
         .dropdown-divider
         %a.dropdown-item{href: "?preview_as=public"}
           %span{'v-html': "preview_icon"}
@@ -52,24 +53,27 @@
       root_page: -> @pages[0]
     methods:
       submit_rename: ->
+        component = this
         @renaming = false
         Api.put "/pages/#{@current_page.id}",
           data:
             page:
               title: @page_title
           error: ->
-            @processing = "Fehler beim Umbenennen"
+            component.processing = "Fehler beim Umbenennen"
       submit_remove: ->
         component = this
-        @processing = "Seite wird entfernt ..."
-        Api.delete "/pages/#{@current_page.id}",
-          error: ->
-            @processing = "Fehler beim Entfernen"
-          success: ->
-            if component.current_page.id == component.root_page.id
-              window.location = "/"
-            else
-              window.location = component.root_page.path
+        confirm_text = if (@current_page.id == @root_page.id) then "Wirklich den kompletten Internetauftritt löschen?" else "Wirklich die Seite '#{@current_page.title}' und alle Unterseiten löschen?"
+        if confirm(confirm_text)
+          component.processing = "Seite wird entfernt ..."
+          Api.delete "/pages/#{component.current_page.id}",
+            error: ->
+              component.processing = "Fehler beim Entfernen"
+            success: ->
+              if component.current_page.id == component.root_page.id
+                window.location = "/"
+              else
+                window.location = component.root_page.path
       create_main_page: ->
         @new_page_name = "Neue Seite"
         @choosing_name_for_new_main_page = true
@@ -80,6 +84,7 @@
         @submit_create_main_page() if @choosing_name_for_new_main_page
         @submit_create_child_page() if @choosing_name_for_new_child_page
       submit_create_main_page: ->
+        component = this
         @choosing_name_for_new_main_page = false
         @processing = "Erstelle neue Seite ..."
         Api.post "/pages",
@@ -89,10 +94,11 @@
               title: @new_page_name
               content: "<h1>#{@new_page_name}</h1>"
           error: ->
-            @processing = "Fehler beim Erstellen"
+            component.processing = "Fehler beim Erstellen"
           success: (new_page)->
             window.location = new_page.path
       submit_create_child_page: ->
+        component = this
         @choosing_name_for_new_child_page = false
         @processing = "Erstelle neue Seite ..."
         Api.post "/pages",
@@ -102,7 +108,7 @@
               title: @new_page_name
               content: "<h1>#{@new_page_name}</h1>"
           error: ->
-            @processing = "Fehler beim Erstellen"
+            component.processing = "Fehler beim Erstellen"
           success: (new_page)->
             window.location = new_page.path
 

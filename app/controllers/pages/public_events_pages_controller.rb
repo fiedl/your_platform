@@ -2,7 +2,7 @@ class Pages::PublicEventsPagesController < Pages::PublicPagesController
 
   expose :page, -> { Pages::PublicEventsPage.find params[:id] }
   expose :group, -> { page.root.group }
-  expose :semester_calendar, -> { page.semester_calendar }
+  expose :semester_calendar, -> { page.semester_calendar! }
 
   private
 
