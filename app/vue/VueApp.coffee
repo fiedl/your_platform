@@ -45,6 +45,7 @@ import CreatePostForm from './components/create_post_form.vue'
 import PostListGroup from './components/post_list_group.vue'
 import Pictures from './components/pictures.vue'
 import PagePictures from './components/page_pictures.vue'
+import Calendar from './components/calendar.vue'
 
 jQuery(document).ready ->
   vue_apps = []
