@@ -24,16 +24,12 @@ module EditableHelper
     }
   end
 
-  def editable_profile_field(profile_field, type: 'text')
-    content_tag "vue-editable-property", "", {
-      property: "profile_field_#{profile_field.id}",
-      'initial-value': profile_field.value,
-      'initial-label': profile_field.label,
-      type: type,
-      editable: can?(:update, profile_field),
-      url: profile_field_path(profile_field),
-      'value-param-key': "profile_field[value]",
-      'label-param-key': "profile_field[label]"
+  def editable_profile_field(profile_field, hide_label: false)
+    content_tag "vue_profile_field", "", {
+      ':initial-profile-field': profile_field.as_json.merge({
+        editable: can?(:update, profile_field)
+      }).to_json,
+      ':hide_label': hide_label.to_json
     }
   end
 

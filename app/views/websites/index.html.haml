@@ -1,0 +1,34 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title= current_title
+
+.card
+  %vue-edit-box
+    .responsive-table
+      %table.table.card-table.table-vcenter
+        %thead
+          %tr
+            %th
+            %th Verbindung oder Gruppe
+            %th Website
+            %th Mit der Plattform erstellte Website
+        %tbody
+          - for group in groups
+            %tr
+              %td.w-1= group_avatar group
+              %td= link_to group.title, group
+              %td
+                - profile_field = group.profile_fields.where(type: "ProfileFields::Homepage").first_or_create
+                = editable_profile_field profile_field, hide_label: true
+              %td
+                - if group.public_home_page
+                  = link_to group.public_home_page, class: 'btn btn-success' do
+                    = website_icon
+                    Internetauftritt anzeigen
+                - elsif can? :update, group
+                  = link_to group_website_path(group_id: group), method: 'post', class: 'btn btn-white', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
+                    = website_icon
+                    Internetauftritt erstellen
+
+

@@ -12,6 +12,7 @@
       :render-value="render_value"
       :editable="editable"
       :label-editable="profile_field.label_editable"
+      :hide_label="hide_label"
     ></vue-editable-property>
     <span class="profile-field-with-children" v-if="profile_field.children && profile_field.children.length > 0">
       <div class="profile_field_parent_label">
@@ -47,7 +48,7 @@
 
 <script>
   export default {
-    props: ["initial-profile-field"],
+    props: ["initial-profile-field", "hide_label"],
     data() { return {
       profile_field: {}
     } },

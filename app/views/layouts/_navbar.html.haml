@@ -40,6 +40,17 @@
               %li
                 = link_to groups_group_of_groups_path(Group.bvs_parent), class: "dropdown-item #{'active' if current_navable == Group.bvs_parent}" do
                   Bezirksverbände
+              .dropdown-divider
+              %li
+                = link_to websites_path, class: "dropdown-item #{'active' if controller_name == 'websites'}" do
+                  Internetauftritte
+              - for group in current_user.current_corporations
+                - if group.public_home_page
+                  = link_to group.public_home_page, class: 'dropdown-item' do
+                    = "Internetauftritt #{group.name}"
+                - elsif can? :update, group
+                  = link_to group_website_path(group_id: group), method: 'post', class: 'dropdown-item', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
+                    = "Internetauftritt für #{group.name} erstellen"
 
           %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}

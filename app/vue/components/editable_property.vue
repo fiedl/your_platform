@@ -1,6 +1,6 @@
 <template>
   <div class="editable-property">
-    <label class="form-label" v-on:mouseenter="suggestEdit" v-on:click="editAndFocus" @dblclick="editLabel" >{{label}}</label>
+    <label class="form-label" v-if="! hide_label" v-on:mouseenter="suggestEdit" v-on:click="editAndFocus" @dblclick="editLabel" >{{label}}</label>
     <div class="value" v-if="! hideValue">
       <vue-editable :property="property" :type="type" :initial-value="initialValue" :url="url" :param-key="valueParamKey" :render-value="renderValue" :editable="editable"></vue-editable>
     </div>
@@ -9,7 +9,7 @@
 
 <script>
   export default {
-    props: ["initialLabel", "property", "type", "initialValue", "url", "valueParamKey", "labelParamKey", "renderValue", "editable", "labelEditable", "hideValue"],
+    props: ["initialLabel", "property", "type", "initialValue", "url", "valueParamKey", "labelParamKey", "renderValue", "editable", "labelEditable", "hideValue", "hide_label"],
     data() { return {
       label: ""
     } },

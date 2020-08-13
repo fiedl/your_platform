@@ -17,4 +17,15 @@ class WebsitesController < ApplicationController
     redirect_to new_home_page
   end
 
+  expose :groups_with_websites, -> { Group.where(id: Group.joins(:child_pages).merge(Page.public_pages)) }
+  expose :active_corporations, -> { Group.where(id: Corporation.active) }
+  expose :groups, -> { groups_with_websites.or active_corporations }
+
+  def index
+    authorize! :index, Pages::HomePage
+
+    set_current_tab :contacts
+    set_current_title "Öffentliche Internetauftritte"
+  end
+
 end
