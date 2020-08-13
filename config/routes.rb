@@ -157,6 +157,8 @@ Rails.application.routes.draw do
   get :home_pages, to: 'pages/home_pages#index'
   post :home_pages, to: 'pages/home_pages#create'
 
+  resources :calendars
+
   resources :logos
 
   resources :mailing_lists

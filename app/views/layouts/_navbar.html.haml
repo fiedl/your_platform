@@ -93,7 +93,7 @@
               %a.dropdown-item Wartburgfeste
               %a.dropdown-item Bundesconvente
               .dropdown-divider
-              %a.dropdown-item Kalender
+              = link_to "Kalender", calendars_path, class: "dropdown-item #{'active' if controller_name == 'calendars'}"
           %li.nav-item.dropdown{class: ('active' if current_tab == :documents)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block

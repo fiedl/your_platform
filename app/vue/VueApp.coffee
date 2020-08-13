@@ -103,6 +103,8 @@ jQuery(document).ready ->
   Vue.component('vue_pictures', Pictures)
   Vue.component('vue_page_pictures', PagePictures)
   Vue.component('vue-page-pictures', PagePictures)
+  Vue.component('vue-calendar', Calendar)
+  Vue.component('vue_calendar', Calendar)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

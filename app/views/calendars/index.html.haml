@@ -1,0 +1,11 @@
+.page-header
+  .row.align-itens-center
+    .col
+      .page-title Kalender
+    .col-auto
+      .ml-auto
+        %a.btn.btn-white{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner oder Smartphone abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten."}
+          = calendar_icon
+          Kalender-Feed abonnieren
+
+%vue_calendar{':calendars': calendars.to_json, timezone: timezone}

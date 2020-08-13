@@ -8,6 +8,9 @@ class Event < ApplicationRecord
 
   scope :important, -> { where(publish_on_global_website: true) }
   scope :commers, -> { where("name like ? or name like ?", "%commers%", "%kommers%") }
+  scope :wartburgfest, -> { where("name like ?", "%wartburgfest%") }
+  scope :wingolfsseminar, -> { where("name like ?", "%wingolfsseminar%") }
+
 
   include Structureable
   include EventGraph
@@ -23,7 +26,8 @@ class Event < ApplicationRecord
 
   def as_json(options = {})
     super(options).merge({
-      group_id: group_id
+      group_id: group_id,
+      # contact_person_id: contact_person_id  # FIXME: Add this back when we have a more performant association for contact people.
     })
   end
 
