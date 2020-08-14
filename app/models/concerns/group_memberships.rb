@@ -78,6 +78,10 @@ concern :GroupMemberships do
         self.errors.add :direct_member_titles_string, 'user not found: #{title}' unless u
         u
       end
+      self.members = new_members
+    end
+
+    def members=(new_members)
       for member in self.direct_members
         unassign_user member unless member.in? new_members if member
       end

@@ -46,6 +46,7 @@ import PostListGroup from './components/post_list_group.vue'
 import Pictures from './components/pictures.vue'
 import PagePictures from './components/page_pictures.vue'
 import Calendar from './components/calendar.vue'
+import OfficerCard from './components/officer_card.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -106,6 +107,8 @@ jQuery(document).ready ->
   Vue.component('vue-page-pictures', PagePictures)
   Vue.component('vue-calendar', Calendar)
   Vue.component('vue_calendar', Calendar)
+  Vue.component('vue-officer-card', OfficerCard)
+  Vue.component('vue_officer_card', OfficerCard)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

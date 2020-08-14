@@ -1,5 +1,5 @@
 <template>
-  <vue-select label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" class="form-select" :placeholder="placeholder">
+  <vue-select label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple">
     <template slot="option" slot-scope="option">
       <div class="option">
         <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
@@ -27,7 +27,7 @@
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users']
+    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users', 'multiple']
     data: ->
       selected: null
       options: []

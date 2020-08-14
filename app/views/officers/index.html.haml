@@ -7,29 +7,9 @@
 
 .row.row-deck.row-cards
   - for officer_group in officer_groups
-    - if officer_group.members.count == 1
-      - officer = officer_group.members.first
+    - if not officer_group.child_groups.any?
       .col-md-6.col-lg-4.filterable
-        .card
-          .card-body
-            .row.row-sm.align-items-center.mb-5
-              .col-auto
-                = user_avatar officer, class: "avatar-md"
-              .col
-                %h3.mb-0= link_to officer.title, officer
-                .text-muted.text-h5= officer_group.title
-            - if (mail = (officer_group.email || officer.email)).present?
-              .email
-                = mail_icon
-                = link_to mail, "mailto:#{mail}", class: "text-muted"
-            - if (phone = officer.phone).present?
-              .phone
-                = smartphone_icon
-                = link_to phone, "tel:#{phone}", class: "text-muted"
-          .card-footer
-            .btn-list
-              = link_to "Historie", group_officers_history_path(officer_group), class: "btn btn-white btn-sm"
-
+        = officer_card officer_group
     - elsif officer_group.child_groups.any?
       .col-md-6.col-lg-4.filterable
         .card
@@ -48,21 +28,3 @@
                         %h4.mb-0= link_to officer.title, officer
                         %small.text-muted= sub_officer_group.name
 
-    - elsif officer_group.members.count > 1
-      .col-md-6.col-lg-4.filterable
-        .card
-          .card-body
-            .row.row-sm
-              .col-auto
-                = group_avatar officer_group, class: "avatar-md"
-              .col
-                %h3.mb-0= officer_group.title
-                - for officer in officer_group.members
-                  .row.row-sm.align-items-center.mt-2
-                    .col-auto
-                      = user_avatar officer, class: "avatar-sm"
-                    .col
-                      %h4.mb-0= link_to officer.title, officer
-          .card-footer
-            .btn-list
-              = link_to "Historie", group_officers_history_path(officer_group), class: "btn btn-white btn-sm"

@@ -67,8 +67,12 @@
                     - if email = officer_group.email || officer.email
                       %small.d-block.mt-n1.text-muted= mail_to email, email, class: 'text-muted'
       .card-footer
-        = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
-          Alle Amtsträger anzeigen
+        .button-list
+          = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
+            Alle Amtsträger anzeigen
+          - if can? :update, group
+            = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
+              Amtsträger ändern
 
     .card
       .card-body
