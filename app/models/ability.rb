@@ -354,6 +354,10 @@ class Ability
     can :index, :officers
 
     if not read_only_mode?
+      # Jeder muss Dokumente erstellen können, z.B. um Konventsprotokolle hochzuladen.
+      # Ansonsten würden auch Verteilermails mit Dokumenten fehlschlagen.
+      can :create, Document
+
       # Regular users can create, update or destroy own profile fields
       # that do not belong to the General section.
       #

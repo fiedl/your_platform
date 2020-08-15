@@ -28,7 +28,7 @@ class Attachment < ApplicationRecord
 
   def groups
     if parent.kind_of? Post
-      parent.groups
+      parent.parent_groups
     elsif parent.kind_of? Page
       [parent.group]
     else

@@ -27,7 +27,7 @@ class User < ApplicationRecord
 
   delegate                  :send_welcome_email, :to => :account
 
-  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page), link_class_name: 'DagLink'
+  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page Post), link_class_name: 'DagLink'
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 

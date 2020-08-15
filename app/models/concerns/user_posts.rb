@@ -9,10 +9,7 @@ concern :UserPosts do
   end
 
   def posts_for_me
-    Post.from_or_to_user(self)
-  end
-  def posts_in_my_groups
-    Post.to_user_via_group(self)
+    Post.where(id: groups.collect { |group| group.descendant_post_ids + group.post_ids } + descendant_post_ids + post_ids)
   end
 
 end

@@ -3,7 +3,7 @@ class Group < ApplicationRecord
   has_dag_links ancestor_class_names: %w(Group Page Event), descendant_class_names: %w(Group User Page Workflow Project Post), link_class_name: 'DagLink'
 
   default_scope { includes(:flags) }
-  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :admins_parent, :group_of_groups, :everyone, :corporations_parent]) }
+  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :admins_parent, :group_of_groups, :everyone, :corporations_parent, :bvs_parent, :wbl_abo]).where.not(type: "Groups::PhvsParent") }
   scope :has_descendant_users, -> { includes(:descendant_users).where(users: { id: nil }) }
 
   include Structureable

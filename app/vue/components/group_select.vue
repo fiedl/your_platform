@@ -2,7 +2,7 @@
   <div>
     <vue-select label="title" :options="options" v-model="selected" @search="fetchGroups" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple" :filter="(list) => list">
       <template slot="selected-option" slot-scope="option">
-        <div class="selected d-flex align-items-center">
+        <div class="selected d-flex align-items-center" :title="option.corporation && (option.name + ' ' + option.corporation.name)">
           <vue-avatar :group="option" class="avatar-sm"></vue-avatar>
           {{ option.title }}
         </div>
@@ -31,7 +31,7 @@
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value', 'multiple', 'initial_options']
+    props: ['placeholder', 'value', 'multiple', 'initial_options', 'required_ability']
     data: ->
       selected: null
       options: @initial_options || []
@@ -51,6 +51,7 @@
           @current_fetch_xhr = Api.get "/search_groups", {
             data:
               query: search
+              required_ability: component.required_ability || 'index'
             success: (result)->
               component.options = result
               loading false

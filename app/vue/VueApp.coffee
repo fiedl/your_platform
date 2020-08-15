@@ -35,6 +35,7 @@ import Avatar from './components/avatar.vue'
 import NewRoomOccupancyForm from './components/new_room_occupancy_form.vue'
 import AccommodationSepaDebitForm from './components/accommodation_sepa_debit_form.vue'
 import EditableSetting from './components/editable_setting.vue'
+import NewDocumentsForm from './components/new_documents_form.vue'
 import AktivmeldungPage from './components/aktivmeldung_page.vue'
 import ChangeStatusButton from './components/change_status_button.vue'
 import StatusSelect from './components/status_select.vue'
@@ -92,6 +93,7 @@ jQuery(document).ready ->
   Vue.component('vue_accommodation_sepa_debit_form', AccommodationSepaDebitForm)
   Vue.component('vue-editable-setting', EditableSetting)
   Vue.component('vue_editable_setting', EditableSetting)
+  Vue.component('vue_new_documents_form', NewDocumentsForm)
   Vue.component('vue_aktivmeldung_page', AktivmeldungPage)
   Vue.component('vue_change_status_button', ChangeStatusButton)
   Vue.component('vue_status_select', StatusSelect)
