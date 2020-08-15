@@ -3,6 +3,8 @@
 - offices = group.officers_groups.first(3) unless offices.present?
 - if offices.present? || can?(:update, group)
   .card
+    .card-header
+      %h3.mb-0 Chargierte
     .card-body
       .row
         - offices.each do |office|
