@@ -25,6 +25,7 @@ class Post < ApplicationRecord
   def mentioned_users
     directly_mentioned_users + comments.collect { |comment| comment.mentioned_users }.flatten
   end
+  scope :public_post, -> { where(publish_on_public_website: true) }
 
   # This determines if the user has not read any part of this conversation,
   # which can be used to highlight the post in a collection.

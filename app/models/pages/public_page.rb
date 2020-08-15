@@ -18,4 +18,8 @@ class Pages::PublicPage < Page
     return (root.child_pages & self.ancestor_pages).first
   end
 
+  def posts
+    child_posts
+  end
+
 end
