@@ -465,6 +465,12 @@ class User < ApplicationRecord
     Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past.where(direct: true)
   end
 
+  def apply_gap_correction
+    corporations_with_past.collect do |corporation|
+      Memberships::Status.apply_gap_correction self, corporation, membership_type: "Memberships::Status"
+    end
+  end
+
 
   # Relationships
   # ------------------------------------------------------------------------------------------

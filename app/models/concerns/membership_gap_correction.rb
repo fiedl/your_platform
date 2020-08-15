@@ -24,7 +24,7 @@ concern :MembershipGapCorrection do
       memberships = memberships.order(:valid_from)
       memberships.to_a.to_enum.with_index.reverse_each do |membership, index| # https://stackoverflow.com/a/20248507/2066546
         following_membership = memberships[index + 1]
-        membership.valid_to = following_membership.valid_from if following_membership
+        membership.valid_to = following_membership.try(:valid_from)
         membership.save
       end
     end
