@@ -5,7 +5,6 @@ class Api::V1::OfficesController < Api::V1::BaseController
 
   def update
     authorize! :update, office
-    authorize! :manage, office if new_officers
 
     office.update office_params if params[:office].present?
     assign_new_officers if new_officers
