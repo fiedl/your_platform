@@ -7,15 +7,53 @@ concern :GroupSearch do
 
   class_methods do
 
-    def search(query, options = {})
-      limit = options[:limit] || 10000
-      (search_by_name(query).limit(limit) + search_by_breadcrumbs(query, limit: limit) + search_by_profile_fields(query)).uniq.first(limit)
+    def search(query, limit: 10000, current_user: nil)
+      if current_user
+        result = search_in_my_groups(query, user: current_user)
+        result = search_in_my_corporations(query, user: current_user) unless result.present?
+      end
+      result = search_by_name(query) unless result.present?
+      if current_user
+        result = search_in_my_groups(query, user: current_user, include_ancestors: true) unless result.present?
+        result = search_in_my_corporations(query, user: current_user, include_ancestors: true) unless result.present?
+      end
+      result = search_by_name(query, include_ancestors: true) unless result.present?
+      result = (search_by_name(query).limit(limit) + search_by_breadcrumbs(query, limit: limit) + search_by_profile_fields(query)) unless result.present?
+      self.where(id: result).regular.uniq.limit(limit)
+    end
+
+    def search_in_my_groups(query, user:, include_ancestors: false)
+      search_by_name(query, include_ancestors: include_ancestors).where(id: user.groups)
+    end
+
+    def search_in_my_corporations(query, user:, include_ancestors: false)
+      search_by_name(query, include_ancestors: include_ancestors).where(id: user.corporations.map(&:descendant_group_ids).flatten)
     end
 
     private
 
-    def search_by_name(query)
-      where("name LIKE ?", "%#{query}%")
+    def search_by_name(query, include_ancestors: false)
+      if include_ancestors
+        search_by_name_with_ancestors(query)
+      else
+        search_by_name_without_ancestors(query)
+      end
+    end
+
+    def search_by_name_with_ancestors(query)
+      relation = joins(:ancestor_groups)
+      query.split(" ").each do |expression|
+        relation = relation.where("groups.name LIKE ? OR groups.extensive_name LIKE ? OR ancestor_groups_groups.name LIKE ?", "%#{expression}%", "%#{expression}%", "%#{expression}%")
+      end
+      relation.uniq
+    end
+
+    def search_by_name_without_ancestors(query)
+      relation = self
+      query.split(" ").each do |expression|
+        relation = relation.where("groups.name LIKE ? OR groups.extensive_name LIKE ?", "%#{expression}%", "%#{expression}%")
+      end
+      relation.uniq
     end
 
     def search_by_extensive_name(query)

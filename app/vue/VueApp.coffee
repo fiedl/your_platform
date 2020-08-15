@@ -21,6 +21,7 @@ import Datepicker from './components/datepicker.vue'
 import NumberOfMembersChart from './components/number_of_members_chart.vue'
 import Leibfamilie from './components/leibfamilie.vue'
 import UserSelect from './components/user_select.vue'
+import GroupSelect from './components/group_select.vue'
 import ShowInEditMode from './components/show_in_edit_mode.vue'
 import GroupMembersTable from './components/group_members_table.vue'
 import AddGroupMemberForm from './components/add_group_member_form.vue'
@@ -75,6 +76,7 @@ jQuery(document).ready ->
   Vue.component('vue-number-of-members-chart', NumberOfMembersChart)
   Vue.component('vue-leibfamilie', Leibfamilie)
   Vue.component('vue-user-select', UserSelect)
+  Vue.component('vue-group-select', GroupSelect)
   Vue.component('vue-show-in-edit-mode', ShowInEditMode)
   Vue.component('vue-group-members-table', GroupMembersTable)
   Vue.component('vue-add-group-member-form', AddGroupMemberForm)

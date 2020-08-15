@@ -1,21 +1,22 @@
 <template>
   <div>
-    <vue-select label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple">
-      <template slot="option" slot-scope="option">
-        <div class="option">
-          <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
+    <vue-select label="title" :options="options" v-model="selected" @search="fetchGroups" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple" :filter="(list) => list">
+      <template slot="selected-option" slot-scope="option">
+        <div class="selected d-flex align-items-center">
+          <vue-avatar :group="option" class="avatar-sm"></vue-avatar>
           {{ option.title }}
         </div>
       </template>
-      <template slot="selected-option" slot-scope="option">
-        <div class="selected d-flex align-items-center">
-          <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
+      <template slot="option" slot-scope="option">
+        <div class="option">
+          <vue-avatar :group="option" class="avatar-sm"></vue-avatar>
           {{ option.title }}
+          <small class="text-muted ml-2" v-if="option.corporation && (option.corporation.id != option.id)" v-text="option.corporation.name"></small>
         </div>
       </template>
       <template #no-options="{ search, searching, loading }">
-        <span v-if="loading">Passende Personen werden gesucht. Bitte kurz warten ...</span>
-        <span v-else>Bitte Namen eingeben und Person auswählen.</span>
+        <span v-if="loading">Passende Gruppen werden gesucht. Bitte kurz warten ...</span>
+        <span v-else>Bitte Namen eingeben und Gruppe auswählen.</span>
       </template>
     </vue-select>
     <div class="error" v-if="error" v-text="error.first(100)"></div>
@@ -30,29 +31,26 @@
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users', 'multiple', 'initial_options']
+    props: ['placeholder', 'value', 'multiple', 'initial_options']
     data: ->
       selected: null
       options: @initial_options || []
       error: null
       current_fetch_xhr: null
-
     created: ->
       this.selected = this.value
     watch:
       value: ->
         this.selected = this.value
     methods:
-      fetchUsers: (search, loading) ->
+      fetchGroups: (search, loading) ->
         component = this
         if search.length > 3
           loading true
           @current_fetch_xhr.abort() if @current_fetch_xhr
-          @current_fetch_xhr = Api.get "/search_users", {
+          @current_fetch_xhr = Api.get "/search_groups", {
             data:
               query: search
-              find_non_wingolf_users: component.find_non_wingolf_isers
-              find_deceased_users: component.find_deceased_users
             success: (result)->
               component.options = result
               loading false
@@ -89,4 +87,8 @@
     padding-top: 4px
     padding-left: 3px
   .vs__search
+
+  .search_breadcrumb
+    margin-left: 5px
+    color: #999
 </style>
