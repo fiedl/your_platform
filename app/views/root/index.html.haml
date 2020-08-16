@@ -34,8 +34,8 @@
               .col-6.row.mb-3.align-items-center.filterable
                 %a.col-auto
                   %span.avatar{style: "background-image: url(#{user.avatar_path})"}
-                .col.text-truncate
-                  = link_to user.title, user, class: "text-body d-block text-truncate"
+                .col
+                  = link_to user.title, user, class: "text-body d-block"
                   %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
                   %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
 
