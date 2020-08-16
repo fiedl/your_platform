@@ -73,12 +73,17 @@
               %tr
                 %td.w-5
                   .thumb
-                    = image_tag document.thumb_path
+                    = link_to document do
+                      = image_tag document.thumb_path
                 %td= link_to document.title, document
                 %td.text-nowrap.text-muted
                   = event_icon
                   = localize document.created_at.to_date
                 %td.text-nowrap
-                  - if document.scope
+                  - if document.scope.kind_of? Group
+                    = folder_icon # group_icon would be more accurate, but having both icons in one list looks cluttered.
+                    = link_to document.scope.title, documents_path(group_id: document.scope.id)
+                  - elsif document.scope.kind_of? Page
                     = folder_icon
-                    = link_to document.scope.title, document.scope
+                    = link_to document.scope.title, documents_path(page_id: document.scope.id)
+
