@@ -3,12 +3,13 @@ class Ability
 
   def ability_classes
     [
-      Abilities::CorporationAbility,
-      Abilities::GroupAbility,
-      Abilities::UserAbility,
-      Abilities::UserAccountAbility,
-      Abilities::ProfileFieldAbility,
-      Abilities::DummyAbility
+      #Abilities::CorporationAbility,
+      #Abilities::GroupAbility,
+      #Abilities::UserAbility,
+      #Abilities::UserAccountAbility,
+      #Abilities::ProfileFieldAbility,
+      #Abilities::DummyAbility
+      Abilities::FreeGroupAbility
     ]
   end
 
@@ -109,6 +110,13 @@ class Ability
       end
     end
     rights_for_everyone
+
+    # This is the new ability structure.
+    # TODO: Migrate the other abilities to separated ability classes.
+    #
+    ability_classes.each do |ability_class|
+      self.merge ability_class.new(user, options)
+    end
   end
 
   def view_as?(role)
@@ -168,6 +176,7 @@ class Ability
     else
       can :manage, :all
       can :execute, [Workflow, WorkflowKit::Workflow]
+      cannot :destroy, Group
 
       # There are features for developers and beta testers.
       cannot :use, :all

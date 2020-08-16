@@ -51,6 +51,9 @@ concern :StructureableRoles do
     return Group.find(g.id)  # in order to have it the OfficerGroup class
   end
 
+  def create_office(name: "Neues Amt")
+    create_officer_group name: name
+  end
 
   # This method returns all officer_parent groups of the structureable object itself
   # and of the descendant groups of the structureable object.

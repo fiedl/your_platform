@@ -120,7 +120,10 @@ Rails.application.routes.draw do
     end
     resources :corporations_parents, controller: 'groups_of_groups'
     resources :rooms
+    resources :free_groups
   end
+
+  resources :free_groups, controller: 'groups/free_groups'
 
   get :corporations, to: 'corporations#index'
   resources :corporations, controller: 'groups' do
