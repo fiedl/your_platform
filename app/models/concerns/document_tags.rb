@@ -11,11 +11,10 @@ concern :DocumentTags do
 
   class_methods do
     def by_categories(categories)
-      matching_parent_pages = Page.where("title like ?", "%#{categories.join('%')}%").pluck(:id)
-      matching_parent_pages_descendants = Page.where("title like ?", "%#{categories.join('%')}%").map(&:descendant_page_ids).flatten
-      tagged(categories) +
-      where("title like ?", "%#{categories.join('%')}%") +
-      where(parent_type: 'Page', parent_id: matching_parent_pages + matching_parent_pages_descendants)
+      categories = categories.collect { |category| [category.singularize, category.pluralize] }.flatten
+      matching_pages = Page.where_like title: categories
+      matching_documents = self.where_like title: categories
+      matching_documents.or(where(parent_type: 'Page', parent_id: matching_pages.collect { |page| [page.id] + page.descendant_page_ids}.flatten))
     end
   end
 

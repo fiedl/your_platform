@@ -9,7 +9,7 @@ concern :UserDocuments do
   end
 
   def document_ids_in_my_scope
-    (self.news_pages + self.posts)
+    (self.news_pages + self.posts.published)
       .map(&:attachments).flatten
       .select { |attachment| attachment.document? }
       .map(&:id)

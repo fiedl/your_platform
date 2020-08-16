@@ -1,11 +1,41 @@
 .page-header
   .row.align-itens-center
     .col-auto
-      - if params[:tags]
+      - if tags
         .page-pretitle Dokumente
-        .page-title= params[:tags].join(" & ")
+        .page-title
+          = tag_icon
+          = link_to "Dokumente", documents_path
+          = " / "
+          = tags.join(" | ")
+      - elsif page
+        .page-pretitle Dokumente
+        .page-title
+          = folder_icon
+          = link_to "Dokumente", documents_path
+          = " / "
+          - page_breadcrumbs[0..-2].each do |page|
+            = link_to page.title, documents_path(page_id: page)
+            = " / "
+          = page.title
+      - elsif user
+        .page-pretitle Dokumente
+        .page-title
+          = user_icon
+          = link_to "Dokumente", documents_path
+          = " / "
+          = user.title
+      - elsif group
+        .page-pretitle Dokumente
+        .page-title
+          = group_icon
+          = link_to "Dokumente", documents_path
+          = " / "
+          = group.title
+      - elsif all
+        .page-title Alle Dokumente
       - else
-        .page-title Dokumente
+        .page-title Aktuelle Dokumente
     .col-auto.ml-auto.d-flex
       = link_to new_document_path, class: 'btn btn-primary' do
         = plus_icon
@@ -20,7 +50,7 @@
           %th Dokument
           %th Datum
           %th Ordner
-          %th Kategorie
+          -#%th Kategorie
       %tbody
         - for document in documents
           %tr
@@ -31,7 +61,7 @@
             %td
               %strong= link_to document.title, document, target: '_blank'
               %div
-                %small= link_to document.author.title, document.author, class: 'text-muted' if document.author
+                %small= link_to document.author.title, documents_path(user_id: document.author_user_id), class: 'text-muted' if document.author
             %td.text-nowrap.text-muted
               = event_icon
               = localize document.created_at.to_date
@@ -40,10 +70,13 @@
                 = group_icon
                 - document.groups.each do |group|
                   = link_to group.title, documents_path(group_id: group.id)
-              - elsif document.scope
+              - elsif document.parent.kind_of? Page
                 = folder_icon
-                = link_to document.scope.title, document.scope
-            %td.text-nowrap
-              = tag_icon
-              .d-inline-block
-                %vue_editable_tags{':initial_tags': ActsAsTaggableOn::Tag.all.to_json}
+                - if document.scope.kind_of?(Page) && document.scope != document.parent
+                  = link_to document.scope.title, documents_path(page_id: document.scope.id)
+                  = " / "
+                = link_to document.parent.title, documents_path(page_id: document.parent.id)
+            -#%td.text-nowrap
+            -#  = tag_icon
+            -#  .d-inline-block
+            -#    %vue_editable_tags{':initial_tags': ActsAsTaggableOn::Tag.all.to_json}

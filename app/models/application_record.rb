@@ -50,4 +50,20 @@ class ApplicationRecord < ActiveRecord::Base
     ["your_platform", Rails.env.to_s, ENV['TEST_ENV_NUMBER']]
   end
 
+  # For example:
+  #
+  #     Page.where_like title: "Foo"
+  #     Page.where_like title: ["Foo", "Bar"]
+  #
+  def self.where_like(attributes_hash)
+    query = self
+    attributes_hash.each do |attribute_name, value_or_values|
+      values = value_or_values.kind_of?(Array) ? value_or_values : [value_or_values]
+      query = values.collect do |value|
+        query.where("#{attribute_name} like ?", "%#{value}%")
+      end.inject(:or)
+    end
+    query
+  end
+
 end

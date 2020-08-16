@@ -9,6 +9,7 @@ class Attachment < ApplicationRecord
   before_destroy :remove_file!
 
   scope :logos, -> { where('title like ?', "%logo%") }
+  scope :documents, -> { where('content_type like ? or content_type like?', "application/pdf", "%document%") }
 
   include Flags
   include HasAuthor

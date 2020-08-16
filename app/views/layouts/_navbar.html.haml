@@ -106,9 +106,9 @@
                   = link_to new_document_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'new'}" do
                     Dokumente hochladen
                 .dropdown-divider
-              %li= link_to "Aktuelle Dokumente", documents_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags].blank?}"
+              %li= link_to "Aktuelle Dokumente", documents_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags].blank? and params[:group_id].blank? and params[:page_id].blank? and params[:user_id].blank? and params[:all].blank?}"
               .dropdown-divider
-              - %w(Vorlagen Protokolle Wingolfsblätter).each do |category|
+              - %w(Wingolfsblätter Protokolle Satzungen Rundschreiben Vorlagen).each do |category|
                 %li= link_to category, documents_path(tags: [category]), class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags] == [category]}"
           %li.nav-item.dropdown{class: ('active' if current_tab == :communication)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}

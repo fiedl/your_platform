@@ -33,7 +33,7 @@ class Page < ApplicationRecord
   include PageAnalytics
 
   scope :regular, -> {
-    where(type: nil)
+    where(type: nil).not_flagged([:intranet_root])
   }
 
   def not_empty?
