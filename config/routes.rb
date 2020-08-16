@@ -59,6 +59,8 @@ Rails.application.routes.draw do
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
     post :renew_cache, to: 'cache_renewals#create'
     get :renew_cache, to: 'cache_renewals#create'
+    get :groups, to: 'groups#index'
+    get :documents, to: 'documents#index'
   end
 
   get :settings, to: 'user_settings#index'
@@ -107,11 +109,10 @@ Rails.application.routes.draw do
     end
     get :website, to: 'websites#show'
     post :website, to: 'websites#create'
+    get :documents, to: 'documents#index'
   end
 
   resources :websites
-
-  resources :my_groups
 
   namespace :groups, path: "" do
     resources :groups_of_groups do
@@ -146,6 +147,7 @@ Rails.application.routes.draw do
     get :renew_cache, to: 'cache_renewals#create'
     resources :logos, controller: :logos
     resources :relocations, controller: 'page_relocations'
+    get :documents, to: 'documents#index'
   end
 
   namespace :pages, path: '' do

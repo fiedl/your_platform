@@ -4,19 +4,21 @@ class GroupsController < ApplicationController
   authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
 
-  expose :group
-  expose :officer_groups, -> { group.important_officer_groups.any? ? group.important_officer_groups : group.officers_groups_of_self_and_descendant_groups }
+  expose :user, -> { User.find params[:user_id] if params[:user_id].present? }
+  expose :parent, -> { user }
+  expose :groups, -> { parent.groups.regular }
 
   def index
-    @group = @parent_group = Group.find(params[:group_id]) if params[:group_id]
-    @groups = (@parent_group.try(:child_groups) || Group.all).includes(:flags)
+    raise 'no parent given' unless parent
+    authorize! :read, parent
 
-    # TODO: Authorize
-
-    set_current_navable(@parent_group || Page.intranet_root)
-    set_current_title(@parent_group.try(:title) || t(:groups))
-    set_current_activity :is_looking_at_group, @parent_group if @parent_group
+    set_current_navable parent
+    set_current_title "Gruppen von #{parent.title}"
+    set_current_tab :members
   end
+
+  expose :group
+  expose :officer_groups, -> { group.important_officer_groups.any? ? group.important_officer_groups : group.officers_groups_of_self_and_descendant_groups }
 
   def show
     set_current_title group.title

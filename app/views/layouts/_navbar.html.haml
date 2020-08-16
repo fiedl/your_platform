@@ -64,6 +64,8 @@
                   = link_to new_aktivmeldung_path, class: "dropdown-item #{'active' if controller_name == 'aktivmeldungen'}" do
                     Aktivmeldung eintragen
                 .dropdown-divider
+              %li
+                = link_to "Meine Gruppen", user_groups_path(user_id: current_user.id), class: "dropdown-item #{'active' if (controller_name == 'groups') && (action_name == 'index') && (params[:user_id].to_i == current_user.id)}"
               - current_user.corporations.each do |corporation|
                 %li
                   %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if (corporation == current_navable) && controller_name == 'group_members')}

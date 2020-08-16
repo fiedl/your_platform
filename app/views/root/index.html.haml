@@ -82,8 +82,8 @@
                 %td.text-nowrap
                   - if document.scope.kind_of? Group
                     = folder_icon # group_icon would be more accurate, but having both icons in one list looks cluttered.
-                    = link_to document.scope.title, documents_path(group_id: document.scope.id)
+                    = link_to document.scope.title, group_documents_path(group_id: document.scope.id)
                   - elsif document.scope.kind_of? Page
                     = folder_icon
-                    = link_to document.scope.title, documents_path(page_id: document.scope.id)
+                    = link_to document.scope.title, page_documents_path(page_id: document.scope.id)
 

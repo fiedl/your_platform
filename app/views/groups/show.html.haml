@@ -1,6 +1,8 @@
 .row
   .col-lg-4
-    = render partial: 'groups/profile_card', locals: {group: group}
+    = render layout: 'groups/profile_card', locals: {group: group} do
+      .text-center.pb-4.px-4
+        = editable group, :body, editable: can?(:update, group), type: 'wysiwyg'
 
     - chart = group.number_of_members_chart
     %vue-number-of-members-chart{height: "50px",

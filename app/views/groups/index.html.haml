@@ -1,5 +1,27 @@
-= render partial: 'groups/tabs', locals: {active: 'subgroups'}
+.page-header
+  .row.align-itens-center
+    .col
+      .page-pretitle= parent.title
+      .page-title Gruppen
+    .col-auto
+      .ml-auto
+        - if can? :create, Groups::FreeGroup
+          = link_to free_groups_path, method: 'post', class: 'btn btn-primary' do
+            = plus_icon
+            Gruppe gründen
 
-%h1.group_of_groups.group_index= current_title
-%div
-  = render partial: 'groups/group_list', locals: {groups: @groups}
+.row.row-deck
+  - for group in groups
+    .col-md-4.col-sm-6
+      = render layout: 'groups/profile_card', locals: {group: group} do
+        .text-center.mb-5
+          .members_count
+            Mitglieder:
+            = group.members.count
+          - if user && valid_from = Membership.where(ancestor_id: group.id, descendant_id: user.id).first.valid_from
+            .text-center.mt-2.text-muted
+              Mitglied seit:
+              = localize valid_from.to_date
+        .card-footer
+          = link_to "Mitglieder", group_members_path(group), class: 'btn btn-white btn-sm'
+          = link_to "Profil", group_path(group), class: 'btn btn-white btn-sm'
