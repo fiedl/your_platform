@@ -7,6 +7,7 @@ concern :ErrorHandling do
   end
 
   def render_error(exception)
+    ExceptionNotifier.notify_exception(exception)
     @error_message = exception.message
     render template: "errors/_error"
   end
