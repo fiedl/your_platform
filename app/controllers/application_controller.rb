@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
   include CachingSwitch
+  include ErrorHandling
 
 
   # We use this custom method to render a partial to a json string.

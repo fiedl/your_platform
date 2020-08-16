@@ -1,0 +1,14 @@
+.empty
+  .empty-icon.mb-5
+    %img{src: "https://raw.githubusercontent.com/tabler/tabler/5aa325a5828019b26342a9d98e8f79e78d59939d/static/illustrations/undraw_bug_fixing_oc7a.svg", height: 150}
+
+  .empty-title.h3 Es ist ein Fehler aufgetreten
+  .empty-subtitle.text-muted
+    = @error_message
+  .empty-subtitle.text-muted
+    %p Wir haben automatisch einen Fehlerbericht erhalten und melden uns bei Dir, wenn wir weitere Fragen haben oder sobald das Problem behoben ist.
+    %p Dein AK Internet
+  .empty-action
+    = link_to root_path, class: "btn btn-primary" do
+      = home_icon
+      Zurück zur Startseite

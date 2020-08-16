@@ -1,0 +1,45 @@
+.empty
+  .empty-icon.mb-5
+    %img{src: "https://raw.githubusercontent.com/tabler/tabler/5aa325a/static/illustrations/undraw_quitting_time_dm8t.svg", height: 150}
+
+  .empty-title.h3
+    Dir fehlen Berechtigungen, um diese Seite anzuzeigen
+  .empty-subtitle.text-muted
+    = @error_message
+
+  - if not current_user.present?
+    .empty-subtitle.mt-5
+      %p Du bist noch nicht angemeldet. Wahrscheinlich liegt es daran.
+      %p
+        Ansonsten melde Dich einfach bei uns. Wir helfen gerne weiter!
+        %br
+        Dein AK Internet
+
+    .empty-action
+      = link_to sign_in_path, class: "btn btn-primary" do
+        = user_icon
+        Jetzt einloggen
+
+  - elsif current_role.to_s.present? && current_role_view != current_role.to_s
+    .empty-subtitle.mt-5
+      - if current_role_view.present?
+        %p
+          = "Du verwendest gerade die Vorschau \"#{translate current_role_view.to_s}\"."
+          %br
+          Damit fehlen Dir die nötigen Rechte.
+
+    .empty-action
+      = link_to url_for(preview_as: current_role.to_s), class: "btn btn-primary" do
+        = user_icon
+        = "Als #{translate current_role.to_s} anzeigen"
+
+  - elsif can_override_access_denied?
+    .empty-subtitle.mt-5
+      Du hast die Möglichkeit, diese Zugriffsbeschränkung mit Deinen Admin-Rechten zu umgehen. Der Vorgang wird dann aber geloggt, um Missbrauch zu vermeiden.
+
+    .empty-action
+      = link_to url_for(admins_only_override: true), class: "btn btn-danger" do
+        = user_icon
+        = "Trotzdem zugreifen"
+
+

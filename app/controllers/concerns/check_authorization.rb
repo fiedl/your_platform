@@ -8,25 +8,6 @@ concern :CheckAuthorization do
     before_action :configure_permitted_devise_parameters, if: :devise_controller?
 
     check_authorization(:unless => :devise_controller?)
-
-
-    rescue_from CanCan::AccessDenied do |exception|
-      Rails.logger.info "Access denied for user #{current_user.try(:id)} on #{exception.action} for #{session['exception.subject']}."
-      if request.format.html? || controller_name == "attachment_downloads"
-        session['exception.action'] = exception.action
-        if exception.subject.kind_of?(String) or exception.subject.kind_of?(Symbol)
-          session['exception.subject'] = exception.subject
-        else
-          session['exception.subject'] = "#{exception.subject.class.name} #{exception.subject.id if exception.subject.respond_to?(:id)}"
-          # exception.subject.to_s.first(50)
-        end
-        session['return_to_after_login'] = request.fullpath
-        store_location_for :user_account, request.fullpath
-        redirect_to errors_unauthorized_url
-      else
-        raise CanCan::AccessDenied, exception
-      end
-    end
   end
 
   # MiniProfiler is a tool that shows the page load time in the top left corner of
