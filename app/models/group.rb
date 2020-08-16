@@ -87,7 +87,7 @@ class Group < ApplicationRecord
 
   def name_with_corporation
     if self.corporation_id && (self.corporation_id != self.id)
-      "#{self.name} (#{self.corporation.name})"
+      "#{self.name} #{self.corporation.name}"
     else
       self.name
     end
