@@ -1,5 +1,33 @@
-= render partial: 'groups/tabs', locals: {active: 'posts'} if @group
-= render partial: 'new' if @new_post
-#posts= render @posts
+.page-header
+  .row.align-itens-center
+    .col-auto
+      - if group
+        .page-title
+          = mail_icon
+          = link_to "Posts", posts_path
+          = " / "
+          = group.name
+      - else
+        .page-title Posts
+.row
+  .d-none.d-md-block.col-md-4
+    .list-group.list-group-transparent
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{href: posts_path, class: ('active' if not group)}
+        .mr-3= inbox_icon
+        Posteingang
+      - for menu_group in menu_groups
+        %a.list-group-item.list-group-item-action.d-flex.align-items-center{href: group_posts_path(menu_group), class: ('active' if menu_group == group)}
+          .mr-3= group_icon
+          = menu_group.name
+          - if menu_group.posts.count > 0
+            %span.ml-auto.badge.badge-gray= menu_group.posts.count
+  .col-12.col-md-8
+    .card
+      - if can? :create, Post
+        .card-header
+          - if group
+            %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, ':parent_group': group.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: :attachments), ':show_publish_on_website_toggle': (group.public_home_page.present?).to_b.to_json, ':show_send_via_email_toggle': true.to_json}
+          - else
+            %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: [:attachments, :parent_groups]), ':suggested_groups': current_user.groups.regular.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path}) }.to_json}
+      %vue_post_list_group{':posts': posts.collect { |post| post.as_json.merge({author: post.author.as_json.merge({path: (polymorphic_path(post.author) if can?(:read, post.author))}), attachments: post.attachments.as_json}, groups: (post.parent_groups + [post.group] - [nil]).as_json) }.to_json}
 
-#load_more= link_to t(:show_more), "?limit=#{(params[:limit] || 1).to_i * 10}"

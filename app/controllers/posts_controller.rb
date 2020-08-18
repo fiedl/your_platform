@@ -1,214 +1,74 @@
 class PostsController < ApplicationController
 
-  authorize_resource
-  skip_authorize_resource only: [:new, :create, :preview, :deliver, :index]
-  skip_authorization_check only: [:preview]
-
-  # This will skip the cross-site-forgery protection for POST /posts.json,
-  # since incoming emails are not sent via a form in this web app,
-  # nor is the incoming email signed in.
-  #
-  # This is copied from:
-  # https://github.com/ivaldi/brimir: tickets_controller.rb
-  #
-  # TODO: Is there a better way to do this?
-  #
-  skip_before_action :verify_authenticity_token, only: :create, if: 'request.format.json?'
-
-  def index
-    params[:limit] ||= 10
-    if params[:group_id].present?
-      @group = Group.find(params[:group_id])
-      @posts = @group.posts.order('sent_at DESC').limit(params[:limit]) if @group
-
-      authorize! :index_posts, @group
-
-      @new_post = Post.new
-      @new_post.group = @group
-      @new_post.author = current_user
-
-      set_current_title "#{t(:posts)} - #{@group.name}"
-      set_current_navable @group
-      set_current_activity :looks_at_posts, @group
-      set_current_access :group
-      set_current_access_text I18n.t(:all_members_of_group_name_can_read_these_posts, group_name: @group.name)
-
-      cookies[:group_tab] = "posts"
-    else
-      @posts = Post.from_or_to_user(current_user).limit(params[:limit]).select { |post| can? :read, post }.reverse
-      @posts.each { |post| authorize! :read, post }
-
-      set_current_title t(:my_posts)
-    end
-  end
+  expose :post
 
   def show
-    @post = Post.find(params[:id])
-    @group = @post.group
+    authorize! :read, post
 
-    @show_all_comments = true
-    @keep_polling_delivery_counters = (@post.created_at >= 5.minutes.ago)
-    @show_delivery_report = params[:show_delivery_report].present?
-
-    set_current_title @post.subject
-    set_current_navable @group
-    set_current_activity :looks_at_posts, @group
-    set_current_access :group
-    set_current_access_text I18n.t(:author_of_post_members_of_group_name_and_mentioned_users_can_read_and_comment_this_post, group_name: @group.name)
+    set_current_tab :communication
+    set_current_title post.subject || post.text.first(30)
   end
 
-  def new
-    @group = Group.find params[:group_id] if params[:group_id].present?
-    authorize! :create_post_for, @group
+  def update
+    authorize! :update, post
+    raise "Cannot modify published or sent posts, only drafts." unless post.draft?
 
-    @new_post = Post.new
-    @new_post.group = @group
-    @new_post.author = current_user
-
-    set_current_navable @group
-    set_current_activity :writes_a_message_to_group, @group
-    set_current_access :group
-    set_current_access_text I18n.t(:members_of_group_and_global_officers_can_write_posts, group_name: @group.name)
+    post.update! post_params
+    render json: {}, status: :ok
   end
 
-  def create
-    return create_via_email if params[:message].present?
+  def destroy
+    authorize! :destroy, post
+    raise "Cannot destroy published or sent posts, only drafts." unless post.draft?
+    post.destroy!
+    render json: {}, status: :ok
+  end
 
-    @group = Group.find(params[:group_id] || params[:post][:group_id] || raise(ActionController::ParameterMissing, 'no group given'))
-    authorize! :create_post_for, @group
 
-    @text = params[:text] || params[:post][:text]
-    @subject = params[:subject] || params[:post][:text].split("\n").first.first(100)
-    @attachments_attributes = params[:attachments_attributes] || params[:post].try(:[], :attachments_attributes) || []
+  expose :user, -> { User.find params[:user_id] if params[:user_id].present? }
+  expose :group, -> { Group.find params[:group_id] if params[:group_id].present? }
+  expose :parent, -> { group || user || current_user }
 
-    if params[:recipient] == 'me'
-      @recipients = [current_user]
+  expose :posts, -> {
+    posts = parent.posts.published
+    if not group
+      posts = posts
+        .where("published_at is null or published_at > ?", 1.year.ago)
+        .where("sent_at is null or sent_at > ?", 1.year.ago)
+    end
+    posts = posts
+      .order(published_at: :desc, sent_at: :desc, created_at: :desc)
+      .limit(50)
+  }
+
+  expose :drafted_post, -> {
+    current_user.drafted_posts.where(sent_via: post_draft_via_key).order(created_at: :desc).first_or_create do |post|
+      post.parent_groups << group if group
+    end
+  }
+
+  expose :post_draft_via_key, -> {
+    if parent
+      "posts-index-#{parent.class.name}-#{parent.id}"
     else
-      if params[:valid_from].present?
-        @memberships = @group.memberships.started_after(params[:valid_from].to_datetime)
-        @recipients = @group.members.where(dag_links: {id: @memberships.map(&:id)})
-        raise ActionController::ParameterMissing, 'validation error: the number of recipients does not match.' if @recipients.count != params[:recipients_count].to_i
-      else
-        @recipients = @group.members
-      end
+      "posts-index"
     end
+  }
 
-    @post = Post.new subject: @subject, text: @text, group_id: @group.id, author_user_id: current_user.id, sent_at: Time.zone.now, attachments_attributes: @attachments_attributes
-    @post.save!
+  expose :menu_groups, -> { current_user.groups.regular }
 
-    if params[:notification] == "instantly"
-      @send_counter = @post.send_as_email_to_recipients @recipients
-      Notification.create_from_post(@post, sent_at: Time.zone.now) unless params[:recipient] == 'me'
-      flash[:notice] = "Nachricht wird an #{@send_counter} Empfänger versandt."
-    else
-      Notification.create_from_post(@post) unless params[:recipient] == 'me'
-      flash[:notice] = "Nachricht wurde gespeichert. #{@recipients.count} Empfänger werden gemäß ihrer eigenen Benachrichtigungs-Einstellungen informiert, spätestens jedoch nach einem Tag."
-    end
+  def index
+    raise 'no parent given' unless parent
+    authorize! :index_posts, parent
 
-    Mention.create_multiple_and_notify_instantly(current_user, @post, @post.text) unless params[:recipient] == 'me'
-
-    @post.destroy if params[:recipient] == 'me'
-
-    respond_to do |format|
-      format.html do
-        if params[:post][:sent_from_root_page]
-          redirect_to root_path, change: 'social_stream'
-        else
-          redirect_to group_posts_path(@group), change: 'posts'
-        end
-      end
-      format.json { render json: {recipients_count: @send_counter, post_url: post_path(@post)} }
-    end
-
-  end
-
-  def preview
-    respond_to do |format|
-      format.json do
-        render json: {
-          text: params[:text],
-          preview: view_context.markup(params[:text])
-        }
-      end
-      format.html do
-        render html: view_context.markup(params[:text])
-      end
-    end
-  end
-
-  # PUT posts/123/deliver
-  #
-  # This forces a post delivery, which is useful when the user decides
-  # that a post should be delivered instantly after creating the post.
-  # Otherwise, the recipients would be notified according to their own
-  # notification policy.
-  #
-  def deliver
-    @post = Post.find params[:post_id]
-    authorize! :deliver, @post
-    @post.notify_recipients
-    respond_to do |format|
-      format.json { render json: @post }
-    end
+    set_current_title "Posts"
+    set_current_tab :communication
   end
 
   private
 
   def post_params
-    params.require(:post).permit(:author_user_id, :external_author, :group_id, :sent_at, :sticky, :subject, :text, :sent_via, :attachments => [:description, :file, :parent_id, :parent_type, :title, :author])
-  end
-
-  # This methods processes incoming email messages that can be sent through
-  #
-  #     POST /posts.json
-  #
-  # with the message sent as the `message` parameter.
-  # This can be tested like this:
-  #
-  #     cat testmessage.txt | curl -s -o /dev/null --data-urlencode message@- http://127.0.0.1:3000/posts.json
-  #
-  # We've adopted this idea from:
-  # https://github.com/ivaldi/brimir
-  #
-  def create_via_email
-    #
-    # ## Authorization
-    #
-    # In case of comments, the user is authenticated by his user token that is included in the
-    # reply-to email address, e.g. user-aeng9iLe...oi2iSh7Hahr.post-345.create-comment.plattform@example.com.
-    # We do not check authorization for comments at the moment. TODO
-    #
-    # In case of posts, the user is authenticated by the sender email address.
-    # TODO: Support uploading public keys to protect from forged email addresses.
-    # The authorization is done in the StoreMailAsPostsAndSendGroupMailJob.
-    # Rejection messages are also sent in the StoreMailAsPostsAndSendGroupMailJob.
-    #
-    # The following authorization step generally checks whether the platform mailgate
-    # should be used. This way, the mailgate can be switched off in the Ability class.
-    #
-    authorize! :use, :platform_mailgate
-
-    if params[:message]
-      if ReceivedMail.new(params[:message]).recipient_email.include?('.create-comment.plattform@')
-        # Then this responds to a conversation and should not create a new post but a comment instead.
-        # Address example: user-aeng9iLei8lahso9shohfu0vaeth4oom2kooloi2iSh7Hahr.post-345.create-comment.plattform@example.com
-        #
-        if @comment = ReceivedCommentMail.new(params[:message]).store_as_comment_if_authorized
-          Notification.create_from_comment(@comment)
-          @posts = [@comment.commentable]
-        end
-      else
-        # This is the regular case: Creating posts from an email ("group mail feature").
-        # Address exmaple: my-group@example.com
-        #
-        # In order to process only one incoming email at a time, we use a job here.
-        # Otherwise, two emails with the same message id could
-        # be processed at the same time by two processes, resulting in duplicate messages.
-        #
-        StoreMailAsPostsAndSendGroupMailJob.perform(params[:message])
-      end
-    end
-    render json: (@posts || [])
+    params.require(:post).permit(:text)
   end
 
 end

@@ -120,6 +120,9 @@
                 Kommunikation
             %ul.dropdown-menu
               %li
+                = link_to posts_path, class: "dropdown-item #{'active' if controller_name == 'posts'}" do
+                  Posts
+              %li
                 = link_to mailing_lists_path, class: "dropdown-item #{'active' if controller_name == 'mailing_lists'}" do
                   = t :mailing_lists
               %li

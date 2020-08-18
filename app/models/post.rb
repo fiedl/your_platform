@@ -25,4 +25,8 @@ class Post < ApplicationRecord
     PostDelivery.where(post_id: self.id, user_id: user.id).first_or_create
   end
 
+  def groups
+    Group.where(id: group_id).or(Group.where(id: parent_groups))
+  end
+
 end

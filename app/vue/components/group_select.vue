@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapper">
     <vue-select label="title" :options="options" v-model="selected" @search="fetchGroups" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple" :filter="(list) => list">
       <template slot="selected-option" slot-scope="option">
         <div class="selected d-flex align-items-center" :title="option.corporation && (option.name + ' ' + option.corporation.name)">
@@ -92,4 +92,7 @@
   .search_breadcrumb
     margin-left: 5px
     color: #999
+
+  .wrapper
+    flex-grow: 1 // for input groups
 </style>

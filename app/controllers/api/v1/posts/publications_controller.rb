@@ -1,6 +1,8 @@
 class Api::V1::Posts::PublicationsController < Api::V1::BaseController
 
   expose :post
+  expose :parent_groups, -> { Group.where id: params[:parent_group_ids] if params[:parent_group_ids].present? }
+
 
   def create
     authorize! :update, post
@@ -9,6 +11,7 @@ class Api::V1::Posts::PublicationsController < Api::V1::BaseController
       published_at: Time.zone.now
     })
 
+    assign_parent_groups if parent_groups
     deliver_post_as_email if params[:send_via_email].to_b
 
     render json: post.as_json(include: :attachments).merge({
@@ -23,6 +26,11 @@ class Api::V1::Posts::PublicationsController < Api::V1::BaseController
 
   def post_params
     params.require(:post).permit(:text, :publish_on_public_website)
+  end
+
+  def assign_parent_groups
+    parent_groups.each { |group| authorize! :create_post, group }
+    post.parent_groups = parent_groups
   end
 
   def deliver_post_as_email

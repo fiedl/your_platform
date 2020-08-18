@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     get :badges, to: 'user_badges#index'
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
-    get :posts, to: 'user_posts#index'
+    get :blog_posts, to: 'user_posts#index'
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
     post :renew_cache, to: 'cache_renewals#create'
     get :renew_cache, to: 'cache_renewals#create'

@@ -60,6 +60,7 @@
     "randomatic": "^3.0.0",
     "rc": "^1.2.8",
     "request": "2.88",
+    "sanitize-html": "^1.27.3",
     "sass-loader": "^6.0.6",
     "scrollreveal": "^3.3.6",
     "sshpk": "^1.13.2",
