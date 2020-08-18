@@ -9,18 +9,23 @@ class RootController < ApplicationController
   expose :documents, -> { current_user.documents_in_my_scope.order(created_at: :desc).limit(5) }
   expose :birthday_users, -> { Birthday.users_ordered_by_upcoming_birthday limit: 4 }
 
+  expose :posts, -> {
+    current_user.posts.published
+    .where("published_at is null or published_at > ?", 1.year.ago)
+    .where("sent_at is null or sent_at > ?", 1.year.ago)
+    .order(published_at: :desc, sent_at: :desc, created_at: :desc)
+    .limit(10)
+  }
+
+  expose :drafted_post, -> { current_user.drafted_posts.where(sent_via: post_draft_via_key).order(created_at: :desc).first_or_create }
+  expose :post_draft_via_key, -> { "root-index" }
+
   def index
     authorize! :index, :root
 
     set_current_access :user
     set_current_access_text :the_content_of_the_start_page_is_personalized
     set_current_tab :start
-
-    @pinned_objects = Event.flagged(:pinned) + Page.flagged(:pinned)
-
-    @posts = current_user.posts_for_me
-      .reorder(created_at: :desc)
-      .limit(5)
   end
 
 
