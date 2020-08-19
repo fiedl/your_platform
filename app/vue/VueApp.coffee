@@ -49,6 +49,7 @@ import Pictures from './components/pictures.vue'
 import PagePictures from './components/page_pictures.vue'
 import Calendar from './components/calendar.vue'
 import OfficerCard from './components/officer_card.vue'
+import Comments from './components/comments.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -113,6 +114,8 @@ jQuery(document).ready ->
   Vue.component('vue_calendar', Calendar)
   Vue.component('vue-officer-card', OfficerCard)
   Vue.component('vue_officer_card', OfficerCard)
+  Vue.component('vue-comments', Comments)
+  Vue.component('vue_comments', Comments)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

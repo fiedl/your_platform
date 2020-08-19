@@ -3,4 +3,4 @@
     - if can?(:create_post, page)
       .card-header
         %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, ':parent_page': page.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: :attachments), ':publish_on_public_website': "true"}
-    %vue_post_list_group{':posts': posts.collect { |post| post.as_json(include: :attachments).merge({author: post.author.as_json.merge({path: (polymorphic_path(post.author) if can?(:read, post.author))})}) }.to_json}
+    = vue_posts posts

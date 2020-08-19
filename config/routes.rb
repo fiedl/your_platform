@@ -373,6 +373,7 @@ Rails.application.routes.draw do
         put :public_website_publications, to: 'posts/public_website_publications#update'
       end
       resources :attachments
+      resources :comments
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships

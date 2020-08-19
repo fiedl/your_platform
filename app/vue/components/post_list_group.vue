@@ -22,6 +22,7 @@
             .error.mt-2.mb-4{'v-if': "post.error_message", 'v-text': "post.error_message"}
             %div{'v-html': "sanitize(post.text)"}
             %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "images(post.attachments)"}
+          %vue-comments{':parent_post': "post", ':initial_comments': "post.comments", ':send_icon': "send_icon", ':current_user': "current_user", ':can_comment': "post.can_comment"}
 </template>
 
 <script lang="coffee">
@@ -30,7 +31,7 @@
   sanitize_html = require('sanitize-html')
 
   PostListGroup =
-    props: ['posts', 'show_public_badges']
+    props: ['posts', 'show_public_badges', 'send_icon', 'current_user']
     data: ->
       current_posts: @posts
       processed_posts: @posts

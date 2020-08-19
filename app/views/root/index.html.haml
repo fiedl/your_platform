@@ -6,7 +6,7 @@
 
 = render partial: 'root/charts'
 
-.row.row-cards
+.row.row-deck.row-cards
   .col-lg-6
     .card
       .card-header
@@ -16,13 +16,18 @@
           %tbody
             - events.each do |event|
               %tr
+                %td.w-1= avatar event
                 %td= link_to event.title, event
                 %td.text-muted
                   = event_icon
                   = localize event.start_at
                 %td= event.group.name
+      - if semester_calendar = current_user.try(:primary_corporation).try(:semester_calendar)
+        .card-footer
+          = link_to "Semesterprogramm", semester_calendar, class: 'btn btn-white btn-sm'
 
-    = cache :tabler_birthday_box, expires_in: Time.now.end_of_day - Time.current do
+  = cache :tabler_birthday_box, expires_in: Time.now.end_of_day - Time.current do
+    .col-lg-6
       .card
         .card-header
           %h4.card-title= t :birthdays
@@ -37,28 +42,30 @@
                   %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
                   %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
 
-    .card
-      .card-header
-        %h4.card-title= t :blog
-      .table-responsive
-        %table.table.card-table.table-vcenter
-          %tbody
-            - blog_posts.each do |blog_post|
-              %tr
-                %td.w-1
-                  - if blog_post.author
-                    %span.avatar{style: "background-image: url(#{blog_post.author.avatar_path})"}
-                -#  .thumb
-                -#    = image_tag document.thumb_path
-                %td= link_to blog_post.title, blog_post
-                %td.text-nowrap.text-muted
-                  = event_icon
-                  = localize blog_post.published_at.to_date
-                %td.text-nowrap
-                  - if blog_post.parent
-                    = folder_icon
-                    = link_to blog_post.parent.title, blog_post.parent
+  -#.col-lg-6
+  -#  .card
+  -#    .card-header
+  -#      %h4.card-title= t :blog
+  -#    .table-responsive
+  -#      %table.table.card-table.table-vcenter
+  -#        %tbody
+  -#          - blog_posts.each do |blog_post|
+  -#            %tr
+  -#              %td.w-1
+  -#                - if blog_post.author
+  -#                  %span.avatar{style: "background-image: url(#{blog_post.author.avatar_path})"}
+  -#              -#  .thumb
+  -#              -#    = image_tag document.thumb_path
+  -#              %td= link_to blog_post.title, blog_post
+  -#              %td.text-nowrap.text-muted
+  -#                = event_icon
+  -#                = localize blog_post.published_at.to_date
+  -#              %td.text-nowrap
+  -#                - if blog_post.parent
+  -#                  = folder_icon
+  -#                  = link_to blog_post.parent.title, blog_post.parent
 
+  .col-lg-6
     .card
       .card-header
         %h4.card-title= t :documents
@@ -82,11 +89,16 @@
                   - elsif document.scope.kind_of? Page
                     = folder_icon
                     = link_to document.scope.title, page_documents_path(page_id: document.scope.id)
+      .card-footer
+        = link_to "Mehr Dokumente anzeigen", documents_path, class: 'btn btn-white btn-sm'
+        - if can? :create, Document
+          = link_to "Dokumente hochladen", new_document_path, class: 'btn btn-white btn-sm'
 
   .col-lg-6
     .card
       - if can? :create, Post
         .card-header
           %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, sent_via: post_draft_via_key, ':initial_post': drafted_post.as_json.merge({attachments: drafted_post.attachments, parent_groups: drafted_post.parent_groups.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path}) }}).to_json, ':suggested_groups': current_user.groups.regular.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path}) }.to_json, ':show_send_via_email_toggle': true.to_json}
-        .card-body
-          %vue_post_list_group{':posts': posts.collect { |post| post.as_json.merge({author: post.author.as_json.merge({path: (polymorphic_path(post.author) if can?(:read, post.author))}), attachments: post.attachments.as_json}, groups: (post.parent_groups + [post.group] - [nil]).as_json) }.to_json}
+      = vue_posts posts
+      .card-footer
+        = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'

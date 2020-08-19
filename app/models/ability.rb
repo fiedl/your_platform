@@ -426,7 +426,7 @@ class Ability
 
       # If a user can read an object, he can comment it.
       #
-      can :create_comment_for, [Post] do |commentable|
+      can [:create_comment_for, :create_comment], [Post] do |commentable|
         can? :read, commentable
       end
 

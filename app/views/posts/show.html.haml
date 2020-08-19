@@ -2,7 +2,7 @@
   .col-sm-8
     .card
       .card-body
-        %vue_post_list_group{':posts': [post].collect { |post| post.as_json.merge({author: post.author.as_json.merge({path: (polymorphic_path(post.author) if can?(:read, post.author))}), attachments: post.attachments.as_json}, groups: (post.parent_groups + [post.group] - [nil]).as_json) }.to_json}
+        = vue_posts [post]
   .col-sm-4
     .card
       .card-header
@@ -23,14 +23,15 @@
           %label.form-label Versandt am
           = localize post.sent_at
 
-          %label.form-label.mt-3 Zugestellt an
-          .avatar-list.avatar-list-stacked.d-block
-            - post.deliveries.sent.each do |delivery|
-              = link_to delivery.user, class: 'avatar' do
-                = user_avatar delivery.user
+          = cache [post.deliveries] do
+            %label.form-label.mt-3 Zugestellt an
+            .avatar-list.avatar-list-stacked.d-block
+              - post.deliveries.sent.includes(user: [:avatar_attachments]).each do |delivery|
+                = link_to delivery.user, class: 'avatar' do
+                  = user_avatar delivery.user
 
-          %label.form-label.mt-3 Konnte nicht zustellen an
-          .avatar-list.avatar-list-stacked.d-block
-            - post.deliveries.failed.each do |delivery|
-              = link_to delivery.user, class: 'avatar' do
-                = user_avatar delivery.user
+            %label.form-label.mt-3 Konnte nicht zustellen an
+            .avatar-list.avatar-list-stacked.d-block
+              - post.deliveries.failed.includes(user: [:avatar_attachments]).each do |delivery|
+                = link_to delivery.user, class: 'avatar' do
+                  = user_avatar delivery.user

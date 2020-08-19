@@ -117,7 +117,7 @@
     </editor-menu-bar>
 
     <div class="with_placeholder">
-      <span class="placeholder" v-if="!(value && value.length > 0) || (value == '<p></p>')">{{ placeholder }}</span>
+      <span class="placeholder text-muted" v-if="!(value && value.length > 0) || (value == '<p></p>')">{{ placeholder }}</span>
       <editor-content class="editor__content" :editor="editor" />
     </div>
   </div>
@@ -150,7 +150,7 @@ export default {
     EditorMenuBar,
     EditorMenuBubble
   },
-  props: ['value', 'editable', 'show_toolbar', 'placeholder'],
+  props: ['value', 'editable', 'show_toolbar', 'placeholder', 'autofocus'],
   data() {
     let component = this
     return {
@@ -178,7 +178,8 @@ export default {
         content: null,
         onUpdate: component.on_update,
         onBlur: component.on_blur,
-        editable: component.editable
+        editable: component.editable,
+        autoFocus: component.autofocus
       }),
       linkUrl: null,
       linkMenuIsActive: false,
