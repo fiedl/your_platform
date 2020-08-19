@@ -18,9 +18,9 @@
 
       - content_for :box_title do
         - if (page.try(:becomes, Page) == @navable.try(:becomes, Page)) and not @this_is_a_new_blog_post
-          = wysiwyg_in_place_if can?(:update, page), page, :title
+          = editable page, :title, editable: can?(:update, page), type: 'wysiwyg'
         - elsif page.embedded?
-          = wysiwyg_in_place_if can?(:update, page), page, :title
+          = editable page, :title, editable: can?(:update, page), type: 'wysiwyg'
         - else  # Blog Entries:
           = link_to(page) do
             = best_in_place_if can?(:update, page), page, :title, class: 'click_does_not_trigger_edit', activator: 'only_manual'

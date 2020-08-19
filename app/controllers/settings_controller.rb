@@ -1,7 +1,5 @@
-# This controller allows to change settings from the ui,
-# for example, with best_in_place, like this:
-#
-#     best_in_place page.settings, :layout
+# This controller allows to change settings from the ui.
+# See also: editable_setting.vue
 #
 class SettingsController < ApplicationController
   respond_to :json

@@ -4,7 +4,6 @@ class ApplicationRecord < ActiveRecord::Base
   include Caching
   include ReadOnlyMode
   include RecordUrl
-  include BestInPlaceCorrections
 
   # Shortcut for global id.
   # The reverse is: `GlobalID::Locator.locate gid`.

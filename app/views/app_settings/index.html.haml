@@ -7,7 +7,7 @@
       = setting_in_place Setting, :app_name
     %li
       = t :preferred_locale
-      = setting_in_place Setting, :preferred_locale, as: :select, collection: I18n.available_locales
+      = setting_in_place Setting, :preferred_locale # , as: :select, collection: I18n.available_locales # FIXME
     %li
       = t :support_email
       = setting_in_place Setting, :support_email
@@ -43,13 +43,13 @@
   %ul.settings
     %li
       Discourse root url for embedded comments (with ending slash):
-      = setting_in_place Setting, :embedded_comments_discourse_url, html_attrs: {placeholder: "https://discourse.example.com/"}
+      = setting_in_place Setting, :embedded_comments_discourse_url, placeholder: "https://discourse.example.com/"
 
   %h2 Suggestions
   %ul.settings
     %li
       Discourse category for suggestions:
-      = setting_in_place Setting, :discourse_suggestions_url, html_attrs: {placeholder: "https://discourse.example.com/"}
+      = setting_in_place Setting, :discourse_suggestions_url, placeholder: "https://discourse.example.com/"
 
 - content_for :side_bar do
   %h4=t :see_also

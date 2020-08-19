@@ -10,8 +10,6 @@
 //= require jquery.autosize
 //= require jqueryui-timepicker-addon
 //= require jqueryui-timepicker-addon/i18n/jquery-ui-timepicker-de
-//= require best_in_place
-//= require best_in_place_datetime
 //= require jquery.ui.datepicker-de
 //= require edit_mode
 //= require jquery-fileupload/basic

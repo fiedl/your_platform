@@ -66,9 +66,6 @@ require 'rails-assets-inline-attachment'
 require 'bootstrap'
 require 'sass-rails'
 
-# In Place Editing
-require 'best_in_place'
-
 # Search
 require 'elasticsearch/model'
 

@@ -11,5 +11,5 @@
 
 - content_for :side_bar do
   .body.widget.clearfix
-    %h4=best_in_place_if can?(:update, @tag), @tag, :title
-    = best_in_place_if can?(:update, @tag), @tag, :body, as: :textarea
+    %h4= editable @tag, :title, editable: can?(:update, @tag)
+    = editable @tag, :body, type: :textarea, editable: can?(:update, @tag)

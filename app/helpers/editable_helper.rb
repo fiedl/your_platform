@@ -48,4 +48,46 @@ module EditableHelper
     }
   end
 
+  # For example:
+  #
+  #   setting_in_place @page, :layout
+  #
+  def setting_in_place(object, setting_key, placeholder: nil, editable: true)
+    setting = (object == Setting ? Setting : object.settings)
+      .where(var: setting_key).first_or_create
+    editable setting, :value, placeholder: placeholder, editable: true
+  end
+
+  def setting_in_place_if(condition, object, setting_key, placeholder: nil)
+    setting_in_place object, setting_key, placeholder: placeholder, editable: condition
+  end
+
+  def ajax_check_box(object, attribute, label = nil)
+    label ||= I18n.t(attribute)
+    form_for object, remote: true do |f|
+      content_tag :label do
+        f.hidden_field(attribute, value: false) +
+        f.check_box(attribute, {class: 'ajax_check_box'}, true) +
+        label
+      end
+    end
+  end
+
+  def ajax_toggle(object, attribute, label = nil)
+    label ||= I18n.t(attribute)
+    form_for object, remote: true do |f|
+      content_tag :label, class: "form-check form-switch" do
+        f.hidden_field(attribute, value: false) +
+        f.check_box(attribute, {class: 'ajax_check_box form-check-input'}, true) +
+        label
+      end
+    end
+  end
+
+  def setting_check_box(object, setting_key, label = nil)
+    label ||= I18n.t(setting_key)
+    setting = object.settings.where(var: setting_key).first_or_create
+    ajax_check_box setting, :value, label
+  end
+
 end

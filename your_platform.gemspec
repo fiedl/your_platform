@@ -106,9 +106,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'sass-rails'
   s.add_dependency 'sass', '>= 3.7.4' # https://github.com/twbs/bootstrap/issues/24549#issuecomment-339473607
 
-  # In Place Editing
-  s.add_dependency 'best_in_place', '>= 2.1.0'                                         # MIT License
-
   # Search
   s.add_dependency 'elasticsearch-model'
 
