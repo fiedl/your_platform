@@ -9,7 +9,7 @@ concern :UserPosts do
   end
 
   def posts
-    Post.where(id: groups.collect { |group| group.child_post_ids + group.post_ids }.flatten + child_post_ids + post_ids)
+    Post.where(id: groups.collect { |group| group.child_post_ids + group.post_ids }.flatten + child_post_ids + posts_from_me_ids)
   end
 
 end
