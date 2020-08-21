@@ -13,7 +13,7 @@
   .nav-item.dropdown
     %a.nav-link.d-flex.lh-1.text-reset.p-0{"data-toggle" => "dropdown", :href => "#"}
       = user_avatar(current_user)
-      .d-none.d-xl-block.pl-2
+      .d-none.d-md-block.pl-2
         %div= current_user.title
         - if current_role_view.present?
           .mt-1.small.text-muted
