@@ -1,12 +1,15 @@
 <template>
   <div class="editor">
-    <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, getMarkAttrs }" v-if="show_toolbar">
-      <div class="menubar">
+    <editor-menu-bubble :editor="editor" v-slot="{ commands, isActive, getMarkAttrs, menu }">
+      <div
+        class="menububble"
+        :class="{ 'is-active': menu.isActive }"
+        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
+      >
 
-        <div class="btn-group mb-4">
-
+        <div class="btn-group" v-if="!linkMenuIsActive">
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.bold() }"
             @click="commands.bold"
           >
@@ -14,7 +17,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.italic() }"
             @click="commands.italic"
           >
@@ -22,7 +25,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.underline() }"
             @click="commands.underline"
           >
@@ -30,7 +33,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.heading({ level: 1 }) }"
             @click="commands.heading({ level: 1 })"
           >
@@ -38,7 +41,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.heading({ level: 2 }) }"
             @click="commands.heading({ level: 2 })"
           >
@@ -46,7 +49,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.heading({ level: 3 }) }"
             @click="commands.heading({ level: 3 })"
           >
@@ -54,7 +57,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.bullet_list() }"
             @click="commands.bullet_list"
           >
@@ -62,7 +65,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.ordered_list() }"
             @click="commands.ordered_list"
           >
@@ -70,7 +73,7 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             :class="{ 'active': isActive.blockquote() }"
             @click="commands.blockquote"
           >
@@ -78,28 +81,28 @@
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             @click="commands.undo"
           >
             <i class="fa fa-undo" />
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             @click="commands.redo"
           >
             <i class="fa fa-undo" style="transform: scaleX(-1);"/>
           </button>
 
           <button
-            class="menubar__button btn btn-white btn-icon"
+            class="menububble__button btn btn-white btn-icon"
             @click="showLinkMenu(getMarkAttrs('link'))"
           >
             <i class="fa fa-link" />
           </button>
         </div>
 
-        <form class="link_form input-group mb-2" @submit.prevent="setLinkUrl(commands.link, linkUrl)" v-if="linkMenuIsActive">
+        <form class="link_form input-group" @submit.prevent="setLinkUrl(commands.link, linkUrl)" v-if="linkMenuIsActive">
           <span class="input-group-text">
             <i class="fa fa-link mr-2"></i>
           </span>
@@ -114,7 +117,7 @@
 
       </div>
 
-    </editor-menu-bar>
+    </editor-menu-bubble>
 
     <div class="with_placeholder">
       <span class="placeholder text-muted" v-if="!(value && value.length > 0) || (value == '<p></p>')">{{ placeholder }}</span>
@@ -124,7 +127,7 @@
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBar, EditorMenuBubble } from 'tiptap'
+import { Editor, EditorContent, EditorMenuBubble } from 'tiptap'
 import {
   Blockquote,
   CodeBlock,
@@ -147,10 +150,9 @@ import {
 export default {
   components: {
     EditorContent,
-    EditorMenuBar,
     EditorMenuBubble
   },
-  props: ['value', 'editable', 'show_toolbar', 'placeholder', 'autofocus'],
+  props: ['value', 'editable', 'placeholder', 'autofocus'],
   data() {
     let component = this
     return {
@@ -235,4 +237,52 @@ export default {
     top: 0
     //padding: .4375rem .75rem
     pointer-events: none
+
+  // https://github.com/ueberdosis/tiptap/blob/main/examples/assets/sass/menububble.scss
+  // http://scss2sass.herokuapp.com/converter
+  .menububble
+    position: absolute
+    display: flex
+    z-index: 20
+    background: #000
+    border-radius: 5px
+    padding: 0.3rem
+    margin-bottom: 0.5rem
+    transform: translateX(-50%)
+    visibility: hidden
+    opacity: 0
+    transition: opacity 0.2s, visibility 0.2s
+
+    &.is-active
+      opacity: 1
+      visibility: visible
+
+    &__button
+      display: inline-flex
+      background: transparent
+      border: 0
+      color: #fff
+      padding: 0.2rem 0.5rem
+      margin-right: 0.2rem
+      border-radius: 3px
+      cursor: pointer
+
+      &:last-child
+        margin-right: 0
+
+      &:hover
+        background-color: rgba(#fff, 0.1)
+
+      &.is-active
+        background-color: rgba(#fff, 0.2)
+
+    &__form
+      display: flex
+      align-items: center
+
+    &__input
+      font: inherit
+      border: none
+      background: transparent
+      color: #fff
 </style>
