@@ -5,7 +5,10 @@
         Post schreiben
         - if group
           an:
-          = link_to group.title, group_members_path(group)
+          = link_to group_members_path(group) do
+            = group.title
+            - if group.corporation && group.corporation != group
+              = group.corporation.title
 .row
   .d-none.d-md-block.col-md-4
     .list-group.list-group-transparent

@@ -40,6 +40,7 @@
       .btn-list{'v-if': "!editing"}
         %a.btn.btn-white.btn-sm{'@click': "navigate_to_history_path"} Historie
         %a.btn.btn-white.btn-sm{'v-if': "editable", '@click': "edit_officers", 'v-if': "!updating"} Amtsträger ändern
+        %a.btn.btn-white.btn-sm{'@click': "navigate_to_new_post_path"} Nachricht schreiben
         %small.text-muted.mt-2.ml-1{'v-if': "updating"} Amtsträger ändern ...
         %i.fa.fa-check.text-success.mt-1.ml-1{'v-if': "success"}
       .d-flex{'v-else': true}
@@ -107,6 +108,8 @@
             component.updating = false
       navigate_to_history_path: ->
         window.location = @history_path
+      navigate_to_new_post_path: ->
+        window.location = "/groups/#{@initial_office.id}/posts/new"
     computed:
       officer: ->
         @officers[0]

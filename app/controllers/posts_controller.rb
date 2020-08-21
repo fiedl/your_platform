@@ -67,6 +67,7 @@ class PostsController < ApplicationController
 
   def new
     authorize! :create, Post
+    authorize! :create_post, group if group
 
     set_current_title "Neuer Post"
     set_current_tab :communication

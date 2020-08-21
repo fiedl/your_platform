@@ -27,4 +27,7 @@
                       .col
                         %h4.mb-0= link_to officer.title, officer
                         %small.text-muted= sub_officer_group.name
+          - if can? :create_post, officer_group
+            .card-footer
+              = link_to "Nachricht schreiben", new_group_post_path(group_id: officer_group.id), class: 'btn btn-white btn-sm'
 

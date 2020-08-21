@@ -35,6 +35,9 @@
                 %small
                   %i.fa.fa-envelope
                   %a.text-muted{':href': "'mailto:' + corporation.email"} {{ corporation.email }}
+          %a.btn.card-btn.btn-white{'v-if': "corporation.chargen", ':href': "'/groups/' + corporation.chargen.id + '/posts/new'"}
+            %i.fa.fa-envelope
+            %span Nachricht an Chargen
           -#%a.card-btn{':href': "'/corporations/' + corporation.id"} Kontaktinformationen ansehen
 </template>
 

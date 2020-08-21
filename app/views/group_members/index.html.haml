@@ -19,6 +19,10 @@
       .card-footer
         = link_to "Kontaktdaten", group_path(group), class: 'btn btn-white btn-sm'
         = link_to "Amtsträger", group_officers_path(group), class: 'btn btn-white btn-sm'
+        - if can? :index_posts, group
+          = link_to "Nachricht schreiben", group_posts_path(group_id: group.id), class: 'btn btn-sm btn-white'
+        - elsif can? :create_post, group
+          = link_to "Nachricht schreiben", new_group_post_path(group_id: group.id), class: 'btn btn-sm btn-white'
 
     .card
       .card-body

@@ -10,7 +10,8 @@
       update_path: group_path(corporation),
       officers: corporation.important_officers,
       email: corporation.email,
-      phone: corporation.phone
+      phone: corporation.phone,
+      chargen: corporation.chargen
     })
   end.to_json
 %vue_corporations_page{':corporations': corporations_json}
