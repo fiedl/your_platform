@@ -50,20 +50,9 @@ require 'reverse_markdown'
 
 # JavaScript
 require 'jquery-rails'
-require 'rails-assets-jquery-ui'
-require 'autosize/rails'
 require 'sugar-rails'
 require 'i18n-js'
-require 'jquery-atwho-rails'
-require 'jquery-turbolinks'
-require 'turbolinks'
-require 'turboboost'
-require 'rails-assets-trentrichardson--jQuery-Timepicker-Addon'
-require 'bootstrap_tokenfield_rails'
-require 'rails-assets-inline-attachment'
 
-# Layout: Twitter Bootstrap
-require 'bootstrap'
 require 'sass-rails'
 
 # Search
@@ -79,23 +68,11 @@ require 'simple_form'
 
 # File Uploads
 require 'carrierwave'
-require 'jquery-fileupload-rails'
 require 'refile/rails'
-
-# Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
-require 'gravatar_image_tag'
-
-# Edit Mode
-require 'edit_mode'
 
 # View Helpers
 require 'phony'
-require 'will_paginate'
 require 'naturally'
-
-# Gallery
-require 'rails-assets-imagesloaded'
-# also, galleria is in our `vendor` directory.
 
 # Client-Side Validations
 require 'judge'

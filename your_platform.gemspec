@@ -39,19 +39,10 @@ Gem::Specification.new do |s|
 
   # JavaScript
   s.add_dependency 'jquery-rails'
-  s.add_dependency "autosize-rails" # autosize textbox
   s.add_dependency "sugar-rails"
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
   s.add_dependency "coffee-rails", '>= 4.1.0'
   s.add_dependency 'execjs', '>= 2.5.2'
-  s.add_dependency 'jquery-atwho-rails', '>= 1.1.0' # @mentions
-  s.add_dependency 'rails-assets-jquery-ui'
-  s.add_dependency 'turbolinks', '>= 5.0'
-  s.add_dependency 'jquery-turbolinks'
-  s.add_dependency 'turboboost'
-  s.add_dependency 'rails-assets-trentrichardson--jQuery-Timepicker-Addon', '>= 1.6.3'
-  s.add_dependency 'bootstrap_tokenfield_rails'
-  s.add_dependency 'rails-assets-inline-attachment'
 
   # Data Structures
   # DAG Structure, https://github.com/resgraph/acts-as-dag
@@ -101,8 +92,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'auto_html', '~> 1.6.4'
   s.add_dependency 'reverse_markdown'
 
-  # Layout: Twitter Bootstrap
-  s.add_dependency 'bootstrap', '~> 4.3.1' # https://github.com/twbs/bootstrap-rubygem
   s.add_dependency 'sass-rails'
   s.add_dependency 'sass', '>= 3.7.4' # https://github.com/twbs/bootstrap/issues/24549#issuecomment-339473607
 
@@ -121,23 +110,11 @@ Gem::Specification.new do |s|
   s.add_dependency 'carrierwave', '~> 0.11'                                                       # MIT License
   s.add_dependency 'mini_magick', '>= 4.9.4' # CVE-2019-13574
   s.add_dependency 'refile', '>= 0.5.5'
-  s.add_dependency 'jquery-fileupload-rails'
   s.add_dependency 'rest-client', '>= 1.8'
-
-  # Gravatar image, see: https://github.com/mdeering/gravatar_image_tag
-  s.add_dependency 'gravatar_image_tag'                                                # MIT License
-
-  # Edit Mode
-  s.add_dependency 'edit_mode', '>= 1.0.5'                                             # MIT License
 
   # View Helpers
   s.add_dependency 'phony'
-  s.add_dependency 'will_paginate', '> 3.0'
   s.add_dependency 'naturally' # natural sorting 1, 3, 12
-
-  # Gallery
-  s.add_dependency 'rails-assets-imagesloaded'
-  # also, galleria is in our `vendor` directory.
 
   # Client-Side Validations
   s.add_dependency 'judge'
