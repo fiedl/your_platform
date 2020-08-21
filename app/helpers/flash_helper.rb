@@ -9,7 +9,7 @@ module FlashHelper
   def flash_area
     content_tag :div, id: 'flash_area' do
       flash.collect do |type, message|
-        alert_field(type, message)
+        alert_field(type, message) if message.present?
       end.join("\n").html_safe + announcement_flash
     end
   end

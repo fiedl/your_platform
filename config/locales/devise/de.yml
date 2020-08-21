@@ -8,10 +8,10 @@ de:
       not_saved:
         one: "Konnte %{resource} nicht speichern: ein Fehler."
         other: "Konnte %{resource} nicht speichern: %{count} Fehler."
- 
+
   devise:
     failure:
-      already_authenticated: 'Sie sind bereits angemeldet.'
+      already_authenticated: ''
       unauthenticated: 'Sie müssen sich anmelden oder registrieren, bevor Sie fortfahren können.'
       unconfirmed: 'Sie müssen Ihren Account bestätigen, bevor Sie fortfahren können.'
       locked: 'Ihr Account ist gesperrt.'
@@ -23,8 +23,8 @@ de:
         not_found_in_database: 'Es wurde kein übereinstimmender Benutzer gefunden.'
       not_found_in_database: 'Ungültige Anmeldedaten.'
     sessions:
-      signed_in: 'Sie sind nun am System angemeldet. Falls Sie an einem fremden Rechner (Internetcafé etc.) arbeiten, vergessen Sie bitte nicht, sich später wieder abzumelden (rechts oben).'
-      signed_out: 'Erfolgreich abgemeldet.'
+      signed_in: ''
+      signed_out: ''
     passwords:
       user_account:
        no_token: 'Sie können diese Seite nur von einer Passwortänderungs-E-Mail-Nachricht heraus besuchen. Wenn Sie von einer Passwortänderungs-E-Mail-Nachricht kommen, stellen Sie bitte sicher, dass sie die Vollständige Adresse (URL) verwendet haben.'
