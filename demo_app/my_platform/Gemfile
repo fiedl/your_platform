@@ -22,12 +22,6 @@ source 'https://rubygems.org' do
     gem 'unicorn'
   end
 
-  # Spring speeds up development by keeping your application running in the background.
-  group :development do
-    gem 'spring'
-    gem 'spring-commands-rspec'
-  end
-
   # Error tracing
   group :development do
     #gem 'better_errors'
