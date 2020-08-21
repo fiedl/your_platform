@@ -4,7 +4,7 @@ class PostMailer < BaseMailer
   def post_email(post:, recipient:)
     @subject = post.title
     @post_url = post_url(post)
-    @body = post.text
+    @body = post.text.html_safe
 
     post.attachments.each do |attachment|
       attachments[attachment.filename] = File.read(attachment.file.path)
