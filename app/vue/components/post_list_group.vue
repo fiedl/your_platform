@@ -1,6 +1,6 @@
 <template lang="haml">
   %ul.card-list-group.list-group
-    .list-group-item.py-4{'v-for': "post in processed_posts"}
+    .list-group-item.py-4{'v-for': "post in processed_posts", ':key': "post.id"}
       .d-flex
         %div.mr-3
           %vue-avatar{':user': "post.author"}
@@ -22,7 +22,7 @@
             .error.mt-2.mb-4{'v-if': "post.error_message", 'v-text': "post.error_message"}
             %div{'v-html': "sanitize(post.text)"}
             %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "images(post.attachments)"}
-          %vue-comments{':parent_post': "post", ':initial_comments': "post.comments", ':send_icon': "send_icon", ':current_user': "current_user", ':can_comment': "post.can_comment"}
+          %vue-comments{':parent_post': "post", ':initial_comments': "post.comments", ':send_icon': "send_icon", ':current_user': "current_user", ':can_comment': "post.can_comment", ':key': "post.id"}
 </template>
 
 <script lang="coffee">
