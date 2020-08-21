@@ -29,11 +29,12 @@ module VueHelper
     }
   end
 
-  def vue_create_post_form(initial_post: nil, sent_via: nil, show_send_via_email_toggle: false, suggested_groups: [], send_via_email: nil, show_publish_on_website_toggle: false)
+  def vue_create_post_form(initial_post: nil, sent_via: nil, show_send_via_email_toggle: false, suggested_groups: [], send_via_email: nil, show_publish_on_website_toggle: false, parent_group: nil)
     content_tag :vue_create_post_form, "", {
       camera_icon: camera_icon,
       send_icon: send_icon,
       sent_via: sent_via,
+      ':parent_group': parent_group.to_json,
       ':initial_post': (initial_post.as_json.merge({
         attachments: initial_post.attachments.as_json,
         parent_groups: initial_post.parent_groups.collect { |group|

@@ -22,4 +22,17 @@ class Pages::PublicPage < Page
     child_posts
   end
 
+  def posts
+    Post.where(id: child_posts).or(Post.where(id: group_posts))
+  end
+
+  def group_posts
+    if self == root
+      Post.joins(:parent_groups).merge(group.posts).public_post
+    else
+      Post.none
+    end
+  end
+
+
 end
