@@ -18,7 +18,7 @@ class Post < ApplicationRecord
   def title
     return subject if subject.present?
     return attachments.collect(&:title).join(", ") if attachments.any?
-    return text.first(100) if text.present?
+    return ActionController::Base.helpers.strip_tags(text).first(100) if text.present?
   end
 
   def mail_to(user)
