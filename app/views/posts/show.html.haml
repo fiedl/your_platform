@@ -11,9 +11,12 @@
         - for group in post.groups
           .mb-2.d-flex.align-items-center
             .mr-2= group_avatar group, class: 'avatar-sm'
-            = group.title
+            = link_to group.title, group_members_path(group), class: 'text-link'
         .mt-3
           = ajax_toggle post, :publish_on_public_website, "Auf öffentlicher Website veröffentlichen"
+        .mt-3
+          %label.form-label Veröffentlicht am
+          = editable post, :published_at, type: 'datetime', editable: can?(:update, post)
 
     - if post.sent_at
       .card
@@ -23,15 +26,18 @@
           %label.form-label Versandt am
           = localize post.sent_at
 
-          = cache [post.deliveries] do
-            %label.form-label.mt-3 Zugestellt an
-            .avatar-list.avatar-list-stacked.d-block
-              - post.deliveries.sent.includes(user: [:avatar_attachments]).each do |delivery|
-                = link_to delivery.user, class: 'avatar' do
-                  = user_avatar delivery.user
+          - if post.deliveries.sent.any?
+            = cache [post, "deliveries sent", post.deliveries.sent.count] do
+              %label.form-label.mt-3 Zugestellt an
+              .avatar-list.avatar-list-stacked.d-block
+                - post.deliveries.sent.includes(user: [:avatar_attachments]).each do |delivery|
+                  = link_to delivery.user, class: 'avatar' do
+                    = user_avatar delivery.user
 
-            %label.form-label.mt-3 Konnte nicht zustellen an
-            .avatar-list.avatar-list-stacked.d-block
-              - post.deliveries.failed.includes(user: [:avatar_attachments]).each do |delivery|
-                = link_to delivery.user, class: 'avatar' do
-                  = user_avatar delivery.user
+          - if post.deliveries.failed.any?
+            = cache [post, "deliveries failed", post.deliveries.failed.count] do
+              %label.form-label.mt-3 Konnte nicht zustellen an
+              .avatar-list.avatar-list-stacked.d-block
+                - post.deliveries.failed.includes(user: [:avatar_attachments]).each do |delivery|
+                  = link_to delivery.user, class: 'avatar' do
+                    = user_avatar delivery.user

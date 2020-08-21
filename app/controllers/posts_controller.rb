@@ -11,7 +11,7 @@ class PostsController < ApplicationController
 
   def update
     authorize! :update, post
-    raise "Cannot modify published or sent posts, only drafts." unless post.draft?
+    raise "Cannot modify posts that have already been sent." if post.sent_at.present?
 
     post.update! post_params
     render json: {}, status: :ok
@@ -68,7 +68,7 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:text)
+    params.require(:post).permit(:text, :published_at)
   end
 
 end
