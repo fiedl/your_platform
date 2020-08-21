@@ -1,6 +1,6 @@
 class VororteController < ApplicationController
 
-  expose :page, -> { Page.flagged(:vorort).first_or_create { |page| page.title = "Vorort des Wingolfsbundes" } || raise('no page flagged :vorort found') }
+  expose :page, -> { Page.flagged(:vorort).first_or_create { |page| page.title = "Vorort des Wingolfsbundes"; page.save; page.add_flag(:vorort) } }
   expose :offices, -> { OfficerGroup.where(name: "Bundeschargierte").first.child_groups }
   expose :post_recipient_group, -> { OfficerGroup.flagged(:bundeschargen).first }
 
