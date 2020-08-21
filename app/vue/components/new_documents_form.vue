@@ -1,5 +1,5 @@
 <template lang="haml">
-  %div
+  %div.new_documents_form
     %vue-dropzone{':options': "dropzone_options", id: "attachment", '@dragenter': "suggesting_drop = true", '@dragleave': "suggesting_drop = false", ':useCustomSlot': "true"}
       .card
         .card-body
@@ -46,7 +46,7 @@
               -#        %vue_editable_tags{':initial_tags': ActsAsTaggableOn::Tag.all.to_json}
 
           .form-label Nachricht
-          %textarea.form-control{'v-model': "post.text", 'data-toggle': 'autosize', placeholder: "Nachricht (optional)", '@input': "on_text_input"}
+          %vue-wysiwyg.form-control{'v-model': "post.text", placeholder: "Nachricht (optional)", '@input': "on_text_input", editable: true}
           .text-muted{'v-if': "draft_saved"} Entwurf gespeichert.
 
           .error.mt-4{'v-if': "error"}
@@ -180,5 +180,13 @@
 
   .dz-preview
     display: none
+
+  .new_documents_form
+    .ProseMirror
+      outline: 0
+      min-height: 3em
+    p
+      margin-bottom: 0
+
 
 </style>
