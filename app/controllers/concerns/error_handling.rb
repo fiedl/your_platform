@@ -9,7 +9,11 @@ concern :ErrorHandling do
   def render_error(exception)
     ExceptionNotifier.notify_exception(exception)
     @error_message = exception.message
-    render template: "errors/_error"
+    if request.format.html?
+      render template: "errors/_error"
+    else
+      raise exception
+    end
   end
 
   def render_unauthorized(exception)

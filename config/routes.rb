@@ -286,10 +286,7 @@ Rails.application.routes.draw do
   resources :integrations, only: [:index]
   get 'integrations/trello', to: 'integrations/trello#show'
 
-
   get :renew_cache, to: 'cache_renewals#create'
-
-  get "errors/unauthorized"
 
   # Dashboards for global admins:
   global_admin_constraint = lambda do |request|
