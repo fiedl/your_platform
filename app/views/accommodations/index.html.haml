@@ -4,6 +4,10 @@
       .page-pretitle= corporation.title
       .page-title Wohnheim
     .col-auto.ml-auto
+      - if can? :create_post, hausbewohner
+        = link_to new_group_post_path(group_id: hausbewohner.id), class: 'btn btn-white' do
+          = mail_icon
+          Nachricht an alle Hausbewohner
       - if can? :create_accommodation_sepa_debit, corporation
         = link_to "SEPA-Miet-Einzug", new_corporation_accommodation_sepa_debit_path, class: 'btn btn-primary'
 

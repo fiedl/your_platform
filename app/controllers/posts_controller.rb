@@ -49,9 +49,9 @@ class PostsController < ApplicationController
 
   expose :post_draft_via_key, -> {
     if parent
-      "posts-index-#{parent.class.name}-#{parent.id}"
+      "posts-#{action_name}-#{parent.class.name}-#{parent.id}"
     else
-      "posts-index"
+      "posts-#{action_name}"
     end
   }
 
@@ -62,6 +62,13 @@ class PostsController < ApplicationController
     authorize! :index_posts, parent
 
     set_current_title "Posts"
+    set_current_tab :communication
+  end
+
+  def new
+    authorize! :create, Post
+
+    set_current_title "Neuer Post"
     set_current_tab :communication
   end
 

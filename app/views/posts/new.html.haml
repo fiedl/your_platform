@@ -1,0 +1,33 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title
+        Post schreiben
+        - if group
+          an:
+          = link_to group.title, group_members_path(group)
+.row
+  .d-none.d-md-block.col-md-4
+    .list-group.list-group-transparent
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center.active
+        .mr-3= document_icon
+        Neuer Post
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{href: posts_path}
+        .mr-3= inbox_icon
+        Posteingang
+      - for menu_group in menu_groups
+        %a.list-group-item.list-group-item-action.d-flex.align-items-center{href: group_posts_path(menu_group), class: ('active' if menu_group == group)}
+          .mr-3= group_icon
+          = menu_group.name
+          - if menu_group.posts.count > 0
+            %span.ml-auto.badge.badge-gray= menu_group.posts.count
+  .col-12.col-md-8
+    .card
+      .card-header
+        - if group
+          = vue_create_post_form initial_post: drafted_post, sent_via: post_draft_via_key, show_publish_on_website_toggle: (group.public_home_page.present?).to_b, show_send_via_email_toggle: true, parent_group: group
+        - else
+          = vue_create_post_form initial_post: drafted_post, sent_via: post_draft_via_key, show_send_via_email_toggle: true, suggested_groups: current_user.groups.regular
+      = vue_posts [], show_public_badges: (group && group.public_home_page.present?).to_b
+
+
