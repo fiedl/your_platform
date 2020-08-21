@@ -102,3 +102,51 @@
       = vue_posts posts
       .card-footer
         = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
+
+.row.row-deck.row-cards
+  - for group in corporations
+    .col-xs-12.col-md-6
+      = render layout: "groups/profile_card", locals: { group: group } do
+        .p-4.pt-0.mt-0
+          .text-center
+            - if (postal_address = group.postal_address).present?
+              .with-newlines.pt-0.mt-0.mb-2
+                = postal_address
+            - if (phone = group.phone).present?
+              .mt-0.mb-1
+                %span.mr-2= landline_icon
+                = link_to phone, "tel:#{phone}"
+            - if (email = group.email).present?
+              .mt-0.mb-0
+                %span.mr-1= mail_icon
+                = mail_to email
+
+            - if group.facebook_url || group.instagram_url || group.youtube_url
+              .social-links.mt-3
+                - if group.facebook_url
+                  = link_to facebook_icon, group.facebook_url, target: '_blank'
+                - if group.instagram_url
+                  = link_to instagram_icon, group.instagram_url, target: '_blank'
+                - if group.youtube_url
+                  = link_to youtube_icon, group.youtube_url, class: 'text-muted', target: '_blank'
+
+          .row.mt-4
+            - group.important_officer_groups.each do |office|
+              - for officer in office.members
+                .row.row-sm.align-items-center.col-xs-12.col-sm-6.col-md-12.col-lg-6.mb-3
+                  .col-auto
+                    = user_avatar(officer)
+                  .col
+                    .text-body.d-block
+                      = link_to officer.title, officer
+                    %small.d-block.mt-n1.text-muted= office.name
+                    - if email = office.email
+                      %small.d-block.mt-n1= mail_to email, email, class: 'text-muted'
+                    - if phone = officer.phone
+                      %small.d-block.mt-n1= link_to phone, "tel:#{phone}", class: 'text-muted'
+
+        .card-footer
+          = link_to "Mitglieder", group_members_path(group), class: 'btn btn-sm btn-white'
+          = link_to "Amtsträger", group_officers_path(group), class: 'btn btn-sm btn-white'
+          - if can? :update, group
+            = link_to "Daten ändern", group_path(group), class: "btn btn-sm btn-white"

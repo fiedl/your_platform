@@ -8,6 +8,7 @@ class RootController < ApplicationController
   expose :blog_posts, -> { BlogPost.relevant_to(current_user).visible_to(current_user).order(published_at: :desc).limit(5).select { |blog_post| can? :read, blog_post } }
   expose :documents, -> { current_user.documents_in_my_scope.order(created_at: :desc).limit(5) }
   expose :birthday_users, -> { Birthday.users_ordered_by_upcoming_birthday limit: 4 }
+  expose :corporations, -> { current_user.current_corporations }
 
   expose :posts, -> {
     current_user.posts.published
