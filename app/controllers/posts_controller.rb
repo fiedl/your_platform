@@ -6,7 +6,7 @@ class PostsController < ApplicationController
     authorize! :read, post
 
     set_current_tab :communication
-    set_current_title post.subject || post.text.first(30)
+    set_current_title post.title
   end
 
   def update

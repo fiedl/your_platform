@@ -22,6 +22,7 @@
             .error.mt-2.mb-4{'v-if': "post.error_message", 'v-text': "post.error_message"}
             %div{'v-html': "sanitize(post.text)"}
             %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "images(post.attachments)"}
+            %vue-attachments{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "non_images(post.attachments)"}
           %vue-comments{':parent_post': "post", ':initial_comments': "post.comments", ':send_icon': "send_icon", ':current_user': "current_user", ':can_comment': "post.can_comment", ':key': "post.id"}
 </template>
 
@@ -46,6 +47,8 @@
         moment(datetime).locale('de').format('dd, DD.MM.YYYY, H:mm')
       images: (attachments)->
         attachments.filter (attachment)-> attachment.content_type.includes("image")
+      non_images: (attachments)->
+        attachments.filter (attachment)-> (!attachment.content_type.includes("image"))
       sanitize: (html)->
         sanitize_html html,
           allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q'])
