@@ -51,7 +51,7 @@
         attachments.filter (attachment)-> (!attachment.content_type.includes("image"))
       sanitize: (html)->
         sanitize_html html,
-          allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q'])
+          allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q', 'h1', 'h2', 'h3', 'h4'])
       process_posts: ->
         component = this
         @processed_posts = @current_posts.map (post)->
