@@ -10,25 +10,29 @@
           .buttons
             %a.btn.btn-primary.btn-icon{'v-if': "show_submit_button", 'v-html': "send_icon", title: "Nachricht posten", ':disabled': "submitting ? true : false", '@click': "submit_post", ':class': "submission_enabled ? '' : 'disabled'"}
             %a.btn.btn-white.btn-icon.upload_button{'v-show': "post.id", 'v-html': "camera_icon", title: "Bild hinzufügen", ':disabled': "submitting ? true : false", ':class': "submitting ? 'disabled' : ''"}
-    .text-muted.mt-2{'v-if': "uploading == 1"} Bild wird hochgeladen ...
-    .text-muted.mt-2{'v-if': "uploading > 1"} Bilder werden hochgeladen ...
-    .error.text-truncate.mt-2{'v-if': "error", 'v-text': "error"}
-    .text-right
-      .ml-auto
-        .mt-2.d-inline-block{'v-if': "show_submit_button && show_send_via_email_toggle"}
-          %label.form-check.form-switch
-            %input.form-check-input{type: 'checkbox', 'v-model': "send_via_email"}
-            %span.form-check-label Als E-Mail versenden
-        .ml-4.mt-2.d-inline-block{'v-if': "show_submit_button && !publish_on_public_website && show_publish_on_website_toggle"}
-          %label.form-check.form-switch
-            %input.form-check-input{type: 'checkbox', 'v-model': "post.publish_on_public_website", '@input': "save_draft"}
-            %span.form-check-label Post auf unserer öffentlichen Website veröffentlichen
-    .images.mt-2.row.row-sm{'v-if': "post.attachments && post.attachments.length > 0"}
-      .col-6.col-sm-4{'v-for': "attachment in post.attachments", ':key': "attachment.id"}
-        .image.form-imagecheck.mb-2
-          .remove_button.btn.btn-white.btn-icon{'@click': "remove_attachment(attachment)", title: "Bild entfernen"}
-            %i.fa.fa-trash
-          %img.form-imagecheck-image{':src': "attachment.file.medium.url"}
+      .text-muted.mt-2{'v-if': "uploading_images == 1"} Bild wird hochgeladen ...
+      .text-muted.mt-2{'v-if': "uploading_documents == 1"} Dokument wird hochgeladen ...
+      .text-muted.mt-2{'v-if': "uploading_images > 1"} Bilder werden hochgeladen ...
+      .text-muted.mt-2{'v-if': "uploading_documents > 1"} Dokument werden hochgeladen ...
+      .error.text-truncate.mt-2{'v-if': "error", 'v-text': "error"}
+      .text-right
+        .ml-auto
+          .mt-2.d-inline-block{'v-if': "show_submit_button && show_send_via_email_toggle"}
+            %label.form-check.form-switch
+              %input.form-check-input{type: 'checkbox', 'v-model': "send_via_email"}
+              %span.form-check-label Als E-Mail versenden
+          .ml-4.mt-2.d-inline-block{'v-if': "show_submit_button && !publish_on_public_website && show_publish_on_website_toggle"}
+            %label.form-check.form-switch
+              %input.form-check-input{type: 'checkbox', 'v-model': "post.publish_on_public_website", '@input': "save_draft"}
+              %span.form-check-label Post auf unserer öffentlichen Website veröffentlichen
+      .images.mt-2.row.row-sm{'v-if': "post.attachments && post.attachments.length > 0"}
+        .col-6.col-sm-4{'v-for': "attachment in post.attachments", ':key': "attachment.id"}
+          .image.form-imagecheck.mb-2{':title': "attachment.title"}
+            .remove_button.btn.btn-white.btn-icon{'@click': "remove_attachment(attachment)", title: "Bild entfernen"}
+              %i.fa.fa-trash
+            %img.form-imagecheck-image{':src': "attachment.file.medium.url", 'v-if': "attachment.content_type.includes('pdf') || attachment.content_type.includes('image')"}
+            .document_icon{'v-else': true}
+              %i.fa.fa-file-o
 
 </template>
 
@@ -57,26 +61,36 @@
         updating: false
         creating_draft: false
         error: null
-        uploading: 0
+        uploading_images: 0
+        uploading_documents: 0
         draft_saved_message_timeout_handler: null
         dropzone_options:
           url: "/api/v1/attachments"
           method: 'post'
-          acceptedFiles: 'image/*'
           clickable: '.upload_button'
           id: "create_post"
           paramName: 'attachment[file]'
           createImageThumbnails: false
           error: (file, msg)->
             component.error = msg
-            component.uploading -= 1
+            if file.type.includes('image')
+              component.uploading_images -= 1
+            else
+              component.uploading_documents -= 1
           sending: (event, xhr, data)->
+            console.log event, xhr, data
             data.append 'authenticity_token', $('meta[name=csrf-token]').attr('content')
             data.append 'post_id', component.post.id
             component.error = null
-            component.uploading += 1
+            if event.type.includes('image')
+              component.uploading_images += 1
+            else
+              component.uploading_documents += 1
           success: (file, new_attachment)->
-            component.uploading -= 1
+            if file.type.includes('image')
+              component.uploading_images -= 1
+            else
+              component.uploading_documents -= 1
             component.error = null
             component.post.attachments.push(new_attachment)
       }
@@ -173,7 +187,7 @@
         else
           "Nachricht posten"
       submission_enabled: ->
-        not (@submitting || @updating || @creating_draft) and (@parent || (@post.parent_groups && @post.parent_groups.length > 0)) and (@uploading == 0)
+        not (@submitting || @updating || @creating_draft) and (@parent || (@post.parent_groups && @post.parent_groups.length > 0)) and (@uploading_documents == 0) and (@uploading_images == 0)
 
   export default CreatePostForm
 </script>
@@ -209,6 +223,7 @@
 
     .image
       position: relative
+      height: 100%
       .remove_button
         position: absolute
         left: 10px
@@ -216,4 +231,17 @@
 
     .dz-preview
       display: none
+
+    .document_icon
+      width: 100%
+      text-align: center
+      border: 1px solid grey
+      border-radius: 3px
+      height: 100%
+      .fa
+        position: absolute
+        top: 40%
+        left: 40%
+        font-size: 50px !important
+
 </style>
