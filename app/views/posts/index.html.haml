@@ -26,9 +26,9 @@
       - if can? :create, Post
         .card-header
           - if group
-            %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, ':parent_group': group.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: :attachments), ':show_publish_on_website_toggle': (group.public_home_page.present?).to_b.to_json, ':show_send_via_email_toggle': true.to_json}
+            = vue_create_post_form initial_post: drafted_post, sent_via: post_draft_via_key, show_publish_on_website_toggle: (group.public_home_page.present?).to_b, show_send_via_email_toggle: true
           - else
-            %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: [:attachments, :parent_groups]), ':suggested_groups': current_user.groups.regular.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path}) }.to_json, ':show_send_via_email_toggle': true.to_json}
+            = vue_create_post_form initial_post: drafted_post, sent_via: post_draft_via_key, show_send_via_email_toggle: true, suggested_groups: current_user.groups.regular
       = vue_posts posts
 
 

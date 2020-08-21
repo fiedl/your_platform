@@ -1,0 +1,37 @@
+.row
+  .col-md-7
+    .card
+      - if page.image || can?(:update, page)
+        %vue-editable-image{src: page.image.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, page).to_json, img_class: 'card-header', update_url: polymorphic_path(page), attribute_name: "pages_public_page[image]", icon: 'fa fa-image', style: 'min-height: 200px'}
+      .card-body
+        %vue-edit-box
+          = editable page, :content, type: 'wysiwyg', class: 'form-control'
+
+  .col-md-5
+    .card
+      .card-header
+        %h3.mb-0 Bundeschargierte
+      .card-body
+        .row
+          - offices.each do |office|
+            - for officer in office.members
+              .col-sm-6.col-md-12.row.row-sm.mb-3.align-items-center
+                .col-auto
+                  = user_avatar(officer)
+                .col
+                  .text-body.d-block= officer.title
+                  %small.d-block.mt-n1.text-muted= office.name
+                  %small.d-block.mt-n1.text-muted= officer.phone
+                  - if email = office.email || officer.email
+                    %small.d-block.mt-n1.text-muted= email
+      .card-footer
+        = link_to "Alle Bundesamtsträger", group_officers_path(group_id: Group.where(name: "Alle Bundesamtsträger").pluck(:id).first), class: 'btn btn-white btn-sm'
+        - if can? :update, page
+          = link_to "Amtsträger ändern", group_officers_path(group_id: Group.where(name: "Alle Bundesamtsträger").pluck(:id).first), class: 'btn btn-white btn-sm'
+
+    .card
+      .card-header
+        %h3.mb-0 Nachricht an den Vorort
+      .card-body
+        = vue_create_post_form initial_post: post, sent_via: post_sent_via, send_via_email: true
+      = vue_posts posts

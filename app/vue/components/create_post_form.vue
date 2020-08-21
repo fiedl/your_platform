@@ -41,7 +41,7 @@
 
 
   CreatePostForm =
-    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via', 'parent_event', 'publish_on_public_website', 'show_publish_on_website_toggle', 'suggested_groups', 'parent_group', 'show_send_via_email_toggle']
+    props: ['placeholder', 'redirect_to_url', 'initial_post', 'camera_icon', 'send_icon', 'parent_page', 'sent_via', 'parent_event', 'publish_on_public_website', 'show_publish_on_website_toggle', 'suggested_groups', 'parent_group', 'show_send_via_email_toggle', 'initial_send_via_email']
     data: ->
       component = this
       {
@@ -52,7 +52,7 @@
           publish_on_public_website: @publish_on_public_website,
           parent_groups: (if @parent_group then [@parent_group] else [])
         }
-        send_via_email: false
+        send_via_email: @initial_send_via_email || false
         submitting: false
         updating: false
         creating_draft: false
@@ -137,7 +137,12 @@
         @post.text = ""
         @post.attachments = []
         @post.publish_on_public_website = false
-        @post.parent_groups = (if @parent_group then [@parent_group] else [])
+        if @parent_group
+          @post.parent_groups = [@parent_group]
+        else if @initial_post
+          @post.parent_groups = @initial_post.parent_groups
+        else
+          @post.parent_groups = []
         @$refs.wysiwyg.reset()
         @submitting = false
         @error = null

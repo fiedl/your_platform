@@ -28,10 +28,6 @@
                     = "Wohnheim #{corporation.name}"
               .dropdown-divider
               %li
-                = link_to group_officers_path(group_id: (g = Group.where(name: "Alle Bundesamtsträger").first).id), class: "dropdown-item #{'active' if current_navable == g}" do
-                  Bundesamtsträger
-              .dropdown-divider
-              %li
                 = link_to corporations_path, class: "dropdown-item #{'active' if controller_name == 'corporations'}" do
                   Verbindungen
               %li
@@ -40,6 +36,14 @@
               %li
                 = link_to groups_group_of_groups_path(Group.bvs_parent), class: "dropdown-item #{'active' if current_navable == Group.bvs_parent}" do
                   Bezirksverbände
+              .dropdown-divider
+              %li
+                = link_to group_officers_path(group_id: (g = Group.where(name: "Alle Bundesamtsträger").first).id), class: "dropdown-item #{'active' if current_navable == g}" do
+                  Bundesamtsträger
+              %li
+                = link_to "Vorort", vorort_path, class: "dropdown-item #{'active' if controller_name == 'vororte'}"
+              %li
+                = link_to "Geschäftsstelle", Page.where(title: "Geschäftsstelle").first, class: "dropdown-item #{'active' if current_navable == Page.where(title: "Geschäftsstelle").first}"
               .dropdown-divider
               %li
                 = link_to websites_path, class: "dropdown-item #{'active' if controller_name == 'websites'}" do

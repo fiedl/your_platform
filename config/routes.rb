@@ -331,6 +331,8 @@ Rails.application.routes.draw do
     get :invitations, to: 'beta_invitations#index'
   end
 
+  get :vorort, to: 'vororte#show'
+
   apipie
   get :api, to: 'apipie/apipies#index'
   namespace :api do
