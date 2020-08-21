@@ -11,13 +11,7 @@
 // about supported directives.
 //
 //= require jquery
-//= require jquery.turbolinks
-//= require jquery-ui
-//
-//= require jquery.purr
 //= require_boxes
 //
 //= require your_platform
 //= require_tree .
-//
-//= require turbolinks
