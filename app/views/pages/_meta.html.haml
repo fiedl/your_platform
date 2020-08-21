@@ -10,7 +10,7 @@
     %li.author.page_author
       = icon :user
       - page.contributors.each do |user|
-        = link_to(user.title, user_posts_path(user_id: user.id))
+        = link_to(user.title, user_blog_posts_path(user_id: user.id))
   - if (not teaser) && @navable != page and not @navable.in?(page.parents) and page.parents.first
     %li.page_parent
       = folder_icon

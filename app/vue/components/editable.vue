@@ -177,10 +177,10 @@
             component.$emit('save', result)
             component.$emit('input', result)
           },
-          error: function(result, message) {
+          error: function(request, status, error) {
             component.submitting = false
             component.success = false
-            component.error = message
+            component.error = request.responseText
             var oldValue = component.valueBeforeEdit
             component.edit()
             component.valueBeforeEdit = oldValue // because edit() replaces this value
