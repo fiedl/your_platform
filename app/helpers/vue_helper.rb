@@ -7,7 +7,7 @@ module VueHelper
   #
   def vue_posts(posts, show_public_badges: false)
     content_tag :vue_post_list_group, "", {
-      ':posts': posts.collect { |post|
+      ':posts': posts.select { |post| post.author.present? }.collect { |post|
         post.as_json.merge({
           author: post.author.as_json.merge({
             path: (polymorphic_path(post.author) if can?(:read, post.author))

@@ -9,7 +9,8 @@ class Ability
       #Abilities::UserAccountAbility,
       #Abilities::ProfileFieldAbility,
       #Abilities::DummyAbility
-      Abilities::FreeGroupAbility
+      Abilities::FreeGroupAbility,
+      Abilities::PostAbility
     ]
   end
 
@@ -47,6 +48,13 @@ class Ability
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
+    # This is the new ability structure.
+    # TODO: Migrate the other abilities to separated ability classes.
+    #
+    ability_classes.each do |ability_class|
+      self.merge ability_class.new(user, options)
+    end
+
     # Attention: Check outside whether the user's role allowes that preview!
     # Currently, this is done in ApplicationController#current_ability.
     #
@@ -66,8 +74,6 @@ class Ability
 
     # Fast lane
     can :read, Pages::PublicPage
-    can :read, Post, parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
-    can :read, Post, publish_on_public_website: true
     can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
     can [:read, :download], Attachment, parent_type: "Page", parent: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
     can [:read, :download], Attachment, parent_type: "SemesterCalendar"
@@ -110,13 +116,6 @@ class Ability
       end
     end
     rights_for_everyone
-
-    # This is the new ability structure.
-    # TODO: Migrate the other abilities to separated ability classes.
-    #
-    ability_classes.each do |ability_class|
-      self.merge ability_class.new(user, options)
-    end
   end
 
   def view_as?(role)
@@ -326,9 +325,6 @@ class Ability
       can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
       end
-
-      # Global officers can post to any group.
-      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
     end
   end
 
@@ -351,9 +347,6 @@ class Ability
 
     can :read, Corporation
     can :index_accommodations, Corporation
-
-    can :read, Post, ancestor_groups: { id: user.group_ids }
-    can :read, Post, parent_events: { group_id: user.group_ids }
 
     # Regular users can access the list of mailing lists.
     #
@@ -455,9 +448,6 @@ class Ability
       can?(:quickly_download, attachment) || attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
     end
 
-    can :update, Post, author_user_id: user.id, sent_at: nil, published_at: nil
-    can :update_public_website_publication, Post, author_user_id: user.id
-
     # All users can join events.
     #
     can :read, Event
@@ -480,10 +470,6 @@ class Ability
     can :index, Notification
     can :read, Notification, recipient: {id: user.id}
 
-    # Users can read post of their groups.
-    can :read, Post, group: {id: user.group_ids}
-    can :index_posts, Group, id: user.group_ids
-
     # Comments:
     # - Users can read comments for all objects they can read anyway.
     # - And they can create comments for these objects as well (see above.)
@@ -495,12 +481,6 @@ class Ability
     can :read, [Comment] do |comment|
       comment.mentioned_users.include? user
     end
-
-    # Users can always read posts they have created, e.g.
-    # - if they have left the group later
-    # - if they have addressed another group
-    #
-    can :read, Post, author_user_id: user.id
 
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
@@ -686,21 +666,6 @@ class Ability
     # All users can show tags. This does not mean that they
     # can see all tagged contents though.
     can :read, ActsAsTaggableOn::Tag
-
-    # Send messages to a group, either via web ui or via email:
-    # This is allowed if the user matches the mailing-list-sender-filter setting.
-    # Definition in: concerns/group_mailing_lists.rb
-    #
-    can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
-      group.user_matches_mailing_list_sender_filter?(user)
-    end
-
-    # Force instant delivery after creating the post.
-    #
-    can :deliver, Post do |post|
-      post.author == user and
-      can? :force_post_notification, post.group
-    end
 
     # Activate platform mailgate, i.e. accept incoming email.
     # The authorization to send to a specific group is done separately in
