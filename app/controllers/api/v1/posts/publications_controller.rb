@@ -36,10 +36,11 @@ class Api::V1::Posts::PublicationsController < Api::V1::BaseController
   def deliver_post_as_email
     post.parent_groups.each { |group| authorize! :create_post_via_email, group }
 
+    post.update! sent_at: Time.zone.now
+
     recipients = ([current_user] + post.parent_groups.collect { |group| group.members }.flatten).uniq
     recipients.each do |recipient_user|
       PostDelivery.where(post_id: post.id, user_id: recipient_user.id).first_or_create
-      post.update! sent_at: Time.zone.now
       DeliverPostViaEmailJob.perform_later post_id: post.id, recipient_user_id: recipient_user.id
     end
   end

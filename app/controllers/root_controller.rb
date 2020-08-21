@@ -13,7 +13,7 @@ class RootController < ApplicationController
     current_user.posts.published
     .where("published_at is null or published_at > ?", 1.year.ago)
     .where("sent_at is null or sent_at > ?", 1.year.ago)
-    .order(published_at: :desc, sent_at: :desc, created_at: :desc)
+    .order(sticky: :asc, updated_at: :desc)
     .limit(10)
   }
 

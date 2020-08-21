@@ -37,7 +37,7 @@ class PostsController < ApplicationController
         .where("sent_at is null or sent_at > ?", 1.year.ago)
     end
     posts = posts
-      .order(published_at: :desc, sent_at: :desc, created_at: :desc)
+      .order(sticky: :asc, updated_at: :desc)
       .limit(50)
   }
 
