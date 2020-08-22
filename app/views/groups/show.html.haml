@@ -48,6 +48,11 @@
             = link_to group_website_path(group_id: group), method: 'post', class: 'btn btn-white', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
               = website_icon
               Internetauftritt erstellen
+        - if can? :create_post, group
+          .mt-2.mr-2.d-inline-block
+            = link_to new_group_post_path(group_id: group.id), class: 'btn btn-white' do
+              = mail_icon
+              Nachricht schreiben
 
 
   .col-lg-8
@@ -76,6 +81,12 @@
           - if can? :update, group
             = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
               Amtsträger ändern
+          - if group.respond_to?(:chargen) && can?(:create_post, group.chargen)
+            = link_to new_group_post_path(group_id: group.chargen.id), class: 'btn btn-white btn-sm' do
+              Nachricht an Chargen schreiben
+          - elsif can?(:create_post, group.officers_parent)
+            = link_to new_group_post_path(group_id: group.officers_parent.id), class: 'btn btn-white btn-sm' do
+              Nachricht an Amtsträger schreiben
 
     - if group.profile_fields.where(type: ["ProfileFields::Address", "ProfileFields::Phone", "ProfileFields::Email", "ProfileFields::Homepage"]).any? || can?(:update, group)
       .card
