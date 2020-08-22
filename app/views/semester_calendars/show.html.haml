@@ -42,7 +42,7 @@
         - if can? :index, SemesterCalendar and can? :read, group
           = link_to "Überblick", semester_calendars_path(group_id: corporation.id), class: 'btn btn-white ml-2', title: "Alle Semesterprogramme von #{corporation.title}"
 
-      %vue_semester_calendar_events{':initial_events': semester_calendar.events.select { |event| can? :read, event }.collect { |event| event.as_json(methods: [:aktive, :philister]).merge({attendees_count: event.attendees.count})}.to_json, ':editable': can?(:update, semester_calendar).to_json, ':group': group.to_json, default_location: group.postal_address, ':semester_calendar': semester_calendar.to_json, ':next_semester_calendar': semester_calendar.next.to_json}
+      = vue_semester_calendar_events semester_calendar: semester_calendar
 
   .col-md-4
     = render partial: 'groups/profile_card', locals: {group: corporation}

@@ -89,14 +89,6 @@ class Event < ApplicationRecord
     self.group.try(:corporation).try(:id)
   end
 
-  def contact_name
-    self.contact_person.try(:title)
-  end
-
-  def contact_id
-    self.contact_person.try(:id)
-  end
-
   def avatar_url
     self.group.try(:avatar_url) || self.group.try(:corporation).try(:avatar_url)
   end

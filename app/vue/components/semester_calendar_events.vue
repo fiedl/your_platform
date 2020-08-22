@@ -13,6 +13,7 @@
                   %th{title: "für Philister veröffentlichen"} Philister
                   %th{title: "auf Verbindungs-Homepage veröffentlichen"} Homepage
                   %th{title: "auf Verbindungs-Homepage veröffentlichen"} wingolf.org
+                  %th{'v-if': "editable && editing"}
                   %th
               %tbody
                 %tr{'v-for': "event in events_by_month(month)", ':class': "event_class(event)", ':key': "event.id"}
@@ -27,8 +28,10 @@
                     %input.form-check-input{type: 'checkbox', 'v-model': "event.publish_on_local_website", '@change': "save_event(event)"}
                   %td{'v-if': "editing", title: "auf Bundes-Homepage wingolf.org veröffentlichen"}
                     %input.form-check-input{type: 'checkbox', 'v-model': "event.publish_on_global_website", '@change': "save_event(event)"}
-                  %td{'v-if': "editing"}
+                  %td.w-1{'v-if': "editing"}
                     %i.fa.fa-trash{'@click': "remove_event(event)", 'v-if': "editable && editing"}
+                  %td.w-1{'v-if': "!editing"}
+                    %a.btn.btn-icon.btn-white{':href': "'/events/' + event.id", 'v-html': "camera_icon", title: "Veranstaltungsfotos posten", 'v-if': "event.can_create_post"}
       .card-footer{'v-if': "editable"}
         .error.text-danger{'v-if': "error", 'v-text': "error"}
         .row
@@ -43,7 +46,7 @@
   Api = require('../api.coffee').default
 
   SemesterCalendarEvents =
-    props: ['initial_events', 'group', 'editable', 'default_location', 'semester_calendar', 'next_semester_calendar']
+    props: ['initial_events', 'group', 'editable', 'default_location', 'semester_calendar', 'next_semester_calendar', 'camera_icon']
     data: ->
       events: @initial_events
       editing: false

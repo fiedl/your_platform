@@ -56,4 +56,23 @@ module VueHelper
     }
   end
 
+  def vue_semester_calendar_events(semester_calendar:, events: nil)
+    content_tag :vue_semester_calendar_events, "", {
+      ':initial_events': (events || semester_calendar.events)
+        .select { |event| can? :read, event }
+        .collect { |event|
+          event.as_json(methods: [:aktive, :philister]).merge({
+            attendees_count: event.attendees.count,
+            can_create_post: can?(:create_post, event)
+          })}
+        .to_json,
+      ':editable': can?(:update, semester_calendar).to_json,
+      ':group': semester_calendar.group.to_json,
+      default_location: semester_calendar.group.postal_address,
+      ':semester_calendar': semester_calendar.to_json,
+      ':next_semester_calendar': semester_calendar.next.to_json,
+      camera_icon: camera_icon
+    }
+  end
+
 end
