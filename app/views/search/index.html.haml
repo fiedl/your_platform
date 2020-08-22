@@ -12,6 +12,9 @@
   .col-md-3
     .subheader.mb-2= t :category
     .list-group.list-group-transparent.mb-3
+      %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'corporations'), href: search_path(query: query, category: 'corporations')}
+        Verbindungen
+        %small.text-muted.ml-auto= corporations.count
       %a.list-group-item.list-group-item-action.d-flex.align-items-center{class: ('active' if category == 'users'), href: search_path(query: query, category: 'users')}
         = t :people
         %small.text-muted.ml-auto= users.count
@@ -32,7 +35,7 @@
         %small.text-muted.ml-auto= posts.count
 
   .col-md-9
-    .row
+    .row.row-deck.row-cards
       - if results.none?
         .col
           .card
@@ -42,6 +45,11 @@
                 %p Sie sind nicht am System angemeldet.
                 - session['return_to_after_login'] = request.fullpath
                 %p= link_to "Anmelden", new_user_account_session_url, class: 'btn btn-primary'
+
+      - if category == 'corporations'
+        - for corporation in corporations.to_a
+          .col-sm-6.col-lg-4
+            = render partial: 'corporations/corporation_card', locals: {group: corporation}
 
       - if category == 'users'
         - for user in users.to_a

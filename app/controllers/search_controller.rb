@@ -6,6 +6,16 @@ class SearchController < ApplicationController
   expose :query, -> { params[:query].to_s }
   expose :query_string_with_wildcards, -> { "%" + query.gsub(' ', '%') + "%" }
   expose :q, -> { query_string_with_wildcards }
+
+  expose :corporations_by_token, -> {
+    filter_by_authorization Corporation.where(token: query)
+  }
+  expose :corporations_by_name, -> {
+    filter_by_authorization Corporation.where("name like ?", q) if query.length > 3
+  }
+  expose :corporations, -> {
+    corporations_by_token.any? ? corporations_by_token : corporations_by_name
+  }
   expose :users, -> {
     filter_by_authorization User.search(query) if query.length > 3
   }
@@ -24,11 +34,11 @@ class SearchController < ApplicationController
   expose :posts, -> {
     filter_by_authorization Post.where("subject like ? or text like ?", q, q).order(sent_at: :desc, created_at: :desc) if query.length > 3
   }
-  expose :results, -> { users.to_a + documents.to_a + pages.to_a + groups.to_a + events.to_a + posts.to_a }
-  expose :category, -> { params[:category] || ('users' if users.present?) || ('documents' if documents.present?) || ('events' if events.present?) || ('pages' if pages.present?) || ('groups' if groups.present?) || ('posts' if posts.present?) }
+  expose :results, -> { corporations.to_a + users.to_a + documents.to_a + pages.to_a + groups.to_a + events.to_a + posts.to_a }
+  expose :category, -> { params[:category] || ('corporations' if corporations.present?) || ('users' if users.present?) || ('documents' if documents.present?) || ('events' if events.present?) || ('pages' if pages.present?) || ('groups' if groups.present?) || ('posts' if posts.present?) }
 
   def index
-    if results.count == 1 and not documents.count == 1
+    if results.count == 1 and not documents.try(:count) == 1
       redirect_to results.first
     end
   end
