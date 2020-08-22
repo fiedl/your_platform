@@ -8,9 +8,11 @@
           %div
             %small.float-right.text-right
               %a.text-muted{':href': "'/posts/' + post.id", 'v-text': "post.published_at_relative", ':title': "format_datetime(post.published_at || post.sent_at)"}
-              .mb-4.mt-1.ml-4{'v-if': "groups.length > 1"}
+              .mb-4.mt-1.ml-4
                 .mb-0{'v-for': "group in post.groups"}
                   %a.text-muted{':href': "'/groups/' + group.id + '/posts'"} {{ group.name }}
+                .mb-0{'v-for': "event in post.events"}
+                  %a.text-muted{':href': "'/events/' + event.id"} {{ event.name }}
             %h4.align-items-center.d-flex
               %a{':href': "post.author.path", 'v-if': "post.author.path"} {{ post.author.title }}
               %span{'v-else': true} {{ post.author.title }}

@@ -56,7 +56,7 @@
         - if can? :create_post, event
           .card-header
             %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, ':parent_event': event.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: :attachments), ':show_publish_on_website_toggle': true.to_json}
-        = vue_posts posts, show_public_badges: current_user.to_b
+        = vue_posts posts, show_public_badges: current_user.present?.to_b
 
 -#%div
 -#  = render partial: 'events/event_details'

@@ -20,6 +20,7 @@ module VueHelper
           },
           can_comment: can?(:create_comment, post),
           groups: (post.parent_groups + [post.group] - [nil]).as_json,
+          events: post.parent_events.as_json,
           can_update_publish_on_public_website: can?(:update_public_website_publication, post)
         })
       }.to_json,
