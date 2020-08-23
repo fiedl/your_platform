@@ -537,7 +537,6 @@ class Ability
     # can :use, :mail_delivery_account_filter
     can :use, :help_videos
     can :use, :permalinks
-    can :use, :caching
 
     # it's not ready, yet, but the tests use it already.
     if Rails.env.test?

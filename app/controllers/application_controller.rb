@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
   include DemoMode
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
-  include CachingSwitch
   include ErrorHandling
 
 
