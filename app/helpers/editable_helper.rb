@@ -4,7 +4,7 @@ module EditableHelper
   #
   #   editable user, :email, type: "email"
   #
-  def editable(object, key, type: 'text', editable: nil, placeholder: nil, class: nil, input_class: nil)
+  def editable(object, key, type: 'text', editable: nil, placeholder: nil, class: nil, input_class: nil, link_to: nil)
     if type == 'date'
       initial_value = localize object.send(key).to_date if object.send(key)
     elsif type == 'datetime'
@@ -20,7 +20,8 @@ module EditableHelper
       'param-key': "#{object.class.model_name.param_key}[#{key}]",
       ':editable': editable.nil? ? can?(:update, object) : editable,
       placeholder: placeholder,
-      input_class: binding.local_variable_get(:class) || input_class
+      input_class: binding.local_variable_get(:class) || input_class,
+      link_to: link_to
     }
   end
 

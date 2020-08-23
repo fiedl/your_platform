@@ -1,60 +1,8 @@
-.events .box .box_heading
-  width: 80%
-
-table.event_details
-  margin-left: 16px
-  th
-    text-align: left
-  td
-    width: 75%
-    padding-bottom: 6px
-  tr
-    vertical-align: top
-  tr.description
-    textarea
-      height: 100px
-  tr.description, tr.start_at, tr.end_at, tr.location, tr.contact_people
-    input, textarea
-      width: 100%
-  tr.publish_on_local_website, tr.publish_on_global_website
-    form, label
-      display: inline-block
-
-  .multi_user_select_activator
-    margin-left: 20px
-
-form#invite
-  margin: 20px
-  margin-bottom: 40px
-  textarea
-    width: 98%
-    height: 200px
-    padding: 1%
-
-ul.upcoming_events
-  padding-left: 6px
-  margin: 6px
-li.upcoming_event
-  list-style-type: none
-  margin-bottom: 6px
-.event.name
-  display: block
-
-table.events_footer
-  margin-left: 6px
-  width: 98%
-  vertical-align
-  td
-    vertical-align: bottom
-  td.create_event
-    text-align: right
-
-a#create_event
-  font-size: 80%
-
-.events_footer
-  .show_all, .show_semester_calendars
-    font-size: 80%
-  .create_event
-    text-align: right
-    margin-bottom: 15px
+.events
+  tr.event
+    &.publish_on_global_website
+      .event_name
+        font-size: 140%
+    &.publish_on_local_website
+      .event_name
+        font-size: 120%

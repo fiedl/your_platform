@@ -1,7 +1,7 @@
 .page-header
   .row.align-itemts-center
     .col-auto
-      .page-pretitle= corporation.title unless group.id == corporation.id
+      .page-pretitle= corporation.title if corporation && (group.id != corporation.id)
       .page-title= group.title
     .col-auto.ml-auto.d-print-none
       .d-flex
@@ -38,9 +38,10 @@
             .location.mb-2{title: "Ort der Veranstaltung"}
               %span.mr-2= location_icon
               .d-inline-block.align-middle= editable event, :location, editable: can?(:update, event)
-      .card-footer
-        = link_to semester_calendar_path(event.semester_calendar!), class: 'btn btn-white btn-sm' do
-          Semesterprogramm anzeigen
+      - if event.corporations.present?
+        .card-footer
+          = link_to semester_calendar_path(event.semester_calendar!), class: 'btn btn-white btn-sm' do
+            Semesterprogramm anzeigen
 
     - if can?(:update, event)
       .card

@@ -3,7 +3,10 @@
     <transition name="fade" mode="out-in">
 
       <span key="3" class='read' v-on:click="edit_if_not_a_link" v-if="!showEditField">
-        <span class="value" v-html="rendered_value()"></span>
+        <a :href="link_to" v-if="link_to">
+          <span class="value" v-html="rendered_value()"></span>
+        </a>
+        <span class="value" v-html="rendered_value()" v-if="!link_to"></span>
         <span v-if="submitting" class="submitting">•••</span>
         <span v-if="success" class="success">✔</span>
         <span v-if="error" class="error-icon">✘</span>
@@ -29,7 +32,7 @@
   Vue.use(VueInputAutowidth)
 
   export default {
-    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable', 'placeholder', 'input_class', 'initialObject'],
+    props: ['initialValue', 'type', 'help', 'url', 'paramKey', 'renderValue', 'editable', 'placeholder', 'input_class', 'initialObject', 'link_to'],
     data() { return {
       editing: false,
       suggestingEdit: false,
@@ -61,7 +64,7 @@
         }
       },
       edit_if_not_a_link() {
-        if (this.rendered_value() && this.rendered_value().includes("<a ")) {
+        if ((this.rendered_value() && this.rendered_value().includes("<a ")) || this.link_to) {
           return
         } else {
           this.edit()

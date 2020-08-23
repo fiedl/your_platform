@@ -10,6 +10,7 @@ class Event < ApplicationRecord
   scope :commers, -> { where("name like ? or name like ?", "%commers%", "%kommers%") }
   scope :wartburgfest, -> { where("name like ?", "%wartburgfest%") }
   scope :wingolfsseminar, -> { where("name like ?", "%wingolfsseminar%") }
+  scope :bundesconvent, -> { where_like name: ["Chargiertenconvent", "Vertreterconvent"] }
 
 
   include Structureable
@@ -133,7 +134,7 @@ class Event < ApplicationRecord
     semester_calendars.first
   end
   def semester_calendar!
-    semester_calendars.first_or_create
+    semester_calendars.try(:first_or_create) || raise('cannot create semester calendar')
   end
 
 
