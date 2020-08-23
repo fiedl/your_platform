@@ -21,7 +21,6 @@ class ApplicationController < ActionController::Base
   include AcceptTermsOfUse
   include ReadOnlyModeInControllersAndViews
   include DemoMode
-  include FastLane
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
   include CachingSwitch
