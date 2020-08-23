@@ -532,18 +532,7 @@ class User < ApplicationRecord
     # List all pages that do not have ancestor groups
     # which the user is no member of.
     #
-
-    # THIS WORKS BUT LOOKS UGLY. TODO: Refactor this:
-    # avoid double negation (i.e. select pages where user is member!)
-    group_ids_the_user_is_no_member_of =
-      Group.pluck(:id) - self.group_ids
-    pages_that_belong_to_groups_the_user_is_no_member_of = Page
-      .includes(:ancestor_groups)
-      .where(groups: {id: group_ids_the_user_is_no_member_of})
-    Page
-      .where.not(id: (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
-      .visible_to(self)
-      .order('pages.updated_at DESC')
+    Page.where.not(id: Page.joins(:ancestor_groups).where.not(groups: {id: self.groups}))
   end
 
 

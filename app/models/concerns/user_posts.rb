@@ -9,7 +9,20 @@ concern :UserPosts do
   end
 
   def posts
-    Post.where(id: groups.collect { |group| group.child_post_ids + group.post_ids }.flatten + child_post_ids + posts_from_me_ids)
+    # This query does not look nice, but is much more efficient.
+    #
+    # 1. Posts that are direclty shared with me by being a child_user of the post.
+    # 2. Posts that are by me by the author_user_id attribute.
+    # 3. Posts that are child_posts of my groups.
+    # 4. Posts that are posts of my groups. (Legacy)
+    #
+    Post.where(id: child_posts).or(
+      Post.where(id: posts_from_me)
+    ).or(
+      Post.where(id: Post.joins(:parent_groups).where(groups: {id: self.groups}))
+    ).or(
+      Post.where(group_id: self.groups)
+    )
   end
 
 end

@@ -7,7 +7,7 @@ module VueHelper
   #
   def vue_posts(posts, show_public_badges: false)
     content_tag :vue_post_list_group, "", {
-      ':posts': posts.select { |post| post.author.present? }.collect { |post|
+      ':posts': posts.where.not(author_user_id: nil).includes({author: [:avatar_attachments]}, :attachments, {comments: [author: [:avatar_attachments]]}, :group, :parent_groups, :parent_events).collect { |post|
         post.as_json.merge({
           author: post.author.as_json.merge({
             path: (polymorphic_path(post.author) if can?(:read, post.author))
@@ -38,14 +38,14 @@ module VueHelper
       ':parent_group': parent_group.to_json,
       ':initial_post': (initial_post.as_json.merge({
         attachments: initial_post.attachments.as_json,
-        parent_groups: initial_post.parent_groups.collect { |group|
+        parent_groups: initial_post.parent_groups.includes(:avatar_attachments).collect { |group|
           group.as_json.merge({
             title: group.title,
             avatar_path: group.avatar_path
           })
         }
       }).to_json if initial_post),
-      ':suggested_groups': suggested_groups.collect { |group|
+      ':suggested_groups': suggested_groups.includes(:avatar_attachments).collect { |group|
         group.as_json.merge({
           title: group.title,
           avatar_path: group.avatar_path

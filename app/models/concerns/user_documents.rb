@@ -5,14 +5,15 @@ concern :UserDocuments do
   end
 
   def documents_in_my_scope
-    Attachment.where id: document_ids_in_my_scope
+    documents_in_my_posts.or(documents_in_my_pages)
   end
 
-  def document_ids_in_my_scope
-    (self.news_pages + self.posts.published)
-      .map(&:attachments).flatten
-      .select { |attachment| attachment.document? }
-      .map(&:id)
+  def documents_in_my_posts
+    Attachment.documents.where(parent_type: "Post", parent_id: self.posts.published)
+  end
+
+  def documents_in_my_pages
+    Attachment.documents.where(parent_type: "Page", parent_id: self.news_pages)
   end
 
 end
