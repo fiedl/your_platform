@@ -25,7 +25,7 @@ Rack::MiniProfiler.config.pre_authorize_cb = lambda do |env|
   not Rails.env.test?
 end
 
-Rack::MiniProfiler.config.start_hidden = true if Rails.env.production?
+#Rack::MiniProfiler.config.start_hidden = true if Rails.env.production?
 Rack::MiniProfiler.config.position = 'top-right'
 Rack::MiniProfiler.config.toggle_shortcut = 'Alt+P'
 
