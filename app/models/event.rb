@@ -232,6 +232,4 @@ class Event < ApplicationRecord
   def self.to_ical
     self.to_ics
   end
-
-  include EventCaching if use_caching?
 end

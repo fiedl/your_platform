@@ -21,9 +21,5 @@ concern :EventGroups do
     def find_all_by_group(group)
       group.events_of_self_and_subgroups.order('start_at')
     end
-
-    def find_all_by_groups(groups)
-      self.where(id: groups.map(&:event_ids_of_self_and_subgroups).flatten.uniq).order('start_at')
-    end
   end
 end

@@ -25,11 +25,7 @@ concern :GroupEvents do
   end
 
   def events_of_self_and_subgroups
-    Event.where(id: event_ids_of_self_and_subgroups)
-  end
-
-  def event_ids_of_self_and_subgroups
-    (self.event_ids + self.descendant_groups.map(&:event_ids_of_self_and_subgroups)).flatten
+    Event.where(group_id: self).or(Event.where(group_id: self.descendant_groups))
   end
 
   def upcoming_events
