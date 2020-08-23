@@ -17,6 +17,9 @@ concern :GroupCaching do
     cache :latest_membership_ids
     cache :membership_ids_this_year
 
+    # GroupMemberList
+    cache :member_table_rows
+
     # GroupListExports
     cache :export_list
 
