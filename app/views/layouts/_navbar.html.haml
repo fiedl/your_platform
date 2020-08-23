@@ -68,8 +68,6 @@
                   = link_to new_aktivmeldung_path, class: "dropdown-item #{'active' if controller_name == 'aktivmeldungen'}" do
                     Aktivmeldung eintragen
                 .dropdown-divider
-              %li
-                = link_to "Meine Gruppen", user_groups_path(user_id: current_user.id), class: "dropdown-item #{'active' if (controller_name == 'groups') && (action_name == 'index') && (params[:user_id].to_i == current_user.id)}"
               - current_user.corporations.each do |corporation|
                 %li
                   %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if (corporation == current_navable) && controller_name == 'group_members')}
@@ -145,14 +143,17 @@
                 Netzwerk
             %ul.dropdown-menu
               %li
-                = link_to small_ads_path, class: "dropdown-item #{'active' if controller_name == 'small_ads'}" do
-                  Gesuche und Angebote
-              %li
-                %a.dropdown-item{:href => "./layout-horizontal.html"}
-                  Karte des Wingolfs
+                = link_to "Meine Gruppen", user_groups_path(user_id: current_user.id), class: "dropdown-item #{'active' if (controller_name == 'groups') && (action_name == 'index') && (params[:user_id].to_i == current_user.id)}"
               - %w(Biermusiker Juristen).each do |group_name|
                 %li
                   = link_to group_members_path(g = Group.where(name: group_name).first), class: "dropdown-item #{'active' if current_navable == g}" do
                     = group_name
+              .dropdown-divider
+              %li
+                = link_to small_ads_path, class: "dropdown-item #{'active' if controller_name == 'small_ads'}" do
+                  Gesuche und Angebote
+              %li
+                %a.dropdown-item{:href => "./layout-horizontal.html"}
+                  Wingolfskarte
 
         = render partial: 'layouts/search'

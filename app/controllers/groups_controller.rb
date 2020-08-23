@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
 
     set_current_navable parent
     set_current_title "Gruppen von #{parent.title}"
-    set_current_tab :members
+    set_current_tab :network
   end
 
   expose :group
