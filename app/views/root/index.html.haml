@@ -26,7 +26,7 @@
         .card-footer
           = link_to "Semesterprogramm", semester_calendar, class: 'btn btn-white btn-sm'
 
-  = cache :tabler_birthday_box, expires_in: Time.now.end_of_day - Time.current do
+  = cache :tabler_birthday_box_v2, expires_in: Time.now.end_of_day - Time.current do
     .col-lg-6
       .card
         .card-header
@@ -34,7 +34,7 @@
         .card-body
           .row.mb-n3
             - birthday_users.each do |user|
-              .col-6.row.mb-3.align-items-center.filterable
+              .col-12.col-md-6.row.mb-3.align-items-center.filterable
                 %a.col-auto
                   %span.avatar{style: "background-image: url(#{user.avatar_path})"}
                 .col
