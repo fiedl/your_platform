@@ -32,3 +32,6 @@ $(document).on 'click', 'ul.tree .branch .indicator', ->
 
 $(document).ready ->
   $("ul.tree").treed({openedClass:'fa fa-chevron-down', closedClass:'fa fa-chevron-right'})
+
+  # open the first tree item to indicate that this is nested.
+  $("ul.tree > .branch:first > .indicator").click()

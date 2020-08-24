@@ -24,6 +24,13 @@
         - elsif can? :create_post, group
           = link_to "Nachricht schreiben", new_group_post_path(group_id: group.id), class: 'btn btn-sm btn-white'
 
+    - if group.child_groups.any?
+      .card
+        .card-body
+          %h3 Untergruppen
+          = group_tree(group) do |child_group|
+            - link_to child_group.name, group_members_path(child_group)
+
     .card
       .card-body
         -#- if can? :add_group_member, group
@@ -71,13 +78,6 @@
               .col-auto
                 = link_to status_group.name, group_members_path(status_group)
                 = status_group.members.count
-
-    - if group.child_groups.any?
-      .card
-        .card-body
-          %h3 Untergruppen
-          = group_tree(group) do |child_group|
-            - link_to child_group.name, group_members_path(child_group)
 
 -#-# %h1 Mitglied werden
 -#-# %div
