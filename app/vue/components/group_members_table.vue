@@ -1,26 +1,35 @@
 <template>
-  <div class="table-responsive">
-    <vue-good-table
-      :columns="columns"
-      :rows="processed_rows"
-      :sort-options="sort_options"
-      :search-options="search_options"
-      styleClass="members child_users display table card-table table-vcenter"
-    >
-      <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'last_name'">
-          <a :href="props.row.href" v-if="props.row.href">{{props.row.last_name}}</a>
-          <span v-if="!props.row.href">{{props.row.last_name}}</span>
-        </span>
-        <span v-else-if="props.column.field == 'status'">
-          <a :href="'/groups/' + props.row.status_group_id + '/members'">{{props.row.status}}</a>
-        </span>
-        <span v-else-if="props.column.field == 'direct_group'">
-          <a :href="'/groups/' + props.row.direct_group_id + '/members'">{{props.row.direct_group_name}}</a>
-        </span>
-        <span v-else v-html="props.formattedRow[props.column.field]"></span>
-      </template>
-    </vue-good-table>
+  <div>
+    <div class="card-header d-flex">
+      <input class="form-control" type="text" v-model="query" placeholder="Mitgliederliste filtern (Name, Status, Beitrittsjahr)"/>
+      <div class="results text-muted text-nowrap ml-2" v-if="query">
+        {{ search_hits }} Treffer
+      </div>
+    </div>
+    <div class="table-responsive">
+      <vue-good-table
+        :columns="columns"
+        :rows="processed_rows"
+        :sort-options="sort_options"
+        :search-options="search_options"
+        styleClass="members child_users display table card-table table-vcenter"
+        @on-search="on_search"
+      >
+        <template slot="table-row" slot-scope="props">
+          <span v-if="props.column.field == 'last_name'">
+            <a :href="props.row.href" v-if="props.row.href">{{props.row.last_name}}</a>
+            <span v-if="!props.row.href">{{props.row.last_name}}</span>
+          </span>
+          <span v-else-if="props.column.field == 'status'">
+            <a :href="'/groups/' + props.row.status_group_id + '/members'">{{props.row.status}}</a>
+          </span>
+          <span v-else-if="props.column.field == 'direct_group'">
+            <a :href="'/groups/' + props.row.direct_group_id + '/members'">{{props.row.direct_group_name}}</a>
+          </span>
+          <span v-else v-html="props.formattedRow[props.column.field]"></span>
+        </template>
+      </vue-good-table>
+    </div>
   </div>
 </template>
 
@@ -47,6 +56,7 @@
       ]
       sort_options:
         initialSortBy: { field: 'since', type: 'desc' }
+      search_hits: null
     created: ->
       component = this
       @current_rows = @rows
@@ -62,6 +72,10 @@
         @current_rows.push(member)
       search: (query)->
         @query = query
+      on_search: (params)->
+        # params.searchTerm - term being searched for
+        # params.rowCount - number of rows that match search
+        @search_hits = params.rowCount
       has_status_entries: ->
         @rows.some (row) -> row.status
       has_direct_group_entries: ->
