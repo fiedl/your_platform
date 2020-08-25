@@ -2,7 +2,7 @@
   .col-sm-8
     .card
       .card-body
-        = vue_posts [post]
+        = vue_posts Post.where id: post.id
   .col-sm-4
     .card
       .card-header
