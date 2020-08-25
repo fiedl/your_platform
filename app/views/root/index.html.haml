@@ -103,6 +103,17 @@
         .card-footer
           = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
 
+.row.row-deck.row-cards
+  .col-12.col-md-6
+    .card
+      .card-body
+        %vue_age_histogram_chart{':ages': histogram_ages.to_json}
+
+  .col-12.col-md-6
+    .card
+      .card-body
+        %vue_status_pie_chart{':statuses': histogram_statuses.to_json}
+
 - Rack::MiniProfiler.step "root/corporation_cards" do
   .row.row-deck.row-cards
     - for group in corporations

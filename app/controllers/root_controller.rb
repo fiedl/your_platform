@@ -21,6 +21,9 @@ class RootController < ApplicationController
   expose :drafted_post, -> { current_user.drafted_posts.where(sent_via: post_draft_via_key).order(created_at: :desc).first_or_create }
   expose :post_draft_via_key, -> { "root-index" }
 
+  expose :histogram_ages, -> { Rails.cache.fetch([Group.alle_wingolfiten, "ages"], expires_in: 1.week) { Group.alle_wingolfiten.member_table_rows.collect { |row| row[:age] } - [nil] } }
+  expose :histogram_statuses, -> { Rails.cache.fetch([Group.alle_wingolfiten, "statuses"], expires_in: 1.week) { Group.alle_wingolfiten.members.collect { |user| user.status_group_in_primary_corporation.try(:name) } - [nil] } }
+
   def index
     Rack::MiniProfiler.step("authorize") do
       authorize! :index, :root
