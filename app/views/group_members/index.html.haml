@@ -79,6 +79,17 @@
                 = link_to status_group.name, group_members_path(status_group)
                 = status_group.members.count
 
+    .row.row-deck
+      .col-6.col-lg-12
+        .card
+          .card-body
+            %vue_age_histogram_chart{':ages': group.member_table_rows.collect { |row| row[:age].to_i }.to_json}
+
+      .col-6.col-lg-12
+        .card
+          .card-body
+            %vue_status_pie_chart{':statuses': group.member_table_rows.collect { |row| row[:status] }.to_json}
+
 -#-# %h1 Mitglied werden
 -#-# %div
 -#-#   - if @own_memberships.now.count == 0

@@ -51,6 +51,8 @@ import Calendar from './components/calendar.vue'
 import OfficerCard from './components/officer_card.vue'
 import Comments from './components/comments.vue'
 import Attachments from './components/attachments.vue'
+import AgeHistogramChart from './components/age_histogram_chart.vue'
+import StatusPieChart from './components/status_pie_chart.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -119,6 +121,8 @@ jQuery(document).ready ->
   Vue.component('vue_comments', Comments)
   Vue.component('vue_attachments', Attachments)
   Vue.component('vue-attachments', Attachments)
+  Vue.component('vue_age_histogram_chart', AgeHistogramChart)
+  Vue.component('vue_status_pie_chart', StatusPieChart)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)
