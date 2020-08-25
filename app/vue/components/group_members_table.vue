@@ -109,6 +109,21 @@
         options.unshift(new Date().getFullYear().toString())
         options.unshift(@current_user.last_name) if @current_user
         options
+      age_histogram: ->
+        age_histogram = []
+        ages = @filtered_rows.map((row)-> row.age).filter((age) -> (age && age > 0))
+        for age in [ages.min()..ages.max()]
+          age_histogram[age] = 0
+        for age in ages
+          age_histogram[age]++
+        age_histogram
+      status_histogram: ->
+        status_histogram = {}
+        statuses = @filtered_rows.map((row)-> row.status)
+        for status in statuses
+          status_histogram[status] ||= 0
+          status_histogram[status]++
+        status_histogram
   }
   `export default GroupMembersTable`
 </script>

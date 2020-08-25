@@ -23,7 +23,8 @@ concern :GroupMemberList do
             status: user.current_status_in(self),
             status_group_id: user.current_status_group_in(self).try(:id),
             direct_group_name: user.direct_groups_in(self).last.try(:name),
-            direct_group_id: user.direct_groups_in(self).last.try(:id)
+            direct_group_id: user.direct_groups_in(self).last.try(:id),
+            age: user.age
           }
           hash
         end
@@ -41,7 +42,8 @@ concern :GroupMemberList do
           status: user.current_status_in(self),
           status_group_id: user.current_status_group_in(self).try(:id),
           direct_group_name: user.direct_groups_in(self).last.try(:name),
-          direct_group_id: user.direct_groups_in(self).last.try(:id)
+          direct_group_id: user.direct_groups_in(self).last.try(:id),
+          age: user.age
         }
         hash
       end
