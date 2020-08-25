@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="card-header d-flex">
-      <vue-select :options="vue_select_options" v-model="query" class="form-control" placeholder="Mitgliederliste filtern (Name, Status, Beitrittsjahr)" @search="query = arguments[0]">
+      <vue-select :options="vue_select_options" v-model="query" class="form-control" placeholder="Mitgliederliste filtern (Name, Status, Beitrittsjahr)" @search="handle_search">
         <template #no-options="{ search, searching, loading }">
         </template>
       </vue-select>
@@ -60,12 +60,14 @@
       ]
       sort_options:
         initialSortBy: { field: 'since', type: 'desc' }
+      vue_select_options: []
     created: ->
       component = this
       @current_rows = @rows
       this.$root.$on 'add_member', component.add_member
       this.$root.$on 'search', component.search
       this.$root.$on 'update_member_table', component.update_member_table
+      @vue_select_options = @default_vue_select_options
     methods:
       translate: (str)->
         I18n.translate str
@@ -75,15 +77,18 @@
         @current_rows.push(member)
       search: (query)->
         @query = query
+      handle_search: (query)->
+        if query.length > 2
+          result = Object.assign [], @default_vue_select_options
+          result.unshift(query) unless result.includes(query)
+          @vue_select_options = result
+          @query = query
       has_status_entries: ->
         @rows.some (row) -> row.status
       has_direct_group_entries: ->
         @rows.some (row) -> row.direct_group_name
       update_member_table: (member_table_rows)->
         @current_rows = member_table_rows
-      create_vue_select_option: (new_option)->
-        @$emit('option:created', new_option)
-        new_option
     computed:
       filtered_rows: ->
         component = this
@@ -101,7 +106,7 @@
           row
       statuses: ->
         @current_rows.map((row) -> row.status).unique()
-      vue_select_options: ->
+      default_vue_select_options: ->
         options = @statuses.sort().filter((status) -> status != "Philister") # because I'd like to move this entry up
         options.unshift("Philister") if @statuses.includes("Philister")
         options.unshift("Bursch") if @statuses.includes("Aktiver Bursch")
