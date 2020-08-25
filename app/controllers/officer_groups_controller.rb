@@ -20,11 +20,8 @@ class OfficerGroupsController < GroupsController
     @group = Group.find params[:id]
     authorize! :update, @group
 
-    @group.update_attributes! officer_group_params
-
-    respond_to do |format|
-      format.json { respond_with_bip @group.reload }
-    end
+    @group.update! officer_group_params
+    render json: @group, status: :ok
   end
 
 

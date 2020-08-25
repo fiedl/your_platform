@@ -29,8 +29,9 @@ module DecisionMaking
 
     def update
       authorize! :update, federal_ballot
-      federal_ballot.update_attributes(federal_ballot_params)
-      respond_with_bip federal_ballot
+      federal_ballot.update! federal_ballot_params
+
+      render json: federal_ballot, status: :ok
     end
 
     def destroy

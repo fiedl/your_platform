@@ -87,8 +87,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes! user_params
-    respond_with_bip @user
+    @user.update! user_params
+
+    render json: @user, status: :ok
   end
 
   def forgot_password
