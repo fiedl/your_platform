@@ -29,7 +29,7 @@
             = link_to "Semesterprogramm", semester_calendar, class: 'btn btn-white btn-sm'
 
   - Rack::MiniProfiler.step "root/birthdays" do
-    = cache :tabler_birthday_box_v2, expires_in: Time.now.end_of_day - Time.current do
+    = cache :tabler_birthday_box_v3, expires_in: Time.now.end_of_day - Time.current do
       .col-lg-6
         .card
           .card-header

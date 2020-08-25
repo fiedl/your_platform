@@ -49,6 +49,7 @@ concern :AvatarAttachments do
 
   def avatar_attachment=(file)
     avatar_attachments.create file: file
+    self.touch
   end
 end
 
@@ -63,6 +64,7 @@ concern :AvatarBackgroundAttachments do
 
   def avatar_background_attachment=(file)
     avatar_background_attachments.create file: file
+    self.touch
   end
 end
 
