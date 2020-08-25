@@ -154,6 +154,16 @@ class EventsController < ApplicationController
     render json: event, status: :ok
   end
 
+  def destroy
+    authorize! :destroy, event
+    event.destroy!
+
+    respond_to do |format|
+      format.html { redirect_to root_path }
+      format.json { render json: {}, status: :ok }
+    end
+  end
+
   private
 
   def event_params

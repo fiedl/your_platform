@@ -13,18 +13,26 @@
       .card
         .card-header
           %h4.card-title= t :events
-        .table-responsive
-          %table.table.card-table.table-vcenter
-            %tbody
-              - events.each do |event|
-                %tr
-                  %td.w-1= avatar event
-                  %td= link_to event.title, event
-                  %td.text-muted
-                    = event_icon
-                    = localize event.start_at
-                  %td= event.group.name
-        - if semester_calendar = current_user.try(:primary_corporation).try(:semester_calendar)
+        - if events.any?
+          .table-responsive
+            %table.table.card-table.table-vcenter
+              %tbody
+                - events.each do |event|
+                  %tr
+                    %td.w-1= avatar event
+                    %td= link_to event.title, event
+                    %td.text-muted
+                      = event_icon
+                      = localize event.start_at
+                    %td= event.group.name
+        - if events.none?
+          .card-body
+            .text-center.text-muted
+              Derzeit sind keine anstehenden Veranstaltungen eingetragen.
+            - if semester_calendar.present? && can?(:update, semester_calendar)
+              .text-center
+                = link_to "Semesterprogramm bearbeiten", semester_calendar
+        - if semester_calendar.present?
           .card-footer
             = link_to "Semesterprogramm", semester_calendar, class: 'btn btn-white btn-sm'
 
@@ -83,8 +91,15 @@
           .card-header
             - Rack::MiniProfiler.step "root/vue_create_post_form" do
               = vue_create_post_form sent_via: post_draft_via_key, initial_post: drafted_post, suggested_groups: current_user.groups.includes(:flags).regular, show_send_via_email_toggle: true
-        - Rack::MiniProfiler.step "root/vue_posts posts" do
-          = vue_posts posts
+        - if posts.none?
+          .card-body
+            .text-center.text-muted
+              Im letzten Jahr hat niemand aus Deinen Gruppen etwas gepostet.
+            .text-center
+              = link_to "Sei der erste", new_post_path
+        - elsif posts.any?
+          - Rack::MiniProfiler.step "root/vue_posts posts" do
+            = vue_posts posts
         .card-footer
           = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
 
