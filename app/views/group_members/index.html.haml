@@ -12,7 +12,7 @@
 .row
   .col-lg-9
     .card
-      %vue-group-members-table{':rows': member_table_rows.to_json}
+      %vue-group-members-table{':rows': member_table_rows.to_json, ':current_user': current_user.to_json}
 
   .col-lg-3
     = render layout: 'groups/profile_card', locals: {group: group} do

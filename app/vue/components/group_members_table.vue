@@ -1,19 +1,21 @@
 <template>
   <div>
     <div class="card-header d-flex">
-      <input class="form-control" type="text" v-model="query" placeholder="Mitgliederliste filtern (Name, Status, Beitrittsjahr)"/>
-      <div class="results text-muted text-nowrap ml-2" v-if="query">
-        {{ search_hits }} Treffer
+      <vue-select :options="vue_select_options" v-model="query" class="form-control" placeholder="Mitgliederliste filtern (Name, Status, Beitrittsjahr)" @search="query = arguments[0]">
+        <template #no-options="{ search, searching, loading }">
+        </template>
+      </vue-select>
+      <div class="results text-muted text-nowrap ml-2" v-if="query && query.length > 3">
+        {{ filtered_rows.length }} Treffer
       </div>
     </div>
     <div class="table-responsive">
       <vue-good-table
+        ref="good_table"
         :columns="columns"
-        :rows="processed_rows"
+        :rows="filtered_rows"
         :sort-options="sort_options"
-        :search-options="search_options"
         styleClass="members child_users display table card-table table-vcenter"
-        @on-search="on_search"
       >
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'last_name'">
@@ -37,11 +39,13 @@
   Vue = require('vue').default
   moment = require('moment')
   VueGoodTable = require('vue-good-table').VueGoodTable
+  VueSelect = require('vue-select').default # https://github.com/sagalbot/vue-select
 
   Vue.component 'vue-good-table', VueGoodTable
+  Vue.component 'vue-select', VueSelect
 
   GroupMembersTable = {
-    props: ['rows'],
+    props: ['rows', 'current_user'],
     data: ->
       current_rows: []
       query: null
@@ -56,7 +60,6 @@
       ]
       sort_options:
         initialSortBy: { field: 'since', type: 'desc' }
-      search_hits: null
     created: ->
       component = this
       @current_rows = @rows
@@ -72,17 +75,23 @@
         @current_rows.push(member)
       search: (query)->
         @query = query
-      on_search: (params)->
-        # params.searchTerm - term being searched for
-        # params.rowCount - number of rows that match search
-        @search_hits = params.rowCount
       has_status_entries: ->
         @rows.some (row) -> row.status
       has_direct_group_entries: ->
         @rows.some (row) -> row.direct_group_name
       update_member_table: (member_table_rows)->
         @current_rows = member_table_rows
+      create_vue_select_option: (new_option)->
+        @$emit('option:created', new_option)
+        new_option
     computed:
+      filtered_rows: ->
+        component = this
+        if @query && @query.length > 2
+          @processed_rows.filter (row)->
+            [row.last_name, row.first_name, row.status, row.since].join(" ").toLowerCase().includes(component.query.toLowerCase())
+        else
+          @processed_rows
       processed_rows: ->
         component = this
         component.current_rows.map (row)->
@@ -90,14 +99,23 @@
           if row.avatar_path
             row.avatar = "<span class=\"avatar\" style=\"background-image: url(#{row.avatar_path})\"></span>"
           row
-      search_options: ->
-        enabled: true
-        externalQuery: @query
+      statuses: ->
+        @current_rows.map((row) -> row.status).unique()
+      vue_select_options: ->
+        options = @statuses.sort().filter((status) -> status != "Philister") # because I'd like to move this entry up
+        options.unshift("Philister") if @statuses.includes("Philister")
+        options.unshift("Bursch") if @statuses.includes("Aktiver Bursch")
+        options.unshift("Fux") if @statuses.includes("Kraßfux")
+        options.unshift(new Date().getFullYear().toString())
+        options.unshift(@current_user.last_name) if @current_user
+        options
   }
   `export default GroupMembersTable`
 </script>
 
 <style lang="sass">
   .vgt-global-search
+    display: none
+  .vs__no-options
     display: none
 </style>
