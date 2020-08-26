@@ -66,9 +66,10 @@
               - officer_group.members.each do |officer|
                 .col-6.row.row-sm.mb-3.align-items-center
                   .col-auto
-                    = user_avatar(officer)
+                    = link_to officer do
+                      = user_avatar(officer)
                   .col
-                    .text-body.d-block= officer.title
+                    .text-body.d-block= link_to officer.title, officer
                     %small.d-block.mt-n1.text-muted= editable officer_group, :title
                     - if officer.phone
                       %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
