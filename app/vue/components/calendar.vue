@@ -4,7 +4,8 @@
       <div class="card">
         <div class="card-body">
           <vue-full-calendar
-            class='demo-app-calendar'
+            class='card-calendar'
+            :plugins="calendar_plugins"
             :options='calendar_options'>
             <template v-slot:eventContent='arg'>
               <b>{{ arg.timeText }}</b>
@@ -27,9 +28,10 @@
 <script>
   import FullCalendar from '@fullcalendar/vue'
   import dayGridPlugin from '@fullcalendar/daygrid'
-  import timeGridPlugin from '@fullcalendar/timegrid'
   import interactionPlugin from '@fullcalendar/interaction'
+  import de from '@fullcalendar/core/locales/de'
   import Vue from 'vue'
+  import moment from 'moment'
 
   Vue.component('vue-full-calendar', FullCalendar)
 
@@ -37,27 +39,34 @@
     props: ['calendars', 'timezone'],
     data() { return {
       current_calendars: this.calendars,
+      calendar_plugins: [
+        dayGridPlugin,
+        interactionPlugin // needed for dateClick
+      ],
       calendar_options: {
-        plugins: [
-          dayGridPlugin,
-          timeGridPlugin,
-          //interactionPlugin // needed for dateClick
-        ],
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        header: {
+          left: 'title',
+          center: '',
+          right: 'prev,next'
+        },
+        themeSystem: 'standard',
+        views: {
+          dayGridMonth: { buttonText: 'month' },
+          //timeGridWeek: { buttonText: 'week' },
+          //timeGridDay: { buttonText: 'day' }
         },
         initialView: 'dayGridMonth',
-        initialEvents: this.initial_events, //[], //INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
+        events: [],
         editable: true,
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
         weekends: true,
+        locale: 'de',
+        firstDay: 1, // Monday
         //select: this.handleDateSelect,
         //eventClick: this.handleEventClick,
-        //eventsSet: this.handleEvents
+        //eventsSet: this.set_events
         /* you can update a remote database when these fire:
         eventAdd:
         eventChange:
@@ -66,9 +75,14 @@
       }
     } },
     created() {
-
+      this.calendar_options.events = this.initial_events
+      //console.log(this.calendar_options.events)
     },
     methods: {
+      //set_events(events) {
+      //  console.log("yes", events)
+      //  events = this.initial_events
+      //}
     },
     computed: {
       initial_events() {
@@ -82,9 +96,11 @@
             }
             events[e.id].calendarIds.push(calendar.id); // Calendars it belongs to
             events[e.id]['title'] = e.name; // Rename according to the calendar
+            events[e.id]['start'] = moment(e.start_at).toDate(); // Rename according to the calendar
+            events[e.id]['className'] = 'bg-lime-lt'
           }
         }
-        return events
+        return events.filter((event) => event.id)
       }
     }
   }
