@@ -107,7 +107,7 @@
       statuses: ->
         @current_rows.map((row) -> row.status).unique()
       default_vue_select_options: ->
-        options = @statuses.sort().filter((status) -> status != "Philister") # because I'd like to move this entry up
+        options = @statuses.unique().sort().filter((status) -> status != "Philister") # because I'd like to move this entry up
         options.unshift("Philister") if @statuses.includes("Philister")
         options.unshift("Bursch") if @statuses.includes("Aktiver Bursch")
         options.unshift("Fux") if @statuses.includes("Kraßfux")
