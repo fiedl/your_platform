@@ -18,7 +18,7 @@
               .col-auto
                 = group_avatar officer_group, class: "avatar-md"
               .col
-                %h3.mb-0= officer_group.title
+                %h3.mb-0= editable officer_group, :title
                 - for sub_officer_group in officer_group.child_groups
                   - for officer in sub_officer_group.members
                     .row.row-sm.align-items-center.mt-2
