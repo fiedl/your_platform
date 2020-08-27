@@ -31,8 +31,9 @@
 </template>
 
 <script lang="coffee">
-  `import Vue from 'vue'`
-  `import VueDropzone from 'vue2-dropzone'`
+  Vue = require('vue').default
+  VueDropzone = require('vue2-dropzone').default
+
   Vue.component 'vue-dropzone', VueDropzone
 
   EditableImage =
@@ -57,6 +58,8 @@
             data.append 'authenticity_token', $('meta[name=csrf-token]').attr('content')
           thumbnail: (event, data)->
             component.image_url = data
+          success: (file, response)->
+            component.image_url = file.dataURL
         }
     created: ->
       @image_url = @src
@@ -69,7 +72,7 @@
     computed:
       edit_label: -> "Bild ändern"
 
-  `export default EditableImage`
+  export default EditableImage
 </script>
 
 <style lang="sass">

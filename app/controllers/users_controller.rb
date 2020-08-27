@@ -114,7 +114,7 @@ class UsersController < ApplicationController
   def user_params
     permitted_keys = []
     if @user
-      permitted_keys += [:avatar, :remove_avatar, :carrierwave_avatar, :carrierwave_avatar_background] if can? :update, @user
+      permitted_keys += [:avatar, :remove_avatar, :avatar_background] if can? :update, @user
       unless params[:user].try(:[], :avatar).present?
         # Because if the avatar is present, the authenticity
         # token check is skipped due to:
