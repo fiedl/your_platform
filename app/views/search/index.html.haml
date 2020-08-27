@@ -69,10 +69,10 @@
       - if category == 'documents'
         - for document in documents.to_a
           .col-sm-6.col-lg-4
-            %a.card.card-sm{href: document.file.path}
+            %a.card.card-sm{href: document.file_path}
               - if document.thumb_url
                 .d-block
-                  %img.card-img-top{src: document.thumb_url}
+                  %img.card-img-top{src: document.medium_path}
               .card-body
                 .d-flex.align-items-center
                   - if document.author
@@ -81,7 +81,7 @@
                     %span.avatar.mr-3.rounded= document_icon
                   .lh-sm
                     %div= document.title
-                    %small.text-muted= document.created_at
+                    %small.text-muted= localize document.created_at.to_date
                     %small.text-muted= document.scope.try(:title)
 
       - if category == 'events'
