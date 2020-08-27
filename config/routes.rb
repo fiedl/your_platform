@@ -226,7 +226,7 @@ Rails.application.routes.draw do
   resources :memberships
   resources :status_memberships
   resources :relationships
-  resources :small_ads, path: 'gesuche-und-angebote'
+  resources :gesuche_und_angebote
 
   get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'
   resources :events do

@@ -338,7 +338,7 @@ class Ability
     can :index, :contacts
     can :index, :documents
     can :index, :my_groups
-    can :index, :small_ads
+    can :index, :gesuche_und_angebote
     can :index, :calendars
 
     can :index_mine, Group
