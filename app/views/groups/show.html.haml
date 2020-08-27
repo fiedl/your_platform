@@ -13,11 +13,11 @@
       .card-body
         .row.align-items.center
           - if group.kind_of? Corporation
-            - %w(Burschen Fuxen Philister).each do |status|
-              - status_group = group.sub_group(status)
-              .col-auto
-                = link_to status_group.name, group_members_path(status_group)
-                = status_group.members.count
+            - ["Burschen", "Fuxen", "Philister", "Alte Herren"].each do |status|
+              - if status_group = group.sub_group(status)
+                .col-auto
+                  = link_to status_group.name, group_members_path(status_group)
+                  = status_group.members.count
       .card-footer
         .mt-2.mr-2.d-inline-block
           = link_to current_semester_calendar_path(group_id: (group.corporation || group)), class: 'btn btn-white' do
