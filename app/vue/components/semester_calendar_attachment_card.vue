@@ -2,7 +2,7 @@
   %vue-dropzone{':options': "dropzone_options", ':useCustomSlot': "true", ':id': "'semester_calendar_' + semester_calendar.id + '_attachment'"}
     .card.semester_calendar_pdf
       .card-header
-        %h3 {{ card_header_title }}
+        %h3.mb-0 {{ card_header_title }}
       .card-body
         .existing_attachment{'v-if': "attachment"}
           %a{':href': "attachment.file_path", target: '_blank'}

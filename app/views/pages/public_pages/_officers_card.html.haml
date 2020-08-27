@@ -4,7 +4,11 @@
 - if offices.present? || can?(:update, group)
   .card
     .card-header
-      %h3.mb-0 Chargierte
+      %h3.mb-0
+        - if group && group.kind_of? Corporation
+          Chargierte
+        - else
+          Amtsträger
     .card-body
       .row
         - offices.each do |office|
