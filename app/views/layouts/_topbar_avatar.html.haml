@@ -24,6 +24,8 @@
               = t current_role_view.to_s
     .dropdown-menu.dropdown-menu-right
       = link_to "Meine Daten", current_user, class: 'dropdown-item'
+      = link_to "Passwort ändern", change_password_path, class: 'dropdown-item'
+      .dropdown-divider
       = link_to "Meine Gruppen", user_groups_path(current_user), class: 'dropdown-item'
       - if current_role.allowed_preview_roles.any?
         - unless params[:preview_not_possible]

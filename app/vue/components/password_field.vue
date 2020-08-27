@@ -21,5 +21,6 @@
 
 <style lang="sass">
   .Password
-    margin-right: 15px
+    max-width: initial !important
+
 </style>
