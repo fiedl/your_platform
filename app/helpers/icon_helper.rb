@@ -48,7 +48,17 @@ module IconHelper
   end
 
   def list_icon
-    icon 'list-alt'
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <line x1="9" y1="6" x2="20" y2="6" />
+        <line x1="9" y1="12" x2="20" y2="12" />
+        <line x1="9" y1="18" x2="20" y2="18" />
+        <line x1="5" y1="6" x2="5" y2="6.01" />
+        <line x1="5" y1="12" x2="5" y2="12.01" />
+        <line x1="5" y1="18" x2="5" y2="18.01" />
+      </svg>
+    }.html_safe
   end
 
   def help_icon
@@ -84,7 +94,17 @@ module IconHelper
   end
 
   def calendar_icon
-    fa_icon(:calendar)
+    %q{
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <path stroke="none" d="M0 0h24v24H0z"/>
+        <rect x="4" y="5" width="16" height="16" rx="2" />
+        <line x1="16" y1="3" x2="16" y2="7" />
+        <line x1="8" y1="3" x2="8" y2="7" />
+        <line x1="4" y1="11" x2="20" y2="11" />
+        <line x1="11" y1="15" x2="12" y2="15" />
+        <line x1="12" y1="15" x2="12" y2="18" />
+      </svg>
+    }.html_safe
   end
 
   def event_icon

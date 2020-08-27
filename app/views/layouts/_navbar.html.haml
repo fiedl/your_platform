@@ -12,7 +12,7 @@
           %li.nav-item.dropdown{class: ('active' if current_tab == :contacts)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
-                = contact_icon
+                = group_icon
               %span.nav-link-title
                 Kontaktdaten
             %ul.dropdown-menu
@@ -59,9 +59,9 @@
           %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block
-                = group_icon
+                = list_icon
               %span.nav-link-title
-                = t :members
+                Mitgliederlisten
             %ul.dropdown-menu
               - if can? :create, User
                 %li
