@@ -5,7 +5,7 @@
   .card
     .card-header
       %h3.mb-0
-        - if group && group.kind_of? Corporation
+        - if group && group.kind_of?(Corporation)
           Chargierte
         - else
           Amtsträger
