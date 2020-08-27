@@ -20,7 +20,7 @@
 <script lang="coffee">
   moment = require('moment')
   Vue = require('vue').default
-  VueDropzone = require('vue2-dropzone').default
+  VueDropzone = require('vue2-dropzone')
 
   Vue.component 'vue-dropzone', VueDropzone
 

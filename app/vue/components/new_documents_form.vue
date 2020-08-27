@@ -66,7 +66,7 @@
 <script lang="coffee">
   Api = require('../api.coffee').default
   Vue = require('vue').default
-  VueDropzone = require('vue2-dropzone').default
+  VueDropzone = require('vue2-dropzone')
   Vue.component 'vue-dropzone', VueDropzone
 
   NewDocumentsForm =

@@ -32,7 +32,7 @@
 
 <script lang="coffee">
   Vue = require('vue').default
-  VueDropzone = require('vue2-dropzone').default
+  VueDropzone = require('vue2-dropzone')
 
   Vue.component 'vue-dropzone', VueDropzone
 
