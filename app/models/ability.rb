@@ -335,6 +335,7 @@ class Ability
 
     can :index, :root
 
+    can :index, :contacts
     can :index, :documents
     can :index, :my_groups
     can :index, :small_ads

@@ -630,16 +630,8 @@ class User < ApplicationRecord
     self.joins(:profile_fields).where(:profile_fields => {label: 'date_of_death'})
   end
 
-  def self.deceased_ids
-    self.deceased.pluck(:id)
-  end
-
   def self.alive
-    if self.deceased_ids.count > 0
-      self.where('NOT users.id IN (?)', self.deceased_ids)
-    else
-      self.all
-    end
+    self.where.not id: deceased
   end
 
   def self.without_account

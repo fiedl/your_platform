@@ -51,6 +51,9 @@ module ProfileFields
         def city
           self.get_field(:city) || geo_information(:city)
         end
+        def town
+          city
+        end
 
         def postal_code
           self.get_field(:postal_code) || geo_information(:postal_code)

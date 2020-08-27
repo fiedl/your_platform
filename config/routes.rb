@@ -164,6 +164,8 @@ Rails.application.routes.draw do
 
   resources :calendars
 
+  resources :contacts
+
   resources :logos
 
   resources :mailing_lists

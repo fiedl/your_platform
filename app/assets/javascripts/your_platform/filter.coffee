@@ -1,6 +1,6 @@
 # The global search field may be used to filter the current content.
 #
-$(document).on 'keyup', 'header #search, #header_search #query.find_and_filter', ->
+$(document).on 'keyup', 'header #search, #header_search #query.find_and_filter, input.filter_query', ->
   query = $(this).val()
 
   $('.filter-hidden').removeClass('filter-hidden')
