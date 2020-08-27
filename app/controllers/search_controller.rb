@@ -11,36 +11,60 @@ class SearchController < ApplicationController
     filter_by_authorization Corporation.where(token: query)
   }
   expose :corporations_by_name, -> {
-    filter_by_authorization Corporation.where("name like ?", q) if query.length > 3
+    filter_by_authorization Corporation.where("name like ?", q)
   }
   expose :corporations, -> {
     corporations_by_token.any? ? corporations_by_token : corporations_by_name
   }
   expose :users, -> {
-    filter_by_authorization User.search(query) if query.length > 3
+    filter_by_authorization User.search(query)
   }
   expose :documents, -> {
-    filter_by_authorization current_user.documents_in_my_scope.where("title like ?", "%#{query}%").order(created_at: :desc) if query.length > 3
+    filter_by_authorization current_user.documents_in_my_scope.where("title like ?", "%#{query}%").order(created_at: :desc)
   }
   expose :pages, -> {
-    filter_by_authorization Page.where("title like ? OR content like ?", q, q).order(published_at: :desc, title: :asc) if query.length > 3
+    filter_by_authorization Page.where("title like ? OR content like ?", q, q).order(published_at: :desc, title: :asc)
   }
   expose :groups, -> {
-    filter_by_authorization Group.search(query) if query.length > 3
+    filter_by_authorization Group.search(query)
   }
   expose :events, -> {
-    filter_by_authorization Event.where("name like ?", q).order('start_at DESC') if query.length > 3
+    filter_by_authorization Event.where("name like ?", q).order('start_at DESC')
   }
   expose :posts, -> {
-    filter_by_authorization Post.where("subject like ? or text like ?", q, q).order(sent_at: :desc, created_at: :desc) if query.length > 3
+    filter_by_authorization Post.where("subject like ? or text like ?", q, q).order(sent_at: :desc, created_at: :desc)
   }
   expose :results, -> { corporations.to_a + users.to_a + documents.to_a + pages.to_a + groups.to_a + events.to_a + posts.to_a }
   expose :category, -> { params[:category] || ('corporations' if corporations.present?) || ('users' if users.present?) || ('documents' if documents.present?) || ('events' if events.present?) || ('pages' if pages.present?) || ('groups' if groups.present?) || ('posts' if posts.present?) }
 
   def index
-    if results.count == 1 and not documents.try(:count) == 1
+    if query.length <= 2
+      redirect_to action: :new
+    elsif results.count == 1 and not documents.try(:count) == 1
       redirect_to results.first
     end
+
+    set_current_title "Suche: #{query}"
+  end
+
+  expose :example_queries, -> {
+    [
+      {query: "Melchers", description: "Suche nach Bbr. Melchers"},
+      {query: "Rostock 15km", description: "Alle Personen im Umkreis von 15km um Rostock"},
+      {query: "Bosch", description: "Personen, die eine Tätigkeit bei der Firma Bosch ausüben"},
+      {query: "Waldstraße", description: "Wer wohnt in der Waldstraße"},
+      {query: "Cambridge", description: "Wer hat in Cambridge studiert?"},
+      {query: "Bundessatzung", description: "Suche das PDF der Bundessatzung"},
+      {query: "Praktikum", description: "Wer sucht oder bietet ein Praktikum?"},
+      {query: "Wingolfsseminar", description: "Wann ist das nächste Wingolfsseminar?", category: 'events'},
+      {query: "Bundesnadeln", description: "Wie kann ich Bundesnadeln bestellen?"},
+      {query: "Gaudeamus igitur", description: "Wie ging doch gleich der Liedtext? Suche im Liederbuch!"},
+    ]
+  }
+
+  def new
+    set_current_title "Suche"
+
   end
 
   # This action results in a redirection to the search result

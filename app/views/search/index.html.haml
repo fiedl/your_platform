@@ -7,6 +7,10 @@
       .text-muted.text-h5.mt-2
         = results.count
         = t :results
+    .col-auto.ml-auto
+      = link_to search_new_path, class: 'btn btn-primary' do
+        = search_icon
+        Suchbeispiele ansehen
 
 .row
   .col-md-3

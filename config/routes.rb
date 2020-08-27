@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   get 'search/guess', to: "search#lucky_guess"
   get 'search/preview', to: "search#preview"
+  get 'search/new', to: "search#new"
   get :search, to: "search#index"
   get 'opensearch.xml', to: 'search#opensearch', as: 'opensearch'
 
