@@ -38,7 +38,11 @@ class SearchController < ApplicationController
   expose :category, -> { params[:category] || ('corporations' if corporations.present?) || ('users' if users.present?) || ('documents' if documents.present?) || ('events' if events.present?) || ('pages' if pages.present?) || ('groups' if groups.present?) || ('posts' if posts.present?) }
 
   def index
-    if query.length <= 2
+    if corporations_by_token.any?
+      if corporations_by_token.count == 1
+        redirect_to corporations_by_token.first
+      end
+    elsif query.length <= 2
       redirect_to action: :new
     elsif results.count == 1 and not documents.try(:count) == 1
       redirect_to results.first
@@ -54,6 +58,8 @@ class SearchController < ApplicationController
       {query: "Bosch", description: "Personen, die eine Tätigkeit bei der Firma Bosch ausüben"},
       {query: "Waldstraße", description: "Wer wohnt in der Waldstraße"},
       {query: "Cambridge", description: "Wer hat in Cambridge studiert?"},
+      {query: "Hallenser Wingolf", description: "Suche nach den Kontaktdaten und Chargierten des Hallenser Wingolfs"},
+      {query: "Be", description: "Suche nach den Kontaktdaten und Chargierten des Berliner Wingolfs anhand Verbindungskürzel"},
       {query: "Bundessatzung", description: "Suche das PDF der Bundessatzung"},
       {query: "Praktikum", description: "Wer sucht oder bietet ein Praktikum?"},
       {query: "Wingolfsseminar", description: "Wann ist das nächste Wingolfsseminar?", category: 'events'},
