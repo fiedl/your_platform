@@ -64,7 +64,7 @@
         }
       },
       edit_if_not_a_link() {
-        if ((this.rendered_value() && this.rendered_value().includes("<a ")) || this.link_to) {
+        if ((this.rendered_value() && this.rendered_value().includes("<a " && !(this.type == 'wysiwyg'))) || this.link_to) {
           return
         } else {
           this.edit()

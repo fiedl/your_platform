@@ -1,6 +1,6 @@
 <template>
   <div class="editor">
-    <editor-menu-bubble :editor="editor" v-slot="{ commands, isActive, getMarkAttrs, menu }">
+    <editor-menu-bubble ref="menu_bubble" :editor="editor" v-slot="{ commands, isActive, getMarkAttrs, menu }">
       <div
         class="menububble"
         :class="{ 'is-active': menu.isActive }"
@@ -197,7 +197,9 @@ export default {
       this.$emit('input', this.current_value)
     },
     on_blur() {
-      this.$emit('blur')
+      if (! this.$refs.menu_bubble.menu.isActive) {
+        this.$emit('blur')
+      }
     },
     showLinkMenu(attrs) {
       this.linkUrl = attrs.href
