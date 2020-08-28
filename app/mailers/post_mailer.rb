@@ -1,5 +1,4 @@
 class PostMailer < BaseMailer
-  helper :logo
 
   def post_email(post:, recipient:)
     @subject = post.title
@@ -7,8 +6,7 @@ class PostMailer < BaseMailer
     @body = post.text.html_safe
     @author = post.author
     @recipient = recipient
-    @sender_avatar_url = post.author.avatar_path
-    @sender_avatar_url = "https://#{AppVersion.domain}#{@sender_avatar_url}" if @sender_avatar_url.start_with? "/"
+    @sender_avatar_url = avatar_url_for(post.author)
     @recipient_groups = post.parent_groups
 
     post.attachments.each do |attachment|

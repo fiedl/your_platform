@@ -9,6 +9,8 @@ class Api::V1::CommentsController < Api::V1::BaseController
     new_comment = parent_post.comments.create! comment_params.merge({author_user_id: current_user.id})
     parent_post.touch
 
+    new_comment.deliver_later
+
     render json: new_comment, status: :ok
   end
 
