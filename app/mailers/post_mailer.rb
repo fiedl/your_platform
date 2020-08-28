@@ -8,7 +8,7 @@ class PostMailer < BaseMailer
     @author = post.author
     @recipient = recipient
     @sender_avatar_url = post.author.avatar_path
-    @sender_avatar_url = AppVersion.domain + @sender_avatar_url if @sender_avatar_url.start_with? "/"
+    @sender_avatar_url = "https://#{AppVersion.domain}#{@sender_avatar_url}" if @sender_avatar_url.start_with? "/"
     @recipient_groups = post.parent_groups
 
     post.attachments.each do |attachment|
