@@ -257,7 +257,7 @@ Rails.application.routes.draw do
 
   resources :issues
 
-  post :support_requests, to: 'support_requests#create'
+  resources :support_requests
 
   get 'avatars', to: 'avatars#show'
   get 'emojis', to: 'emojis#index'

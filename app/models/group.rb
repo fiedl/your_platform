@@ -267,6 +267,10 @@ class Group < ApplicationRecord
     self.corporations_parent
   end
 
+  def self.support
+    find_or_create_special_group :support
+  end
+
   include GroupCaching if use_caching?
 end
 

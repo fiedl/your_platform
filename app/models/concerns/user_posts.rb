@@ -28,4 +28,8 @@ concern :UserPosts do
     )
   end
 
+  def support_requests
+    SupportRequest.where author_user_id: self.id
+  end
+
 end

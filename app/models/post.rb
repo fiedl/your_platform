@@ -12,6 +12,7 @@ class Post < ApplicationRecord
   include Commentable
   include PostDeliveryReport
   include PostDrafts
+  include Flags
 
   scope :public_post, -> { where(publish_on_public_website: true) }
 

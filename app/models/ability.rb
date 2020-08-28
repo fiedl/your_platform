@@ -340,6 +340,7 @@ class Ability
     can :index, :my_groups
     can :index, :gesuche_und_angebote
     can :index, :calendars
+    can :index, SupportRequest
 
     can :index_mine, Group
 
