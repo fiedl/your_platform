@@ -10,6 +10,8 @@ concern :ErrorHandling do
     ExceptionNotifier.notify_exception(exception)
     @error_message = exception.message
     if request.format.html?
+      logger.error exception.message
+      logger.error exception.backtrace.join("\n")
       render template: "errors/_error"
     else
       raise exception
