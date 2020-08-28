@@ -4,7 +4,7 @@
 
 <script lang="coffee">
   StatusPieChart =
-    props: ['statuses']
+    props: ['statuses', 'title']
     data: ->
       current_statuses: @statuses
     created: ->
@@ -50,7 +50,7 @@
           sparkline: {enabled: true}
         dataLabels: {enabled: true},
         title:
-          text: 'Statusverteilung',
+          text: if @title == null then 'Statusverteilung' else @title,
           floating: false,
           offsetY: -5,
           align: 'left',

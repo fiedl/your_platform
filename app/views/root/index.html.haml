@@ -106,13 +106,20 @@
 .row.row-deck.row-cards
   .col-12.col-md-6
     .card
+      .card-header
+        %h3.mb-0
+          Altersverteilung im Wingolf
+          %a{'data-toggle': "tooltip", 'data-placement': "bottom", title: "Im Moment sind noch nicht alle Philister wieder in die Plattform importiert. Deswegen sieht die Altersverteilung nicht wie erwartet aus."}= info_icon
       .card-body
-        %vue_age_histogram_chart{':ages': histogram_ages.to_json}
+        %vue_age_histogram_chart{':ages': histogram_ages.to_json, title: ""}
 
   .col-12.col-md-6
     .card
+      .card-header
+        %h3.mb-0
+          Statusverteilung im Wingolf
       .card-body
-        %vue_status_pie_chart{':statuses': histogram_statuses.to_json}
+        %vue_status_pie_chart{':statuses': histogram_statuses.to_json, title: ""}
 
 - Rack::MiniProfiler.step "root/corporation_cards" do
   .row.row-deck.row-cards

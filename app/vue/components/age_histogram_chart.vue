@@ -6,7 +6,7 @@
   d3 = require('d3-array')
 
   AgeHistogramChart =
-    props: ['ages']
+    props: ['ages', 'title']
     data: ->
       current_ages: @ages
     created: ->
@@ -60,7 +60,7 @@
           sparkline: {enabled: true}
         dataLabels: {enabled: false},
         title:
-          text: 'Altersverteilung',
+          text: if @title == null then 'Altersverteilung' else @title,
           floating: false,
           offsetY: -5,
           align: 'left',
