@@ -8,18 +8,12 @@ class Api::V1::SearchUsersController < Api::V1::BaseController
   def index
     authorize! :index, User
 
-    @users = search_base.accessible_by(current_ability, :index).search(params[:query])
+    @users = User.search(params[:query])
+    @users = @users.accessible_by(current_ability, :index)
+    @users = @users.alive unless params[:find_deceased_users].to_boolean
+    @users = @users.wingolfiten unless params[:find_non_wingolf_users].to_boolean
 
     render json: @users.as_json(methods: [:name, :title, :name_affix, :avatar_path, :search_hint])
-  end
-
-  private
-
-  def search_base
-    base = User
-    base = base.alive unless params[:find_deceased_users].to_boolean
-    base = base.wingolfiten unless params[:find_non_wingolf_users].to_boolean
-    base
   end
 
 end

@@ -6,11 +6,11 @@ concern :UserSearch do
   class_methods do
 
     def search(query)
-      if query.present?
+      where id: (if query.present?
         search_by_geo_location(query) || (search_by_name_and_title(query) + search_by_profile_fields(query))
       else
         []
-      end.uniq
+      end.uniq)
     end
 
     private
