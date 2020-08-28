@@ -188,7 +188,7 @@ module YourPlatformMailMessageExtensions
   end
 
   def recipient_is_system_address?
-    recipient_address == Setting.support_email
+    (recipient_address == Setting.support_email) or recipient_address.ends_with?("fiedlschuster.de") or recipient_address.ends_with?("yourplatform.io") or recipient_address.ends_with?("wingolf.io")
   end
 
 end
