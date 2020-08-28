@@ -9,31 +9,32 @@
       .card-header
         %input.filter_query.form-control{placeholder: "Filtern nach Name, Ort, Telefon oder E-Mail-Adresse"}
       .responsive-table
-        %table.table.card-table.table-vcenter
-          %thead
-            %tr
-              %th
-              %th Name
-              %th Ort
-              %th Telefon
-              %th E-Mail
-          %tbody
-            - for contact in contacts
+        - Rack::MiniProfiler.step "contacts_table" do
+          %table.table.card-table.table-vcenter
+            %thead
               %tr
-                %td.w-1= user_avatar contact
-                %td= link_to contact.title, contact
-                %td
-                  - if contact.primary_address_field.try(:town)
-                    = location_icon
-                    = contact.primary_address_field.town
-                %td
-                  - if contact.phone.present?
-                    = phone_icon
-                    = link_to contact.phone, "tel:#{contact.phone}"
-                %td
-                  - if contact.email
-                    = mail_to contact.email, class: 'btn btn-icon btn-white' do
-                      = mail_icon
+                %th
+                %th Name
+                %th Ort
+                %th Telefon
+                %th E-Mail
+            %tbody
+              - for contact in contacts
+                %tr
+                  %td.w-1= user_avatar contact
+                  %td= link_to contact.title, contact
+                  %td
+                    - if contact.primary_address_field.try(:town)
+                      = location_icon
+                      = contact.primary_address_field.town
+                  %td
+                    - if contact.phone.present?
+                      = phone_icon
+                      = link_to contact.phone, "tel:#{contact.phone}"
+                  %td
+                    - if contact.email
+                      = mail_to contact.email, class: 'btn btn-icon btn-white' do
+                        = mail_icon
         .card-body
           %small
             .text-center.mt-2.text-muted
