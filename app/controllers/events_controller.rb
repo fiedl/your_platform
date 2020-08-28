@@ -7,7 +7,7 @@ class EventsController < ApplicationController
   }
   expose :parent, -> { user || group }
   expose :category, -> { params[:category] }
-  expose :semester_calendars, -> { (user.corporations.map(&:semester_calendar) if user) || ([group.semester_calendar] if group && group.semester_calendar) || [] }
+  expose :semester_calendars, -> { ((user.corporations.map(&:semester_calendar) if user) || ([group.semester_calendar] if group && group.semester_calendar) || []) - [nil] }
   expose :events, -> {
     events = parent.events if parent
     events ||= Event.all
