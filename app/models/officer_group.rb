@@ -24,6 +24,10 @@ class OfficerGroup < Group
     end
   end
 
+  def important_officer_groups
+    [self]
+  end
+
   def self.patch_officer_groups
     officer_groups = Group.flagged(:officers_parent).collect { |officers_parent| officers_parent.descendant_groups }.flatten
     officer_groups.each do |officer_group|

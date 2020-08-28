@@ -85,7 +85,7 @@
           - if group.respond_to?(:chargen) && can?(:create_post, group.chargen)
             = link_to new_group_post_path(group_id: group.chargen.id), class: 'btn btn-white btn-sm' do
               Nachricht an Chargen schreiben
-          - elsif can?(:create_post, group.officers_parent)
+          - elsif group.officers_parent.present? && can?(:create_post, group.officers_parent)
             = link_to new_group_post_path(group_id: group.officers_parent.id), class: 'btn btn-white btn-sm' do
               Nachricht an Amtsträger schreiben
 
