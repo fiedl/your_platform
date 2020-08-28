@@ -43,11 +43,12 @@
               %span.navbar-toggler-icon
             %a.navbar-brand.navbar-brand-autodark.d-none-navbar-horizontal.pr-0.pr-md-3{:href => root_path}
               %img.navbar-brand-image{:src => logo_url}/
-              &nbsp;
-              - if current_navable.kind_of? Pages::PublicPage
-                = current_navable.group.try(:title) || current_navable.title
-              - else
-                = AppVersion.app_name
+              .d-none.d-sm-inline-block
+                &nbsp;
+                - if current_navable.kind_of? Pages::PublicPage
+                  = current_navable.group.try(:title) || current_navable.title
+                - else
+                  = AppVersion.app_name
 
             - if current_user
               = render partial: 'layouts/topbar_avatar'
