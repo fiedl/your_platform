@@ -6,13 +6,6 @@ concern :UserProfile do
     include HasProfile
   end
 
-  def mobile
-    (mobile_phone_profile_fields + phone_profile_fields).first.try(:value)
-  end
-  def mobile=(new_number)
-    (mobile_phone_profile_fields.first || phone_and_fax_fields.create(label: I18n.t(:mobile), type: 'ProfileFields::Phone')).update_attributes(value: new_number)
-  end
-
   def profile_field_by_label(label)
     profile_fields.where(label: label).first
   end

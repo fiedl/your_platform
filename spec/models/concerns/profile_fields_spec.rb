@@ -55,6 +55,14 @@ describe ProfileFields do
       end
     end
 
+    describe "#mobile" do
+      before do
+        @profileable.profile_fields.create label: "Mobil", value: "0171 123 34 45", type: "ProfileFields::Phone"
+      end
+      subject { @profileable.mobile }
+      it { should == "0171 123 34 45" }
+    end
+
     describe "#profile" do
       subject { @profileable.profile }
       it { should be_kind_of Profile }
