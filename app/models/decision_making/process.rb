@@ -97,15 +97,15 @@ module DecisionMaking
     def notify_global_officers_about_new_proposal(options = {})
       current_user = options[:current_user] || raise(RuntimeError, 'option current_user missing')
       self.class.global_officers_that_can_approve_proposal.each do |recipient|
-        Notification.create(
-          recipient_id: recipient.id,
-          author_id: current_user.id,
-          reference_url: self.url,
-          reference_type: self.class.to_s,
-          reference_id: self.id,
-          message: self.title,
-          text: I18n.t(:str_has_submitted_a_new_ballot, str: proposer_group.title)
-        )
+        # Notification.create(
+        #   recipient_id: recipient.id,
+        #   author_id: current_user.id,
+        #   reference_url: self.url,
+        #   reference_type: self.class.to_s,
+        #   reference_id: self.id,
+        #   message: self.title,
+        #   text: I18n.t(:str_has_submitted_a_new_ballot, str: proposer_group.title)
+        # )
       end
     end
 
