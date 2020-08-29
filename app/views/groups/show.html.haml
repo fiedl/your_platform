@@ -131,6 +131,19 @@
               %h2= t :bank_account_information
               = editable_profile_fields profileable: group, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
 
+    - if group.kind_of? Corporation
+      .card
+        .card-header
+          %h2.mb-0 Heraldik
+        .card-body
+          .row
+            .col-md-4.mb-3
+              %h4 Wappen
+              %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+            .col-md-4.mb-3
+              %h4 Zirkel
+              %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+
     - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
       .card
         .card-body
