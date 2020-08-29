@@ -84,7 +84,7 @@ if specs_to_run.any?
     return output
   end
 
-  result = shell "bundle exec #{specs_to_run_by_this_worker.join(' ')}"
+  result = shell "bundle exec rspec #{specs_to_run_by_this_worker.join(' ')}"
 
   failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
 
