@@ -9,6 +9,7 @@ concern :ProfileFields do
     has_many :mobile_phone_profile_fields, -> { where(type: 'ProfileFields::Phone').where_like(label: ["mobil", "handy"]) }, class_name: 'ProfileFields::Phone', as: :profileable, dependent: :destroy, autosave: true
     has_many :email_fields, -> { where(type: 'ProfileFields::Email') }, class_name: 'ProfileFields::Email', as: :profileable, dependent: :destroy, autosave: true
     has_many :email_and_mailing_list_fields, -> { where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']) }, class_name: 'ProfileField', as: :profileable, dependent: :destroy, autosave: true
+    has_many :description_fields, -> { where(type: 'ProfileFields::Description') }, class_name: 'ProfileFields::Description', as: :profileable, dependent: :destroy, autosave: true
 
     include AddressProfileFields
   end

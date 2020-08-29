@@ -87,6 +87,7 @@
         if (this.profile_field.type == "ProfileFields::Phone") { return "phone" }
         if (this.profile_field.type == "ProfileFields::Date") { return "date" }
         if (this.profile_field.type == "ProfileFields::About") { return "textarea" }
+        if (this.profile_field.type == "ProfileFields::Description") { return "textarea" }
         return "text"
       },
       editable() {

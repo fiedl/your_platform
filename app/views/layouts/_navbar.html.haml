@@ -122,6 +122,8 @@
               .dropdown-divider
               - %w(Wingolfsblätter Protokolle Satzungen Rundschreiben Vorlagen).each do |category|
                 %li= link_to category, documents_path(tags: [category]), class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags] == [category]}"
+              %li
+                = link_to "Wappen und Zirkel", heraldics_path, class: "dropdown-item #{'active' if controller_name == 'heraldics'}"
           %li.nav-item.dropdown{class: ('active' if current_tab == :communication)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
               %span.nav-link-icon.d-md-none.d-lg-inline-block

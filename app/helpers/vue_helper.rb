@@ -77,4 +77,12 @@ module VueHelper
     }
   end
 
+  def vue_profile_field(profile_field)
+    content_tag 'vue-profile-field', "", {
+      ':initial-profile-field': profile_field.as_json.merge({
+        editable: can?(:update, profile_field)
+      }).to_json
+    }
+  end
+
 end

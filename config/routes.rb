@@ -258,6 +258,7 @@ Rails.application.routes.draw do
   resources :issues
 
   resources :support_requests
+  resources :heraldics
 
   get 'avatars', to: 'avatars#show'
   get 'emojis', to: 'emojis#index'

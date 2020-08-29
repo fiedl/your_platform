@@ -2,7 +2,7 @@
   <div class="editable-property">
     <label class="form-label" v-if="! hide_label" v-on:mouseenter="suggestEdit" v-on:click="editAndFocus" @dblclick="editLabel" >{{label}}</label>
     <div class="value" v-if="! hideValue">
-      <vue-editable :property="property" :type="type" :initial-value="initialValue" :url="url" :param-key="valueParamKey" :render-value="renderValue" :editable="editable"></vue-editable>
+      <vue-editable :property="property" :type="type" :initial-value="initialValue" :url="url" :param-key="valueParamKey" :render-value="renderValue" :editable="editable" :input_class="(type == 'textarea') ? 'form-control' : ''"></vue-editable>
     </div>
   </div>
 </template>
