@@ -27,8 +27,7 @@ rspec_args = ARGV.to_a.join(" ")
 
 cmd = "bundle exec rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}"
 print "#{cmd}\n"
-json_list_of_specs = `#{cmd}`
-print "#{json_list_of_specs}\n\n"
+`#{cmd}`
 
 require 'json'
 data = JSON.parse(File.read("tmp/specs.json"))
@@ -85,7 +84,7 @@ if specs_to_run.any?
     return output
   end
 
-  result = shell "bin/rspec #{specs_to_run_by_this_worker.join(' ')}"
+  result = shell "bundle exec #{specs_to_run_by_this_worker.join(' ')}"
 
   failed_specs = result.scan(/\nrspec .\/([^\s]*) # /).collect { |match| match[0] }
 
@@ -97,7 +96,7 @@ if specs_to_run.any?
       number_of_retries = 0
       loop do
         number_of_retries += 1
-        result = shell "bin/rspec #{spec}"
+        result = shell "bundle exec rspec #{spec}"
         number_of_failing_specs = result.scan(/example[s]?, ([0-9]*) failure[s]?/).last[0].to_i
         if number_of_failing_specs == 0
           break
