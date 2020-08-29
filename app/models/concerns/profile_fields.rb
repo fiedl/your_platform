@@ -4,6 +4,9 @@ concern :ProfileFields do
     has_many :profile_fields, as: :profileable, dependent: :destroy, autosave: true
     has_many :address_profile_fields, -> { where type: 'ProfileFields::Address' }, class_name: 'ProfileFields::Address', as: :profileable, dependent: :destroy, autosave: true
     has_many :phone_and_fax_fields, -> { where(type: 'ProfileFields::Phone') }, class_name: 'ProfileFields::Phone', as: :profileable, dependent: :destroy, autosave: true
+    has_many :fax_profile_fields, -> { where(type: 'ProfileFields::Phone').where_like label: "fax" }, class_name: 'ProfileFields::Phone', as: :profileable, dependent: :destroy, autosave: true
+    has_many :phone_profile_fields, -> { where(type: 'ProfileFields::Phone').where.not(id: where_like(label: "fax")) }, class_name: 'ProfileFields::Phone', as: :profileable, dependent: :destroy, autosave: true
+    has_many :mobile_phone_profile_fields, -> { where(type: 'ProfileFields::Phone').where_like(label: ["mobil", "handy"]) }, class_name: 'ProfileFields::Phone', as: :profileable, dependent: :destroy, autosave: true
     has_many :email_fields, -> { where(type: 'ProfileFields::Email') }, class_name: 'ProfileFields::Email', as: :profileable, dependent: :destroy, autosave: true
     has_many :email_and_mailing_list_fields, -> { where(type: ['ProfileFields::Email', 'ProfileFields::MailingListEmail']) }, class_name: 'ProfileField', as: :profileable, dependent: :destroy, autosave: true
 
@@ -36,18 +39,27 @@ concern :ProfileFields do
     email_fields.first
   end
 
-  def phone_profile_fields
-    phone_and_fax_fields.select do |field|
-      not field.label.downcase.include? 'fax'
-    end
-  end
-
   def phone_fields
     phone_profile_fields
   end
 
+  def landline_profile_fields
+    phone_profile_fields - mobile_phone_profile_fields
+  end
+
   def phone
-    phone_fields.first.try(:value)
+    if landline_profile_fields.first.try(:value).present?
+      landline_profile_fields.first.value
+    else
+      mobile
+    end
+  end
+  def phone=(new_number)
+    (landline_profile_fields.first || phone_and_fax_fields.create(label: I18n.t(:phone), type: 'ProfileFields::Phone')).update_attributes(value: new_number)
+    phone_profile_fields.reload
+  end
+  def phone_field
+    landline_profile_fields.first || phone_profile_fields.first
   end
 
   def website_fields

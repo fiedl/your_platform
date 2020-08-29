@@ -20,7 +20,7 @@ describe User do
 
   describe "accessible attributes" do
     subject { @user }
-    [ :first_name, :last_name, :alias, :email, :create_account, :female ].each do |attr|
+    [ :first_name, :last_name, :alias, :email, :female ].each do |attr|
       it { should respond_to( attr ) }
       it { should respond_to( "#{attr}=".to_sym ) }
     end
@@ -468,8 +468,8 @@ describe User do
     end
     describe "for a phone and a mobile number given" do
       before do
-        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
-        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
+        @mobile_field = @user.profile_fields.create(label: 'Mobile', type: 'ProfileFields::Phone', value: '0171 123 45 67').becomes(ProfileFields::Phone)
+        @phone_field = @user.profile_fields.create(label: 'Phone', type: 'ProfileFields::Phone', value: '09131 123 45 67').becomes(ProfileFields::Phone)
       end
       it { should == @phone_field.value }
     end
@@ -674,7 +674,7 @@ describe User do
   end
 
   context "for a user without account" do
-    before { @user_without_account = create( :user, :create_account => false ) }
+    before { @user_without_account = create :user }
 
     describe "#has_account?" do
       subject { @user_without_account.has_account? }
@@ -693,44 +693,6 @@ describe User do
     describe "#deactivate_account" do
       it "should raise an error, since no account exists" do
         expect { @user_without_account.deactivate_account }.to raise_error
-      end
-    end
-  end
-
-  describe "#create_account attribute" do
-    describe "#create_account == true" do
-      it "should cause the user to be created with account" do
-        create( :user, create_account: true ).account.should_not be_nil
-      end
-    end
-    describe "#create_account == false" do
-      it "should cause the user to be created without account" do
-        create( :user, create_account: false ).account.should be_nil
-      end
-    end
-    describe "#create_account == 0" do
-      it "should cause the user to be created without account" do
-        create( :user, create_account: 0 ).account.should be_nil
-      end
-    end
-    describe "#create_account == 1" do
-      it "should cause the user to be created with account" do
-        create( :user, create_account: 1 ).account.should_not be_nil
-      end
-    end
-    describe "#create_account == '0'" do # for HTML forms
-      it "should cause the user to be created without account" do
-        create( :user, create_account: "0" ).account.should be_nil
-      end
-    end
-    describe "#create_account == '1'" do # for HTML forms
-      it "should cause the user to be created with account" do
-        create( :user, create_account: "1" ).account.should_not be_nil
-      end
-    end
-    describe "#create_account == ''" do
-      it "should cause the user to be created without account" do
-        create( :user, create_account: "" ).account.should be_nil
       end
     end
   end
@@ -1324,45 +1286,6 @@ describe User do
   end
 
 
-  # User Creation
-  # ==========================================================================================
-
-  describe ".create" do
-    before { @params = {first_name: "Johnny", last_name: "Doe"} }
-    subject { @user = User.create(@params) }
-    describe "when #add_to_corporation is set to a corporation" do
-      before do
-        @corporation = create(:corporation_with_status_groups)
-        @params.merge!({:add_to_corporation => @corporation})
-      end
-      it "should add the user to the first status group of this corporation" do
-        subject
-        @corporation.status_groups.first.members.should include @user
-      end
-    end
-    describe "when #add_to_corporation is set to a corporation id" do
-      before do
-        @corporation = create(:corporation_with_status_groups)
-        @params.merge!({:add_to_corporation => @corporation.id})
-      end
-      it "should add the user to the first status group of this corporation" do
-        subject
-        @corporation.status_groups.first.members.should include @user
-      end
-    end
-    describe "when #add_to_corporation is set to a corporation id which is a String (via html form)" do
-      before do
-        @corporation = create(:corporation_with_status_groups)
-        @params.merge!({:add_to_corporation => @corporation.id.to_s})
-      end
-      it "should add the user to the first status group of this corporation" do
-        subject
-        @corporation.status_groups.first.members.should include @user
-      end
-    end
-  end
-
-
   # Finder Methods
   # ==========================================================================================
 
@@ -1509,7 +1432,7 @@ describe User do
       @user_without_email = create(:user)
       @user_without_email.profile_fields.destroy_all
       @user_with_empty_email = create(:user)
-      @user_with_empty_email.profile_fields.where(type: 'ProfileFields::Email').first.update_attributes(:value => nil)  # to circumvent validation
+      @user_with_empty_email.email_and_mailing_list_fields.first.update_attributes(:value => nil)  # to circumvent validation
     end
     subject { User.with_email }
     specify "prelims" do

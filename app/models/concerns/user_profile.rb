@@ -6,34 +6,11 @@ concern :UserProfile do
     include HasProfile
   end
 
-  def landline_profile_fields
-    phone_profile_fields - mobile_phone_profile_fields
-  end
-  def mobile_phone_profile_fields
-    phone_profile_fields.select do |field|
-      field.label.downcase.include?('mobil') or field.label.downcase.include?('handy')
-    end
-  end
-
-  def phone
-    if landline_profile_fields.first.try(:value).present?
-      landline_profile_fields.first.value
-    else
-      mobile
-    end
-  end
-  def phone=(new_number)
-    (landline_profile_fields.first || profile_fields.create(label: I18n.t(:phone), type: 'ProfileFields::Phone')).update_attributes(value: new_number)
-  end
-  def phone_field
-    landline_profile_fields.first || phone_profile_fields.first
-  end
-
   def mobile
     (mobile_phone_profile_fields + phone_profile_fields).first.try(:value)
   end
   def mobile=(new_number)
-    (mobile_phone_profile_fields.first || profile_fields.create(label: I18n.t(:mobile), type: 'ProfileFields::Phone')).update_attributes(value: new_number)
+    (mobile_phone_profile_fields.first || phone_and_fax_fields.create(label: I18n.t(:mobile), type: 'ProfileFields::Phone')).update_attributes(value: new_number)
   end
 
   def profile_field_by_label(label)

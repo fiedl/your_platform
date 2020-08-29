@@ -298,7 +298,7 @@ class User < ApplicationRecord
   # This method activates the user account, i.e. grants the user the right to log in.
   #
   def activate_account
-    create_account
+    create_account unless account
   end
 
   # This method deactivates the user account, i.e. destroys the associated object
@@ -309,31 +309,6 @@ class User < ApplicationRecord
     self.account.destroy
     self.account = nil
   end
-
-  # If the attribute `create_account` is set to `true` or to `1`, e.g. by an html form,
-  # this code makes sure that the account association is build.
-  # This code is run on validation, as you can see above in this model.
-  # Note: A welcome email is automatically sent on save by the UserAccount model.
-  def build_account_if_requested
-
-    # If this value is set by an html form, it is "0" or "1". But "0" would
-    # transform to true rather than to false.
-    # Thus, we have to make sure that "0" means false.
-    self.create_account = false if self.create_account == "0"
-    self.create_account = true if self.create_account == "1"
-    self.create_account = false if self.create_account == 0
-    self.create_account = true if self.create_account == 1
-    self.create_account = false if self.create_account == ""
-
-    if self.create_account == true
-      self.account.destroy if self.has_account?
-      self.account = self.build_account
-      self.create_account = false # to make sure that this code is nut run twice.
-      return self.account
-    end
-
-  end
-  private :build_account_if_requested
 
   def token
     account.try(:auth_token)
