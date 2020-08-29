@@ -116,13 +116,6 @@ describe ProfileFields::Address do
   end
   subject { @address_field }
 
-  describe "#display_html" do
-    subject { @address_field.display_html }
-    it "should have a line-break in it" do
-      subject.should include( "<br" )
-    end
-  end
-
   describe "#geo_location" do
     subject { @address_field.geo_location }
     it { should be_kind_of GeoLocation }

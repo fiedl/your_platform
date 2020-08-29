@@ -72,31 +72,6 @@ class SemesterCalendar < ApplicationRecord
     events.commers.first
   end
 
-  def events_attributes=(attributes)
-    attributes.each do |i, event_params|
-      if event_params[:id].present?
-        event = events.select { |event| event.id == event_params[:id].to_i }.first
-        if event
-          if event_params[:_destroy] == '1'
-            event.destroy # http://railscasts.com/episodes/196-nested-model-form-revised
-          else
-            event.update_attributes event_params.except(:_destroy, :id)
-          end
-        else
-          raise(RuntimeError, "event #{event_params[:id]} not in semester calendar events.")
-        end
-      else
-        if event_params[:name].present?
-          new_event = Event.create(event_params.except(:_destroy).merge({group_id: group.id}))
-          events.push(new_event)
-        else
-          Rails.logger.warn "Skipping creation of event without name: #{event_params.to_s}"
-        end
-      end
-    end
-    self.touch unless attributes.empty?
-  end
-
   def save(*args)
     super(*args)
     self.events.map(&:save)
