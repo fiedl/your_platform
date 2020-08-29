@@ -1,7 +1,6 @@
 rvm:
   - "2.6.2"
 env:
- COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql SELENIUM=true"
   - "WORKER_ID=0  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true           RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql"
   - "WORKER_ID=1  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true           RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql"
   - "WORKER_ID=2  NUMBER_OF_WORKERS=10 CI_CATEGORY=models      NO_RENEW_CACHE=true           RAILS_ENV=test CI=travis COVERALLS_SILENT=true NEO4J_REST_URL_TEST=http://neo4j:neo4j@localhost:7474 DB=mysql"
@@ -21,7 +20,8 @@ cache:
     - node_modules
   yarn: true
 dist: trusty
-sudo: true
+os: linux
+language: ruby
 addons:
   firefox: latest
   chrome: stable
@@ -30,7 +30,7 @@ addons:
       - pwgen
       - libicu-dev
 services:
-  - redis-server
+  - redis
   - elasticsearch
   - neo4j
 before_install:
@@ -68,5 +68,5 @@ notifications:
       - https://webhooks.gitter.im/e/14aec2cb97b9e0f2a808
     on_success: always  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
-    on_start: false     # default: false
+    on_start: never     # options: [always|never|change] default: never
 
