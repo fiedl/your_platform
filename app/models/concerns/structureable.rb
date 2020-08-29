@@ -92,9 +92,6 @@ concern :Structureable do
       elsif object.kind_of? Event
         unless self.events.include? object
           self.events << object
-          if use_caching?
-            object.renew_cached_methods_of_event_ancestors
-          end
         end
       elsif object.kind_of? Project
         self.child_projects << object unless self.child_projects.include? object

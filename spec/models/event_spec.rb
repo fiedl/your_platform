@@ -160,27 +160,6 @@ describe Event do
     end
   end
 
-  describe ".find_all_by_groups" do
-    before do
-      @group1 = create( :group )
-      @event1 = @group1.events.create( :start_at => 5.hours.from_now )
-      @group2 = create( :group )
-      @event2 = @group2.events.create( :start_at => 2.hours.from_now )
-      @group3 = create( :group )
-      @event3 = @group3.events.create
-    end
-    subject { Event.find_all_by_groups( [ @group1, @group2 ] ) }
-    it "should return the events of the given groups" do
-      subject.should include @event1, @event2
-    end
-    it "should not return the events of other groups" do
-      subject.should_not include @event3
-    end
-    it "should return the events in ascending order" do
-      subject.first.start_at.should < subject.last.start_at
-    end
-  end
-
 
   # Structure
   # ==========================================================================================

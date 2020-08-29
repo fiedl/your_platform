@@ -11,23 +11,22 @@ concern :ProfileFields do
   end
 
   def email
-    @email ||= email_and_mailing_list_fields.first.try(:value)
+    email_and_mailing_list_fields.first.try(:value)
   end
-  def email=( email )
-    @email = nil
-    @email_profile_field ||= profile_fields_by_type("ProfileFields::Email").first
-    if email.nil?
-      @email_profile_field.try(:destroy)
+  def email=(new_email)
+    email_profile_field = email_and_mailing_list_fields.first
+    if new_email.nil?
+      email_profile_field.try(:destroy)
     else
-      @email_profile_field ||= profile_fields.build(type: "ProfileFields::Email", label: "email")
-      @email_profile_field.value = email
+      email_profile_field ||= email_and_mailing_list_fields.build(type: "ProfileFields::Email", label: "email")
+      email_profile_field.value = new_email
     end
   end
   def email_does_not_work?
     email_needs_review? or email_empty?
   end
   def email_needs_review?
-    profile_fields_by_type("ProfileFields::Email").review_needed.count > 0
+    email_and_mailing_list_fields.review_needed.count > 0
   end
   def email_empty?
     not email.present?
