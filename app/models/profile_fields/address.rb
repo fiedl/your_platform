@@ -5,10 +5,6 @@ module ProfileFields
   class Address < ProfileField
     def self.model_name; ProfileField.model_name; end
 
-    def display_html
-      BestInPlace::ViewHelpers.markup(self.composed_value)
-    end
-
     def as_json(*args)
       super.merge({
         profileable_title: profileable_title,
