@@ -35,9 +35,10 @@ describe ProfileFields do
     end
 
     describe "#email=" do
-      subject { @profileable.email = "foo@example.com" }
+      subject { @profileable.email = "foo@example.com"; @profileable.save }
       it "should create an email profile field" do
         subject
+        @profileable.profile_fields.reload
         @profileable.profile_fields.last.should be_kind_of ProfileField
         @profileable.profile_fields.last.type.should == "ProfileFields::Email"
         @profileable.profile_fields.last.value.should == "foo@example.com"
