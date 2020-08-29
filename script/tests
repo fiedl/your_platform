@@ -25,9 +25,10 @@ NUMBER_OF_RETRIES = 2
 
 rspec_args = ARGV.to_a.join(" ")
 
-cmd = "bin/rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}"
+cmd = "bundle exec rspec --seed 1 --format json --out tmp/specs.json --dry-run #{rspec_args}"
 print "#{cmd}\n"
 json_list_of_specs = `#{cmd}`
+print "#{json_list_of_specs}\n\n"
 
 require 'json'
 data = JSON.parse(File.read("tmp/specs.json"))
@@ -118,7 +119,7 @@ if specs_to_run.any?
   end
 
 else
-  print "No specs to run for this worker #{ENV['WORKER_ID']} of ENV['NUMBER_OF_WORKERS']. Category: #{ENV['CI_CATEGORY']}\n"
+  print "No specs to run for this worker #{ENV['WORKER_ID']} of #{ENV['NUMBER_OF_WORKERS']}. Category: #{ENV['CI_CATEGORY']}\n"
   exit 0
 end
 
