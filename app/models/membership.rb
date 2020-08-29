@@ -239,10 +239,15 @@ class Membership < DagLink
   #    group1                       group2
   #      |---- user       =>          |---- user
   #
+  # Due to the membership gap correction, the new membership is created before
+  # invalidating the last one, because the latest status membership is always
+  # open-ended.
+  #
   def move_to_group(group_to_move_in, options = {})
     time = (options[:time] || options[:date] || options[:at] || Time.zone.now).to_datetime
+    new_membership = group_to_move_in.assign_user self.user, at: time
     invalidate at: time
-    group_to_move_in.assign_user self.user, at: time
+    return new_membership
   end
   def move_to(group, options = {})
     move_to_group(group, options)

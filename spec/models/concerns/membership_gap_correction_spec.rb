@@ -35,10 +35,12 @@ describe MembershipGapCorrection do
       subject
       @membership2.reload.valid_from.should be_the_same_time_as @time2
     end
-    it "should preserve the valid_to of the right membership" do
+    it "should make the right membership open-ended (valid_to = nil) [breaking change]" do
+      # A user can't go to a state where he has no status. The last
+      # status is "deceased" or "former member".
       @membership2.reload.valid_to.should be_the_same_time_as @time3
       subject
-      @membership2.reload.valid_to.should be_the_same_time_as @time3
+      @membership2.reload.valid_to.should be_nil
     end
 
     specify "at the cut point, there should by only one membership" do
@@ -71,7 +73,6 @@ describe MembershipGapCorrection do
 
       @membership1 = @status1.assign_user @user, at: @time1
       @membership2 = @status2.assign_user @user, at: @time2
-      @status2.unassign_user @user, at: @time3
     end
 
     describe "#apply_gap_correction" do
@@ -102,9 +103,9 @@ describe MembershipGapCorrection do
       end
 
       it "should not consider the indirect membership of status3 as the user is only officer there, no regular member" do
-        @membership2.reload.valid_to.should be_the_same_time_as @time3
+        @membership2.reload.valid_to.should be_nil
         subject
-        @membership2.reload.valid_to.should be_the_same_time_as @time3
+        @membership2.reload.valid_to.should be_nil
       end
     end
 

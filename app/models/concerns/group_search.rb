@@ -19,7 +19,7 @@ concern :GroupSearch do
       end
       result = search_by_name(query, include_ancestors: true) unless result.present?
       result = (search_by_name(query).limit(limit) + search_by_breadcrumbs(query, limit: limit) + search_by_profile_fields(query)) unless result.present?
-      self.where(id: result).regular.uniq.limit(limit)
+      self.where(id: result).regular.distinct.limit(limit)
     end
 
     def search_in_my_groups(query, user:, include_ancestors: false)
@@ -45,7 +45,7 @@ concern :GroupSearch do
       query.split(" ").each do |expression|
         relation = relation.where("groups.name LIKE ? OR groups.extensive_name LIKE ? OR ancestor_groups_groups.name LIKE ?", "%#{expression}%", "%#{expression}%", "%#{expression}%")
       end
-      relation.uniq
+      relation.distinct
     end
 
     def search_by_name_without_ancestors(query)
@@ -53,7 +53,7 @@ concern :GroupSearch do
       query.split(" ").each do |expression|
         relation = relation.where("groups.name LIKE ? OR groups.extensive_name LIKE ?", "%#{expression}%", "%#{expression}%")
       end
-      relation.uniq
+      relation.distinct
     end
 
     def search_by_extensive_name(query)
