@@ -13,7 +13,7 @@ module VueHelper
             path: (polymorphic_path(post.author) if can?(:read, post.author))
           }),
           attachments: post.attachments.as_json,
-          comments: post.comments.collect { |comment|
+          comments: post.comments.order(:created_at).collect { |comment|
             comment.as_json.merge({
               author: comment.author
             })
