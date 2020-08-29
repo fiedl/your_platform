@@ -17,7 +17,7 @@ class Attachment < ApplicationRecord
   include DocumentTags
 
   def title
-    super || filename.gsub("_", " ")
+    super || filename.try(:gsub, "_", " ")
   end
 
   def scope

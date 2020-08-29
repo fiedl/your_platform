@@ -3,6 +3,16 @@ class Abilities::PostAbility < Abilities::BaseAbility
   def rights_for_everyone
     can :read, Post, parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
     can :read, Post, publish_on_public_website: true
+
+    if not read_only_mode?
+      # Send messages to a group, either via web ui or via email:
+      # This is allowed if the user matches the mailing-list-sender-filter setting.
+      # Definition in: concerns/group_mailing_lists.rb
+      #
+      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
+        group.user_matches_mailing_list_sender_filter?(user)
+      end
+    end
   end
 
   def rights_for_signed_in_users
@@ -30,18 +40,10 @@ class Abilities::PostAbility < Abilities::BaseAbility
         post.author == user and
         can? :force_post_notification, post.group
       end
-
-      # Send messages to a group, either via web ui or via email:
-      # This is allowed if the user matches the mailing-list-sender-filter setting.
-      # Definition in: concerns/group_mailing_lists.rb
-      #
-      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
-        group.user_matches_mailing_list_sender_filter?(user)
-      end
     end
   end
 
-  def rights_for_local_officers
+  def rights_for_global_officers
     if not read_only_mode?
       # Global officers can post to any group.
       can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group

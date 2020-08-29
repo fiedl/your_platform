@@ -30,9 +30,8 @@ describe Ability do
     let(:ability) { Ability.new(user) }
     subject { ability }
 
-    def the_user(reload = false)
-      @the_user_ability = nil if reload
-      @the_user_ability ||= Ability.new(user.reload)
+    def the_user
+      Ability.new(user)
     end
 
     context "(blog posts)" do
@@ -63,7 +62,7 @@ describe Ability do
         he { should be_able_to :create_post_for, @group }
         context "when there is a post in this group" do
           before do
-            @post = @group.posts.create
+            @post = @group.create_post published_at: 1.year.ago
             @post_attachment = @post.attachments.create
           end
           he { should be_able_to :read, @post }
@@ -82,7 +81,7 @@ describe Ability do
         he { should_not be_able_to :index_posts, @group }
         context "when there is a post in this group" do
           before do
-            @post = @group.posts.create
+            @post = @group.create_post published_at: 1.year.ago
             @post_attachment = @post.attachments.create
           end
           he { should_not be_able_to :read, @post }
@@ -115,43 +114,13 @@ describe Ability do
       end
     end
 
-    context "(mentions)" do
-      context "when mentioned in a comment" do
-        before do
-          @group = create :group
-          @post = @group.posts.create
-          @post_attachment = @post.attachments.create
-          @comment = @post.comments.create text: "This comment mentions @[[#{user.title}]] and, thereby, invites him to this post."
-          Mention.create_multiple(create(:user), @comment, @comment.text)
-        end
-        specify { @group.members.should_not include user }
-        he { should be_able_to :read, @post }
-        he { should be_able_to :read, @comment }
-        he { should be_able_to :create_comment_for, @post }
-        he { should be_able_to :read, @post_attachment }
-        he { should be_able_to :download, @post_attachment }
-      end
-      context "when mentioned in a post" do
-        before do
-          @group = create :group
-          @post = @group.posts.create text: "This post mentions @[[#{user.title}]] and, thereby, invites him to this post."
-          @post_attachment = @post.attachments.create
-          Mention.create_multiple(create(:user), @post, @post.text)
-        end
-        specify { @group.members.should_not include user }
-        he { should be_able_to :read, @post }
-        he { should be_able_to :create_comment_for, @post }
-        he { should be_able_to :read, @post_attachment }
-        he { should be_able_to :download, @post_attachment }
-      end
-    end
-
     context "when the user is global admin" do
       before { user.global_admin = true }
 
-      he "should not be able to destroy events that are older than 10 minutes" do
-        @event = create :event, name: "Recent Event", description: "This is an event with content!"
+      he "should not be able to destroy events with attendees" do
+        @event = create :event, name: "Event with attendees", description: "This is an event with content!"
         @event.update_attribute :created_at, 11.minutes.ago
+        @event.attendees << create(:user)
 
         the_user.should_not be_able_to :destroy, @event
       end
@@ -179,11 +148,11 @@ describe Ability do
 
         user.global_admin = false
         wait_for_cache
-        the_user(true).should_not be_able_to :manage, @page
+        the_user.should_not be_able_to :manage, @page
 
         user.global_admin = true
         wait_for_cache
-        the_user(true).should be_able_to :manage, @page
+        the_user.should be_able_to :manage, @page
       end
     end
 
@@ -258,9 +227,10 @@ describe Ability do
           user.should be_in @group.officers_of_self_and_ancestors
           the_user.should be_able_to :destroy, @event
         end
-        he "should not be able to destroy events that are older than 10 minutes" do
-          @event = @group.events.create name: "Recent Event", description: "non-empty"
+        he "should not be able to destroy events that have attendees" do
+          @event = @group.events.create name: "Event with attendees", description: "non-empty"
           @event.update_attribute :created_at, 11.minutes.ago
+          @event.attendees << create(:user)
 
           the_user.should_not be_able_to :destroy, @event
         end

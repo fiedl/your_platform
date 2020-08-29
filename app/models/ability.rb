@@ -109,13 +109,12 @@ class Ability
           if user.beta_tester?
             rights_for_beta_testers
           end
-          if view_as?([:user])
-            rights_for_signed_in_users
-          end
+          rights_for_signed_in_users
         end
       end
     end
     rights_for_everyone
+    restrictions_for_everyone
   end
 
   def view_as?(role)
@@ -396,11 +395,7 @@ class Ability
       can :create_attachment_for, Event do |event|
         can?(:join, event) or event.attendees.include?(user) or event.contact_people.include?(user)
       end
-      can [:update, :destroy], Attachment do |attachment|
-        attachment.author == user and
-        attachment.parent.kind_of?(Event) and
-        (attachment.parent.attendees.include?(user) or attachment.parent.contact_people.include?(user))
-      end
+      can [:update, :destroy], Attachment, author_user_id: user.id
 
       # If a user is contact person of an event, he can provide pages and
       # attachment for this event.
@@ -446,9 +441,7 @@ class Ability
     can :read, Page do |page|
       (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
-    can [:read, :download], Attachment do |attachment|
-      can?(:quickly_download, attachment) || attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
-    end
+    can [:read, :download], Attachment, parent_type: "Group", parent_id: user.group_ids
 
     # All users can join events.
     #
@@ -477,11 +470,6 @@ class Ability
     # - And they can create comments for these objects as well (see above.)
     can :read, Comment do |comment|
       can? :read, comment.commentable
-    end
-
-    # Posts and Comments can be read when the users has been mentioned:
-    can :read, [Comment] do |comment|
-      comment.mentioned_users.include? user
     end
 
     # Post attachments can be read if the post can be read.
@@ -535,7 +523,7 @@ class Ability
     # Feature switches
     #
     can :use, :semester_calendars
-    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
     # can :use, :mail_delivery_account_filter
     can :use, :help_videos
     can :use, :permalinks
@@ -638,32 +626,6 @@ class Ability
       can :read, :personal_feed
     end
 
-    # Nobody can destroy non-empty pages that are older than 10 minutes.
-    # Pages that are no longer needed can be archived instead.
-    # Public pages can be destroyed until TODO we have the archive-pages interface back.
-    #
-    cannot :destroy, Page do |page|
-      (page.created_at < 10.minutes.ago) && page.not_empty? && !page.kind_of?(Pages::PublicPage)
-    end
-
-    # Nobody can destroy semester calendars with attachments.
-    #
-    cannot :destroy, SemesterCalendar do |semester_calendar|
-      semester_calendar.attachments.count > 0
-    end
-
-    # Nobody can destroy or update a ballot that is signed.
-    cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
-      ballot.signed?
-    end
-
-    # We don't want people to re-use older semester calendars. Thus, after a while,
-    # the term cannot be changed anymore. They should create new calendars for new
-    # terms.
-    cannot :change_term, SemesterCalendar do |semester_calendar|
-      semester_calendar.created_at < 1.day.ago
-    end
-
     # All users can show tags. This does not mean that they
     # can see all tagged contents though.
     can :read, ActsAsTaggableOn::Tag
@@ -686,11 +648,6 @@ class Ability
     # See AvatarsController.
     #
     can :read, :avatars
-
-    # Nobody can recalculate term reports that have already been submitted.
-    cannot :recalculate, TermReport do |term_report|
-      term_report.state && !(term_report.state.rejected?)
-    end
 
   end
 
@@ -719,6 +676,49 @@ class Ability
 
     can [:read, :download], Attachment do |document|
       document.has_flag? :dummy
+    end
+  end
+
+  def restrictions_for_everyone
+    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
+    # Nobody can destroy non-empty pages that are older than 10 minutes.
+    # Pages that are no longer needed can be archived instead.
+    # Public pages can be destroyed until TODO we have the archive-pages interface back.
+    #
+    cannot :destroy, Page do |page|
+      (page.created_at < 10.minutes.ago) && page.not_empty? && !page.kind_of?(Pages::PublicPage)
+    end
+
+    # Nobody can destroy events with attendees.
+    # If an event is cancelled, it should be noted in the event title.
+    # Otherwise, the event would just be missing in the users' calendars.
+    #
+    cannot :destroy, Event do |event|
+      event.attendees.count > 0
+    end
+
+    # Nobody can destroy semester calendars with attachments.
+    #
+    cannot :destroy, SemesterCalendar do |semester_calendar|
+      semester_calendar.attachments.count > 0
+    end
+
+    # Nobody can destroy or update a ballot that is signed.
+    cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
+      ballot.signed?
+    end
+
+    # We don't want people to re-use older semester calendars. Thus, after a while,
+    # the term cannot be changed anymore. They should create new calendars for new
+    # terms.
+    cannot :change_term, SemesterCalendar do |semester_calendar|
+      semester_calendar.created_at < 1.day.ago
+    end
+
+    # Nobody can recalculate term reports that have already been submitted.
+    cannot :recalculate, TermReport do |term_report|
+      term_report.state && !(term_report.state.rejected?)
     end
   end
 
