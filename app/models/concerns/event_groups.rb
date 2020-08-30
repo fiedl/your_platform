@@ -2,6 +2,10 @@ concern :EventGroups do
 
   included do
     belongs_to :group
+
+    def group
+      super || parent_groups.first
+    end
   end
 
   def self.move_event_to_group(event_id, group_id)
