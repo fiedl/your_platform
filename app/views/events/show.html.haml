@@ -34,6 +34,10 @@
             .start_at.mb-2{title: "Beginn der Veranstaltung"}
               %span.mr-2= calendar_icon
               = editable event, :start_at, editable: can?(:update, event), type: 'datetime'
+            - if event.end_at || can?(:update, event)
+              .end_at.mb-2{title: "Ende der Veranstaltung"}
+                %span.mr-2 bis
+                = editable event, :end_at, editable: can?(:update, event), type: 'datetime'
 
             .location.mb-2{title: "Ort der Veranstaltung"}
               %span.mr-2= location_icon
@@ -42,6 +46,9 @@
         .card-footer
           = link_to semester_calendar_path(event.semester_calendar!), class: 'btn btn-white btn-sm' do
             Semesterprogramm anzeigen
+
+    - if not show_posts_column
+      = vue_event_attendees_card event if can? :join, event
 
     - if can?(:update, event)
       .card
@@ -53,6 +60,8 @@
 
   - if show_posts_column
     .col-md-8
+      = vue_event_attendees_card event if can? :join, event
+
       .card
         - if can? :create_post, event
           .card-header

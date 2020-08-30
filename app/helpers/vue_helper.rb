@@ -104,4 +104,23 @@ module VueHelper
     }
   end
 
+  def vue_event_attendees_card(event)
+    content_tag 'vue_event_attendees', "", {
+      ':initial_event': event.as_json.merge({
+        contact_people: event.contact_people.collect { |user|
+          user.as_json.merge({
+            phone: user.phone
+          })
+        },
+        attendees: event.attendees
+      }).to_json,
+      ':editable': can?(:update, event),
+      ':joinable': can?(:join, event),
+      ':current_user': current_user.to_json,
+      ':attendees_group': event.attendees_group.to_json,
+      join_icon: calendar_plus_icon,
+      leave_icon: calendar_minus_icon
+    }
+  end
+
 end

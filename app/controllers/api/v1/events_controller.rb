@@ -33,7 +33,7 @@ class Api::V1::EventsController < Api::V1::BaseController
 
   expose :group, -> { Group.find params[:group_id] if params[:group_id].present? }
   expose :parent_groups, -> { Group.where(id: params[:parent_group_ids]) if params[:parent_group_ids] }
-  expose :contact_people, -> { User.where(id: params[:contact_people_ids]) if params[:contact_people_ids] }
+  expose :contact_people, -> { User.where(id: params[:contact_people_ids] || params[:event][:contact_people_ids]) if params[:contact_people_ids] || (params[:event] && params[:event][:contact_people_ids]) }
 
   def create
     authorize! :create, Event
@@ -55,6 +55,7 @@ class Api::V1::EventsController < Api::V1::BaseController
   def update
     authorize! :update, event
     event.update! event_params
+    event.contact_people = contact_people if contact_people
 
     render json: event.as_json.merge({
       attendees_count: event.attendees.count

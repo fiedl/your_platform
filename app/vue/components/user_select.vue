@@ -1,6 +1,6 @@
 <template>
   <div>
-    <vue-select label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple">
+    <vue-select ref="vue_select" label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple">
       <template slot="option" slot-scope="option">
         <div class="option">
           <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
@@ -30,15 +30,16 @@
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users', 'multiple', 'initial_options']
+    props: ['placeholder', 'value', 'find_non_wingolf_users', 'find_deceased_users', 'multiple', 'initial_options', 'autofocus']
     data: ->
       selected: null
       options: @initial_options || []
       error: null
       current_fetch_xhr: null
-
     created: ->
       this.selected = this.value
+    mounted: ->
+      # this.$refs.vue_select.focus() if @autofocus # FIXME
     watch:
       value: ->
         this.selected = this.value

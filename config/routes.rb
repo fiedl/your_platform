@@ -349,7 +349,10 @@ Rails.application.routes.draw do
         resources :events
         resources :blog_posts
       end
-      resources :events
+      resources :events do
+        post :join, to: 'events/join#create'
+        post :leave, to: 'events/leave#create'
+      end
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
