@@ -16,6 +16,23 @@ Geocoder::Lookup::Test.add_stub(
 ]
 )
 Geocoder::Lookup::Test.add_stub(
+    "Berlin", [
+    {
+        latitude: 52.5163,
+        longitude: 13.3778,
+        address: "Berlin",
+        state: 'Berlin',
+        state_code: 'BER',
+        country: 'Germany',
+        country_code: 'DE',
+        city: 'Berlin',
+        postal_code: '10117',
+        street_number: '',
+        route: ''
+    }
+]
+)
+Geocoder::Lookup::Test.add_stub(
     "44 Rue de Stalingrad, Grenoble, Frankreich", [
     {
         latitude: 45.178876,

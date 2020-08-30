@@ -8,8 +8,7 @@ concern :UserGeoSearch do
     def within(params)
       geo_locations = GeoLocation.near(params[:around], params[:radius_in_km])
       profile_fields = ProfileField.where value: geo_locations.map(&:address), type: "ProfileFields::Address"
-      users = profile_fields.map(&:profileable).select { |profileable| profileable.kind_of? User }
-      return users
+      self.joins(:profile_fields).merge(profile_fields)
     end
 
   end

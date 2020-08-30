@@ -63,21 +63,6 @@ class ProfileField < ApplicationRecord
   end
 
 
-  # Often, profile_fields are to be displayed in a certain manner on a HTML page.
-  # This method returns the profile_field's value as HTML code in the way
-  # the profile_field should be displayed.
-  #
-  # Override this in the inheriting classes in ordner to modify the html output
-  # of the value.
-  #
-  def display_html
-    if self.value.try(:include?, "\n")
-      BestInPlace::ViewHelpers.markup(self.value)
-    else
-      self.value
-    end
-  end
-
   # This method returns the key, i.e. the un-translated label,
   # which is needed for child profile fields.
   #

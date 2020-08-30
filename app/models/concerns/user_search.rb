@@ -10,40 +10,41 @@ concern :UserSearch do
         search_by_geo_location(query) || (search_by_name_and_title(query) + search_by_profile_fields(query))
       else
         []
-      end.uniq
+      end.to_a.uniq
     end
-
-    private
 
     def search_by_geo_location(query)
       if match_data = query.match(/(.*) ([0-9]*)km/)
         address = match_data[1]
         radius = match_data[2]
-        users = User.within radius_in_km: radius, around: address
-        users.select do |user|
-          user.alive? && user.wingolfit?
-        end
+        users = self.alive.within(radius_in_km: radius, around: address)
       end
     end
 
     def search_by_name_and_title(query)
       q = "%" + query.gsub(' ', '%') + "%"
-      users = self
-        .where("CONCAT(first_name, ' ', last_name) LIKE ?", q)
-        .order('last_name', 'first_name').distinct
+      users = self.where(id: User
+        .where("CONCAT(users.first_name, ' ', users.last_name) LIKE ?", q)
+        .order('users.last_name', 'users.first_name').distinct
+      )
       users = [User.find_by_title(query)] - [nil] if users.none?
       users
     end
 
     def search_by_profile_fields(query)
-      q = "%" + query.gsub(' ', '%') + "%"
-      profile_fields =
-        ProfileField.where(profileable_type: "User").where("value like ? or label like ?", q, q) +
-        ProfileField.joins(:parent).where(parents_profile_fields: {profileable_type: "User"}).where("profile_fields.value like ? or profile_fields.label like ?", q, q)
-      users = profile_fields.collect do |profile_field|
-        if user = profile_field.profileable
-          user.search_hint = "#{profile_field.label}: #{profile_field.value}"
-          user
+      profile_fields = ProfileField.where_like(value: query).or(
+        ProfileField.where_like(label: query)
+      )
+      profile_fields.includes(:parent).to_a.collect do |profile_field|
+        # When calling `profile_field.profileable` here, we get
+        # ActiveRecord::StatementInvalid (Mysql2::Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''Group'' at line 1
+        if (profile_field.parent || profile_field).profileable_type == 'User'
+          if self.exists? id: (profile_field.parent || profile_field).profileable_id
+            if user = User.find((profile_field.parent || profile_field).profileable_id)
+              user.search_hint = "#{profile_field.label}: #{profile_field.value}"
+              user
+            end
+          end
         end
       end - [nil]
     end

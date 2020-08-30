@@ -29,6 +29,25 @@ describe UserSearch do
         subject.should be_kind_of Array
       end
     end
+
+
+    # FIXME https://github.com/alexreisner/geocoder/issues/1181 ?
+
+    #describe "(geo search)" do
+    #  before do
+    #    @user = create :user_with_account
+    #    @user.profile_fields.create type: "ProfileFields::Address", label: "Working at", value: "Pariser Platz 1\n 10117 Berlin"
+    #  end
+    #  let(:query) { "Berlin 15km" }
+    #
+    #  it "should find users with matching address" do
+    #    subject.should include @user
+    #  end
+    #  it "should be chainable" do
+    #    User.alive.search(query).should include @user
+    #    User.alive.accessible_by(Ability.new(@user)).search(query).should include @user
+    #  end
+    #end
   end
 
 end
