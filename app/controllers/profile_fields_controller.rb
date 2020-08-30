@@ -58,7 +58,7 @@ class ProfileFieldsController < ApplicationController
 
     Issue.scan_object(@profile_field) if params[:scan_for_issues].present?
 
-    render json: @profile_field.to_json(methods: [:display_html, :issues])
+    render json: @profile_field.to_json(methods: [:issues])
   end
 
   def destroy
