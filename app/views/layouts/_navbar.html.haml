@@ -95,11 +95,19 @@
               %span.nav-link-title
                 Veranstaltungen
             %ul.dropdown-menu
+              - if can? :create, Event
+                %li
+                  = link_to new_event_path, class: "dropdown-item #{'active' if controller_name == 'events' and action_name == 'new'}" do
+                    Veranstaltung eintragen
+                .dropdown-divider
               = link_to "Meine Veranstaltungen", user_events_path(user_id: current_user.id), class: "dropdown-item #{'active' if controller_name == 'events' and params[:user_id] == current_user.id}"
               .dropdown-divider
+              %span.dropdown-header Semesterprogramme
               - current_user.corporations.each do |corporation|
-                = link_to corporation.title, group_search_semester_calendar_path(group_id: corporation.id), class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && current_navable == corporation}"
-              = link_to "Alle Semesterprogramme", semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index' && !group}"
+                = link_to group_search_semester_calendar_path(group_id: corporation.id), class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && current_navable == corporation}" do
+                  = corporation.title
+              = link_to semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index' && !params[:group_id]}" do
+                Andere Verbindungen
               .dropdown-divider
               = link_to "Große Veranstaltungen aus dem Bund", events_path(published_on_global_website: true), class: "dropdown-item #{'active' if controller_name == 'events' and params[:published_on_global_website].to_b}"
               - for category in %w(Stiftungsfeste Wartburgfeste Bundesconvente Wingolfsseminare)

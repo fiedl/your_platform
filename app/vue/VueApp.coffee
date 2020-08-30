@@ -53,6 +53,7 @@ import Comments from './components/comments.vue'
 import Attachments from './components/attachments.vue'
 import AgeHistogramChart from './components/age_histogram_chart.vue'
 import StatusPieChart from './components/status_pie_chart.vue'
+import NewEventForm from './components/new_event_form.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -123,6 +124,7 @@ jQuery(document).ready ->
   Vue.component('vue-attachments', Attachments)
   Vue.component('vue_age_histogram_chart', AgeHistogramChart)
   Vue.component('vue_status_pie_chart', StatusPieChart)
+  Vue.component('vue_new_event_form', NewEventForm)
 
   vue_app = new Vue({el: "#vue-app"})
   vue_apps.push(vue_app)

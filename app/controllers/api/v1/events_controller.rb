@@ -31,12 +31,18 @@ class Api::V1::EventsController < Api::V1::BaseController
     render json: event.as_json(methods: required_event_methods)
   end
 
-  expose :group
+  expose :group, -> { Group.find params[:group_id] if params[:group_id].present? }
+  expose :parent_groups, -> { Group.where(id: params[:parent_group_ids]) if params[:parent_group_ids] }
+  expose :contact_people, -> { User.where(id: params[:contact_people_ids]) if params[:contact_people_ids] }
 
   def create
-    authorize! :create_event, group
+    authorize! :create, Event
+    authorize! :create_event, group if group
 
-    new_event = group.events.create! event_params
+    new_event = (group.try(:events) || Event).create! event_params
+    new_event.parent_groups = parent_groups if parent_groups.present?
+    new_event.contact_people = contact_people if contact_people.present?
+
     render json: new_event, status: :ok
   end
 

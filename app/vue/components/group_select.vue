@@ -31,10 +31,10 @@
   Vue.component 'vue-select', VueSelect
 
   UserSelect =
-    props: ['placeholder', 'value', 'multiple', 'initial_options', 'required_ability']
+    props: ['placeholder', 'value', 'multiple', 'initial_options', 'suggested_groups', 'required_ability']
     data: ->
       selected: null
-      options: @initial_options || []
+      options: @initial_options || @suggested_groups || []
       error: null
       current_fetch_xhr: null
     created: ->
@@ -60,7 +60,7 @@
               loading false
           }
         else
-          component.options = @initial_options || []
+          component.options = @initial_options || @suggested_groups || []
       lostFocus: ->
         this.$emit('lostFocus')
       selectedHandler: (v)->

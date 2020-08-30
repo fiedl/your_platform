@@ -85,4 +85,23 @@ module VueHelper
     }
   end
 
+  def vue_new_event_form
+    content_tag 'vue_new_event_form', "", {
+      ':current_user': current_user.to_json,
+      ':initial_groups': [current_user.primary_corporation.as_json.merge({
+        title: current_user.primary_corporation.title,
+        avatar_path: current_user.primary_corporation.avatar_path,
+        avatar_background_path: current_user.primary_corporation.avatar_background_path
+      })].to_json,
+      ':suggested_groups': current_user.groups.regular.includes(:avatar_attachments, :flags).collect { |group|
+        group.as_json.merge({
+          title: group.title,
+          avatar_path: group.avatar_path,
+          avatar_background_path: group.avatar_background_path,
+        })
+      }.to_json,
+      initial_location: current_user.primary_corporation.postal_address.gsub("\n", ", ")
+    }
+  end
+
 end

@@ -2,7 +2,7 @@
   .row.align-itens-center
     .col
       - if parent
-        .page-pretitle= parent.title
+        .page-pretitle.d-none.d-sm-block= parent.title
       .page-title= current_title
     .col-auto
       - if user == current_user

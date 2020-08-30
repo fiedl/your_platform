@@ -1,5 +1,12 @@
 class EventsController < ApplicationController
 
+  def new
+    authorize! :create, Event
+
+    set_current_title "Veranstaltung eintragen"
+    set_current_tab :events
+  end
+
   expose :user, -> { User.find params[:user_id] if params[:user_id].present? }
   expose :group, -> {
     (Group.find params[:group_id] if params[:group_id].present?) ||

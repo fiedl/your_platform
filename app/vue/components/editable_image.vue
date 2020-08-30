@@ -71,6 +71,9 @@
       editables: -> []
     computed:
       edit_label: -> "Bild ändern"
+    watch:
+      src: (new_source)->
+        @image_url = new_source
 
   export default EditableImage
 </script>
