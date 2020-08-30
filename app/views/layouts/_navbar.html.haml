@@ -149,9 +149,10 @@
               %li
                 = link_to mailing_lists_path, class: "dropdown-item #{'active' if controller_name == 'mailing_lists'}" do
                   = t :mailing_lists
-              %li
-                = link_to decision_making_federal_ballots_path, class: "dropdown-item #{'active' if controller_name == 'federal_ballots'}" do
-                  Bundesanträge
+              -#- if can? :index, DecisionMaking::FederalBallot
+              -#  %li
+              -#    = link_to decision_making_federal_ballots_path, class: "dropdown-item #{'active' if controller_name == 'federal_ballots'}" do
+              -#      Bundesanträge
 
           %li.nav-item.dropdown{class: ('active' if current_tab == :network)}
             %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
