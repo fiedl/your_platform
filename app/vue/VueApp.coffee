@@ -53,6 +53,8 @@ import Comments from './components/comments.vue'
 import Attachments from './components/attachments.vue'
 import AgeHistogramChart from './components/age_histogram_chart.vue'
 import StatusPieChart from './components/status_pie_chart.vue'
+import HeraldicColorSelect from './components/heraldic_color_select.vue'
+import EditableRibbon from './components/editable_ribbon.vue'
 import NewEventForm from './components/new_event_form.vue'
 import EventAttendees from './components/event_attendees.vue'
 
@@ -125,6 +127,9 @@ jQuery(document).ready ->
   Vue.component('vue-attachments', Attachments)
   Vue.component('vue_age_histogram_chart', AgeHistogramChart)
   Vue.component('vue_status_pie_chart', StatusPieChart)
+  Vue.component('vue_heraldic_color_select', HeraldicColorSelect)
+  Vue.component('vue-heraldic-color-select', HeraldicColorSelect)
+  Vue.component('vue_editable_ribbon', EditableRibbon)
   Vue.component('vue_new_event_form', NewEventForm)
   Vue.component('vue_event_attendees', EventAttendees)
 
