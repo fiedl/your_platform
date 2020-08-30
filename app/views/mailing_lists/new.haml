@@ -1,0 +1,9 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Neuen E-Mail-Verteiler einrichten
+
+.card
+  .card-body
+    %labl.form-label.required Für welche Empfänger-Gruppe?
+    %vue-group-select{'@input': "redirect_to('/groups/' + arguments[0].id + '/mailing_lists')", ':suggested_groups': current_user.groups.regular.collect { |group| group.as_json(methods: [:title, :avatar_path]) }.to_json}

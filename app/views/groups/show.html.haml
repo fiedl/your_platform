@@ -106,11 +106,12 @@
                   - if group.kind_of?(Corporation) && group.chargen_mailing_list
                     %vue-profile-field{':initial-profile-field': group.chargen_mailing_list.as_json.merge({label: "E-Mail Chargen"}).to_json}
 
-    - if group.groups_with_mailing_lists.any?
+    - if group.groups_with_mailing_lists.any? || can?(:manage_mailing_lists_for, group)
       .card
+        .card-header
+          %h2.mb-0= t :mailing_lists
         .card-body
           #mailing-lists
-            %h2= t :mailing_lists
             .row.mb-n3
               - group.groups_with_mailing_lists.each do |group|
                 .col-6.row.row-sm.mb-3.align-items-center
@@ -120,7 +121,14 @@
                   .col
                     .text-body.d-block= group.title
                     %small.d-block.mt-n1= link_to group.mailing_lists.first.value, "mailto:#{group.mailing_lists.first.value}"
-
+        - if can?(:manage_mailing_lists_for, group) || can?(:create_post, group)
+          .card-footer
+            - if can?(:manage_mailing_lists_for, group)
+              = link_to group_mailing_lists_path(group_id: group.id), class: 'btn btn-white btn-sm' do
+                E-Mail-Verteiler verwalten
+            - if can?(:create_post, group)
+              = link_to new_post_path(group_id: group.id), class: 'btn btn-white btn-sm' do
+                Nachricht schreiben
 
 
     - if group.profile_fields.where(type: "ProfileFields::BankAccount").any? || can?(:update, group)

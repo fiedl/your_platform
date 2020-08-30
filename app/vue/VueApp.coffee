@@ -133,6 +133,11 @@ jQuery(document).ready ->
   Vue.component('vue_new_event_form', NewEventForm)
   Vue.component('vue_event_attendees', EventAttendees)
 
-  vue_app = new Vue({el: "#vue-app"})
+  vue_app = new Vue
+    el: "#vue-app"
+    methods:
+      redirect_to: (url)->
+        window.location = url
+
   vue_apps.push(vue_app)
   App.vue_app = vue_app
