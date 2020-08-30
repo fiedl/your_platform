@@ -139,7 +139,7 @@ class GroupsController < ApplicationController
     permitted_keys += [:internal_token] if can? :change_internal_token, @group
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
     permitted_keys += [:body, :welcome_message] if can? :update, @group
-    permitted_keys += [:mailing_list_sender_filter] if can? :update, @group
+    permitted_keys += [:mailing_list_sender_filter, :sender_policy] if can? :update, @group
     permitted_keys += [:avatar, :avatar_background, :wappen, :zirkel] if can? :update, @group
   end
 

@@ -3,13 +3,18 @@
     .col-auto
       .page-title E-Mail-Verteiler
     .col-auto.ml-auto
-      .btn.btn-primary Neuen Verteiler einrichten
+      = link_to new_mailing_list_path, class: 'btn btn-primary' do
+        = plus_icon
+        Neuen Verteiler einrichten
 
 .card
+  .card-header
+    %input.filter_query.form-control{placeholder: "Filtern nach E-Mail-Adresse oder Gruppe"}
   .table-responsive
     %table.mailing_lists.card-table.table.table-vcenter
       %thead
         %tr
+          %th
           %th Verteiler-Adresse
           %th.d-sm-none.d-md-table-cell Empfänger-Gruppe
           %th.d-sm-none.d-md-table-cell= t :members
@@ -19,13 +24,19 @@
       %tbody
         - mailing_lists.each do |mailing_list|
           %tr
+            %td.w-1= group_avatar mailing_list.group
             %td= link_to mailing_list.email, "mailto:#{mailing_list.email}"
             %td.d-sm-none.d-md-table-cell= link_to mailing_list.group_name, mailing_list.group
-            %td.d-sm-none.d-md-table-cell= mailing_list.members_count
             %td.d-sm-none.d-md-table-cell
+              = group_icon
+              = mailing_list.members_count
+            %td.d-sm-none.d-md-table-cell.text-truncate
               - if mailing_list.sender_policy.present?
                 = t mailing_list.sender_policy, scope: 'sender_filter_short'
-            %td.d-sm-none.d-md-table-cell= mailing_list.posts_count
+                %span.has_tooltip{title: t(mailing_list.sender_policy, scope: 'sender_filter_long')}= info_icon
+            %td.d-sm-none.d-md-table-cell
+              = comments_icon
+              = mailing_list.posts_count
             %td
-              - if can? :manage, mailing_list
+              - if can? :manage_mailing_lists_for, mailing_list.group
                 = link_to t(:settings), group_mailing_lists_path(group_id: mailing_list.group.id), class: 'btn btn-sm btn-white'

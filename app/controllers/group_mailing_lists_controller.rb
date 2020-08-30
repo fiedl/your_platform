@@ -1,14 +1,14 @@
 class GroupMailingListsController < ApplicationController
-  skip_authorize_resource :only => :index
+
+  expose :group, -> { Group.find params[:group_id] if params[:group_id].present? }
+  expose :mailing_lists, -> { group.mailing_lists }
 
   def index
-    @group = Group.find params[:group_id]
-    authorize! :manage_mailing_lists_for, @group
+    authorize! :manage_mailing_lists_for, group
 
-    @email_address_fields = @group.profile_fields.where(type: 'ProfileFields::MailingListEmail')
-
-    set_current_navable @group
-    set_current_title "#{t(:manage_mailing_lists)}: #{@group.name}"
+    set_current_navable group
+    set_current_title "#{t(:mailing_lists)} #{group.name}"
+    set_current_tab :communication
   end
 
 end

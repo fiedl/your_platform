@@ -27,6 +27,15 @@ de:
     users_with_account:       Plattform-Zugang
     corporation_members:      Verbindung
     group_members:            Gruppe
-    group_offiers:            Gruppen-Amtsträger
+    group_officers:           Gruppen-Amtsträger
     officers:                 Alle Amtsträger
     global_officers:          Bundesamtsträger
+
+  sender_filter_long:
+    open:                     Jeder kann an diesen Verteiler schreiben.
+    users_with_account:       Mitglieder mit Plattform-Zugang können an diesen Verteiler schreiben.
+    corporation_members:      Mitglieder der Verbindung können an diesen Verteiler schreiben.
+    group_members:            Mitglieder der Gruppe können an diesen Verteiler schreiben.
+    group_officers:           Gruppen-Amtsträger können an diesen Verteiler schreiben.
+    officers:                 Alle Amtsträger können an diesen Verteiler schreiben.
+    global_officers:          Nur Bundesamtsträger können an diesen Verteiler schreiben.

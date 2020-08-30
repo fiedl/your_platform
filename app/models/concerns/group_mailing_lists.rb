@@ -24,11 +24,37 @@ concern :GroupMailingLists do
     %w(open users_with_account corporation_members group_members officers group_officers global_officers)
   end
 
+  def default_mailing_list_sender_filter
+    if self.kind_of? OfficerGroup
+      # Everyone can contact officers.
+      'open'
+    elsif self.corporation.present?
+      # If the group has an associated corporation, all members
+      # of the corporation can post.
+      'corporation_members'
+    else
+      # If this is a regular group, all group members can post.
+      'group_members'
+    end
+  end
+
+  def sender_policy
+    if mailing_list_sender_filter.present?
+      mailing_list_sender_filter
+    else
+      default_mailing_list_sender_filter
+    end
+  end
+  def sender_policy=(new_sender_policy)
+    raise "#{new_sender_policy} is invalid." unless new_sender_policy.in? mailing_list_sender_filter_settings
+    self.mailing_list_sender_filter = new_sender_policy
+  end
+
   # Checks whether the given user is allowed to send an email to the mailing lists
   # of this group.
   #
   def user_matches_mailing_list_sender_filter?(user)
-    case self.mailing_list_sender_filter.to_s
+    case sender_policy
     when 'open'
       true
     when 'users_with_account'
@@ -43,18 +69,6 @@ concern :GroupMailingLists do
       user && user.in?(self.officers)
     when 'global_officers'
       user && user.global_officer?
-    when '', nil  # (default setting)
-      if self.kind_of? OfficerGroup
-        # Everyone can contact officers.
-        true
-      elsif self.corporation.present?
-        # If the group has an associated corporation, all members
-        # of the corporation can post.
-        user && user.member_of?(self.corporation)
-      else
-        # If this is a regular group, all group members can post.
-        user && user.member_of?(self)
-      end
     else
       false
     end
