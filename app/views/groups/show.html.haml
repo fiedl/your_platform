@@ -54,6 +54,11 @@
               = mail_icon
               Nachricht schreiben
 
+        - if can? :destroy, group
+          .mt-2.mr-2.d-inline-block
+            = link_to group, method: 'delete', class: 'btn btn-white', data: {confirm: "Möchtest Du die gruppe \"#{group.name}\" wirklich unwiederbringlich löschen?"} do
+              = trash_icon
+              Gruppe löschen
 
   .col-lg-8
     .card
