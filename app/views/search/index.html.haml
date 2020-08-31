@@ -64,7 +64,7 @@
                   %span.avatar.mr-3.rounded{style: "background-image: url(#{user.avatar_url})"}
                   .lh-sm
                     %div= user.title
-                    .text-muted= user.search_hint
+                    .text-muted.small.mt-1{style: 'word-break: break-word'}= user.search_hint
 
       - if category == 'documents'
         - for document in documents.to_a
