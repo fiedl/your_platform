@@ -1,7 +1,7 @@
 = form_tag term_reports_path, method: 'get' do
   .row
     .col-md-3.p-0
-      = select_tag :group_id, options_for_select([[t(:corporation), nil]] + Corporation.all.active.order(:name).collect { |corporation| [corporation.title, corporation.id] }, group.try(:id)), class: 'form-select'
+      = select_tag :group_id, options_for_select([["Alle Verbindungen", nil]] + Corporation.all.active.order(:name).collect { |corporation| [corporation.title, corporation.id] }, group.try(:id)), class: 'form-select'
     .col-md-2.p-0
       = select_tag :year, options_for_select((1900..Time.zone.now.year).collect { |year| [year, year] }, term.try(:year) || params[:year]), class: 'form-select'
     .col-md-3.p-0

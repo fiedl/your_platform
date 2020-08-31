@@ -46,6 +46,7 @@ class TermReportsController < ApplicationController
     reports = TermReport.all
     reports = reports.where(group_id: group.id) if group
     reports = reports.where(term_id: terms.pluck(:id)) if terms && terms.any?
+    reports = reports.includes(group: :avatar_attachments)
     reports
   }
 
