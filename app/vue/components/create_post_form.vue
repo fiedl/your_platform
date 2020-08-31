@@ -194,6 +194,11 @@
 
 <style lang="sass">
   .create_post_form
+
+    .editor__content
+      /* to account for the buttons */
+      padding-right: 75px
+
     .ProseMirror
       outline: 0
 

@@ -235,6 +235,7 @@ export default {
 
   .with_placeholder
     position: relative
+    overflow: hidden
 
   .placeholder
     position: absolute
