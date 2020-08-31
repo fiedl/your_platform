@@ -21,7 +21,8 @@ module ProfileFields
 
     concerning :SubFields do
       included do
-        has_child_profile_fields :first_address_line, :second_address_line, :postal_code, :city, :region, :country_code
+        # has_child_profile_fields :first_address_line, :second_address_line, :postal_code, :city, :region, :country_code
+        has_child_profile_fields # TODO: Remove this after converting to free-text fields
 
         def street_with_number
           self.get_field(:first_address_line) || geo_information(:street)
@@ -84,67 +85,66 @@ module ProfileFields
           ).strip
         end
 
-        def original_value
-          read_attribute :value
+        def convert
+          convert_to_free_text_format
         end
 
-        def composed_value
-          if first_address_line.present?
-            composed_address
-          else
-            original_value
-          end
+        def convert_to_free_text_format
+          self.value = self.composed_address if self.composed_address.present?
+          # self.save
+          # self.children.destroy_all
         end
 
-        # First, we had all address fields store as free-text value.
-        # This method migrates this format to the new one where street, city etc.
-        # are stored as separate child profile fields.
+
+        # # First, we had all address fields store as free-text value.
+        # # This method migrates this format to the new one where street, city etc.
+        # # are stored as separate child profile fields.
+        # #
+        # def convert_to_format_with_separate_fields
+        #   # p "converting profile field #{id} of #{profileable.try(:class).try(:name)} #{profileable.try(:id)} ..."
         #
-        def convert_to_format_with_separate_fields
-          # p "converting profile field #{id} of #{profileable.try(:class).try(:name)} #{profileable.try(:id)} ..."
-
-          old_value = self.value
-
-          if self.geo_information(:street).present?
-            self.first_address_line = self.geo_information(:street)
-            self.city = self.geo_information(:city)
-            self.postal_code = self.geo_information(:postal_code)
-            self.country_code = self.geo_information(:country_code)
-          else
-            # If we haven't processed this field already.
-            #
-            unless self.get_field(:first_address_line).present?
-              # If we can't extract the street name, copy the whole address into
-              # the second address line field. Otherwise, we'd lose this information
-              # in the ui.
-              #
-              self.second_address_line = self.read_attribute(:value)
-              self.add_flag :needs_review
-            end
-          end
-
-          # For foreign addresses, better include the state/region field, since
-          # we do not know if this field is needed there.
-          #
-          if self.geo_information(:country_code).present? && self.geo_information(:country_code).try(:downcase) != default_country_code.try(:downcase)
-            self.region = self.geo_information(:state)
-          end
-
-          self.save
-
-          if old_value && self.value && [old_value, self.value].collect { |v|
-              v.gsub("traße", "tr.").gsub("\n", "").gsub(",", "").gsub(" ", "")
-            }.uniq.count == 2
-            # The old and the new value differ. This could simply mean that
-            # "Frankreich" has been replaced by "France". But it could also mean
-            # that the address is not readable anymore. In any case, it should
-            # be checked manually.
-            #
-            self.add_flag :needs_review
-          end
-
-          return self
-        end
+        #   old_value = self.value
+        #
+        #   if self.geo_information(:street).present?
+        #     self.first_address_line = self.geo_information(:street)
+        #     self.city = self.geo_information(:city)
+        #     self.postal_code = self.geo_information(:postal_code)
+        #     self.country_code = self.geo_information(:country_code)
+        #   else
+        #     # If we haven't processed this field already.
+        #     #
+        #     unless self.get_field(:first_address_line).present?
+        #       # If we can't extract the street name, copy the whole address into
+        #       # the second address line field. Otherwise, we'd lose this information
+        #       # in the ui.
+        #       #
+        #       self.second_address_line = self.read_attribute(:value)
+        #       self.add_flag :needs_review
+        #     end
+        #   end
+        #
+        #   # For foreign addresses, better include the state/region field, since
+        #   # we do not know if this field is needed there.
+        #   #
+        #   if self.geo_information(:country_code).present? && self.geo_information(:country_code).try(:downcase) != default_country_code.try(:downcase)
+        #     self.region = self.geo_information(:state)
+        #   end
+        #
+        #   self.save
+        #
+        #   if old_value && self.value && [old_value, self.value].collect { |v|
+        #       v.gsub("traße", "tr.").gsub("\n", "").gsub(",", "").gsub(" ", "")
+        #     }.uniq.count == 2
+        #     # The old and the new value differ. This could simply mean that
+        #     # "Frankreich" has been replaced by "France". But it could also mean
+        #     # that the address is not readable anymore. In any case, it should
+        #     # be checked manually.
+        #     #
+        #     self.add_flag :needs_review
+        #   end
+        #
+        #   return self
+        # end
       end
     end
 
