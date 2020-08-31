@@ -144,8 +144,8 @@
                   Post erstellen
               .dropdown-divider
               %li
-                = link_to posts_path, class: "dropdown-item #{'active' if controller_name == 'posts' && action_name == 'index'}" do
-                  Posts
+                = link_to posts_path, class: "dropdown-item #{'active' if controller_name == 'posts' && action_name == 'index' && !params[:group_id]}" do
+                  Posteingang
               %li
                 = link_to mailing_lists_path, class: "dropdown-item #{'active' if controller_name == 'mailing_lists'}" do
                   = t :mailing_lists
