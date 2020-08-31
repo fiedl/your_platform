@@ -23,6 +23,9 @@
           Derzeit sind hier keine Räume eingetragen.
   .col-md-4
     = render layout: 'groups/profile_card', locals: {group: institution} do
+      .text-center.pb-4.px-4
+        = editable institution, :body, editable: can?(:update, institution), type: 'wysiwyg'
+
       - if postal_address.present? or phone.present?
         .card-body.no-border.text-center
           - if postal_address.present?
