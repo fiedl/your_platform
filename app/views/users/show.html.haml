@@ -19,9 +19,9 @@
         %h3 Verwaltung
         - if can? :manage, user
           %span.tool.profile_fields_index
-            = link_to t(:profile_fields), profile_fields_path(user_id: user.id), class: 'btn btn-outline-secondary'
+            = link_to t(:profile_fields), profile_fields_path(user_id: user.id), class: 'btn btn-white'
         - if can? :manage, user
-          = link_to t(:show_group_memberships), user_memberships_path(user_id: user.id), class: 'btn btn-outline-secondary'
+          = link_to "Gruppen-Mitgliedschaften", user_memberships_path(user_id: user.id), class: 'btn btn-white'
         - if can? :renew_cache, user
           %span.tool.renew_cache= renew_cache_button(user)
 
