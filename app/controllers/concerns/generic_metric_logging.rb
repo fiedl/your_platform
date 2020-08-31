@@ -1,9 +1,6 @@
 concern :GenericMetricLogging do
 
   included do
-    helper_method :metric_logger
-
-    # before_action :log_generic_metric_event
     # after_action :log_request
     after_action  :log_activity
   end
@@ -32,31 +29,11 @@ concern :GenericMetricLogging do
     end
   end
 
-  # This logs the event using a metric storage.
-  # Here, we use fnordmetric. The metrics can be viewed via
-  #
-  #   http://localhost:4242
-  #
-  # when the deamon is started via
-  #
-  #   bundle exec foreman start fnordmetric
-  #
-  def log_generic_metric_event
-    unless read_only_mode?
-      type = "#{self.class.name.underscore}_#{action_name}"  # e.g. pages_controller_show
-      metric_logger.log_event( { id: params[:id] }, type: type)
-      metric_logger.log_event( { request_type: type }, type: :generic_request)
-    end
-  end
-  def metric_logger
-    @metric_logger ||= MetricLogger.new(current_user: current_user, session_id: session[:session_id])
-  end
-
 
   # Generic Activity Logger
   #
   def log_activity
-    if not read_only_mode? and not action_name.in?(["index", "show", "download", "autocomplete_title", "preview", "description"]) and not params['controller'].in?(['sessions', 'devise/sessions', 'api/v1/sessions', 'profile_fields', 'user_accounts'])
+    if not read_only_mode? and not action_name.in?(["new", "index", "show", "download", "autocomplete_title", "preview", "description"]) and not params['controller'].in?(['sessions', 'devise/sessions', 'api/v1/sessions', 'profile_fields', 'user_accounts'])
       begin
         type = self.class.name.gsub("Controller", "").singularize
         id = params[:id]

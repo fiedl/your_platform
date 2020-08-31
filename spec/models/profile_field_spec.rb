@@ -40,9 +40,6 @@ describe ProfileField do
     it { should respond_to( :children ) }
   end
 
-  it { should respond_to( :display_html ) }
-
-
 end
 
 
@@ -115,13 +112,6 @@ describe ProfileFields::Address do
                                                      value: "Pariser Platz 1\n 10117 Berlin" )
   end
   subject { @address_field }
-
-  describe "#display_html" do
-    subject { @address_field.display_html }
-    it "should have a line-break in it" do
-      subject.should include( "<br" )
-    end
-  end
 
   describe "#geo_location" do
     subject { @address_field.geo_location }
@@ -404,16 +394,6 @@ describe ProfileFields::BankAccount do
 
 end
 
-# Description Field
-# ==========================================================================================
-
-describe ProfileFields::Description do
-  before { @description_field = ProfileFields::Description.create( label: "Heraldic Animal",
-                                                                   value: "The heraldic animal of the organisation is a fox." ) }
-  subject { @description_field }
-  its( :display_html ) { should include( @description_field.value ) }
-end
-
 
 # Phone Number Field
 # ==========================================================================================
@@ -439,17 +419,6 @@ describe ProfileFields::Phone do
 
 end
 
-
-# Homepage Field
-# ==========================================================================================
-
-describe ProfileFields::Homepage do
-
-  subject { ProfileFields::Homepage.create( value: "example.com" ) }
-
-  its( :display_html ) { should == "<a href=\"http://example.com\">http://example.com</a>" }
-
-end
 
 
 # Date Field

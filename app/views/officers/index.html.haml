@@ -1,10 +1,33 @@
-= render partial: 'groups/tabs', locals: {active: 'officers'} if @group
+.page-header
+  .row.align-itens-center
+    .col-auto
+      - unless group.title.downcase.include? t(:officers).downcase
+        .page-pretitle= t :officers
+      .page-title= group.title
 
-= render partial: 'officers_overview'
+.row.row-deck.row-cards
+  - for officer_group in officer_groups
+    - if not officer_group.child_groups.any?
+      .col-md-6.col-lg-4.filterable
+        = officer_card officer_group
+    - elsif officer_group.child_groups.any?
+      .col-md-6.col-lg-4.filterable
+        .card
+          .card-body
+            .row.row-sm
+              .col-auto
+                = group_avatar officer_group, class: "avatar-md"
+              .col
+                %h3.mb-0= editable officer_group, :title
+                - for sub_officer_group in officer_group.child_groups
+                  - for officer in sub_officer_group.members
+                    .row.row-sm.align-items-center.mt-2
+                      .col-auto
+                        = user_avatar officer, class: "avatar-sm"
+                      .col
+                        %h4.mb-0= link_to officer.title, officer
+                        %small.text-muted= sub_officer_group.name
+          - if can? :create_post, officer_group
+            .card-footer
+              = link_to "Nachricht schreiben", new_group_post_path(group_id: officer_group.id), class: 'btn btn-white btn-sm'
 
-%h1.officers= @title
-%div.officers
-  = render partial: 'officer_groups_by_scope_table.html'
-
-- if can? :create_officers_group_for, @group
-  = render partial: 'history_notice'

@@ -9,13 +9,15 @@ class Attachment < ApplicationRecord
   before_destroy :remove_file!
 
   scope :logos, -> { where('title like ?', "%logo%") }
+  scope :documents, -> { where('content_type like ? or content_type like?', "application/pdf", "%document%") }
 
   include Flags
   include HasAuthor
   # include AttachmentSearch  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+  include DocumentTags
 
   def title
-    super || filename.gsub("_", " ")
+    super || filename.try(:gsub, "_", " ")
   end
 
   def scope
@@ -23,6 +25,16 @@ class Attachment < ApplicationRecord
   end
   def scope_title
     scope.try(:title)
+  end
+
+  def groups
+    if parent.kind_of? Post
+      parent.parent_groups
+    elsif parent.kind_of? Page
+      [parent.group]
+    else
+      []
+    end
   end
 
   def thumb_url
@@ -39,18 +51,18 @@ class Attachment < ApplicationRecord
     AppVersion.root_url + medium_path if medium_path.present?
   end
   def medium_path
-    file.url(:medium) if has_type? 'image'
+    file.url(:medium) if has_type?( "image" ) or has_type?( "pdf" )
   end
 
   def big_url
     AppVersion.root_url + big_path if big_path.present?
   end
   def big_path
-    file.url(:big) if has_type? 'image'
+    file.url(:big) if has_type?( "image" ) or has_type?( "pdf" )
   end
 
-  def has_type?( type )
-    self.content_type.include? type
+  def has_type?(type)
+    self.content_type.to_s.include? type
   end
 
   def filename

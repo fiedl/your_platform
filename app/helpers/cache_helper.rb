@@ -5,8 +5,8 @@ module CacheHelper
     link = group_renew_cache_path(object) if object.kind_of? Group
     link = page_renew_cache_path(object) if object.kind_of? Page
     link = event_renew_cache_path(object) if object.kind_of? Event
-    link_to link, method: 'post', title: t(:renew_cache), class: 'btn btn-outline-secondary' do
-      fa_icon(:refresh)
+    link_to link, method: 'post', title: t(:renew_cache), class: 'btn btn-white' do
+      fa_icon(:refresh) + t(:renew_cache)
     end
   end
 

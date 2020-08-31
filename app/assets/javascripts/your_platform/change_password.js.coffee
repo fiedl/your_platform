@@ -9,10 +9,10 @@ previous_password_present = ->
 
 password_and_confirmation_match = ->
   if $('#password').val() == $('#user_account_password_confirmation').val()
-    $('#user_account_password_confirmation').addClass('success')
+    $('.password-confirm-success').show()
     true
   else
-    $('#user_account_password_confirmation').removeClass('success')
+    $('.password-confirm-success').hide()
     false
 
 demo_passwords = ->
@@ -51,22 +51,16 @@ account_aggreement_checked = ->
 check_requirements = ->
   if previous_password_present() && password_is_no_demo_password() && password_is_strong_enough() && password_and_confirmation_match() && account_aggreement_checked()
     $('.requirements_not_met_yet').hide()
-    $('.submit_confirmation').show()
+    $('.submit_confirmation .btn').prop('disabled', false)
   else
     $('.requirements_not_met_yet').show()
-    $('.submit_confirmation').hide()
+    $('.submit_confirmation .btn').prop('disabled', true)
 
 $(document).ready ->
   check_requirements()
+  password_and_confirmation_match()
 
-$(document).on 'change', 'input#user_account_agreement', ->
-  check_requirements()
-  if $('input#user_account_agreement').prop('checked') == true
-    $('.thanks').removeClass('hidden').show()
-  else
-    $('.thanks').addClass('hidden')
-
-$(document).on 'keyup change', '#user_account_password_confirmation, #password', ->
+$(document).on 'keyup change', '#user_account_password_confirmation, #password, #user_account_agreement', ->
   check_requirements()
 
 $(document).on 'mouseover', '.pro_tipp_trigger', ->

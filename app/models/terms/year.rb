@@ -11,4 +11,12 @@ class Terms::Year < Term
     year.to_s
   end
 
+  def next
+    Terms::Year.find_or_create_by year: year + 1
+  end
+
+  def previous
+    Terms::Year.find_or_create_by year: year - 1
+  end
+
 end

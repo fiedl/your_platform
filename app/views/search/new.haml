@@ -1,0 +1,19 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Suche auf der Plattform
+
+.card
+  .card-header
+    = form_tag search_path, :method => 'get', role: 'search', class: 'w-100' do
+      .input-group
+        = search_field_tag :query, params[:query], :class => "search-query form-control", placeholder: "Suche nach Bundesbrüdern, Verbindungen, Dokumenten, Veranstaltungen oder Posts", :autocomplete => 'off', autofocus: true
+        = submit_tag "Suchen", class: "btn btn-primary"
+  .card-body
+    .text-center
+      .h3 Beispiel-Suchen:
+      - for example in example_queries
+        .mb-2
+          = surround "\"" do
+            = link_to example[:query], search_path(query: example[:query], category: example[:category])
+          %span.ml-3.text-muted= example[:description]

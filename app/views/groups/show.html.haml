@@ -1,1 +1,166 @@
-= render @group
+.row
+  .col-lg-4
+    = render layout: 'groups/profile_card', locals: {group: group} do
+      .text-center.pb-4.px-4
+        = editable group, :body, editable: can?(:update, group), type: 'wysiwyg'
+
+    - chart = group.number_of_members_chart
+    %vue-number-of-members-chart{height: "50px",
+      ':sub_charts': chart.sub_charts.to_json,
+      group_name: chart.group.name,
+      ':years': chart.years.to_json,
+      }
+      .card-body
+        .row.align-items.center
+          - if group.kind_of? Corporation
+            - ["Burschen", "Fuxen", "Philister", "Alte Herren"].each do |status|
+              - if status_group = group.sub_group(status)
+                .col-auto
+                  = link_to status_group.name, group_members_path(status_group)
+                  = status_group.members.count
+      .card-footer
+        .mt-2.mr-2.d-inline-block
+          = link_to current_semester_calendar_path(group_id: (group.corporation || group)), class: 'btn btn-white' do
+            = calendar_icon
+            Semesterprogramm anzeigen
+        .mt-2.mr-2.d-inline-block
+          = link_to group_members_path(group), class: "btn btn-white" do
+            = group_icon
+            Mitgliederliste anzeigen
+        - if group.respond_to? :term_reports
+          .mt-2.mr-2.d-inline-block
+            = link_to term_report_path(group.term_reports.last), class: "btn btn-white" do
+              = list_icon
+              Semesterstatistik anzeigen
+
+        - if group.kind_of? Corporation
+          .mt-2.mr-2.d-inline-block
+            = link_to corporation_accommodations_path(corporation_id: group.id), class: "btn btn-white" do
+              = home_icon
+              Hausbewohner anzeigen
+        - if group.public_home_page.present?
+          .mt-2.mr-2.d-inline-block
+            = link_to group_website_path(group_id: group), class: 'btn btn-white' do
+              = website_icon
+              Internetauftritt anzeigen
+        - elsif can? :update, group
+          .mt-2.mr-2.d-inline-block
+            = link_to group_website_path(group_id: group), method: 'post', class: 'btn btn-white', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
+              = website_icon
+              Internetauftritt erstellen
+        - if can? :create_post, group
+          .mt-2.mr-2.d-inline-block
+            = link_to new_group_post_path(group_id: group.id), class: 'btn btn-white' do
+              = mail_icon
+              Nachricht schreiben
+
+        - if can? :destroy, group
+          .mt-2.mr-2.d-inline-block
+            = link_to group, method: 'delete', class: 'btn btn-white', data: {confirm: "Möchtest Du die gruppe \"#{group.name}\" wirklich unwiederbringlich löschen?"} do
+              = trash_icon
+              Gruppe löschen
+
+  .col-lg-8
+    .card
+      .card-body
+        #officers
+          %h2
+            = group.kind_of?(Corporation) ? "Chargierte und Amtsträger" : "Amtsträger"
+          .row.mb-n3
+            - officer_groups.each do |officer_group|
+              - officer_group.members.each do |officer|
+                .col-6.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = link_to officer do
+                      = user_avatar(officer)
+                  .col
+                    .text-body.d-block= link_to officer.title, officer
+                    %small.d-block.mt-n1.text-muted= editable officer_group, :title
+                    - if officer.phone
+                      %small.d-block.mt-n1.text-muted= link_to officer.phone, "tel:#{officer.phone.gsub(' ', '')}", class: 'text-muted'
+                    - if email = officer_group.email || officer.email
+                      %small.d-block.mt-n1.text-muted= mail_to email, email, class: 'text-muted'
+      .card-footer
+        .button-list
+          = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
+            Alle Amtsträger anzeigen
+          - if can? :update, group
+            = link_to group_officers_path(group_id: group.id), class: "btn btn-white btn-sm" do
+              Amtsträger ändern
+          - if group.respond_to?(:chargen) && can?(:create_post, group.chargen)
+            = link_to new_group_post_path(group_id: group.chargen.id), class: 'btn btn-white btn-sm' do
+              Nachricht an Chargen schreiben
+          - elsif group.officers_parent.present? && can?(:create_post, group.officers_parent)
+            = link_to new_group_post_path(group_id: group.officers_parent.id), class: 'btn btn-white btn-sm' do
+              Nachricht an Amtsträger schreiben
+
+    - if group.profile_fields.where(type: ["ProfileFields::Address", "ProfileFields::Phone", "ProfileFields::Email", "ProfileFields::Homepage"]).any? || can?(:update, group)
+      .card
+        .card-body
+          #contact_information
+            %vue-edit-box
+              %h2= t :contact_information
+              .row
+                .col-md-4
+                  = editable_profile_fields profileable: group, types: ["ProfileFields::Address"], new_profile_fields: [{label: "Anschrift", type: "ProfileFields::Address"}]
+                .col-md-4
+                  = editable_profile_fields profileable: group, types: ["ProfileFields::Phone"], new_profile_fields: [{label: "Telefon", type: "ProfileFields::Phone"}, {label: "Fax", type: "ProfileFields::Phone"}]
+                .col-md-4
+                  = editable_profile_fields profileable: group, types: ["ProfileFields::Email", "ProfileFields::Homepage"], new_profile_fields: [{label: "E-Mail", type: "ProfileFields::Email"}, {label: "Website", type: "ProfileFields::Homepage"}, {label: "Facebook", type: "ProfileFields::Homepage"}, {label: "Instagram", type: "ProfileFields::Homepage"}, {label: "YouTube", type: "ProfileFields::Homepage"}]
+
+                  - if group.kind_of?(Corporation) && group.chargen_mailing_list
+                    %vue-profile-field{':initial-profile-field': group.chargen_mailing_list.as_json.merge({label: "E-Mail Chargen"}).to_json}
+
+    - if group.groups_with_mailing_lists.any? || can?(:manage_mailing_lists_for, group)
+      .card
+        .card-header
+          %h2.mb-0= t :mailing_lists
+        .card-body
+          #mailing-lists
+            .row.mb-n3
+              - group.groups_with_mailing_lists.each do |group|
+                .col-6.row.row-sm.mb-3.align-items-center
+                  .col-auto
+                    = mail_icon
+                    -#= user_avatar(group)
+                  .col
+                    .text-body.d-block= group.title
+                    %small.d-block.mt-n1= link_to group.mailing_lists.first.value, "mailto:#{group.mailing_lists.first.value}"
+        - if can?(:manage_mailing_lists_for, group) || can?(:create_post, group)
+          .card-footer
+            - if can?(:manage_mailing_lists_for, group)
+              = link_to group_mailing_lists_path(group_id: group.id), class: 'btn btn-white btn-sm' do
+                E-Mail-Verteiler verwalten
+            - if can?(:create_post, group)
+              = link_to new_post_path(group_id: group.id), class: 'btn btn-white btn-sm' do
+                Nachricht schreiben
+
+
+    - if group.profile_fields.where(type: "ProfileFields::BankAccount").any? || can?(:update, group)
+      .card
+        .card-body
+          #bank
+            %vue-edit-box
+              %h2= t :bank_account_information
+              = editable_profile_fields profileable: group, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
+
+    - if group.kind_of? Corporation
+      .card
+        .card-header
+          %h2.mb-0 Heraldik
+        .card-body
+          .row
+            .col-md-4.mb-3
+              %h4 Wappen
+              %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+            .col-md-4.mb-3
+              %h4 Zirkel
+              %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+
+    - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
+      .card
+        .card-body
+          #description
+            %vue-edit-box
+              %h2 Hintergrund-Infos
+              = editable_profile_fields profileable: group, types: ["ProfileFields::Description"], new_profile_fields: [{label: "Beschreibung", type: "ProfileFields::Description"}]

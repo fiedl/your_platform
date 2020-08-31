@@ -9,7 +9,7 @@ $(document).ready ->
     url = element.data('url')
     $.ajax {
       url: url,
-      data: {fast_lane: true},
+      data: {},
       success: (result)->
         element.show()
         content_container = $(result).find('#content #content_area .row.box_configuration')

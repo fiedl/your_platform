@@ -5,18 +5,6 @@ module CorporateVitaHelper
     }
   end
 
-  def status_membership_valid_from_best_in_place( membership )
-    best_in_place( membership,
-                   :valid_from_localized_date,  # type: :date,
-                   url: membership_path( id: membership.id,
-                                                     controller: :memberships,
-                                                     action: :update,
-                                                     format: :json
-                                                     ),
-                   :class => "status_group_date_of_joining"
-                   )
-  end
-
   def status_membership_promoted_on_event( membership )
     event = membership.event
     best_in_place( membership,

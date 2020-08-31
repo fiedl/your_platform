@@ -4,80 +4,26 @@ class GroupsController < ApplicationController
   authorize_resource :group, except: [:create, :test_welcome_message]
   respond_to :html, :json, :csv, :ics
 
+  expose :user, -> { User.find params[:user_id] if params[:user_id].present? }
+  expose :parent, -> { user }
+  expose :groups, -> { parent.groups.regular }
+
   def index
-    @group = @parent_group = Group.find(params[:group_id]) if params[:group_id]
-    @groups = (@parent_group.try(:child_groups) || Group.all).includes(:flags)
+    raise 'no parent given' unless parent
+    authorize! :read, parent
 
-    # TODO: Authorize
-
-    set_current_navable(@parent_group || Page.intranet_root)
-    set_current_title(@parent_group.try(:title) || t(:groups))
-    set_current_activity :is_looking_at_group, @parent_group if @parent_group
+    set_current_navable parent
+    set_current_title "Gruppen von #{parent.title}"
+    set_current_tab :network
   end
 
+  expose :group
+  expose :officer_groups, -> { group.important_officer_groups.any? ? group.important_officer_groups : group.officers_groups_of_self_and_descendant_groups }
+
   def show
-    if @group
-      if request.format.html?
-
-        if @group.kind_of? Groups::GroupOfGroups
-          redirect_to groups_group_of_groups_path(@group)
-          return
-        else
-          redirect_to_group_tab
-          return
-        end
-
-      elsif request.format.json?
-        Rack::MiniProfiler.step('groups#show controller: fetch memberships') do
-          # If this is a collection group, e.g. the corporations_parent group,
-          # do not list the single members.
-          #
-          if @group.group_of_groups?
-            @memberships = []
-            @child_groups = @group.child_groups - [@group.find_officers_parent_group]
-
-          # This is a regular group.
-          #
-          else
-            @memberships = @group.memberships_for_member_list
-          end
-        end
-
-        # The user might provide a `valid_from` option as constraint on the validity range.
-        #
-        if params[:valid_from].present?
-          @memberships = @memberships.started_after(params[:valid_from].to_datetime)
-        end
-
-        Rack::MiniProfiler.step('groups#show controller: cancan') do
-          # Make sure only members that are allowed to be seen are in this array!
-          #
-          allowed_member_ids = @group.members.accessible_by(current_ability).pluck(:id)
-          allowed_memberships = @group.memberships.where(descendant_id: allowed_member_ids)
-          @memberships = @memberships & allowed_memberships
-        end
-
-        Rack::MiniProfiler.step('groups#show controller: fetch members') do
-          # Fill also the members into a separate variable.
-          #
-          @members = @group.members.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)})
-
-          # For some special groups, the first method of retreiving the members does not work.
-          # Fallback to these slower methods:
-          @members = User.includes(:links_as_child).where(dag_links: {id: @memberships.map(&:id)}) if @members.empty?
-          @members = @memberships.collect { |membership| membership.user } if @members.empty?
-        end
-
-        # for performance reasons deactivated for the moment.
-        # fill_map_address_fields
-        @large_map_address_fields = []
-
-        # @posts = @group.posts.order("sent_at DESC").limit(10)
-
-        @new_membership = @group.build_membership
-      end
-    end
-
+    set_current_title group.title
+    set_current_navable group
+    set_current_tab :contacts
 
     # Log exports.
     #
@@ -90,12 +36,8 @@ class GroupsController < ApplicationController
       )
     end
 
-
     respond_to do |format|
-      format.json do
-        authorize! :read, @group
-        render json: @group.serializable_hash.merge({member_count: @memberships.try(:count)})
-      end
+      format.html
       format.pdf do
         authorize! :read, @group
         authorize! :export_member_list, @group
@@ -123,19 +65,11 @@ class GroupsController < ApplicationController
         send_data(@group.members_to_pdf(options), filename: "#{file_title}.pdf", type: 'application/pdf', disposition: 'inline')
       end
     end
-
-    metric_logger.log_event @group.try(:attributes), type: :show_group
   end
 
   def update
-    if group_params[:body]
-      params[:group][:body] = html2markdown params[:group][:body]
-    end
-
     @group.update_attributes!(group_params)
-    respond_to do |format|
-      format.json { respond_with_bip @group.reload }
-    end
+    render json: {}, status: :ok
   end
 
   def create
@@ -158,16 +92,16 @@ class GroupsController < ApplicationController
     end
   end
 
-  # POST groups/123/test_welcome_message
-  def test_welcome_message
-    @group = Group.find params[:group_id]
-    authorize! :update, @group
-    notification = @group.send_welcome_message_to current_user
-    Notification.deliver_for_user current_user
-    respond_to do |format|
-      format.json { render json: notification }
-    end
-  end
+  # # POST groups/123/test_welcome_message
+  # def test_welcome_message
+  #   @group = Group.find params[:group_id]
+  #   authorize! :update, @group
+  #   notification = @group.send_welcome_message_to current_user
+  #   Notification.deliver_for_user current_user
+  #   respond_to do |format|
+  #     format.json { render json: notification }
+  #   end
+  # end
 
   private
 
@@ -205,7 +139,8 @@ class GroupsController < ApplicationController
     permitted_keys += [:internal_token] if can? :change_internal_token, @group
     permitted_keys += [:direct_members_titles_string] if can? :update_memberships, @group
     permitted_keys += [:body, :welcome_message] if can? :update, @group
-    permitted_keys += [:mailing_list_sender_filter] if can? :update, @group
+    permitted_keys += [:mailing_list_sender_filter, :sender_policy] if can? :update, @group
+    permitted_keys += [:avatar, :avatar_background, :wappen, :zirkel] if can? :update, @group
   end
 
   def fill_map_address_fields

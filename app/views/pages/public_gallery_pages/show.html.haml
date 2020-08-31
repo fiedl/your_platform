@@ -1,0 +1,16 @@
+.row
+  .col-md-8
+    .card
+      .card-body
+        %vue-edit-box
+          = editable page, :content, type: 'wysiwyg', class: 'form-control'
+      .card-body
+        %vue-page-pictures{':page': page.as_json(include: :images).to_json, ':editable': can?(:update, page).to_json}
+
+    = render partial: 'pages/public_pages/posts'
+
+  .col-md-4
+    = render partial: 'pages/public_pages/profile_card'
+    = render partial: 'pages/public_pages/events_card'
+    = render partial: 'pages/public_pages/officers_card'
+

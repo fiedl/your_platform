@@ -1,0 +1,4 @@
+.row.row-deck.row-cards
+  - current_user.corporations.each do |corporation|
+    .col-sm.col-xs-12
+      = render Charts::NumberOfMembers::Corporation.new(group: corporation)

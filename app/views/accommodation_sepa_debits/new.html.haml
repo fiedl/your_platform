@@ -1,0 +1,14 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle
+        Wohnheim
+        = corporation.title
+      .page-title Miet-Einzug
+
+= form_tag corporation_accommodation_sepa_debits_path, method: 'post', id: 'sepa_debit_form' do
+  %vue_accommodation_sepa_debit_form{':rooms': rooms_json,
+    ':corporation': corporation.to_json,
+    return_url: corporation_accommodations_path(corporation_id: corporation.id),
+    ':creditor_identifier': creditor_identifier.to_json}
+

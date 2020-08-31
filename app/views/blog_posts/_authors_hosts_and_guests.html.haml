@@ -17,13 +17,13 @@
     - if blog_post.hosts.any?
       %h4= t (blog_post.hosts.count > 1 ? :hosts : :host)
       - blog_post.hosts.each do |user|
-        %p= link_to_user_with_avatar(user, user_posts_path(user_id: user.id))
+        %p= link_to_user_with_avatar(user, user_blog_posts_path(user_id: user.id))
 
       - if blog_post.guests.any?
         %h4= t (blog_post.guests.count > 1 ? :guests : :guest)
         - blog_post.guests.each do |user|
-          %p= link_to_user_with_avatar(user, user_posts_path(user_id: user.id))
+          %p= link_to_user_with_avatar(user, user_blog_posts_path(user_id: user.id))
 
     - elsif blog_post.author
       %h4= t :author
-      %p= link_to_user_with_avatar(blog_post.author, user_posts_path(user_id: blog_post.author.id))
+      %p= link_to_user_with_avatar(blog_post.author, user_blog_posts_path(user_id: blog_post.author.id))

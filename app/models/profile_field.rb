@@ -6,6 +6,9 @@ class ProfileField < ApplicationRecord
   include ProfileFieldProfileable
   include ProfileFieldComposedValue
 
+  scope :ich_suche, -> { where(type: "ProfileFields::About").where("label like ?", "%ich suche%").where("length(value) > 10") }
+  scope :ich_biete, -> { where(type: "ProfileFields::About").where("label like ? or label like ?", "%ich biete%", "%i_offer%").where("length(value) > 10") }
+
   # Only allow the type column to be an existing class name.
   #
   validates_each :type do |record, attr, value|
@@ -53,25 +56,12 @@ class ProfileField < ApplicationRecord
   def as_json(options = {})
     super.merge({
       type: type,
-      key: key
+      key: key,
+      flags: flags,
+      children: children
     })
   end
 
-
-  # Often, profile_fields are to be displayed in a certain manner on a HTML page.
-  # This method returns the profile_field's value as HTML code in the way
-  # the profile_field should be displayed.
-  #
-  # Override this in the inheriting classes in ordner to modify the html output
-  # of the value.
-  #
-  def display_html
-    if self.value.try(:include?, "\n")
-      BestInPlace::ViewHelpers.markup(self.value)
-    else
-      self.value
-    end
-  end
 
   # This method returns the key, i.e. the un-translated label,
   # which is needed for child profile fields.

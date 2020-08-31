@@ -9,7 +9,7 @@ describe SemesterCalendar do
     @event_in_another_term = Event.create name: "Christmas Party", start_at: Time.zone.now.change(month: 12)
     @corporation << @event
     @corporation << @event_in_another_term
-    @semester_calendar.reload.events(true)
+    @semester_calendar.reload.events
   end
 
   describe "#events" do
@@ -29,33 +29,6 @@ describe SemesterCalendar do
       end
       it "should include the events of subgroups" do
         subject.should include @sub_event
-      end
-    end
-  end
-
-  describe "#update" do
-    describe "when changing event attributes" do
-      subject { @semester_calendar.update! events_attributes: {0 => {id: @event.id, name: "Special BBQ"}} }
-      it "should update the changed attribute on the event" do
-        subject
-        @event.reload.name.should == "Special BBQ"
-      end
-      it "should not change the other attributes" do
-        @old_start_at = @event.start_at
-        subject
-        @event.reload.start_at.to_i.should == @old_start_at.to_i
-      end
-    end
-
-    describe "when adding a new event's attributes" do
-      subject { @semester_calendar.update! events_attributes: {0 => {name: "New event"}} }
-      it "should create the new event" do
-        subject
-        Event.last.name.should == "New event"
-      end
-      it "should add the new event to the calendars corporation" do
-        subject
-        Event.last.group.should == @corporation
       end
     end
   end

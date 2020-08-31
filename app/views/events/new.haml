@@ -1,0 +1,12 @@
+.page-header
+  .row.align-itens-center
+    .col
+      .page-title= current_title
+    .col-auto
+      - if can? :update, current_user.primary_corporation
+        .ml-auto
+          = link_to current_semester_calendar_path(current_user.primary_corporation), class: "btn btn-white" do
+            = plus_icon
+            Ganzes Semesterprogramm eintragen
+
+= vue_new_event_form

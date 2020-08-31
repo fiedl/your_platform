@@ -39,8 +39,9 @@ class MembershipsController < ApplicationController
   end
 
   def update
-    membership.update_attributes! membership_params
-    respond_with_bip membership, param: :membership
+    membership.update! membership_params
+
+    render json: membership, status: :ok
   end
 
   def destroy

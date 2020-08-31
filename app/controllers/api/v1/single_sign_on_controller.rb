@@ -24,7 +24,7 @@ module Api::V1
       sso.name = current_user.title
       sso.username = current_user.alias
       sso.username = current_user.email unless sso.username.present?
-      sso.avatar_url = view_context.user_avatar_url(current_user)
+      sso.avatar_url = current_user.avatar_url
 
       #sso.avatar_force_update = true
       sso.admin = current_user.global_admin?

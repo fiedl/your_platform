@@ -3,6 +3,8 @@ require 'spec_helper'
 describe UserBackup do
   before do
     @user = create :user_with_account, :with_profile_fields, :with_date_of_birth, :with_address,  :with_bank_account, :with_corporate_vita, email: "johnny@example.com"
+    @user.save
+    @name = @user.name
     @email = @user.email
     @postal_address = @user.postal_address
     @postal_address_flag = @user.address_fields.first.postal_address?
@@ -141,6 +143,32 @@ describe UserBackup do
 
     it "should restore the account's auth token" do
       @user.account.auth_token.should == @auth_token
+    end
+  end
+
+  describe "#restore_minimal_profile" do
+    subject do
+      @user.backup_and_remove_profile(confirm: "yes")
+      @user = User.find(@user.id)
+      @user.restore_minimal_profile
+      @user = User.find(@user.id)
+    end
+    before { subject }
+
+    it "should restore the name" do
+      @user.name.should == @name
+    end
+
+    it "should restore the date of birth" do
+      @user.date_of_birth.should == @date_of_birth
+    end
+
+    it "should not restore the email address" do
+      @user.email.should be_nil
+    end
+
+    it "should not restore the postal address" do
+      @user.postal_address.should be_nil
     end
   end
 end

@@ -5,6 +5,7 @@
 # and in the `Group` and its memberships.
 #
 class MailingList < ProfileFields::MailingListEmail
+  self.table_name = "profile_fields"
 
   def email
     self.value
@@ -18,20 +19,16 @@ class MailingList < ProfileFields::MailingListEmail
     group.name_with_corporation
   end
 
-  def group
-    profileable if profileable.kind_of? Group
-  end
-
-  def members
-    group.members
-  end
-
   def members_count
-    group.member_ids.count
+    group.memberships.length
   end
 
   def posts
-    Post.where(sent_via: self.email)
+    if self.email.present?
+      Post.where(sent_via: self.email)
+    else
+      Post.none
+    end
   end
 
   def posts_count
@@ -39,11 +36,11 @@ class MailingList < ProfileFields::MailingListEmail
   end
 
   def sender_policy
-    group.mailing_list_sender_filter
+    group.sender_policy
   end
 
   def self.all
-    ProfileFields::MailingListEmail.all.collect { |profile_field| profile_field.becomes(MailingList) }
+    ProfileFields::MailingListEmail.includes(:group, :memberships).order(value: :asc).all.collect { |profile_field| profile_field.becomes(MailingList) }
   end
 
   def self.sti_name

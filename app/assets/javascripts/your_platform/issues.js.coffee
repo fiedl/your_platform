@@ -41,5 +41,3 @@ $(document).on 'click', 'body.issues .destroy-container .btn', ->
 # issues#new
 # =======================================================================================
 
-$(document).ready ->
-  $('body.issues textarea#description').autosize()

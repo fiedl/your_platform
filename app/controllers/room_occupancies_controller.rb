@@ -2,32 +2,30 @@ class RoomOccupanciesController < ApplicationController
 
   expose :group
   expose :room, -> { group if group.kind_of? Groups::Room }
+  expose :occupancies, -> { room.occupancies.order(valid_from: :desc).collect { |membership|
+    membership.as_json.merge({
+      occupant_title: (membership.user.title if can?(:read_name, membership.user)),
+      occupant: (membership.user if can?(:read, membership.user))
+    })
+  } }
   expose :scope, -> { room.parent_groups.try(:first) }
+  expose :corporation, -> { room.corporation }
+  expose :redirect_to_url, -> { params[:redirect_to_url] || corporation_accommodations_path(corporation_id: corporation.id) }
 
-  def new
-    authorize! :manage, room
+  def index
+    authorize! :read, room
 
-    set_current_navable scope
+    set_current_title room.title
+    set_current_navable room
+    set_current_tab :contacts
   end
 
-  def create
-    authorize! :manage, room
+  def new
+    authorize! :update_accommodations, corporation
 
-    date = params[:occupancy_since]
-
-    room.memberships.at_time(date).each do |membership|
-      membership.invalidate at: date
-    end
-
-    case params[:occupancy_type]
-    when 'empty'
-      redirect_to group_room_occupants_path(group_id: room.parent.id)
-    when 'existing_user'
-      room.assign_user User.find_by_title(params[:existing_user_title]), at: date
-      redirect_to group_room_occupants_path(group_id: room.parent.id)
-    when 'new_user'
-      redirect_to new_user_path(group_id: room.id, group_member_since: date)
-    end
+    set_current_title room.title
+    set_current_navable scope
+    set_current_tab :contacts
   end
 
 end

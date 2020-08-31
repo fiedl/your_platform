@@ -11,6 +11,8 @@ class UsersController < ApplicationController
     # Make sure in `user_params` that only the avatar can pass then!
   }
 
+  expose :user, -> { @user }
+
   def index
     begin
       redirect_to group_path(Group.everyone)
@@ -24,14 +26,13 @@ class UsersController < ApplicationController
     set_current_navable @user
     set_current_access :signed_in
     set_current_access_text :all_signed_in_users_can_read_this_user_profile
+    set_current_tab :contacts
 
     if current_user == @user
       set_current_activity :looks_at_own_profile, @user
     else
       set_current_activity :looks_at_profile, @user
     end
-
-    metric_logger.log_event @user.attributes.merge({name: @user.name, title: @user.title}), type: :show_user
 
     respond_to do |format|
       format.html
@@ -86,8 +87,9 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update_attributes! user_params
-    respond_with_bip @user
+    @user.update! user_params
+
+    render json: @user, status: :ok
   end
 
   def forgot_password
@@ -112,7 +114,7 @@ class UsersController < ApplicationController
   def user_params
     permitted_keys = []
     if @user
-      permitted_keys += [:avatar, :remove_avatar] if can? :update, @user
+      permitted_keys += [:avatar, :remove_avatar, :avatar_background] if can? :update, @user
       unless params[:user].try(:[], :avatar).present?
         # Because if the avatar is present, the authenticity
         # token check is skipped due to:

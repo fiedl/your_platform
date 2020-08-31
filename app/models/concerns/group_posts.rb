@@ -1,14 +1,20 @@
 concern :GroupPosts do
 
   included do
-    has_many :posts
+    has_many :legacy_posts, class_name: 'Post'
   end
 
-  def descendant_post_ids
-    descendant_groups.map(&:post_ids).flatten
+  # This combines:
+  #
+  #     group.legacy_posts
+  #     group.child_posts   # new default
+  #
+  def posts
+    Post.where(id: legacy_posts).or(Post.where(id: child_posts))
   end
-  def descendant_posts
-    Post.where(id: descendant_post_ids)
+
+  def create_post(attrs = {})
+    child_posts.create attrs
   end
 
 end

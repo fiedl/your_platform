@@ -8,6 +8,6 @@
           .dark-bg= image_tag logo.file_path
           .key
             Key:
-            = best_in_place logo, :title, as: :select, collection: %w(logo logo-header logo-header-dark logo-footer logo-footer-dark logo-icon).collect { |str| [str, str] }
+            -#= best_in_place logo, :title, as: :select, collection: %w(logo logo-header logo-header-dark logo-footer logo-footer-dark logo-icon).collect { |str| [str, str] }
 
     #new_attachment= render partial: 'attachments/drop_field', locals: {parent: page, title: "logo", type: :image}

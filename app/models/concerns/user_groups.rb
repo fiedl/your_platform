@@ -23,4 +23,8 @@ concern :UserGroups do
     current_corporations
   end
 
+  def direct_groups_in(group)
+    self.direct_groups & group.descendant_groups
+  end
+
 end

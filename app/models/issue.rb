@@ -100,7 +100,7 @@ class Issue < ApplicationRecord
       I18n.with_locale(admin.locale) do
         message = I18n.t(:there_are_n_unresolved_issues_in_your_domain, n: issues.count)
         text = I18n.t(:please_click_above_link_and_resolve_issues)
-        notification = Notification.create recipient_id: admin_id, reference_url: issues_url, message: message, text: text
+        # notification = Notification.create recipient_id: admin_id, reference_url: issues_url, message: message, text: text
       end
     end
   end

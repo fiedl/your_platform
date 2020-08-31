@@ -1,22 +1,14 @@
 class CorporationsController < ApplicationController
-  respond_to :html, :json
 
-  before_action :find_corporations
-  authorize_resource
+  expose :parent_group, -> { Group.corporations_parent }
+  expose :corporations, -> { Corporation.active }
 
   def index
-    respond_to do |format|
-      format.html { redirect_to group_path(Corporation.corporations_parent) }
-      format.json { respond_with @corporations.pluck(:name) }
-    end
-  end
+    authorize! :index, Corporation
 
-
-  private
-
-  def find_corporations
-    query = params[:term] || params[:query] || ""
-    @corporations = Corporation.where('name LIKE ?', "%#{query}%")
+    set_current_title "Verbindungen"
+    set_current_navable parent_group
+    set_current_tab :contacts
   end
 
 end

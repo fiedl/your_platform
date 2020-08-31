@@ -21,10 +21,10 @@ class ApplicationController < ActionController::Base
   include AcceptTermsOfUse
   include ReadOnlyModeInControllersAndViews
   include DemoMode
-  include FastLane
   include ConfirmAdminsOnlyAccess
   include GenericMetricLogging
-  include CachingSwitch
+  include ErrorHandling
+  include PrivateViews
 
 
   # We use this custom method to render a partial to a json string.

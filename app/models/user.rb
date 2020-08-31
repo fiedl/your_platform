@@ -12,9 +12,6 @@ class User < ApplicationRecord
   include Merit
   has_merit
 
-  attr_accessor             :create_account, :add_to_corporation
-  # Boolean, der vormerkt, ob dem (neuen) Benutzer ein Account hinzugefügt werden soll.
-
   validates_presence_of     :last_name
   validates_format_of       :first_name, with: /\A[^\,]*\z/, if: Proc.new { |user| user.first_name.present? }  # The name must not contain a comma.
   validates_format_of       :last_name, with: /\A[^\,]*\z/
@@ -30,7 +27,7 @@ class User < ApplicationRecord
 
   delegate                  :send_welcome_email, :to => :account
 
-  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page), link_class_name: 'DagLink'
+  has_dag_links             ancestor_class_names: %w(Page Group Event), descendant_class_names: %w(Page Post), link_class_name: 'DagLink'
 
   has_many                  :relationships_as_first_user, foreign_key: 'user1_id', class_name: "Relationship", dependent: :destroy, inverse_of: :user1
 
@@ -46,9 +43,6 @@ class User < ApplicationRecord
   include Navable
 
   before_save               :generate_alias_if_necessary, :capitalize_name
-  before_save               :build_account_if_requested
-  after_save                :add_to_group_if_requested
-
 
   # Easy user settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -91,6 +85,13 @@ class User < ApplicationRecord
   include UserBio
   include UserBackup
 
+
+  def as_json(*options)
+    super.merge({
+      title: title,
+      avatar_path: avatar_path
+    })
+  end
 
   # General Properties
   # ==========================================================================================
@@ -297,11 +298,7 @@ class User < ApplicationRecord
   # This method activates the user account, i.e. grants the user the right to log in.
   #
   def activate_account
-    unless self.account
-      self.account = self.build_account
-      self.save
-    end
-    return self.account
+    create_account unless account
   end
 
   # This method deactivates the user account, i.e. destroys the associated object
@@ -312,31 +309,6 @@ class User < ApplicationRecord
     self.account.destroy
     self.account = nil
   end
-
-  # If the attribute `create_account` is set to `true` or to `1`, e.g. by an html form,
-  # this code makes sure that the account association is build.
-  # This code is run on validation, as you can see above in this model.
-  # Note: A welcome email is automatically sent on save by the UserAccount model.
-  def build_account_if_requested
-
-    # If this value is set by an html form, it is "0" or "1". But "0" would
-    # transform to true rather than to false.
-    # Thus, we have to make sure that "0" means false.
-    self.create_account = false if self.create_account == "0"
-    self.create_account = true if self.create_account == "1"
-    self.create_account = false if self.create_account == 0
-    self.create_account = true if self.create_account == 1
-    self.create_account = false if self.create_account == ""
-
-    if self.create_account == true
-      self.account.destroy if self.has_account?
-      self.account = self.build_account
-      self.create_account = false # to make sure that this code is nut run twice.
-      return self.account
-    end
-
-  end
-  private :build_account_if_requested
 
   def token
     account.try(:auth_token)
@@ -363,25 +335,6 @@ class User < ApplicationRecord
       end
     end
   end
-
-  # Groups
-  # ------------------------------------------------------------------------------------------
-
-  def add_to_group_if_requested
-    if self.add_to_corporation.present?
-      corporation = add_to_corporation if add_to_corporation.kind_of? Group
-      corporation ||= Group.find(add_to_corporation) if add_to_corporation.kind_of? Fixnum
-      corporation ||= Group.find(add_to_corporation.to_i) if add_to_corporation.kind_of?(String) && add_to_corporation.to_i.kind_of?(Fixnum)
-      if corporation
-        status_group = corporation.becomes(Corporation).status_groups.first || raise(RuntimeError, 'no status group in this corporation!')
-        status_group.assign_user self
-      else
-        raise ActiveRecord::RecordNotFound, 'corporation not found.'
-      end
-      self.add_to_corporation = nil
-    end
-  end
-  private :add_to_group_if_requested
 
 
   # Corporations
@@ -484,7 +437,13 @@ class User < ApplicationRecord
   # ==========================================================================================
 
   def corporate_vita_memberships_in(corporation)
-    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past
+    Memberships::Status.find_all_by_user_and_corporation(self, corporation).with_past.where(direct: true)
+  end
+
+  def apply_gap_correction
+    corporations_with_past.collect do |corporation|
+      Memberships::Status.apply_gap_correction self, corporation, membership_type: "Memberships::Status"
+    end
   end
 
 
@@ -548,18 +507,7 @@ class User < ApplicationRecord
     # List all pages that do not have ancestor groups
     # which the user is no member of.
     #
-
-    # THIS WORKS BUT LOOKS UGLY. TODO: Refactor this:
-    # avoid double negation (i.e. select pages where user is member!)
-    group_ids_the_user_is_no_member_of =
-      Group.pluck(:id) - self.group_ids
-    pages_that_belong_to_groups_the_user_is_no_member_of = Page
-      .includes(:ancestor_groups)
-      .where(groups: {id: group_ids_the_user_is_no_member_of})
-    Page
-      .where.not(id: (pages_that_belong_to_groups_the_user_is_no_member_of + [0])) # +[0]-hack: otherwise the list is empty when all pages should be shown, i.e. for fresh systems.
-      .visible_to(self)
-      .order('pages.updated_at DESC')
+    Page.where.not(id: Page.joins(:ancestor_groups).where.not(groups: {id: self.groups}))
   end
 
 
@@ -657,16 +605,8 @@ class User < ApplicationRecord
     self.joins(:profile_fields).where(:profile_fields => {label: 'date_of_death'})
   end
 
-  def self.deceased_ids
-    self.deceased.pluck(:id)
-  end
-
   def self.alive
-    if self.deceased_ids.count > 0
-      self.where('NOT users.id IN (?)', self.deceased_ids)
-    else
-      self.all
-    end
+    self.where.not id: deceased
   end
 
   def self.without_account

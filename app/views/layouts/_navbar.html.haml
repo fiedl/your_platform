@@ -1,0 +1,178 @@
+.navbar-expand-md
+  #navbar-menu.collapse.navbar-collapse
+    .navbar.navbar-light
+      .container-xl
+        %ul.navbar-nav
+          %li.nav-item{class: ('active' if current_tab == :start or current_tab.blank?)}
+            %a.nav-link{:href => root_path}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = home_icon
+              %span.nav-link-title
+                Start
+          %li.nav-item.dropdown{class: ('active' if current_tab == :contacts)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = group_icon
+              %span.nav-link-title
+                Kontaktdaten
+            %ul.dropdown-menu
+              %li
+                = link_to current_user, class: 'dropdown-item' do
+                  Meine Kontaktdaten ändern
+              .dropdown-divider
+              %li
+                = link_to contacts_path, class: "dropdown-item #{'active' if controller_name == 'contacts'}" do
+                  Meine Bundesbrüder
+              - current_user.corporations.each do |corporation|
+                %li
+                  = link_to group_path(corporation), class: 'dropdown-item' do
+                    = "Verbindung #{corporation.name}"
+                %li
+                  = link_to corporation_accommodations_path(corporation_id: corporation.id), class: 'dropdown-item' do
+                    = "Wohnheim #{corporation.name}"
+              - if (bv = current_user.bv).present?
+                %li
+                  = link_to group_path(bv), class: 'dropdown-item' do
+                    = bv.extensive_name || bv.name
+              .dropdown-divider
+              %li
+                = link_to corporations_path, class: "dropdown-item #{'active' if controller_name == 'corporations'}" do
+                  Verbindungen
+              %li
+                = link_to groups_group_of_groups_path(Groups::PhvsParent.first), class: "dropdown-item #{'active' if current_navable == Groups::PhvsParent.first}" do
+                  Philistervereine
+              %li
+                = link_to groups_group_of_groups_path(Group.bvs_parent), class: "dropdown-item #{'active' if current_navable == Group.bvs_parent}" do
+                  Bezirksverbände
+              .dropdown-divider
+              %li
+                = link_to group_officers_path(group_id: (g = Group.where(name: "Alle Bundesamtsträger").first).id), class: "dropdown-item #{'active' if current_navable == g}" do
+                  Bundesamtsträger
+              %li
+                = link_to "Vorort", vorort_path, class: "dropdown-item #{'active' if controller_name == 'vororte'}"
+              %li
+                = link_to "Geschäftsstelle", Page.where(title: "Geschäftsstelle").first, class: "dropdown-item #{'active' if current_navable == Page.where(title: "Geschäftsstelle").first}"
+              .dropdown-divider
+              %li
+                = link_to websites_path, class: "dropdown-item #{'active' if controller_name == 'websites'}" do
+                  Internetauftritte
+              - for group in current_user.current_corporations
+                - if group.public_home_page
+                  = link_to group.public_home_page, class: 'dropdown-item' do
+                    = "Internetauftritt #{group.name}"
+                - elsif can? :update, group
+                  = link_to group_website_path(group_id: group), method: 'post', class: 'dropdown-item', title: "Plattformgestützt einen öffentlichen Internetauftritt für #{group.name} erstellen" do
+                    = "Internetauftritt für #{group.name} erstellen"
+
+          %li.nav-item.dropdown{class: ('active' if current_tab == :members)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-base", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = list_icon
+              %span.nav-link-title
+                Mitgliederlisten
+            %ul.dropdown-menu
+              - if can? :create, User
+                %li
+                  = link_to new_aktivmeldung_path, class: "dropdown-item #{'active' if controller_name == 'aktivmeldungen'}" do
+                    Aktivmeldung eintragen
+                .dropdown-divider
+              - current_user.corporations.each do |corporation|
+                %li
+                  %a.dropdown-item{:href => group_members_path(corporation), class: ('active' if (corporation == current_navable) && controller_name == 'group_members')}
+                    = corporation.name
+              .dropdown-divider
+              %li
+                = link_to "Alle Wingolfiten", group_members_path(Group.alle_wingolfiten), class: 'dropdown-item'
+                = link_to "Alle Aktiven", group_members_path(Group.alle_aktiven), class: 'dropdown-item'
+                = link_to "Alle Philister", group_members_path(Group.alle_philister), class: 'dropdown-item'
+              .dropdown-divider
+              %li
+                = link_to "Semesterstatistik", term_report_path(current_user.primary_corporation.term_reports.last), class: "dropdown-item #{'active' if controller_name == 'term_reports'}"
+          %li.nav-item.dropdown{class: ('active' if current_tab == :events)}
+            %a.nav-link.dropdown-toggle{'data-toggle': "dropdown", href: "#"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = calendar_icon
+              %span.nav-link-title
+                Veranstaltungen
+            %ul.dropdown-menu
+              - if can? :create, Event
+                %li
+                  = link_to new_event_path, class: "dropdown-item #{'active' if controller_name == 'events' and action_name == 'new'}" do
+                    Veranstaltung eintragen
+                .dropdown-divider
+              = link_to "Meine Veranstaltungen", user_events_path(user_id: current_user.id), class: "dropdown-item #{'active' if controller_name == 'events' and params[:user_id] == current_user.id}"
+              .dropdown-divider
+              %span.dropdown-header Semesterprogramme
+              - current_user.corporations.each do |corporation|
+                = link_to group_search_semester_calendar_path(group_id: corporation.id), class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && current_navable == corporation}" do
+                  = corporation.title
+              = link_to semester_calendars_path, class: "dropdown-item #{'active' if controller_name == 'semester_calendars' && action_name == 'index' && !params[:group_id]}" do
+                Andere Verbindungen
+              .dropdown-divider
+              = link_to "Große Veranstaltungen aus dem Bund", events_path(published_on_global_website: true), class: "dropdown-item #{'active' if controller_name == 'events' and params[:published_on_global_website].to_b}"
+              - for category in %w(Stiftungsfeste Wartburgfeste Bundesconvente Wingolfsseminare)
+                = link_to category, events_path(category: category), class: "dropdown-item #{'active' if controller_name == 'events' and params[:category] == category}"
+              -#.dropdown-divider
+              -#= link_to "Kalender", calendars_path, class: "dropdown-item #{'active' if controller_name == 'calendars'}"
+          %li.nav-item.dropdown{class: ('active' if current_tab == :documents)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-extra", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = document_icon
+              %span.nav-link-title
+                Dokumente
+            %ul.dropdown-menu
+              - if can? :create, Document
+                %li
+                  = link_to new_document_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'new'}" do
+                    Dokumente hochladen
+                .dropdown-divider
+              %li= link_to "Aktuelle Dokumente", documents_path, class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags].blank? and params[:group_id].blank? and params[:page_id].blank? and params[:user_id].blank? and params[:all].blank?}"
+              .dropdown-divider
+              - %w(Wingolfsblätter Protokolle Satzungen Rundschreiben Vorlagen).each do |category|
+                %li= link_to category, documents_path(tags: [category]), class: "dropdown-item #{'active' if controller_name == 'documents' and action_name == 'index' and params[:tags] == [category]}"
+              %li
+                = link_to "Wappen und Zirkel", heraldics_path, class: "dropdown-item #{'active' if controller_name == 'heraldics'}"
+          %li.nav-item.dropdown{class: ('active' if current_tab == :communication)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = mail_icon
+              %span.nav-link-title
+                Kommunikation
+            %ul.dropdown-menu
+              %li
+                = link_to new_post_path, class: "dropdown-item #{'active' if controller_name == 'posts' && action_name == 'new'}" do
+                  Post erstellen
+              .dropdown-divider
+              %li
+                = link_to posts_path, class: "dropdown-item #{'active' if controller_name == 'posts' && action_name == 'index' && !params[:group_id]}" do
+                  Posteingang
+              %li
+                = link_to mailing_lists_path, class: "dropdown-item #{'active' if controller_name == 'mailing_lists'}" do
+                  = t :mailing_lists
+              -#- if can? :index, DecisionMaking::FederalBallot
+              -#  %li
+              -#    = link_to decision_making_federal_ballots_path, class: "dropdown-item #{'active' if controller_name == 'federal_ballots'}" do
+              -#      Bundesanträge
+
+          %li.nav-item.dropdown{class: ('active' if current_tab == :network)}
+            %a.nav-link.dropdown-toggle{"aria-expanded" => "false", "data-toggle" => "dropdown", :href => "#navbar-layout", :role => "button"}
+              %span.nav-link-icon.d-md-none.d-lg-inline-block
+                = network_icon
+              %span.nav-link-title
+                Netzwerk
+            %ul.dropdown-menu
+              %li
+                = link_to "Meine Gruppen", user_groups_path(user_id: current_user.id), class: "dropdown-item #{'active' if (controller_name == 'groups') && (action_name == 'index') && (params[:user_id].to_i == current_user.id)}"
+              - %w(Biermusiker Juristen).each do |group_name|
+                %li
+                  = link_to group_members_path(g = Group.where(name: group_name).first), class: "dropdown-item #{'active' if current_navable == g}" do
+                    = group_name
+              .dropdown-divider
+              %li
+                = link_to gesuche_und_angebote_path, class: "dropdown-item #{'active' if controller_name == 'gesuche_und_angebote'}" do
+                  Gesuche und Angebote
+              -#%li
+              -#  %a.dropdown-item{:href => "./layout-horizontal.html"}
+              -#    Wingolfskarte
+
+        = render partial: 'layouts/search'

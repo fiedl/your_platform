@@ -1,116 +1,83 @@
 !!!
-%html{:lang => 'en'}
+%html{:lang => "en"}
   %head
-    %meta{:charset => 'utf-8'}/
-    %meta{:content => 'IE=Edge,chrome=1', 'http-equiv' => 'X-UA-Compatible'}/
-    %meta{:content => 'width=device-width, initial-scale=1.0', :name => 'viewport'}/
-    %meta{name: 'turbolinks-cache-control', content: 'no-cache'}/
-    %title= website_title_with_app_name
-    = csrf_meta_tags
-    / Le HTML5 shim, for IE6-8 support of HTML elements
-    /[if lt IE 9]
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js" type="text/javascript"></script>
+    - Rack::MiniProfiler.step("html head") do
+      %meta{:charset => "utf-8"}/
+      %meta{:content => "width=device-width, initial-scale=1, viewport-fit=cover", :name => "viewport"}/
+      %meta{:content => "ie=edge", "http-equiv" => "X-UA-Compatible"}/
+      %title= website_title_with_app_name
+      -#%link{:crossorigin => "", :href => "https://fonts.gstatic.com/", :rel => "preconnect"}/
+      %meta{:content => "#206bc4", :name => "msapplication-TileColor"}/
+      %meta{:content => "#206bc4", :name => "theme-color"}/
+      %meta{:content => "black-translucent", :name => "apple-mobile-web-app-status-bar-style"}/
+      %meta{:content => "yes", :name => "apple-mobile-web-app-capable"}/
+      %meta{:content => "yes", :name => "mobile-web-app-capable"}/
+      %meta{:content => "True", :name => "HandheldFriendly"}/
+      %meta{:content => "320", :name => "MobileOptimized"}/
+      %meta{:content => "noindex,nofollow,noarchive", :name => "robots"}/
+      %link{:href => "./favicon.ico", :rel => "icon", :type => "image/x-icon"}/
+      %link{:href => "./favicon.ico", :rel => "shortcut icon", :type => "image/x-icon"}/
+      / CSS files
+      :css
+        body {
+          display: none;
+        }
+      = stylesheet_link_tag 'bootstrap_layout', :media => 'all'
+      = stylesheet_link_tag 'application', :media => 'all'
+      = javascript_include_tag 'application', data: {turbolinks_eval: false}
+      = javascript_include_tag 'bootstrap_tabler', data: {turbolinks_eval: false}
 
+      - if Rails.env.production?
+        = javascript_include_tag "vue_app.pack"
+      - else
+        = javascript_include_tag 'http://localhost:9000/vue_app.pack.js' # webpack-dev-server
+        = javascript_include_tag 'http://localhost:8098' # vue dev tools
 
+      = csrf_meta_tags
+  = body_tag class: 'antialiased' do
+    #vue-app.page
+      - unless controller_name == "sessions"
+        %header.navbar.navbar-expand-md.navbar-light
+          .container-xl
+            %button.navbar-toggler{"data-target" => "#navbar-menu", "data-toggle" => "collapse", :type => "button"}
+              %span.navbar-toggler-icon
+            %a.navbar-brand.navbar-brand-autodark.d-none-navbar-horizontal.pr-0.pr-md-3{:href => root_path}
+              %img.navbar-brand-image{:src => logo_url}/
+              .d-none.d-sm-inline-block
+                &nbsp;
+                - if current_navable.kind_of? Pages::PublicPage
+                  = current_navable.group.try(:title) || current_navable.title
+                - else
+                  = AppVersion.app_name
 
-    = stylesheet_link_tag 'bootstrap_setup', :media => 'all'
-    = stylesheet_link_tag 'bootstrap_layout', :media => 'all', data: {turbolinks_track: 'reload'}
-    = stylesheet_link_tag 'application', :media => 'all'
+            - if current_user
+              = render partial: 'layouts/topbar_avatar'
+            - else
+              = link_to "Anmelden", sign_in_path
 
-    -#/ For third-generation iPad with high-resolution Retina display:
-    -#/ Size should be 144 x 144 pixels
-    -#= favicon_link_tag 'apple-touch-icon-144x144-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '144x144'
-    -#/ For iPhone with high-resolution Retina display:
-    -#/ Size should be 114 x 114 pixels
-    -#= favicon_link_tag 'apple-touch-icon-114x114-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '114x114'
-    -#/ For first- and second-generation iPad:
-    -#/ Size should be 72 x 72 pixels
-    -#= favicon_link_tag 'apple-touch-icon-72x72-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '72x72'
-    -#/ For non-Retina iPhone, iPod Touch, and Android 2.1+ devices:
-    -#/ Size should be 57 x 57 pixels
-    -#= favicon_link_tag 'apple-touch-icon-precomposed.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png'
-    -#/ For all other devices
-    -#/ Size should be 32 x 32 pixels
-    -#-#= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon'
+        - if current_navable.kind_of? Pages::PublicPage
+          = render partial: 'layouts/public_navbar'
+        - elsif current_user
+          = render partial: 'layouts/navbar'
 
-    %link{rel: 'search', href: opensearch_path, title: "#{app_name} Search", type: 'application/opensearchdescription+xml'}
-
-    = google_maps_api_script_tag
-    = javascript_include_tag 'application', data: {turbolinks_eval: false}
-    = javascript_include_tag "//cdn.jsdelivr.net/afterglow/latest/afterglow.min.js" unless Rails.env.test? # Takes tooooo long.
-    = yield :scripts
-    = yield :head
-
-  = body_tag do
-    #vue-app
-      = render partial: 'shared/current_masquerade'
-      - if current_user
-        %nav#logged-in-bar.navbar.navbar-default.navbar-top
-          .container-fluid
-            .navbar-header
-              %button.navbar-toggle.collapsed{data: {toggle: 'collapse', target: '#logged-in-bar-collapse'}}
-                %span.sr-only Toggle Navigation
-                %span.icon-bar
-                %span.icon-bar
-                %span.icon-bar
-              %a.navbar-brand{:href => '#'}= app_name
-
-            .collapse.navbar-collapse#logged-in-bar-collapse
-              %ul.nav.navbar-nav
-                - if not show_role_preview_menu?
-                  %li
-                    = link_to t(:my_profile), current_user, :class => 'my_profile'
-                %li.dropdown.my_groups
-                  %a.dropdown-toggle{href: my_groups_path, data: {toggle: 'dropdown'}}
-                    = t :my_groups
-                    %b.caret= ''
-                  %ul.dropdown-menu
-                    = groups_of_user_table current_user
-
-                - # role indicator and preview menu
-                = render partial: 'layouts/role_preview_switcher'
-
-                - # notifications
-                = render partial: 'notifications/notifications_dropdown'
-
-                - # %li.dropdown
-                - #   = link_to(                                                                   |
-                - #     ( t(:bookmarks) + ' ' + content_tag( :b, '', class: 'caret' ) ).html_safe, |
-                - #     my_bookmarks_path,                                                         |
-                - #     class: 'dropdown-toggle', data: { toggle: 'dropdown' } )                   |
-                - #   %ul.dropdown-menu.my-favorites
-                - #     = bookmarked_objects_lis( current_user )
-
-              %ul.nav.navbar-nav.navbar-right
-                %li.last.dropdown
-                  %a.dropdown-toggle.current_user_dropdown{'data-toggle' => 'dropdown', :href => '#'}
-                    = render 'layouts/session_bar_avatar'
-                    = current_user.title
-                    %b.caret
-                  = render partial: 'layouts/current_user_dropdown'
-                - if can? :use, :merit
-                  %li
-                    = link_to user_badges_path(current_user) do
-                      = merit_indicator(current_user)
-
-      .row#header-bar-wrapper
-        = render partial: 'layouts/header_bar'
-
-      .row#breadcrumb-bar
-        %nav#breadcrumb.navbar
-          .container-fluid
-            = render partial: 'layouts/breadcrumbs'
-
-            %span#access_indicator
-              = access_indicator if current_user
-
-            = render partial: 'layouts/toolbar'
-
-      = yield :custom_header
-
-      .container-fluid
-        .row
-          #content
-            = render partial: 'layouts/multi_column_content_area'
-
-      .bottom_page_footer.hidden-print= render partial: 'layouts/footer' unless @hide_footer
+      #content.content
+        .container-xl
+          / Content here
+          = render partial: 'shared/flashes'
+          = yield
+        %footer.footer.footer-transparent
+          .container
+            .row.text-center.align-items-center.flex-row-reverse
+              .col-lg-auto.ml-lg-auto
+                %ul.list-inline.list-inline-dots.mb-0
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://plattformpodcast.com"} Podcast
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://wingolf.io/vademecum/"} App
+                  %li.list-inline-item
+                    %a.link-secondary{:href => "https://github.com/fiedl/your_platform", :target => "_blank"} Source-Code
+              .col-12.col-lg-auto.mt-3.mt-lg-0
+                = succeed "." do
+                  %a.link-secondary{:href => "https://wingolf.io/intro/"} Plattform-Projekt des AK Internet und IT-Dienstleistungen Fiedlschuster
+    :javascript
+      document.body.style.display = "block"

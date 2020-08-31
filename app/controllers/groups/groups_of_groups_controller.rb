@@ -7,7 +7,7 @@ class Groups::GroupsOfGroupsController < ApplicationController
 
     set_current_navable group
     set_current_title group.title
-    @hide_vertical_nav = true
+    set_current_tab :contacts
 
     respond_to do |format|
       format.html

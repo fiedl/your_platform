@@ -27,7 +27,7 @@ class PostDelivery < ApplicationRecord
       self.user_email = user.email
 
       Rails.logger.info "Sending post as email to #{user.inspect} (#{user_email}) ..."
-      if PostMailer.post_email(post.text, [user], post.email_subject, post.author, post.group, post).deliver_now
+      if PostMailer.post_email(post: post, recipient: user).deliver_now
         self.sent_at = Time.zone.now
         self.save
         return self

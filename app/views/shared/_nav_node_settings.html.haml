@@ -1,25 +1,25 @@
-- # locals:
-- navable || raise(ActionController::ParameterMissing, 'no navable given')
-- nav_node ||= navable.nav_node
-
-%h2= t :navigation
-%table.settings
-  %tr
-    %th= t :menu_options
-    %td
-      = ajax_check_box navable, :show_in_menu
-      = ajax_check_box navable, :slim_menu
-      = ajax_check_box navable, :show_as_teaser_box
-      = ajax_check_box navable, :embedded if navable.respond_to? :embedded
-      = ajax_check_box navable, :show_in_footer if navable.respond_to? :show_in_footer
-      = ajax_check_box navable, :footer_embedded if navable.respond_to? :footer_embedded
-  %tr
-    %th= t :breadcrumb_options
-    %td
-      = ajax_check_box navable, :slim_breadcrumb, t(:slim_breadcrumb)
-  %tr
-    %th= t :separate_menu_label
-    %td= best_in_place nav_node, :menu_item
-  %tr
-    %th= t :separate_breadcrumb_label
-    %td= best_in_place nav_node, :breadcrumb_item
+-#- # locals:
+-#- navable || raise(ActionController::ParameterMissing, 'no navable given')
+-#- nav_node ||= navable.nav_node
+-#
+-#%h2= t :navigation
+-#%table.settings
+-#  %tr
+-#    %th= t :menu_options
+-#    %td
+-#      = ajax_check_box navable, :show_in_menu
+-#      = ajax_check_box navable, :slim_menu
+-#      = ajax_check_box navable, :show_as_teaser_box
+-#      = ajax_check_box navable, :embedded if navable.respond_to? :embedded
+-#      = ajax_check_box navable, :show_in_footer if navable.respond_to? :show_in_footer
+-#      = ajax_check_box navable, :footer_embedded if navable.respond_to? :footer_embedded
+-#  %tr
+-#    %th= t :breadcrumb_options
+-#    %td
+-#      = ajax_check_box navable, :slim_breadcrumb, t(:slim_breadcrumb)
+-#  %tr
+-#    %th= t :separate_menu_label
+-#    %td= best_in_place nav_node, :menu_item
+-#  %tr
+-#    %th= t :separate_breadcrumb_label
+-#    %td= best_in_place nav_node, :breadcrumb_item

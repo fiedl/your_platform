@@ -1,0 +1,6 @@
+- if can?(:create_post, page) || posts.any?
+  .card
+    - if can?(:create_post, page)
+      .card-header
+        %vue_create_post_form{camera_icon: camera_icon, send_icon: send_icon, ':parent_page': page.to_json, sent_via: post_draft_via_key, ':initial_post': drafted_post.to_json(include: :attachments), ':publish_on_public_website': "true"}
+    = vue_posts posts

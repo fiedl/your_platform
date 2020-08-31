@@ -35,9 +35,10 @@ describe ProfileFields do
     end
 
     describe "#email=" do
-      subject { @profileable.email = "foo@example.com" }
+      subject { @profileable.email = "foo@example.com"; @profileable.save }
       it "should create an email profile field" do
         subject
+        @profileable.profile_fields.reload
         @profileable.profile_fields.last.should be_kind_of ProfileField
         @profileable.profile_fields.last.type.should == "ProfileFields::Email"
         @profileable.profile_fields.last.value.should == "foo@example.com"
@@ -52,6 +53,14 @@ describe ProfileFields do
       it "should return the value of the first email profile field" do
         subject.should == "bar@example.com"
       end
+    end
+
+    describe "#mobile" do
+      before do
+        @profileable.profile_fields.create label: "Mobil", value: "0171 123 34 45", type: "ProfileFields::Phone"
+      end
+      subject { @profileable.mobile }
+      it { should == "0171 123 34 45" }
     end
 
     describe "#profile" do

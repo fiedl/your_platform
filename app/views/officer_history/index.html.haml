@@ -1,0 +1,15 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle Amtsträger-Historie
+      .page-title= group.title
+
+.card
+  :ruby
+    memberships_json = memberships.collect do |membership|
+      membership.as_json.merge({
+        user: membership.user.as_json
+      })
+    end.to_json
+  %vue_editable_memberships_table{':initial_memberships': memberships_json,
+    ':editable': can?(:manage, group).to_json}

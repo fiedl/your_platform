@@ -42,6 +42,17 @@ module GroupsHelper
     groups_of_user_table(current_user, require_post_ability: true)
   end
 
+  def group_tree(group, options = {class: "tree"}, &block)
+    content_tag :ul, class: options[:class] do
+      group.child_groups.collect do |child_group|
+        content_tag :li do
+          (block_given? ? yield(child_group) : child_group.name).html_safe +
+          (group_tree(child_group, class: nil, &block) if child_group.child_groups.any?).to_s.html_safe
+        end
+      end.join.html_safe
+    end.html_safe
+  end
+
   private
 
   def membership_li( user, group )

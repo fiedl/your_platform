@@ -48,6 +48,8 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # Create different versions of your uploaded files:
   version :thumb, :if => :image_or_pdf? do
     process :cover
+    process :resize_to_limit => [300,300]
+    process :convert => :png, if: :pdf?
     process :modify_content_type
 
     def full_filename(for_file = model.attachment.file)
@@ -55,14 +57,19 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     end
   end
 
-  version :medium, :if => :image? do
-    process :resize_to_limit => [580,330]
+  version :medium, :if => :image_or_pdf? do
+    process :cover, if: :pdf?
+    process :resize_to_limit => [600,600]
+    process :convert => :png, if: :pdf?
+    process :modify_content_type
   end
 
-  version :big, if: :image? do
-    process :resize_to_limit => [1024,768]
+  version :big, if: :image_or_pdf? do
+    process :cover, if: :pdf?
+    process :resize_to_limit => [1500,1500]
+    process :convert => :png, if: :pdf?
+    process :modify_content_type
   end
-
 
   version :video_thumb, :if => :video? do
     process :create_video_thumb
@@ -102,7 +109,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   def cover
     manipulate! do |img|
       img.format("png", 0)
-      img.resize("100x100")
+      img.resize("1500x1500")
       img = yield(img) if block_given?
       img
     end

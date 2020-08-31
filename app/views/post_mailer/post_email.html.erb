@@ -4,35 +4,23 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body style="font-family: Helvetica; line-height: 150%">
-    
-    <%= link_to root_url do %>
-      <%= image_tag 'logo.png', align: 'right' %>
-    <% end %><br />
-    
-    <h2><%= link_to @subject, @post.url %></h2>
-    
-    <%= markup @text %>
-    
-    <p>
-      <%= render partial: 'posts/attachments', locals: {post: @post} %>
-    </p>
-    
+
+    <% if logo_url %>
+      <%= link_to root_url do %>
+        <%= image_tag logo_url, align: 'right', style: 'max-height: 3em' %>
+      <% end %><br />
+    <% end %>
+
+    <h2><%= link_to @subject, @post_url %></h2>
+
+    <%= @body %>
+
     <p>
       <hr style="height:1px;border:none;color:#333;background-color:#333;" />
       <p><small>
-        <%= link_to "Auf der Plattform anzeigen", @post.url %>
-        |
-        <%= link_to t(:write_a_comment), @post.url %>
-        <% if @show_delivery_report_link %>
-          |
-          <%= link_to t(:delivery_report), @post.url + "?show_delivery_report=true" %>
-        <% end %>
+        <%= link_to "Post auf der Plattform kommentieren", @post_url %>
       </small></p>
-      <br />
-      <small><small>
-        <%= app_name %>, <%= link_to(@group.name, @group) %>
-      </small></small>
     </p>
-    
+
   </body>
 </html>

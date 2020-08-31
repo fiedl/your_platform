@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Make `yarn` and `node` be found by the script.
+export PATH="$PATH:/usr/local/bin"
+
+# This has been https://github.com/webpack/webpack-dev-server.
+# But webpack-dev-server serves the assets at localhost:8080 rather than
+# exporting the assets. Exporting the assets is done via `webpack --watch`
+# as suggested at https://github.com/webpack/webpack-dev-server/issues/62#issuecomment-68673680.
+#
+./node_modules/.bin/webpack --config config/webpack.config.js --watch

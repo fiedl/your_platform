@@ -1,0 +1,13 @@
+.row
+  .col-md-8
+    .card
+      .card-header
+        %h2= semester_calendar.term.title
+      = vue_semester_calendar_events semester_calendar: semester_calendar
+
+    = render partial: 'pages/public_pages/posts'
+
+  .col-md-4
+    = render partial: 'pages/public_pages/events_card'
+    = render partial: 'pages/public_pages/profile_card'
+

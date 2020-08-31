@@ -4,6 +4,11 @@
 concern :PagePublicWebsite do
   included do
 
+    # This belongs to group public websites.
+    scope :public_pages, -> { where(type: ["Pages::PublicPage", "Pages::PublicEventsPage", "Pages::PublicGalleryPage"]) }
+
+    # The following belongs to the legacy website feature.
+
     # Page.find_root (:root)          <
     #      |------ public_page_1      < public website
     #      |------ public_page_2      <

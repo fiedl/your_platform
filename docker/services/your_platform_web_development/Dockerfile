@@ -9,7 +9,7 @@ RUN gem install bundler
 
 # Install nodejs.
 RUN aptitude install -y build-essential libssl-dev
-RUN curl -sL https://deb.nodesource.com/setup_8.x | bash
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash
 RUN aptitude install -y nodejs
 RUN node --version
 RUN npm i -g yarn

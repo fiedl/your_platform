@@ -1,28 +1,24 @@
-# This ability class defines the basic structure for our role-based
-# authorization system.
-#
-# You can either override it completely or use the following method
-# to defined your own rights.
-#
-#     # app/model/ability.rb
-#     require_dependency YourPlatform::Engine.root.join('app/models/ability').to_s
-#
-#     module AbilityDefinitions
-#       def rights_for_local_admins
-#         super
-#         can :do, :amazing_things
-#       end
-#     end
-#
-#     class Ability
-#       prepend AbilityDefinitions
-#     end
-#
-# For an extensive example, have a look at:
-# https://github.com/fiedl/wingolfsplattform/blob/master/app/models/ability.rb
-#
 class Ability
   include CanCan::Ability
+
+  def ability_classes
+    [
+      #Abilities::CorporationAbility,
+      #Abilities::GroupAbility,
+      #Abilities::UserAbility,
+      #Abilities::UserAccountAbility,
+      #Abilities::ProfileFieldAbility,
+      #Abilities::DummyAbility
+      Abilities::FreeGroupAbility,
+      Abilities::PostAbility
+    ]
+  end
+
+  # def initialize(user, options = {})
+  #   ability_classes.each do |ability_class|
+  #     self.merge ability_class.new(user, options)
+  #   end
+  # end
 
   def initialize(user, options = {})
     # Define abilities for the passed in user here. For example:
@@ -52,6 +48,13 @@ class Ability
     # See the wiki for details:
     # https://github.com/ryanb/cancan/wiki/Defining-Abilities
 
+    # This is the new ability structure.
+    # TODO: Migrate the other abilities to separated ability classes.
+    #
+    ability_classes.each do |ability_class|
+      self.merge ability_class.new(user, options)
+    end
+
     # Attention: Check outside whether the user's role allowes that preview!
     # Currently, this is done in ApplicationController#current_ability.
     #
@@ -68,6 +71,14 @@ class Ability
 
     @read_only_mode = options[:read_only_mode]
     @user = user || @user_by_auth_token
+
+    # Fast lane
+    can :read, Pages::PublicPage
+    can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
+    can [:read, :download], Attachment, parent_type: "Page", parent: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
+    can [:read, :download], Attachment, parent_type: "SemesterCalendar"
+    can [:read, :download], Attachment, parent_type: "Post", parent: { parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] } }
+    can [:read, :download], Attachment, parent_type: "Post", parent: { publish_on_public_website: true }
 
     if @user.try(:account) # has to be able to sign in
       if @user_by_auth_token
@@ -103,6 +114,7 @@ class Ability
       end
     end
     rights_for_everyone
+    restrictions_for_everyone
   end
 
   def view_as?(role)
@@ -162,6 +174,7 @@ class Ability
     else
       can :manage, :all
       can :execute, [Workflow, WorkflowKit::Workflow]
+      cannot :destroy, Group
 
       # There are features for developers and beta testers.
       cannot :use, :all
@@ -218,6 +231,7 @@ class Ability
     if not read_only_mode?
       # Local officers can create events in their groups.
       #
+      can :create, Event
       can [:create_event, :create_event_for], Group do |group|
         user.in? group.officers_of_self_and_ancestor_groups
       end
@@ -245,6 +259,12 @@ class Ability
         can? :update, semester_calendar
       end
 
+      can :update_accommodations, Corporation do |corporation|
+        user.in? corporation.officers
+      end
+      can :create_accommodation_sepa_debit, Corporation do |corporation|
+        user.in? corporation.wohnheimsverein.officers if corporation.wohnheimsverein
+      end
 
       # Local officers of pages can edit their pages and sub-pages
       # as long as they are the authors or the pages have *no* author.
@@ -302,12 +322,10 @@ class Ability
     can :export_member_list, Group
     if not read_only_mode?
       can [:create_event, :create_event_for], Group
+      can :create, Event
       can [:update, :destroy, :invite_to], Event do |event|
         event.contact_people.include? user
       end
-
-      # Global officers can post to any group.
-      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
     end
   end
 
@@ -318,16 +336,21 @@ class Ability
 
     can :index, :root
 
+    can :index, :contacts
     can :index, :documents
     can :index, :my_groups
+    can :index, :gesuche_und_angebote
+    can :index, :calendars
+    can :index, :heraldics
+    can :index, SupportRequest
 
     can :index_mine, Group
 
-    # Regular users can read users that are not hidden.
-    # And they can read themselves.
-    #
-    can :read, User, id: User.find_all_non_hidden.pluck(:id)
-    can :read, user
+    can :read, User, id: user.id
+    can :index, User
+
+    can :read, Corporation
+    can :index_accommodations, Corporation
 
     # Regular users can access the list of mailing lists.
     #
@@ -337,6 +360,10 @@ class Ability
     can :index, :officers
 
     if not read_only_mode?
+      # Jeder muss Dokumente erstellen können, z.B. um Konventsprotokolle hochzuladen.
+      # Ansonsten würden auch Verteilermails mit Dokumenten fehlschlagen.
+      can :create, Document
+
       # Regular users can create, update or destroy own profile fields
       # that do not belong to the General section.
       #
@@ -371,11 +398,7 @@ class Ability
       can :create_attachment_for, Event do |event|
         can?(:join, event) or event.attendees.include?(user) or event.contact_people.include?(user)
       end
-      can [:update, :destroy], Attachment do |attachment|
-        attachment.author == user and
-        attachment.parent.kind_of?(Event) and
-        (attachment.parent.attendees.include?(user) or attachment.parent.contact_people.include?(user))
-      end
+      can [:update, :destroy], Attachment, author_user_id: user.id
 
       # If a user is contact person of an event, he can provide pages and
       # attachment for this event.
@@ -396,7 +419,7 @@ class Ability
 
       # If a user can read an object, he can comment it.
       #
-      can :create_comment_for, [Post] do |commentable|
+      can [:create_comment_for, :create_comment], [Post] do |commentable|
         can? :read, commentable
       end
 
@@ -421,9 +444,7 @@ class Ability
     can :read, Page do |page|
       (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
-    can [:read, :download], Attachment do |attachment|
-      can?(:quickly_download, attachment) || attachment.parent.try(:group).nil? || attachment.parent.try(:group).try(:members).try(:include?, user)
-    end
+    can [:read, :download], Attachment, parent_type: "Group", parent_id: user.group_ids
 
     # All users can join events.
     #
@@ -436,6 +457,9 @@ class Ability
     can :index_events, Group
     can :index_events, User, :id => user.id
 
+    can [:create_post, :create_post_for], Event, group_id: user.group_ids
+    can [:create_post, :create_post_for], Event, parent_groups: { id: user.group_ids }
+
     # Name auto completion
     #
     can :autocomplete_title, User
@@ -444,28 +468,11 @@ class Ability
     can :index, Notification
     can :read, Notification, recipient: {id: user.id}
 
-    # Users can read post of their groups.
-    can :read, Post, group: {id: user.group_ids}
-    can :index_posts, Group, id: user.group_ids
-
     # Comments:
     # - Users can read comments for all objects they can read anyway.
     # - And they can create comments for these objects as well (see above.)
     can :read, Comment do |comment|
       can? :read, comment.commentable
-    end
-
-    # Posts and Comments can be read when the users has been mentioned:
-    can :read, [Post, Comment] do |post_or_comment|
-      post_or_comment.mentioned_users.include? user
-    end
-
-    # Users can always read posts they have created, e.g.
-    # - if they have left the group later
-    # - if they have addressed another group
-    #
-    can :read, Post do |post|
-      post.author == user
     end
 
     # Post attachments can be read if the post can be read.
@@ -494,17 +501,6 @@ class Ability
     can :create_beta_invitation_for, Beta do |beta|
       beta.invitees.include? user
     end
-
-    # Mobile app
-    can :use, :mobile_app do
-      Mobile::BaseController.mobile_beta.invitees.include?(user)
-    end
-    can :read, :mobile_welcome
-    can :read, :mobile_dashboard
-    can :read, :mobile_app_info
-    can :read, :mobile_contacts
-    can :read, :mobile_events
-    can :read, :mobile_documents
   end
 
   def rights_for_auth_token_users
@@ -530,12 +526,10 @@ class Ability
     # Feature switches
     #
     can :use, :semester_calendars
-    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
     # can :use, :mail_delivery_account_filter
     can :use, :help_videos
     can :use, :permalinks
-    can :use, :caching
-    can :use, :find_and_filter
 
     # it's not ready, yet, but the tests use it already.
     if Rails.env.test?
@@ -635,57 +629,9 @@ class Ability
       can :read, :personal_feed
     end
 
-    # Nobody can destroy non-empty pages that are older than 10 minutes.
-    # Pages that are no longer needed can be archived instead.
-    #
-    cannot :destroy, Page do |page|
-      (page.created_at < 10.minutes.ago) && page.not_empty?
-    end
-
-    # Nobody can destroy non-empty events that are older than 10 minutes.
-    # This kind of clean-up is not desired as this would delete events
-    # from the calendar subscriptions as well.
-    #
-    cannot :destroy, Event do |event|
-      (event.created_at < 10.minutes.ago) && event.non_empty?
-    end
-
-    # Nobody can destroy semester calendars with attachments.
-    #
-    cannot :destroy, SemesterCalendar do |semester_calendar|
-      semester_calendar.attachments.count > 0
-    end
-
-    # Nobody can destroy or update a ballot that is signed.
-    cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
-      ballot.signed?
-    end
-
-    # We don't want people to re-use older semester calendars. Thus, after a while,
-    # the term cannot be changed anymore. They should create new calendars for new
-    # terms.
-    cannot :change_term, SemesterCalendar do |semester_calendar|
-      semester_calendar.created_at < 1.day.ago
-    end
-
     # All users can show tags. This does not mean that they
     # can see all tagged contents though.
     can :read, ActsAsTaggableOn::Tag
-
-    # Send messages to a group, either via web ui or via email:
-    # This is allowed if the user matches the mailing-list-sender-filter setting.
-    # Definition in: concerns/group_mailing_lists.rb
-    #
-    can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
-      group.user_matches_mailing_list_sender_filter?(user)
-    end
-
-    # Force instant delivery after creating the post.
-    #
-    can :deliver, Post do |post|
-      post.author == user and
-      can? :force_post_notification, post.group
-    end
 
     # Activate platform mailgate, i.e. accept incoming email.
     # The authorization to send to a specific group is done separately in
@@ -705,14 +651,6 @@ class Ability
     # See AvatarsController.
     #
     can :read, :avatars
-
-    # Everyone can read the mobile app's welcome screen.
-    can :read, :mobile_welcome
-
-    # Nobody can recalculate term reports that have already been submitted.
-    cannot :recalculate, TermReport do |term_report|
-      term_report.state && !(term_report.state.rejected?)
-    end
 
   end
 
@@ -743,4 +681,48 @@ class Ability
       document.has_flag? :dummy
     end
   end
+
+  def restrictions_for_everyone
+    cannot :use, :pdf_search  # It's not ready, yet. https://trello.com/c/aYtvpSij/1057
+
+    # Nobody can destroy non-empty pages that are older than 10 minutes.
+    # Pages that are no longer needed can be archived instead.
+    # Public pages can be destroyed until TODO we have the archive-pages interface back.
+    #
+    cannot :destroy, Page do |page|
+      (page.created_at < 10.minutes.ago) && page.not_empty? && !page.kind_of?(Pages::PublicPage)
+    end
+
+    # Nobody can destroy events with attendees.
+    # If an event is cancelled, it should be noted in the event title.
+    # Otherwise, the event would just be missing in the users' calendars.
+    #
+    cannot :destroy, Event do |event|
+      event.attendees.count > 0
+    end
+
+    # Nobody can destroy semester calendars with attachments.
+    #
+    cannot :destroy, SemesterCalendar do |semester_calendar|
+      semester_calendar.attachments.count > 0
+    end
+
+    # Nobody can destroy or update a ballot that is signed.
+    cannot [:update, :destroy, :submit, :create_attachment_for], DecisionMaking::Ballot do |ballot|
+      ballot.signed?
+    end
+
+    # We don't want people to re-use older semester calendars. Thus, after a while,
+    # the term cannot be changed anymore. They should create new calendars for new
+    # terms.
+    cannot :change_term, SemesterCalendar do |semester_calendar|
+      semester_calendar.created_at < 1.day.ago
+    end
+
+    # Nobody can recalculate term reports that have already been submitted.
+    cannot :recalculate, TermReport do |term_report|
+      term_report.state && !(term_report.state.rejected?)
+    end
+  end
+
 end

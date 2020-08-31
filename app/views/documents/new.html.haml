@@ -1,0 +1,7 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Dokumente hochladen
+
+%vue_new_documents_form{':initial_post': drafted_post.as_json.merge({parent_groups: drafted_post.parent_groups.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path, corporation: group.corporation.as_json})}.as_json, parent_users: drafted_post.parent_users.as_json}, attachments: drafted_post.attachments.collect { |attachment| attachment.as_json.merge({author: attachment.author.as_json}) }.as_json).to_json, ':current_user_groups': current_user.groups.regular.select { |group| can? :create_post, group }.collect { |group| group.as_json.merge({title: group.title, avatar_path: group.avatar_path, corporation: group.corporation.as_json}) }.to_json, sent_via: post_draft_via_key}
+

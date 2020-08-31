@@ -1,0 +1,21 @@
+.page-header
+  .row.align-itens-center
+    .col
+      .page-title Plattform-Hilfe
+
+
+.row
+  .col-md-8
+    .card
+      .card-header
+        = vue_create_post_form initial_post: drafted_post, sent_via: post_draft_via_key, parent_group: Group.support, send_via_email: true, placeholder: "Nachricht an Bundesbrüder vom Plattform-Support schreiben"
+      = vue_posts support_requests
+      .card-body
+        .text-center.small.text-muted
+          .mb-1 Schreib uns einfach. Wir helfen Dir gerne weiter!
+          .mb-0 Deine Bundesbrüder aus dem Arbeitskreis Internet
+
+  .col-md-4
+    = render partial: 'pages/public_pages/profile_card', locals: {group: support_group}
+    = render partial: 'pages/public_pages/officers_card', locals: {group: support_group}
+

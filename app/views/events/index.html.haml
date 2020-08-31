@@ -1,10 +1,74 @@
-- @title = title_for_events_index  # see EventsHelper
-- set_title @title  # set html title tag
+.page-header
+  .row.align-itens-center
+    .col
+      - if parent
+        .page-pretitle.d-none.d-sm-block= parent.title
+      .page-title= current_title
+    .col-auto
+      - if user == current_user
+        %a.btn.btn-white{href: events_url(format: 'ics', protocol: 'webcal', token: current_user.account.auth_token), title: "Veranstaltungen, die mich betreffen, im Kalender auf dem eigenen Rechner oder Smartphone abonnieren. Der Kalender wird dann automatisch auf dem Laufenden gehalten."}
+          = calendar_icon
+          Kalender abonnieren (iCal)
 
-= render partial: 'groups/tabs', locals: {active: 'events'} if @group && can?(:read, @group)
-- @hide_vertical_nav = true if not can?(:read, @group)
+- show_side_column = semester_calendars.any?
+.row
+  %div{class: show_side_column ? 'col-lg-9' : 'col-lg-12'}
+    %vue-edit-box
+      .card.clear
+        .table-responsive
+          %table.table.card-table.align-items-center.table-vcenter
+            %thead
+              %tr
+                %td
+                %td Datum
+                %td Veranstaltung
+                %td Gruppe
+                -#%td Ansprechpartner
+                %th
+            %tbody
+              - for event in events
+                - if event.start_at
+                  %tr.event{class: [('publish_on_local_website' if event.publish_on_local_website), ('publish_on_global_website' if event.publish_on_global_website)].join(" ")}
+                    %td.w-1
+                      - if event.group
+                        = avatar event.group
+                    %td.text-truncate= localize event.start_at
+                    %td.event_name
+                      %strong
+                        -#= editable event, :name, editable: can?(:update, event), link_to: event_path(event)
+                        = link_to event.name, event
+                    %td
+                      - if event.group
+                        = link_to group_events_path(group_id: event.group.id) do
+                          = event.group.name
+                          - if event.group.corporation && event.group.corporation != event.group
+                            = event.group.corporation.name
+                    -#%td
+                    -#  - if event.contact_people.first
+                    -#    = link_to event.contact_people.first.title, event.contact_people.first
+                    %td
+                      - if can? :create_post, event
+                        = link_to event_path(event), class: 'btn btn-icon btn-white', title: "Veranstaltungsfotos posten" do
+                          = camera_icon
+          - unless params[:all]
+            .card-footer.text-center
+              = link_to url_for(all: true), class: 'btn btn-white' do
+                Mehr anzeigen
 
-- if @group and not @all
-  = render partial: 'upcoming_events'
-- else
-  = render partial: 'all_events'
+  - if show_side_column
+    .col-lg-3
+      - for semester_calendar in semester_calendars
+        - if attachment = semester_calendar.attachments.last
+          .card
+            .card-header
+              %h3
+                = t :semester_calendar
+                = semester_calendar.group.title
+            .card-body
+              %a{href: attachment.file_url, target: '_blank'}
+                %img{src: attachment.file.medium.url}
+            .card-footer
+              - if can?(:update, corporation)
+                = link_to "Semesterprogramm ändern", current_semester_calendar_path(group_id: semester_calendar.group.id), class: 'btn btn-white btn-sm'
+              - else
+                = link_to "Vollständiges Programm anzeigen", current_semester_calendar_path(group_id: semester_calendar.group.id), class: 'btn btn-white btn-sm'

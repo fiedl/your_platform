@@ -36,6 +36,7 @@ Rails.application.routes.draw do
 
   get 'search/guess', to: "search#lucky_guess"
   get 'search/preview', to: "search#preview"
+  get 'search/new', to: "search#new"
   get :search, to: "search#index"
   get 'opensearch.xml', to: 'search#opensearch', as: 'opensearch'
 
@@ -55,9 +56,12 @@ Rails.application.routes.draw do
     get :badges, to: 'user_badges#index'
     get :activities, to: 'activities#index'
     get :contact, to: 'user_contact_information#index', as: 'contact_information'
-    get :posts, to: 'user_posts#index'
+    get :blog_posts, to: 'user_posts#index'
     get :sign_in, to: 'user_masquerade#show', as: 'masquerade'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
+    get :groups, to: 'groups#index'
+    get :documents, to: 'documents#index'
   end
 
   get :settings, to: 'user_settings#index'
@@ -69,6 +73,7 @@ Rails.application.routes.draw do
 
   get 'groups/:id/address_labels/(:filter)/:pdf_type.:format', to: 'groups#show', as: 'group_address_labels'
   #get 'groups/:parent_group_id/subgroups(.:format)', to: 'groups#index', as: 'subgroups'
+  get 'groups/:group_id/semester_calendar', to: 'semester_calendars#show', as: '/current_semester_calendar'
   resources :groups do
     get :news, to: 'group_news#index'
     get :subgroups, to: 'groups#index'
@@ -84,6 +89,9 @@ Rails.application.routes.draw do
     post 'members/memberships', to: 'memberships/from_members_index#create'
     get :member_data_summaries, to: 'group_member_data_summaries#index'
     get :officers, to: 'officers#index'
+    namespace :officers do
+      get :history, to: '/officer_history#index'
+    end
     get :settings, to: 'group_settings#index'
     get :mailing_lists, to: 'group_mailing_lists#index'
     get :memberships, to: 'memberships#index'
@@ -96,12 +104,16 @@ Rails.application.routes.draw do
     get 'terms/:year/:term_type/calendar', to: 'semester_calendars#show', as: 'semester_calendar_by_term_and_year'
     get 'exports/:list.:format', to: 'list_exports#show', as: 'list_export'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
     namespace :excel_imports do
       resources :users
     end
+    get :website, to: 'websites#show'
+    post :website, to: 'websites#create'
+    get :documents, to: 'documents#index'
   end
-  
-  resources :my_groups
+
+  resources :websites
 
   namespace :groups, path: "" do
     resources :groups_of_groups do
@@ -109,10 +121,16 @@ Rails.application.routes.draw do
     end
     resources :corporations_parents, controller: 'groups_of_groups'
     resources :rooms
+    resources :free_groups
   end
 
+  resources :free_groups, controller: 'groups/free_groups'
+
   get :corporations, to: 'corporations#index'
-  resources :corporations, controller: 'groups'
+  resources :corporations, controller: 'groups' do
+    get :accommodations, to: 'accommodations#index'
+    resources :accommodation_sepa_debits
+  end
   resources :officer_groups
 
   namespace :officers do
@@ -133,10 +151,21 @@ Rails.application.routes.draw do
     get :renew_cache, to: 'cache_renewals#create'
     resources :logos, controller: :logos
     resources :relocations, controller: 'page_relocations'
+    get :documents, to: 'documents#index'
+  end
+
+  namespace :pages, path: '' do
+    resources :public_pages, path: '/public'
+    resources :public_events_pages, path: '/public/events'
+    resources :public_gallery_pages, path: '/public/galleries'
   end
 
   get :home_pages, to: 'pages/home_pages#index'
   post :home_pages, to: 'pages/home_pages#create'
+
+  resources :calendars
+
+  resources :contacts
 
   resources :logos
 
@@ -197,6 +226,7 @@ Rails.application.routes.draw do
   resources :memberships
   resources :status_memberships
   resources :relationships
+  resources :gesuche_und_angebote
 
   get 'events/public', to: 'events#index', published_on_global_website: true, all: true, as: 'public_events'
   resources :events do
@@ -206,6 +236,7 @@ Rails.application.routes.draw do
     post 'invite/:recipient', to: 'events#invite', as: 'invite'
     get :attachments, to: 'attachments#index'
     post :renew_cache, to: 'cache_renewals#create'
+    get :renew_cache, to: 'cache_renewals#create'
   end
   resources :semester_calendars do
     member do
@@ -226,7 +257,8 @@ Rails.application.routes.draw do
 
   resources :issues
 
-  post :support_requests, to: 'support_requests#create'
+  resources :support_requests
+  resources :heraldics
 
   get 'avatars', to: 'avatars#show'
   get 'emojis', to: 'emojis#index'
@@ -258,10 +290,7 @@ Rails.application.routes.draw do
   resources :integrations, only: [:index]
   get 'integrations/trello', to: 'integrations/trello#show'
 
-
   get :renew_cache, to: 'cache_renewals#create'
-
-  get "errors/unauthorized"
 
   # Dashboards for global admins:
   global_admin_constraint = lambda do |request|
@@ -303,20 +332,7 @@ Rails.application.routes.draw do
     get :invitations, to: 'beta_invitations#index'
   end
 
-  namespace :mobile do
-    get :welcome, to: 'welcome#index'
-    get :beta, to: 'beta#show'
-    get :dashboard, to: 'dashboard#index'
-    get :app_info, to: 'app_info#index'
-    get :contacts, to: 'contacts#index'
-    get :documents, to: 'documents#index'
-    get 'documents/:id', to: 'documents#show', as: 'document'
-    get 'events/:id', to: 'events#show', as: 'event'
-    get :nearby_locations, to: 'nearby_locations#index'
-    get 'partials/:partial_key', to: 'partials#show'
-    resources :photos, only: [:show, :index, :create]
-  end
-
+  get :vorort, to: 'vororte#show'
 
   apipie
   get :api, to: 'apipie/apipies#index'
@@ -333,7 +349,10 @@ Rails.application.routes.draw do
         resources :events
         resources :blog_posts
       end
-      resources :events
+      resources :events do
+        post :join, to: 'events/join#create'
+        post :leave, to: 'events/leave#create'
+      end
       resources :users do
         get :corporate_vita, to: 'users/corporate_vita#show'
         get :change_status_button, to: 'users/change_status_button#show'
@@ -341,10 +360,26 @@ Rails.application.routes.draw do
         get :avatar, to: '/avatars#show'
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
+        post :change_status, to: 'change_status#create'
       end
-      resources :groups
+      resources :groups do
+        resources :members
+      end
+      resources :corporations do
+        resources :rooms
+      end
+      resources :offices
+      resources :room_occupancies
       resources :documents
+      resources :pages
       resources :songs
+      resources :posts do
+        resources :attachments
+        post :publish, to: 'posts/publications#create'
+        put :public_website_publications, to: 'posts/public_website_publications#update'
+      end
+      resources :attachments
+      resources :comments
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships

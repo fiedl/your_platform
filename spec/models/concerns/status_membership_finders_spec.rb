@@ -17,7 +17,7 @@ describe StatusMembershipFinders do
     @intermediate_group.parent_groups << @corporation
     @status_group.parent_groups << @intermediate_group
     @user = create(:user)
-    @status_group.assign_user @user
+    @status_group.assign_user @user, at: 1.year.ago
 
     @membership = Membership.find_by_user_and_group(@user, @status_group)
     @intermediate_group_membership = Membership.find_by_user_and_group(@user, @intermediate_group)
@@ -70,7 +70,7 @@ describe StatusMembershipFinders do
     end
     it "should return current memberships, but not expired memberships" do
       subject.should include @membership
-      @membership.invalidate at: 2.minutes.ago
+      @membership.move_to @second_status_group, at: 2.minutes.ago
       Memberships::Status.find_all_by_user(@user).should_not include @membership
     end
   end
@@ -80,7 +80,7 @@ describe StatusMembershipFinders do
       subject { Memberships::Status.find_all_by_user(@user).now }
       it "should return current memberships, but not expired memberships" do
         subject.should include @membership
-        @membership.invalidate at: 2.minutes.ago
+        @membership.move_to @second_status_group, at: 2.minutes.ago
         Memberships::Status.find_all_by_user(@user).now.should_not include @membership
       end
     end
@@ -89,7 +89,7 @@ describe StatusMembershipFinders do
       subject { Memberships::Status.find_all_by_user(@user).now_and_in_the_past }
       it "should return current memberships and expired ones" do
         subject.should include @membership
-        @membership.invalidate at: 2.minutes.ago
+        @membership.move_to @second_status_group, at: 2.minutes.ago
         Memberships::Status.find_all_by_user(@user).now_and_in_the_past
             .should include @membership
       end
@@ -99,7 +99,7 @@ describe StatusMembershipFinders do
       subject { Memberships::Status.find_all_by_user(@user).in_the_past }
       it "should return only expired memberships" do
         subject.should_not include @membership
-        @membership.invalidate at: 2.minutes.ago
+        @membership.move_to @second_status_group, at: 2.minutes.ago
         Memberships::Status.find_all_by_user(@user).in_the_past
             .should include @membership
       end

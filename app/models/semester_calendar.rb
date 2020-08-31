@@ -25,6 +25,10 @@ class SemesterCalendar < ApplicationRecord
 
   scope :current, -> { where(term_id: Term.current.map(&:id)) }
 
+  def attachment=(file)
+    attachments.create file: file
+  end
+
   def current?
     term.time_range.cover? Time.zone.now
   end
@@ -56,39 +60,16 @@ class SemesterCalendar < ApplicationRecord
   end
 
 
-  def events(reload = false)
-    @events = nil if reload
-    @events ||= group.events_with_subgroups.where(start_at: term.time_range).order(:start_at).to_a
+  def events
+    group.events_with_subgroups.where(start_at: term.time_range).order(:start_at)
   end
 
-  def reload
-    @events = nil
-    super
+  def important_events
+    events.important
   end
 
-  def events_attributes=(attributes)
-    attributes.each do |i, event_params|
-      if event_params[:id].present?
-        event = events.select { |event| event.id == event_params[:id].to_i }.first
-        if event
-          if event_params[:_destroy] == '1'
-            event.destroy # http://railscasts.com/episodes/196-nested-model-form-revised
-          else
-            event.update_attributes event_params.except(:_destroy, :id)
-          end
-        else
-          raise(RuntimeError, "event #{event_params[:id]} not in semester calendar events.")
-        end
-      else
-        if event_params[:name].present?
-          new_event = Event.create(event_params.except(:_destroy).merge({group_id: group.id}))
-          events.push(new_event)
-        else
-          Rails.logger.warn "Skipping creation of event without name: #{event_params.to_s}"
-        end
-      end
-    end
-    self.touch unless attributes.empty?
+  def commers
+    events.commers.first
   end
 
   def save(*args)
@@ -120,6 +101,21 @@ class SemesterCalendar < ApplicationRecord
 
   def self.by_corporation_and_term(corporation, term)
     self.find_or_create_by(group_id: corporation.id, term_id: term.id)
+  end
+
+  def next
+    self.class.find_or_create_by group_id: group.id, term_id: term.next.id
+  end
+
+  def previous
+    self.class.find_or_create_by group_id: group.id, term_id: term.previous.id
+  end
+
+  def as_json(*args)
+    super.merge({
+      title: title,
+      term: term.as_json
+    })
   end
 
 end

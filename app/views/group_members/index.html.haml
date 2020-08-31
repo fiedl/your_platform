@@ -1,56 +1,107 @@
-= render partial: 'groups/tabs', locals: {active: 'members'}
+/ Page title
+.page-header
+  .row.align-items-center
+    .col
+      %h2.page-title
+        = current_title
+    .col-auto
+      .ml-auto
+        - if group.corporation
+          = link_to "Aktivmeldung eintragen", new_aktivmeldung_path, class: 'btn btn-primary'
 
--# %h1 Mitglied werden
--# %div
--#   - if @own_memberships.now.count == 0
--#     %a.btn.btn-success Beitreten
--#   - elsif @own_memberships.now.direct.count > 0
--#     %a.btn.btn-danger Gruppe verlassen
--#   - @own_memberships.each do |membership|
--#     %p
--#       Mitglied seit
--#       = localize membership.valid_from.to_date if membership.valid_from
--#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
+.row
+  .col-lg-9
+    .card
+      %vue-group-members-table{':rows': member_table_rows.to_json, ':current_user': current_user.to_json}
 
-#members
-  = box class: 'section.members' do
-    - content_for :box_title do
-      = best_in_place_if can?(:rename, group), group, :name
-      = ": #{t :members}"
-      %span.members_count (#{member_table_rows.count})
-    - content_for :box_tools do
-      - if can?(:use, :term_reports) && group.corporation
-        .tool.term_reports
-          = link_to group_term_report_path(group), class: 'btn btn-outline-secondary' do
-            = fa_icon 'bar-chart'
-            = t(:term_report)
-      - if can? :renew_cache, group
-        .tool.renew_cache= renew_cache_button(group)
-      - if can? :add_group_member, group
-        = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
-          = t :add_member
-      = render partial: 'groups/export_button'
-      - if can? :update_members, group
-        = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary right' do
-          = icon 'folder-open'
-          = t(:data_administration)
-      - if can? :manage_memberships_manually, group
-        = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-outline-secondary right'
-    - content_for :box_body do
-      %span#group_members
-        .child_users
-          = render partial: 'groups/member_list', locals: {group: group, member_table_rows: member_table_rows}
+  .col-lg-3
+    = render layout: 'groups/profile_card', locals: {group: group} do
+      .card-footer
+        = link_to "Kontaktdaten", group_path(group), class: 'btn btn-white btn-sm'
+        = link_to "Amtsträger", group_officers_path(group), class: 'btn btn-white btn-sm'
+        - if can? :index_posts, group
+          = link_to "Nachricht schreiben", group_posts_path(group_id: group.id), class: 'btn btn-sm btn-white'
+        - elsif can? :create_post, group
+          = link_to "Nachricht schreiben", new_group_post_path(group_id: group.id), class: 'btn btn-sm btn-white'
 
-- if can? :add_group_member_manually, group
-  %h1= t :add_members_manually
-  %div.add_group_members
-    = form_for new_membership, url: group_members_memberships_path(format: 'json') do |form|
-      %span.add_group_member_name_field.left
-        = form.text_field :user_title, 'data-autocomplete-url' => titles_api_v1_users_path, :class => 'user-select-input new-membership', placeholder: t(:enter_last_name_wait_and_select_from_list)
-      %span.add_group_member_tools.right
-        = form.date_select :valid_from, value: Date.today, class: 'valid-from-field', start_year: 1950, end_year: Time.now.year + 5
-        = form.submit t(:add), class: 'btn btn-primary add-user-button'
+    - if group.child_groups.any?
+      .card
+        .card-body
+          %h3 Untergruppen
+          = group_tree(group) do |child_group|
+            - link_to child_group.name, group_members_path(child_group)
 
--#%h1.group_members_map= t :map
--#%div
--#  .google_maps.with_info_window{data: {datatable: 'table.members'}}
+    .card
+      .card-body
+        -#- if can? :add_group_member, group
+        -#  = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
+        -#    = t :add_member
+
+        - if can? :export_member_list, group
+          %h3 Export
+          = render partial: 'groups/export_button'
+
+        - if group.corporation
+          %h3.mt-4 Statistik
+          .tool.term_reports
+            = link_to group_term_report_path(group.corporation), class: 'btn btn-white' do
+              = fa_icon 'bar-chart'
+              = t(:term_report)
+
+        %h3.mt-4 Mitgliederverwaltung
+        - if can? :renew_cache, group
+          .tool.renew_cache= renew_cache_button(group)
+        -#- if can? :update_members, group
+        -#  = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary' do
+        -#    = icon 'folder-open'
+        -#    = t(:data_administration)
+        - if can? :manage_memberships_manually, group
+          = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-white'
+
+    - if can? :add_group_member_manually, group
+      .card
+        .card-body
+          %div.add_group_members
+            %vue-add-group-member-form{':group': group.to_json}
+
+    - chart = group.number_of_members_chart
+    %vue-number-of-members-chart{height: "50px",
+      ':sub_charts': chart.sub_charts.to_json,
+      group_name: chart.group.name,
+      ':years': chart.years.to_json,
+      }
+      .card-body
+        .row.align-items.center
+          - if group.kind_of? Corporation
+            - %w(Burschen Fuxen Philister).each do |status|
+              - status_group = group.sub_group(status)
+              .col-auto
+                = link_to status_group.name, group_members_path(status_group)
+                = status_group.members.count
+
+    .row.row-deck
+      .col-6.col-lg-12
+        .card
+          .card-body
+            %vue_age_histogram_chart{':ages': group.member_table_rows.collect { |row| row[:age].to_i }.to_json}
+
+      .col-6.col-lg-12
+        .card
+          .card-body
+            %vue_status_pie_chart{':statuses': group.member_table_rows.collect { |row| row[:status] }.to_json}
+
+-#-# %h1 Mitglied werden
+-#-# %div
+-#-#   - if @own_memberships.now.count == 0
+-#-#     %a.btn.btn-success Beitreten
+-#-#   - elsif @own_memberships.now.direct.count > 0
+-#-#     %a.btn.btn-danger Gruppe verlassen
+-#-#   - @own_memberships.each do |membership|
+-#-#     %p
+-#-#       Mitglied seit
+-#-#       = localize membership.valid_from.to_date if membership.valid_from
+-#-#       = "bis #{localize membership.valid_to.to_date}" if membership.valid_to
+-#
+-#-#%h1.group_members_map= t :map
+-#-#%div
+-#-#  .google_maps.with_info_window{data: {datatable: 'table.members'}}

@@ -2,16 +2,19 @@ class Api::V1::SearchUsersController < Api::V1::BaseController
 
   api :GET, '/api/v1/search_users?query=Foo', "Lists all users that match the given query."
   param :query, String, "Query string, e.g. user name"
-  param :limit, :number, "Limit the search results"
+  param :find_non_wingolf_users, :bool, "Whether to find non-wingolf members as well"
+  param :find_deceased_users, :bool, "Whether to find deceased useres"
 
   def index
     authorize! :index, User
 
-    @users = User.search(params[:query]) #, limit: params[:limit].try(:to_i))
-    @users = @users.select { |user| (user.alive? && user.wingolfit?) || user.has_flag?(:dummy) }
-    @users = @users.select { |user| can? :read, user }
+    @users = User
+    @users = @users.alive unless params[:find_deceased_users].to_boolean
+    @users = @users.wingolfiten unless params[:find_non_wingolf_users].to_boolean
+    @users = @users.accessible_by(current_ability, :index)
+    @users = @users.search(params[:query])
 
-    render json: @users.as_json(methods: [:name, :title, :avatar_url])
+    render json: @users.as_json(methods: [:name, :title, :name_affix, :avatar_path, :search_hint])
   end
 
 end

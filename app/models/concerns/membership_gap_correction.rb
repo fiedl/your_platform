@@ -21,10 +21,16 @@ concern :MembershipGapCorrection do
     def apply_gap_correction(user, parent_group, options = {})
       memberships = Membership.with_past.direct.where(ancestor_type: 'Group', ancestor_id: parent_group.descendant_groups.pluck(:id), descendant_type: 'User', descendant_id: user.id)
       memberships = memberships.where(type: options[:membership_type]) if options[:membership_type]
-      memberships = memberships.order(:valid_from)
+
+      # Sorting the memberships by ancestor_id is a hack: The correct status order is given by the
+      # status group id, which is the ancestor_id here. In cases where two memberships have the same
+      # valid_from, the status group ids gives the correct order of the corporate vita.
+      #
+      memberships = memberships.order(:valid_from, :ancestor_id)
+
       memberships.to_a.to_enum.with_index.reverse_each do |membership, index| # https://stackoverflow.com/a/20248507/2066546
         following_membership = memberships[index + 1]
-        membership.valid_to = following_membership.valid_from if following_membership
+        membership.valid_to = following_membership.try(:valid_from)
         membership.save
       end
     end

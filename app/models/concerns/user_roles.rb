@@ -232,6 +232,10 @@ concern :UserRoles do
     groups.flagged(:admins_parent).collect{ |g| g.parent_groups.first.parent_groups.first }.compact.collect{ |g| g.descendant_users.pluck(:id) }.flatten
   end
 
+  def administrated_group_ids
+    groups.flagged(:admins_parent).collect{ |g| g.parent_groups.first.parent_groups.first }.compact.collect{ |g| [g.id, g.descendant_groups.pluck(:id)] }.flatten
+  end
+
   def administrates_user?(id)
     groups.flagged(:admins_parent).each do |g|
       user_group = g.parent_groups.first.parent_groups.first

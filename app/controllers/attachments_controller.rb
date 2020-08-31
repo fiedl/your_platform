@@ -48,20 +48,15 @@ class AttachmentsController < ApplicationController
     @attachment = Attachment.find(params[:id])
     authorize! :update, @attachment
 
-    respond_to do |format|
-      if @attachment.update_attributes(attachment_params)
-        format.html { redirect_to @attachment, notice: 'Attachment was successfully updated.' }
-        format.json { respond_with_bip(@attachment) }
-      else
-        format.html { render action: "edit" }
-        format.json { respond_with_bip(@attachment) }
-      end
-    end
+    @attachment.update! attachment_params
+    render json: @attachment, status: :ok
   end
 
   def destroy
     @attachment = Attachment.find(params[:id])
-    @attachment.destroy
+    @attachment.destroy!
+
+    render json: {}, status: :ok
   end
 
   def show

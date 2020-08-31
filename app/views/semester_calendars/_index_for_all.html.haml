@@ -1,33 +1,75 @@
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Semesterprogramme
+    .col-auto.ml-auto
+      = link_to current_semester_calendar_path(group_id: current_user.primary_corporation), class: 'btn btn-primary' do
+        = plus_icon
+        Semesterprogramm eintragen
+
 .row
-  .col-sm-8.col-xs-12
-    %h1.semester_calendars= current_title
-    %div
-      .semester
-        = form_tag semester_calendars_path, method: 'get' do
-          = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year)
-          = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type)
-          = submit_tag("OK")
+  .col-lg-8
+    .card
+      .card-header
+        .semester.w-100
+          = form_tag semester_calendars_path, method: 'get', class: 'd-flex w-100' do
+            = select_tag :year, options_for_select((1980..(Time.zone.now.year+5)).collect { |year| [year, year] }, term.year), class: 'form-select'
+            = select_tag :term_type, options_for_select([[t(:summer_term), "Terms::Summer"], [t(:winter_term), "Terms::Winter"]], term.type), class: 'form-select'
+            = submit_tag "OK", class: 'btn btn-primary'
 
-      %ul.semester_calendars
-        - @semester_calendars.each do |semester_calendar|
-          %li
-            %strong= link_to "#{semester_calendar.group.title} #{semester_calendar.title}", semester_calendar
-            %small
-              = link_to "iCal", group_events_url(group_id: semester_calendar.group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token))
-              |
-              - if semester_calendar.attachments.any?
-                = link_to "PDF", semester_calendar.attachments.last.file_url
-            %br
-            %small
-              = "#{t(:semester_calendar_updated_at)}:"
-              = localize semester_calendar.updated_at.to_date
+      .table-responsive
+        %table.table.card-table.table-vcenter
+          %thead
+            %tr
+              %th.w-1
+              %th Verbindung
+              %th iCal
+              %th PDF
+              %th Veranstaltungen
+              %th Commers am
+              %th Stand
+          %tbody
+            - for semester_calendar in semester_calendars
+              %tr
+                %td= group_avatar semester_calendar.group
+                %td
+                  %strong= link_to semester_calendar.group.title, semester_calendar_path(semester_calendar)
+                %td
+                  = link_to group_events_url(group_id: semester_calendar.group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token)) do
+                    = calendar_icon
+                %td
+                  - if semester_calendar.attachments.any?
+                    = link_to semester_calendar.attachments.last.file_url do
+                      = document_icon
+                %td= semester_calendar.events.count
+                %td
+                  - if semester_calendar.commers
+                    = link_to semester_calendar.commers do
+                      = localize semester_calendar.commers.start_at.to_date
+                %td= localize semester_calendar.updated_at.to_date
 
-  .col-sm-4.col-xs-12
-    - if @public_events.any?
-      %h1.public_events
-        = t :events_from_the_global_website
-        .tool.public_ical_feed
-          = surround "(", ")" do
-            = link_to "iCal", public_events_url(protocol: 'webcal', format: 'ics')
-      %div
-        = render partial: 'events/events_lis', locals: {events: @public_events}
+  - if public_events.any?
+    .col-lg-4
+      .card
+        .card-header
+          %h3.mb-0 Veranstaltungen aus dem Bund
+          .tool.public_ical_feed.ml-auto
+            = link_to public_events_url(protocol: 'webcal', format: 'ics') do
+              = calendar_icon
+        .card-body
+          - for event in public_events
+            .row.mb-3.align-items-center
+              .col-auto
+                = group_avatar event.group
+              .col
+                %div
+                  %strong
+                    = link_to event do
+                      = event.title
+                %div
+                  %small.text-muted
+                    - if event.group.corporation
+                      = link_to event.group.corporation.title, event.semester_calendar
+                    - else
+                      = event.group.title
+                %small.text-muted= localize event.start_at.to_date

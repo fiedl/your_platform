@@ -1,15 +1,30 @@
-%table.group_of_groups.datatable
-  %thead
-    %tr
-      %th= t :group
-      %th= t :members
-      - group.important_officer_keys.each do |key|
-        %th= t key
-  %tbody
-    - group.child_groups_table_rows.each do |row|
-      - child_group = Group.find row[:child_group_id]
-      %tr
-        %td= link_to child_group.name, child_group
-        %td= row[:members_count]
-        - group.important_officer_keys.each do |key|
-          %td= user_links(User.find(row["#{key}_ids"]))
+.card
+  .table-responsive
+    %table.card-table.table.table-vcenter.group_of_groups
+      %thead
+        %tr
+          %th
+          %th Kürzel
+          %th= group.name.singularize
+          %th= t :members
+          - group.important_officer_keys.each do |key|
+            %th= t key
+      %tbody
+        - group.child_groups_table_rows.each do |row|
+          - child_group = Group.find row[:child_group_id]
+          %tr
+            %td.w-1= group_avatar child_group
+            %td.text-truncate= child_group.token
+            %td= link_to child_group.extensive_name, child_group
+            %td= row[:members_count]
+            - group.important_officer_keys.each do |key|
+              %td
+                - for officer in User.find(row["#{key}_ids"])
+                  .d-flex
+                    = user_avatar officer, class: 'avatar-sm'
+                    .ml-2.mb-2
+                      %strong= link_to officer.title, officer
+                      - if officer.phone
+                        .text-muted
+                          = landline_icon
+                          = link_to officer.phone, "tel:#{officer.phone}", class: 'text-muted'

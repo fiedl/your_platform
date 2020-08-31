@@ -1,3 +1,80 @@
 /*
- *=require_tree './bootstrap_layout'
+ *= require @fullcalendar/core/main.css
+ *= require @fullcalendar/daygrid/main.css
+ *= require 'tabler/dist/css/tabler.min'
+ *    require_tree './bootstrap_layout'
  */
+
+// Profile-avatar fix
+// https://github.com/tabler/tabler/issues/651
+//
+.card-profile-img
+  width: 6rem
+  height: 6rem
+  left: 50%
+  transform: translate(-50%, 0)
+  margin-top: -5rem
+  margin-bottom: 1rem
+  border: 3px solid #fff
+  border-radius: 100%
+  box-shadow: 0 1px 1px rgba(0, 0, 0, .1)
+  background-color: #fff
+.card-profile
+  .card-header
+    height: 9rem
+    background-size: cover
+
+// Black badges
+// https://preview-dev.tabler.io/docs/badges.html
+//
+.bg-black
+  background: #000
+
+// Fix for search-page avatars
+// https://preview-dev.tabler.io/search-results.html
+//
+.card-body > .d-flex > span.avatar
+  min-width: 2rem
+
+// Fix for button and dropdown icons
+.btn:not(.btn-icon), .dropdown-item
+  > img, > i, > span, > .fa, > .icon
+    margin-right: 5px
+
+// Fix for font-awesome icons in nav
+.nav-link-icon i.fa
+  display: block
+  margin-top: 1px
+
+// Fix for danger button in card footers
+.card-footer .btn.btn-danger
+  color: white
+
+// Float helper
+.clear
+  clear: both
+
+// Hack when chaining two .card-body elements.
+.card-body.no-border
+  border-top: none
+  padding-top: 0
+  margin-top: 0
+
+// Dispaly newlines
+.with-newlines
+  white-space: pre-line
+
+// Fix deck rows with card tables
+.card > .table-responsive
+  flex: 1 1 auto
+
+@media (min-width: 48rem)
+  #header_search
+    max-width: 230px
+
+.btn-primary, .btn-primary svg, .btn-info, .btn-info svg
+  color: white
+  stroke: white
+
+.text-black
+  color: #354052

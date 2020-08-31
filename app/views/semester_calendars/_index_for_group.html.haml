@@ -1,17 +1,42 @@
-= render partial: 'groups/tabs', locals: {group: @group, active: 'events'}
-%h1.semester_calendars
-  = current_title
-%div
-  %h2= group.title
-  %ul.semester_calendars
-    - @semester_calendars.reverse.each do |semester_calendar|
-      %li{class: "#{semester_calendar.current? ? 'current' : ''} semester_calendar_#{semester_calendar.id}"}
-        = link_to semester_calendar.title(locale: current_user.locale), semester_calendar
-        - if can? :destroy, semester_calendar
-          = link_to semester_calendar_path(semester_calendar), method: 'delete', remote: true, class: 'btn btn-danger btn-xs show_only_in_edit_mode' do
-            = icon :trash
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle= group.title
+      .page-title Semesterprogramme
+    .col-auto.ml-auto
+      = link_to current_semester_calendar_path(group_id: current_user.primary_corporation), class: 'btn btn-primary' do
+        = plus_icon
+        Semesterprogramm eintragen
 
-  - if can? :index, SemesterCalendar
-    .show_other_semester_calendars_links
-      .show_semester_calendars_of_all_groups
-        = link_to "Semesterprogramme aller Verbindungen anzeigen", semester_calendars_path
+
+.card
+  .table-responsive
+    %table.table.card-table.table-vcenter
+      %thead
+        %tr
+          %th.w-1
+          %th Semester
+          %th iCal
+          %th PDF
+          %th Veranstaltungen
+          %th Commers am
+          %th Stand
+      %tbody
+        - for semester_calendar in semester_calendars
+          %tr
+            %td= group_avatar semester_calendar.group
+            %td
+              %strong= link_to semester_calendar.term.title
+            %td
+              = link_to group_events_url(group_id: semester_calendar.group.id, public: true, format: 'ics', protocol: 'webcal', token: current_user.try(:account).try(:auth_token)) do
+                = calendar_icon
+            %td
+              - if semester_calendar.attachments.any?
+                = link_to semester_calendar.attachments.last.file_url do
+                  = document_icon
+            %td= semester_calendar.events.count
+            %td
+              - if semester_calendar.commers
+                = link_to semester_calendar.commers do
+                  = localize semester_calendar.commers.start_at.to_date
+            %td= localize semester_calendar.updated_at.to_date

@@ -9,6 +9,9 @@ concern :Flags do
       group_ids_no_flags = includes(:flags).where(flags: {flagable_id: nil})
       where(id: group_ids_other_flags + group_ids_no_flags)
     }
+
+    scope :has_flags, -> { where.not(flags: {id: nil}) }
+    scope :has_no_flags, -> { where(flags: {id: nil}) }
   end
 
   class_methods do

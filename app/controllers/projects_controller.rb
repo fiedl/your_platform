@@ -22,8 +22,9 @@ class ProjectsController < ApplicationController
   end
 
   def update
-    @project.update_attributes(project_params)
-    respond_with_bip(@project)
+    @project.update! project_params
+
+    render json: @project, status: :ok
   end
 
   def new

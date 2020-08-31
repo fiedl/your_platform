@@ -1,22 +1,24 @@
 class OfficersController < ApplicationController
-  skip_authorization_check only: :index
+
+  expose :group
+  expose :officer_groups, -> {
+    (
+      group.important_officer_groups +
+      group.descendant_groups.where(type: "OfficerGroup")
+    ).uniq
+  }
 
   def index
-    @group = Group.find(params[:group_id]) || raise(ActionController::ParameterMissing, 'no group found')
-    @structureable = @group
-    authorize! :read, @structureable
+    authorize! :read, group
 
-    @officer_groups = @structureable.descendant_groups.where(type: 'OfficerGroup')
-    @officer_groups_by_scope = @officer_groups.group_by { |officer_group| officer_group.scope }
-    @officer_groups_by_scope = @officer_groups_by_scope.sort_by { |scope, officer_groups| scope.id }
+    set_current_navable group
+    set_current_tab :contacts
 
-    set_current_navable @structureable
-    set_current_title "#{@structureable.title}: #{t(:all_officers)}"
-    set_current_activity :looks_at_officers, @group
-    set_current_access :signed_in
-    set_current_access_text :all_signed_in_users_can_read_this_officer_list
-
-    cookies[:group_tab] = "officers"
+    if group.title.include? t(:officers)
+      set_current_title group.title
+    else
+      set_current_title "#{group.title}: #{t(:officers)}"
+    end
   end
 
   # Required params:

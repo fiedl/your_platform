@@ -1,9 +1,7 @@
 - # Communication Box
 - # This is extracted out into a partial because we needed to override the box in an app.
-- #
 - if can? :update, @user
-  %h1.section.communication= t(:communication)
-  %div
-    %ul.attributes.keys-and-values
-      %li.local_postal_mail_subscription.attribute= render partial: 'users/local_postal_mail_subscription'
-      = profile_field_lis @user.profile.section(:communication).fields, no_remove: true, lock_label: true
+  .card
+    .card-body
+      %h2= t :communication
+      = ajax_toggle user, :local_postal_mail_subscription, "Rundschreiben per Post erhalten"

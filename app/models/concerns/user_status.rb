@@ -28,7 +28,12 @@ concern :UserStatus do
   end
 
   def current_status_group_in(corporation)
+    Memberships::Status # make sure this class is loaded (auto-loading issue)
     StatusGroup.find_by_user_and_corporation(self, corporation) if corporation
+  end
+
+  def current_status_in(corporation)
+    current_status_group_in(corporation).try(:name).try(:singularize)
   end
 
   def status_group_in_primary_corporation

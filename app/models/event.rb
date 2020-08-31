@@ -3,8 +3,15 @@ class Event < ApplicationRecord
   validates :start_at, presence: true
   before_validation -> { self.start_at ||= self.created_at || Time.zone.now }
 
-  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page), link_class_name: 'DagLink'
+  has_dag_links ancestor_class_names: %w(Group Page), descendant_class_names: %w(Group Page Post), link_class_name: 'DagLink'
   has_many :attachments, as: :parent, dependent: :destroy
+
+  scope :important, -> { where(publish_on_global_website: true) }
+  scope :commers, -> { where("name like ? or name like ?", "%commers%", "%kommers%") }
+  scope :wartburgfest, -> { where("name like ?", "%wartburgfest%") }
+  scope :wingolfsseminar, -> { where("name like ?", "%wingolfsseminar%") }
+  scope :bundesconvent, -> { where_like name: ["Chargiertenconvent", "Vertreterconvent"] }
+
 
   include Structureable
   include EventGraph
@@ -12,6 +19,7 @@ class Event < ApplicationRecord
   include EventGroups
   include EventContactPeople
   include EventAttendees
+  include EventAvatar
 
 
   # General Properties
@@ -19,7 +27,8 @@ class Event < ApplicationRecord
 
   def as_json(options = {})
     super(options).merge({
-      group_id: group_id
+      group_id: group_id,
+      # contact_person_id: contact_person_id  # FIXME: Add this back when we have a more performant association for contact people.
     })
   end
 
@@ -58,7 +67,7 @@ class Event < ApplicationRecord
   end
 
   def empty_title?
-    self.name.in? [nil, "", I18n.t(:enter_name_of_event_here)]
+    self.name.in? [nil, "", I18n.t(:enter_name_of_event_here), "Neue Veranstaltung"]
   end
 
   def empty_description?
@@ -81,16 +90,16 @@ class Event < ApplicationRecord
     self.group.try(:corporation).try(:id)
   end
 
-  def contact_name
-    self.contact_person.try(:title)
-  end
-
-  def contact_id
-    self.contact_person.try(:id)
-  end
-
   def avatar_url
     self.group.try(:avatar_url) || self.group.try(:corporation).try(:avatar_url)
+  end
+
+  def groups
+    Group.where(id: [group_id] + parent_group_ids)
+  end
+
+  def corporations
+    groups.map(&:corporation) - [nil]
   end
 
 
@@ -111,6 +120,21 @@ class Event < ApplicationRecord
   def localized_end_at=(string)
     attribute_will_change! :end_at
     self.end_at = string.present? ? LocalizedDateTimeParser.parse(string, Time).to_time : nil
+  end
+
+  def term
+    Term.by_date start_at
+  end
+
+  def semester_calendars
+    SemesterCalendar.where(group_id: corporations, term_id: term) if corporations.any? && term
+  end
+
+  def semester_calendar
+    semester_calendars.first
+  end
+  def semester_calendar!
+    semester_calendars.try(:first_or_create) || raise('cannot create semester calendar')
   end
 
 
@@ -208,6 +232,4 @@ class Event < ApplicationRecord
   def self.to_ical
     self.to_ics
   end
-
-  include EventCaching if use_caching?
 end

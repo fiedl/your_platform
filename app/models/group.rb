@@ -1,9 +1,12 @@
 class Group < ApplicationRecord
 
-  has_dag_links ancestor_class_names: %w(Group Page Event), descendant_class_names: %w(Group User Page Workflow Project), link_class_name: 'DagLink'
+  has_dag_links ancestor_class_names: %w(Group Page Event), descendant_class_names: %w(Group User Page Workflow Project Post), link_class_name: 'DagLink'
 
   default_scope { includes(:flags) }
-  scope :regular, -> { not_flagged([:contact_people, :attendees, :officers_parent, :group_of_groups, :everyone, :corporations_parent]) }
+  scope :regular, -> {
+    where(type: nil).or(where.not(type: "Groups::PhvsParent")).not_flagged([:contact_people, :attendees, :officers_parent, :admins_parent, :group_of_groups, :everyone, :corporations_parent, :bvs_parent, :wbl_abo])
+  }
+  scope :has_descendant_users, -> { includes(:descendant_users).where(users: { id: nil }) }
 
   include Structureable
   include GroupGraph
@@ -30,6 +33,10 @@ class Group < ApplicationRecord
   include GroupMapItem
   include HasProfile
   include GroupSearch
+  include GroupAvatar
+  include GroupCharts
+  include GroupPublicWebsite
+  include GroupHeraldics
 
   # Easy group settings: https://github.com/huacnlee/rails-settings-cached
   # For example:
@@ -83,7 +90,7 @@ class Group < ApplicationRecord
 
   def name_with_corporation
     if self.corporation_id && (self.corporation_id != self.id)
-      "#{self.name} (#{self.corporation.name})"
+      "#{self.name} #{self.corporation.name}"
     else
       self.name
     end
@@ -218,6 +225,30 @@ class Group < ApplicationRecord
   def status_group_ids
     status_groups.pluck(:id)
   end
+  def status_group_tree
+    child_groups_with_status_groups.collect do |child_group|
+      {
+        id: child_group.id,
+        name: child_group.name,
+        type: child_group.type,
+        children: child_group.status_group_tree
+      }
+    end
+  end
+  def status_group_tree_ids
+    child_groups_with_status_groups.collect { |child_group| [child_group, child_group.descendant_groups] }.flatten.map(&:id)
+  end
+  def child_groups_with_status_groups
+    child_groups & (status_groups + status_groups.map(&:ancestor_groups)).flatten
+  end
+  def status_groups_with_level(group_hash_array = status_group_tree, level = 0)
+    group_hash_array.collect do |entry|
+      entry[:level] = level
+      children = status_groups_with_level(entry[:children], level + 1)
+      entry[:children] = nil
+      [entry, children]
+    end.flatten
+  end
 
   def find_deceased_members_parent_group
     self.descendant_groups.where(name: ["Verstorbene", "Deceased"]).limit(1).first
@@ -235,6 +266,10 @@ class Group < ApplicationRecord
   #
   def self.main_org
     self.corporations_parent
+  end
+
+  def self.support
+    find_or_create_special_group :support
   end
 
   include GroupCaching if use_caching?

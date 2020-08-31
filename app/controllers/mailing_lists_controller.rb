@@ -8,12 +8,14 @@ class MailingListsController < ApplicationController
     authorize! :index, MailingList
 
     set_current_title t :mailing_lists
-    set_current_breadcrumbs [
-      {title: current_title}
-    ]
+    set_current_tab :communication
+  end
 
-    set_current_access :signed_in
-    set_current_access_text t :all_signed_in_users_can_read_this_content
+  def new
+    authorize! :create, MailingList
+
+    set_current_title "E-Mail-Verteiler einrichten"
+    set_current_tab :communication
   end
 
 end

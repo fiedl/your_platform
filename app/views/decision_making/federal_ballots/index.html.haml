@@ -1,19 +1,26 @@
-%h1
-  = current_title
-  .create_ballot.tool= link_to t(:new_federal_ballot), decision_making_federal_ballots_path, method: :post, class: 'btn btn-outline-secondary'
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-title Bundesanträge
+    .col-auto.ml-auto.d-flex
+      .create_ballot.tool
+        = link_to decision_making_federal_ballots_path, method: :post, class: 'btn btn-primary' do
+          = plus_icon
+          = t(:new_federal_ballot)
 %div
-
-  %table.ballots.federal_ballots.datatable
-    %thead
-      %tr
-        %th= t :proposed_at
-        %th= t :proposer
-        %th= t :title
-        %th= t :status
-    %tbody
-      - federal_ballots.each do |ballot|
-        %tr
-          %td= l ballot.proposed_at.to_date if ballot.proposed_at
-          %td= ballot.proposer_group.try(:title)
-          %td= link_to ballot.title, ballot
-          %td{class: ballot.status_key}= render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: ballot}
+  .card
+    .responsive-table
+      %table.card-table.table.table-vcenter.ballots.federal_ballots
+        %thead
+          %tr
+            %th= t :proposed_at
+            %th= t :proposer
+            %th= t :title
+            %th= t :status
+        %tbody
+          - federal_ballots.each do |ballot|
+            %tr
+              %td= l ballot.proposed_at.to_date if ballot.proposed_at
+              %td= ballot.proposer_group.try(:title)
+              %td= link_to ballot.title, ballot
+              %td{class: ballot.status_key}= render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: ballot}

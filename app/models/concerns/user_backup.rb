@@ -63,6 +63,22 @@ concern :UserBackup do
     self.delete_cache
   end
 
+  def restore_minimal_profile
+    raise "This user (#{id}) already has an existing profile. Not restoring from backup file." if profile_fields.any?
+    hash = ActiveSupport::JSON.decode(File.read(latest_backup_file))
+    self.first_name = hash['first_name']
+    self.last_name = hash['last_name']
+    self.save!
+    hash['profile_fields']
+      .select { |pf| pf['key'].to_s.in? ['date_of_birth', 'date_of_death', 'W-Nummer', 'w_nummer'] }
+      .each do |profile_field_hash|
+        profile_field = self.profile_fields.create profile_field_hash.except('children', 'key', 'flags')
+        profile_field.key = profile_field_hash['key']
+        profile_field.save
+    end
+    self.delete_cache; self.reload
+  end
+
   def anonymize_name_and_remove_profile_and_account!(confirmation = {})
     raise "Please confirm the destructive action by 'confirm: \"yes\"'." unless confirmation[:confirm] == "yes"
     self.profile_fields.destroy_all

@@ -1,5 +1,8 @@
 = render partial: 'groups/tabs', locals: {active: 'members'} if group
 
-%h1.memberships= current_title
-%div
-  = render partial: 'memberships_table', locals: {memberships: memberships}
+.card.memberships
+  .card-header
+    %h2= current_title
+  .card-body
+    %vue-edit-box
+      = render partial: 'memberships_table', locals: {memberships: memberships}

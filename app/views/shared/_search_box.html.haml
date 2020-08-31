@@ -1,3 +1,0 @@
-= form_tag search_path, :method => 'get', class: "navbar-form navbar-search form-inline my-2 my-lg-0", role: 'search' do
-  = search_field_tag :query, params[ :query ], :class => "search-query form-control mr-sm-2 #{'find_and_filter' if can?(:use, :find_and_filter)}", :placeholder => t(:find_and_filter), :autocomplete => 'off', :title => t(:type_query_and_press_enter), data: {placement: 'bottom', preview_url: search_preview_path(format: 'json')}
-  %button.btn.btn-outline-light.my-2.my-sm-0{type: 'submit'}= t :search

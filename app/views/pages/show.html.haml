@@ -1,56 +1,15 @@
-= render partial: 'pages/tabs'
+.row
+  .col-md-8
+    .card
+      - if page.image || can?(:update, page)
+        %vue-editable-image{src: page.image.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, page).to_json, img_class: 'card-header', update_url: polymorphic_path(page), attribute_name: "pages_public_page[image]", icon: 'fa fa-image', style: 'min-height: 200px'}
+      .card-body
+        %vue-edit-box
+          = editable page, :content, type: 'wysiwyg', class: 'form-control'
 
-- page ||= @page
-
-- if page.visible_to?(current_user, preview_as: params[:preview_as])
-
-  - content_for :toolbar do
-    = render partial: 'pages/page_settings_button', object: page, as: :page if can? :manage, page
-
-  = draggable_boxes_row(page) do
-
-    .col-sm-12.col-xs-12.resizable_col
-      = render page, show_meta: (page.kind_of?(BlogPost) || (not page.public?))
-
-    - if page.settings.show_group_map
-      .col-sm-6.col-xs-12.resizable_col
-        %h1.group_map_box{id: "group-map-box-#{page.id}"}= group_map_title
-        %div
-          = render partial: 'shared/group_map', locals: {page: page}
-
-    - if @events
-      .col-sm-6.col-xs-12.resizable_col.public_root_events= render partial: 'pages/events', locals: {page: page, events: @events}
-
-    - visible_pages_only(page.embedded_pages).each do |embedded_page|
-      .col-sm-6.col-xs-12.resizable_col= render embedded_page
-      - visible_pages_only(embedded_page.blog_posts).each do |blog_post|
-        .col-sm-6.col-xs-12= render partial: 'blog_posts/teaser', object: blog_post, as: :blog_post
-
-    - visible_pages_only(page.teaser_boxes).each do |teaser_box_page|
-      .col-sm-6.col-xs-12.resizable_col= render partial: 'pages/teaser_box', object: teaser_box_page, as: :page
-
-    - if page.settings.show_officers
-      .col-sm-6.col-xs-12.resizable_col
-        - if page.settings.show_officers_for_group_id
-          = render partial: 'pages/officers', locals: {structureable: Group.find(page.settings.show_officers_for_group_id), limit: page.number_of_officers_to_show}
-        - else
-          = render partial: 'pages/officers', locals: {structureable: page, limit: page.number_of_officers_to_show}
-
-    .col-sm-12.col-xs-12
-      = render partial: 'pages/new_page_button', locals: {parent_page: page}
-
-    #blog_entries.eq-height
-      - visible_pages_only(page.blog_entries).each do |blog_entry|
-        .col-sm-12.col-xs-12.resizable_col
-          = render partial: 'pages/page', object: blog_entry
-
-    - if page.public? && page.home_page && (page.id != page.home_page.id) && page.home_page.settings.scroll_over_to_start_page
-      #scroll_over_to_home_page{data: {url: page.home_page.url}}
-        #goto_start_page
-          #goto_start_page_indicator= fa_icon 'chevron-down'
-          = t :goto_start_page
-
-- else # Page not visible to the user
-  %h1= page.title
-  %div
-    = t :this_page_has_not_been_published_yet
+  - if page.attachments.any?
+    .col-md-4
+      .card
+        .card-header Dateien
+        .card-body
+          = render attachments

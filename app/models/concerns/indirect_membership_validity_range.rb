@@ -105,6 +105,10 @@ concern :IndirectMembershipValidityRange do
     end
   end
 
+  def recalculate
+    recalculate_validity_range
+  end
+
 
   # Invalidation
   # ====================================================================================================

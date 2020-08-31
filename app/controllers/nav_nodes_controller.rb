@@ -4,8 +4,8 @@ class NavNodesController < ApplicationController
     @nav_node = NavNode.find params[:id]
     authorize! :update, @nav_node
 
-    @nav_node.update_attributes(nav_node_params)
-    respond_with_bip(@nav_node)
+    @nav_node.update! nav_node_params
+    render json: @nav_node, status: :ok
   end
 
   private

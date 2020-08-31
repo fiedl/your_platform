@@ -1,7 +1,9 @@
 concern :ProfileFieldProfileable do
 
   included do
-    belongs_to             :profileable, polymorphic: true
+    belongs_to :profileable, polymorphic: true
+    belongs_to :user, -> { where(profile_fields: {profileable_type: "User"}).includes(:profile_fields) }, foreign_key: :profileable_id
+    belongs_to :group, -> { where(profile_fields: {profileable_type: "Group"}).includes(:profile_fields) }, foreign_key: :profileable_id
 
     # For child profile fields, this returns the profileable of the parent.
     # For parents, this returns just the assigned profileable.

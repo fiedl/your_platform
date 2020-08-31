@@ -1,34 +1,130 @@
-- # We render the vertical nav within this view to save some space.
-- # Therefore, deactivate the vertical nav in the layout.
-- @hide_vertical_nav = true
--#- @hide_footer = true
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle= "Willkommen, #{current_user.first_name}!"
+      .page-title Start
 
-.row.start-page-entry
-  .col-sm-6.col-xs-12
-    .row.d-block
-      - if @pinned_objects.any?
-        = render @pinned_objects
+- Rack::MiniProfiler.step "root/charts" do
+  = render partial: 'root/charts'
 
-      = render partial: 'shared/upcoming_events', locals: {events: current_user.try(:upcoming_events).try(:limit, 5) || []}
+.row.row-deck.row-cards
+  - Rack::MiniProfiler.step "root/events" do
+    .col-lg-6
+      .card
+        .card-header
+          %h4.card-title= t :events
+        - if events.any?
+          .table-responsive
+            %table.table.card-table.table-vcenter
+              %tbody
+                - events.each do |event|
+                  %tr
+                    %td.w-1= avatar event
+                    %td= link_to event.title, event
+                    %td.text-muted
+                      = event_icon
+                      = localize event.start_at
+                    %td= event.group.name
+        - if events.none?
+          .card-body
+            .text-center.text-muted
+              Derzeit sind keine anstehenden Veranstaltungen eingetragen.
+            - if semester_calendar.present? && can?(:update, semester_calendar)
+              .text-center
+                = link_to "Semesterprogramm bearbeiten", semester_calendar
+        - if semester_calendar.present?
+          .card-footer
+            = link_to "Semesterprogramm", semester_calendar, class: 'btn btn-white btn-sm'
 
-      = box title: t(:blog_entries) do
-        %ul.blog_posts.root_list
-          - for blog_post in @blog_posts
-            = render partial: 'root/list_entry', locals: {obj: blog_post, date: blog_post.published_at, category: blog_post.parent, author: blog_post.author}
-  .col-sm-6.col-xs-12.side-col
-    .row
-      .col-sm-6.col-xs-12
-        = box title: "Sammelnachrichten" do
-          %ul.posts.root_list
-            - for post in @posts
-              = render partial: 'root/list_entry', locals: {obj: post, date: post.created_at, category: post.group, author: post.author}
-      .col-sm-6.col-xs-12
-        = render partial: 'root/start_page_elements'
-    .row
-      .col-sm-12.col-xs-12
-        = box title: t(:documents) do
-          %ul.documents.root_list
-            - for document in @documents
-              = render partial: 'root/list_entry', locals: {obj: document, date: document.created_at, category: document.scope, author: document.author, thumb: document.thumb_path, new_tab: true}
+  - Rack::MiniProfiler.step "root/birthdays" do
+    = cache :tabler_birthday_box_v3, expires_in: Time.now.end_of_day - Time.current do
+      .col-lg-6
+        .card
+          .card-header
+            %h4.card-title= t :birthdays
+          .card-body
+            .row.mb-n3
+              - birthday_users.each do |user|
+                .col-12.col-md-6.row.mb-3.align-items-center.filterable
+                  %a.col-auto
+                    %span.avatar{style: "background-image: url(#{user.avatar_path})"}
+                  .col
+                    = link_to user.title, user, class: "text-body d-block"
+                    %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
+                    %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
 
-      
+
+  - Rack::MiniProfiler.step "root/documents" do
+    .col-lg-6
+      .card
+        .card-header
+          %h4.card-title= t :documents
+        .table-responsive
+          %table.table.card-table.table-vcenter
+            %tbody
+              - documents.each do |document|
+                %tr
+                  %td.w-5
+                    .thumb
+                      = link_to document do
+                        = image_tag document.thumb_path
+                  %td= link_to document.title, document
+                  %td.text-nowrap.text-muted
+                    = event_icon
+                    = localize document.created_at.to_date
+                  %td.text-nowrap
+                    - if document.scope.kind_of? Group
+                      = folder_icon # group_icon would be more accurate, but having both icons in one list looks cluttered.
+                      = link_to document.scope.title, group_documents_path(group_id: document.scope.id)
+                    - elsif document.scope.kind_of? Page
+                      = folder_icon
+                      = link_to document.scope.title, page_documents_path(page_id: document.scope.id)
+        .card-footer
+          = link_to "Mehr Dokumente anzeigen", documents_path, class: 'btn btn-white btn-sm'
+          - if can? :create, Document
+            = link_to "Dokumente hochladen", new_document_path, class: 'btn btn-white btn-sm'
+
+  - Rack::MiniProfiler.step "root/posts" do
+    .col-lg-6
+      .card
+        - if can? :create, Post
+          .card-header
+            - Rack::MiniProfiler.step "root/vue_create_post_form" do
+              = vue_create_post_form sent_via: post_draft_via_key, initial_post: drafted_post, suggested_groups: current_user.groups.includes(:flags).regular, show_send_via_email_toggle: true
+        - if posts.none?
+          .card-body
+            .text-center.text-muted
+              Im letzten Jahr hat niemand aus Deinen Gruppen etwas gepostet.
+            .text-center
+              = link_to "Sei der erste", new_post_path
+        - elsif posts.any?
+          - Rack::MiniProfiler.step "root/vue_posts posts" do
+            = vue_posts posts
+        .card-footer
+          = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
+
+- if show_histograms
+  .row.row-deck.row-cards
+    .col-12.col-md-6
+      .card
+        .card-header
+          %h3.mb-0
+            Altersverteilung im Wingolf
+            %a{'data-toggle': "tooltip", 'data-placement': "bottom", title: "Im Moment sind noch nicht alle Philister wieder in die Plattform importiert. Deswegen sieht die Altersverteilung nicht wie erwartet aus."}= info_icon
+        .card-body
+          %vue_age_histogram_chart{':ages': histogram_ages.to_json, title: ""}
+
+    .col-12.col-md-6
+      .card
+        .card-header
+          %h3.mb-0
+            Statusverteilung im Wingolf
+        .card-body
+          %vue_status_pie_chart{':statuses': histogram_statuses.to_json, title: ""}
+
+- Rack::MiniProfiler.step "root/corporation_cards" do
+  .row.row-deck.row-cards
+    - for group in corporations
+      .col-lg-6
+        = cache [group, "root/corporation_card"], expires_in: 1.day do
+          = render partial: 'corporations/corporation_card', locals: {group: group}

@@ -1,8 +1,15 @@
-%h1
-  = current_title
-  - if can? :destroy, federal_ballot
-    = remove_button federal_ballot, confirm: t(:are_you_sure_to_delete_this_ballot), show_only_in_edit_mode: false
-  .tool= render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: federal_ballot}
+.page-header
+  .row.align-itens-center
+    .col-auto
+      .page-pretitle Bundesanträge
+      .page-title
+        = current_title
+    .col-auto
+      = render partial: 'decision_making/federal_ballots/status_label', locals: {federal_ballot: federal_ballot}
+    .col-auto.ml-auto.d-flex
+      - if can? :destroy, federal_ballot
+        = remove_button federal_ballot, confirm: t(:are_you_sure_to_delete_this_ballot), show_only_in_edit_mode: false
+
 %div
   %table.properties
     %tr

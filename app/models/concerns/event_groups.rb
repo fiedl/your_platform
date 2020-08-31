@@ -2,6 +2,10 @@ concern :EventGroups do
 
   included do
     belongs_to :group
+
+    def group
+      super || parent_groups.first
+    end
   end
 
   def self.move_event_to_group(event_id, group_id)
@@ -13,13 +17,13 @@ concern :EventGroups do
     self.save
   end
 
+  def admins_of_self_and_ancestors
+    (super + group.admins_of_self_and_ancestors).uniq
+  end
+
   class_methods do
     def find_all_by_group(group)
       group.events_of_self_and_subgroups.order('start_at')
-    end
-
-    def find_all_by_groups(groups)
-      self.where(id: groups.map(&:event_ids_of_self_and_subgroups).flatten.uniq).order('start_at')
     end
   end
 end

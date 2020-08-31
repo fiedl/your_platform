@@ -2,7 +2,7 @@
 - #  - memberships
 
 - if can? :manage, scope
-  .alert.alert-warning
+  .alert.alert-warning.mt-5
     %p
       %strong Besondere Sorgfalt geboten:
       Die Mitgliedschaftszeiträume der direkten Mitgliedschaften können durch Klick auf das Datum bearbeitet werden. Hierbei wird allerdings keinerlei Prüfung der Plausibilität vorgenommen, sondern direkt die Datenbank bearbeitet. Bitte äußerste Vorsicht walten lassen.
@@ -56,7 +56,7 @@
         %td
           - if membership.group
             - if membership.direct?
-              = best_in_place membership, :valid_from_localized_date
+              = editable membership, :valid_from, type: 'date'
             - else
               = localize(membership.valid_from.to_date) if membership.valid_from
           - else
@@ -64,7 +64,7 @@
         %td
           - if membership.group
             - if membership.direct?
-              = best_in_place membership, :valid_to_localized_date
+              = editable membership, :valid_to, type: 'date'
             - else
               = localize(membership.valid_to.to_date) if membership.valid_to
           - else

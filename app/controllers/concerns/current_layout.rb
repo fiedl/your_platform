@@ -17,7 +17,6 @@ concern :CurrentLayout do
   def current_layout
     layout ||= (permitted_layouts & [layout_param]).first
     #layout ||= (permitted_layouts & [layout_setting]).first if current_navable.try(:in_intranet?)
-    #layout ||= mobile_layout_if_mobile_app
     #layout ||= intranet_layout if current_navable.try(:in_intranet?)
     #layout ||= current_navable.layout if current_navable.respond_to? :layout
     #layout ||= current_home_page.layout if current_home_page
@@ -41,15 +40,15 @@ concern :CurrentLayout do
   end
 
   def permitted_layouts
-    ([default_layout] + %w(bootstrap minimal compact modern iweb mobile resource_2017 primer strappy)).uniq
+    ([default_layout] + %w(bootstrap minimal compact modern iweb resource_2017 primer strappy)).uniq
   end
 
   def default_layout
-    'strappy'
+    'bootstrap'
   end
 
   def intranet_layout
-    'strappy'
+    'bootstrap'
   end
 
   def current_logo_url(key = nil)
@@ -72,25 +71,11 @@ concern :CurrentLayout do
   end
 
   def resource_centred_layouts
-    %w(resource_2017 primer)
+    %w(resource_2017 primer bootstrap)
   end
 
   def resource_centred_layout?
     current_layout.in? resource_centred_layouts
-  end
-
-  # The mobile app appends the parameter `?layout=mobile` once.
-  # After that, the layout has to stay mobile. We use a cookie
-  # to store that. As the mobile app has its own cookie store,
-  # this won't interfere with other platform client instances.
-  #
-  def mobile_layout_if_mobile_app
-    cookies[:layout] = 'mobile' if params[:layout] == 'mobile'
-    if cookies[:layout] == 'mobile' and (params[:layout].blank? or params[:layout] == 'mobile')
-      'mobile'
-    else
-      nil
-    end
   end
 
   # Each layout may define override views.

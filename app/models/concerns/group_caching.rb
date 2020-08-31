@@ -20,9 +20,6 @@ concern :GroupCaching do
     # GroupMemberList
     cache :member_table_rows
 
-    # GroupEvents
-    cache :event_ids_of_self_and_subgroups
-
     # GroupListExports
     cache :export_list
 

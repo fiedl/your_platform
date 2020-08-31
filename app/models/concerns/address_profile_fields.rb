@@ -3,7 +3,7 @@ concern :AddressProfileFields do
   # Scope for profile fields that are postal addresses.
   #
   def address_fields
-    self.id ? profile_fields.where(type: 'ProfileFields::Address') : profile_fields.where('false')
+    address_profile_fields
   end
 
   def address_fields_json
