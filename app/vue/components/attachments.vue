@@ -1,7 +1,7 @@
 <template lang="haml">
   %div
     .row.mb-n3
-      .col-6.row.row-sm.mb-3.align-items-center{'v-for': "attachment in attachments"}
+      .col-md-6.row.row-sm.mb-3.align-items-center{'v-for': "attachment in attachments"}
         %a.col-auto.thumb{':href': "attachment.file_path", target: '_blank'}
           %img{':src': "attachment.file.thumb.url"}
         .col.text-truncate

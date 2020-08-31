@@ -13,7 +13,7 @@
                   %a.text-muted{':href': "'/groups/' + group.id + '/posts'"} {{ group.name }}
                 .mb-0{'v-for': "event in post.events"}
                   %a.text-muted{':href': "'/events/' + event.id"} {{ event.name }}
-            %h4.align-items-center.d-flex
+            %h4.align-items-center.d-md-flex
               %a{':href': "post.author.path", 'v-if': "post.author.path"} {{ post.author.title }}
               %span{'v-else': true} {{ post.author.title }}
               %span.badge.bg-blue.ml-2{'v-if': "post.publish_on_public_website && show_public_badges", title: "Auf öffentlichem Internetauftritt veröffentlicht", ':data-toggle': "post.can_update_publish_on_public_website ? 'dropdown' : ''"} Öffentlich
