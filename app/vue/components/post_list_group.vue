@@ -5,7 +5,7 @@
         %div.mr-3
           %vue-avatar{':user': "post.author"}
         .flex-fill
-          %div
+          %div.post
             %small.float-right.text-right
               %a.text-muted{':href': "'/posts/' + post.id", 'v-text': "post.published_at_relative", ':title': "format_datetime(post.published_at || post.sent_at)"}
               .mb-4.mt-1.ml-4
@@ -53,7 +53,14 @@
         attachments.filter (attachment)-> (!attachment.content_type.includes("image"))
       sanitize: (html)->
         sanitize_html html,
-          allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q', 'h1', 'h2', 'h3', 'h4'])
+          allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q', 'h1', 'h2', 'h3', 'h4', 'iframe', 'div'])
+          allowedIframeHostnames: ['www.youtube.com']
+          allowedAttributes: {
+            a: ['href', 'name', 'target', 'class'],
+            img: ['src'],
+            iframe: ['src']
+            div: ['class']
+          }
       process_posts: ->
         component = this
         @processed_posts = @current_posts.map (post)->

@@ -62,7 +62,15 @@
         @adding_comment = false
         @submitting = false
       sanitize: (html)->
-        sanitize_html html
+        sanitize_html html,
+          allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q', 'h1', 'h2', 'h3', 'h4', 'iframe', 'div'])
+          allowedIframeHostnames: ['www.youtube.com']
+          allowedAttributes: {
+            a: ['href', 'name', 'target', 'class'],
+            img: ['src'],
+            iframe: ['src']
+            div: ['class']
+          }
       format_datetime_relative: (datetime)->
         moment(datetime).locale('de').fromNow()
       format_datetime: (datetime)->

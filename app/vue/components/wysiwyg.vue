@@ -145,8 +145,9 @@ import {
   Link,
   Strike,
   Underline,
-  History,
+  History
 } from 'tiptap-extensions'
+import YouTubeIframe from '../lib/tiptap/youtube_iframe'
 export default {
   components: {
     EditorContent,
@@ -176,6 +177,7 @@ export default {
           new Strike(),
           new Underline(),
           new History(),
+          new YouTubeIframe
         ],
         content: null,
         onUpdate: component.on_update,
