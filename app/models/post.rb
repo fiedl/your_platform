@@ -7,7 +7,7 @@ class Post < ApplicationRecord
 
   has_many :attachments, as: :parent, dependent: :destroy
 
-  has_many :deliveries, class_name: 'PostDelivery'
+  has_many :deliveries, class_name: 'PostDelivery', dependent: :destroy
 
   include Commentable
   include PostDeliveryReport
