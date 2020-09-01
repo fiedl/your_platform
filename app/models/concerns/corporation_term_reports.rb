@@ -6,7 +6,7 @@ concern :CorporationTermReports do
 
   def generate_term_reports(options = {})
     years = options[:years] || ((Time.zone.now.year - 10)..Time.zone.now.year)
-    term_types = ["Terms::Winter", "Terms::Summer", "Terms::Year"]
+    term_types = ["Terms::Winter", "Terms::Summer"]
     years.each do |year|
       term_types.each do |type|
         TermReports::ForCorporation.by_corporation_and_term(self, Term.by_year_and_type(year, type))
