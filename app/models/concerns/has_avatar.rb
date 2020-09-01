@@ -17,7 +17,7 @@ concern :HasAvatar do
 
     def avatar_url
       url = avatar_path
-      url = "https://#{AppVersion.domain}#{avatar_path}" if avatar_path.start_with?("/")
+      url = "https://#{AppVersion.domain}#{avatar_path}" if avatar_path.to_s.start_with?("/")
     end
 
     def avatar_background_path
