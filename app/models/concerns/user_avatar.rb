@@ -6,9 +6,9 @@ concern :UserAvatar do
 
   def default_avatar_path
     if female?
-      "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_female_480.png"
+      "/images/avatar_female_480.png"
     else
-      "https://github.com/fiedl/your_platform/raw/master/app/assets/images/img/avatar_male_480.png"
+      "/images/avatar_male_480.png"
     end
   end
 
