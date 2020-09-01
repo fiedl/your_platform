@@ -47,4 +47,45 @@ class MailingList < ProfileFields::MailingListEmail
     "ProfileFields::MailingListEmail"
   end
 
+  def self.create_default_mailing_lists
+    Corporation.active.all.each do |corporation|
+      if corporation.subdomain.present?
+        domain = "#{corporation.subdomain}.#{AppVersion.domain}"
+        ["Aktivitas", "Burschen", "Fuxen", "Senior (x)", "Fuxmajor (xx)", "Kneipwart (xxx)", "Chargen", "Hauptkassenwart", "Gäste", "Hausbewohner", "Philisterschaft", "Altherrenschaft"].each do |group_name|
+          if group = corporation.sub_group(group_name)
+            if group.mailing_lists.none?
+              email = "#{default_group_name_to_address_mapping(group_name)}@#{domain}"
+              group.mailing_lists.create label: "E-Mail-Verteiler", value: email
+            end
+          else
+            logger.warn("Verbindung #{corporation.name} hat keine Gruppe #{group_name}")
+          end
+        end
+        if corporation.mailing_lists.none?
+          email = "aktive-und-philister@#{domain}"
+          corporation.mailing_lists.create label: "E-Mail-Verteiler", value: email
+        end
+      else
+        logger.warn "Verbindung #{corporation.name} hat keine Subdomain!"
+      end
+    end
+  end
+
+  def self.default_group_name_to_address_mapping(group_name)
+    case group_name
+    when "Senior", "Senior (x)"
+      "x"
+    when "Fuxmajor", "Fuxmaior", "Fuxmajor (xx)", "Fuxmaior (xx)"
+      "xx"
+    when "Kneipwart", "Kneipwart (xxx)"
+      "xxx"
+    when "Hauptkassenwart"
+      "hkw"
+    when "Philisterschaft", "Altherrenschaft"
+      "philister"
+    else
+      group_name.downcase.parameterize
+    end
+  end
+
 end
