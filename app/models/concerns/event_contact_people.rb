@@ -28,6 +28,9 @@ concern :EventContactPeople do
   def contact_name
     contact_person.try(:title)
   end
+  def contact_id
+    contact_person.try(:id)
+  end
 
   def destroy
     find_contact_people_group.try(:destroy)
