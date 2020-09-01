@@ -24,6 +24,11 @@ concern :EventContactPeople do
     contact_people.first
   end
 
+  # Used by /api/v1/events
+  def contact_name
+    contact_person.try(:title)
+  end
+
   def destroy
     find_contact_people_group.try(:destroy)
     super
