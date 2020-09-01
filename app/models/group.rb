@@ -216,7 +216,7 @@ class Group < ApplicationRecord
   def leaf_group_ids
     self.descendant_groups.order('id').includes(:flags).select { |group|
       group.has_no_subgroups_other_than_the_officers_parent? and not group.is_officers_group?
-    }.map(&:id)
+    }.map(&:id).uniq
   end
 
   def status_groups
