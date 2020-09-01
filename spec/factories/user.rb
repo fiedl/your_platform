@@ -27,10 +27,7 @@ FactoryGirl.define do
       after :create do |user|
         pf = user.profile_fields.create(type: ProfileFields::Address.name)
         pf.postal_address = true
-        pf.first_address_line = "Pariser Platz 1"
-        pf.postal_code = "10117"
-        pf.city = "Berlin"
-        pf.country_code = "DE"
+        pf.value = "Pariser Platz 1\n10117 Berlin"
         pf.save
       end
     end

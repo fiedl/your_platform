@@ -5,18 +5,12 @@ feature "Address changes" do
 
   background do
     @user = create :user
-    @address = @user.profile_fields.create(label: "Study address", type: "ProfileFields::Address")
-    @address = ProfileField.find(@address.id)
-    @address.first_address_line = "Robert-Blum-Straße 38"
-    @address.postal_code = "06114"
-    @address.city = "Halle (Saale)"
-    @address.country_code = "DE"
-    @address.save
+    @address = @user.profile_fields.create(label: "Study address", type: "ProfileFields::Address", value: "Robert-Blum-Straße 38\n06114 Halle (Saale)")
   end
 
   scenario "Prelims" do
     @user.profile_fields.count.should == 2 # email, @address
-    @address.children.count.should == 6
+    @address.children.count.should == 0
   end
 
   scenario "An admin changes the address of a user", :js do
