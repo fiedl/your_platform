@@ -21,11 +21,6 @@ module YourPlatformMailMessageExtensions
   def deliver
     Rails.logger.info "Beginning delivery of Mail::Message #{message_id} for #{recipient_address}."
 
-    if Ability.new(nil).can? :use, :mail_delivery_account_filter
-      Rails.logger.info "Mail delivery account filter: allow without account = #{@allow_recipients_without_account}, recipient is system address = #{recipient_is_system_address?}, recipient has account = #{recipient_has_user_account?}"
-      return false unless @allow_recipients_without_account || recipient_is_system_address? || recipient_has_user_account?
-    end
-
     if recipient_address.include?('@')
       begin
         Rails.logger.info "Sending mail smtp_envelope_to #{self.smtp_envelope_to.to_s}."
