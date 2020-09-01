@@ -44,6 +44,10 @@ Rails.application.routes.draw do
 
   mount Judge::Engine => '/judge'
 
+  get 'my-profile', to: 'my_profile#show'
+  get 'mein-profil', to: 'my_profile#show'
+  get 'meine-kontaktdaten', to: 'my_profile#show'
+
   resources :users do
     put :forgot_password, on: :member
     resource :account, controller: 'user_accounts'
