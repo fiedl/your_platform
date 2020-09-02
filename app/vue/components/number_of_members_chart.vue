@@ -1,5 +1,5 @@
 <template>
-  <a :href="href" class="card">
+  <a :href="href" class="card mb-0">
     <div class="card-body">
       <div class="d-flex align-items-center">
         <div class="subheader">Mitglieder</div>

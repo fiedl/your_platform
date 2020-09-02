@@ -64,20 +64,17 @@
           %div.add_group_members
             %vue-add-group-member-form{':group': group.to_json}
 
-    - chart = group.number_of_members_chart
-    %vue-number-of-members-chart{height: "50px",
-      ':sub_charts': chart.sub_charts.to_json,
-      group_name: chart.group.name,
-      ':years': chart.years.to_json,
-      }
-      .card-body
-        .row.align-items.center
-          - if group.kind_of? Corporation
-            - %w(Burschen Fuxen Philister).each do |status|
-              - status_group = group.sub_group(status)
-              .col-auto
-                = link_to status_group.name, group_members_path(status_group)
-                = status_group.members.count
+    = render group.number_of_members_chart
+    = cache [group, "group_members#show", "chart_numbers_card"] do
+      .card
+        .card-body
+          .row.align-items.center
+            - if group.kind_of? Corporation
+              - %w(Burschen Fuxen Philister).each do |status|
+                - status_group = group.sub_group(status)
+                .col-auto
+                  = link_to status_group.name, group_members_path(status_group)
+                  = status_group.members.count
 
     .row.row-deck
       .col-6.col-lg-12
@@ -88,7 +85,7 @@
       .col-6.col-lg-12
         .card
           .card-body
-            %vue_status_pie_chart{':statuses': group.member_table_rows.collect { |row| row[:status] }.to_json}
+            %vue_status_pie_chart{':statuses': (group.member_table_rows.collect { |row| row[:status] } - [nil, ""]).to_json}
 
 -#-# %h1 Mitglied werden
 -#-# %div

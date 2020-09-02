@@ -1,4 +1,4 @@
-<%= cache [group.group, "charts", "number_of_members", group.group.members.count] do %>
+<%= cache [group.group, "charts", "number_of_members", "v2", group.group.members.count] do %>
   <vue-number-of-members-chart
     height="50px"
     :sub_charts="<%= group.sub_charts.to_json %>"
