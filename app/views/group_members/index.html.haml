@@ -12,80 +12,89 @@
 .row
   .col-lg-9
     .card
-      %vue-group-members-table{':rows': member_table_rows.to_json, ':current_user': current_user.to_json}
+      - Rack::MiniProfiler.step "views/members table" do
+        %vue-group-members-table{':rows': member_table_rows.to_json, ':current_user': current_user.to_json}
 
   .col-lg-3
-    = render layout: 'groups/profile_card', locals: {group: group} do
-      .card-footer
-        = link_to "Kontaktdaten", group_path(group), class: 'btn btn-white btn-sm'
-        = link_to "Amtsträger", group_officers_path(group), class: 'btn btn-white btn-sm'
-        - if can? :index_posts, group
-          = link_to "Nachricht schreiben", group_posts_path(group_id: group.id), class: 'btn btn-sm btn-white'
-        - elsif can? :create_post, group
-          = link_to "Nachricht schreiben", new_group_post_path(group_id: group.id), class: 'btn btn-sm btn-white'
+    - Rack::MiniProfiler.step "views/profile card" do
+      = render layout: 'groups/profile_card', locals: {group: group} do
+        .card-footer
+          = link_to "Kontaktdaten", group_path(group), class: 'btn btn-white btn-sm'
+          = link_to "Amtsträger", group_officers_path(group), class: 'btn btn-white btn-sm'
+          - if can? :index_posts, group
+            = link_to "Nachricht schreiben", group_posts_path(group_id: group.id), class: 'btn btn-sm btn-white'
+          - elsif can? :create_post, group
+            = link_to "Nachricht schreiben", new_group_post_path(group_id: group.id), class: 'btn btn-sm btn-white'
 
-    - if group.child_groups.any?
+    - Rack::MiniProfiler.step "views/group tree" do
+      = cache [group, "views/child_group_tree", group.child_groups.pluck(:updated_at)] do
+        - if group.child_groups.any?
+          .card
+            .card-body
+              %h3 Untergruppen
+              = group_tree(group) do |child_group|
+                - link_to child_group.name, group_members_path(child_group)
+
+    - Rack::MiniProfiler.step "views/export card" do
       .card
         .card-body
-          %h3 Untergruppen
-          = group_tree(group) do |child_group|
-            - link_to child_group.name, group_members_path(child_group)
+          -#- if can? :add_group_member, group
+          -#  = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
+          -#    = t :add_member
 
-    .card
-      .card-body
-        -#- if can? :add_group_member, group
-        -#  = link_to new_group_member_path(group_id: group.id), class: 'btn btn-success' do
-        -#    = t :add_member
+          - if can? :export_member_list, group
+            %h3 Export
+            = render partial: 'groups/export_button'
 
-        - if can? :export_member_list, group
-          %h3 Export
-          = render partial: 'groups/export_button'
+          - if group.corporation
+            %h3.mt-4 Statistik
+            .tool.term_reports
+              = link_to group_term_report_path(group.corporation), class: 'btn btn-white' do
+                = fa_icon 'bar-chart'
+                = t(:term_report)
 
-        - if group.corporation
-          %h3.mt-4 Statistik
-          .tool.term_reports
-            = link_to group_term_report_path(group.corporation), class: 'btn btn-white' do
-              = fa_icon 'bar-chart'
-              = t(:term_report)
-
-        %h3.mt-4 Mitgliederverwaltung
-        - if can? :renew_cache, group
-          .tool.renew_cache= renew_cache_button(group)
-        -#- if can? :update_members, group
-        -#  = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary' do
-        -#    = icon 'folder-open'
-        -#    = t(:data_administration)
-        - if can? :manage_memberships_manually, group
-          = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-white'
+          %h3.mt-4 Mitgliederverwaltung
+          - if can? :renew_cache, group
+            .tool.renew_cache= renew_cache_button(group)
+          -#- if can? :update_members, group
+          -#  = link_to group_member_data_summaries_path(group), class: 'btn btn-outline-secondary' do
+          -#    = icon 'folder-open'
+          -#    = t(:data_administration)
+          - if can? :manage_memberships_manually, group
+            = link_to t(:memberships), group_memberships_path(group), class: 'btn btn-white'
 
     - if can? :add_group_member_manually, group
-      .card
-        .card-body
-          %div.add_group_members
-            %vue-add-group-member-form{':group': group.to_json}
+      - Rack::MiniProfiler.step "views/add_group_member_manually" do
+        .card
+          .card-body
+            %div.add_group_members
+              %vue-add-group-member-form{':group': group.to_json}
 
-    = render group.number_of_members_chart
-    = cache [group, "group_members#show", "chart_numbers_card"] do
-      .card
-        .card-body
-          .row.align-items.center
-            - if group.kind_of? Corporation
-              - %w(Burschen Fuxen Philister).each do |status|
-                - status_group = group.sub_group(status)
-                .col-auto
-                  = link_to status_group.name, group_members_path(status_group)
-                  = status_group.members.count
+    - Rack::MiniProfiler.step "views/group.number_of_members_chart" do
+      = render group.number_of_members_chart
+      = cache [group, "group_members#show", "chart_numbers_card"] do
+        .card
+          .card-body
+            .row.align-items.center
+              - if group.kind_of? Corporation
+                - %w(Burschen Fuxen Philister).each do |status|
+                  - status_group = group.sub_group(status)
+                  .col-auto
+                    = link_to status_group.name, group_members_path(status_group)
+                    = status_group.members.count
 
     .row.row-deck
-      .col-6.col-lg-12
-        .card
-          .card-body
-            %vue_age_histogram_chart{':ages': group.member_table_rows.collect { |row| row[:age].to_i }.to_json}
+      - Rack::MiniProfiler.step "views/age histogram" do
+        .col-6.col-lg-12
+          .card
+            .card-body
+              %vue_age_histogram_chart{':ages': group.member_table_rows.collect { |row| row[:age].to_i }.to_json}
 
-      .col-6.col-lg-12
-        .card
-          .card-body
-            %vue_status_pie_chart{':statuses': (group.member_table_rows.collect { |row| row[:status] } - [nil, ""]).to_json}
+      - Rack::MiniProfiler.step "views/status histogram" do
+        .col-6.col-lg-12
+          .card
+            .card-body
+              %vue_status_pie_chart{':statuses': (group.member_table_rows.collect { |row| row[:status] } - [nil, ""]).to_json}
 
 -#-# %h1 Mitglied werden
 -#-# %div
