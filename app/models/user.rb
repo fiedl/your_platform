@@ -39,6 +39,8 @@ class User < ApplicationRecord
   has_many                  :comments, foreign_key: 'author_user_id', class_name: 'Comment'
   has_many                  :mentions, foreign_key: 'whom_user_id', class_name: 'Mention'
 
+  scope :regular, -> { alive }
+
   include Structureable
   include Navable
 

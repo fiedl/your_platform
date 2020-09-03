@@ -6,6 +6,11 @@ concern :UserDateOfBirth do
   included do
     has_one :date_of_birth_profile_field, -> { where label: 'date_of_birth' }, class_name: "ProfileFields::Date", as: :profileable, autosave: true
     after_save :save_date_of_birth_profile_field
+
+    scope :without_birthday, -> { joins(:date_of_birth_profile_field).where(profile_fields: {profileable_id: nil}).or(
+      joins(:date_of_birth_profile_field).where(profile_fields: {value: [nil, ""]})
+    ) }
+    scope :with_birthday, -> { where.not(id: without_birthday) }
   end
 
   def date_of_birth

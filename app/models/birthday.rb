@@ -18,7 +18,8 @@ class Birthday
   private
 
   def self.users_ordered_by_upcoming_birthday(limit: 3)
-    User.where(id: Graph::User.user_ids_order_by_upcoming_birthday(limit: limit)).select { |u| u.date_of_birth.present? }
+    ids = Graph::User.user_ids_order_by_upcoming_birthday(limit: limit)
+    User.with_birthday.where(id: ids).order("field(users.id, #{ids.join ','})")
   end
 
 end

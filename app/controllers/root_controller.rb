@@ -7,7 +7,7 @@ class RootController < ApplicationController
   expose :events, -> { current_user.upcoming_events.limit(5) }
   expose :semester_calendar, -> { current_user.try(:primary_corporation).try(:semester_calendar) }
   expose :documents, -> { current_user.documents_in_my_scope.order(created_at: :desc).limit(5) }
-  expose :birthday_users, -> { Birthday.users_ordered_by_upcoming_birthday limit: 4 }
+  expose :birthday_users, -> { Birthday.users_ordered_by_upcoming_birthday(limit: 12).regular.limit(4) }
   expose :corporations, -> { current_user.current_corporations }
 
   expose :posts, -> {
