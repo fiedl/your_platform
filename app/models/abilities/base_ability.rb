@@ -19,6 +19,12 @@ class Abilities::BaseAbility
     # When the system is in read-only mode, write abilities are disallowed.
     @read_only_mode = options[:read_only_mode]
 
+    # When defining relative abilities, i.e. calling `can?` in an ability-definition block,
+    # the abilities not only from this class, but also from the other ability
+    # definitions should be used. Therefore, we need to keep track of the
+    # parent ability class.
+    @parent_ability = options[:parent_ability]
+
     rights_for_everyone
     if @user_by_auth_token.try(:account).present?
       rights_for_auth_token_users
@@ -87,6 +93,10 @@ class Abilities::BaseAbility
   end
   def user
     @user
+  end
+
+  def parent_ability_can?(*args)
+    @parent_ability.can?(*args)
   end
 
 end

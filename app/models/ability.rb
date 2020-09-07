@@ -10,13 +10,14 @@ class Ability
       #Abilities::ProfileFieldAbility,
       #Abilities::DummyAbility
       Abilities::FreeGroupAbility,
-      Abilities::PostAbility
+      Abilities::PostAbility,
+      Abilities::AttachmentAbility
     ]
   end
 
   # def initialize(user, options = {})
   #   ability_classes.each do |ability_class|
-  #     self.merge ability_class.new(user, options)
+  #     self.merge ability_class.new(user, options.merge(parent_ability: self))
   #   end
   # end
 
@@ -52,7 +53,7 @@ class Ability
     # TODO: Migrate the other abilities to separated ability classes.
     #
     ability_classes.each do |ability_class|
-      self.merge ability_class.new(user, options)
+      self.merge ability_class.new(user, options.merge(parent_ability: self))
     end
 
     # Attention: Check outside whether the user's role allowes that preview!
@@ -74,11 +75,6 @@ class Ability
 
     # Fast lane
     can :read, Pages::PublicPage
-    can [:read, :download], Attachment, title: ['avatar', 'avatar_background']
-    can [:read, :download], Attachment, parent_type: "Page", parent: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] }
-    can [:read, :download], Attachment, parent_type: "SemesterCalendar"
-    can [:read, :download], Attachment, parent_type: "Post", parent: { parent_pages: { type: ["Pages::PublicPage", "Pages::PublicGalleryPage", "Pages::PublicEventsPage"] } }
-    can [:read, :download], Attachment, parent_type: "Post", parent: { publish_on_public_website: true }
 
     if @user.try(:account) # has to be able to sign in
       if @user_by_auth_token
@@ -215,9 +211,6 @@ class Ability
     can :manage, Page do |page|
       user.administrated_objects.include? page
     end
-    can :manage, Attachment do |attachment|
-      can? :manage, attachment.parent
-    end
     can :update, Event do |event|
       event.id.in? Page.where(id: user.page_ids_of_pages_the_user_is_officer_of).collect(&:event_ids).flatten
     end
@@ -287,12 +280,6 @@ class Ability
       can :create_attachment_for, Page do |page|
         (page.group) && (page.group.officers_of_self_and_ancestors.include?(user))
       end
-      can :update, Attachment do |attachment|
-        can?(:read, attachment) &&
-        (attachment.parent.respond_to?(:group) && attachment.parent.group) && (attachment.parent.group.officers_of_self_and_ancestors.include?(user)) &&
-        ((attachment.author == user) || (attachment.parent.respond_to?(:author) && attachment.parent.author == user))
-      end
-
 
       # Local officers of pages can add attachments to the page and subpages
       # and modify their own attachments.
@@ -300,21 +287,7 @@ class Ability
       can :create_attachment_for, Page do |page|
         can?(:read, page) and page.officers_of_self_and_ancestors.include?(user)
       end
-      can [:update, :destroy], Attachment do |attachment|
-        can?(:read, attachment.parent) and
-        can?(:read, attachment) and
-        attachment.author == user
-      end
 
-      # Local officers can also modify any attachment of their own pages
-      # in order to review their own pages.
-      #
-      can [:update, :destroy], Attachment do |attachment|
-        attachment.parent.respond_to?(:officers_of_self_and_ancestors) &&
-        attachment.parent.officers_of_self_and_ancestors.include?(user) &&
-        can?(:read, attachment) &&
-        (attachment.parent.respond_to?(:author) && attachment.parent.author == user)
-      end
     end
   end
 
@@ -398,7 +371,6 @@ class Ability
       can :create_attachment_for, Event do |event|
         can?(:join, event) or event.attendees.include?(user) or event.contact_people.include?(user)
       end
-      can [:update, :destroy], Attachment, author_user_id: user.id
 
       # If a user is contact person of an event, he can provide pages and
       # attachment for this event.
@@ -410,11 +382,6 @@ class Ability
       end
       can [:update, :create_attachment_for, :destroy, :publish], Page do |page|
         page.ancestor_events.map(&:contact_people).flatten.include? user
-      end
-      can [:update, :destroy], Attachment do |attachment|
-        attachment.author == user and
-        attachment.parent.kind_of?(Page) and
-        attachment.parent.ancestor_events.map(&:contact_people).flatten.include?(user)
       end
 
       # If a user can read an object, he can comment it.
@@ -444,7 +411,6 @@ class Ability
     can :read, Page do |page|
       (page.group.nil? || page.group.members.include?(user)) && page.ancestor_users.none?
     end
-    can [:read, :download], Attachment, parent_type: "Group", parent_id: user.group_ids
 
     # All users can join events.
     #
@@ -473,11 +439,6 @@ class Ability
     # - And they can create comments for these objects as well (see above.)
     can :read, Comment do |comment|
       can? :read, comment.commentable
-    end
-
-    # Post attachments can be read if the post can be read.
-    can [:read, :download], Attachment do |attachment|
-      can?(:quickly_download, attachment) || attachment.parent.kind_of?(Post) and can?(:read, attachment.parent)
     end
 
     # All signed-in users can read their news (timeline).
@@ -559,20 +520,6 @@ class Ability
     can :read, Page do |page|
       page.public?
     end
-    can [:read, :download], Attachment do |attachment|
-      can?(:quickly_download, attachment) || attachment.parent.kind_of?(Page) && attachment.parent.public?
-    end
-
-    # Logos should not add delay for downloading.
-    # Thus, authorize quickly.
-    can :quickly_download, Attachment do |attachment|
-      attachment.id.in?(Attachment.logos.pluck(:id))
-    end
-
-    # Thumbnails should not add delay. They do not contain
-    # valueable information. Just pass them through.
-    can :download_thumb, Attachment
-
 
     # All users can read the public bios of the users.
     #
