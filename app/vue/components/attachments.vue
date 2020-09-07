@@ -6,7 +6,7 @@
           %img{':src': "attachment.file.thumb.url"}
         .col.text-truncate
           %a{':href': "attachment.file_path", target: '_blank'} {{ attachment.title }}
-          .text-muted.d-block.mt-n1 {{ attachment.author_title }}
+          .text-muted.d-block.mt-n1.author {{ attachment.author_title }}
 </template>
 
 <script lang="coffee">

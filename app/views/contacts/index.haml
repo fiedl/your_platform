@@ -22,12 +22,12 @@
               - for contact in contacts
                 %tr
                   %td.w-1= user_avatar contact
-                  %td= link_to contact.title, contact
+                  %td.user= link_to contact.title, contact
                   %td
                     - if contact.primary_address_field.try(:town)
                       = location_icon
                       = contact.primary_address_field.town
-                  %td
+                  %td.obscure-in-demo.text-truncate
                     - if contact.phone.present?
                       = phone_icon
                       = link_to contact.phone, "tel:#{contact.phone}"

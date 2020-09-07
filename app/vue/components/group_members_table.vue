@@ -18,7 +18,7 @@
         styleClass="members child_users display table card-table table-vcenter"
       >
         <template slot="table-row" slot-scope="props">
-          <span v-if="props.column.field == 'last_name'">
+          <span v-if="props.column.field == 'last_name'" class="obscure-in-demo">
             <a :href="props.row.href" v-if="props.row.href">{{props.row.last_name}}</a>
             <span v-if="!props.row.href">{{props.row.last_name}}</span>
           </span>

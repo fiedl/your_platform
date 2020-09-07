@@ -152,6 +152,7 @@ class Ability
 
     can :use, :requests_index
     can :use, :permalinks
+    can :use, :demo_mode
 
     can :use, :masquerade do
       # Only global admins that are developers are allowed
@@ -171,10 +172,11 @@ class Ability
       can :manage, :all
       can :execute, [Workflow, WorkflowKit::Workflow]
       cannot :destroy, Group
-
-      # There are features for developers and beta testers.
-      cannot :use, :all
     end
+
+    # There are features for developers and beta testers.
+    cannot :use, :all
+    can :use, :demo_mode
   end
 
   def rights_for_local_admins

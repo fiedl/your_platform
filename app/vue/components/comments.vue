@@ -6,7 +6,7 @@
           %vue-avatar.mr-3{':user': "comment.author"}
         .flex-fill
           %strong.h4{':title': "format_datetime(comment.created_at)"}
-            %a{':href': "'/users/' + comment.author.id"} {{ comment.author.title }}
+            %a.author{':href': "'/users/' + comment.author.id"} {{ comment.author.title }}
           %span{'v-html': "sanitize(comment.text)"}
     .error.text-danger{'v-if': "error"} {{ error.first(100) }}
     .add_comment{'v-if': "can_comment"}

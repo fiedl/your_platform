@@ -10,9 +10,9 @@
                 %vue-avatar.mr-2{':user': "user"}
               %div
                 %div
-                  %a.text-black{':href': "'/users/' + user.id"} {{ user.title }}
+                  %a.user.text-black{':href': "'/users/' + user.id"} {{ user.title }}
                 %div.small
-                  %a.text-muted{':href': "'tel:' + user.phone", 'v-if': "user.phone"} {{ user.phone }}
+                  %a.text-muted.phone{':href': "'tel:' + user.phone", 'v-if': "user.phone"} {{ user.phone }}
           %div{'v-else': true}
             %vue-user-select{multiple: true, 'v-model': "event.contact_people", autofocus: true}
         .col-md-6{'v-if': "joinable"}

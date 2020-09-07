@@ -4,7 +4,7 @@
       %vue-editable-image{src: user.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, user).to_json, img_class: 'card-header', update_url: user_path(user), attribute_name: "user[avatar_background]"}
       .card-body.text-center
         %vue-editable-image{src: user.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, user).to_json, update_url: user_path(user), attribute_name: 'user[avatar]'}
-        %h3.mb-3
+        %h3.mb-3.user
           = editable user, :first_name, editable: can?(:change_first_name, user)
           = editable user, :last_name, editable: can?(:change_last_name, user)
           = user.name_affix
@@ -32,7 +32,7 @@
         #contact_information
           %vue-edit-box
             %h2= t :contact_information
-            .row
+            .row.obscure-in-demo
               .col-md-4
                 = editable_profile_fields profileable: user, types: ["ProfileFields::Address"], new_profile_fields: [{label: "Semesteranschrift", type: "ProfileFields::Address"}, {label: "Heimatanschrift", type: "ProfileFields::Address"}, {label: "Adresse", type: "ProfileFields::Address"}]
               .col-md-4

@@ -19,7 +19,7 @@
     %a.nav-link.d-flex.lh-1.text-reset.p-0{"data-toggle" => "dropdown", :href => "#"}
       = user_avatar(current_user)
       .d-none.d-md-block.pl-2
-        %div= current_user.title
+        .user= current_user.title
         - if current_role_view.present?
           .mt-1.small.text-muted
             - if current_role.to_s == current_role_view.to_s
@@ -39,5 +39,11 @@
           - current_role.allowed_preview_roles.each do |preview_role|
             - active_or_not = (preview_role == current_role_view) ? 'active' : ''
             %a.dropdown-item{class: active_or_not, href: "?preview_as=#{preview_role}"}= t(preview_role)
+      - if can?(:use, :demo_mode) || demo_mode?
+        .dropdown-divider
+        = link_to url_for(demo_mode: demo_mode? ? 'false' : 'true'), class: "dropdown-item #{'active' if demo_mode?}", title: "Sensible Informationen ausblenden, um Bildschirmfotos aufnehmen zu können, die veröffentlicht werden können." do
+          Demo-Modus
+          - if demo_mode?
+            %span.ml-auto= check_icon
       .dropdown-divider
       = link_to t(:sign_out), sign_out_path, method: :delete, id: 'sign_out', class: 'dropdown-item'

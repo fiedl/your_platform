@@ -7,7 +7,7 @@
       - if (phone = group.phone).present?
         .mt-0.mb-1
           %span.mr-2= landline_icon
-          = link_to phone, "tel:#{phone}"
+          = link_to phone, "tel:#{phone}", class: 'phone obscure-in-demo'
       - if (email = group.email).present?
         .mt-0.mb-0
           %span.mr-1= mail_icon
@@ -29,13 +29,13 @@
             .col-auto
               = user_avatar(officer)
             .col
-              .text-body.d-block
+              .text-body.d-block.user
                 = link_to officer.title, officer
               %small.d-block.mt-n1.text-muted= office.name
               - if email = office.email
-                %small.d-block.mt-n1= mail_to email, email, class: 'text-muted'
+                %small.d-block.mt-n1= mail_to email, email, class: 'text-muted obscure-in-demo'
               - if phone = officer.phone
-                %small.d-block.mt-n1= link_to phone, "tel:#{phone}", class: 'text-muted'
+                %small.d-block.mt-n1= link_to phone, "tel:#{phone}", class: 'text-muted phone obscure-in-demo'
 
   .card-footer
     = link_to "Mitglieder", group_members_path(group), class: 'btn btn-sm btn-white'

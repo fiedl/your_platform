@@ -5,20 +5,9 @@ body.demo_mode
   .profiler-results
     display: none
 
-  .discourse_topics
-    .title, .last_poster
-      +obscure
-
-  #logged-in-bar
-    .user_avatar, .user_name
-      +obscure
-
 body.demo_mode:not(.mustermann)
   .obscure-in-demo
     +obscure
-
-  a[href^='/users']:not(.btn):not(.my_profile):not(.dropdown-toggle):not(.workflow_trigger):not(.change_avatar):not(.user_settings):not(.mustermann)
-      +obscure
 
   .vertical_nav .active.user
     +obscure
@@ -50,10 +39,13 @@ body.demo_mode:not(.mustermann)
   .direct_officers
     +obscure
 
-  a.user
+  .user
     +obscure
 
-  span.phone
+  .author
+    +obscure
+
+  .phone
     +obscure
 
   .submission_author

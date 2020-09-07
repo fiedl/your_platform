@@ -60,7 +60,7 @@
                   = image_tag document.thumb_path
             %td
               %strong= link_to document.title, document, target: '_blank'
-              %div
+              %div.author
                 %small= link_to document.author.title, documents_path(user_id: document.author_user_id), class: 'text-muted' if document.author
             %td.text-nowrap.text-muted
               = event_icon
