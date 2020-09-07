@@ -31,7 +31,7 @@
           - if postal_address.present?
             .with-newlines.pt-0.mt-0.mb-4= postal_address
           - if phone.present?
-            .mt-0.mb-4
+            .mt-0.mb-4.obscure-in-demo
               = landline_icon
               = phone
       - # https://stackoverflow.com/a/2952056/2066546
@@ -43,7 +43,7 @@
 
     - if bank_account.present?
       .card
-        .card-body
+        .card-body.obscure-in-demo
           .account_holder.mb-3
             %label.form-label Kontoinhaber
             = bank_account.account_holder

@@ -6,10 +6,10 @@
           %vue-editable-image{':src': "room.customized_avatar_background_path", edit_alignment: "top right", ':editable': "editable && room.id > 0", img_class: 'card-header', ':update_url': "'/groups/' + room.id", attribute_name: "group[avatar_background]", ':icon': "room.occupant ? null : 'fa fa-home fa-2x'"}
           .card-body.text-center
             %vue-edit-box
-              %vue-editable-image{':src': "room.occupant.avatar_path", img_class: "card-profile-img", ':editable': "editable", ':update_url': "'/users/' + room.occupant.id", attribute_name: 'user[avatar]', 'v-if': "room.occupant"}
+              %vue-editable-image{':src': "room.occupant.avatar_path", img_class: "card-profile-img obscure-in-demo", ':editable': "editable", ':update_url': "'/users/' + room.occupant.id", attribute_name: 'user[avatar]', 'v-if': "room.occupant"}
               %h3.mb-3.clear
                 %vue-editable{ref: "room_name", ':data-room-id': "room.id", ':initial-value': "room.name", ':url': "'/groups/' + room.id", paramKey: "group[name]", ':editable': "editable", type: 'text'}
-              %a.occupant{':href': "'/users/' + room.occupant.id", 'v-if': "room.occupant"} {{ room.occupant.title }}
+              %a.occupant.user{':href': "'/users/' + room.occupant.id", 'v-if': "room.occupant"} {{ room.occupant.title }}
               .occupant_since{'v-if': "room.occupant_since"}
                 Bewohner seit: {{ format_date(room.occupant_since) }}
               .rent
