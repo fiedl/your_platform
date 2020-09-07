@@ -32,9 +32,8 @@ class Page < ApplicationRecord
   include PageFooter
   include PageAnalytics
 
-  scope :regular, -> {
-    where(type: nil).not_flagged([:intranet_root])
-  }
+  scope :regular, -> { where(type: nil).not_flagged([:intranet_root]) }
+  scope :without_group, -> { includes(:ancestor_groups).where(groups: {id: nil}) }
 
   def not_empty?
     attachments.any? || (content && content.length > 5) || children.any?

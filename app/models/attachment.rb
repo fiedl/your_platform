@@ -1,6 +1,8 @@
 class Attachment < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
+  belongs_to :parent_group, -> { where(attachments: {parent_type: "Group"}).includes(:attachments) }, foreign_key: :parent_id, class_name: "Group"
+  belongs_to :parent_page, -> { where(attachments: {parent_type: "Page"}).includes(:attachments) }, foreign_key: :parent_id, class_name: "Page"
 
   mount_uploader :file, AttachmentUploader
 
@@ -10,6 +12,7 @@ class Attachment < ApplicationRecord
 
   scope :logos, -> { where('title like ?', "%logo%") }
   scope :documents, -> { where('content_type like ? or content_type like?', "application/pdf", "%document%") }
+  scope :belongs_to_page_without_group, -> { includes(parent_page: :ancestor_groups).where(groups: {id: nil}) }
 
   include Flags
   include HasAuthor

@@ -21,6 +21,9 @@ class Abilities::AttachmentAbility < Abilities::BaseAbility
 
   def rights_for_signed_in_users
     can [:read, :download], Attachment, parent_type: "Group", parent_id: user.group_ids
+    can [:read, :download], Attachment, Attachment.belongs_to_page_without_group do |attachment|
+      attachment.parent_page && attachment.parent_page.ancestor_groups.none?
+    end
 
     # Post attachments can be read if the post can be read.
     can [:read, :download], Attachment do |attachment|
