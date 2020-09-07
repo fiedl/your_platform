@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency "i18n-js", '>= 3.0.0.rc8'
   s.add_dependency "coffee-rails", '>= 4.1.0'
   s.add_dependency 'execjs', '>= 2.5.2'
+  s.add_dependency 'json', '~> 2.3.0'
 
   # Data Structures
   # DAG Structure, https://github.com/resgraph/acts-as-dag
