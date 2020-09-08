@@ -58,10 +58,12 @@
 </template>
 
 <script lang="coffee">
+  moment = require('moment')
+
   AccommodationSepaDebitForm =
     props: ['rooms', 'corporation', 'return_url', 'creditor_identifier']
     data: ->
-      subject: "Mieteinzug #{@corporation.name}"
+      subject: "Mieteinzug #{@corporation.name} #{moment().format('MMMM YYYY')}"
     created: ->
       $(document).on 'keypress', '#sepa_debit_form', (e)->
         e.preventDefault() if (e.charCode || e.keyCode) == 13 # enter
