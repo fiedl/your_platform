@@ -119,9 +119,9 @@ class AccommodationSepaDebitsController < ApplicationController
           #   'FNAL' ("Letztmalige Lastschrift")
           sequence_type: 'RCUR',
 
-          # # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
-          # # Date
-          # requested_date: Date.new(2013,9,5),
+          # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
+          # Date
+          requested_date: Date.tomorrow,
 
           # OPTIONAL: Enables or disables batch booking, in German "Sammelbuchung / Einzelbuchung"
           # True or False
