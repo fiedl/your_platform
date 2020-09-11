@@ -9,7 +9,7 @@
 
 .row.row-deck.row-cards
   - Rack::MiniProfiler.step "root/events" do
-    .col-lg-6
+    .col-lg-7
       .card
         .card-header
           %h4.card-title= t :events
@@ -38,7 +38,7 @@
 
   - Rack::MiniProfiler.step "root/birthdays" do
     = cache :tabler_birthday_box_v4, expires_in: Time.now.end_of_day - Time.current do
-      .col-lg-6
+      .col-lg-5
         .card
           .card-header
             %h4.card-title= t :birthdays
@@ -54,8 +54,28 @@
                     %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
 
 
-  - Rack::MiniProfiler.step "root/documents" do
-    .col-lg-6
+.row.row-cards
+  - Rack::MiniProfiler.step "root/posts" do
+    .col-lg-7
+      .card
+        - if can? :create, Post
+          .card-header
+            - Rack::MiniProfiler.step "root/vue_create_post_form" do
+              = vue_create_post_form sent_via: post_draft_via_key, initial_post: drafted_post, suggested_groups: current_user.groups.includes(:flags).regular, show_send_via_email_toggle: true
+        - if posts.none?
+          .card-body
+            .text-center.text-muted
+              Im letzten Jahr hat niemand aus Deinen Gruppen etwas gepostet.
+            .text-center
+              = link_to "Sei der erste", new_post_path
+        - elsif posts.any?
+          - Rack::MiniProfiler.step "root/vue_posts posts" do
+            = vue_posts posts
+        .card-footer
+          = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
+
+  .col-lg-5
+    - Rack::MiniProfiler.step "root/documents" do
       .card
         .card-header
           %h4.card-title= t :documents
@@ -84,47 +104,24 @@
           - if can? :create, Document
             = link_to "Dokumente hochladen", new_document_path, class: 'btn btn-white btn-sm'
 
-  - Rack::MiniProfiler.step "root/posts" do
-    .col-lg-6
-      .card
-        - if can? :create, Post
+    - if show_histograms
+      - Rack::MiniProfiler.step "root/histograms" do
+        .card
           .card-header
-            - Rack::MiniProfiler.step "root/vue_create_post_form" do
-              = vue_create_post_form sent_via: post_draft_via_key, initial_post: drafted_post, suggested_groups: current_user.groups.includes(:flags).regular, show_send_via_email_toggle: true
-        - if posts.none?
+            %h3.mb-0
+              Altersverteilung im Wingolf
+              %a{'data-toggle': "tooltip", 'data-placement': "bottom", title: "Im Moment sind noch nicht alle Philister wieder in die Plattform importiert. Deswegen sieht die Altersverteilung nicht wie erwartet aus."}= info_icon
           .card-body
-            .text-center.text-muted
-              Im letzten Jahr hat niemand aus Deinen Gruppen etwas gepostet.
-            .text-center
-              = link_to "Sei der erste", new_post_path
-        - elsif posts.any?
-          - Rack::MiniProfiler.step "root/vue_posts posts" do
-            = vue_posts posts
-        .card-footer
-          = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
+            %vue_age_histogram_chart{':ages': histogram_ages.to_json, title: ""}
 
-- if show_histograms
-  .row.row-deck.row-cards
-    .col-12.col-md-6
-      .card
-        .card-header
-          %h3.mb-0
-            Altersverteilung im Wingolf
-            %a{'data-toggle': "tooltip", 'data-placement': "bottom", title: "Im Moment sind noch nicht alle Philister wieder in die Plattform importiert. Deswegen sieht die Altersverteilung nicht wie erwartet aus."}= info_icon
-        .card-body
-          %vue_age_histogram_chart{':ages': histogram_ages.to_json, title: ""}
+        .card
+          .card-header
+            %h3.mb-0
+              Statusverteilung im Wingolf
+          .card-body
+            %vue_status_pie_chart{':statuses': histogram_statuses.to_json, title: ""}
 
-    .col-12.col-md-6
-      .card
-        .card-header
-          %h3.mb-0
-            Statusverteilung im Wingolf
-        .card-body
-          %vue_status_pie_chart{':statuses': histogram_statuses.to_json, title: ""}
-
-- Rack::MiniProfiler.step "root/corporation_cards" do
-  .row.row-deck.row-cards
-    - for group in corporations
-      .col-lg-6
+    - Rack::MiniProfiler.step "root/corporation_cards" do
+      - for group in corporations
         = cache [group, "root/corporation_card"], expires_in: 1.day do
           = render partial: 'corporations/corporation_card', locals: {group: group}
