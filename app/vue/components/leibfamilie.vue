@@ -9,7 +9,7 @@
         </div>
       </a>
       <a v-on:click="remove(entry)" v-if="editable && entry.relationship && editBox() && editBox().editMode" class="col-auto remove" :title="translate('remove')">
-        <trash-icon size="1.5x"></trash-icon>
+        <span v-html="trash_icon"></span>
       </a>
     </div>
 
@@ -25,7 +25,7 @@
 
 <script lang="coffee">
   Leibfamilie = {
-    props: ['initialLeibfamilie', 'user', 'editable']
+    props: ['initialLeibfamilie', 'user', 'editable', 'trash_icon']
     data: -> {
       leibfamilie: []
       newLeibbursch: null
