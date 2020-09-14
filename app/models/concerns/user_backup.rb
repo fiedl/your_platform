@@ -80,6 +80,14 @@ concern :UserBackup do
     self.delete_cache; self.reload
   end
 
+  def restore_w_nummer
+    raise "Der Benutzer #{id} hat bereits eine W-Nummer #{w_nummer}" if w_nummer.present?
+    hash = ActiveSupport::JSON.decode(File.read(latest_backup_file))
+    self.w_nummer = hash['profile_fields'].detect { |pf| pf['key'].to_s.in? ['W-Nummer', 'w_nummer'] }['value']
+    self.save
+    self.delete_cache; self.reload
+  end
+
   def anonymize_name_and_remove_profile_and_account!(confirmation = {})
     raise "Please confirm the destructive action by 'confirm: \"yes\"'." unless confirmation[:confirm] == "yes"
     self.profile_fields.destroy_all
