@@ -1,10 +1,11 @@
 <template>
   <div>
-    <vue-select ref="vue_select" label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple">
+    <vue-select ref="vue_select" label="title" :options="options" v-model="selected" @search="fetchUsers" @input="selectedHandler" @search:blur="lostFocus" :class="multiple ? 'form-control' : 'form-select'" :placeholder="placeholder" :multiple="multiple" :filterable="false">
       <template slot="option" slot-scope="option">
         <div class="option">
           <span class="avatar avatar-sm rounded mr-2 ml-n1" :style="'background-image: url(' + option.avatar_path + ')'"></span>
           {{ option.title }}
+          <small class="ml-3">{{ option.search_hint }}</small>
         </div>
       </template>
       <template slot="selected-option" slot-scope="option">
