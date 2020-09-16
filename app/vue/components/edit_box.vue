@@ -2,7 +2,10 @@
   <div>
     <div class="edit-box" v-bind:class="boxClass" v-on:click.self="saveAll">
       <div class="edit-tools" v-if="editable">
-        <button class="btn btn-outline-secondary btn-sm edit-button" v-on:click.stop="toggle">{{buttonLabel}}</button>
+        <button :class="buttonClass" v-on:click.stop="toggle">
+          <span class="mr-2" v-html="edit_icon" v-if="edit_icon && large_button"></span>
+          {{ buttonLabel }}
+        </button>
       </div>
       <slot></slot>
     </div>
@@ -14,6 +17,7 @@
 
 <script lang="coffee">
 EditBox = {
+  props: ['large_button', 'edit_icon']
   data: -> {
     editMode: false,
     editable: false,
@@ -78,6 +82,11 @@ EditBox = {
         I18n.translate('done')
       else
         I18n.translate('edit')
+    buttonClass: ->
+      if @large_button
+        "edit-button align-items-center btn btn-white mb-2"
+      else
+        "edit-button align-items-center btn btn-sm btn-white"
 }
 `export default EditBox`
 </script>
@@ -92,7 +101,7 @@ EditBox = {
   .edit-box.edit-mode
     z-index: 6000
     position: relative
-    background: white
+    background: #f4f6fb
   .edit-tools
     float: right
     text-align: right

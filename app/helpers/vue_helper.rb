@@ -1,5 +1,14 @@
 module VueHelper
 
+  def vue_edit_box(large_button: false)
+    content_tag 'vue-edit-box', {
+      ':large_button': large_button.to_json,
+      edit_icon: edit_icon
+    } do
+      yield
+    end
+  end
+
   # Display a list of posts and comments with a vue component.
   #
   # show_public_badges: Whether to show a badge indicating whether the
