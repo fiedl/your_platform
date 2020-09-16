@@ -70,7 +70,7 @@
               = link_to "Sei der erste", new_post_path
         - elsif posts.any?
           - Rack::MiniProfiler.step "root/vue_posts posts" do
-            = vue_posts posts
+            = vue_posts posts, sent_via: post_draft_via_key
         .card-footer
           = link_to "Mehr Posts anzeigen", posts_path, class: 'btn btn-white btn-sm'
 
@@ -125,3 +125,15 @@
       - for group in corporations
         = cache [group, "root/corporation_card"], expires_in: 1.day do
           = render partial: 'corporations/corporation_card', locals: {group: group}
+
+    - Rack::MiniProfiler.step "root/platform_news" do
+      - if platform_news_group
+        .card
+          .card-header
+            %h3.mb-0 Plattform-Updates
+          - if can? :create_post, platform_news_group
+            .card-header
+              = vue_create_post_form sent_via: platform_news_sent_via_key, initial_post: platform_news_draft, parent_group: platform_news_group, show_publish_on_website_toggle: true
+            = vue_posts platform_news_posts, sent_via: platform_news_sent_via_key
+          .card-footer
+            = link_to "Mehr Updates anzeigen", platform_news_group.public_home_page || posts_path(group_id: platform_news_group.id), class: 'btn btn-white btn-sm'

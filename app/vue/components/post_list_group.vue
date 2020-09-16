@@ -34,7 +34,7 @@
   sanitize_html = require('sanitize-html')
 
   PostListGroup =
-    props: ['posts', 'show_public_badges', 'send_icon', 'current_user']
+    props: ['posts', 'show_public_badges', 'send_icon', 'current_user', 'sent_via']
     data: ->
       current_posts: @posts
       processed_posts: @posts
@@ -67,8 +67,9 @@
           post.published_at_relative = component.format_datetime_relative(post.published_at || post.sent_at)
           post
       add_post: (post)->
-        @current_posts.unshift(post)
-        @process_posts()
+        if (!@sent_via) || (@sent_via == post.sent_via)
+          @current_posts.unshift(post)
+          @process_posts()
       set_publish_on_public_website: (post, setting)->
         component = this
         post.publish_on_public_website = setting

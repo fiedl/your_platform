@@ -14,12 +14,24 @@ class RootController < ApplicationController
     current_user.posts.published
     .where("published_at is null or published_at > ?", 1.year.ago)
     .where("sent_at is null or sent_at > ?", 1.year.ago)
+    .where.not(id: platform_news_posts.pluck(:id))
     .order(sticky: :asc, updated_at: :desc)
     .limit(10)
   }
 
   expose :drafted_post, -> { current_user.drafted_posts.where(sent_via: post_draft_via_key).order(created_at: :desc).first_or_create }
   expose :post_draft_via_key, -> { "root-index" }
+
+  expose :platform_news_group, -> { Group.where(name: "PlattformBlog.com").first }
+  expose :platform_news_posts, -> {
+    Post.where(id: platform_news_group.posts.published.where("published_at is null or published_at > ?", 1.year.ago).order(sticky: :asc, updated_at: :desc).limit(10).select { |post| post.parent_groups.count == 1 }.map(&:id))
+  }
+  expose :platform_news_draft, -> {
+    current_user.drafted_posts.where(sent_via: platform_news_sent_via_key).order(created_at: :desc).first_or_create  do |post|
+      post.parent_groups << platform_news_group
+    end
+  }
+  expose :platform_news_sent_via_key, -> { "root-index-platform-news" }
 
   expose :show_histograms, -> {
     if Group.alle_wingolfiten.read_cached(:member_table_rows).present?
