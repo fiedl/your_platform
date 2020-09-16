@@ -5,7 +5,7 @@ module VueHelper
   # show_public_badges: Whether to show a badge indicating whether the
   #   post is to be published on the public website.
   #
-  def vue_posts(posts, show_public_badges: false, sent_via: nil)
+  def vue_posts(posts, show_public_badges: false, sent_via: nil, show_single_post: false)
     content_tag :vue_post_list_group, "", {
       ':posts': posts.where.not(author_user_id: nil).includes({author: [:avatar_attachments]}, :attachments, {comments: [author: [:avatar_attachments]]}, :group, :parent_groups, :parent_events).collect { |post|
         post.as_json.merge({
@@ -19,6 +19,7 @@ module VueHelper
             })
           },
           can_comment: can?(:create_comment, post),
+          editable: can?(:update, post),
           groups: (post.parent_groups + [post.group] - [nil]).as_json,
           events: post.parent_events.as_json,
           can_update_publish_on_public_website: can?(:update_public_website_publication, post)
@@ -27,7 +28,8 @@ module VueHelper
       send_icon: send_icon,
       sent_via: sent_via,
       ':current_user': current_user.to_json,
-      ':show_public_badges': show_public_badges.to_b.to_json
+      ':show_public_badges': show_public_badges.to_b.to_json,
+      ':show_single_post': show_single_post.to_json
     }
   end
 

@@ -7,6 +7,9 @@
         .flex-fill
           %div.post
             %small.float-right.text-right
+              %span.text-muted{'v-if': "(post.editable) && (!show_single_post)"}
+                %a.text-muted{':href': "'/posts/' + post.id", title: "Details ansehen bzw. Post bearbeiten"} Bearbeiten
+                %span.ml-1.mr-1= " | "
               %a.text-muted{':href': "'/posts/' + post.id", 'v-text': "post.published_at_relative", ':title': "format_datetime(post.published_at || post.sent_at)"}
               .mb-4.mt-1.ml-4
                 .mb-0{'v-for': "group in post.groups"}
@@ -34,7 +37,7 @@
   sanitize_html = require('sanitize-html')
 
   PostListGroup =
-    props: ['posts', 'show_public_badges', 'send_icon', 'current_user', 'sent_via']
+    props: ['posts', 'show_public_badges', 'send_icon', 'current_user', 'sent_via', 'show_single_post']
     data: ->
       current_posts: @posts
       processed_posts: @posts
