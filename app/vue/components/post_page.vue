@@ -17,53 +17,55 @@
           .card-body
             %vue-post-list-group{ref: 'posts', ':posts': "[current_post]", ':current_user': "current_user", show_single_post: true, ':send_icon': "send_icon"}
       .col-sm-4
-        .card
-          .card-header
-            %h3.mb-0 Zielgruppe
-          .card-body
-            %div{'v-if': "editing"}
-              %label.form-label Leserechte
-              %vue-group-select{placeholder: "Gruppen auswählen, deren Mitglieder diesen Post lesen dürfen", multiple: true, 'v-model': "current_post.groups", '@input': "submit_update"}
-            %div{'v-else': true}
-              .mb-2.d-flex.align-items-center{'v-for': "group in current_post.groups"}
-                .mr-2
-                  %vue-avatar.avatar-sm{':group': "group"}
-                %a.text-link{':href': "'/groups/' + group.id + '/members'", 'v-text': "group.title"}
-            .mt-3
-              %label.form-check.form-switch
-                %input.form-check-input{type: 'checkbox', 'v-model': "current_post.publish_on_public_website", '@change': "submit_update"}
-                %span.form-check-label Auf öffentlicher Website veröffentlichen
-            .mt-3
-              %label.form-label Veröffentlicht am
-              %vue-editable{ref: 'published_at', type: 'datetime', ':editable': "current_post.editable", input_class: 'form-control', ':initial-value': "format_datetime(current_post.published_at)", ':initial-object': "post", ':url': "'/posts/' + post.id", 'param-key': "post[published_at]"}
+        %div
+          .card
+            .card-header
+              %h3.mb-0 Zielgruppe
+            .card-body
+              %div{'v-if': "editing"}
+                %label.form-label Leserechte
+                %vue-group-select{placeholder: "Gruppen auswählen, deren Mitglieder diesen Post lesen dürfen", multiple: true, 'v-model': "current_post.groups", '@input': "submit_update"}
+              %div{'v-else': true}
+                .mb-2.d-flex.align-items-center{'v-for': "group in current_post.groups"}
+                  .mr-2
+                    %vue-avatar.avatar-sm{':group': "group"}
+                  %a.text-link{':href': "'/groups/' + group.id + '/members'", 'v-text': "group.title"}
+              .mt-3
+                %label.form-check.form-switch
+                  %input.form-check-input{type: 'checkbox', 'v-model': "current_post.publish_on_public_website", '@change': "submit_update"}
+                  %span.form-check-label Auf öffentlicher Website veröffentlichen
+              .mt-3
+                %label.form-label Veröffentlicht am
+                %vue-editable{ref: 'published_at', type: 'datetime', ':editable': "current_post.editable", input_class: 'form-control', ':initial-value': "format_datetime(current_post.published_at)", ':initial-object': "post", ':url': "'/posts/' + post.id", 'param-key': "post[published_at]"}
 
-        %div{'v-if': "editing && current_post.sent_at"}
-          .alert.alert-warning Dieser Post wurde bereits per E-Mail verschickt. Du kannst den Post zwar noch auf der Plattform bearbeiten. Der Post dadurch aber nicht erneut per E-Mail versandt.
-        %div{'v-if': "ready"}
-          .card{'v-if': "current_post.sent_at"}
-            .card-header
-              %h3.mb-0 Sendebericht
-            .card-body
-              %label.form-label Versandt am
-              %span{'v-text': "format_datetime(current_post.sent_at)"}
-              %div{'v-if': "post.sent_deliveries && post.sent_deliveries.length > 0"}
-                %label.form-label.mt-3 Zugestellt an
-                  .avatar-list.avatar-list-stacked.d-block
-                    %a.avatar{'v-for': "delivery in post.sent_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
-                      %vue-avatar{':user': "delivery.user"}
-              %div{'v-if': "post.failed_deliveries && post.failed_deliveries.length > 0"}
-                %label.form-label.mt-3 Konnte nicht zustellen an:
-                  .avatar-list.avatar-list-stacked.d-block
-                    %a.avatar{'v-for': "delivery in post.failed_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
-                      %vue-avatar{':user': "delivery.user"}
-          .card{'v-if': "!current_post.sent_at && !current_post.archived_at && current_post.published_at"}
-            .card-header
-              %h3.mb-0 Per E-Mail versenden
-            .card-body
-              Dieser Post wurde noch nicht per E-Mail verschickt.
-              %a.btn.btn-primary.mt-2{'href': '#', '@click': "deliver"}
-                %span{'v-html': "mail_icon"}
-                %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
+          %div{'v-if': "editing && current_post.sent_at"}
+            .alert.alert-warning Dieser Post wurde bereits per E-Mail verschickt. Du kannst den Post zwar noch auf der Plattform bearbeiten. Der Post dadurch aber nicht erneut per E-Mail versandt.
+          %div{'v-if': "ready"}
+            .card{'v-if': "current_post.sent_at"}
+              .card-header
+                %h3.mb-0 Sendebericht
+              .card-body
+                %label.form-label Versandt am
+                %span{'v-text': "format_datetime(current_post.sent_at)"}
+                %div
+                  %div{'v-if': "post.sent_deliveries && post.sent_deliveries.length > 0"}
+                    %label.form-label.mt-3 Zugestellt an
+                      .avatar-list.avatar-list-stacked.d-block
+                        %a.avatar{'v-for': "delivery in post.sent_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
+                          %vue-avatar{':user': "delivery.user"}
+                  %div{'v-if': "post.failed_deliveries && post.failed_deliveries.length > 0"}
+                    %label.form-label.mt-3 Konnte nicht zustellen an:
+                      .avatar-list.avatar-list-stacked.d-block
+                        %a.avatar{'v-for': "delivery in post.failed_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
+                          %vue-avatar{':user': "delivery.user"}
+            .card{'v-if': "!current_post.sent_at && !current_post.archived_at && current_post.published_at"}
+              .card-header
+                %h3.mb-0 Per E-Mail versenden
+              .card-body
+                Dieser Post wurde noch nicht per E-Mail verschickt.
+                %a.btn.btn-primary.mt-2{'href': '#', '@click': "deliver"}
+                  %span{'v-html': "mail_icon"}
+                  %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
 
         -//# TODO: Ausprobieren, wie die UI sich für Event-Posts macht.
         -//# TODO: Attachments

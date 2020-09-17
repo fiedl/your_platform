@@ -23,9 +23,9 @@
             %a.dropdown-item{':class': "post.publish_on_public_website ? 'active' : ''", '@click': "set_publish_on_public_website(true)"} Auf öffentlicher Website veröffentlichen
             %a.dropdown-item{':class': "post.publish_on_public_website ? '' : 'active'", '@click': "set_publish_on_public_website(false)"} Nicht auf öffentlicher Website veröffentlichen
         .error.mt-2.mb-4{'v-if': "post.error_message", 'v-text': "post.error_message"}
-        %vue-editable{'ref': "post_text", ':initial-value': "post.text", type: 'wysiwyg', ':editable': "post.editable", 'input_class': "form-control", ':url': "'/posts/' + post.id", 'param-key': "post[text]"}
-        %vue-pictures{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "images(post.attachments)"}
-        %vue-attachments{'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "non_images(post.attachments)"}
+        %vue-editable{'ref': "post_text", ':initial-value': "post.text", type: 'wysiwyg', ':editable': "editable", 'input_class': "form-control", ':url': "'/posts/' + post.id", 'param-key': "post[text]"}
+        %vue-pictures{ref: "pictures", 'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "images(post.attachments)", ':editable': "editable"}
+        %vue-attachments{ref: "attachments", 'v-if': "post.attachments && post.attachments.length > 0", ':attachments': "non_images(post.attachments)", ':editable': "editable"}
       %vue-comments{':parent_post': "post", ':initial_comments': "post.comments", ':send_icon': "send_icon", ':current_user': "current_user", ':can_comment': "post.can_comment", ':key': "post.id"}
 </template>
 
@@ -50,8 +50,17 @@
           error: (request, status, error)->
             component.post.error_message = request.responseText.first(100)
             component.post.publish_on_public_website = !setting
+      images: (attachments)->
+        attachments.filter (attachment)-> attachment.content_type.includes("image")
+      non_images: (attachments)->
+        attachments.filter (attachment)-> (!attachment.content_type.includes("image"))
       editables: ->
-        [@$refs.post_text]
+        [@$refs.post_text, @$refs.attachments, @$refs.pictures].filter((editable) -> editable)
+      editBox: ->
+        @$parent.editBox()
+    computed:
+      editable: ->
+        @post.editable && @show_single_post
   export default Post
 </script>
 

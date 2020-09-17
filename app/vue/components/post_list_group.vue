@@ -19,10 +19,6 @@
       setInterval @process_posts, 60000
       @$root.$on 'add_post', @add_post
     methods:
-      images: (attachments)->
-        attachments.filter (attachment)-> attachment.content_type.includes("image")
-      non_images: (attachments)->
-        attachments.filter (attachment)-> (!attachment.content_type.includes("image"))
       sanitize: (html)->
         sanitize_html html,
           allowedTags: sanitize_html.defaults.allowedTags.concat(['blockquote', 'q', 'h1', 'h2', 'h3', 'h4', 'iframe', 'div'])
@@ -42,6 +38,8 @@
           @process_posts()
       editables: ->
         @$children.map((child) -> child.editables()).flat()
+      editBox: ->
+        @$parent.editBox() if @$parent.editBox
     computed:
       groups: ->
         @current_posts.map( (post) -> post.groups ).flat().unique()
