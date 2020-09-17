@@ -105,7 +105,10 @@
           "col-6"
         else
           "col-6 col-sm-4"
-
+    watch:
+      attachments: (new_attachments, old_attachments)->
+        for attachment in new_attachments
+          @current_attachments.push(attachment) unless old_attachments.includes(attachment)
   export default Pictures
 </script>
 

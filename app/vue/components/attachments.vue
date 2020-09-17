@@ -40,6 +40,10 @@
         Api.delete "/attachments/#{attachment.id}",
           error: (request, status, error)->
             component.error = request.responseText
+    watch:
+      attachments: (new_attachments, old_attachments)->
+        for attachment in new_attachments
+          @current_attachments.push(attachment) unless old_attachments.includes(attachment)
 
   export default Attachments
 </script>
