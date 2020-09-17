@@ -380,6 +380,7 @@ Rails.application.routes.draw do
       resources :posts do
         resources :attachments
         post :publish, to: 'posts/publications#create'
+        post :deliver, to: 'posts/deliveries#create'
         put :public_website_publications, to: 'posts/public_website_publications#update'
       end
       resources :attachments

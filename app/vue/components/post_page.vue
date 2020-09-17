@@ -37,6 +37,8 @@
               %label.form-label Veröffentlicht am
               %vue-editable{ref: 'published_at', type: 'datetime', ':editable': "current_post.editable", input_class: 'form-control', ':initial-value': "format_datetime(current_post.published_at)", ':initial-object': "post", ':url': "'/posts/' + post.id", 'param-key': "post[published_at]"}
 
+        %div{'v-if': "editing && current_post.sent_at"}
+          .alert.alert-warning Dieser Post wurde bereits per E-Mail verschickt. Du kannst den Post zwar noch auf der Plattform bearbeiten. Der Post dadurch aber nicht erneut per E-Mail versandt.
         %div{'v-if': "ready"}
           .card{'v-if': "current_post.sent_at"}
             .card-header
@@ -44,37 +46,28 @@
             .card-body
               %label.form-label Versandt am
               %span{'v-text': "format_datetime(current_post.sent_at)"}
+              %div{'v-if': "post.sent_deliveries && post.sent_deliveries.length > 0"}
+                %label.form-label.mt-3 Zugestellt an
+                  .avatar-list.avatar-list-stacked.d-block
+                    %a.avatar{'v-for': "delivery in post.sent_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
+                      %vue-avatar{':user': "delivery.user"}
+              %div{'v-if': "post.failed_deliveries && post.failed_deliveries.length > 0"}
+                %label.form-label.mt-3 Konnte nicht zustellen an:
+                  .avatar-list.avatar-list-stacked.d-block
+                    %a.avatar{'v-for': "delivery in post.failed_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
+                      %vue-avatar{':user': "delivery.user"}
           .card{'v-if': "!current_post.sent_at && !current_post.archived_at && current_post.published_at"}
             .card-header
               %h3.mb-0 Per E-Mail versenden
             .card-body
               Dieser Post wurde noch nicht per E-Mail verschickt.
-              %a.btn.btn-primary.mt-2{'href': '#'}
+              %a.btn.btn-primary.mt-2{'href': '#', '@click': "deliver"}
                 %span{'v-html': "mail_icon"}
                 %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
-              %div{'v-if': "post.sent_deliveries && post.sent_deliveries.length > 0"}
-              -//#- if post.deliveries.sent.any?
-        -//#        = cache [post, "deliveries sent", post.deliveries.sent.count] do
-        -//#          %label.form-label.mt-3 Zugestellt an
-        -//#          .avatar-list.avatar-list-stacked.d-block
-        -//#            - post.deliveries.sent.includes(user: [:avatar_attachments]).each do |delivery|
-        -//#              = link_to delivery.user, class: 'avatar' do
-        -//#                = user_avatar delivery.user
-        -//#
-        -//#      - if post.deliveries.failed.any?
-        -//#        = cache [post, "deliveries failed", post.deliveries.failed.count] do
-        -//#          %label.form-label.mt-3 Konnte nicht zustellen an
-        -//#          .avatar-list.avatar-list-stacked.d-block
-        -//#            - post.deliveries.failed.includes(user: [:avatar_attachments]).each do |delivery|
-        -//#              = link_to delivery.user, class: 'avatar' do
-        -//#                = user_avatar delivery.user
 
         -//# TODO: Ausprobieren, wie die UI sich für Event-Posts macht.
         -//# TODO: Attachments
-        -//# TODO: Deliver
-        -//# TODO: Delivery report
         -//# TODO: published scope
-        -//# TODO: prevent multiple deliveries
         -//# TODO: subject in posts form
 
 </template>
@@ -103,7 +96,7 @@
       save: ->
         @editing = false
         @waiting_for_submission = false
-        @submitting = false # TODO
+        @submit_update()
       editables: ->
         [this.$refs.subject, this.$refs.published_at, this.$refs.posts.editables(), this].flat()
       editBox: ->
@@ -133,6 +126,17 @@
             component.submitting = false
           success: ->
             component.submitting = false
+      deliver: ->
+        component = this
+        component.error = null
+        component.submitting = true
+        Api.post "/posts/#{@post.id}/deliver",
+          error: (request, status, error)->
+            component.error = request.responseText
+            component.submitting = false
+          success: (result)->
+            component.submitting = false
+            component.current_post.sent_at = result.sent_at
     computed:
       group_names: ->
         @current_post.groups.map((group) -> group.name).join(", ")

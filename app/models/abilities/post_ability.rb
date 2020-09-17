@@ -9,7 +9,7 @@ class Abilities::PostAbility < Abilities::BaseAbility
       # This is allowed if the user matches the mailing-list-sender-filter setting.
       # Definition in: concerns/group_mailing_lists.rb
       #
-      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group do |group|
+      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification, :deliver_post], Group do |group|
         group.user_matches_mailing_list_sender_filter?(user)
       end
     end
@@ -46,7 +46,7 @@ class Abilities::PostAbility < Abilities::BaseAbility
   def rights_for_global_officers
     if not read_only_mode?
       # Global officers can post to any group.
-      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification], Group
+      can [:create_post, :create_post_for, :create_post_via_email, :force_post_notification, :deliver_post], Group
     end
   end
 

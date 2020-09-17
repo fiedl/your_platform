@@ -61,14 +61,14 @@ module VueHelper
         },
         events: post.parent_events.as_json,
         can_update_publish_on_public_website: can?(:update_public_website_publication, post),
-        sent_deliveries: Rails.cache.fetch([post, "sent_deliveries", post.deliveries.sent.count]) {
+        sent_deliveries: Rails.cache.fetch([post, "sent_deliveries", "v3", post.deliveries.sent.count]) {
           post.deliveries.sent.collect { |delivery|
-            delivery.as_json.includes(:user)
+            delivery.as_json(methods: :user)
           }
         },
-        failed_deliveries: Rails.cache.fetch([post, "failed_deliveries", post.deliveries.failed.count]) {
+        failed_deliveries: Rails.cache.fetch([post, "failed_deliveries", "v3", post.deliveries.failed.count]) {
           post.deliveries.failed.collect { |delivery|
-            delivery.as_json.includes(:user)
+            delivery.as_json(methods: :user)
           }
         },
       }).to_json,
