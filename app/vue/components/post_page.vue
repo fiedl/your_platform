@@ -68,7 +68,6 @@
                   %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
 
         -//# TODO: Ausprobieren, wie die UI sich für Event-Posts macht.
-        -//# TODO: published scope
         -//# TODO: subject in posts form
 
 </template>
