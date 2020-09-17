@@ -59,7 +59,9 @@ module VueHelper
         groups: (post.parent_groups + [post.group] - [nil]).collect { |group|
           group.as_json(methods: [:avatar_path, :title])
         },
-        events: post.parent_events.as_json,
+        events: post.parent_events.collect { |event|
+          event.as_json(methods: [:avatar_path, :title])
+        },
         can_update_publish_on_public_website: can?(:update_public_website_publication, post),
         sent_deliveries: Rails.cache.fetch([post, "sent_deliveries", "v3", post.deliveries.sent.count]) {
           post.deliveries.sent.collect { |delivery|

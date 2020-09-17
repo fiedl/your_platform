@@ -20,16 +20,25 @@
         %div
           .card
             .card-header
-              %h3.mb-0 Zielgruppe
+              %h3.mb-0{'v-if': "current_post.groups && current_post.groups.length == 1"} Zielgruppe
+              %h3.mb-0{'v-if': "current_post.groups && current_post.groups.length > 1"} Zielgruppen
+              %h3.mb-0{'v-if': "current_post.events && current_post.events.length == 1"} Veranstaltung
+              %h3.mb-0{'v-if': "current_post.events && current_post.events.length > 1"} Veranstaltungen
             .card-body
-              %div{'v-if': "editing"}
-                %label.form-label Leserechte
-                %vue-group-select{placeholder: "Gruppen auswählen, deren Mitglieder diesen Post lesen dürfen", multiple: true, 'v-model': "current_post.groups", '@input': "submit_update"}
-              %div{'v-else': true}
-                .mb-2.d-flex.align-items-center{'v-for': "group in current_post.groups"}
+              %div{'v-if': "current_post.groups && current_post.groups.length > 0"}
+                %div{'v-if': "editing"}
+                  %label.form-label Leserechte
+                  %vue-group-select{placeholder: "Gruppen auswählen, deren Mitglieder diesen Post lesen dürfen", multiple: true, 'v-model': "current_post.groups", '@input': "submit_update"}
+                %div{'v-else': true}
+                  .mb-2.d-flex.align-items-center{'v-for': "group in current_post.groups"}
+                    .mr-2
+                      %vue-avatar.avatar-sm{':group': "group"}
+                    %a.text-link{':href': "'/groups/' + group.id + '/members'", 'v-text': "group.title"}
+              %div{'v-if': "current_post.events && current_post.events.length > 0"}
+                .mb-2.d-flex.align-items-center{'v-for': "event in current_post.events"}
                   .mr-2
-                    %vue-avatar.avatar-sm{':group': "group"}
-                  %a.text-link{':href': "'/groups/' + group.id + '/members'", 'v-text': "group.title"}
+                    %vue-avatar.avatar-sm{':event': "event"}
+                  %a.text-link{':href': "'/events/' + event.id", 'v-text': "event.name"}
               .mt-3
                 %label.form-check.form-switch
                   %input.form-check-input{type: 'checkbox', 'v-model': "current_post.publish_on_public_website", '@change': "submit_update"}
@@ -58,7 +67,7 @@
                       .avatar-list.avatar-list-stacked.d-block
                         %a.avatar{'v-for': "delivery in post.failed_deliveries", ':href': "'/users/' + delivery.user_id", ':title': "delivery.user.title"}
                           %vue-avatar{':user': "delivery.user"}
-            .card{'v-if': "!current_post.sent_at && !current_post.archived_at && current_post.published_at"}
+            .card{'v-if': "!current_post.sent_at && !current_post.archived_at && current_post.published_at && current_post.groups && current_post.groups.length > 0"}
               .card-header
                 %h3.mb-0 Per E-Mail versenden
               .card-body
@@ -67,7 +76,6 @@
                   %span{'v-html': "mail_icon"}
                   %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
 
-        -//# TODO: Ausprobieren, wie die UI sich für Event-Posts macht.
         -//# TODO: subject in posts form
 
 </template>
