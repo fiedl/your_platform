@@ -4,7 +4,7 @@
       .col-md-6.row.row-sm.mb-3.align-items-center{'v-for': "attachment in current_attachments", ':key': "attachment.id"}
         %a.col-auto.thumb{':href': "attachment.file_path", target: '_blank'}
           %img{':src': "attachment.file.thumb.url"}
-        .col.text-truncate
+        .col
           %a{':href': "attachment.file_path", target: '_blank'} {{ attachment.title }}
           .text-muted.d-block.mt-n1.author {{ attachment.author_title }}
           %span{'v-if': "editable && editing"}
