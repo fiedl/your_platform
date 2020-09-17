@@ -45,6 +45,8 @@ import Wysiwyg from './components/wysiwyg.vue'
 import PublicWebsiteNavbarNav from './components/public_website_navbar_nav.vue'
 import CreatePostForm from './components/create_post_form.vue'
 import PostListGroup from './components/post_list_group.vue'
+import Post from './components/post.vue'
+import PostPage from './components/post_page.vue'
 import Pictures from './components/pictures.vue'
 import PagePictures from './components/page_pictures.vue'
 import Calendar from './components/calendar.vue'
@@ -112,7 +114,12 @@ jQuery(document).ready ->
   Vue.component('vue-wysiwyg', Wysiwyg)
   Vue.component('vue_public_website_navbar_nav', PublicWebsiteNavbarNav)
   Vue.component('vue_create_post_form', CreatePostForm)
+  Vue.component('vue-post-list-group', PostListGroup)
   Vue.component('vue_post_list_group', PostListGroup)
+  Vue.component('vue-post', Post)
+  Vue.component('vue_post', Post)
+  Vue.component('vue-post-page', PostPage)
+  Vue.component('vue_post_page', PostPage)
   Vue.component('vue-pictures', Pictures)
   Vue.component('vue_pictures', Pictures)
   Vue.component('vue_page_pictures', PagePictures)

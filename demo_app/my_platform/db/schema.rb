@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200812200056) do
+ActiveRecord::Schema.define(version: 20200917171018) do
 
   create_table "activities", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci" do |t|
     t.string   "trackable_type"
@@ -406,6 +406,7 @@ ActiveRecord::Schema.define(version: 20200812200056) do
     t.string   "sent_via"
     t.datetime "published_at"
     t.boolean  "publish_on_public_website"
+    t.datetime "archived_at"
     t.index ["author_user_id"], name: "posts_author_user_id_fk", using: :btree
     t.index ["group_id"], name: "posts_group_id_fk", using: :btree
   end

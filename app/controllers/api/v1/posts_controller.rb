@@ -21,7 +21,6 @@ class Api::V1::PostsController < Api::V1::BaseController
 
   def update
     authorize! :update, post
-    raise "Post #{post.id} is not a draft and cannot be updated anymore" unless post.draft?
 
     post.update! post_params if params[:post].present?
     assign_parent_groups if parent_groups
@@ -32,7 +31,7 @@ class Api::V1::PostsController < Api::V1::BaseController
   private
 
   def post_params
-    params.require(:post).permit(:text, :publish_on_public_website)
+    params.require(:post).permit(:text, :publish_on_public_website, :subject, :published_at, :archived_at)
   end
 
   def assign_parent_groups

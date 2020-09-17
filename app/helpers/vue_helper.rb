@@ -42,6 +42,44 @@ module VueHelper
     }
   end
 
+  def vue_post_page(post)
+    content_tag :vue_post_page, "", {
+      ':post': post.as_json.merge({
+        author: post.author.as_json.merge({
+          path: (polymorphic_path(post.author) if can?(:read, post.author))
+        }),
+        attachments: post.attachments.as_json,
+        comments: post.comments.order(:created_at).collect { |comment|
+          comment.as_json.merge({
+            author: comment.author
+          })
+        },
+        can_comment: can?(:create_comment, post),
+        editable: can?(:update, post),
+        groups: (post.parent_groups + [post.group] - [nil]).collect { |group|
+          group.as_json(methods: [:avatar_path, :title])
+        },
+        events: post.parent_events.as_json,
+        can_update_publish_on_public_website: can?(:update_public_website_publication, post),
+        sent_deliveries: Rails.cache.fetch([post, "sent_deliveries", post.deliveries.sent.count]) {
+          post.deliveries.sent.collect { |delivery|
+            delivery.as_json.includes(:user)
+          }
+        },
+        failed_deliveries: Rails.cache.fetch([post, "failed_deliveries", post.deliveries.failed.count]) {
+          post.deliveries.failed.collect { |delivery|
+            delivery.as_json.includes(:user)
+          }
+        },
+      }).to_json,
+      mail_icon: mail_icon,
+      trash_icon: trash_icon,
+      edit_icon: edit_icon,
+      send_icon: send_icon,
+      ':current_user': current_user.to_json,
+    }
+  end
+
   def vue_create_post_form(initial_post: nil, sent_via: nil, show_send_via_email_toggle: false, suggested_groups: Group.none, send_via_email: nil, show_publish_on_website_toggle: false, parent_group: nil, placeholder: nil)
     content_tag :vue_create_post_form, "", {
       camera_icon: camera_icon,
