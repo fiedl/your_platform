@@ -75,9 +75,6 @@
                 %a.btn.btn-primary.mt-2{'href': '#', '@click': "deliver"}
                   %span{'v-html': "mail_icon"}
                   %span{'v-text': "'Per E-Mail senden an: ' + group_names"}
-
-        -//# TODO: subject in posts form
-
 </template>
 
 <script lang="coffee">

@@ -4,6 +4,9 @@
       .input-group.w-100.mb-2{'v-if': "(!parent) && show_submit_button"}
         %span.input-group-text An:
         %vue-group-select{placeholder: "Empfänger-Gruppen", 'v-model': "post.parent_groups", multiple: true, ':initial_options': "suggested_groups", '@input': "save_draft"}
+      .input-group.w-100.mb-2{'v-if': "show_submit_button && send_via_email"}
+        %span.input-group-text Betreff:
+        %input.form-control{type: 'text', placeholder: "Betreffzeile der E-Mail-Nachricht", 'v-model': "post.subject"}
       .input-group
         %vue-wysiwyg{'ref': "wysiwyg", ':placeholder': "placeholder || default_placeholder", 'v-model': "post.text", class: 'form-control', '@input': "on_input", ':editable': "submitting ? false : true"}
         .buttons_bottom
@@ -91,6 +94,7 @@
               component.uploading_images -= 1
             else
               component.uploading_documents -= 1
+              component.post.subject = new_attachment.title unless component.post.subject
             component.error = null
             component.post.attachments.push(new_attachment)
       }
@@ -187,7 +191,7 @@
         else
           "Nachricht posten"
       submission_enabled: ->
-        not (@submitting || @updating || @creating_draft) and (@parent || (@post.parent_groups && @post.parent_groups.length > 0)) and (@uploading_documents == 0) and (@uploading_images == 0)
+        not (@submitting || @updating || @creating_draft) and (@parent || (@post.parent_groups && @post.parent_groups.length > 0)) and (@uploading_documents == 0) and (@uploading_images == 0) and ((@post.subject && (@post.subject.length > 0)) || !@send_via_email)
 
   export default CreatePostForm
 </script>
