@@ -92,7 +92,7 @@
           #bank
             %vue-edit-box
               %h2= t :bank_account_information
-              = editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
+              .obscure-in-demo= editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
 
     .card
       .card-body

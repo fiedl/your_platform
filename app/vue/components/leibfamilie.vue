@@ -1,10 +1,10 @@
 <template>
   <div class="row">
     <div v-for="entry in leibfamilie" class="col-md-6 row row-sm align-items-center">
-      <a class="col row row-sm align-items-center mb-2" :href="'/users/' + entry.user.id">
+      <a class="col row row-sm align-items-center mb-2 obscure-in-demo" :href="'/users/' + entry.user.id">
         <span class="avatar col-auto" :style="'background-image: url(' + entry.user.avatar_path + ')'"></span>
         <div class="col">
-          <div class="text-body d-block">{{entry.user.title}}</div>
+          <div class="text-body d-block user">{{entry.user.title}}</div>
           <small class="d-block text-muted mt-n1">{{entry.description}}</small>
         </div>
       </a>
