@@ -134,6 +134,9 @@
           - if can? :create_post, platform_news_group
             .card-header
               = vue_create_post_form sent_via: platform_news_sent_via_key, initial_post: platform_news_draft, parent_group: platform_news_group, show_publish_on_website_toggle: true
-            = vue_posts platform_news_posts, sent_via: platform_news_sent_via_key
+          = vue_posts platform_news_posts, sent_via: platform_news_sent_via_key
           .card-footer
-            = link_to "Mehr Updates anzeigen", platform_news_group.public_home_page || posts_path(group_id: platform_news_group.id), class: 'btn btn-white btn-sm'
+            - if platform_news_group.public_home_page
+              = link_to "Mehr Updates anzeigen", platform_news_group.public_home_page, class: 'btn btn-white btn-sm'
+            - elsif can? :index_posts, platform_news_group
+              = link_to "Mehr Updates anzeigen", posts_path(group_id: platform_news_group.id), class: 'btn btn-white btn-sm'
