@@ -42,6 +42,7 @@ class Abilities::BaseAbility
       end
       rights_for_global_admins if view_as?(:global_admin) && user.global_admin?
     end
+    restrictions_for_everyone
 
   end
 
@@ -76,6 +77,9 @@ class Abilities::BaseAbility
   end
 
   def rights_for_global_admins
+  end
+
+  def restrictions_for_everyone
   end
 
   def view_as?(role_or_roles)

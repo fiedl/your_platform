@@ -31,7 +31,7 @@ class Abilities::PostAbility < Abilities::BaseAbility
     if not read_only_mode?
       can :create, Post
 
-      can :update, Post, author_user_id: user.id, sent_at: nil, published_at: nil
+      can :update, Post, author_user_id: user.id
       can :update_public_website_publication, Post, author_user_id: user.id
 
       # Force instant delivery after creating the post.
@@ -57,5 +57,11 @@ class Abilities::PostAbility < Abilities::BaseAbility
   end
 
   def rights_for_global_admins
+  end
+
+  def restrictions_for_everyone
+    cannot :deliver_post, Post do |post|
+      post.sent_at.present? || post.archived_at.present?
+    end
   end
 end
