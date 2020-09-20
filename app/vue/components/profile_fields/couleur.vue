@@ -1,7 +1,7 @@
 <template lang="haml">
   %div
     .ribbon_section.mt-3.mb-2
-      %vue-editable-ribbon{':value': "apparent_colors"}
+      %vue-ribbon{':value': "apparent_colors"}
     %div
       %label.form-label Farben
       %vue-heraldic-color-select{'v-model': "profile_field.colors[0]", '@input': "update"}
