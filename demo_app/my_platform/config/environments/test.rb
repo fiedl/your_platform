@@ -47,5 +47,6 @@ Rails.application.configure do
   config.action_view.raise_on_missing_translations = true
 
   # Raises errors for deprecations, https://stackoverflow.com/a/21723601/2066546
-  config.active_support.deprecation = :raise
+  # config.active_support.deprecation = :raise
+  config.active_support.deprecation = :log
 end
