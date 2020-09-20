@@ -78,7 +78,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'rack-cors'
 
   # Authorization
-  s.add_dependency 'cancancan', '~> 1.15.0'
+  s.add_dependency 'cancancan', '~> 1.10'
 
   # To use ActiveModel has_secure_password (password encryption)
   s.add_dependency 'bcrypt', '>= 3.0.1'                                                # MIT License
@@ -179,6 +179,11 @@ Gem::Specification.new do |s|
   # Emails and Encoding
   s.add_dependency 'charlock_holmes'
   s.add_dependency 'extended_email_reply_parser'
+
+  # Shopping
+  s.add_dependency 'spree', '~> 3.2.0'
+  s.add_dependency 'spree_auth_devise' #, '~> 3.2.0'
+  s.add_dependency 'spree_gateway' #, '~> 3.2.0'
 
 
   # Fixes

@@ -132,6 +132,12 @@ require 'trello'
 require 'charlock_holmes'
 require 'extended_email_reply_parser'
 
+# Shopping
+require 'spree'
+require 'spree_auth_devise'
+require 'spree_gateway'
+
+
 require_relative '../../config/initializers/inflections'
 
 # Development:
