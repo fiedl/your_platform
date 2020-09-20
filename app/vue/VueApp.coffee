@@ -16,6 +16,7 @@ import EditableImage from './components/editable_image.vue'
 import EditBox from './components/edit_box.vue'
 import ProfileField from './components/profile_field.vue'
 import AddressProfileField from './components/profile_fields/address.vue'
+import CouleurProfileField from './components/profile_fields/couleur.vue'
 import ProfileFields from './components/profile_fields.vue'
 import Datepicker from './components/datepicker.vue'
 import NumberOfMembersChart from './components/number_of_members_chart.vue'
@@ -82,6 +83,7 @@ jQuery(document).ready ->
   Vue.component('vue-profile-field', ProfileField)
   Vue.component('vue_profile_field', ProfileField)
   Vue.component('vue-address-profile-field', AddressProfileField)
+  Vue.component('vue-couleur-profile-field', CouleurProfileField)
   Vue.component('vue-profile-fields', ProfileFields)
   Vue.component('vue-datepicker', Datepicker)
   Vue.component('vue-number-of-members-chart', NumberOfMembersChart)

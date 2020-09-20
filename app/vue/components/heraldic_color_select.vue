@@ -1,11 +1,11 @@
 <template lang="haml">
   %div
     %a.form-select.d-flex.align-items-center{'data-toggle': 'dropdown'}
-      .color-circle.mr-2{':style': "'background-color: ' + selected.hex"}
+      .color-circle.mr-2{':style': "'background-color: ' + selected.hex", 'v-if': "selected.hex"}
       %span {{ selected.name }}
     .dropdown-menu
-      %li.dropdown-item{'v-for': "color in current_colors", '@click': "selected = color"}
-        .color-circle.mr-2{':style': "'background-color: ' + color.hex"}
+      %li.dropdown-item{'v-for': "color in current_colors", '@click': "on_select(color)"}
+        .color-circle.mr-2{':style': "'background-color: ' + color.hex", 'v-if': "color.hex"}
         %span {{ color.name }}
 </template>
 
@@ -26,10 +26,19 @@
         {name: "Hellblau", hex: "#62b0fe"}
         {name: "Lila", hex: "#b960e5"},
         {name: "Grün", hex: "#008700"},
+        {name: "Keine", hex: null},
       ]
+    methods:
+      on_select: (color)->
+        @selected = color
+        if color.hex
+          @$emit 'input', color.name
+        else
+          @$emit 'input', null
     created: ->
-      @selected = @current_colors.find((color) -> color.name == @value) if @value
-      @selected ||= @current_colors[0]
+      component = this
+      @selected = @current_colors.find((color) -> color.name.toLowerCase() == component.value.toLowerCase()) if component.value
+      @selected ||= @current_colors[@current_colors.length - 1]
   export default HeraldicColorSelect
 </script>
 

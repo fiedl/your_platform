@@ -385,6 +385,9 @@ Rails.application.routes.draw do
       end
       resources :attachments
       resources :comments
+      namespace :profile_fields do
+        resources :couleur
+      end
       get :current_user, to: 'current_user#show'
       get :current_role, to: 'current_role#show'
       resources :memberships

@@ -9,6 +9,8 @@
 class Corporation < Group
   after_create { self.parent_groups << Groups::CorporationsParent.find_or_create }
 
+  has_many :couleur_profile_fields, -> { where type: 'ProfileFields::Couleur' }, class_name: 'ProfileFields::Couleur', as: :profileable, dependent: :destroy, autosave: true
+
   include CorporationGroups
   include CorporationTermReports
   include CorporationLocation
@@ -95,6 +97,24 @@ class Corporation < Group
   # Corporations use semester calendars to group events.
   def use_semester_calendars?
     true
+  end
+
+  def couleur
+    couleur_profile_fields.where(label: "Band").first_or_create do |couleur|
+      couleur.set colors: %w(schwarz weiß gold), percussion_colors: %w(silber silber), reverse: false
+    end
+  end
+
+  def couleur_hospitanten
+    couleur_profile_fields.where(label: "Hospitanten-Band").first_or_create do |couleur|
+      couleur.set colors: %w(schwarz weiß), percussion_colors: %w(gold gold), reverse: false
+    end
+  end
+
+  def couleur_konkneipanten
+    couleur_profile_fields.where(label: "Konkneipanten-Band").first_or_create do |couleur|
+      couleur.set colors: %w(schwarz weiß), ground_color: 'gold', percussion_colors: %w(gold gold), reverse: false
+    end
   end
 
   include CorporationCaching if use_caching?

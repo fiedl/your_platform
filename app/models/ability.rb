@@ -176,7 +176,9 @@ class Ability
 
     # There are features for developers and beta testers.
     cannot :use, :all
+
     can :use, :demo_mode
+    can :use, :corporation_couleur
   end
 
   def rights_for_local_admins

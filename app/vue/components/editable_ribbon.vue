@@ -1,7 +1,7 @@
 <template lang="haml">
   %div
     .wrapper.d-inline-block{':class': "selecting_color_index ? 'selecting' : ''"}
-      .section{'v-for': "(color, index) in selected_colors", ':style': "'background-color: ' + color.hex", '@click': "selecting_color_index = index", ':class': "index == selecting_color_index ? 'active' : ''"}
+      .section{'v-for': "(color, index) in selected_colors", ':style': "'background-color: ' + color.hex + ';' + 'height: ' + color_section_height(index)", '@click': "edit(index)", ':class': "index == selecting_color_index ? 'active' : ''"}
     .dropdown-menu.color-pallette.d-inline-block.show{'v-if': "selecting_color_index && selecting_color_index > 0"}
       %li.dropdown-item{'v-for': "color in colors", '@click': "select(color)", ':class': "color.name == selected_colors[selecting_color_index].name ? 'active' : ''"}
         .color-circle.mr-2{':style': "'background-color: ' + color.hex"}
@@ -28,13 +28,35 @@
         {name: "Lila", hex: "#b960e5"},
         {name: "Grün", hex: "#008700"},
       ]
+    created: ->
+      @init()
     methods:
+      init: ->
+        @selected_colors = []
+        for color_string in @value
+          @selected_colors.push @colors.find((color) -> (color.name.toLowerCase() == color_string.toLowerCase()))
+      edit: (index)->
+        if @editable
+          @selected_color_index = index
       select: (color)->
         @selected_colors[@selecting_color_index] = color
         @selecting_color_index = null
-    created: ->
-      for color_string in @value
-        @selected_colors.push @colors.find((color) -> color.name == color_string)
+      color_section_height: (index)->
+        if @selected_colors.length > 5 # ribbon with ground color (Konkneiptant)
+          if index == 0 or index == @selected_colors.length - 1
+            "4%"
+          else if (index == 1 or index == @selected_colors.length - 2)
+            "#{(100 - 8 * 2) / (@selected_colors.length - 3) * 0.5}%"
+          else
+            "#{(100 - 8 * 2) / (@selected_colors.length - 3)}%"
+        else
+          if index == 0 or index == @selected_colors.length - 1
+            "4%"
+          else
+            "#{(100 - 8 * 2) / (@selected_colors.length - 2)}%"
+    watch:
+      value: (new_value)->
+        @init()
 
   export default EditableRibbon
 </script>
@@ -46,19 +68,16 @@
     width: 5em
     height: 5em
     transform: rotate(36deg)
+    border: 1px solid #ddd
   .section
-    height: 27%
     width: 100%
   .section:first-child
-    height: 10%
-  .section:last-child
-    height: 10%
+    margin-top: 4%
   .selecting
     .section
       opacity: 0.2
     .section.active
       opacity: 1
-
 
   .color-circle
     width: 1em
