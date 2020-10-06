@@ -1,12 +1,12 @@
 <template lang="haml">
   %div
-    .wrapper.d-inline-block{':class': "round ? 'round' : ''"}
+    .wrapper.d-inline-block{':class': "round ? 'round' : ''", ':style': "'width: ' + (width || '5em') + '; height: ' + (height || '5em')"}
       .section{'v-for': "(color, index) in selected_colors", ':style': "'background-color: ' + color.hex + ';' + 'height: ' + color_section_height(index)"}
 </template>
 
 <script lang="coffee">
   Ribbon =
-    props: ['value', 'round']
+    props: ['value', 'round', 'width', 'height']
     data: ->
       selected_colors: []
       colors: [
@@ -52,8 +52,6 @@
 <style lang="sass">
   .wrapper
     overflow: hidden
-    width: 5em
-    height: 5em
     transform: rotate(36deg)
   .wrapper.round
     border-radius: 50px
