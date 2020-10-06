@@ -70,11 +70,11 @@
                   .mb-2
                     - case current_user.current_status_in corporation
                     - when "Hospitant"
-                      %vue_ribbon{':value': corporation.couleur_hospitanten.apparent_colors, height: "60px", width: "100%"}
+                      %vue_ribbon{':value': corporation.couleur_hospitanten.apparent_colors, height: "60px", width: "100%", rotate: '0deg'}
                     - when "Konkneipant"
-                      %vue_ribbon{':value': corporation.couleur_konkneipanten.apparent_colors, height: "60px", width: "100%"}
+                      %vue_ribbon{':value': corporation.couleur_konkneipanten.apparent_colors, height: "60px", width: "100%", rotate: '0deg'}
                     - else
-                      %vue_ribbon{':value': corporation.couleur.apparent_colors, height: "60px", width: "100%"}
+                      %vue_ribbon{':value': corporation.couleur.apparent_colors, height: "60px", width: "100%", rotate: '0deg'}
         .container-xl
           / Content here
           = render partial: 'shared/flashes'

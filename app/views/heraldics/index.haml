@@ -11,6 +11,10 @@
           %th Verbindung
           %th Wappen
           %th Zirkel
+          - if can? :use, :corporation_couleur
+            %th Couleur
+            %th Hospitanten
+            %th Konkneipanten
           %th Beschreibung
       %tbody
         - for group in corporations
@@ -21,6 +25,16 @@
               %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
             %td
               %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
+            - if can? :use, :corporation_couleur
+              %td
+                %vue-edit-box
+                  %vue-couleur-profile-field{':initial_profile_field': group.couleur.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+              %td
+                %vue-edit-box
+                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_hospitanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+              %td
+                %vue-edit-box
+                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_konkneipanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
             %td
               %vue-edit-box
                 - for profile_field in group.description_fields
