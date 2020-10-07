@@ -105,6 +105,7 @@ EditBox = {
   .edit-tools
     float: right
     text-align: right
+    margin-bottom: 5px
     .btn.btn-outline-secondary.edit-button:hover
       background: white
       color: #6e7582
