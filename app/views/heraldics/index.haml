@@ -4,40 +4,47 @@
       .page-title Heraldik
 
 .card
-  .table-responsive
-    %table.table.card-table.table-mobile-sm
-      %thead
+  %table.table.card-table.table-mobile-md
+    %thead
+      %tr
+        %th Verbindung
+        %th Wappen
+        %th Zirkel
+        - if can? :use, :corporation_couleur
+          %th Burschen
+          %th Fuxen
+          %th Hospitanten
+          %th Konkneipanten
+        %th Beschreibung
+    %tbody
+      - for group in corporations
         %tr
-          %th Verbindung
-          %th Wappen
-          %th Zirkel
+          %td
+            = link_to group.title, group
+          %td
+            %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
+          %td
+            %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
           - if can? :use, :corporation_couleur
-            %th Couleur
-            %th Hospitanten
-            %th Konkneipanten
-          %th Beschreibung
-      %tbody
-        - for group in corporations
-          %tr
-            %td
-              = link_to group.title, group
-            %td
-              %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
-            %td
-              %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 100px; min-width: 100px; background-repeat: no-repeat; background-size: contain; border: 0px'}
-            - if can? :use, :corporation_couleur
-              %td
-                %vue-edit-box
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
-              %td
-                %vue-edit-box
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_hospitanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
-              %td
-                %vue-edit-box
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_konkneipanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
             %td
               %vue-edit-box
-                - for profile_field in group.description_fields
-                  - if profile_field.label.in? heraldic_field_labels
-                    .mb-3
-                      = vue_profile_field profile_field
+                %h4.d-lg-none Burschen-Band
+                %vue-couleur-profile-field{':initial_profile_field': group.couleur.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+            %td
+              %vue-edit-box
+                %h4.d-lg-none Fuxen-Band
+                %vue-couleur-profile-field{':initial_profile_field': group.couleur_fuxen.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+            %td
+              %vue-edit-box
+                %h4.d-lg-none Hospitanten-Band
+                %vue-couleur-profile-field{':initial_profile_field': group.couleur_hospitanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+            %td
+              %vue-edit-box
+                %h4.d-lg-none Konkneipanten-Band
+                %vue-couleur-profile-field{':initial_profile_field': group.couleur_konkneipanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+          %td
+            %vue-edit-box
+              - for profile_field in group.description_fields
+                - if profile_field.label.in? heraldic_field_labels
+                  .mb-3
+                    = vue_profile_field profile_field

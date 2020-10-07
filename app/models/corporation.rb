@@ -105,6 +105,12 @@ class Corporation < Group
     end
   end
 
+  def couleur_fuxen
+    couleur_profile_fields.where(label: "Fuxen-Band").first_or_create do |couleur|
+      couleur.set colors: %w(schwarz weiß gold), percussion_colors: %w(silber silber), reverse: false
+    end
+  end
+
   def couleur_hospitanten
     couleur_profile_fields.where(label: "Hospitanten-Band").first_or_create do |couleur|
       couleur.set colors: %w(schwarz weiß), percussion_colors: %w(gold gold), reverse: false
