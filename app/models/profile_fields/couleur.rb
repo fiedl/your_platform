@@ -52,4 +52,20 @@ class ProfileFields::Couleur < ProfileField
     })
   end
 
+  def self.colors
+    [
+      {name: "Schwarz", hex: "#000000"},
+      {name: "Weiß", hex: "#ffffff"},
+      {name: "Gold", hex: "#f6bc5c"},
+      {name: "Altgold", hex: "#d58b0a"},
+      {name: "Silber", hex: "#7f7f7f"},
+      {name: "Rot", hex: "#fe0000"},
+      {name: "Dunkelrot", hex: "#7f0000"},
+      {name: "Blau", hex: "#1100bd"},
+      {name: "Hellblau", hex: "#62b0fe"},
+      {name: "Lila", hex: "#b960e5"},
+      {name: "Grün", hex: "#008700"}
+    ]
+  end
+
 end

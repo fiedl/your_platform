@@ -161,16 +161,16 @@
               .row.mt-3
                 .col-md-3.mb-3
                   %h4 Band
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur.to_json, ':editable': can?(:update, group).to_json}
+                  = vue_couleur_profile_field group.couleur
                 .col-md-3.mb-3
                   %h4 Fuxen-Band
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_fuxen.to_json, ':editable': can?(:update, group).to_json}
+                  = vue_couleur_profile_field group.couleur_fuxen
                 .col-md-3.mb-3
                   %h4 Hospitanten-Band
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_hospitanten.to_json, ':editable': can?(:update, group).to_json}
+                  = vue_couleur_profile_field group.couleur_hospitanten
                 .col-md-3.mb-3
                   %h4 Konkneipanten-Band
-                  %vue-couleur-profile-field{':initial_profile_field': group.couleur_konkneipanten.to_json, ':editable': can?(:update, group).to_json}
+                  = vue_couleur_profile_field group.couleur_konkneipanten
 
     - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
       .card

@@ -1,19 +1,19 @@
 <template lang="haml">
   %div
     .ribbon_section.mt-3.mb-2{'@click': "edit"}
-      %vue-ribbon{':value': "apparent_colors", ':rotate': "rotate"}
+      %vue-ribbon{':value': "apparent_colors", ':rotate': "rotate", ':colors': "colors"}
     %div{'v-if': "editing"}
       %label.form-label Farben
-      %vue-heraldic-color-select{'v-model': "profile_field.colors[0]", '@input': "update"}
-      %vue-heraldic-color-select{'v-model': "profile_field.colors[1]", '@input': "update"}
-      %vue-heraldic-color-select{'v-model': "profile_field.colors[2]", '@input': "update"}
+      %vue-heraldic-color-select{'v-model': "profile_field.colors[0]", '@input': "update", ':colors': "colors"}
+      %vue-heraldic-color-select{'v-model': "profile_field.colors[1]", '@input': "update", ':colors': "colors"}
+      %vue-heraldic-color-select{'v-model': "profile_field.colors[2]", '@input': "update", ':colors': "colors"}
 
       %label.form-label.mt-4 Auf Grundfarbe
-      %vue-heraldic-color-select{'v-model': "profile_field.ground_color", '@input': "update"}
+      %vue-heraldic-color-select{'v-model': "profile_field.ground_color", '@input': "update", ':colors': "colors"}
 
       %label.form-label.mt-4 Perkussion
-      %vue-heraldic-color-select{'v-model': "profile_field.percussion_colors[0]", '@input': "update"}
-      %vue-heraldic-color-select{'v-model': "profile_field.percussion_colors[1]", '@input': "update"}
+      %vue-heraldic-color-select{'v-model': "profile_field.percussion_colors[0]", '@input': "update", ':colors': "colors"}
+      %vue-heraldic-color-select{'v-model': "profile_field.percussion_colors[1]", '@input': "update", ':colors': "colors"}
 
       %label.form-check.form-switch.mt-4
         %input.form-check-input{type: 'checkbox', 'v-model': "profile_field.reverse", '@input': "update"}
@@ -25,7 +25,7 @@
   Vue = require('vue').default
 
   CouleurProfileField =
-    props: ['initial_profile_field', 'editable', 'rotate']
+    props: ['initial_profile_field', 'editable', 'rotate', 'colors']
     data: ->
       profile_field: @initial_profile_field
       editing: false

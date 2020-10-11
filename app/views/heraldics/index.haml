@@ -31,19 +31,19 @@
             %td
               %vue-edit-box
                 %h4.d-lg-none Burschen-Band
-                %vue-couleur-profile-field{':initial_profile_field': group.couleur.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+                = vue_couleur_profile_field group.couleur, rotate: 0
             %td
               %vue-edit-box
                 %h4.d-lg-none Fuxen-Band
-                %vue-couleur-profile-field{':initial_profile_field': group.couleur_fuxen.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+                = vue_couleur_profile_field group.couleur_fuxen, rotate: 0
             %td
               %vue-edit-box
                 %h4.d-lg-none Hospitanten-Band
-                %vue-couleur-profile-field{':initial_profile_field': group.couleur_hospitanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+                = vue_couleur_profile_field group.couleur_hospitanten, rotate: 0
             %td
               %vue-edit-box
                 %h4.d-lg-none Konkneipanten-Band
-                %vue-couleur-profile-field{':initial_profile_field': group.couleur_konkneipanten.to_json, ':editable': can?(:update, group).to_json, rotate: 0}
+                = vue_couleur_profile_field group.couleur_konkneipanten, rotate: 0
           %td
             %vue-edit-box
               - for profile_field in group.description_fields

@@ -137,6 +137,15 @@ module VueHelper
     }
   end
 
+  def vue_couleur_profile_field(profile_field, rotate: nil)
+    content_tag 'vue-couleur-profile-field', "", {
+      ':initial_profile_field': profile_field.to_json,
+      ':editable': can?(:update, profile_field).to_json,
+      ':colors': ProfileFields::Couleur.colors.to_json,
+      rotate: rotate
+    }
+  end
+
   def vue_new_event_form
     content_tag 'vue_new_event_form', "", {
       ':current_user': current_user.to_json,
