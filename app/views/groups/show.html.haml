@@ -166,11 +166,11 @@
                   %h4 Fuxen-Band
                   = vue_couleur_profile_field group.couleur_fuxen
                 .col-md-3.mb-3
-                  %h4 Hospitanten-Band
-                  = vue_couleur_profile_field group.couleur_hospitanten
-                .col-md-3.mb-3
                   %h4 Konkneipanten-Band
                   = vue_couleur_profile_field group.couleur_konkneipanten
+                .col-md-3.mb-3
+                  %h4 Hospitanten-Band
+                  = vue_couleur_profile_field group.couleur_hospitanten
 
     - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
       .card
