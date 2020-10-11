@@ -56,15 +56,23 @@ class ProfileFields::Couleur < ProfileField
     [
       {name: "Schwarz", hex: "#000000"},
       {name: "Weiß", hex: "#ffffff"},
-      {name: "Gold", hex: "#f6bc5c"},
-      {name: "Altgold", hex: "#d58b0a"},
-      {name: "Silber", hex: "#7f7f7f"},
-      {name: "Rot", hex: "#fe0000"},
-      {name: "Dunkelrot", hex: "#7f0000"},
+      {name: "Gold", hex: "#c2a952"},
+      {name: "Altgold", hex: "#99893D"},
+      {name: "Silber", hex: "#999999"},
+      {name: "Rot", hex: "#c71d19"},
+      {name: "Dunkelrot", hex: "#991914"},
+      {name: "Weinrot", hex: "#661F44"},
+      {name: "Karmesinrot", hex: "#E72274"},
+      {name: "Purpur", hex: "#E72274"},
+      {name: "Violett", hex: "#841F82"},
       {name: "Blau", hex: "#1100bd"},
+      {name: "Kornblumenblau", hex: "#263688"},
       {name: "Hellblau", hex: "#62b0fe"},
+      {name: "Hellblau (Siegen)", hex: "#3fa7cd"},
+      {name: "Hellblau (Hohenheim)", hex: "#0bddf9"},
       {name: "Lila", hex: "#b960e5"},
-      {name: "Grün", hex: "#008700"}
+      {name: "Grün", hex: "#136736"},
+      {name: "Keine", hex: nil}
     ]
   end
 
