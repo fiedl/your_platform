@@ -7,15 +7,7 @@
 <script lang="coffee">
   Ribbon =
     props: ['value', 'round', 'width', 'height', 'rotate', 'colors']
-    data: ->
-      selected_colors: []
-    created: ->
-      @init()
     methods:
-      init: ->
-        @selected_colors = []
-        for color_string in @value
-          @selected_colors.push @colors.find((color) -> (color.name.toLowerCase() == color_string.toLowerCase()))
       color_section_height: (index)->
         if @selected_colors.length > 5 # ribbon with ground color (Konkneiptant)
           if index == 0 or index == @selected_colors.length - 1
@@ -29,9 +21,14 @@
             "4%"
           else
             "#{(100 - 8 * 2) / (@selected_colors.length - 2)}%"
-    watch:
-      value: (new_value)->
-        @init()
+    computed:
+      selected_colors: ->
+        component = this
+        if @value
+          @value.map (color_string)->
+            component.colors.find((color) -> (color.name.toLowerCase() == color_string.toLowerCase()))
+        else
+          []
 
   export default Ribbon
 </script>
