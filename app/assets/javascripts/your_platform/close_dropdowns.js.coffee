@@ -30,3 +30,10 @@ $(document).on 'hide.bs.dropdown', (e) ->
   if $(e.relatedTarget).hasClass('dropdown-toggle')
     if $(this).find('.prevent-closing-outer-dropdowns').length > 0
       e.preventDefault()
+
+
+# Do not close dropdowns when clicking inside the menu.
+# https://stackoverflow.com/a/32922725/2066546
+#
+$(document).on 'click', '.dropdown-menu', (e)->
+  e.stopPropagation()

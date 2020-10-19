@@ -365,6 +365,7 @@ Rails.application.routes.draw do
         post :location, on: :collection, to: 'users/locations#create'
         put :location, on: :collection, to: 'users/locations#update'
         post :change_status, to: 'change_status#create'
+        put '/settings/:key', to: 'users/settings#update'
       end
       resources :groups do
         resources :members

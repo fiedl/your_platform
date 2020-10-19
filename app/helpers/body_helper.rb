@@ -9,7 +9,7 @@ module BodyHelper
       ("public-website" if @navable.kind_of?(Page) && @navable.public?),
       ("demo_mode" if demo_mode?),
       ("ios" if params[:app] == "ios"),
-      ("auto-dark-mode" if can?(:use, :dark_mode),
+      dark_mode_body_class,
       options[:class]
     ]
     data = {
@@ -22,6 +22,19 @@ module BodyHelper
     data[:turbolinks] = options[:turbolinks]
     content_tag :body, class: css_classes.join(" "), data: data do
       yield
+    end
+  end
+
+  def dark_mode_body_class
+    if can? :use, :dark_mode
+      case current_user.settings.dark_mode
+      when 'dark'
+        "theme-dark"
+      when 'auto', '', nil
+        "auto-dark-mode"
+      else
+        nil
+      end
     end
   end
 

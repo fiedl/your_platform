@@ -60,6 +60,7 @@ import HeraldicColorSelect from './components/heraldic_color_select.vue'
 import Ribbon from './components/ribbon.vue'
 import NewEventForm from './components/new_event_form.vue'
 import EventAttendees from './components/event_attendees.vue'
+import RightCornerRibbon from './components/right_corner_ribbon.vue'
 
 jQuery(document).ready ->
   vue_apps = []
@@ -142,6 +143,7 @@ jQuery(document).ready ->
   Vue.component('vue-ribbon', Ribbon)
   Vue.component('vue_new_event_form', NewEventForm)
   Vue.component('vue_event_attendees', EventAttendees)
+  Vue.component('vue_right_corner_ribbon', RightCornerRibbon)
 
   vue_app = new Vue
     el: "#vue-app"
