@@ -9,6 +9,7 @@ module BodyHelper
       ("public-website" if @navable.kind_of?(Page) && @navable.public?),
       ("demo_mode" if demo_mode?),
       ("ios" if params[:app] == "ios"),
+      ("auto-dark-mode" if can?(:use, :dark_mode),
       options[:class]
     ]
     data = {

@@ -5,6 +5,32 @@
  *    require_tree './bootstrap_layout'
  */
 
+// Dark-mode fixes
+body.theme-dark
+  a
+    color: white
+  a:hover
+    color: #eee
+  .vs__dropdown-menu
+    background: #2f3949
+    li, a
+      color: white
+  a.active.dropdown-item
+    color: white
+    font-weight: bold
+  .text-muted
+    color: #8e95a8!important
+  .text-body
+    color: white !important
+  .thumb img
+    background: white
+  .card-profile-img
+    background-color: #000
+  .icon_container
+    background-color: #333
+  .dropdown-header
+    color: #8e95a8
+
 // Top bar
 // Make it a little transparent in order for the top-right ribbon to be shown
 //

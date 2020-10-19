@@ -179,6 +179,7 @@ class Ability
 
     can :use, :demo_mode
     can :use, :corporation_couleur
+    can :use, :dark_mode
   end
 
   def rights_for_local_admins
