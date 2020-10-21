@@ -44,24 +44,29 @@ class Attachment < ApplicationRecord
     AppVersion.root_url + thumb_path
   end
   def thumb_path
-    url = file.url( :thumb ) if has_type?( "image" ) or has_type?( "pdf" )
-    url = file.url( :video_thumb ) if has_type?( "video" )
-    url = helpers.image_path( 'file.png' ) unless url
-    return url
+    url = file.url if has_type?("svg")
+    url ||= file.url(:thumb) if has_type?("image") or has_type?("pdf")
+    url ||= file.url(:video_thumb) if has_type?("video")
+    url ||= helpers.image_path('file.png')
+    url
   end
 
   def medium_url
     AppVersion.root_url + medium_path if medium_path.present?
   end
   def medium_path
-    file.url(:medium) if has_type?( "image" ) or has_type?( "pdf" )
+    url = file.url if has_type?("svg")
+    url ||= file.url(:medium) if has_type?("image") or has_type?("pdf")
+    url
   end
 
   def big_url
     AppVersion.root_url + big_path if big_path.present?
   end
   def big_path
-    file.url(:big) if has_type?( "image" ) or has_type?( "pdf" )
+    url = file.url if has_type?("svg")
+    url ||= file.url(:big) if has_type?("image") or has_type?("pdf")
+    url
   end
 
   def has_type?(type)

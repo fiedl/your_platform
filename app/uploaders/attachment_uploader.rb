@@ -46,7 +46,7 @@ class AttachmentUploader < CarrierWave::Uploader::Base
   # end
 
   # Create different versions of your uploaded files:
-  version :thumb, :if => :image_or_pdf? do
+  version :thumb, :if => :need_thumb? do
     process :cover
     process :resize_to_limit => [300,300]
     process :convert => :png, if: :pdf?
@@ -57,14 +57,14 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     end
   end
 
-  version :medium, :if => :image_or_pdf? do
+  version :medium, :if => :need_thumb? do
     process :cover, if: :pdf?
     process :resize_to_limit => [600,600]
     process :convert => :png, if: :pdf?
     process :modify_content_type
   end
 
-  version :big, if: :image_or_pdf? do
+  version :big, if: :need_thumb? do
     process :cover, if: :pdf?
     process :resize_to_limit => [1500,1500]
     process :convert => :png, if: :pdf?
@@ -79,21 +79,28 @@ class AttachmentUploader < CarrierWave::Uploader::Base
     end
   end
 
-  def video?( new_file )
+  def video?(new_file)
     new_file.content_type.include?('video')
   end
 
-  def image_or_pdf?( new_file )
-    new_file && new_file.content_type.present? &&
-      (new_file.content_type.include?('image') || new_file.content_type.include?('pdf'))
+  def svg?(new_file)
+    new_file && new_file.content_type.present? && new_file.content_type.include?('svg')
   end
 
-  def image?( new_file )
+  def raster_image?(new_file)
+    image?(new_file) and not svg?(new_file)
+  end
+
+  def image?(new_file)
     new_file && new_file.content_type.present? && new_file.content_type.include?('image')
   end
 
   def pdf?(new_file)
     new_file && new_file.content_type.present? && new_file.content_type.include?('pdf')
+  end
+
+  def need_thumb?(new_file)
+    raster_image?(new_file) or pdf?(new_file)
   end
 
   def set_content_type
