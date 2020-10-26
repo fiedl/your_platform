@@ -13,7 +13,7 @@ concern :PageVideos do
   end
 
   def raw_youtube_video_url
-    `youtube-dl --get-url -f best #{teaser_youtube_url}`.strip if teaser_youtube_url
+    # `y-dl --get-url -f best #{teaser_youtube_url}`.strip if teaser_youtube_url
   end
 
   def video_attachments
