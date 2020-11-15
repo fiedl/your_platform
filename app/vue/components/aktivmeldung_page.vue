@@ -107,7 +107,7 @@
               %input.form-control{'v-model': "account_holder", placeholder: "Kontoinhaber"}
 
             .account_iban.mb-3
-              %label.form-label.required IBAN
+              %label.form-label IBAN
               %input.form-control{'v-model': "account_iban", placeholder: "IBAN"}
 
             .account_bic.mb-3
@@ -291,11 +291,11 @@
         !@submitting && @all_required_fields_are_given
       all_required_fields_are_given: ->
         if @new_member_type == "Aktivmeldung"
-          @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @email && @study_address && @home_address && @study && @study_from && @university && @subject && @account_iban && @status && @privacy
+          @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @email && @study_address && @home_address && @study && @study_from && @university && @subject && @status && @privacy
         else if @new_member_type == "Bandaufnahme"
           @corporation && @valid_from && @existing_user && @status
         else if @new_member_type == "Hausbewohner"
-          @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @study_address && @home_address && @study && @study_from && @university && @subject && @account_iban && @room && @privacy
+          @corporation && @valid_from && @first_name && @last_name && @date_of_birth && @phone && @study_address && @home_address && @study && @study_from && @university && @subject && @room && @privacy
         else if @new_member_type == "Keilgast"
           @corporation && @valid_from && @first_name && @last_name && @privacy
         else if @new_member_type == "Dame"
