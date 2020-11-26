@@ -208,4 +208,20 @@ module VueHelper
     }
   end
 
+  def vue_editable_image(attachment = nil, src: nil, tools_alignment: 'right', editable: false, image_class: '', icon: 'fa fa-image', update_url: nil, attribute_name: nil, style: nil, link_to: nil)
+    content_tag 'vue-editable-image', "", {
+      src: attachment.try(:big_path) || src,
+      download_url: attachment.try(:path),
+      tools_alignment: tools_alignment,
+      ':editable': editable.to_json,
+      img_class: image_class,
+      icon: icon,
+      download_icon: download_icon,
+      update_url: update_url,
+      attribute_name: attribute_name,
+      style: style,
+      link_to: link_to
+    }
+  end
+
 end

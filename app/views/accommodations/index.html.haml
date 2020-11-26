@@ -16,7 +16,8 @@
     - if rooms.any? || can?(:update_accommodations, corporation)
       %vue_rooms{':initial_rooms': rooms.to_json,
         ':corporation': corporation.to_json,
-        ':editable': can?(:update_accommodations, corporation).to_json}
+        ':editable': can?(:update_accommodations, corporation).to_json,
+        download_icon: download_icon}
     - else
       .card
         .card-body

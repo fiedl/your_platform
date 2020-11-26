@@ -27,6 +27,10 @@
         <a :click="edit" :class="'edit ' + edit_alignment">{{ edit_label }}</a>
       </div>
     </vue-dropzone>
+
+    <div :class="'download ' + download_alignment" v-if="download_url || src">
+      <a :href="download_url || src" target="_blank" title="Bild herunterladen"><span v-html="download_icon"></span></a>
+    </div>
   </div>
 </template>
 
@@ -37,7 +41,7 @@
   Vue.component 'vue-dropzone', VueDropzone
 
   EditableImage =
-    props: ['src', 'editable', 'img_class', 'edit_alignment', 'update_url', 'attribute_name', 'icon']
+    props: ['src', 'editable', 'img_class', 'tools_alignment', 'update_url', 'attribute_name', 'icon', 'download_icon', 'link_to', 'download_url']
     data: ->
       component = this
       {
@@ -71,6 +75,16 @@
       editables: -> []
     computed:
       edit_label: -> "Bild ändern"
+      edit_alignment: ->
+        if @tools_alignment == 'center'
+          'center'
+        else
+          'top right'
+      download_alignment: ->
+        if @tools_alignment == 'center'
+          'bottom center'
+        else
+          'bottom right'
     watch:
       src: (new_source)->
         @image_url = new_source
@@ -108,7 +122,7 @@
       font-size: 2em !important
 
   .editable_image.editable
-    cursor: grab
+    cursor: pointer
 
     a.edit
       position: absolute
@@ -123,6 +137,16 @@
       left: auto
       transform: none
       right: 5px
+
+  .download
+    position: absolute
+  .download.right
+    right: 5px
+  .download.center
+    left: 50%
+    transform: translate(-50%, -50%)
+  .download.bottom
+    bottom: 5px
 
   .editable_image.editable
     -webkit-filter: brightness(100%)
@@ -142,5 +166,17 @@
 
   .editable_image.editable.suggesting_drop
     -webkit-filter: brightness(110%)
+
+
+  .editable_image
+    .download a
+      opacity: 0
+      transition-property: all
+      transition-duration: 0.3s
+
+  .editable_image:hover
+    .download a
+      opacity: 1
+
 
 </style>

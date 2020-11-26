@@ -21,10 +21,10 @@
   - show_posts_column = can?(:create_post, event) || posts.any?
   .col-md-4{class: ('col-md-12' unless show_posts_column)}
     .card.card-profile
-      %vue-editable-image{src: event.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, event).to_json, img_class: 'card-header', update_url: event_path(event), attribute_name: "event[avatar_background]"}
+      = vue_editable_image src: event.avatar_background_path, editable: can?(:update, event), image_class: 'card-header', update_url: event_path(event), attribute_name: "event[avatar_background]"
       .card-body.text-center
         %vue-edit-box
-          %vue-editable-image{src: event.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, event).to_json, update_url: event_path(event), attribute_name: 'event[avatar]', icon: "fa fa-calendar fa-2x"}
+          = vue_editable_image src: event.avatar_path, image_class: "card-profile-img", editable: can?(:update, event), update_url: event_path(event), attribute_name: 'event[avatar]', icon: "fa fa-calendar fa-2x", tools_alignment: 'center'
           %h3.mb-3
             = editable event, :name, editable: can?(:update, event)
 

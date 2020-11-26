@@ -152,10 +152,10 @@
           .row
             .col-md-4.mb-3
               %h4 Wappen
-              %vue-editable-image{src: group.wappen.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+              = vue_editable_image group.wappen, editable: can?(:update, group), image_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[wappen]", style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'
             .col-md-4.mb-3
               %h4 Zirkel
-              %vue-editable-image{src: group.zirkel.try(:big_path), edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", icon: 'fa fa-image', style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'}
+              = vue_editable_image group.zirkel, editable: can?(:update, group), image_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'
           - if can? :use, :corporation_couleur
             %vue-edit-box
               .row.mt-3

@@ -17,9 +17,9 @@
       .col-md-6.col-lg-4{'v-for': "corporation in sorted_corporations", ':key': "corporation.id"}
         -#.card.card-profile
         %a.card.card-profile{':href': "'/corporations/' + corporation.id"}
-          %vue-editable-image{':src': "corporation.avatar_background_path", edit_alignment: "top right", ':editable': "corporation.editable", img_class: 'card-header', ':update_url': "corporation.update_path", attribute_name: "group[avatar_background]"}
+          %vue-editable-image{':src': "corporation.avatar_background_path", ':editable': "corporation.editable", img_class: 'card-header', ':update_url': "corporation.update_path", attribute_name: "group[avatar_background]"}
           .card-body.text-center
-            %vue-editable-image{':src': "corporation.avatar_path", img_class: "card-profile-img", ':editable': "corporation.editable", icon: "fa fa-group fa-2x", ':update_url': "corporation.update_path", attribute_name: 'group[avatar]'}
+            %vue-editable-image{':src': "corporation.avatar_path", img_class: "card-profile-img", ':editable': "corporation.editable", icon: "fa fa-group fa-2x", ':update_url': "corporation.update_path", attribute_name: 'group[avatar]', tools_alignment: 'center'}
             %h3.mb-1= "{{ corporation.name }}"
             .col.text-muted.mb-3
               %small Aktive: {{ corporation.aktive_count }},

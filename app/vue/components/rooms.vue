@@ -3,10 +3,10 @@
     .row.row-deck
       .col-md-6{'v-for': "room in rooms", ':key': "room.id"}
         .card.card-profile
-          %vue-editable-image{':src': "room.customized_avatar_background_path", edit_alignment: "top right", ':editable': "editable && room.id > 0", img_class: 'card-header', ':update_url': "'/groups/' + room.id", attribute_name: "group[avatar_background]", ':icon': "room.occupant ? null : 'fa fa-home fa-2x'"}
+          %vue-editable-image{':src': "room.customized_avatar_background_path", ':editable': "editable && room.id > 0", img_class: 'card-header', ':update_url': "'/groups/' + room.id", attribute_name: "group[avatar_background]", ':icon': "room.occupant ? null : 'fa fa-home fa-2x'"}
           .card-body.text-center
             %vue-edit-box
-              %vue-editable-image{':src': "room.occupant.avatar_path", img_class: "card-profile-img obscure-in-demo", ':editable': "editable", ':update_url': "'/users/' + room.occupant.id", attribute_name: 'user[avatar]', 'v-if': "room.occupant"}
+              %vue-editable-image{':src': "room.occupant.avatar_path", img_class: "card-profile-img obscure-in-demo", ':editable': "editable", ':update_url': "'/users/' + room.occupant.id", attribute_name: 'user[avatar]', 'v-if': "room.occupant", ':download_url': "room.occupant.avatar_path", ':download_icon': "download_icon", tools_alignment: 'center'}
               %h3.mb-3.clear
                 %vue-editable{ref: "room_name", ':data-room-id': "room.id", ':initial-value': "room.name", ':url': "'/groups/' + room.id", paramKey: "group[name]", ':editable': "editable", type: 'text'}
               %a.occupant.user{':href': "'/users/' + room.occupant.id", 'v-if': "room.occupant"} {{ room.occupant.title }}
@@ -30,7 +30,7 @@
   moment = require 'moment'
 
   Rooms =
-    props: ['initial_rooms', 'corporation', 'editable']
+    props: ['initial_rooms', 'corporation', 'editable', 'download_icon']
     data: ->
       rooms: []
     created: ->

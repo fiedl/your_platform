@@ -1,7 +1,7 @@
 .card.card-profile
-  %vue-editable-image{src: group.avatar_background_path, edit_alignment: "top right", ':editable': can?(:update, group).to_json, img_class: 'card-header', update_url: group_path(group), attribute_name: "group[avatar_background]"}
+  = vue_editable_image src: group.avatar_background_path, editable: can?(:update, group), image_class: 'card-header', update_url: group_path(group), attribute_name: "group[avatar_background]"
   .card-body.text-center
-    %vue-editable-image{src: group.avatar_path, img_class: "card-profile-img", ':editable': can?(:update, group).to_json, update_url: group_path(group), attribute_name: 'group[avatar]', icon: "fa fa-group fa-2x"}
+    = vue_editable_image src: group.avatar_path, image_class: "card-profile-img", editable: can?(:update, group), update_url: group_path(group), attribute_name: 'group[avatar]', icon: "fa fa-group fa-2x", tools_alignment: 'center'
     %h3.mb-3
       = editable group, :name, editable: can?(:rename, group)
 
