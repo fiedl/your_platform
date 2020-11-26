@@ -289,6 +289,8 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :magazines
+
   resources :features
 
   resources :integrations, only: [:index]

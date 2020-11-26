@@ -1,0 +1,22 @@
+.page-header
+  .row.align-items-center
+    .col
+      %h2.page-title= current_title
+    .col-auto.ml-auto
+      .input-icon
+        %input.form-control{type: 'text', placeholder: "Zeitschrift suchen"}
+        %span.input-icon-addon
+          = search_icon
+
+.row.row-cards.row-deck
+  - for magazine in magazines
+    .col-sm-6.col-lg-4
+      .card.card-sm
+        = link_to magazine, class: 'd-block' do
+          %img.card-img-top
+        .card-body
+          .d-flex.align-items-center
+            = avatar magazine.avatar if magazine.avatar
+            %div
+              %div= link_to magazine.title, magazine
+              .text-muted= magazine.group.title if magazine.group
