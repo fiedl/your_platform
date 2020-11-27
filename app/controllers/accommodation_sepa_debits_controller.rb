@@ -46,7 +46,7 @@ class AccommodationSepaDebitsController < ApplicationController
 
       # OPTIONAL: Business Identifier Code (SWIFT-Code) of the creditor
       # String, 8 or 11 char
-      bic: bank_account.bic,
+      bic: (bank_account.bic if bank_account.bic.present?),
 
       # International Bank Account Number of the creditor
       # String, max. 34 chars
@@ -68,7 +68,7 @@ class AccommodationSepaDebitsController < ApplicationController
 
           # OPTIONAL: Business Identifier Code (SWIFT-Code) of the debtor's account
           # String, 8 or 11 char
-          bic: room.occupant.bank_account.bic,
+          bic: (room.occupant.bank_account.bic if room.occupant.bank_account.bic.present?),
 
           # International Bank Account Number of the debtor's account
           # String, max. 34 chars
