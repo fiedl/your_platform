@@ -5,6 +5,8 @@
         %table.table.card-table.table-vcenter.table-mobile-sm
           %thead
             %tr
+              %th.w-1
+                %input.form-check-input.m-0.align-middle{type: 'checkbox', 'v-model': "select_all"}
               %th
               %th Konto
               %th Betrag
@@ -13,6 +15,8 @@
               %th Mandat unterschrieben am
           %tbody
             %tr{'v-for': "room in rooms", 'v-if': "room.occupant && room.occupant.bank_account && room.occupant.bank_account.iban"}
+              %td.w-1
+                %input.form-check-input.m-0.align-middle{type: 'checkbox', 'v-model': "selected_room_ids", ':value': "room.id", name: "selected_room_ids[]", 'number': true}
               %td.w-1
                 %vue-avatar{':url': "room.occupant.avatar_path"}
               %td
@@ -64,12 +68,26 @@
     props: ['rooms', 'corporation', 'return_url', 'creditor_identifier']
     data: ->
       subject: "Mieteinzug #{@corporation.name} #{moment().format('MMMM YYYY')}"
+      selected_room_ids: @rooms.map (room) -> room.id
     created: ->
       $(document).on 'keypress', '#sepa_debit_form', (e)->
         e.preventDefault() if (e.charCode || e.keyCode) == 13 # enter
     methods:
       complete_subject: (room)->
         "#{@subject} #{room.name}"
+    computed:
+      select_all:
+        get: ->
+          component = this
+          if component.selected_room_ids
+            component.selected_room_ids.length == component.rooms.length
+          else
+            []
+        set: (value)->
+          component = this
+          component.selected_room_ids = []
+          if value
+            component.rooms.forEach (room)-> component.selected_room_ids.push room.id
 
   export default AccommodationSepaDebitForm
 </script>

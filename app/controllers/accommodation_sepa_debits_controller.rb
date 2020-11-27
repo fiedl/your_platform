@@ -21,6 +21,8 @@ class AccommodationSepaDebitsController < ApplicationController
     })
   }.to_json }
 
+  expose :selected_room_ids, -> { params[:selected_room_ids] }
+
   def new
     authorize! :create_accommodation_sepa_debit, corporation
 
@@ -59,96 +61,98 @@ class AccommodationSepaDebitsController < ApplicationController
 
     for room in rooms
       if room.occupant.try(:bank_account).try(:iban).present? and mandate_id_for_user(room.occupant).present?
-        complete_subject = "#{subject} #{room.name}"
+        if room.id.to_s.in? selected_room_ids
+          complete_subject = "#{subject} #{room.name}"
 
-        sdd.add_transaction(
-          # Name of the debtor, in German: "Zahlungspflichtiger"
-          # String, max. 70 char
-          name: room.occupant.bank_account.account_holder,
+          sdd.add_transaction(
+            # Name of the debtor, in German: "Zahlungspflichtiger"
+            # String, max. 70 char
+            name: room.occupant.bank_account.account_holder,
 
-          # OPTIONAL: Business Identifier Code (SWIFT-Code) of the debtor's account
-          # String, 8 or 11 char
-          bic: (room.occupant.bank_account.bic if room.occupant.bank_account.bic.present?),
+            # OPTIONAL: Business Identifier Code (SWIFT-Code) of the debtor's account
+            # String, 8 or 11 char
+            bic: (room.occupant.bank_account.bic if room.occupant.bank_account.bic.present?),
 
-          # International Bank Account Number of the debtor's account
-          # String, max. 34 chars
-          iban: room.occupant.bank_account.iban.gsub(" ", ""),
+            # International Bank Account Number of the debtor's account
+            # String, max. 34 chars
+            iban: room.occupant.bank_account.iban.gsub(" ", ""),
 
-          # Amount
-          # Number with two decimal digit
-          amount: room.rent.gsub(",", "."),
+            # Amount
+            # Number with two decimal digit
+            amount: room.rent.gsub(",", "."),
 
-          # OPTIONAL: Currency, EUR by default (ISO 4217 standard)
-          # String, 3 char
-          currency: 'EUR',
+            # OPTIONAL: Currency, EUR by default (ISO 4217 standard)
+            # String, 3 char
+            currency: 'EUR',
 
-          # OPTIONAL: Instruction Identification, will not be submitted to the debtor
-          # String, max. 35 char
-          instruction: room.name
-            .parameterize(preserve_case: true, separator: ' '),
+            # OPTIONAL: Instruction Identification, will not be submitted to the debtor
+            # String, max. 35 char
+            instruction: room.name
+              .parameterize(preserve_case: true, separator: ' '),
 
-          # # OPTIONAL: End-To-End-Identification, will be submitted to the debtor
-          # # String, max. 35 char
-          # reference:                 'XYZ/2013-08-ABO/6789',
+            # # OPTIONAL: End-To-End-Identification, will be submitted to the debtor
+            # # String, max. 35 char
+            # reference:                 'XYZ/2013-08-ABO/6789',
 
-          # OPTIONAL: Unstructured remittance information, in German "Verwendungszweck"
-          # String, max. 140 char
-          remittance_information: complete_subject
-            .parameterize(preserve_case: true, separator: ' '),
+            # OPTIONAL: Unstructured remittance information, in German "Verwendungszweck"
+            # String, max. 140 char
+            remittance_information: complete_subject
+              .parameterize(preserve_case: true, separator: ' '),
 
-          # Mandate identifikation, in German "Mandatsreferenz"
-          # String, max. 35 char
-          mandate_id: mandate_id_for_user(room.occupant),               #'K-02-2011-12345',
+            # Mandate identifikation, in German "Mandatsreferenz"
+            # String, max. 35 char
+            mandate_id: mandate_id_for_user(room.occupant),               #'K-02-2011-12345',
 
-          # Mandate Date of signature, in German "Datum, zu dem das Mandat unterschrieben wurde"
-          # Date
-          mandate_date_of_signature: mandate_date_of_signature_for_user(room.occupant),
+            # Mandate Date of signature, in German "Datum, zu dem das Mandat unterschrieben wurde"
+            # Date
+            mandate_date_of_signature: mandate_date_of_signature_for_user(room.occupant),
 
-          # Local instrument, in German "Lastschriftart"
-          # One of these strings:
-          #   'CORE' ("Basis-Lastschrift")
-          #   'COR1' ("Basis-Lastschrift mit verkürzter Vorlagefrist")
-          #   'B2B' ("Firmen-Lastschrift")
-          local_instrument: 'CORE',
+            # Local instrument, in German "Lastschriftart"
+            # One of these strings:
+            #   'CORE' ("Basis-Lastschrift")
+            #   'COR1' ("Basis-Lastschrift mit verkürzter Vorlagefrist")
+            #   'B2B' ("Firmen-Lastschrift")
+            local_instrument: 'CORE',
 
-          # Sequence type
-          # One of these strings:
-          #   'FRST' ("Erst-Lastschrift")
-          #   'RCUR' ("Folge-Lastschrift")
-          #   'OOFF' ("Einmalige Lastschrift")
-          #   'FNAL' ("Letztmalige Lastschrift")
-          sequence_type: 'RCUR',
+            # Sequence type
+            # One of these strings:
+            #   'FRST' ("Erst-Lastschrift")
+            #   'RCUR' ("Folge-Lastschrift")
+            #   'OOFF' ("Einmalige Lastschrift")
+            #   'FNAL' ("Letztmalige Lastschrift")
+            sequence_type: 'RCUR',
 
-          # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
-          # Date
-          requested_date: Date.tomorrow,
+            # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
+            # Date
+            requested_date: Date.tomorrow,
 
-          # OPTIONAL: Enables or disables batch booking, in German "Sammelbuchung / Einzelbuchung"
-          # True or False
-          batch_booking: true
+            # OPTIONAL: Enables or disables batch booking, in German "Sammelbuchung / Einzelbuchung"
+            # True or False
+            batch_booking: true
 
-          # # OPTIONAL: Use a different creditor account
-          # # CreditorAccount
-          # creditor_account: SEPA::CreditorAccount.new(
-          #   name:                'Creditor Inc.',
-          #   bic:                 'RABONL2U',
-          #   iban:                'NL08RABO0135742099',
-          #   creditor_identifier: 'NL53ZZZ091734220000'
-          # )
+            # # OPTIONAL: Use a different creditor account
+            # # CreditorAccount
+            # creditor_account: SEPA::CreditorAccount.new(
+            #   name:                'Creditor Inc.',
+            #   bic:                 'RABONL2U',
+            #   iban:                'NL08RABO0135742099',
+            #   creditor_identifier: 'NL53ZZZ091734220000'
+            # )
 
-          # # OPTIONAL: Specify the country & address of the debtor (REQUIRED for SEPA debits outside of EU. The individually required fields depend on the target country)
-          # debtor_address: SEPA::DebtorAddress.new(
-          #   country_code:        'CH',
-          #   # Not required if individual fields are used
-          #   address_line1:       'Mustergasse 123a',
-          #   address_line2:       '1234 Musterstadt'
-          #   # Not required if address_line1 and address_line2 are used
-          #   street_name:         'Mustergasse',
-          #   building_number:     '123a',
-          #   post_code:           '1234',
-          #   town_name:           'Musterstadt'
-          # )
-        )
+            # # OPTIONAL: Specify the country & address of the debtor (REQUIRED for SEPA debits outside of EU. The individually required fields depend on the target country)
+            # debtor_address: SEPA::DebtorAddress.new(
+            #   country_code:        'CH',
+            #   # Not required if individual fields are used
+            #   address_line1:       'Mustergasse 123a',
+            #   address_line2:       '1234 Musterstadt'
+            #   # Not required if address_line1 and address_line2 are used
+            #   street_name:         'Mustergasse',
+            #   building_number:     '123a',
+            #   post_code:           '1234',
+            #   town_name:           'Musterstadt'
+            # )
+          )
+        end
       end
     end
 
