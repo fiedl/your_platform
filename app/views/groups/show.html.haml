@@ -156,21 +156,20 @@
             .col-md-4.mb-3
               %h4 Zirkel
               = vue_editable_image group.zirkel, editable: can?(:update, group), image_class: 'card-header', update_url: polymorphic_path(group), attribute_name: "group[zirkel]", style: 'min-height: 200px; background-repeat: no-repeat; background-size: contain;'
-          - if can? :use, :corporation_couleur
-            %vue-edit-box
-              .row.mt-3
-                .col-md-3.mb-3
-                  %h4 Band
-                  = vue_couleur_profile_field group.couleur
-                .col-md-3.mb-3
-                  %h4 Fuxen-Band
-                  = vue_couleur_profile_field group.couleur_fuxen
-                .col-md-3.mb-3
-                  %h4 Konkneipanten-Band
-                  = vue_couleur_profile_field group.couleur_konkneipanten
-                .col-md-3.mb-3
-                  %h4 Hospitanten-Band
-                  = vue_couleur_profile_field group.couleur_hospitanten
+          %vue-edit-box
+            .row.mt-3
+              .col-md-3.mb-3
+                %h4 Band
+                = vue_couleur_profile_field group.couleur
+              .col-md-3.mb-3
+                %h4 Fuxen-Band
+                = vue_couleur_profile_field group.couleur_fuxen
+              .col-md-3.mb-3
+                %h4 Konkneipanten-Band
+                = vue_couleur_profile_field group.couleur_konkneipanten
+              .col-md-3.mb-3
+                %h4 Hospitanten-Band
+                = vue_couleur_profile_field group.couleur_hospitanten
 
     - if group.profile_fields.where(type: "ProfileFields::Description").any? || can?(:update, group)
       .card

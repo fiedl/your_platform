@@ -26,15 +26,13 @@ module BodyHelper
   end
 
   def dark_mode_body_class
-    if can? :use, :dark_mode
-      case current_user.settings.dark_mode
-      when 'dark'
-        "theme-dark"
-      when 'auto', '', nil
-        "auto-dark-mode"
-      else
-        nil
-      end
+    case current_user.settings.dark_mode
+    when 'dark'
+      "theme-dark"
+    when 'auto', '', nil
+      "auto-dark-mode"
+    else
+      nil
     end
   end
 
