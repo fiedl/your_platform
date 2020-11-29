@@ -185,26 +185,30 @@ module VueHelper
   end
 
   def vue_right_corner_ribbon
-    current_user_ribbons = current_user.sorted_current_corporations.collect do |corporation|
-      case current_user.current_status_in corporation
-      when "Hospitant"
-        corporation.couleur_hospitanten
-      when "Konkneipant"
-        corporation.couleur_konkneipanten
-      when "Kraßfux", "Brandfux", "Fux"
-        corporation.couleur_fuxen
-      else
-        corporation.couleur
+    if current_navable.kind_of? Pages::PublicPage
+      ribbons = [current_navable.group.couleur]
+    elsif current_user
+      ribbons = current_user.sorted_current_corporations.collect do |corporation|
+        case current_user.current_status_in corporation
+        when "Hospitant"
+          corporation.couleur_hospitanten
+        when "Konkneipant"
+          corporation.couleur_konkneipanten
+        when "Kraßfux", "Brandfux", "Fux"
+          corporation.couleur_fuxen
+        else
+          corporation.couleur
+        end
       end
     end
     show_ribbon = true
-    show_ribbon = false if current_user.settings.show_ribbon.in? ['false', false]
+    show_ribbon = false if current_user && current_user.settings.show_ribbon.in?(['false', false])
     content_tag 'vue_right_corner_ribbon', "", {
       ':current_user': current_user.to_json,
-      ':initial_dark_mode': (current_user.settings.dark_mode || 'auto').to_json,
+      ':initial_dark_mode': ((current_user && current_user.settings.dark_mode) || 'auto').to_json,
       ':initial_show_ribbon': show_ribbon,
       ':color_palette': ProfileFields::Couleur.colors.to_json,
-      ':current_user_ribbons': current_user_ribbons.to_json
+      ':current_user_ribbons': ribbons.to_json
     }
   end
 

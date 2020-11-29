@@ -61,7 +61,7 @@
           = render partial: 'layouts/navbar'
 
       #content.content
-        - if current_user && can?(:use, :corporation_couleur) && can?(:use, :dark_mode)
+        - if can?(:use, :corporation_couleur) && can?(:use, :dark_mode)
           -#= cache [current_user, "#current_user_global_couleur_ribbons"] do
           - Rack::MiniProfiler.step "#current_user_global_couleur_ribbons" do
             = vue_right_corner_ribbon

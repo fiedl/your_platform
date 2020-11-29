@@ -4,7 +4,7 @@
       .ribbon_rotate
         .mb-2{'v-for': "ribbon in current_user_ribbons", key: "ribbon.id"}
           %vue-ribbon{':value': "ribbon.apparent_colors", height: "60px", width: "100%", rotate: '0deg', ':colors': "color_palette"}
-    .container-xl
+    .container-xl{'v-if': "current_user"}
       .right
         .view_menu_trigger.dropdown-toggle{'data-toggle': "dropdown"} Ansicht
         .dropdown-menu.dropdown-menu-right
