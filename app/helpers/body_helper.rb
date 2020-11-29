@@ -26,7 +26,7 @@ module BodyHelper
   end
 
   def dark_mode_body_class
-    case current_user.settings.dark_mode
+    case current_user && current_user.settings.dark_mode
     when 'dark'
       "theme-dark"
     when 'auto', '', nil
