@@ -86,6 +86,7 @@ class User < ApplicationRecord
   include UserGender
   include UserBio
   include UserBackup
+  include UserCouleur
 
 
   def as_json(*options)
