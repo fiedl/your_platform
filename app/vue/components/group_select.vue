@@ -84,6 +84,7 @@
   .vs__actions
     .vs__open-indicator
       display: none
+  .vs__dropdown-menu
   .vs__selected-options
     padding-top: 4px
     padding-left: 3px
