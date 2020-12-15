@@ -15,6 +15,7 @@ class BaseMailer < ActionMailer::Base
   helper ApplicationHelper
   default from: "\"#{AppVersion.app_name}\" <#{Setting.support_email}>"
   default sender: Rails.application.secrets.smtp_user
+  default "Message-ID" => lambda { "<#{SecureRandom.uuid}@#{Rails.application.secrets.smtp_domain}>" }
 
   include PrivateViews
 
