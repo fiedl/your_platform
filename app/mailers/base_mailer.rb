@@ -20,7 +20,7 @@ class BaseMailer < ActionMailer::Base
   include PrivateViews
 
   def self.delivery_errors_address
-    "delivery-errors@#{AppVersion.email_domain}"
+    Rails.application.secrets.delivery_error_address || "delivery-errors@#{AppVersion.email_domain}"
   end
 
   def self.technical_sender
