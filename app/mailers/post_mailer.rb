@@ -18,7 +18,7 @@ class PostMailer < BaseMailer
     message.from = "#{post.author.title} <#{post.author.email}>"
     message.reply_to = "#{post.author.title} <#{post.author.email}>"
     message.return_path = BaseMailer.delivery_errors_address
-    message.sender = BaseMailer.default[:from]
+    message.sender = BaseMailer.technical_sender
     message.to = post.parent_groups.collect { |group|
       address = group.mailing_lists.first.try(:value)
       address ||= "#{group.title.parameterize}-#{group.id}.noreply@#{AppVersion.domain}"

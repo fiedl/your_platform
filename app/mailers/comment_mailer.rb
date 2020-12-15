@@ -38,7 +38,7 @@ class CommentMailer < BaseMailer
     message.from = "#{@author.title} <#{@author.email}>"
     message.reply_to = "#{@author.title} <#{@author.email}>"
     message.return_path = BaseMailer.delivery_errors_address
-    message.sender = BaseMailer.default[:from]
+    message.sender = BaseMailer.technical_sender
 
     message.to = @recipients.collect { |user|
       "#{user.title} <#{user.email}>"
