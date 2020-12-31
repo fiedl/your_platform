@@ -4,7 +4,7 @@ class ListExportsController < ApplicationController
   expose :quarter, -> { params[:quarter] }
 
   expose :year, -> { params[:year] }
-  expose :date, -> { "#{year}-01-01".to_date if year }
+  expose :date, -> { params[:date].try(:to_date) || ("#{year}-01-01".to_date if year) }
 
   def show
     authorize! :read, group
