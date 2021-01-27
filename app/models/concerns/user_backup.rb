@@ -34,9 +34,13 @@ concern :UserBackup do
   end
 
   def restore_profile
-    raise "Achtung! Das Adress-Format hat sich geändert, weil Adressen jetzt Freitextfelder sind. TODO: Das muss das Restore-System noch lernen, bevor ein Import durchgeführt wird."
     raise "This user (#{id}) already has an existing profile. Not restoring from backup file." if profile_fields.any?
     hash = ActiveSupport::JSON.decode(File.read(latest_backup_file))
+
+    if (address = hash['profile_fields'].select { |pf| pf['type'] == "ProfileFields::Address" }.first) && address['children'].present?
+      raise "Achtung! Das Adress-Format hat sich geändert, weil Adressen jetzt Freitextfelder sind. TODO: Das muss das Restore-System noch lernen, bevor ein Import durchgeführt wird."
+    end
+
     self.first_name = hash['first_name']
     self.last_name = hash['last_name']
     self.alias = hash['alias']
