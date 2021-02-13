@@ -224,6 +224,16 @@ class Ability
       user.in? group.officers_of_self_and_ancestors
     end
 
+    # Who can read bank-account information of users?
+    # - [x] The user herself --> `rights_for_signed_in_users`
+    # - [x] Kassenwarte des eigenen PhV/BV/WV
+    # - [x] Wohnheimsverein-Kassenwarte, wenn Hausbewohner
+    #
+    can :read_bank_account, User do |other_user|
+      (user.groups.flagged(:kassenwart).map(&:scope) & other_user.groups).any? ||
+      (other_user.groups.where(type: "Groups::Room").map(&:kassenwarte).flatten.include? user)
+    end
+
     if not read_only_mode?
       # Local officers can create events in their groups.
       #
@@ -403,6 +413,8 @@ class Ability
       end
 
     end
+
+    can :read_bank_account, User, :id => user.id
 
     can :read, Group do |group|
       # Regular users cannot see the former_members_parent groups

@@ -87,12 +87,13 @@
               = editable_profile_fields profileable: user, types: ["ProfileFields::Organization"], new_profile_fields: [{label: "Organisation", type: "ProfileFields::Organization"}]
 
     - if user.profile_fields.where(type: "ProfileFields::BankAccount").any? || can?(:update, user)
-      .card
-        .card-body
-          #bank
-            %vue-edit-box
-              %h2= t :bank_account_information
-              .obscure-in-demo= editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
+      - if can? :read_bank_account, user
+        .card
+          .card-body
+            #bank
+              %vue-edit-box
+                %h2= t :bank_account_information
+                .obscure-in-demo= editable_profile_fields profileable: user, types: ["ProfileFields::BankAccount"], new_profile_fields: [{label: "Bankverbindung", type: "ProfileFields::BankAccount"}]
 
     .card
       .card-body

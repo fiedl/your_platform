@@ -32,6 +32,14 @@ class Groups::Room < Group
     memberships.with_past
   end
 
+  def wohnheimsverein
+    corporation.wohnheimsverein
+  end
+
+  def kassenwarte
+    wohnheimsverein.kassenwarte
+  end
+
   def as_json(*args)
     super.merge({
       occupant: occupant,
