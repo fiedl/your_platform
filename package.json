@@ -71,7 +71,7 @@
     "style-loader": "^1.2.1",
     "svgo": "^1.3.0",
     "tabler": "^1.0.0-alpha.7",
-    "tar": "^2.2.2",
+    "tar": "^4.4.18",
     "tiptap": "^1.29.4",
     "tiptap-extensions": "^1.32.1",
     "tough-cookie": "^2.3.3",
