@@ -34,7 +34,7 @@
     "cssnano": "^4.1.10",
     "d3-array": "^2.6.0",
     "datatables": "^1.10.13",
-    "datatables.net": "^1.10.18",
+    "datatables.net": "^1.11.3",
     "datatables.net-bs": "^1.10.18",
     "datatables.net-fixedheader": "^3.1.4",
     "datatables.net-fixedheader-bs": "^3.1.4",
