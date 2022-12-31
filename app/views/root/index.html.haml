@@ -50,8 +50,9 @@
                     %span.avatar{style: "background-image: url(#{user.avatar_path})"}
                   .col
                     = link_to user.title, user, class: "text-body d-block"
-                    %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
-                    %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
+                    - if user.date_of_birth.present?
+                      %small.d-block.text-muted.text-truncate.mt-n1= localize user.date_of_birth
+                      %small.d-block.text-muted.text-truncate.mt-n1= t :n_years, n: (Date.today < user.birthday_this_year ? user.next_age : user.age)
 
 
 .row.row-cards
