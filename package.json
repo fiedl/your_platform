@@ -14,7 +14,7 @@
     "@fullcalendar/daygrid": "4.4",
     "@fullcalendar/interaction": "4.4",
     "@fullcalendar/vue": "4.4",
-    "apexcharts": "^3.19.3",
+    "apexcharts": "^3.24.0",
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
