@@ -32,6 +32,7 @@ class UserAccount < ApplicationRecord
   #   Lockable: locks an account after a specified number of failed sign-in attempts.
   #     Can unlock via email or after a specified time period.
   #
+  extend Devise::Models
   devise :database_authenticatable, :recoverable, :rememberable, :validatable, :registerable, :masqueradable
 
   include DeviseTokenAuth::Concerns::User

@@ -8,18 +8,14 @@ volumes:
   your_platform_gems: {}
   your_platform_tmp: {}
 
-networks:
-  backend:
-    driver: bridge
-
 services:
   web:
-    build: docker/services/your_platform_web_development
+    build: .
     volumes:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
-      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
+      - "your_platform_tmp:/app/tmp"
     expose:
       - 3001
     ports:
@@ -37,19 +33,15 @@ services:
       - mysql
       - redis
       - neo4j
-    networks:
-      - default
-      - backend
-    command:
-      - script/start
+    command: /bin/bash -c "bundle install && bundle exec rails server -p 3001 -b 0.0.0.0"
 
   sidekiq:
-    build: docker/services/your_platform_web_development
+    build: .
     volumes:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
-      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
+      - "your_platform_tmp:/app/tmp"
     environment:
       RAILS_ENV: development
       MYSQL_DATABASE: your_platform
@@ -63,41 +55,37 @@ services:
       - mysql
       - redis
       - neo4j
-    networks:
-      - backend
-    command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec sidekiq --queue critical --queue default --queue low --queue cache --queue dag_links --verbose --environment development"
+    command: /bin/bash -c "bundle exec sidekiq --queue critical --queue default --queue low --queue cache --queue dag_links --verbose --environment development"
 
-  notifications:
-    build: docker/services/your_platform_web_development
-    volumes:
-      - ".:/app"
-      - "your_platform_uploads:/app/uploads"
-      - "your_platform_gems:/usr/local/bundle"
-      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
-    environment:
-      RAILS_ENV: development
-      MYSQL_DATABASE: your_platform
-      MYSQL_TEST_DATABASE: your_platform_test
-      MYSQL_USER: root
-      MYSQL_PASSWORD: secret
-      MYSQL_HOST: mysql
-      REDIS_HOST: redis
-      NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
-    depends_on:
-      - mysql
-      - redis
-      - neo4j
-    networks:
-      - backend
-    command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rake your_platform:notifications:worker"
+  #notifications:
+  #  build: .
+  #  volumes:
+  #    - ".:/app"
+  #    - "your_platform_uploads:/app/uploads"
+  #    - "your_platform_gems:/usr/local/bundle"
+  #    - "your_platform_tmp:/app/tmp"
+  #  environment:
+  #    RAILS_ENV: development
+  #    MYSQL_DATABASE: your_platform
+  #    MYSQL_TEST_DATABASE: your_platform_test
+  #    MYSQL_USER: root
+  #    MYSQL_PASSWORD: secret
+  #    MYSQL_HOST: mysql
+  #    REDIS_HOST: redis
+  #    NEO4J_REST_URL: "http://neo4j:trinity@neo4j:7474/"
+  #  depends_on:
+  #    - mysql
+  #    - redis
+  #    - neo4j
+  #  command: /bin/bash -c "bundle exec rake your_platform:notifications:worker"
 
   console:
-    build: docker/services/your_platform_web_development
+    build: .
     volumes:
       - ".:/app"
       - "your_platform_uploads:/app/uploads"
       - "your_platform_gems:/usr/local/bundle"
-      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
+      - "your_platform_tmp:/app/tmp"
     environment:
       RAILS_ENV: development
       MYSQL_DATABASE: your_platform
@@ -111,16 +99,14 @@ services:
       - mysql
       - redis
       - neo4j
-    networks:
-      - backend
-    command: /bin/bash -c "cd /app/demo_app/my_platform && bundle exec rails console"
+    command: /bin/bash -c "bundle exec rails console"
 
   tests:
-    build: docker/services/your_platform_web_development
+    build: .
     volumes:
       - ".:/app"
       - "your_platform_gems:/usr/local/bundle"
-      - "your_platform_tmp:/app/demo_app/my_platform/tmp"
+      - "your_platform_tmp:/app/tmp"
     environment:
       RAILS_ENV: test
       MYSQL_TEST_DATABASE: your_platform_test
@@ -133,8 +119,6 @@ services:
       - mysql
       - redis
       - neo4j
-    networks:
-      - backend
     command: /bin/bash -c "rake tests"
 
   mysql:
@@ -146,26 +130,20 @@ services:
       MYSQL_PASSWORD: secret
       MYSQL_ROOT_PASSWORD: secret
       MYSQL_USER: your_platform
-    networks:
-      - backend
     command: "mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
 
   redis:
     image: redis
     volumes:
       - your_platform_redis_data:/var/lib/redis
-    networks:
-      - backend
 
   neo4j:
     image: neo4j:3.5
     volumes:
       - your_platform_neo4j_data:/data
-    ports:
-      - "0.0.0.0:7474:7474"
-      - "0.0.0.0:7687:7687"
+    expose:
+      - 7474
+      - 7687
     environment:
       NEO4J_AUTH: "neo4j/trinity"
-    networks:
-      - backend
 

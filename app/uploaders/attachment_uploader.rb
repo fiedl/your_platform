@@ -1,5 +1,3 @@
-require 'carrierwave/processing/mime_types'
-
 class AttachmentUploader < CarrierWave::Uploader::Base
 
   # Include RMagick or MiniMagick support:

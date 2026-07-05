@@ -3,8 +3,8 @@ class GeoLocation < ApplicationRecord
   # When to perform geocoding queries (to google)
   # ==========================================================================================
 
-  after_validation :geocode, :if => [ 'address_changed?', 'latitude.nil?' ]
-  after_find :geocode_and_save, :if => 'latitude.nil?'
+  after_validation :geocode, :if => [ :address_changed?, lambda { |c| c.latitude.nil? } ]
+  after_find :geocode_and_save, :if => lambda { |c| c.latitude.nil? }
 
 
   # What to do when performing a geocoding query (to google)

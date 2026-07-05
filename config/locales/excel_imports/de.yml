@@ -1,3 +1,0 @@
-de:
-  import_users: Benutzer importieren
-  import_users_into_group_str: "Benutzer als Mitglieder in die Gruppe \"%{str}\" importieren."
