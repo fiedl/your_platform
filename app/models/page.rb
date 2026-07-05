@@ -30,7 +30,6 @@ class Page < ApplicationRecord
   include PageVideos
   include PageSearch
   include PageFooter
-  include PageAnalytics
 
   scope :regular, -> { where(type: nil).not_flagged([:intranet_root]) }
   scope :without_group, -> { includes(:ancestor_groups).where(groups: {id: nil}) }

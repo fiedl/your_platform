@@ -1,29 +1,14 @@
-# This file lists the assets that need to be compiled into separate files.
+# Be sure to restart your server when you modify this file.
 
-# Images
-Rails.application.config.assets.precompile += %w(*.png *.jpg *.jpeg *.gif)
+# Version of your assets, change this if you want to expire all your assets.
+Rails.application.config.assets.version = '1.0'
 
-# Layout
-Rails.application.config.assets.precompile += %w( bootstrap_setup.css bootstrap_layout.css )
-Rails.application.config.assets.precompile += %w( iweb_layout.css )
-Rails.application.config.assets.precompile += %w( compact_layout.css )
-Rails.application.config.assets.precompile += %w( modern_layout.css )
-Rails.application.config.assets.precompile += %w( primer_layout.css )
+# Add additional assets to the asset load path.
+# Rails.application.config.assets.paths << Emoji.images_path
+# Add Yarn node_modules folder to the asset load path.
+Rails.application.config.assets.paths << Rails.root.join('node_modules')
 
-# Vendor Images
-Rails.application.config.assets.precompile += %w( aiga_immigration.png )
-
-# Separate layout javascripts
-Rails.application.config.assets.precompile += %w( bootstrap_tabler.js )
-Rails.application.config.assets.precompile += %w( iweb.js )
-
-# Vue app
-Rails.application.config.assets.precompile += %w(vue_app.pack.js)
-
-# Include node modules where javascript stuff lives.
-# http://nithinbekal.com/posts/yarn-rails/
-#
-Rails.application.config.assets.paths << YourPlatform::Engine.root.join('app/javascripts')
-Rails.application.config.assets.paths << YourPlatform::Engine.root.join('vendor/packs')
-Rails.application.config.assets.paths << YourPlatform::Engine.root.join('node_modules')
-
+# Precompile additional assets.
+# application.js, application.css, and all non-JS/CSS in the app/assets
+# folder are already added.
+# Rails.application.config.assets.precompile += %w( admin.js admin.css )
